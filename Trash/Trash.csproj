@@ -13,11 +13,11 @@
 	<ItemGroup>
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.8.0" />
 		<PackageReference Include="Antlr4BuildTasks" Version="8.1" />
+		<PackageReference Include="AntlrTreeEditing" Version="1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
-		<ProjectReference Include="..\AntlrTreeEditing\AntlrTreeEditing.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>
