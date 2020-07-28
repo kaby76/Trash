@@ -17,7 +17,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
-		<ProjectReference Include="..\XPath\xpath.csproj" />
+		<ProjectReference Include="..\AntlrTreeEditing\AntlrTreeEditing.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>
