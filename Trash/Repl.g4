@@ -1,11 +1,17 @@
 grammar Repl;
 
 cmd
-	: import_
+	: read
+	| import_
+	| quit
+	| empty
 	;
-
-import_ : 'import' 'antlr3'? ffn ';' ;
+quit : 'quit' | 'exit';
+read : 'read' ffn ';' ;
+import_ : 'import' type? ffn ';' ;
+type : 'antlr3' | 'antlr2' | 'bison';
 ffn : StringLiteral ;
+empty : ';' ;
 StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb '"') ;
 fragment Lca : Esc | ~ ('\'' | '\\') ;
 fragment Lcb : Esc | ~ ('"' | '\\') ;
@@ -17,3 +23,4 @@ fragment XDIGIT
    | 'a' .. 'f'
    | 'A' .. 'F'
    ;
+WS : ([ \t] | [\r\n\f])+ -> skip ;
