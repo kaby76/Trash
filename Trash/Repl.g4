@@ -7,17 +7,32 @@ cmd
 	| quit
 	| empty
 	| bang
+	| alias
+	| anything
 	;
+anything : id rest? ';' ;
+rest : (id_keyword | int | StringLiteral )+;
 bang : BANG (BANG | int | id) ;
-quit : 'quit' | 'exit';
-history : 'history' ;
-alias : 'alias' id '=' (StringLiteral | id);
-read : 'read' ffn ';' ;
-import_ : 'import' type? ffn ';' ;
-type : 'antlr3' | 'antlr2' | 'bison';
+quit : QUIT | EXIT ;
+history : HISTORY ;
+alias : ALIAS (id '=' (StringLiteral | id_keyword))?;
+read : READ ffn ';' ;
+import_ : IMPORT type? ffn ';' ;
+type : ANTLR3 | ANTLR2 | BISON;
 ffn : StringLiteral ;
 empty : ';' ;
 int : INT ;
+id_keyword : id | ALIAS | ANTLR3 | ANTLR2 | BISON | EXIT | HISTORY | IMPORT | QUIT | READ;
+
+ALIAS : 'alias';
+ANTLR3 : 'antlr3';
+ANTLR2 : 'antlr2';
+BISON : 'bison';
+EXIT : 'exit';
+HISTORY : 'history';
+IMPORT : 'import';
+QUIT : 'quit';
+READ : 'read';
 
 BANG : '!';
 INT: [0-9]+;
@@ -27,6 +42,7 @@ fragment Lcb : Esc | ~ ('"' | '\\') ;
 fragment Esc
    : '\\' ('n' | 'r' | 't' | 'b' | 'f' | '"' | '\'' | '\\' | '>' | 'u' XDIGIT XDIGIT XDIGIT XDIGIT | .)
    ;
+
 fragment XDIGIT
    : '0' .. '9'
    | 'a' .. 'f'

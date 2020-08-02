@@ -2,6 +2,7 @@
 {
     using Antlr4.Runtime;
     using LanguageServer;
+    using Microsoft.CodeAnalysis;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -11,9 +12,19 @@
     {
         List<string> History { get; set; } = new List<string>();
         const string PreviousHistoryFfn = ".trash.rc";
+        Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
 
         public Repl()
         {
+        }
+
+        void RedoAliases()
+        {
+            for (int i = 0; i < History.Count; ++i)
+            {
+                string input = History[i];
+                RecallAliases(input);
+            }
         }
 
         void ReadHistory()
@@ -22,6 +33,7 @@
             if (!System.IO.File.Exists(home + Path.DirectorySeparatorChar + PreviousHistoryFfn)) return;
             var history = System.IO.File.ReadAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn);
             History = history.ToList();
+            RedoAliases();
         }
 
         void WriteHistory()
@@ -137,6 +149,46 @@
                         System.Console.WriteLine("No previous command starts with " + s);
                     }
                 }
+                else if (tree.alias() != null)
+                {
+                    History.Add(line);
+                    var alias = tree.alias();
+                    var id = alias.id();
+                    var sl = alias.StringLiteral();
+                    if (sl != null)
+                    {
+                        Aliases[id.GetText()] = sl.GetText().Substring(1, sl.GetText().Length - 2);
+                    }
+                    else if (alias.id_keyword() != null)
+                    {
+                        var id_keyword = alias.id_keyword();
+                        Aliases[id.GetText()] = id_keyword.GetText();
+                    }
+                    else if (alias.id() == null)
+                    {
+                        System.Console.WriteLine();
+                        foreach (var p in Aliases)
+                        {
+                            System.Console.WriteLine(p.Key + " = " + p.Value);
+                        }
+                    }
+                }
+                else if (tree.anything() != null)
+                {
+                    var anything = tree.anything();
+                    if (Aliases.ContainsKey(anything.id().GetText()))
+                    {
+                        var cmd = Aliases[anything.id().GetText()];
+                        var rest = anything.rest()?.children.Select(c => c.GetText());
+                        var rs = rest != null ? String.Join(" ", rest) : "";
+                        cmd = cmd + rs;
+                        return Execute(cmd);
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("Unknown command");
+                    }
+                }
             }
             catch
             {
@@ -144,6 +196,69 @@
             }
             return true;
         }
+
+        public bool RecallAliases(string line)
+        {
+            try
+            {
+                var input = line + ";";
+                var str = new AntlrInputStream(input);
+                var lexer = new ReplLexer(str);
+                var tokens = new CommonTokenStream(lexer);
+                var parser = new ReplParser(tokens);
+                var tree = parser.cmd();
+                if (tree.read() != null)
+                {
+                }
+                else if (tree.import_() != null)
+                {
+                }
+                else if (tree.history() != null)
+                {
+                }
+                else if (tree.quit() != null)
+                {
+                }
+                else if (tree.empty() != null)
+                {
+                }
+                else if (tree.bang() != null)
+                {
+                }
+                else if (tree.alias() != null)
+                {
+                    var alias = tree.alias();
+                    var id = alias.id();
+                    var sl = alias.StringLiteral();
+                    if (sl != null)
+                    {
+                        Aliases[id.GetText()] = sl.GetText().Substring(1, sl.GetText().Length - 2);
+                    }
+                    else if (alias.id_keyword() != null)
+                    {
+                        var id_keyword = alias.id_keyword();
+                        Aliases[id.GetText()] = id_keyword.GetText();
+                    }
+                }
+                else if (tree.anything() != null)
+                {
+                    var anything = tree.anything();
+                    if (Aliases.ContainsKey(anything.id().GetText()))
+                    {
+                        var cmd = Aliases[anything.id().GetText()];
+                        var rest = anything.rest()?.children.Select(c => c.GetText());
+                        var rs = String.Join(" ", rest);
+                        cmd = cmd + rs;
+                        RecallAliases(cmd);
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return true;
+        }
+
     }
 
 }
