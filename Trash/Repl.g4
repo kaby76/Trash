@@ -8,7 +8,7 @@ cmd
 	| empty
 	| bang
 	;
-bang : BANG (BANG | int) ;
+bang : BANG (BANG | int | id) ;
 quit : 'quit' | 'exit';
 history : 'history' ;
 alias : 'alias' id '=' (StringLiteral | id);

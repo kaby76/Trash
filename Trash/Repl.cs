@@ -120,9 +120,21 @@
                         var num = Int32.Parse(snum);
                         return Execute(History[num]);
                     }
-                    else if (bang.BANG() != null)
+                    else if (bang.BANG().Length > 1)
                     {
                         return Execute(History.Last());
+                    }
+                    else if (bang.id() != null)
+                    {
+                        var s = bang.id().GetText();
+                        for (int i = History.Count - 1; i >= 0; --i)
+                        {
+                            if (History[i].StartsWith(s))
+                            {
+                                return Execute(History[i]);
+                            }
+                        }
+                        System.Console.WriteLine("No previous command starts with " + s);
                     }
                 }
             }
