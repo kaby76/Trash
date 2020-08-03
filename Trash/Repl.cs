@@ -1,8 +1,10 @@
 ﻿namespace Trash
 {
     using Antlr4.Runtime;
+    using Antlr4.Runtime.Tree;
     using LanguageServer;
     using Microsoft.CodeAnalysis;
+    using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -13,6 +15,7 @@
         List<string> History { get; set; } = new List<string>();
         const string PreviousHistoryFfn = ".trash.rc";
         Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
+        Stack<Tuple<string, string, IParseTree>> stack = new Stack<Tuple<string, string, IParseTree>>();
 
         public Repl()
         {
@@ -70,11 +73,13 @@
                     var r = tree.read();
                     var f = r.ffn().GetText();
                     f = f.Substring(1, f.Length - 2);
-                    var s1 = new AntlrFileStream(f.Substring(1, f.Length - 2));
+                    var ii = System.IO.File.ReadAllText(f);
+                    var s1 = new AntlrInputStream(ii);
                     var l1 = new ANTLRv4Lexer(s1);
                     var t1 = new CommonTokenStream(l1);
                     var p1 = new ANTLRv4Parser(t1);
                     var tr = p1.grammarSpec();
+                    stack.Push(new Tuple<string, string, IParseTree>(f, ii, tr));
                 }
                 else if (tree.import_() != null)
                 {
@@ -173,6 +178,21 @@
                         }
                     }
                 }
+                else if (tree.dot() != null)
+                {
+                    if (stack.Any())
+                    {
+                        var t = stack.Peek();
+                        TerminalNodeImpl x = TreeEdits.LeftMostToken(t.Item3);
+                        var ts = x.Payload.TokenSource;
+                        System.Console.WriteLine();
+                        System.Console.WriteLine(
+                            TreeOutput.OutputTree(
+                                t.Item3,
+                                ts as Lexer,
+                                null).ToString());
+                    }
+                }
                 else if (tree.anything() != null)
                 {
                     var anything = tree.anything();
@@ -188,6 +208,42 @@
                     {
                         System.Console.WriteLine("Unknown command");
                     }
+                }
+                else if (tree.find() != null)
+                {
+                    History.Add(line);
+                    var find = tree.find();
+                    var expr = find.StringLiteral().GetText();
+                    expr = expr.Substring(1, expr.Length - 2);
+                    var top = stack.Peek();
+                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                    var atree = top.Item3;
+                    ANTLRv4Lexer alexer = new ANTLRv4Lexer(new AntlrInputStream(""));
+                    CommonTokenStream cts = new CommonTokenStream(alexer);
+                    ANTLRv4Parser aparser = new ANTLRv4Parser(cts);
+                    AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser);
+                    var nodes = engine.parseExpression(expr,
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
+                    foreach (var node in nodes)
+                    {
+                        TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
+                        var ts = x.Payload.TokenSource;
+                        System.Console.WriteLine();
+                        System.Console.WriteLine(
+                            TreeOutput.OutputTree(
+                                node,
+                                ts as Lexer,
+                                null).ToString());
+                    }
+                }
+                else if (tree.print() != null)
+                {
+                    History.Add(line);
+                    var top = stack.Peek();
+                    System.Console.WriteLine();
+                    System.Console.WriteLine(top.Item1);
+                    System.Console.WriteLine(top.Item2);
                 }
             }
             catch

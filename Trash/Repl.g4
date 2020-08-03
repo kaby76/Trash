@@ -1,39 +1,61 @@
 grammar Repl;
 
 cmd
-	: read
+	:
+	  alias
+	| anything
+	| bang
+	| dot
+	| empty
+	| find
 	| history
 	| import_
+	| print
 	| quit
-	| empty
-	| bang
-	| alias
-	| anything
+	| read
 	;
 anything : id rest? ';' ;
 rest : (id_keyword | int | StringLiteral )+;
 bang : BANG (BANG | int | id) ;
-quit : QUIT | EXIT ;
+dot : DOT ';' ;
+print : PRINT ';' ;
+quit : (QUIT | EXIT) ';' ;
 history : HISTORY ;
 alias : ALIAS (id '=' (StringLiteral | id_keyword))?;
 read : READ ffn ';' ;
 import_ : IMPORT type? ffn ';' ;
+find : FIND StringLiteral ';' ;
+
 type : ANTLR3 | ANTLR2 | BISON;
 ffn : StringLiteral ;
 empty : ';' ;
 int : INT ;
-id_keyword : id | ALIAS | ANTLR3 | ANTLR2 | BISON | EXIT | HISTORY | IMPORT | QUIT | READ;
+id_keyword : id
+  | ALIAS
+  | ANTLR3
+  | ANTLR2
+  | BISON
+  | EXIT
+  | FIND
+  | HISTORY
+  | IMPORT
+  | PRINT
+  | QUIT
+  | READ
+  ;
 
 ALIAS : 'alias';
 ANTLR3 : 'antlr3';
 ANTLR2 : 'antlr2';
 BISON : 'bison';
 EXIT : 'exit';
+FIND : 'find';
 HISTORY : 'history';
 IMPORT : 'import';
+PRINT : 'print';
 QUIT : 'quit';
 READ : 'read';
-
+DOT : '.';
 BANG : '!';
 INT: [0-9]+;
 StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb '"') ;
