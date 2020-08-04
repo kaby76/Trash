@@ -211,7 +211,8 @@
                     {
                         var ii = System.IO.File.ReadAllText(f);
                         Dictionary<string, string> res = new Dictionary<string, string>();
-                        LanguageServer.Antlr3Import.Try(f, ii, ref res);
+                        var imp = new LanguageServer.Antlr3Import();
+                        imp.Try(f, ii, ref res);
                         System.Console.Write(res.First().Value);
                     }
                     else if (type == "antlr2")
@@ -226,7 +227,8 @@
                     {
                         var ii = System.IO.File.ReadAllText(f);
                         Dictionary<string, string> res = new Dictionary<string, string>();
-                        LanguageServer.BisonImport.Try(f, ii, ref res);
+                        var imp = new LanguageServer.BisonImport();
+                        imp.Try(f, ii, ref res);
                         System.Console.Write(res.First().Value);
                     }
                 }
