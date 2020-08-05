@@ -108,7 +108,7 @@
                         var cmd = Aliases[anything.id().GetText()];
                         var rest = anything.rest()?.children.Select(c => c.GetText());
                         var rs = rest != null ? String.Join(" ", rest) : "";
-                        cmd = cmd + rs;
+                        cmd = cmd + " " + rs;
                         return Execute(cmd);
                     }
                     else

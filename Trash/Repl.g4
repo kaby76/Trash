@@ -2,7 +2,6 @@ grammar Repl;
 
 cmd :
   alias
-  | anything
   | bang
   | convert
   | dot
@@ -18,6 +17,7 @@ cmd :
   | rotate
   | stack
   | unfold
+  | anything
   ;
 alias : ALIAS (id '=' (StringLiteral | id_keyword))?;
 anything : id rest? ';' ;
@@ -63,7 +63,7 @@ id_keyword : id
   | ROTATE
   | UNFOLD
   ;
-rest : (id_keyword | int | StringLiteral )+;
+rest : .+;
 type : ANTLR4 | ANTLR3 | ANTLR2 | BISON;
 
 ALIAS : 'alias';
