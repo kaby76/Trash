@@ -4,32 +4,38 @@ cmd :
   alias
   | anything
   | bang
+  | convert
   | dot
   | empty
   | find
   | fold
   | history
-  | import_
+  | load
+  | parse
   | print
   | quit
-  | read
   | rename
+  | rotate
+  | stack
   | unfold
   ;
 alias : ALIAS (id '=' (StringLiteral | id_keyword))?;
 anything : id rest? ';' ;
 bang : BANG (BANG | int | id) ;
 combine : COMBINE ';' ;
+convert : CONVERT type ';' ;
 dot : DOT ';' ;
 find : FIND StringLiteral ';' ;
 fold : FOLD StringLiteral ';' ;
 history : HISTORY ;
-import_ : IMPORT type? ffn ';' ;
+parse : PARSE type ';' ;
 print : PRINT ';' ;
 quit : (QUIT | EXIT) ';' ;
-read : READ ffn ';' ;
+load : LOAD ffn ';' ;
 rename : RENAME StingLiteral StringLiteral ';' ;
 split : SPLIT ';' ;
+stack : STACK ';' ;
+rotate : ROTATE ';' ;
 unfold : UNFOLD StringLiteral ';' ;
 
 empty : ';' ;
@@ -46,35 +52,42 @@ id_keyword : id
   | FIND
   | FOLD
   | HISTORY
-  | IMPORT
+  | CONVERT
+  | PARSE
   | PRINT
   | QUIT
-  | READ
+  | LOAD
   | RENAME
   | SPLIT
+  | STACK
+  | ROTATE
   | UNFOLD
   ;
 rest : (id_keyword | int | StringLiteral )+;
-type : ANTLR3 | ANTLR2 | BISON;
+type : ANTLR4 | ANTLR3 | ANTLR2 | BISON;
 
 ALIAS : 'alias';
 ANTLR2 : 'antlr2';
 ANTLR3 : 'antlr3';
+ANTLR4 : 'antlr4';
 BANG : '!';
 BISON : 'bison';
 COMBINE : 'combine';
+CONVERT : 'convert';
 DOT : '.';
 EXIT : 'exit';
 FIND : 'find';
 FOLD : 'fold';
 HISTORY : 'history';
-IMPORT : 'import';
 INT: [0-9]+;
+LOAD : 'load';
+PARSE : 'parse' ;
 PRINT : 'print';
 QUIT : 'quit';
-READ : 'read';
 RENAME : 'rename';
 SPLIT : 'split';
+STACK : 'stack';
+ROTATE : 'rotate';
 StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb* '"') ;
 UNFOLD : 'unfold';
 

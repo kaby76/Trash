@@ -4,6 +4,7 @@
     using Antlr4.Runtime.Tree;
     using LanguageServer;
     using Microsoft.CodeAnalysis;
+    using org.eclipse.wst.xml.xpath2.api;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
     using System.Collections.Generic;
@@ -16,13 +17,7 @@
         List<string> History { get; set; } = new List<string>();
         const string PreviousHistoryFfn = ".trash.rc";
         Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
-        Stack<Tuple<string, string, IParseTree>> stack = new Stack<Tuple<string, string, IParseTree>>();
-
-        void HistoryAdd(string input)
-        {
-            History.Add(input);
-            WriteHistory();
-        }
+        Stack<Document> stack = new Stack<Document>();
 
         public Repl()
         {
@@ -37,7 +32,13 @@
             }
         }
 
-        void ReadHistory()
+        void HistoryAdd(string input)
+        {
+            History.Add(input);
+            HistoryWrite();
+        }
+
+        void HistoryRead()
         {
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             if (!System.IO.File.Exists(home + Path.DirectorySeparatorChar + PreviousHistoryFfn)) return;
@@ -46,7 +47,7 @@
             RedoAliases();
         }
 
-        void WriteHistory()
+        void HistoryWrite()
         {
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             System.IO.File.WriteAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn, History);
@@ -55,13 +56,13 @@
         public void Run()
         {
             string input;
-            ReadHistory();
+            HistoryRead();
             do
             {
                 Console.Write("> ");
                 input = Console.ReadLine();
             } while (Execute(input));
-            WriteHistory();
+            HistoryWrite();
         }
 
         public bool Execute(string line)
@@ -141,17 +142,65 @@
                         System.Console.WriteLine("No previous command starts with " + s);
                     }
                 }
+                else if (tree.convert() != null)
+                {
+                    HistoryAdd(line);
+                    var import = tree.convert();
+                    var type = import.type()?.GetText();
+                    var doc = stack.Peek();
+                    var f = doc.FullPath;
+                    if (type == "antlr3")
+                    {
+                        Dictionary<string, string> res = new Dictionary<string, string>();
+                        var imp = new LanguageServer.Antlr3Import();
+                        imp.Try(doc.FullPath, doc.Code, ref res);
+                        stack.Pop();
+                        foreach (var r in res)
+                        {
+                            var new_doc = CheckDoc(r.Key);
+                            new_doc.Code = r.Value;
+                            stack.Push(new_doc);
+                        }
+                        System.Console.Write(res.First().Value);
+                    }
+                    else if (type == "antlr2")
+                    {
+                        Dictionary<string, string> res = new Dictionary<string, string>();
+                        var imp = new LanguageServer.Antlr2Import();
+                        imp.Try(doc.FullPath, doc.Code, ref res);
+                        foreach (var r in res)
+                        {
+                            var new_doc = CheckDoc(r.Key);
+                            new_doc.Code = r.Value;
+                            stack.Push(new_doc);
+                        }
+                        System.Console.Write(res.First().Value);
+                    }
+                    else if (type == "bison")
+                    {
+                        Dictionary<string, string> res = new Dictionary<string, string>();
+                        var imp = new LanguageServer.BisonImport();
+                        imp.Try(doc.FullPath, doc.Code, ref res);
+                        foreach (var r in res)
+                        {
+                            var new_doc = CheckDoc(r.Key);
+                            new_doc.Code = r.Value;
+                            stack.Push(new_doc);
+                        }
+                        System.Console.Write(res.First().Value);
+                    }
+                }
                 else if (tree.dot() != null)
                 {
                     if (stack.Any())
                     {
-                        var t = stack.Peek();
-                        TerminalNodeImpl x = TreeEdits.LeftMostToken(t.Item3);
+                        var doc = stack.Peek();
+                        TerminalNodeImpl x = TreeEdits.LeftMostToken(doc.GetParseTree());
                         var ts = x.Payload.TokenSource;
                         System.Console.WriteLine();
                         System.Console.WriteLine(
                             TreeOutput.OutputTree(
-                                t.Item3,
+                                doc.GetParseTree(),
                                 ts as Lexer,
                                 null).ToString());
                     }
@@ -162,9 +211,9 @@
                     var find = tree.find();
                     var expr = find.StringLiteral().GetText();
                     expr = expr.Substring(1, expr.Length - 2);
-                    var top = stack.Peek();
+                    var doc = stack.Peek();
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    var atree = top.Item3;
+                    var atree = doc.GetParseTree();
                     ANTLRv4Lexer alexer = new ANTLRv4Lexer(new AntlrInputStream(""));
                     CommonTokenStream cts = new CommonTokenStream(alexer);
                     ANTLRv4Parser aparser = new ANTLRv4Parser(cts);
@@ -200,64 +249,54 @@
                         System.Console.WriteLine(i + " " + h);
                     }
                 }
-                else if (tree.import_() != null)
+                else if (tree.load() != null)
                 {
                     HistoryAdd(line);
-                    var import = tree.import_();
-                    var type = import.type()?.GetText();
-                    var f = import.ffn().GetText();
+                    var r = tree.load();
+                    var f = r.ffn().GetText();
                     f = f.Substring(1, f.Length - 2);
-                    if (type == "antlr3")
-                    {
-                        var ii = System.IO.File.ReadAllText(f);
-                        Dictionary<string, string> res = new Dictionary<string, string>();
-                        var imp = new LanguageServer.Antlr3Import();
-                        imp.Try(f, ii, ref res);
-                        System.Console.Write(res.First().Value);
-                    }
-                    else if (type == "antlr2")
-                    {
-                        var ii = System.IO.File.ReadAllText(f);
-                        Dictionary<string, string> res = new Dictionary<string, string>();
-                        var imp = new LanguageServer.Antlr2Import();
-                        imp.Try(f, ii, ref res);
-                        System.Console.Write(res.First().Value);
-                    }
-                    else if (type == "bison")
-                    {
-                        var ii = System.IO.File.ReadAllText(f);
-                        Dictionary<string, string> res = new Dictionary<string, string>();
-                        var imp = new LanguageServer.BisonImport();
-                        imp.Try(f, ii, ref res);
-                        System.Console.Write(res.First().Value);
-                    }
+                    var doc = CheckDoc(f);
+                    stack.Push(doc);
+                }
+                else if (tree.parse() != null)
+                {
+                    HistoryAdd(line);
+                    var r = tree.parse();
+                    var doc = stack.Peek();
+                    ParseDoc(doc, r.type()?.GetText());
                 }
                 else if (tree.print() != null)
                 {
                     HistoryAdd(line);
-                    var top = stack.Peek();
+                    var doc = stack.Peek();
                     System.Console.WriteLine();
-                    System.Console.WriteLine(top.Item1);
-                    System.Console.WriteLine(top.Item2);
+                    System.Console.WriteLine(doc.FullPath);
+                    System.Console.WriteLine(doc.Code);
                 }
                 else if (tree.quit() != null)
                 {
                     HistoryAdd(line);
                     return false;
                 }
-                else if (tree.read() != null)
+                else if (tree.rotate() != null)
                 {
                     HistoryAdd(line);
-                    var r = tree.read();
-                    var f = r.ffn().GetText();
-                    f = f.Substring(1, f.Length - 2);
-                    var ii = System.IO.File.ReadAllText(f);
-                    var s1 = new AntlrInputStream(ii);
-                    var l1 = new ANTLRv4Lexer(s1);
-                    var t1 = new CommonTokenStream(l1);
-                    var p1 = new ANTLRv4Parser(t1);
-                    var tr = p1.grammarSpec();
-                    stack.Push(new Tuple<string, string, IParseTree>(f, ii, tr));
+                    var docs = stack.ToList();
+                    var last = docs.Last();
+                    docs.RemoveAt(docs.Count() - 1);
+                    stack = new Stack<Document>();
+                    foreach (var doc in docs) stack.Push(doc);
+                    stack.Push(last);
+                }
+                else if (tree.stack() != null)
+                {
+                    HistoryAdd(line);
+                    var docs = stack.ToList();
+                    foreach (var doc in docs)
+                    {
+                        System.Console.WriteLine();
+                        System.Console.WriteLine(doc.FullPath);
+                    }
                 }
                 else if (tree.unfold() != null)
                 {
@@ -265,22 +304,20 @@
                     var unfold = tree.unfold();
                     var expr = unfold.StringLiteral().GetText();
                     expr = expr.Substring(1, expr.Length - 2);
-                    var top = stack.Peek();
-                    var document = CheckDoc(top.Item1);
-                    var aparser = ParserDetailsFactory.Create(document).Parser;
-                    var atree = document.GetParseTree();
+                    var doc = stack.Peek();
+                    var aparser = ParsingResultsFactory.Create(doc).Parser;
+                    var atree = doc.GetParseTree();
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
                         atree, aparser);
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                    var res = LanguageServer.Transform.Unfold(nodes, document);
-                    document.Code = res.First().Value;
-                    document = CheckDoc(document.FullPath);
+                    var res = LanguageServer.Transform.Unfold(nodes, doc);
+                    doc.Code = res.First().Value;
+                    doc = CheckDoc(doc.FullPath);
                     stack.Pop();
-                    stack.Push(new Tuple<string, string, IParseTree>(top.Item1,
-                        document.Code, document.GetParseTree()));
+                    stack.Push(doc);
                 }
             }
             catch
@@ -300,25 +337,7 @@
                 var tokens = new CommonTokenStream(lexer);
                 var parser = new ReplParser(tokens);
                 var tree = parser.cmd();
-                if (tree.read() != null)
-                {
-                }
-                else if (tree.import_() != null)
-                {
-                }
-                else if (tree.history() != null)
-                {
-                }
-                else if (tree.quit() != null)
-                {
-                }
-                else if (tree.empty() != null)
-                {
-                }
-                else if (tree.bang() != null)
-                {
-                }
-                else if (tree.alias() != null)
+                if (tree.alias() != null)
                 {
                     var alias = tree.alias();
                     var id = alias.id();
@@ -352,7 +371,7 @@
             return true;
         }
 
-        public static Document CheckDoc(string path)
+        public Document CheckDoc(string path)
         {
             string file_name = path;
             Document document = Workspaces.Workspace.Instance.FindDocument(file_name);
@@ -379,10 +398,15 @@
                 }
                 project.AddDocument(document);
             }
-            document.Changed = true;
-            _ = ParserDetailsFactory.Create(document);
-            _ = LanguageServer.Module.Compile();
             return document;
+        }
+
+        public void ParseDoc(Document document, string grammar)
+        {
+            document.Changed = true;
+            document.ParseAs = grammar;
+            _ = ParsingResultsFactory.Create(document);
+            _ = new LanguageServer.Module().Compile();
         }
     }
 }
