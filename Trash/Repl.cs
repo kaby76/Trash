@@ -100,6 +100,12 @@
                         }
                     }
                 }
+                else if (tree.analyze() != null)
+                {
+                    HistoryAdd(line);
+                    var doc = stack.Peek();
+                    AnalyzeDoc(doc);
+                }
                 else if (tree.anything() != null)
                 {
                     var anything = tree.anything();
@@ -129,9 +135,9 @@
                     {
                         return Execute(History.Last());
                     }
-                    else if (bang.id() != null)
+                    else if (bang.id_keyword() != null)
                     {
-                        var s = bang.id().GetText();
+                        var s = bang.id_keyword().GetText();
                         for (int i = History.Count - 1; i >= 0; --i)
                         {
                             if (History[i].StartsWith(s))
@@ -399,6 +405,18 @@
                 project.AddDocument(document);
             }
             return document;
+        }
+
+        public void AnalyzeDoc(Document document)
+        {
+            _ = ParsingResultsFactory.Create(document);
+            var results = LanguageServer.Analysis.PerformAnalysis(document);
+            
+            foreach (var r in results)
+            {
+                System.Console.WriteLine(r.Document + " " + r.Severify + " " + r.Start + " " + r.Message);
+                System.Console.WriteLine();
+            }
         }
 
         public void ParseDoc(Document document, string grammar)

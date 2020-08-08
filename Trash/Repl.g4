@@ -2,6 +2,7 @@ grammar Repl;
 
 cmd :
   alias
+  | analyze
   | bang
   | convert
   | dot
@@ -19,15 +20,16 @@ cmd :
   | unfold
   | anything
   ;
-alias : ALIAS (id '=' (StringLiteral | id_keyword))?;
+alias : ALIAS (id '=' (StringLiteral | id_keyword))? ';' ;
+analyze : ANALYZE ';' ;
 anything : id rest? ';' ;
-bang : BANG (BANG | int | id) ;
+bang : BANG (BANG | int | id_keyword) ';' ;
 combine : COMBINE ';' ;
 convert : CONVERT type ';' ;
 dot : DOT ';' ;
 find : FIND StringLiteral ';' ;
 fold : FOLD StringLiteral ';' ;
-history : HISTORY ;
+history : HISTORY ';' ;
 parse : PARSE type ';' ;
 print : PRINT ';' ;
 quit : (QUIT | EXIT) ';' ;
@@ -44,29 +46,31 @@ int : INT ;
 id : ID ;
 id_keyword : id
   | ALIAS
+  | ANALYZE
   | ANTLR3
   | ANTLR2
   | BISON
   | COMBINE
+  | CONVERT
   | EXIT
   | FIND
   | FOLD
   | HISTORY
-  | CONVERT
+  | LOAD
   | PARSE
   | PRINT
   | QUIT
-  | LOAD
   | RENAME
+  | ROTATE
   | SPLIT
   | STACK
-  | ROTATE
   | UNFOLD
   ;
 rest : .+;
 type : ANTLR4 | ANTLR3 | ANTLR2 | BISON;
 
 ALIAS : 'alias';
+ANALYZE : 'analyze';
 ANTLR2 : 'antlr2';
 ANTLR3 : 'antlr3';
 ANTLR4 : 'antlr4';
