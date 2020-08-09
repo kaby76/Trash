@@ -304,6 +304,13 @@
                         System.Console.WriteLine(doc.FullPath);
                     }
                 }
+                else if (tree.unalias() != null)
+                {
+                    HistoryAdd(line);
+                    var alias = tree.unalias();
+                    var id = alias.id();
+                    Aliases.Remove(id.GetText());
+                }
                 else if (tree.unfold() != null)
                 {
                     HistoryAdd(line);
@@ -364,6 +371,12 @@
                         var id_keyword = alias.id_keyword();
                         Aliases[id.GetText()] = id_keyword.GetText();
                     }
+                }
+                else if (tree.unalias() != null)
+                {
+                    var alias = tree.unalias();
+                    var id = alias.id();
+                    Aliases.Remove(id.GetText());
                 }
                 else if (tree.anything() != null)
                 {
