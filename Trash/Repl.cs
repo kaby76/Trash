@@ -255,15 +255,6 @@
                         System.Console.WriteLine(i + " " + h);
                     }
                 }
-                else if (tree.load() != null)
-                {
-                    HistoryAdd(line);
-                    var r = tree.load();
-                    var f = r.ffn().GetText();
-                    f = f.Substring(1, f.Length - 2);
-                    var doc = CheckDoc(f);
-                    stack.Push(doc);
-                }
                 else if (tree.parse() != null)
                 {
                     HistoryAdd(line);
@@ -283,6 +274,15 @@
                 {
                     HistoryAdd(line);
                     return false;
+                }
+                else if (tree.read() != null)
+                {
+                    HistoryAdd(line);
+                    var r = tree.read();
+                    var f = r.ffn().GetText();
+                    f = f.Substring(1, f.Length - 2);
+                    var doc = CheckDoc(f);
+                    stack.Push(doc);
                 }
                 else if (tree.rotate() != null)
                 {
@@ -324,6 +324,13 @@
                     doc = CheckDoc(doc.FullPath);
                     stack.Pop();
                     stack.Push(doc);
+                }
+                else if (tree.write() != null)
+                {
+                    HistoryAdd(line);
+                    var r = tree.write();
+                    var doc = stack.Pop();
+                    WriteDoc(doc);
                 }
             }
             catch
@@ -407,6 +414,26 @@
             return document;
         }
 
+        public void WriteDoc(Document document)
+        {
+            if (document != null)
+            {
+                var file_name = document.FullPath;
+                try
+                {   // Open the text file using a stream reader.
+                    using (StreamWriter sw = new StreamWriter(file_name))
+                    {
+                        sw.Write(document.Code);
+                    }
+                    System.Console.WriteLine("Written to file " + file_name);
+                }
+                catch (Exception e)
+                {
+                    System.Console.WriteLine("Failed to write file " + e.Message);
+                }
+            }
+        }
+
         public void AnalyzeDoc(Document document)
         {
             _ = ParsingResultsFactory.Create(document);
@@ -414,7 +441,7 @@
             
             foreach (var r in results)
             {
-                System.Console.WriteLine(r.Document + " " + r.Severify + " " + r.Start + " " + r.Message);
+                System.Console.Write(r.Document + " " + r.Severify + " " + r.Start + " " + r.Message);
                 System.Console.WriteLine();
             }
         }

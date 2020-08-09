@@ -10,14 +10,16 @@ cmd :
   | find
   | fold
   | history
-  | load
   | parse
   | print
   | quit
+  | read
   | rename
   | rotate
   | stack
+  | unalias
   | unfold
+  | write
   | anything
   ;
 alias : ALIAS (id '=' (StringLiteral | id_keyword))? ';' ;
@@ -33,12 +35,14 @@ history : HISTORY ';' ;
 parse : PARSE type ';' ;
 print : PRINT ';' ;
 quit : (QUIT | EXIT) ';' ;
-load : LOAD ffn ';' ;
+read : READ ffn ';' ;
 rename : RENAME StingLiteral StringLiteral ';' ;
 split : SPLIT ';' ;
 stack : STACK ';' ;
 rotate : ROTATE ';' ;
+unalias : UNALIAS id ';' ;
 unfold : UNFOLD StringLiteral ';' ;
+write : WRITE ';' ;
 
 empty : ';' ;
 ffn : StringLiteral ;
@@ -56,15 +60,17 @@ id_keyword : id
   | FIND
   | FOLD
   | HISTORY
-  | LOAD
   | PARSE
   | PRINT
   | QUIT
+  | READ
   | RENAME
   | ROTATE
   | SPLIT
   | STACK
+  | UNALIAS
   | UNFOLD
+  | WRITE
   ;
 rest : .+;
 type : ANTLR4 | ANTLR3 | ANTLR2 | BISON;
@@ -84,7 +90,7 @@ FIND : 'find';
 FOLD : 'fold';
 HISTORY : 'history';
 INT: [0-9]+;
-LOAD : 'load';
+READ : 'read';
 PARSE : 'parse' ;
 PRINT : 'print';
 QUIT : 'quit';
@@ -93,7 +99,9 @@ SPLIT : 'split';
 STACK : 'stack';
 ROTATE : 'rotate';
 StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb* '"') ;
+UNALIAS : 'unalias' ;
 UNFOLD : 'unfold';
+WRITE : 'write';
 
 fragment Lca : Esc | ~ ('\'' | '\\') ;
 fragment Lcb : Esc | ~ ('"' | '\\') ;
