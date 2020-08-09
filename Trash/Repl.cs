@@ -287,12 +287,12 @@
                 else if (tree.rotate() != null)
                 {
                     HistoryAdd(line);
+                    var top = stack.Pop();
                     var docs = stack.ToList();
-                    var last = docs.Last();
-                    docs.RemoveAt(docs.Count() - 1);
+                    docs.Reverse();
                     stack = new Stack<Document>();
+                    stack.Push(top);
                     foreach (var doc in docs) stack.Push(doc);
-                    stack.Push(last);
                 }
                 else if (tree.stack() != null)
                 {
