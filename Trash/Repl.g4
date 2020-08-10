@@ -21,6 +21,7 @@ cmd :
   | stack
   | unalias
   | unfold
+  | ulliteral
   | write
   | anything
   ) ';'
@@ -48,6 +49,7 @@ rotate : ROTATE ;
 rup : RUP StringLiteral ;
 unalias : UNALIAS id ;
 unfold : UNFOLD StringLiteral ;
+ulliteral : ULLITERAL StringLiteral ;
 write : WRITE ;
 
 ffn : StringLiteral ;
@@ -75,6 +77,7 @@ id_keyword : id
   | RUP
   | SPLIT
   | STACK
+  | ULLITERAL
   | UNALIAS
   | UNFOLD
   | WRITE
@@ -108,6 +111,7 @@ SPLIT : 'split';
 STACK : 'stack';
 ROTATE : 'rotate';
 StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb* '"') ;
+ULLITERAL : 'ulliteral' ;
 UNALIAS : 'unalias' ;
 UNFOLD : 'unfold';
 WRITE : 'write';

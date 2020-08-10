@@ -7,4 +7,8 @@ parse
 unfold "//parserRuleSpec[RULE_REF/text() = 'e']//labeledAlt//RULE_REF[text() = 'int']"
 rup "//parserRuleSpec[RULE_REF/text() = 'e']//labeledAlt//block"
 print
+read "c:/users/kenne/documents/antlrvsix2/corpus-for-codebuff/keywordfun.g4"
+parse
+ulliteral "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL"
+ulliteral "//lexerRuleSpec[TOKEN_REF/text() = 'B']//STRING_LITERAL"
 quit
