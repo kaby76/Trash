@@ -32,7 +32,7 @@ dot : DOT ';' ;
 find : FIND StringLiteral ';' ;
 fold : FOLD StringLiteral ';' ;
 history : HISTORY ';' ;
-parse : PARSE type ';' ;
+parse : PARSE type? ';' ;
 print : PRINT ';' ;
 quit : (QUIT | EXIT) ';' ;
 read : READ ffn ';' ;

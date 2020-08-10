@@ -1,0 +1,6 @@
+read "c:/users/kenne/documents/antlrvsix2/corpus-for-codebuff/a.g4"
+print
+parse antlr4
+unfold "//parserRuleSpec[RULE_REF/text() = 's']//labeledAlt//RULE_REF[text() = 'e']"
+print
+quit

@@ -78,7 +78,6 @@
                 if (false) ;
                 else if (tree.alias() != null)
                 {
-                    HistoryAdd(line);
                     var alias = tree.alias();
                     var id = alias.id();
                     var sl = alias.StringLiteral();
@@ -102,7 +101,6 @@
                 }
                 else if (tree.analyze() != null)
                 {
-                    HistoryAdd(line);
                     var doc = stack.Peek();
                     AnalyzeDoc(doc);
                 }
@@ -150,7 +148,6 @@
                 }
                 else if (tree.convert() != null)
                 {
-                    HistoryAdd(line);
                     var import = tree.convert();
                     var type = import.type()?.GetText();
                     var doc = stack.Peek();
@@ -213,16 +210,14 @@
                 }
                 else if (tree.find() != null)
                 {
-                    HistoryAdd(line);
                     var find = tree.find();
                     var expr = find.StringLiteral().GetText();
                     expr = expr.Substring(1, expr.Length - 2);
                     var doc = stack.Peek();
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    var atree = doc.GetParseTree();
-                    ANTLRv4Lexer alexer = new ANTLRv4Lexer(new AntlrInputStream(""));
-                    CommonTokenStream cts = new CommonTokenStream(alexer);
-                    ANTLRv4Parser aparser = new ANTLRv4Parser(cts);
+                    var pr = ParsingResultsFactory.Create(doc);
+                    var aparser = pr.Parser;
+                    var atree = pr.ParseTree;
                     AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser);
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
@@ -247,7 +242,6 @@
                 }
                 else if (tree.history() != null)
                 {
-                    HistoryAdd(line);
                     System.Console.WriteLine();
                     for (int i = 0; i < History.Count; ++i)
                     {
@@ -257,14 +251,12 @@
                 }
                 else if (tree.parse() != null)
                 {
-                    HistoryAdd(line);
                     var r = tree.parse();
                     var doc = stack.Peek();
                     ParseDoc(doc, r.type()?.GetText());
                 }
                 else if (tree.print() != null)
                 {
-                    HistoryAdd(line);
                     var doc = stack.Peek();
                     System.Console.WriteLine();
                     System.Console.WriteLine(doc.FullPath);
@@ -277,7 +269,6 @@
                 }
                 else if (tree.read() != null)
                 {
-                    HistoryAdd(line);
                     var r = tree.read();
                     var f = r.ffn().GetText();
                     f = f.Substring(1, f.Length - 2);
@@ -286,7 +277,6 @@
                 }
                 else if (tree.rotate() != null)
                 {
-                    HistoryAdd(line);
                     var top = stack.Pop();
                     var docs = stack.ToList();
                     docs.Reverse();
@@ -296,7 +286,6 @@
                 }
                 else if (tree.stack() != null)
                 {
-                    HistoryAdd(line);
                     var docs = stack.ToList();
                     foreach (var doc in docs)
                     {
@@ -306,26 +295,25 @@
                 }
                 else if (tree.unalias() != null)
                 {
-                    HistoryAdd(line);
                     var alias = tree.unalias();
                     var id = alias.id();
                     Aliases.Remove(id.GetText());
                 }
                 else if (tree.unfold() != null)
                 {
-                    HistoryAdd(line);
                     var unfold = tree.unfold();
                     var expr = unfold.StringLiteral().GetText();
                     expr = expr.Substring(1, expr.Length - 2);
                     var doc = stack.Peek();
-                    var aparser = ParsingResultsFactory.Create(doc).Parser;
-                    var atree = doc.GetParseTree();
+                    var pr = ParsingResultsFactory.Create(doc);
+                    var aparser = pr.Parser;
+                    var atree = pr.ParseTree;
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
                         atree, aparser);
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
                     var res = LanguageServer.Transform.Unfold(nodes, doc);
                     doc.Code = res.First().Value;
                     doc = CheckDoc(doc.FullPath);
@@ -334,11 +322,11 @@
                 }
                 else if (tree.write() != null)
                 {
-                    HistoryAdd(line);
                     var r = tree.write();
                     var doc = stack.Pop();
                     WriteDoc(doc);
                 }
+                HistoryAdd(line);
             }
             catch
             {
