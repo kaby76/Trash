@@ -192,6 +192,7 @@
                         }
                         System.Console.Write(res.First().Value);
                     }
+                    ParseDoc(stack.Peek());
                 }
                 else if (tree.dot() != null)
                 {
@@ -310,6 +311,7 @@
                     doc = CheckDoc(doc.FullPath);
                     stack.Pop();
                     stack.Push(doc);
+                    ParseDoc(stack.Peek());
                 }
                 else if (tree.stack() != null)
                 {
@@ -346,6 +348,7 @@
                     doc = CheckDoc(doc.FullPath);
                     stack.Pop();
                     stack.Push(doc);
+                    ParseDoc(stack.Peek());
                 }
                 else if (tree.write() != null)
                 {
@@ -474,7 +477,7 @@
             }
         }
 
-        public void ParseDoc(Document document, string grammar)
+        public void ParseDoc(Document document, string grammar = null)
         {
             document.Changed = true;
             document.ParseAs = grammar;
