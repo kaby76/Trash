@@ -5,6 +5,6 @@ unfold "//parserRuleSpec[RULE_REF/text() = 's']//labeledAlt//RULE_REF[text() = '
 read "c:/users/kenne/documents/antlrvsix2/corpus-for-codebuff/A2.g4"
 parse
 unfold "//parserRuleSpec[RULE_REF/text() = 'e']//labeledAlt//RULE_REF[text() = 'int']"
-rup "//parserRuleSpec[RULE_REF/text() = 's']//labeledAlt//block"
+rup "//parserRuleSpec[RULE_REF/text() = 'e']//labeledAlt//block"
 print
 quit
