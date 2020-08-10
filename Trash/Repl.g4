@@ -1,7 +1,7 @@
 grammar Repl;
 
 cmd :
-  alias
+  ( alias
   | analyze
   | bang
   | convert
@@ -11,40 +11,45 @@ cmd :
   | fold
   | history
   | parse
+  | pop
   | print
   | quit
   | read
   | rename
   | rotate
+  | rup
   | stack
   | unalias
   | unfold
   | write
   | anything
+  ) ';'
   ;
-alias : ALIAS (id '=' (StringLiteral | id_keyword))? ';' ;
-analyze : ANALYZE ';' ;
-anything : id rest? ';' ;
-bang : BANG (BANG | int | id_keyword) ';' ;
-combine : COMBINE ';' ;
-convert : CONVERT type ';' ;
-dot : DOT ';' ;
-find : FIND StringLiteral ';' ;
-fold : FOLD StringLiteral ';' ;
-history : HISTORY ';' ;
-parse : PARSE type? ';' ;
-print : PRINT ';' ;
-quit : (QUIT | EXIT) ';' ;
-read : READ ffn ';' ;
-rename : RENAME StingLiteral StringLiteral ';' ;
-split : SPLIT ';' ;
-stack : STACK ';' ;
-rotate : ROTATE ';' ;
-unalias : UNALIAS id ';' ;
-unfold : UNFOLD StringLiteral ';' ;
-write : WRITE ';' ;
+alias : ALIAS (id '=' (StringLiteral | id_keyword))? ;
+analyze : ANALYZE ;
+anything : id rest? ;
+bang : BANG (BANG | int | id_keyword) ;
+combine : COMBINE ;
+convert : CONVERT type ;
+dot : DOT ;
+empty : ;
+find : FIND StringLiteral ;
+fold : FOLD StringLiteral ;
+history : HISTORY ;
+parse : PARSE type? ;
+pop : POP ;
+print : PRINT ;
+quit : (QUIT | EXIT) ;
+read : READ ffn ;
+rename : RENAME StingLiteral StringLiteral ;
+split : SPLIT ;
+stack : STACK ;
+rotate : ROTATE ;
+rup : RUP StringLiteral ;
+unalias : UNALIAS id ;
+unfold : UNFOLD StringLiteral ;
+write : WRITE ;
 
-empty : ';' ;
 ffn : StringLiteral ;
 int : INT ;
 id : ID ;
@@ -61,11 +66,13 @@ id_keyword : id
   | FOLD
   | HISTORY
   | PARSE
+  | POP
   | PRINT
   | QUIT
   | READ
   | RENAME
   | ROTATE
+  | RUP
   | SPLIT
   | STACK
   | UNALIAS
@@ -91,7 +98,9 @@ FOLD : 'fold';
 HISTORY : 'history';
 INT: [0-9]+;
 READ : 'read';
+RUP : 'rup' ;
 PARSE : 'parse' ;
+POP : 'pop' ;
 PRINT : 'print';
 QUIT : 'quit';
 RENAME : 'rename';

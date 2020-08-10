@@ -198,12 +198,14 @@
                     if (stack.Any())
                     {
                         var doc = stack.Peek();
-                        TerminalNodeImpl x = TreeEdits.LeftMostToken(doc.GetParseTree());
+                        var pr = ParsingResultsFactory.Create(doc);
+                        var pt = pr.ParseTree;
+                        TerminalNodeImpl x = TreeEdits.LeftMostToken(pt);
                         var ts = x.Payload.TokenSource;
                         System.Console.WriteLine();
                         System.Console.WriteLine(
                             TreeOutput.OutputTree(
-                                doc.GetParseTree(),
+                                pt,
                                 ts as Lexer,
                                 null).ToString());
                     }
@@ -255,6 +257,10 @@
                     var doc = stack.Peek();
                     ParseDoc(doc, r.type()?.GetText());
                 }
+                else if (tree.pop() != null)
+                {
+                    _ = stack.Pop();
+                }
                 else if (tree.print() != null)
                 {
                     var doc = stack.Peek();
@@ -283,6 +289,27 @@
                     stack = new Stack<Document>();
                     stack.Push(top);
                     foreach (var doc in docs) stack.Push(doc);
+                }
+                else if (tree.rup() != null)
+                {
+                    var unfold = tree.rup();
+                    var expr = unfold.StringLiteral().GetText();
+                    expr = expr.Substring(1, expr.Length - 2);
+                    var doc = stack.Peek();
+                    var pr = ParsingResultsFactory.Create(doc);
+                    var aparser = pr.Parser;
+                    var atree = pr.ParseTree;
+                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                    AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                        atree, aparser);
+                    var nodes = engine.parseExpression(expr,
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    var res = LanguageServer.Transform.RemoveUselessParentheses(nodes, doc);
+                    doc.Code = res.First().Value;
+                    doc = CheckDoc(doc.FullPath);
+                    stack.Pop();
+                    stack.Push(doc);
                 }
                 else if (tree.stack() != null)
                 {
