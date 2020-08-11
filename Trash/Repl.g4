@@ -6,6 +6,7 @@ cmd :
   | bang
   | convert
   | dot
+  | delete
   | empty
   | find
   | fold
@@ -21,6 +22,7 @@ cmd :
   | stack
   | unalias
   | unfold
+  | unify
   | ulliteral
   | write
   | anything
@@ -32,6 +34,7 @@ anything : id rest? ;
 bang : BANG (BANG | int | id_keyword) ;
 combine : COMBINE ;
 convert : CONVERT type ;
+delete : DELETE StringLiteral ;
 dot : DOT ;
 empty : ;
 find : FIND StringLiteral ;
@@ -42,13 +45,14 @@ pop : POP ;
 print : PRINT ;
 quit : (QUIT | EXIT) ;
 read : READ ffn ;
-rename : RENAME StingLiteral StringLiteral ;
-split : SPLIT ;
-stack : STACK ;
+rename : RENAME StringLiteral StringLiteral ;
 rotate : ROTATE ;
 rup : RUP StringLiteral ;
+split : SPLIT ;
+stack : STACK ;
 unalias : UNALIAS id ;
 unfold : UNFOLD StringLiteral ;
+unify : UNIFY StringLiteral ;
 ulliteral : ULLITERAL StringLiteral ;
 write : WRITE ;
 
@@ -63,6 +67,7 @@ id_keyword : id
   | BISON
   | COMBINE
   | CONVERT
+  | DELETE
   | EXIT
   | FIND
   | FOLD
@@ -80,6 +85,7 @@ id_keyword : id
   | ULLITERAL
   | UNALIAS
   | UNFOLD
+  | UNIFY
   | WRITE
   ;
 rest : .+;
@@ -94,6 +100,7 @@ BANG : '!';
 BISON : 'bison';
 COMBINE : 'combine';
 CONVERT : 'convert';
+DELETE : 'delete' ;
 DOT : '.';
 EXIT : 'exit';
 FIND : 'find';
@@ -114,6 +121,7 @@ StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb* '"') ;
 ULLITERAL : 'ulliteral' ;
 UNALIAS : 'unalias' ;
 UNFOLD : 'unfold';
+UNIFY : 'unify';
 WRITE : 'write';
 
 fragment Lca : Esc | ~ ('\'' | '\\') ;

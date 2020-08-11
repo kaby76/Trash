@@ -194,6 +194,28 @@
                     }
                     ParseDoc(stack.Peek());
                 }
+                else if (tree.delete() != null)
+                {
+                    var delete = tree.delete();
+                    var expr = delete.StringLiteral().GetText();
+                    expr = expr.Substring(1, expr.Length - 2);
+                    var doc = stack.Peek();
+                    var pr = ParsingResultsFactory.Create(doc);
+                    var aparser = pr.Parser;
+                    var atree = pr.ParseTree;
+                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                    AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                        atree, aparser);
+                    var nodes = engine.parseExpression(expr,
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    var res = LanguageServer.Transform.Delete(nodes, doc);
+                    doc.Code = res.First().Value;
+                    doc = CheckDoc(doc.FullPath);
+                    stack.Pop();
+                    stack.Push(doc);
+                    ParseDoc(stack.Peek());
+                }
                 else if (tree.dot() != null)
                 {
                     if (stack.Any())
@@ -281,6 +303,28 @@
                     f = f.Substring(1, f.Length - 2);
                     var doc = CheckDoc(f);
                     stack.Push(doc);
+                }
+                else if (tree.rename() != null)
+                {
+                    var rename = tree.rename();
+                    var to_sym = rename.StringLiteral()[1].GetText();
+                    var doc = stack.Peek();
+                    var expr = rename.StringLiteral()[0].GetText();
+                    expr = expr.Substring(1, expr.Length - 2);
+                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                    var pr = ParsingResultsFactory.Create(doc);
+                    var aparser = pr.Parser;
+                    var atree = pr.ParseTree;
+                    AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser);
+                    var nodes = engine.parseExpression(expr,
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                    var res = LanguageServer.Transform.Rename(nodes, to_sym, doc);
+                    doc.Code = res.First().Value;
+                    doc = CheckDoc(doc.FullPath);
+                    stack.Pop();
+                    stack.Push(doc);
+                    ParseDoc(stack.Peek());
                 }
                 else if (tree.rotate() != null)
                 {
@@ -371,6 +415,10 @@
                     stack.Pop();
                     stack.Push(doc);
                     ParseDoc(stack.Peek());
+                }
+                else if (tree.unify() != null)
+                {
+
                 }
                 else if (tree.write() != null)
                 {
