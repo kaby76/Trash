@@ -446,9 +446,9 @@
                 }
                 HistoryAdd(line);
             }
-            catch
+            catch (Exception eeks)
             {
-                System.Console.WriteLine("Err");
+                System.Console.WriteLine(eeks.Message);
             }
             return true;
         }
@@ -519,8 +519,9 @@
                         document.Code = str;
                     }
                 }
-                catch (IOException)
+                catch (IOException eeks)
                 {
+                    throw eeks;
                 }
                 Project project = Workspaces.Workspace.Instance.FindProject("Misc");
                 if (project == null)
