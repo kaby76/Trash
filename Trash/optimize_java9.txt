@@ -18,4 +18,6 @@ delete "//parserRuleSpec[RULE_REF/text() = 'singleStaticImportDeclaration']"
 delete "//parserRuleSpec[RULE_REF/text() = 'staticImportOnDemandDeclaration']"
 rup "//parserRuleSpec//labeledAlt//block"
 
+unify "//parserRuleSpec[RULE_REF/text() = 'importDeclaration']//ruleAltList"
+
 quit

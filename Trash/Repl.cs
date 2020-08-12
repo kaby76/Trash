@@ -418,7 +418,25 @@
                 }
                 else if (tree.unify() != null)
                 {
-
+                    var unify = tree.unify();
+                    var expr = unify.StringLiteral().GetText();
+                    expr = expr.Substring(1, expr.Length - 2);
+                    var doc = stack.Peek();
+                    var pr = ParsingResultsFactory.Create(doc);
+                    var aparser = pr.Parser;
+                    var atree = pr.ParseTree;
+                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                    AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                        atree, aparser);
+                    var nodes = engine.parseExpression(expr,
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    var res = LanguageServer.Transform.Unify(nodes, doc);
+                    doc.Code = res.First().Value;
+                    doc = CheckDoc(doc.FullPath);
+                    stack.Pop();
+                    stack.Push(doc);
+                    ParseDoc(stack.Peek());
                 }
                 else if (tree.write() != null)
                 {
