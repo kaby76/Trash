@@ -1,11 +1,11 @@
-read "c:/users/kenne/documents/grammars-v4/java/java9/java9.g4"
-
+read "c:/users/kenne/documents/scrapejavaspec/java14.g4"
 parse
-
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'ordinaryCompilation']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'ordinaryCompilationUnit']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'modularCompilationUnit']"
 unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'packageModifier']"
-delete "//parserRuleSpec[RULE_REF/text() = 'compilationUnit']"
-delete "//parserRuleSpec[RULE_REF/text() = 'modularCompilation']"
+delete "//parserRuleSpec[RULE_REF/text() = 'ordinaryCompilationUnit']"
+delete "//parserRuleSpec[RULE_REF/text() = 'modularCompilationUnit']"
+delete "//parserRuleSpec[RULE_REF/text() = 'packageModifier']"
 rup "//parserRuleSpec//labeledAlt//block"
 
 unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'singleTypeImportDeclaration']"
