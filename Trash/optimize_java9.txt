@@ -1,4 +1,4 @@
-read "c:/users/kenne/documents/scrapejavaspec/java14.g4"
+read "c:/users/kenne/documents/scrapejavaspec/java9.g4"
 parse
 unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'ordinaryCompilationUnit']"
 unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'modularCompilationUnit']"

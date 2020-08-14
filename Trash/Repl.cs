@@ -441,7 +441,7 @@
                 else if (tree.write() != null)
                 {
                     var r = tree.write();
-                    var doc = stack.Pop();
+                    var doc = stack.Peek();
                     WriteDoc(doc);
                 }
                 HistoryAdd(line);
