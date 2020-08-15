@@ -357,6 +357,22 @@
                     stack.Push(doc);
                     ParseDoc(stack.Peek());
                 }
+                else if (tree.split() != null)
+                {
+                    var r = tree.split();
+                    var doc = stack.Peek();
+                    var results = LanguageServer.Transform.SplitGrammar(doc);
+                    if (results.Count > 0)
+                    {
+                        stack.Pop();
+                        foreach (var res in results)
+                        {
+                            var new_doc = CreateDoc(res.Key);
+                            new_doc.Code = res.Value;
+                            stack.Push(new_doc);
+                        }
+                    }
+                }
                 else if (tree.stack() != null)
                 {
                     var docs = stack.ToList();
@@ -501,6 +517,36 @@
             {
             }
             return true;
+        }
+
+        public Document CreateDoc(string path)
+        {
+            string file_name = path;
+            Document document = Workspaces.Workspace.Instance.FindDocument(file_name);
+            if (document == null)
+            {
+                document = new Workspaces.Document(file_name);
+                try
+                {   // Open the text file using a stream reader.
+                    using (StreamReader sr = new StreamReader(file_name))
+                    {
+                        // Read the stream to a string, and write the string to the console.
+                        string str = sr.ReadToEnd();
+                        document.Code = str;
+                    }
+                }
+                catch (IOException eeks)
+                {
+                }
+                Project project = Workspaces.Workspace.Instance.FindProject("Misc");
+                if (project == null)
+                {
+                    project = new Project("Misc", "Misc", "Misc");
+                    Workspaces.Workspace.Instance.AddChild(project);
+                }
+                project.AddDocument(document);
+            }
+            return document;
         }
 
         public Document CheckDoc(string path)

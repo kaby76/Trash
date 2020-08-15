@@ -19,6 +19,7 @@ cmd :
   | rename
   | rotate
   | rup
+  | split
   | stack
   | unalias
   | unfold
