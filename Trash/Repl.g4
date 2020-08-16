@@ -18,6 +18,7 @@ cmd :
   | quit
   | read
   | rename
+  | reorder
   | rotate
   | rup
   | split
@@ -49,6 +50,7 @@ print : PRINT ;
 quit : (QUIT | EXIT) ;
 read : READ ffn ;
 rename : RENAME StringLiteral StringLiteral ;
+reorder : REORDER (alpha | bfs | dfs);
 rotate : ROTATE ;
 rup : RUP StringLiteral ;
 split : SPLIT ;
@@ -58,7 +60,9 @@ unfold : UNFOLD StringLiteral ;
 unify : UNIFY StringLiteral ;
 ulliteral : ULLITERAL StringLiteral ;
 write : WRITE ;
-
+alpha : ALPHA;
+bfs : BFS StringLiteral;
+dfs : DFS StringLiteral;
 ffn : StringLiteral ;
 int : INT ;
 id : ID ;
@@ -82,6 +86,7 @@ id_keyword : id
   | QUIT
   | READ
   | RENAME
+  | REORDER
   | ROTATE
   | RUP
   | SPLIT
@@ -95,16 +100,19 @@ id_keyword : id
 rest : .+;
 type : ANTLR4 | ANTLR3 | ANTLR2 | BISON;
 
+ALPHA : 'alpha';
 ALIAS : 'alias';
 ANALYZE : 'analyze';
 ANTLR2 : 'antlr2';
 ANTLR3 : 'antlr3';
 ANTLR4 : 'antlr4';
 BANG : '!';
+BFS : 'bfs';
 BISON : 'bison';
 COMBINE : 'combine';
 CONVERT : 'convert';
 DELETE : 'delete' ;
+DFS : 'dfs';
 DOT : '.';
 EXIT : 'exit';
 FIND : 'find';
@@ -118,6 +126,7 @@ PRINT : 'print';
 QUIT : 'quit';
 READ : 'read';
 RENAME : 'rename';
+REORDER : 'reorder';
 ROTATE : 'rotate';
 RUP : 'rup' ;
 SPLIT : 'split';
