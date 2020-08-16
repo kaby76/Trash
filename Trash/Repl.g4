@@ -11,6 +11,7 @@ cmd :
   | find
   | fold
   | history
+  | mvsr
   | parse
   | pop
   | print
@@ -41,6 +42,7 @@ empty : ;
 find : FIND StringLiteral ;
 fold : FOLD StringLiteral ;
 history : HISTORY ;
+mvsr : MVSR StringLiteral ;
 parse : PARSE type? ;
 pop : POP ;
 print : PRINT ;
@@ -73,6 +75,7 @@ id_keyword : id
   | FIND
   | FOLD
   | HISTORY
+  | MVSR
   | PARSE
   | POP
   | PRINT
@@ -107,17 +110,18 @@ EXIT : 'exit';
 FIND : 'find';
 FOLD : 'fold';
 HISTORY : 'history';
-INT: [0-9]+;
-READ : 'read';
-RUP : 'rup' ;
+INT : [0-9]+;
+MVSR : 'mvsr';
 PARSE : 'parse' ;
 POP : 'pop' ;
 PRINT : 'print';
 QUIT : 'quit';
+READ : 'read';
 RENAME : 'rename';
+ROTATE : 'rotate';
+RUP : 'rup' ;
 SPLIT : 'split';
 STACK : 'stack';
-ROTATE : 'rotate';
 StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb* '"') ;
 ULLITERAL : 'ulliteral' ;
 UNALIAS : 'unalias' ;
