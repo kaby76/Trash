@@ -4,7 +4,7 @@
     using Antlr4.Runtime.Tree;
     using LanguageServer;
     using Microsoft.CodeAnalysis;
-    using org.eclipse.wst.xml.xpath2.api;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
     using System.Collections.Generic;
@@ -74,7 +74,10 @@
                 var lexer = new ReplLexer(str);
                 var tokens = new CommonTokenStream(lexer);
                 var parser = new ReplParser(tokens);
+                var listener = new ErrorListener<IToken>(2);
+                parser.AddErrorListener(listener);
                 var tree = parser.cmd();
+                if (listener.had_error) throw new Exception("command syntax error");
                 if (false) ;
                 else if (tree.alias() != null)
                 {
@@ -486,7 +489,11 @@
                 var lexer = new ReplLexer(str);
                 var tokens = new CommonTokenStream(lexer);
                 var parser = new ReplParser(tokens);
+                parser.RemoveErrorListeners();
+                var listener = new ErrorListener<IToken>(0);
+                parser.AddErrorListener(listener);
                 var tree = parser.cmd();
+                if (listener.had_error) throw new Exception("command syntax error");
                 if (tree.alias() != null)
                 {
                     var alias = tree.alias();
