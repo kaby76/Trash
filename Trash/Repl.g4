@@ -1,5 +1,6 @@
 grammar Repl;
 
+cmds : cmd+ ;
 cmd :
   ( alias
   | analyze
