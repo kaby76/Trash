@@ -50,7 +50,7 @@ print : PRINT ;
 quit : (QUIT | EXIT) ;
 read : READ ffn ;
 rename : RENAME StringLiteral StringLiteral ;
-reorder : REORDER (alpha | bfs | dfs);
+reorder : REORDER (alpha | bfs | dfs | modes);
 rotate : ROTATE ;
 rup : RUP StringLiteral ;
 split : SPLIT ;
@@ -60,10 +60,11 @@ unfold : UNFOLD StringLiteral ;
 unify : UNIFY StringLiteral ;
 ulliteral : ULLITERAL StringLiteral ;
 write : WRITE ;
-alpha : ALPHA;
-bfs : BFS StringLiteral;
-dfs : DFS StringLiteral;
+alpha : ALPHA ;
+bfs : BFS StringLiteral ;
+dfs : DFS StringLiteral ;
 ffn : StringLiteral ;
+modes : MODES ;
 int : INT ;
 id : ID ;
 id_keyword : id
@@ -119,6 +120,7 @@ FIND : 'find';
 FOLD : 'fold';
 HISTORY : 'history';
 INT : [0-9]+;
+MODES : 'modes' ;
 MVSR : 'mvsr';
 PARSE : 'parse' ;
 POP : 'pop' ;
@@ -138,6 +140,13 @@ UNFOLD : 'unfold';
 UNIFY : 'unify';
 WRITE : 'write';
 
+// Last on purpose.
+ID: Id;
+
+BLOCK_COMMENT : BlockComment -> skip ;
+LINE_COMMENT : LineComment -> skip ;
+WS : ( Hws | Vws )+ -> skip ;
+
 fragment Lca : Esc | ~ ('\'' | '\\') ;
 fragment Lcb : Esc | ~ ('"' | '\\') ;
 fragment Esc : '\\' ('n' | 'r' | 't' | 'b' | 'f' | '"' | '\'' | '\\' | '>' | 'u' XDIGIT XDIGIT XDIGIT XDIGIT | .) ;
@@ -145,13 +154,9 @@ fragment XDIGIT : '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ;
 fragment BlockComment : '/*' ( ('/' ~'*') | ~'/' )* '*/' ;
 fragment LineComment : '//' ~[\r\n]* ;
 fragment LineCommentExt : '//' ~'\n'* ( '\n' Hws* '//' ~'\n'* )* ;
-BLOCK_COMMENT : BlockComment -> skip ;
-LINE_COMMENT : LineComment -> skip ;
-WS : ( Hws | Vws )+ -> skip ;
 fragment Ws : Hws | Vws ;
 fragment Hws : [ \t] ;
 fragment Vws : [\r\n\f] ;
-ID: Id;
 fragment Id : NameStartChar NameChar* ;
 fragment Underscore : '_' ;
 fragment NameStartChar : 'A'..'Z' | 'a'..'z' | '_'

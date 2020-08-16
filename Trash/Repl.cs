@@ -384,38 +384,47 @@
                 }
                 else if (tree.reorder() != null)
                 {
+                    Dictionary<string, string> results = new Dictionary<string, string>();
                     var c = tree.reorder();
                     var doc = stack.Peek();
-                    LspAntlr.ReorderType order;
                     string expr = null;
-                    if (c.alpha() != null)
-                        order = LspAntlr.ReorderType.Alphabetically;
-                    else if (c.bfs() != null)
+                    if (c.modes() != null)
                     {
-                        order = LspAntlr.ReorderType.BFS;
-                        expr = c.bfs().StringLiteral().GetText();
+                        results = LanguageServer.Transform.SortModes(doc);
                     }
-                    else if (c.dfs() != null)
+                    else
                     {
-                        order = LspAntlr.ReorderType.DFS;
-                        expr = c.dfs().StringLiteral().GetText();
+                        LspAntlr.ReorderType order = default;
+                        if (c.alpha() != null)
+                            order = LspAntlr.ReorderType.Alphabetically;
+                        else if (c.bfs() != null)
+                        {
+                            order = LspAntlr.ReorderType.BFS;
+                            expr = c.bfs().StringLiteral().GetText();
+                        }
+                        else if (c.dfs() != null)
+                        {
+                            order = LspAntlr.ReorderType.DFS;
+                            expr = c.dfs().StringLiteral().GetText();
+                        }
+                        else
+                            throw new Exception("unknown sorting type");
+                        List<IParseTree> nodes = null;
+                        if (expr != null)
+                        {
+                            expr = expr.Substring(1, expr.Length - 2);
+                            var pr = ParsingResultsFactory.Create(doc);
+                            var aparser = pr.Parser;
+                            var atree = pr.ParseTree;
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                                atree, aparser);
+                            nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        }
+                        results = LanguageServer.Transform.ReorderParserRules(doc, order, nodes);
                     }
-                    else throw new Exception("unknown sorting type");
-                    List<IParseTree> nodes = null;
-                    if (expr != null)
-                    {
-                        expr = expr.Substring(1, expr.Length - 2);
-                        var pr = ParsingResultsFactory.Create(doc);
-                        var aparser = pr.Parser;
-                        var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                    }
-                    var results = LanguageServer.Transform.ReorderParserRules(doc, order, nodes);
                     if (results.Count > 0)
                     {
                         stack.Pop();
