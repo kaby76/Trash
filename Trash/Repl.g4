@@ -12,6 +12,7 @@ cmd :
   | empty
   | find
   | fold
+  | has
   | history
   | kleene
   | mvsr
@@ -23,6 +24,7 @@ cmd :
   | rename
   | reorder
   | rotate
+  | rr
   | rup
   | split
   | stack
@@ -45,6 +47,7 @@ dot : DOT ;
 empty : ;
 find : FIND StringLiteral ;
 fold : FOLD StringLiteral ;
+has : HAS (DR | IR) (LEFT | RIGHT) StringLiteral ;
 history : HISTORY ;
 kleene : KLEENE StringLiteral ;
 mvsr : MVSR StringLiteral ;
@@ -56,6 +59,7 @@ read : READ ffn ;
 rename : RENAME StringLiteral StringLiteral ;
 reorder : REORDER (alpha | bfs | dfs | modes) ;
 rotate : ROTATE ;
+rr : RR StringLiteral ;
 rup : RUP StringLiteral ;
 split : SPLIT ;
 stack : STACK ;
@@ -80,11 +84,15 @@ id_keyword : id
   | COMBINE
   | CONVERT
   | DELETE
+  | DR
   | EXIT
   | FIND
   | FOLD
+  | HAS
   | HISTORY
+  | IR
   | KLEENE
+  | LEFT
   | MVSR
   | PARSE
   | POP
@@ -93,7 +101,9 @@ id_keyword : id
   | READ
   | RENAME
   | REORDER
+  | RIGHT
   | ROTATE
+  | RR
   | RUP
   | SPLIT
   | STACK
@@ -118,12 +128,16 @@ COMBINE : 'combine' ;
 CONVERT : 'convert' ;
 DELETE : 'delete' ;
 DFS : 'dfs' ;
+DR : 'dr' ;
 DOT : '.' ;
 EXIT : 'exit' ;
 FIND : 'find' ;
 FOLD : 'fold' ;
+HAS : 'has' ;
 HISTORY : 'history' ;
 INT : [0-9]+ ;
+IR : 'ir' ;
+LEFT : 'left' ;
 KLEENE : 'kleene' ;
 MODES : 'modes' ;
 MVSR : 'mvsr' ;
@@ -134,7 +148,9 @@ QUIT : 'quit' ;
 READ : 'read' ;
 RENAME : 'rename' ;
 REORDER : 'reorder' ;
+RIGHT : 'right' ;
 ROTATE : 'rotate' ;
+RR : 'rr' ;
 RUP : 'rup' ;
 SPLIT : 'split' ;
 STACK : 'stack' ;

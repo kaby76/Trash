@@ -290,6 +290,36 @@
                     else if (tree.empty() != null)
                     {
                     }
+                    else if (tree.has() != null)
+                    {
+                        List<Tuple<string, bool>> result = new List<Tuple<string, bool>>();
+                        var c = tree.has();
+                        var l_or_r = c.LEFT() == null ? "right" : "left";
+                        var expr = c.StringLiteral().GetText();
+                        expr = expr.Substring(1, expr.Length - 2);
+                        var doc = stack.Peek();
+                        var pr = ParsingResultsFactory.Create(doc);
+                        var aparser = pr.Parser;
+                        var atree = pr.ParseTree;
+                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser);
+                        var nodes = engine.parseExpression(expr,
+                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        if (c.DR() != null)
+                        {
+                            result = LanguageServer.Transform.HasDirectRec(nodes, l_or_r, doc);
+                        }
+                        else if (c.IR() != null)
+                        {
+                        }
+                        else throw new Exception("unknown check");
+                        foreach (var r in result)
+                        {
+                            System.Console.WriteLine(r.Item1 + " " + r.Item2);
+                        }
+                    }
                     else if (tree.history() != null)
                     {
                         System.Console.WriteLine();
@@ -437,6 +467,24 @@
                         stack = new StackQueue<Document>();
                         stack.Push(top);
                         foreach (var doc in docs) stack.Push(doc);
+                    }
+                    else if (tree.rr() != null)
+                    {
+                        var c = tree.rr();
+                        var expr = c.StringLiteral().GetText();
+                        expr = expr.Substring(1, expr.Length - 2);
+                        var doc = stack.Peek();
+                        var pr = ParsingResultsFactory.Create(doc);
+                        var aparser = pr.Parser;
+                        var atree = pr.ParseTree;
+                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser);
+                        var nodes = engine.parseExpression(expr,
+                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        var results = LanguageServer.Transform.ToRightRecursion(nodes, doc);
+                        EnactEdits(results);
                     }
                     else if (tree.rup() != null)
                     {
