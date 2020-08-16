@@ -313,6 +313,7 @@
                         }
                         else if (c.IR() != null)
                         {
+                            result = LanguageServer.Transform.HasIndirectRec(nodes, l_or_r, doc);
                         }
                         else throw new Exception("unknown check");
                         foreach (var r in result)
