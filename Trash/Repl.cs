@@ -308,6 +308,7 @@
                 {
                     var rename = tree.rename();
                     var to_sym = rename.StringLiteral()[1].GetText();
+                    to_sym = to_sym.Substring(1, to_sym.Length - 2);
                     var doc = stack.Peek();
                     var expr = rename.StringLiteral()[0].GetText();
                     expr = expr.Substring(1, expr.Length - 2);
