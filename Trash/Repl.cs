@@ -157,22 +157,8 @@
                         var r = tree.combine();
                         var doc1 = stack.PeekTop(0);
                         var doc2 = stack.PeekTop(1);
-                        //var results = LanguageServer.Transform.CombineGrammars(doc1, doc2);
-                        //if (results.Count > 0)
-                        //{
-                        //    stack.Pop();
-                        //    foreach (var res in results)
-                        //    {
-                        //        var new_doc = CreateDoc(res.Key);
-                        //        new_doc.Code = res.Value;
-                        //        stack.Push(new_doc);
-                        //        ParseDoc(new_doc);
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    System.Console.WriteLine("no changes");
-                        //}
+                        var results = LanguageServer.Transform.CombineGrammars(doc1, doc2);
+                        EnactEdits(results);
                     }
                     else if (tree.convert() != null)
                     {
@@ -238,21 +224,7 @@
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                         var results = LanguageServer.Transform.Delete(nodes, doc);
-                        if (results.Count > 0)
-                        {
-                            stack.Pop();
-                            foreach (var res in results)
-                            {
-                                var new_doc = CreateDoc(res.Key);
-                                new_doc.Code = res.Value;
-                                stack.Push(new_doc);
-                                ParseDoc(new_doc);
-                            }
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("no changes");
-                        }
+                        EnactEdits(results);
                     }
                     else if (tree.dot() != null)
                     {
@@ -328,21 +300,7 @@
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                         var results = LanguageServer.Transform.MoveStartRuleToTop(doc, nodes);
-                        if (results.Count > 0)
-                        {
-                            stack.Pop();
-                            foreach (var res in results)
-                            {
-                                var new_doc = CreateDoc(res.Key);
-                                new_doc.Code = res.Value;
-                                stack.Push(new_doc);
-                                ParseDoc(new_doc);
-                            }
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("no changes");
-                        }
+                        EnactEdits(results);
                     }
                     else if (tree.parse() != null)
                     {
@@ -391,21 +349,7 @@
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
                         var results = LanguageServer.Transform.Rename(nodes, to_sym, doc);
-                        if (results.Count > 0)
-                        {
-                            stack.Pop();
-                            foreach (var res in results)
-                            {
-                                var new_doc = CreateDoc(res.Key);
-                                new_doc.Code = res.Value;
-                                stack.Push(new_doc);
-                                ParseDoc(new_doc);
-                            }
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("no changes");
-                        }
+                        EnactEdits(results);
                     }
                     else if (tree.reorder() != null)
                     {
@@ -450,21 +394,7 @@
                             }
                             results = LanguageServer.Transform.ReorderParserRules(doc, order, nodes);
                         }
-                        if (results.Count > 0)
-                        {
-                            stack.Pop();
-                            foreach (var res in results)
-                            {
-                                var new_doc = CreateDoc(res.Key);
-                                new_doc.Code = res.Value;
-                                stack.Push(new_doc);
-                                ParseDoc(new_doc);
-                            }
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("no changes");
-                        }
+                        EnactEdits(results);
                     }
                     else if (tree.rotate() != null)
                     {
@@ -491,42 +421,14 @@
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                         var results = LanguageServer.Transform.RemoveUselessParentheses(nodes, doc);
-                        if (results.Count > 0)
-                        {
-                            stack.Pop();
-                            foreach (var res in results)
-                            {
-                                var new_doc = CreateDoc(res.Key);
-                                new_doc.Code = res.Value;
-                                stack.Push(new_doc);
-                                ParseDoc(new_doc);
-                            }
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("no changes");
-                        }
+                        EnactEdits(results);
                     }
                     else if (tree.split() != null)
                     {
                         var r = tree.split();
                         var doc = stack.Peek();
                         var results = LanguageServer.Transform.SplitGrammar(doc);
-                        if (results.Count > 0)
-                        {
-                            stack.Pop();
-                            foreach (var res in results)
-                            {
-                                var new_doc = CreateDoc(res.Key);
-                                new_doc.Code = res.Value;
-                                stack.Push(new_doc);
-                                ParseDoc(new_doc);
-                            }
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("no changes");
-                        }
+                        EnactEdits(results);
                     }
                     else if (tree.stack() != null)
                     {
@@ -553,21 +455,7 @@
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
                         var results = LanguageServer.Transform.UpperLowerCaseLiteral(nodes, doc);
-                        if (results.Count > 0)
-                        {
-                            stack.Pop();
-                            foreach (var res in results)
-                            {
-                                var new_doc = CreateDoc(res.Key);
-                                new_doc.Code = res.Value;
-                                stack.Push(new_doc);
-                                ParseDoc(new_doc);
-                            }
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("no changes");
-                        }
+                        EnactEdits(results);
                     }
                     else if (tree.unalias() != null)
                     {
@@ -591,21 +479,7 @@
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
                         var results = LanguageServer.Transform.Unfold(nodes, doc);
-                        if (results.Count > 0)
-                        {
-                            stack.Pop();
-                            foreach (var res in results)
-                            {
-                                var new_doc = CreateDoc(res.Key);
-                                new_doc.Code = res.Value;
-                                stack.Push(new_doc);
-                                ParseDoc(new_doc);
-                            }
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("no changes");
-                        }
+                        EnactEdits(results);
                     }
                     else if (tree.unify() != null)
                     {
@@ -623,21 +497,7 @@
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                         var results = LanguageServer.Transform.Unify(nodes, doc);
-                        if (results.Count > 0)
-                        {
-                            stack.Pop();
-                            foreach (var res in results)
-                            {
-                                var new_doc = CreateDoc(res.Key);
-                                new_doc.Code = res.Value;
-                                stack.Push(new_doc);
-                                ParseDoc(new_doc);
-                            }
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("no changes");
-                        }
+                        EnactEdits(results);
                     }
                     else if (tree.write() != null)
                     {
@@ -653,6 +513,26 @@
                 System.Console.WriteLine(eeks.Message);
             }
             return true;
+        }
+
+        public void EnactEdits(Dictionary<string, string> results)
+        {
+            if (results.Count > 0)
+            {
+                stack.Pop();
+                foreach (var res in results)
+                {
+                    if (res.Value == null) continue;
+                    var new_doc = CreateDoc(res.Key);
+                    new_doc.Code = res.Value;
+                    stack.Push(new_doc);
+                    ParseDoc(new_doc);
+                }
+            }
+            else
+            {
+                System.Console.WriteLine("no changes");
+            }
         }
 
         public bool RecallAliases(string line)
