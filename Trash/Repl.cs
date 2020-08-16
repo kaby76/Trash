@@ -11,13 +11,14 @@
     using System.IO;
     using System.Linq;
     using Workspaces;
+    using Utils;
 
     class Repl
     {
         List<string> History { get; set; } = new List<string>();
         const string PreviousHistoryFfn = ".trash.rc";
         Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
-        Stack<Document> stack = new Stack<Document>();
+        Utils.StackQueue<Document> stack = new Utils.StackQueue<Document>();
 
         public Repl()
         {
@@ -150,6 +151,28 @@
                             }
                             System.Console.WriteLine("No previous command starts with " + s);
                         }
+                    }
+                    else if (tree.combine() != null)
+                    {
+                        var r = tree.combine();
+                        var doc1 = stack.PeekTop(0);
+                        var doc2 = stack.PeekTop(1);
+                        //var results = LanguageServer.Transform.CombineGrammars(doc1, doc2);
+                        //if (results.Count > 0)
+                        //{
+                        //    stack.Pop();
+                        //    foreach (var res in results)
+                        //    {
+                        //        var new_doc = CreateDoc(res.Key);
+                        //        new_doc.Code = res.Value;
+                        //        stack.Push(new_doc);
+                        //        ParseDoc(new_doc);
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    System.Console.WriteLine("no changes");
+                        //}
                     }
                     else if (tree.convert() != null)
                     {
@@ -448,7 +471,7 @@
                         var top = stack.Pop();
                         var docs = stack.ToList();
                         docs.Reverse();
-                        stack = new Stack<Document>();
+                        stack = new StackQueue<Document>();
                         stack.Push(top);
                         foreach (var doc in docs) stack.Push(doc);
                     }

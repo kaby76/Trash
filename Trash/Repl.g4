@@ -6,6 +6,7 @@ cmd :
   | analyze
   | bang
   | convert
+  | combine
   | dot
   | delete
   | empty
