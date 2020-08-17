@@ -68,7 +68,7 @@ stack : STACK ;
 unalias : UNALIAS id ;
 unfold : UNFOLD StringLiteral ;
 unify : UNIFY StringLiteral ;
-ulliteral : ULLITERAL StringLiteral ;
+ulliteral : ULLITERAL StringLiteral? ;
 write : WRITE ;
 alpha : ALPHA ;
 bfs : BFS StringLiteral ;

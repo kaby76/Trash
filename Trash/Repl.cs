@@ -319,6 +319,7 @@
                     }
                     else if (tree.empty() != null)
                     {
+                        continue; // Don't add to history.
                     }
                     else if (tree.has() != null)
                     {
@@ -576,20 +577,28 @@
                     else if (tree.ulliteral() != null)
                     {
                         var ulliteral = tree.ulliteral();
-                        var expr = ulliteral.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
+                        var expr = ulliteral.StringLiteral()?.GetText();
+                        expr = expr?.Substring(1, expr.Length - 2);
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser))
+                        if (expr != null)
                         {
-                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                            var nodes = engine.parseExpression(expr,
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                            var results = LanguageServer.Transform.UpperLowerCaseLiteral(nodes, doc);
+                            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                                atree, aparser))
+                            {
+                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                var nodes = engine.parseExpression(expr,
+                                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                                var results = LanguageServer.Transform.UpperLowerCaseLiteral(nodes, doc);
+                                EnactEdits(results);
+                            }
+                        }
+                        else
+                        {
+                            var results = LanguageServer.Transform.UpperLowerCaseLiteral(null, doc);
                             EnactEdits(results);
                         }
                     }
