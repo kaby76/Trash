@@ -12,6 +12,7 @@ cmd :
   | empty
   | find
   | fold
+  | foldlit
   | has
   | history
   | kleene
@@ -47,6 +48,7 @@ dot : DOT ;
 empty : ;
 find : FIND StringLiteral ;
 fold : FOLD StringLiteral ;
+foldlit : FOLDLIT StringLiteral ;
 has : HAS (DR | IR) (LEFT | RIGHT) StringLiteral ;
 history : HISTORY ;
 kleene : KLEENE StringLiteral ;
@@ -88,6 +90,7 @@ id_keyword : id
   | EXIT
   | FIND
   | FOLD
+  | FOLDLIT
   | HAS
   | HISTORY
   | IR
@@ -133,6 +136,7 @@ DOT : '.' ;
 EXIT : 'exit' ;
 FIND : 'find' ;
 FOLD : 'fold' ;
+FOLDLIT : 'foldlit' ;
 HAS : 'has' ;
 HISTORY : 'history' ;
 INT : [0-9]+ ;

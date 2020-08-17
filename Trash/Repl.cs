@@ -293,6 +293,26 @@
                             EnactEdits(results);
                         }
                     }
+                    else if (tree.foldlit() != null)
+                    {
+                        var c = tree.foldlit();
+                        var expr = c.StringLiteral().GetText();
+                        expr = expr.Substring(1, expr.Length - 2);
+                        var doc = stack.Peek();
+                        var pr = ParsingResultsFactory.Create(doc);
+                        var aparser = pr.Parser;
+                        var atree = pr.ParseTree;
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                            var results = LanguageServer.Transform.Foldlit(nodes, doc);
+                            EnactEdits(results);
+                        }
+                    }
                     else if (tree.empty() != null)
                     {
                     }
