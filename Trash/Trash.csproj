@@ -12,7 +12,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.8.0" />
-		<PackageReference Include="Antlr4BuildTasks" Version="8.1" />
+		<PackageReference Include="Antlr4BuildTasks" Version="8.2" />
 		<PackageReference Include="AntlrTreeEditing" Version="1.6" />
 	</ItemGroup>
 
