@@ -217,14 +217,16 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                        var results = LanguageServer.Transform.Delete(nodes, doc);
-                        EnactEdits(results);
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            var results = LanguageServer.Transform.Delete(nodes, doc);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.dot() != null)
                     {
@@ -253,20 +255,22 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
-                        foreach (var node in nodes)
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
                         {
-                            TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
-                            var ts = x.Payload.TokenSource;
-                            System.Console.WriteLine();
-                            System.Console.WriteLine(
-                                TreeOutput.OutputTree(
-                                    node,
-                                    ts as Lexer,
-                                    null).ToString());
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
+                            foreach (var node in nodes)
+                            {
+                                TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
+                                var ts = x.Payload.TokenSource;
+                                System.Console.WriteLine();
+                                System.Console.WriteLine(
+                                    TreeOutput.OutputTree(
+                                        node,
+                                        ts as Lexer,
+                                        null).ToString());
+                            }
                         }
                     }
                     else if (tree.fold() != null)
@@ -278,14 +282,16 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                        var results = LanguageServer.Transform.Fold(nodes, doc);
-                        EnactEdits(results);
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            var results = LanguageServer.Transform.Fold(nodes, doc);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.empty() != null)
                     {
@@ -301,24 +307,26 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                        if (c.DR() != null)
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
                         {
-                            result = LanguageServer.Transform.HasDirectRec(nodes, l_or_r, doc);
-                        }
-                        else if (c.IR() != null)
-                        {
-                            result = LanguageServer.Transform.HasIndirectRec(nodes, l_or_r, doc);
-                        }
-                        else throw new Exception("unknown check");
-                        foreach (var r in result)
-                        {
-                            System.Console.WriteLine(r.Item1 + " " + r.Item2);
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            if (c.DR() != null)
+                            {
+                                result = LanguageServer.Transform.HasDirectRec(nodes, l_or_r, doc);
+                            }
+                            else if (c.IR() != null)
+                            {
+                                result = LanguageServer.Transform.HasIndirectRec(nodes, l_or_r, doc);
+                            }
+                            else throw new Exception("unknown check");
+                            foreach (var r in result)
+                            {
+                                System.Console.WriteLine(r.Item1 + " " + r.Item2);
+                            }
                         }
                     }
                     else if (tree.history() != null)
@@ -339,14 +347,16 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                        var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(nodes, doc);
-                        EnactEdits(results);
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(nodes, doc);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.mvsr() != null)
                     {
@@ -357,14 +367,16 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                        var results = LanguageServer.Transform.MoveStartRuleToTop(doc, nodes);
-                        EnactEdits(results);
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            var results = LanguageServer.Transform.MoveStartRuleToTop(doc, nodes);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.parse() != null)
                     {
@@ -408,12 +420,14 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                        var results = LanguageServer.Transform.Rename(nodes, to_sym, doc);
-                        EnactEdits(results);
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                        {
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                            var results = LanguageServer.Transform.Rename(nodes, to_sym, doc);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.reorder() != null)
                     {
@@ -449,12 +463,14 @@
                                 var pr = ParsingResultsFactory.Create(doc);
                                 var aparser = pr.Parser;
                                 var atree = pr.ParseTree;
-                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                                    atree, aparser);
-                                nodes = engine.parseExpression(expr,
-                                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                                    atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                }
                             }
                             results = LanguageServer.Transform.ReorderParserRules(doc, order, nodes);
                         }
@@ -478,14 +494,16 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                        var results = LanguageServer.Transform.ToRightRecursion(nodes, doc);
-                        EnactEdits(results);
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            var results = LanguageServer.Transform.ToRightRecursion(nodes, doc);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.rup() != null)
                     {
@@ -496,14 +514,16 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                        var results = LanguageServer.Transform.RemoveUselessParentheses(nodes, doc);
-                        EnactEdits(results);
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            var results = LanguageServer.Transform.RemoveUselessParentheses(nodes, doc);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.split() != null)
                     {
@@ -530,14 +550,16 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                        var results = LanguageServer.Transform.UpperLowerCaseLiteral(nodes, doc);
-                        EnactEdits(results);
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                            var results = LanguageServer.Transform.UpperLowerCaseLiteral(nodes, doc);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.unalias() != null)
                     {
@@ -554,14 +576,16 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                        var results = LanguageServer.Transform.Unfold(nodes, doc);
-                        EnactEdits(results);
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                            var results = LanguageServer.Transform.Unfold(nodes, doc);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.unify() != null)
                     {
@@ -572,14 +596,16 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser);
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                        var results = LanguageServer.Transform.Unify(nodes, doc);
-                        EnactEdits(results);
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                            atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            var results = LanguageServer.Transform.Unify(nodes, doc);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.write() != null)
                     {
