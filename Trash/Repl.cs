@@ -156,6 +156,21 @@
                             System.Console.WriteLine("No previous command starts with " + s);
                         }
                     }
+                    else if (tree.cd() != null)
+                    {
+                        var c = tree.cd();
+                        var expr = c.StringLiteral()?.GetText();
+                        expr = expr?.Substring(1, expr.Length - 2);
+                        if (expr != null)
+                        {
+                            Directory.SetCurrentDirectory(expr);
+                        }
+                        else
+                        {
+                            expr = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+                            Directory.SetCurrentDirectory(expr);
+                        }
+                    }
                     else if (tree.combine() != null)
                     {
                         var r = tree.combine();
@@ -381,6 +396,24 @@
                                 .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                             var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(nodes, doc);
                             EnactEdits(results);
+                        }
+                    }
+                    else if (tree.ls() != null)
+                    {
+                        var c = tree.ls();
+                        var expr = c.StringLiteral()?.GetText();
+                        expr = expr?.Substring(1, expr.Length - 2);
+                        var cwd = Directory.GetCurrentDirectory();
+                        List<string> dirs = new List<string>(Directory.EnumerateDirectories(cwd));
+                        foreach (var dir in dirs)
+                        {
+                            Console.WriteLine($"{dir.Substring(dir.LastIndexOf(Path.DirectorySeparatorChar) + 1)}/");
+                        }
+                        if (expr == null) expr = "*";
+                        string[] files = Directory.GetFiles(cwd, expr);
+                        foreach (var f in files)
+                        {
+                            Console.WriteLine($"{f.Substring(f.LastIndexOf(Path.DirectorySeparatorChar) + 1)}");
                         }
                     }
                     else if (tree.mvsr() != null)

@@ -5,6 +5,7 @@ cmd :
   ( alias
   | analyze
   | bang
+  | cd
   | convert
   | combine
   | dot
@@ -16,6 +17,7 @@ cmd :
   | has
   | history
   | kleene
+  | ls
   | mvsr
   | parse
   | pop
@@ -41,6 +43,7 @@ alias : ALIAS (id '=' (StringLiteral | id_keyword))? ;
 analyze : ANALYZE ;
 anything : id rest? ;
 bang : BANG (BANG | int | id_keyword) ;
+cd : CD StringLiteral? ;
 combine : COMBINE ;
 convert : CONVERT type ;
 delete : DELETE StringLiteral ;
@@ -52,6 +55,7 @@ foldlit : FOLDLIT StringLiteral ;
 has : HAS (DR | IR) (LEFT | RIGHT) StringLiteral ;
 history : HISTORY ;
 kleene : KLEENE StringLiteral ;
+ls : LS StringLiteral? ;
 mvsr : MVSR StringLiteral ;
 parse : PARSE type? ;
 pop : POP ;
@@ -83,6 +87,7 @@ id_keyword : id
   | ANTLR3
   | ANTLR2
   | BISON
+  | CD
   | COMBINE
   | CONVERT
   | DELETE
@@ -96,6 +101,7 @@ id_keyword : id
   | IR
   | KLEENE
   | LEFT
+  | LS
   | MVSR
   | PARSE
   | POP
@@ -127,6 +133,7 @@ ANTLR4 : 'antlr4' ;
 BANG : '!' ;
 BFS : 'bfs' ;
 BISON : 'bison' ;
+CD : 'cd' ;
 COMBINE : 'combine' ;
 CONVERT : 'convert' ;
 DELETE : 'delete' ;
@@ -142,6 +149,7 @@ HISTORY : 'history' ;
 INT : [0-9]+ ;
 IR : 'ir' ;
 LEFT : 'left' ;
+LS : 'ls' ;
 KLEENE : 'kleene' ;
 MODES : 'modes' ;
 MVSR : 'mvsr' ;
