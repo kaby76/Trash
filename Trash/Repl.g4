@@ -62,7 +62,7 @@ rename : RENAME StringLiteral StringLiteral ;
 reorder : REORDER (alpha | bfs | dfs | modes) ;
 rotate : ROTATE ;
 rr : RR StringLiteral ;
-rup : RUP StringLiteral ;
+rup : RUP StringLiteral? ;
 split : SPLIT ;
 stack : STACK ;
 unalias : UNALIAS id ;

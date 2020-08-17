@@ -531,21 +531,29 @@
                     }
                     else if (tree.rup() != null)
                     {
-                        var unfold = tree.rup();
-                        var expr = unfold.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
+                        var rup = tree.rup();
+                        var expr = rup.StringLiteral()?.GetText();
+                        expr = expr?.Substring(1, expr.Length - 2);
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
-                            atree, aparser))
+                        if (expr != null)
                         {
-                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                            var nodes = engine.parseExpression(expr,
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                            var results = LanguageServer.Transform.RemoveUselessParentheses(nodes, doc);
+                            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(
+                                atree, aparser))
+                            {
+                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                var nodes = engine.parseExpression(expr,
+                                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                var results = LanguageServer.Transform.RemoveUselessParentheses(nodes, doc);
+                                EnactEdits(results);
+                            }
+                        }
+                        else
+                        {
+                            var results = LanguageServer.Transform.RemoveUselessParentheses(doc);
                             EnactEdits(results);
                         }
                     }
