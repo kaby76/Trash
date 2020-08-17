@@ -73,11 +73,15 @@
                 var input = line + ";";
                 var str = new AntlrInputStream(input);
                 var lexer = new ReplLexer(str);
+                lexer.RemoveErrorListeners();
+                var llistener = new ErrorListener<int>(0);
+                lexer.AddErrorListener(llistener);
                 var tokens = new CommonTokenStream(lexer);
                 var parser = new ReplParser(tokens);
                 var listener = new ErrorListener<IToken>(2);
                 parser.AddErrorListener(listener);
                 var btree = parser.cmds();
+                if (llistener.had_error) throw new Exception("command syntax error");
                 if (listener.had_error) throw new Exception("command syntax error");
                 foreach (var tree in btree.cmd())
                 {
@@ -670,12 +674,16 @@
                 var input = line + ";";
                 var str = new AntlrInputStream(input);
                 var lexer = new ReplLexer(str);
+                lexer.RemoveErrorListeners();
+                var llistener = new ErrorListener<int>(0);
+                lexer.AddErrorListener(llistener);
                 var tokens = new CommonTokenStream(lexer);
                 var parser = new ReplParser(tokens);
                 parser.RemoveErrorListeners();
                 var listener = new ErrorListener<IToken>(0);
                 parser.AddErrorListener(listener);
                 var tree = parser.cmd();
+                if (llistener.had_error) throw new Exception("command syntax error");
                 if (listener.had_error) throw new Exception("command syntax error");
                 if (tree.alias() != null)
                 {

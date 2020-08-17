@@ -17,8 +17,16 @@ delete "//parserRuleSpec[RULE_REF/text() = 'typeImportOnDemandDeclaration']"
 delete "//parserRuleSpec[RULE_REF/text() = 'singleStaticImportDeclaration']"
 delete "//parserRuleSpec[RULE_REF/text() = 'staticImportOnDemandDeclaration']"
 rup "//parserRuleSpec//labeledAlt//block"
-
 unify "//parserRuleSpec[RULE_REF/text() = 'importDeclaration']//ruleAltList"
+
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'normalAnnotation']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'markerAnnotation']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'singleElementAnnotation']"
+delete "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+delete "//parserRuleSpec[RULE_REF/text() = 'markerAnnotation']"
+delete "//parserRuleSpec[RULE_REF/text() = 'singleElementAnnotation']"
+rup "//parserRuleSpec//labeledAlt//block"
+unify "//parserRuleSpec[RULE_REF/text() = 'annotation']//ruleAltList"
 
 foldlit "//lexerRuleSpec/TOKEN_REF[text() = 'LPAREN']"
 foldlit "//lexerRuleSpec/TOKEN_REF[text() = 'RPAREN']"
