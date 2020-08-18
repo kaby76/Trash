@@ -828,7 +828,7 @@
                         document.Code = str;
                     }
                 }
-                catch (IOException eeks)
+                catch (IOException)
                 {
                 }
                 Project project = Workspaces.Workspace.Instance.FindProject("Misc");
