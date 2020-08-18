@@ -12,6 +12,7 @@
     using System.Linq;
     using Workspaces;
     using Utils;
+    using System.Text;
 
     class Repl
     {
@@ -19,9 +20,23 @@
         const string PreviousHistoryFfn = ".trash.rc";
         Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
         Utils.StackQueue<Document> stack = new Utils.StackQueue<Document>();
+        string script_file = null;
+        int current_line_index = 0;
+        string[] lines = null;
 
-        public Repl()
+        public Repl(string[] args)
         {
+            for (int i = 0; i < args.Length; ++i)
+            {
+                switch (args[i])
+                {
+                    case "-script":
+                        script_file = args[i+1];
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         void RedoAliases()
@@ -56,13 +71,25 @@
 
         public void Run()
         {
-            string input;
             HistoryRead();
-            do
+            string input;
+            if (script_file != null)
             {
-                Console.Write("> ");
-                input = Console.ReadLine();
-            } while (Execute(input));
+                // Read commands from script, and read a grammar file (Antlr4) from stdin.
+                lines = System.IO.File.ReadAllLines(script_file);
+                do
+                {
+                    input = lines[current_line_index++];
+                } while (Execute(input));
+            }
+            else
+            {
+                do
+                {
+                    Console.Write("> ");
+                    input = Console.ReadLine();
+                } while (Execute(input));
+            }
             HistoryWrite();
         }
 
@@ -455,10 +482,37 @@
                     else if (tree.read() != null)
                     {
                         var r = tree.read();
-                        var f = r.ffn().GetText();
-                        f = f.Substring(1, f.Length - 2);
-                        var doc = CheckDoc(f);
-                        stack.Push(doc);
+                        var f = r.StringLiteral()?.GetText();
+                        var id = r.id()?.GetText();
+                        if (f != null)
+                        {
+                            f = f.Substring(1, f.Length - 2);
+                            var doc = CheckDoc(f);
+                            stack.Push(doc);
+                        }
+                        else if (id != null)
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            for (; ; )
+                            {
+                                string cl;
+                                if (script_file != null)
+                                {
+                                    cl = lines[current_line_index++];
+                                }
+                                else
+                                {
+                                    cl = Console.ReadLine();
+                                }
+                                if (cl == id)
+                                    break;
+                                sb.AppendLine(cl);
+                            }
+                            var s = sb.ToString();
+                            var doc = CreateDoc("temp" + current_line_index + ".g4");
+                            doc.Code = s;
+                            stack.Push(doc);
+                        }
                     }
                     else if (tree.rename() != null)
                     {

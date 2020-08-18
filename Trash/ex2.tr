@@ -2,13 +2,17 @@ read "c:/users/kenne/documents/antlrvsix2/corpus-for-codebuff/a.g4"
 print
 parse
 unfold "//parserRuleSpec[RULE_REF/text() = 's']//labeledAlt//RULE_REF[text() = 'e']"
+print
 read "c:/users/kenne/documents/antlrvsix2/corpus-for-codebuff/A2.g4"
 parse
+print
 unfold "//parserRuleSpec[RULE_REF/text() = 'e']//labeledAlt//RULE_REF[text() = 'int']"
-rup "//parserRuleSpec[RULE_REF/text() = 'e']//labeledAlt//block"
+rup "//parserRuleSpec[RULE_REF/text() = 'e']//labeledAlt//altList"
 print
 read "c:/users/kenne/documents/antlrvsix2/corpus-for-codebuff/keywordfun.g4"
 parse
+print
 ulliteral "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL"
 ulliteral "//lexerRuleSpec[TOKEN_REF/text() = 'B']//STRING_LITERAL"
+print
 quit

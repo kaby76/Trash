@@ -9,7 +9,7 @@
     {
         static void Main(string[] args)
         {
-            var repl = new Repl();
+            var repl = new Repl(args);
             repl.Run();
         }
 
