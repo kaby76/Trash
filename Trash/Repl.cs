@@ -3,16 +3,14 @@
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using LanguageServer;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Workspaces;
-    using Utils;
     using System.Text;
+    using Utils;
+    using Workspaces;
 
     class Repl
     {
@@ -86,7 +84,7 @@
             {
                 do
                 {
-                    Console.Write("> ");
+                    Console.Error.Write("> ");
                     input = Console.ReadLine();
                 } while (Execute(input));
             }
@@ -154,7 +152,7 @@
                         }
                         else
                         {
-                            System.Console.WriteLine("Unknown command");
+                            System.Console.Error.WriteLine("Unknown command");
                         }
                     }
                     else if (tree.bang() != null)
@@ -180,7 +178,7 @@
                                     return Execute(History[i]);
                                 }
                             }
-                            System.Console.WriteLine("No previous command starts with " + s);
+                            System.Console.Error.WriteLine("No previous command starts with " + s);
                         }
                     }
                     else if (tree.cd() != null)
@@ -224,7 +222,6 @@
                                 new_doc.Code = r.Value;
                                 stack.Push(new_doc);
                             }
-                            System.Console.Write(res.First().Value);
                         }
                         else if (type == "antlr2")
                         {
@@ -237,7 +234,6 @@
                                 new_doc.Code = r.Value;
                                 stack.Push(new_doc);
                             }
-                            System.Console.Write(res.First().Value);
                         }
                         else if (type == "bison")
                         {
@@ -250,7 +246,6 @@
                                 new_doc.Code = r.Value;
                                 stack.Push(new_doc);
                             }
-                            System.Console.Write(res.First().Value);
                         }
                         ParseDoc(stack.Peek());
                     }
@@ -470,8 +465,8 @@
                     else if (tree.print() != null)
                     {
                         var doc = stack.Peek();
-                        System.Console.WriteLine();
-                        System.Console.WriteLine(doc.FullPath);
+                        System.Console.Error.WriteLine();
+                        System.Console.Error.WriteLine(doc.FullPath);
                         System.Console.WriteLine(doc.Code);
                     }
                     else if (tree.quit() != null)
@@ -734,7 +729,7 @@
             }
             catch (Exception eeks)
             {
-                System.Console.WriteLine(eeks.Message);
+                System.Console.Error.WriteLine(eeks.Message);
             }
             return true;
         }
@@ -755,7 +750,7 @@
             }
             else
             {
-                System.Console.WriteLine("no changes");
+                System.Console.Error.WriteLine("no changes");
             }
         }
 
@@ -889,11 +884,11 @@
                     {
                         sw.Write(document.Code);
                     }
-                    System.Console.WriteLine("Written to file " + file_name);
+                    System.Console.Error.WriteLine("Written to file " + file_name);
                 }
                 catch (Exception e)
                 {
-                    System.Console.WriteLine("Failed to write file " + e.Message);
+                    System.Console.Error.WriteLine("Failed to write file " + e.Message);
                 }
             }
         }
