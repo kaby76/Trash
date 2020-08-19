@@ -162,11 +162,15 @@
                         {
                             var snum = bang.@int().GetText();
                             var num = Int32.Parse(snum);
-                            return Execute(History[num]);
+                            var recall = History[num];
+                            System.Console.Error.WriteLine(recall);
+                            return Execute(recall);
                         }
                         else if (bang.BANG().Length > 1)
                         {
-                            return Execute(History.Last());
+                            var recall = History.Last();
+                            System.Console.Error.WriteLine(recall);
+                            return Execute(recall);
                         }
                         else if (bang.id_keyword() != null)
                         {
@@ -175,7 +179,9 @@
                             {
                                 if (History[i].StartsWith(s))
                                 {
-                                    return Execute(History[i]);
+                                    var recall = History[i];
+                                    System.Console.Error.WriteLine(recall);
+                                    return Execute(recall);
                                 }
                             }
                             System.Console.Error.WriteLine("No previous command starts with " + s);
@@ -353,7 +359,7 @@
                     }
                     else if (tree.empty() != null)
                     {
-                        continue; // Don't add to history.
+                        throw new DoNotAddToHistory(); // Don't add to history.
                     }
                     else if (tree.has() != null)
                     {
@@ -727,11 +733,19 @@
                 }
                 HistoryAdd(line);
             }
+            catch (DoNotAddToHistory)
+            {
+            }
             catch (Exception eeks)
             {
                 System.Console.Error.WriteLine(eeks.Message);
             }
             return true;
+        }
+
+        private class DoNotAddToHistory : Exception
+        {
+            public DoNotAddToHistory() { }
         }
 
         public void EnactEdits(Dictionary<string, string> results)
