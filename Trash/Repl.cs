@@ -21,6 +21,7 @@
         string script_file = null;
         int current_line_index = 0;
         string[] lines = null;
+        int QuietAfter = 10;
 
         public Repl(string[] args)
         {
@@ -637,6 +638,18 @@
                             EnactEdits(results);
                         }
                     }
+                    else if (tree.set() != null)
+                    {
+                        var c = tree.set();
+                        var id = c.id_keyword().GetText();
+                        var v1 = c.StringLiteral()?.GetText();
+                        var v2 = c.INT()?.GetText();
+                        if (id.ToLower() == "quietafter")
+                        {
+                            var v = int.Parse(v2);
+                            QuietAfter = v;
+                        }
+                    }
                     else if (tree.split() != null)
                     {
                         var r = tree.split();
@@ -923,7 +936,8 @@
         {
             document.Changed = true;
             document.ParseAs = grammar;
-            _ = ParsingResultsFactory.Create(document);
+            var pd = ParsingResultsFactory.Create(document);
+            pd.QuietAfter = QuietAfter;
             _ = new LanguageServer.Module().Compile();
         }
     }

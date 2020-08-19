@@ -29,6 +29,7 @@ cmd :
   | rotate
   | rr
   | rup
+  | set
   | split
   | stack
   | unalias
@@ -67,6 +68,7 @@ reorder : REORDER (alpha | bfs | dfs | modes) ;
 rotate : ROTATE ;
 rr : RR StringLiteral ;
 rup : RUP StringLiteral? ;
+set : SET id_keyword '=' (StringLiteral | INT) ;
 split : SPLIT ;
 stack : STACK ;
 unalias : UNALIAS id ;
@@ -113,6 +115,7 @@ id_keyword : id
   | ROTATE
   | RR
   | RUP
+  | SET
   | SPLIT
   | STACK
   | ULLITERAL
@@ -163,6 +166,7 @@ RIGHT : 'right' ;
 ROTATE : 'rotate' ;
 RR : 'rr' ;
 RUP : 'rup' ;
+SET : 'set' ;
 SPLIT : 'split' ;
 STACK : 'stack' ;
 StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb* '"') ;
