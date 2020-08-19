@@ -44,7 +44,7 @@ alias : ALIAS (id '=' (StringLiteral | id_keyword))? ;
 analyze : ANALYZE ;
 anything : id rest? ;
 bang : BANG (BANG | int | id_keyword) ;
-cd : CD StringLiteral? ;
+cd : CD (StringLiteral | stuff)? ;
 combine : COMBINE ;
 convert : CONVERT type ;
 delete : DELETE StringLiteral ;
@@ -62,7 +62,7 @@ parse : PARSE type? ;
 pop : POP ;
 print : PRINT ;
 quit : (QUIT | EXIT) ;
-read : READ (StringLiteral | id) ;
+read : READ (StringLiteral | stuff) ;
 rename : RENAME StringLiteral StringLiteral ;
 reorder : REORDER (alpha | bfs | dfs | modes) ;
 rotate : ROTATE ;
@@ -124,6 +124,7 @@ id_keyword : id
   | UNIFY
   | WRITE
   ;
+stuff : STUFF | id_keyword ;
 rest : .+ ;
 type : ANTLR4 | ANTLR3 | ANTLR2 | BISON ;
 ALPHA : 'alpha' ;
@@ -175,21 +176,18 @@ UNALIAS : 'unalias' ;
 UNFOLD : 'unfold' ;
 UNIFY : 'unify' ;
 WRITE : 'write' ;
-
-// Last on purpose.
 ID: Id ;
-
 BLOCK_COMMENT : BlockComment -> skip ;
 LINE_COMMENT : LineComment -> skip ;
 WS : ( Hws | Vws )+ -> skip ;
+STUFF : ~[ \t\n\r;]+ ;
 
 fragment Lca : Esc | ~ ('\'' | '\\') ;
 fragment Lcb : Esc | ~ ('"' | '\\') ;
 fragment Esc : '\\' ('n' | 'r' | 't' | 'b' | 'f' | '"' | '\'' | '\\' | '>' | 'u' XDIGIT XDIGIT XDIGIT XDIGIT | .) ;
 fragment XDIGIT : '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ;
 fragment BlockComment : '/*' ( ('/' ~'*') | ~'/' )* '*/' ;
-fragment LineComment : '//' ~[\r\n]* ;
-fragment LineCommentExt : '//' ~'\n'* ( '\n' Hws* '//' ~'\n'* )* ;
+fragment LineComment : '--' ~[\r\n]* ;
 fragment Ws : Hws | Vws ;
 fragment Hws : [ \t] ;
 fragment Vws : [\r\n\f] ;

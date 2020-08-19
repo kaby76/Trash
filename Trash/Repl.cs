@@ -192,7 +192,15 @@
                     {
                         var c = tree.cd();
                         var expr = c.StringLiteral()?.GetText();
-                        expr = expr?.Substring(1, expr.Length - 2);
+                        var stuff = c.stuff();
+                        if (expr != null)
+                        {
+                            expr = expr?.Substring(1, expr.Length - 2);
+                        }
+                        else if (stuff != null)
+                        {
+                            expr = stuff.GetText();
+                        }
                         if (expr != null)
                         {
                             Directory.SetCurrentDirectory(expr);
@@ -485,14 +493,32 @@
                     {
                         var r = tree.read();
                         var f = r.StringLiteral()?.GetText();
-                        var id = r.id()?.GetText();
+                        string here = null;
+                        if (f == null)
+                        {
+                            var s = r.stuff().GetText();
+                            if (s != null)
+                            {
+                                if (s.Contains("."))
+                                {
+                                    f = s;
+                                }
+                                else
+                                {
+                                    here = s;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            f = f?.Substring(1, f.Length - 2);
+                        }
                         if (f != null)
                         {
-                            f = f.Substring(1, f.Length - 2);
                             var doc = CheckDoc(f);
                             stack.Push(doc);
                         }
-                        else if (id != null)
+                        else if (here != null)
                         {
                             StringBuilder sb = new StringBuilder();
                             for (; ; )
@@ -506,7 +532,7 @@
                                 {
                                     cl = Console.ReadLine();
                                 }
-                                if (cl == id)
+                                if (cl == here)
                                     break;
                                 sb.AppendLine(cl);
                             }
@@ -515,6 +541,7 @@
                             doc.Code = s;
                             stack.Push(doc);
                         }
+                        else throw new Exception("not sure what to read.");
                     }
                     else if (tree.rename() != null)
                     {
