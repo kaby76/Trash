@@ -22,6 +22,7 @@ cmd :
   | parse
   | pop
   | print
+  | pwd
   | quit
   | read
   | rename
@@ -61,6 +62,7 @@ mvsr : MVSR StringLiteral ;
 parse : PARSE type? ;
 pop : POP ;
 print : PRINT ;
+pwd : PWD ;
 quit : (QUIT | EXIT) ;
 read : READ (StringLiteral | stuff) ;
 rename : RENAME StringLiteral StringLiteral ;
@@ -107,6 +109,7 @@ id_keyword : id
   | PARSE
   | POP
   | PRINT
+  | PWD
   | QUIT
   | READ
   | RENAME
@@ -159,6 +162,7 @@ MVSR : 'mvsr' ;
 PARSE : 'parse' ;
 POP : 'pop' ;
 PRINT : 'print' ;
+PWD : 'pwd' ;
 QUIT : 'quit' ;
 READ : 'read' ;
 RENAME : 'rename' ;

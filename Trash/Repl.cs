@@ -484,6 +484,11 @@
                         System.Console.Error.WriteLine(doc.FullPath);
                         System.Console.WriteLine(doc.Code);
                     }
+                    else if (tree.pwd() != null)
+                    {
+                        var cwd = Directory.GetCurrentDirectory();
+                        System.Console.Error.WriteLine(cwd);
+                    }
                     else if (tree.quit() != null)
                     {
                         HistoryAdd(line);
