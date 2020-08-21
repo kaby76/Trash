@@ -56,13 +56,8 @@
 
         void HistoryWrite()
         {
-            //var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            //System.IO.File.WriteAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn, History);
-        }
-
-        public void Run()
-        {
-            Execute();
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            System.IO.File.WriteAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn, History);
         }
 
         public void Execute(string line)
@@ -773,19 +768,19 @@
         {
             HistoryRead();
             string input;
+            ICharStream str;
             if (script_file != null)
             {
                 // Read commands from script, and read a grammar file (Antlr4) from stdin.
-                //lines = System.IO.File.ReadAllLines(script_file);
-                //do
-                //{
-                //    input = lines[current_line_index++];
-                //} while (Execute(input));
+                var st = System.IO.File.ReadAllText(script_file);
+                str = new AntlrInputStream(st);
             }
             else
             {
                 var stdin = new StreamReader(Console.OpenStandardInput(), Console.InputEncoding);
-                var str = new MyInputStream(stdin);
+                str = new MyInputStream(stdin);
+            }
+            { 
                 var lexer = new ReplLexer(str);
                 lexer.RemoveErrorListeners();
                 var llistener = new ErrorListener<int>(0);
@@ -1501,6 +1496,7 @@
                                 var doc = stack.Peek();
                                 WriteDoc(doc);
                             }
+                            HistoryWrite();
                         }
                         catch (DoNotAddToHistory)
                         {
@@ -1528,7 +1524,6 @@
                         }
                     }
                 }
-                HistoryWrite();
             }
         }
 

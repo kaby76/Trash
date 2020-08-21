@@ -10,7 +10,7 @@
         static void Main(string[] args)
         {
             var repl = new Repl(args);
-            repl.Run();
+            repl.Execute();
         }
 
         static string Read()
