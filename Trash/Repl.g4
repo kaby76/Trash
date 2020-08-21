@@ -1,7 +1,10 @@
 grammar Repl;
 
-cmds : cmd+ ;
+cmds
+  : (cmd HWS* (SEMI | VWS+))+
+  ;
 cmd :
+  HWS*
   ( alias
   | analyze
   | bang
@@ -39,48 +42,49 @@ cmd :
   | ulliteral
   | write
   | anything
-  ) ';'
+  )
+  HWS*
   ;
-alias : ALIAS (id '=' (StringLiteral | id_keyword))? ;
+alias : ALIAS HWS* (ID HWS* EQUAL HWS* (StringLiteral | id_keyword))? ;
 analyze : ANALYZE ;
-anything : id rest? ;
-bang : BANG (BANG | int | id_keyword) ;
-cd : CD (StringLiteral | stuff)? ;
+anything : id HWS* stuff* ;
+bang : BANG HWS* (BANG | int | id_keyword) ;
+cd : CD HWS* (StringLiteral | stuff)? ;
 combine : COMBINE ;
-convert : CONVERT type ;
-delete : DELETE StringLiteral ;
+convert : CONVERT HWS* type ;
+delete : DELETE HWS* StringLiteral ;
 dot : DOT ;
 empty : ;
-find : FIND StringLiteral ;
-fold : FOLD StringLiteral ;
-foldlit : FOLDLIT StringLiteral ;
-has : HAS (DR | IR) (LEFT | RIGHT) StringLiteral ;
+find : FIND HWS* StringLiteral ;
+fold : FOLD HWS* StringLiteral ;
+foldlit : FOLDLIT HWS* StringLiteral ;
+has : HAS HWS* (DR | IR) HWS* (LEFT | RIGHT) HWS* StringLiteral ;
 history : HISTORY ;
-kleene : KLEENE StringLiteral ;
-ls : LS StringLiteral? ;
-mvsr : MVSR StringLiteral ;
-parse : PARSE type? ;
+kleene : KLEENE HWS* StringLiteral ;
+ls : LS HWS* (StringLiteral | stuff)?  ;
+mvsr : MVSR HWS* StringLiteral ;
+parse : PARSE HWS* type? ;
 pop : POP ;
 print : PRINT ;
 pwd : PWD ;
 quit : (QUIT | EXIT) ;
-read : READ (StringLiteral | stuff) ;
-rename : RENAME StringLiteral StringLiteral ;
-reorder : REORDER (alpha | bfs | dfs | modes) ;
+read : READ HWS* (StringLiteral | stuff) ;
+rename : RENAME HWS* StringLiteral HWS* StringLiteral ;
+reorder : REORDER HWS* (alpha | bfs | dfs | modes) ;
 rotate : ROTATE ;
-rr : RR StringLiteral ;
-rup : RUP StringLiteral? ;
-set : SET id_keyword '=' (StringLiteral | INT) ;
+rr : RR HWS* StringLiteral ;
+rup : RUP HWS* StringLiteral? ;
+set : SET HWS* id_keyword HWS* '=' HWS* (StringLiteral | INT) ;
 split : SPLIT ;
 stack : STACK ;
-unalias : UNALIAS id ;
-unfold : UNFOLD StringLiteral ;
-unify : UNIFY StringLiteral ;
-ulliteral : ULLITERAL StringLiteral? ;
+unalias : UNALIAS HWS* id ;
+unfold : UNFOLD HWS* StringLiteral ;
+unify : UNIFY HWS* StringLiteral ;
+ulliteral : ULLITERAL HWS* StringLiteral? ;
 write : WRITE ;
 alpha : ALPHA ;
-bfs : BFS StringLiteral ;
-dfs : DFS StringLiteral ;
+bfs : BFS HWS* StringLiteral ;
+dfs : DFS HWS* StringLiteral ;
 modes : MODES ;
 int : INT ;
 id : ID ;
@@ -128,8 +132,8 @@ id_keyword : id
   | WRITE
   ;
 stuff : STUFF | id_keyword ;
-rest : .+ ;
 type : ANTLR4 | ANTLR3 | ANTLR2 | BISON ;
+
 ALPHA : 'alpha' ;
 ALIAS : 'alias' ;
 ANALYZE : 'analyze';
@@ -146,6 +150,7 @@ DELETE : 'delete' ;
 DFS : 'dfs' ;
 DR : 'dr' ;
 DOT : '.' ;
+EQUAL : '=' ;
 EXIT : 'exit' ;
 FIND : 'find' ;
 FOLD : 'fold' ;
@@ -171,6 +176,7 @@ RIGHT : 'right' ;
 ROTATE : 'rotate' ;
 RR : 'rr' ;
 RUP : 'rup' ;
+SEMI : ';' ;
 SET : 'set' ;
 SPLIT : 'split' ;
 STACK : 'stack' ;
@@ -183,8 +189,9 @@ WRITE : 'write' ;
 ID: Id ;
 BLOCK_COMMENT : BlockComment -> skip ;
 LINE_COMMENT : LineComment -> skip ;
-WS : ( Hws | Vws )+ -> skip ;
-STUFF : ~[ \t\n\r;]+ ;
+HWS : Hws ;
+VWS : Vws ;
+STUFF : (~[! \t\n\r;] ~[ \t\n\r;]*) ;
 
 fragment Lca : Esc | ~ ('\'' | '\\') ;
 fragment Lcb : Esc | ~ ('"' | '\\') ;

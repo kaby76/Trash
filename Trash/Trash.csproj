@@ -8,7 +8,9 @@
 	  <None Remove="Repl.g4" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Antlr4 Include="Repl.g4" />
+	  <Antlr4 Include="Repl.g4">
+	    <GAtn>true</GAtn>
+	  </Antlr4>
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.8.0" />

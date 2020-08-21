@@ -40,11 +40,7 @@
 
         void RedoAliases()
         {
-            for (int i = 0; i < History.Count; ++i)
-            {
-                string input = History[i];
-                RecallAliases(input);
-            }
+            RecallAliases();
         }
 
         void HistoryAdd(string input)
@@ -55,44 +51,21 @@
 
         void HistoryRead()
         {
-            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (!System.IO.File.Exists(home + Path.DirectorySeparatorChar + PreviousHistoryFfn)) return;
-            var history = System.IO.File.ReadAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn);
-            History = history.ToList();
             RedoAliases();
         }
 
         void HistoryWrite()
         {
-            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            System.IO.File.WriteAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn, History);
+            //var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            //System.IO.File.WriteAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn, History);
         }
 
         public void Run()
         {
-            HistoryRead();
-            string input;
-            if (script_file != null)
-            {
-                // Read commands from script, and read a grammar file (Antlr4) from stdin.
-                lines = System.IO.File.ReadAllLines(script_file);
-                do
-                {
-                    input = lines[current_line_index++];
-                } while (Execute(input));
-            }
-            else
-            {
-                do
-                {
-                    Console.Error.Write("> ");
-                    input = Console.ReadLine();
-                } while (Execute(input));
-            }
-            HistoryWrite();
+            Execute();
         }
 
-        public bool Execute(string line)
+        public void Execute(string line)
         {
             try
             {
@@ -115,7 +88,7 @@
                     else if (tree.alias() != null)
                     {
                         var alias = tree.alias();
-                        var id = alias.id();
+                        var id = alias.ID();
                         var sl = alias.StringLiteral();
                         if (sl != null)
                         {
@@ -126,7 +99,7 @@
                             var id_keyword = alias.id_keyword();
                             Aliases[id.GetText()] = id_keyword.GetText();
                         }
-                        else if (alias.id() == null)
+                        else if (alias.ID() == null)
                         {
                             System.Console.WriteLine();
                             foreach (var p in Aliases)
@@ -146,10 +119,12 @@
                         if (Aliases.ContainsKey(anything.id().GetText()))
                         {
                             var cmd = Aliases[anything.id().GetText()];
-                            var rest = anything.rest()?.children.Select(c => c.GetText());
+                            var stuff = anything.stuff();
+                            var rest = stuff.Select(s => s.GetText()).ToList();
                             var rs = rest != null ? String.Join(" ", rest) : "";
                             cmd = cmd + " " + rs;
-                            return Execute(cmd);
+                            Execute(cmd);
+                            return;
                         }
                         else
                         {
@@ -165,13 +140,15 @@
                             var num = Int32.Parse(snum);
                             var recall = History[num];
                             System.Console.Error.WriteLine(recall);
-                            return Execute(recall);
+                            Execute(recall);
+                            return;
                         }
                         else if (bang.BANG().Length > 1)
                         {
                             var recall = History.Last();
                             System.Console.Error.WriteLine(recall);
-                            return Execute(recall);
+                            Execute(recall);
+                            return;
                         }
                         else if (bang.id_keyword() != null)
                         {
@@ -182,7 +159,8 @@
                                 {
                                     var recall = History[i];
                                     System.Console.Error.WriteLine(recall);
-                                    return Execute(recall);
+                                    Execute(recall);
+                                    return;
                                 }
                             }
                             System.Console.Error.WriteLine("No previous command starts with " + s);
@@ -492,7 +470,7 @@
                     else if (tree.quit() != null)
                     {
                         HistoryAdd(line);
-                        return false;
+                        throw new Quit();
                     }
                     else if (tree.read() != null)
                     {
@@ -633,7 +611,7 @@
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
                         var atree = pr.ParseTree;
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try( atree, aparser))
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
                         {
                             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                             var nodes = engine.parseExpression(expr,
@@ -781,11 +759,782 @@
             catch (DoNotAddToHistory)
             {
             }
+            catch (Quit)
+            {
+                throw;
+            }
             catch (Exception eeks)
             {
                 System.Console.Error.WriteLine(eeks.Message);
             }
-            return true;
+        }
+
+        public void Execute()
+        {
+            HistoryRead();
+            string input;
+            if (script_file != null)
+            {
+                // Read commands from script, and read a grammar file (Antlr4) from stdin.
+                //lines = System.IO.File.ReadAllLines(script_file);
+                //do
+                //{
+                //    input = lines[current_line_index++];
+                //} while (Execute(input));
+            }
+            else
+            {
+                var stdin = new StreamReader(Console.OpenStandardInput(), Console.InputEncoding);
+                var str = new MyInputStream(stdin);
+                var lexer = new ReplLexer(str);
+                lexer.RemoveErrorListeners();
+                var llistener = new ErrorListener<int>(0);
+                lexer.AddErrorListener(llistener);
+                var tokens = new MyUnbufferedTokenStream(lexer);
+                int last = str.Index;
+                for (; ; )
+                {
+                    if (str.Index == str.Size)
+                    {
+                        Console.Error.Write("> ");
+                        if (last != str.Index)
+                        {
+                            // Copy everything from last to current index as string
+                            // and enter into history.
+                            var h = str.GetText(new Antlr4.Runtime.Misc.Interval(last, str.Index - 1));
+                            h = h.Replace("\n", "").Replace("\r", "");
+                            if (h != "")
+                                HistoryAdd(h);
+                            last = str.Index;
+                        }
+                    }
+
+                    {
+                        var parser = new ReplParser(tokens);
+                        var listener = new ErrorListener<IToken>(2);
+                        parser.AddErrorListener(listener);
+                        parser.ErrorHandler = new MyBailErrorStrategy(tokens);
+                        var tree = parser.cmd();
+
+                        if (llistener.had_error) throw new Exception("command syntax error");
+                        if (listener.had_error) throw new Exception("command syntax error");
+
+                        try
+                        {
+                            if (false) ;
+                            else if (tree.alias() != null)
+                            {
+                                var alias = tree.alias();
+                                var id = alias.ID();
+                                var sl = alias.StringLiteral();
+                                if (sl != null)
+                                {
+                                    Aliases[id.GetText()] = sl.GetText().Substring(1, sl.GetText().Length - 2);
+                                }
+                                else if (alias.id_keyword() != null)
+                                {
+                                    var id_keyword = alias.id_keyword();
+                                    Aliases[id.GetText()] = id_keyword.GetText();
+                                }
+                                else if (alias.ID() == null)
+                                {
+                                    System.Console.WriteLine();
+                                    foreach (var p in Aliases)
+                                    {
+                                        System.Console.WriteLine(p.Key + " = " + p.Value);
+                                    }
+                                }
+                            }
+                            else if (tree.analyze() != null)
+                            {
+                                var doc = stack.Peek();
+                                AnalyzeDoc(doc);
+                            }
+                            else if (tree.anything() != null)
+                            {
+                                var anything = tree.anything();
+                                if (Aliases.ContainsKey(anything.id().GetText()))
+                                {
+                                    var cmd = Aliases[anything.id().GetText()];
+                                    ReplParser.StuffContext[] stuff = anything.stuff();
+                                    var rest = stuff.Select(s => s.GetText()).ToList();
+                                    var rs = rest != null ? String.Join(" ", rest) : "";
+                                    cmd = cmd + " " + rs;
+                                    Execute(cmd);
+                                    last = str.Index;
+                                }
+                                else
+                                {
+                                    System.Console.Error.WriteLine("Unknown command");
+                                }
+                            }
+                            else if (tree.bang() != null)
+                            {
+                                var bang = tree.bang();
+                                if (bang.@int() != null)
+                                {
+                                    var snum = bang.@int().GetText();
+                                    var num = Int32.Parse(snum);
+                                    var recall = History[num];
+                                    System.Console.Error.WriteLine(recall);
+                                    Execute(recall);
+                                    throw new DoNotAddToHistory();
+                                }
+                                else if (bang.BANG().Length > 1)
+                                {
+                                    var recall = History.Last();
+                                    System.Console.Error.WriteLine(recall);
+                                    Execute(recall);
+                                    throw new DoNotAddToHistory();
+                                }
+                                else if (bang.id_keyword() != null)
+                                {
+                                    var s = bang.id_keyword().GetText();
+                                    for (int i = History.Count - 1; i >= 0; --i)
+                                    {
+                                        if (History[i].StartsWith(s))
+                                        {
+                                            var recall = History[i];
+                                            System.Console.Error.WriteLine(recall);
+                                            Execute(recall);
+                                            throw new DoNotAddToHistory();
+                                        }
+                                    }
+                                    System.Console.Error.WriteLine("No previous command starts with " + s);
+                                }
+                            }
+                            else if (tree.cd() != null)
+                            {
+                                var c = tree.cd();
+                                var expr = c.StringLiteral()?.GetText();
+                                var stuff = c.stuff();
+                                if (expr != null)
+                                {
+                                    expr = expr?.Substring(1, expr.Length - 2);
+                                }
+                                else if (stuff != null)
+                                {
+                                    expr = stuff.GetText();
+                                }
+                                if (expr != null)
+                                {
+                                    Directory.SetCurrentDirectory(expr);
+                                }
+                                else
+                                {
+                                    expr = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+                                    Directory.SetCurrentDirectory(expr);
+                                }
+                            }
+                            else if (tree.combine() != null)
+                            {
+                                var r = tree.combine();
+                                var doc1 = stack.PeekTop(0);
+                                var doc2 = stack.PeekTop(1);
+                                var results = LanguageServer.Transform.CombineGrammars(doc1, doc2);
+                                EnactEdits(results);
+                            }
+                            else if (tree.convert() != null)
+                            {
+                                var import = tree.convert();
+                                var type = import.type()?.GetText();
+                                var doc = stack.Peek();
+                                var f = doc.FullPath;
+                                if (type == "antlr3")
+                                {
+                                    Dictionary<string, string> res = new Dictionary<string, string>();
+                                    var imp = new LanguageServer.Antlr3Import();
+                                    imp.Try(doc.FullPath, doc.Code, ref res);
+                                    stack.Pop();
+                                    foreach (var r in res)
+                                    {
+                                        var new_doc = CheckDoc(r.Key);
+                                        new_doc.Code = r.Value;
+                                        stack.Push(new_doc);
+                                    }
+                                }
+                                else if (type == "antlr2")
+                                {
+                                    Dictionary<string, string> res = new Dictionary<string, string>();
+                                    var imp = new LanguageServer.Antlr2Import();
+                                    imp.Try(doc.FullPath, doc.Code, ref res);
+                                    foreach (var r in res)
+                                    {
+                                        var new_doc = CheckDoc(r.Key);
+                                        new_doc.Code = r.Value;
+                                        stack.Push(new_doc);
+                                    }
+                                }
+                                else if (type == "bison")
+                                {
+                                    Dictionary<string, string> res = new Dictionary<string, string>();
+                                    var imp = new LanguageServer.BisonImport();
+                                    imp.Try(doc.FullPath, doc.Code, ref res);
+                                    foreach (var r in res)
+                                    {
+                                        var new_doc = CheckDoc(r.Key);
+                                        new_doc.Code = r.Value;
+                                        stack.Push(new_doc);
+                                    }
+                                }
+                                ParseDoc(stack.Peek());
+                            }
+                            else if (tree.delete() != null)
+                            {
+                                var delete = tree.delete();
+                                var expr = delete.StringLiteral().GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    var results = LanguageServer.Transform.Delete(nodes, doc);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.dot() != null)
+                            {
+                                if (stack.Any())
+                                {
+                                    var doc = stack.Peek();
+                                    var pr = ParsingResultsFactory.Create(doc);
+                                    var pt = pr.ParseTree;
+                                    TerminalNodeImpl x = TreeEdits.LeftMostToken(pt);
+                                    var ts = x.Payload.TokenSource;
+                                    System.Console.WriteLine();
+                                    System.Console.WriteLine(
+                                        TreeOutput.OutputTree(
+                                            pt,
+                                            ts as Lexer,
+                                            null).ToString());
+                                }
+                            }
+                            else if (tree.find() != null)
+                            {
+                                var find = tree.find();
+                                var expr = find.StringLiteral().GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
+                                    foreach (var node in nodes)
+                                    {
+                                        TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
+                                        var ts = x.Payload.TokenSource;
+                                        System.Console.WriteLine();
+                                        System.Console.WriteLine(
+                                            TreeOutput.OutputTree(
+                                                node,
+                                                ts as Lexer,
+                                                null).ToString());
+                                    }
+                                }
+                            }
+                            else if (tree.fold() != null)
+                            {
+                                var c = tree.fold();
+                                var expr = c.StringLiteral().GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    var results = LanguageServer.Transform.Fold(nodes, doc);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.foldlit() != null)
+                            {
+                                var c = tree.foldlit();
+                                var expr = c.StringLiteral().GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                                    var results = LanguageServer.Transform.Foldlit(nodes, doc);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.empty() != null)
+                            {
+                                throw new DoNotAddToHistory(); // Don't add to history.
+                            }
+                            else if (tree.has() != null)
+                            {
+                                List<Tuple<string, bool>> result = new List<Tuple<string, bool>>();
+                                var c = tree.has();
+                                var l_or_r = c.LEFT() == null ? "right" : "left";
+                                var expr = c.StringLiteral().GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    if (c.DR() != null)
+                                    {
+                                        result = LanguageServer.Transform.HasDirectRec(nodes, l_or_r, doc);
+                                    }
+                                    else if (c.IR() != null)
+                                    {
+                                        result = LanguageServer.Transform.HasIndirectRec(nodes, l_or_r, doc);
+                                    }
+                                    else throw new Exception("unknown check");
+                                    foreach (var r in result)
+                                    {
+                                        System.Console.WriteLine(r.Item1 + " " + r.Item2);
+                                    }
+                                }
+                            }
+                            else if (tree.history() != null)
+                            {
+                                System.Console.WriteLine();
+                                for (int i = 0; i < History.Count; ++i)
+                                {
+                                    var h = History[i];
+                                    System.Console.WriteLine(i + " " + h);
+                                }
+                            }
+                            else if (tree.kleene() != null)
+                            {
+                                var c = tree.kleene();
+                                var expr = c.StringLiteral().GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(nodes, doc);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.ls() != null)
+                            {
+                                var path = ".";
+                                var c = tree.ls();
+                                var expr = c.StringLiteral()?.GetText();
+                                var stuff = c.stuff();
+                                if (expr != null)
+                                {
+                                    expr = expr?.Substring(1, expr.Length - 2);
+                                }
+                                else if (stuff != null)
+                                {
+                                    expr = stuff.GetText();
+                                }
+                                if (expr != null)
+                                {
+                                    path = expr;
+                                }
+                                List<string> dirs = new List<string>(Directory.EnumerateDirectories(path));
+                                foreach (var dir in dirs)
+                                {
+                                    Console.WriteLine($"{dir.Substring(dir.LastIndexOf(Path.DirectorySeparatorChar) + 1)}/");
+                                }
+                                if (expr == null) expr = "*";
+                                string[] files = Directory.GetFiles(path, expr);
+                                foreach (var f in files)
+                                {
+                                    Console.WriteLine($"{f.Substring(f.LastIndexOf(Path.DirectorySeparatorChar) + 1)}");
+                                }
+                            }
+                            else if (tree.mvsr() != null)
+                            {
+                                var c = tree.mvsr();
+                                var expr = c.StringLiteral().GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    var results = LanguageServer.Transform.MoveStartRuleToTop(doc, nodes);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.parse() != null)
+                            {
+                                var r = tree.parse();
+                                var doc = stack.Peek();
+                                ParseDoc(doc, r.type()?.GetText());
+                            }
+                            else if (tree.pop() != null)
+                            {
+                                _ = stack.Pop();
+                            }
+                            else if (tree.print() != null)
+                            {
+                                var doc = stack.Peek();
+                                System.Console.Error.WriteLine();
+                                System.Console.Error.WriteLine(doc.FullPath);
+                                System.Console.WriteLine(doc.Code);
+                            }
+                            else if (tree.pwd() != null)
+                            {
+                                var cwd = Directory.GetCurrentDirectory();
+                                System.Console.Error.WriteLine(cwd);
+                            }
+                            else if (tree.quit() != null)
+                            {
+                                return;
+                            }
+                            else if (tree.read() != null)
+                            {
+                                var r = tree.read();
+                                var f = r.StringLiteral()?.GetText();
+                                string here = null;
+                                if (f == null)
+                                {
+                                    var s = r.stuff().GetText();
+                                    if (s != null)
+                                    {
+                                        if (s.Contains("."))
+                                        {
+                                            f = s;
+                                        }
+                                        else
+                                        {
+                                            here = s;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    f = f?.Substring(1, f.Length - 2);
+                                }
+                                if (f != null)
+                                {
+                                    var doc = CheckDoc(f);
+                                    stack.Push(doc);
+                                }
+                                else if (here != null)
+                                {
+                                    StringBuilder sb = new StringBuilder();
+                                    for (; ; )
+                                    {
+                                        string cl;
+                                        if (script_file != null)
+                                        {
+                                            cl = lines[current_line_index++];
+                                        }
+                                        else
+                                        {
+                                            cl = Console.ReadLine();
+                                        }
+                                        if (cl == here)
+                                            break;
+                                        sb.AppendLine(cl);
+                                    }
+                                    var s = sb.ToString();
+                                    var doc = CreateDoc("temp" + current_line_index + ".g4");
+                                    doc.Code = s;
+                                    stack.Push(doc);
+                                }
+                                else throw new Exception("not sure what to read.");
+                            }
+                            else if (tree.rename() != null)
+                            {
+                                var rename = tree.rename();
+                                var to_sym = rename.StringLiteral()[1].GetText();
+                                to_sym = to_sym.Substring(1, to_sym.Length - 2);
+                                var doc = stack.Peek();
+                                var expr = rename.StringLiteral()[0].GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                                    var results = LanguageServer.Transform.Rename(nodes, to_sym, doc);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.reorder() != null)
+                            {
+                                Dictionary<string, string> results = new Dictionary<string, string>();
+                                var c = tree.reorder();
+                                var doc = stack.Peek();
+                                string expr = null;
+                                if (c.modes() != null)
+                                {
+                                    results = LanguageServer.Transform.SortModes(doc);
+                                }
+                                else
+                                {
+                                    LspAntlr.ReorderType order = default;
+                                    if (c.alpha() != null)
+                                        order = LspAntlr.ReorderType.Alphabetically;
+                                    else if (c.bfs() != null)
+                                    {
+                                        order = LspAntlr.ReorderType.BFS;
+                                        expr = c.bfs().StringLiteral().GetText();
+                                    }
+                                    else if (c.dfs() != null)
+                                    {
+                                        order = LspAntlr.ReorderType.DFS;
+                                        expr = c.dfs().StringLiteral().GetText();
+                                    }
+                                    else
+                                        throw new Exception("unknown sorting type");
+                                    List<IParseTree> nodes = null;
+                                    if (expr != null)
+                                    {
+                                        expr = expr.Substring(1, expr.Length - 2);
+                                        var pr = ParsingResultsFactory.Create(doc);
+                                        var aparser = pr.Parser;
+                                        var atree = pr.ParseTree;
+                                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                        {
+                                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                            nodes = engine.parseExpression(expr,
+                                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                        }
+                                    }
+                                    results = LanguageServer.Transform.ReorderParserRules(doc, order, nodes);
+                                }
+                                EnactEdits(results);
+                            }
+                            else if (tree.rotate() != null)
+                            {
+                                var top = stack.Pop();
+                                var docs = stack.ToList();
+                                docs.Reverse();
+                                stack = new StackQueue<Document>();
+                                stack.Push(top);
+                                foreach (var doc in docs) stack.Push(doc);
+                            }
+                            else if (tree.rr() != null)
+                            {
+                                var c = tree.rr();
+                                var expr = c.StringLiteral().GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    var results = LanguageServer.Transform.ToRightRecursion(nodes, doc);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.rup() != null)
+                            {
+                                var rup = tree.rup();
+                                var expr = rup.StringLiteral()?.GetText();
+                                expr = expr?.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                if (expr != null)
+                                {
+                                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                    {
+                                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                        var nodes = engine.parseExpression(expr,
+                                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                        var results = LanguageServer.Transform.RemoveUselessParentheses(nodes, doc);
+                                        EnactEdits(results);
+                                    }
+                                }
+                                else
+                                {
+                                    var results = LanguageServer.Transform.RemoveUselessParentheses(doc);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.set() != null)
+                            {
+                                var c = tree.set();
+                                var id = c.id_keyword().GetText();
+                                var v1 = c.StringLiteral()?.GetText();
+                                var v2 = c.INT()?.GetText();
+                                if (id.ToLower() == "quietafter")
+                                {
+                                    var v = int.Parse(v2);
+                                    QuietAfter = v;
+                                }
+                            }
+                            else if (tree.split() != null)
+                            {
+                                var r = tree.split();
+                                var doc = stack.Peek();
+                                var results = LanguageServer.Transform.SplitGrammar(doc);
+                                EnactEdits(results);
+                            }
+                            else if (tree.stack() != null)
+                            {
+                                var docs = stack.ToList();
+                                foreach (var doc in docs)
+                                {
+                                    System.Console.WriteLine();
+                                    System.Console.WriteLine(doc.FullPath);
+                                }
+                            }
+                            else if (tree.ulliteral() != null)
+                            {
+                                var ulliteral = tree.ulliteral();
+                                var expr = ulliteral.StringLiteral()?.GetText();
+                                expr = expr?.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                if (expr != null)
+                                {
+                                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                    {
+                                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                        var nodes = engine.parseExpression(expr,
+                                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                                        var results = LanguageServer.Transform.UpperLowerCaseLiteral(nodes, doc);
+                                        EnactEdits(results);
+                                    }
+                                }
+                                else
+                                {
+                                    var results = LanguageServer.Transform.UpperLowerCaseLiteral(null, doc);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.unalias() != null)
+                            {
+                                var alias = tree.unalias();
+                                var id = alias.id();
+                                Aliases.Remove(id.GetText());
+                            }
+                            else if (tree.unfold() != null)
+                            {
+                                var unfold = tree.unfold();
+                                var expr = unfold.StringLiteral().GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                                    var results = LanguageServer.Transform.Unfold(nodes, doc);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.unify() != null)
+                            {
+                                var unify = tree.unify();
+                                var expr = unify.StringLiteral().GetText();
+                                expr = expr.Substring(1, expr.Length - 2);
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    var results = LanguageServer.Transform.Unify(nodes, doc);
+                                    EnactEdits(results);
+                                }
+                            }
+                            else if (tree.write() != null)
+                            {
+                                var r = tree.write();
+                                var doc = stack.Peek();
+                                WriteDoc(doc);
+                            }
+                        }
+                        catch (DoNotAddToHistory)
+                        {
+                        }
+                        catch (Quit)
+                        {
+                            return;
+                        }
+                        catch (Exception eeks)
+                        {
+                            System.Console.Error.WriteLine(eeks.Message);
+                        }
+                        finally
+                        {
+                            // Reset the input buffer and start all over from
+                            // scratch.
+                            while (str.Index < str.Size && !(str.LA(1) == '\n' || str.LA(1) == '\r'))
+                                str.Consume();
+                            while (str.Index < str.Size && (str.LA(1) == '\n' || str.LA(1) == '\r'))
+                                str.Consume();
+                            lexer = new ReplLexer(str);
+                            lexer.RemoveErrorListeners();
+                            lexer.AddErrorListener(new ErrorListener<int>(0));
+                            tokens = new MyUnbufferedTokenStream(lexer);
+                        }
+                    }
+                }
+                HistoryWrite();
+            }
+        }
+
+        private class Quit : Exception
+        {
+            public Quit() { }
         }
 
         private class DoNotAddToHistory : Exception
@@ -813,62 +1562,101 @@
             }
         }
 
-        public bool RecallAliases(string line)
+        public void RecallAliases()
         {
-            try
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (!System.IO.File.Exists(home + Path.DirectorySeparatorChar + PreviousHistoryFfn)) return;
+            var history = System.IO.File.ReadAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn);
+            History = history.ToList();
+            var st = string.Join(Environment.NewLine, history);
+            var str = new AntlrInputStream(st);
+            var lexer = new ReplLexer(str);
+            lexer.RemoveErrorListeners();
+            var llistener = new ErrorListener<int>(0);
+            lexer.AddErrorListener(llistener);
+            if (false)
             {
-                var input = line + ";";
-                var str = new AntlrInputStream(input);
-                var lexer = new ReplLexer(str);
-                lexer.RemoveErrorListeners();
-                var llistener = new ErrorListener<int>(0);
-                lexer.AddErrorListener(llistener);
-                var tokens = new CommonTokenStream(lexer);
-                var parser = new ReplParser(tokens);
-                parser.RemoveErrorListeners();
-                var listener = new ErrorListener<IToken>(0);
-                parser.AddErrorListener(listener);
-                var tree = parser.cmd();
-                if (llistener.had_error) throw new Exception("command syntax error");
-                if (listener.had_error) throw new Exception("command syntax error");
-                if (tree.alias() != null)
+                for (; ; )
                 {
-                    var alias = tree.alias();
-                    var id = alias.id();
-                    var sl = alias.StringLiteral();
-                    if (sl != null)
-                    {
-                        Aliases[id.GetText()] = sl.GetText().Substring(1, sl.GetText().Length - 2);
-                    }
-                    else if (alias.id_keyword() != null)
-                    {
-                        var id_keyword = alias.id_keyword();
-                        Aliases[id.GetText()] = id_keyword.GetText();
-                    }
-                }
-                else if (tree.unalias() != null)
-                {
-                    var alias = tree.unalias();
-                    var id = alias.id();
-                    Aliases.Remove(id.GetText());
-                }
-                else if (tree.anything() != null)
-                {
-                    var anything = tree.anything();
-                    if (Aliases.ContainsKey(anything.id().GetText()))
-                    {
-                        var cmd = Aliases[anything.id().GetText()];
-                        var rest = anything.rest()?.children.Select(c => c.GetText());
-                        var rs = String.Join(" ", rest);
-                        cmd = cmd + rs;
-                        RecallAliases(cmd);
-                    }
+                    var tok = lexer.NextToken();
+                    System.Console.WriteLine(tok);
+                    if (tok.Type == -1)
+                        break;
                 }
             }
-            catch
+
+            var tokens = new UnbufferedTokenStream(lexer);
+            int last = str.Index;
+            for (; ; )
             {
+                try
+                {
+                    var parser = new ReplParser(tokens);
+                    var listener = new ErrorListener<IToken>(2);
+                    parser.AddErrorListener(listener);
+                    parser.ErrorHandler = new MyBailErrorStrategy(tokens);
+                    var tree = parser.cmd();
+
+                    if (llistener.had_error) throw new Exception("command syntax error");
+                    if (listener.had_error) throw new Exception("command syntax error");
+
+                    if (tree.alias() != null)
+                    {
+                        var alias = tree.alias();
+                        var id = alias.ID()?.GetText();
+                        var sl = alias.StringLiteral()?.GetText();
+                        var id_keyword = alias.id_keyword()?.GetText();
+                        if (id != null && sl != null)
+                        {
+                            Aliases[id] = sl.Substring(1, sl.Length - 2);
+                        }
+                        else if (id != null && id_keyword != null)
+                        {
+                            Aliases[id] = id_keyword;
+                        }
+                    }
+                    else if (tree.unalias() != null)
+                    {
+                        var alias = tree.unalias();
+                        var id = alias.id();
+                        Aliases.Remove(id.GetText());
+                    }
+                    else if (tree.anything() != null)
+                    {
+                        var anything = tree.anything();
+                        if (Aliases.ContainsKey(anything.id().GetText()))
+                        {
+                            var cmd = Aliases[anything.id().GetText()];
+                            var stuff = anything.stuff();
+                            var rest = stuff.Select(s => s.GetText()).ToList();
+                            var rs = rest != null ? String.Join(" ", rest) : "";
+                            cmd = cmd + rs;
+                            //RecallAliases(cmd);
+                        }
+                    }
+                }
+                catch (DoNotAddToHistory)
+                {
+                }
+                catch (Exception eeks)
+                {
+                }
+                finally
+                {
+                    // Reset the input buffer and start all over from
+                    // scratch.
+                    while (str.Index < str.Size && !(str.LA(1) == '\n' || str.LA(1) == '\r'))
+                        str.Consume();
+                    while (str.Index < str.Size && (str.LA(1) == '\n' || str.LA(1) == '\r'))
+                        str.Consume();
+                    lexer = new ReplLexer(str);
+                    lexer.RemoveErrorListeners();
+                    lexer.AddErrorListener(new ErrorListener<int>(0));
+                    tokens = new UnbufferedTokenStream(lexer);
+                }
+                if (str.Index == str.Size)
+                    break;
             }
-            return true;
         }
 
         public Document CreateDoc(string path)
