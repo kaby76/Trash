@@ -52,23 +52,23 @@ bang : BANG HWS* (BANG | int | id_keyword) ;
 cd : CD HWS* (StringLiteral | stuff)? ;
 combine : COMBINE ;
 convert : CONVERT HWS* type ;
-delete : DELETE HWS* StringLiteral ;
+delete : DELETE HWS* arg ;
 dot : DOT ;
 empty : ;
-find : FIND HWS* StringLiteral ;
-fold : FOLD HWS* StringLiteral ;
-foldlit : FOLDLIT HWS* StringLiteral ;
+find : FIND HWS* arg ;
+fold : FOLD HWS* arg ;
+foldlit : FOLDLIT HWS* arg ;
 has : HAS HWS* (DR | IR) HWS* (LEFT | RIGHT) HWS* StringLiteral ;
 history : HISTORY ;
-kleene : KLEENE HWS* StringLiteral ;
-ls : LS HWS* (StringLiteral | stuff)?  ;
+kleene : KLEENE HWS* arg ;
+ls : LS HWS* arg?  ;
 mvsr : MVSR HWS* StringLiteral ;
 parse : PARSE HWS* type? ;
 pop : POP ;
 print : PRINT ;
 pwd : PWD ;
 quit : (QUIT | EXIT) ;
-read : READ HWS* (StringLiteral | stuff) ;
+read : READ HWS* arg ;
 rename : RENAME HWS* StringLiteral HWS* StringLiteral ;
 reorder : REORDER HWS* (alpha | bfs | dfs | modes) ;
 rotate : ROTATE ;
@@ -88,6 +88,7 @@ dfs : DFS HWS* StringLiteral ;
 modes : MODES ;
 int : INT ;
 id : ID ;
+arg : (StringLiteral | stuff) ;
 id_keyword : id
   | ALIAS
   | ANALYZE

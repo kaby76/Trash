@@ -60,6 +60,24 @@
             System.IO.File.WriteAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn, History);
         }
 
+        string GetArg(ReplParser.ArgContext arg)
+        {
+            if (arg == null)
+                return null;
+            if (arg.StringLiteral() != null)
+            {
+                var sl = arg.StringLiteral().GetText();
+                sl = sl.Substring(1, sl.Length - 2);
+                return sl;
+            }
+            if (arg.stuff() != null)
+            {
+                var a = arg.stuff().GetText();
+                return a;
+            }
+            return null;
+        }
+
         public void Execute(string line)
         {
             try
@@ -240,8 +258,7 @@
                     else if (tree.delete() != null)
                     {
                         var delete = tree.delete();
-                        var expr = delete.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
+                        var expr = GetArg(delete.arg());
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
@@ -276,8 +293,7 @@
                     else if (tree.find() != null)
                     {
                         var find = tree.find();
-                        var expr = find.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
+                        var expr = GetArg(find.arg());
                         var doc = stack.Peek();
                         org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                         var pr = ParsingResultsFactory.Create(doc);
@@ -304,8 +320,7 @@
                     else if (tree.fold() != null)
                     {
                         var c = tree.fold();
-                        var expr = c.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
+                        var expr = GetArg(c.arg());
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
@@ -323,8 +338,7 @@
                     else if (tree.foldlit() != null)
                     {
                         var c = tree.foldlit();
-                        var expr = c.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
+                        var expr = GetArg(c.arg());
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
@@ -387,8 +401,7 @@
                     else if (tree.kleene() != null)
                     {
                         var c = tree.kleene();
-                        var expr = c.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
+                        var expr = GetArg(c.arg());
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
@@ -406,8 +419,7 @@
                     else if (tree.ls() != null)
                     {
                         var c = tree.ls();
-                        var expr = c.StringLiteral()?.GetText();
-                        expr = expr?.Substring(1, expr.Length - 2);
+                        var expr = GetArg(c.arg());
                         var cwd = Directory.GetCurrentDirectory();
                         List<string> dirs = new List<string>(Directory.EnumerateDirectories(cwd));
                         foreach (var dir in dirs)
@@ -470,26 +482,11 @@
                     else if (tree.read() != null)
                     {
                         var r = tree.read();
-                        var f = r.StringLiteral()?.GetText();
+                        var f = GetArg(r.arg());
                         string here = null;
-                        if (f == null)
+                        if (!f.Contains("."))
                         {
-                            var s = r.stuff().GetText();
-                            if (s != null)
-                            {
-                                if (s.Contains("."))
-                                {
-                                    f = s;
-                                }
-                                else
-                                {
-                                    here = s;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            f = f?.Substring(1, f.Length - 2);
+                            here = f;
                         }
                         if (f != null)
                         {
@@ -977,8 +974,7 @@
                             else if (tree.delete() != null)
                             {
                                 var delete = tree.delete();
-                                var expr = delete.StringLiteral().GetText();
-                                expr = expr.Substring(1, expr.Length - 2);
+                                var expr = GetArg(delete.arg());
                                 var doc = stack.Peek();
                                 var pr = ParsingResultsFactory.Create(doc);
                                 var aparser = pr.Parser;
@@ -1013,8 +1009,7 @@
                             else if (tree.find() != null)
                             {
                                 var find = tree.find();
-                                var expr = find.StringLiteral().GetText();
-                                expr = expr.Substring(1, expr.Length - 2);
+                                var expr = GetArg(find.arg());
                                 var doc = stack.Peek();
                                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                                 var pr = ParsingResultsFactory.Create(doc);
@@ -1041,8 +1036,7 @@
                             else if (tree.fold() != null)
                             {
                                 var c = tree.fold();
-                                var expr = c.StringLiteral().GetText();
-                                expr = expr.Substring(1, expr.Length - 2);
+                                var expr = GetArg(c.arg());
                                 var doc = stack.Peek();
                                 var pr = ParsingResultsFactory.Create(doc);
                                 var aparser = pr.Parser;
@@ -1060,8 +1054,7 @@
                             else if (tree.foldlit() != null)
                             {
                                 var c = tree.foldlit();
-                                var expr = c.StringLiteral().GetText();
-                                expr = expr.Substring(1, expr.Length - 2);
+                                var expr = GetArg(c.arg());
                                 var doc = stack.Peek();
                                 var pr = ParsingResultsFactory.Create(doc);
                                 var aparser = pr.Parser;
@@ -1124,8 +1117,7 @@
                             else if (tree.kleene() != null)
                             {
                                 var c = tree.kleene();
-                                var expr = c.StringLiteral().GetText();
-                                expr = expr.Substring(1, expr.Length - 2);
+                                var expr = GetArg(c.arg());
                                 var doc = stack.Peek();
                                 var pr = ParsingResultsFactory.Create(doc);
                                 var aparser = pr.Parser;
@@ -1144,16 +1136,7 @@
                             {
                                 var path = ".";
                                 var c = tree.ls();
-                                var expr = c.StringLiteral()?.GetText();
-                                var stuff = c.stuff();
-                                if (expr != null)
-                                {
-                                    expr = expr?.Substring(1, expr.Length - 2);
-                                }
-                                else if (stuff != null)
-                                {
-                                    expr = stuff.GetText();
-                                }
+                                var expr = GetArg(c.arg());
                                 if (expr != null)
                                 {
                                     path = expr;
@@ -1218,26 +1201,11 @@
                             else if (tree.read() != null)
                             {
                                 var r = tree.read();
-                                var f = r.StringLiteral()?.GetText();
+                                var f = GetArg(r.arg());
                                 string here = null;
-                                if (f == null)
+                                if (!f.Contains("."))
                                 {
-                                    var s = r.stuff().GetText();
-                                    if (s != null)
-                                    {
-                                        if (s.Contains("."))
-                                        {
-                                            f = s;
-                                        }
-                                        else
-                                        {
-                                            here = s;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    f = f?.Substring(1, f.Length - 2);
+                                    here = f;
                                 }
                                 if (f != null)
                                 {
