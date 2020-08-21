@@ -213,6 +213,12 @@ namespace Trash
                 {
                     break;
                 }
+                else if (read == 0xA && n - 1 >= 0 && data[n - 1] != 0xD)
+                {
+                    data[n++] = (char)0xD;
+                    ensureCapacity(n + distance + 1);
+                    data[n++] = (char)0xA;
+                }
                 else
                 {
                     data[n++] = (char)read;

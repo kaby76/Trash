@@ -191,7 +191,7 @@ BLOCK_COMMENT : BlockComment -> skip ;
 LINE_COMMENT : LineComment -> skip ;
 HWS : Hws ;
 VWS : Vws ;
-STUFF : (~[! \t\n\r;] ~[ \t\n\r;]*) ;
+STUFF : (~([!] | [;] | '\u0020'| '\u000B' | '\u000A' | '\u000D') ~([;] | '\u0020' | '\u000A' | '\u000D' | '\u000B')*) ;
 
 fragment Lca : Esc | ~ ('\'' | '\\') ;
 fragment Lcb : Esc | ~ ('"' | '\\') ;
@@ -200,8 +200,8 @@ fragment XDIGIT : '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ;
 fragment BlockComment : '/*' ( ('/' ~'*') | ~'/' )* '*/' ;
 fragment LineComment : '--' ~[\r\n]* ;
 fragment Ws : Hws | Vws ;
-fragment Hws : [ \t] ;
-fragment Vws : [\r\n\f] ;
+fragment Hws : ('\u0020'| '\u000B');
+fragment Vws : ('\u000A' | '\u000D') ;
 fragment Id : NameStartChar NameChar* ;
 fragment Underscore : '_' ;
 fragment NameStartChar : 'A'..'Z' | 'a'..'z' | '_'
