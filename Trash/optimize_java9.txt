@@ -41,7 +41,23 @@ foldlit "//lexerRuleSpec/TOKEN_REF"
 
 -- Clean up packageOrTypeName rule.
 kleene //parserRuleSpec/RULE_REF[text()='packageOrTypeName']
+kleene //parserRuleSpec/RULE_REF[text()='packageName']
+kleene //parserRuleSpec/RULE_REF[text()='ambigousName']
+rup
 
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'assignmentOperator']"
+delete "//parserRuleSpec[RULE_REF/text() = 'assignmentOperator']"
+
+-- Clean up additiveExpression
+kleene kleene //parserRuleSpec/RULE_REF[text()='additiveExpression']
+rup
+unify //parserRuleSpec[RULE_REF/text()='additiveExpression']//altList
+
+-- Clean up relationalExpression
+kleene //parserRuleSpec/RULE_REF[text()='relationalExpression']
+rup
+unify //parserRuleSpec[RULE_REF/text()='relationalExpression']//altList
+unify //parserRuleSpec[RULE_REF/text()='relationalExpression']//altList//altList
 
 -- Save
 write

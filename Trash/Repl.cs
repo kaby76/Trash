@@ -362,8 +362,7 @@
                         List<Tuple<string, bool>> result = new List<Tuple<string, bool>>();
                         var c = tree.has();
                         var l_or_r = c.LEFT() == null ? "right" : "left";
-                        var expr = c.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
+                        var expr = GetArg(c.arg());
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
@@ -704,8 +703,7 @@
                     else if (tree.unfold() != null)
                     {
                         var unfold = tree.unfold();
-                        var expr = unfold.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
+                        var expr = GetArg(unfold.arg());
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
@@ -723,8 +721,7 @@
                     else if (tree.unify() != null)
                     {
                         var unify = tree.unify();
-                        var expr = unify.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
+                        var expr = GetArg(unify.arg());
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
@@ -1078,8 +1075,7 @@
                                 List<Tuple<string, bool>> result = new List<Tuple<string, bool>>();
                                 var c = tree.has();
                                 var l_or_r = c.LEFT() == null ? "right" : "left";
-                                var expr = c.StringLiteral().GetText();
-                                expr = expr.Substring(1, expr.Length - 2);
+                                var expr = GetArg(c.arg());
                                 var doc = stack.Peek();
                                 var pr = ParsingResultsFactory.Create(doc);
                                 var aparser = pr.Parser;
@@ -1423,8 +1419,7 @@
                             else if (tree.unfold() != null)
                             {
                                 var unfold = tree.unfold();
-                                var expr = unfold.StringLiteral().GetText();
-                                expr = expr.Substring(1, expr.Length - 2);
+                                var expr = GetArg(unfold.arg());
                                 var doc = stack.Peek();
                                 var pr = ParsingResultsFactory.Create(doc);
                                 var aparser = pr.Parser;
@@ -1442,8 +1437,7 @@
                             else if (tree.unify() != null)
                             {
                                 var unify = tree.unify();
-                                var expr = unify.StringLiteral().GetText();
-                                expr = expr.Substring(1, expr.Length - 2);
+                                var expr = GetArg(unify.arg());
                                 var doc = stack.Peek();
                                 var pr = ParsingResultsFactory.Create(doc);
                                 var aparser = pr.Parser;
