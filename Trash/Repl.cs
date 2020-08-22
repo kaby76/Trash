@@ -410,7 +410,7 @@
                                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                             }
-                            var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(nodes, doc);
+                            var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(doc, nodes);
                             EnactEdits(results);
                         }
                     }
@@ -1122,7 +1122,7 @@
                                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                                     }
-                                    var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(nodes, doc);
+                                    var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(doc, nodes);
                                     EnactEdits(results);
                                 }
                             }
