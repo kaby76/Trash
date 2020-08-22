@@ -48,16 +48,36 @@ rup
 unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'assignmentOperator']"
 delete "//parserRuleSpec[RULE_REF/text() = 'assignmentOperator']"
 
--- Clean up additiveExpression
-kleene kleene //parserRuleSpec/RULE_REF[text()='additiveExpression']
+-- Clean up all left and right direct recursion, e.g., additiveExpression, relationalExpression
+kleene
 rup
-unify //parserRuleSpec[RULE_REF/text()='additiveExpression']//altList
 
--- Clean up relationalExpression
-kleene //parserRuleSpec/RULE_REF[text()='relationalExpression']
-rup
+unify //parserRuleSpec[RULE_REF/text()='additiveExpression']//altList
 unify //parserRuleSpec[RULE_REF/text()='relationalExpression']//altList
 unify //parserRuleSpec[RULE_REF/text()='relationalExpression']//altList//altList
+
+-- Take care of the indirect left recursion in classOrInterfaceType, classType, interfaceType
+-- Whoever wrote it is brain dead. And whoever wrote the unfolding for it in Java9 is also brain dead.
+delete //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//RULE_REF[text()='interfaceType']
+delete //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//OR
+unfold //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//RULE_REF[text()='classType']
+unfold //parserRuleSpec[RULE_REF/text()='interfaceType']//RULE_REF[text()='classType']
+-- Required to remove "mutually left-recursive" warning for classOrInterfaceType!
+-- Apparently, parentheses mess it up.
+rup
+
+-- Same type of problem.
+delete //parserRuleSpec[RULE_REF/text()='unannClassOrInterfaceType']//RULE_REF[text()='unannInterfaceType']
+delete //parserRuleSpec[RULE_REF/text()='unannClassOrInterfaceType']//OR
+unfold //parserRuleSpec[RULE_REF/text()='unannClassOrInterfaceType']//RULE_REF[text()='unannClassType']
+unfold //parserRuleSpec[RULE_REF/text()='unannInterfaceType']//RULE_REF[text()='unannClassType']
+-- Required to remove "mutually left-recursive" warning.
+rup
+
+-- Take care of postfixExpression indirect left recursion.
+unfold //parserRuleSpec[RULE_REF/text()='postfixExpression']//RULE_REF[text()='postIncrementExpression']
+unfold //parserRuleSpec[RULE_REF/text()='postfixExpression']//RULE_REF[text()='postDecrementExpression']
+rup
 
 -- Save
 write
