@@ -182,16 +182,7 @@
                     else if (tree.cd() != null)
                     {
                         var c = tree.cd();
-                        var expr = c.StringLiteral()?.GetText();
-                        var stuff = c.stuff();
-                        if (expr != null)
-                        {
-                            expr = expr?.Substring(1, expr.Length - 2);
-                        }
-                        else if (stuff != null)
-                        {
-                            expr = stuff.GetText();
-                        }
+                        var expr = GetArg(c.arg());
                         if (expr != null)
                         {
                             Directory.SetCurrentDirectory(expr);
@@ -359,7 +350,7 @@
                     }
                     else if (tree.has() != null)
                     {
-                        List<Tuple<string, bool>> result = new List<Tuple<string, bool>>();
+                        List<Tuple<string, string>> result = new List<Tuple<string, string>>();
                         var c = tree.has();
                         var l_or_r = c.LEFT() == null ? "right" : "left";
                         var expr = GetArg(c.arg());
@@ -369,13 +360,17 @@
                         var atree = pr.ParseTree;
                         using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
                         {
-                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                            var nodes = engine.parseExpression(expr,
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            List<IParseTree> nodes = null;
+                            if (expr != null)
+                            {
+                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                nodes = engine.parseExpression(expr,
+                                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            }
                             if (c.DR() != null)
                             {
-                                result = LanguageServer.Transform.HasDirectRec(nodes, l_or_r, doc);
+                                result = LanguageServer.Transform.HasDirectRec(doc, nodes);
                             }
                             else if (c.IR() != null)
                             {
@@ -407,10 +402,14 @@
                         var atree = pr.ParseTree;
                         using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
                         {
-                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                            var nodes = engine.parseExpression(expr,
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            List<IParseTree> nodes = null;
+                            if (expr != null)
+                            {
+                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                nodes = engine.parseExpression(expr,
+                                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            }
                             var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(nodes, doc);
                             EnactEdits(results);
                         }
@@ -895,16 +894,7 @@
                             else if (tree.cd() != null)
                             {
                                 var c = tree.cd();
-                                var expr = c.StringLiteral()?.GetText();
-                                var stuff = c.stuff();
-                                if (expr != null)
-                                {
-                                    expr = expr?.Substring(1, expr.Length - 2);
-                                }
-                                else if (stuff != null)
-                                {
-                                    expr = stuff.GetText();
-                                }
+                                var expr = GetArg(c.arg());
                                 if (expr != null)
                                 {
                                     Directory.SetCurrentDirectory(expr);
@@ -1072,7 +1062,7 @@
                             }
                             else if (tree.has() != null)
                             {
-                                List<Tuple<string, bool>> result = new List<Tuple<string, bool>>();
+                                List<Tuple<string, string>> result = new List<Tuple<string, string>>();
                                 var c = tree.has();
                                 var l_or_r = c.LEFT() == null ? "right" : "left";
                                 var expr = GetArg(c.arg());
@@ -1082,13 +1072,17 @@
                                 var atree = pr.ParseTree;
                                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
                                 {
-                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                    var nodes = engine.parseExpression(expr,
+                                    List<IParseTree> nodes = null;
+                                    if (expr != null)
+                                    {
+                                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                        nodes = engine.parseExpression(expr,
                                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    }
                                     if (c.DR() != null)
                                     {
-                                        result = LanguageServer.Transform.HasDirectRec(nodes, l_or_r, doc);
+                                        result = LanguageServer.Transform.HasDirectRec(doc, nodes);
                                     }
                                     else if (c.IR() != null)
                                     {
@@ -1120,10 +1114,14 @@
                                 var atree = pr.ParseTree;
                                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
                                 {
-                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                    var nodes = engine.parseExpression(expr,
-                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    List<IParseTree> nodes = null;
+                                    if (expr != null)
+                                    {
+                                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                        nodes = engine.parseExpression(expr,
+                                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    }
                                     var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(nodes, doc);
                                     EnactEdits(results);
                                 }
