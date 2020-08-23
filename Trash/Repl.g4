@@ -58,7 +58,7 @@ empty : ;
 find : FIND HWS* arg ;
 fold : FOLD HWS* arg ;
 foldlit : FOLDLIT HWS* arg ;
-has : HAS HWS* (DR | IR) HWS* (LEFT | RIGHT)? HWS* arg? ;
+has : HAS HWS* (DR | IR) HWS* GRAPH? HWS* arg? ;
 history : HISTORY ;
 kleene : KLEENE HWS* arg? ;
 ls : LS HWS* arg?  ;
@@ -104,11 +104,11 @@ id_keyword : id
   | FIND
   | FOLD
   | FOLDLIT
+  | GRAPH
   | HAS
   | HISTORY
   | IR
   | KLEENE
-  | LEFT
   | LS
   | MVSR
   | PARSE
@@ -119,7 +119,6 @@ id_keyword : id
   | READ
   | RENAME
   | REORDER
-  | RIGHT
   | ROTATE
   | RR
   | RUP
@@ -156,11 +155,11 @@ EXIT : 'exit' ;
 FIND : 'find' ;
 FOLD : 'fold' ;
 FOLDLIT : 'foldlit' ;
+GRAPH : 'graph' ;
 HAS : 'has' ;
 HISTORY : 'history' ;
 INT : [0-9]+ ;
 IR : 'ir' ;
-LEFT : 'left' ;
 LS : 'ls' ;
 KLEENE : 'kleene' ;
 MODES : 'modes' ;
@@ -173,7 +172,6 @@ QUIT : 'quit' ;
 READ : 'read' ;
 RENAME : 'rename' ;
 REORDER : 'reorder' ;
-RIGHT : 'right' ;
 ROTATE : 'rotate' ;
 RR : 'rr' ;
 RUP : 'rup' ;

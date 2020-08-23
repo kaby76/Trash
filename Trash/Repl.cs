@@ -351,7 +351,7 @@
                     else if (tree.has() != null)
                     {
                         var c = tree.has();
-                        var l_or_r = c.LEFT() == null ? "right" : "left";
+                        var graph = c.GRAPH() != null;
                         var expr = GetArg(c.arg());
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
@@ -377,7 +377,7 @@
                             }
                             else if (c.IR() != null)
                             {
-                                var result = LanguageServer.Transform.HasIndirectRec(nodes, l_or_r, doc);
+                                var result = LanguageServer.Transform.HasIndirectRec(nodes, graph, doc);
                                 foreach (var r in result)
                                 {
                                     System.Console.WriteLine(r);
@@ -1062,7 +1062,7 @@
                             else if (tree.has() != null)
                             {
                                 var c = tree.has();
-                                var l_or_r = c.LEFT() == null ? "right" : "left";
+                                var graph = c.GRAPH() != null;
                                 var expr = GetArg(c.arg());
                                 var doc = stack.Peek();
                                 var pr = ParsingResultsFactory.Create(doc);
@@ -1088,7 +1088,7 @@
                                     }
                                     else if (c.IR() != null)
                                     {
-                                        var result = LanguageServer.Transform.HasIndirectRec(nodes, l_or_r, doc);
+                                        var result = LanguageServer.Transform.HasIndirectRec(nodes, graph, doc);
                                         foreach (var r in result)
                                         {
                                             System.Console.WriteLine(r);
