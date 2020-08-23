@@ -350,7 +350,6 @@
                     }
                     else if (tree.has() != null)
                     {
-                        List<Tuple<string, string>> result = new List<Tuple<string, string>>();
                         var c = tree.has();
                         var l_or_r = c.LEFT() == null ? "right" : "left";
                         var expr = GetArg(c.arg());
@@ -370,17 +369,21 @@
                             }
                             if (c.DR() != null)
                             {
-                                result = LanguageServer.Transform.HasDirectRec(doc, nodes);
+                                var result = LanguageServer.Transform.HasDirectRec(doc, nodes);
+                                foreach (var r in result)
+                                {
+                                    System.Console.WriteLine(r);
+                                }
                             }
                             else if (c.IR() != null)
                             {
-                                result = LanguageServer.Transform.HasIndirectRec(nodes, l_or_r, doc);
+                                var result = LanguageServer.Transform.HasIndirectRec(nodes, l_or_r, doc);
+                                foreach (var r in result)
+                                {
+                                    System.Console.WriteLine(r);
+                                }
                             }
                             else throw new Exception("unknown check");
-                            foreach (var r in result)
-                            {
-                                System.Console.WriteLine(r.Item1 + " " + r.Item2);
-                            }
                         }
                     }
                     else if (tree.history() != null)
@@ -1058,7 +1061,6 @@
                             }
                             else if (tree.has() != null)
                             {
-                                List<Tuple<string, string>> result = new List<Tuple<string, string>>();
                                 var c = tree.has();
                                 var l_or_r = c.LEFT() == null ? "right" : "left";
                                 var expr = GetArg(c.arg());
@@ -1078,17 +1080,21 @@
                                     }
                                     if (c.DR() != null)
                                     {
-                                        result = LanguageServer.Transform.HasDirectRec(doc, nodes);
+                                        var result = LanguageServer.Transform.HasDirectRec(doc, nodes);
+                                        foreach (var r in result)
+                                        {
+                                            System.Console.WriteLine(r);
+                                        }
                                     }
                                     else if (c.IR() != null)
                                     {
-                                        result = LanguageServer.Transform.HasIndirectRec(nodes, l_or_r, doc);
+                                        var result = LanguageServer.Transform.HasIndirectRec(nodes, l_or_r, doc);
+                                        foreach (var r in result)
+                                        {
+                                            System.Console.WriteLine(r);
+                                        }
                                     }
                                     else throw new Exception("unknown check");
-                                    foreach (var r in result)
-                                    {
-                                        System.Console.WriteLine(r.Item1 + " " + r.Item2);
-                                    }
                                 }
                             }
                             else if (tree.history() != null)
