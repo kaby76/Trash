@@ -215,7 +215,7 @@
                             stack.Pop();
                             foreach (var r in res)
                             {
-                                var new_doc = CheckDoc(r.Key);
+                                var new_doc = CreateDoc(r.Key);
                                 new_doc.Code = r.Value;
                                 stack.Push(new_doc);
                             }
@@ -227,7 +227,7 @@
                             imp.Try(doc.FullPath, doc.Code, ref res);
                             foreach (var r in res)
                             {
-                                var new_doc = CheckDoc(r.Key);
+                                var new_doc = CreateDoc(r.Key);
                                 new_doc.Code = r.Value;
                                 stack.Push(new_doc);
                             }
@@ -239,7 +239,19 @@
                             imp.Try(doc.FullPath, doc.Code, ref res);
                             foreach (var r in res)
                             {
-                                var new_doc = CheckDoc(r.Key);
+                                var new_doc = CreateDoc(r.Key);
+                                new_doc.Code = r.Value;
+                                stack.Push(new_doc);
+                            }
+                        }
+                        else if (type == "ebnf")
+                        {
+                            Dictionary<string, string> res = new Dictionary<string, string>();
+                            var imp = new LanguageServer.W3CebnfImport();
+                            imp.Try(doc.FullPath, doc.Code, ref res);
+                            foreach (var r in res)
+                            {
+                                var new_doc = CreateDoc(r.Key);
                                 new_doc.Code = r.Value;
                                 stack.Push(new_doc);
                             }
@@ -926,7 +938,7 @@
                                     stack.Pop();
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CheckDoc(r.Key);
+                                        var new_doc = CreateDoc(r.Key);
                                         new_doc.Code = r.Value;
                                         stack.Push(new_doc);
                                     }
@@ -938,7 +950,7 @@
                                     imp.Try(doc.FullPath, doc.Code, ref res);
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CheckDoc(r.Key);
+                                        var new_doc = CreateDoc(r.Key);
                                         new_doc.Code = r.Value;
                                         stack.Push(new_doc);
                                     }
@@ -950,7 +962,19 @@
                                     imp.Try(doc.FullPath, doc.Code, ref res);
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CheckDoc(r.Key);
+                                        var new_doc = CreateDoc(r.Key);
+                                        new_doc.Code = r.Value;
+                                        stack.Push(new_doc);
+                                    }
+                                }
+                                else if (type == "ebnf")
+                                {
+                                    Dictionary<string, string> res = new Dictionary<string, string>();
+                                    var imp = new LanguageServer.W3CebnfImport();
+                                    imp.Try(doc.FullPath, doc.Code, ref res);
+                                    foreach (var r in res)
+                                    {
+                                        var new_doc = CreateDoc(r.Key);
                                         new_doc.Code = r.Value;
                                         stack.Push(new_doc);
                                     }

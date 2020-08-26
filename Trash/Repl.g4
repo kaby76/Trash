@@ -51,7 +51,7 @@ anything : id HWS* stuff* ;
 bang : BANG HWS* (BANG | int | id_keyword) ;
 cd : CD HWS* arg? ;
 combine : COMBINE ;
-convert : CONVERT HWS* type ;
+convert : CONVERT HWS* type? ;
 delete : DELETE HWS* arg ;
 dot : DOT ;
 empty : ;
@@ -132,7 +132,7 @@ id_keyword : id
   | WRITE
   ;
 stuff : STUFF | id_keyword ;
-type : ANTLR4 | ANTLR3 | ANTLR2 | BISON ;
+type : ANTLR4 | ANTLR3 | ANTLR2 | BISON | EBNF ;
 
 ALPHA : 'alpha' ;
 ALIAS : 'alias' ;
@@ -150,6 +150,7 @@ DELETE : 'delete' ;
 DFS : 'dfs' ;
 DR : 'dr' ;
 DOT : '.' ;
+EBNF : 'ebnf' ;
 EQUAL : '=' ;
 EXIT : 'exit' ;
 FIND : 'find' ;
