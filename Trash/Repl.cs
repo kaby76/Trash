@@ -212,12 +212,13 @@
                             Dictionary<string, string> res = new Dictionary<string, string>();
                             var imp = new LanguageServer.Antlr3Import();
                             imp.Try(doc.FullPath, doc.Code, ref res);
-                            stack.Pop();
                             foreach (var r in res)
                             {
                                 var new_doc = CreateDoc(r.Key);
                                 new_doc.Code = r.Value;
                                 stack.Push(new_doc);
+                                if (new_doc.FullPath.EndsWith(".g4"))
+                                    ParseDoc(stack.Peek());
                             }
                         }
                         else if (type == "antlr2")
@@ -230,6 +231,8 @@
                                 var new_doc = CreateDoc(r.Key);
                                 new_doc.Code = r.Value;
                                 stack.Push(new_doc);
+                                if (new_doc.FullPath.EndsWith(".g4"))
+                                    ParseDoc(stack.Peek());
                             }
                         }
                         else if (type == "bison")
@@ -242,6 +245,8 @@
                                 var new_doc = CreateDoc(r.Key);
                                 new_doc.Code = r.Value;
                                 stack.Push(new_doc);
+                                if (new_doc.FullPath.EndsWith(".g4"))
+                                    ParseDoc(stack.Peek());
                             }
                         }
                         else if (type == "ebnf")
@@ -254,9 +259,10 @@
                                 var new_doc = CreateDoc(r.Key);
                                 new_doc.Code = r.Value;
                                 stack.Push(new_doc);
+                                if (new_doc.FullPath.EndsWith(".g4"))
+                                    ParseDoc(stack.Peek());
                             }
                         }
-                        ParseDoc(stack.Peek());
                     }
                     else if (tree.delete() != null)
                     {
@@ -935,12 +941,13 @@
                                     Dictionary<string, string> res = new Dictionary<string, string>();
                                     var imp = new LanguageServer.Antlr3Import();
                                     imp.Try(doc.FullPath, doc.Code, ref res);
-                                    stack.Pop();
                                     foreach (var r in res)
                                     {
                                         var new_doc = CreateDoc(r.Key);
                                         new_doc.Code = r.Value;
                                         stack.Push(new_doc);
+                                        if (new_doc.FullPath.EndsWith(".g4"))
+                                            ParseDoc(stack.Peek());
                                     }
                                 }
                                 else if (type == "antlr2")
@@ -953,6 +960,8 @@
                                         var new_doc = CreateDoc(r.Key);
                                         new_doc.Code = r.Value;
                                         stack.Push(new_doc);
+                                        if (new_doc.FullPath.EndsWith(".g4"))
+                                            ParseDoc(stack.Peek());
                                     }
                                 }
                                 else if (type == "bison")
@@ -965,6 +974,8 @@
                                         var new_doc = CreateDoc(r.Key);
                                         new_doc.Code = r.Value;
                                         stack.Push(new_doc);
+                                        if (new_doc.FullPath.EndsWith(".g4"))
+                                            ParseDoc(stack.Peek());
                                     }
                                 }
                                 else if (type == "ebnf")
@@ -977,9 +988,10 @@
                                         var new_doc = CreateDoc(r.Key);
                                         new_doc.Code = r.Value;
                                         stack.Push(new_doc);
+                                        if (new_doc.FullPath.EndsWith(".g4"))
+                                            ParseDoc(stack.Peek());
                                     }
                                 }
-                                ParseDoc(stack.Peek());
                             }
                             else if (tree.delete() != null)
                             {
