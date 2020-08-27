@@ -299,6 +299,10 @@
                                     null).ToString());
                         }
                     }
+                    else if (tree.empty() != null)
+                    {
+                        throw new DoNotAddToHistory(); // Don't add to history.
+                    }
                     else if (tree.find() != null)
                     {
                         var find = tree.find();
@@ -362,9 +366,23 @@
                             EnactEdits(results);
                         }
                     }
-                    else if (tree.empty() != null)
+                    else if (tree.group() != null)
                     {
-                        throw new DoNotAddToHistory(); // Don't add to history.
+                        var group = tree.group();
+                        var expr = GetArg(group.arg());
+                        var doc = stack.Peek();
+                        var pr = ParsingResultsFactory.Create(doc);
+                        var aparser = pr.Parser;
+                        var atree = pr.ParseTree;
+                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                        {
+                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                            var nodes = engine.parseExpression(expr,
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            var results = LanguageServer.Transform.Group(nodes, doc);
+                            EnactEdits(results);
+                        }
                     }
                     else if (tree.has() != null)
                     {
@@ -734,10 +752,10 @@
                             EnactEdits(results);
                         }
                     }
-                    else if (tree.unify() != null)
+                    else if (tree.ungroup() != null)
                     {
-                        var unify = tree.unify();
-                        var expr = GetArg(unify.arg());
+                        var c = tree.ungroup();
+                        var expr = GetArg(c.arg());
                         var doc = stack.Peek();
                         var pr = ParsingResultsFactory.Create(doc);
                         var aparser = pr.Parser;
@@ -748,7 +766,7 @@
                             var nodes = engine.parseExpression(expr,
                                     new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                                 .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                            var results = LanguageServer.Transform.Unify(nodes, doc);
+                            var results = LanguageServer.Transform.Ungroup(nodes, doc);
                             EnactEdits(results);
                         }
                     }
@@ -1028,6 +1046,10 @@
                                             null).ToString());
                                 }
                             }
+                            else if (tree.empty() != null)
+                            {
+                                throw new DoNotAddToHistory(); // Don't add to history.
+                            }
                             else if (tree.find() != null)
                             {
                                 var find = tree.find();
@@ -1091,9 +1113,23 @@
                                     EnactEdits(results);
                                 }
                             }
-                            else if (tree.empty() != null)
+                            else if (tree.group() != null)
                             {
-                                throw new DoNotAddToHistory(); // Don't add to history.
+                                var group = tree.group();
+                                var expr = GetArg(group.arg());
+                                var doc = stack.Peek();
+                                var pr = ParsingResultsFactory.Create(doc);
+                                var aparser = pr.Parser;
+                                var atree = pr.ParseTree;
+                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+                                {
+                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                                    var nodes = engine.parseExpression(expr,
+                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    var results = LanguageServer.Transform.Group(nodes, doc);
+                                    EnactEdits(results);
+                                }
                             }
                             else if (tree.has() != null)
                             {
@@ -1466,10 +1502,10 @@
                                     EnactEdits(results);
                                 }
                             }
-                            else if (tree.unify() != null)
+                            else if (tree.ungroup() != null)
                             {
-                                var unify = tree.unify();
-                                var expr = GetArg(unify.arg());
+                                var c = tree.ungroup();
+                                var expr = GetArg(c.arg());
                                 var doc = stack.Peek();
                                 var pr = ParsingResultsFactory.Create(doc);
                                 var aparser = pr.Parser;
@@ -1480,7 +1516,7 @@
                                     var nodes = engine.parseExpression(expr,
                                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                                    var results = LanguageServer.Transform.Unify(nodes, doc);
+                                    var results = LanguageServer.Transform.Ungroup(nodes, doc);
                                     EnactEdits(results);
                                 }
                             }

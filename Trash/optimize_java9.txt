@@ -1,5 +1,5 @@
 -- Read Java9
-read "c:/users/kenne/documents/scrapejavaspec/java9.g4"
+read /users/kenne/documents/scrapejavaspec/java9.g4
 
 -- Parse is required.
 parse
@@ -12,7 +12,7 @@ delete "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 delete "//parserRuleSpec[RULE_REF/text() = 'markerAnnotation']"
 delete "//parserRuleSpec[RULE_REF/text() = 'singleElementAnnotation']"
 rup
-unify "//parserRuleSpec[RULE_REF/text() = 'annotation']//ruleAltList"
+group "//parserRuleSpec[RULE_REF/text() = 'annotation']//ruleAltList"
 
 -- Clean up the compilationUnit rule.
 unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'ordinaryCompilationUnit']"
@@ -22,7 +22,7 @@ delete "//parserRuleSpec[RULE_REF/text() = 'ordinaryCompilationUnit']"
 delete "//parserRuleSpec[RULE_REF/text() = 'modularCompilationUnit']"
 delete "//parserRuleSpec[RULE_REF/text() = 'packageModifier']"
 rup
-unify "//parserRuleSpec[RULE_REF/text()='compilationUnit']"
+group "//parserRuleSpec[RULE_REF/text()='compilationUnit']"
 
 -- Clean up the importDeclaration rule.
 unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'singleTypeImportDeclaration']"
@@ -34,7 +34,7 @@ delete "//parserRuleSpec[RULE_REF/text() = 'typeImportOnDemandDeclaration']"
 delete "//parserRuleSpec[RULE_REF/text() = 'singleStaticImportDeclaration']"
 delete "//parserRuleSpec[RULE_REF/text() = 'staticImportOnDemandDeclaration']"
 rup
-unify "//parserRuleSpec[RULE_REF/text() = 'importDeclaration']//ruleAltList"
+group "//parserRuleSpec[RULE_REF/text() = 'importDeclaration']//ruleAltList"
 
 -- Fold all lexer rules into parser string literals.
 foldlit "//lexerRuleSpec/TOKEN_REF"
@@ -52,12 +52,18 @@ delete "//parserRuleSpec[RULE_REF/text() = 'assignmentOperator']"
 kleene
 rup
 
-unify //parserRuleSpec[RULE_REF/text()='additiveExpression']//altList
-unify //parserRuleSpec[RULE_REF/text()='relationalExpression']//altList
-unify //parserRuleSpec[RULE_REF/text()='relationalExpression']//altList//altList
+group //parserRuleSpec[RULE_REF/text()='additiveExpression']//altList
+group //parserRuleSpec[RULE_REF/text()='relationalExpression']//altList
+group //parserRuleSpec[RULE_REF/text()='relationalExpression']//altList//altList
 
 -- Take care of the indirect left recursion in classOrInterfaceType, classType, interfaceType
 -- Whoever wrote it is brain dead. And whoever wrote the unfolding for it in Java9 is also brain dead.
+-- Note equivalent transforms:
+-- unfold //parserRuleSpec[RULE_REF/text()='interfaceType']//RULE_REF[text()='classType']
+-- unfold //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//RULE_REF[text()='classType']
+-- unfold //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//RULE_REF[text()='interfaceType']
+-- rup
+-- group //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//ruleAltList
 delete //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//RULE_REF[text()='interfaceType']
 delete //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//OR
 unfold //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//RULE_REF[text()='classType']
@@ -78,6 +84,17 @@ rup
 unfold //parserRuleSpec[RULE_REF/text()='postfixExpression']//RULE_REF[text()='postIncrementExpression']
 unfold //parserRuleSpec[RULE_REF/text()='postfixExpression']//RULE_REF[text()='postDecrementExpression']
 rup
+
+-- Pile all crap into primaryNoNewArray.
+unfold //parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='fieldAccess']
+unfold //parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='methodInvocation']
+unfold //parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='classInstanceCreationExpression']
+unfold //parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='methodReference']
+unfold //parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='arrayAccess']
+unfold //parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='primary']
+rup
+
+-- The grammar should now be free of indirect left recursion.
 
 -- Save
 write

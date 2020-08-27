@@ -17,6 +17,7 @@ cmd :
   | find
   | fold
   | foldlit
+  | group
   | has
   | history
   | kleene
@@ -38,7 +39,7 @@ cmd :
   | stack
   | unalias
   | unfold
-  | unify
+  | ungroup
   | ulliteral
   | write
   | anything
@@ -58,6 +59,7 @@ empty : ;
 find : FIND HWS* arg ;
 fold : FOLD HWS* arg ;
 foldlit : FOLDLIT HWS* arg ;
+group : GROUP HWS* arg ;
 has : HAS HWS* (DR | IR) HWS* GRAPH? HWS* arg? ;
 history : HISTORY ;
 kleene : KLEENE HWS* arg? ;
@@ -79,7 +81,7 @@ split : SPLIT ;
 stack : STACK ;
 unalias : UNALIAS HWS* id ;
 unfold : UNFOLD HWS* arg ;
-unify : UNIFY HWS* arg ;
+ungroup : UNGROUP HWS* arg ;
 ulliteral : ULLITERAL HWS* StringLiteral? ;
 write : WRITE ;
 alpha : ALPHA ;
@@ -105,6 +107,7 @@ id_keyword : id
   | FOLD
   | FOLDLIT
   | GRAPH
+  | GROUP
   | HAS
   | HISTORY
   | IR
@@ -128,7 +131,7 @@ id_keyword : id
   | ULLITERAL
   | UNALIAS
   | UNFOLD
-  | UNIFY
+  | UNGROUP
   | WRITE
   ;
 stuff : STUFF | id_keyword ;
@@ -157,6 +160,7 @@ FIND : 'find' ;
 FOLD : 'fold' ;
 FOLDLIT : 'foldlit' ;
 GRAPH : 'graph' ;
+GROUP : 'group' ;
 HAS : 'has' ;
 HISTORY : 'history' ;
 INT : [0-9]+ ;
@@ -184,7 +188,7 @@ StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb* '"') ;
 ULLITERAL : 'ulliteral' ;
 UNALIAS : 'unalias' ;
 UNFOLD : 'unfold' ;
-UNIFY : 'unify' ;
+UNGROUP : 'ungroup' ;
 WRITE : 'write' ;
 ID: Id ;
 BLOCK_COMMENT : BlockComment -> skip ;
