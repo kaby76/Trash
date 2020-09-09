@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Trash": {
-      "commandName": "Project",
-      "commandLineArgs": "-script \"C:/Users/kenne/Documents/AntlrVSIX2/Trash/basic.txt\""
+      "commandName": "Project"
     }
   }
 }
