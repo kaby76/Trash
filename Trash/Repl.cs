@@ -527,7 +527,7 @@
                         }
                         if (f != null)
                         {
-                            var doc = CheckDoc(f);
+                            var doc = ReadDoc(f);
                             stack.Push(doc);
                         }
                         else if (here != null)
@@ -1277,7 +1277,7 @@
                                 }
                                 if (f != null)
                                 {
-                                    var doc = CheckDoc(f);
+                                    var doc = ReadDoc(f);
                                     stack.Push(doc);
                                 }
                                 else if (here != null)
@@ -1714,7 +1714,7 @@
             return document;
         }
 
-        public Document CheckDoc(string path)
+        public Document ReadDoc(string path)
         {
             string file_name = path;
             Document document = Workspaces.Workspace.Instance.FindDocument(file_name);
