@@ -214,8 +214,7 @@
                             imp.Try(doc.FullPath, doc.Code, ref res);
                             foreach (var r in res)
                             {
-                                var new_doc = CreateDoc(r.Key);
-                                new_doc.Code = r.Value;
+                                var new_doc = CreateDoc(r.Key, r.Value);
                                 stack.Push(new_doc);
                                 if (new_doc.FullPath.EndsWith(".g4"))
                                     ParseDoc(stack.Peek());
@@ -228,8 +227,7 @@
                             imp.Try(doc.FullPath, doc.Code, ref res);
                             foreach (var r in res)
                             {
-                                var new_doc = CreateDoc(r.Key);
-                                new_doc.Code = r.Value;
+                                var new_doc = CreateDoc(r.Key, r.Value);
                                 stack.Push(new_doc);
                                 if (new_doc.FullPath.EndsWith(".g4"))
                                     ParseDoc(stack.Peek());
@@ -242,8 +240,7 @@
                             imp.Try(doc.FullPath, doc.Code, ref res);
                             foreach (var r in res)
                             {
-                                var new_doc = CreateDoc(r.Key);
-                                new_doc.Code = r.Value;
+                                var new_doc = CreateDoc(r.Key, r.Value);
                                 stack.Push(new_doc);
                                 if (new_doc.FullPath.EndsWith(".g4"))
                                     ParseDoc(stack.Peek());
@@ -256,8 +253,7 @@
                             imp.Try(doc.FullPath, doc.Code, ref res);
                             foreach (var r in res)
                             {
-                                var new_doc = CreateDoc(r.Key);
-                                new_doc.Code = r.Value;
+                                var new_doc = CreateDoc(r.Key, r.Value);
                                 stack.Push(new_doc);
                                 if (new_doc.FullPath.EndsWith(".g4"))
                                     ParseDoc(stack.Peek());
@@ -549,8 +545,7 @@
                                 sb.AppendLine(cl);
                             }
                             var s = sb.ToString();
-                            var doc = CreateDoc("temp" + current_line_index + ".g4");
-                            doc.Code = s;
+                            var doc = CreateDoc("temp" + current_line_index + ".g4", s);
                             stack.Push(doc);
                         }
                         else throw new Exception("not sure what to read.");
@@ -961,8 +956,7 @@
                                     imp.Try(doc.FullPath, doc.Code, ref res);
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CreateDoc(r.Key);
-                                        new_doc.Code = r.Value;
+                                        var new_doc = CreateDoc(r.Key, r.Value);
                                         stack.Push(new_doc);
                                         if (new_doc.FullPath.EndsWith(".g4"))
                                             ParseDoc(stack.Peek());
@@ -975,8 +969,7 @@
                                     imp.Try(doc.FullPath, doc.Code, ref res);
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CreateDoc(r.Key);
-                                        new_doc.Code = r.Value;
+                                        var new_doc = CreateDoc(r.Key, r.Value);
                                         stack.Push(new_doc);
                                         if (new_doc.FullPath.EndsWith(".g4"))
                                             ParseDoc(stack.Peek());
@@ -989,8 +982,7 @@
                                     imp.Try(doc.FullPath, doc.Code, ref res);
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CreateDoc(r.Key);
-                                        new_doc.Code = r.Value;
+                                        var new_doc = CreateDoc(r.Key, r.Value);
                                         stack.Push(new_doc);
                                         if (new_doc.FullPath.EndsWith(".g4"))
                                             ParseDoc(stack.Peek());
@@ -1003,8 +995,7 @@
                                     imp.Try(doc.FullPath, doc.Code, ref res);
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CreateDoc(r.Key);
-                                        new_doc.Code = r.Value;
+                                        var new_doc = CreateDoc(r.Key, r.Value);
                                         stack.Push(new_doc);
                                         if (new_doc.FullPath.EndsWith(".g4"))
                                             ParseDoc(stack.Peek());
@@ -1299,8 +1290,7 @@
                                         sb.AppendLine(cl);
                                     }
                                     var s = sb.ToString();
-                                    var doc = CreateDoc("temp" + current_line_index + ".g4");
-                                    doc.Code = s;
+                                    var doc = CreateDoc("temp" + current_line_index + ".g4", s);
                                     stack.Push(doc);
                                 }
                                 else throw new Exception("not sure what to read.");
@@ -1575,8 +1565,7 @@
                 foreach (var res in results)
                 {
                     if (res.Value == null) continue;
-                    var new_doc = CreateDoc(res.Key);
-                    new_doc.Code = res.Value;
+                    var new_doc = CreateDoc(res.Key, res.Value);
                     stack.Push(new_doc);
                     ParseDoc(new_doc);
                 }
@@ -1684,25 +1673,13 @@
             }
         }
 
-        public Document CreateDoc(string path)
+        public Document CreateDoc(string path, string code)
         {
             string file_name = path;
             Document document = Workspaces.Workspace.Instance.FindDocument(file_name);
             if (document == null)
             {
                 document = new Workspaces.Document(file_name);
-                try
-                {   // Open the text file using a stream reader.
-                    using (StreamReader sr = new StreamReader(file_name))
-                    {
-                        // Read the stream to a string, and write the string to the console.
-                        string str = sr.ReadToEnd();
-                        document.Code = str;
-                    }
-                }
-                catch (IOException)
-                {
-                }
                 Project project = Workspaces.Workspace.Instance.FindProject("Misc");
                 if (project == null)
                 {
@@ -1711,6 +1688,7 @@
                 }
                 project.AddDocument(document);
             }
+            document.Code = code;
             return document;
         }
 
