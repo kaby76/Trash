@@ -12,6 +12,7 @@
     using Utils;
     using Workspaces;
 
+
     class Repl
     {
         List<string> History { get; set; } = new List<string>();
@@ -22,6 +23,8 @@
         int current_line_index = 0;
         string[] lines = null;
         int QuietAfter = 10;
+        private readonly Docs _docs;
+        public Workspace _workspace { get; private set; } = new Workspace();
 
         public Repl(string[] args)
         {
@@ -36,6 +39,8 @@
                         break;
                 }
             }
+
+            _docs = new Docs(this);
         }
 
         void RedoAliases()
@@ -124,7 +129,7 @@
                     else if (tree.analyze() != null)
                     {
                         var doc = stack.Peek();
-                        AnalyzeDoc(doc);
+                        _docs.AnalyzeDoc(doc);
                     }
                     else if (tree.anything() != null)
                     {
@@ -214,10 +219,9 @@
                             imp.Try(doc.FullPath, doc.Code, ref res);
                             foreach (var r in res)
                             {
-                                var new_doc = CreateDoc(r.Key, r.Value);
+                                var new_doc = _docs.CreateDoc(r.Key, r.Value);
                                 stack.Push(new_doc);
-                                if (new_doc.FullPath.EndsWith(".g4"))
-                                    ParseDoc(stack.Peek());
+                                if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
                             }
                         }
                         else if (type == "antlr2")
@@ -227,10 +231,9 @@
                             imp.Try(doc.FullPath, doc.Code, ref res);
                             foreach (var r in res)
                             {
-                                var new_doc = CreateDoc(r.Key, r.Value);
+                                var new_doc = _docs.CreateDoc(r.Key, r.Value);
                                 stack.Push(new_doc);
-                                if (new_doc.FullPath.EndsWith(".g4"))
-                                    ParseDoc(stack.Peek());
+                                if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
                             }
                         }
                         else if (type == "bison")
@@ -240,10 +243,9 @@
                             imp.Try(doc.FullPath, doc.Code, ref res);
                             foreach (var r in res)
                             {
-                                var new_doc = CreateDoc(r.Key, r.Value);
+                                var new_doc = _docs.CreateDoc(r.Key, r.Value);
                                 stack.Push(new_doc);
-                                if (new_doc.FullPath.EndsWith(".g4"))
-                                    ParseDoc(stack.Peek());
+                                if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
                             }
                         }
                         else if (type == "ebnf")
@@ -253,10 +255,9 @@
                             imp.Try(doc.FullPath, doc.Code, ref res);
                             foreach (var r in res)
                             {
-                                var new_doc = CreateDoc(r.Key, r.Value);
+                                var new_doc = _docs.CreateDoc(r.Key, r.Value);
                                 stack.Push(new_doc);
-                                if (new_doc.FullPath.EndsWith(".g4"))
-                                    ParseDoc(stack.Peek());
+                                if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
                             }
                         }
                     }
@@ -297,7 +298,7 @@
                     }
                     else if (tree.empty() != null)
                     {
-                        throw new DoNotAddToHistory(); // Don't add to history.
+                        throw new Repl.DoNotAddToHistory(); // Don't add to history.
                     }
                     else if (tree.find() != null)
                     {
@@ -489,7 +490,7 @@
                     {
                         var r = tree.parse();
                         var doc = stack.Peek();
-                        ParseDoc(doc, r.type()?.GetText());
+                        _docs.ParseDoc(doc, QuietAfter, r.type()?.GetText());
                     }
                     else if (tree.pop() != null)
                     {
@@ -510,7 +511,7 @@
                     else if (tree.quit() != null)
                     {
                         HistoryAdd(line);
-                        throw new Quit();
+                        throw new Repl.Quit();
                     }
                     else if (tree.read() != null)
                     {
@@ -523,7 +524,7 @@
                         }
                         if (f != null)
                         {
-                            var doc = ReadDoc(f);
+                            var doc = _docs.ReadDoc(f);
                             stack.Push(doc);
                         }
                         else if (here != null)
@@ -545,7 +546,7 @@
                                 sb.AppendLine(cl);
                             }
                             var s = sb.ToString();
-                            var doc = CreateDoc("temp" + current_line_index + ".g4", s);
+                            var doc = _docs.CreateDoc("temp" + current_line_index + ".g4", s);
                             stack.Push(doc);
                         }
                         else throw new Exception("not sure what to read.");
@@ -769,15 +770,15 @@
                     {
                         var r = tree.write();
                         var doc = stack.Peek();
-                        WriteDoc(doc);
+                        _docs.WriteDoc(doc);
                     }
                 }
                 HistoryAdd(line);
             }
-            catch (DoNotAddToHistory)
+            catch (Repl.DoNotAddToHistory)
             {
             }
-            catch (Quit)
+            catch (Repl.Quit)
             {
                 throw;
             }
@@ -866,7 +867,7 @@
                             else if (tree.analyze() != null)
                             {
                                 var doc = stack.Peek();
-                                AnalyzeDoc(doc);
+                                _docs.AnalyzeDoc(doc);
                             }
                             else if (tree.anything() != null)
                             {
@@ -896,14 +897,14 @@
                                     var recall = History[num];
                                     System.Console.Error.WriteLine(recall);
                                     Execute(recall);
-                                    throw new DoNotAddToHistory();
+                                    throw new Repl.DoNotAddToHistory();
                                 }
                                 else if (bang.BANG().Length > 1)
                                 {
                                     var recall = History.Last();
                                     System.Console.Error.WriteLine(recall);
                                     Execute(recall);
-                                    throw new DoNotAddToHistory();
+                                    throw new Repl.DoNotAddToHistory();
                                 }
                                 else if (bang.id_keyword() != null)
                                 {
@@ -915,7 +916,7 @@
                                             var recall = History[i];
                                             System.Console.Error.WriteLine(recall);
                                             Execute(recall);
-                                            throw new DoNotAddToHistory();
+                                            throw new Repl.DoNotAddToHistory();
                                         }
                                     }
                                     System.Console.Error.WriteLine("No previous command starts with " + s);
@@ -956,10 +957,9 @@
                                     imp.Try(doc.FullPath, doc.Code, ref res);
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CreateDoc(r.Key, r.Value);
+                                        var new_doc = _docs.CreateDoc(r.Key, r.Value);
                                         stack.Push(new_doc);
-                                        if (new_doc.FullPath.EndsWith(".g4"))
-                                            ParseDoc(stack.Peek());
+                                        if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
                                     }
                                 }
                                 else if (type == "antlr2")
@@ -969,10 +969,9 @@
                                     imp.Try(doc.FullPath, doc.Code, ref res);
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CreateDoc(r.Key, r.Value);
+                                        var new_doc = _docs.CreateDoc(r.Key, r.Value);
                                         stack.Push(new_doc);
-                                        if (new_doc.FullPath.EndsWith(".g4"))
-                                            ParseDoc(stack.Peek());
+                                        if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
                                     }
                                 }
                                 else if (type == "bison")
@@ -982,10 +981,9 @@
                                     imp.Try(doc.FullPath, doc.Code, ref res);
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CreateDoc(r.Key, r.Value);
+                                        var new_doc = _docs.CreateDoc(r.Key, r.Value);
                                         stack.Push(new_doc);
-                                        if (new_doc.FullPath.EndsWith(".g4"))
-                                            ParseDoc(stack.Peek());
+                                        if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
                                     }
                                 }
                                 else if (type == "ebnf")
@@ -995,10 +993,9 @@
                                     imp.Try(doc.FullPath, doc.Code, ref res);
                                     foreach (var r in res)
                                     {
-                                        var new_doc = CreateDoc(r.Key, r.Value);
+                                        var new_doc = _docs.CreateDoc(r.Key, r.Value);
                                         stack.Push(new_doc);
-                                        if (new_doc.FullPath.EndsWith(".g4"))
-                                            ParseDoc(stack.Peek());
+                                        if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
                                     }
                                 }
                             }
@@ -1039,7 +1036,7 @@
                             }
                             else if (tree.empty() != null)
                             {
-                                throw new DoNotAddToHistory(); // Don't add to history.
+                                throw new Repl.DoNotAddToHistory(); // Don't add to history.
                             }
                             else if (tree.find() != null)
                             {
@@ -1235,7 +1232,7 @@
                             {
                                 var r = tree.parse();
                                 var doc = stack.Peek();
-                                ParseDoc(doc, r.type()?.GetText());
+                                _docs.ParseDoc(doc, QuietAfter, r.type()?.GetText());
                             }
                             else if (tree.pop() != null)
                             {
@@ -1268,7 +1265,7 @@
                                 }
                                 if (f != null)
                                 {
-                                    var doc = ReadDoc(f);
+                                    var doc = _docs.ReadDoc(f);
                                     stack.Push(doc);
                                 }
                                 else if (here != null)
@@ -1290,7 +1287,7 @@
                                         sb.AppendLine(cl);
                                     }
                                     var s = sb.ToString();
-                                    var doc = CreateDoc("temp" + current_line_index + ".g4", s);
+                                    var doc = _docs.CreateDoc("temp" + current_line_index + ".g4", s);
                                     stack.Push(doc);
                                 }
                                 else throw new Exception("not sure what to read.");
@@ -1510,18 +1507,22 @@
                                     EnactEdits(results);
                                 }
                             }
+                            else if (tree.workspace() != null)
+                            {
+                                _workspace = new Workspace();
+                            }
                             else if (tree.write() != null)
                             {
                                 var r = tree.write();
                                 var doc = stack.Peek();
-                                WriteDoc(doc);
+                                _docs.WriteDoc(doc);
                             }
                             HistoryWrite();
                         }
-                        catch (DoNotAddToHistory)
+                        catch (Repl.DoNotAddToHistory)
                         {
                         }
-                        catch (Quit)
+                        catch (Repl.Quit)
                         {
                             return;
                         }
@@ -1565,9 +1566,9 @@
                 foreach (var res in results)
                 {
                     if (res.Value == null) continue;
-                    var new_doc = CreateDoc(res.Key, res.Value);
+                    var new_doc = _docs.CreateDoc(res.Key, res.Value);
                     stack.Push(new_doc);
-                    ParseDoc(new_doc);
+                    _docs.ParseDoc(new_doc, QuietAfter);
                 }
             }
             else
@@ -1649,7 +1650,7 @@
                         }
                     }
                 }
-                catch (DoNotAddToHistory)
+                catch (Repl.DoNotAddToHistory)
                 {
                 }
                 catch (Exception eeks)
@@ -1671,97 +1672,6 @@
                 if (str.Index == str.Size)
                     break;
             }
-        }
-
-        public Document CreateDoc(string path, string code)
-        {
-            string file_name = path;
-            Document document = Workspaces.Workspace.Instance.FindDocument(file_name);
-            if (document == null)
-            {
-                document = new Workspaces.Document(file_name);
-                Project project = Workspaces.Workspace.Instance.FindProject("Misc");
-                if (project == null)
-                {
-                    project = new Project("Misc", "Misc", "Misc");
-                    Workspaces.Workspace.Instance.AddChild(project);
-                }
-                project.AddDocument(document);
-            }
-            document.Code = code;
-            return document;
-        }
-
-        public Document ReadDoc(string path)
-        {
-            string file_name = path;
-            Document document = Workspaces.Workspace.Instance.FindDocument(file_name);
-            if (document == null)
-            {
-                document = new Workspaces.Document(file_name);
-                try
-                {   // Open the text file using a stream reader.
-                    using (StreamReader sr = new StreamReader(file_name))
-                    {
-                        // Read the stream to a string, and write the string to the console.
-                        string str = sr.ReadToEnd();
-                        document.Code = str;
-                    }
-                }
-                catch (IOException eeks)
-                {
-                    throw eeks;
-                }
-                Project project = Workspaces.Workspace.Instance.FindProject("Misc");
-                if (project == null)
-                {
-                    project = new Project("Misc", "Misc", "Misc");
-                    Workspaces.Workspace.Instance.AddChild(project);
-                }
-                project.AddDocument(document);
-            }
-            return document;
-        }
-
-        public void WriteDoc(Document document)
-        {
-            if (document != null)
-            {
-                var file_name = document.FullPath;
-                try
-                {   // Open the text file using a stream reader.
-                    using (StreamWriter sw = new StreamWriter(file_name))
-                    {
-                        sw.Write(document.Code);
-                    }
-                    System.Console.Error.WriteLine("Written to file " + file_name);
-                }
-                catch (Exception e)
-                {
-                    System.Console.Error.WriteLine("Failed to write file " + e.Message);
-                }
-            }
-        }
-
-        public void AnalyzeDoc(Document document)
-        {
-            _ = ParsingResultsFactory.Create(document);
-            var results = LanguageServer.Analysis.PerformAnalysis(document);
-            
-            foreach (var r in results)
-            {
-                System.Console.Write(r.Document + " " + r.Severify + " " + r.Start + " " + r.Message);
-                System.Console.WriteLine();
-            }
-        }
-
-        public void ParseDoc(Document document, string grammar = null)
-        {
-            document.Changed = true;
-            document.ParseAs = grammar;
-            var pd = ParsingResultsFactory.Create(document);
-            pd.QuietAfter = QuietAfter;
-            _ = new LanguageServer.Module().Compile();
         }
     }
 }

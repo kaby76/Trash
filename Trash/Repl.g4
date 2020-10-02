@@ -41,6 +41,7 @@ cmd :
   | unfold
   | ungroup
   | ulliteral
+  | workspace
   | write
   | anything
   )
@@ -83,6 +84,7 @@ unalias : UNALIAS HWS* id ;
 unfold : UNFOLD HWS* arg ;
 ungroup : UNGROUP HWS* arg ;
 ulliteral : ULLITERAL HWS* StringLiteral? ;
+workspace : WORKSPACE ;
 write : WRITE ;
 alpha : ALPHA ;
 bfs : BFS HWS* StringLiteral ;
@@ -132,6 +134,7 @@ id_keyword : id
   | UNALIAS
   | UNFOLD
   | UNGROUP
+  | WORKSPACE
   | WRITE
   ;
 stuff : STUFF | id_keyword ;
@@ -189,6 +192,7 @@ ULLITERAL : 'ulliteral' ;
 UNALIAS : 'unalias' ;
 UNFOLD : 'unfold' ;
 UNGROUP : 'ungroup' ;
+WORKSPACE : 'workspace' ;
 WRITE : 'write' ;
 ID: Id ;
 BLOCK_COMMENT : BlockComment -> skip ;
