@@ -8,6 +8,7 @@ cmd :
   ( alias
   | analyze
   | bang
+  | build
   | cd
   | convert
   | combine
@@ -33,6 +34,7 @@ cmd :
   | reorder
   | rotate
   | rr
+  | run
   | rup
   | set
   | split
@@ -51,6 +53,7 @@ alias : ALIAS HWS* (ID HWS* EQUAL HWS* (StringLiteral | id_keyword))? ;
 analyze : ANALYZE ;
 anything : id HWS* stuff* ;
 bang : BANG HWS* (BANG | int | id_keyword) ;
+build : BUILD ;
 cd : CD HWS* arg? ;
 combine : COMBINE ;
 convert : CONVERT HWS* type? ;
@@ -76,6 +79,7 @@ rename : RENAME HWS* StringLiteral HWS* StringLiteral ;
 reorder : REORDER HWS* (alpha | bfs | dfs | modes) ;
 rotate : ROTATE ;
 rr : RR HWS* StringLiteral ;
+run : RUN ;
 rup : RUP HWS* StringLiteral? ;
 set : SET HWS* id_keyword HWS* '=' HWS* (StringLiteral | INT) ;
 split : SPLIT ;
@@ -99,6 +103,7 @@ id_keyword : id
   | ANTLR3
   | ANTLR2
   | BISON
+  | BUILD
   | CD
   | COMBINE
   | CONVERT
@@ -126,6 +131,7 @@ id_keyword : id
   | REORDER
   | ROTATE
   | RR
+  | RUN
   | RUP
   | SET
   | SPLIT
@@ -149,6 +155,7 @@ ANTLR4 : 'antlr4' ;
 BANG : '!' ;
 BFS : 'bfs' ;
 BISON : 'bison' ;
+BUILD : 'build' ;
 CD : 'cd' ;
 COMBINE : 'combine' ;
 CONVERT : 'convert' ;
@@ -182,6 +189,7 @@ RENAME : 'rename' ;
 REORDER : 'reorder' ;
 ROTATE : 'rotate' ;
 RR : 'rr' ;
+RUN : 'run' ;
 RUP : 'rup' ;
 SEMI : ';' ;
 SET : 'set' ;

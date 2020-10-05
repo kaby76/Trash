@@ -16,6 +16,15 @@
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.8.0" />
 		<PackageReference Include="Antlr4BuildTasks" Version="8.3" />
 		<PackageReference Include="AntlrTreeEditing" Version="1.7" />
+		<PackageReference Include="Microsoft.CodeAnalysis" Version="3.7.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.7.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.7.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.7.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Features" Version="3.7.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.7.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.7.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.7.0" />
 	</ItemGroup>
 
 	<ItemGroup>

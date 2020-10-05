@@ -12,8 +12,7 @@
     using Utils;
     using Workspaces;
 
-
-    class Repl
+    public class Repl
     {
         List<string> History { get; set; } = new List<string>();
         const string PreviousHistoryFfn = ".trash.rc";
@@ -921,6 +920,11 @@
                                     }
                                     System.Console.Error.WriteLine("No previous command starts with " + s);
                                 }
+                            }
+                            else if (tree.build() != null)
+                            {
+                                var g = new Grun(this);
+                                g.Build();
                             }
                             else if (tree.cd() != null)
                             {
