@@ -198,10 +198,6 @@ namespace Easy
                 process.WaitForExit();
                 var success = process.ExitCode == 0;
 
-                //Compilation? compilation = msbuild_project.GetCompilationAsync().Result;
-                //IAssemblySymbol assembly = compilation.Assembly;
-                //var file = compilation.AssemblyName;
-
                 //var alc = new TestAssemblyLoadContext(path + "/bin/Debug/netcoreapp3.1/Test.dll");
                 //Assembly asm = alc.LoadFromAssemblyPath(path + "/bin/Debug/netcoreapp3.1/Test.dll");
                 Assembly asm = Assembly.LoadFile(path + "/bin/Debug/netcoreapp3.1/Test.dll");
@@ -226,16 +222,18 @@ namespace Easy
             }
         }
 
-        public void BuildIt()
-        {
-            // Create a workspace.
-            var msbuild_workspace = MSBuildWorkspace.Create();
+        //public void BuildIt()
+        //{
+        //    // Create a workspace.
+        //    //var msbuild_workspace = MSBuildWorkspace.Create();
 
-            var project = msbuild_workspace.OpenProjectAsync("Test.csproj").Result;
-            var compilation = project.GetCompilationAsync().Result;
-            var assembly = compilation.Assembly;
-
-        }
+        //    //var project = msbuild_workspace.OpenProjectAsync("Test.csproj").Result;
+        //    //var compilation = project.GetCompilationAsync().Result;
+        //    //var assembly = compilation.Assembly;
+        //    //Compilation? compilation = msbuild_project.GetCompilationAsync().Result;
+        //    //IAssemblySymbol assembly = compilation.Assembly;
+        //    //var file = compilation.AssemblyName;
+        //}
     }
 
 

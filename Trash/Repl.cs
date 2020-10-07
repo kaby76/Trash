@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using System.Text.RegularExpressions;
+
+namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -36,6 +38,17 @@
                         break;
                     default:
                         break;
+                }
+            }
+
+            // Clean up left overs from "run" commands.
+            var path = Path.GetTempPath();
+            var regex = new Regex("Antlrvsix[0-9]+$");
+            foreach (string dir in Directory.GetDirectories(path))
+            {
+                if (regex.IsMatch(dir))
+                {
+                    Directory.Delete(dir, true);
                 }
             }
 
