@@ -7,9 +7,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Antlr4.Runtime.Tree;
+using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
 using Document = Workspaces.Document;
 using Project = Microsoft.CodeAnalysis.Project;
 using Workspace = Workspaces.Workspace;
+using System.Reflection;
+using System.Runtime.Loader;
+using Antlr4.Runtime;
 
 namespace Trash
 {
@@ -22,20 +27,12 @@ namespace Trash
             _repl = repl;
         }
 
-        public List<Document> Grammars
-        {
-            get; set;
-        }
+        public List<Document> Grammars { get; set; }
 
-        public List<Document> ImportGrammars
-        {
-            get; set;
-        }
+        public List<Document> ImportGrammars { get; set; }
 
-        public List<Document> SupportCode
-        {
-            get; set;
-        }
+        public List<Document> SupportCode { get; set; }
+
         private static string JoinArguments(IEnumerable<string> arguments)
         {
             if (arguments == null)
@@ -47,7 +44,7 @@ namespace Trash
                 if (builder.Length > 0)
                     builder.Append(' ');
 
-                if (argument.IndexOfAny(new[] { '"', ' ' }) < 0)
+                if (argument.IndexOfAny(new[] {'"', ' '}) < 0)
                 {
                     builder.Append(argument);
                     continue;
@@ -78,9 +75,8 @@ namespace Trash
         {
         }
 
-        public void Build()
+        public void Run(string[] parameters)
         {
-
             // Create temporary directory.
             var path = Path.GetTempPath();
             path = path + Path.DirectorySeparatorChar + "Antlrvsix" + new Random().Next();
@@ -95,7 +91,7 @@ namespace Trash
                     sb.AppendLine(@"
 <Project Sdk=""Microsoft.NET.Sdk"" >
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
 	</PropertyGroup>
 	<ItemGroup>");
                     foreach (var grammar in grammars)
@@ -106,7 +102,7 @@ namespace Trash
                     sb.AppendLine(@"</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include=""Antlr4.Runtime.Standard"" Version =""4.8.0"" />
-		<PackageReference Include=""Antlr4BuildTasks"" Version = ""8.3"" />
+		<PackageReference Include=""Antlr4BuildTasks"" Version = ""8.4"" />
 		<PackageReference Include= ""AntlrTreeEditing"" Version = ""1.7"" />
 	</ItemGroup>
 	<PropertyGroup>
@@ -127,6 +123,7 @@ namespace Trash
                     var code = doc.Code;
                     System.IO.File.WriteAllText(fn, code);
                 }
+
                 // Add in Main.cs to get parse.
                 {
                     StringBuilder sb = new StringBuilder();
@@ -134,11 +131,13 @@ namespace Trash
 namespace Easy
 {
     using Antlr4.Runtime;
+    using Antlr4.Runtime.Tree;
     using System.Text;
     using System.Runtime.CompilerServices;
+
     public class Program
     {
-        static IParseTree Parse(string input)
+        public static IParseTree Parse(string input)
         {
             var str = new AntlrInputStream(input);
             var lexer = new ");
@@ -157,20 +156,23 @@ namespace Easy
                         var combined = grammars.Where(d => d.FullPath.EndsWith(".g4")).ToList();
                         if (combined.Count == 1)
                         {
-                            lexer_name = combined.First().FullPath.Replace(".g4", "");
-                            lexer_name = lexer_name + "Lexer";
-                            parser_name = lexer_name + "Parser";
+                            var combined_name = Path.GetFileName(combined.First().FullPath).Replace(".g4", "");
+                            lexer_name = combined_name + "Lexer";
+                            parser_name = combined_name + "Parser";
                         }
                     }
+
                     sb.Append(lexer_name);
-                    sb.AppendLine(@"(str);
+                    sb.Append(@"(str);
             var tokens = new CommonTokenStream(lexer);
             var parser = new ");
                     sb.Append(parser_name);
                     sb.Append(@"(tokens);
             var tree = parser.");
+                    sb.Append(parameters[0]);
 
                     sb.AppendLine(@"();
+            return tree;
         }
     }
 }");
@@ -195,24 +197,33 @@ namespace Easy
                 process.BeginOutputReadLine();
                 process.WaitForExit();
                 var success = process.ExitCode == 0;
-                Environment.CurrentDirectory = old;
 
                 //Compilation? compilation = msbuild_project.GetCompilationAsync().Result;
                 //IAssemblySymbol assembly = compilation.Assembly;
                 //var file = compilation.AssemblyName;
-                //Assembly asm = Assembly.LoadFile(file);
-                //Type type = asm.GetType("Program");
-                //MethodInfo methodInfo = type.GetMethod("Main");
-                //methodInfo.Invoke(null, null);
+
+                //var alc = new TestAssemblyLoadContext(path + "/bin/Debug/netcoreapp3.1/Test.dll");
+                //Assembly asm = alc.LoadFromAssemblyPath(path + "/bin/Debug/netcoreapp3.1/Test.dll");
+                Assembly asm = Assembly.LoadFile(path + "/bin/Debug/netcoreapp3.1/Test.dll");
+
+                Type[] types = asm.GetTypes();
+                Type type = asm.GetType("Easy.Program");
+                var methods = type.GetMethods();
+                MethodInfo methodInfo = type.GetMethod("Parse");
+                object[] parm = new object[] {parameters[1]};
+                var res = methodInfo.Invoke(null, parm);
+                var tree = res as IParseTree;
+                var t2 = res as ParserRuleContext;
+                System.Console.WriteLine(tree.ToStringTree());
+
+                //alc.Unload();
+
+                Environment.CurrentDirectory = old;
             }
             finally
             {
-                Directory.Delete(path, true);
+                //Directory.Delete(path, true);
             }
-        }
-
-        public void Run()
-        {
         }
 
         public void BuildIt()
@@ -224,6 +235,28 @@ namespace Easy
             var compilation = project.GetCompilationAsync().Result;
             var assembly = compilation.Assembly;
 
+        }
+    }
+
+
+    public class TestAssemblyLoadContext : AssemblyLoadContext
+    {
+        private AssemblyDependencyResolver _resolver;
+
+        public TestAssemblyLoadContext(string mainAssemblyToLoadPath) : base(isCollectible: true)
+        {
+            _resolver = new AssemblyDependencyResolver(mainAssemblyToLoadPath);
+        }
+
+        protected override Assembly Load(AssemblyName name)
+        {
+            string assemblyPath = _resolver.ResolveAssemblyToPath(name);
+            if (assemblyPath != null)
+            {
+                return LoadFromAssemblyPath(assemblyPath);
+            }
+
+            return null;
         }
     }
 }

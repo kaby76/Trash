@@ -645,6 +645,14 @@
                             EnactEdits(results);
                         }
                     }
+                    else if (tree.run() != null)
+                    {
+                        var c = tree.run();
+                        var g = new Grun(this);
+                        var p = c.arg();
+                        var parameters = p.Select(a => GetArg(a)).ToArray();
+                        g.Run(parameters);
+                    }
                     else if (tree.rup() != null)
                     {
                         var rup = tree.rup();
@@ -920,11 +928,6 @@
                                     }
                                     System.Console.Error.WriteLine("No previous command starts with " + s);
                                 }
-                            }
-                            else if (tree.build() != null)
-                            {
-                                var g = new Grun(this);
-                                g.Build();
                             }
                             else if (tree.cd() != null)
                             {
@@ -1390,6 +1393,14 @@
                                     var results = LanguageServer.Transform.ToRightRecursion(nodes, doc);
                                     EnactEdits(results);
                                 }
+                            }
+                            else if (tree.run() != null)
+                            {
+                                var c = tree.run();
+                                var g = new Grun(this);
+                                var p = c.arg();
+                                var parameters = p.Select(a => GetArg(a)).ToArray();
+                                g.Run(parameters);
                             }
                             else if (tree.rup() != null)
                             {

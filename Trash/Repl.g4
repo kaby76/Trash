@@ -8,7 +8,6 @@ cmd :
   ( alias
   | analyze
   | bang
-  | build
   | cd
   | convert
   | combine
@@ -53,7 +52,6 @@ alias : ALIAS HWS* (ID HWS* EQUAL HWS* (StringLiteral | id_keyword))? ;
 analyze : ANALYZE ;
 anything : id HWS* stuff* ;
 bang : BANG HWS* (BANG | int | id_keyword) ;
-build : BUILD ;
 cd : CD HWS* arg? ;
 combine : COMBINE ;
 convert : CONVERT HWS* type? ;
@@ -79,7 +77,7 @@ rename : RENAME HWS* StringLiteral HWS* StringLiteral ;
 reorder : REORDER HWS* (alpha | bfs | dfs | modes) ;
 rotate : ROTATE ;
 rr : RR HWS* StringLiteral ;
-run : RUN ;
+run : RUN HWS* arg (HWS* arg (HWS* arg)? )? ;
 rup : RUP HWS* StringLiteral? ;
 set : SET HWS* id_keyword HWS* '=' HWS* (StringLiteral | INT) ;
 split : SPLIT ;
@@ -103,7 +101,6 @@ id_keyword : id
   | ANTLR3
   | ANTLR2
   | BISON
-  | BUILD
   | CD
   | COMBINE
   | CONVERT
