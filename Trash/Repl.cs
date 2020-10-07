@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Trash
+﻿namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -11,6 +9,7 @@ namespace Trash
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using Utils;
     using Workspaces;
 
