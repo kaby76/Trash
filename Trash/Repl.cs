@@ -201,7 +201,11 @@
                         var expr = GetArg(c.arg());
                         if (expr != null)
                         {
-                            Directory.SetCurrentDirectory(expr);
+                            var dirs = Directory.EnumerateDirectories(expr);
+                            if (dirs.Count() == 1)
+                                Directory.SetCurrentDirectory(dirs.First());
+                            else
+                                throw new Exception("No matching directory for '" + expr + "'.");
                         }
                         else
                         {
@@ -535,7 +539,10 @@
                         }
                         if (f != null)
                         {
-                            var doc = _docs.ReadDoc(f);
+                            var files = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), f);
+                            if (files.Count() != 1)
+                                throw new Exception("Ambiguous match for '" + f + "'.");
+                            var doc = _docs.ReadDoc(files.First());
                             stack.Push(doc);
                         }
                         else if (here != null)
@@ -947,7 +954,11 @@
                                 var expr = GetArg(c.arg());
                                 if (expr != null)
                                 {
-                                    Directory.SetCurrentDirectory(expr);
+                                    var dirs = Directory.EnumerateDirectories(Directory.GetCurrentDirectory(), expr);
+                                    if (dirs.Count() == 1)
+                                        Directory.SetCurrentDirectory(dirs.First());
+                                    else
+                                        throw new Exception("No matching directory for '" + expr + "'.");
                                 }
                                 else
                                 {
@@ -1284,7 +1295,10 @@
                                 }
                                 if (f != null)
                                 {
-                                    var doc = _docs.ReadDoc(f);
+                                    var files = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), f);
+                                    if (files.Count() != 1)
+                                        throw new Exception("Ambiguous match for '" + f + "'.");
+                                    var doc = _docs.ReadDoc(files.First());
                                     stack.Push(doc);
                                 }
                                 else if (here != null)

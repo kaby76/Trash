@@ -94,6 +94,11 @@ unfold //parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='a
 unfold //parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='primary']
 rup
 
+-- There is still one rule with indirect left recursion, "primaryNoNewArray". Ungroup
+-- the rules that contain "( primaryNoNewArray | arrayCreationExpression)" on the LHS.
+-- This will turn it into direct left recursion which Antlr can handle.
+ungroup //parserRuleSpec[RULE_REF/text()='primaryNoNewArray']/element[ebnf/block/altList/alternative/element/atom/ruleref/RULE_REF/text()='primaryNoNewArray']
+
 -- The grammar should now be free of indirect left recursion.
 
 -- Save
