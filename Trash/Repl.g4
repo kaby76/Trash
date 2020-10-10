@@ -12,6 +12,7 @@ cmd :
   | convert
   | combine
   | dot
+  | delabel
   | delete
   | empty
   | find
@@ -55,6 +56,7 @@ bang : BANG HWS* (BANG | int | id_keyword) ;
 cd : CD HWS* arg? ;
 combine : COMBINE ;
 convert : CONVERT HWS* type? ;
+delabel : DELABEL HWS* ;
 delete : DELETE HWS* arg ;
 dot : DOT ;
 empty : ;
@@ -104,6 +106,7 @@ id_keyword : id
   | CD
   | COMBINE
   | CONVERT
+  | DELABEL
   | DELETE
   | DR
   | EXIT
@@ -156,6 +159,7 @@ BUILD : 'build' ;
 CD : 'cd' ;
 COMBINE : 'combine' ;
 CONVERT : 'convert' ;
+DELABEL : 'delabel' ;
 DELETE : 'delete' ;
 DFS : 'dfs' ;
 DR : 'dr' ;

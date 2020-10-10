@@ -276,6 +276,13 @@
                             }
                         }
                     }
+                    else if (tree.delabel() != null)
+                    {
+                        var cmd = tree.delabel();
+                        var doc = stack.Peek();
+                        var results = LanguageServer.Transform.Delabel(doc);
+                        EnactEdits(results);
+                    }
                     else if (tree.delete() != null)
                     {
                         var delete = tree.delete();
@@ -1028,6 +1035,13 @@
                                         if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
                                     }
                                 }
+                            }
+                            else if (tree.delabel() != null)
+                            {
+                                var cmd = tree.delabel();
+                                var doc = stack.Peek();
+                                var results = LanguageServer.Transform.Delabel(doc);
+                                EnactEdits(results);
                             }
                             else if (tree.delete() != null)
                             {
