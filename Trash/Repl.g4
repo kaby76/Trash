@@ -20,6 +20,7 @@ cmd :
   | foldlit
   | group
   | has
+  | help
   | history
   | kleene
   | ls
@@ -65,6 +66,7 @@ fold : FOLD HWS* arg ;
 foldlit : FOLDLIT HWS* arg ;
 group : GROUP HWS* arg ;
 has : HAS HWS* (DR | IR) HWS* GRAPH? HWS* arg? ;
+help : HELP ;
 history : HISTORY ;
 kleene : KLEENE HWS* arg? ;
 ls : LS HWS* arg?  ;
@@ -116,6 +118,7 @@ id_keyword : id
   | GRAPH
   | GROUP
   | HAS
+  | HELP
   | HISTORY
   | IR
   | KLEENE
@@ -173,6 +176,7 @@ FOLDLIT : 'foldlit' ;
 GRAPH : 'graph' ;
 GROUP : 'group' ;
 HAS : 'has' ;
+HELP : 'help' ;
 HISTORY : 'history' ;
 INT : [0-9]+ ;
 IR : 'ir' ;
