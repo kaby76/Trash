@@ -201,7 +201,7 @@
                         var expr = GetArg(c.arg());
                         if (expr != null)
                         {
-                            var dirs = Directory.EnumerateDirectories(expr);
+                            var dirs = Directory.EnumerateDirectories(Directory.GetCurrentDirectory(), expr);
                             if (dirs.Count() == 1)
                                 Directory.SetCurrentDirectory(dirs.First());
                             else
