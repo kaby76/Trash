@@ -193,71 +193,21 @@ namespace Trash
                     {
                         new CDelabel().Execute(this, x_delabel);
                     }
-                    else if (tree.delete() != null)
+                    else if (tree.delete() is ReplParser.DeleteContext x_delete)
                     {
-                        var delete = tree.delete();
-                        var expr = GetArg(delete.arg());
-                        var doc = stack.Peek();
-                        var pr = ParsingResultsFactory.Create(doc);
-                        var aparser = pr.Parser;
-                        var atree = pr.ParseTree;
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                        {
-                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                            var nodes = engine.parseExpression(expr,
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                            var results = LanguageServer.Transform.Delete(nodes, doc);
-                            EnactEdits(results);
-                        }
+                        new CDelete().Execute(this, x_delete);
                     }
-                    else if (tree.dot() != null)
+                    else if (tree.dot() is ReplParser.DotContext x_dot)
                     {
-                        if (stack.Any())
-                        {
-                            var doc = stack.Peek();
-                            var pr = ParsingResultsFactory.Create(doc);
-                            var pt = pr.ParseTree;
-                            TerminalNodeImpl x = TreeEdits.LeftMostToken(pt);
-                            var ts = x.Payload.TokenSource;
-                            System.Console.WriteLine();
-                            System.Console.WriteLine(
-                                TreeOutput.OutputTree(
-                                    pt,
-                                    ts as Lexer,
-                                    null).ToString());
-                        }
+                        new CDot().Execute(this, x_dot);
                     }
                     else if (tree.empty() != null)
                     {
                         throw new Repl.DoNotAddToHistory(); // Don't add to history.
                     }
-                    else if (tree.find() != null)
+                    else if (tree.find() is ReplParser.FindContext x_find)
                     {
-                        var find = tree.find();
-                        var expr = GetArg(find.arg());
-                        var doc = stack.Peek();
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        var pr = ParsingResultsFactory.Create(doc);
-                        var aparser = pr.Parser;
-                        var atree = pr.ParseTree;
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                        {
-                            var nodes = engine.parseExpression(expr,
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
-                            foreach (var node in nodes)
-                            {
-                                TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
-                                var ts = x.Payload.TokenSource;
-                                System.Console.WriteLine();
-                                System.Console.WriteLine(
-                                    TreeOutput.OutputTree(
-                                        node,
-                                        ts as Lexer,
-                                        null).ToString());
-                            }
-                        }
+                        new CFind().Execute(this, x_find);
                     }
                     else if (tree.fold() != null)
                     {
@@ -865,71 +815,21 @@ namespace Trash
                             {
                                 new CDelabel().Execute(this, x_delabel);
                             }
-                            else if (tree.delete() != null)
+                            else if (tree.delete() is ReplParser.DeleteContext x_delete)
                             {
-                                var delete = tree.delete();
-                                var expr = GetArg(delete.arg());
-                                var doc = stack.Peek();
-                                var pr = ParsingResultsFactory.Create(doc);
-                                var aparser = pr.Parser;
-                                var atree = pr.ParseTree;
-                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                                {
-                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                    var nodes = engine.parseExpression(expr,
-                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                                    var results = LanguageServer.Transform.Delete(nodes, doc);
-                                    EnactEdits(results);
-                                }
+                                new CDelete().Execute(this, x_delete);
                             }
-                            else if (tree.dot() != null)
+                            else if (tree.dot() is ReplParser.DotContext x_dot)
                             {
-                                if (stack.Any())
-                                {
-                                    var doc = stack.Peek();
-                                    var pr = ParsingResultsFactory.Create(doc);
-                                    var pt = pr.ParseTree;
-                                    TerminalNodeImpl x = TreeEdits.LeftMostToken(pt);
-                                    var ts = x.Payload.TokenSource;
-                                    System.Console.WriteLine();
-                                    System.Console.WriteLine(
-                                        TreeOutput.OutputTree(
-                                            pt,
-                                            ts as Lexer,
-                                            null).ToString());
-                                }
+                                new CDot().Execute(this, x_dot);
                             }
                             else if (tree.empty() != null)
                             {
                                 throw new Repl.DoNotAddToHistory(); // Don't add to history.
                             }
-                            else if (tree.find() != null)
+                            else if (tree.find() is ReplParser.FindContext x_find)
                             {
-                                var find = tree.find();
-                                var expr = GetArg(find.arg());
-                                var doc = stack.Peek();
-                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                var pr = ParsingResultsFactory.Create(doc);
-                                var aparser = pr.Parser;
-                                var atree = pr.ParseTree;
-                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                                {
-                                    var nodes = engine.parseExpression(expr,
-                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
-                                    foreach (var node in nodes)
-                                    {
-                                        TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
-                                        var ts = x.Payload.TokenSource;
-                                        System.Console.WriteLine();
-                                        System.Console.WriteLine(
-                                            TreeOutput.OutputTree(
-                                                node,
-                                                ts as Lexer,
-                                                null).ToString());
-                                    }
-                                }
+                                new CFind().Execute(this, x_find);
                             }
                             else if (tree.fold() != null)
                             {

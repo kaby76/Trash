@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+
     class CCd
     {
         public void Help()

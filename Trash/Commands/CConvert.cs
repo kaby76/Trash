@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
+    using System.Collections.Generic;
+
     class CConvert
     {
         public void Help()

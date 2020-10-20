@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
     class CDelabel
     {
