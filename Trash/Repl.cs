@@ -21,9 +21,9 @@ namespace Trash
         const string PreviousHistoryFfn = ".trash.rc";
         public Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
         public Utils.StackQueue<Document> stack = new Utils.StackQueue<Document>();
-        string script_file = null;
-        int current_line_index = 0;
-        string[] lines = null;
+        public string script_file = null;
+        public int current_line_index = 0;
+        public string[] lines = null;
         public int QuietAfter = 10;
         public readonly Docs _docs;
         public Workspace _workspace { get; set; } = new Workspace();
@@ -364,67 +364,26 @@ namespace Trash
                         var doc = stack.Peek();
                         _docs.ParseDoc(doc, QuietAfter, r.type()?.GetText());
                     }
-                    else if (tree.pop() != null)
+                    else if (tree.pop() is ReplParser.PopContext x_pop)
                     {
-                        _ = stack.Pop();
+                        new CPop().Execute(this, x_pop);
                     }
-                    else if (tree.print() != null)
+                    else if (tree.print() is ReplParser.PrintContext x_print)
                     {
-                        var doc = stack.Peek();
-                        System.Console.Error.WriteLine();
-                        System.Console.Error.WriteLine(doc.FullPath);
-                        System.Console.WriteLine(doc.Code);
+                        new CPrint().Execute(this, x_print);
                     }
-                    else if (tree.pwd() != null)
+                    else if (tree.pwd() is ReplParser.PwdContext x_pwd)
                     {
-                        var cwd = Directory.GetCurrentDirectory();
-                        System.Console.Error.WriteLine(cwd);
+                        new CPwd().Execute(this, x_pwd);
                     }
                     else if (tree.quit() != null)
                     {
                         HistoryAdd(line);
                         throw new Repl.Quit();
                     }
-                    else if (tree.read() != null)
+                    else if (tree.read() is ReplParser.ReadContext x_read)
                     {
-                        var r = tree.read();
-                        var f = GetArg(r.arg());
-                        string here = null;
-                        if (!f.Contains("."))
-                        {
-                            here = f;
-                        }
-                        if (f != null)
-                        {
-                            var files = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), f);
-                            if (files.Count() != 1)
-                                throw new Exception("Ambiguous match for '" + f + "'.");
-                            var doc = _docs.ReadDoc(files.First());
-                            stack.Push(doc);
-                        }
-                        else if (here != null)
-                        {
-                            StringBuilder sb = new StringBuilder();
-                            for (; ; )
-                            {
-                                string cl;
-                                if (script_file != null)
-                                {
-                                    cl = lines[current_line_index++];
-                                }
-                                else
-                                {
-                                    cl = Console.ReadLine();
-                                }
-                                if (cl == here)
-                                    break;
-                                sb.AppendLine(cl);
-                            }
-                            var s = sb.ToString();
-                            var doc = _docs.CreateDoc("temp" + current_line_index + ".g4", s);
-                            stack.Push(doc);
-                        }
-                        else throw new Exception("not sure what to read.");
+                        new CRead().Execute(this, x_read);
                     }
                     else if (tree.rename() != null)
                     {
@@ -571,47 +530,17 @@ namespace Trash
                         var results = LanguageServer.Transform.SplitGrammar(doc);
                         EnactEdits(results);
                     }
-                    else if (tree.stack() != null)
+                    else if (tree.stack() is ReplParser.StackContext x_stack)
                     {
-                        var docs = stack.ToList();
-                        foreach (var doc in docs)
-                        {
-                            System.Console.WriteLine();
-                            System.Console.WriteLine(doc.FullPath);
-                        }
+                        new CStack().Execute(this, x_stack);
                     }
-                    else if (tree.ulliteral() != null)
+                    else if (tree.ulliteral() is ReplParser.UlliteralContext x_ulliteral)
                     {
-                        var ulliteral = tree.ulliteral();
-                        var expr = ulliteral.StringLiteral()?.GetText();
-                        expr = expr?.Substring(1, expr.Length - 2);
-                        var doc = stack.Peek();
-                        var pr = ParsingResultsFactory.Create(doc);
-                        var aparser = pr.Parser;
-                        var atree = pr.ParseTree;
-                        if (expr != null)
-                        {
-                            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                            {
-                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                var nodes = engine.parseExpression(expr,
-                                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                                var results = LanguageServer.Transform.UpperLowerCaseLiteral(nodes, doc);
-                                EnactEdits(results);
-                            }
-                        }
-                        else
-                        {
-                            var results = LanguageServer.Transform.UpperLowerCaseLiteral(null, doc);
-                            EnactEdits(results);
-                        }
+                        new CUlliteral().Execute(this, x_ulliteral);
                     }
-                    else if (tree.unalias() != null)
+                    else if (tree.unalias() is ReplParser.UnaliasContext x_unalias)
                     {
-                        var alias = tree.unalias();
-                        var id = alias.id();
-                        Aliases.Remove(id.GetText());
+                        new CUnalias().Execute(this, x_unalias);
                     }
                     else if (tree.unfold() is ReplParser.UnfoldContext x_unfold)
                     {
@@ -950,66 +879,25 @@ namespace Trash
                                 var doc = stack.Peek();
                                 _docs.ParseDoc(doc, QuietAfter, r.type()?.GetText());
                             }
-                            else if (tree.pop() != null)
+                            else if (tree.pop() is ReplParser.PopContext x_pop)
                             {
-                                _ = stack.Pop();
+                                new CPop().Execute(this, x_pop);
                             }
-                            else if (tree.print() != null)
+                            else if (tree.print() is ReplParser.PrintContext x_print)
                             {
-                                var doc = stack.Peek();
-                                System.Console.Error.WriteLine();
-                                System.Console.Error.WriteLine(doc.FullPath);
-                                System.Console.WriteLine(doc.Code);
+                                new CPrint().Execute(this, x_print);
                             }
-                            else if (tree.pwd() != null)
+                            else if (tree.pwd() is ReplParser.PwdContext x_pwd)
                             {
-                                var cwd = Directory.GetCurrentDirectory();
-                                System.Console.Error.WriteLine(cwd);
+                                new CPwd().Execute(this, x_pwd);
                             }
                             else if (tree.quit() != null)
                             {
                                 return;
                             }
-                            else if (tree.read() != null)
+                            else if (tree.read() is ReplParser.ReadContext x_read)
                             {
-                                var r = tree.read();
-                                var f = GetArg(r.arg());
-                                string here = null;
-                                if (!f.Contains("."))
-                                {
-                                    here = f;
-                                }
-                                if (f != null)
-                                {
-                                    var files = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), f);
-                                    if (files.Count() != 1)
-                                        throw new Exception("Ambiguous match for '" + f + "'.");
-                                    var doc = _docs.ReadDoc(files.First());
-                                    stack.Push(doc);
-                                }
-                                else if (here != null)
-                                {
-                                    StringBuilder sb = new StringBuilder();
-                                    for (; ; )
-                                    {
-                                        string cl;
-                                        if (script_file != null)
-                                        {
-                                            cl = lines[current_line_index++];
-                                        }
-                                        else
-                                        {
-                                            cl = Console.ReadLine();
-                                        }
-                                        if (cl == here)
-                                            break;
-                                        sb.AppendLine(cl);
-                                    }
-                                    var s = sb.ToString();
-                                    var doc = _docs.CreateDoc("temp" + current_line_index + ".g4", s);
-                                    stack.Push(doc);
-                                }
-                                else throw new Exception("not sure what to read.");
+                                new CRead().Execute(this, x_read);
                             }
                             else if (tree.rename() != null)
                             {
@@ -1156,47 +1044,17 @@ namespace Trash
                                 var results = LanguageServer.Transform.SplitGrammar(doc);
                                 EnactEdits(results);
                             }
-                            else if (tree.stack() != null)
+                            else if (tree.stack() is ReplParser.StackContext x_stack)
                             {
-                                var docs = stack.ToList();
-                                foreach (var doc in docs)
-                                {
-                                    System.Console.WriteLine();
-                                    System.Console.WriteLine(doc.FullPath);
-                                }
+                                new CStack().Execute(this, x_stack);
                             }
-                            else if (tree.ulliteral() != null)
+                            else if (tree.ulliteral() is ReplParser.UlliteralContext x_ulliteral)
                             {
-                                var ulliteral = tree.ulliteral();
-                                var expr = ulliteral.StringLiteral()?.GetText();
-                                expr = expr?.Substring(1, expr.Length - 2);
-                                var doc = stack.Peek();
-                                var pr = ParsingResultsFactory.Create(doc);
-                                var aparser = pr.Parser;
-                                var atree = pr.ParseTree;
-                                if (expr != null)
-                                {
-                                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                                    {
-                                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                        var nodes = engine.parseExpression(expr,
-                                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                                        var results = LanguageServer.Transform.UpperLowerCaseLiteral(nodes, doc);
-                                        EnactEdits(results);
-                                    }
-                                }
-                                else
-                                {
-                                    var results = LanguageServer.Transform.UpperLowerCaseLiteral(null, doc);
-                                    EnactEdits(results);
-                                }
+                                new CUlliteral().Execute(this, x_ulliteral);
                             }
-                            else if (tree.unalias() != null)
+                            else if (tree.unalias() is ReplParser.UnaliasContext x_unalias)
                             {
-                                var alias = tree.unalias();
-                                var id = alias.id();
-                                Aliases.Remove(id.GetText());
+                                new CUnalias().Execute(this, x_unalias);
                             }
                             else if (tree.unfold() is ReplParser.UnfoldContext x_unfold)
                             {
@@ -1327,11 +1185,9 @@ namespace Trash
                             Aliases[id] = id_keyword;
                         }
                     }
-                    else if (tree.unalias() != null)
+                    else if (tree.unalias() is ReplParser.UnaliasContext x_unalias)
                     {
-                        var alias = tree.unalias();
-                        var id = alias.id();
-                        Aliases.Remove(id.GetText());
+                        new CUnalias().Execute(this, x_unalias);
                     }
                     else if (tree.anything() != null)
                     {
