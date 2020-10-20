@@ -66,7 +66,7 @@ fold : FOLD HWS* arg ;
 foldlit : FOLDLIT HWS* arg ;
 group : GROUP HWS* arg ;
 has : HAS HWS* (DR | IR) HWS* GRAPH? HWS* arg? ;
-help : HELP ;
+help : HELP HWS* id_keyword?;
 history : HISTORY ;
 kleene : KLEENE HWS* arg? ;
 ls : LS HWS* arg?  ;

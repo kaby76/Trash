@@ -5,7 +5,7 @@
     using System.IO;
     using Workspaces;
 
-    class Docs
+    public class Docs
     {
         private Repl _repl;
 

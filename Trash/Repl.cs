@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using Trash.Commands;
+
+namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -17,13 +19,13 @@
     {
         List<string> History { get; set; } = new List<string>();
         const string PreviousHistoryFfn = ".trash.rc";
-        Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
-        Utils.StackQueue<Document> stack = new Utils.StackQueue<Document>();
+        public Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
+        public Utils.StackQueue<Document> stack = new Utils.StackQueue<Document>();
         string script_file = null;
         int current_line_index = 0;
         string[] lines = null;
-        int QuietAfter = 10;
-        private readonly Docs _docs;
+        public int QuietAfter = 10;
+        public readonly Docs _docs;
         public Workspace _workspace { get; private set; } = new Workspace();
 
         public Repl(string[] args)
@@ -76,7 +78,7 @@
             System.IO.File.WriteAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn, History);
         }
 
-        string GetArg(ReplParser.ArgContext arg)
+        public string GetArg(ReplParser.ArgContext arg)
         {
             if (arg == null)
                 return null;
@@ -114,33 +116,13 @@
                 foreach (var tree in btree.cmd())
                 {
                     if (false) ;
-                    else if (tree.alias() != null)
+                    else if (tree.alias() is ReplParser.AliasContext x_alias)
                     {
-                        var alias = tree.alias();
-                        var id = alias.ID();
-                        var sl = alias.StringLiteral();
-                        if (sl != null)
-                        {
-                            Aliases[id.GetText()] = sl.GetText().Substring(1, sl.GetText().Length - 2);
-                        }
-                        else if (alias.id_keyword() != null)
-                        {
-                            var id_keyword = alias.id_keyword();
-                            Aliases[id.GetText()] = id_keyword.GetText();
-                        }
-                        else if (alias.ID() == null)
-                        {
-                            System.Console.WriteLine();
-                            foreach (var p in Aliases)
-                            {
-                                System.Console.WriteLine(p.Key + " = " + p.Value);
-                            }
-                        }
+                        new CAlias().Execute(this, x_alias);
                     }
-                    else if (tree.analyze() != null)
+                    else if (tree.analyze() is ReplParser.AnalyzeContext x_analyze)
                     {
-                        var doc = stack.Peek();
-                        _docs.AnalyzeDoc(doc);
+                        new CAnalyze().Execute(this, x_analyze);
                     }
                     else if (tree.anything() != null)
                     {
@@ -195,93 +177,21 @@
                             System.Console.Error.WriteLine("No previous command starts with " + s);
                         }
                     }
-                    else if (tree.cd() != null)
+                    else if (tree.cd() is ReplParser.CdContext x_cd)
                     {
-                        var c = tree.cd();
-                        var expr = GetArg(c.arg());
-                        if (expr != null)
-                        {
-                            var dirs = Directory.EnumerateDirectories(Directory.GetCurrentDirectory(), expr);
-                            if (dirs.Count() == 1)
-                                Directory.SetCurrentDirectory(dirs.First());
-                            else
-                                throw new Exception("No matching directory for '" + expr + "'.");
-                        }
-                        else
-                        {
-                            expr = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
-                            Directory.SetCurrentDirectory(expr);
-                        }
+                        new CCd().Execute(this, x_cd);
                     }
-                    else if (tree.combine() != null)
+                    else if (tree.combine() is ReplParser.CombineContext x_combine)
                     {
-                        var r = tree.combine();
-                        var doc1 = stack.PeekTop(0);
-                        var doc2 = stack.PeekTop(1);
-                        var results = LanguageServer.Transform.CombineGrammars(doc1, doc2);
-                        EnactEdits(results);
+                        new CCombine().Execute(this, x_combine);
                     }
-                    else if (tree.convert() != null)
+                    else if (tree.convert() is ReplParser.ConvertContext x_convert)
                     {
-                        var import = tree.convert();
-                        var type = import.type()?.GetText();
-                        var doc = stack.Peek();
-                        var f = doc.FullPath;
-                        if (type == "antlr3")
-                        {
-                            Dictionary<string, string> res = new Dictionary<string, string>();
-                            var imp = new LanguageServer.Antlr3Import();
-                            imp.Try(doc.FullPath, doc.Code, ref res);
-                            foreach (var r in res)
-                            {
-                                var new_doc = _docs.CreateDoc(r.Key, r.Value);
-                                stack.Push(new_doc);
-                                if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
-                            }
-                        }
-                        else if (type == "antlr2")
-                        {
-                            Dictionary<string, string> res = new Dictionary<string, string>();
-                            var imp = new LanguageServer.Antlr2Import();
-                            imp.Try(doc.FullPath, doc.Code, ref res);
-                            foreach (var r in res)
-                            {
-                                var new_doc = _docs.CreateDoc(r.Key, r.Value);
-                                stack.Push(new_doc);
-                                if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
-                            }
-                        }
-                        else if (type == "bison")
-                        {
-                            Dictionary<string, string> res = new Dictionary<string, string>();
-                            var imp = new LanguageServer.BisonImport();
-                            imp.Try(doc.FullPath, doc.Code, ref res);
-                            foreach (var r in res)
-                            {
-                                var new_doc = _docs.CreateDoc(r.Key, r.Value);
-                                stack.Push(new_doc);
-                                if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
-                            }
-                        }
-                        else if (type == "ebnf")
-                        {
-                            Dictionary<string, string> res = new Dictionary<string, string>();
-                            var imp = new LanguageServer.W3CebnfImport();
-                            imp.Try(doc.FullPath, doc.Code, ref res);
-                            foreach (var r in res)
-                            {
-                                var new_doc = _docs.CreateDoc(r.Key, r.Value);
-                                stack.Push(new_doc);
-                                if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
-                            }
-                        }
+                        new CConvert().Execute(this, x_convert);
                     }
-                    else if (tree.delabel() != null)
+                    else if (tree.delabel() is ReplParser.DelabelContext x_delabel)
                     {
-                        var cmd = tree.delabel();
-                        var doc = stack.Peek();
-                        var results = LanguageServer.Transform.Delabel(doc);
-                        EnactEdits(results);
+                        new CDelabel().Execute(this, x_delabel);
                     }
                     else if (tree.delete() != null)
                     {
@@ -441,46 +351,9 @@
                             else throw new Exception("unknown check");
                         }
                     }
-                    else if (tree.help() != null)
+                    else if (tree.help() is ReplParser.HelpContext x)
                     {
-                        System.Console.WriteLine(@"Commands:
-alias - Allow a string to be substituted for a word of a simple command.
-analyze - perform an analysis of a grammar.
-!! (""bang bang"") - repeat the previous command.
-!int - repeat a previous command.
-cd - change directory.
-combine - create a combined grammar from the lexer and parser grammars on the top of stack.
-delete - delete nodes in the parse tree for a grammar and reform the grammar.
-find - find nodes in the parse tree for a grammar.
-fold - replace a sequence of symbols on the RHS of a rule with a LHS symbol of another rule.
-foldlit - replace a literal on the RHS of a rule with a LHS symbol of another rule.
-group - group common sub-sequences of symbols for alts.
-has - analyze a grammar for left/right/direct/indirect recursion.
-history - show the history of commands executed.
-kleene - convert a rule in BNF to EBNF.
-ls - show contents of a directory.
-mvsr - move a rule to the top of the grammar.
-parse - parse a grammar.
-pop - pop the stack of files.
-print - print the file at the top of stack.
-pwd - print out the current working directory.
-quit - exit Trash.
-read - read a file and place it on the stack.
-rename - rename a symbol in the grammar.
-reorder - reorder the rules of a grammar.
-rotate - rotate the stack.
-rr - replace left recursion with right recursion.
-run - generate a parser, compile it, and run it on input.
-rup - remove useless parentheses in a grammar rule.
-split - split a combined grammar.
-stack - print the stack.
-ulliteral - convert a lexer rule for a simple string literal to accept a string in any case.
-unalias - unalias a command.
-unfold - unfold a grammar rule symbol.
-ungroup - ungroup a parenthesized alt.
-workspace - create a new workspace for the run command.
-write - write a file to disk.
-");
+                        new CHelp().Execute(this, x);
                     }
                     else if (tree.history() != null)
                     {
@@ -915,33 +788,13 @@ write - write a file to disk.
                         try
                         {
                             if (false) ;
-                            else if (tree.alias() != null)
+                            else if (tree.alias() is ReplParser.AliasContext x_alias)
                             {
-                                var alias = tree.alias();
-                                var id = alias.ID();
-                                var sl = alias.StringLiteral();
-                                if (sl != null)
-                                {
-                                    Aliases[id.GetText()] = sl.GetText().Substring(1, sl.GetText().Length - 2);
-                                }
-                                else if (alias.id_keyword() != null)
-                                {
-                                    var id_keyword = alias.id_keyword();
-                                    Aliases[id.GetText()] = id_keyword.GetText();
-                                }
-                                else if (alias.ID() == null)
-                                {
-                                    System.Console.WriteLine();
-                                    foreach (var p in Aliases)
-                                    {
-                                        System.Console.WriteLine(p.Key + " = " + p.Value);
-                                    }
-                                }
+                                new CAlias().Execute(this, x_alias);
                             }
-                            else if (tree.analyze() != null)
+                            else if (tree.analyze() is ReplParser.AnalyzeContext x_analyze)
                             {
-                                var doc = stack.Peek();
-                                _docs.AnalyzeDoc(doc);
+                                new CAnalyze().Execute(this, x_analyze);
                             }
                             else if (tree.anything() != null)
                             {
@@ -996,93 +849,21 @@ write - write a file to disk.
                                     System.Console.Error.WriteLine("No previous command starts with " + s);
                                 }
                             }
-                            else if (tree.cd() != null)
+                            else if (tree.cd() is ReplParser.CdContext x_cd)
                             {
-                                var c = tree.cd();
-                                var expr = GetArg(c.arg());
-                                if (expr != null)
-                                {
-                                    var dirs = Directory.EnumerateDirectories(Directory.GetCurrentDirectory(), expr);
-                                    if (dirs.Count() == 1)
-                                        Directory.SetCurrentDirectory(dirs.First());
-                                    else
-                                        throw new Exception("No matching directory for '" + expr + "'.");
-                                }
-                                else
-                                {
-                                    expr = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
-                                    Directory.SetCurrentDirectory(expr);
-                                }
+                                new CCd().Execute(this, x_cd);
                             }
-                            else if (tree.combine() != null)
+                            else if (tree.combine() is ReplParser.CombineContext x_combine)
                             {
-                                var r = tree.combine();
-                                var doc1 = stack.PeekTop(0);
-                                var doc2 = stack.PeekTop(1);
-                                var results = LanguageServer.Transform.CombineGrammars(doc1, doc2);
-                                EnactEdits(results);
+                                new CCombine().Execute(this, x_combine);
                             }
-                            else if (tree.convert() != null)
+                            else if (tree.convert() is ReplParser.ConvertContext x_convert)
                             {
-                                var import = tree.convert();
-                                var type = import.type()?.GetText();
-                                var doc = stack.Peek();
-                                var f = doc.FullPath;
-                                if (type == "antlr3")
-                                {
-                                    Dictionary<string, string> res = new Dictionary<string, string>();
-                                    var imp = new LanguageServer.Antlr3Import();
-                                    imp.Try(doc.FullPath, doc.Code, ref res);
-                                    foreach (var r in res)
-                                    {
-                                        var new_doc = _docs.CreateDoc(r.Key, r.Value);
-                                        stack.Push(new_doc);
-                                        if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
-                                    }
-                                }
-                                else if (type == "antlr2")
-                                {
-                                    Dictionary<string, string> res = new Dictionary<string, string>();
-                                    var imp = new LanguageServer.Antlr2Import();
-                                    imp.Try(doc.FullPath, doc.Code, ref res);
-                                    foreach (var r in res)
-                                    {
-                                        var new_doc = _docs.CreateDoc(r.Key, r.Value);
-                                        stack.Push(new_doc);
-                                        if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
-                                    }
-                                }
-                                else if (type == "bison")
-                                {
-                                    Dictionary<string, string> res = new Dictionary<string, string>();
-                                    var imp = new LanguageServer.BisonImport();
-                                    imp.Try(doc.FullPath, doc.Code, ref res);
-                                    foreach (var r in res)
-                                    {
-                                        var new_doc = _docs.CreateDoc(r.Key, r.Value);
-                                        stack.Push(new_doc);
-                                        if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
-                                    }
-                                }
-                                else if (type == "ebnf")
-                                {
-                                    Dictionary<string, string> res = new Dictionary<string, string>();
-                                    var imp = new LanguageServer.W3CebnfImport();
-                                    imp.Try(doc.FullPath, doc.Code, ref res);
-                                    foreach (var r in res)
-                                    {
-                                        var new_doc = _docs.CreateDoc(r.Key, r.Value);
-                                        stack.Push(new_doc);
-                                        if (new_doc.FullPath.EndsWith(".g4")) _docs.ParseDoc(stack.Peek(), QuietAfter);
-                                    }
-                                }
+                                new CConvert().Execute(this, x_convert);
                             }
-                            else if (tree.delabel() != null)
+                            else if (tree.delabel() is ReplParser.DelabelContext x_delabel)
                             {
-                                var cmd = tree.delabel();
-                                var doc = stack.Peek();
-                                var results = LanguageServer.Transform.Delabel(doc);
-                                EnactEdits(results);
+                                new CDelabel().Execute(this, x_delabel);
                             }
                             else if (tree.delete() != null)
                             {
@@ -1242,46 +1023,9 @@ write - write a file to disk.
                                     else throw new Exception("unknown check");
                                 }
                             }
-                            else if (tree.help() != null)
+                            else if (tree.help() is ReplParser.HelpContext x)
                             {
-                                System.Console.WriteLine(@"Commands:
-alias - Allow a string to be substituted for a word of a simple command.
-analyze - perform an analysis of a grammar.
-!! (""bang bang"") - repeat the previous command.
-!int - repeat a previous command.
-cd - change directory.
-combine - create a combined grammar from the lexer and parser grammars on the top of stack.
-delete - delete nodes in the parse tree for a grammar and reform the grammar.
-find - find nodes in the parse tree for a grammar.
-fold - replace a sequence of symbols on the RHS of a rule with a LHS symbol of another rule.
-foldlit - replace a literal on the RHS of a rule with a LHS symbol of another rule.
-group - group common sub-sequences of symbols for alts.
-has - analyze a grammar for left/right/direct/indirect recursion.
-history - show the history of commands executed.
-kleene - convert a rule in BNF to EBNF.
-ls - show contents of a directory.
-mvsr - move a rule to the top of the grammar.
-parse - parse a grammar.
-pop - pop the stack of files.
-print - print the file at the top of stack.
-pwd - print out the current working directory.
-quit - exit Trash.
-read - read a file and place it on the stack.
-rename - rename a symbol in the grammar.
-reorder - reorder the rules of a grammar.
-rotate - rotate the stack.
-rr - replace left recursion with right recursion.
-run - generate a parser, compile it, and run it on input.
-rup - remove useless parentheses in a grammar rule.
-split - split a combined grammar.
-stack - print the stack.
-ulliteral - convert a lexer rule for a simple string literal to accept a string in any case.
-unalias - unalias a command.
-unfold - unfold a grammar rule symbol.
-ungroup - ungroup a parenthesized alt.
-workspace - create a new workspace for the run command.
-write - write a file to disk.
-");
+                                new CHelp().Execute(this, x);
                             }
                             else if (tree.history() != null)
                             {
