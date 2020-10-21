@@ -1,10 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
     class CSet
     {
+        public void Help()
+        {
+            System.Console.WriteLine(@"set <id> = <value>
+Set a value.
+
+Example:
+    set quietafter=10
+");
+        }
+
+        public void Execute(Repl repl, ReplParser.SetContext tree)
+        {
+            var id = tree.id_keyword().GetText();
+            var v1 = tree.StringLiteral()?.GetText();
+            var v2 = tree.INT()?.GetText();
+            if (id.ToLower() == "quietafter")
+            {
+                var v = int.Parse(v2);
+                repl.QuietAfter = v;
+            }
+        }
     }
 }

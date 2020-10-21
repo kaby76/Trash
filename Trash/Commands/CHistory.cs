@@ -1,10 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
     class CHistory
     {
+        public void Help()
+        {
+            System.Console.WriteLine(@"history
+Print out the shell command history.
+
+Example:
+    history
+");
+        }
+
+        public void Execute(Repl repl, ReplParser.HistoryContext tree)
+        {
+            System.Console.WriteLine();
+            for (int i = 0; i < repl.History.Count; ++i)
+            {
+                var h = repl.History[i];
+                System.Console.WriteLine(i + " " + h);
+            }
+        }
     }
 }

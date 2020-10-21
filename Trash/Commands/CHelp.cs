@@ -54,6 +54,76 @@ write - write a file to disk.
                 var id = tree.id_keyword();
                 if (id.GetText() == "alias")
                     new CAlias().Help();
+                else if (id.GetText() == "analyze")
+                    new CAnalyze().Help();
+                else if (id.GetText() == "cd")
+                    new CCd().Help();
+                else if (id.GetText() == "combine")
+                    new CCombine().Help();
+                else if (id.GetText() == "delete")
+                    new CDelete().Help();
+                else if (id.GetText() == "find")
+                    new CFind().Help();
+                else if (id.GetText() == "fold")
+                    new CFold().Help();
+                else if (id.GetText() == "foldlit")
+                    new CFoldlit().Help();
+                else if (id.GetText() == "group")
+                    new CGroup().Help();
+                else if (id.GetText() == "has")
+                    new CHas().Help();
+                else if (id.GetText() == "history")
+                    new CHistory().Help();
+                else if (id.GetText() == "kleene")
+                    new CKleene().Help();
+                else if (id.GetText() == "ls")
+                    new CLs().Help();
+                else if (id.GetText() == "mvsr")
+                    new CMvsr().Help();
+                else if (id.GetText() == "parse")
+                    new CParse().Help();
+                else if (id.GetText() == "pop")
+                    new CPop().Help();
+                else if (id.GetText() == "print")
+                    new CPrint().Help();
+                else if (id.GetText() == "pwd")
+                    new CPwd().Help();
+                else if (id.GetText() == "quit")
+                    new CQuit().Help();
+                else if (id.GetText() == "read")
+                    new CRead().Help();
+                else if (id.GetText() == "rename")
+                    new CRename().Help();
+                else if (id.GetText() == "reorder")
+                    new CReorder().Help();
+                else if (id.GetText() == "rotate")
+                    new CRotate().Help();
+                else if (id.GetText() == "rr")
+                    new CRr().Help();
+                else if (id.GetText() == "run")
+                    new CRun().Help();
+                else if (id.GetText() == "rup")
+                    new CRup().Help();
+                else if (id.GetText() == "split")
+                    new CSplit().Help();
+                else if (id.GetText() == "stack")
+                    new CStack().Help();
+                else if (id.GetText() == "ulliteral")
+                    new CUlliteral().Help();
+                else if (id.GetText() == "unalias")
+                    new CUnalias().Help();
+                else if (id.GetText() == "unfold")
+                    new CUnfold().Help();
+                else if (id.GetText() == "ungroup")
+                    new CUngroup().Help();
+                else if (id.GetText() == "workspace")
+                    new CWorkspace().Help();
+                else if (id.GetText() == "write")
+                    new CWrite().Help();
+                else
+                {
+                    System.Console.WriteLine("Help for unknown command.");
+                }
             }
         }
     }
