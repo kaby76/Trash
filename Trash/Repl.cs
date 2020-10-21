@@ -183,79 +183,17 @@ namespace Trash
                     {
                         new CFold().Execute(this, x_fold);
                     }
-                    else if (tree.foldlit() != null)
+                    else if (tree.foldlit() is ReplParser.FoldlitContext x_foldlit)
                     {
-                        var c = tree.foldlit();
-                        var expr = GetArg(c.arg());
-                        var doc = stack.Peek();
-                        var pr = ParsingResultsFactory.Create(doc);
-                        var aparser = pr.Parser;
-                        var atree = pr.ParseTree;
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                        {
-                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                            var nodes = engine.parseExpression(expr,
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                            var results = LanguageServer.Transform.Foldlit(nodes, doc);
-                            EnactEdits(results);
-                        }
+                        new CFoldlit().Execute(this, x_foldlit);
                     }
-                    else if (tree.group() != null)
+                    else if (tree.group() is ReplParser.GroupContext x_group)
                     {
-                        var group = tree.group();
-                        var expr = GetArg(group.arg());
-                        var doc = stack.Peek();
-                        var pr = ParsingResultsFactory.Create(doc);
-                        var aparser = pr.Parser;
-                        var atree = pr.ParseTree;
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                        {
-                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                            var nodes = engine.parseExpression(expr,
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                            var results = LanguageServer.Transform.Group(nodes, doc);
-                            EnactEdits(results);
-                        }
+                        new CGroup().Execute(this, x_group);
                     }
-                    else if (tree.has() != null)
+                    else if (tree.has() is ReplParser.HasContext x_has)
                     {
-                        var c = tree.has();
-                        var graph = c.GRAPH() != null;
-                        var expr = GetArg(c.arg());
-                        var doc = stack.Peek();
-                        var pr = ParsingResultsFactory.Create(doc);
-                        var aparser = pr.Parser;
-                        var atree = pr.ParseTree;
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                        {
-                            List<IParseTree> nodes = null;
-                            if (expr != null)
-                            {
-                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                nodes = engine.parseExpression(expr,
-                                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                            }
-                            if (c.DR() != null)
-                            {
-                                var result = LanguageServer.Transform.HasDirectRec(doc, nodes);
-                                foreach (var r in result)
-                                {
-                                    System.Console.WriteLine(r);
-                                }
-                            }
-                            else if (c.IR() != null)
-                            {
-                                var result = LanguageServer.Transform.HasIndirectRec(nodes, graph, doc);
-                                foreach (var r in result)
-                                {
-                                    System.Console.WriteLine(r);
-                                }
-                            }
-                            else throw new Exception("unknown check");
-                        }
+                        new CHas().Execute(this, x_has);
                     }
                     else if (tree.help() is ReplParser.HelpContext x_help)
                     {
@@ -265,69 +203,21 @@ namespace Trash
                     {
                         new CHistory().Execute(this, x_history);
                     }
-                    else if (tree.kleene() != null)
+                    else if (tree.kleene() is ReplParser.KleeneContext x_kleene)
                     {
-                        var c = tree.kleene();
-                        var expr = GetArg(c.arg());
-                        var doc = stack.Peek();
-                        var pr = ParsingResultsFactory.Create(doc);
-                        var aparser = pr.Parser;
-                        var atree = pr.ParseTree;
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                        {
-                            List<IParseTree> nodes = null;
-                            if (expr != null)
-                            {
-                                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                nodes = engine.parseExpression(expr,
-                                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                            }
-                            var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(doc, nodes);
-                            EnactEdits(results);
-                        }
+                        new CKleene().Execute(this, x_kleene);
                     }
-                    else if (tree.ls() != null)
+                    else if (tree.ls() is ReplParser.LsContext x_ls)
                     {
-                        var c = tree.ls();
-                        var expr = GetArg(c.arg());
-                        var cwd = Directory.GetCurrentDirectory();
-                        List<string> dirs = new List<string>(Directory.EnumerateDirectories(cwd));
-                        foreach (var dir in dirs)
-                        {
-                            Console.WriteLine($"{dir.Substring(dir.LastIndexOf(Path.DirectorySeparatorChar) + 1)}/");
-                        }
-                        if (expr == null) expr = "*";
-                        string[] files = Directory.GetFiles(cwd, expr);
-                        foreach (var f in files)
-                        {
-                            Console.WriteLine($"{f.Substring(f.LastIndexOf(Path.DirectorySeparatorChar) + 1)}");
-                        }
+                        new CLs().Execute(this, x_ls);
                     }
-                    else if (tree.mvsr() != null)
+                    else if (tree.mvsr() is ReplParser.MvsrContext x_mvsr)
                     {
-                        var c = tree.mvsr();
-                        var expr = c.StringLiteral().GetText();
-                        expr = expr.Substring(1, expr.Length - 2);
-                        var doc = stack.Peek();
-                        var pr = ParsingResultsFactory.Create(doc);
-                        var aparser = pr.Parser;
-                        var atree = pr.ParseTree;
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                        {
-                            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                            var nodes = engine.parseExpression(expr,
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                            var results = LanguageServer.Transform.MoveStartRuleToTop(doc, nodes);
-                            EnactEdits(results);
-                        }
+                        new CMvsr().Execute(this, x_mvsr);
                     }
-                    else if (tree.parse() != null)
+                    else if (tree.parse() is ReplParser.ParseContext x_parse)
                     {
-                        var r = tree.parse();
-                        var doc = stack.Peek();
-                        _docs.ParseDoc(doc, QuietAfter, r.type()?.GetText());
+                        new CParse().Execute(this, x_parse);
                     }
                     else if (tree.pop() is ReplParser.PopContext x_pop)
                     {
@@ -545,79 +435,17 @@ namespace Trash
                             {
                                 new CFold().Execute(this, x_fold);
                             }
-                            else if (tree.foldlit() != null)
+                            else if (tree.foldlit() is ReplParser.FoldlitContext x_foldlit)
                             {
-                                var c = tree.foldlit();
-                                var expr = GetArg(c.arg());
-                                var doc = stack.Peek();
-                                var pr = ParsingResultsFactory.Create(doc);
-                                var aparser = pr.Parser;
-                                var atree = pr.ParseTree;
-                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                                {
-                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                    var nodes = engine.parseExpression(expr,
-                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                                    var results = LanguageServer.Transform.Foldlit(nodes, doc);
-                                    EnactEdits(results);
-                                }
+                                new CFoldlit().Execute(this, x_foldlit);
                             }
-                            else if (tree.group() != null)
+                            else if (tree.group() is ReplParser.GroupContext x_group)
                             {
-                                var group = tree.group();
-                                var expr = GetArg(group.arg());
-                                var doc = stack.Peek();
-                                var pr = ParsingResultsFactory.Create(doc);
-                                var aparser = pr.Parser;
-                                var atree = pr.ParseTree;
-                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                                {
-                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                    var nodes = engine.parseExpression(expr,
-                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                                    var results = LanguageServer.Transform.Group(nodes, doc);
-                                    EnactEdits(results);
-                                }
+                                new CGroup().Execute(this, x_group);
                             }
-                            else if (tree.has() != null)
+                            else if (tree.has() is ReplParser.HasContext x_has)
                             {
-                                var c = tree.has();
-                                var graph = c.GRAPH() != null;
-                                var expr = GetArg(c.arg());
-                                var doc = stack.Peek();
-                                var pr = ParsingResultsFactory.Create(doc);
-                                var aparser = pr.Parser;
-                                var atree = pr.ParseTree;
-                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                                {
-                                    List<IParseTree> nodes = null;
-                                    if (expr != null)
-                                    {
-                                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                        nodes = engine.parseExpression(expr,
-                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                                    }
-                                    if (c.DR() != null)
-                                    {
-                                        var result = LanguageServer.Transform.HasDirectRec(doc, nodes);
-                                        foreach (var r in result)
-                                        {
-                                            System.Console.WriteLine(r);
-                                        }
-                                    }
-                                    else if (c.IR() != null)
-                                    {
-                                        var result = LanguageServer.Transform.HasIndirectRec(nodes, graph, doc);
-                                        foreach (var r in result)
-                                        {
-                                            System.Console.WriteLine(r);
-                                        }
-                                    }
-                                    else throw new Exception("unknown check");
-                                }
+                                new CHas().Execute(this, x_has);
                             }
                             else if (tree.help() is ReplParser.HelpContext x_help)
                             {
@@ -627,73 +455,21 @@ namespace Trash
                             {
                                 new CHistory().Execute(this, x_history);
                             }
-                            else if (tree.kleene() != null)
+                            else if (tree.kleene() is ReplParser.KleeneContext x_kleene)
                             {
-                                var c = tree.kleene();
-                                var expr = GetArg(c.arg());
-                                var doc = stack.Peek();
-                                var pr = ParsingResultsFactory.Create(doc);
-                                var aparser = pr.Parser;
-                                var atree = pr.ParseTree;
-                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                                {
-                                    List<IParseTree> nodes = null;
-                                    if (expr != null)
-                                    {
-                                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                        nodes = engine.parseExpression(expr,
-                                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                                    }
-                                    var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(doc, nodes);
-                                    EnactEdits(results);
-                                }
+                                new CKleene().Execute(this, x_kleene);
                             }
-                            else if (tree.ls() != null)
+                            else if (tree.ls() is ReplParser.LsContext x_ls)
                             {
-                                var path = ".";
-                                var c = tree.ls();
-                                var expr = GetArg(c.arg());
-                                if (expr != null)
-                                {
-                                    path = expr;
-                                }
-                                List<string> dirs = new List<string>(Directory.EnumerateDirectories(path));
-                                foreach (var dir in dirs)
-                                {
-                                    Console.WriteLine($"{dir.Substring(dir.LastIndexOf(Path.DirectorySeparatorChar) + 1)}/");
-                                }
-                                if (expr == null) expr = "*";
-                                string[] files = Directory.GetFiles(path, expr);
-                                foreach (var f in files)
-                                {
-                                    Console.WriteLine($"{f.Substring(f.LastIndexOf(Path.DirectorySeparatorChar) + 1)}");
-                                }
+                                new CLs().Execute(this, x_ls);
                             }
-                            else if (tree.mvsr() != null)
+                            else if (tree.mvsr() is ReplParser.MvsrContext x_mvsr)
                             {
-                                var c = tree.mvsr();
-                                var expr = c.StringLiteral().GetText();
-                                expr = expr.Substring(1, expr.Length - 2);
-                                var doc = stack.Peek();
-                                var pr = ParsingResultsFactory.Create(doc);
-                                var aparser = pr.Parser;
-                                var atree = pr.ParseTree;
-                                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
-                                {
-                                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                                    var nodes = engine.parseExpression(expr,
-                                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                                    var results = LanguageServer.Transform.MoveStartRuleToTop(doc, nodes);
-                                    EnactEdits(results);
-                                }
+                                new CMvsr().Execute(this, x_mvsr);
                             }
-                            else if (tree.parse() != null)
+                            else if (tree.parse() is ReplParser.ParseContext x_parse)
                             {
-                                var r = tree.parse();
-                                var doc = stack.Peek();
-                                _docs.ParseDoc(doc, QuietAfter, r.type()?.GetText());
+                                new CParse().Execute(this, x_parse);
                             }
                             else if (tree.pop() is ReplParser.PopContext x_pop)
                             {

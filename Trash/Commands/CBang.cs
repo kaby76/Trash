@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
+    using System;
+    using System.Linq;
+
     class CBang
     {
         public void Help()
