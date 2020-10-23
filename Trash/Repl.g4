@@ -40,10 +40,11 @@ cmd :
   | set
   | split
   | stack
+  | ulliteral
   | unalias
   | unfold
   | ungroup
-  | ulliteral
+  | unulliteral
   | workspace
   | write
   | anything
@@ -90,11 +91,13 @@ ulliteral : ULLITERAL HWS* StringLiteral? ;
 unalias : UNALIAS HWS* id ;
 unfold : UNFOLD HWS* arg ;
 ungroup : UNGROUP HWS* arg ;
+unulliteral : UNULLITERAL HWS* uclc HWS* StringLiteral? ;
 workspace : WORKSPACE ;
 write : WRITE ;
 alpha : ALPHA ;
 bfs : BFS HWS* StringLiteral ;
 dfs : DFS HWS* StringLiteral ;
+uclc : UC | LC ;
 modes : MODES ;
 int : INT ;
 id : ID ;
@@ -145,6 +148,8 @@ id_keyword : id
   | UNGROUP
   | WORKSPACE
   | WRITE
+  | UC
+  | LC
   ;
 stuff : STUFF | id_keyword ;
 type : ANTLR4 | ANTLR3 | ANTLR2 | BISON | EBNF ;
@@ -180,6 +185,7 @@ HELP : 'help' ;
 HISTORY : 'history' ;
 INT : [0-9]+ ;
 IR : 'ir' ;
+LC : 'lc' ;
 LS : 'ls' ;
 KLEENE : 'kleene' ;
 MODES : 'modes' ;
@@ -201,10 +207,12 @@ SET : 'set' ;
 SPLIT : 'split' ;
 STACK : 'stack' ;
 StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb* '"') ;
+UC : 'uc' ;
 ULLITERAL : 'ulliteral' ;
 UNALIAS : 'unalias' ;
 UNFOLD : 'unfold' ;
 UNGROUP : 'ungroup' ;
+UNULLITERAL : 'unulliteral' ;
 WORKSPACE : 'workspace' ;
 WRITE : 'write' ;
 ID: Id ;

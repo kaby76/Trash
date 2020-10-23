@@ -292,6 +292,10 @@ namespace Trash
                     {
                         new CUngroup().Execute(this, x_ungroup);
                     }
+                    else if (tree.unulliteral() is ReplParser.UnulliteralContext x_unulliteral)
+                    {
+                        new CUnulliteral().Execute(this, x_unulliteral);
+                    }
                     else if (tree.workspace() is ReplParser.WorkspaceContext x_workspace)
                     {
                         new CWorkspace().Execute(this, x_workspace);
@@ -542,6 +546,10 @@ namespace Trash
                             else if (tree.ungroup() is ReplParser.UngroupContext x_ungroup)
                             {
                                 new CUngroup().Execute(this, x_ungroup);
+                            }
+                            else if (tree.unulliteral() is ReplParser.UnulliteralContext x_unulliteral)
+                            {
+                                new CUnulliteral().Execute(this, x_unulliteral);
                             }
                             else if (tree.workspace() is ReplParser.WorkspaceContext x_workspace)
                             {

@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Trash": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\pb\\pb-csharp\\src\\g"
     }
   }
 }

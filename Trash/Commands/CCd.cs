@@ -23,16 +23,18 @@ Example:
             var expr = repl.GetArg(tree.arg());
             if (expr != null)
             {
-                var dirs = Directory.EnumerateDirectories(Directory.GetCurrentDirectory(), expr);
-                if (dirs.Count() == 1)
-                    Directory.SetCurrentDirectory(dirs.First());
-                else
-                    throw new Exception("No matching directory for '" + expr + "'.");
+                DirectoryInfo di = new DirectoryInfo(expr);
+                if (!di.Exists)
+                    throw new Exception("directory does not exist.");
+                Directory.SetCurrentDirectory(di.FullName);
             }
             else
             {
                 expr = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
-                Directory.SetCurrentDirectory(expr);
+                DirectoryInfo di = new DirectoryInfo(expr);
+                if (!di.Exists)
+                    throw new Exception("directory does not exist.");
+                Directory.SetCurrentDirectory(di.FullName);
             }
         }
     }
