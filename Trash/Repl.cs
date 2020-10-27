@@ -5,6 +5,7 @@ namespace Trash
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using LanguageServer;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
     using System.Collections.Generic;
@@ -88,19 +89,24 @@ namespace Trash
                 sl = sl.Substring(1, sl.Length - 2);
                 return sl;
             }
-            if (arg.stuff() != null)
+            else if (arg.id_keyword() != null)
             {
-                var a = arg.stuff().GetText();
+                var a = arg.id_keyword().GetText();
                 return a;
             }
-            return null;
+            else if (arg.NonWs() != null)
+            {
+                var a = arg.NonWs().GetText();
+                return a;
+            }
+            else
+                return null;
         }
 
-        public void Execute(string line)
+        public void Execute(string input)
         {
             try
             {
-                var input = line + ";";
                 var str = new AntlrInputStream(input);
                 var lexer = new ReplLexer(str);
                 lexer.RemoveErrorListeners();
@@ -130,7 +136,8 @@ namespace Trash
                         if (Aliases.ContainsKey(anything.id().GetText()))
                         {
                             var cmd = Aliases[anything.id().GetText()];
-                            var stuff = anything.stuff();
+                            var stuff = anything.children.ToList();
+                            stuff.RemoveAt(0);
                             var rest = stuff.Select(s => s.GetText()).ToList();
                             var rs = rest != null ? String.Join(" ", rest) : "";
                             cmd = cmd + " " + rs;
@@ -233,7 +240,7 @@ namespace Trash
                     }
                     else if (tree.quit() != null)
                     {
-                        HistoryAdd(line);
+                        HistoryAdd(input);
                         throw new Repl.Quit();
                     }
                     else if (tree.read() is ReplParser.ReadContext x_read)
@@ -305,7 +312,7 @@ namespace Trash
                         new CWrite().Execute(this, x_write);
                     }
                 }
-                HistoryAdd(line);
+                HistoryAdd(input);
             }
             catch (Repl.DoNotAddToHistory)
             {
@@ -323,42 +330,75 @@ namespace Trash
         public void Execute()
         {
             HistoryRead();
+            StreamReader reader;
             string input;
             ICharStream str;
             if (script_file != null)
             {
                 // Read commands from script, and read a grammar file (Antlr4) from stdin.
                 var st = System.IO.File.ReadAllText(script_file);
-                str = new AntlrInputStream(st);
+                reader = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(st ?? "")));
             }
             else
             {
-                var stdin = new StreamReader(Console.OpenStandardInput(), Console.InputEncoding);
-                str = new MyInputStream(stdin);
+                reader = new StreamReader(Console.OpenStandardInput(), Console.InputEncoding);
             }
             { 
-                var lexer = new ReplLexer(str);
-                lexer.RemoveErrorListeners();
-                var llistener = new ErrorListener<int>(0);
-                lexer.AddErrorListener(llistener);
-                var tokens = new MyUnbufferedTokenStream(lexer);
-                int last = str.Index;
                 for (; ; )
                 {
-                    if (str.Index == str.Size)
+
+                    Console.Error.Write("> ");
+                    //if (str.Index == str.Size)
+                    //{
+                    //    Console.Error.Write("> ");
+                    //    if (last != str.Index)
+                    //    {
+                    //        // Copy everything from last to current index as string
+                    //        // and enter into history.
+                    //        var h = str.GetText(new Antlr4.Runtime.Misc.Interval(last, str.Index - 1));
+                    //        h = h.Replace("\n", "").Replace("\r", "");
+                    //        if (h != "")
+                    //            HistoryAdd(h);
+                    //        last = str.Index;
+                    //    }
+                    //}
+
+                    // We're going to do this in two shots. First scan for an end of line or end of file.
+                    // Then, create a normal Antlr stream with the line or lines. We then parse this as usual.
+                    // The only thing that we allow multi-lines are explicit '\' continuations, or strings.
+                    StringBuilder sb = new StringBuilder();
+                    for (; ; )
                     {
-                        Console.Error.Write("> ");
-                        if (last != str.Index)
+                        int i = reader.Read();
+                        if (i < 0) break;
+                        char c = (char)i;
+                        if (c == '\n')
                         {
-                            // Copy everything from last to current index as string
-                            // and enter into history.
-                            var h = str.GetText(new Antlr4.Runtime.Misc.Interval(last, str.Index - 1));
-                            h = h.Replace("\n", "").Replace("\r", "");
-                            if (h != "")
-                                HistoryAdd(h);
-                            last = str.Index;
+                            break;
                         }
+                        else if (c == '"' || c == '\'')
+                        {
+                            // Read string.
+                        }
+                        else if (c == '\\')
+                        {
+                            // escape.
+                        }
+                        else if (c == ';')
+                        {
+                            break;
+                        }
+                        sb.Append(c);
                     }
+                    var inp = sb.ToString();
+                    str = new AntlrInputStream(inp);
+                    var lexer = new ReplLexer(str);
+                    lexer.RemoveErrorListeners();
+                    var llistener = new ErrorListener<int>(0);
+                    lexer.AddErrorListener(llistener);
+                    var tokens = new MyUnbufferedTokenStream(lexer);
+                    int last = str.Index;
+
 
                     {
                         var parser = new ReplParser(tokens);
@@ -387,7 +427,7 @@ namespace Trash
                                 if (Aliases.ContainsKey(anything.id().GetText()))
                                 {
                                     var cmd = Aliases[anything.id().GetText()];
-                                    ReplParser.StuffContext[] stuff = anything.stuff();
+                                    var stuff = anything.children.ToList().Skip(1);
                                     var rest = stuff.Select(s => s.GetText()).ToList();
                                     var rs = rest != null ? String.Join(" ", rest) : "";
                                     cmd = cmd + " " + rs;
@@ -559,6 +599,7 @@ namespace Trash
                             {
                                 new CWrite().Execute(this, x_write);
                             }
+                            HistoryAdd(inp);
                             HistoryWrite();
                         }
                         catch (Repl.DoNotAddToHistory)
@@ -574,16 +615,16 @@ namespace Trash
                         }
                         finally
                         {
-                            // Reset the input buffer and start all over from
-                            // scratch.
-                            while (str.Index < str.Size && !(str.LA(1) == '\n' || str.LA(1) == '\r'))
-                                str.Consume();
-                            while (str.Index < str.Size && (str.LA(1) == '\n' || str.LA(1) == '\r'))
-                                str.Consume();
-                            lexer = new ReplLexer(str);
-                            lexer.RemoveErrorListeners();
-                            lexer.AddErrorListener(new ErrorListener<int>(0));
-                            tokens = new MyUnbufferedTokenStream(lexer);
+                            //// Reset the input buffer and start all over from
+                            //// scratch.
+                            //while (str.Index < str.Size && !(str.LA(1) == '\n' || str.LA(1) == '\r'))
+                            //    str.Consume();
+                            //while (str.Index < str.Size && (str.LA(1) == '\n' || str.LA(1) == '\r'))
+                            //    str.Consume();
+                            //lexer = new ReplLexer(str);
+                            //lexer.RemoveErrorListeners();
+                            //lexer.AddErrorListener(new ErrorListener<int>(0));
+                            //tokens = new MyUnbufferedTokenStream(lexer);
                         }
                     }
                 }
@@ -682,10 +723,10 @@ namespace Trash
                         if (Aliases.ContainsKey(anything.id().GetText()))
                         {
                             var cmd = Aliases[anything.id().GetText()];
-                            var stuff = anything.stuff();
-                            var rest = stuff.Select(s => s.GetText()).ToList();
-                            var rs = rest != null ? String.Join(" ", rest) : "";
-                            cmd = cmd + rs;
+                           // var stuff = anything.stuff();
+                           // var rest = stuff.Select(s => s.GetText()).ToList();
+                           // var rs = rest != null ? String.Join(" ", rest) : "";
+                           // cmd = cmd + rs;
                             //RecallAliases(cmd);
                         }
                     }
