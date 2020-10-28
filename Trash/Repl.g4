@@ -5,8 +5,8 @@ options
 	superClass = CompatShim.Parser;
 }
 
-cmds
-  : cmd ( SEMI cmd )+
+cmd_all
+  : cmd EOF
   ;
 cmd :
   alias
@@ -72,7 +72,7 @@ has : HAS (DR | IR) GRAPH? arg? ;
 help : HELP id_keyword?;
 history : HISTORY ;
 kleene : KLEENE arg? ;
-ls : LS arg?  ;
+ls : LS arg*  ;
 mvsr : MVSR StringLiteral ;
 parse : PARSE type? ;
 pop : POP ;
@@ -103,7 +103,7 @@ uclc : UC | LC ;
 modes : MODES ;
 int : INT ;
 id : ID ;
-arg : (StringLiteral | id_keyword | NonWs) ;
+arg : (StringLiteral | id_keyword | NonWs | DOT) ;
 id_keyword : id
   | ALIAS
   | ANALYZE

@@ -21,21 +21,12 @@ Example:
         public void Execute(Repl repl, ReplParser.CdContext tree)
         {
             var expr = repl.GetArg(tree.arg());
-            if (expr != null)
-            {
-                DirectoryInfo di = new DirectoryInfo(expr);
-                if (!di.Exists)
-                    throw new Exception("directory does not exist.");
-                Directory.SetCurrentDirectory(di.FullName);
-            }
-            else
-            {
-                expr = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
-                DirectoryInfo di = new DirectoryInfo(expr);
-                if (!di.Exists)
-                    throw new Exception("directory does not exist.");
-                Directory.SetCurrentDirectory(di.FullName);
-            }
+            var list = new Globbing().GetDirectory(expr);
+            if (list.Count == 0)
+                throw new Exception("directory does not exist.");
+            else if (list.Count >= 2)
+                throw new Exception("ambigous");
+            Directory.SetCurrentDirectory(list.First().FullName);
         }
     }
 }

@@ -110,10 +110,10 @@
                 var parser = new ReplParser(tokens);
                 var listener = new ErrorListener<IToken>(2);
                 parser.AddErrorListener(listener);
-                var btree = parser.cmds();
+                var btree = parser.cmd_all();
                 if (llistener.had_error) throw new Exception("command syntax error");
                 if (listener.had_error) throw new Exception("command syntax error");
-                foreach (var tree in btree.cmd())
+                var tree = btree.cmd();
                 {
                     if (false) ;
                     else if (tree.alias() is ReplParser.AliasContext x_alias)
@@ -390,7 +390,7 @@
                     lexer.RemoveErrorListeners();
                     var llistener = new ErrorListener<int>(0);
                     lexer.AddErrorListener(llistener);
-                    var tokens = new MyUnbufferedTokenStream(lexer);
+                    var tokens = new CommonTokenStream(lexer);
                     int last = str.Index;
 
 
@@ -398,12 +398,14 @@
                         var parser = new ReplParser(tokens);
                         var listener = new ErrorListener<IToken>(2);
                         parser.AddErrorListener(listener);
-                        parser.ErrorHandler = new MyBailErrorStrategy(tokens);
-                        var tree = parser.cmd();
-
-                        if (llistener.had_error) throw new Exception("command syntax error");
-                        if (listener.had_error) throw new Exception("command syntax error");
-
+                        //parser.ErrorHandler = new MyBailErrorStrategy(tokens);
+                        var btree = parser.cmd_all();
+                        if (llistener.had_error || listener.had_error)
+                        {
+                            System.Console.Error.WriteLine("command syntax error");
+                            continue;
+                        }
+                        var tree = btree.cmd();
                         try
                         {
                             if (false) ;
@@ -686,12 +688,11 @@
                     var parser = new ReplParser(tokens);
                     var listener = new ErrorListener<IToken>(2);
                     parser.AddErrorListener(listener);
-                    parser.ErrorHandler = new MyBailErrorStrategy(tokens);
-                    var tree = parser.cmd();
-
+                    //parser.ErrorHandler = new MyBailErrorStrategy(tokens);
+                    var btree = parser.cmd_all();
                     if (llistener.had_error) throw new Exception("command syntax error");
                     if (listener.had_error) throw new Exception("command syntax error");
-
+                    var tree = btree.cmd();
                     if (tree.alias() != null)
                     {
                         var alias = tree.alias();
