@@ -1,19 +1,13 @@
-﻿using Trash.Commands;
-
-namespace Trash
+﻿namespace Trash
 {
     using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
-    using LanguageServer;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
-    using Utils;
+    using Trash.Commands;
     using Workspaces;
 
     public class Repl

@@ -1,9 +1,6 @@
 ﻿namespace Trash.Commands
 {
-    using GlobExpressions;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.Extensions.FileSystemGlobbing;
-    using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Design.Serialization;
@@ -102,38 +99,73 @@ Example:
                 if (j == expr.Length) rest = "";
                 else rest = expr.Substring(j + 1, expr.Length - j - 1);
             }
-            if (rest == "")
+            if (first == ".")
             {
-                var ex = GlobToRegex(first);
-                var regex = new Regex(ex);
-                var dirs = di.GetDirectories().ToList().Select(i => i.Name).ToList();
-                foreach (var m in dirs.Where(t => regex.IsMatch(t)).ToList())
-                {
-                    results.Add(m);
-                }
-                var files = di.GetFiles().ToList().Select(i => i.Name).ToList();
-                foreach (var f in files.Where(t => regex.IsMatch(t)).ToList())
-                {
-                    results.Add(f);
-                }
+                return Contents(cwd, rest);
             }
-            else
+            else if (first == "..")
             {
-                var ex = GlobToRegex(first);
-                var regex = new Regex(ex);
-                var dirs = di.GetDirectories().ToList().Select(i => i.Name).ToList();
-                var matches = dirs.Where(t => regex.IsMatch(t)).ToList();
-                foreach (var m in matches)
+                return Contents(cwd + "/..", rest);
+            } else
+            {
+                List<string> dirs = new List<string>();
+                List<string> files = new List<string>();
+                if (first != "")
                 {
-                    var res = Contents(m, rest);
-                    foreach (var r in res) results.Add(r);
+                    var ex = GlobToRegex(first);
+                    var regex = new Regex(ex);
+                    dirs = di.GetDirectories().ToList().Select(i => i.Name).Where(t => regex.IsMatch(t)).ToList();
+                    files = di.GetFiles().ToList().Select(i => i.Name).Where(t => regex.IsMatch(t)).ToList();
                 }
+                else
+                {
+                    dirs = di.GetDirectories().ToList().Select(i => i.Name).ToList();
+                    files = di.GetFiles().ToList().Select(i => i.Name).ToList();
+                }
+                if (rest != "")
+                {
+                    foreach (var m in dirs)
+                    {
+                        var res = Contents(m, rest);
+                        foreach (var r in res) results.Add(r);
+                    }
+                }
+                else
+                {
+                    foreach (var m in dirs)
+                    {
+                        results.Add(m + "/");
+                    }
+                    foreach (var f in files)
+                    {
+                        results.Add(f);
+                    }
+                }
+                return results;
             }
-            return results;
         }
 
         public List<string> Contents(string expr)
         {
+            if (expr == null)
+            {
+                List<string> result = new List<string>();
+                var cwd = Directory.GetCurrentDirectory();
+                DirectoryInfo di = new DirectoryInfo(cwd);
+                if (!di.Exists)
+                    throw new Exception("directory or file does not exist.");
+                var dirs = di.GetDirectories().ToList().Select(i => i.Name).ToList();
+                foreach (var dir in dirs)
+                {
+                    result.Add(dir.Substring(dir.LastIndexOf(Path.DirectorySeparatorChar) + 1));
+                }
+                var files = di.GetFiles().ToList().Select(i => i.Name).ToList();
+                foreach (var f in files)
+                {
+                    result.Add(f.Substring(f.LastIndexOf(Path.DirectorySeparatorChar) + 1));
+                }
+                return result;
+            }
             if (Path.IsPathRooted(expr))
             {
                 var full_path = Path.GetFullPath(expr);
@@ -152,58 +184,10 @@ Example:
         public void Execute(Repl repl, ReplParser.LsContext tree)
         {
             var expr = repl.GetArg(tree.arg());
-            if (expr != null)
+            var list = Contents(expr);
+            foreach (var f in list)
             {
-                var list = Contents(expr);
-                //DirectoryInfoWrapper patternSearchFolder;
-                //bool is_absolute = Path.IsPathRooted(expr);
-                //if (is_absolute)
-                //{
-                //    var root = Path.GetPathRoot(expr);
-                //    patternSearchFolder = new DirectoryInfoWrapper(new DirectoryInfo(root));
-                //}
-                //else
-                //{
-                //    var cwd = Directory.GetCurrentDirectory();
-                //    patternSearchFolder = new DirectoryInfoWrapper(new DirectoryInfo(cwd));
-                //}
-
-                //var matcher = new Microsoft.Extensions.FileSystemGlobbing.Matcher(StringComparison.OrdinalIgnoreCase);
-                //matcher.AddInclude(expr);
-                //var results = matcher.Execute(patternSearchFolder);
-                //if (!results.HasMatches)
-                //    throw new Exception("directory or file does not exist.");
-
-                //var files = results.Files;
-                //foreach (var f in files)
-                //{
-                //    var e = f.Path;
-                //    Console.WriteLine($"{e}");
-                //}
-                foreach (var f in list)
-                {
-                    Console.WriteLine($"{f}");
-                }
-
-            }
-            else
-            {
-                var cwd = Directory.GetCurrentDirectory();
-                DirectoryInfo di = new DirectoryInfo(cwd);
-                if (!di.Exists)
-                    throw new Exception("directory or file does not exist.");
-
-                var dirs = di.GetDirectories().ToList().Select(i => i.Name).ToList();
-                foreach (var dir in dirs)
-                {
-                    Console.WriteLine($"{dir.Substring(dir.LastIndexOf(Path.DirectorySeparatorChar) + 1)}/");
-                }
-                if (expr == null) expr = "*";
-                var files = di.GetFiles(expr).ToList().Select(i => i.Name).ToList();
-                foreach (var f in files)
-                {
-                    Console.WriteLine($"{f.Substring(f.LastIndexOf(Path.DirectorySeparatorChar) + 1)}");
-                }
+                Console.WriteLine($"{f}");
             }
         }
     }
