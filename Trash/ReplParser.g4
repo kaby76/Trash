@@ -54,10 +54,10 @@ cmd :
   | write
   | anything
   ;
-alias : ALIAS (ID EQUAL (StringLiteral | id_keyword))? ;
+alias : ALIAS (NonWsArgMode EQUAL (StringLiteral | NonWsArgMode))? ;
 analyze : ANALYZE ;
 anything : id  .*  ;
-bang : BANG (BANG | int | id_keyword) ;
+bang : BANG .* ;
 cd : CD arg? ;
 combine : COMBINE ;
 convert : CONVERT type? ;
@@ -70,7 +70,7 @@ fold : FOLD StringLiteral ;
 foldlit : FOLDLIT StringLiteral ;
 group : GROUP StringLiteral ;
 has : HAS (DR | IR) GRAPH? arg? ;
-help : HELP id_keyword?;
+help : HELP NonWsArgMode?;
 history : HISTORY ;
 kleene : KLEENE StringLiteral? ;
 ls : LS arg*  ;
@@ -87,7 +87,7 @@ rotate : ROTATE ;
 rr : RR StringLiteral ;
 run : RUN arg (arg (arg)? )? ;
 rup : RUP StringLiteral? ;
-set : SET id_keyword '=' (StringLiteral | INT) ;
+set : SET NonWsArgMode '=' (StringLiteral | INT) ;
 split : SPLIT ;
 stack : STACK ;
 ulliteral : ULLITERAL StringLiteral? ;
@@ -104,54 +104,5 @@ uclc : UC | LC ;
 modes : MODES ;
 int : INT ;
 id : ID ;
-arg : (StringLiteral | id_keyword | NonWs | DOT) ;
-id_keyword : id
-  | ALIAS
-  | ANALYZE
-  | ANTLR3
-  | ANTLR2
-  | BISON
-  | CD
-  | COMBINE
-  | CONVERT
-  | DELABEL
-  | DELETE
-  | DR
-  | EXIT
-  | FIND
-  | FOLD
-  | FOLDLIT
-  | GRAPH
-  | GROUP
-  | HAS
-  | HELP
-  | HISTORY
-  | IR
-  | KLEENE
-  | LS
-  | MVSR
-  | PARSE
-  | POP
-  | PRINT
-  | PWD
-  | QUIT
-  | READ
-  | RENAME
-  | REORDER
-  | ROTATE
-  | RR
-  | RUN
-  | RUP
-  | SET
-  | SPLIT
-  | STACK
-  | ULLITERAL
-  | UNALIAS
-  | UNFOLD
-  | UNGROUP
-  | WORKSPACE
-  | WRITE
-  | UC
-  | LC
-  ;
+arg : StringLiteral | NonWsArgMode ;
 type : ANTLR4 | ANTLR3 | ANTLR2 | BISON | EBNF ;

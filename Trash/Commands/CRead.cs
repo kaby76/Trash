@@ -27,10 +27,10 @@ Example:
             }
             if (f != null)
             {
-                var files = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), f);
+                var files = new Globbing().Contents(f);
                 if (files.Count() != 1)
                     throw new Exception("Ambiguous match for '" + f + "'.");
-                var doc = repl._docs.ReadDoc(files.First());
+                var doc = repl._docs.ReadDoc(files.First().FullName);
                 repl.stack.Push(doc);
             }
             else if (here != null)

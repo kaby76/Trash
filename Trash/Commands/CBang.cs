@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Runtime.Serialization.Formatters;
 
     class CBang
     {
@@ -21,25 +22,23 @@ Example:
 
         public void Execute(Repl repl, ReplParser.BangContext tree)
         {
-            if (tree.@int() != null)
-            {
-                var snum = tree.@int().GetText();
-                var num = Int32.Parse(snum);
-                var recall = repl.History[num];
-                System.Console.Error.WriteLine(recall);
-                repl.Execute(recall);
-                return;
-            }
-            else if (tree.BANG().Length > 1)
+            if (tree.BANG().GetText() == "!!")
             {
                 var recall = repl.History.Last();
                 System.Console.Error.WriteLine(recall);
                 repl.Execute(recall);
                 return;
             }
-            else if (tree.id_keyword() != null)
+            else if (int.TryParse(tree.BANG().GetText().Substring(1), out int num))
             {
-                var s = tree.id_keyword().GetText();
+                var recall = repl.History[num];
+                System.Console.Error.WriteLine(recall);
+                repl.Execute(recall);
+                return;
+            }
+            else
+            {
+                var s = tree.BANG().GetText().Substring(1);
                 for (int i = repl.History.Count - 1; i >= 0; --i)
                 {
                     if (repl.History[i].StartsWith(s))

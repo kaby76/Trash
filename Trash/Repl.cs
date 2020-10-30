@@ -52,11 +52,6 @@
             _docs = new Docs(this);
         }
 
-        void RedoAliases()
-        {
-            RecallAliases();
-        }
-
         void HistoryAdd(string input)
         {
             History.Add(input);
@@ -65,7 +60,7 @@
 
         void HistoryRead()
         {
-            RedoAliases();
+            RecallAliases();
         }
 
         void HistoryWrite()
@@ -84,14 +79,9 @@
                 sl = sl.Substring(1, sl.Length - 2);
                 return sl;
             }
-            else if (arg.id_keyword() != null)
+            else if (arg.NonWsArgMode() != null)
             {
-                var a = arg.id_keyword().GetText();
-                return a;
-            }
-            else if (arg.NonWs() != null)
-            {
-                var a = arg.NonWs().GetText();
+                var a = arg.NonWsArgMode().GetText();
                 return a;
             }
             else
@@ -113,7 +103,8 @@
             {
                 var str = new AntlrInputStream(input);
                 var lexer = new ReplLexer(str);
-                lexer.RemoveErrorListeners();
+		        lexer.Mode(ReplLexer.CommandMode);
+		        lexer.RemoveErrorListeners();
                 var llistener = new ErrorListener<int>(0);
                 lexer.AddErrorListener(llistener);
                 var tokens = new CommonTokenStream(lexer);
@@ -333,7 +324,7 @@
 
         public void Execute()
         {
-  //          HistoryRead();
+            HistoryRead();
             StreamReader reader;
             string input;
             ICharStream str;
@@ -662,6 +653,7 @@
                 var inp = history[i];
                 var str = new AntlrInputStream(inp);
                 var lexer = new ReplLexer(str);
+                lexer.Mode(ReplLexer.CommandMode);
                 lexer.RemoveErrorListeners();
                 var llistener = new ErrorListener<int>(0);
                 lexer.AddErrorListener(llistener);
@@ -679,7 +671,7 @@
                     var tree = btree.cmd();
                     if (tree.alias() is ReplParser.AliasContext x_alias)
                     {
-                        new CAlias().Execute(this, x_alias);
+                        new CAlias().Execute(this, x_alias, true);
                     }
                     else if (tree.unalias() is ReplParser.UnaliasContext x_unalias)
                     {

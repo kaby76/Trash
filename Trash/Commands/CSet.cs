@@ -14,10 +14,10 @@ Example:
 
         public void Execute(Repl repl, ReplParser.SetContext tree)
         {
-            var id = tree.id_keyword().GetText();
+            var id = tree.NonWsArgMode();
             var v1 = tree.StringLiteral()?.GetText();
             var v2 = tree.INT()?.GetText();
-            if (id.ToLower() == "quietafter")
+            if (id?.GetText().ToLower() == "quietafter")
             {
                 var v = int.Parse(v2);
                 repl.QuietAfter = v;

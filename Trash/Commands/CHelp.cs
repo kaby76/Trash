@@ -8,7 +8,7 @@
 
         public void Execute(Repl repl, ReplParser.HelpContext tree)
         {
-            if (tree.id_keyword() == null)
+            if (tree.NonWsArgMode() == null)
             {
                 System.Console.WriteLine(@"Commands:
 alias - Allow a string to be substituted for a word of a simple command.
@@ -51,7 +51,7 @@ write - write a file to disk.
             }
             else
             {
-                var id = tree.id_keyword();
+                var id = tree.NonWsArgMode();
                 if (id.GetText() == "alias")
                     new CAlias().Help();
                 else if (id.GetText() == "analyze")

@@ -13,20 +13,19 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.AliasContext tree)
+        public void Execute(Repl repl, ReplParser.AliasContext tree, bool silent = false)
         {
-            var id = tree.ID();
+            var ids = tree.NonWsArgMode();
             var sl = tree.StringLiteral();
             if (sl != null)
             {
-                repl.Aliases[id.GetText()] = sl.GetText().Substring(1, sl.GetText().Length - 2);
+                repl.Aliases[ids[0].GetText()] = sl.GetText().Substring(1, sl.GetText().Length - 2);
             }
-            else if (tree.id_keyword() != null)
+            else if (ids.Length > 1)
             {
-                var id_keyword = tree.id_keyword();
-                repl.Aliases[id.GetText()] = id_keyword.GetText();
+                repl.Aliases[ids[0].GetText()] = ids[1].GetText();
             }
-            else if (tree.ID() == null)
+            else if (! silent)
             {
                 System.Console.WriteLine();
                 foreach (var p in repl.Aliases)
