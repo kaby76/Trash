@@ -20,7 +20,7 @@ Example:
 
         public void Execute(Repl repl, ReplParser.FindContext tree)
         {
-            var expr = repl.GetArg(tree.arg());
+            var expr = repl.GetString(tree.StringLiteral());
             var doc = repl.stack.Peek();
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
             var pr = ParsingResultsFactory.Create(doc);

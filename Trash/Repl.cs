@@ -1,6 +1,7 @@
 ﻿namespace Trash
 {
     using Antlr4.Runtime;
+    using Antlr4.Runtime.Tree;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -95,6 +96,15 @@
             }
             else
                 return null;
+        }
+
+        public string GetString(ITerminalNode arg)
+        {
+            if (arg == null)
+                return null;
+            var sl = arg.GetText();
+            sl = sl.Substring(1, sl.Length - 2);
+            return sl;
         }
 
         public void Execute(string input)
@@ -323,7 +333,7 @@
 
         public void Execute()
         {
-            HistoryRead();
+  //          HistoryRead();
             StreamReader reader;
             string input;
             ICharStream str;
@@ -342,21 +352,6 @@
                 {
 
                     Console.Error.Write("> ");
-                    //if (str.Index == str.Size)
-                    //{
-                    //    Console.Error.Write("> ");
-                    //    if (last != str.Index)
-                    //    {
-                    //        // Copy everything from last to current index as string
-                    //        // and enter into history.
-                    //        var h = str.GetText(new Antlr4.Runtime.Misc.Interval(last, str.Index - 1));
-                    //        h = h.Replace("\n", "").Replace("\r", "");
-                    //        if (h != "")
-                    //            HistoryAdd(h);
-                    //        last = str.Index;
-                    //    }
-                    //}
-
                     // We're going to do this in two shots. First scan for an end of line or end of file.
                     // Then, create a normal Antlr stream with the line or lines. We then parse this as usual.
                     // The only thing that we allow multi-lines are explicit '\' continuations, or strings.
@@ -366,10 +361,8 @@
                         int i = reader.Read();
                         if (i < 0) break;
                         char c = (char)i;
-                        if (c == '\n')
-                        {
-                            break;
-                        }
+                        if (c == '\n') break;
+                        else if (c == '\r') continue;
                         else if (c == '"' || c == '\'')
                         {
                             // Read string.
@@ -387,6 +380,7 @@
                     var inp = sb.ToString();
                     str = new AntlrInputStream(inp);
                     var lexer = new ReplLexer(str);
+                    lexer.Mode(ReplLexer.CommandMode);
                     lexer.RemoveErrorListeners();
                     var llistener = new ErrorListener<int>(0);
                     lexer.AddErrorListener(llistener);
@@ -662,27 +656,17 @@
             if (!System.IO.File.Exists(home + Path.DirectorySeparatorChar + PreviousHistoryFfn)) return;
             var history = System.IO.File.ReadAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn);
             History = history.ToList();
-            var st = string.Join(Environment.NewLine, history);
-            var str = new AntlrInputStream(st);
-            var lexer = new ReplLexer(str);
-            lexer.RemoveErrorListeners();
-            var llistener = new ErrorListener<int>(0);
-            lexer.AddErrorListener(llistener);
-            if (false)
-            {
-                for (; ; )
-                {
-                    var tok = lexer.NextToken();
-                    System.Console.WriteLine(tok);
-                    if (tok.Type == -1)
-                        break;
-                }
-            }
 
-            var tokens = new UnbufferedTokenStream(lexer);
-            int last = str.Index;
-            for (; ; )
+            for (int i = 0; i < history.Length; ++i)
             {
+                var inp = history[i];
+                var str = new AntlrInputStream(inp);
+                var lexer = new ReplLexer(str);
+                lexer.RemoveErrorListeners();
+                var llistener = new ErrorListener<int>(0);
+                lexer.AddErrorListener(llistener);
+                var tokens = new CommonTokenStream(lexer);
+                int last = str.Index;
                 try
                 {
                     var parser = new ReplParser(tokens);
@@ -693,20 +677,9 @@
                     if (llistener.had_error) throw new Exception("command syntax error");
                     if (listener.had_error) throw new Exception("command syntax error");
                     var tree = btree.cmd();
-                    if (tree.alias() != null)
+                    if (tree.alias() is ReplParser.AliasContext x_alias)
                     {
-                        var alias = tree.alias();
-                        var id = alias.ID()?.GetText();
-                        var sl = alias.StringLiteral()?.GetText();
-                        var id_keyword = alias.id_keyword()?.GetText();
-                        if (id != null && sl != null)
-                        {
-                            Aliases[id] = sl.Substring(1, sl.Length - 2);
-                        }
-                        else if (id != null && id_keyword != null)
-                        {
-                            Aliases[id] = id_keyword;
-                        }
+                        new CAlias().Execute(this, x_alias);
                     }
                     else if (tree.unalias() is ReplParser.UnaliasContext x_unalias)
                     {
@@ -717,11 +690,11 @@
                         var anything = tree.anything();
                         if (Aliases.ContainsKey(anything.id().GetText()))
                         {
-                            var cmd = Aliases[anything.id().GetText()];
-                           // var stuff = anything.stuff();
-                           // var rest = stuff.Select(s => s.GetText()).ToList();
-                           // var rs = rest != null ? String.Join(" ", rest) : "";
-                           // cmd = cmd + rs;
+                            //var cmd = Aliases[anything.id().GetText()];
+                            //var stuff = anything.stuff();
+                            //var rest = stuff.Select(s => s.GetText()).ToList();
+                            //var rs = rest != null ? String.Join(" ", rest) : "";
+                            //cmd = cmd + rs;
                             //RecallAliases(cmd);
                         }
                     }
@@ -734,19 +707,7 @@
                 }
                 finally
                 {
-                    // Reset the input buffer and start all over from
-                    // scratch.
-                    while (str.Index < str.Size && !(str.LA(1) == '\n' || str.LA(1) == '\r'))
-                        str.Consume();
-                    while (str.Index < str.Size && (str.LA(1) == '\n' || str.LA(1) == '\r'))
-                        str.Consume();
-                    lexer = new ReplLexer(str);
-                    lexer.RemoveErrorListeners();
-                    lexer.AddErrorListener(new ErrorListener<int>(0));
-                    tokens = new UnbufferedTokenStream(lexer);
                 }
-                if (str.Index == str.Size)
-                    break;
             }
         }
     }

@@ -5,13 +5,15 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 	<ItemGroup>
-	  <None Remove="Repl.g4" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Antlr4 Include="Repl.g4">
-	    <GAtn>true</GAtn>
-	  </Antlr4>
-	</ItemGroup>
+    <Antlr4 Include="ReplParser.g4">
+      <GAtn>true</GAtn>
+      <Package>Trash</Package>
+    </Antlr4>
+    <Antlr4 Include="ReplLexer.g4">
+      <GAtn>true</GAtn>
+      <Package>Trash</Package>
+    </Antlr4>
+  </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.8.0" />
 		<PackageReference Include="Antlr4BuildTasks" Version="8.4" />

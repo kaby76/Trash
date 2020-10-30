@@ -23,7 +23,7 @@ Example:
 
         public void Execute(Repl repl, ReplParser.GroupContext tree)
         {
-            var expr = repl.GetArg(tree.arg());
+            var expr = repl.GetString(tree.StringLiteral());
             var doc = repl.stack.Peek();
             var pr = ParsingResultsFactory.Create(doc);
             var aparser = pr.Parser;
