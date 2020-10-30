@@ -60,6 +60,11 @@
 
         void HistoryRead()
         {
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (!System.IO.File.Exists(home + Path.DirectorySeparatorChar + PreviousHistoryFfn)) return;
+            var history = System.IO.File.ReadAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn);
+            History = history.ToList();
+
             RecallAliases();
         }
 
@@ -402,23 +407,9 @@
                             {
                                 new CAnalyze().Execute(this, x_analyze);
                             }
-                            else if (tree.anything() != null)
+                            else if (tree.anything() is ReplParser.AnythingContext x_anything)
                             {
-                                var anything = tree.anything();
-                                if (Aliases.ContainsKey(anything.id().GetText()))
-                                {
-                                    var cmd = Aliases[anything.id().GetText()];
-                                    var stuff = anything.children.ToList().Skip(1);
-                                    var rest = stuff.Select(s => s.GetText()).ToList();
-                                    var rs = rest != null ? String.Join(" ", rest) : "";
-                                    cmd = cmd + " " + rs;
-                                    Execute(cmd);
-                                    last = str.Index;
-                                }
-                                else
-                                {
-                                    System.Console.Error.WriteLine("Unknown command");
-                                }
+                                new CAnything().Execute(this, x_anything);
                             }
                             else if (tree.bang() is ReplParser.BangContext x_bang)
                             {
@@ -641,65 +632,56 @@
             }
         }
 
+        public void ExecuteAlias(string inp)
+        {
+            var str = new AntlrInputStream(inp);
+            var lexer = new ReplLexer(str);
+            lexer.Mode(ReplLexer.CommandMode);
+            lexer.RemoveErrorListeners();
+            var llistener = new ErrorListener<int>(0);
+            lexer.AddErrorListener(llistener);
+            var tokens = new CommonTokenStream(lexer);
+            int last = str.Index;
+            try
+            {
+                var parser = new ReplParser(tokens);
+                var listener = new ErrorListener<IToken>(2);
+                parser.AddErrorListener(listener);
+                //parser.ErrorHandler = new MyBailErrorStrategy(tokens);
+                var btree = parser.cmd_all();
+                if (llistener.had_error) throw new Exception("command syntax error");
+                if (listener.had_error) throw new Exception("command syntax error");
+                var tree = btree.cmd();
+                if (tree.alias() is ReplParser.AliasContext x_alias)
+                {
+                    new CAlias().Execute(this, x_alias, true);
+                }
+                else if (tree.unalias() is ReplParser.UnaliasContext x_unalias)
+                {
+                    new CUnalias().Execute(this, x_unalias);
+                }
+                else if (tree.anything() is ReplParser.AnythingContext x_anything)
+                {
+                    new CAnything().Execute(this, x_anything, true);
+                }
+            }
+            catch (Repl.DoNotAddToHistory)
+            {
+            }
+            catch (Exception eeks)
+            {
+            }
+            finally
+            {
+            }
+        }
+
         public void RecallAliases()
         {
-            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (!System.IO.File.Exists(home + Path.DirectorySeparatorChar + PreviousHistoryFfn)) return;
-            var history = System.IO.File.ReadAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn);
-            History = history.ToList();
-
-            for (int i = 0; i < history.Length; ++i)
+            for (int i = 0; i < History.Count; ++i)
             {
-                var inp = history[i];
-                var str = new AntlrInputStream(inp);
-                var lexer = new ReplLexer(str);
-                lexer.Mode(ReplLexer.CommandMode);
-                lexer.RemoveErrorListeners();
-                var llistener = new ErrorListener<int>(0);
-                lexer.AddErrorListener(llistener);
-                var tokens = new CommonTokenStream(lexer);
-                int last = str.Index;
-                try
-                {
-                    var parser = new ReplParser(tokens);
-                    var listener = new ErrorListener<IToken>(2);
-                    parser.AddErrorListener(listener);
-                    //parser.ErrorHandler = new MyBailErrorStrategy(tokens);
-                    var btree = parser.cmd_all();
-                    if (llistener.had_error) throw new Exception("command syntax error");
-                    if (listener.had_error) throw new Exception("command syntax error");
-                    var tree = btree.cmd();
-                    if (tree.alias() is ReplParser.AliasContext x_alias)
-                    {
-                        new CAlias().Execute(this, x_alias, true);
-                    }
-                    else if (tree.unalias() is ReplParser.UnaliasContext x_unalias)
-                    {
-                        new CUnalias().Execute(this, x_unalias);
-                    }
-                    else if (tree.anything() != null)
-                    {
-                        var anything = tree.anything();
-                        if (Aliases.ContainsKey(anything.id().GetText()))
-                        {
-                            //var cmd = Aliases[anything.id().GetText()];
-                            //var stuff = anything.stuff();
-                            //var rest = stuff.Select(s => s.GetText()).ToList();
-                            //var rs = rest != null ? String.Join(" ", rest) : "";
-                            //cmd = cmd + rs;
-                            //RecallAliases(cmd);
-                        }
-                    }
-                }
-                catch (Repl.DoNotAddToHistory)
-                {
-                }
-                catch (Exception eeks)
-                {
-                }
-                finally
-                {
-                }
+                var inp = History[i];
+                ExecuteAlias(inp);
             }
         }
     }
