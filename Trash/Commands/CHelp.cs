@@ -52,74 +52,81 @@ write - write a file to disk.
             else
             {
                 var id = tree.NonWsArgMode();
-                if (id.GetText() == "alias")
+                var cmd = id.GetText();
+                if (cmd == "alias")
                     new CAlias().Help();
-                else if (id.GetText() == "analyze")
+                else if (cmd == "analyze")
                     new CAnalyze().Help();
-                else if (id.GetText() == "cd")
+                else if (cmd == "cd")
                     new CCd().Help();
-                else if (id.GetText() == "combine")
+                else if (cmd == "combine")
                     new CCombine().Help();
-                else if (id.GetText() == "delete")
+                else if (cmd == "delete")
                     new CDelete().Help();
-                else if (id.GetText() == "find")
+                else if (cmd == "find")
                     new CFind().Help();
-                else if (id.GetText() == "fold")
+                else if (cmd == "fold")
                     new CFold().Help();
-                else if (id.GetText() == "foldlit")
+                else if (cmd == "foldlit")
                     new CFoldlit().Help();
-                else if (id.GetText() == "group")
+                else if (cmd == "group")
                     new CGroup().Help();
-                else if (id.GetText() == "has")
+                else if (cmd == "has")
                     new CHas().Help();
-                else if (id.GetText() == "history")
+                else if (cmd == "history")
                     new CHistory().Help();
-                else if (id.GetText() == "kleene")
+                else if (cmd == "kleene")
                     new CKleene().Help();
-                else if (id.GetText() == "ls")
+                else if (cmd == "ls")
                     new CLs().Help();
-                else if (id.GetText() == "mvsr")
+                else if (cmd == "mvsr")
                     new CMvsr().Help();
-                else if (id.GetText() == "parse")
+                else if (cmd == "parse")
                     new CParse().Help();
-                else if (id.GetText() == "pop")
+                else if (cmd == "pop")
                     new CPop().Help();
-                else if (id.GetText() == "print")
+                else if (cmd == "print")
                     new CPrint().Help();
-                else if (id.GetText() == "pwd")
+                else if (cmd == "pwd")
                     new CPwd().Help();
-                else if (id.GetText() == "quit")
+                else if (cmd == "quit")
                     new CQuit().Help();
-                else if (id.GetText() == "read")
+                else if (cmd == "read")
                     new CRead().Help();
-                else if (id.GetText() == "rename")
+                else if (cmd == "rename")
                     new CRename().Help();
-                else if (id.GetText() == "reorder")
+                else if (cmd == "reorder")
                     new CReorder().Help();
-                else if (id.GetText() == "rotate")
+                else if (cmd == "rotate")
                     new CRotate().Help();
-                else if (id.GetText() == "rr")
+                else if (cmd == "rr")
                     new CRr().Help();
-                else if (id.GetText() == "run")
+                else if (cmd == "run")
                     new CRun().Help();
-                else if (id.GetText() == "rup")
+                else if (cmd == "rup")
                     new CRup().Help();
-                else if (id.GetText() == "split")
+                else if (cmd == "split")
                     new CSplit().Help();
-                else if (id.GetText() == "stack")
+                else if (cmd == "stack")
                     new CStack().Help();
-                else if (id.GetText() == "ulliteral")
+                else if (cmd == "ulliteral")
                     new CUlliteral().Help();
-                else if (id.GetText() == "unalias")
+                else if (cmd == "unalias")
                     new CUnalias().Help();
-                else if (id.GetText() == "unfold")
+                else if (cmd == "unfold")
                     new CUnfold().Help();
-                else if (id.GetText() == "ungroup")
+                else if (cmd == "ungroup")
                     new CUngroup().Help();
-                else if (id.GetText() == "workspace")
+                else if (cmd == "workspace")
                     new CWorkspace().Help();
-                else if (id.GetText() == "write")
+                else if (cmd == "write")
                     new CWrite().Help();
+                else if (repl.Aliases.ContainsKey(cmd))
+                {
+                    var aliased_cmd = repl.Aliases[cmd];
+                    System.Console.WriteLine($"'{cmd}' is aliased to '{aliased_cmd}'");
+                    repl.Execute("help " + aliased_cmd);
+                }
                 else
                 {
                     System.Console.WriteLine("Help for unknown command.");
