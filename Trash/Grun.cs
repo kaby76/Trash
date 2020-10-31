@@ -103,7 +103,7 @@ namespace Trash
 	<ItemGroup>
 		<PackageReference Include=""Antlr4.Runtime.Standard"" Version =""4.8.0"" />
 		<PackageReference Include=""Antlr4BuildTasks"" Version = ""8.4"" />
-		<PackageReference Include= ""AntlrTreeEditing"" Version = ""1.8"" />
+		<PackageReference Include= ""AntlrTreeEditing"" Version = ""1.9"" />
 	</ItemGroup>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>

@@ -28,7 +28,7 @@ Examples:
             var pr = ParsingResultsFactory.Create(doc);
             var aparser = pr.Parser;
             var atree = pr.ParseTree;
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
             {
                 List<IParseTree> nodes = null;
                 if (expr != null)

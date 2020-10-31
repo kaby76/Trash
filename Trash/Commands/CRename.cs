@@ -30,7 +30,7 @@ Example:
             var pr = ParsingResultsFactory.Create(doc);
             var aparser = pr.Parser;
             var atree = pr.ParseTree;
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
             {
                 var nodes = engine.parseExpression(expr,
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })

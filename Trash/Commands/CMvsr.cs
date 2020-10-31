@@ -21,7 +21,7 @@ Move the rule, whose symbol is identified by the xpath string, to the top of the
             var pr = ParsingResultsFactory.Create(doc);
             var aparser = pr.Parser;
             var atree = pr.ParseTree;
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = AntlrTreeEditing.AntlrDOM.ConvertToDOM.Try(atree, aparser))
+            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var nodes = engine.parseExpression(expr,

@@ -23,14 +23,7 @@ Example:
                 var doc = repl.stack.Peek();
                 var pr = ParsingResultsFactory.Create(doc);
                 var pt = pr.ParseTree;
-                TerminalNodeImpl x = TreeEdits.LeftMostToken(pt);
-                var ts = x.Payload.TokenSource;
-                System.Console.WriteLine();
-                System.Console.WriteLine(
-                    TreeOutput.OutputTree(
-                        pt,
-                        ts as Lexer,
-                        null).ToString());
+                repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser>(new IParseTree[] { pt }, pr.Parser));
             }
         }
     }

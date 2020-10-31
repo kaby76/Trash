@@ -7,7 +7,7 @@ options
 }
 
 cmd_all
-  : cmd EOF
+  : cmd ( PIPE cmd )* EOF
   ;
 cmd :
   alias
@@ -44,7 +44,9 @@ cmd :
   | rup
   | set
   | split
+  | st
   | stack
+  | text
   | ulliteral
   | unalias
   | unfold
@@ -65,10 +67,10 @@ delabel : DELABEL ;
 delete : DELETE arg ;
 dot : DOT ;
 empty : ;
-find : FIND StringLiteral ;
-fold : FOLD StringLiteral ;
-foldlit : FOLDLIT StringLiteral ;
-group : GROUP StringLiteral ;
+find : FIND arg ;
+fold : FOLD arg ;
+foldlit : FOLDLIT arg ;
+group : GROUP arg ;
 has : HAS (DR | IR) GRAPH? arg? ;
 help : HELP NonWsArgMode?;
 history : HISTORY ;
@@ -89,7 +91,9 @@ run : RUN arg (arg (arg)? )? ;
 rup : RUP StringLiteral? ;
 set : SET NonWsArgMode '=' (StringLiteral | INT) ;
 split : SPLIT ;
+st : ST ;
 stack : STACK ;
+text : TEXT ;
 ulliteral : ULLITERAL StringLiteral? ;
 unalias : UNALIAS id ;
 unfold : UNFOLD arg ;
