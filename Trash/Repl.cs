@@ -130,24 +130,9 @@
                     {
                         new CAnalyze().Execute(this, x_analyze);
                     }
-                    else if (tree.anything() != null)
+                    else if (tree.anything() is ReplParser.AnythingContext x_anything)
                     {
-                        var anything = tree.anything();
-                        if (Aliases.ContainsKey(anything.id().GetText()))
-                        {
-                            var cmd = Aliases[anything.id().GetText()];
-                            var stuff = anything.children.ToList();
-                            stuff.RemoveAt(0);
-                            var rest = stuff.Select(s => s.GetText()).ToList();
-                            var rs = rest != null ? String.Join(" ", rest) : "";
-                            cmd = cmd + " " + rs;
-                            Execute(cmd);
-                            return;
-                        }
-                        else
-                        {
-                            System.Console.Error.WriteLine("Unknown command");
-                        }
+                        new CAnything().Execute(this, x_anything);
                     }
                     else if (tree.bang() is ReplParser.BangContext x_bang)
                     {

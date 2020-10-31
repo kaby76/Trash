@@ -23,7 +23,7 @@ namespace Trash.Commands
             }
             else
             {
-                System.Console.Error.WriteLine("Unknown command");
+                throw new Exception("Unknown command");
             }
         }
     }
