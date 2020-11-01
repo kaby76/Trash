@@ -26,7 +26,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.ReorderContext tree)
+        public void Execute(Repl repl, ReplParser.ReorderContext tree, bool piped)
         {
             Dictionary<string, string> results = new Dictionary<string, string>();
             var doc = repl.stack.Peek();

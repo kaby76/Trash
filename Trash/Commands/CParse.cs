@@ -17,7 +17,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.ParseContext tree)
+        public void Execute(Repl repl, ReplParser.ParseContext tree, bool piped)
         {
             var doc = repl.stack.Peek();
             repl._docs.ParseDoc(doc, repl.QuietAfter, tree.type()?.GetText());

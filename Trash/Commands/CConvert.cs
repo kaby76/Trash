@@ -17,7 +17,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.ConvertContext tree)
+        public void Execute(Repl repl, ReplParser.ConvertContext tree, bool piped)
         {
             var type = tree.type()?.GetText();
             var doc = repl.stack.Peek();

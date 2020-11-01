@@ -16,7 +16,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.DeleteContext tree)
+        public void Execute(Repl repl, ReplParser.DeleteContext tree, bool piped)
         {
             var expr = repl.GetArg(tree.arg());
             var doc = repl.stack.Peek();

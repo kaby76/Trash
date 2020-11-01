@@ -12,7 +12,7 @@ workspace run the generated parser, output a tree or find elements in the tree.
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.RunContext tree)
+        public void Execute(Repl repl, ReplParser.RunContext tree, bool piped)
         {
             var g = new Grun(repl);
             var p = tree.arg();

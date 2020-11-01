@@ -13,7 +13,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.DelabelContext tree)
+        public void Execute(Repl repl, ReplParser.DelabelContext tree, bool piped)
         {
             var doc = repl.stack.Peek();
             var results = LanguageServer.Transform.Delabel(doc);

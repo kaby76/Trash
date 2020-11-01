@@ -17,7 +17,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.FoldlitContext tree)
+        public void Execute(Repl repl, ReplParser.FoldlitContext tree, bool piped)
         {
             var expr = repl.GetArg(tree.arg());
             var doc = repl.stack.Peek();

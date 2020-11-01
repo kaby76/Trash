@@ -15,7 +15,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.RotateContext tree)
+        public void Execute(Repl repl, ReplParser.RotateContext tree, bool piped)
         {
             var top = repl.stack.Pop();
             var docs = repl.stack.ToList();

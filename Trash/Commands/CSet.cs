@@ -12,7 +12,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.SetContext tree)
+        public void Execute(Repl repl, ReplParser.SetContext tree, bool piped)
         {
             var id = tree.NonWsArgMode();
             var v1 = tree.StringLiteral()?.GetText();

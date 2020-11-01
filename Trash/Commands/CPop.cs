@@ -15,7 +15,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.PopContext tree)
+        public void Execute(Repl repl, ReplParser.PopContext tree, bool piped)
         {
             _ = repl.stack.Pop();
         }

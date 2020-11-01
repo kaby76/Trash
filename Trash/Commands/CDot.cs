@@ -16,7 +16,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.DotContext tree)
+        public void Execute(Repl repl, ReplParser.DotContext tree, bool piped)
         {
             if (repl.stack.Any())
             {

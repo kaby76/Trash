@@ -7,7 +7,7 @@ namespace Trash.Commands
 {
     class CAnything
     {
-        internal void Execute(Repl repl, ReplParser.AnythingContext tree, bool redo_aliases = false)
+        internal void Execute(Repl repl, ReplParser.AnythingContext tree, bool piped, bool redo_aliases = false)
         {
             if (repl.Aliases.ContainsKey(tree.id().GetText()))
             {

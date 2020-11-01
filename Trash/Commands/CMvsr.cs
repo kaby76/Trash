@@ -13,7 +13,7 @@ Move the rule, whose symbol is identified by the xpath string, to the top of the
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.MvsrContext tree)
+        public void Execute(Repl repl, ReplParser.MvsrContext tree, bool piped)
         {
             var expr = tree.StringLiteral().GetText();
             expr = expr.Substring(1, expr.Length - 2);

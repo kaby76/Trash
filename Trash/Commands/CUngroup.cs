@@ -16,7 +16,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.UngroupContext tree)
+        public void Execute(Repl repl, ReplParser.UngroupContext tree, bool piped)
         {
             var expr = repl.GetArg(tree.arg());
             var doc = repl.stack.Peek();

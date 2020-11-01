@@ -12,10 +12,10 @@ namespace Trash.Commands
         {
         }
 
-        public virtual void Execute(Repl repl, IParseTree t)
+        public virtual void Execute(Repl repl, IParseTree t, bool piped)
         {
         }
-        public virtual void Execute(Repl repl, ReplParser.HelpContext t)
+        public virtual void Execute(Repl repl, ReplParser.HelpContext t, bool piped)
         {
         }
     }

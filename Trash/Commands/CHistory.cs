@@ -12,7 +12,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.HistoryContext tree)
+        public void Execute(Repl repl, ReplParser.HistoryContext tree, bool piped)
         {
             System.Console.WriteLine();
             for (int i = 0; i < repl.History.Count; ++i)

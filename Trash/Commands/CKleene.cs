@@ -21,7 +21,7 @@ Examples:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.KleeneContext tree)
+        public void Execute(Repl repl, ReplParser.KleeneContext tree, bool piped)
         {
             var expr = repl.GetString(tree.StringLiteral());
             var doc = repl.stack.Peek();

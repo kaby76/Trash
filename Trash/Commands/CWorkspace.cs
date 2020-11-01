@@ -14,7 +14,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.WorkspaceContext tree)
+        public void Execute(Repl repl, ReplParser.WorkspaceContext tree, bool piped)
         {
             repl._workspace = new Workspace();
         }

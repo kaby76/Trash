@@ -15,7 +15,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.SplitContext tree)
+        public void Execute(Repl repl, ReplParser.SplitContext tree, bool piped)
         {
             var doc = repl.stack.Peek();
             var results = LanguageServer.Transform.SplitGrammar(doc);

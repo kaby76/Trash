@@ -18,7 +18,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.CdContext tree)
+        public void Execute(Repl repl, ReplParser.CdContext tree, bool piped)
         {
             var expr = repl.GetArg(tree.arg());
             var list = new Globbing().GetDirectory(expr);

@@ -17,7 +17,7 @@ Example:
 ") ;
         }
 
-        public void Execute(Repl repl, ReplParser.ReadContext tree)
+        public void Execute(Repl repl, ReplParser.ReadContext tree, bool piped)
         {
             var f = repl.GetArg(tree.arg());
             string here = null;

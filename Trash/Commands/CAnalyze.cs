@@ -13,7 +13,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.AnalyzeContext tree)
+        public void Execute(Repl repl, ReplParser.AnalyzeContext tree, bool piped)
         {
             var doc = repl.stack.Peek();
             repl._docs.AnalyzeDoc(doc);

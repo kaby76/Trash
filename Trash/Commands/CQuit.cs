@@ -12,7 +12,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.QuitContext tree)
+        public void Execute(Repl repl, ReplParser.QuitContext tree, bool piped)
         {
         }
     }

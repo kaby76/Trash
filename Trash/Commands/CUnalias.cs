@@ -12,7 +12,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.UnaliasContext tree)
+        public void Execute(Repl repl, ReplParser.UnaliasContext tree, bool piped)
         {
             var id = tree.id();
             repl.Aliases.Remove(id.GetText());

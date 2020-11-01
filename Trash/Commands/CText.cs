@@ -61,13 +61,13 @@ Example:
             return sb.ToString();
         }
 
-        public void Execute(Repl repl, ReplParser.TextContext tree)
+        public void Execute(Repl repl, ReplParser.TextContext tree, bool piped)
         {
             var pair = repl.tree_stack.Pop();
             var nodes = pair.Item1;
             foreach (var node in nodes)
             {
-                System.Console.WriteLine(Reconstruct(node));
+                System.Console.WriteLine(this.Reconstruct(node));
             }
         }
     }

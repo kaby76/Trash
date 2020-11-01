@@ -24,7 +24,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.UnulliteralContext tree)
+        public void Execute(Repl repl, ReplParser.UnulliteralContext tree, bool piped)
         {
             var type = tree.uclc()?.GetText();
             var expr = tree.StringLiteral()?.GetText();

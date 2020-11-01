@@ -20,7 +20,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.BangContext tree)
+        public void Execute(Repl repl, ReplParser.BangContext tree, bool piped)
         {
             if (tree.BANG().GetText() == "!!")
             {

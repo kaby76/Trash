@@ -6,7 +6,7 @@
         {
         }
 
-        public void Execute(Repl repl, ReplParser.HelpContext tree)
+        public void Execute(Repl repl, ReplParser.HelpContext tree, bool piped)
         {
             if (tree.NonWsArgMode() == null)
             {

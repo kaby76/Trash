@@ -14,7 +14,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.PwdContext tree)
+        public void Execute(Repl repl, ReplParser.PwdContext tree, bool piped)
         {
             var cwd = Directory.GetCurrentDirectory();
             System.Console.Error.WriteLine(cwd);

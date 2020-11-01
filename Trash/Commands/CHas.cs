@@ -20,7 +20,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.HasContext tree)
+        public void Execute(Repl repl, ReplParser.HasContext tree, bool piped)
         {
             var graph = tree.GRAPH() != null;
             var expr = repl.GetArg(tree.arg());

@@ -24,7 +24,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.LsContext tree)
+        public void Execute(Repl repl, ReplParser.LsContext tree, bool piped)
         {
             var args = tree.arg();
             if (args.Length == 0) args = null;

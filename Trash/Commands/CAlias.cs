@@ -13,7 +13,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.AliasContext tree, bool silent = false)
+        public void Execute(Repl repl, ReplParser.AliasContext tree, bool piped, bool silent = false)
         {
             var ids = tree.NonWsArgMode();
             var sl = tree.StringLiteral();

@@ -16,7 +16,7 @@ Examples:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.StContext tree)
+        public void Execute(Repl repl, ReplParser.StContext tree, bool piped)
         {
             var pair = repl.tree_stack.Pop();
             var trees = pair.Item1;

@@ -14,7 +14,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.StackContext tree)
+        public void Execute(Repl repl, ReplParser.StackContext tree, bool piped)
         {
             var docs = repl.stack.ToList();
             foreach (var doc in docs)

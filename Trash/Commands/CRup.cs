@@ -24,7 +24,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.RupContext tree)
+        public void Execute(Repl repl, ReplParser.RupContext tree, bool piped)
         {
             var expr = tree.StringLiteral()?.GetText();
             expr = expr?.Substring(1, expr.Length - 2);

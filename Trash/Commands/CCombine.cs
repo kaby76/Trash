@@ -15,7 +15,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.CombineContext tree)
+        public void Execute(Repl repl, ReplParser.CombineContext tree, bool piped)
         {
             var doc1 = repl.stack.PeekTop(0);
             var doc2 = repl.stack.PeekTop(1);

@@ -19,7 +19,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.RenameContext tree)
+        public void Execute(Repl repl, ReplParser.RenameContext tree, bool piped)
         {
             var to_sym = tree.StringLiteral()[1].GetText();
             to_sym = to_sym.Substring(1, to_sym.Length - 2);

@@ -23,7 +23,7 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.UlliteralContext tree)
+        public void Execute(Repl repl, ReplParser.UlliteralContext tree, bool piped)
         {
             var expr = tree.StringLiteral()?.GetText();
             expr = expr?.Substring(1, expr.Length - 2);
