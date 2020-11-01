@@ -19,17 +19,26 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.FindContext tree)
+        public void Execute(Repl repl, ReplParser.FindContext tree, bool piped)
         {
             var expr = repl.GetArg(tree.arg());
-            // var doc = repl.stack.Peek();
+            IParseTree[] atrees;
+            Parser aparser;
+            if (piped)
+            {
+                var pair = repl.tree_stack.Pop();
+                atrees = pair.Item1;
+                aparser = pair.Item2;
+            }
+            else
+            {
+                var doc = repl.stack.Peek();
+                var pr = ParsingResultsFactory.Create(doc);
+                aparser = pr.Parser;
+                IParseTree atree = pr.ParseTree;
+                atrees = new IParseTree[] { atree };
+            }
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-            //var pr = ParsingResultsFactory.Create(doc);
-            //var aparser = pr.Parser;
-            //var atree = pr.ParseTree;
-            var pair = repl.tree_stack.Pop();
-            var atrees = pair.Item1;
-            var aparser = pair.Item2;
             IParseTree root = atrees.First().Root();
             var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
             using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, aparser))

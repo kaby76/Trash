@@ -173,7 +173,7 @@
                     }
                     else if (tree.find() is ReplParser.FindContext x_find)
                     {
-                        new CFind().Execute(this, x_find);
+                        new CFind().Execute(this, x_find, c > 0);
                     }
                     else if (tree.fold() is ReplParser.FoldContext x_fold)
                     {
@@ -437,7 +437,7 @@
                                 }
                                 else if (tree.find() is ReplParser.FindContext x_find)
                                 {
-                                    new CFind().Execute(this, x_find);
+                                    new CFind().Execute(this, x_find, c > 0);
                                 }
                                 else if (tree.fold() is ReplParser.FoldContext x_fold)
                                 {

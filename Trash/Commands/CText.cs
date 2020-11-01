@@ -65,27 +65,10 @@ Example:
         {
             var pair = repl.tree_stack.Pop();
             var nodes = pair.Item1;
-            var parser = pair.Item2;
-            var root = nodes.First()?.Root();
-            TerminalNodeImpl t = TreeEdits.LeftMostToken(root);
-            var st = t.Payload.InputStream;
             foreach (var node in nodes)
             {
                 System.Console.WriteLine(Reconstruct(node));
             }
-            //var (text_before, other) = TreeEdits.TextToLeftOfLeaves(parser.TokStream, root);
-            //TreeEdits.Reconstruct()
-            //foreach (var node in nodes)
-            //{
-            //    TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
-            //    var ts = x.Payload.TokenSource;
-            //    System.Console.WriteLine();
-            //    System.Console.WriteLine(
-            //        TreeOutput.OutputTree(
-            //            node,
-            //            ts as Lexer,
-            //            null).ToString());
-            //}
         }
     }
 }
