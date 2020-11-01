@@ -75,9 +75,9 @@ namespace Trash
         {
         }
 
-        public void Run(string[] parameters)
+        public IParseTree Run(Repl repl, string[] parameters)
         {
-            // Create temporary directory.
+            // Create a temporary directory containing a C# project with grammars.
             var path = Path.GetTempPath();
             path = path + Path.DirectorySeparatorChar + "Antlrvsix" + new Random().Next();
             var grammars = _repl._workspace.AllDocuments().Where(d => d.FullPath.EndsWith(".g4")).ToList();
@@ -137,6 +137,7 @@ namespace Easy
 
     public class Program
     {
+        public static Parser Parser { get; set; }
         public static IParseTree Parse(string input)
         {
             var str = new AntlrInputStream(input);
@@ -168,6 +169,7 @@ namespace Easy
             var parser = new ");
                     sb.Append(parser_name);
                     sb.Append(@"(tokens);
+            Parser = parser;
             var tree = parser.");
                     sb.Append(parameters[0]);
 
@@ -197,6 +199,7 @@ namespace Easy
                 process.BeginOutputReadLine();
                 process.WaitForExit();
                 var success = process.ExitCode == 0;
+                if (!success) throw new Exception("Build failed.");
 
                 //var alc = new TestAssemblyLoadContext(path + "/bin/Debug/netcoreapp3.1/Test.dll");
                 //Assembly asm = alc.LoadFromAssemblyPath(path + "/bin/Debug/netcoreapp3.1/Test.dll");
@@ -209,17 +212,24 @@ namespace Easy
                 object[] parm = new object[] {parameters[1]};
                 var res = methodInfo.Invoke(null, parm);
                 var tree = res as IParseTree;
-                var t2 = res as ParserRuleContext;
-                System.Console.WriteLine(tree.ToStringTree());
+                var t2 = tree as ParserRuleContext;
 
-                //alc.Unload();
+                var m2 = type.GetProperty("Parser");
+                object[] p2 = new object[0];
+                var r2 = m2.GetValue(null, p2);
 
+                // return the tree.
                 Environment.CurrentDirectory = old;
+                repl.tree_stack.Push(
+                    new Tuple<IParseTree[], Parser>(new IParseTree[] { t2 },
+                        (Parser) r2));
+
             }
             finally
             {
                 //Directory.Delete(path, true);
             }
+            return null;
         }
 
         //public void BuildIt()

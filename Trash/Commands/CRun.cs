@@ -1,5 +1,6 @@
 ﻿namespace Trash.Commands
 {
+    using Antlr4.Runtime.Tree;
     using System.Linq;
 
     class CRun
@@ -17,7 +18,7 @@ workspace run the generated parser, output a tree or find elements in the tree.
             var g = new Grun(repl);
             var p = tree.arg();
             var parameters = p.Select(a => repl.GetArg(a)).ToArray();
-            g.Run(parameters);
+            g.Run(repl, parameters);
         }
     }
 }
