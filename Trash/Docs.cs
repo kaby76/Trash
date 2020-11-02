@@ -49,27 +49,20 @@
             Document document = _repl._workspace.FindDocument(file_name);
             if (document == null)
             {
-                document = new Workspaces.Document(file_name);
-                try
-                {   // Open the text file using a stream reader.
-                    using (StreamReader sr = new StreamReader(file_name))
-                    {
-                        // Read the stream to a string, and write the string to the console.
-                        string str = sr.ReadToEnd();
-                        document.Code = str;
-                    }
-                }
-                catch (IOException eeks)
+                throw new Exception("File does not exist.");
+            }
+            try
+            {   // Open the text file using a stream reader.
+                using (StreamReader sr = new StreamReader(file_name))
                 {
-                    throw eeks;
+                    // Read the stream to a string, and write the string to the console.
+                    string str = sr.ReadToEnd();
+                    document.Code = str;
                 }
-                Project project = _repl._workspace.FindProject("Misc");
-                if (project == null)
-                {
-                    project = new Project("Misc", "Misc", "Misc");
-                    _repl._workspace.AddChild(project);
-                }
-                project.AddDocument(document);
+            }
+            catch (IOException eeks)
+            {
+                throw eeks;
             }
             return document;
         }
