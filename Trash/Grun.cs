@@ -81,10 +81,10 @@ namespace Trash
             var path = Path.GetTempPath();
             path = path + Path.DirectorySeparatorChar + "Antlrvsix" + new Random().Next();
             var grammars = _repl._workspace.AllDocuments().Where(d => d.FullPath.EndsWith(".g4")).ToList();
+            var old = Environment.CurrentDirectory;
             try
             {
                 Directory.CreateDirectory(path);
-                var old = Environment.CurrentDirectory;
                 Environment.CurrentDirectory = path;
                 {
                     StringBuilder sb = new StringBuilder();
@@ -227,7 +227,7 @@ namespace Easy
             }
             finally
             {
-                //Directory.Delete(path, true);
+                Environment.CurrentDirectory = old;
             }
             return null;
         }
