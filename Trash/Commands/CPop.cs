@@ -17,7 +17,9 @@ Example:
 
         public void Execute(Repl repl, ReplParser.PopContext tree, bool piped)
         {
-            _ = repl.stack.Pop();
+            var file = repl.stack.Pop();
+            if (file != null)
+                file.Delete();
         }
     }
 }

@@ -58,8 +58,8 @@ cmd :
   ;
 alias : ALIAS (NonWsArgMode EQUAL (StringLiteral | NonWsArgMode))? ;
 analyze : ANALYZE ;
-anything : id  .*  ;
-bang : BANG .* ;
+anything : id (~(PIPE | SEMI))*  ;
+bang : BANG (~(PIPE | SEMI))* ;
 cd : CD arg? ;
 combine : COMBINE ;
 convert : CONVERT type? ;

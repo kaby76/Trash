@@ -87,6 +87,12 @@
             }
         }
 
+        public void RemoveDoc(string path)
+        {
+            Document document = _repl._workspace.FindDocument(path);
+            document.Delete();
+        }
+
         public void AnalyzeDoc(Document document)
         {
             _ = ParsingResultsFactory.Create(document);
