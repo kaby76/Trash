@@ -1,5 +1,5 @@
 -- Read Java9
-read /users/kenne/documents/scrapejavaspec/java9.g4
+read /Users/kenne/Documents/ScrapeJavaSpec/Java9.g4
 
 -- Parse is required.
 parse
