@@ -45,6 +45,7 @@ ulliteral - convert a lexer rule for a simple string literal to accept a string 
 unalias - unalias a command.
 unfold - unfold a grammar rule symbol.
 ungroup - ungroup a parenthesized alt.
+version - print out the version of Trash.
 workspace - create a new workspace for the run command.
 write - write a file to disk.
 ");

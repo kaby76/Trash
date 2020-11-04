@@ -25,6 +25,7 @@
         public int QuietAfter = 10;
         public readonly Docs _docs;
         public Workspace _workspace { get; set; } = new Workspace();
+        public static string Version { get; internal set; } = "8.2";
 
         public Repl(string[] args)
         {
@@ -297,6 +298,10 @@
                     {
                         new CUnulliteral().Execute(this, x_unulliteral, is_piped);
                     }
+                    else if (tree.version() is ReplParser.VersionContext x_version)
+                    {
+                        new CVersion().Execute(this, x_version, is_piped);
+                    }
                     else if (tree.workspace() is ReplParser.WorkspaceContext x_workspace)
                     {
                         new CWorkspace().Execute(this, x_workspace, is_piped);
@@ -568,6 +573,10 @@
                                 else if (tree.unulliteral() is ReplParser.UnulliteralContext x_unulliteral)
                                 {
                                     new CUnulliteral().Execute(this, x_unulliteral, is_piped);
+                                }
+                                else if (tree.version() is ReplParser.VersionContext x_version)
+                                {
+                                    new CVersion().Execute(this, x_version, is_piped);
                                 }
                                 else if (tree.workspace() is ReplParser.WorkspaceContext x_workspace)
                                 {

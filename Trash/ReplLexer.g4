@@ -83,6 +83,7 @@ UNALIAS : 'unalias' -> pushMode(ArgMode) ;
 UNFOLD : 'unfold' -> pushMode(ArgMode) ;
 UNGROUP : 'ungroup' -> pushMode(ArgMode) ;
 UNULLITERAL : 'unulliteral' -> pushMode(ArgMode) ;
+VERSION : 'version' -> pushMode(ArgMode) ;
 WORKSPACE : 'workspace' -> pushMode(ArgMode) ;
 WRITE : 'write' -> pushMode(ArgMode) ;
 HWSCommandMode : Hws -> skip ;

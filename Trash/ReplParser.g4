@@ -52,6 +52,7 @@ cmd :
   | unfold
   | ungroup
   | unulliteral
+  | version
   | workspace
   | write
   | anything
@@ -99,6 +100,7 @@ unalias : UNALIAS id ;
 unfold : UNFOLD arg ;
 ungroup : UNGROUP arg ;
 unulliteral : UNULLITERAL uclc StringLiteral? ;
+version : VERSION ;
 workspace : WORKSPACE ;
 write : WRITE ;
 alpha : ALPHA ;
