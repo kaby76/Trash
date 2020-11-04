@@ -4,6 +4,13 @@
     {
         public void Help()
         {
+            System.Console.WriteLine(@"help <id>
+Give help for command <id>. If <id> is an alias, the help command indicates what it
+is aliased to, and gives help for that command.
+
+Example:
+    help help
+");
         }
 
         public void Execute(Repl repl, ReplParser.HelpContext tree, bool piped)
@@ -23,6 +30,7 @@ fold - replace a sequence of symbols on the RHS of a rule with a LHS symbol of a
 foldlit - replace a literal on the RHS of a rule with a LHS symbol of another rule.
 group - group common sub-sequences of symbols for alts.
 has - analyze a grammar for left/right/direct/indirect recursion.
+help - gives help for commands.
 history - show the history of commands executed.
 kleene - convert a rule in BNF to EBNF.
 ls - show contents of a directory.
