@@ -23,7 +23,7 @@ namespace Trash.Commands
             }
             else
             {
-                throw new Exception("Unknown command");
+                throw new Exception("Unknown command '" + tree.id().GetText() + "'");
             }
         }
     }

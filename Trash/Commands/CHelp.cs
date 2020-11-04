@@ -158,7 +158,7 @@ write - write a file to disk.
                 }
                 else
                 {
-                    System.Console.WriteLine("Help for unknown command.");
+                    System.Console.WriteLine("Help unavailable -- unknown command '" + cmd + "'.");
                 }
             }
         }

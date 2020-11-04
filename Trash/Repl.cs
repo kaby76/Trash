@@ -411,6 +411,9 @@
                         System.Console.WriteLine("Bye!");
                         System.Environment.Exit(0);
                     }
+                    catch (Exception eeks)
+                    {
+                    }
                 }
             }
         }
