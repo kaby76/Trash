@@ -35,6 +35,7 @@ help run
 help rup
 help set
 help split
+help st
 help stack
 help text
 help ulliteral
