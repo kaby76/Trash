@@ -349,7 +349,7 @@
                     for (; ; )
                     {
                         int i = reader.Read();
-                        if (i < 0) break;
+                        if (i < 0) return;
                         char c = (char)i;
                         if (c == '\n') break;
                         else if (c == '\r') continue;
