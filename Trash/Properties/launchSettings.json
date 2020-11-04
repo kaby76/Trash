@@ -2,7 +2,7 @@
   "profiles": {
     "Trash": {
       "commandName": "Project",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\AntlrVSIX\\Trash"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\grammars-v4\\sql\\plsql"
     }
   }
 }
