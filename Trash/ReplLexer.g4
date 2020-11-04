@@ -88,6 +88,8 @@ WORKSPACE : 'workspace' -> pushMode(ArgMode) ;
 WRITE : 'write' -> pushMode(ArgMode) ;
 HWSCommandMode : Hws -> skip ;
 VWSCommandMode : Vws -> skip ;
+BLOCK_COMMENT_CommandMode : BlockComment -> skip ;
+LINE_COMMENT_CommandMode : LineComment -> skip ;
 ID : Id -> pushMode(ArgMode) ;
 INT : Digit+ -> pushMode(ArgMode) ;
 
@@ -116,4 +118,6 @@ PIPE : '|' -> popMode ;
 NonWsArgMode : ~(' ' | '\n' | '\r' | ';' | '=' | '!' | '|') (~(' ' | '\n' | '\r' | ';' | '=' | '|'))* ;
 HWSArgMode : Hws -> skip ;
 VWSArgMode : Vws -> skip ;
+BLOCK_COMMENT_ArgMode : BlockComment -> skip ;
+LINE_COMMENT_ArgMode : LineComment -> skip ;
 
