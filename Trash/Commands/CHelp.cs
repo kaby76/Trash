@@ -72,10 +72,14 @@ write - write a file to disk.
                     new CAlias().Help();
                 else if (cmd == "analyze")
                     new CAnalyze().Help();
+                else if (cmd == "bang")
+                    new CBang().Help();
                 else if (cmd == "cd")
                     new CCd().Help();
                 else if (cmd == "combine")
                     new CCombine().Help();
+                else if (cmd == "convert")
+                    new CConvert().Help();
                 else if (cmd == "delabel")
                     new CDelabel().Help();
                 else if (cmd == "delete")
@@ -92,6 +96,8 @@ write - write a file to disk.
                     new CGroup().Help();
                 else if (cmd == "has")
                     new CHas().Help();
+                else if (cmd == "help")
+                    new CHelp().Help();
                 else if (cmd == "history")
                     new CHistory().Help();
                 else if (cmd == "kleene")
