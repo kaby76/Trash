@@ -1,5 +1,5 @@
 #!/bin/sh
-exe=../bin/Debug/netcoreapp3.1/Trash.exe
+exe="../bin/Debug/netcoreapp3.1/Trash.exe -noprompt -echo"
 
 echo ======== TEST 1 HELP ========
 
@@ -112,5 +112,42 @@ then
 	echo TEST 4 PASSED
 else
 	echo TEST 4 FAILED
+fi
+
+echo ======== TEST 5 FOLDLIT ========
+cat << HERE | $exe > test5.out
+read Fold.g4
+parse
+print
+foldlit "//lexerRuleSpec/TOKEN_REF[text()='MUL']"
+print
+foldlit "//lexerRuleSpec/TOKEN_REF"
+print
+quit
+HERE
+diff test5.out test5.std
+if [ $? = 0 ]
+then
+	echo TEST 5 PASSED
+else
+	echo TEST 5 FAILED
+fi
+
+
+echo ======== TEST 6 UNFOLD ========
+cat << HERE | $exe > test6.out
+read Fold.g4
+parse
+print
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='a']"
+print
+quit
+HERE
+diff test6.out test6.std
+if [ $? = 0 ]
+then
+	echo TEST 6 PASSED
+else
+	echo TEST 6 FAILED
 fi
 

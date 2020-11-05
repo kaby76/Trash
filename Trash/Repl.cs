@@ -26,6 +26,8 @@
         public readonly Docs _docs;
         public Workspace _workspace { get; set; } = new Workspace();
         public static string Version { get; internal set; } = "8.3";
+        public string Prompt { get; set; } = "> ";
+        public bool Echo { get; set; } = false;
 
         public Repl(string[] args)
         {
@@ -34,7 +36,16 @@
                 switch (args[i])
                 {
                     case "-script":
-                        script_file = args[i+1];
+                        script_file = args[i + 1];
+                        break;
+                    case "-prompt":
+                        Prompt = args[i + 1];
+                        break;
+                    case "-noprompt":
+                        Prompt = null;
+                        break;
+                    case "-echo":
+                        Echo = true;
                         break;
                     default:
                         break;
@@ -361,9 +372,10 @@
             { 
                 for (; ; )
                 {
-                    bool is_redirected = ConsoleEx.IsInputRedirected;
-                    if (!is_redirected) Console.Error.Write("> ");
-
+                    if (Prompt != null)
+                    {
+                        Console.Error.Write(Prompt);
+                    }
                     // We're going to do this in two shots. First scan for an end of line or end of file.
                     // Then, create a normal Antlr stream with the line or lines. We then parse this as usual.
                     // The only thing that we allow multi-lines are explicit '\' continuations, or strings.
@@ -392,7 +404,7 @@
                             sb.Append(c);
                         }
                         var inp = sb.ToString();
-                        if (is_redirected) System.Console.WriteLine("> " + inp);
+                        if (Echo) System.Console.WriteLine("> " + inp);
                         Execute(inp);
                         if (tree_stack.Any())
                         {
