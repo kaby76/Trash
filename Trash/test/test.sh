@@ -91,3 +91,26 @@ then
 else
 	echo TEST 3 FAILED
 fi
+
+echo ======== TEST 4 ULLITERAL, UNULLITERAL ========
+cat << HERE | $exe > test4.out
+read Literals.g4
+parse
+print
+ulliteral
+print
+unulliteral lc
+print
+ulliteral
+unulliteral uc
+print
+quit
+HERE
+diff test4.out test4.std
+if [ $? = 0 ]
+then
+	echo TEST 4 PASSED
+else
+	echo TEST 4 FAILED
+fi
+
