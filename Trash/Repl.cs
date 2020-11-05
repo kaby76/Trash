@@ -361,38 +361,38 @@
             { 
                 for (; ; )
                 {
-
-                    Console.Error.Write("> ");
+                    bool is_redirected = ConsoleEx.IsInputRedirected;
+                    if (!is_redirected) Console.Error.Write("> ");
 
                     // We're going to do this in two shots. First scan for an end of line or end of file.
                     // Then, create a normal Antlr stream with the line or lines. We then parse this as usual.
                     // The only thing that we allow multi-lines are explicit '\' continuations, or strings.
-                    StringBuilder sb = new StringBuilder();
-                    for (; ; )
-                    {
-                        int i = reader.Read();
-                        if (i < 0) throw new Repl.Quit();
-                        char c = (char)i;
-                        if (c == '\n') break;
-                        else if (c == '\r') continue;
-                        else if (c == '"' || c == '\'')
-                        {
-                            // Read string.
-                        }
-                        else if (c == '\\')
-                        {
-                            // escape.
-                        }
-                        else if (c == ';')
-                        {
-                            break;
-                        }
-                        sb.Append(c);
-                    }
-                    var inp = sb.ToString();
-
                     try
                     {
+                        StringBuilder sb = new StringBuilder();
+                        for (; ; )
+                        {
+                            int i = reader.Read();
+                            if (i < 0) throw new Repl.Quit();
+                            char c = (char)i;
+                            if (c == '\n') break;
+                            else if (c == '\r') continue;
+                            else if (c == '"' || c == '\'')
+                            {
+                                // Read string.
+                            }
+                            else if (c == '\\')
+                            {
+                                // escape.
+                            }
+                            else if (c == ';')
+                            {
+                                break;
+                            }
+                            sb.Append(c);
+                        }
+                        var inp = sb.ToString();
+                        if (is_redirected) System.Console.WriteLine("> " + inp);
                         Execute(inp);
                         if (tree_stack.Any())
                         {

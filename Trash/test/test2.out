@@ -1,3 +1,5 @@
+> read Expr.g4
+> print
 grammar Expr;
 e : e ('*' | '/') e
   | e ('+' | '-') e
@@ -16,6 +18,8 @@ RP : ')' ;
 ID : ( ('a' .. 'z') | ('A' .. 'Z') | '_' )+ ;
 WS : [ \r\n\t] + -> skip ;
 
+> parse
+> .
 
 ( grammarSpec
   ( grammarDecl
@@ -440,4 +444,5 @@ WS : [ \r\n\t] + -> skip ;
   ( DEFAULT_TOKEN_CHANNEL i=184 txt=<EOF> tt=-1
 ) ) 
 
+> quit
 Bye!

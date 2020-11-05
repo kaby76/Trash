@@ -1,3 +1,6 @@
+> read Expr.g4
+> parse
+> . | find "//parserRuleSpec[RULE_REF/text()='a']"
 
 ( parserRuleSpec
   ( DEFAULT_TOKEN_CHANNEL i=58 txt=a tt=2
@@ -18,6 +21,9 @@
   ( exceptionGroup
 ) ) 
 
+> . | find "//parserRuleSpec[RULE_REF/text()='a']" | text
 a : INT ;
+> . | find "//parserRuleSpec[RULE_REF/text()='a']" | st
 ([287 281 141] a : ([320 287 281 141] ([370 320 287 281 141] ([372 370 320 287 281 141] ([380 372 370 320 287 281 141] ([485 380 372 370 320 287 281 141] ([498 485 380 372 370 320 287 281 141] ([546 498 485 380 372 370 320 287 281 141] INT))))))) ; [322 287 281 141])
+> quit
 Bye!

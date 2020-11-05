@@ -1,3 +1,4 @@
+> help
 Commands:
 alias - Allow a string to be substituted for a word of a simple command.
 analyze - perform an analysis of a grammar.
@@ -44,6 +45,7 @@ version - print out the version of Trash.
 workspace - create a new workspace for the run command.
 write - write a file to disk.
 
+> help alias
 alias <id> = <string>
 Set up an alias that assigns <string> to <id>. The command <string> is executed with <id>.
 
@@ -51,6 +53,7 @@ Example:
     alias h=history
     h
 
+> help analyze
 analyze
 Trash can perform an analysis of a grammar. The analysis includes a count of symbol
 type, cycles, and unused symbols.
@@ -58,6 +61,7 @@ type, cycles, and unused symbols.
 Example:
     analyze
 
+> help bang
 (!! | !<int> | !<id>)  -- (bang)
 Execute the previous command;
 Or, execute the command line int.
@@ -68,6 +72,7 @@ Example:
     !5
     !par
 
+> help cd
 cd <string>
 Change current directory. If string is not given, change to the user's home directory.
 'cd' accepts wildcards.
@@ -76,6 +81,7 @@ Example:
     cd
     cd *foo
 
+> help combine
 combine
 Combine two grammars on top of stack into one grammar.
 One grammar must be a lexer grammar, the other a parser grammar,
@@ -85,6 +91,7 @@ Example:
     (top of stack contains a lexer file and a parser file, both parsed.)
     combine
 
+> help convert
 convert (antlr2 | antlr3 | antlr4 | bison | ebnf)?
 Convert the parsed grammar file at the top of stack into Antlr4 syntax. If the type of
 grammar cannot be inferred from the file suffix, a type can be supplied with the command.
@@ -94,6 +101,7 @@ Example:
     (top of stack contains a grammar file that is Antlr2 or 3, Bison, or EBNF syntax.)
     combine antlr3
 
+> help delabel
 delabel
 Remove all labels from an Antlr4 grammar that is on the top of stack, e.g.,
 "expr : lhs=expr (PLUS | MINUS) rhs=expr # foobar1 ....." => "expr : expr (PLUS | MINUS) expr ....."
@@ -101,24 +109,28 @@ Remove all labels from an Antlr4 grammar that is on the top of stack, e.g.,
 Example:
     delabel
 
+> help delete
 delete <string>
 Delete nodes in the parsed file at the top of stack specified by the XPath expression string.
 
 Example:
     delete "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
+> help dot
 .
 Print out the parse tree for the file at the top of stack.
 
 Example:
     .
 
+> help find
 find <string>
 Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
 
 Example:
     find "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
+> help fold
 fold <string>
 Replace a sequence of symbols on the RHS of a rule
 with the rule LHS symbol.
@@ -126,12 +138,14 @@ with the rule LHS symbol.
 Example:
     fold "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
+> help foldlit
 foldlit <string>
 Replace a literal on the RHS of a rule with the lexer rule LHS symbol.
 
 Example:
     foldlit "//lexerRuleSpec/TOKEN_REF"
 
+> help group
 group <string>
 Perform a recursive left- and right- factorization of alternatives for rules.
 The nodes specified must be for ruleAltList, lexerAltList, or altList. A common
@@ -140,12 +154,14 @@ The process repeats for alternatives nested.
 Example:
     group //parserRuleSpec[RULE_REF/text()='additiveExpression']//altList
 
+> help has
 has (dr | ir) (left | right) <string>
 Print out whether the rule specified by the xpath expression pointing to the LHS symbol
 of a parser or lexer rule has left or right recursion.
 
 Example:
 
+> help help
 help <id>
 Give help for command <id>. If <id> is an alias, the help command indicates what it
 is aliased to, and gives help for that command.
@@ -153,12 +169,14 @@ is aliased to, and gives help for that command.
 Example:
     help help
 
+> help history
 history
 Print out the shell command history.
 
 Example:
     history
 
+> help kleene
 kleene <string>?
 Replace a rule, whose symbol is identified by the xpath string, of the grammar
 at the top of the grammar with an EBNF form if it contains direct left or direct
@@ -168,6 +186,7 @@ Examples:
     kleene
     kleene //parserRuleSpec/RULE_REF[text()='packageOrTypeName']
 
+> help ls
 ls <string>?
 List directory contents. If string is not given, list the current directory contents.
 ls accepts wildcards.
@@ -176,9 +195,11 @@ Example:
     ls
     ls foobar*
 
+> help mvsr
 mvsr <string>
 Move the rule, whose symbol is identified by the xpath string, to the top of the grammar.
 
+> help parse
 parse (antlr2 | antlr3 | antlr4 | bison | ebnf)?
 Parse the flie at the top of stack with the given parser type (antlr2, _antlr3, antlr4, bison, etc).
 
@@ -186,6 +207,7 @@ Example:
     parse
     parse antlr2
 
+> help pop
 pop
 Pop the top document from the stack. If the stack is empty, nothing is further popped.
 There is no check as to whether the document has been written to disk. If you want to write
@@ -195,30 +217,35 @@ the file, use write.
 Example:
     pop
 
+> help print
 print
 Print out text file at the top of stack.
 
 Example:
     print
 
+> help pwd
 pwd
 Print out the current working directory.
 
 Example:
     pwd
 
+> help quit
 (quit | exit)
 Exit the shell program.
 
 Example:
     quit
 
+> help read
 read <string>
 Read the text file file-name and place it on the top of the stack. read accepts wildcards.
 
 Example:
     read "c:/users/kenne/documents/antlrvsix/corpus-for-codebuff/a.g4"
 
+> help rename
 rename <string> <string>
 Rename a symbol, the first parameter as specified by the xpath expression string,
 to a new name, the second parameter as a string. The result may place all changed
@@ -227,6 +254,7 @@ grammars that use the symbol on the stack.
 Example:
     rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
 
+> help reorder
 reorder alpha
 reorder bfs <string>
 reorder dfs <string>
@@ -239,22 +267,26 @@ the grammar.
 Example:
     reorder alpha
 
+> help rotate
 rotate
 Rotate the stack once.
 
 Example:
     rotate
 
+> help rr
 rr <string>
 Replace left indirect or direct recursion with right recursion.
 
 Example:
     rr ...
 
+> help run
 run arg1 (arg2 arg3? )?
 Generate a parser using the Antlr tool on the grammar specified by the current
 workspace run the generated parser, output a tree or find elements in the tree.
 
+> help rup
 rup <string>?
 Find all altLists as specified by the xpath expression in the parsed file at 
 the top of stack. If the xpath expression is not given, the transform is applied
@@ -267,12 +299,14 @@ one child; (3) the ebnf parent of block must not contain a blockSuffix.
 Example:
     rup
 
+> help set
 set <id> = <value>
 Set a value.
 
 Example:
     set quietafter=10
 
+> help split
 split
 The split command attempts to split a grammar at the top of the stack. The grammar
 must be a combined lexer/parser grammar for the transformation to proceed. The
@@ -282,24 +316,28 @@ stack. The original grammar is popped off the stack.
 Example:
     split
 
+> help st
 st
 Output tree using the Antlr runtime ToStringTree().
 
 Examples:
     . | st
 
+> help stack
 stack
 Print the stack of files.
 
 Example:
     stack
 
+> help text
 text
 Reads a tree from stdin and prints the source text.
 
 Example:
     find //lexerRuleSpec | text
 
+> help ulliteral
 ulliteral <string>?
 The ulliteral command applies the "upper - and lower -case string literal" transform
 to a collection of terminal nodes in the parse tree, which is identified with the supplied
@@ -312,12 +350,14 @@ parser or lexer rule. The resulting code is parsed and placed on the top of stac
 Example:
     ulliteral "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL"
 
+> help unalias
 unalias <id>
 Remove an aliased command.
 
 Example:
     unalias h
 
+> help unfold
 unfold <string>
 The unfold command applies the unfold transform to a collection of terminal nodes
 in the parse tree, which is identified with the supplied xpath expression. Prior
@@ -329,12 +369,14 @@ stack.
 Example:
     unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'markerAnnotation']"
 
+> help ungroup
 ungroup <string>
 Perform an ungroup transformation of the 'element' node(s) specified by the string.
 
 Example:
     ungroup "//parserRuleSpec[RULE_REF/text() = 'a']//ruleAltList"
 
+> help unulliteral
 unulliteral (uc | lc) <string>?
 The unulliteral command applies the inverse "upper - and lower -case string literal" transform
 to a collection of terminal nodes in the parse tree, which is identified with the supplied
@@ -348,16 +390,20 @@ parser or lexer rule. The resulting code is parsed and placed on the top of stac
 Example:
     unulliteral //lexerRuleSpec[TOKEN_REF/text()='A']
 
+> help version
+> help workspace
 workspace
 Create a new workspace.
 
 Example:
     workspace
 
+> help write
 write
 Pop the stack, and write out the file specified.
 
 Example:
     write
 
+> quit
 Bye!

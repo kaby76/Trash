@@ -1,3 +1,6 @@
+> read Literals.g4
+> parse
+> print
 grammar Literals;
 
 p : Hello World ;
@@ -6,6 +9,8 @@ World : 'world';
 Foo : 'w_kdf';
 WS : (' ' | '\n' | '\r')+ -> skip;
 
+> ulliteral
+> print
 grammar Literals;
 
 p : Hello World ;
@@ -14,6 +19,8 @@ World :  [wW] [oO] [rR] [lL] [dD];
 Foo :  [wW] [_] [kK] [dD] [fF];
 WS : (' ' | '\n' | '\r')+ -> skip;
 
+> unulliteral lc
+> print
 grammar Literals;
 
 p : Hello World ;
@@ -22,6 +29,9 @@ World : 'world';
 Foo : 'w_kdf';
 WS : (' ' | '\n' | '\r')+ -> skip;
 
+> ulliteral
+> unulliteral uc
+> print
 grammar Literals;
 
 p : Hello World ;
@@ -30,4 +40,5 @@ World : 'WORLD';
 Foo : 'W_KDF';
 WS : (' ' | '\n' | '\r')+ -> skip;
 
+> quit
 Bye!
