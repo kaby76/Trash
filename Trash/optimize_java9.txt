@@ -5,99 +5,99 @@ read /Users/kenne/Documents/ScrapeJavaSpec/Java9.g4
 parse
 
 -- Clean up the annotation rule.
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'normalAnnotation']"
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'markerAnnotation']"
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'singleElementAnnotation']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'normalAnnotation']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'markerAnnotation']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'singleElementAnnotation']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='normalAnnotation']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='markerAnnotation']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='singleElementAnnotation']"
+delete "//parserRuleSpec[RULE_REF/text()='normalAnnotation']"
+delete "//parserRuleSpec[RULE_REF/text()='markerAnnotation']"
+delete "//parserRuleSpec[RULE_REF/text()='singleElementAnnotation']"
 rup
-group "//parserRuleSpec[RULE_REF/text()		      = 'annotation']//ruleAltList"
+group "//parserRuleSpec[RULE_REF/text()='annotation']//ruleAltList"
 
 -- Clean up the compilationUnit rule.
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'ordinaryCompilationUnit']"
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'modularCompilationUnit']"
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'packageModifier']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'ordinaryCompilationUnit']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'modularCompilationUnit']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'packageModifier']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='ordinaryCompilationUnit']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='modularCompilationUnit']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='packageModifier']"
+delete "//parserRuleSpec[RULE_REF/text()='ordinaryCompilationUnit']"
+delete "//parserRuleSpec[RULE_REF/text()='modularCompilationUnit']"
+delete "//parserRuleSpec[RULE_REF/text()='packageModifier']"
 rup
-group "//parserRuleSpec[RULE_REF/text()		      ='compilationUnit']"
+group "//parserRuleSpec[RULE_REF/text()='compilationUnit']"
 
 -- Clean up the importDeclaration rule.
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'singleTypeImportDeclaration']"
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'typeImportOnDemandDeclaration']"
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'singleStaticImportDeclaration']"
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'staticImportOnDemandDeclaration']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'singleTypeImportDeclaration']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'typeImportOnDemandDeclaration']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'singleStaticImportDeclaration']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'staticImportOnDemandDeclaration']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='singleTypeImportDeclaration']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='typeImportOnDemandDeclaration']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='singleStaticImportDeclaration']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='staticImportOnDemandDeclaration']"
+delete "//parserRuleSpec[RULE_REF/text()='singleTypeImportDeclaration']"
+delete "//parserRuleSpec[RULE_REF/text()='typeImportOnDemandDeclaration']"
+delete "//parserRuleSpec[RULE_REF/text()='singleStaticImportDeclaration']"
+delete "//parserRuleSpec[RULE_REF/text()='staticImportOnDemandDeclaration']"
 rup
-group "//parserRuleSpec[RULE_REF/text()		      = 'importDeclaration']//ruleAltList"
+group "//parserRuleSpec[RULE_REF/text()='importDeclaration']//ruleAltList"
 
 -- Fold all lexer rules into parser string literals.
 foldlit "//lexerRuleSpec/TOKEN_REF"
 
 -- Clean up packageOrTypeName rule.
-kleene "//parserRuleSpec/RULE_REF[text()	      ='packageOrTypeName']"
-kleene "//parserRuleSpec/RULE_REF[text()	      ='packageName']"
-kleene "//parserRuleSpec/RULE_REF[text()	      ='ambigousName']"
+kleene "//parserRuleSpec/RULE_REF[text()='packageOrTypeName']"
+kleene "//parserRuleSpec/RULE_REF[text()='packageName']"
+kleene "//parserRuleSpec/RULE_REF[text()='ambigousName']"
 rup
 
-unfold "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'assignmentOperator']"
-delete "//parserRuleSpec[RULE_REF/text()	      = 'assignmentOperator']"
+unfold "//parserRuleSpec//labeledAlt//RULE_REF[text()='assignmentOperator']"
+delete "//parserRuleSpec[RULE_REF/text()='assignmentOperator']"
 
 -- Clean up all left and right direct recursion, e.g., additiveExpression, relationalExpression
 kleene
 rup
 
-group "//parserRuleSpec[RULE_REF/text()		      ='additiveExpression']//altList"
-group "//parserRuleSpec[RULE_REF/text()		      ='relationalExpression']//altList"
-group "//parserRuleSpec[RULE_REF/text()		      ='relationalExpression']//altList//altList"
+group "//parserRuleSpec[RULE_REF/text()='additiveExpression']//altList"
+group "//parserRuleSpec[RULE_REF/text()='relationalExpression']//altList"
+group "//parserRuleSpec[RULE_REF/text()='relationalExpression']//altList//altList"
 
 -- Take care of the indirect left recursion in classOrInterfaceType, classType, interfaceType
 -- Whoever wrote it is brain dead. And whoever wrote the unfolding for it in Java9 is also brain dead.
 -- Note equivalent transforms:
--- unfold //parserRuleSpec[RULE_REF/text()	      ='interfaceType']//RULE_REF[text()='classType']
--- unfold //parserRuleSpec[RULE_REF/text()	      ='classOrInterfaceType']//RULE_REF[text()='classType']
--- unfold //parserRuleSpec[RULE_REF/text()	      ='classOrInterfaceType']//RULE_REF[text()='interfaceType']
+-- unfold //parserRuleSpec[RULE_REF/text()='interfaceType']//RULE_REF[text()='classType']
+-- unfold //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//RULE_REF[text()='classType']
+-- unfold //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//RULE_REF[text()='interfaceType']
 -- rup
--- group //parserRuleSpec[RULE_REF/text()	      ='classOrInterfaceType']//ruleAltList
-delete "//parserRuleSpec[RULE_REF/text()	      ='classOrInterfaceType']//RULE_REF[text()='interfaceType']"
-delete "//parserRuleSpec[RULE_REF/text()	      ='classOrInterfaceType']//OR"
-unfold "//parserRuleSpec[RULE_REF/text()	      ='classOrInterfaceType']//RULE_REF[text()='classType']"
-unfold "//parserRuleSpec[RULE_REF/text()	      ='interfaceType']//RULE_REF[text()='classType']"
+-- group //parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//ruleAltList
+delete "//parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//RULE_REF[text()='interfaceType']"
+delete "//parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//OR"
+unfold "//parserRuleSpec[RULE_REF/text()='classOrInterfaceType']//RULE_REF[text()='classType']"
+unfold "//parserRuleSpec[RULE_REF/text()='interfaceType']//RULE_REF[text()='classType']"
 -- Required to remove "mutually left-recursive" warning for classOrInterfaceType!
 -- Apparently, parentheses mess it up.
 rup
 
 -- Same type of problem.
-delete "//parserRuleSpec[RULE_REF/text()	      ='unannClassOrInterfaceType']//RULE_REF[text()='unannInterfaceType']"
-delete "//parserRuleSpec[RULE_REF/text()	      ='unannClassOrInterfaceType']//OR"
-unfold "//parserRuleSpec[RULE_REF/text()	      ='unannClassOrInterfaceType']//RULE_REF[text()='unannClassType']"
-unfold "//parserRuleSpec[RULE_REF/text()	      ='unannInterfaceType']//RULE_REF[text()='unannClassType']"
+delete "//parserRuleSpec[RULE_REF/text()='unannClassOrInterfaceType']//RULE_REF[text()='unannInterfaceType']"
+delete "//parserRuleSpec[RULE_REF/text()='unannClassOrInterfaceType']//OR"
+unfold "//parserRuleSpec[RULE_REF/text()='unannClassOrInterfaceType']//RULE_REF[text()='unannClassType']"
+unfold "//parserRuleSpec[RULE_REF/text()='unannInterfaceType']//RULE_REF[text()='unannClassType']"
 -- Required to remove "mutually left-recursive" warning.
 rup
 
 -- Take care of postfixExpression indirect left recursion.
-unfold "//parserRuleSpec[RULE_REF/text()	      ='postfixExpression']//RULE_REF[text()='postIncrementExpression']"
-unfold "//parserRuleSpec[RULE_REF/text()	      ='postfixExpression']//RULE_REF[text()='postDecrementExpression']"
+unfold "//parserRuleSpec[RULE_REF/text()='postfixExpression']//RULE_REF[text()='postIncrementExpression']"
+unfold "//parserRuleSpec[RULE_REF/text()='postfixExpression']//RULE_REF[text()='postDecrementExpression']"
 rup
 
 -- Pile all crap into primaryNoNewArray.
-unfold "//parserRuleSpec[RULE_REF/text()	      ='primaryNoNewArray']//RULE_REF[text()='fieldAccess']"
-unfold "//parserRuleSpec[RULE_REF/text()	      ='primaryNoNewArray']//RULE_REF[text()='methodInvocation']"
-unfold "//parserRuleSpec[RULE_REF/text()	      ='primaryNoNewArray']//RULE_REF[text()='classInstanceCreationExpression']"
-unfold "//parserRuleSpec[RULE_REF/text()	      ='primaryNoNewArray']//RULE_REF[text()='methodReference']"
-unfold "//parserRuleSpec[RULE_REF/text()	      ='primaryNoNewArray']//RULE_REF[text()='arrayAccess']"
-unfold "//parserRuleSpec[RULE_REF/text()	      ='primaryNoNewArray']//RULE_REF[text()='primary']"
+unfold "//parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='fieldAccess']"
+unfold "//parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='methodInvocation']"
+unfold "//parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='classInstanceCreationExpression']"
+unfold "//parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='methodReference']"
+unfold "//parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='arrayAccess']"
+unfold "//parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//RULE_REF[text()='primary']"
 rup
 
 -- There is still one rule with indirect left recursion, "primaryNoNewArray". Ungroup
 -- the rules that contain "( primaryNoNewArray | arrayCreationExpression)" on the LHS.
 -- This will turn it into direct left recursion which Antlr can handle.
-ungroup "//parserRuleSpec[RULE_REF/text()	      ='primaryNoNewArray']//element[ebnf/block/altList/alternative/element/atom/ruleref/RULE_REF/text()='primaryNoNewArray']"
+ungroup "//parserRuleSpec[RULE_REF/text()='primaryNoNewArray']//element[ebnf/block/altList/alternative/element/atom/ruleref/RULE_REF/text()='primaryNoNewArray']"
 
 -- The grammar should now be free of indirect left recursion.
 

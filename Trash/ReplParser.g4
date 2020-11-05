@@ -23,6 +23,7 @@ cmd :
   | find
   | fold
   | foldlit
+  | generate
   | group
   | has
   | help
@@ -71,6 +72,7 @@ empty : ;
 find : FIND arg ;
 fold : FOLD arg ;
 foldlit : FOLDLIT arg ;
+generate : GENERATE arg* ;
 group : GROUP arg ;
 has : HAS (DR | IR) GRAPH? arg? ;
 help : HELP NonWsArgMode?;

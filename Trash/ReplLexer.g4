@@ -106,6 +106,7 @@ DFS : 'dfs' ;
 DR : 'dr' ;
 EBNF : 'ebnf' ;
 EXIT : 'exit' ;
+GENERATE : 'generate' ;
 GRAPH : 'graph' ;
 IR : 'ir' ;
 LC : 'lc' ;

@@ -13,11 +13,11 @@
     using Document = Workspaces.Document;
     using Workspace = Workspaces.Workspace;
 
-    public class Grun
+    public class Generate
     {
         private Repl _repl;
 
-        public Grun(Repl repl)
+        public Generate(Repl repl)
         {
             _repl = repl;
         }
@@ -39,7 +39,7 @@
                 if (builder.Length > 0)
                     builder.Append(' ');
 
-                if (argument.IndexOfAny(new[] {'"', ' '}) < 0)
+                if (argument.IndexOfAny(new[] { '"', ' ' }) < 0)
                 {
                     builder.Append(argument);
                     continue;
@@ -73,14 +73,10 @@
         public void Run(Repl repl, string[] parameters)
         {
             // Create a temporary directory containing a C# project with grammars.
-            var path = Path.GetTempPath();
-            path = path + Path.DirectorySeparatorChar + "Antlrvsix" + new Random().Next();
             var grammars = _repl._workspace.AllDocuments().Where(d => d.FullPath.EndsWith(".g4")).ToList();
             var old = Environment.CurrentDirectory;
             try
             {
-                Directory.CreateDirectory(path);
-                Environment.CurrentDirectory = path;
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.AppendLine(@"
@@ -107,7 +103,7 @@
 		<NoWarn>1701;1702;3021</NoWarn>
 	</PropertyGroup>
 </Project>");
-                    var fn_csproj = path + Path.DirectorySeparatorChar + "Test.csproj";
+                    var fn_csproj = "Test.csproj";
                     System.IO.File.WriteAllText(fn_csproj, sb.ToString());
                 }
 
@@ -195,34 +191,9 @@ namespace Easy
                 process.WaitForExit();
                 var success = process.ExitCode == 0;
                 if (!success) throw new Exception("Build failed.");
-
-                //var alc = new TestAssemblyLoadContext(path + "/bin/Debug/netcoreapp3.1/Test.dll");
-                //Assembly asm = alc.LoadFromAssemblyPath(path + "/bin/Debug/netcoreapp3.1/Test.dll");
-                Assembly asm = Assembly.LoadFile(path + "/bin/Debug/netcoreapp3.1/Test.dll");
-
-                Type[] types = asm.GetTypes();
-                Type type = asm.GetType("Easy.Program");
-                var methods = type.GetMethods();
-                MethodInfo methodInfo = type.GetMethod("Parse");
-                object[] parm = new object[] {parameters[1]};
-                var res = methodInfo.Invoke(null, parm);
-                var tree = res as IParseTree;
-                var t2 = tree as ParserRuleContext;
-
-                var m2 = type.GetProperty("Parser");
-                object[] p2 = new object[0];
-                var r2 = m2.GetValue(null, p2);
-
-                // return the tree.
-                Environment.CurrentDirectory = old;
-                repl.tree_stack.Push(
-                    new Tuple<IParseTree[], Parser>(new IParseTree[] { t2 },
-                        (Parser) r2));
-
             }
             finally
             {
-                Environment.CurrentDirectory = old;
             }
         }
 
@@ -238,5 +209,27 @@ namespace Easy
         //    //IAssemblySymbol assembly = compilation.Assembly;
         //    //var file = compilation.AssemblyName;
         //}
+    }
+
+
+    public class TestAssemblyLoadContext : AssemblyLoadContext
+    {
+        private AssemblyDependencyResolver _resolver;
+
+        public TestAssemblyLoadContext(string mainAssemblyToLoadPath) : base(isCollectible: true)
+        {
+            _resolver = new AssemblyDependencyResolver(mainAssemblyToLoadPath);
+        }
+
+        protected override Assembly Load(AssemblyName name)
+        {
+            string assemblyPath = _resolver.ResolveAssemblyToPath(name);
+            if (assemblyPath != null)
+            {
+                return LoadFromAssemblyPath(assemblyPath);
+            }
+
+            return null;
+        }
     }
 }

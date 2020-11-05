@@ -1,0 +1,443 @@
+grammar Expr;
+e : e ('*' | '/') e
+  | e ('+' | '-') e
+  | '(' e ')'
+  | ('-' | '+')* a
+  ;
+a : INT ;
+id : ID ;
+INT : ('0' .. '9')+ ;
+MUL : '*' ;
+DIV : '/' ;
+ADD : '+' ;
+SUB : '-' ;
+LP : '(' ;
+RP : ')' ;
+ID : ( ('a' .. 'z') | ('A' .. 'Z') | '_' )+ ;
+WS : [ \r\n\t] + -> skip ;
+
+
+( grammarSpec
+  ( grammarDecl
+    ( grammarType
+      ( DEFAULT_TOKEN_CHANNEL i=0 txt=grammar tt=19
+    ) ) 
+    ( identifier
+      ( DEFAULT_TOKEN_CHANNEL i=2 txt=Expr tt=1
+    ) ) 
+    ( DEFAULT_TOKEN_CHANNEL i=3 txt=; tt=32
+  ) ) 
+  ( rules
+    ( ruleSpec
+      ( parserRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=5 txt=e tt=2
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=7 txt=: tt=29
+        ) 
+        ( ruleBlock
+          ( ruleAltList
+            ( labeledAlt
+              ( alternative
+                ( element
+                  ( atom
+                    ( ruleref
+                      ( DEFAULT_TOKEN_CHANNEL i=9 txt=e tt=2
+                ) ) ) ) 
+                ( element
+                  ( ebnf
+                    ( block
+                      ( DEFAULT_TOKEN_CHANNEL i=11 txt=( tt=33
+                      ) 
+                      ( altList
+                        ( alternative
+                          ( element
+                            ( atom
+                              ( terminal
+                                ( DEFAULT_TOKEN_CHANNEL i=12 txt='*' tt=8
+                        ) ) ) ) ) 
+                        ( DEFAULT_TOKEN_CHANNEL i=14 txt=| tt=45
+                        ) 
+                        ( alternative
+                          ( element
+                            ( atom
+                              ( terminal
+                                ( DEFAULT_TOKEN_CHANNEL i=16 txt='/' tt=8
+                      ) ) ) ) ) ) 
+                      ( DEFAULT_TOKEN_CHANNEL i=17 txt=) tt=34
+                ) ) ) ) 
+                ( element
+                  ( atom
+                    ( ruleref
+                      ( DEFAULT_TOKEN_CHANNEL i=19 txt=e tt=2
+            ) ) ) ) ) ) 
+            ( DEFAULT_TOKEN_CHANNEL i=21 txt=| tt=45
+            ) 
+            ( labeledAlt
+              ( alternative
+                ( element
+                  ( atom
+                    ( ruleref
+                      ( DEFAULT_TOKEN_CHANNEL i=23 txt=e tt=2
+                ) ) ) ) 
+                ( element
+                  ( ebnf
+                    ( block
+                      ( DEFAULT_TOKEN_CHANNEL i=25 txt=( tt=33
+                      ) 
+                      ( altList
+                        ( alternative
+                          ( element
+                            ( atom
+                              ( terminal
+                                ( DEFAULT_TOKEN_CHANNEL i=26 txt='+' tt=8
+                        ) ) ) ) ) 
+                        ( DEFAULT_TOKEN_CHANNEL i=28 txt=| tt=45
+                        ) 
+                        ( alternative
+                          ( element
+                            ( atom
+                              ( terminal
+                                ( DEFAULT_TOKEN_CHANNEL i=30 txt='-' tt=8
+                      ) ) ) ) ) ) 
+                      ( DEFAULT_TOKEN_CHANNEL i=31 txt=) tt=34
+                ) ) ) ) 
+                ( element
+                  ( atom
+                    ( ruleref
+                      ( DEFAULT_TOKEN_CHANNEL i=33 txt=e tt=2
+            ) ) ) ) ) ) 
+            ( DEFAULT_TOKEN_CHANNEL i=35 txt=| tt=45
+            ) 
+            ( labeledAlt
+              ( alternative
+                ( element
+                  ( atom
+                    ( terminal
+                      ( DEFAULT_TOKEN_CHANNEL i=37 txt='(' tt=8
+                ) ) ) ) 
+                ( element
+                  ( atom
+                    ( ruleref
+                      ( DEFAULT_TOKEN_CHANNEL i=39 txt=e tt=2
+                ) ) ) ) 
+                ( element
+                  ( atom
+                    ( terminal
+                      ( DEFAULT_TOKEN_CHANNEL i=41 txt=')' tt=8
+            ) ) ) ) ) ) 
+            ( DEFAULT_TOKEN_CHANNEL i=43 txt=| tt=45
+            ) 
+            ( labeledAlt
+              ( alternative
+                ( element
+                  ( ebnf
+                    ( block
+                      ( DEFAULT_TOKEN_CHANNEL i=45 txt=( tt=33
+                      ) 
+                      ( altList
+                        ( alternative
+                          ( element
+                            ( atom
+                              ( terminal
+                                ( DEFAULT_TOKEN_CHANNEL i=46 txt='-' tt=8
+                        ) ) ) ) ) 
+                        ( DEFAULT_TOKEN_CHANNEL i=48 txt=| tt=45
+                        ) 
+                        ( alternative
+                          ( element
+                            ( atom
+                              ( terminal
+                                ( DEFAULT_TOKEN_CHANNEL i=50 txt='+' tt=8
+                      ) ) ) ) ) ) 
+                      ( DEFAULT_TOKEN_CHANNEL i=51 txt=) tt=34
+                    ) ) 
+                    ( blockSuffix
+                      ( ebnfSuffix
+                        ( DEFAULT_TOKEN_CHANNEL i=52 txt=* tt=42
+                ) ) ) ) ) 
+                ( element
+                  ( atom
+                    ( ruleref
+                      ( DEFAULT_TOKEN_CHANNEL i=54 txt=a tt=2
+        ) ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=56 txt=; tt=32
+        ) 
+        ( exceptionGroup
+    ) ) ) 
+    ( ruleSpec
+      ( parserRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=58 txt=a tt=2
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=60 txt=: tt=29
+        ) 
+        ( ruleBlock
+          ( ruleAltList
+            ( labeledAlt
+              ( alternative
+                ( element
+                  ( atom
+                    ( terminal
+                      ( DEFAULT_TOKEN_CHANNEL i=62 txt=INT tt=1
+        ) ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=64 txt=; tt=32
+        ) 
+        ( exceptionGroup
+    ) ) ) 
+    ( ruleSpec
+      ( parserRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=66 txt=id tt=2
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=68 txt=: tt=29
+        ) 
+        ( ruleBlock
+          ( ruleAltList
+            ( labeledAlt
+              ( alternative
+                ( element
+                  ( atom
+                    ( terminal
+                      ( DEFAULT_TOKEN_CHANNEL i=70 txt=ID tt=1
+        ) ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=72 txt=; tt=32
+        ) 
+        ( exceptionGroup
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=74 txt=INT tt=1
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=76 txt=: tt=29
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerBlock
+                    ( DEFAULT_TOKEN_CHANNEL i=78 txt=( tt=33
+                    ) 
+                    ( lexerAltList
+                      ( lexerAlt
+                        ( lexerElements
+                          ( lexerElement
+                            ( lexerAtom
+                              ( characterRange
+                                ( DEFAULT_TOKEN_CHANNEL i=79 txt='0' tt=8
+                                ) 
+                                ( DEFAULT_TOKEN_CHANNEL i=81 txt=.. tt=47
+                                ) 
+                                ( DEFAULT_TOKEN_CHANNEL i=83 txt='9' tt=8
+                    ) ) ) ) ) ) ) 
+                    ( DEFAULT_TOKEN_CHANNEL i=84 txt=) tt=34
+                  ) ) 
+                  ( ebnfSuffix
+                    ( DEFAULT_TOKEN_CHANNEL i=85 txt=+ tt=44
+        ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=87 txt=; tt=32
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=89 txt=MUL tt=1
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=91 txt=: tt=29
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerAtom
+                    ( terminal
+                      ( DEFAULT_TOKEN_CHANNEL i=93 txt='*' tt=8
+        ) ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=95 txt=; tt=32
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=97 txt=DIV tt=1
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=99 txt=: tt=29
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerAtom
+                    ( terminal
+                      ( DEFAULT_TOKEN_CHANNEL i=101 txt='/' tt=8
+        ) ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=103 txt=; tt=32
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=105 txt=ADD tt=1
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=107 txt=: tt=29
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerAtom
+                    ( terminal
+                      ( DEFAULT_TOKEN_CHANNEL i=109 txt='+' tt=8
+        ) ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=111 txt=; tt=32
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=113 txt=SUB tt=1
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=115 txt=: tt=29
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerAtom
+                    ( terminal
+                      ( DEFAULT_TOKEN_CHANNEL i=117 txt='-' tt=8
+        ) ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=119 txt=; tt=32
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=121 txt=LP tt=1
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=123 txt=: tt=29
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerAtom
+                    ( terminal
+                      ( DEFAULT_TOKEN_CHANNEL i=125 txt='(' tt=8
+        ) ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=127 txt=; tt=32
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=129 txt=RP tt=1
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=131 txt=: tt=29
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerAtom
+                    ( terminal
+                      ( DEFAULT_TOKEN_CHANNEL i=133 txt=')' tt=8
+        ) ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=135 txt=; tt=32
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=137 txt=ID tt=1
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=139 txt=: tt=29
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerBlock
+                    ( DEFAULT_TOKEN_CHANNEL i=141 txt=( tt=33
+                    ) 
+                    ( lexerAltList
+                      ( lexerAlt
+                        ( lexerElements
+                          ( lexerElement
+                            ( lexerBlock
+                              ( DEFAULT_TOKEN_CHANNEL i=143 txt=( tt=33
+                              ) 
+                              ( lexerAltList
+                                ( lexerAlt
+                                  ( lexerElements
+                                    ( lexerElement
+                                      ( lexerAtom
+                                        ( characterRange
+                                          ( DEFAULT_TOKEN_CHANNEL i=144 txt='a' tt=8
+                                          ) 
+                                          ( DEFAULT_TOKEN_CHANNEL i=146 txt=.. tt=47
+                                          ) 
+                                          ( DEFAULT_TOKEN_CHANNEL i=148 txt='z' tt=8
+                              ) ) ) ) ) ) ) 
+                              ( DEFAULT_TOKEN_CHANNEL i=149 txt=) tt=34
+                      ) ) ) ) ) 
+                      ( DEFAULT_TOKEN_CHANNEL i=151 txt=| tt=45
+                      ) 
+                      ( lexerAlt
+                        ( lexerElements
+                          ( lexerElement
+                            ( lexerBlock
+                              ( DEFAULT_TOKEN_CHANNEL i=153 txt=( tt=33
+                              ) 
+                              ( lexerAltList
+                                ( lexerAlt
+                                  ( lexerElements
+                                    ( lexerElement
+                                      ( lexerAtom
+                                        ( characterRange
+                                          ( DEFAULT_TOKEN_CHANNEL i=154 txt='A' tt=8
+                                          ) 
+                                          ( DEFAULT_TOKEN_CHANNEL i=156 txt=.. tt=47
+                                          ) 
+                                          ( DEFAULT_TOKEN_CHANNEL i=158 txt='Z' tt=8
+                              ) ) ) ) ) ) ) 
+                              ( DEFAULT_TOKEN_CHANNEL i=159 txt=) tt=34
+                      ) ) ) ) ) 
+                      ( DEFAULT_TOKEN_CHANNEL i=161 txt=| tt=45
+                      ) 
+                      ( lexerAlt
+                        ( lexerElements
+                          ( lexerElement
+                            ( lexerAtom
+                              ( terminal
+                                ( DEFAULT_TOKEN_CHANNEL i=163 txt='_' tt=8
+                    ) ) ) ) ) ) ) 
+                    ( DEFAULT_TOKEN_CHANNEL i=165 txt=) tt=34
+                  ) ) 
+                  ( ebnfSuffix
+                    ( DEFAULT_TOKEN_CHANNEL i=166 txt=+ tt=44
+        ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=168 txt=; tt=32
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( DEFAULT_TOKEN_CHANNEL i=170 txt=WS tt=1
+        ) 
+        ( DEFAULT_TOKEN_CHANNEL i=172 txt=: tt=29
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerAtom
+                    ( DEFAULT_TOKEN_CHANNEL i=174 txt=[ \\r\\n\\t] tt=3
+                  ) ) 
+                  ( ebnfSuffix
+                    ( DEFAULT_TOKEN_CHANNEL i=176 txt=+ tt=44
+              ) ) ) ) 
+              ( lexerCommands
+                ( DEFAULT_TOKEN_CHANNEL i=178 txt=-> tt=37
+                ) 
+                ( lexerCommand
+                  ( lexerCommandName
+                    ( identifier
+                      ( DEFAULT_TOKEN_CHANNEL i=180 txt=skip tt=2
+        ) ) ) ) ) ) ) ) 
+        ( DEFAULT_TOKEN_CHANNEL i=182 txt=; tt=32
+  ) ) ) ) 
+  ( DEFAULT_TOKEN_CHANNEL i=184 txt=<EOF> tt=-1
+) ) 
+
+Bye!

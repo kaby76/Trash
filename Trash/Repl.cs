@@ -25,7 +25,7 @@
         public int QuietAfter = 10;
         public readonly Docs _docs;
         public Workspace _workspace { get; set; } = new Workspace();
-        public static string Version { get; internal set; } = "8.2";
+        public static string Version { get; internal set; } = "8.3";
 
         public Repl(string[] args)
         {
@@ -273,6 +273,10 @@
                         else if (tree.split() is ReplParser.SplitContext x_split)
                         {
                             new CSplit().Execute(this, x_split, is_piped);
+                        }
+                        else if (tree.st() is ReplParser.StContext x_st)
+                        {
+                            new CSt().Execute(this, x_st, is_piped);
                         }
                         else if (tree.stack() is ReplParser.StackContext x_stack)
                         {
