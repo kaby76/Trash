@@ -18,7 +18,7 @@
         const string PreviousHistoryFfn = ".trash.rc";
         public Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
         public Utils.StackQueue<Document> stack = new Utils.StackQueue<Document>();
-        public Utils.StackQueue<Tuple<IParseTree[], Parser>> tree_stack = new Utils.StackQueue<Tuple<IParseTree[], Parser>>();
+        public Utils.StackQueue<Tuple<IParseTree[], Parser, Document, string[]>> tree_stack = new Utils.StackQueue<Tuple<IParseTree[], Parser, Document, string[]>>();
         public string script_file = null;
         public int current_line_index = 0;
         public string[] lines = null;
@@ -188,10 +188,6 @@
                         {
                             throw new Repl.DoNotAddToHistory(); // Don't add to history.
                         }
-                        else if (tree.find() is ReplParser.FindContext x_find)
-                        {
-                            new CFind().Execute(this, x_find, is_piped);
-                        }
                         else if (tree.fold() is ReplParser.FoldContext x_fold)
                         {
                             new CFold().Execute(this, x_fold, is_piped);
@@ -329,6 +325,11 @@
                         {
                             new CWrite().Execute(this, x_write, is_piped);
                         }
+                        else if (tree.xgrep() is ReplParser.XgrepContext x_xgrep)
+                        {
+                            new CXGrep().Execute(this, x_xgrep, is_piped);
+                        }
+                        else throw new Exception("Unhandled command!");
                         HistoryAdd(input);
                     }
                     catch (Repl.DoNotAddToHistory)

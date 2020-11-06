@@ -27,7 +27,6 @@ combine - create a combined grammar from the lexer and parser grammars on the to
 delabel - remove all labels from an Antlr4 grammar.
 delete - delete nodes in the parse tree for a grammar and reform the grammar.
 . (aka 'dot') - print out the parse tree for the file at the top of stack.
-find - find nodes in the parse tree for a grammar.
 fold - replace a sequence of symbols on the RHS of a rule with a LHS symbol of another rule.
 foldlit - replace a literal on the RHS of a rule with a LHS symbol of another rule.
 group - group common sub-sequences of symbols for alts.
@@ -62,6 +61,7 @@ unulliteral - inverse transform of ulliteral.
 version - print out the version of Trash.
 workspace - create a new workspace for the run command.
 write - write a file to disk.
+xgrep - find nodes in the parse tree for a grammar.
 ");
             }
             else
@@ -86,8 +86,6 @@ write - write a file to disk.
                     new CDelete().Help();
                 else if (cmd == "dot")
                     new CDot().Help();
-                else if (cmd == "find")
-                    new CFind().Help();
                 else if (cmd == "fold")
                     new CFold().Help();
                 else if (cmd == "foldlit")
@@ -156,6 +154,8 @@ write - write a file to disk.
                     new CWorkspace().Help();
                 else if (cmd == "write")
                     new CWrite().Help();
+                else if (cmd == "xgrep")
+                    new CXGrep().Help();
                 else if (repl.Aliases.ContainsKey(cmd))
                 {
                     var aliased_cmd = repl.Aliases[cmd];

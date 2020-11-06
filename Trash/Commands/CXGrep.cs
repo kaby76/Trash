@@ -7,32 +7,34 @@
     using System.Linq;
     using System;
 
-    class CFind
+    class CXGrep
     {
         public void Help()
         {
-            System.Console.WriteLine(@"find <string>
+            System.Console.WriteLine(@"xgrep <string>
 Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
 
 Example:
-    find ""//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']""
+    xgrep ""//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']""
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.FindContext tree, bool piped)
+        public void Execute(Repl repl, ReplParser.XgrepContext tree, bool piped)
         {
             var expr = repl.GetArg(tree.arg());
             IParseTree[] atrees;
             Parser aparser;
+            Workspaces.Document doc;
             if (piped)
             {
                 var pair = repl.tree_stack.Pop();
                 atrees = pair.Item1;
                 aparser = pair.Item2;
+                doc = pair.Item3;
             }
             else
             {
-                var doc = repl.stack.Peek();
+                doc = repl.stack.Peek();
                 var pr = ParsingResultsFactory.Create(doc);
                 aparser = pr.Parser;
                 IParseTree atree = pr.ParseTree;
@@ -47,7 +49,7 @@ Example:
                 var nodes = engine.parseExpression(expr,
                         new StaticContextBuilder()).evaluate(dynamicContext, l.ToArray() )
                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
-                repl.tree_stack.Push(new Tuple<IParseTree[], Parser>(nodes, aparser));
+                repl.tree_stack.Push(new Tuple<IParseTree[], Parser, Workspaces.Document, string[]>(nodes, aparser, doc, null));
             }
         }
     }

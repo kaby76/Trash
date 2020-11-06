@@ -20,7 +20,6 @@ cmd :
   | delabel
   | delete
   | empty
-  | find
   | fold
   | foldlit
   | generate
@@ -56,6 +55,7 @@ cmd :
   | version
   | workspace
   | write
+  | xgrep
   | anything
   ;
 alias : ALIAS (NonWsArgMode EQUAL (StringLiteral | NonWsArgMode))? ;
@@ -69,7 +69,6 @@ delabel : DELABEL ;
 delete : DELETE arg ;
 dot : DOT ;
 empty : ;
-find : FIND arg ;
 fold : FOLD arg ;
 foldlit : FOLDLIT arg ;
 generate : GENERATE arg* ;
@@ -96,7 +95,7 @@ set : SET NonWsArgMode '=' (StringLiteral | INT) ;
 split : SPLIT ;
 st : ST ;
 stack : STACK ;
-text : TEXT ;
+text : TEXT arg? ;
 ulliteral : ULLITERAL StringLiteral? ;
 unalias : UNALIAS id ;
 unfold : UNFOLD arg ;
@@ -105,6 +104,7 @@ unulliteral : UNULLITERAL uclc StringLiteral? ;
 version : VERSION ;
 workspace : WORKSPACE ;
 write : WRITE ;
+xgrep : XGREP arg ;
 alpha : ALPHA ;
 bfs : BFS StringLiteral ;
 dfs : DFS StringLiteral ;

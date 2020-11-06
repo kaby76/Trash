@@ -216,8 +216,11 @@ namespace Easy
                 // return the tree.
                 Environment.CurrentDirectory = old;
                 repl.tree_stack.Push(
-                    new Tuple<IParseTree[], Parser>(new IParseTree[] { t2 },
-                        (Parser) r2));
+                    new Tuple<IParseTree[], Parser, Workspaces.Document, string[]>(
+                        new IParseTree[] { t2 },
+                        (Parser) r2,
+                        null,
+                        null));
 
             }
             finally

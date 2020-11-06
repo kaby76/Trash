@@ -17,8 +17,9 @@
     {
         public void Help()
         {
-            System.Console.WriteLine(@"text
-Reads a tree from stdin and prints the source text.
+            System.Console.WriteLine(@"text line-number?
+Reads a tree from stdin and prints the source text. If 'line-number' is
+specified, the line number range for the tree is printed.
 
 Example:
     find //lexerRuleSpec | text
@@ -63,10 +64,35 @@ Example:
 
         public void Execute(Repl repl, ReplParser.TextContext tree, bool piped)
         {
+            var args = tree.arg();
+            var arg = args?.GetText();
+            var line_number = (arg == "line-number");
             var pair = repl.tree_stack.Pop();
             var nodes = pair.Item1;
+            var parser = pair.Item2;
+            var doc = pair.Item3;
+            var lines = pair.Item4;
             foreach (var node in nodes)
             {
+                if (line_number)
+                {
+                    var source_interval = node.SourceInterval;
+                    int a = source_interval.a;
+                    int b = source_interval.b;
+                    IToken ta = parser.TokenStream.Get(a);
+                    IToken tb = parser.TokenStream.Get(b);
+                    var start = ta.StartIndex;
+                    var stop = tb.StopIndex + 1;
+                    if (doc != null)
+                    {
+                        var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
+                        var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
+                        System.Console.Write(System.IO.Path.GetFileName(doc.FullPath)
+                            + ":" + line_a + "," + col_a
+                            + "-" + line_b + "," + col_b
+                            + "\t");
+                    }
+                }
                 System.Console.WriteLine(this.Reconstruct(node));
             }
         }
