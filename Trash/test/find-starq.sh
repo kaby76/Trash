@@ -8,6 +8,7 @@ do
 cat << HERE | $exe
 read $i
 parse
+. | xgrep "//ebnf[blockSuffix/ebnfSuffix/QUESTION and block/altList[@ChildCount = 1]/alternative[@ChildCount = 1]/element/ebnf/blockSuffix/ebnfSuffix/PLUS]" | text line-number
 HERE
 done
 
