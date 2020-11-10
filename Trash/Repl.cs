@@ -143,6 +143,10 @@
                         var tree = trees[c];
                         var is_piped = c > 0;
                         if (false) ;
+                        else if (tree.agl() is ReplParser.AglContext x_agl)
+                        {
+                            new CAgl().Execute(this, x_agl, is_piped);
+                        }
                         else if (tree.alias() is ReplParser.AliasContext x_alias)
                         {
                             new CAlias().Execute(this, x_alias, is_piped);
@@ -211,6 +215,10 @@
                         else if (tree.history() is ReplParser.HistoryContext x_history)
                         {
                             new CHistory().Execute(this, x_history, is_piped);
+                        }
+                        else if (tree.json() is ReplParser.JsonContext x_json)
+                        {
+                            new CJson().Execute(this, x_json, is_piped);
                         }
                         else if (tree.kleene() is ReplParser.KleeneContext x_kleene)
                         {
@@ -289,6 +297,10 @@
                         {
                             new CStack().Execute(this, x_stack, is_piped);
                         }
+                        else if (tree.svg() is ReplParser.SvgContext x_svg)
+                        {
+                            new CSvg().Execute(this, x_svg, is_piped);
+                        }
                         else if (tree.text() is ReplParser.TextContext x_text)
                         {
                             new CText().Execute(this, x_text, is_piped);
@@ -328,6 +340,10 @@
                         else if (tree.xgrep() is ReplParser.XgrepContext x_xgrep)
                         {
                             new CXGrep().Execute(this, x_xgrep, is_piped);
+                        }
+                        else if (tree.xml() is ReplParser.XmlContext x_xml)
+                        {
+                            new CXml().Execute(this, x_xml, is_piped);
                         }
                         else throw new Exception("Unhandled command!");
                         HistoryAdd(input);

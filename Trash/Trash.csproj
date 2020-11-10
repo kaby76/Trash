@@ -1,8 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 	<ItemGroup>
     <Antlr4 Include="ReplParser.g4">
@@ -31,20 +33,23 @@
 	</ItemGroup>
   
   <ItemGroup>
-    <Content Include="antlr-4.8-complete.jar">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="jre.zip">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
 		<ProjectReference Include="..\Algorithms\Algorithms.csproj" />
 		<ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
 	</ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="AutomaticGraphLayout">
+      <HintPath>..\..\automatic-graph-layout\GraphLayout\MSAGL\bin\Debug\netcoreapp3.1\AutomaticGraphLayout.dll</HintPath>
+    </Reference>
+    <Reference Include="AutomaticGraphLayout.Drawing">
+      <HintPath>..\..\automatic-graph-layout\GraphLayout\Drawing\bin\Debug\netcoreapp3.1\AutomaticGraphLayout.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Msagl.GraphViewerGdi">
+      <HintPath>..\..\automatic-graph-layout\GraphLayout\tools\GraphViewerGDI\bin\Debug\netcoreapp3.1\Microsoft.Msagl.GraphViewerGdi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
-	<PropertyGroup>
+  <PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 	</PropertyGroup>
 

@@ -10,7 +10,8 @@ cmd_all
   : cmd ( PIPE cmd )* EOF
   ;
 cmd :
-  alias
+  agl
+  | alias
   | analyze
   | bang
   | cd
@@ -27,6 +28,7 @@ cmd :
   | has
   | help
   | history
+  | json
   | kleene
   | ls
   | mvsr
@@ -46,6 +48,7 @@ cmd :
   | split
   | st
   | stack
+  | svg
   | text
   | ulliteral
   | unalias
@@ -56,8 +59,10 @@ cmd :
   | workspace
   | write
   | xgrep
+  | xml
   | anything
   ;
+agl : AGL ;
 alias : ALIAS (NonWsArgMode EQUAL (StringLiteral | NonWsArgMode))? ;
 analyze : ANALYZE ;
 anything : id (~(PIPE | SEMI))*  ;
@@ -76,6 +81,7 @@ group : GROUP arg ;
 has : HAS (DR | IR) GRAPH? arg? ;
 help : HELP NonWsArgMode?;
 history : HISTORY ;
+json : JSON ;
 kleene : KLEENE StringLiteral? ;
 ls : LS arg*  ;
 mvsr : MVSR StringLiteral ;
@@ -95,6 +101,7 @@ set : SET NonWsArgMode '=' (StringLiteral | INT) ;
 split : SPLIT ;
 st : ST ;
 stack : STACK ;
+svg : SVG ;
 text : TEXT arg? ;
 ulliteral : ULLITERAL StringLiteral? ;
 unalias : UNALIAS id ;
@@ -105,6 +112,7 @@ version : VERSION ;
 workspace : WORKSPACE ;
 write : WRITE ;
 xgrep : XGREP arg ;
+xml : XML ;
 alpha : ALPHA ;
 bfs : BFS StringLiteral ;
 dfs : DFS StringLiteral ;
