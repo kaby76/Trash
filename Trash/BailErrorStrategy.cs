@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using System;
-using System.IO;
-
-namespace Trash
+﻿namespace Trash
 {
+    using Antlr4.Runtime;
+
     public class MyBailErrorStrategy : BailErrorStrategy
     {
         ITokenStream stream;

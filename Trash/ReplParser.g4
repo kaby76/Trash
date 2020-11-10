@@ -83,7 +83,7 @@ help : HELP NonWsArgMode?;
 history : HISTORY ;
 json : JSON ;
 kleene : KLEENE StringLiteral? ;
-ls : LS arg*  ;
+ls : LS arg* ;
 mvsr : MVSR StringLiteral ;
 parse : PARSE type? ;
 pop : POP ;

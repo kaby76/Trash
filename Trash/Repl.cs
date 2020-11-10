@@ -361,11 +361,11 @@
                     }
                 }
             }
-            catch (Repl.Quit quit)
+            catch (Repl.Quit)
             {
                 throw;
             }
-            catch (Exception eeks)
+            catch (Exception)
             {
             }
         }
@@ -374,8 +374,6 @@
         {
             HistoryRead();
             StreamReader reader;
-            string input;
-            ICharStream str;
             if (script_file != null)
             {
                 // Read commands from script, and read a grammar file (Antlr4) from stdin.
@@ -439,12 +437,12 @@
                             }
                         }
                     }
-                    catch (Repl.Quit quit)
+                    catch (Repl.Quit)
                     {
                         System.Console.WriteLine("Bye!");
                         System.Environment.Exit(0);
                     }
-                    catch (Exception eeks)
+                    catch (Exception)
                     {
                     }
                 }
@@ -521,7 +519,7 @@
             catch (Repl.DoNotAddToHistory)
             {
             }
-            catch (Exception eeks)
+            catch (Exception)
             {
             }
             finally
