@@ -10,6 +10,12 @@
     {
         public void Help()
         {
+            System.Console.WriteLine(@"agl
+Read a tree from stdin and open a Windows Form that displays the graph.
+
+Example:
+    . | agl
+");
         }
 
         public Graph CreateGraph(IParseTree[] trees, IList<string> parserRules)

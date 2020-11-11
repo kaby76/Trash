@@ -6,9 +6,13 @@
     {
         public void Help()
         {
-            System.Console.WriteLine(@"run arg1 (arg2 arg3? )?
-Generate a parser using the Antlr tool on the grammar specified by the current
-workspace run the generated parser, output a tree or find elements in the tree.
+            System.Console.WriteLine(@"run arg?
+Run a parser that was generated and built using ""generate"" with input that is read from
+stdin. The output of the command is the resulting parse tree.
+
+Examples:
+    cat input.txt | run | json
+    echo ""1 + 2"" | run
 ");
         }
 

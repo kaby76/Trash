@@ -18,21 +18,26 @@ Example:
             if (tree.NonWsArgMode() == null)
             {
                 System.Console.WriteLine(@"Commands:
+agl - read a tree from stdin and draw a Windows Form graph.
 alias - Allow a string to be substituted for a word of a simple command.
 analyze - perform an analysis of a grammar.
 !! (""bang bang"") - repeat the previous command.
 !int - repeat a previous command.
+cat - cat a file to stdout.
 cd - change directory.
 combine - create a combined grammar from the lexer and parser grammars on the top of stack.
 delabel - remove all labels from an Antlr4 grammar.
 delete - delete nodes in the parse tree for a grammar and reform the grammar.
 . (aka 'dot') - print out the parse tree for the file at the top of stack.
+echo - echo a string to stdout.
 fold - replace a sequence of symbols on the RHS of a rule with a LHS symbol of another rule.
 foldlit - replace a literal on the RHS of a rule with a LHS symbol of another rule.
+generate - generate a parser and compile it.
 group - group common sub-sequences of symbols for alts.
 has - analyze a grammar for left/right/direct/indirect recursion.
 help - gives help for commands.
 history - show the history of commands executed.
+json - read a tree from stdin and produce a json representation.
 kleene - convert a rule in BNF to EBNF.
 ls - show contents of a directory.
 mvsr - move a rule to the top of the grammar.
@@ -46,7 +51,7 @@ rename - rename a symbol in the grammar.
 reorder - reorder the rules of a grammar.
 rotate - rotate the stack.
 rr - replace left recursion with right recursion.
-run - generate a parser, compile it, and run it on input.
+run - run a parser and output a parse tree.
 rup - remove useless parentheses in a grammar rule.
 set - set a value.
 split - split a combined grammar.
@@ -62,18 +67,23 @@ version - print out the version of Trash.
 workspace - create a new workspace for the run command.
 write - write a file to disk.
 xgrep - find nodes in the parse tree for a grammar.
+xml - read a tree from stdin and convert it to xml.
 ");
             }
             else
             {
                 var id = tree.NonWsArgMode();
                 var cmd = id.GetText();
-                if (cmd == "alias")
+                if (cmd == "agl")
+                    new CAgl().Help();
+                else if (cmd == "alias")
                     new CAlias().Help();
                 else if (cmd == "analyze")
                     new CAnalyze().Help();
                 else if (cmd == "bang")
                     new CBang().Help();
+                else if (cmd == "cat")
+                    new CCat().Help();
                 else if (cmd == "cd")
                     new CCd().Help();
                 else if (cmd == "combine")
@@ -86,10 +96,14 @@ xgrep - find nodes in the parse tree for a grammar.
                     new CDelete().Help();
                 else if (cmd == "dot")
                     new CDot().Help();
+                else if (cmd == "echo")
+                    new CEcho().Help();
                 else if (cmd == "fold")
                     new CFold().Help();
                 else if (cmd == "foldlit")
                     new CFoldlit().Help();
+                else if (cmd == "generate")
+                    new CGenerate().Help();
                 else if (cmd == "group")
                     new CGroup().Help();
                 else if (cmd == "has")
@@ -98,6 +112,8 @@ xgrep - find nodes in the parse tree for a grammar.
                     new CHelp().Help();
                 else if (cmd == "history")
                     new CHistory().Help();
+                else if (cmd == "json")
+                    new CJson().Help();
                 else if (cmd == "kleene")
                     new CKleene().Help();
                 else if (cmd == "ls")
@@ -156,6 +172,8 @@ xgrep - find nodes in the parse tree for a grammar.
                     new CWrite().Help();
                 else if (cmd == "xgrep")
                     new CXGrep().Help();
+                else if (cmd == "xml")
+                    new CXml().Help();
                 else if (repl.Aliases.ContainsKey(cmd))
                 {
                     var aliased_cmd = repl.Aliases[cmd];

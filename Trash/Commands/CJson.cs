@@ -8,6 +8,12 @@
     {
         public void Help()
         {
+            System.Console.WriteLine(@"json
+Read a tree from stdin and write a JSON represenation of it.
+
+Example:
+    . | json
+");
         }
 
         class JsonWalk : IParseTreeListener
