@@ -49,7 +49,7 @@ Example:
                 var nodes = engine.parseExpression(expr,
                         new StaticContextBuilder()).evaluate(dynamicContext, l.ToArray() )
                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
-                repl.tree_stack.Push(new Tuple<IParseTree[], Parser, Workspaces.Document, string[]>(nodes, aparser, doc, null));
+                repl.tree_stack.Push(new Tuple<IParseTree[], Parser, Workspaces.Document, string>(nodes, aparser, doc, null));
             }
         }
     }

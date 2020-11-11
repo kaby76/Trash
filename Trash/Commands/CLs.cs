@@ -1,14 +1,8 @@
 ﻿namespace Trash.Commands
 {
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Design.Serialization;
     using System.IO;
     using System.Linq;
-    using System.Runtime.InteropServices.ComTypes;
-    using System.Text;
-    using System.Text.RegularExpressions;
 
     class CLs
     {

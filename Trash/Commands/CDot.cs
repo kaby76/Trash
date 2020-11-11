@@ -23,7 +23,7 @@ Example:
                 var doc = repl.stack.Peek();
                 var pr = ParsingResultsFactory.Create(doc);
                 var pt = pr.ParseTree;
-                repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser, Workspaces.Document, string[]>(new IParseTree[] { pt }, pr.Parser, doc, null));
+                repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser, Workspaces.Document, string>(new IParseTree[] { pt }, pr.Parser, doc, null));
             }
         }
     }

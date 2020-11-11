@@ -18,7 +18,7 @@
         const string PreviousHistoryFfn = ".trash.rc";
         public Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
         public Utils.StackQueue<Document> stack = new Utils.StackQueue<Document>();
-        public Utils.StackQueue<Tuple<IParseTree[], Parser, Document, string[]>> tree_stack = new Utils.StackQueue<Tuple<IParseTree[], Parser, Document, string[]>>();
+        public Utils.StackQueue<Tuple<IParseTree[], Parser, Document, string>> tree_stack = new Utils.StackQueue<Tuple<IParseTree[], Parser, Document, string>>();
         public string script_file = null;
         public int current_line_index = 0;
         public string[] lines = null;
@@ -164,6 +164,10 @@
                             new CBang().Execute(this, x_bang, is_piped);
                             return;
                         }
+                        else if (tree.cat() is ReplParser.CatContext x_cat)
+                        {
+                            new CCat().Execute(this, x_cat, is_piped);
+                        }
                         else if (tree.cd() is ReplParser.CdContext x_cd)
                         {
                             new CCd().Execute(this, x_cd, is_piped);
@@ -187,6 +191,10 @@
                         else if (tree.dot() is ReplParser.DotContext x_dot)
                         {
                             new CDot().Execute(this, x_dot, is_piped);
+                        }
+                        else if (tree.echo() is ReplParser.EchoContext x_echo)
+                        {
+                            new CEcho().Execute(this, x_echo, is_piped);
                         }
                         else if (tree.empty() != null)
                         {
@@ -427,17 +435,28 @@
                         Execute(inp);
                         if (tree_stack.Any())
                         {
-                            var nodes = tree_stack.Pop();
-                            foreach (var node in nodes.Item1)
+                            var tuple = tree_stack.Pop();
+                            var nodes = tuple.Item1;
+                            var parser = tuple.Item2;
+                            var doc = tuple.Item3;
+                            var text = tuple.Item4;
+                            if (nodes != null)
                             {
-                                TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
-                                var ts = x.Payload.TokenSource;
-                                System.Console.WriteLine();
-                                System.Console.WriteLine(
-                                    TreeOutput.OutputTree(
-                                        node,
-                                        ts as Lexer,
-                                        null).ToString());
+                                foreach (var node in nodes)
+                                {
+                                    TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
+                                    var ts = x.Payload.TokenSource;
+                                    System.Console.WriteLine();
+                                    System.Console.WriteLine(
+                                        TreeOutput.OutputTree(
+                                            node,
+                                            ts as Lexer,
+                                            null).ToString());
+                                }
+                            }
+                            else if (text != null)
+                            {
+                                System.Console.WriteLine(text);
                             }
                         }
                     }

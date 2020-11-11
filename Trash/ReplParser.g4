@@ -14,12 +14,14 @@ cmd :
   | alias
   | analyze
   | bang
+  | cat
   | cd
   | convert
   | combine
   | dot
   | delabel
   | delete
+  | echo
   | empty
   | fold
   | foldlit
@@ -67,12 +69,14 @@ alias : ALIAS (NonWsArgMode EQUAL (StringLiteral | NonWsArgMode))? ;
 analyze : ANALYZE ;
 anything : id (~(PIPE | SEMI))*  ;
 bang : BANG (~(PIPE | SEMI))* ;
+cat : CAT arg+ ;
 cd : CD arg? ;
 combine : COMBINE ;
 convert : CONVERT type? ;
 delabel : DELABEL ;
 delete : DELETE arg ;
 dot : DOT ;
+echo : ECHO arg ;
 empty : ;
 fold : FOLD arg ;
 foldlit : FOLDLIT arg ;
@@ -95,7 +99,7 @@ rename : RENAME StringLiteral StringLiteral ;
 reorder : REORDER (alpha | bfs | dfs | modes) ;
 rotate : ROTATE ;
 rr : RR StringLiteral ;
-run : RUN arg ;
+run : RUN arg? ;
 rup : RUP StringLiteral? ;
 set : SET NonWsArgMode '=' (StringLiteral | INT) ;
 split : SPLIT ;

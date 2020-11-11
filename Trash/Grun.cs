@@ -88,7 +88,13 @@
                 Type type = asm.GetType("Easy.Program");
                 var methods = type.GetMethods();
                 MethodInfo methodInfo = type.GetMethod("Parse");
-                object[] parm = new object[] {input};
+                string txt = input;
+                if (input == null)
+                {
+                    var tuple = repl.tree_stack.Pop();
+                    txt = tuple.Item4;
+                }
+                object[] parm = new object[] {txt};
                 var res = methodInfo.Invoke(null, parm);
                 var tree = res as IParseTree;
                 var t2 = tree as ParserRuleContext;
@@ -100,7 +106,7 @@
                 // return the tree.
                 Environment.CurrentDirectory = old;
                 repl.tree_stack.Push(
-                    new Tuple<IParseTree[], Parser, Workspaces.Document, string[]>(
+                    new Tuple<IParseTree[], Parser, Workspaces.Document, string>(
                         new IParseTree[] { t2 },
                         (Parser) r2,
                         null,
