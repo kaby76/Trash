@@ -7,7 +7,7 @@ options
 }
 
 cmd_all
-  : cmd ( PIPE cmd )* EOF
+  : cmd ( PIPE cmd )* (GT arg)? EOF
   ;
 cmd :
   agl

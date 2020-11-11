@@ -122,8 +122,8 @@
             {
                 var str = new AntlrInputStream(input);
                 var lexer = new ReplLexer(str);
-	            lexer.Mode(ReplLexer.CommandMode);
-	            lexer.RemoveErrorListeners();
+                lexer.Mode(ReplLexer.CommandMode);
+                lexer.RemoveErrorListeners();
                 var llistener = new ErrorListener<int>(0);
                 lexer.AddErrorListener(llistener);
                 var tokens = new CommonTokenStream(lexer);
@@ -136,6 +136,7 @@
                     throw new Exception("Syntax error for command '" + str + "'");
                 }
                 var trees = btree.cmd();
+                var redirect = btree.arg();
                 for (int c = 0; c < trees.Length; ++c)
                 {
                     try
@@ -372,6 +373,56 @@
                         System.Console.Error.WriteLine(eeks.Message);
                     }
                 }
+                if (tree_stack.Any())
+                { 
+                    var tuple = tree_stack.Pop();
+                    var tnodes = tuple.Item1;
+                    var tparser = tuple.Item2;
+                    var tdoc = tuple.Item3;
+                    var ttext = tuple.Item4;
+                    string fn = "";
+                    if (redirect != null)
+                    {
+                        var temp = this.GetArg(redirect);
+                        var leading_path = System.IO.Path.GetDirectoryName(temp);
+                        var file_name = System.IO.Path.GetFileName(temp);
+                        if (leading_path != "")
+                        {
+                            var list = new Globbing().Contents(leading_path).ToList();
+                            if (list.Count > 1)
+                                throw new Exception("File redirect ambiguous.");
+                            var f = list?.First();
+                            if (f != null && !(f is DirectoryInfo))
+                                throw new Exception("File redirect not to a file.");
+                            fn = f != null ? f.FullName + "/" : "";
+                        }
+                        fn = fn + file_name;
+                    }
+                    using (System.IO.StreamWriter file =
+                        (fn != null && fn != "" ?
+                            new System.IO.StreamWriter(fn)
+                            : new StreamWriter(Console.OpenStandardOutput())))
+                    {
+                        if (tnodes != null)
+                        {
+                            foreach (var node in tnodes)
+                            {
+                                TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
+                                var ts = x.Payload.TokenSource;
+                                file.WriteLine();
+                                file.WriteLine(
+                                    TreeOutput.OutputTree(
+                                        node,
+                                        ts as Lexer,
+                                        null).ToString());
+                            }
+                        }
+                        else if (ttext != null)
+                        {
+                            file.WriteLine(ttext);
+                        }
+                    }
+                }
             }
             catch (Repl.Quit)
             {
@@ -433,32 +484,6 @@
                         var inp = sb.ToString();
                         if (Echo) System.Console.WriteLine("> " + inp);
                         Execute(inp);
-                        if (tree_stack.Any())
-                        {
-                            var tuple = tree_stack.Pop();
-                            var nodes = tuple.Item1;
-                            var parser = tuple.Item2;
-                            var doc = tuple.Item3;
-                            var text = tuple.Item4;
-                            if (nodes != null)
-                            {
-                                foreach (var node in nodes)
-                                {
-                                    TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
-                                    var ts = x.Payload.TokenSource;
-                                    System.Console.WriteLine();
-                                    System.Console.WriteLine(
-                                        TreeOutput.OutputTree(
-                                            node,
-                                            ts as Lexer,
-                                            null).ToString());
-                                }
-                            }
-                            else if (text != null)
-                            {
-                                System.Console.WriteLine(text);
-                            }
-                        }
                     }
                     catch (Repl.Quit)
                     {
