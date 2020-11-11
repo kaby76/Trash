@@ -6,6 +6,13 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="test\Generated\**" />
+    <EmbeddedResource Remove="test\Generated\**" />
+    <None Remove="test\Generated\**" />
+    <Page Remove="test\Generated\**" />
+  </ItemGroup>
 	<ItemGroup>
     <Antlr4 Include="ReplParser.g4">
       <GAtn>true</GAtn>
@@ -38,9 +45,9 @@
 	</ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Domemtech.AutomaticGraphLayout" Version="1.1.4"/>
-    <PackageReference Include="Domemtech.AutomaticGraphLayout.Drawing" Version="1.1.4"/>
-    <PackageReference Include="Domemtech.AutomaticGraphLayout.GraphViewerGdi" Version="1.1.4"/>
+    <PackageReference Include="Domemtech.AutomaticGraphLayout" Version="1.1.4" />
+    <PackageReference Include="Domemtech.AutomaticGraphLayout.Drawing" Version="1.1.4" />
+    <PackageReference Include="Domemtech.AutomaticGraphLayout.GraphViewerGdi" Version="1.1.4" />
   </ItemGroup>
 
   <PropertyGroup>

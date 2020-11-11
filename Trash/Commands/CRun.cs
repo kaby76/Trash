@@ -15,9 +15,9 @@ workspace run the generated parser, output a tree or find elements in the tree.
         public void Execute(Repl repl, ReplParser.RunContext tree, bool piped)
         {
             var g = new Grun(repl);
-            var p = tree.arg();
-            var parameters = p.Select(a => repl.GetArg(a)).ToArray();
-            g.Run(repl, parameters);
+            var a = tree.arg();
+            var input = repl.GetArg(a);
+            g.Run(repl, input);
         }
     }
 }

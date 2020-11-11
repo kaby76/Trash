@@ -73,10 +73,14 @@
         public void Run(Repl repl, string[] parameters)
         {
             // Create a directory containing a C# project with grammars.
+            var path = Environment.CurrentDirectory;
+            path = path + Path.DirectorySeparatorChar + "Generated";
             var grammars = _repl._workspace.AllDocuments().Where(d => d.FullPath.EndsWith(".g4")).ToList();
             var old = Environment.CurrentDirectory;
             try
             {
+                Directory.CreateDirectory(path);
+		Environment.CurrentDirectory = path;
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.AppendLine(@"
@@ -103,7 +107,7 @@
 		<NoWarn>1701;1702;3021</NoWarn>
 	</PropertyGroup>
 </Project>");
-                    var fn_csproj = "Test.csproj";
+		    var fn_csproj = path + Path.DirectorySeparatorChar + "Test.csproj";
                     System.IO.File.WriteAllText(fn_csproj, sb.ToString());
                 }
 
@@ -194,6 +198,7 @@ namespace Easy
             }
             finally
             {
+                Environment.CurrentDirectory = old;
             }
         }
 

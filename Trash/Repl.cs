@@ -200,6 +200,10 @@
                         {
                             new CFoldlit().Execute(this, x_foldlit, is_piped);
                         }
+                        else if (tree.generate() is ReplParser.GenerateContext x_generate)
+                        {
+                            new CGenerate().Execute(this, x_generate, is_piped);
+                        }
                         else if (tree.group() is ReplParser.GroupContext x_group)
                         {
                             new CGroup().Execute(this, x_group, is_piped);
