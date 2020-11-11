@@ -76,7 +76,7 @@ convert : CONVERT type? ;
 delabel : DELABEL ;
 delete : DELETE arg ;
 dot : DOT ;
-echo : ECHO arg ;
+echo : ECHO arg* ;
 empty : ;
 fold : FOLD arg ;
 foldlit : FOLDLIT arg ;

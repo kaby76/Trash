@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using Antlr4.Runtime.Tree;
+using Antlr4.Runtime;
 
 namespace Trash.Commands
 {
@@ -8,17 +11,24 @@ namespace Trash.Commands
     {
         public void Help()
         {
-            System.Console.WriteLine(@"Echo <string>
-Echo a string literal and write to stdout.
+            System.Console.WriteLine(@"Echo <string>*
+Echo string literals and write to stdout.
 
 Example:
-    cat input.txt
+    echo ""1 + 2""
 ");
         }
 
         public void Execute(Repl repl, ReplParser.EchoContext tree, bool piped)
         {
-
+            var args = tree.arg();
+            var list = args?.Select(t => repl.GetArg(t)).ToList();
+            StringBuilder sb = new StringBuilder();
+            foreach (var input in list)
+            {
+                sb.Append(input);
+            }
+            repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, sb.ToString()));
         }
     }
 }
