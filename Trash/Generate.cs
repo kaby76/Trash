@@ -72,7 +72,7 @@
 
         public void Run(Repl repl, string[] parameters)
         {
-            // Create a temporary directory containing a C# project with grammars.
+            // Create a directory containing a C# project with grammars.
             var grammars = _repl._workspace.AllDocuments().Where(d => d.FullPath.EndsWith(".g4")).ToList();
             var old = Environment.CurrentDirectory;
             try
@@ -93,7 +93,7 @@
                     sb.AppendLine(@"</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include=""Antlr4.Runtime.Standard"" Version =""4.8.0"" />
-		<PackageReference Include=""Antlr4BuildTasks"" Version = ""8.4"" />
+		<PackageReference Include=""Antlr4BuildTasks"" Version = ""8.7"" />
 		<PackageReference Include= ""AntlrTreeEditing"" Version = ""1.9"" />
 	</ItemGroup>
 	<PropertyGroup>
