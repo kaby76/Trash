@@ -245,6 +245,14 @@
                         {
                             new CMvsr().Execute(this, x_mvsr, is_piped);
                         }
+                        else if (tree.newdot() is ReplParser.NewdotContext x_newdot)
+                        {
+                            new CNewDot().Execute(this, x_newdot, is_piped);
+                        }
+                        else if (tree.newtext() is ReplParser.NewtextContext x_newtext)
+                        {
+                            new CNewtext().Execute(this, x_newtext, is_piped);
+                        }
                         else if (tree.parse() is ReplParser.ParseContext x_parse)
                         {
                             new CParse().Execute(this, x_parse, is_piped);
