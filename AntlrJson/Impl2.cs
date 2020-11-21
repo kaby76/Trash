@@ -1,5 +1,6 @@
 ﻿namespace AntlrJson.Impl2
 {
+    using Algorithms;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
@@ -9,11 +10,62 @@
     using System.Text;
     using System.Text.Json;
     using System.Text.Json.Serialization;
-    using System.Text.RegularExpressions;
-    using Algorithms;
 
     public class ParseTreeConverter : JsonConverter<IParseTree>
     {
+
+        public class MyCharStream : ICharStream
+        {
+            public string Text { get; set; }
+            public int Index => throw new NotImplementedException();
+            public int Size => throw new NotImplementedException();
+            public string SourceName => throw new NotImplementedException();
+            public void Consume()
+            {
+                throw new NotImplementedException();
+            }
+
+            [return: NotNull]
+            public string GetText(Interval interval)
+            {
+                return this.Text.Substring(interval.a, interval.b - interval.a + 1);
+            }
+
+            public int LA(int i)
+            {
+                throw new NotImplementedException();
+            }
+
+            public int Mark()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Release(int marker)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Seek(int index)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class MyToken : IToken
+        {
+            public string Text { get; set; }
+            public int Type { get; set; }
+            public int Line { get; set; }
+            public int Column { get; set; }
+            public int Channel { get; set; }
+            public int TokenIndex { get; set; }
+            public int StartIndex { get; set; }
+            public int StopIndex { get; set; }
+            public ITokenSource TokenSource { get; set; }
+            public ICharStream InputStream { get; set; }
+        }
+
         public class MyTokenStream : ITokenStream
         {
             private ITokenSource _tokenSource;
@@ -130,37 +182,10 @@
                 Sync(1);
             }
 
-            /// <summary>
-            /// Make sure we have 'need' elements from current position
-            /// <see cref="p">p</see>
-            /// . Last valid
-            /// <c>p</c>
-            /// index is
-            /// <c>tokens.length-1</c>
-            /// .
-            /// <c>p+need-1</c>
-            /// is the tokens index 'need' elements
-            /// ahead.  If we need 1 element,
-            /// <c>(p+1-1)==p</c>
-            /// must be less than
-            /// <c>tokens.length</c>
-            /// .
-            /// </summary>
             protected internal virtual void Sync(int want)
             {
             }
 
-            /// <summary>
-            /// Add
-            /// <paramref name="n"/>
-            /// elements to the buffer. Returns the number of tokens
-            /// actually added to the buffer. If the return value is less than
-            /// <paramref name="n"/>
-            /// ,
-            /// then EOF was reached before
-            /// <paramref name="n"/>
-            /// tokens could be added.
-            /// </summary>
             protected internal virtual int Fill(int n)
             {
                 return n;
@@ -176,16 +201,6 @@
                 n++;
             }
 
-            /// <summary>Return a marker that we can release later.</summary>
-            /// <remarks>
-            /// Return a marker that we can release later.
-            /// <p>The specific marker value used for this class allows for some level of
-            /// protection against misuse where
-            /// <c>seek()</c>
-            /// is called on a mark or
-            /// <c>release()</c>
-            /// is called in the wrong order.</p>
-            /// </remarks>
             public virtual int Mark()
             {
                 if (numMarkers == 0)
@@ -312,6 +327,25 @@
             }
         }
 
+        public class MyFakeLexer : ITokenSource
+        {
+            public int Line => throw new NotImplementedException();
+
+            public int Column => throw new NotImplementedException();
+
+            public ICharStream InputStream { get; set; }
+
+            public string SourceName => throw new NotImplementedException();
+
+            public ITokenFactory TokenFactory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+            [return: NotNull]
+            public IToken NextToken()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         string code;
         Lexer lexer;
         Parser parser;
@@ -340,7 +374,10 @@
 
         public override IParseTree Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var out_token_stream = new MyTokenStream();
+            MyTokenStream out_token_stream = new MyTokenStream();
+            MyFakeLexer fake_lexer = new MyFakeLexer();
+            MyCharStream fake_char_stream = new MyCharStream();
+            fake_lexer.InputStream = fake_char_stream;
             if (!(reader.TokenType == JsonTokenType.StartObject)) throw new JsonException();
             reader.Read();
             List<string> mode_names = new List<string>();
@@ -358,6 +395,7 @@
                 if (pn == "Text")
                 {
                     out_token_stream.Text = reader.GetString();
+                    fake_char_stream.Text = out_token_stream.Text;
                     reader.Read();
                 }
                 else if (pn == "Tokens")
@@ -366,12 +404,20 @@
                     reader.Read();
                     while (reader.TokenType == JsonTokenType.Number)
                     {
-                        var token = new CommonToken(reader.GetInt32()); // Type
+                        var type = reader.GetInt32();
                         reader.Read();
-                        token.StartIndex = reader.GetInt32();
+                        var start = reader.GetInt32();
                         reader.Read();
-                        token.StopIndex = reader.GetInt32();
+                        var stop = reader.GetInt32();
                         reader.Read();
+                        var channel = reader.GetInt32();
+                        reader.Read();
+                        var token = new MyToken();
+                        token.StartIndex = start;
+                        token.StopIndex = stop;
+                        token.Channel = channel;
+                        token.InputStream = fake_lexer.InputStream;
+                        token.TokenSource = fake_lexer;
                         token.Text = out_token_stream.Text.Substring(token.StartIndex, token.StopIndex - token.StartIndex + 1);
                         out_token_stream.Add(token);
                     }
@@ -495,6 +541,7 @@
                 writer.WriteNumberValue(token.Type);
                 writer.WriteNumberValue(token.StartIndex);
                 writer.WriteNumberValue(token.StopIndex);
+                writer.WriteNumberValue(token.Channel);
                 if (token.Type == Antlr4.Runtime.TokenConstants.EOF) break;
             }
             writer.WriteEndArray();
