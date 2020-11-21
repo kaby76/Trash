@@ -1,8 +1,10 @@
 {
   "profiles": {
     "Trash": {
-      "commandName": "Project",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\AntlrVSIX\\Trash"
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\dotnet\\dotnet.exe",
+      "commandLineArgs": "Trash.dll",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\AntlrVSIX\\Trash\\bin\\Debug\\net5-windows"
     }
   }
 }

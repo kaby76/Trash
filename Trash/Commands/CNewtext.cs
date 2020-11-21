@@ -9,6 +9,7 @@
     using AntlrJson;
     using System;
     using LanguageServer;
+    using Algorithms;
 
     class CNewtext
     {
@@ -35,19 +36,21 @@ Example:
                 if (n is TerminalNodeImpl term)
                 {
                     var s = term.Symbol.InputStream;
-                    var ais = s as AntlrInputStream;
                     var c = term.Payload.StartIndex;
                     var d = term.Payload.StopIndex;
                     if (last != -1 && c != -1 && c > last)
                     {
-                        var txt = ais.GetText(new Antlr4.Runtime.Misc.Interval(last, c - 1));
-                        sb.Append(txt);
+                        if (s != null)
+                        {
+                            var txt = s.GetText(new Antlr4.Runtime.Misc.Interval(last, c - 1));
+                            sb.Append(txt);
+                        }
                     }
                     if (c != -1 && d != -1)
                     {
-                        if (ais != null)
+                        if (s != null)
                         {
-                            string txt = ais.GetText(new Antlr4.Runtime.Misc.Interval(c, d));
+                            string txt = s.GetText(new Antlr4.Runtime.Misc.Interval(c, d));
                             sb.Append(txt);
                         }
                         else
@@ -78,36 +81,71 @@ Example:
             var lines = pair.Item4;
             var doc = repl.stack.Peek();
             var pr = ParsingResultsFactory.Create(doc);
+            var lexer = pr.Lexer;
             var parser = pr.Parser;
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new ParseTreeConverter(parser));
-            serializeOptions.Converters.Add(new TokenConverter());
-            serializeOptions.Converters.Add(new TokenStreamConverter());
-            serializeOptions.WriteIndented = true;
-            var obj1 = JsonSerializer.Deserialize<MyTuple<IParseTree, ITokenStream>>(lines, serializeOptions);
-            var nodes = new IParseTree[] { obj1.Item1 };
-            foreach (var node in nodes)
+            if (tree.arg()?.GetText() == "2")
             {
-                if (line_number)
+                serializeOptions.Converters.Add(new AntlrJson.Impl2.ParseTreeConverter(null, null, lexer, parser));
+                serializeOptions.WriteIndented = true;
+                var obj1 = JsonSerializer.Deserialize<IParseTree>(lines, serializeOptions);
+                if (obj1 == null) return;
+                var nodes = new IParseTree[] { obj1 };
+                foreach (var node in nodes)
                 {
-                    var source_interval = node.SourceInterval;
-                    int a = source_interval.a;
-                    int b = source_interval.b;
-                    IToken ta = parser.TokenStream.Get(a);
-                    IToken tb = parser.TokenStream.Get(b);
-                    var start = ta.StartIndex;
-                    var stop = tb.StopIndex + 1;
-                    if (doc != null)
+                    if (line_number)
                     {
-                        var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
-                        var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
-                        System.Console.Write(System.IO.Path.GetFileName(doc.FullPath)
-                            + ":" + line_a + "," + col_a
-                            + "-" + line_b + "," + col_b
-                            + "\t");
+                        var source_interval = node.SourceInterval;
+                        int a = source_interval.a;
+                        int b = source_interval.b;
+                        IToken ta = parser.TokenStream.Get(a);
+                        IToken tb = parser.TokenStream.Get(b);
+                        var start = ta.StartIndex;
+                        var stop = tb.StopIndex + 1;
+                        if (doc != null)
+                        {
+                            var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
+                            var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
+                            System.Console.Write(System.IO.Path.GetFileName(doc.FullPath)
+                                + ":" + line_a + "," + col_a
+                                + "-" + line_b + "," + col_b
+                                + "\t");
+                        }
                     }
+                    System.Console.WriteLine(this.Reconstruct(node));
                 }
-                System.Console.WriteLine(this.Reconstruct(node));
+            }
+            else
+            {
+                serializeOptions.Converters.Add(new AntlrJson.Impl1.ParseTreeConverter(parser));
+                serializeOptions.Converters.Add(new AntlrJson.Impl1.TokenConverter());
+                serializeOptions.Converters.Add(new AntlrJson.Impl1.TokenStreamConverter());
+                serializeOptions.WriteIndented = true;
+                var obj1 = JsonSerializer.Deserialize<MyTuple<IParseTree, ITokenStream>>(lines, serializeOptions);
+                var nodes = new IParseTree[] { obj1.Item1 };
+                foreach (var node in nodes)
+                {
+                    if (line_number)
+                    {
+                        var source_interval = node.SourceInterval;
+                        int a = source_interval.a;
+                        int b = source_interval.b;
+                        IToken ta = parser.TokenStream.Get(a);
+                        IToken tb = parser.TokenStream.Get(b);
+                        var start = ta.StartIndex;
+                        var stop = tb.StopIndex + 1;
+                        if (doc != null)
+                        {
+                            var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
+                            var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
+                            System.Console.Write(System.IO.Path.GetFileName(doc.FullPath)
+                                + ":" + line_a + "," + col_a
+                                + "-" + line_b + "," + col_b
+                                + "\t");
+                        }
+                    }
+                    System.Console.WriteLine(this.Reconstruct(node));
+                }
             }
         }
     }

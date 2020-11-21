@@ -91,7 +91,7 @@ json : JSON ;
 kleene : KLEENE StringLiteral? ;
 ls : LS arg* ;
 mvsr : MVSR StringLiteral ;
-newdot : NEWDOT ;
+newdot : NEWDOT arg? ;
 newtext : NEWTEXT arg? ;
 parse : PARSE type? ;
 pop : POP ;

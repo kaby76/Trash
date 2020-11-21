@@ -1,4 +1,4 @@
-﻿namespace AntlrJson
+﻿namespace AntlrJson.Impl1
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Misc;

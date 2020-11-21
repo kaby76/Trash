@@ -6,6 +6,7 @@
     using AntlrJson;
     using System.Text.Json;
     using System;
+    using Algorithms;
 
     class CNewDot
     {
@@ -27,13 +28,23 @@ Example:
                 var pr = ParsingResultsFactory.Create(doc);
                 var pt = pr.ParseTree;
                 var serializeOptions = new JsonSerializerOptions();
-                serializeOptions.Converters.Add(new ParseTreeConverter(pr.Parser));
-                serializeOptions.Converters.Add(new TokenConverter());
-                serializeOptions.Converters.Add(new TokenStreamConverter());
-                serializeOptions.WriteIndented = true;
-                MyTuple<IParseTree, ITokenStream> tuple = new MyTuple<IParseTree, ITokenStream>(pt, pr.TokStream);
-                string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
-                repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
+                if (tree.arg()?.GetText() == "2")
+                {
+                    serializeOptions.Converters.Add(new AntlrJson.Impl2.ParseTreeConverter(pr.Code, pr.TokStream, pr.Lexer, pr.Parser));
+                    serializeOptions.WriteIndented = true;
+                    string js1 = JsonSerializer.Serialize(pt, serializeOptions);
+                    repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
+                }
+                else
+                {
+                    serializeOptions.Converters.Add(new AntlrJson.Impl1.ParseTreeConverter(pr.Parser));
+                    serializeOptions.Converters.Add(new AntlrJson.Impl1.TokenConverter());
+                    serializeOptions.Converters.Add(new AntlrJson.Impl1.TokenStreamConverter());
+                    serializeOptions.WriteIndented = true;
+                    MyTuple<IParseTree, ITokenStream> tuple = new MyTuple<IParseTree, ITokenStream>(pt, pr.TokStream);
+                    string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
+                    repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
+                }
             }
         }
     }
