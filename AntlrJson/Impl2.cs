@@ -19,7 +19,7 @@
             public string Text { get; set; }
             public int Index => throw new NotImplementedException();
             public int Size => throw new NotImplementedException();
-            public string SourceName => throw new NotImplementedException();
+            public string SourceName { get; set; }
             public void Consume()
             {
                 throw new NotImplementedException();
@@ -76,7 +76,6 @@
             protected internal IToken lastToken;
             protected internal IToken lastTokenBufferStart;
             protected internal int currentTokenIndex = 0;
-            string text;
 
             public MyTokenStream()
             {
@@ -86,7 +85,7 @@
 
             public MyTokenStream(string t)
             {
-                text = t;
+                Text = t;
                 this.tokens = new List<IToken>();
                 n = 0;
             }
@@ -392,7 +391,13 @@
             {
                 string pn = reader.GetString();
                 reader.Read();
-                if (pn == "Text")
+                if (pn == "FileName")
+                {
+                    var name = reader.GetString();
+                    fake_char_stream.SourceName = name;
+                    reader.Read();
+                }
+                else if (pn == "Text")
                 {
                     out_token_stream.Text = reader.GetString();
                     fake_char_stream.Text = out_token_stream.Text;
@@ -529,6 +534,10 @@
         public override void Write(Utf8JsonWriter writer, IParseTree person, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
+
+            writer.WritePropertyName("FileName");
+            writer.WriteStringValue(parser.GrammarFileName);
+
             writer.WritePropertyName("Text");
             writer.WriteStringValue(code);
 

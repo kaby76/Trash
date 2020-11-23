@@ -1,15 +1,13 @@
 ﻿namespace Trash.Commands
 {
+    using Algorithms;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
+    using LanguageServer;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Text.Json;
-    using AntlrJson;
-    using System;
-    using LanguageServer;
-    using Algorithms;
 
     class CNewtext
     {
@@ -75,9 +73,6 @@ Example:
             var arg = tree.arg()?.GetText();
             var line_number = (arg == "line-number");
             var pair = repl.tree_stack.Pop();
-            //var nodes = pair.Item1;
-            //var parser = pair.Item2;
-            //var doc = pair.Item3;
             var lines = pair.Item4;
             var doc = repl.stack.Peek();
             var pr = ParsingResultsFactory.Create(doc);

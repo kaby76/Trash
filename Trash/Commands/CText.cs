@@ -3,15 +3,10 @@
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using LanguageServer;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Design.Serialization;
-    using System.IO;
     using System.Linq;
-    using System.Runtime.InteropServices.ComTypes;
     using System.Text;
-    using System.Text.RegularExpressions;
+    using System.Text.Json;
 
     class CText
     {
@@ -38,18 +33,28 @@ Example:
                 if (n is TerminalNodeImpl term)
                 {
                     var s = term.Symbol.InputStream;
-                    var ais = s as AntlrInputStream;
                     var c = term.Payload.StartIndex;
                     var d = term.Payload.StopIndex;
                     if (last != -1 && c != -1 && c > last)
                     {
-                        var txt = ais.GetText(new Antlr4.Runtime.Misc.Interval(last, c - 1));
-                        sb.Append(txt);
+                        if (s != null)
+                        {
+                            var txt = s.GetText(new Antlr4.Runtime.Misc.Interval(last, c - 1));
+                            sb.Append(txt);
+                        }
                     }
                     if (c != -1 && d != -1)
                     {
-                        var txt = ais.GetText(new Antlr4.Runtime.Misc.Interval(c, d));
-                        sb.Append(txt);
+                        if (s != null)
+                        {
+                            string txt = s.GetText(new Antlr4.Runtime.Misc.Interval(c, d));
+                            sb.Append(txt);
+                        }
+                        else
+                        {
+                            string txt = term.Symbol.Text;
+                            sb.Append(txt);
+                        }
                     }
                     last = d + 1;
                 }
@@ -68,10 +73,17 @@ Example:
             var arg = args?.GetText();
             var line_number = (arg == "line-number");
             var pair = repl.tree_stack.Pop();
-            var nodes = pair.Item1;
-            var parser = pair.Item2;
-            var doc = pair.Item3;
             var lines = pair.Item4;
+			var doc = repl.stack.Peek();
+			var pr = ParsingResultsFactory.Create(doc);
+			var lexer = pr.Lexer;
+			var parser = pr.Parser;
+			var serializeOptions = new JsonSerializerOptions();
+			serializeOptions.Converters.Add(new AntlrJson.Impl2.ParseTreeConverter(null, null, lexer, parser));
+			serializeOptions.WriteIndented = true;
+			var obj1 = JsonSerializer.Deserialize<IParseTree>(lines, serializeOptions);
+			if (obj1 == null) return;
+			var nodes = new IParseTree[] { obj1 };
             foreach (var node in nodes)
             {
                 if (line_number)
