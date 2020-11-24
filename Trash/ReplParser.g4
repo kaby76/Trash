@@ -34,8 +34,6 @@ cmd :
   | kleene
   | ls
   | mvsr
-  | newdot
-  | newtext
   | parse
   | pop
   | print
@@ -91,8 +89,6 @@ json : JSON ;
 kleene : KLEENE StringLiteral? ;
 ls : LS arg* ;
 mvsr : MVSR StringLiteral ;
-newdot : NEWDOT arg? ;
-newtext : NEWTEXT arg? ;
 parse : PARSE type? ;
 pop : POP ;
 print : PRINT ;
