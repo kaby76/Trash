@@ -613,9 +613,12 @@
                         writer.WriteNumberValue(0);
                     var type = n.RuleIndex;
                     writer.WriteNumberValue(type);
-                    foreach (var c in n?.children.Reverse())
+                    if (n.children != null)
                     {
-                        stack.Push(c);
+                        foreach (var c in n.children.Reverse())
+                        {
+                            stack.Push(c);
+                        }
                     }
                 } else if (node is TerminalNodeImpl t)
                 {

@@ -80,7 +80,7 @@ Example:
 			var parser = pr.Parser;
 			var serializeOptions = new JsonSerializerOptions();
 			serializeOptions.Converters.Add(new AntlrJson.Impl2.ParseTreeConverter(null, null, lexer, parser));
-			serializeOptions.WriteIndented = true;
+			serializeOptions.WriteIndented = false;
 			var obj1 = JsonSerializer.Deserialize<IParseTree>(lines, serializeOptions);
 			if (obj1 == null) return;
 			var nodes = new IParseTree[] { obj1 };

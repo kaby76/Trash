@@ -26,7 +26,7 @@ Example:
                 var pt = pr.ParseTree;
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.Impl2.ParseTreeConverter(pr.Code, pr.TokStream, pr.Lexer, pr.Parser));
-                serializeOptions.WriteIndented = true;
+                serializeOptions.WriteIndented = false;
                 string js1 = JsonSerializer.Serialize(pt, serializeOptions);
                 repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
             }
