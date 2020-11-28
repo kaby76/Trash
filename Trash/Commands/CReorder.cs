@@ -15,14 +15,16 @@ namespace Trash.Commands
             System.Console.WriteLine(@"reorder alpha
 reorder bfs <string>
 reorder dfs <string>
-Reorder the parser rules according to the specified type. For BFS and DFS, an XPath
-expression must be supplied to specify all the start rule symbols. For alphabetic
-reordering, all parser rules are retained, and simply reordered alphabetically. For BFS
-and DFS, if the rule is unreachable from a start node, then the rule is dropped from
-the grammar.
+Reorder the parser rules according to the specified type and start rule.
+For BFS and DFS, an XPath expression must be supplied to specify all the start
+rule symbols. For alphabetic reordering, all parser rules are retained, and
+simply reordered alphabetically. For BFS and DFS, if the rule is unreachable
+from a start node set that is specified via <string>, then the rule is dropped
+from the grammar.
 
 Example:
     reorder alpha
+    reorder dfs ""//parserRuleSpec/RULE_REF[text()='libraryDefinition']""
 ");
         }
 
