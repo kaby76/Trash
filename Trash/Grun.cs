@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using Algorithms;
+
+namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -106,7 +108,7 @@
                 // return the tree.
                 Environment.CurrentDirectory = old;
                 repl.tree_stack.Push(
-                    new Tuple<IParseTree[], Parser, Workspaces.Document, string>(
+                    new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(
                         new IParseTree[] { t2 },
                         (Parser) r2,
                         null,

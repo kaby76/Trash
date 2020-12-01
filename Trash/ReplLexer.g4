@@ -85,6 +85,8 @@ ST : 'st' -> pushMode(ArgMode) ;
 STACK : 'stack' -> pushMode(ArgMode) ;
 SVG : 'svg' -> pushMode(ArgMode) ;
 TEXT : 'text' -> pushMode(ArgMode) ;
+TOKENS : 'tokens' -> pushMode(ArgMode) ;
+TREE : 'tree' -> pushMode(ArgMode) ;
 ULLITERAL : 'ulliteral' -> pushMode(ArgMode) ;
 UNALIAS : 'unalias' -> pushMode(ArgMode) ;
 UNFOLD : 'unfold' -> pushMode(ArgMode) ;

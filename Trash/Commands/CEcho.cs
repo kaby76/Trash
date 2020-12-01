@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Algorithms;
 using Antlr4.Runtime.Tree;
 using Antlr4.Runtime;
 
@@ -28,7 +29,7 @@ Example:
             {
                 sb.Append(input);
             }
-            repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, sb.ToString()));
+            repl.tree_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, sb.ToString()));
         }
     }
 }

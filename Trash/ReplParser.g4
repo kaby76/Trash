@@ -52,6 +52,8 @@ cmd :
   | stack
   | svg
   | text
+  | ctokens
+  | ctree
   | ulliteral
   | unalias
   | unfold
@@ -107,6 +109,8 @@ st : ST ;
 stack : STACK ;
 svg : SVG ;
 text : TEXT arg? ;
+ctokens : TOKENS ;
+ctree : TREE ;
 ulliteral : ULLITERAL StringLiteral? ;
 unalias : UNALIAS id ;
 unfold : UNFOLD arg ;

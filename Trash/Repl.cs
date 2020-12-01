@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using Algorithms;
+
+namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -18,7 +20,7 @@
         const string PreviousHistoryFfn = ".trash.rc";
         public Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
         public Utils.StackQueue<Document> stack = new Utils.StackQueue<Document>();
-        public Utils.StackQueue<Tuple<IParseTree[], Parser, Document, string>> tree_stack = new Utils.StackQueue<Tuple<IParseTree[], Parser, Document, string>>();
+        public Utils.StackQueue<MyTuple<IParseTree[], Parser, Document, string>> tree_stack = new Utils.StackQueue<MyTuple<IParseTree[], Parser, Document, string>>();
         public string script_file = null;
         public int current_line_index = 0;
         public string[] lines = null;
@@ -317,6 +319,14 @@
                         else if (tree.text() is ReplParser.TextContext x_text)
                         {
                             new CText().Execute(this, x_text, is_piped);
+                        }
+                        else if (tree.ctokens() is ReplParser.CtokensContext x_tokens)
+                        {
+                            new CTokens().Execute(this, x_tokens, is_piped);
+                        }
+                        else if (tree.ctree() is ReplParser.CtreeContext x_tree)
+                        {
+                            new CTree().Execute(this, x_tree, is_piped);
                         }
                         else if (tree.ulliteral() is ReplParser.UlliteralContext x_ulliteral)
                         {

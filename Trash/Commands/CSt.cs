@@ -1,4 +1,6 @@
-﻿namespace Trash.Commands
+﻿using Algorithms;
+
+namespace Trash.Commands
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -26,7 +28,7 @@ Examples:
             {
                 sb.AppendLine(t.ToStringTree(parser));
             }
-            repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, sb.ToString()));
+            repl.tree_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, sb.ToString()));
         }
     }
 }

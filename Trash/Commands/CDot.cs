@@ -1,4 +1,6 @@
-﻿namespace Trash.Commands
+﻿using Algorithms;
+
+namespace Trash.Commands
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -28,7 +30,7 @@ Example:
                 serializeOptions.Converters.Add(new AntlrJson.Impl2.ParseTreeConverter(pr.Code, pr.TokStream, pr.Lexer, pr.Parser));
                 serializeOptions.WriteIndented = false;
                 string js1 = JsonSerializer.Serialize(pt, serializeOptions);
-                repl.tree_stack.Push(new System.Tuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
+                repl.tree_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
             }
         }
     }

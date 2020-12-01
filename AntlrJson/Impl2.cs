@@ -1,4 +1,7 @@
-﻿namespace AntlrJson.Impl2
+﻿using System.IO;
+using System.Reflection;
+
+namespace AntlrJson.Impl2
 {
     using Algorithms;
     using Antlr4.Runtime;
@@ -326,7 +329,7 @@
             }
         }
 
-        public class MyFakeLexer : ITokenSource
+        public class MyFakeLexer : Lexer, ITokenSource
         {
             public int Line => throw new NotImplementedException();
 
@@ -336,12 +339,46 @@
 
             public string SourceName => throw new NotImplementedException();
 
-            public ITokenFactory TokenFactory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public ITokenFactory TokenFactory
+            {
+                get => throw new NotImplementedException();
+                set => throw new NotImplementedException();
+            }
+
+            public override string[] RuleNames => throw new NotImplementedException();
+
+            public Vocabulary _vocabulary;
+            public override IVocabulary Vocabulary
+            {
+                get { return _vocabulary; }
+            }
+
+            public override string GrammarFileName => throw new NotImplementedException();
+
+            public string[] _modeNames;
+            public override string[] ModeNames
+            {
+                get { return _modeNames; }
+            }
+
+            public string[] _channelNames;
+            public override string[] ChannelNames
+            {
+                get { return _channelNames; }
+            }
 
             [return: NotNull]
             public IToken NextToken()
             {
                 throw new NotImplementedException();
+            }
+
+            public MyFakeLexer(ICharStream input) : base(input)
+            {
+            }
+
+            public MyFakeLexer(ICharStream input, TextWriter output, TextWriter errorOutput) : base(input, output, errorOutput)
+            {
             }
         }
 
@@ -374,7 +411,7 @@
         public override IParseTree Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             MyTokenStream out_token_stream = new MyTokenStream();
-            MyFakeLexer fake_lexer = new MyFakeLexer();
+            MyFakeLexer fake_lexer = new MyFakeLexer(null);
             MyCharStream fake_char_stream = new MyCharStream();
             fake_lexer.InputStream = fake_char_stream;
             if (!(reader.TokenType == JsonTokenType.StartObject)) throw new JsonException();
@@ -382,6 +419,8 @@
             List<string> mode_names = new List<string>();
             List<string> channel_names = new List<string>();
             List<string> lexer_rule_names = new List<string>();
+            List<string> literal_names = new List<string>();
+            List<string> symbolic_names = new List<string>();
             Dictionary<string, int> token_type_map = new Dictionary<string, int>();
             List<Type> parser_rule_types = new List<Type>();
             List<Type> lexer_rule_types = new List<Type>();
@@ -423,21 +462,25 @@
                         token.Channel = channel;
                         token.InputStream = fake_lexer.InputStream;
                         token.TokenSource = fake_lexer;
-                        token.Text = out_token_stream.Text.Substring(token.StartIndex, token.StopIndex - token.StartIndex + 1);
+                        token.Text =
+                            out_token_stream.Text.Substring(token.StartIndex, token.StopIndex - token.StartIndex + 1);
                         out_token_stream.Add(token);
                     }
+
                     reader.Read();
                 }
                 else if (pn == "ModeNames")
                 {
                     if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
                     reader.Read();
-                    while (reader.TokenType == JsonTokenType.String)
+                    while (reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null)
                     {
                         mode_names.Add(reader.GetString());
                         reader.Read();
                     }
+
                     reader.Read();
+                    fake_lexer._modeNames = mode_names.ToArray();
                 }
                 else if (pn == "ChannelNames")
                 {
@@ -448,13 +491,37 @@
                         channel_names.Add(reader.GetString());
                         reader.Read();
                     }
+
+                    reader.Read();
+                    fake_lexer._channelNames = channel_names.ToArray();
+                }
+                else if (pn == "LiteralNames")
+                {
+                    if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
+                    reader.Read();
+                    while (reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null)
+                    {
+                        literal_names.Add(reader.GetString());
+                        reader.Read();
+                    }
+                    reader.Read();
+                }
+                else if (pn == "SymbolicNames")
+                {
+                    if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
+                    reader.Read();
+                    while (reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null)
+                    {
+                        symbolic_names.Add(reader.GetString());
+                        reader.Read();
+                    }
                     reader.Read();
                 }
                 else if (pn == "LexerRuleNames")
                 {
                     if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
                     reader.Read();
-                    while (reader.TokenType == JsonTokenType.String)
+                    while (reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null)
                     {
                         lexer_rule_names.Add(reader.GetString());
                         reader.Read();
@@ -465,7 +532,7 @@
                 {
                     if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
                     reader.Read();
-                    while (reader.TokenType == JsonTokenType.String)
+                    while (reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null)
                     {
                         var name = reader.GetString();
                         lexer_rule_names.Add(name);
@@ -481,7 +548,7 @@
                 {
                     if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
                     reader.Read();
-                    while (reader.TokenType == JsonTokenType.String)
+                    while (reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null)
                     {
                         var name = reader.GetString();
                         reader.Read();
@@ -526,6 +593,7 @@
                 else
                     throw new JsonException();
             }
+            fake_lexer._vocabulary = new Vocabulary(literal_names.ToArray(), symbolic_names.ToArray());
             return nodes[1];
 
             throw new JsonException();
@@ -565,6 +633,30 @@
             writer.WritePropertyName("ChannelNames");
             writer.WriteStartArray();
             foreach (var n in lexer.ChannelNames)
+            {
+                writer.WriteStringValue(n);
+            }
+            writer.WriteEndArray();
+
+            writer.WritePropertyName("LiteralNames");
+            writer.WriteStartArray();
+            // ROYAL PAIN IN THE ASS ANTLR HIDING.
+            var vocab = lexer.Vocabulary;
+            var vocab_type = vocab.GetType();
+            FieldInfo myFieldInfo1 = vocab_type.GetField("literalNames",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            var literal_names = myFieldInfo1.GetValue(vocab) as string[];
+            FieldInfo myFieldInfo2 = vocab_type.GetField("symbolicNames",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            var symbolic_names = myFieldInfo2.GetValue(vocab) as string[];
+            foreach (var n in literal_names)
+            {
+                writer.WriteStringValue(n);
+            }
+            writer.WriteEndArray();
+            writer.WritePropertyName("SymbolicNames");
+            writer.WriteStartArray();
+            foreach (var n in symbolic_names)
             {
                 writer.WriteStringValue(n);
             }
