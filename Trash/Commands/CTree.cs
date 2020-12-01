@@ -23,52 +23,6 @@ Example:
 ");
         }
 
-        private string Reconstruct(IParseTree tree)
-        {
-            Stack<IParseTree> stack = new Stack<IParseTree>();
-            stack.Push(tree);
-            StringBuilder sb = new StringBuilder();
-            int last = -1;
-            while (stack.Any())
-            {
-                var n = stack.Pop();
-                if (n is TerminalNodeImpl term)
-                {
-                    var s = term.Symbol.InputStream;
-                    var c = term.Payload.StartIndex;
-                    var d = term.Payload.StopIndex;
-                    if (last != -1 && c != -1 && c > last)
-                    {
-                        if (s != null)
-                        {
-                            var txt = s.GetText(new Antlr4.Runtime.Misc.Interval(last, c - 1));
-                            sb.Append(txt);
-                        }
-                    }
-                    if (c != -1 && d != -1)
-                    {
-                        if (s != null)
-                        {
-                            string txt = s.GetText(new Antlr4.Runtime.Misc.Interval(c, d));
-                            sb.Append(txt);
-                        }
-                        else
-                        {
-                            string txt = term.Symbol.Text;
-                            sb.Append(txt);
-                        }
-                    }
-                    last = d + 1;
-                }
-                else
-                    for (int i = n.ChildCount - 1; i >= 0; i--)
-                    {
-                        stack.Push(n.GetChild(i));
-                    }
-            }
-            return sb.ToString();
-        }
-
         public void Execute(Repl repl, ReplParser.CtreeContext tree, bool piped)
         {
             MyTuple<IParseTree[], Parser, Document, string> tuple = repl.tree_stack.Pop();

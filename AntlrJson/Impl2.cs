@@ -457,6 +457,7 @@ namespace AntlrJson.Impl2
                         var channel = reader.GetInt32();
                         reader.Read();
                         var token = new MyToken();
+                        token.Type = type;
                         token.StartIndex = start;
                         token.StopIndex = stop;
                         token.Channel = channel;
@@ -584,6 +585,7 @@ namespace AntlrJson.Impl2
                             var symbol = out_token_stream.Get(index);
                             var foo = new TerminalNodeImpl(symbol);
                             nodes[current] = foo;
+                            foo.Parent = parent_node;
                             parent_node?.AddChild(foo);
                         }
                         current++;
@@ -696,7 +698,7 @@ namespace AntlrJson.Impl2
             while (stack.Any())
             {
                 var node = stack.Pop();
-                preorder[node] = number;
+                preorder[node] = number++;
                 if (node is ParserRuleContext n)
                 {
                     if (n.Parent != null)

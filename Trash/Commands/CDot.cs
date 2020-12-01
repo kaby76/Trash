@@ -1,4 +1,5 @@
-﻿using Algorithms;
+﻿using System.Text;
+using Algorithms;
 
 namespace Trash.Commands
 {
