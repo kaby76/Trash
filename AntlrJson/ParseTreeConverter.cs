@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace AntlrJson.Impl2
+namespace AntlrJson
 {
     using Algorithms;
     using Antlr4.Runtime;

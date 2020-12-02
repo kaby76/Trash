@@ -93,7 +93,7 @@ namespace Trash
                 string txt = input;
                 if (input == null)
                 {
-                    var tuple = repl.tree_stack.Pop();
+                    var tuple = repl.input_output_stack.Pop();
                     txt = tuple.Item4;
                 }
                 object[] parm = new object[] {txt};
@@ -107,7 +107,7 @@ namespace Trash
 
                 // return the tree.
                 Environment.CurrentDirectory = old;
-                repl.tree_stack.Push(
+                repl.input_output_stack.Push(
                     new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(
                         new IParseTree[] { t2 },
                         (Parser) r2,

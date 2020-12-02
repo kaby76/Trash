@@ -72,14 +72,14 @@ Example:
             var args = tree.arg();
             var arg = args?.GetText();
             var line_number = (arg == "line-number");
-            var pair = repl.tree_stack.Pop();
+            var pair = repl.input_output_stack.Pop();
             var lines = pair.Item4;
 			var doc = repl.stack.Peek();
 			var pr = ParsingResultsFactory.Create(doc);
 			var lexer = pr.Lexer;
 			var parser = pr.Parser;
 			var serializeOptions = new JsonSerializerOptions();
-			serializeOptions.Converters.Add(new AntlrJson.Impl2.ParseTreeConverter(null, null, lexer, parser));
+			serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter(null, null, lexer, parser));
 			serializeOptions.WriteIndented = false;
 			var obj1 = JsonSerializer.Deserialize<IParseTree>(lines, serializeOptions);
 			if (obj1 == null) return;

@@ -28,10 +28,10 @@ Example:
                 var pr = ParsingResultsFactory.Create(doc);
                 var pt = pr.ParseTree;
                 var serializeOptions = new JsonSerializerOptions();
-                serializeOptions.Converters.Add(new AntlrJson.Impl2.ParseTreeConverter(pr.Code, pr.TokStream, pr.Lexer, pr.Parser));
+                serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter(pr.Code, pr.TokStream, pr.Lexer, pr.Parser));
                 serializeOptions.WriteIndented = false;
                 string js1 = JsonSerializer.Serialize(pt, serializeOptions);
-                repl.tree_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
+                repl.input_output_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
             }
         }
     }

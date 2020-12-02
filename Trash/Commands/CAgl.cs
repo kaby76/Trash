@@ -86,7 +86,7 @@ Example:
         {
             System.Windows.Forms.Form form = new System.Windows.Forms.Form();
             Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-            var pair = repl.tree_stack.Pop();
+            var pair = repl.input_output_stack.Pop();
             var nodes = pair.Item1;
             var parser = pair.Item2;
             var doc = pair.Item3;

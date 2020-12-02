@@ -25,14 +25,14 @@ Example:
 
         public void Execute(Repl repl, ReplParser.CtreeContext tree, bool piped)
         {
-            MyTuple<IParseTree[], Parser, Document, string> tuple = repl.tree_stack.Pop();
+            MyTuple<IParseTree[], Parser, Document, string> tuple = repl.input_output_stack.Pop();
             var lines = tuple.Item4;
             var doc = repl.stack.Peek();
             var pr = ParsingResultsFactory.Create(doc);
             var lexer = pr.Lexer;
             var parser = pr.Parser;
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.Impl2.ParseTreeConverter(null, null, lexer, parser));
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter(null, null, lexer, parser));
             serializeOptions.WriteIndented = false;
             var obj1 = JsonSerializer.Deserialize<IParseTree>(lines, serializeOptions);
             if (obj1 == null) return;
@@ -50,7 +50,7 @@ Example:
                         null).ToString());
             }
             tuple.Item4 = sb.ToString();
-            repl.tree_stack.Push(tuple);
+            repl.input_output_stack.Push(tuple);
         }
     }
 }

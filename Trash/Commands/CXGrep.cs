@@ -29,7 +29,7 @@ Example:
             Workspaces.Document doc;
             if (piped)
             {
-                var pair = repl.tree_stack.Pop();
+                var pair = repl.input_output_stack.Pop();
                 atrees = pair.Item1;
                 aparser = pair.Item2;
                 doc = pair.Item3;
@@ -51,7 +51,7 @@ Example:
                 var nodes = engine.parseExpression(expr,
                         new StaticContextBuilder()).evaluate(dynamicContext, l.ToArray() )
                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
-                repl.tree_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(nodes, aparser, doc, null));
+                repl.input_output_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(nodes, aparser, doc, null));
             }
         }
     }

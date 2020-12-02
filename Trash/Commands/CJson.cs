@@ -87,7 +87,7 @@ Example:
 
         public void Execute(Repl repl, ReplParser.JsonContext tree, bool piped)
         {
-            var pair = repl.tree_stack.Pop();
+            var pair = repl.input_output_stack.Pop();
             var nodes = pair.Item1;
             var parser = pair.Item2;
             var doc = pair.Item3;
