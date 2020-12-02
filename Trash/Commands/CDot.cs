@@ -30,7 +30,7 @@ Example:
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter(pr.Code, pr.TokStream, pr.Lexer, pr.Parser));
                 serializeOptions.WriteIndented = false;
-                string js1 = JsonSerializer.Serialize(pt, serializeOptions);
+                string js1 = JsonSerializer.Serialize(new IParseTree[] {pt}, serializeOptions);
                 repl.input_output_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
             }
         }

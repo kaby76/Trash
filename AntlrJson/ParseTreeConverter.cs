@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
-
-namespace AntlrJson
+﻿namespace AntlrJson
 {
     using Algorithms;
     using Antlr4.Runtime;
@@ -9,12 +6,15 @@ namespace AntlrJson
     using Antlr4.Runtime.Tree;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    public class ParseTreeConverter : JsonConverter<IParseTree>
+
+    public class ParseTreeConverter : JsonConverter<IParseTree[]>
     {
 
         public class MyCharStream : ICharStream
@@ -406,9 +406,9 @@ namespace AntlrJson
         }
 
         public override bool CanConvert(Type typeToConvert) =>
-            typeof(IParseTree).IsAssignableFrom(typeToConvert);
+            typeof(IParseTree[]).IsAssignableFrom(typeToConvert);
 
-        public override IParseTree Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override IParseTree[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             MyTokenStream out_token_stream = new MyTokenStream();
             MyFakeLexer fake_lexer = new MyFakeLexer(null);
@@ -425,6 +425,7 @@ namespace AntlrJson
             List<Type> parser_rule_types = new List<Type>();
             List<Type> lexer_rule_types = new List<Type>();
             Dictionary<int, IParseTree> nodes = new Dictionary<int, IParseTree>();
+            List<IParseTree> result = new List<IParseTree>();
             List<MyTuple<int, string, int, int, int>> tokens = new List<MyTuple<int, string, int, int, int>>();
             while (reader.TokenType == JsonTokenType.PropertyName)
             {
@@ -577,6 +578,7 @@ namespace AntlrJson
                             Type type = parser_rule_types[type_of_node];
                             var foo = (IParseTree)Activator.CreateInstance(type, new object[] { parent_node, 0 });
                             nodes[current] = foo;
+                            if (parent_node == null) result.Add(foo);
                             parent_node?.AddChild((Antlr4.Runtime.RuleContext)foo);
                         }
                         else
@@ -586,6 +588,7 @@ namespace AntlrJson
                             var foo = new TerminalNodeImpl(symbol);
                             nodes[current] = foo;
                             foo.Parent = parent_node;
+                            if (parent_node == null) result.Add(foo);
                             parent_node?.AddChild(foo);
                         }
                         current++;
@@ -596,12 +599,10 @@ namespace AntlrJson
                     throw new JsonException();
             }
             fake_lexer._vocabulary = new Vocabulary(literal_names.ToArray(), symbolic_names.ToArray());
-            return nodes[1];
-
-            throw new JsonException();
+            return result.ToArray();
         }
 
-        public override void Write(Utf8JsonWriter writer, IParseTree person, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, IParseTree[] nodes, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 
@@ -692,7 +693,7 @@ namespace AntlrJson
             writer.WritePropertyName("Nodes");
             writer.WriteStartArray();
             Stack<IParseTree> stack = new Stack<IParseTree>();
-            stack.Push(person);
+            foreach (var node in nodes) stack.Push(node);
             Dictionary<IParseTree, int> preorder = new Dictionary<IParseTree, int>();
             int number = 1;
             while (stack.Any())
