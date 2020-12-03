@@ -14,9 +14,8 @@
     using System.Text.Json.Serialization;
 
 
-    public class ParseTreeConverter : JsonConverter<IParseTree[]>
+    public class ParseTreeConverter : JsonConverter<MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser>>
     {
-
         public class MyCharStream : ICharStream
         {
             public string Text { get; set; }
@@ -329,7 +328,7 @@
             }
         }
 
-        public class MyFakeLexer : Lexer, ITokenSource
+        public class MyLexer : Lexer, ITokenSource
         {
             public int Line => throw new NotImplementedException();
 
@@ -373,26 +372,60 @@
                 throw new NotImplementedException();
             }
 
-            public MyFakeLexer(ICharStream input) : base(input)
+            public MyLexer(ICharStream input) : base(input)
             {
             }
 
-            public MyFakeLexer(ICharStream input, TextWriter output, TextWriter errorOutput) : base(input, output, errorOutput)
+            public MyLexer(ICharStream input, TextWriter output, TextWriter errorOutput) : base(input, output, errorOutput)
             {
             }
         }
 
-        string code;
-        Lexer lexer;
-        Parser parser;
-        ITokenStream in_token_stream;
-
-        public ParseTreeConverter(string c, ITokenStream ts, Lexer l, Parser p)
+        public class MyParser : Parser
         {
-            code = c;
-            in_token_stream = ts;
-            parser = p;
-            lexer = l;
+            public MyParser(ITokenStream input) : base(input)
+            {
+            }
+
+            public MyParser(ITokenStream input, TextWriter output, TextWriter errorOutput) : base(input, output, errorOutput)
+            {
+            }
+
+            public string[] _ruleNames;
+            public override string[] RuleNames
+            {
+                get { return _ruleNames; }
+            }
+
+            public string _grammarFileName;
+            public override string GrammarFileName
+            {
+                get { return _grammarFileName; }
+            }
+
+            public Vocabulary _vocabulary;
+            public override IVocabulary Vocabulary
+            {
+                get { return _vocabulary; }
+            }
+        }
+
+        public class MyParserRuleContext : ParserRuleContext
+        {
+            public int _ruleIndex;
+
+            public MyParserRuleContext(ParserRuleContext parent, int invokingStateNumber) : base(parent, invokingStateNumber)
+            {
+            }
+
+            public override int RuleIndex
+            {
+                get { return _ruleIndex; }
+            }
+        }
+
+        public ParseTreeConverter()
+        {
         }
 
 
@@ -405,15 +438,15 @@
             return char.ToUpper(s[0]) + s.Substring(1);
         }
 
-        public override bool CanConvert(Type typeToConvert) =>
-            typeof(IParseTree[]).IsAssignableFrom(typeToConvert);
+        public override bool CanConvert(Type typeToConvert) => true;
 
-        public override IParseTree[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             MyTokenStream out_token_stream = new MyTokenStream();
-            MyFakeLexer fake_lexer = new MyFakeLexer(null);
+            MyLexer lexer = new MyLexer(null);
+            MyParser parser = new MyParser(out_token_stream);
             MyCharStream fake_char_stream = new MyCharStream();
-            fake_lexer.InputStream = fake_char_stream;
+            lexer.InputStream = fake_char_stream;
             if (!(reader.TokenType == JsonTokenType.StartObject)) throw new JsonException();
             reader.Read();
             List<string> mode_names = new List<string>();
@@ -422,11 +455,9 @@
             List<string> literal_names = new List<string>();
             List<string> symbolic_names = new List<string>();
             Dictionary<string, int> token_type_map = new Dictionary<string, int>();
-            List<Type> parser_rule_types = new List<Type>();
-            List<Type> lexer_rule_types = new List<Type>();
+            List<string> parser_rule_types = new List<string>();
             Dictionary<int, IParseTree> nodes = new Dictionary<int, IParseTree>();
             List<IParseTree> result = new List<IParseTree>();
-            List<MyTuple<int, string, int, int, int>> tokens = new List<MyTuple<int, string, int, int, int>>();
             while (reader.TokenType == JsonTokenType.PropertyName)
             {
                 string pn = reader.GetString();
@@ -462,8 +493,8 @@
                         token.StartIndex = start;
                         token.StopIndex = stop;
                         token.Channel = channel;
-                        token.InputStream = fake_lexer.InputStream;
-                        token.TokenSource = fake_lexer;
+                        token.InputStream = lexer.InputStream;
+                        token.TokenSource = lexer;
                         token.Text =
                             out_token_stream.Text.Substring(token.StartIndex, token.StopIndex - token.StartIndex + 1);
                         out_token_stream.Add(token);
@@ -482,7 +513,7 @@
                     }
 
                     reader.Read();
-                    fake_lexer._modeNames = mode_names.ToArray();
+                    lexer._modeNames = mode_names.ToArray();
                 }
                 else if (pn == "ChannelNames")
                 {
@@ -495,7 +526,7 @@
                     }
 
                     reader.Read();
-                    fake_lexer._channelNames = channel_names.ToArray();
+                    lexer._channelNames = channel_names.ToArray();
                 }
                 else if (pn == "LiteralNames")
                 {
@@ -537,12 +568,8 @@
                     while (reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null)
                     {
                         var name = reader.GetString();
-                        lexer_rule_names.Add(name);
+                        parser_rule_types.Add(name);
                         reader.Read();
-                        var typeDiscriminator = Capitalized(name);
-                        var all_types = parser.GetType().Assembly.GetTypes();
-                        var type = all_types.Where(t => t.Name.StartsWith(typeDiscriminator)).First();
-                        parser_rule_types.Add(type);
                     }
                     reader.Read();
                 }
@@ -575,8 +602,10 @@
                         var parent_node = parent > 0 ? nodes[parent] as ParserRuleContext : null;
                         if (type_of_node < 1000000)
                         {
-                            Type type = parser_rule_types[type_of_node];
-                            var foo = (IParseTree)Activator.CreateInstance(type, new object[] { parent_node, 0 });
+                            MyParserRuleContext foo = new MyParserRuleContext(parent_node, 0)
+                            {
+                                _ruleIndex = type_of_node
+                            };
                             nodes[current] = foo;
                             if (parent_node == null) result.Add(foo);
                             parent_node?.AddChild((Antlr4.Runtime.RuleContext)foo);
@@ -598,22 +627,35 @@
                 else
                     throw new JsonException();
             }
-            fake_lexer._vocabulary = new Vocabulary(literal_names.ToArray(), symbolic_names.ToArray());
-            return result.ToArray();
+            var vocab = new Vocabulary(literal_names.ToArray(), symbolic_names.ToArray());
+            parser._vocabulary = vocab;
+            parser._grammarFileName = fake_char_stream.SourceName;
+            parser._ruleNames = parser_rule_types.ToArray();
+            lexer._vocabulary = vocab;
+            MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser> res = new MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser>()
+            {
+                Item1 = fake_char_stream.SourceName,
+                Item2 = out_token_stream,
+                Item3 = result.ToArray(),
+                Item4 = lexer,
+                Item5 = parser
+            };
+            return res;
         }
 
-        public override void Write(Utf8JsonWriter writer, IParseTree[] nodes, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser> tuple, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 
             writer.WritePropertyName("FileName");
-            writer.WriteStringValue(parser.GrammarFileName);
+            writer.WriteStringValue(tuple.Item5.GrammarFileName);
 
             writer.WritePropertyName("Text");
-            writer.WriteStringValue(code);
+            writer.WriteStringValue(tuple.Item1);
 
             writer.WritePropertyName("Tokens");
             writer.WriteStartArray();
+            var in_token_stream = tuple.Item2;
             in_token_stream.Seek(0);
             for (int i = 0; ; ++i)
             {
@@ -628,14 +670,14 @@
 
             writer.WritePropertyName("ModeNames");
             writer.WriteStartArray();
-            foreach (var n in lexer.ModeNames)
+            foreach (var n in tuple.Item4.ModeNames)
             {
                 writer.WriteStringValue(n);
             }
             writer.WriteEndArray();
             writer.WritePropertyName("ChannelNames");
             writer.WriteStartArray();
-            foreach (var n in lexer.ChannelNames)
+            foreach (var n in tuple.Item4.ChannelNames)
             {
                 writer.WriteStringValue(n);
             }
@@ -644,7 +686,7 @@
             writer.WritePropertyName("LiteralNames");
             writer.WriteStartArray();
             // ROYAL PAIN IN THE ASS ANTLR HIDING.
-            var vocab = lexer.Vocabulary;
+            var vocab = tuple.Item4.Vocabulary;
             var vocab_type = vocab.GetType();
             FieldInfo myFieldInfo1 = vocab_type.GetField("literalNames",
                 BindingFlags.NonPublic | BindingFlags.Instance);
@@ -667,7 +709,7 @@
 
             writer.WritePropertyName("LexerRuleNames");
             writer.WriteStartArray();
-            foreach (var n in lexer.RuleNames)
+            foreach (var n in tuple.Item4.RuleNames)
             {
                 writer.WriteStringValue(n);
             }
@@ -675,7 +717,7 @@
 
             writer.WritePropertyName("ParserRuleNames");
             writer.WriteStartArray();
-            foreach (var n in parser.RuleNames)
+            foreach (var n in tuple.Item5.RuleNames)
             {
                 writer.WriteStringValue(n);
             }
@@ -683,7 +725,7 @@
 
             writer.WritePropertyName("TokenTypeMap");
             writer.WriteStartArray();
-            foreach (var pair in lexer.TokenTypeMap)
+            foreach (var pair in tuple.Item4.TokenTypeMap)
             {
                 writer.WriteStringValue(pair.Key);
                 writer.WriteNumberValue(pair.Value);
@@ -693,7 +735,7 @@
             writer.WritePropertyName("Nodes");
             writer.WriteStartArray();
             Stack<IParseTree> stack = new Stack<IParseTree>();
-            foreach (var node in nodes) stack.Push(node);
+            foreach (var node in tuple.Item3) stack.Push(node);
             Dictionary<IParseTree, int> preorder = new Dictionary<IParseTree, int>();
             int number = 1;
             while (stack.Any())

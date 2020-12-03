@@ -75,7 +75,7 @@ Example:
             var lexer = pr.Lexer;
             var parser = pr.Parser;
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter(null, null, lexer, parser));
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
             var obj1 = JsonSerializer.Deserialize<IParseTree>(lines, serializeOptions);
             if (obj1 == null) return;

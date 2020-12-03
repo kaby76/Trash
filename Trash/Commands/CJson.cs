@@ -1,8 +1,12 @@
 ﻿namespace Trash
 {
+    using Algorithms;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
+    using LanguageServer;
     using System;
+    using System.Text.Json;
+    using Workspaces;
 
     class CJson
     {
@@ -87,11 +91,18 @@ Example:
 
         public void Execute(Repl repl, ReplParser.JsonContext tree, bool piped)
         {
-            var pair = repl.input_output_stack.Pop();
-            var nodes = pair.Item1;
-            var parser = pair.Item2;
-            var doc = pair.Item3;
-            var lines = pair.Item4;
+            MyTuple<IParseTree[], Parser, Document, string> tuple = repl.input_output_stack.Pop();
+            var lines = tuple.Item4;
+            var doc = repl.stack.Peek();
+            var pr = ParsingResultsFactory.Create(doc);
+            var lexer = pr.Lexer;
+            var parser = pr.Parser;
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = false;
+            var nodes = JsonSerializer.Deserialize<IParseTree[]>(lines, serializeOptions);
+            if (nodes == null) return;
+            
             foreach (var node in nodes)
             {
                 ParseTreeWalker.Default.Walk(new JsonWalk(parser), node);

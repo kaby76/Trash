@@ -3,8 +3,8 @@
     "Trash": {
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\dotnet\\dotnet.exe",
-      "commandLineArgs": "Trash.dll",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\AntlrVSIX\\Trash\\bin\\Debug\\net5-windows"
+      "commandLineArgs": "bin\\Debug\\net5-windows\\Trash.dll",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\AntlrVSIX\\Trash"
     }
   }
 }

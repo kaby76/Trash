@@ -1,10 +1,12 @@
-﻿using Algorithms;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
+    using Algorithms;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
+    using LanguageServer;
     using System.Text;
+    using System.Text.Json;
+    using Workspaces;
 
     class CSt
     {
@@ -20,11 +22,19 @@ Examples:
 
         public void Execute(Repl repl, ReplParser.StContext tree, bool piped)
         {
-            var pair = repl.input_output_stack.Pop();
-            var trees = pair.Item1;
-            var parser = pair.Item2;
+            MyTuple<IParseTree[], Parser, Document, string> tuple = repl.input_output_stack.Pop();
+            var lines = tuple.Item4;
+            var doc = repl.stack.Peek();
+            var pr = ParsingResultsFactory.Create(doc);
+            var lexer = pr.Lexer;
+            var parser = pr.Parser;
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = false;
+            var nodes = JsonSerializer.Deserialize<IParseTree[]>(lines, serializeOptions);
+            if (nodes == null) return;
             StringBuilder sb = new StringBuilder();
-            foreach (var t in trees)
+            foreach (var t in nodes)
             {
                 sb.AppendLine(t.ToStringTree(parser));
             }

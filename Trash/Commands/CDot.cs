@@ -26,11 +26,16 @@ Example:
             {
                 var doc = repl.stack.Peek();
                 var pr = ParsingResultsFactory.Create(doc);
-                var pt = pr.ParseTree;
+                IParseTree pt = pr.ParseTree;
                 var serializeOptions = new JsonSerializerOptions();
-                serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter(pr.Code, pr.TokStream, pr.Lexer, pr.Parser));
+                serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
-                string js1 = JsonSerializer.Serialize(new IParseTree[] {pt}, serializeOptions);
+                var tuple = new MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser>()
+                {
+                    Item1 = doc.Code, Item2 = pr.TokStream, Item3 = new IParseTree[] {pt}, Item4 = pr.Lexer,
+                    Item5 = pr.Parser
+                };
+                string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
                 repl.input_output_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
             }
         }

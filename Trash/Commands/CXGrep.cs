@@ -1,13 +1,13 @@
-﻿using Algorithms;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
+    using Algorithms;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Linq;
-    using System;
+    using System.Text.Json;
+    using Workspaces;
 
     class CXGrep
     {
@@ -25,33 +25,50 @@ Example:
         {
             var expr = repl.GetArg(tree.arg());
             IParseTree[] atrees;
-            Parser aparser;
+            Parser parser;
+            Lexer lexer;
             Workspaces.Document doc;
+            string code;
+            CommonTokenStream tokstream;
             if (piped)
             {
-                var pair = repl.input_output_stack.Pop();
-                atrees = pair.Item1;
-                aparser = pair.Item2;
-                doc = pair.Item3;
+                MyTuple<IParseTree[], Parser, Document, string> tuple = repl.input_output_stack.Pop();
+                var lines = tuple.Item4;
+                doc = repl.stack.Peek();
+                var pr = ParsingResultsFactory.Create(doc);
+                lexer = pr.Lexer;
+                parser = pr.Parser;
+                var serializeOptions = new JsonSerializerOptions();
+                serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+                serializeOptions.WriteIndented = false;
+                var nodes = JsonSerializer.Deserialize<MyTuple<string, string, Parser, Lexer, ITokenStream, IParseTree[]>>(lines, serializeOptions);
+                atrees = null;// nodes;
+                parser = null;//pair.Item2;
             }
             else
             {
                 doc = repl.stack.Peek();
                 var pr = ParsingResultsFactory.Create(doc);
-                aparser = pr.Parser;
+                parser = pr.Parser;
+                tokstream = pr.TokStream;
                 IParseTree atree = pr.ParseTree;
                 atrees = new IParseTree[] { atree };
             }
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
             IParseTree root = atrees.First().Root();
             var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, aparser))
+            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
             {
                 var l = atrees.Select(t => ate.FindDomNode(t));
                 var nodes = engine.parseExpression(expr,
                         new StaticContextBuilder()).evaluate(dynamicContext, l.ToArray() )
                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
-                repl.input_output_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(nodes, aparser, doc, null));
+
+                var serializeOptions = new JsonSerializerOptions();
+                serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+                serializeOptions.WriteIndented = false;
+                string js1 = JsonSerializer.Serialize(nodes, serializeOptions);
+                repl.input_output_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
             }
         }
     }

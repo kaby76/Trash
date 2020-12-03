@@ -386,9 +386,6 @@ namespace Trash
                 if (input_output_stack.Any())
                 { 
                     var tuple = input_output_stack.Pop();
-                    var tnodes = tuple.Item1;
-                    var tparser = tuple.Item2;
-                    var tdoc = tuple.Item3;
                     var ttext = tuple.Item4;
                     string fn = "";
                     if (redirect != null)
@@ -413,21 +410,7 @@ namespace Trash
                             new System.IO.StreamWriter(fn)
                             : new StreamWriter(Console.OpenStandardOutput())))
                     {
-                        if (tnodes != null)
-                        {
-                            foreach (var node in tnodes)
-                            {
-                                TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
-                                var ts = x.Payload.TokenSource;
-                                file.WriteLine();
-                                file.WriteLine(
-                                    TreeOutput.OutputTree(
-                                        node,
-                                        ts as Lexer,
-                                        null).ToString());
-                            }
-                        }
-                        else if (ttext != null)
+                        if (ttext != null)
                         {
                             file.WriteLine(ttext);
                         }
