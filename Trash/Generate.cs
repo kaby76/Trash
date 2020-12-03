@@ -131,6 +131,9 @@ namespace Easy
     public class Program
     {
         public static Parser Parser { get; set; }
+        public static Lexer Lexer { get; set; }
+        public static ITokenStream TokenStream { get; set; }
+        public static IParseTree Tree { get; set; }
         public static IParseTree Parse(string input)
         {
             var str = new AntlrInputStream(input);
@@ -158,7 +161,9 @@ namespace Easy
 
                     sb.Append(lexer_name);
                     sb.Append(@"(str);
+            Lexer = lexer;
             var tokens = new CommonTokenStream(lexer);
+            TokenStream = tokens;
             var parser = new ");
                     sb.Append(parser_name);
                     sb.Append(@"(tokens);
@@ -167,6 +172,7 @@ namespace Easy
                     sb.Append(parameters[0]);
 
                     sb.AppendLine(@"();
+            Tree = tree;
             return tree;
         }
     }

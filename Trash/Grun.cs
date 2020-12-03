@@ -96,12 +96,18 @@
                 var m2 = type.GetProperty("Parser");
                 object[] p2 = new object[0];
                 var r2 = m2.GetValue(null, p2);
+                var m3 = type.GetProperty("Lexer");
+                object[] p3 = new object[0];
+                var r3 = m3.GetValue(null, p3);
+                var m4 = type.GetProperty("TokenStream");
+                object[] p4 = new object[0];
+                var r4 = m4.GetValue(null, p4);
                 Environment.CurrentDirectory = old;
 
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
-                var tuple = new AntlrJson.ParseInfo() {Text = txt, Nodes = new IParseTree[]{t2}, Parser = r2 as Parser};
+                var tuple = new AntlrJson.ParseInfo() {Text = txt, Stream = r4 as ITokenStream, Nodes = new IParseTree[]{t2}, Parser = r2 as Parser, Lexer = r3 as Lexer };
                 string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
                 repl.input_output_stack.Push(js1);
             }

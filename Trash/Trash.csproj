@@ -8,10 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="test\Generated\**" />
-    <EmbeddedResource Remove="test\Generated\**" />
-    <None Remove="test\Generated\**" />
-    <Page Remove="test\Generated\**" />
+    <Compile Remove="Generated\**" />
+    <Compile Remove="test\**" />
+    <EmbeddedResource Remove="Generated\**" />
+    <EmbeddedResource Remove="test\**" />
+    <None Remove="Generated\**" />
+    <None Remove="test\**" />
+    <Page Remove="Generated\**" />
+    <Page Remove="test\**" />
   </ItemGroup>
 	<ItemGroup>
     <Antlr4 Include="ReplParser.g4">
