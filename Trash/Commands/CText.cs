@@ -1,4 +1,5 @@
 ﻿using Algorithms;
+using Workspaces;
 
 namespace Trash.Commands
 {
@@ -81,10 +82,14 @@ Example:
 			var nodes = obj1.Nodes;
             var parser = obj1.Parser;
             var fn = obj1.FileName;
-            var doc = repl._docs.ReadDoc(fn);
+            Document doc = null;
+            if (!(fn == null || fn == "stdin"))
+            {
+                doc = repl._docs.ReadDoc(fn);
+            }
             foreach (var node in nodes)
             {
-                if (line_number)
+                if (line_number && doc != null)
                 {
                     var source_interval = node.SourceInterval;
                     int a = source_interval.a;
