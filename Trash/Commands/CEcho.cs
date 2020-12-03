@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using Algorithms;
-using Antlr4.Runtime.Tree;
-using Antlr4.Runtime;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
+    using System.Linq;
+    using System.Text;
+
     class CEcho
     {
         public void Help()

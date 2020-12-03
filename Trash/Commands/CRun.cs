@@ -1,7 +1,5 @@
 ﻿namespace Trash.Commands
 {
-    using System.Linq;
-
     class CRun
     {
         public void Help()

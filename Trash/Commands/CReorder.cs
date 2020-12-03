@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
     using Antlr4.Runtime.Tree;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     class CReorder

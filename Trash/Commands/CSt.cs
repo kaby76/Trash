@@ -1,12 +1,9 @@
 ﻿namespace Trash.Commands
 {
-    using Algorithms;
-    using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using LanguageServer;
     using System.Text;
     using System.Text.Json;
-    using Workspaces;
 
     class CSt
     {

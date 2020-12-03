@@ -1,8 +1,6 @@
-﻿using System.Text.Json;
-using Algorithms;
-
-namespace Trash
+﻿namespace Trash
 {
+    using Algorithms;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using System;
@@ -11,8 +9,8 @@ namespace Trash
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Runtime.Loader;
     using System.Text;
+    using System.Text.Json;
     using Document = Workspaces.Document;
     using Workspace = Workspaces.Workspace;
 

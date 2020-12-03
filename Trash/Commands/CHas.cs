@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Antlr4.Runtime.Tree;
-using LanguageServer;
-using org.eclipse.wst.xml.xpath2.processor.util;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
+    using Antlr4.Runtime.Tree;
+    using LanguageServer;
+    using org.eclipse.wst.xml.xpath2.processor.util;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     class CHas
     {
         public void Help()

@@ -7,7 +7,6 @@
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Linq;
     using System.Text.Json;
-    using Workspaces;
 
     class CXGrep
     {

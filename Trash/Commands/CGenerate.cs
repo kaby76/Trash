@@ -1,6 +1,5 @@
 ﻿namespace Trash.Commands
 {
-    using Antlr4.Runtime.Tree;
     using System.Linq;
 
     class CGenerate

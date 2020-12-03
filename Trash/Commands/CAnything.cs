@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
+    using System;
+    using System.Linq;
+
     class CAnything
     {
         internal void Execute(Repl repl, ReplParser.AnythingContext tree, bool piped, bool redo_aliases = false)

@@ -1,8 +1,6 @@
 ﻿namespace Trash.Commands
 {
-    using System;
     using System.Linq;
-    using System.Runtime.Serialization.Formatters;
 
     class CBang
     {

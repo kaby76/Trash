@@ -1,13 +1,9 @@
-﻿using Algorithms;
-using Workspaces;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
+    using Algorithms;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using LanguageServer;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.Text.Json;
 
