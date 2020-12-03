@@ -1,8 +1,9 @@
-﻿namespace Trash.Commands
+﻿using Algorithms;
+
+namespace Trash.Commands
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
-    using LanguageServer;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -73,37 +74,30 @@ Example:
             var arg = args?.GetText();
             var line_number = (arg == "line-number");
             var lines = repl.input_output_stack.Pop();
-			var doc = repl.stack.Peek();
-			var pr = ParsingResultsFactory.Create(doc);
-			var lexer = pr.Lexer;
-			var parser = pr.Parser;
 			var serializeOptions = new JsonSerializerOptions();
 			serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
 			serializeOptions.WriteIndented = false;
-			var obj1 = JsonSerializer.Deserialize<IParseTree>(lines, serializeOptions);
-			if (obj1 == null) return;
-			var nodes = new IParseTree[] { obj1 };
+			var obj1 = JsonSerializer.Deserialize<MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser>>(lines, serializeOptions);
+			var nodes = obj1.Item3;
+            var parser = obj1.Item5;
             foreach (var node in nodes)
             {
-                if (line_number)
-                {
-                    var source_interval = node.SourceInterval;
-                    int a = source_interval.a;
-                    int b = source_interval.b;
-                    IToken ta = parser.TokenStream.Get(a);
-                    IToken tb = parser.TokenStream.Get(b);
-                    var start = ta.StartIndex;
-                    var stop = tb.StopIndex + 1;
-                    if (doc != null)
-                    {
-                        var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
-                        var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
-                        System.Console.Write(System.IO.Path.GetFileName(doc.FullPath)
-                            + ":" + line_a + "," + col_a
-                            + "-" + line_b + "," + col_b
-                            + "\t");
-                    }
-                }
+                //if (line_number)
+                //{
+                //    var source_interval = node.SourceInterval;
+                //    int a = source_interval.a;
+                //    int b = source_interval.b;
+                //    IToken ta = parser.TokenStream.Get(a);
+                //    IToken tb = parser.TokenStream.Get(b);
+                //    var start = ta.StartIndex;
+                //    var stop = tb.StopIndex + 1;
+                //    var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
+                //    var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
+                //    System.Console.Write(System.IO.Path.GetFileName(doc.FullPath) 
+                //                         + ":" + line_a + "," + col_a
+                //            + "-" + line_b + "," + col_b
+                //            + "\t");
+                //}
                 System.Console.WriteLine(this.Reconstruct(node));
             }
         }
