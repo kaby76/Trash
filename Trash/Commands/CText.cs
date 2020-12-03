@@ -77,27 +77,29 @@ Example:
 			var serializeOptions = new JsonSerializerOptions();
 			serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
 			serializeOptions.WriteIndented = false;
-			var obj1 = JsonSerializer.Deserialize<MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser>>(lines, serializeOptions);
-			var nodes = obj1.Item3;
-            var parser = obj1.Item5;
+			var obj1 = JsonSerializer.Deserialize<AntlrJson.ParseInfo>(lines, serializeOptions);
+			var nodes = obj1.Nodes;
+            var parser = obj1.Parser;
+            var fn = obj1.FileName;
+            var doc = repl._docs.ReadDoc(fn);
             foreach (var node in nodes)
             {
-                //if (line_number)
-                //{
-                //    var source_interval = node.SourceInterval;
-                //    int a = source_interval.a;
-                //    int b = source_interval.b;
-                //    IToken ta = parser.TokenStream.Get(a);
-                //    IToken tb = parser.TokenStream.Get(b);
-                //    var start = ta.StartIndex;
-                //    var stop = tb.StopIndex + 1;
-                //    var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
-                //    var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
-                //    System.Console.Write(System.IO.Path.GetFileName(doc.FullPath) 
-                //                         + ":" + line_a + "," + col_a
-                //            + "-" + line_b + "," + col_b
-                //            + "\t");
-                //}
+                if (line_number)
+                {
+                    var source_interval = node.SourceInterval;
+                    int a = source_interval.a;
+                    int b = source_interval.b;
+                    IToken ta = parser.TokenStream.Get(a);
+                    IToken tb = parser.TokenStream.Get(b);
+                    var start = ta.StartIndex;
+                    var stop = tb.StopIndex + 1;
+                    var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
+                    var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
+                    System.Console.Write(System.IO.Path.GetFileName(doc.FullPath)
+                                         + ":" + line_a + "," + col_a
+                            + "-" + line_b + "," + col_b
+                            + "\t");
+                }
                 System.Console.WriteLine(this.Reconstruct(node));
             }
         }

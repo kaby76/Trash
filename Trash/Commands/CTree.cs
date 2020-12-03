@@ -25,10 +25,10 @@ Example:
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
-            var in_tuple = JsonSerializer.Deserialize<MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser>>(lines, serializeOptions);
-            var nodes = in_tuple.Item3;
-            var lexer = in_tuple.Item4;
-            var parser = in_tuple.Item5;
+            var in_tuple = JsonSerializer.Deserialize<AntlrJson.ParseInfo>(lines, serializeOptions);
+            var nodes = in_tuple.Nodes;
+            var lexer = in_tuple.Lexer;
+            var parser = in_tuple.Parser;
             StringBuilder sb = new StringBuilder();
             foreach (var node in nodes)
             {

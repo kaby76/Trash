@@ -94,7 +94,8 @@ Example:
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
-            var nodes = JsonSerializer.Deserialize<IParseTree[]>(lines, serializeOptions);
+            var parse_info = JsonSerializer.Deserialize<AntlrJson.ParseInfo>(lines, serializeOptions);
+            var nodes = parse_info.Nodes;
             System.Windows.Forms.Form form = new System.Windows.Forms.Form();
             Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
             Microsoft.Msagl.Drawing.Graph graph = CreateGraph(nodes, parser.RuleNames.ToList());

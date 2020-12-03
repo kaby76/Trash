@@ -81,9 +81,8 @@ Example:
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
-            var nodes = JsonSerializer.Deserialize<IParseTree[]>(lines, serializeOptions);
-            if (nodes == null) return;
-            foreach (var node in nodes)
+            var parse_info = JsonSerializer.Deserialize<AntlrJson.ParseInfo>(lines, serializeOptions);
+            foreach (var node in parse_info.Nodes)
             {
                 ParseTreeWalker.Default.Walk(new XmlWalk(parser), node);
             }

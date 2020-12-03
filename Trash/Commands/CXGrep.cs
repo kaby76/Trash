@@ -1,4 +1,6 @@
-﻿namespace Trash.Commands
+﻿using org.eclipse.wst.xml.xpath2.processor.@internal.function;
+
+namespace Trash.Commands
 {
     using Algorithms;
     using Antlr4.Runtime;
@@ -26,28 +28,31 @@ Example:
             IParseTree[] atrees;
             Parser parser;
             Lexer lexer;
-            Workspaces.Document doc;
-            string code;
-            CommonTokenStream tokstream;
+            string text;
+            string fn;
+            ITokenStream tokstream;
             if (piped)
             {
                 var lines = repl.input_output_stack.Pop();
-                doc = repl.stack.Peek();
-                var pr = ParsingResultsFactory.Create(doc);
-                lexer = pr.Lexer;
-                parser = pr.Parser;
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
-                var nodes = JsonSerializer.Deserialize<MyTuple<string, string, Parser, Lexer, ITokenStream, IParseTree[]>>(lines, serializeOptions);
-                atrees = null;// nodes;
-                parser = null;//pair.Item2;
+                var parse_info = JsonSerializer.Deserialize<AntlrJson.ParseInfo>(lines, serializeOptions);
+                text = parse_info.Text;
+                fn = parse_info.FileName;
+                atrees = parse_info.Nodes;
+                parser = parse_info.Parser;
+                lexer = parse_info.Lexer;
+                tokstream = parse_info.Stream;
             }
             else
             {
-                doc = repl.stack.Peek();
+                var doc = repl.stack.Peek();
                 var pr = ParsingResultsFactory.Create(doc);
                 parser = pr.Parser;
+                lexer = pr.Lexer;
+                text = pr.Code;
+                fn = pr.FullFileName;
                 tokstream = pr.TokStream;
                 IParseTree atree = pr.ParseTree;
                 atrees = new IParseTree[] { atree };
@@ -65,7 +70,8 @@ Example:
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
-                string js1 = JsonSerializer.Serialize(nodes, serializeOptions);
+                var parse_info_out = new AntlrJson.ParseInfo(){Text = text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = nodes };
+                string js1 = JsonSerializer.Serialize(parse_info_out, serializeOptions);
                 repl.input_output_stack.Push(js1);
             }
         }

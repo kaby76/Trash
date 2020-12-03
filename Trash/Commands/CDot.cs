@@ -1,4 +1,6 @@
-﻿namespace Trash.Commands
+﻿using AntlrJson;
+
+namespace Trash.Commands
 {
     using Algorithms;
     using Antlr4.Runtime;
@@ -28,10 +30,10 @@ Example:
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
-                var tuple = new MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser>()
+                var tuple = new ParseInfo()
                 {
-                    Item1 = doc.Code, Item2 = pr.TokStream, Item3 = new IParseTree[] {pt}, Item4 = pr.Lexer,
-                    Item5 = pr.Parser
+                    Text = doc.Code, FileName = doc.FullPath, Stream = pr.TokStream, Nodes = new IParseTree[] {pt}, Lexer = pr.Lexer,
+                    Parser = pr.Parser
                 };
                 string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
                 repl.input_output_stack.Push(js1);

@@ -1,6 +1,5 @@
 ﻿namespace Trash
 {
-    using Algorithms;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using System;
@@ -102,14 +101,7 @@
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
-                var tuple = new MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser>()
-                {
-                    Item1 = txt,
-                    Item2 = null,
-                    Item3 = new IParseTree[] { t2 },
-                    Item4 = null,
-                    Item5 = r2 as Parser
-                };
+                var tuple = new AntlrJson.ParseInfo() {Text = txt, Nodes = new IParseTree[]{t2}, Parser = r2 as Parser};
                 string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
                 repl.input_output_stack.Push(js1);
             }
