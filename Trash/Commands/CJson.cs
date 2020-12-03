@@ -91,8 +91,7 @@ Example:
 
         public void Execute(Repl repl, ReplParser.JsonContext tree, bool piped)
         {
-            MyTuple<IParseTree[], Parser, Document, string> tuple = repl.input_output_stack.Pop();
-            var lines = tuple.Item4;
+            var lines = repl.input_output_stack.Pop();
             var doc = repl.stack.Peek();
             var pr = ParsingResultsFactory.Create(doc);
             var lexer = pr.Lexer;

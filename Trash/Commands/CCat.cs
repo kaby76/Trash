@@ -37,7 +37,7 @@ Example:
                     sb.Append(input);
                 }
             }
-            repl.input_output_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, sb.ToString()));
+            repl.input_output_stack.Push(sb.ToString());
         }
     }
 }

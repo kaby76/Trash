@@ -68,8 +68,7 @@ Example:
 
         public void Execute(Repl repl, ReplParser.CtokensContext tree, bool piped)
         {
-            var pair = repl.input_output_stack.Pop();
-            var lines = pair.Item4;
+            var lines = repl.input_output_stack.Pop();
             var doc = repl.stack.Peek();
             var pr = ParsingResultsFactory.Create(doc);
             var lexer = pr.Lexer;

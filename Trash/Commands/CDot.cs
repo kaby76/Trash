@@ -36,7 +36,7 @@ Example:
                     Item5 = pr.Parser
                 };
                 string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
-                repl.input_output_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
+                repl.input_output_stack.Push(js1);
             }
         }
     }

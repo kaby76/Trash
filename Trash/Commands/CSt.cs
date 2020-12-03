@@ -22,8 +22,7 @@ Examples:
 
         public void Execute(Repl repl, ReplParser.StContext tree, bool piped)
         {
-            MyTuple<IParseTree[], Parser, Document, string> tuple = repl.input_output_stack.Pop();
-            var lines = tuple.Item4;
+            var lines = repl.input_output_stack.Pop();
             var doc = repl.stack.Peek();
             var pr = ParsingResultsFactory.Create(doc);
             var lexer = pr.Lexer;
@@ -38,7 +37,7 @@ Examples:
             {
                 sb.AppendLine(t.ToStringTree(parser));
             }
-            repl.input_output_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, sb.ToString()));
+            repl.input_output_stack.Push(sb.ToString());
         }
     }
 }

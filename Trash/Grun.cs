@@ -1,4 +1,5 @@
-﻿using Algorithms;
+﻿using System.Text.Json;
+using Algorithms;
 
 namespace Trash
 {
@@ -81,11 +82,7 @@ namespace Trash
             try
             {
                 Environment.CurrentDirectory = path;
-
-                //var alc = new TestAssemblyLoadContext(path + "/bin/Debug/netcoreapp3.1/Test.dll");
-                //Assembly asm = alc.LoadFromAssemblyPath(path + "/bin/Debug/netcoreapp3.1/Test.dll");
                 Assembly asm = Assembly.LoadFile(path + "/bin/Debug/netcoreapp3.1/Test.dll");
-
                 Type[] types = asm.GetTypes();
                 Type type = asm.GetType("Easy.Program");
                 var methods = type.GetMethods();
@@ -93,27 +90,30 @@ namespace Trash
                 string txt = input;
                 if (input == null)
                 {
-                    var tuple = repl.input_output_stack.Pop();
-                    txt = tuple.Item4;
+                    txt = repl.input_output_stack.Pop();
                 }
                 object[] parm = new object[] {txt};
                 var res = methodInfo.Invoke(null, parm);
                 var tree = res as IParseTree;
                 var t2 = tree as ParserRuleContext;
-
                 var m2 = type.GetProperty("Parser");
                 object[] p2 = new object[0];
                 var r2 = m2.GetValue(null, p2);
-
-                // return the tree.
                 Environment.CurrentDirectory = old;
-                repl.input_output_stack.Push(
-                    new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(
-                        new IParseTree[] { t2 },
-                        (Parser) r2,
-                        null,
-                        null));
 
+                var serializeOptions = new JsonSerializerOptions();
+                serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+                serializeOptions.WriteIndented = false;
+                var tuple = new MyTuple<string, ITokenStream, IParseTree[], Lexer, Parser>()
+                {
+                    Item1 = txt,
+                    Item2 = null,
+                    Item3 = new IParseTree[] { t2 },
+                    Item4 = null,
+                    Item5 = r2 as Parser
+                };
+                string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
+                repl.input_output_stack.Push(js1);
             }
             finally
             {

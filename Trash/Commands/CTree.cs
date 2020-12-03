@@ -25,8 +25,7 @@ Example:
 
         public void Execute(Repl repl, ReplParser.CtreeContext tree, bool piped)
         {
-            MyTuple<IParseTree[], Parser, Document, string> stack_param = repl.input_output_stack.Pop();
-            var lines = stack_param.Item4;
+            var lines = repl.input_output_stack.Pop();
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
@@ -47,11 +46,7 @@ Example:
                         parser,
                         null).ToString());
             }
-            MyTuple<IParseTree[], Parser, Document, string> result = new MyTuple<IParseTree[], Parser, Document, string>()
-            {
-                Item1 = null, Item2 = null, Item3 = null, Item4 = sb.ToString()
-            };
-            repl.input_output_stack.Push(result);
+            repl.input_output_stack.Push(sb.ToString());
         }
     }
 }

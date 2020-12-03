@@ -20,7 +20,7 @@ namespace Trash
         const string PreviousHistoryFfn = ".trash.rc";
         public Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
         public Utils.StackQueue<Document> stack = new Utils.StackQueue<Document>();
-        public Utils.StackQueue<MyTuple<IParseTree[], Parser, Document, string>> input_output_stack = new Utils.StackQueue<MyTuple<IParseTree[], Parser, Document, string>>();
+        public Utils.StackQueue<string> input_output_stack = new Utils.StackQueue<string>();
         public string script_file = null;
         public int current_line_index = 0;
         public string[] lines = null;
@@ -384,9 +384,8 @@ namespace Trash
                     }
                 }
                 if (input_output_stack.Any())
-                { 
-                    var tuple = input_output_stack.Pop();
-                    var ttext = tuple.Item4;
+                {
+                    var ttext = input_output_stack.Pop();
                     string fn = "";
                     if (redirect != null)
                     {

@@ -72,8 +72,7 @@ Example:
             var args = tree.arg();
             var arg = args?.GetText();
             var line_number = (arg == "line-number");
-            var pair = repl.input_output_stack.Pop();
-            var lines = pair.Item4;
+            var lines = repl.input_output_stack.Pop();
 			var doc = repl.stack.Peek();
 			var pr = ParsingResultsFactory.Create(doc);
 			var lexer = pr.Lexer;

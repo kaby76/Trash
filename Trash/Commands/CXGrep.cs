@@ -32,8 +32,7 @@ Example:
             CommonTokenStream tokstream;
             if (piped)
             {
-                MyTuple<IParseTree[], Parser, Document, string> tuple = repl.input_output_stack.Pop();
-                var lines = tuple.Item4;
+                var lines = repl.input_output_stack.Pop();
                 doc = repl.stack.Peek();
                 var pr = ParsingResultsFactory.Create(doc);
                 lexer = pr.Lexer;
@@ -68,7 +67,7 @@ Example:
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
                 string js1 = JsonSerializer.Serialize(nodes, serializeOptions);
-                repl.input_output_stack.Push(new MyTuple<IParseTree[], Parser, Workspaces.Document, string>(null, null, null, js1));
+                repl.input_output_stack.Push(js1);
             }
         }
     }
