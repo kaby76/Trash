@@ -35,6 +35,8 @@
             MyLexer lexer = new MyLexer(null);
             MyParser parser = new MyParser(out_token_stream);
             MyCharStream fake_char_stream = new MyCharStream();
+            string text = null;
+
             lexer.InputStream = fake_char_stream;
             if (!(reader.TokenType == JsonTokenType.StartObject)) throw new JsonException();
             reader.Read();
@@ -61,6 +63,7 @@
                 {
                     out_token_stream.Text = reader.GetString();
                     fake_char_stream.Text = out_token_stream.Text;
+                    text = out_token_stream.Text;
                     reader.Read();
                 }
                 else if (pn == "Tokens")
@@ -229,7 +232,8 @@
                 Stream = out_token_stream,
                 Nodes = result.ToArray(),
                 Lexer = lexer,
-                Parser = parser
+                Parser = parser,
+                Text = text
             };
             return res;
         }
@@ -338,7 +342,14 @@
                 if (node is ParserRuleContext n)
                 {
                     if (n.Parent != null)
-                        writer.WriteNumberValue(preorder[n.Parent]);
+                    {
+                        // Note, the node may have a parent, but the tree that is being serialized may be
+                        // a sub tree. If there is no key for the node, write out zero.
+                        if (preorder.ContainsKey(n.Parent))
+                            writer.WriteNumberValue(preorder[n.Parent]);
+                        else
+                            writer.WriteNumberValue(0);
+                    }
                     else
                         writer.WriteNumberValue(0);
                     var type = n.RuleIndex;
@@ -353,7 +364,12 @@
                 } else if (node is TerminalNodeImpl t)
                 {
                     if (t.Parent != null)
-                        writer.WriteNumberValue(preorder[t.Parent]);
+                    {
+                        if (preorder.ContainsKey(t.Parent))
+                            writer.WriteNumberValue(preorder[t.Parent]);
+                        else
+                            writer.WriteNumberValue(0);
+                    }
                     else
                         writer.WriteNumberValue(0);
                     var type = t.Symbol.TokenIndex + 1000000;
