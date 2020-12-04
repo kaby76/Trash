@@ -347,7 +347,11 @@
             set => throw new NotImplementedException();
         }
 
-        public override string[] RuleNames => throw new NotImplementedException();
+        public string[] _ruleNames;
+        public override string[] RuleNames
+        {
+            get { return _ruleNames; }
+        }
 
         public Vocabulary _vocabulary;
         public override IVocabulary Vocabulary
@@ -355,7 +359,11 @@
             get { return _vocabulary; }
         }
 
-        public override string GrammarFileName => throw new NotImplementedException();
+        public string _grammarFileName;
+        public override string GrammarFileName
+        {
+            get { return _grammarFileName; }
+        }
 
         public string[] _modeNames;
         public override string[] ModeNames
@@ -367,6 +375,12 @@
         public override string[] ChannelNames
         {
             get { return _channelNames; }
+        }
+
+        public IDictionary<string, int> _tokenTypeMap;
+        public override IDictionary<string, int> TokenTypeMap
+        {
+            get { return _tokenTypeMap; }
         }
 
         [return: NotNull]

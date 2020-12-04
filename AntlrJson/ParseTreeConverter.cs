@@ -44,7 +44,7 @@
             List<string> literal_names = new List<string>();
             List<string> symbolic_names = new List<string>();
             Dictionary<string, int> token_type_map = new Dictionary<string, int>();
-            List<string> parser_rule_types = new List<string>();
+            List<string> parser_rule_names = new List<string>();
             Dictionary<int, IParseTree> nodes = new Dictionary<int, IParseTree>();
             List<IParseTree> result = new List<IParseTree>();
             while (reader.TokenType == JsonTokenType.PropertyName)
@@ -157,7 +157,7 @@
                     while (reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null)
                     {
                         var name = reader.GetString();
-                        parser_rule_types.Add(name);
+                        parser_rule_names.Add(name);
                         reader.Read();
                     }
                     reader.Read();
@@ -219,8 +219,10 @@
             var vocab = new Vocabulary(literal_names.ToArray(), symbolic_names.ToArray());
             parser._vocabulary = vocab;
             parser._grammarFileName = fake_char_stream.SourceName;
-            parser._ruleNames = parser_rule_types.ToArray();
+            parser._ruleNames = parser_rule_names.ToArray();
             lexer._vocabulary = vocab;
+            lexer._ruleNames = lexer_rule_names.ToArray();
+            lexer._tokenTypeMap = token_type_map;
             var res = new AntlrJson.ParseInfo()
             {
                 FileName= fake_char_stream.SourceName,
