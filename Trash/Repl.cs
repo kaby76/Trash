@@ -140,6 +140,7 @@
                 {
                     try
                     {
+                        DateTime before = DateTime.Now;
                         var tree = trees[c];
                         var is_piped = c > 0;
                         if (false) ;
@@ -366,6 +367,8 @@
                             new CXml().Execute(this, x_xml, is_piped);
                         }
                         else throw new Exception("Unhandled command!");
+                        DateTime after = DateTime.Now;
+                        System.Console.Error.WriteLine("Time for command: " + (after - before));
                         HistoryAdd(input);
                     }
                     catch (Repl.DoNotAddToHistory)

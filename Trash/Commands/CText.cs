@@ -1,4 +1,5 @@
-﻿using Algorithms;
+﻿using System;
+using Algorithms;
 using Workspaces;
 
 namespace Trash.Commands
