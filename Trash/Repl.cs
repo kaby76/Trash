@@ -249,6 +249,10 @@
                         {
                             new CParse().Execute(this, x_parse, is_piped);
                         }
+                        else if (tree.period() is ReplParser.PeriodContext x_period)
+                        {
+                            new CPeriod().Execute(this, x_period, is_piped);
+                        }
                         else if (tree.pop() is ReplParser.PopContext x_pop)
                         {
                             new CPop().Execute(this, x_pop, is_piped);

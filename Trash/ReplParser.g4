@@ -35,6 +35,7 @@ cmd :
   | ls
   | mvsr
   | parse
+  | period
   | pop
   | print
   | pwd
@@ -92,6 +93,7 @@ kleene : KLEENE StringLiteral? ;
 ls : LS arg* ;
 mvsr : MVSR StringLiteral ;
 parse : PARSE type? ;
+period : PERIOD ;
 pop : POP ;
 print : PRINT ;
 pwd : PWD ;
