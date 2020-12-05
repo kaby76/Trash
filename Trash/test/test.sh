@@ -178,7 +178,7 @@ fi
 
 
 echo ======== TEST 8 GENERATE, DOT ========
-cat << HERE | $exe > test8.out
+cat << HERE | $exe | grep -v 'Restored' | grep -v 'Time Elapsed' > test8.out
 read Expr.g4
 parse
 generate e

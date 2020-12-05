@@ -5,14 +5,13 @@ Microsoft (R) Build Engine version 16.8.0+126527ff1 for .NET
 Copyright (C) Microsoft Corporation. All rights reserved.
 
   Determining projects to restore...
-  Restored C:\Users\kenne\Documents\AntlrVSIX\Trash\test\Generated\Test.csproj (in 1.72 sec).
+  All projects are up-to-date for restore.
   Test -> C:\Users\kenne\Documents\AntlrVSIX\Trash\test\Generated\bin\Debug\netcoreapp3.1\Test.dll
 
 Build succeeded.
     0 Warning(s)
     0 Error(s)
 
-Time Elapsed 00:00:06.47
 
 
 > echo "1+2*3+4/5*6/7-8/9++10/-11" | run | dot
