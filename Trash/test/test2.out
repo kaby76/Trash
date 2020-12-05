@@ -19,24 +19,24 @@ ID : ( ('a' .. 'z') | ('A' .. 'Z') | '_' )+ ;
 WS : [ \r\n\t] + -> skip ;
 
 > parse
-> .
+> . | tree
 
 ( grammarSpec
   ( grammarDecl
     ( grammarType
-      ( DEFAULT_TOKEN_CHANNEL i=0 txt=grammar tt=19
+      ( GRAMMAR i=0 txt=grammar tt=19 DEFAULT_TOKEN_CHANNEL
     ) ) 
     ( identifier
-      ( DEFAULT_TOKEN_CHANNEL i=2 txt=Expr tt=1
+      ( TOKEN_REF i=8 txt=Expr tt=1 DEFAULT_TOKEN_CHANNEL
     ) ) 
-    ( DEFAULT_TOKEN_CHANNEL i=3 txt=; tt=32
+    ( SEMI i=12 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
   ) ) 
   ( rules
     ( ruleSpec
       ( parserRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=5 txt=e tt=2
+        ( RULE_REF i=15 txt=e tt=2 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=7 txt=: tt=29
+        ( COLON i=17 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( ruleBlock
           ( ruleAltList
@@ -45,134 +45,134 @@ WS : [ \r\n\t] + -> skip ;
                 ( element
                   ( atom
                     ( ruleref
-                      ( DEFAULT_TOKEN_CHANNEL i=9 txt=e tt=2
+                      ( RULE_REF i=19 txt=e tt=2 DEFAULT_TOKEN_CHANNEL
                 ) ) ) ) 
                 ( element
                   ( ebnf
                     ( block
-                      ( DEFAULT_TOKEN_CHANNEL i=11 txt=( tt=33
+                      ( LPAREN i=21 txt=( tt=33 DEFAULT_TOKEN_CHANNEL
                       ) 
                       ( altList
                         ( alternative
                           ( element
                             ( atom
                               ( terminal
-                                ( DEFAULT_TOKEN_CHANNEL i=12 txt='*' tt=8
+                                ( STRING_LITERAL i=22 txt='*' tt=8 DEFAULT_TOKEN_CHANNEL
                         ) ) ) ) ) 
-                        ( DEFAULT_TOKEN_CHANNEL i=14 txt=| tt=45
+                        ( OR i=26 txt=| tt=45 DEFAULT_TOKEN_CHANNEL
                         ) 
                         ( alternative
                           ( element
                             ( atom
                               ( terminal
-                                ( DEFAULT_TOKEN_CHANNEL i=16 txt='/' tt=8
+                                ( STRING_LITERAL i=28 txt='/' tt=8 DEFAULT_TOKEN_CHANNEL
                       ) ) ) ) ) ) 
-                      ( DEFAULT_TOKEN_CHANNEL i=17 txt=) tt=34
+                      ( RPAREN i=31 txt=) tt=34 DEFAULT_TOKEN_CHANNEL
                 ) ) ) ) 
                 ( element
                   ( atom
                     ( ruleref
-                      ( DEFAULT_TOKEN_CHANNEL i=19 txt=e tt=2
+                      ( RULE_REF i=33 txt=e tt=2 DEFAULT_TOKEN_CHANNEL
             ) ) ) ) ) ) 
-            ( DEFAULT_TOKEN_CHANNEL i=21 txt=| tt=45
+            ( OR i=38 txt=| tt=45 DEFAULT_TOKEN_CHANNEL
             ) 
             ( labeledAlt
               ( alternative
                 ( element
                   ( atom
                     ( ruleref
-                      ( DEFAULT_TOKEN_CHANNEL i=23 txt=e tt=2
+                      ( RULE_REF i=40 txt=e tt=2 DEFAULT_TOKEN_CHANNEL
                 ) ) ) ) 
                 ( element
                   ( ebnf
                     ( block
-                      ( DEFAULT_TOKEN_CHANNEL i=25 txt=( tt=33
+                      ( LPAREN i=42 txt=( tt=33 DEFAULT_TOKEN_CHANNEL
                       ) 
                       ( altList
                         ( alternative
                           ( element
                             ( atom
                               ( terminal
-                                ( DEFAULT_TOKEN_CHANNEL i=26 txt='+' tt=8
+                                ( STRING_LITERAL i=43 txt='+' tt=8 DEFAULT_TOKEN_CHANNEL
                         ) ) ) ) ) 
-                        ( DEFAULT_TOKEN_CHANNEL i=28 txt=| tt=45
+                        ( OR i=47 txt=| tt=45 DEFAULT_TOKEN_CHANNEL
                         ) 
                         ( alternative
                           ( element
                             ( atom
                               ( terminal
-                                ( DEFAULT_TOKEN_CHANNEL i=30 txt='-' tt=8
+                                ( STRING_LITERAL i=49 txt='-' tt=8 DEFAULT_TOKEN_CHANNEL
                       ) ) ) ) ) ) 
-                      ( DEFAULT_TOKEN_CHANNEL i=31 txt=) tt=34
+                      ( RPAREN i=52 txt=) tt=34 DEFAULT_TOKEN_CHANNEL
                 ) ) ) ) 
                 ( element
                   ( atom
                     ( ruleref
-                      ( DEFAULT_TOKEN_CHANNEL i=33 txt=e tt=2
+                      ( RULE_REF i=54 txt=e tt=2 DEFAULT_TOKEN_CHANNEL
             ) ) ) ) ) ) 
-            ( DEFAULT_TOKEN_CHANNEL i=35 txt=| tt=45
+            ( OR i=59 txt=| tt=45 DEFAULT_TOKEN_CHANNEL
             ) 
             ( labeledAlt
               ( alternative
                 ( element
                   ( atom
                     ( terminal
-                      ( DEFAULT_TOKEN_CHANNEL i=37 txt='(' tt=8
+                      ( STRING_LITERAL i=61 txt='(' tt=8 DEFAULT_TOKEN_CHANNEL
                 ) ) ) ) 
                 ( element
                   ( atom
                     ( ruleref
-                      ( DEFAULT_TOKEN_CHANNEL i=39 txt=e tt=2
+                      ( RULE_REF i=65 txt=e tt=2 DEFAULT_TOKEN_CHANNEL
                 ) ) ) ) 
                 ( element
                   ( atom
                     ( terminal
-                      ( DEFAULT_TOKEN_CHANNEL i=41 txt=')' tt=8
+                      ( STRING_LITERAL i=67 txt=')' tt=8 DEFAULT_TOKEN_CHANNEL
             ) ) ) ) ) ) 
-            ( DEFAULT_TOKEN_CHANNEL i=43 txt=| tt=45
+            ( OR i=74 txt=| tt=45 DEFAULT_TOKEN_CHANNEL
             ) 
             ( labeledAlt
               ( alternative
                 ( element
                   ( ebnf
                     ( block
-                      ( DEFAULT_TOKEN_CHANNEL i=45 txt=( tt=33
+                      ( LPAREN i=76 txt=( tt=33 DEFAULT_TOKEN_CHANNEL
                       ) 
                       ( altList
                         ( alternative
                           ( element
                             ( atom
                               ( terminal
-                                ( DEFAULT_TOKEN_CHANNEL i=46 txt='-' tt=8
+                                ( STRING_LITERAL i=77 txt='-' tt=8 DEFAULT_TOKEN_CHANNEL
                         ) ) ) ) ) 
-                        ( DEFAULT_TOKEN_CHANNEL i=48 txt=| tt=45
+                        ( OR i=81 txt=| tt=45 DEFAULT_TOKEN_CHANNEL
                         ) 
                         ( alternative
                           ( element
                             ( atom
                               ( terminal
-                                ( DEFAULT_TOKEN_CHANNEL i=50 txt='+' tt=8
+                                ( STRING_LITERAL i=83 txt='+' tt=8 DEFAULT_TOKEN_CHANNEL
                       ) ) ) ) ) ) 
-                      ( DEFAULT_TOKEN_CHANNEL i=51 txt=) tt=34
+                      ( RPAREN i=86 txt=) tt=34 DEFAULT_TOKEN_CHANNEL
                     ) ) 
                     ( blockSuffix
                       ( ebnfSuffix
-                        ( DEFAULT_TOKEN_CHANNEL i=52 txt=* tt=42
+                        ( STAR i=87 txt=* tt=42 DEFAULT_TOKEN_CHANNEL
                 ) ) ) ) ) 
                 ( element
                   ( atom
                     ( ruleref
-                      ( DEFAULT_TOKEN_CHANNEL i=54 txt=a tt=2
+                      ( RULE_REF i=89 txt=a tt=2 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=56 txt=; tt=32
+        ( SEMI i=94 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
         ) 
         ( exceptionGroup
     ) ) ) 
     ( ruleSpec
       ( parserRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=58 txt=a tt=2
+        ( RULE_REF i=97 txt=a tt=2 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=60 txt=: tt=29
+        ( COLON i=99 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( ruleBlock
           ( ruleAltList
@@ -181,17 +181,17 @@ WS : [ \r\n\t] + -> skip ;
                 ( element
                   ( atom
                     ( terminal
-                      ( DEFAULT_TOKEN_CHANNEL i=62 txt=INT tt=1
+                      ( TOKEN_REF i=101 txt=INT tt=1 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=64 txt=; tt=32
+        ( SEMI i=105 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
         ) 
         ( exceptionGroup
     ) ) ) 
     ( ruleSpec
       ( parserRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=66 txt=id tt=2
+        ( RULE_REF i=108 txt=id tt=2 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=68 txt=: tt=29
+        ( COLON i=111 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( ruleBlock
           ( ruleAltList
@@ -200,17 +200,17 @@ WS : [ \r\n\t] + -> skip ;
                 ( element
                   ( atom
                     ( terminal
-                      ( DEFAULT_TOKEN_CHANNEL i=70 txt=ID tt=1
+                      ( TOKEN_REF i=113 txt=ID tt=1 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=72 txt=; tt=32
+        ( SEMI i=116 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
         ) 
         ( exceptionGroup
     ) ) ) 
     ( ruleSpec
       ( lexerRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=74 txt=INT tt=1
+        ( TOKEN_REF i=119 txt=INT tt=1 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=76 txt=: tt=29
+        ( COLON i=123 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( lexerRuleBlock
           ( lexerAltList
@@ -218,7 +218,7 @@ WS : [ \r\n\t] + -> skip ;
               ( lexerElements
                 ( lexerElement
                   ( lexerBlock
-                    ( DEFAULT_TOKEN_CHANNEL i=78 txt=( tt=33
+                    ( LPAREN i=125 txt=( tt=33 DEFAULT_TOKEN_CHANNEL
                     ) 
                     ( lexerAltList
                       ( lexerAlt
@@ -226,24 +226,24 @@ WS : [ \r\n\t] + -> skip ;
                           ( lexerElement
                             ( lexerAtom
                               ( characterRange
-                                ( DEFAULT_TOKEN_CHANNEL i=79 txt='0' tt=8
+                                ( STRING_LITERAL i=126 txt='0' tt=8 DEFAULT_TOKEN_CHANNEL
                                 ) 
-                                ( DEFAULT_TOKEN_CHANNEL i=81 txt=.. tt=47
+                                ( RANGE i=130 txt=.. tt=47 DEFAULT_TOKEN_CHANNEL
                                 ) 
-                                ( DEFAULT_TOKEN_CHANNEL i=83 txt='9' tt=8
+                                ( STRING_LITERAL i=133 txt='9' tt=8 DEFAULT_TOKEN_CHANNEL
                     ) ) ) ) ) ) ) 
-                    ( DEFAULT_TOKEN_CHANNEL i=84 txt=) tt=34
+                    ( RPAREN i=136 txt=) tt=34 DEFAULT_TOKEN_CHANNEL
                   ) ) 
                   ( ebnfSuffix
-                    ( DEFAULT_TOKEN_CHANNEL i=85 txt=+ tt=44
+                    ( PLUS i=137 txt=+ tt=44 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=87 txt=; tt=32
+        ( SEMI i=139 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
     ) ) ) 
     ( ruleSpec
       ( lexerRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=89 txt=MUL tt=1
+        ( TOKEN_REF i=142 txt=MUL tt=1 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=91 txt=: tt=29
+        ( COLON i=146 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( lexerRuleBlock
           ( lexerAltList
@@ -252,15 +252,15 @@ WS : [ \r\n\t] + -> skip ;
                 ( lexerElement
                   ( lexerAtom
                     ( terminal
-                      ( DEFAULT_TOKEN_CHANNEL i=93 txt='*' tt=8
+                      ( STRING_LITERAL i=148 txt='*' tt=8 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=95 txt=; tt=32
+        ( SEMI i=152 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
     ) ) ) 
     ( ruleSpec
       ( lexerRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=97 txt=DIV tt=1
+        ( TOKEN_REF i=155 txt=DIV tt=1 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=99 txt=: tt=29
+        ( COLON i=159 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( lexerRuleBlock
           ( lexerAltList
@@ -269,15 +269,15 @@ WS : [ \r\n\t] + -> skip ;
                 ( lexerElement
                   ( lexerAtom
                     ( terminal
-                      ( DEFAULT_TOKEN_CHANNEL i=101 txt='/' tt=8
+                      ( STRING_LITERAL i=161 txt='/' tt=8 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=103 txt=; tt=32
+        ( SEMI i=165 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
     ) ) ) 
     ( ruleSpec
       ( lexerRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=105 txt=ADD tt=1
+        ( TOKEN_REF i=168 txt=ADD tt=1 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=107 txt=: tt=29
+        ( COLON i=172 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( lexerRuleBlock
           ( lexerAltList
@@ -286,15 +286,15 @@ WS : [ \r\n\t] + -> skip ;
                 ( lexerElement
                   ( lexerAtom
                     ( terminal
-                      ( DEFAULT_TOKEN_CHANNEL i=109 txt='+' tt=8
+                      ( STRING_LITERAL i=174 txt='+' tt=8 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=111 txt=; tt=32
+        ( SEMI i=178 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
     ) ) ) 
     ( ruleSpec
       ( lexerRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=113 txt=SUB tt=1
+        ( TOKEN_REF i=181 txt=SUB tt=1 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=115 txt=: tt=29
+        ( COLON i=185 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( lexerRuleBlock
           ( lexerAltList
@@ -303,15 +303,15 @@ WS : [ \r\n\t] + -> skip ;
                 ( lexerElement
                   ( lexerAtom
                     ( terminal
-                      ( DEFAULT_TOKEN_CHANNEL i=117 txt='-' tt=8
+                      ( STRING_LITERAL i=187 txt='-' tt=8 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=119 txt=; tt=32
+        ( SEMI i=191 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
     ) ) ) 
     ( ruleSpec
       ( lexerRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=121 txt=LP tt=1
+        ( TOKEN_REF i=194 txt=LP tt=1 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=123 txt=: tt=29
+        ( COLON i=197 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( lexerRuleBlock
           ( lexerAltList
@@ -320,15 +320,15 @@ WS : [ \r\n\t] + -> skip ;
                 ( lexerElement
                   ( lexerAtom
                     ( terminal
-                      ( DEFAULT_TOKEN_CHANNEL i=125 txt='(' tt=8
+                      ( STRING_LITERAL i=199 txt='(' tt=8 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=127 txt=; tt=32
+        ( SEMI i=203 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
     ) ) ) 
     ( ruleSpec
       ( lexerRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=129 txt=RP tt=1
+        ( TOKEN_REF i=206 txt=RP tt=1 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=131 txt=: tt=29
+        ( COLON i=209 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( lexerRuleBlock
           ( lexerAltList
@@ -337,15 +337,15 @@ WS : [ \r\n\t] + -> skip ;
                 ( lexerElement
                   ( lexerAtom
                     ( terminal
-                      ( DEFAULT_TOKEN_CHANNEL i=133 txt=')' tt=8
+                      ( STRING_LITERAL i=211 txt=')' tt=8 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=135 txt=; tt=32
+        ( SEMI i=215 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
     ) ) ) 
     ( ruleSpec
       ( lexerRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=137 txt=ID tt=1
+        ( TOKEN_REF i=218 txt=ID tt=1 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=139 txt=: tt=29
+        ( COLON i=221 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( lexerRuleBlock
           ( lexerAltList
@@ -353,14 +353,14 @@ WS : [ \r\n\t] + -> skip ;
               ( lexerElements
                 ( lexerElement
                   ( lexerBlock
-                    ( DEFAULT_TOKEN_CHANNEL i=141 txt=( tt=33
+                    ( LPAREN i=223 txt=( tt=33 DEFAULT_TOKEN_CHANNEL
                     ) 
                     ( lexerAltList
                       ( lexerAlt
                         ( lexerElements
                           ( lexerElement
                             ( lexerBlock
-                              ( DEFAULT_TOKEN_CHANNEL i=143 txt=( tt=33
+                              ( LPAREN i=225 txt=( tt=33 DEFAULT_TOKEN_CHANNEL
                               ) 
                               ( lexerAltList
                                 ( lexerAlt
@@ -368,21 +368,21 @@ WS : [ \r\n\t] + -> skip ;
                                     ( lexerElement
                                       ( lexerAtom
                                         ( characterRange
-                                          ( DEFAULT_TOKEN_CHANNEL i=144 txt='a' tt=8
+                                          ( STRING_LITERAL i=226 txt='a' tt=8 DEFAULT_TOKEN_CHANNEL
                                           ) 
-                                          ( DEFAULT_TOKEN_CHANNEL i=146 txt=.. tt=47
+                                          ( RANGE i=230 txt=.. tt=47 DEFAULT_TOKEN_CHANNEL
                                           ) 
-                                          ( DEFAULT_TOKEN_CHANNEL i=148 txt='z' tt=8
+                                          ( STRING_LITERAL i=233 txt='z' tt=8 DEFAULT_TOKEN_CHANNEL
                               ) ) ) ) ) ) ) 
-                              ( DEFAULT_TOKEN_CHANNEL i=149 txt=) tt=34
+                              ( RPAREN i=236 txt=) tt=34 DEFAULT_TOKEN_CHANNEL
                       ) ) ) ) ) 
-                      ( DEFAULT_TOKEN_CHANNEL i=151 txt=| tt=45
+                      ( OR i=238 txt=| tt=45 DEFAULT_TOKEN_CHANNEL
                       ) 
                       ( lexerAlt
                         ( lexerElements
                           ( lexerElement
                             ( lexerBlock
-                              ( DEFAULT_TOKEN_CHANNEL i=153 txt=( tt=33
+                              ( LPAREN i=240 txt=( tt=33 DEFAULT_TOKEN_CHANNEL
                               ) 
                               ( lexerAltList
                                 ( lexerAlt
@@ -390,35 +390,35 @@ WS : [ \r\n\t] + -> skip ;
                                     ( lexerElement
                                       ( lexerAtom
                                         ( characterRange
-                                          ( DEFAULT_TOKEN_CHANNEL i=154 txt='A' tt=8
+                                          ( STRING_LITERAL i=241 txt='A' tt=8 DEFAULT_TOKEN_CHANNEL
                                           ) 
-                                          ( DEFAULT_TOKEN_CHANNEL i=156 txt=.. tt=47
+                                          ( RANGE i=245 txt=.. tt=47 DEFAULT_TOKEN_CHANNEL
                                           ) 
-                                          ( DEFAULT_TOKEN_CHANNEL i=158 txt='Z' tt=8
+                                          ( STRING_LITERAL i=248 txt='Z' tt=8 DEFAULT_TOKEN_CHANNEL
                               ) ) ) ) ) ) ) 
-                              ( DEFAULT_TOKEN_CHANNEL i=159 txt=) tt=34
+                              ( RPAREN i=251 txt=) tt=34 DEFAULT_TOKEN_CHANNEL
                       ) ) ) ) ) 
-                      ( DEFAULT_TOKEN_CHANNEL i=161 txt=| tt=45
+                      ( OR i=253 txt=| tt=45 DEFAULT_TOKEN_CHANNEL
                       ) 
                       ( lexerAlt
                         ( lexerElements
                           ( lexerElement
                             ( lexerAtom
                               ( terminal
-                                ( DEFAULT_TOKEN_CHANNEL i=163 txt='_' tt=8
+                                ( STRING_LITERAL i=255 txt='_' tt=8 DEFAULT_TOKEN_CHANNEL
                     ) ) ) ) ) ) ) 
-                    ( DEFAULT_TOKEN_CHANNEL i=165 txt=) tt=34
+                    ( RPAREN i=259 txt=) tt=34 DEFAULT_TOKEN_CHANNEL
                   ) ) 
                   ( ebnfSuffix
-                    ( DEFAULT_TOKEN_CHANNEL i=166 txt=+ tt=44
+                    ( PLUS i=260 txt=+ tt=44 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=168 txt=; tt=32
+        ( SEMI i=262 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
     ) ) ) 
     ( ruleSpec
       ( lexerRuleSpec
-        ( DEFAULT_TOKEN_CHANNEL i=170 txt=WS tt=1
+        ( TOKEN_REF i=265 txt=WS tt=1 DEFAULT_TOKEN_CHANNEL
         ) 
-        ( DEFAULT_TOKEN_CHANNEL i=172 txt=: tt=29
+        ( COLON i=268 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
         ) 
         ( lexerRuleBlock
           ( lexerAltList
@@ -426,23 +426,24 @@ WS : [ \r\n\t] + -> skip ;
               ( lexerElements
                 ( lexerElement
                   ( lexerAtom
-                    ( DEFAULT_TOKEN_CHANNEL i=174 txt=[ \\r\\n\\t] tt=3
+                    ( LEXER_CHAR_SET i=270 txt=[ \\r\\n\\t] tt=3 DEFAULT_TOKEN_CHANNEL
                   ) ) 
                   ( ebnfSuffix
-                    ( DEFAULT_TOKEN_CHANNEL i=176 txt=+ tt=44
+                    ( PLUS i=280 txt=+ tt=44 DEFAULT_TOKEN_CHANNEL
               ) ) ) ) 
               ( lexerCommands
-                ( DEFAULT_TOKEN_CHANNEL i=178 txt=-> tt=37
+                ( RARROW i=282 txt=-> tt=37 DEFAULT_TOKEN_CHANNEL
                 ) 
                 ( lexerCommand
                   ( lexerCommandName
                     ( identifier
-                      ( DEFAULT_TOKEN_CHANNEL i=180 txt=skip tt=2
+                      ( RULE_REF i=285 txt=skip tt=2 DEFAULT_TOKEN_CHANNEL
         ) ) ) ) ) ) ) ) 
-        ( DEFAULT_TOKEN_CHANNEL i=182 txt=; tt=32
+        ( SEMI i=290 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
   ) ) ) ) 
-  ( DEFAULT_TOKEN_CHANNEL i=184 txt=<EOF> tt=-1
+  ( EOF i=293 txt= tt=-1 DEFAULT_TOKEN_CHANNEL
 ) ) 
+
 
 > quit
 Bye!
