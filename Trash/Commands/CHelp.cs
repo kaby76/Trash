@@ -18,56 +18,59 @@ Example:
             if (tree.NonWsArgMode() == null)
             {
                 System.Console.WriteLine(@"Commands:
-agl - read a tree from stdin and draw a Windows Form graph.
+agl - Read a tree from stdin and draw a Windows Form graph.
 alias - Allow a string to be substituted for a word of a simple command.
-analyze - perform an analysis of a grammar.
-!! (""bang bang"") - repeat the previous command.
-!int - repeat a previous command.
-cat - cat a file to stdout.
-cd - change directory.
-combine - create a combined grammar from the lexer and parser grammars on the top of stack.
-delabel - remove all labels from an Antlr4 grammar.
-delete - delete nodes in the parse tree for a grammar and reform the grammar.
-. (aka 'dot') - print out the parse tree for the file at the top of stack.
-echo - echo a string to stdout.
-fold - replace a sequence of symbols on the RHS of a rule with a LHS symbol of another rule.
-foldlit - replace a literal on the RHS of a rule with a LHS symbol of another rule.
-generate - generate a parser and compile it.
-group - group common sub-sequences of symbols for alts.
-has - analyze a grammar for left/right/direct/indirect recursion.
-help - gives help for commands.
-history - show the history of commands executed.
-json - read a tree from stdin and produce a json representation.
-kleene - convert a rule in BNF to EBNF.
-ls - show contents of a directory.
-mvsr - move a rule to the top of the grammar.
-parse - parse a grammar.
-pop - pop the stack of files.
-print - print the file at the top of stack.
-pwd - print out the current working directory.
-quit - exit Trash.
-read - read a file and place it on the stack.
-rename - rename a symbol in the grammar.
-reorder - reorder the rules of a grammar.
-rotate - rotate the stack.
-rr - replace left recursion with right recursion.
-run - run a parser and output a parse tree.
-rup - remove useless parentheses in a grammar rule.
-set - set a value.
-split - split a combined grammar.
-st - print the tree using 'toStringTree()'.
-stack - print the stack.
-text - print the tree source.
-ulliteral - convert a lexer rule for a simple string literal to accept a string in any case.
-unalias - unalias a command.
-unfold - unfold a grammar rule symbol.
-ungroup - ungroup a parenthesized alt.
-unulliteral - inverse transform of ulliteral.
-version - print out the version of Trash.
-workspace - create a new workspace for the run command.
-write - write a file to disk.
-xgrep - find nodes in the parse tree for a grammar.
-xml - read a tree from stdin and convert it to xml.
+analyze - Perform an analysis of a grammar.
+!! (""bang bang"") - Repeat the previous command.
+!int - Repeat a previous command.
+cat - Type the contents of a file to stdout.
+cd - Change directory.
+combine - Create a combined grammar from the lexer and parser grammars on the top of stack.
+convert - Convert the parsed grammar file at the top of stack into Antlr4 syntax.
+delabel - Remove all labels from an Antlr4 grammar.
+delete - Delete nodes in the parse tree for a grammar and reform the grammar.
+dot - Print a Dot graph.
+echo - Echo a string to stdout.
+fold - Replace a sequence of symbols on the RHS of a rule with a LHS symbol of another rule.
+foldlit - Replace a literal on the RHS of a rule with a LHS symbol of another rule.
+generate - Generate a parser and compile it.
+group - Group common sub-sequences of symbols for alts.
+has - Analyze a grammar for left/right/direct/indirect recursion.
+help - Give help for commands.
+history - Show the history of commands executed.
+json - Read a tree from stdin and produce a json representation.
+kleene - Convert a rule in BNF to EBNF.
+ls - Show contents of a directory.
+mvsr - Move a rule to the top of the grammar.
+parse - Parse a grammar.
+period (aka '.') - Print out the parse tree for the file at the top of stack.
+pop - Pop the stack of files.
+print - Print the file at the top of stack.
+pwd - Print out the current working directory.
+quit - Exit Trash.
+read - Read a file and place it on the stack.
+rename - Rename a symbol in the grammar.
+reorder - Reorder the rules of a grammar.
+rotate - Rotate the stack.
+rr - Replace left recursion with right recursion.
+run - Run a parser and output a parse tree.
+rup - Remove useless parentheses in a grammar rule.
+set - Set a value.
+split - Split a combined grammar.
+st - Print the tree using 'toStringTree()'.
+stack - Print the stack.
+text - Print the tree source.
+tokens - Print the tokens associated with a parse tree.
+ulliteral - Convert a lexer rule for a simple string literal to accept a string in any case.
+unalias - Unalias a command.
+unfold - Unfold a grammar rule symbol.
+ungroup - Ungroup a parenthesized alt.
+unulliteral - Apply inverse transform of ulliteral.
+version - Print out the version of Trash.
+workspace - Create a new workspace for the run command.
+write - Write a file to disk.
+xgrep - Find nodes in the parse tree for a grammar.
+xml - Read a tree from stdin and convert it to xml.
 ");
             }
             else
@@ -122,6 +125,8 @@ xml - read a tree from stdin and convert it to xml.
                     new CMvsr().Help();
                 else if (cmd == "parse")
                     new CParse().Help();
+                else if (cmd == "period")
+                    new CPeriod().Help();
                 else if (cmd == "pop")
                     new CPop().Help();
                 else if (cmd == "print")

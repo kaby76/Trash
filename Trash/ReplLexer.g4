@@ -68,7 +68,7 @@ KLEENE : 'kleene' -> pushMode(ArgMode) ;
 LS : 'ls' -> pushMode(ArgMode) ;
 MVSR : 'mvsr' -> pushMode(ArgMode) ;
 PARSE : 'parse' -> pushMode(ArgMode) ;
-PERIOD : '.' -> pushMode(ArgMode) ;
+PERIOD : ( '.' | 'period' ) -> pushMode(ArgMode) ;
 POP : 'pop' -> pushMode(ArgMode) ;
 PRINT : 'print' -> pushMode(ArgMode) ;
 PWD : 'pwd' -> pushMode(ArgMode) ;

@@ -1,30 +1,35 @@
 #!/bin/sh
-exe="../bin/Debug/netcoreapp3.1/Trash.exe -noprompt -echo"
+exe="../bin/Debug/net5-windows/Trash.exe -noprompt -echo"
 
 echo ======== TEST 1 HELP ========
 
 cat << HERE | $exe > test1.out
 help
+help agl
 help alias
 help analyze
 help bang
+help cat
 help cd
 help combine
 help convert
 help delabel
 help delete
 help dot
-help find
+help echo
 help fold
 help foldlit
+help generate
 help group
 help has
 help help
 help history
+help json
 help kleene
 help ls
 help mvsr
 help parse
+help period
 help pop
 help print
 help pwd
@@ -49,6 +54,8 @@ help unulliteral
 help version
 help workspace
 help write
+help xgrep
+help xml
 quit
 HERE
 diff test1.out test1.std
@@ -64,7 +71,7 @@ cat << HERE | $exe > test2.out
 read Expr.g4
 print
 parse
-.
+. | tree
 quit
 HERE
 diff test2.out test2.std
@@ -75,13 +82,13 @@ else
 	echo TEST 2 FAILED
 fi
 
-echo ======== TEST 3 DOT, FIND, TEXT, ST ========
+echo ======== TEST 3 DOT, XGREP, TEXT, ST ========
 cat << HERE | $exe > test3.out
 read Expr.g4
 parse
-. | find "//parserRuleSpec[RULE_REF/text()='a']"
-. | find "//parserRuleSpec[RULE_REF/text()='a']" | text
-. | find "//parserRuleSpec[RULE_REF/text()='a']" | st
+. | xgrep "//parserRuleSpec[RULE_REF/text()='a']" | tree
+. | xgrep "//parserRuleSpec[RULE_REF/text()='a']" | text
+. | xgrep "//parserRuleSpec[RULE_REF/text()='a']" | st
 quit
 HERE
 diff test3.out test3.std
