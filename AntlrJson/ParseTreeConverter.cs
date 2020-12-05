@@ -1,4 +1,6 @@
-﻿namespace AntlrJson
+﻿using Antlr4.Runtime.Misc;
+
+namespace AntlrJson
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -24,6 +26,7 @@
             {
                 return string.Empty;
             }
+
             return char.ToUpper(s[0]) + s.Substring(1);
         }
 
@@ -70,6 +73,7 @@
                 {
                     if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
                     reader.Read();
+                    int token_index = 0;
                     while (reader.TokenType == JsonTokenType.Number)
                     {
                         var type = reader.GetInt32();
@@ -87,6 +91,7 @@
                         token.Channel = channel;
                         token.InputStream = lexer.InputStream;
                         token.TokenSource = lexer;
+                        token.TokenIndex = token_index++;
                         token.Text =
                             out_token_stream.Text.Substring(token.StartIndex, token.StopIndex - token.StartIndex + 1);
                         out_token_stream.Add(token);
@@ -129,6 +134,7 @@
                         literal_names.Add(reader.GetString());
                         reader.Read();
                     }
+
                     reader.Read();
                 }
                 else if (pn == "SymbolicNames")
@@ -140,6 +146,7 @@
                         symbolic_names.Add(reader.GetString());
                         reader.Read();
                     }
+
                     reader.Read();
                 }
                 else if (pn == "LexerRuleNames")
@@ -151,6 +158,7 @@
                         lexer_rule_names.Add(reader.GetString());
                         reader.Read();
                     }
+
                     reader.Read();
                 }
                 else if (pn == "ParserRuleNames")
@@ -163,6 +171,7 @@
                         parser_rule_names.Add(name);
                         reader.Read();
                     }
+
                     reader.Read();
                 }
                 else if (pn == "TokenTypeMap")
@@ -177,6 +186,7 @@
                         reader.Read();
                         token_type_map[name] = tt;
                     }
+
                     reader.Read();
                 }
                 else if (pn == "Nodes")
@@ -191,7 +201,7 @@
                         reader.Read();
                         int type_of_node = reader.GetInt32();
                         reader.Read();
-                        var parent_node = parent > 0 ? nodes[parent] as ParserRuleContext : null;
+                        var parent_node = parent > 0 ? nodes[parent] as MyParserRuleContext : null;
                         if (type_of_node < 1000000)
                         {
                             MyParserRuleContext foo = new MyParserRuleContext(parent_node, 0)
@@ -199,26 +209,46 @@
                                 _ruleIndex = type_of_node
                             };
                             nodes[current] = foo;
-                            if (parent_node == null) result.Add(foo);
-                            parent_node?.AddChild((Antlr4.Runtime.RuleContext)foo);
+                            if (parent_node == null)
+                            {
+                                result.Add(foo);
+                            }
+                            else
+                            {
+                                parent_node.AddChild((Antlr4.Runtime.RuleContext) foo);
+                            }
                         }
                         else
                         {
                             var index = type_of_node - 1000000;
                             var symbol = out_token_stream.Get(index);
-                            var foo = new TerminalNodeImpl(symbol);
+                            var foo = new MyTerminalNodeImpl(symbol);
                             nodes[current] = foo;
                             foo.Parent = parent_node;
-                            if (parent_node == null) result.Add(foo);
-                            parent_node?.AddChild(foo);
+                            if (parent_node == null)
+                            {
+                                result.Add(foo);
+                            }
+                            else
+                            {
+                                parent_node.AddChild(foo);
+                            }
                         }
+
                         current++;
                     }
+
+                    foreach (var n in result)
+                    {
+                        Sweep(n);
+                    }
+
                     reader.Read();
                 }
                 else
                     throw new JsonException();
             }
+
             var vocab = new Vocabulary(literal_names.ToArray(), symbolic_names.ToArray());
             parser._vocabulary = vocab;
             parser._grammarFileName = fake_char_stream.SourceName;
@@ -228,7 +258,7 @@
             lexer._tokenTypeMap = token_type_map;
             var res = new AntlrJson.ParseInfo()
             {
-                FileName= fake_char_stream.SourceName,
+                FileName = fake_char_stream.SourceName,
                 Stream = out_token_stream,
                 Nodes = result.ToArray(),
                 Lexer = lexer,
@@ -236,6 +266,38 @@
                 Text = text
             };
             return res;
+        }
+
+        private void Sweep(IParseTree node)
+        {
+            Stack<IParseTree> s = new Stack<IParseTree>();
+            Stack<IParseTree> t = new Stack<IParseTree>();
+            s.Push(node);
+            while (s.Any())
+            {
+                var n = s.Pop();
+                t.Push(n);
+                for (int i = n.ChildCount - 1; i >= 0; --i)
+                {
+                    var c = n.GetChild(i);
+                    s.Push(c);
+                }
+            }
+            while (t.Any())
+            {
+                var n = t.Pop();
+                if (n is MyParserRuleContext x)
+                {
+                    if (n.ChildCount > 0)
+                    {
+                        x._sourceInterval = new Interval(n.GetChild(0).SourceInterval.a, n.GetChild(n.ChildCount - 1).SourceInterval.b);
+                    }
+                }
+                else if (n is MyTerminalNodeImpl y)
+                {
+                    y._sourceInterval = new Interval(y.Symbol.StartIndex, y.Symbol.StartIndex);
+                }
+            }
         }
 
         public override void Write(Utf8JsonWriter writer, ParseInfo tuple, JsonSerializerOptions options)

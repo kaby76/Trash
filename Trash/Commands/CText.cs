@@ -1,5 +1,6 @@
 ﻿using System;
 using Algorithms;
+using LanguageServer;
 using Workspaces;
 
 namespace Trash.Commands
@@ -82,6 +83,7 @@ Example:
 			var obj1 = JsonSerializer.Deserialize<AntlrJson.ParseInfo>(lines, serializeOptions);
 			var nodes = obj1.Nodes;
             var parser = obj1.Parser;
+            var lexer = obj1.Lexer;
             var fn = obj1.FileName;
             Document doc = null;
             if (!(fn == null || fn == "stdin"))
