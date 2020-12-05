@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using System.Windows.Xps.Serialization;
+
+namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -22,6 +24,7 @@
         public int current_line_index = 0;
         public string[] lines = null;
         public int QuietAfter = 10;
+        public bool Times = false;
         public readonly Docs _docs;
         public Workspace _workspace { get; set; } = new Workspace();
         public static string Version { get; internal set; } = "8.3";
@@ -371,8 +374,12 @@
                             new CXml().Execute(this, x_xml, is_piped);
                         }
                         else throw new Exception("Unhandled command!");
-                        DateTime after = DateTime.Now;
-                        System.Console.Error.WriteLine("Time for command: " + (after - before));
+
+                        if (Times)
+                        {
+                            DateTime after = DateTime.Now;
+                            System.Console.Error.WriteLine("Time for command: " + (after - before));
+                        }
                         HistoryAdd(input);
                     }
                     catch (Repl.DoNotAddToHistory)

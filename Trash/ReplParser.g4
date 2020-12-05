@@ -105,7 +105,7 @@ rotate : ROTATE ;
 rr : RR StringLiteral ;
 run : RUN arg? ;
 rup : RUP StringLiteral? ;
-set : SET NonWsArgMode '=' (StringLiteral | INT) ;
+set : SET NonWsArgMode '=' (StringLiteral | INTArgMode | NonWsArgMode ) ;
 split : SPLIT ;
 st : ST ;
 stack : STACK ;

@@ -126,6 +126,7 @@ EQUAL : '=' ;
 GT : '>' ;
 SEMI : ';' ;
 PIPE : '|' -> popMode ;
+INTArgMode : Digit+ ;
 NonWsArgMode : ~(' ' | '\n' | '\r' | ';' | '=' | '!' | '|' | '>') (~(' ' | '\n' | '\r' | ';' | '=' | '|' | '>'))* ;
 HWSArgMode : Hws -> skip ;
 VWSArgMode : Vws -> skip ;
