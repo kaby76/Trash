@@ -1,49 +1,65 @@
 > help
 Commands:
+agl - Read a tree from stdin and draw a Windows Form graph.
 alias - Allow a string to be substituted for a word of a simple command.
-analyze - perform an analysis of a grammar.
-!! ("bang bang") - repeat the previous command.
-!int - repeat a previous command.
-cd - change directory.
-combine - create a combined grammar from the lexer and parser grammars on the top of stack.
-delabel - remove all labels from an Antlr4 grammar.
-delete - delete nodes in the parse tree for a grammar and reform the grammar.
-. (aka 'dot') - print out the parse tree for the file at the top of stack.
-find - find nodes in the parse tree for a grammar.
-fold - replace a sequence of symbols on the RHS of a rule with a LHS symbol of another rule.
-foldlit - replace a literal on the RHS of a rule with a LHS symbol of another rule.
-group - group common sub-sequences of symbols for alts.
-has - analyze a grammar for left/right/direct/indirect recursion.
-help - gives help for commands.
-history - show the history of commands executed.
-kleene - convert a rule in BNF to EBNF.
-ls - show contents of a directory.
-mvsr - move a rule to the top of the grammar.
-parse - parse a grammar.
-pop - pop the stack of files.
-print - print the file at the top of stack.
-pwd - print out the current working directory.
-quit - exit Trash.
-read - read a file and place it on the stack.
-rename - rename a symbol in the grammar.
-reorder - reorder the rules of a grammar.
-rotate - rotate the stack.
-rr - replace left recursion with right recursion.
-run - generate a parser, compile it, and run it on input.
-rup - remove useless parentheses in a grammar rule.
-set - set a value.
-split - split a combined grammar.
-st - print the tree using 'toStringTree()'.
-stack - print the stack.
-text - print the tree source.
-ulliteral - convert a lexer rule for a simple string literal to accept a string in any case.
-unalias - unalias a command.
-unfold - unfold a grammar rule symbol.
-ungroup - ungroup a parenthesized alt.
-unulliteral - inverse transform of ulliteral.
-version - print out the version of Trash.
-workspace - create a new workspace for the run command.
-write - write a file to disk.
+analyze - Perform an analysis of a grammar.
+!! ("bang bang") - Repeat the previous command.
+!int - Repeat a previous command.
+cat - Type the contents of a file to stdout.
+cd - Change directory.
+combine - Create a combined grammar from the lexer and parser grammars on the top of stack.
+convert - Convert the parsed grammar file at the top of stack into Antlr4 syntax.
+delabel - Remove all labels from an Antlr4 grammar.
+delete - Delete nodes in the parse tree for a grammar and reform the grammar.
+dot - Print a Dot graph.
+echo - Echo a string to stdout.
+fold - Replace a sequence of symbols on the RHS of a rule with a LHS symbol of another rule.
+foldlit - Replace a literal on the RHS of a rule with a LHS symbol of another rule.
+generate - Generate a parser and compile it.
+group - Group common sub-sequences of symbols for alts.
+has - Analyze a grammar for left/right/direct/indirect recursion.
+help - Give help for commands.
+history - Show the history of commands executed.
+json - Read a tree from stdin and produce a json representation.
+kleene - Convert a rule in BNF to EBNF.
+ls - Show contents of a directory.
+mvsr - Move a rule to the top of the grammar.
+parse - Parse a grammar.
+period (aka '.') - Print out the parse tree for the file at the top of stack.
+pop - Pop the stack of files.
+print - Print the file at the top of stack.
+pwd - Print out the current working directory.
+quit - Exit Trash.
+read - Read a file and place it on the stack.
+rename - Rename a symbol in the grammar.
+reorder - Reorder the rules of a grammar.
+rotate - Rotate the stack.
+rr - Replace left recursion with right recursion.
+run - Run a parser and output a parse tree.
+rup - Remove useless parentheses in a grammar rule.
+set - Set a value.
+split - Split a combined grammar.
+st - Print the tree using 'toStringTree()'.
+stack - Print the stack.
+text - Print the tree source.
+tokens - Print the tokens associated with a parse tree.
+ulliteral - Convert a lexer rule for a simple string literal to accept a string in any case.
+unalias - Unalias a command.
+unfold - Unfold a grammar rule symbol.
+ungroup - Ungroup a parenthesized alt.
+unulliteral - Apply inverse transform of ulliteral.
+version - Print out the version of Trash.
+workspace - Create a new workspace for the run command.
+write - Write a file to disk.
+xgrep - Find nodes in the parse tree for a grammar.
+xml - Read a tree from stdin and convert it to xml.
+
+> help agl
+agl
+Read a tree from stdin and open a Windows Form that displays the graph.
+
+Example:
+    . | agl
 
 > help alias
 alias <id> = <string>
@@ -71,6 +87,13 @@ Example:
     !!
     !5
     !par
+
+> help cat
+Cat <arg>
+Read a file and write to stdout.
+
+Example:
+    cat input.txt
 
 > help cd
 cd <string>
@@ -117,18 +140,18 @@ Example:
     delete "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
 > help dot
-.
-Print out the parse tree for the file at the top of stack.
+dot
+Print out the parse tree in Dot format.
 
 Example:
-    .
+    . | dot > output.dot
 
-> help find
-find <string>
-Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
+> help echo
+Echo <string>*
+Echo string literals and write to stdout.
 
 Example:
-    find "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+    echo "1 + 2"
 
 > help fold
 fold <string>
@@ -144,6 +167,16 @@ Replace a literal on the RHS of a rule with the lexer rule LHS symbol.
 
 Example:
     foldlit "//lexerRuleSpec/TOKEN_REF"
+
+> help generate
+generate <arg>* 
+Generate a parser using the Antlr tool on the grammar specified by the current
+workspace. The generated parser is placed in the directory <current-directory>/Generated/.
+The given arg is the name of the start rule. After generating the parser and driver, it
+is compiled for use with the "run" command.
+
+Examples:
+    generate expression
 
 > help group
 group <string>
@@ -176,6 +209,13 @@ Print out the shell command history.
 Example:
     history
 
+> help json
+json
+Read a tree from stdin and write a JSON represenation of it.
+
+Example:
+    . | json
+
 > help kleene
 kleene <string>?
 Replace a rule, whose symbol is identified by the xpath string, of the grammar
@@ -206,6 +246,13 @@ Parse the flie at the top of stack with the given parser type (antlr2, _antlr3, 
 Example:
     parse
     parse antlr2
+
+> help period
+.
+Print out the parse tree for the file at the top of stack.
+
+Example:
+    .
 
 > help pop
 pop
@@ -258,14 +305,16 @@ Example:
 reorder alpha
 reorder bfs <string>
 reorder dfs <string>
-Reorder the parser rules according to the specified type. For BFS and DFS, an XPath
-expression must be supplied to specify all the start rule symbols. For alphabetic
-reordering, all parser rules are retained, and simply reordered alphabetically. For BFS
-and DFS, if the rule is unreachable from a start node, then the rule is dropped from
-the grammar.
+Reorder the parser rules according to the specified type and start rule.
+For BFS and DFS, an XPath expression must be supplied to specify all the start
+rule symbols. For alphabetic reordering, all parser rules are retained, and
+simply reordered alphabetically. For BFS and DFS, if the rule is unreachable
+from a start node set that is specified via <string>, then the rule is dropped
+from the grammar.
 
 Example:
     reorder alpha
+    reorder dfs "//parserRuleSpec/RULE_REF[text()='libraryDefinition']"
 
 > help rotate
 rotate
@@ -282,9 +331,13 @@ Example:
     rr ...
 
 > help run
-run arg1 (arg2 arg3? )?
-Generate a parser using the Antlr tool on the grammar specified by the current
-workspace run the generated parser, output a tree or find elements in the tree.
+run arg?
+Run a parser that was generated and built using "generate" with input that is read from
+stdin. The output of the command is the resulting parse tree.
+
+Examples:
+    cat input.txt | run | json
+    echo "1 + 2" | run
 
 > help rup
 rup <string>?
@@ -331,8 +384,9 @@ Example:
     stack
 
 > help text
-text
-Reads a tree from stdin and prints the source text.
+text line-number?
+Reads a tree from stdin and prints the source text. If 'line-number' is
+specified, the line number range for the tree is printed.
 
 Example:
     find //lexerRuleSpec | text
@@ -404,6 +458,20 @@ Pop the stack, and write out the file specified.
 
 Example:
     write
+
+> help xgrep
+xgrep <string>
+Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
+
+Example:
+    xgrep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+
+> help xml
+xml
+Read a tree from stdin and write an XML represenation of it.
+
+Example:
+    . | xml
 
 > quit
 Bye!
