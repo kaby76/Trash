@@ -20,14 +20,12 @@ Examples:
         public void Execute(Repl repl, ReplParser.StContext tree, bool piped)
         {
             var lines = repl.input_output_stack.Pop();
-            var doc = repl.stack.Peek();
-            var pr = ParsingResultsFactory.Create(doc);
-            var lexer = pr.Lexer;
-            var parser = pr.Parser;
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
             var parse_info = JsonSerializer.Deserialize<AntlrJson.ParseInfo>(lines, serializeOptions);
+            var lexer = parse_info.Lexer;
+            var parser = parse_info.Parser;
             var nodes = parse_info.Nodes;
             StringBuilder sb = new StringBuilder();
             foreach (var t in nodes)

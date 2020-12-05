@@ -1,11 +1,11 @@
 > read Expr.g4
 > parse
-> . | find "//parserRuleSpec[RULE_REF/text()='a']"
+> . | xgrep "//parserRuleSpec[RULE_REF/text()='a']" | tree
 
 ( parserRuleSpec
-  ( DEFAULT_TOKEN_CHANNEL i=58 txt=a tt=2
+  ( RULE_REF i=97 txt=a tt=2 DEFAULT_TOKEN_CHANNEL
   ) 
-  ( DEFAULT_TOKEN_CHANNEL i=60 txt=: tt=29
+  ( COLON i=99 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
   ) 
   ( ruleBlock
     ( ruleAltList
@@ -14,16 +14,18 @@
           ( element
             ( atom
               ( terminal
-                ( DEFAULT_TOKEN_CHANNEL i=62 txt=INT tt=1
+                ( TOKEN_REF i=101 txt=INT tt=1 DEFAULT_TOKEN_CHANNEL
   ) ) ) ) ) ) ) ) 
-  ( DEFAULT_TOKEN_CHANNEL i=64 txt=; tt=32
+  ( SEMI i=105 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
   ) 
   ( exceptionGroup
 ) ) 
 
-> . | find "//parserRuleSpec[RULE_REF/text()='a']" | text
+
+> . | xgrep "//parserRuleSpec[RULE_REF/text()='a']" | text
 a : INT ;
-> . | find "//parserRuleSpec[RULE_REF/text()='a']" | st
-([287 281 141] a : ([320 287 281 141] ([370 320 287 281 141] ([372 370 320 287 281 141] ([380 372 370 320 287 281 141] ([485 380 372 370 320 287 281 141] ([498 485 380 372 370 320 287 281 141] ([546 498 485 380 372 370 320 287 281 141] INT))))))) ; [322 287 281 141])
+> . | xgrep "//parserRuleSpec[RULE_REF/text()='a']" | st
+(parserRuleSpec a : (ruleBlock (ruleAltList (labeledAlt (alternative (element (atom (terminal INT))))))) ; exceptionGroup)
+
 > quit
 Bye!
