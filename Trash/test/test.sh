@@ -82,7 +82,7 @@ else
 	echo TEST 2 FAILED
 fi
 
-echo ======== TEST 3 DOT, XGREP, TEXT, ST ========
+echo ======== TEST 3 PERIOD, XGREP, TEXT, ST ========
 cat << HERE | $exe > test3.out
 read Expr.g4
 parse
@@ -157,4 +157,40 @@ then
 else
 	echo TEST 6 FAILED
 fi
+
+
+echo ======== TEST 7 DOT, XML, JSON ========
+cat << HERE | $exe > test7.out
+read Expr.g4
+parse
+. | dot
+. | xml
+. | json
+quit
+HERE
+diff test7.out test7.std
+if [ $? = 0 ]
+then
+	echo TEST 7 PASSED
+else
+	echo TEST 7 FAILED
+fi
+
+
+echo ======== TEST 8 GENERATE, DOT ========
+cat << HERE | $exe > test8.out
+read Expr.g4
+parse
+generate e
+echo "1+2*3+4/5*6/7-8/9++10/-11" | run | dot
+quit
+HERE
+diff test8.out test8.std
+if [ $? = 0 ]
+then
+	echo TEST 8 PASSED
+else
+	echo TEST 8 FAILED
+fi
+
 
