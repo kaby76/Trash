@@ -21,6 +21,7 @@ cmd :
   | dot
   | delabel
   | delete
+  | diff
   | echo
   | empty
   | fold
@@ -78,6 +79,7 @@ combine : COMBINE ;
 convert : CONVERT type? ;
 delabel : DELABEL ;
 delete : DELETE arg ;
+diff : DIFF arg arg ;
 dot : DOT ;
 echo : ECHO arg* ;
 empty : ;

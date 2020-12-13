@@ -1,0 +1,138 @@
+
+( grammarSpec
+  ( grammarDecl
+    ( grammarType
+      ( GRAMMAR i=0 txt=grammar tt=19 DEFAULT_TOKEN_CHANNEL
+    ) ) 
+    ( identifier
+      ( TOKEN_REF i=8 txt=A tt=1 DEFAULT_TOKEN_CHANNEL
+    ) ) 
+    ( SEMI i=9 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) 
+  ( rules
+    ( ruleSpec
+      ( parserRuleSpec
+        ( RULE_REF i=12 txt=s tt=2 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( COLON i=14 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( ruleBlock
+          ( ruleAltList
+            ( labeledAlt
+              ( alternative
+                ( element
+                  ( atom
+                    ( ruleref
+                      ( RULE_REF i=16 txt=x tt=2 DEFAULT_TOKEN_CHANNEL
+        ) ) ) ) ) ) ) ) 
+        ( SEMI i=18 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( exceptionGroup
+    ) ) ) 
+    ( ruleSpec
+      ( parserRuleSpec
+        ( RULE_REF i=21 txt=x tt=2 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( COLON i=23 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( ruleBlock
+          ( ruleAltList
+            ( labeledAlt
+              ( alternative
+                ( element
+                  ( atom
+                    ( ruleref
+                      ( RULE_REF i=25 txt=e tt=2 DEFAULT_TOKEN_CHANNEL
+        ) ) ) ) ) ) ) ) 
+        ( SEMI i=27 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( exceptionGroup
+    ) ) ) 
+    ( ruleSpec
+      ( parserRuleSpec
+        ( RULE_REF i=30 txt=e tt=2 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( COLON i=32 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( ruleBlock
+          ( ruleAltList
+            ( labeledAlt
+              ( alternative
+                ( element
+                  ( atom
+                    ( ruleref
+                      ( RULE_REF i=34 txt=e tt=2 DEFAULT_TOKEN_CHANNEL
+                ) ) ) ) 
+                ( element
+                  ( atom
+                    ( terminal
+                      ( STRING_LITERAL i=36 txt='*' tt=8 DEFAULT_TOKEN_CHANNEL
+                ) ) ) ) 
+                ( element
+                  ( atom
+                    ( ruleref
+                      ( RULE_REF i=40 txt=e tt=2 DEFAULT_TOKEN_CHANNEL
+            ) ) ) ) ) ) 
+            ( OR i=42 txt=| tt=45 DEFAULT_TOKEN_CHANNEL
+            ) 
+            ( labeledAlt
+              ( alternative
+                ( element
+                  ( atom
+                    ( terminal
+                      ( TOKEN_REF i=44 txt=INT tt=1 DEFAULT_TOKEN_CHANNEL
+        ) ) ) ) ) ) ) ) 
+        ( SEMI i=48 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( exceptionGroup
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( TOKEN_REF i=51 txt=INT tt=1 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( COLON i=55 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerAtom
+                    ( LEXER_CHAR_SET i=57 txt=[0-9] tt=3 DEFAULT_TOKEN_CHANNEL
+                  ) ) 
+                  ( ebnfSuffix
+                    ( PLUS i=62 txt=+ tt=44 DEFAULT_TOKEN_CHANNEL
+        ) ) ) ) ) ) ) 
+        ( SEMI i=64 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
+    ) ) ) 
+    ( ruleSpec
+      ( lexerRuleSpec
+        ( TOKEN_REF i=67 txt=WS tt=1 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( COLON i=70 txt=: tt=29 DEFAULT_TOKEN_CHANNEL
+        ) 
+        ( lexerRuleBlock
+          ( lexerAltList
+            ( lexerAlt
+              ( lexerElements
+                ( lexerElement
+                  ( lexerAtom
+                    ( LEXER_CHAR_SET i=72 txt=[ \\t\\n] tt=3 DEFAULT_TOKEN_CHANNEL
+                  ) ) 
+                  ( ebnfSuffix
+                    ( PLUS i=79 txt=+ tt=44 DEFAULT_TOKEN_CHANNEL
+              ) ) ) ) 
+              ( lexerCommands
+                ( RARROW i=81 txt=-> tt=37 DEFAULT_TOKEN_CHANNEL
+                ) 
+                ( lexerCommand
+                  ( lexerCommandName
+                    ( identifier
+                      ( RULE_REF i=84 txt=skip tt=2 DEFAULT_TOKEN_CHANNEL
+        ) ) ) ) ) ) ) ) 
+        ( SEMI i=89 txt=; tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( EOF i=92 txt= tt=-1 DEFAULT_TOKEN_CHANNEL
+) ) 
+
+

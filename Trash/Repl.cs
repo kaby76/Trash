@@ -192,6 +192,10 @@ namespace Trash
                         {
                             new CDelete().Execute(this, x_delete, is_piped);
                         }
+                        else if (tree.diff() is ReplParser.DiffContext x_diff)
+                        {
+                            new CDiff().Execute(this, x_diff, is_piped);
+                        }
                         else if (tree.dot() is ReplParser.DotContext x_dot)
                         {
                             new CDot().Execute(this, x_dot, is_piped);
