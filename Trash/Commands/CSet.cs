@@ -10,6 +10,7 @@ Set a value.
 Example:
     set quietafter=10
     set times=true
+    set history=300
 ");
         }
 
@@ -27,6 +28,11 @@ Example:
             {
                 var v = bool.Parse(ids[1].GetText());
                 repl.Times = v;
+            }
+            else if (ids[0]?.GetText().ToLower() == "history")
+            {
+                var v = int.Parse(v2);
+                repl.HistoryLimit = v;
             }
         }
     }

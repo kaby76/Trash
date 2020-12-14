@@ -16,7 +16,8 @@ namespace Trash
     public class Repl
     {
         public List<string> History { get; set; } = new List<string>();
-        const string PreviousHistoryFfn = ".trash.rc";
+        const string SetupFfn = ".trash_profile";
+        const string HistoryFfn = ".trash_history";
         public Dictionary<string, string> Aliases { get; set; } = new Dictionary<string, string>();
         public Utils.StackQueue<Document> stack = new Utils.StackQueue<Document>();
         public Utils.StackQueue<string> input_output_stack = new Utils.StackQueue<string>();
@@ -25,6 +26,7 @@ namespace Trash
         public string[] lines = null;
         public int QuietAfter = 10;
         public bool Times = false;
+        public int HistoryLimit = 0;
         public readonly Docs _docs;
         public Workspace _workspace { get; set; } = new Workspace();
         public static string Version { get; internal set; } = "8.3";
@@ -77,17 +79,35 @@ namespace Trash
         void HistoryRead()
         {
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (!System.IO.File.Exists(home + Path.DirectorySeparatorChar + PreviousHistoryFfn)) return;
-            var history = System.IO.File.ReadAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn);
-            History = history.ToList();
+            string[] history = new string[0];
+            if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + HistoryFfn))
+            {
+                history = System.IO.File.ReadAllLines(home + Path.DirectorySeparatorChar + HistoryFfn);
+            }
 
-            RecallAliases();
+            if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + SetupFfn))
+            {
+                var profile_input = System.IO.File.ReadAllLines(home + Path.DirectorySeparatorChar + SetupFfn);
+                List<string> profile = profile_input.ToList();
+                for (int i = 0; i < profile.Count; ++i)
+                {
+                    var inp = profile[i];
+                    try
+                    {
+                        Execute(inp);
+                    }
+                    catch
+                    { }
+                }
+            }
+            var hlist = history.ToList();
+            History = hlist.Skip(Math.Max(0, hlist.Count() - this.HistoryLimit)).ToList();
         }
 
         void HistoryWrite()
         {
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            System.IO.File.WriteAllLines(home + Path.DirectorySeparatorChar + PreviousHistoryFfn, History);
+            System.IO.File.WriteAllLines(home + Path.DirectorySeparatorChar + HistoryFfn, History);
         }
 
         public string GetArg(ReplParser.ArgContext arg)
@@ -579,15 +599,6 @@ namespace Trash
             }
             finally
             {
-            }
-        }
-
-        public void RecallAliases()
-        {
-            for (int i = 0; i < History.Count; ++i)
-            {
-                var inp = History[i];
-                ExecuteAlias(inp);
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace Trash.Commands
+﻿using System;
+
+namespace Trash.Commands
 {
     class CHistory
     {
@@ -15,7 +17,8 @@ Example:
         public void Execute(Repl repl, ReplParser.HistoryContext tree, bool piped)
         {
             System.Console.WriteLine();
-            for (int i = 0; i < repl.History.Count; ++i)
+            int start = Math.Max(0, repl.History.Count - repl.HistoryLimit);
+            for (int i = start; i < repl.History.Count; ++i)
             {
                 var h = repl.History[i];
                 System.Console.WriteLine(i + " " + h);

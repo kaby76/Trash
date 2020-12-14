@@ -14,10 +14,7 @@
                 var rest = stuff.Select(s => s.GetText()).ToList();
                 var rs = rest != null ? String.Join(" ", rest) : "";
                 cmd = cmd + " " + rs;
-                if (redo_aliases)
-                    repl.ExecuteAlias(cmd);
-                else
-                    repl.Execute(cmd);
+                repl.Execute(cmd);
             }
             else
             {
