@@ -82,12 +82,18 @@ namespace AntlrJson
                         reader.Read();
                         var stop = reader.GetInt32();
                         reader.Read();
+                        var line = reader.GetInt32();
+                        reader.Read();
+                        var column = reader.GetInt32();
+                        reader.Read();
                         var channel = reader.GetInt32();
                         reader.Read();
                         var token = new MyToken();
                         token.Type = type;
                         token.StartIndex = start;
                         token.StopIndex = stop;
+                        token.Line = line;
+                        token.Column = column;
                         token.Channel = channel;
                         token.InputStream = lexer.InputStream;
                         token.TokenSource = lexer;
@@ -320,6 +326,8 @@ namespace AntlrJson
                 writer.WriteNumberValue(token.Type);
                 writer.WriteNumberValue(token.StartIndex);
                 writer.WriteNumberValue(token.StopIndex);
+                writer.WriteNumberValue(token.Line);
+                writer.WriteNumberValue(token.Column);
                 writer.WriteNumberValue(token.Channel);
                 if (token.Type == Antlr4.Runtime.TokenConstants.EOF) break;
             }

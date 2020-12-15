@@ -50,7 +50,9 @@ Example:
                     if (a_node is TerminalNodeImpl term)
                     {
                         var name = term.Symbol.Text;
-                        System.Console.WriteLine("+++ " + name);
+                        var line = term.Symbol.Line;
+                        var col = term.Symbol.Column;
+                        System.Console.WriteLine("+++ (" + line + "," + col + ") " + name);
                     }
                 }
                 else if (o.O == Operation.Op.Delete)
@@ -61,7 +63,9 @@ Example:
                     if (a_node is TerminalNodeImpl term)
                     {
                         var name = term.Symbol.Text;
-                        System.Console.WriteLine("--- " + name);
+                        var line = term.Symbol.Line;
+                        var col = term.Symbol.Column;
+                        System.Console.WriteLine("--- (" + line + "," + col + ") " + name);
                     }
                 }
                 else if (o.O == Operation.Op.Change)
@@ -73,12 +77,16 @@ Example:
                     if (a_node is TerminalNodeImpl term)
                     {
                         var name = term.Symbol.Text;
-                        System.Console.WriteLine("--- " + name);
+                        var line = term.Symbol.Line;
+                        var col = term.Symbol.Column;
+                        System.Console.WriteLine("--- (" + line + "," + col + ") " + name);
                     }
                     if (a_node2 is TerminalNodeImpl term2)
                     {
                         var name = term2.Symbol.Text;
-                        System.Console.WriteLine("+++ " + name);
+                        var line = term2.Symbol.Line;
+                        var col = term2.Symbol.Column;
+                        System.Console.WriteLine("+++ (" + line + "," + col + ") " + name);
                     }
                 }
             }
