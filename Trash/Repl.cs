@@ -76,7 +76,7 @@ namespace Trash
             HistoryWrite();
         }
 
-        void HistoryRead()
+        void ReadSetupAndHistory()
         {
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string[] history = new string[0];
@@ -138,7 +138,7 @@ namespace Trash
             return sl;
         }
 
-        public void Execute(string input)
+        public void Execute(string input, bool add_to_history = true)
         {
             try
             {
@@ -294,7 +294,7 @@ namespace Trash
                         }
                         else if (tree.quit() != null)
                         {
-                            HistoryAdd(input);
+                            if (add_to_history) HistoryAdd(input);
                             throw new Repl.Quit();
                         }
                         else if (tree.read() is ReplParser.ReadContext x_read)
@@ -404,7 +404,7 @@ namespace Trash
                             DateTime after = DateTime.Now;
                             System.Console.Error.WriteLine("Time for command: " + (after - before));
                         }
-                        HistoryAdd(input);
+                        if (add_to_history) HistoryAdd(input);
                     }
                     catch (Repl.DoNotAddToHistory)
                     {
@@ -462,7 +462,7 @@ namespace Trash
 
         public void Execute()
         {
-            HistoryRead();
+            ReadSetupAndHistory();
             StreamReader reader;
             if (script_file != null)
             {

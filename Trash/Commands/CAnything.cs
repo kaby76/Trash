@@ -14,7 +14,7 @@
                 var rest = stuff.Select(s => s.GetText()).ToList();
                 var rs = rest != null ? String.Join(" ", rest) : "";
                 cmd = cmd + " " + rs;
-                repl.Execute(cmd);
+                repl.Execute(cmd, false);
             }
             else
             {
