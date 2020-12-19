@@ -40,7 +40,7 @@ Example:
                     var t = stack.Pop();
                     sb.AppendLine("Node" + t.GetHashCode().ToString()
                                           + " [label=\""
-                                          + Trees.GetNodeText(t, parse_info.Parser.RuleNames)
+                                          + LanguageServer.TreeOutput.PerformEscapes(Trees.GetNodeText(t, parse_info.Parser.RuleNames))
                                           + "\"];");
                     for (int i = t.ChildCount-1; i >= 0; --i)
                     {

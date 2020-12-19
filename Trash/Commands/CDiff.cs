@@ -41,11 +41,11 @@ Example:
             var result = ZhangShashaCSharp.Tree.ZhangShasha(trees[0], trees[1]);
             foreach (var o in result.Item2)
             {
-//                System.Console.Write(o.O.ToString() + " " + o.N1 + " => " + o.N2 + " ");
+                System.Console.Write(o.O.ToString() + " " + o.N1 + " => " + o.N2 + " ");
                 if (o.O == Operation.Op.Insert)
                 {
                     var zs_node = trees[1].all_nodes[o.N2];
-//                    System.Console.Write(zs_node.label);
+                    System.Console.Write(zs_node.label);
                     var a_node = trees[1].antlr_nodes[zs_node];
                     if (a_node is TerminalNodeImpl term)
                     {
@@ -58,7 +58,7 @@ Example:
                 else if (o.O == Operation.Op.Delete)
                 {
                     var zs_node = trees[0].all_nodes[o.N1];
-                    //                    System.Console.Write(zs_node.label);
+                    System.Console.Write(zs_node.label);
                     var a_node = trees[0].antlr_nodes[zs_node];
                     if (a_node is TerminalNodeImpl term)
                     {
@@ -90,16 +90,16 @@ Example:
                     }
                 }
             }
-            //System.Console.WriteLine("======");
-            //foreach (var o in trees[0].all_nodes)
-            //{
-            //    System.Console.WriteLine(o.Key + " " + o.Value.label + " " + trees[0].antlr_nodes[o.Value]);
-            //}
-            //System.Console.WriteLine("======");
-            //foreach (var o in trees[1].all_nodes)
-            //{
-            //    System.Console.WriteLine(o.Key + " " + o.Value.label + " " + trees[1].antlr_nodes[o.Value]);
-            //}
+            System.Console.WriteLine("======");
+            foreach (var o in trees[0].all_nodes)
+            {
+                System.Console.WriteLine(o.Key + " " + o.Value.label + " " + trees[0].antlr_nodes[o.Value]);
+            }
+            System.Console.WriteLine("======");
+            foreach (var o in trees[1].all_nodes)
+            {
+                System.Console.WriteLine(o.Key + " " + o.Value.label + " " + trees[1].antlr_nodes[o.Value]);
+            }
         }
     }
 }
