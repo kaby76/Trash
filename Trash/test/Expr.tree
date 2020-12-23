@@ -1,0 +1,4840 @@
+
+( syntax1
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_comment_symbol
+        ( OPSTAR i=0 txt=(* tt=80 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=2 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=3 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=4 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Hu i=5 txt=H tt=34 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=6 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=7 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=8 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=9 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Xu i=10 txt=X tt=50 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=11 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=12 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=13 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=14 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=15 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=16 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=17 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=18 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=19 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=20 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=21 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=22 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Hu i=23 txt=H tt=34 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=24 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=25 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=26 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=27 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=28 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=29 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=30 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=31 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=32 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=33 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=34 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=35 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=36 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=37 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=38 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=39 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=40 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=41 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=42 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=43 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=44 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=45 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=46 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=47 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=48 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=49 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=50 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=51 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=52 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=53 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=54 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Bu i=55 txt=B tt=28 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=56 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=57 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=58 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( decimal_digit
+        ( N2 i=59 txt=2 tt=55 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=60 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=61 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=62 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_comment_symbol
+        ( STARCP i=63 txt=*) tt=68 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=65 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=66 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=67 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Yu i=68 txt=Y tt=51 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=69 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=70 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=71 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Xu i=72 txt=X tt=50 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=73 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=74 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=75 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=76 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Yu i=77 txt=Y tt=51 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=78 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=79 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=80 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Xu i=81 txt=X tt=50 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=82 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=83 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=84 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=85 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=86 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=87 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=88 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_repeat_symbol
+        ( OPCOLON i=89 txt=(: tt=85 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=91 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=92 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Yu i=93 txt=Y tt=51 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=94 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=95 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=96 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Xu i=97 txt=X tt=50 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=98 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=99 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=100 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=101 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=102 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=103 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_repeat_symbol
+        ( COLONCP i=104 txt=:) tt=73 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=106 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=107 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=108 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=109 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Yu i=110 txt=Y tt=51 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=111 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=112 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=113 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Xu i=114 txt=X tt=50 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=115 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=116 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=117 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=118 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=119 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=120 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=121 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=122 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=123 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=124 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=125 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=126 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=127 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=128 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=129 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=130 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=131 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=132 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=133 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=134 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=135 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=136 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=137 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=138 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=139 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=140 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=141 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=142 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=143 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( defining_symbol
+            ( EQUAL i=144 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=145 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=146 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=147 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=148 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=149 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=150 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=151 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=152 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=153 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=154 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=155 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=156 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=157 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=158 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=159 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=160 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=161 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=162 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=163 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=164 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=165 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=166 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( terminator_symbol
+            ( DOT i=167 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=168 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=169 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=170 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=171 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=172 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=173 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=174 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=175 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=176 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=177 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=178 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=179 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=180 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=181 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=182 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=183 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=184 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=185 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=186 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=187 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=188 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=189 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=190 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=191 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=192 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=193 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=194 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=195 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=196 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Gu i=197 txt=G tt=33 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=198 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=199 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=200 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=201 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=202 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=203 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=204 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=205 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=206 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=207 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=208 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=209 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=210 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=211 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=212 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=213 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=214 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=215 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_repeat_symbol
+        ( OPCOLON i=216 txt=(: tt=85 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=218 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=219 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( definition_separator_symbol
+            ( FSLASH i=220 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=221 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=222 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=223 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=224 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=225 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=226 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Gu i=227 txt=G tt=33 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=228 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=229 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=230 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=231 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=232 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=233 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=234 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=235 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=236 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=237 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=238 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=239 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=240 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=241 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_repeat_symbol
+        ( COLONCP i=242 txt=:) tt=73 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=244 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=245 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=246 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=247 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=248 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=249 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Gu i=250 txt=G tt=33 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=251 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=252 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=253 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=254 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=255 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=256 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=257 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=258 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=259 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=260 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=261 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=262 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=263 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=264 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=265 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=266 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=267 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=268 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=269 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=270 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=271 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=272 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_repeat_symbol
+        ( OPCOLON i=273 txt=(: tt=85 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=275 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=276 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( concatenate_symbol
+            ( COMMA i=277 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=278 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=279 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=280 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=281 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=282 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=283 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=284 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=285 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_repeat_symbol
+        ( COLONCP i=286 txt=:) tt=73 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=288 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=289 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=290 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=291 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=292 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=293 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=294 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=295 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=296 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=297 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=298 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=299 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=300 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=301 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=302 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=303 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=304 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=305 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_option_symbol
+        ( CPSLASH i=306 txt=(/ tt=83 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=308 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=309 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( except_symbol
+            ( HYPHEN i=310 txt=- tt=74 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=311 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=312 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=313 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=314 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Xu i=315 txt=X tt=50 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=316 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=317 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=318 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=319 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=320 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=321 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=322 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=323 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_option_symbol
+        ( FSLASH_CP i=324 txt=/) tt=71 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=326 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=327 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=328 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=329 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Xu i=330 txt=X tt=50 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=331 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=332 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=333 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=334 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=335 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=336 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=337 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=338 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=339 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=340 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=341 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=342 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=343 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=344 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=345 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=346 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=347 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=348 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=349 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=350 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=351 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=352 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=353 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=354 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=355 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=356 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=357 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=358 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_option_symbol
+        ( CPSLASH i=359 txt=(/ tt=83 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=361 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=362 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=363 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=364 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=365 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Gu i=366 txt=G tt=33 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=367 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=368 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=369 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=370 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=371 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( repetition_symbol
+            ( STAR i=372 txt=* tt=77 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=373 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=374 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_option_symbol
+        ( FSLASH_CP i=375 txt=/) tt=71 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=377 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=378 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=379 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=380 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=381 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=382 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=383 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=384 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Yu i=385 txt=Y tt=51 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=386 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=387 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=388 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=389 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=390 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=391 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=392 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=393 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=394 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Yu i=395 txt=Y tt=51 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=396 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=397 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=398 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=399 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=400 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=401 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=402 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=403 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=404 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=405 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=406 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=407 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=408 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=409 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=410 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=411 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=412 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Qu i=413 txt=Q tt=43 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=414 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=415 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=416 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=417 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=418 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=419 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=420 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=421 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=422 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=423 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=424 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=425 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=426 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=427 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=428 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=429 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=430 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=431 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=432 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Qu i=433 txt=Q tt=43 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=434 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=435 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=436 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=437 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=438 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=439 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=440 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=441 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=442 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=443 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=444 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=445 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=446 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=447 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=448 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=449 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=450 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=451 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=452 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=453 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=454 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Qu i=455 txt=Q tt=43 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=456 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=457 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=458 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=459 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=460 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=461 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=462 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=463 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Gu i=464 txt=G tt=33 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=465 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=466 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=467 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=468 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=469 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=470 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=471 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=472 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=473 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Qu i=474 txt=Q tt=43 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=475 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=476 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=477 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=478 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=479 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=480 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=481 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=482 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=483 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=484 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=485 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=486 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=487 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=488 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=489 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=490 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=491 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=492 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=493 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=494 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=495 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=496 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=497 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=498 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=499 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=500 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=501 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=502 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=503 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=504 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=505 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=506 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=507 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=508 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=509 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=510 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=511 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=512 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=513 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=514 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=515 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=516 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=517 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=518 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Yu i=519 txt=Y tt=51 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=520 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=521 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=522 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=523 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=524 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=525 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=526 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Yu i=527 txt=Y tt=51 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=528 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=529 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=530 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=531 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=532 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=533 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=534 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=535 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=536 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=537 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=538 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=539 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=540 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=541 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=542 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=543 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=544 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Qu i=545 txt=Q tt=43 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=546 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=547 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=548 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=549 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=550 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=551 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=552 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=553 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=554 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( start_option_symbol
+            ( CPSLASH i=555 txt=(/ tt=83 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=557 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=558 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=559 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=560 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=561 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=562 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=563 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=564 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=565 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=566 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=567 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=568 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=569 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=570 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=571 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=572 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=573 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=574 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=575 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=576 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=577 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=578 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( end_option_symbol
+            ( FSLASH_CP i=579 txt=/) tt=71 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=581 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=582 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=583 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=584 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=585 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=586 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=587 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=588 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=589 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=590 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=591 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=592 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=593 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=594 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=595 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Qu i=596 txt=Q tt=43 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=597 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=598 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=599 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=600 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=601 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=602 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=603 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=604 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=605 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( start_repeat_symbol
+            ( OPCOLON i=606 txt=(: tt=85 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=608 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=609 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=610 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=611 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=612 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=613 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=614 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=615 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=616 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=617 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=618 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=619 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=620 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=621 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=622 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=623 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=624 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=625 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=626 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=627 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=628 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=629 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( end_repeat_symbol
+            ( COLONCP i=630 txt=:) tt=73 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=632 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=633 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=634 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=635 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Gu i=636 txt=G tt=33 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=637 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=638 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=639 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=640 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=641 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=642 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=643 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=644 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=645 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Qu i=646 txt=Q tt=43 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=647 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=648 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=649 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=650 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=651 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=652 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=653 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=654 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=655 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( start_group_symbol
+            ( OP i=656 txt=( tt=81 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=657 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=658 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=659 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=660 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=661 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=662 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=663 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=664 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=665 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=666 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=667 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=668 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=669 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=670 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=671 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=672 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=673 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=674 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=675 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=676 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=677 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=678 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( end_group_symbol
+            ( CP i=679 txt=) tt=69 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=680 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=681 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=682 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=683 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=684 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=685 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=686 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=687 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=688 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=689 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=690 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=691 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=692 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=693 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=694 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=695 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=696 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=697 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( second_quote_symbol
+        ( DQ i=698 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( second_terminal_character
+        ( terminal_character
+          ( first_quote_symbol
+            ( SQ i=699 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( second_quote_symbol
+        ( DQ i=700 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=701 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=702 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=703 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Hu i=704 txt=H tt=34 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=705 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=706 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=707 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=708 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=709 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=710 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=711 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=712 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( except_symbol
+        ( HYPHEN i=713 txt=- tt=74 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=714 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( second_quote_symbol
+        ( DQ i=715 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( second_terminal_character
+        ( terminal_character
+          ( first_quote_symbol
+            ( SQ i=716 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( second_quote_symbol
+        ( DQ i=717 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=718 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=719 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=720 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=721 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=722 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=723 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=724 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_repeat_symbol
+        ( OPCOLON i=725 txt=(: tt=85 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=727 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=728 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Hu i=729 txt=H tt=34 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=730 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=731 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=732 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=733 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=734 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=735 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=736 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=737 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( except_symbol
+        ( HYPHEN i=738 txt=- tt=74 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=739 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( second_quote_symbol
+        ( DQ i=740 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( second_terminal_character
+        ( terminal_character
+          ( first_quote_symbol
+            ( SQ i=741 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( second_quote_symbol
+        ( DQ i=742 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=743 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_repeat_symbol
+        ( COLONCP i=744 txt=:) tt=73 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=746 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=747 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( second_quote_symbol
+        ( DQ i=748 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( second_terminal_character
+        ( terminal_character
+          ( first_quote_symbol
+            ( SQ i=749 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( second_quote_symbol
+        ( DQ i=750 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=751 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=752 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=753 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=754 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=755 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=756 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=757 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( second_quote_symbol
+            ( DQ i=758 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=759 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=760 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=761 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=762 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Hu i=763 txt=H tt=34 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=764 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=765 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=766 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=767 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=768 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=769 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=770 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=771 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( except_symbol
+        ( HYPHEN i=772 txt=- tt=74 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=773 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=774 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( second_quote_symbol
+            ( DQ i=775 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=776 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=777 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=778 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=779 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=780 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=781 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=782 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=783 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_repeat_symbol
+        ( OPCOLON i=784 txt=(: tt=85 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=786 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=787 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Hu i=788 txt=H tt=34 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=789 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=790 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=791 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=792 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=793 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=794 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=795 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=796 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( except_symbol
+        ( HYPHEN i=797 txt=- tt=74 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=798 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=799 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( second_quote_symbol
+            ( DQ i=800 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=801 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=802 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_repeat_symbol
+        ( COLONCP i=803 txt=:) tt=73 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=805 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=806 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=807 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( second_quote_symbol
+            ( DQ i=808 txt=\" tt=78 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=809 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=810 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=811 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=812 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=813 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=814 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=815 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=816 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=817 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=818 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=819 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=820 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=821 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=822 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=823 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Fu i=824 txt=F tt=32 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=825 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=826 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=827 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=828 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=829 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=830 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=831 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=832 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=833 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=834 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=835 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=836 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=837 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=838 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_repeat_symbol
+        ( OPCOLON i=839 txt=(: tt=85 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=841 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=842 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=843 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=844 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=845 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=846 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=847 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=848 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=849 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=850 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=851 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=852 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Gu i=853 txt=G tt=33 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=854 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=855 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=856 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_repeat_symbol
+        ( COLONCP i=857 txt=:) tt=73 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=859 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=860 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=861 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=862 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=863 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=864 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=865 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Gu i=866 txt=G tt=33 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=867 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=868 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=869 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=870 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=871 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=872 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=873 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Gu i=874 txt=G tt=33 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=875 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=876 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=877 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=878 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_repeat_symbol
+        ( OPCOLON i=879 txt=(: tt=85 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=881 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Du i=882 txt=D tt=30 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=883 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Gu i=884 txt=G tt=33 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=885 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=886 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=887 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_repeat_symbol
+        ( COLONCP i=888 txt=:) tt=73 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=890 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=891 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=892 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=893 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=894 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=895 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=896 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=897 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=898 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=899 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=900 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=901 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=902 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Qu i=903 txt=Q tt=43 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=904 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=905 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=906 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=907 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=908 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=909 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=910 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=911 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=912 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( special_sequence_symbol
+            ( QM i=913 txt=? tt=79 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=914 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=915 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=916 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_repeat_symbol
+        ( OPCOLON i=917 txt=(: tt=85 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=919 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=920 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Hu i=921 txt=H tt=34 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=922 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=923 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=924 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=925 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=926 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=927 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=928 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=929 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( except_symbol
+        ( HYPHEN i=930 txt=- tt=74 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=931 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=932 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( special_sequence_symbol
+            ( QM i=933 txt=? tt=79 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=934 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=935 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_repeat_symbol
+        ( COLONCP i=936 txt=:) tt=73 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=938 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=939 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=940 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( special_sequence_symbol
+            ( QM i=941 txt=? tt=79 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=942 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=943 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=944 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=945 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=946 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=947 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=948 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=949 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=950 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=951 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=952 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=953 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=954 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=955 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=956 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( start_comment_symbol
+            ( OPSTAR i=957 txt=(* tt=80 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=959 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=960 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=961 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( start_repeat_symbol
+        ( OPCOLON i=962 txt=(: tt=85 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=964 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=965 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=966 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=967 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=968 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=969 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=970 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=971 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=972 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=973 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Yu i=974 txt=Y tt=51 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=975 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Bu i=976 txt=B tt=28 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=977 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=978 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=979 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( end_repeat_symbol
+        ( COLONCP i=980 txt=:) tt=73 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( concatenate_symbol
+        ( COMMA i=982 txt=, tt=63 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=983 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_string
+      ( first_quote_symbol
+        ( SQ i=984 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+      ) ) 
+      ( first_terminal_character
+        ( terminal_character
+          ( end_comment_symbol
+            ( STARCP i=985 txt=*) tt=68 DEFAULT_TOKEN_CHANNEL
+      ) ) ) ) 
+      ( first_quote_symbol
+        ( SQ i=987 txt=' tt=75 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=988 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=989 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=990 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=991 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=992 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=993 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=994 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=995 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=996 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=997 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=998 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=999 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Yu i=1000 txt=Y tt=51 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=1001 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Bu i=1002 txt=B tt=28 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=1003 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=1004 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=1005 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=1006 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1007 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1008 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( defining_symbol
+        ( EQUAL i=1009 txt== tt=64 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1010 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=1011 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ou i=1012 txt=O tt=41 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=1013 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=1014 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=1015 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=1016 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=1017 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1018 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=1019 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1020 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=1021 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=1022 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=1023 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Mu i=1024 txt=M tt=39 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=1025 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=1026 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=1027 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=1028 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1029 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=1030 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1031 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=1032 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Pu i=1033 txt=P tt=42 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=1034 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=1035 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Iu i=1036 txt=I tt=35 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=1037 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Lu i=1038 txt=L tt=38 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1039 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Su i=1040 txt=S tt=45 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=1041 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Qu i=1042 txt=Q tt=43 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Uu i=1043 txt=U tt=47 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=1044 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Nu i=1045 txt=N tt=40 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=1046 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=1047 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=1048 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=1049 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1050 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1051 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1052 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1053 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( definition_separator_symbol
+        ( FSLASH i=1054 txt=/ tt=66 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( space_character
+      ( SPACE i=1055 txt=  tt=88 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=1056 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Hu i=1057 txt=H tt=34 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=1058 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=1059 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Au i=1060 txt=A tt=27 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Cu i=1061 txt=C tt=29 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Tu i=1062 txt=T tt=46 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Eu i=1063 txt=E tt=31 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( letter
+        ( Ru i=1064 txt=R tt=44 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_free_symbol
+    ( terminal_character
+      ( terminator_symbol
+        ( DOT i=1065 txt=. tt=87 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) 
+  ( gap_separator
+    ( new_line
+      ( LF i=1066 txt=\r tt=105 DEFAULT_TOKEN_CHANNEL
+      ) 
+      ( NL i=1067 txt=\n tt=104 DEFAULT_TOKEN_CHANNEL
+  ) ) ) 
+  ( EOF i=1068 txt= tt=-1 DEFAULT_TOKEN_CHANNEL
+) ) 
+
+
