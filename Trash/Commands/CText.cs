@@ -1,9 +1,4 @@
-﻿using System;
-using Algorithms;
-using LanguageServer;
-using Workspaces;
-
-namespace Trash.Commands
+﻿namespace Trash.Commands
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -11,6 +6,7 @@ namespace Trash.Commands
     using System.Linq;
     using System.Text;
     using System.Text.Json;
+    using Workspaces;
 
     class CText
     {
@@ -25,7 +21,7 @@ Example:
 ");
         }
 
-        private string Reconstruct(IParseTree tree)
+        public string Reconstruct(IParseTree tree)
         {
             Stack<IParseTree> stack = new Stack<IParseTree>();
             stack.Push(tree);

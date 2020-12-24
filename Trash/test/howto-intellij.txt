@@ -1,0 +1,16 @@
+* Clone the Grammar-Kit repository.
+* Open the file "ExprParser.bnf".
+* Install Grammar-Kit plugin
+  * Menu 'File => Settings' => 'Plugins' => Click on 'Marketplace' tab =>
+    In 'Type / to see options', type grammar-kit => 'Install' => 'OK'.
+* If you open the application and .bnf file, it takes 2+ minutes to parse the file!
+* The .bnf file will be highlighted. You can right-click on a symbol
+  then 'Go To' => 'Declaration or Usages'.
+* Note--Right-click => 'Find Usages' returns ZILCH!
+* Make sure to add 'idea.is.internal=true' to c:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2019.2.3\bin\idea.properties
+  and restart the editor. Otherwise you will not see the "PSI viewer",
+  that is, the AST viewer.
+* Cntl-Alt-P to go into the "Live Preview" buffer.
+* To view the AST, menu "Tools => View PSI Structure".
+
+
