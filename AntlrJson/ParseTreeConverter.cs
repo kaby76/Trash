@@ -1,8 +1,7 @@
-﻿using Antlr4.Runtime.Misc;
-
-namespace AntlrJson
+﻿namespace AntlrJson
 {
     using Antlr4.Runtime;
+    using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
     using System;
     using System.Collections.Generic;
@@ -10,15 +9,13 @@ namespace AntlrJson
     using System.Reflection;
     using System.Text.Json;
     using System.Text.Json.Serialization;
-
+    using AltAntlr;
 
     public class ParseTreeConverter : JsonConverter<ParseInfo>
     {
-
         public ParseTreeConverter()
         {
         }
-
 
         private static string Capitalized(string s)
         {

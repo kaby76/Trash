@@ -29,7 +29,9 @@
   </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9" />
-		<PackageReference Include="Antlr4BuildTasks" Version="8.9" />
+                <PackageReference Include="Antlr4BuildTasks" Version="8.9">
+                    <PrivateAssets>all</PrivateAssets>
+                </PackageReference>
 		<PackageReference Include="Antlr4RuntimeShim" Version="0.0.1" />
 		<PackageReference Include="AntlrTreeEditing" Version="2.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis" Version="3.7.0" />

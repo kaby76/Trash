@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Algorithms\Algorithms.csproj" />
+    <ProjectReference Include="..\AltAntlr\AltAntlr.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
