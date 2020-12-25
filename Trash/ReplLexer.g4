@@ -119,6 +119,7 @@ DR : 'dr' ;
 EBNF : 'ebnf' ;
 GRAPH : 'graph' ;
 IR : 'ir' ;
+ISO14977 : 'iso14977' ;
 LC : 'lc' ;
 MODES : 'modes' ;
 StringLiteral : ('\'' Lca Lca* '\'') | ('"' Lcb Lcb* '"') ;

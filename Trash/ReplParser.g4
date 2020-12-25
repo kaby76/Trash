@@ -133,4 +133,4 @@ modes : MODES ;
 int : INT ;
 id : ID ;
 arg : StringLiteral | NonWsArgMode ;
-type : ANTLR4 | ANTLR3 | ANTLR2 | BISON | EBNF ;
+type : ANTLR4 | ANTLR3 | ANTLR2 | BISON | EBNF | ISO14977 ;
