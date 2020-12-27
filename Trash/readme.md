@@ -1,8 +1,8 @@
 # Trash
 
-**Trash** is a tool to support editing, analysis, refactoring,
-and conversion of CFG grammars, including Antlr2, Antlr3, Antlr4,
-Bison, W3C EBNF, and ISO 14977.
+**Trash** is a tool to support the editing, analyzing, refactoring,
+and converting from one format to anther, of
+CFG grammars.
 Trash is analogous to
 [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
 but for parsing, in the lingua-franca of parsing: parse trees and XPath.
@@ -18,7 +18,7 @@ The code is implemented in C#.
 ## Supported grammars
 
 | Grammars | File suffix |
-| ---- | ---- | ---- |
+| ---- | ---- |
 | Antlr4 | .g4 |
 | Antlr3 | .g3 |
 | Antlr2 | .g2 |
