@@ -1,4 +1,6 @@
 grammar Expr;
+s : e EOF
+  ;
 e : e ('*' | '/') e
   | e ('+' | '-') e
   | '(' e ')'

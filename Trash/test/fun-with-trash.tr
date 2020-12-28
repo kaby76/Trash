@@ -1,0 +1,21 @@
+echo "Generate a parser."
+read Expr.g4
+parse
+generate s
+
+echo "Parse and print out a parse tree."
+echo "1+2+3" | run | tree
+
+echo "Print out a parse tree as JSON."
+echo "1+2+3" | run | json
+
+echo "Print out a parse tree as XML."
+echo "1+2+3" | run | xml
+
+echo "Print out a parse tree as s-expression."
+echo "1+2+3" | run | st
+
+echo "Rename a symbol in a grammar."
+rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
+print
+
