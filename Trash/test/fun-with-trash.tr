@@ -15,6 +15,9 @@ echo "1+2+3" | run | xml
 echo "Print out a parse tree as s-expression."
 echo "1+2+3" | run | st
 
+echo "Print out a parse tree as a dot graph."
+echo "1+2+3" | run | dot
+
 echo "Find all literals."
 echo "1+2+3" | run | xgrep "//INT" | st
 
@@ -30,4 +33,3 @@ write
 
 echo "Done with Expr.g4"
 pop
-
