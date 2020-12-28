@@ -62,6 +62,7 @@ cmd :
   | ungroup
   | unulliteral
   | version
+  | wc
   | workspace
   | write
   | xgrep
@@ -121,6 +122,7 @@ unfold : UNFOLD arg ;
 ungroup : UNGROUP arg ;
 unulliteral : UNULLITERAL uclc StringLiteral? ;
 version : VERSION ;
+wc : WC ;
 workspace : WORKSPACE ;
 write : WRITE ;
 xgrep : XGREP arg ;

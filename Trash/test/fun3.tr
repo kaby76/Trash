@@ -1,0 +1,12 @@
+echo "Generate a parser."
+read Java9.g4
+parse
+generate compilationUnit
+
+echo "Warm up."
+cat WindowState.java | run > save-tree
+echo "Parse and save parse result."
+cat WindowState.java | run > save-tree
+
+echo "Find methods."
+cat save-tree | xgrep "//methodDeclaration" | st

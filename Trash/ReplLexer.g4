@@ -95,6 +95,7 @@ UNFOLD : 'unfold' -> pushMode(ArgMode) ;
 UNGROUP : 'ungroup' -> pushMode(ArgMode) ;
 UNULLITERAL : 'unulliteral' -> pushMode(ArgMode) ;
 VERSION : 'version' -> pushMode(ArgMode) ;
+WC : 'wc' -> pushMode(ArgMode) ;
 WORKSPACE : 'workspace' -> pushMode(ArgMode) ;
 WRITE : 'write' -> pushMode(ArgMode) ;
 XGREP : 'xgrep' -> pushMode(ArgMode) ;

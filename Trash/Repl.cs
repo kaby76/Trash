@@ -1,6 +1,4 @@
-﻿using System.Windows.Xps.Serialization;
-
-namespace Trash
+﻿namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -380,6 +378,10 @@ namespace Trash
                         else if (tree.version() is ReplParser.VersionContext x_version)
                         {
                             new CVersion().Execute(this, x_version, is_piped);
+                        }
+                        else if (tree.wc() is ReplParser.WcContext x_wc)
+                        {
+                            new CWc().Execute(this, x_wc, is_piped);
                         }
                         else if (tree.workspace() is ReplParser.WorkspaceContext x_workspace)
                         {
