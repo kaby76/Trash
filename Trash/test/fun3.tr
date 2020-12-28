@@ -8,5 +8,5 @@ cat WindowState.java | run > save-tree
 echo "Parse and save parse result."
 cat WindowState.java | run > save-tree
 
-echo "Find methods."
-cat save-tree | xgrep "//methodDeclaration" | st
+echo "Count number of method declarations."
+cat save-tree | xgrep "//methodDeclaration" | st | wc
