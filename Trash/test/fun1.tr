@@ -21,16 +21,3 @@ echo "1+2+3" | run | dot
 
 echo "Find all literals."
 echo "1+2+3" | run | xgrep "//INT" | st
-
-echo "Rename a symbol in a grammar, save."
-rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
-print
-write
-
-// Cannot do until Net 5.1+ supports dll unload, or Trash becomes out-of-process.
-//generate s
-//echo "Print out a parse tree as s-expression."
-//echo "1+2+3" | run | st
-
-echo "Done with Expr.g4"
-pop
