@@ -59,6 +59,7 @@ set - Set a value.
 split - Split a combined grammar.
 st - Print the tree using 'toStringTree()'.
 stack - Print the stack.
+strip - Remove all comments, labels, etc., in order to derive a plain CFG.
 text - Print the tree source.
 tokens - Print the tokens associated with a parse tree.
 ulliteral - Convert a lexer rule for a simple string literal to accept a string in any case.
