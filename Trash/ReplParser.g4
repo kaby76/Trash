@@ -52,6 +52,7 @@ cmd :
   | split
   | st
   | stack
+  | strip
   | svg
   | text
   | ctokens
@@ -112,6 +113,7 @@ set : SET NonWsArgMode '=' (StringLiteral | INTArgMode | NonWsArgMode ) ;
 split : SPLIT ;
 st : ST ;
 stack : STACK ;
+strip : STRIP ;
 svg : SVG ;
 text : TEXT arg? ;
 ctokens : TOKENS ;

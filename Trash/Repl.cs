@@ -339,6 +339,10 @@
                         {
                             new CStack().Execute(this, x_stack, is_piped);
                         }
+                        else if (tree.strip() is ReplParser.StripContext x_strip)
+                        {
+                            new CStrip().Execute(this, x_strip, is_piped);
+                        }
                         else if (tree.svg() is ReplParser.SvgContext x_svg)
                         {
                             new CSvg().Execute(this, x_svg, is_piped);

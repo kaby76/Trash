@@ -85,6 +85,7 @@ SET : 'set' -> pushMode(ArgMode) ;
 SPLIT : 'split' -> pushMode(ArgMode) ;
 ST : 'st' -> pushMode(ArgMode) ;
 STACK : 'stack' -> pushMode(ArgMode) ;
+STRIP : 'strip' -> pushMode(ArgMode) ;
 SVG : 'svg' -> pushMode(ArgMode) ;
 TEXT : 'text' -> pushMode(ArgMode) ;
 TOKENS : 'tokens' -> pushMode(ArgMode) ;
