@@ -86,6 +86,18 @@ Execute the command line <em>int</em>.
 
 Execute the command that begins with <em>string</em>.
 
+### Cat
+
+<pre>
+cat
+</pre>
+
+"Cat" the contents of a file to stdout.
+
+Example:
+
+    cat input.txt | run | tree
+
 ### Cd
 
 <pre>
@@ -167,7 +179,25 @@ Example:
 
     delete "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
-For for further details, see the [Delete parse tree node](refactoring.md#delete-parse-tree-node) refactoring details.
+For further details, see the [Delete parse tree node](refactoring.md#delete-parse-tree-node) refactoring details.
+
+### Dot
+
+<pre>
+dot
+</pre>
+
+Read the result set from a command and convert it into a Dot representation.
+You can then [visualize the graph online](https://dreampuf.github.io/GraphvizOnline/#digraph%20G%20%7B%0A%0A%20%20subgraph%20cluster_0%20%7B%0A%20%20%20%20style%3Dfilled%3B%0A%20%20%20%20color%3Dlightgrey%3B%0A%20%20%20%20node%20%5Bstyle%3Dfilled%2Ccolor%3Dwhite%5D%3B%0A%20%20%20%20a0%20-%3E%20a1%20-%3E%20a2%20-%3E%20a3%3B%0A%20%20%20%20label%20%3D%20%22process%20%231%22%3B%0A%20%20%7D%0A%0A%20%20subgraph%20cluster_1%20%7B%0A%20%20%20%20node%20%5Bstyle%3Dfilled%5D%3B%0A%20%20%20%20b0%20-%3E%20b1%20-%3E%20b2%20-%3E%20b3%3B%0A%20%20%20%20label%20%3D%20%22process%20%232%22%3B%0A%20%20%20%20color%3Dblue%0A%20%20%7D%0A%20%20start%20-%3E%20a0%3B%0A%20%20start%20-%3E%20b0%3B%0A%20%20a1%20-%3E%20b3%3B%0A%20%20b2%20-%3E%20a3%3B%0A%20%20a3%20-%3E%20a0%3B%0A%20%20a3%20-%3E%20end%3B%0A%20%20b3%20-%3E%20end%3B%0A%0A%20%20start%20%5Bshape%3DMdiamond%5D%3B%0A%20%20end%20%5Bshape%3DMsquare%5D%3B%0A%7D)
+(or [here](http://graphviz.it/#/gallery/unix.gv)) or with Graphviz](https://graphviz.org/).
+
+### Echo
+
+<pre>
+echo <em>string</em>
+</pre>
+
+Echo a string literal to stdout (e.g., to be used with `run`).
 
 ### Fold
 
@@ -178,7 +208,7 @@ fold <em>string</em>
 Replace a sequence of symbols on the RHS of a rule
 with the rule LHS symbol.
 
-For for further details, see the [fold](refactoring.md#Fold) refactoring details.
+For further details, see the [fold](refactoring.md#Fold) refactoring details.
 
 ### Foldlit
 
@@ -189,7 +219,19 @@ fold <em>string</em>
 Replace a literal on the RHS of a rule
 with the lexer rule LHS symbol.
 
-For for further details, see the [fold literal](refactoring.md#replace-literals-in-parser-with-lexer-token-symbols) refactoring details.
+For further details, see the [fold literal](refactoring.md#replace-literals-in-parser-with-lexer-token-symbols) refactoring details.
+
+### Generate
+
+<pre>
+generate <em>string</em>
+</pre>
+
+Generate a C# parser using the stack files. Make sure to `read` all
+dependent source code if your grammar reference classes in different
+source files. The command will then create a `generated/` directory
+containing the code and compile it with NET Core `dotnet`. Afterward,
+use `run` to run the parser.
 
 ### Group
 
@@ -202,7 +244,7 @@ The nodes specified must be for `ruleAltList`, `lexerAltList`, or `altList`.
 A common prefix and suffix is performed on the alternatives, and
 a new expression derived. The process repeats for alternatives nested. 
 
-For for further details, see the [Group alts](refactoring.md#group-alts) refactoring details.
+For further details, see the [Group alts](refactoring.md#group-alts) refactoring details.
 
 ### Has
 
@@ -213,7 +255,7 @@ has (dr | ir) (left | right) <em>string</em>
 Print out whether the rule specified by the xpath expression pointing to the LHS symbol
 of a parser or lexer rule has left or right recursion.
 
-For for further details, see the [analysis](analysis.md#has-directindirect-recursion) section.
+For further details, see the [analysis](analysis.md#has-directindirect-recursion) section.
 
 ### Help
 
@@ -230,6 +272,14 @@ history
 </pre>
 
 Print out the shell command history.
+
+### Json
+
+<pre>
+json
+</pre>
+
+Read from stdin the result set and print out it as JSON.
 
 ### Kleene
 
@@ -320,7 +370,7 @@ Rename a symbol, the first parameter as specified by the xpath expression string
 to a new name, the second parameter as a string. The result may
 place all changed grammars that use the symbol on the stack.
 
-For for further details, see the [Rename](refactoring.md#rename) refactoring details.
+For further details, see the [Rename](refactoring.md#rename) refactoring details.
 
 ### Reorder
 
@@ -377,7 +427,7 @@ Rewrite the node with the parentheses removed, if the altList satifies three con
 (2) the `altList` node doesn't contain more than one child, or if it does, then the containing altList/labeledAlt/alterative each does not contain more than one child;
 (3) the `ebnf` parent of `block` must not contain a `blockSuffix`.
 
-For for further details, see the [remove useless parentheses](refactoring.md#remove-useless-parentheses) refactoring details.
+For further details, see the [remove useless parentheses](refactoring.md#remove-useless-parentheses) refactoring details.
 
 ### Split
 
@@ -390,7 +440,7 @@ The grammar must be a combined lexer/parser grammar for the transformation to
 proceed. The transformation creates a lexer grammar and a parser grammar and places them
 on the stack. The original grammar is popped off the stack.
 
-For for further details, see the [split grammar](refactoring.md#splitting-and-combining-grammars) refactoring details.
+For further details, see the [split grammar](refactoring.md#splitting-and-combining-grammars) refactoring details.
 
 ### Stack
 
@@ -408,6 +458,22 @@ strip
 
 Strip the top-of-stack grammar completely of all non-essential CFG
 rules, including labels, comments, actions, and format one rule per line.
+
+### Text
+
+<pre>
+text
+</pre>
+
+Read stdin the result set and output the corresponding text for it.
+
+### Tokens
+
+<pre>
+tokens
+</pre>
+
+Read stdin the result set and output the corresponding tokens for it.
 
 ### ULLiteral
 
@@ -460,20 +526,16 @@ ungroup <em>string</em>
 Perform an ungroup transformation of the `element` node(s) specified
 by the string.
 
-For for further details, see the [Ungroup alts](refactoring.md#ungroup-alts) refactoring details.
+For further details, see the [Ungroup alts](refactoring.md#ungroup-alts) refactoring details.
 
 
-### XGrep
+### Version
 
 <pre>
-xgrep <em>string</em>
+version
 </pre>
 
-Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
-
-Example:
-
-    . | xgrep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+Output to stdout the current version of Trash.
 
 ### Wc
 
@@ -498,3 +560,24 @@ write
 </pre>
 
 Pop the stack, and write out the file specified.
+
+### XGrep
+
+<pre>
+xgrep <em>string</em>
+</pre>
+
+Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
+
+Example:
+
+    . | xgrep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+
+### Xml
+
+<pre>
+xml
+</pre>
+
+Read from stdin the result set and print out it as XML.
+
