@@ -1,13 +1,14 @@
 # Trash
 
-**Trash** is a tool to support the editing, analyzing, refactoring,
-and converting from one format to anther, of
-CFG grammars.
+**Trash** is a command-line shell to support the editing, analyzing,
+refactoring, and converting from one format to anther, of
+CFG parsing tool grammars.
 Trash is analogous to
 [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
 but for parsing, in the lingua-franca of parsing: parse trees and XPath.
-__Trash currently only runs on Windows due to AGL being dependent on
-the Windows UI.__
+___Trash currently only runs on Windows due to AGL being dependent on
+the Windows UI. The CLI tool will be replaced in the next release with
+Bash, which will allow all commands except AGL to run on Linux.___
 
 The tool uses [Antlr](https://antlr.org),
 [Antlr4BuildTasks](https://github.com/kaby76/Antlr4BuildTasks),
