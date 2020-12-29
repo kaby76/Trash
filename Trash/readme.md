@@ -6,6 +6,8 @@ CFG grammars.
 Trash is analogous to
 [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
 but for parsing, in the lingua-franca of parsing: parse trees and XPath.
+__Trash currently only runs on Windows due to AGL being dependent on
+the Windows UI.__
 
 The tool uses [Antlr](https://antlr.org),
 [Antlr4BuildTasks](https://github.com/kaby76/Antlr4BuildTasks),
