@@ -56,6 +56,34 @@ The code is implemented in C#.
 	cat WindowState.java | run > save-tree
 	cat save-tree | xgrep "//methodDeclaration" | st | wc
 
+### Create a "here" doc.
+
+    read HERE
+    grammar A;
+    s : e ;
+    e : e '*' e | INT ;
+    INT : [0-9]+ ;
+    WS : [ \t\n]+ -> skip ;
+    HERE
+    parse
+    rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
+    print
+    quit
+
+## Usage
+
+<pre>
+trash [-script <em>string</em>]
+</pre>
+
+Trash reads stdin or a specified script file commands, one line at a time.
+
+(1) `trash`
+
+Read stdin one line at a time until `quit` command executed.
+
+(2) `cat ex1.tr | trash`
+
 ## Supported grammars
 
 | Grammars | File suffix |
