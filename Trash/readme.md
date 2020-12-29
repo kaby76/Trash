@@ -10,7 +10,7 @@ ___Trash currently only runs on Windows due to AGL being dependent on
 the Windows UI. The CLI tool will be replaced in the next release with
 Bash, which will allow all commands except AGL to run on Linux.___
 
-The tool uses [Antlr](https://antlr.org),
+The tool uses [Antlr](https://www.antlr.org/),
 [Antlr4BuildTasks](https://github.com/kaby76/Antlr4BuildTasks),
 [XPath2](https://en.wikipedia.org/wiki/XPath), 
 [S-expressions](https://en.wikipedia.org/wiki/S-expression)
