@@ -15,6 +15,44 @@ for Antlr parse trees,
 and a number of other tools.
 The code is implemented in C#.
 
+## What can you do with Trash?
+
+### Generate a parser
+
+	read Expr.g4
+	parse
+	generate s
+
+### Parse and print out a parse tree, as JSON, XML, or s-expressions
+
+	echo "1+2+3" | run | tree
+	echo "1+2+3" | run | json
+	echo "1+2+3" | run | xml
+	echo "1+2+3" | run | st
+	echo "1+2+3" | run | dot
+
+### Print out a parse tree using AGL (on Windows)
+
+	echo "1+2+3" | run | agl
+
+### Find tokens
+
+	echo "1+2+3" | run | xgrep "//INT" | st
+
+### Rename a symbol in a grammar, save
+
+	rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
+	print
+	generate s
+
+### Count method declarations in a Java source file
+
+	read Java9.g4
+	parse
+	generate compilationUnit
+	cat WindowState.java | run > save-tree
+	cat save-tree | xgrep "//methodDeclaration" | st | wc
+
 ## Supported grammars
 
 | Grammars | File suffix |
@@ -23,8 +61,9 @@ The code is implemented in C#.
 | Antlr3 | .g3 |
 | Antlr2 | .g2 |
 | Bison | .y |
+| LBNF | .cf |
 | W3C EBNF | .ebnf |
-| ISO 14977 | .iso14977 |
+| ISO 14977 | .iso14977, .iso |
 
 # Installation
 
