@@ -84,6 +84,10 @@ Read stdin one line at a time until `quit` command executed.
 
 (2) `cat ex1.tr | trash`
 
+## Commands of Trash
+
+See [this list](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md) of commands available in Trash.
+
 ## Supported grammars
 
 | Grammars | File suffix |
