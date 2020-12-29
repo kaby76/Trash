@@ -16,7 +16,7 @@ _Grammar_
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
 
-_[Trash command](Trash.md#Has)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#Has)_
 
     has dr left "//(parserRuleSpec | lexerRuleSpec)/(RULE_REF | TOKEN_REF)"
 
@@ -29,7 +29,7 @@ _Result_
     INT False
     WS False
 
-_[Trash command](Trash.md#Has)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#Has)_
 
     has dr right "//(parserRuleSpec | lexerRuleSpec)/(RULE_REF | TOKEN_REF)"
 

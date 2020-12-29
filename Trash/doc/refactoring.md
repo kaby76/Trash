@@ -42,7 +42,7 @@ _Before_
     RP : ')' ;
     WS : [ \r\n\t] + -> skip ;
 
-_[Trash command](Trash.md#Foldlit)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#Foldlit)_
 
     foldlit "//lexerRuleSpec/RULE_REF"
 
@@ -129,7 +129,7 @@ perserved but formatting between rules may not. Use "reformat"
 to reformat the grammars to your style.
 
 Trash provides for reordering parser rules through the
-[reorder](trash.md#reorder) command.
+[reorder](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#reorder) command.
 
 _Before_
 
@@ -273,7 +273,7 @@ Combined grammar:
     RP : ')' ;
     WS : [ \r\n\t] + -> skip ;
 
-_[Trash command](Trash.md#split)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#split)_
 
 `split`
 
@@ -358,7 +358,7 @@ _Before_
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
 
-_[Trash command](Trash.md#rup)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#rup)_
 
 `rup "//parserRuleSpec[RULE_REF/text() = 'e']//labeledAlt//block"`
 
@@ -389,7 +389,7 @@ _Before_
     C: 'uvw' 'xyz'?;
     D: 'uvw' 'xyz'+;
 
-_[Trash command](Trash.md#ulliteral)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#ulliteral)_
 
     ulliteral "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL"
     ulliteral "//lexerRuleSpec[TOKEN_REF/text() = 'B']//STRING_LITERAL"
@@ -420,7 +420,7 @@ _Before_
     C: 'uvw' 'xyz'?;
     D: 'uvw' 'xyz'+;
 
-_[Trash command](Trash.md#delete)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#delete)_
 
     delete "//lexerRuleSpec[TOKEN_REF/text() = 'A']"
 
@@ -447,7 +447,7 @@ _Before_
     grammar CommonFactors;
     a : 'X' 'B' 'Z' | 'X' 'C' 'Z' | 'X' 'D' 'Z' ;
 
-_[Trash command](Trash.md#group)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#group)_
 
     group "//parserRuleSpec[RULE_REF/text() = 'a']//ruleAltList"
 
@@ -470,7 +470,7 @@ _Before_
     grammar CF2;
     a : (a | 'X') 'B' 'Z' | 'C' ;
 
-_[Trash command](Trash.md#ungroup)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#ungroup)_
 
     ungroup "//parserRuleSpec[RULE_REF/text() = 'a']//ruleAltList"
 
@@ -494,7 +494,7 @@ _Before_
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
 
-_[Trash command](Trash.md#rename)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#rename)_
 
     rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
 
@@ -519,7 +519,7 @@ _Before_
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
 
-_[Trash command](Trash.md#mvsr)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#mvsr)_
 
     mvsr "//parserRuleSpec/RULE_REF[text() = 'e']"
 
@@ -557,7 +557,7 @@ _Before_
     mode Three;
     Three_AA : 'AA' -> popMode;
 
-_[Trash command](Trash.md#reorder)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#reorder)_
 
     reorder modes
 
@@ -597,7 +597,7 @@ _Original grammar_
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
 
-_[Trash command](Trash.md#unfold)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#unfold)_
 
     unfold "//parserRuleSpec/ruleBlock//RULE_REF[text() = 'a']"
 
@@ -610,7 +610,7 @@ _Modified grammar_
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
 
-_[Trash command](Trash.md#fold)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#fold)_
 
     fold "//parserRuleSpec/RULE_REF[text() = 'a']"
 
@@ -642,7 +642,7 @@ _Original grammar_
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
 
-_[Trash command](Trash.md#kleene)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#kleene)_
 
     kleene "//parserRuleSpec/ruleBlock//RULE_REF[text() = 'a']"
     kleene "//parserRuleSpec/ruleBlock//RULE_REF[text() = 'b']"
@@ -683,7 +683,7 @@ _Original grammar_
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
 
-_[Trash command](Trash.md#kleene)_
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#kleene)_
 
     delabel
 
