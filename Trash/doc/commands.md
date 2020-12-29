@@ -2,6 +2,19 @@
 
 ## Commands
 
+### Agl
+
+<pre>
+agl
+</pre>
+
+Read stdin and display the graph using an
+Automatic Graph Layout library window.
+
+Example:
+
+    . | agl
+
 ### Alias
 
 Aliases allow a string to be substituted for a word when it is used as the
@@ -155,18 +168,6 @@ Example:
     delete "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
 For for further details, see the [Delete parse tree node](refactoring.md#delete-parse-tree-node) refactoring details.
-
-### Find
-
-<pre>
-find <em>string</em>
-</pre>
-
-Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
-
-Example:
-
-    find "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
 ### Fold
 
@@ -399,6 +400,15 @@ stack
 
 Print the stack of files.
 
+### Strip
+
+<pre>
+strip
+</pre>
+
+Strip the top-of-stack grammar completely of all non-essential CFG
+rules, including labels, comments, actions, and format one rule per line.
+
 ### ULLiteral
 
 <pre>
@@ -452,6 +462,26 @@ by the string.
 
 For for further details, see the [Ungroup alts](refactoring.md#ungroup-alts) refactoring details.
 
+
+### XGrep
+
+<pre>
+xgrep <em>string</em>
+</pre>
+
+Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
+
+Example:
+
+    . | xgrep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+
+### Wc
+
+<pre>
+wc
+</pre>
+
+Read stdin and output the count of the number of lines.
 
 ### Workspace
 
