@@ -27,7 +27,7 @@
         public int HistoryLimit = 0;
         public readonly Docs _docs;
         public Workspace _workspace { get; set; } = new Workspace();
-        public static string Version { get; internal set; } = "8.3";
+        public static string Version { get; internal set; } = "8.4";
         public string Prompt { get; set; } = "> ";
         public bool Echo { get; set; } = false;
 
