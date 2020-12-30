@@ -181,6 +181,27 @@ Example:
 
 For further details, see the [Delete parse tree node](refactoring.md#delete-parse-tree-node) refactoring details.
 
+### Diff
+
+<pre>
+diff <em>file1</em> <em>file2</em>
+</pre>
+
+Computes the diff between grammars using Zhang-Shasha. Note, this
+algorithm is very, very slow for anything but the simplest of grammars.
+The files are the names of files containing the result sets of the parse
+of each grammar.
+
+Example:
+
+    read orig.g4
+    parse
+    . > orig.rs
+    read mod.g4
+    parse
+    . > mod.rs
+    diff orig.rs mod.rs
+
 ### Dot
 
 <pre>

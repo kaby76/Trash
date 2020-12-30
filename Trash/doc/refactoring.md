@@ -699,3 +699,53 @@ _Modified grammar_
       ;
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
+
+### Strip
+
+This transform removes all labeling, actions, semantic predicates, and comments
+in a grammar, and reformats the grammar one rule per line. This refactoring is useful
+for performing diffs between different versions of a grammar.
+
+These XPath expressions find all nodes in order of deletion:
+
+    //DOC_COMMENT
+    //labeledAlt/(POUND | identifier)
+    //labeledLexerElement/(identifier | ASSIGN | PLUS_ASSIGN)
+    //labeledElement/(identifier | ASSIGN | PLUS_ASSIGN)
+    //parserRuleSpec/ruleReturns
+    //prequelConstruct
+    //parserRuleSpec/ruleReturns
+    //actionBlock
+
+Then, each rule is found:
+
+    //parserRuleSpec
+
+and a carriage return/line feed is inserted before the Left-most leaf of each sub-tree applied.
+    
+_Original grammar_
+
+    grammar Kleene;
+    // This is the expression grammar...
+    s : a ;
+    a : a ';' e1=e  # alt1
+      | e2=e # alt2
+      ;
+    e : lhs=e '*' rhs=e # alt1e
+      | INT # alt2e
+      ;
+    INT : [0-9]+ ;
+    WS : [ \t\n]+ -> skip ;
+
+_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#strip)_
+
+    strip
+
+_Modified grammar_
+
+    grammar Kleene;
+    s : a ;
+    a : a ';'e | e ;
+    e : e '*' e | INT ;
+    INT : [0-9]+ ;
+    WS : [ \t\n]+ -> skip ;
