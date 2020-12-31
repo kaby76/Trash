@@ -126,6 +126,23 @@ where `...` is the path to the `Trash.dll`. This command
 reads commands from stdin one line at a time
 until `quit` or the end-of-file is read.
 
+
+## Result Sets -- the data passed between commands
+
+A *result set* is a JSON serialization of:
+
+* A set of parse tree nodes.
+* Parser information related to the parse tree nodes.
+* Lexer information related to the parse tree nodes.
+* The name of the input corresponding to the parse tree nodes.
+* The input text corresponding to the parse tree nodes.
+
+Most commands in Trash, e.g., "." or "xgrep", read and/or write result sets and
+perform an operation on the result set. Other commands in Trash,
+e.g., "wc", "cat", or "echo", are standard character-orient data
+passed. At the end of executing the command, either is just printed
+to stdout.
+
 ## Commands of Trash
 
 See [this list](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md) of commands available in Trash.
