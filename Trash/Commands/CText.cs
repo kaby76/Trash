@@ -76,7 +76,7 @@ Example:
 			var serializeOptions = new JsonSerializerOptions();
 			serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
 			serializeOptions.WriteIndented = false;
-			var obj1 = JsonSerializer.Deserialize<AntlrJson.ParseInfo>(lines, serializeOptions);
+			var obj1 = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
 			var nodes = obj1.Nodes;
             var parser = obj1.Parser;
             var lexer = obj1.Lexer;

@@ -110,7 +110,7 @@
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
-                var tuple = new AntlrJson.ParseInfo() {Text = txt, FileName = "stdin", Stream = r4 as ITokenStream, Nodes = new IParseTree[]{t2}, Parser = r2 as Parser, Lexer = r3 as Lexer };
+                var tuple = new AntlrJson.ParsingResultSet() {Text = txt, FileName = "stdin", Stream = r4 as ITokenStream, Nodes = new IParseTree[]{t2}, Parser = r2 as Parser, Lexer = r3 as Lexer };
                 string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
                 repl.input_output_stack.Push(js1);
             }

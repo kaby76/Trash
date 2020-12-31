@@ -27,7 +27,7 @@ Example:
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
-                var tuple = new ParseInfo()
+                var tuple = new ParsingResultSet()
                 {
                     Text = doc.Code,
                     FileName = doc.FullPath,

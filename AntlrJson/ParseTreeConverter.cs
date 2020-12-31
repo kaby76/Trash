@@ -11,7 +11,7 @@
     using System.Text.Json.Serialization;
     using AltAntlr;
 
-    public class ParseTreeConverter : JsonConverter<ParseInfo>
+    public class ParseTreeConverter : JsonConverter<ParsingResultSet>
     {
         public ParseTreeConverter()
         {
@@ -29,7 +29,7 @@
 
         public override bool CanConvert(Type typeToConvert) => true;
 
-        public override ParseInfo Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override ParsingResultSet Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             MyTokenStream out_token_stream = new MyTokenStream();
             MyLexer lexer = new MyLexer(null);
@@ -259,7 +259,7 @@
             lexer._vocabulary = vocab;
             lexer._ruleNames = lexer_rule_names.ToArray();
             lexer._tokenTypeMap = token_type_map;
-            var res = new AntlrJson.ParseInfo()
+            var res = new AntlrJson.ParsingResultSet()
             {
                 FileName = fake_char_stream.SourceName,
                 Stream = out_token_stream,
@@ -303,7 +303,7 @@
             }
         }
 
-        public override void Write(Utf8JsonWriter writer, ParseInfo tuple, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, ParsingResultSet tuple, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 

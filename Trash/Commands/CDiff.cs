@@ -34,7 +34,7 @@ Example:
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
-            var tuples = lines.Select(t => JsonSerializer.Deserialize<AntlrJson.ParseInfo>(t, serializeOptions)).ToList();
+            var tuples = lines.Select(t => JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(t, serializeOptions)).ToList();
             var lexer = tuples[0].Lexer;
             var parser = tuples[0].Parser;
             var trees = tuples.Select(t => new Tree(t.Nodes[0], parser, lexer)).ToList();

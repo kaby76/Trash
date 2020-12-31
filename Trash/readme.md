@@ -127,7 +127,7 @@ reads commands from stdin one line at a time
 until `quit` or the end-of-file is read.
 
 
-## Result Sets -- the data passed between commands
+## Parsing Result Sets -- the data passed between commands
 
 A *result set* is a JSON serialization of:
 

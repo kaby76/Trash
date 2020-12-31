@@ -23,7 +23,7 @@ Example:
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
-            var in_tuple = JsonSerializer.Deserialize<AntlrJson.ParseInfo>(lines, serializeOptions);
+            var in_tuple = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
             var nodes = in_tuple.Nodes;
             var lexer = in_tuple.Lexer;
             var parser = in_tuple.Parser;

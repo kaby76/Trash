@@ -37,7 +37,7 @@ Example:
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
-                var parse_info = JsonSerializer.Deserialize<AntlrJson.ParseInfo>(lines, serializeOptions);
+                var parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
                 text = parse_info.Text;
                 fn = parse_info.FileName;
                 atrees = parse_info.Nodes;
@@ -70,7 +70,7 @@ Example:
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
-                var parse_info_out = new AntlrJson.ParseInfo(){Text = text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = nodes };
+                var parse_info_out = new AntlrJson.ParsingResultSet(){Text = text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = nodes };
                 string js1 = JsonSerializer.Serialize(parse_info_out, serializeOptions);
                 repl.input_output_stack.Push(js1);
             }
