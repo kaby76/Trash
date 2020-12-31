@@ -63,6 +63,31 @@ The code is implemented in C#.
 	strip
 	print
 
+### Diff grammars
+
+	# From a Bash shell
+	alias trash='dotnet c:\\users\\kenne\\documents\\antlrvsix\\trash\\bin\\debug\\net5-windows\\trash.dll'
+	echo version | trash
+
+	cat << HERE1 | trash > v1.temp
+	read v1.g4
+	parse
+	strip
+	print
+	HERE1
+
+	cat << HERE2 | trash > v2.temp
+	read v2.g4
+	parse
+	strip
+	print
+	HERE2
+
+	diff v1.temp v2.temp
+
+*There is a built-in diff for grammars, but it is not
+practical except for small grammars in this release.*
+
 ### Create a "here" doc.
 
     read HERE
