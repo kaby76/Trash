@@ -68,6 +68,7 @@ unfold - Unfold a grammar rule symbol.
 ungroup - Ungroup a parenthesized alt.
 unulliteral - Apply inverse transform of ulliteral.
 version - Print out the version of Trash.
+wc - Read stdin and output the number of lines.
 workspace - Create a new workspace for the run command.
 write - Write a file to disk.
 xgrep - Find nodes in the parse tree for a grammar.

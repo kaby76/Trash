@@ -56,6 +56,13 @@ The code is implemented in C#.
 	cat WindowState.java | run > save-tree
 	cat save-tree | xgrep "//methodDeclaration" | st | wc
 
+### Strip a grammar of all non-essential CFG
+
+	read Java9.g4
+	parse
+	strip
+	print
+
 ### Create a "here" doc.
 
     read HERE
@@ -77,12 +84,22 @@ trash [-script <em>string</em>]
 </pre>
 
 Trash reads stdin or a specified script file commands, one line at a time.
+Start a `Cmd` or `Powershell` or `Bash` shell, then
 
-(1) `trash`
+(1) `dotnet ...\Trash.dll`
 
-Read stdin one line at a time until `quit` command executed.
+where `...` is the path to the `Trash.dll`. This command
+starts an interactive shell, reading from stdin one line at a time
+until `quit` command is executed.
 
-(2) `cat ex1.tr | trash`
+Once in the interactive shell, type `help` to get a list of the
+commands.
+
+(2) `cat ex1.tr | dotnet ...\Trash.dll`
+
+where `...` is the path to the `Trash.dll`. This command
+reads commands from stdin one line at a time
+until `quit` or the end-of-file is read.
 
 ## Commands of Trash
 
@@ -102,28 +119,36 @@ See [this list](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/comman
 
 # Installation
 
-## (Incomplete)
+## Install via Antlrvsix or Antlrvs-vscode
+
+Install the Antlrvsix for VS2019 or Antlrvsix-vscode for VSCode
+extension. The Trash program
+will be installed in the extensions area for VS2019/VSCode.
+Use Find or similar
+command to find the Trash.dll.
 
 ## Nightly build
 
-## Current release (Incomplete)
+# Current release
+
+## 8.3 (30 Dec 2020)
+
+* Added a grammar diff program.
+* Added an ISO 14977 parser.
+* Added AGL (Automatic Graph Layout), XML, JSON output.
+* Added Cat, Echo, Wc, Strip commands.
+* Adding BNFC’s LBNF and other associated grammars. NB: This work is not yet complete, and only works for the simplest of grammars.
+* [Trash history should be limited; Alias setup should be separated from history. #113](https://github.com/kaby76/AntlrVSIX/issues/113)
+* [Include fix of Antlrv4parser.g4 grammar](https://github.com/antlr/grammars-v4/issues/1956)
+* [Fix Update to NET 5! #110](https://github.com/kaby76/AntlrVSIX/issues/110)
+* [Fix There should be a graph output command in Trash #108](https://github.com/kaby76/AntlrVSIX/issues/108)
+* [Fix TreeOutput.OutputTree should output tokens in similar format to parse tree nodes #107](https://github.com/kaby76/AntlrVSIX/issues/107)
+* [Fix "Find" should be renamed "XGrep" in Trash #106](https://github.com/kaby76/AntlrVSIX/issues/106)
+
 
 # Documentation
 
-## Running the **Trash** command-line engine
-
-The **Trash** tool is a command-line interpreter for executing
-operations on grammar files. With it, you can read Antlr2, Antlr3,
-Antrl4, and Bison grammars, convert to Antlr4, find sub-trees
-in the parse tree for the grammar using XPath expressions, analyze,
-and refactor the grammar.
-
-To run the tool, you will need to find the **Trash.exe** executable
-after installing the extension in Visual Studio 2019, or unpacking
-it directly from the downloaded .vsix--a ZIP file.
-It should be under
-"C:/Users/userid/AppData/Local/Microsoft/VisualStudio/.../AntlrVSIX/8.0/Trash/netcoreapp3.1/Trash.exe".
-Once you find the executable, please refer to
+Please refer to
 the [documentation](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md).
 
 ## Analysis
@@ -187,16 +212,28 @@ The refactorings implemented are:
 The source code for the extension is open source, free of charge, and free of ads. For the latest developments on the extension,
 check out my [blog](http://codinggorilla.com).
 
-# Building (Incomplete)
+# Building
 
----------
+1) git clone https://github.com/kaby76/AntlrVSIX
+2) cd AntlrVSIX
+3) # From a `Developer Command Prompt for VS2019`
+4) msbuild /t:restore
+5) msbuild
+
+Trash.dll is at ./Trash/bin/Debug/net5-windows
+after building successfully. You must have Net5 SDK installed
+to build and run.
 
 # Prior Releases
 
+(Incomplete.)
+
 # Roadmap
 
-## Planned for vx.x 
+## Planned for v9
 
-## Alternatives (Incomplete)
+* Place Trash in it's own repo, independent of Antlrvsix.
+* Replace Trash shell and commands with Bash and independent programs.
+
 
 Any questions, email me at ken.domino <at> gmail.com
