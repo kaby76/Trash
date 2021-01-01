@@ -22,90 +22,105 @@ The code is implemented in C#.
 
 ### Generate a parser
 
-	read Expr.g4
-	parse
-	generate s
+	$ dotnet .../trash.dll
+	> read Expr.g4
+	> parse
+	> generate s
+	> quit
 
 ### Parse and print out a parse tree, as JSON, XML, or s-expressions
 
-	echo "1+2+3" | run | tree
-	echo "1+2+3" | run | json
-	echo "1+2+3" | run | xml
-	echo "1+2+3" | run | st
-	echo "1+2+3" | run | dot
+	$ dotnet .../trash.dll
+	> echo "1+2+3" | run | tree
+	> echo "1+2+3" | run | json
+	> echo "1+2+3" | run | xml
+	> echo "1+2+3" | run | st
+	> echo "1+2+3" | run | dot
+	> quit
 
 ### Print out a parse tree using AGL (on Windows)
 
-	echo "1+2+3" | run | agl
+	$ dotnet .../trash.dll
+	> echo "1+2+3" | run | agl
+	> quit
 
 ### Find tokens
 
-	echo "1+2+3" | run | xgrep "//INT" | st
+	$ dotnet .../trash.dll
+	> echo "1+2+3" | run | xgrep "//INT" | st
+	> quit
 
-### Rename a symbol in a grammar, save
+### Rename a symbol in a grammar, generate a parser for new grammar
 
-	rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
-	print
-	generate s
+	$ dotnet .../trash.dll
+	> rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
+	> print
+	> generate s
+	> quit
 
 ### Count method declarations in a Java source file
 
-	read Java9.g4
-	parse
-	generate compilationUnit
-	cat WindowState.java | run > save-tree
-	cat save-tree | xgrep "//methodDeclaration" | st | wc
+	$ dotnet .../trash.dll
+	> read Java9.g4
+	> parse
+	> generate compilationUnit
+	> cat WindowState.java | run > save-tree
+	> cat save-tree | xgrep "//methodDeclaration" | st | wc
+	> quit
 
 ### Strip a grammar of all non-essential CFG
 
-	read Java9.g4
-	parse
-	strip
-	print
+	$ dotnet .../trash.dll
+	> read Java9.g4
+	> parse
+	> strip
+	> write
+	> quit
 
 ### Diff grammars
 
 	# From a Bash shell
-	alias trash='dotnet c:\\users\\kenne\\documents\\antlrvsix\\trash\\bin\\debug\\net5-windows\\trash.dll'
-	echo version | trash
+	$ alias trash='dotnet ...\\trash.dll'
+	$ echo version | trash
 
-	cat << HERE1 | trash > v1.temp
+	$ cat << HERE1 | dotnet ...\\trash.dll > v1.temp
 	read v1.g4
 	parse
 	strip
 	print
 	HERE1
 
-	cat << HERE2 | trash > v2.temp
+	$ cat << HERE2 | dotnet ...\\trash.dll > v2.temp
 	read v2.g4
 	parse
 	strip
 	print
 	HERE2
 
-	diff v1.temp v2.temp
+	$ diff v1.temp v2.temp
 
 *There is a built-in diff for grammars, but it is not
 practical except for small grammars in this release.*
 
 ### Create a "here" doc.
 
-    read HERE
+ 	$ dotnet .../trash.dll
+    > read HERE
     grammar A;
     s : e ;
     e : e '*' e | INT ;
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
     HERE
-    parse
-    rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
-    print
-    quit
+    > parse
+    > rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
+    > print
+    > quit
 
 ## Usage
 
 <pre>
-trash [-script <em>string</em>]
+dotnet ...\\trash.dll [-script <em>string</em>]
 </pre>
 
 Trash reads stdin or a specified script file commands, one line at a time.
