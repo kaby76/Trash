@@ -36,3 +36,5 @@ tool/target/
 
 # Ignore generated test suite
 Generated/
+x/
+packages-microsoft-prod.deb
