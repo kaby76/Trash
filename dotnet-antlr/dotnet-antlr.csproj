@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+    <RootNamespace>dotnet_antlr</RootNamespace>
+    <PackAsTool>true</PackAsTool>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <AssemblyName>dotnet_antlr</AssemblyName>
+    <PackageId>dotnet-antlr</PackageId>
+    <Description>
+      <![CDATA[dotnet Antlr template tool.
+This package can be installed as a dotnet global or local tool.
+This tool generates code around the files you placed in a directory for
+an Antlr parser.]]>
+    </Description>
+    <ToolCommandName>dotnet-antlr</ToolCommandName>
+    <RootNamespace>AntlrTemplating</RootNamespace>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="Domemtech.Globbing" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

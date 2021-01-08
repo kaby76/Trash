@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "dotnet-antlr": {
+      "commandName": "Project",
+      "commandLineArgs": "-s rulelist",
+      "workingDirectory": "c:/Users/kenne/Documents/grammars-v4/abnf"
+    }
+  }
+}
