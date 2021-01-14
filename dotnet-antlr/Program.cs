@@ -273,7 +273,7 @@ WS
             sb.AppendLine(@"
 <Project Sdk=""Microsoft.NET.Sdk"" >
 	<PropertyGroup>
-    <TargetFrameworks>net5.0;net471;net480;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
         <OutputType>Exe</OutputType>
 	</PropertyGroup>
 	<ItemGroup>");
@@ -293,8 +293,8 @@ WS
             sb.AppendLine(@"</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include=""Antlr4.Runtime.Standard"" Version =""4.9.0"" />
-		<PackageReference Include=""Antlr4BuildTasks"" Version = ""8.10"" />
-		<PackageReference Include= ""AntlrTreeEditing"" Version = ""1.9"" />
+		<PackageReference Include=""Antlr4BuildTasks"" Version = ""8.10"" PrivateAssets=""all"" />
+        <PackageReference Include= ""AntlrTreeEditing"" Version = ""1.9"" />
 	</ItemGroup>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
