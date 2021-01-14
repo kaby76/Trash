@@ -273,7 +273,7 @@ WS
             sb.AppendLine(@"
 <Project Sdk=""Microsoft.NET.Sdk"" >
 	<PropertyGroup>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>net5.0;net471;net480;netcoreapp3.1</TargetFrameworks>
         <OutputType>Exe</OutputType>
 	</PropertyGroup>
 	<ItemGroup>");
