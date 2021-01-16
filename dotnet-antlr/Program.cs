@@ -530,10 +530,14 @@ namespace " + @namespace + @"
 
             sb.AppendLine(@"();
             if (listener_lexer.had_error || listener_parser.had_error)
+            {
                 System.Console.Error.WriteLine(""error in parse."");
+            }
             else
+            {
                 System.Console.Error.WriteLine(""parse completed."");
-            Tree = tree;
+            }
+            System.Environment.Exit(listener_lexer.had_error || listener_parser.had_error ? 1 : 0);
         }
     }
 }");
