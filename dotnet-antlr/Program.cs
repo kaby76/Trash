@@ -531,11 +531,11 @@ namespace " + @namespace + @"
             sb.AppendLine(@"();
             if (listener_lexer.had_error || listener_parser.had_error)
             {
-                System.Console.Error.WriteLine(""error in parse."");
+                System.Console.Error.WriteLine(""parse failed."");
             }
             else
             {
-                System.Console.Error.WriteLine(""parse completed."");
+                System.Console.Error.WriteLine(""parse succeeded."");
             }
             System.Environment.Exit(listener_lexer.had_error || listener_parser.had_error ? 1 : 0);
         }
