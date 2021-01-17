@@ -488,11 +488,14 @@ namespace " + @namespace + @"
             var lexer = new ");
             var lexer_name = "";
             var parser_name = "";
+            // lexer and parser are set if the grammar is partitioned.
+            // rest is set if there are grammar is combined.
             var lexer = grammarFiles?.Where(d => d.EndsWith("Lexer.g4")).ToList();
             var parser = grammarFiles?.Where(d => d.EndsWith("Parser.g4")).ToList();
-            var rest = grammarFiles?.Where(d => !lexer.Contains(d) && !parser.Contains(d)).ToList();
-            if ((rest == null && lexer == null && parser == null) || rest.Count == 0)
+            var rest = grammarFiles?.Where(d => !d.EndsWith("Parser.g4") && !d.EndsWith("Lexer.g4")).ToList();
+            if ((rest == null || rest.Count == 0) && lexer == null && parser == null)
             {
+                // I have no clue what your grammars are.
                 lexer_name = "arithmeticLexer";
                 parser_name = "arithmeticParser";
             }
