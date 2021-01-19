@@ -30,6 +30,9 @@
 
             [Option('t', "target", Required = false, HelpText = "The target language for the project.")]
             public string Target { get; set; }
+
+            [Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
+            public string InputFile { get; set; }
         }
 
         static void Main(string[] args)
@@ -602,6 +605,7 @@ namespace " + @namespace + @"
         {
             bool show_tree = false;
             bool show_tokens = false;
+            string file_name = null;
             string input = null;
             for (int i = 0; i < args.Length; ++i)
             {
@@ -617,8 +621,11 @@ namespace " + @namespace + @"
                 }
                 else if (args[i].Equals(""-input""))
                     input = args[i];
+                else if (args[i].Equals(""-file""))
+                    file_name = args[++i];
             }
-            if (input == null)
+            ICharStream str = null;
+            if (input == null && file_name == null)
             {
                 StringBuilder sb = new StringBuilder();
                 int ch;
@@ -627,8 +634,14 @@ namespace " + @namespace + @"
                     sb.Append((char)ch);
                 }
                 input = sb.ToString();
+                str = CharStreams.fromstring(input);
+            } else if (input != null)
+            {
+                str = CharStreams.fromstring(input);
+            } else if (file_name != null)
+            {
+                str = CharStreams.fromPath(file_name);
             }
-            var str = new AntlrInputStream(input);
             var lexer = new " + lexer_name + @"(str);
             if (show_tokens)
             {
@@ -699,6 +712,7 @@ public class Program {
     {
         boolean show_tree = false;
         boolean show_tokens = false;
+        String file_name = null;
         String input = null;
         for (int i = 0; i < args.length; ++i)
         {
@@ -714,8 +728,11 @@ public class Program {
             }
             else if (args[i].equals(""-input""))
                 input = args[i];
+            else if (args[i].equals(""-file""))
+                file_name = args[++i];
         }
-        if (input == null)
+        CharStream str = null;
+        if (input == null && file_name == null)
         {
             StringBuilder sb = new StringBuilder();
             int ch;
@@ -724,9 +741,14 @@ public class Program {
                 sb.append((char)ch);
             }
             input = sb.toString();
+            str = CharStreams.fromString(input);
+        } else if (input != null)
+        {
+            str = CharStreams.fromString(input);
+        } else if (file_name != null)
+        {
+            str = CharStreams.fromFileName(file_name);
         }
-        CommonTokenStream tokens = null;
-        ANTLRInputStream str = new ANTLRInputStream(input);
         " + lexer_name + " lexer = new " + lexer_name + @"(str);
         if (show_tokens)
         {
@@ -744,7 +766,7 @@ public class Program {
             System.out.println(new_s.toString());
         }
         lexer.reset();
-        tokens = new CommonTokenStream(lexer);
+        var tokens = new CommonTokenStream(lexer);
         " + parser_name + " parser = new " + parser_name + @"(tokens);
         ErrorListener lexer_listener = new ErrorListener();
         ErrorListener listener = new ErrorListener();
