@@ -207,7 +207,7 @@ fragment SIGN : ('+' | '-') ;
                 sb.AppendLine(@"<!-- Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @" -->
 <Project Sdk=""Microsoft.NET.Sdk"" >
   <PropertyGroup>
-    <TargetFrameworks>net5.0</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>");
@@ -226,7 +226,7 @@ fragment SIGN : ('+' | '-') ;
 
                 sb.AppendLine(@"</ItemGroup>
   <ItemGroup>
-    <PackageReference Include=""Antlr4.Runtime.Standard"" Version =""4.9.0"" />
+    <PackageReference Include=""Antlr4.Runtime.Standard"" Version =""4.9.1"" />
     <PackageReference Include=""Antlr4BuildTasks"" Version = ""8.10"" PrivateAssets=""all"" />
     <PackageReference Include=""AntlrTreeEditing"" Version = ""1.9"" />
   </ItemGroup>
@@ -634,10 +634,10 @@ namespace " + @namespace + @"
                     sb.Append((char)ch);
                 }
                 input = sb.ToString();
-                str = CharStreams.fromstring(input);
+                str = CharStreams.fromString(input);
             } else if (input != null)
             {
-                str = CharStreams.fromstring(input);
+                str = CharStreams.fromString(input);
             } else if (file_name != null)
             {
                 str = CharStreams.fromPath(file_name);
