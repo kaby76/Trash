@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-s module",
-      "workingDirectory": "c:/Users/kenne/Documents/grammars-v4/abb"
+      "commandLineArgs": "-s sql_script",
+      "workingDirectory": "c:/Users/kaber/Documents/grammars-v4/sql/plsql"
     }
   }
 }
