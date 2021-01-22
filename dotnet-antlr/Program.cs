@@ -401,7 +401,7 @@ fragment UNSIGNED_INTEGER : ('0' .. '9')+ ;
 fragment E : 'E' | 'e' ;
 fragment SIGN : ('+' | '-') ;
 ");
-                var fn = outputDirectory + "arithmetic.g4";
+                var fn = outputDirectory + "Arithmetic.g4";
                 System.IO.File.WriteAllText(fn, sb.ToString());
             }
         }
@@ -435,7 +435,7 @@ fragment SIGN : ('+' | '-') ;
                 }
                 else
                 {
-                    sb.AppendLine(@"<Antlr4 Include=""arithmetic.g4"" />");
+                    sb.AppendLine(@"<Antlr4 Include=""Arithmetic.g4"" />");
                 }
 
                 sb.AppendLine(@"</ItemGroup>
@@ -784,11 +784,13 @@ public class ErrorListener extends ConsoleErrorListener
             var lexer = grammarFiles?.Where(d => d.EndsWith("Lexer.g4")).ToList();
             var parser = grammarFiles?.Where(d => d.EndsWith("Parser.g4")).ToList();
             var rest = grammarFiles?.Where(d => !d.EndsWith("Parser.g4") && !d.EndsWith("Lexer.g4")).ToList();
-            if ((rest == null || rest.Count == 0) && lexer == null && parser == null)
+            if ((rest == null || rest.Count == 0)
+                && (lexer == null || lexer.Count == 0)
+                && (parser == null || parser.Count == 0))
             {
                 // I have no clue what your grammars are.
-                lexer_name = "arithmeticLexer";
-                parser_name = "arithmeticParser";
+                lexer_name = "ArithmeticLexer";
+                parser_name = "ArithmeticParser";
             }
             else if (lexer.Count == 1)
             {
