@@ -330,7 +330,9 @@ public class ErrorListener extends ConsoleErrorListener
                 "Java" => "./Java/**/*.java",
                 _ => throw new NotImplementedException(),
             };
-            DirectoryCopy(target, outputDirectory, true);
+            DirectoryInfo dir = new DirectoryInfo("./CSharp");
+            if (dir.Exists)
+                DirectoryCopy(target, outputDirectory, true);
             // Copy all files to generated directory.
             //var g = new Domemtech.Globbing.Glob();
             //var files = g.Contents(file_pattern);
