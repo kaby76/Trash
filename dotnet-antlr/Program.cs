@@ -13,28 +13,33 @@
 
         class Options
         {
-            [Option('c', "case-fold", Required = false, HelpText = "Fold case of lexer. True = upper, false = lower.")]
+           // public Options() { }
+
+            [Option('a', "antlr4cs", Required=false, Default=false, HelpText = "Generate code for Antlr4cs runtime.")]
+            public bool Antlr4cs { get; set; }
+
+            [Option('c', "case-fold", Required=false, HelpText="Fold case of lexer. True = upper, false = lower.")]
             public bool? CaseFold { get; set; }
 
-            [Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
+            [Option('f', "file", Required=false, HelpText="The name of an input file to parse.")]
             public string InputFile { get; set; }
 
-            [Option('g', "grammar-files", Required = false, HelpText = "A list of semi-colon separated grammar files.")]
+            [Option('g', "grammar-files", Required=false, HelpText="A list of semi-colon separated grammar files.")]
             public string GrammarFiles { get; set; }
 
-            [Option('n', "namespace", Required = false, HelpText = "The namespace for all generated files.")]
+            [Option('n', "namespace", Required=false, HelpText="The namespace for all generated files.")]
             public string DefaultNamespace { get; set; }
 
-            [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
+            [Option('o', "output-directory", Required=false, HelpText="The output directory for the project.")]
             public string OutputDirectory { get; set; }
 
-            [Option('p', "package", Required = false, HelpText = "PackageReference's to include, in name/version pairs.")]
+            [Option('p', "package", Required=false, HelpText="PackageReference's to include, in name/version pairs.")]
             public string Packages { get; set; }
 
-            [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
+            [Option('s', "start-rule", Required=false, HelpText="Start rule name.")]
             public string StartRule { get; set; }
 
-            [Option('t', "target", Required = false, HelpText = "The target language for the project.")]
+            [Option('t', "target", Required=false, HelpText="The target language for the project.")]
             public string Target { get; set; }
         }
 
@@ -60,9 +65,12 @@
             string outputDirectory = null;
             string target = null;
             bool? case_fold = null;
+            bool antlr4cs = false;
             result.WithParsed(o =>
             {
                 target = "CSharp";
+                antlr4cs = o.Antlr4cs;
+                if (antlr4cs) @namespace = "Test";
                 if (o.CaseFold != null) case_fold = o.CaseFold;
                 if (o.DefaultNamespace != null) @namespace = o.DefaultNamespace;
                 if (o.DefaultNamespace != null) target = o.Target;
@@ -114,24 +122,24 @@
             }
 
             // Add .csproj or pom.xml.
-            AddBuildFile(target, @namespace, grammarFiles, outputDirectory);
+            AddBuildFile(antlr4cs, target, @namespace, grammarFiles, outputDirectory);
 
             // Add grammars
             AddGrammars(grammarFiles, outputDirectory);
 
             // Add driver program.
-            AddMain(case_fold, target, grammarFiles, @namespace, startRule, outputDirectory);
+            AddMain(antlr4cs, case_fold, target, grammarFiles, @namespace, startRule, outputDirectory);
 
             // Add ErrorListener code.
-            AddErrorListener(target, @namespace, outputDirectory);
+            AddErrorListener(antlr4cs, target, @namespace, outputDirectory);
 
             // Add case folding char stream code.
             AddCaseFold(case_fold, target, @namespace, outputDirectory);
 
             // Add TreeOutput code.
-            AddTreeOutput(target, @namespace, outputDirectory);
+            AddTreeOutput(antlr4cs, target, @namespace, outputDirectory);
 
-            AddSourceFiles(target, @namespace, outputDirectory);
+            AddSourceFiles(antlr4cs, target, @namespace, outputDirectory);
 
             return 0;
         }
@@ -322,7 +330,7 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private static void AddSourceFiles(string target, string @namespace, string outputDirectory)
+        private static void AddSourceFiles(bool antlr4cs, string target, string @namespace, string outputDirectory)
         {
             var file_pattern = target switch
             {
@@ -406,7 +414,7 @@ fragment SIGN : ('+' | '-') ;
             }
         }
 
-        private static void AddBuildFile(string target, string @namespace, List<string> grammarFiles, string outputDirectory)
+        private static void AddBuildFile(bool antlr4cs, string target, string @namespace, List<string> grammarFiles, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
             if (target == "CSharp")
@@ -417,33 +425,53 @@ fragment SIGN : ('+' | '-') ;
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
-  <ItemGroup>");
+  ");
 
-                if (grammarFiles != null && grammarFiles.Any())
+                if (!antlr4cs)
                 {
-                    foreach (var grammar in grammarFiles)
+                    sb.AppendLine("<ItemGroup>");
+                    if (grammarFiles != null && grammarFiles.Any())
                     {
-                        if (@namespace == null)
-                            sb.AppendLine("<Antlr4 Include=\"" + Path.GetFileName(grammar) + "\" />");
-                        else
+                        foreach (var grammar in grammarFiles)
                         {
-                            sb.AppendLine("<Antlr4 Include=\"" + Path.GetFileName(grammar) + "\">");
-                            sb.AppendLine("<Package>" + @namespace + "</Package>");
-                            sb.AppendLine("</Antlr4>");
+                            if (@namespace == null)
+                                sb.AppendLine("<Antlr4 Include=\"" + Path.GetFileName(grammar) + "\" />");
+                            else
+                            {
+                                sb.AppendLine("<Antlr4 Include=\"" + Path.GetFileName(grammar) + "\">");
+                                sb.AppendLine("<Package>" + @namespace + "</Package>");
+                                sb.AppendLine("</Antlr4>");
+                            }
                         }
                     }
-                }
-                else
-                {
-                    sb.AppendLine(@"<Antlr4 Include=""Arithmetic.g4"" />");
+                    else
+                    {
+                        sb.AppendLine(@"<Antlr4 Include=""Arithmetic.g4"" />");
+                    }
+                    sb.AppendLine("</ItemGroup>");
                 }
 
-                sb.AppendLine(@"</ItemGroup>
+                if (!antlr4cs)
+                {
+                    sb.AppendLine(@"
   <ItemGroup>
     <PackageReference Include=""Antlr4.Runtime.Standard"" Version =""4.9.1"" />
     <PackageReference Include=""Antlr4BuildTasks"" Version = ""8.11"" PrivateAssets=""all"" />
     <PackageReference Include=""AntlrTreeEditing"" Version = ""1.9"" />
-  </ItemGroup>
+  </ItemGroup>");
+                }
+                else
+                {
+                    sb.AppendLine(@"
+  <ItemGroup>
+    <PackageReference Include=""Antlr4"" Version=""4.6.6"">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include=""Antlr4.Runtime"" Version=""4.6.6"" />
+  </ItemGroup>");
+                }
+                    sb.AppendLine(@"
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
@@ -456,10 +484,10 @@ fragment SIGN : ('+' | '-') ;
             }
         }
 
-        private static void AddTreeOutput(string target, string @namespace, string outputDirectory)
+        private static void AddTreeOutput(bool antlr4cs, string target, string @namespace, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
-            if (target == "CSharp")
+            if (target == "CSharp" && !antlr4cs)
             {
                 sb.AppendLine(@"
 // Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
@@ -711,10 +739,10 @@ public class TreeOutput
             }
         }
 
-        private static void AddErrorListener(string target, string @namespace, string outputDirectory)
+        private static void AddErrorListener(bool antlr4cs, string target, string @namespace, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
-            if (target == "CSharp")
+            if (target == "CSharp" && !antlr4cs)
             {
                 sb.AppendLine(@"
 // Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
@@ -774,7 +802,7 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private static void AddMain(bool? case_fold, string target, List<string> grammarFiles, string @namespace, string startRule, string outputDirectory)
+        private static void AddMain(bool antlr4cs, bool? case_fold, string target, List<string> grammarFiles, string @namespace, string startRule, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
             var lexer_name = "";
@@ -816,8 +844,11 @@ public class ErrorListener extends ConsoleErrorListener
                 sb.Append(@"
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using System;
+using System.IO;
 using System.Text;
 using System.Runtime.CompilerServices;
+
 public class Program
 {
     static void Main(string[] args)
@@ -852,14 +883,37 @@ public class Program
             {
                 sb.Append((char)ch);
             }
-            input = sb.ToString();
-            str = CharStreams.fromString(input);
+            input = sb.ToString();");
+                if (!antlr4cs)
+                    sb.AppendLine(
+            @"str = CharStreams.fromString(input);");
+                else
+                    sb.AppendLine(
+            @"str = new Antlr4.Runtime.AntlrInputStream(
+                    new MemoryStream(Encoding.UTF8.GetBytes(input ?? """")));");
+                sb.AppendLine(@"
         } else if (input != null)
         {
-            str = CharStreams.fromString(input);
+            ");
+                if (!antlr4cs)
+                    sb.AppendLine(
+            @"str = CharStreams.fromString(input);");
+                else
+                    sb.AppendLine(
+            @"str = new Antlr4.Runtime.AntlrInputStream(
+                    new MemoryStream(Encoding.UTF8.GetBytes(input ?? """")));");
+                sb.AppendLine(@"
         } else if (file_name != null)
         {
-            str = CharStreams.fromPath(file_name);
+            ");
+                if (!antlr4cs)
+                    sb.AppendLine(
+            @"str = CharStreams.fromPath(file_name);");
+                else
+                    sb.AppendLine(
+            @"FileStream fs = new FileStream(file_name, FileMode.Open);
+                str = new Antlr4.Runtime.AntlrInputStream(fs);");
+                sb.AppendLine(@"
         }
         ");
                 if (case_fold != null)
@@ -878,7 +932,7 @@ public class Program
                 var token = (CommonToken)ro_token;
                 token.TokenIndex = i;
                 new_s.AppendLine(token.ToString());
-                if (token.Type == Antlr4.Runtime.TokenConstants.EOF)
+                if (token.Type == Antlr4.Runtime.TokenConstants."+ (antlr4cs ? "Eof" : "EOF") + @")
                     break;
             }
             System.Console.Error.WriteLine(new_s.ToString());
@@ -886,7 +940,9 @@ public class Program
         lexer.Reset();
         var tokens = new CommonTokenStream(lexer);
         var parser = new " + parser_name + @"(tokens);
-        var listener_lexer = new ErrorListener<int>();
+        ");
+                if (!antlr4cs)
+                    sb.AppendLine(@"var listener_lexer = new ErrorListener<int>();
         var listener_parser = new ErrorListener<IToken>();
         lexer.AddErrorListener(listener_lexer);
         parser.AddErrorListener(listener_parser);
@@ -903,9 +959,26 @@ public class Program
         {
             System.Console.Error.WriteLine(tree.ToStringTree());
         }
-        System.Environment.Exit(listener_lexer.had_error || listener_parser.had_error ? 1 : 0);
-    }
-}
+        System.Environment.Exit(listener_lexer.had_error || listener_parser.had_error ? 1 : 0);");
+                else
+                    sb.AppendLine(@"
+        var tree = parser." + startRule + @"();
+        if (parser.NumberOfSyntaxErrors != 0)
+        {
+            System.Console.Error.WriteLine(""parse failed."");
+        }
+        else
+        {
+            System.Console.Error.WriteLine(""parse succeeded."");
+        }
+        if (show_tree)
+        {
+            System.Console.Error.WriteLine(tree.ToStringTree());
+        }
+        System.Environment.Exit(parser.NumberOfSyntaxErrors != 0 ? 1 : 0);");
+                sb.AppendLine(@"
+            }
+        }
 ");
                 if (@namespace != null) sb.AppendLine("}");
                 // Test to find an appropriate file name to place this into.
