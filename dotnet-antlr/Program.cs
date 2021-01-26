@@ -39,8 +39,11 @@
             [Option('s', "start-rule", Required=false, HelpText="Start rule name.")]
             public string StartRule { get; set; }
 
-            [Option('t', "target", Required=false, HelpText="The target language for the project.")]
+            [Option('t', "target", Required = false, Default="CSharp", HelpText = "The target language for the project.")]
             public string Target { get; set; }
+
+            [Option('x', "profile", Required = false, Default=false, HelpText = "Add in Antlr profiling code.")]
+            public bool Profiling { get; set; }
         }
 
         static void Main(string[] args)
@@ -66,9 +69,11 @@
             string target = null;
             bool? case_fold = null;
             bool antlr4cs = false;
+            bool profiling = false;
             result.WithParsed(o =>
             {
-                target = "CSharp";
+                target = o.Target;
+                profiling = o.Profiling;
                 antlr4cs = o.Antlr4cs;
                 if (antlr4cs) @namespace = "Test";
                 if (o.CaseFold != null) case_fold = o.CaseFold;
@@ -128,7 +133,7 @@
             AddGrammars(grammarFiles, outputDirectory);
 
             // Add driver program.
-            AddMain(antlr4cs, case_fold, target, grammarFiles, @namespace, startRule, outputDirectory);
+            AddMain(profiling, antlr4cs, case_fold, target, grammarFiles, @namespace, startRule, outputDirectory);
 
             // Add ErrorListener code.
             AddErrorListener(antlr4cs, target, @namespace, outputDirectory);
@@ -482,6 +487,19 @@ fragment SIGN : ('+' | '-') ;
                 var fn = outputDirectory + "Test.csproj";
                 System.IO.File.WriteAllText(fn, sb.ToString());
             }
+            else if (target == "Java")
+            {
+                sb.AppendLine(@"#!/bin/sh
+java -jar ~/Downloads/antlr-4.9.1-complete.jar *.g4
+javac -classpath ~/Downloads/antlr-4.9.1-complete.jar:.. *.java
+");
+                System.IO.File.WriteAllText(outputDirectory + "build.sh", sb.ToString());
+                sb.AppendLine(@"#!/bin/sh
+java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. Program
+");
+                System.IO.File.WriteAllText(outputDirectory + "run.sh", sb.ToString());
+            }
+
         }
 
         private static void AddTreeOutput(bool antlr4cs, string target, string @namespace, string outputDirectory)
@@ -606,9 +624,9 @@ public class TreeOutput
             }
             else if (target == "Java")
             {
+                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
+                if (@namespace != null) sb.AppendLine("package " + @namespace + @";");
                 sb.Append(@"
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
-package " + @namespace + @";
 
 import java.util.*;
 import java.io.File;
@@ -744,8 +762,7 @@ public class TreeOutput
             StringBuilder sb = new StringBuilder();
             if (target == "CSharp" && !antlr4cs)
             {
-                sb.AppendLine(@"
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
+                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
                 if (@namespace != null) sb.AppendLine("namespace " + @namespace + @"
 {");
                 sb.Append(@"
@@ -774,10 +791,9 @@ public class ErrorListener<S> : ConsoleErrorListener<S>
             }
             else if (target == "Java")
             {
+                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
+                if (@namespace != null) sb.AppendLine("package " + @namespace + @";");
                 sb.Append(@"
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
-package " + @namespace + @";
-
 import org.antlr.v4.runtime.*;
 
 public class ErrorListener extends ConsoleErrorListener
@@ -802,7 +818,7 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private static void AddMain(bool antlr4cs, bool? case_fold, string target, List<string> grammarFiles, string @namespace, string startRule, string outputDirectory)
+        private static void AddMain(bool profiling, bool antlr4cs, bool? case_fold, string target, List<string> grammarFiles, string @namespace, string startRule, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
             var lexer_name = "";
@@ -837,8 +853,7 @@ public class ErrorListener extends ConsoleErrorListener
             }
             if (target == "CSharp")
             {
-                sb.AppendLine(@"
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
+                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
                 if (@namespace != null) sb.AppendLine("namespace " + @namespace + @"
 {");
                 sb.Append(@"
@@ -883,42 +898,43 @@ public class Program
             {
                 sb.Append((char)ch);
             }
-            input = sb.ToString();");
+            input = sb.ToString();
+            ");
                 if (!antlr4cs)
-                    sb.AppendLine(
+                    sb.Append(
             @"str = CharStreams.fromString(input);");
                 else
-                    sb.AppendLine(
+                    sb.Append(
             @"str = new Antlr4.Runtime.AntlrInputStream(
                     new MemoryStream(Encoding.UTF8.GetBytes(input ?? """")));");
-                sb.AppendLine(@"
+                sb.Append(@"
         } else if (input != null)
         {
             ");
                 if (!antlr4cs)
-                    sb.AppendLine(
+                    sb.Append(
             @"str = CharStreams.fromString(input);");
                 else
-                    sb.AppendLine(
+                    sb.Append(
             @"str = new Antlr4.Runtime.AntlrInputStream(
                     new MemoryStream(Encoding.UTF8.GetBytes(input ?? """")));");
-                sb.AppendLine(@"
+                sb.Append(@"
         } else if (file_name != null)
         {
             ");
                 if (!antlr4cs)
-                    sb.AppendLine(
+                    sb.Append(
             @"str = CharStreams.fromPath(file_name);");
                 else
-                    sb.AppendLine(
+                    sb.Append(
             @"FileStream fs = new FileStream(file_name, FileMode.Open);
                 str = new Antlr4.Runtime.AntlrInputStream(fs);");
-                sb.AppendLine(@"
+                sb.Append(@"
         }
         ");
                 if (case_fold != null)
                 {
-                    sb.AppendLine(@"str = new CaseChangingCharStream(str, "
+                    sb.Append(@"str = new CaseChangingCharStream(str, "
                         + ((bool)case_fold ? "true" : "false") + @");
         ");
                 }
@@ -932,7 +948,7 @@ public class Program
                 var token = (CommonToken)ro_token;
                 token.TokenIndex = i;
                 new_s.AppendLine(token.ToString());
-                if (token.Type == Antlr4.Runtime.TokenConstants."+ (antlr4cs ? "Eof" : "EOF") + @")
+                if (token.Type == Antlr4.Runtime.TokenConstants." + (antlr4cs ? "Eof" : "EOF") + @")
                     break;
             }
             System.Console.Error.WriteLine(new_s.ToString());
@@ -942,10 +958,17 @@ public class Program
         var parser = new " + parser_name + @"(tokens);
         ");
                 if (!antlr4cs)
-                    sb.AppendLine(@"var listener_lexer = new ErrorListener<int>();
+                {
+                    sb.Append(@"var listener_lexer = new ErrorListener<int>();
         var listener_parser = new ErrorListener<IToken>();
         lexer.AddErrorListener(listener_lexer);
-        parser.AddErrorListener(listener_parser);
+        parser.AddErrorListener(listener_parser);");
+                    if (profiling)
+                    {
+                        sb.Append(@"
+        parser.Profile = true;");
+                    }
+                    sb.Append(@"
         var tree = parser." + startRule + @"();
         if (listener_lexer.had_error || listener_parser.had_error)
         {
@@ -958,10 +981,23 @@ public class Program
         if (show_tree)
         {
             System.Console.Error.WriteLine(tree.ToStringTree());
-        }
+        }");
+                    if (profiling)
+                    {
+                        sb.Append(@"ProfileParser(parser);
+        ");
+                    }
+                    sb.Append(@"
         System.Environment.Exit(listener_lexer.had_error || listener_parser.had_error ? 1 : 0);");
+                }
                 else
-                    sb.AppendLine(@"
+                {
+                    if (profiling)
+                    {
+                        sb.Append(@"
+        parser.Profile = true;");
+                    }
+                    sb.Append(@"
         var tree = parser." + startRule + @"();
         if (parser.NumberOfSyntaxErrors != 0)
         {
@@ -975,10 +1011,40 @@ public class Program
         {
             System.Console.Error.WriteLine(tree.ToStringTree());
         }
+");
+                    if (profiling)
+                    {
+                        sb.Append(@"ProfileParser(parser);
+        ");
+                    }
+                    sb.Append(@"
         System.Environment.Exit(parser.NumberOfSyntaxErrors != 0 ? 1 : 0);");
-                sb.AppendLine(@"
+                }
+                sb.Append(@"
+    }
+
+    private static void ProfileParser(Parser parser)
+    {
+        Antlr4.Runtime.Atn.ATN atn = parser.Atn;
+        Antlr4.Runtime.Atn.DecisionInfo[] di_list = parser.ParseInfo.getDecisionInfo();
+	    foreach (var decisionInfo in di_list)
+        {
+            var ds = atn.GetDecisionState(decisionInfo.decision);
+            string rule = parser.RuleNames[ds.ruleIndex];
+            if (decisionInfo.timeInPrediction > 0)
+            {
+                System.Console.WriteLine(rule);
+                System.Console.WriteLine(decisionInfo.timeInPrediction);
+                System.Console.WriteLine(decisionInfo.invocations);
+                System.Console.WriteLine(decisionInfo.SLL_TotalLook);
+                System.Console.WriteLine(decisionInfo.SLL_MaxLook);
+                System.Console.WriteLine(decisionInfo.ambiguities.Count);
+                System.Console.WriteLine(decisionInfo.errors.Count);
+                System.Console.WriteLine();
             }
         }
+    }
+}
 ");
                 if (@namespace != null) sb.AppendLine("}");
                 // Test to find an appropriate file name to place this into.
@@ -987,9 +1053,9 @@ public class Program
             }
             else if (target == "Java")
             {
+                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
+                if (@namespace != null) sb.AppendLine("package " + @namespace + @";");
                 sb.Append(@"
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
-package " + @namespace + @";
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -998,13 +1064,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CodePointCharStream;
-import org.antlr.v4.runtime.CommonToken;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.IntStream;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class Program {
@@ -1072,7 +1132,13 @@ public class Program {
         ErrorListener listener = new ErrorListener();
         parser.removeParseListeners();
         parser.addErrorListener(listener);
-        lexer.addErrorListener(lexer_listener);
+        lexer.addErrorListener(lexer_listener);");
+                if (profiling)
+                {
+                    sb.Append(@"
+        parser.setProfile(true);");
+                }
+                sb.Append(@"
         ParseTree tree = parser." + startRule + @"();
         if (listener.had_error || lexer_listener.had_error)
             System.out.println(""error in parse."");
@@ -1082,7 +1148,37 @@ public class Program {
         {
             System.out.println(tree.toStringTree());
         }
-        java.lang.System.exit(listener.had_error || lexer_listener.had_error ? 1 : 0);
+        ");
+                if (profiling)
+                {
+                    sb.Append(@"ProfileParser(parser);
+        ");
+                }
+                sb.Append(@"java.lang.System.exit(listener.had_error || lexer_listener.had_error ? 1 : 0);
+    }
+
+    private static void ProfileParser(Parser parser)
+    {
+        var atn = parser.getATN();
+        var di_list = parser.getParseInfo().getDecisionInfo();
+        for (int i = 0; i < di_list.length; ++i)
+        {
+            var decisionInfo = di_list[i];
+            var ds = atn.getDecisionState(decisionInfo.decision);
+            var rule = parser.getRuleNames()[ds.ruleIndex];
+            if (decisionInfo.timeInPrediction > 0)
+            {
+                System.out.println(rule);
+                System.out.println(rule);
+                System.out.println(decisionInfo.timeInPrediction);
+                System.out.println(decisionInfo.invocations);
+                System.out.println(decisionInfo.SLL_TotalLook);
+                System.out.println(decisionInfo.SLL_MaxLook);
+                System.out.println(decisionInfo.ambiguities.size());
+                System.out.println(decisionInfo.errors.size());
+                System.out.println();
+            }
+        }
     }
 }
 ");

@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-a -s sql_script",
-      "workingDirectory": "c:/Users/kaber/Documents/grammars-v4/sql/plsql"
+      "commandLineArgs": "-s compilationUnit -t Java",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\antlr4\\runtime-testsuite\\scripts\\csharp\\issue-2693"
     }
   }
 }
