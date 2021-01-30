@@ -28,12 +28,12 @@
     </Antlr4>
   </ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9" />
-                <PackageReference Include="Antlr4BuildTasks" Version="8.9">
+		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.1" />
+                <PackageReference Include="Antlr4BuildTasks" Version="8.12">
                     <PrivateAssets>all</PrivateAssets>
                 </PackageReference>
-		<PackageReference Include="Antlr4RuntimeShim" Version="0.0.1" />
-		<PackageReference Include="AntlrTreeEditing" Version="2.2" />
+		<PackageReference Include="Antlr4RuntimeShim" Version="0.0.2" />
+		<PackageReference Include="AntlrTreeEditing" Version="2.3" />
 		<PackageReference Include="Microsoft.CodeAnalysis" Version="3.7.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.7.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />
