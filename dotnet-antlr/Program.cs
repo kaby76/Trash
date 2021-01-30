@@ -462,7 +462,6 @@ fragment SIGN : ('+' | '-') ;
   <ItemGroup>
     <PackageReference Include=""Antlr4.Runtime.Standard"" Version =""4.9.1"" />
     <PackageReference Include=""Antlr4BuildTasks"" Version = ""8.12"" PrivateAssets=""all"" />
-    <PackageReference Include=""AntlrTreeEditing"" Version = ""1.9"" />
   </ItemGroup>");
                 }
                 else
