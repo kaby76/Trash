@@ -9,7 +9,7 @@
 
     class Program
     {
-        static string version = "1.3";
+        static string version = "1.4";
 
         class Options
         {
@@ -70,6 +70,9 @@
             bool? case_fold = null;
             bool antlr4cs = false;
             bool profiling = false;
+            bool stop = false;
+            result.WithNotParsed(o => { stop = true; });
+            if (stop) return 0;
             result.WithParsed(o =>
             {
                 target = o.Target;
@@ -461,7 +464,7 @@ fragment SIGN : ('+' | '-') ;
                     sb.AppendLine(@"
   <ItemGroup>
     <PackageReference Include=""Antlr4.Runtime.Standard"" Version =""4.9.1"" />
-    <PackageReference Include=""Antlr4BuildTasks"" Version = ""8.12"" PrivateAssets=""all"" />
+    <PackageReference Include=""Antlr4BuildTasks"" Version = ""8.13"" PrivateAssets=""all"" />
   </ItemGroup>");
                 }
                 else
@@ -860,6 +863,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
 
@@ -983,7 +987,7 @@ public class Program
         }");
                     if (profiling)
                     {
-                        sb.Append(@"ProfileParser(parser);
+                        sb.Append(@"System.Console.Out.WriteLine(String.Join("", "", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
         ");
                     }
                     sb.Append(@"
@@ -1013,35 +1017,13 @@ public class Program
 ");
                     if (profiling)
                     {
-                        sb.Append(@"ProfileParser(parser);
+                        sb.Append(@"System.Console.Out.WriteLine(String.Join("", "", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
         ");
                     }
                     sb.Append(@"
         System.Environment.Exit(parser.NumberOfSyntaxErrors != 0 ? 1 : 0);");
                 }
                 sb.Append(@"
-    }
-
-    private static void ProfileParser(Parser parser)
-    {
-        Antlr4.Runtime.Atn.ATN atn = parser.Atn;
-        Antlr4.Runtime.Atn.DecisionInfo[] di_list = parser.ParseInfo.getDecisionInfo();
-	    foreach (var decisionInfo in di_list)
-        {
-            var ds = atn.GetDecisionState(decisionInfo.decision);
-            string rule = parser.RuleNames[ds.ruleIndex];
-            if (decisionInfo.timeInPrediction > 0)
-            {
-                System.Console.WriteLine(rule);
-                System.Console.WriteLine(decisionInfo.timeInPrediction);
-                System.Console.WriteLine(decisionInfo.invocations);
-                System.Console.WriteLine(decisionInfo.SLL_TotalLook);
-                System.Console.WriteLine(decisionInfo.SLL_MaxLook);
-                System.Console.WriteLine(decisionInfo.ambiguities.Count);
-                System.Console.WriteLine(decisionInfo.errors.Count);
-                System.Console.WriteLine();
-            }
-        }
     }
 }
 ");
@@ -1163,24 +1145,15 @@ public class Program {
         for (int i = 0; i < di_list.length; ++i)
         {
             var decisionInfo = di_list[i];
-            var ds = atn.getDecisionState(decisionInfo.decision);
-            var rule = parser.getRuleNames()[ds.ruleIndex];
-            if (decisionInfo.timeInPrediction > 0)
-            {
-                System.out.println(rule);
-                System.out.println(rule);
-                System.out.println(decisionInfo.timeInPrediction);
-                System.out.println(decisionInfo.invocations);
-                System.out.println(decisionInfo.SLL_TotalLook);
-                System.out.println(decisionInfo.SLL_MaxLook);
-                System.out.println(decisionInfo.ambiguities.size());
-                System.out.println(decisionInfo.errors.size());
-                System.out.println();
-            }
+            if (i != 0) System.out.print("", "");
+            System.out.print(decisionInfo.toString());
         }
+        System.out.println();
     }
 }
 ");
+                sb.Append(@"System.Console.Out.WriteLine(String.Join("", "", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
+        ");
 
                 // Test to find an appropriate file name to place this into.
                 string fn = outputDirectory + "Program.java";
