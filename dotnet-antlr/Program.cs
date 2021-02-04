@@ -11,6 +11,20 @@
     {
         static string version = "1.4";
 
+        public enum TargetType
+        {
+            Cpp,
+            CSharp,
+            Dart,
+            Go,
+            Java,
+            JavaScript,
+            Php,
+            Python2,
+            Python3,
+            Swift,
+        }
+
         class Options
         {
            // public Options() { }
@@ -39,8 +53,8 @@
             [Option('s', "start-rule", Required=false, HelpText="Start rule name.")]
             public string StartRule { get; set; }
 
-            [Option('t', "target", Required = false, Default="CSharp", HelpText = "The target language for the project.")]
-            public string Target { get; set; }
+            [Option('t', "target", Required = false, Default=TargetType.CSharp, HelpText = "The target language for the project.")]
+            public TargetType Target { get; set; }
 
             [Option('x', "profile", Required = false, Default=false, HelpText = "Add in Antlr profiling code.")]
             public bool Profiling { get; set; }
@@ -66,7 +80,7 @@
             Dictionary<string, string> packages = new Dictionary<string, string>();
             string startRule = null;
             string outputDirectory = null;
-            string target = null;
+            TargetType target = TargetType.CSharp;
             bool? case_fold = null;
             bool antlr4cs = false;
             bool profiling = false;
@@ -81,7 +95,6 @@
                 if (antlr4cs) @namespace = "Test";
                 if (o.CaseFold != null) case_fold = o.CaseFold;
                 if (o.DefaultNamespace != null) @namespace = o.DefaultNamespace;
-                if (o.DefaultNamespace != null) target = o.Target;
                 if (o.GrammarFiles != null) grammarFiles = o.GrammarFiles?.Split(",").ToList();
                 else
                 {
@@ -152,11 +165,11 @@
             return 0;
         }
 
-        private static void AddCaseFold(bool? case_fold, string target, string @namespace, string outputDirectory)
+        private static void AddCaseFold(bool? case_fold, TargetType target, string @namespace, string outputDirectory)
         {
             if (case_fold == null) return;
             StringBuilder sb = new StringBuilder();
-            if (target == "CSharp")
+            if (target == TargetType.CSharp)
             {
                 sb.AppendLine(@"
 // Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
@@ -272,7 +285,7 @@ namespace Antlr4.Runtime
                 string fn = outputDirectory + "CaseChangingCharStream.cs";
                 System.IO.File.WriteAllText(fn, sb.ToString());
             }
-            else if (target == "Java")
+            else if (target == TargetType.Java)
             {
                 sb.Append(@"
 // Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
@@ -306,7 +319,6 @@ public class ErrorListener extends ConsoleErrorListener
         {
             // Get the subdirectories for the specified directory.
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
-
             if (!dir.Exists)
             {
                 throw new DirectoryNotFoundException(
@@ -338,17 +350,24 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private static void AddSourceFiles(bool antlr4cs, string target, string @namespace, string outputDirectory)
+        private static void AddSourceFiles(bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
         {
             var file_pattern = target switch
             {
-                "CSharp" => "./CSharp/**/*.cs",
-                "Java" => "./Java/**/*.java",
+                TargetType.CSharp => "./CSharp/**/*.cs",
+                TargetType.Java => "./Java/**/*.java",
                 _ => throw new NotImplementedException(),
             };
             DirectoryInfo dir = new DirectoryInfo("./CSharp");
+            string sourceDirName = target switch
+            {
+                TargetType.CSharp => "CSharp",
+                TargetType.Java => "Java",
+                TargetType.JavaScript => "JavaScript",
+                _ => throw new NotImplementedException(),
+            };
             if (dir.Exists)
-                DirectoryCopy(target, outputDirectory, true);
+                DirectoryCopy(sourceDirName, outputDirectory, true);
             // Copy all files to generated directory.
             //var g = new Domemtech.Globbing.Glob();
             //var files = g.Contents(file_pattern);
@@ -422,10 +441,10 @@ fragment SIGN : ('+' | '-') ;
             }
         }
 
-        private static void AddBuildFile(bool antlr4cs, string target, string @namespace, List<string> grammarFiles, string outputDirectory)
+        private static void AddBuildFile(bool antlr4cs, TargetType target, string @namespace, List<string> grammarFiles, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
-            if (target == "CSharp")
+            if (target == TargetType.CSharp)
             {
                 sb.AppendLine(@"<!-- Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @" -->
 <Project Sdk=""Microsoft.NET.Sdk"" >
@@ -489,7 +508,7 @@ fragment SIGN : ('+' | '-') ;
                 var fn = outputDirectory + "Test.csproj";
                 System.IO.File.WriteAllText(fn, sb.ToString());
             }
-            else if (target == "Java")
+            else if (target == TargetType.Java)
             {
                 sb.AppendLine(@"#!/bin/sh
 java -jar ~/Downloads/antlr-4.9.1-complete.jar *.g4
@@ -504,10 +523,10 @@ java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. Program
 
         }
 
-        private static void AddTreeOutput(bool antlr4cs, string target, string @namespace, string outputDirectory)
+        private static void AddTreeOutput(bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
-            if (target == "CSharp" && !antlr4cs)
+            if (target == TargetType.CSharp && !antlr4cs)
             {
                 sb.AppendLine(@"
 // Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
@@ -624,7 +643,7 @@ public class TreeOutput
                 string fn = outputDirectory + "TreeOutput.cs";
                 System.IO.File.WriteAllText(fn, sb.ToString());
             }
-            else if (target == "Java")
+            else if (target == TargetType.Java)
             {
                 sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
                 if (@namespace != null) sb.AppendLine("package " + @namespace + @";");
@@ -759,10 +778,10 @@ public class TreeOutput
             }
         }
 
-        private static void AddErrorListener(bool antlr4cs, string target, string @namespace, string outputDirectory)
+        private static void AddErrorListener(bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
-            if (target == "CSharp" && !antlr4cs)
+            if (target == TargetType.CSharp && !antlr4cs)
             {
                 sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
                 if (@namespace != null) sb.AppendLine("namespace " + @namespace + @"
@@ -791,7 +810,7 @@ public class ErrorListener<S> : ConsoleErrorListener<S>
                 string fn = outputDirectory + "ErrorListener.cs";
                 System.IO.File.WriteAllText(fn, sb.ToString());
             }
-            else if (target == "Java")
+            else if (target == TargetType.Java)
             {
                 sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
                 if (@namespace != null) sb.AppendLine("package " + @namespace + @";");
@@ -820,7 +839,7 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private static void AddMain(bool profiling, bool antlr4cs, bool? case_fold, string target, List<string> grammarFiles, string @namespace, string startRule, string outputDirectory)
+        private static void AddMain(bool profiling, bool antlr4cs, bool? case_fold, TargetType target, List<string> grammarFiles, string @namespace, string startRule, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
             var lexer_name = "";
@@ -853,7 +872,7 @@ public class ErrorListener extends ConsoleErrorListener
                     parser_name = combined_name + "Parser";
                 }
             }
-            if (target == "CSharp")
+            if (target == TargetType.CSharp)
             {
                 sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
                 if (@namespace != null) sb.AppendLine("namespace " + @namespace + @"
@@ -1032,7 +1051,7 @@ public class Program
                 string fn = outputDirectory + "Program.cs";
                 System.IO.File.WriteAllText(fn, sb.ToString());
             }
-            else if (target == "Java")
+            else if (target == TargetType.Java)
             {
                 sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
                 if (@namespace != null) sb.AppendLine("package " + @namespace + @";");
