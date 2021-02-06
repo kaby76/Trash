@@ -534,7 +534,15 @@ fragment SIGN : ('+' | '-') ;
             {
                 sb.AppendLine(@"#!/bin/sh
 java -jar ~/Downloads/antlr-4.9.1-complete.jar *.g4
+if [[ ""$?"" != ""0"" ]]
+then
+    exit 1
+fi
 javac -classpath ~/Downloads/antlr-4.9.1-complete.jar:.. *.java
+if [[ ""$?"" != ""0"" ]]
+then
+    exit 1
+fi
 ");
                 var fn = outputDirectory + "build.sh";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
@@ -550,9 +558,25 @@ java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. Program
 rm -rf node_modules
 rm -f package-lock.json
 npm i antlr4@4.9.1
+if [[ ""$?"" != ""0"" ]]
+then
+    exit 1
+fi
 npm i typescript-string-operations@1.4.1
+if [[ ""$?"" != ""0"" ]]
+then
+    exit 1
+fi
 npm i fs-extra
+if [[ ""$?"" != ""0"" ]]
+then
+    exit 1
+fi
 java -jar ~/Downloads/antlr-4.9.1-complete.jar -Dlanguage=JavaScript *.g4
+if [[ ""$?"" != ""0"" ]]
+then
+    exit 1
+fi
 cat - << EOF
 To run:
 echo string | node.exe program.js -tree
