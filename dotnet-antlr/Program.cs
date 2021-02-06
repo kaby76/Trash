@@ -1269,6 +1269,13 @@ function getChar() {
     return buffer.toString('utf8');
 }
 
+class MyErrorListener extends antlr4.error.ErrorListener {
+	syntaxError(recognizer, offendingSymbol, line, column, msg, err) {
+		num_errors++;
+		console.error(`${offendingSymbol} line ${line}, col ${column}: ${msg}`);
+	}
+}
+
 var show_tokens = false;
 var show_tree = false;
 var input = null;
@@ -1317,30 +1324,8 @@ const tokens = new antlr4.CommonTokenStream(lexer);
 const parser = new " + parser_name + @"(tokens);
 lexer.removeErrorListeners();
 parser.removeErrorListeners();
-parser.addErrorListener({
-    syntaxError: (recognizer, offendingSymbol, line, column, msg, err) => {
-        num_errors++;
-        console.error(`${offendingSymbol} line ${line}, col ${column}: ${msg}`);
-    },
-    reportAttemptingFullContext: (recognizer, dfa, start, stop, conf, configs) =>
-    {
-    },
-    reportAmbiguity: (recognizer, dfa, start, stop, exact, amb, configs) =>
-    {
-    }
-  });
-lexer.addErrorListener({
-    syntaxError: (recognizer, offendingSymbol, line, column, msg, err) => {
-        num_errors++;
-        console.error(`${offendingSymbol} line ${line}, col ${column}: ${msg}`);
-    },
-    reportAttemptingFullContext: (recognizer, dfa, start, stop, conf, configs) =>
-    {
-    },
-    reportAmbiguity: (recognizer, dfa, start, stop, exact, amb, configs) =>
-    {
-    }
-  });
+parser.addErrorListener(new MyErrorListener());
+lexer.addErrorListener(new MyErrorListener());
 const tree = parser." + startRule + @"();
 if (show_tree)
 {
