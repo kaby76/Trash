@@ -5,7 +5,9 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     class Program
     {
@@ -25,6 +27,32 @@
             Swift,
         }
 
+        public enum EncodingType
+        {
+            Native,
+            Unix,
+            Windows,
+            Mac,
+        }
+
+        public static EncodingType GetOperatingSystem()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return EncodingType.Unix;
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return EncodingType.Windows;
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return EncodingType.Mac;
+            }
+
+            throw new Exception("Cannot determine operating system!");
+        }
+
         class Options
         {
            // public Options() { }
@@ -34,6 +62,9 @@
 
             [Option('c', "case-fold", Required=false, HelpText="Fold case of lexer. True = upper, false = lower.")]
             public bool? CaseFold { get; set; }
+
+            [Option('e', "encoding", Required = false, Default = EncodingType.Native, HelpText = "End of line encoding.")]
+            public EncodingType Encoding { get; set; }
 
             [Option('f', "file", Required=false, HelpText="The name of an input file to parse.")]
             public string InputFile { get; set; }
@@ -50,14 +81,14 @@
             [Option('p', "package", Required=false, HelpText="PackageReference's to include, in name/version pairs.")]
             public string Packages { get; set; }
 
+            [Option('x', "profile", Required = false, Default = false, HelpText = "Add in Antlr profiling code.")]
+            public bool Profiling { get; set; }
+            
             [Option('s', "start-rule", Required=false, HelpText="Start rule name.")]
             public string StartRule { get; set; }
 
             [Option('t', "target", Required = false, Default=TargetType.CSharp, HelpText = "The target language for the project.")]
             public TargetType Target { get; set; }
-
-            [Option('x', "profile", Required = false, Default=false, HelpText = "Add in Antlr profiling code.")]
-            public bool Profiling { get; set; }
         }
 
         static void Main(string[] args)
@@ -81,6 +112,7 @@
             string startRule = null;
             string outputDirectory = null;
             TargetType target = TargetType.CSharp;
+            EncodingType encoding = GetOperatingSystem();
             bool? case_fold = null;
             bool antlr4cs = false;
             bool profiling = false;
@@ -92,6 +124,7 @@
                 target = o.Target;
                 profiling = o.Profiling;
                 antlr4cs = o.Antlr4cs;
+                encoding = o.Encoding == EncodingType.Native ? GetOperatingSystem() : o.Encoding;
                 if (antlr4cs) @namespace = "Test";
                 if (o.CaseFold != null) case_fold = o.CaseFold;
                 if (o.DefaultNamespace != null) @namespace = o.DefaultNamespace;
@@ -142,30 +175,18 @@
                 throw;
             }
 
-            // Add .csproj or pom.xml.
-            AddBuildFile(antlr4cs, target, @namespace, grammarFiles, outputDirectory);
-
-            // Add grammars
-            AddGrammars(grammarFiles, outputDirectory);
-
-            // Add driver program.
-            AddMain(profiling, antlr4cs, case_fold, target, grammarFiles, @namespace, startRule, outputDirectory);
-
-            // Add ErrorListener code.
-            AddErrorListener(antlr4cs, target, @namespace, outputDirectory);
-
-            // Add case folding char stream code.
-            AddCaseFold(case_fold, target, @namespace, outputDirectory);
-
-            // Add TreeOutput code.
-            AddTreeOutput(antlr4cs, target, @namespace, outputDirectory);
-
-            AddSourceFiles(antlr4cs, target, @namespace, outputDirectory);
+            AddBuildFile(encoding, antlr4cs, target, @namespace, grammarFiles, outputDirectory);
+            AddGrammars(encoding, grammarFiles, outputDirectory);
+            AddMain(encoding, profiling, antlr4cs, case_fold, target, grammarFiles, @namespace, startRule, outputDirectory);
+            AddErrorListener(encoding, antlr4cs, target, @namespace, outputDirectory);
+            AddCaseFold(encoding, case_fold, target, @namespace, outputDirectory);
+            AddTreeOutput(encoding, antlr4cs, target, @namespace, outputDirectory);
+            AddSourceFiles(encoding, antlr4cs, target, @namespace, outputDirectory);
 
             return 0;
         }
 
-        private static void AddCaseFold(bool? case_fold, TargetType target, string @namespace, string outputDirectory)
+        private static void AddCaseFold(EncodingType encoding, bool? case_fold, TargetType target, string @namespace, string outputDirectory)
         {
             if (case_fold == null) return;
             StringBuilder sb = new StringBuilder();
@@ -350,7 +371,7 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private static void AddSourceFiles(bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
+        private static void AddSourceFiles(EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
         {
             var file_pattern = target switch
             {
@@ -387,7 +408,7 @@ public class ErrorListener extends ConsoleErrorListener
             //}
         }
 
-        private static void AddGrammars(List<string> grammarFiles, string outputDirectory)
+        private static void AddGrammars(EncodingType encoding, List<string> grammarFiles, string outputDirectory)
         {
             if (grammarFiles != null && grammarFiles.Any())
             {
@@ -397,7 +418,7 @@ public class ErrorListener extends ConsoleErrorListener
                     var i = System.IO.File.ReadAllText(g);
                     var n = System.IO.Path.GetFileName(g);
                     var fn = outputDirectory + n;
-                    System.IO.File.WriteAllText(fn, i);
+                    System.IO.File.WriteAllText(fn, Localize(encoding, i));
                 }
             }
             else
@@ -438,11 +459,11 @@ fragment E : 'E' | 'e' ;
 fragment SIGN : ('+' | '-') ;
 ");
                 var fn = outputDirectory + "Arithmetic.g4";
-                System.IO.File.WriteAllText(fn, sb.ToString());
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
         }
 
-        private static void AddBuildFile(bool antlr4cs, TargetType target, string @namespace, List<string> grammarFiles, string outputDirectory)
+        private static void AddBuildFile(EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, List<string> grammarFiles, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
             if (target == TargetType.CSharp)
@@ -507,7 +528,7 @@ fragment SIGN : ('+' | '-') ;
   </PropertyGroup>
 </Project>");
                 var fn = outputDirectory + "Test.csproj";
-                System.IO.File.WriteAllText(fn, sb.ToString());
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
             else if (target == TargetType.Java)
             {
@@ -515,11 +536,13 @@ fragment SIGN : ('+' | '-') ;
 java -jar ~/Downloads/antlr-4.9.1-complete.jar *.g4
 javac -classpath ~/Downloads/antlr-4.9.1-complete.jar:.. *.java
 ");
-                System.IO.File.WriteAllText(outputDirectory + "build.sh", sb.ToString());
+                var fn = outputDirectory + "build.sh";
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
                 sb.AppendLine(@"#!/bin/sh
 java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. Program
 ");
-                System.IO.File.WriteAllText(outputDirectory + "run.sh", sb.ToString());
+                fn = outputDirectory + "run.sh";
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
             else if (target == TargetType.JavaScript)
             {
@@ -537,7 +560,8 @@ node.exe program.js -tree -input string
 node.exe program.js -tree -file path
 EOF
 ");
-                System.IO.File.WriteAllText(outputDirectory + "build.sh", sb.ToString());
+                var fn = outputDirectory + "build.sh";
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
                 sb = new StringBuilder();
                 sb.AppendLine(@"
 {
@@ -558,11 +582,12 @@ EOF
   ""type"": ""module""
 }
 ");
-                System.IO.File.WriteAllText(outputDirectory + "package.json", sb.ToString());
+                fn = outputDirectory + "package.json";
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
         }
 
-        private static void AddTreeOutput(bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
+        private static void AddTreeOutput(EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
             if (target == TargetType.CSharp && !antlr4cs)
@@ -680,7 +705,7 @@ public class TreeOutput
 ");
                 if (@namespace != null) sb.AppendLine("}");
                 string fn = outputDirectory + "TreeOutput.cs";
-                System.IO.File.WriteAllText(fn, sb.ToString());
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
             else if (target == TargetType.Java)
             {
@@ -813,14 +838,14 @@ public class TreeOutput
 ");
 
                 string fn = outputDirectory + "TreeOutput.java";
-                System.IO.File.WriteAllText(fn, sb.ToString());
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
             else if (target == TargetType.JavaScript)
             {
             }
         }
 
-        private static void AddErrorListener(bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
+        private static void AddErrorListener(EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
             if (target == TargetType.CSharp && !antlr4cs)
@@ -850,7 +875,7 @@ public class ErrorListener<S> : ConsoleErrorListener<S>
 ");
                 if (@namespace != null) sb.AppendLine("}");
                 string fn = outputDirectory + "ErrorListener.cs";
-                System.IO.File.WriteAllText(fn, sb.ToString());
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
             else if (target == TargetType.Java)
             {
@@ -877,14 +902,14 @@ public class ErrorListener extends ConsoleErrorListener
 }
 ");
                 string fn = outputDirectory + "ErrorListener.java";
-                System.IO.File.WriteAllText(fn, sb.ToString());
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
             else if (target == TargetType.JavaScript)
             {
             }
         }
 
-        private static void AddMain(bool profiling, bool antlr4cs, bool? case_fold, TargetType target, List<string> grammarFiles, string @namespace, string startRule, string outputDirectory)
+        private static void AddMain(EncodingType encoding, bool profiling, bool antlr4cs, bool? case_fold, TargetType target, List<string> grammarFiles, string @namespace, string startRule, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
             var lexer_name = "";
@@ -1094,7 +1119,7 @@ public class Program
                 if (@namespace != null) sb.AppendLine("}");
                 // Test to find an appropriate file name to place this into.
                 string fn = outputDirectory + "Program.cs";
-                System.IO.File.WriteAllText(fn, sb.ToString());
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
             else if (target == TargetType.Java)
             {
@@ -1221,7 +1246,7 @@ public class Program {
 
                 // Test to find an appropriate file name to place this into.
                 string fn = outputDirectory + "Program.java";
-                System.IO.File.WriteAllText(fn, sb.ToString());
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
             else if (target == TargetType.JavaScript)
             {
@@ -1230,8 +1255,8 @@ public class Program {
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const antlr4 = require('antlr4');
-import ArithmeticLexer from './ArithmeticLexer.js';
-import ArithmeticParser from './ArithmeticParser.js';
+import " + lexer_name + @" from './" + lexer_name + @".js';
+import " + parser_name + @" from './" + parser_name + @".js';
 const strops = require('typescript-string-operations');
 let fs = require('fs-extra')
 
@@ -1283,7 +1308,7 @@ if (input == null && file_name == null)
     str = antlr4.CharStreams.fromString(input);
 } else if (file_name != null)
 {
-    str = antlr4.CharStreams.fromFileName(file_name);
+    str = antlr4.CharStreams.fromPathSync(file_name, 'utf8');
 }
 var num_errors = 0;
 const lexer = new " + lexer_name + @"(str);
@@ -1296,12 +1321,24 @@ parser.addErrorListener({
     syntaxError: (recognizer, offendingSymbol, line, column, msg, err) => {
         num_errors++;
         console.error(`${offendingSymbol} line ${line}, col ${column}: ${msg}`);
+    },
+    reportAttemptingFullContext: (recognizer, dfa, start, stop, conf, configs) =>
+    {
+    },
+    reportAmbiguity: (recognizer, dfa, start, stop, exact, amb, configs) =>
+    {
     }
   });
 lexer.addErrorListener({
     syntaxError: (recognizer, offendingSymbol, line, column, msg, err) => {
         num_errors++;
         console.error(`${offendingSymbol} line ${line}, col ${column}: ${msg}`);
+    },
+    reportAttemptingFullContext: (recognizer, dfa, start, stop, conf, configs) =>
+    {
+    },
+    reportAmbiguity: (recognizer, dfa, start, stop, exact, amb, configs) =>
+    {
     }
   });
 const tree = parser." + startRule + @"();
@@ -1323,8 +1360,37 @@ else
 
                 // Test to find an appropriate file name to place this into.
                 string fn = outputDirectory + "program.js";
-                System.IO.File.WriteAllText(fn, sb.ToString());
+                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
+        }
+
+        static string Localize(EncodingType encoding, string code)
+        {
+            var is_win = code.Contains("\r\n");
+            var is_mac = code.Contains("\n\r");
+            var is_uni = code.Contains("\n") && !(is_win || is_mac);
+            if (encoding == EncodingType.Windows)
+            {
+                if (is_win) return code;
+                else if (is_mac) return code.Replace("\n\r", "\r\n");
+                else if (is_uni) return code.Replace("\n", "\r\n");
+                else return code;
+            }
+            if (encoding == EncodingType.Mac)
+            {
+                if (is_win) return code.Replace("\r\n", "\n\r");
+                else if (is_mac) return code;
+                else if (is_uni) return code.Replace("\n", "\n\r");
+                else return code;
+            }
+            if (encoding == EncodingType.Unix)
+            {
+                if (is_win) return code.Replace("\r\n", "\n");
+                else if (is_mac) return code.Replace("\n\r", "\n");
+                else if (is_uni) return code;
+                else return code;
+            }
+            return code;
         }
     }
 }
