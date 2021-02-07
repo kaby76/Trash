@@ -11,7 +11,7 @@
 
     class Program
     {
-        static string version = "1.4";
+        static string version = "1.5";
 
         public enum TargetType
         {
@@ -1096,7 +1096,7 @@ public class Program
         }
         if (show_tree)
         {
-            System.Console.Error.WriteLine(tree.ToStringTree());
+            System.Console.Error.WriteLine(tree.ToStringTree(parser));
         }");
                     if (profiling)
                     {
