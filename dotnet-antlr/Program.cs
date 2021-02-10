@@ -133,6 +133,7 @@
                 if (o.OutputDirectory != null) outputDirectory = o.OutputDirectory;
             });
             var path = Environment.CurrentDirectory;
+            var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             path = path + Path.DirectorySeparatorChar + outputDirectory;
             outputDirectory = System.IO.Path.GetFullPath(path);
             try
@@ -149,22 +150,25 @@
             var tool_grammar_files = new Domemtech.Globbing.Glob()
                     .RegexContents(tool_grammar_files_pattern)
                     .Where(f => f is FileInfo)
-                    .Select(f => f.FullName.Replace('\\','/'));
-            var filter = new System.Text.RegularExpressions.Regex("^(?!.*(/Generated|/target|/examples)).+$");
+                    .Select(f => f.FullName.Replace('\\','/')
+                        .Replace(cd, ""))
+                    .OrderBy(f => f)
+                    .ToList();
+            var filter = new System.Text.RegularExpressions.Regex("^(?!.*(Generated/|target/|examples/)).+$");
             tool_grammar_files = tool_grammar_files
                 .Where(f =>
                 {
                     var r = filter.IsMatch(f);
                     return r;
-                });
+                }).ToList();
             // Find all grammars.
-            var additional_grammars_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
+            var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/)).+g4$";
             var all_grammar_files = new Domemtech.Globbing.Glob()
                     .RegexContents(additional_grammars_pattern)
                     .Where(f => f is FileInfo)
-                    .Select(f => f.FullName);
+                    .Select(f => f.FullName.Replace(cd, ""));
             // Find all source files.
-            var all_source_pattern = "^(?!.*(/Generated|/target|/examples)).+" + target switch
+            var all_source_pattern = "^(?!.*(Generated/|target/|examples/)).+" + target switch
             {
                 TargetType.CSharp => "cs",
                 TargetType.Java => "java",
@@ -181,15 +185,14 @@
             var all_source_files = new Domemtech.Globbing.Glob()
                     .RegexContents(all_source_pattern)
                     .Where(f => f is FileInfo)
-                    .Select(f => f.FullName);
+                    .Select(f => f.FullName.Replace(cd, ""));
 
             AddSourceFiles(all_source_files, encoding, antlr4cs, target, @namespace, outputDirectory);
             AddBuildFile(encoding, antlr4cs, target, @namespace, tool_grammar_files, outputDirectory);
-            AddGrammars(encoding, all_grammar_files, outputDirectory);
+            AddGrammars(target, @namespace, encoding, all_grammar_files, outputDirectory);
             AddMain(encoding, profiling, antlr4cs, case_fold, target, tool_grammar_files, @namespace, startRule, outputDirectory);
             AddErrorListener(encoding, antlr4cs, target, @namespace, outputDirectory);
             AddCaseFold(encoding, case_fold, target, @namespace, outputDirectory);
-            //AddTreeOutput(encoding, antlr4cs, target, @namespace, outputDirectory);
             return 0;
         }
 
@@ -343,41 +346,6 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
-        {
-            // Get the subdirectories for the specified directory.
-            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
-            if (!dir.Exists)
-            {
-                throw new DirectoryNotFoundException(
-                    "Source directory does not exist or could not be found: "
-                    + sourceDirName);
-            }
-
-            DirectoryInfo[] dirs = dir.GetDirectories();
-
-            // If the destination directory doesn't exist, create it.       
-            Directory.CreateDirectory(destDirName);
-
-            // Get the files in the directory and copy them to the new location.
-            FileInfo[] files = dir.GetFiles();
-            foreach (FileInfo file in files)
-            {
-                string tempPath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(tempPath, true);
-            }
-
-            // If copying subdirectories, copy them and their contents to new location.
-            if (copySubDirs)
-            {
-                foreach (DirectoryInfo subdir in dirs)
-                {
-                    string tempPath = Path.Combine(destDirName, subdir.Name);
-                    DirectoryCopy(subdir.FullName, tempPath, copySubDirs);
-                }
-            }
-        }
-
         private static void AddSourceFiles(IEnumerable<string> all_source_files, EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
         {
             var cd = Environment.CurrentDirectory + "/";
@@ -404,34 +372,38 @@ public class ErrorListener extends ConsoleErrorListener
             path = path.Replace('\\', '/');
             v = v.Replace('\\', '/');
             var q = Path.GetDirectoryName(v).ToString().Replace('\\', '/');
-            CreateDirectoryRecursively(q);
-            File.Copy(path, v);
+            Directory.CreateDirectory(q);
+            File.Copy(path, v, true);
         }
 
-        static void CreateDirectoryRecursively(string path)
-        {
-            Directory.CreateDirectory(path);
-            return;
-            string[] pathParts = path.Replace('\\', '/').Split('/');
-            for (int i = 0; i < pathParts.Length; i++)
-            {
-                if (i > 0)
-                    pathParts[i] = Path.Combine(pathParts[i - 1], pathParts[i]);
-                if (!Directory.Exists(pathParts[i]))
-                    Directory.CreateDirectory(pathParts[i]);
-            }
-        }
-
-        private static void AddGrammars(EncodingType encoding, IEnumerable<string> all_grammar_files, string outputDirectory)
+        private static void AddGrammars(TargetType target, string @namespace, EncodingType encoding, IEnumerable<string> all_grammar_files, string outputDirectory)
         {
             if (all_grammar_files.Any())
             {
-                foreach (var g in all_grammar_files)
+                if (target == TargetType.Java)
                 {
-                    var i = System.IO.File.ReadAllText(g);
-                    var n = System.IO.Path.GetFileName(g);
-                    var fn = outputDirectory + n;
-                    System.IO.File.WriteAllText(fn, Localize(encoding, i));
+                    var cd = Environment.CurrentDirectory + "/";
+                    var set = new HashSet<string>();
+                    foreach (var path in all_grammar_files)
+                    {
+                        // Construct proper starting directory based on namespace.
+                        var f = path.Replace('\\', '/');
+                        var c = cd.Replace('\\', '/');
+                        var e = f.Replace(c, "");
+                        var m = Path.GetFileName(f);
+                        var n = @namespace.Replace('.', '/') + "/" + m;
+                        CopyFile(path, outputDirectory.Replace('\\', '/') + n);
+                    }
+                }
+                else
+                {
+                    foreach (var g in all_grammar_files)
+                    {
+                        var i = System.IO.File.ReadAllText(g);
+                        var n = System.IO.Path.GetFileName(g);
+                        var fn = outputDirectory + n;
+                        System.IO.File.WriteAllText(fn, Localize(encoding, i));
+                    }
                 }
             }
             else
@@ -545,24 +517,43 @@ fragment SIGN : ('+' | '-') ;
             }
             else if (target == TargetType.Java)
             {
-                sb.AppendLine(@"#!/bin/sh
-java -jar ~/Downloads/antlr-4.9.1-complete.jar *.g4
-if [[ ""$?"" != ""0"" ]]
-then
-    exit 1
-fi
-javac -classpath ~/Downloads/antlr-4.9.1-complete.jar:.. *.java
-if [[ ""$?"" != ""0"" ]]
-then
-    exit 1
-fi
+                sb.AppendLine(@"
+# Generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
+# Makefile for " + String.Join(", ", tool_grammar_files) + @"
+
+.SUFFIXES: .g4 .java .class
+
+.java.class:
+	javac -cp /mnt/c/Users/kenne/Downloads/antlr-4.9.1-complete.jar:. $*.java
+
+ANTLRGRAMMARS ?= $(wildcard *.g4)
+
+%Lexer.java %Parser.java : %.g4
+	java -jar ~/Downloads/antlr-4.9.1-complete.jar -package " + @namespace + @" $<
+
+%.java : %.g4
+	java -jar ~/Downloads/antlr-4.9.1-complete.jar -package " + @namespace + @" $<
+
+GENERATED = " + String.Join(" ",
+            tool_grammar_files.Select(
+                g =>
+                @namespace.Replace('.', '/') + '/' + g.Replace(".g4",".java"))) + @"
+
+SOURCES = $(GENERATED) \
+    " + @namespace.Replace('.', '/') + '/' + @"Program.java \
+    " + @namespace.Replace('.', '/') + '/' + @"ErrorListener.java
+
+default: classes
+
+classes: $(GENERATED) $(SOURCES:.java=.class)
+
+clean:
+	rm **/*.class $(GENERATED)
+
+run:
+	java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. " + @namespace + @".Program
 ");
-                var fn = outputDirectory + "build.sh";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-                sb.AppendLine(@"#!/bin/sh
-java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. Program
-");
-                fn = outputDirectory + "run.sh";
+                var fn = outputDirectory + "makefile";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
             else if (target == TargetType.JavaScript)
@@ -621,264 +612,6 @@ EOF
 ");
                 fn = outputDirectory + "package.json";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-        }
-
-        private static void AddTreeOutput(EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (target == TargetType.CSharp && !antlr4cs)
-            {
-                sb.AppendLine(@"
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
-                if (@namespace != null) sb.AppendLine("namespace " + @namespace + @"
-{");
-                sb.Append(@"
-using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using Antlr4.Runtime.Tree;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-
-public class TreeOutput
-{
-    private static int changed = 0;
-    private static bool first_time = true;
-
-    public static StringBuilder OutputTree(IParseTree tree, Lexer lexer, Parser parser, CommonTokenStream stream)
-    {
-        changed = 0;
-        first_time = true;
-        var sb = new StringBuilder();
-        ParenthesizedAST(tree, sb, lexer, parser, stream);
-        return sb;
-    }
-
-    private static void ParenthesizedAST(IParseTree tree, StringBuilder sb, Lexer lexer, Parser parser, CommonTokenStream stream, int level = 0)
-    {
-        if (tree as TerminalNodeImpl != null)
-        {
-            TerminalNodeImpl tok = tree as TerminalNodeImpl;
-            Interval interval = tok.SourceInterval;
-            IList<IToken> inter = null;
-            if (tok.Symbol.TokenIndex >= 0)
-                inter = stream?.GetHiddenTokensToLeft(tok.Symbol.TokenIndex);
-            if (inter != null)
-                foreach (var t in inter)
-                {
-                    var ty = tok.Symbol.Type;
-                    var name = lexer.Vocabulary.GetSymbolicName(ty);
-                    StartLine(sb, level);
-                    sb.AppendLine(""("" + name + "" text = "" + PerformEscapes(t.Text) + "" "" + lexer.ChannelNames[t.Channel]);
-                }
-            {
-                var ty = tok.Symbol.Type;
-                var name = lexer.Vocabulary.GetSymbolicName(ty);
-                StartLine(sb, level);
-                sb.AppendLine(""( "" + name + "" i ="" + tree.SourceInterval.a
-                    + "" txt ="" + PerformEscapes(tree.GetText())
-                    + "" tt ="" + tok.Symbol.Type
-                    + "" "" + lexer.ChannelNames[tok.Symbol.Channel]);
-            }
-        }
-        else
-        {
-            var x = tree as RuleContext;
-            var ri = x.RuleIndex;
-            var name = parser.RuleNames[ri];
-            StartLine(sb, level);
-            sb.Append(""( "" + name);
-            sb.AppendLine();
-        }
-        for (int i = 0; i<tree.ChildCount; ++i)
-        {
-            var c = tree.GetChild(i);
-            ParenthesizedAST(c, sb, lexer, parser, stream, level + 1);
-        }
-        if (level == 0)
-        {
-            for (int k = 0; k < 1 + changed - level; ++k) sb.Append("") "");
-            sb.AppendLine();
-            changed = 0;
-        }
-    }
-
-    private static void StartLine(StringBuilder sb, int level = 0)
-    {
-        if (changed - level >= 0)
-        {
-            if (!first_time)
-            {
-                for (int j = 0; j < level; ++j) sb.Append(""  "");
-                for (int k = 0; k < 1 + changed - level; ++k) sb.Append("") "");
-                sb.AppendLine();
-            }
-            changed = 0;
-            first_time = false;
-        }
-        changed = level;
-        for (int j = 0; j < level; ++j) sb.Append(""  "");
-    }
-
-    private static string ToLiteral(string input)
-    {
-        using (var writer = new StringWriter())
-        {
-            var literal = input;
-            literal = literal.Replace(""\\"", ""\\\\"");
-            return literal;
-        }
-    }
-
-    public static string PerformEscapes(string s)
-    {
-        StringBuilder new_s = new StringBuilder();
-        new_s.Append(ToLiteral(s));
-        return new_s.ToString();
-    }
-}
-");
-                if (@namespace != null) sb.AppendLine("}");
-                string fn = outputDirectory + "TreeOutput.cs";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-            else if (target == TargetType.Java)
-            {
-                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
-                if (@namespace != null) sb.AppendLine("package " + @namespace + @";");
-                sb.Append(@"
-
-import java.util.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import org.antlr.v4.gui.TreeViewer;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CodePointCharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNodeImpl;
-import org.antlr.v4.runtime.*;
-import java.util.regex.Pattern;
-import java.io.File;
-import java.lang.reflect.*;
-
-public class TreeOutput
-{
-    private static int changed = 0;
-    private static boolean first_time = true;
-
-    public static StringBuilder OutputTree(ParseTree tree, CommonTokenStream stream)
-    {
-        var sb = new StringBuilder();
-        ParenthesizedAST(tree, sb, stream, 0);
-        return sb;
-    }
-
-    private static void ParenthesizedAST(ParseTree tree, StringBuilder sb, CommonTokenStream stream, int level)
-    {
-        // Antlr always names a non-terminal with first letter lowercase,
-        // but renames it when creating the type in C#. So, remove the prefix,
-        // lowercase the first letter, and remove the trailing ""Context"" part of
-        // the name. Saves big time on output!
-        if (tree instanceof TerminalNodeImpl)
-        {
-            TerminalNodeImpl tok = (TerminalNodeImpl)tree;
-            var interval = tok.getSourceInterval();
-            var inter = stream.getHiddenTokensToLeft(tok.symbol.getTokenIndex());
-            if (inter != null)
-                for (var t : inter)
-                {
-                    StartLine(sb, tree, stream, level);
-                    sb.append(""( HIDDEN text="" + PerformEscapes(t.getText()));
-                    sb.append(System.lineSeparator());
-                }
-                StartLine(sb, tree, stream, level);
-                Lexer xxx = (Lexer)stream.getTokenSource();
-                String[] yyy = xxx.getChannelNames();
-                sb.append(""( "" + yyy[tok.getSymbol().getChannel()]
-                    + "" i ="" + tree.getSourceInterval().a
-                    + "" txt ="" + PerformEscapes(tree.getText())
-                    + "" tt ="" + tok.getSymbol().getType());
-                    sb.append(System.lineSeparator());
-            }
-            else
-            {
-                var fixed_name = tree.getClass().getName().toString();
-                fixed_name = fixed_name.replaceAll("" ^[^$]*[$]"", """");
-                fixed_name = fixed_name.substring(0, fixed_name.length() - ""Context"".length());
-                fixed_name = Character.toString(fixed_name.charAt(0)).toLowerCase()
-                        + fixed_name.substring(1);
-                StartLine(sb, tree, stream, level);
-                sb.append(""( "" + fixed_name);
-                sb.append(System.lineSeparator());
-            }
-            for (int i = 0; i < tree.getChildCount(); ++i)
-            {
-                var c = tree.getChild(i);
-                ParenthesizedAST(c, sb, stream, level + 1);
-            }
-            if (level == 0)
-            {
-                for (int k = 0; k < 1 + changed - level; ++k) sb.append("") "");
-                sb.append(System.lineSeparator());
-                changed = 0;
-            }
-        }
-
-        private static void StartLine(StringBuilder sb, ParseTree tree, CommonTokenStream stream, int level)
-        {
-            if (changed - level >= 0)
-            {
-                if (!first_time)
-                {
-                    for (int j = 0; j < level; ++j) sb.append(""  "");
-                    for (int k = 0; k < 1 + changed - level; ++k) sb.append("") "");
-                    sb.append(System.lineSeparator());
-                }
-                changed = 0;
-                first_time = false;
-            }
-            changed = level;
-            for (int j = 0; j < level; ++j) sb.append(""  "");
-        }
-
-        private static String ToLiteral(String input)
-        {
-            var literal = input;
-            literal = literal.replace(""\\"", ""\\\\"");
-            literal = input.replace(""\b"", ""\\b"");
-            literal = literal.replace(""\n"", ""\\n"");
-            literal = literal.replace(""\t"", ""\\t"");
-            literal = literal.replace(""\r"", ""\\r"");
-            literal = literal.replace(""\f"", ""\\f"");
-            literal = literal.replace(""\"""", ""\\\"""");
-            literal = literal.replace(String.format(""\"" +{0}\t\"""", ""\n""), """");
-            return literal;
-        }
-
-        public static String PerformEscapes(String s)
-        {
-            StringBuilder new_s = new StringBuilder();
-            new_s.append(ToLiteral(s));
-            return new_s.toString();
-        }
-    }
-");
-
-                string fn = outputDirectory + "TreeOutput.java";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-            else if (target == TargetType.JavaScript)
-            {
             }
         }
 
