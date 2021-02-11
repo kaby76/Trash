@@ -68,7 +68,7 @@
             [Option('f', "file", Required=false, HelpText="The name of an input file to parse.")]
             public string InputFile { get; set; }
 
-            [Option('g', "grammar-files", Required=false, HelpText="A list of semi-colon separated grammar files.")]
+            [Option('g', "grammar-files", Required=false, HelpText="A list of vertical bar separated grammar file paths.")]
             public string GrammarFiles { get; set; }
 
             [Option('n', "namespace", Required=false, HelpText="The namespace for all generated files.")]
