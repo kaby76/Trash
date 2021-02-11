@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-s grammarSpec -g \"ANTLRv4Parser.g4;ANTLRv4Lexer.g4\" -n org.antlr.parser.antlr4 -t Java",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4\\antlr\\antlr4"
+      "commandLineArgs": "-s program -g \"JavaScriptParser.g4|JavaScriptLexer.g4\" -t Java",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\new-grammars-v4\\javascript\\javascript"
     }
   }
 }

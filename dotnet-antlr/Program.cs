@@ -357,13 +357,8 @@ public class ErrorListener extends ConsoleErrorListener
                 var c = cd.Replace('\\', '/');
                 var e = f.Replace(c, "");
                 var m = Path.GetFileName(f);
-                var n = @namespace.Replace('.', '/') + "/" + m;
-                if (e.EndsWith(n))
-                {
-                    var o = e.Substring(0, e.Length - n.Length);
-                    var s = n.Substring(0, n.IndexOf('/'));
-                }
-                CopyFile(path, outputDirectory.Replace('\\', '/') + n);
+                var n = @namespace != null ? @namespace.Replace('.', '/') : "";
+                CopyFile(path, outputDirectory.Replace('\\', '/') + n + "/" + m);
             }
         }
 
@@ -391,7 +386,7 @@ public class ErrorListener extends ConsoleErrorListener
                         var c = cd.Replace('\\', '/');
                         var e = f.Replace(c, "");
                         var m = Path.GetFileName(f);
-                        var n = @namespace.Replace('.', '/') + "/" + m;
+                        var n = (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + m;
                         CopyFile(path, outputDirectory.Replace('\\', '/') + n);
                     }
                 }
@@ -529,19 +524,19 @@ fragment SIGN : ('+' | '-') ;
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 
 %Lexer.java %Parser.java : %.g4
-	java -jar ~/Downloads/antlr-4.9.1-complete.jar -package " + @namespace + @" $<
+	java -jar ~/Downloads/antlr-4.9.1-complete.jar " + (@namespace != null ? "-package " + @namespace : "") + @" $<
 
 %.java : %.g4
-	java -jar ~/Downloads/antlr-4.9.1-complete.jar -package " + @namespace + @" $<
+	java -jar ~/Downloads/antlr-4.9.1-complete.jar " + (@namespace != null ? "-package " + @namespace : "") + @" $<
 
 GENERATED = " + String.Join(" ",
             tool_grammar_files.Select(
                 g =>
-                @namespace.Replace('.', '/') + '/' + g.Replace(".g4",".java"))) + @"
+                (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + g.Replace(".g4",".java"))) + @"
 
 SOURCES = $(GENERATED) \
-    " + @namespace.Replace('.', '/') + '/' + @"Program.java \
-    " + @namespace.Replace('.', '/') + '/' + @"ErrorListener.java
+    " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"Program.java \
+    " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"ErrorListener.java
 
 default: classes
 
@@ -551,7 +546,7 @@ clean:
 	rm **/*.class $(GENERATED)
 
 run:
-	java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. " + @namespace + @".Program
+	java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. " + (@namespace != null ? @namespace : "") + @".Program
 ");
                 var fn = outputDirectory + "makefile";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
