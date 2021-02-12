@@ -694,6 +694,7 @@ public class ErrorListener extends ConsoleErrorListener
                 // I have no clue what your grammars are.
                 lexer_name = "ArithmeticLexer";
                 parser_name = "ArithmeticParser";
+                startRule = "file";
             }
             else if (lexer.Count == 1)
             {
@@ -869,7 +870,7 @@ public class Program
         }
         if (show_tree)
         {
-            System.Console.Error.WriteLine(tree.ToStringTree());
+            System.Console.Error.WriteLine(tree.ToStringTree(parser));
         }
 ");
                     if (profiling)
