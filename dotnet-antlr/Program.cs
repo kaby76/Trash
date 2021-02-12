@@ -519,7 +519,7 @@ fragment SIGN : ('+' | '-') ;
 .SUFFIXES: .g4 .java .class
 
 .java.class:
-	javac -cp /mnt/c/Users/kenne/Downloads/antlr-4.9.1-complete.jar:. $*.java
+	javac -cp ~/Downloads/antlr-4.9.1-complete.jar:. $*.java
 
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 
@@ -745,7 +745,7 @@ public class Program
                 continue;
             }
             else if (args[i].Equals(""-input""))
-                input = args[i];
+                input = args[++i];
             else if (args[i].Equals(""-file""))
                 file_name = args[++i];
         }
