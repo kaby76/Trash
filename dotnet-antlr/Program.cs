@@ -926,7 +926,7 @@ public class Program {
                 continue;
             }
             else if (args[i].equals(""-input""))
-                input = args[i];
+                input = args[++i];
             else if (args[i].equals(""-file""))
                 file_name = args[++i];
         }
