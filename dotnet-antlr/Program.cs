@@ -168,7 +168,7 @@
                     .Where(f => f is FileInfo)
                     .Select(f => f.FullName.Replace(cd, ""));
             // Find all source files.
-            var all_source_pattern = "^(?!.*(Generated/|target/|examples/)).+" + target switch
+            var all_source_pattern = "^(?!.*(Generated/|target/|examples/" + (!antlr4cs ? "|Antlr4cs/" : "") + ")).+" + target switch
             {
                 TargetType.CSharp => "cs",
                 TargetType.Java => "java",
@@ -571,7 +571,9 @@ if [[ ""$?"" != ""0"" ]]
 then
     exit 1
 fi
-java -jar ~/Downloads/antlr-4.9.1-complete.jar -Dlanguage=JavaScript *.g4
+cp -r /c/Users/kenne/Documents/GitHub/antlr4/runtime/JavaScript/src/antlr4/* node_modules/antlr4/src/antlr4
+java -jar ~/Downloads/antlr4-4.9.2-SNAPSHOT-complete.jar -Dlanguage=JavaScript *.g4
+# java -jar ~/Downloads/antlr-4.9.1-complete.jar -Dlanguage=JavaScript *.g4
 if [[ ""$?"" != ""0"" ]]
 then
     exit 1
@@ -1082,6 +1084,19 @@ lexer.removeErrorListeners();
 parser.removeErrorListeners();
 parser.addErrorListener(new MyErrorListener());
 lexer.addErrorListener(new MyErrorListener());
+if (show_tokens)
+{
+    for (var i = 0; ; ++i)
+    {
+        var ro_token = lexer.nextToken();
+        var token = ro_token;
+        token.TokenIndex = i;
+        console.log(token.toString());
+        if (token.type === antlr4.Token.EOF)
+            break;
+    }
+}
+lexer.reset();
 const tree = parser." + startRule + @"();
 if (show_tree)
 {
