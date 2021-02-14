@@ -891,13 +891,8 @@ public class Program
                 if (@namespace != null) sb.AppendLine("package " + @namespace + @";");
                 sb.Append(@"
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -928,14 +923,7 @@ public class Program {
         CharStream str = null;
         if (input == null && file_name == null)
         {
-            StringBuilder sb = new StringBuilder();
-            int ch;
-            while ((ch = System.in.read()) != -1)
-            {
-                sb.append((char)ch);
-            }
-            input = sb.toString();
-            str = CharStreams.fromString(input);
+            str = CharStreams.fromStream(System.in);
         } else if (input != null)
         {
             str = CharStreams.fromString(input);
