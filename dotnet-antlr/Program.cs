@@ -161,6 +161,30 @@
                     var r = filter.IsMatch(f);
                     return r;
                 }).ToList();
+            string lexer_name, parser_name;
+            startRule = GeneratedNames(tool_grammar_files, startRule, out lexer_name, out parser_name);
+            var suffix = target switch
+            {
+                TargetType.CSharp => ".cs",
+                TargetType.Java => ".java",
+                TargetType.JavaScript => ".js",
+                TargetType.Cpp => ".cpp",
+                TargetType.Dart => ".dart",
+                TargetType.Go => ".go",
+                TargetType.Php => ".php",
+                TargetType.Python2 => ".py",
+                TargetType.Python3 => ".py",
+                TargetType.Swift => ".swift",
+                _ => throw new NotImplementedException(),
+            };
+            var generated_files = new List<string>()
+            {
+                lexer_name + suffix,
+                parser_name + suffix,
+                lexer_name + ".interp",
+                lexer_name + ".tokens"
+            };
+
             // Find all grammars.
             var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/)).+g4$";
             var all_grammar_files = new Domemtech.Globbing.Glob()
@@ -188,9 +212,9 @@
                     .Select(f => f.FullName.Replace(cd, ""));
 
             AddSourceFiles(all_source_files, encoding, antlr4cs, target, @namespace, outputDirectory);
-            AddBuildFile(encoding, antlr4cs, target, @namespace, tool_grammar_files, outputDirectory);
+            AddBuildFile(encoding, antlr4cs, target, @namespace, tool_grammar_files, generated_files, outputDirectory);
             AddGrammars(target, @namespace, encoding, all_grammar_files, outputDirectory);
-            AddMain(encoding, profiling, antlr4cs, case_fold, target, tool_grammar_files, @namespace, startRule, outputDirectory);
+            AddMain(encoding, profiling, antlr4cs, case_fold, target, tool_grammar_files, @namespace, startRule, lexer_name, parser_name, outputDirectory);
             AddErrorListener(encoding, antlr4cs, target, @namespace, outputDirectory);
             AddCaseFold(encoding, case_fold, target, @namespace, outputDirectory);
             return 0;
@@ -443,7 +467,7 @@ fragment SIGN : ('+' | '-') ;
             }
         }
 
-        private static void AddBuildFile(EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, IEnumerable<string> tool_grammar_files, string outputDirectory)
+        private static void AddBuildFile(EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, IEnumerable<string> tool_grammar_files, IEnumerable<string> generated_files, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
             if (target == TargetType.CSharp)
@@ -530,9 +554,9 @@ ANTLRGRAMMARS ?= $(wildcard *.g4)
 	java -jar ~/Downloads/antlr-4.9.1-complete.jar " + (@namespace != null ? "-package " + @namespace : "") + @" $<
 
 GENERATED = " + String.Join(" ",
-            tool_grammar_files.Select(
+            generated_files.Select(
                 g =>
-                (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + g.Replace(".g4",".java"))) + @"
+                (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + g)) + @"
 
 SOURCES = $(GENERATED) \
     " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"Program.java \
@@ -546,7 +570,7 @@ clean:
 	rm **/*.class $(GENERATED)
 
 run:
-	java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. " + (@namespace != null ? @namespace : "") + @".Program
+	java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. " + (@namespace != null ? @namespace + "." : "") + @"Program
 ");
                 var fn = outputDirectory + "makefile";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
@@ -679,40 +703,9 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private static void AddMain(EncodingType encoding, bool profiling, bool antlr4cs, bool? case_fold, TargetType target, IEnumerable<string> tool_grammar_files, string @namespace, string startRule, string outputDirectory)
+        private static void AddMain(EncodingType encoding, bool profiling, bool antlr4cs, bool? case_fold, TargetType target, IEnumerable<string> tool_grammar_files, string @namespace, string startRule, string lexer_name, string parser_name, string outputDirectory)
         {
             StringBuilder sb = new StringBuilder();
-            var lexer_name = "";
-            var parser_name = "";
-            // lexer and parser are set if the grammar is partitioned.
-            // rest is set if there are grammar is combined.
-            var lexer = tool_grammar_files?.Where(d => d.EndsWith("Lexer.g4")).ToList();
-            var parser = tool_grammar_files?.Where(d => d.EndsWith("Parser.g4")).ToList();
-            var rest = tool_grammar_files?.Where(d => !d.EndsWith("Parser.g4") && !d.EndsWith("Lexer.g4")).ToList();
-            if ((rest == null || rest.Count == 0)
-                && (lexer == null || lexer.Count == 0)
-                && (parser == null || parser.Count == 0))
-            {
-                // I have no clue what your grammars are.
-                lexer_name = "ArithmeticLexer";
-                parser_name = "ArithmeticParser";
-                startRule = "file";
-            }
-            else if (lexer.Count == 1)
-            {
-                lexer_name = Path.GetFileName(lexer.First().Replace(".g4", ""));
-                parser_name = Path.GetFileName(parser.First().Replace(".g4", ""));
-            }
-            else if (lexer.Count == 0)
-            {
-                // Combined.
-                if (rest.Count == 1)
-                {
-                    var combined_name = Path.GetFileName(rest.First()).Replace(".g4", "");
-                    lexer_name = combined_name + "Lexer";
-                    parser_name = combined_name + "Parser";
-                }
-            }
             if (target == TargetType.CSharp)
             {
                 sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
@@ -1118,6 +1111,43 @@ else
                 string fn = outputDirectory + "program.js";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
+        }
+
+        private static string GeneratedNames(IEnumerable<string> tool_grammar_files, string startRule, out string lexer_name, out string parser_name)
+        {
+            lexer_name = "";
+            parser_name = "";
+            // lexer and parser are set if the grammar is partitioned.
+            // rest is set if there are grammar is combined.
+            var lexer = tool_grammar_files?.Where(d => d.EndsWith("Lexer.g4")).ToList();
+            var parser = tool_grammar_files?.Where(d => d.EndsWith("Parser.g4")).ToList();
+            var rest = tool_grammar_files?.Where(d => !d.EndsWith("Parser.g4") && !d.EndsWith("Lexer.g4")).ToList();
+            if ((rest == null || rest.Count == 0)
+                && (lexer == null || lexer.Count == 0)
+                && (parser == null || parser.Count == 0))
+            {
+                // I have no clue what your grammars are.
+                lexer_name = "ArithmeticLexer";
+                parser_name = "ArithmeticParser";
+                startRule = "file";
+            }
+            else if (lexer.Count == 1)
+            {
+                lexer_name = Path.GetFileName(lexer.First().Replace(".g4", ""));
+                parser_name = Path.GetFileName(parser.First().Replace(".g4", ""));
+            }
+            else if (lexer.Count == 0)
+            {
+                // Combined.
+                if (rest.Count == 1)
+                {
+                    var combined_name = Path.GetFileName(rest.First()).Replace(".g4", "");
+                    lexer_name = combined_name + "Lexer";
+                    parser_name = combined_name + "Parser";
+                }
+            }
+
+            return startRule;
         }
 
         static string Localize(EncodingType encoding, string code)
