@@ -181,8 +181,6 @@
             {
                 lexer_name + suffix,
                 parser_name + suffix,
-                lexer_name + ".interp",
-                lexer_name + ".tokens"
             };
 
             // Find all grammars.
@@ -540,18 +538,21 @@ fragment SIGN : ('+' | '-') ;
 # Generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
 # Makefile for " + String.Join(", ", tool_grammar_files) + @"
 
+JAR = ~/Downloads/antlr-4.9.1-complete.jar
+CLASSPATH = ""$(JAR);.""
+
 .SUFFIXES: .g4 .java .class
 
 .java.class:
-	javac -cp ~/Downloads/antlr-4.9.1-complete.jar:. $*.java
+	javac -cp $(CLASSPATH) $*.java
 
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 
 %Lexer.java %Parser.java : %.g4
-	java -jar ~/Downloads/antlr-4.9.1-complete.jar " + (@namespace != null ? "-package " + @namespace : "") + @" $<
+	java -jar $(JAR) " + (@namespace != null ? "-o " + @namespace.Replace('.', '/') : "") + (@namespace != null ? " -package " + @namespace : "") + @" $<
 
 %.java : %.g4
-	java -jar ~/Downloads/antlr-4.9.1-complete.jar " + (@namespace != null ? "-package " + @namespace : "") + @" $<
+	java -jar $(JAR) " + (@namespace != null ? "-o " + @namespace.Replace('.', '/') : "") + (@namespace != null ? " -package " + @namespace : "") + @" $<
 
 GENERATED = " + String.Join(" ",
             generated_files.Select(
@@ -570,7 +571,7 @@ clean:
 	rm **/*.class $(GENERATED)
 
 run:
-	java -classpath ~/Downloads/antlr-4.9.1-complete.jar:. " + (@namespace != null ? @namespace + "." : "") + @"Program
+	java -classpath $(CLASSPATH) " + (@namespace != null ? @namespace + "." : "") + @"Program
 ");
                 var fn = outputDirectory + "makefile";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
