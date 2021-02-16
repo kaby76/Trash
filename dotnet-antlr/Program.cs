@@ -539,7 +539,7 @@ fragment SIGN : ('+' | '-') ;
 # Makefile for " + String.Join(", ", tool_grammar_files) + @"
 
 JAR = ~/Downloads/antlr-4.9.1-complete.jar
-CLASSPATH = ""$(JAR);.""
+CLASSPATH = $(JAR)" + (encoding == EncodingType.Windows ? "\\;" : ":") + @".
 
 .SUFFIXES: .g4 .java .class
 
@@ -568,7 +568,7 @@ default: classes
 classes: $(GENERATED) $(SOURCES:.java=.class)
 
 clean:
-	rm **/*.class $(GENERATED)
+	rm **/*.class $(GENERATED) **/*.interp **/*.tokens
 
 run:
 	java -classpath $(CLASSPATH) " + (@namespace != null ? @namespace + "." : "") + @"Program
