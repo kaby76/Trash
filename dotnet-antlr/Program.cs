@@ -7,10 +7,32 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
+    using System.Xml;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     class Program
     {
-        static string version = "1.5";
+        static string version = "2.0";
+        IEnumerable<string> all_source_files = null;
+        EncodingType encoding = GetOperatingSystem();
+        bool antlr4cs = false;
+        TargetType target = TargetType.CSharp;
+        string @namespace = null;
+        string outputDirectory = "Generated/";
+        HashSet<string> tool_grammar_files = null;
+        List<string> generated_files = null;
+        List<string> additional_grammar_files = null;
+        bool profiling = false;
+        bool? case_fold = null;
+        string lexer_name = null;
+        string lexer_grammar_file_name = null;
+        string lexer_generated_file_name = null;
+        string parser_name = null;
+        string parser_grammar_file_name = null;
+        string parser_generated_file_name = null;
+        string startRule;
+        string suffix;
 
         public enum TargetType
         {
@@ -68,8 +90,11 @@
             [Option('f', "file", Required=false, HelpText="The name of an input file to parse.")]
             public string InputFile { get; set; }
 
-            [Option('g', "grammar-files", Required=false, HelpText="A list of vertical bar separated grammar file paths.")]
+            [Option('g', "grammar-files", Required = false, HelpText = "A list of vertical bar separated grammar file paths.")]
             public string GrammarFiles { get; set; }
+
+            [Option('m', "maven", Required = false, Default = false, HelpText = "Read Antlr pom file and convert.")]
+            public bool Maven { get; set; }
 
             [Option('n', "namespace", Required=false, HelpText="The namespace for all generated files.")]
             public string DefaultNamespace { get; set; }
@@ -94,7 +119,7 @@
         {
             try
             {
-                MainInternal(args);
+                new Program().MainInternal(args);
             }
             catch (Exception e)
             {
@@ -102,20 +127,13 @@
             }
         }
 
-        static int MainInternal(string[] args)
+        int MainInternal(string[] args)
         {
             var result = Parser.Default.ParseArguments<Options>(args);
             string tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
-            string @namespace = null;
             Dictionary<string, string> packages = new Dictionary<string, string>();
-            string startRule = null;
-            string outputDirectory = "Generated/";
-            TargetType target = TargetType.CSharp;
-            EncodingType encoding = GetOperatingSystem();
-            bool? case_fold = null;
-            bool antlr4cs = false;
-            bool profiling = false;
             bool stop = false;
+            bool maven = false;
 
             result.WithNotParsed(o => { stop = true; });
             if (stop) return 0;
@@ -124,6 +142,7 @@
                 target = o.Target;
                 profiling = o.Profiling;
                 antlr4cs = o.Antlr4cs;
+                maven = o.Maven;
                 encoding = o.Encoding == EncodingType.Native ? GetOperatingSystem() : o.Encoding;
                 if (antlr4cs) @namespace = "Test";
                 if (o.CaseFold != null) case_fold = o.CaseFold;
@@ -146,24 +165,7 @@
                 throw;
             }
 
-            // Find tool grammars.
-            var tool_grammar_files = new Domemtech.Globbing.Glob()
-                    .RegexContents(tool_grammar_files_pattern)
-                    .Where(f => f is FileInfo)
-                    .Select(f => f.FullName.Replace('\\','/')
-                        .Replace(cd, ""))
-                    .OrderBy(f => f)
-                    .ToList();
-            var filter = new System.Text.RegularExpressions.Regex("^(?!.*(Generated/|target/|examples/)).+$");
-            tool_grammar_files = tool_grammar_files
-                .Where(f =>
-                {
-                    var r = filter.IsMatch(f);
-                    return r;
-                }).ToList();
-            string lexer_name, parser_name;
-            startRule = GeneratedNames(tool_grammar_files, startRule, out lexer_name, out parser_name);
-            var suffix = target switch
+            suffix = target switch
             {
                 TargetType.CSharp => ".cs",
                 TargetType.Java => ".java",
@@ -177,18 +179,114 @@
                 TargetType.Swift => ".swift",
                 _ => throw new NotImplementedException(),
             };
-            var generated_files = new List<string>()
+            if (maven)
             {
-                lexer_name + suffix,
-                parser_name + suffix,
-            };
+                XmlTextReader reader = new XmlTextReader(@"pom.xml");
+                reader.Namespaces = false;
+                XPathDocument document = new XPathDocument(reader);
+                XPathNavigator navigator = document.CreateNavigator();
+                XmlNamespaceManager nsmgr = new XmlNamespaceManager(reader.NameTable);
 
-            // Find all grammars.
-            var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/)).+g4$";
-            var all_grammar_files = new Domemtech.Globbing.Glob()
+                // I do not know why, but we use '*//' becuase the tree could be
+                // build/pluginManagement/plugins/plugin or
+                // build/plugins/plugin. And the configuration appears to be the same.
+                var gg = navigator
+                    .Select("/project/build/*//plugin/configuration/grammarName", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                var gs = navigator
+                    .Select("//configuration/grammars", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                var lx = navigator
+                    .Select("/project/build/*//plugin/configuration/lexerName", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                var i = navigator
+                    .Select("//configuration/includes/include", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                var s = navigator
+                    .Select("//configuration/entryPoint", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+
+                // grammarName is required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
+                if (!gg.Any()) throw new Exception();
+                // entryPoint required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
+                if (!s.Any()) throw new Exception();
+                var package_name = navigator
+                    .Select("/project/build/plugins/plugin/configuration/packageName", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Where(t => t.Value != "")
+                    .Select(t => t.Value)
+                    .ToList();
+                var arguments = navigator
+                    .Select("/project/build/plugins/plugin/configuration/arguments/argument", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Where(t => t.Value != "")
+                    .Select(t => t.Value)
+                    .ToList();
+                if ((package_name.Any() && !arguments.Any()) ||
+                    (!package_name.Any() && arguments.Any())) { throw new Exception(); }
+
+                parser_name = gg.First() + "Parser";
+                parser_grammar_file_name = gs.Any() ? gs.First() : gg.First() + ".g4";
+                parser_generated_file_name = parser_name + suffix;
+
+                lexer_name = lx.Any() ? lx.First() : gg.First() + "Lexer";
+                lexer_grammar_file_name = lx.Any() ? lx.First() + ".g4" : gg.First() + ".g4";
+                lexer_generated_file_name = lexer_name + suffix;
+
+                if (package_name.Any()) @namespace = package_name.First();
+                tool_grammar_files = new HashSet<string>();
+                foreach (var xx in gs) tool_grammar_files.Add(xx);
+                foreach (var xx in i) tool_grammar_files.Add(xx);
+                startRule = s.First();
+                if (gg != null && gg.Count() == 1)
+                {
+                    gs = new List<string>() { gg.First() + "Lexer.g4", gg.First() + "Parser.g4" };
+                }
+                generated_files = new List<string>()
+                {
+                    lexer_name + suffix,
+                    parser_name + suffix,
+                };
+            }
+            else
+            {
+                // Find tool grammars.
+                startRule = GeneratedNames();
+                generated_files = new List<string>()
+                {
+                    lexer_name + suffix,
+                    parser_name + suffix,
+                };
+                var filter = new System.Text.RegularExpressions.Regex("^(?!.*(Generated/|target/|examples/)).+$");
+                tool_grammar_files = new HashSet<string>();
+                foreach (var xx in tool_grammar_files
+                    .Where(f =>
+                    {
+                        var r = filter.IsMatch(f);
+                        return r;
+                    }).ToList()) tool_grammar_files.Add(xx);
+
+            }
+            // Include all other grammar files, but not if they are the main grammars.
+            var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/|"
+                + String.Join("|", tool_grammar_files)
+                + ")).+g4$";
+            additional_grammar_files = new Domemtech.Globbing.Glob()
                     .RegexContents(additional_grammars_pattern)
                     .Where(f => f is FileInfo)
-                    .Select(f => f.FullName.Replace(cd, ""));
+                    .Select(f => f.FullName.Replace(cd, ""))
+                    .ToList();
+
             // Find all source files.
             var all_source_pattern = "^(?!.*(Generated/|target/|examples/" + (!antlr4cs ? "|Antlr4cs/" : "") + ")).+" + target switch
             {
@@ -204,21 +302,22 @@
                 TargetType.Swift => "[.]swift",
                 _ => throw new NotImplementedException(),
             } + "$";
-            var all_source_files = new Domemtech.Globbing.Glob()
+            all_source_files = new Domemtech.Globbing.Glob()
                     .RegexContents(all_source_pattern)
                     .Where(f => f is FileInfo)
-                    .Select(f => f.FullName.Replace(cd, ""));
+                    .Select(f => f.FullName.Replace(cd, ""))
+                    .ToList();
 
-            AddSourceFiles(all_source_files, encoding, antlr4cs, target, @namespace, outputDirectory);
-            AddBuildFile(encoding, antlr4cs, target, @namespace, tool_grammar_files, generated_files, outputDirectory);
-            AddGrammars(target, @namespace, encoding, all_grammar_files, outputDirectory);
-            AddMain(encoding, profiling, antlr4cs, case_fold, target, tool_grammar_files, @namespace, startRule, lexer_name, parser_name, outputDirectory);
-            AddErrorListener(encoding, antlr4cs, target, @namespace, outputDirectory);
-            AddCaseFold(encoding, case_fold, target, @namespace, outputDirectory);
+            AddSourceFiles();
+            AddBuildFile();
+            AddGrammars();
+            AddMain();
+            AddErrorListener();
+            AddCaseFold();
             return 0;
         }
 
-        private static void AddCaseFold(EncodingType encoding, bool? case_fold, TargetType target, string @namespace, string outputDirectory)
+        private void AddCaseFold()
         {
             if (case_fold == null) return;
             StringBuilder sb = new StringBuilder();
@@ -368,7 +467,7 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private static void AddSourceFiles(IEnumerable<string> all_source_files, EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
+        private void AddSourceFiles()
         {
             var cd = Environment.CurrentDirectory + "/";
             var set = new HashSet<string>();
@@ -384,7 +483,7 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private static void CopyFile(string path, string v)
+        private void CopyFile(string path, string v)
         {
             path = path.Replace('\\', '/');
             v = v.Replace('\\', '/');
@@ -393,15 +492,25 @@ public class ErrorListener extends ConsoleErrorListener
             File.Copy(path, v, true);
         }
 
-        private static void AddGrammars(TargetType target, string @namespace, EncodingType encoding, IEnumerable<string> all_grammar_files, string outputDirectory)
+        private void AddGrammars()
         {
-            if (all_grammar_files.Any())
+            if (tool_grammar_files.Any())
             {
                 if (target == TargetType.Java)
                 {
                     var cd = Environment.CurrentDirectory + "/";
                     var set = new HashSet<string>();
-                    foreach (var path in all_grammar_files)
+                    foreach (var path in tool_grammar_files)
+                    {
+                        // Construct proper starting directory based on namespace.
+                        var f = path.Replace('\\', '/');
+                        var c = cd.Replace('\\', '/');
+                        var e = f.Replace(c, "");
+                        var m = Path.GetFileName(f);
+                        var n = (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + m;
+                        CopyFile(path, outputDirectory.Replace('\\', '/') + n);
+                    }
+                    foreach (var path in additional_grammar_files)
                     {
                         // Construct proper starting directory based on namespace.
                         var f = path.Replace('\\', '/');
@@ -414,7 +523,7 @@ public class ErrorListener extends ConsoleErrorListener
                 }
                 else
                 {
-                    foreach (var g in all_grammar_files)
+                    foreach (var g in tool_grammar_files)
                     {
                         var i = System.IO.File.ReadAllText(g);
                         var n = System.IO.Path.GetFileName(g);
@@ -465,7 +574,7 @@ fragment SIGN : ('+' | '-') ;
             }
         }
 
-        private static void AddBuildFile(EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, IEnumerable<string> tool_grammar_files, IEnumerable<string> generated_files, string outputDirectory)
+        private void AddBuildFile()
         {
             StringBuilder sb = new StringBuilder();
             if (target == TargetType.CSharp)
@@ -548,12 +657,6 @@ CLASSPATH = $(JAR)" + (encoding == EncodingType.Windows ? "\\;" : ":") + @".
 
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 
-%Lexer.java %Parser.java : %.g4
-	java -jar $(JAR) " + (@namespace != null ? "-o " + @namespace.Replace('.', '/') : "") + (@namespace != null ? " -package " + @namespace : "") + @" $<
-
-%.java : %.g4
-	java -jar $(JAR) " + (@namespace != null ? "-o " + @namespace.Replace('.', '/') : "") + (@namespace != null ? " -package " + @namespace : "") + @" $<
-
 GENERATED = " + String.Join(" ",
             generated_files.Select(
                 g =>
@@ -568,10 +671,19 @@ default: classes
 classes: $(GENERATED) $(SOURCES:.java=.class)
 
 clean:
-	rm **/*.class $(GENERATED) **/*.interp **/*.tokens
+	rm -f " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"*.class
+	rm -f " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"*.interp
+	rm -f " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"*.tokens
+	rm -f $(GENERATED)
 
 run:
 	java -classpath $(CLASSPATH) " + (@namespace != null ? @namespace + "." : "") + @"Program
+
+" + lexer_generated_file_name + " : " + lexer_grammar_file_name + @"
+	java -jar $(JAR) " + (@namespace != null ? " -package " + @namespace : "") + @" $<
+
+" + parser_generated_file_name + " : " + parser_grammar_file_name + @"
+	java -jar $(JAR) " + (@namespace != null ? " -package " + @namespace : "") + @" $<
 ");
                 var fn = outputDirectory + "makefile";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
@@ -637,7 +749,7 @@ EOF
             }
         }
 
-        private static void AddErrorListener(EncodingType encoding, bool antlr4cs, TargetType target, string @namespace, string outputDirectory)
+        private void AddErrorListener()
         {
             StringBuilder sb = new StringBuilder();
             if (target == TargetType.CSharp && !antlr4cs)
@@ -704,7 +816,7 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private static void AddMain(EncodingType encoding, bool profiling, bool antlr4cs, bool? case_fold, TargetType target, IEnumerable<string> tool_grammar_files, string @namespace, string startRule, string lexer_name, string parser_name, string outputDirectory)
+        private void AddMain()
         {
             StringBuilder sb = new StringBuilder();
             if (target == TargetType.CSharp)
@@ -1102,7 +1214,7 @@ else
             }
         }
 
-        private static string GeneratedNames(IEnumerable<string> tool_grammar_files, string startRule, out string lexer_name, out string parser_name)
+        private string GeneratedNames()
         {
             lexer_name = "";
             parser_name = "";

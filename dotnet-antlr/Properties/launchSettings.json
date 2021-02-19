@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-s acmeCompUnit -t Java",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4\\acme"
+      "commandLineArgs": "-m -t Java",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4\\dice"
     }
   }
 }
