@@ -255,6 +255,14 @@
                 {
                     lexer_grammar_file_name = lexer_name + ".g4";
                 }
+                else if (new Domemtech.Globbing.Glob()
+                    .RegexContents(lexer_name + ".g4")
+                    .Where(f => f is FileInfo)
+                    .Select(f => f.Name)
+                    .ToList().Contains(lexer_name + ".g4"))
+                {
+                    lexer_grammar_file_name = lexer_name + ".g4";
+                }
                 else
                 {
                     lexer_grammar_file_name = gg.First() + ".g4";
