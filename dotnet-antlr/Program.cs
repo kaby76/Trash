@@ -236,11 +236,29 @@
                     (!package_name.Any() && arguments.Any())) { throw new Exception(); }
 
                 parser_name = gg.First() + "Parser";
-                parser_grammar_file_name = gs.Any() ? gs.First() : gg.First() + ".g4";
+                if (gs.Any())
+                {
+                    parser_grammar_file_name = gs.First();
+                }
+                else if (i.Any() && i.Contains(parser_name + ".g4"))
+                {
+                    parser_grammar_file_name = parser_name + ".g4";
+                }
+                else
+                {
+                    parser_grammar_file_name = gg.First() + ".g4";
+                }
                 parser_generated_file_name = parser_name + suffix;
 
                 lexer_name = lx.Any() ? lx.First() : gg.First() + "Lexer";
-                lexer_grammar_file_name = lx.Any() ? lx.First() + ".g4" : gg.First() + ".g4";
+                if (i.Any() && i.Contains(lexer_name + ".g4"))
+                {
+                    lexer_grammar_file_name = lexer_name + ".g4";
+                }
+                else
+                {
+                    lexer_grammar_file_name = gg.First() + ".g4";
+                }
                 lexer_generated_file_name = lexer_name + suffix;
 
                 if (package_name.Any()) @namespace = package_name.First();

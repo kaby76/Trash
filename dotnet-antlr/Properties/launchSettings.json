@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "-m -t Java",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4\\dice"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4\\cto"
     }
   }
 }
