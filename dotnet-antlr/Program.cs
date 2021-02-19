@@ -238,22 +238,40 @@
                 parser_name = gg.First() + "Parser";
                 if (gs.Any())
                 {
-                    parser_grammar_file_name = gs.First();
+                    parser_grammar_file_name =
+                        package_name.Any() && package_name.First() != ""
+                        ? package_name.First().Replace('.', '/') + '/' + gs.First()
+                        : gs.First();
                 }
                 else if (i.Any() && i.Contains(parser_name + ".g4"))
                 {
-                    parser_grammar_file_name = parser_name + ".g4";
+                    parser_grammar_file_name =
+                        package_name.Any() && package_name.First() != ""
+                        ? package_name.First().Replace('.', '/') + '/' + parser_name + ".g4"
+                        : parser_name + ".g4";
                 }
                 else
                 {
-                    parser_grammar_file_name = gg.First() + ".g4";
+                    parser_grammar_file_name =
+                        (package_name.Any() && package_name.First() != ""
+                        ? package_name.First().Replace('.', '/') + '/'
+                        : "")
+                        + gg.First() + ".g4";
                 }
-                parser_generated_file_name = parser_name + suffix;
+                parser_generated_file_name =
+                    (package_name.Any() && package_name.First() != ""
+                    ? package_name.First().Replace('.', '/') + '/'
+                    : "")
+                    + parser_name + suffix;
 
                 lexer_name = lx.Any() ? lx.First() : gg.First() + "Lexer";
                 if (i.Any() && i.Contains(lexer_name + ".g4"))
                 {
-                    lexer_grammar_file_name = lexer_name + ".g4";
+                    lexer_grammar_file_name =
+                        (package_name.Any() && package_name.First() != ""
+                        ? package_name.First().Replace('.', '/') + '/'
+                        : "")
+                        + lexer_name + ".g4";
                 }
                 else if (new Domemtech.Globbing.Glob()
                     .RegexContents(lexer_name + ".g4")
@@ -261,13 +279,25 @@
                     .Select(f => f.Name)
                     .ToList().Contains(lexer_name + ".g4"))
                 {
-                    lexer_grammar_file_name = lexer_name + ".g4";
+                    lexer_grammar_file_name =
+                        (package_name.Any() && package_name.First() != ""
+                        ? package_name.First().Replace('.', '/') + '/'
+                        : "")
+                        + lexer_name + ".g4";
                 }
                 else
                 {
-                    lexer_grammar_file_name = gg.First() + ".g4";
+                    lexer_grammar_file_name =
+                        (package_name.Any() && package_name.First() != ""
+                        ? package_name.First().Replace('.', '/') + '/'
+                        : "")
+                        + gg.First() + ".g4";
                 }
-                lexer_generated_file_name = lexer_name + suffix;
+                lexer_generated_file_name =
+                    (package_name.Any() && package_name.First() != ""
+                    ? package_name.First().Replace('.', '/') + '/'
+                    : "")
+                    + lexer_name + suffix;
 
                 if (package_name.Any()) @namespace = package_name.First();
                 tool_grammar_files = new HashSet<string>();
