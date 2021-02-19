@@ -232,8 +232,6 @@
                     .Where(t => t.Value != "")
                     .Select(t => t.Value)
                     .ToList();
-                if ((package_name.Any() && !arguments.Any()) ||
-                    (!package_name.Any() && arguments.Any())) { throw new Exception(); }
 
                 parser_name = gg.First() + "Parser";
                 if (gs.Any())
