@@ -36,6 +36,7 @@
         string parser_generated_file_name = null;
         string startRule;
         string suffix;
+        private IEnumerable<string> skip_list;
 
         public enum TargetType
         {
@@ -97,6 +98,9 @@
             [Option('g', "grammar-files", Required = false, HelpText = "A list of vertical bar separated grammar file paths.")]
             public string GrammarFiles { get; set; }
 
+            [Option('k', "skip-list", Required = false, Separator = ':', HelpText = "A skip list for pom.xml.")]
+            public IEnumerable<string> SkipList { get; set; }
+
             [Option('m', "maven", Required = false, Default = false, HelpText = "Read Antlr pom file and convert.")]
             public bool Maven { get; set; }
 
@@ -154,6 +158,7 @@
                 if (o.GrammarFiles != null) tool_grammar_files_pattern = o.GrammarFiles;
                 if (o.StartRule != null) startRule = o.StartRule;
                 if (o.OutputDirectory != null) outputDirectory = o.OutputDirectory;
+                if (o.SkipList != null) skip_list = o.SkipList;
             });
             var path = Environment.CurrentDirectory;
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
@@ -211,29 +216,38 @@
                 // I do not know why, but we use '*//' becuase the tree could be
                 // build/pluginManagement/plugins/plugin or
                 // build/plugins/plugin. And the configuration appears to be the same.
-                var gg = navigator
-                    .Select("//configuration/grammarName", nsmgr)
+
+                var i = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/includes/include", nsmgr)
                     .Cast<XPathNavigator>()
                     .Select(t => t.Value)
                     .ToList();
-                var gs = navigator
-                    .Select("//configuration/grammars", nsmgr)
+                var arguments = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/arguments/argument", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Where(t => t.Value != "")
+                    .Select(t => t.Value)
+                    .ToList();
+
+                var gg = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/grammarName", nsmgr)
                     .Cast<XPathNavigator>()
                     .Select(t => t.Value)
                     .ToList();
                 var lx = navigator
-                    .Select("//configuration/lexerName", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Select(t => t.Value)
-                    .ToList();
-                var i = navigator
-                    .Select("//configuration/includes/include", nsmgr)
+                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/lexerName", nsmgr)
                     .Cast<XPathNavigator>()
                     .Select(t => t.Value)
                     .ToList();
                 var s = navigator
-                    .Select("//configuration/entryPoint", nsmgr)
+                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/entryPoint", nsmgr)
                     .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                var package_name = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/packageName", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Where(t => t.Value != "")
                     .Select(t => t.Value)
                     .ToList();
 
@@ -242,17 +256,6 @@
                 // entryPoint required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
                 if (!s.Any()) throw new Exception();
                 // Check existance of files.
-                foreach (var x in gs)
-                {
-                    if (!new Domemtech.Globbing.Glob()
-                     .RegexContents(x)
-                     .Where(f => f is FileInfo)
-                     .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                     .Any())
-                    {
-                        System.Console.Error.WriteLine("Error in pom.xml: <grammars>" + x + "</grammar> is for a file that does not exist.");
-                    }
-                }
                 foreach (var x in i)
                 {
                     if (!new Domemtech.Globbing.Glob()
@@ -264,19 +267,6 @@
                         System.Console.Error.WriteLine("Error in pom.xml: <include>" + x + "</include> is for a file that does not exist.");
                     }
                 }
-
-                var package_name = navigator
-                    .Select("/project/build/plugins/plugin/configuration/packageName", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Where(t => t.Value != "")
-                    .Select(t => t.Value)
-                    .ToList();
-                var arguments = navigator
-                    .Select("/project/build/plugins/plugin/configuration/arguments/argument", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Where(t => t.Value != "")
-                    .Select(t => t.Value)
-                    .ToList();
 
                 parser_name = gg.First() + "Parser";
                 var parser_grammars_pattern =
@@ -333,10 +323,6 @@
                     parser_grammar_file_name
                 };
                 startRule = s.First();
-                if (gg != null && gg.Count() == 1)
-                {
-                    gs = new List<string>() { gg.First() + "Lexer.g4", gg.First() + "Parser.g4" };
-                }
                 generated_files = new List<string>()
                 {
                     lexer_generated_file_name,
@@ -772,25 +758,47 @@ run:
             }
             else if (target == TargetType.JavaScript)
             {
-                sb.AppendLine(@"#!/bin/sh
-rm -rf node_modules
-rm -f package-lock.json
-npm install
-cp -r /c/Users/kenne/Documents/GitHub/antlr4/runtime/JavaScript/src/antlr4/* node_modules/antlr4/src/antlr4
-java -jar ~/Downloads/antlr4-4.9.2-SNAPSHOT-complete.jar -Dlanguage=JavaScript *.g4
-# java -jar ~/Downloads/antlr-4.9.1-complete.jar -Dlanguage=JavaScript *.g4
-if [[ ""$?"" != ""0"" ]]
-then
-    exit 1
-fi
-cat - << EOF
-To run:
-echo string | node.exe program.js -tree
-node.exe program.js -tree -input string
-node.exe program.js -tree -file path
-EOF
+                sb.AppendLine(@"
+# Generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
+# Makefile for " + String.Join(", ", tool_grammar_files) + @"
+
+JAR = ~/Downloads/antlr4-4.9.2-SNAPSHOT-complete.jar
+RT = ~/Downloads/antlr4-4.9.2-SNAPSHOT-runtime-js.zip
+
+CLASSPATH = $(JAR)" + (encoding == EncodingType.Windows ? "\\;" : ":") + @".
+
+.SUFFIXES: .g4 .js
+
+ANTLRGRAMMARS ?= $(wildcard *.g4)
+
+GENERATED = " + String.Join(" ", generated_files) + @"
+
+SOURCES = $(GENERATED) \
+    " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"program.js
+
+default: classes
+
+classes: $(SOURCES)
+	npm install
+	cd node_modules/antlr4; unzip -q -o $(RT)
+
+clean:
+	rm -rf node_modules
+	rm -f package-lock.json
+	rm -f " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"*.interp
+	rm -f " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"*.tokens
+	rm -f $(GENERATED)
+
+run:
+	node program.js
+
+" + lexer_generated_file_name + " : " + lexer_grammar_file_name + @"
+	java -jar $(JAR) -Dlanguage=JavaScript " + (@namespace != null ? " -package " + @namespace : "") + @" $<
+
+" + parser_generated_file_name + " : " + parser_grammar_file_name + @"
+	java -jar $(JAR) -Dlanguage=JavaScript " + (@namespace != null ? " -package " + @namespace : "") + @" $<
 ");
-                var fn = outputDirectory + "build.sh";
+                var fn = outputDirectory + "makefile";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
                 sb = new StringBuilder();
                 sb.AppendLine(@"
@@ -1183,7 +1191,7 @@ let fs = require('fs-extra')
 function getChar() {
 	let buffer = Buffer.alloc(1);
 	var xx = fs.readSync(0, buffer, 0, 1);
-	if (buffer[0] == 0x0a) {
+	if (xx === 0) {
 		return '';
 	}
     return buffer.toString('utf8');
