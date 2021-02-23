@@ -638,6 +638,13 @@ public class ErrorListener extends ConsoleErrorListener
                         var fn = outputDirectory + n;
                         System.IO.File.WriteAllText(fn, Localize(encoding, i));
                     }
+                    foreach (var g in additional_grammar_files)
+                    {
+                        var i = System.IO.File.ReadAllText(g);
+                        var n = System.IO.Path.GetFileName(g);
+                        var fn = outputDirectory + n;
+                        System.IO.File.WriteAllText(fn, Localize(encoding, i));
+                    }
                 }
             }
             else
