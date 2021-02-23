@@ -228,6 +228,16 @@
                     .Where(t => t.Value != "")
                     .Select(t => t.Value)
                     .ToList();
+                var source_directory = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/sourceDirectory", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Where(t => t.Value != "")
+                    .Select(t => t.Value)
+                    .ToList();
+                var all_else = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/*[not(self::sourceDirectory or self::arguments or self::includes or self::visitor or self::listener)]", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .ToList();
 
                 var gg = navigator
                     .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/grammarName", nsmgr)
@@ -266,6 +276,33 @@
                     {
                         System.Console.Error.WriteLine("Error in pom.xml: <include>" + x + "</include> is for a file that does not exist.");
                     }
+                }
+                // Check package naem. If there's a package name without an args list for
+                // the Antlr tool to generate for that package name, this will not be target
+                // independent.
+                if (package_name.Any() && package_name.First() != "")
+                {
+                    bool package_option = false;
+                    foreach (var a in arguments)
+                    {
+                        if (a == "-package")
+                        {
+                            package_option = true;
+                            break;
+                        }
+                    }
+                    if (!package_option)
+                    {
+                        System.Console.Error.WriteLine("You have a package reference for the parser in the test of it, "
+                            + "but you don't have "
+                            + "a package option on the Antlr tool generator configuration. Therfore, it's likely you have a package defined in your grammar directly, which is "
+                            + "not target independent code, so it will not work other than for the default target.");
+                    }
+                }
+                // Check all other config options in antlr4-maven-plugin configuration.
+                if (all_else.Any())
+                {
+                    System.Console.Error.WriteLine("Antlr4 maven config contains stuff that I don't understand.");
                 }
 
                 parser_name = gg.First() + "Parser";
