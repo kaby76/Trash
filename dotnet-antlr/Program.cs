@@ -818,7 +818,7 @@ ANTLRGRAMMARS ?= $(wildcard *.g4)
 GENERATED = " + String.Join(" ", generated_files) + @"
 
 SOURCES = $(GENERATED) \
-    " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"program.js
+    " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"index.js
 
 default: classes
 
@@ -834,7 +834,7 @@ clean:
 	rm -f $(GENERATED)
 
 run:
-	node program.js $(RUNARGS)
+	node index.js $(RUNARGS)
 
 " + lexer_generated_file_name + " : " + lexer_grammar_file_name + @"
 	java -jar $(JAR) -Dlanguage=JavaScript " + (@namespace != null ? " -package " + @namespace : "") + @" $<
