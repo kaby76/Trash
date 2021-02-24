@@ -789,7 +789,7 @@ clean:
 	rm -f $(GENERATED)
 
 run:
-	java -classpath $(CLASSPATH) " + (@namespace != null ? @namespace + "." : "") + @"Program
+	java -classpath $(CLASSPATH) " + (@namespace != null ? @namespace + "." : "") + @"Program $(RUNARGS)
 
 " + lexer_generated_file_name + " : " + lexer_grammar_file_name + @"
 	java -jar $(JAR) " + (@namespace != null ? " -package " + @namespace : "") + @" $<
@@ -834,7 +834,7 @@ clean:
 	rm -f $(GENERATED)
 
 run:
-	node program.js
+	node program.js $(RUNARGS)
 
 " + lexer_generated_file_name + " : " + lexer_grammar_file_name + @"
 	java -jar $(JAR) -Dlanguage=JavaScript " + (@namespace != null ? " -package " + @namespace : "") + @" $<
@@ -1041,8 +1041,8 @@ public class Program
                     break;
             }
             System.Console.Error.WriteLine(new_s.ToString());
+            lexer.Reset();
         }
-        lexer.Reset();
         var tokens = new CommonTokenStream(lexer);
         var parser = new " + parser_name + @"(tokens);
         ");
@@ -1179,8 +1179,8 @@ public class Program {
                     break;
             }
             System.out.println(new_s.toString());
+            lexer.reset();
         }
-        lexer.reset();
         var tokens = new CommonTokenStream(lexer);
         " + parser_name + " parser = new " + parser_name + @"(tokens);
         ErrorListener lexer_listener = new ErrorListener();
@@ -1309,8 +1309,8 @@ if (show_tokens)
         if (token.type === antlr4.Token.EOF)
             break;
     }
+    lexer.reset();
 }
-lexer.reset();
 const tree = parser." + startRule + @"();
 if (show_tree)
 {
@@ -1329,7 +1329,7 @@ else
 ");
 
                 // Test to find an appropriate file name to place this into.
-                string fn = outputDirectory + "program.js";
+                string fn = outputDirectory + "index.js";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
             }
         }
