@@ -13,6 +13,7 @@
     class Program
     {
         static string version = "2.1";
+        List<string> failed_modules = new List<string>();
         IEnumerable<string> all_source_files = null;
         EncodingType encoding = GetOperatingSystem();
         bool antlr4cs = false;
@@ -201,6 +202,9 @@
             if (maven)
             {
                 FollowPoms(cd);
+                if (failed_modules.Any())
+                    throw new Exception("Failed conversion of "
+                        + String.Join(", ", failed_modules));
             }
             else
             {
@@ -257,6 +261,7 @@
                             "Driver generation failed for "
                             + cd + sd + "/");
                         System.Console.WriteLine(e);
+                        failed_modules.Add(cd + sd + "/");
                     }
                 }
             }
