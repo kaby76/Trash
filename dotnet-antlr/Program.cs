@@ -8,18 +8,20 @@
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Xml;
-    using System.Xml.Linq;
     using System.Xml.XPath;
 
     class Program
     {
-        static string version = "2.0";
+        static string version = "2.1";
         IEnumerable<string> all_source_files = null;
         EncodingType encoding = GetOperatingSystem();
         bool antlr4cs = false;
         TargetType target = TargetType.CSharp;
         string @namespace = null;
         string outputDirectory = "Generated/";
+        string target_directory;
+        string source_directory;
+        string target_specific_src_directory;
         HashSet<string> tool_grammar_files = null;
         HashSet<string> tool_src_grammar_files = null;
         List<string> generated_files = null;
@@ -37,6 +39,7 @@
         string startRule;
         string suffix;
         private IEnumerable<string> skip_list;
+        bool maven = false;
 
         public enum TargetType
         {
@@ -135,16 +138,16 @@
             }
         }
 
-        int MainInternal(string[] args)
+        void MainInternal(string[] args)
         {
-            var result = Parser.Default.ParseArguments<Options>(args);
             string tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
-            Dictionary<string, string> packages = new Dictionary<string, string>();
-            bool stop = false;
-            bool maven = false;
 
+            // Parse options, stop if we see a bogus option, or something like --help.
+            var result = Parser.Default.ParseArguments<Options>(args);
+            bool stop = false;
             result.WithNotParsed(o => { stop = true; });
-            if (stop) return 0;
+            if (stop) return;
+            
             result.WithParsed(o =>
             {
                 target = o.Target;
@@ -160,19 +163,6 @@
                 if (o.OutputDirectory != null) outputDirectory = o.OutputDirectory;
                 if (o.SkipList != null) skip_list = o.SkipList;
             });
-            var path = Environment.CurrentDirectory;
-            var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
-            path = path + Path.DirectorySeparatorChar + outputDirectory;
-            outputDirectory = System.IO.Path.GetFullPath(path);
-            try
-            {
-                // Create a directory containing a C# project with grammars.
-                Directory.CreateDirectory(outputDirectory);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
 
             if (antlr4cs) target = TargetType.Antlr4cs;
             suffix = target switch
@@ -190,7 +180,7 @@
                 TargetType.Antlr4cs => ".cs",
                 _ => throw new NotImplementedException(),
             };
-            var target_directory = target switch
+            target_specific_src_directory = target switch
             {
                 TargetType.CSharp => "CSharp",
                 TargetType.Java => "Java",
@@ -205,166 +195,12 @@
                 TargetType.Antlr4cs => "Antlr4cs",
                 _ => throw new NotImplementedException(),
             };
+
+            var path = Environment.CurrentDirectory;
+            var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             if (maven)
             {
-                XmlTextReader reader = new XmlTextReader(@"pom.xml");
-                reader.Namespaces = false;
-                XPathDocument document = new XPathDocument(reader);
-                XPathNavigator navigator = document.CreateNavigator();
-                XmlNamespaceManager nsmgr = new XmlNamespaceManager(reader.NameTable);
-
-                // I do not know why, but we use '*//' becuase the tree could be
-                // build/pluginManagement/plugins/plugin or
-                // build/plugins/plugin. And the configuration appears to be the same.
-
-                var i = navigator
-                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/includes/include", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Select(t => t.Value)
-                    .ToList();
-                var arguments = navigator
-                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/arguments/argument", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Where(t => t.Value != "")
-                    .Select(t => t.Value)
-                    .ToList();
-                var source_directory = navigator
-                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/sourceDirectory", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Where(t => t.Value != "")
-                    .Select(t => t.Value)
-                    .ToList();
-                var all_else = navigator
-                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/*[not(self::sourceDirectory or self::arguments or self::includes or self::visitor or self::listener)]", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .ToList();
-
-                var gg = navigator
-                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/grammarName", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Select(t => t.Value)
-                    .ToList();
-                var lx = navigator
-                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/lexerName", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Select(t => t.Value)
-                    .ToList();
-                var s = navigator
-                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/entryPoint", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Select(t => t.Value)
-                    .ToList();
-                var package_name = navigator
-                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/packageName", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Where(t => t.Value != "")
-                    .Select(t => t.Value)
-                    .ToList();
-
-                // grammarName is required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
-                if (!gg.Any()) throw new Exception();
-                // entryPoint required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
-                if (!s.Any()) throw new Exception();
-                // Check existance of files.
-                foreach (var x in i)
-                {
-                    if (!new Domemtech.Globbing.Glob()
-                     .RegexContents(x)
-                     .Where(f => f is FileInfo)
-                     .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                     .Any())
-                    {
-                        System.Console.Error.WriteLine("Error in pom.xml: <include>" + x + "</include> is for a file that does not exist.");
-                    }
-                }
-                // Check package naem. If there's a package name without an args list for
-                // the Antlr tool to generate for that package name, this will not be target
-                // independent.
-                if (package_name.Any() && package_name.First() != "")
-                {
-                    bool package_option = false;
-                    foreach (var a in arguments)
-                    {
-                        if (a == "-package")
-                        {
-                            package_option = true;
-                            break;
-                        }
-                    }
-                    if (!package_option)
-                    {
-                        System.Console.Error.WriteLine("You have a package reference for the parser in the test of it, "
-                            + "but you don't have "
-                            + "a package option on the Antlr tool generator configuration. Therfore, it's likely you have a package defined in your grammar directly, which is "
-                            + "not target independent code, so it will not work other than for the default target.");
-                    }
-                }
-                // Check all other config options in antlr4-maven-plugin configuration.
-                if (all_else.Any())
-                {
-                    System.Console.Error.WriteLine("Antlr4 maven config contains stuff that I don't understand.");
-                }
-
-                parser_name = gg.First() + "Parser";
-                var parser_grammars_pattern =
-                    "^((?!.*(Generated/|target/|examples/))|("
-                    + target_directory + "/))(" + gg.First() + "|" + gg.First() + "Parser).g4$";
-                parser_src_grammar_file_name =
-                    new Domemtech.Globbing.Glob()
-                        .RegexContents(parser_grammars_pattern)
-                        .Where(f => f is FileInfo)
-                        .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                        .ToList()
-                        .First();
-                parser_grammar_file_name =
-                    (package_name.Any() && package_name.First() != ""
-                    ? package_name.First().Replace('.', '/') + '/'
-                    : "")
-                    + Path.GetFileName(parser_src_grammar_file_name);
-                parser_generated_file_name =
-                    (package_name.Any() && package_name.First() != ""
-                    ? package_name.First().Replace('.', '/') + '/'
-                    : "")
-                    + parser_name + suffix;
-
-                lexer_name = lx.Any() ? lx.First() : gg.First() + "Lexer";
-                var lexer_grammars_pattern =
-                    "^((?!.*(Generated/|target/|examples/))|("
-                    + target_directory + "/))(" + gg.First() + "|" + gg.First() + "Lexer).g4$";
-                lexer_src_grammar_file_name = new Domemtech.Globbing.Glob()
-                        .RegexContents(lexer_grammars_pattern)
-                        .Where(f => f is FileInfo)
-                        .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                        .ToList()
-                        .First();
-                lexer_grammar_file_name =
-                    (package_name.Any() && package_name.First() != ""
-                    ? package_name.First().Replace('.', '/') + '/'
-                    : "")
-                    + Path.GetFileName(lexer_src_grammar_file_name);
-                lexer_generated_file_name =
-                    (package_name.Any() && package_name.First() != ""
-                    ? package_name.First().Replace('.', '/') + '/'
-                    : "")
-                    + lexer_name + suffix;
-
-                if (package_name.Any()) @namespace = package_name.First();
-                tool_src_grammar_files = new HashSet<string>()
-                {
-                    lexer_src_grammar_file_name,
-                    parser_src_grammar_file_name
-                };
-                tool_grammar_files = new HashSet<string>()
-                {
-                    lexer_grammar_file_name,
-                    parser_grammar_file_name
-                };
-                startRule = s.First();
-                generated_files = new List<string>()
-                {
-                    lexer_generated_file_name,
-                    parser_generated_file_name,
-                };
+                FollowPoms(cd);
             }
             else
             {
@@ -384,6 +220,323 @@
                         return r;
                     }).ToList()) tool_grammar_files.Add(xx);
 
+                GenerateSingle(cd);
+            }
+        }
+
+        private void FollowPoms(string cd)
+        {
+            Environment.CurrentDirectory = cd;
+            System.Console.WriteLine(cd);
+
+            target_directory = System.IO.Path.GetFullPath(cd + Path.DirectorySeparatorChar + outputDirectory);
+
+            XmlTextReader reader = new XmlTextReader(cd + Path.DirectorySeparatorChar + @"pom.xml");
+            reader.Namespaces = false;
+            XPathDocument document = new XPathDocument(reader);
+            XPathNavigator navigator = document.CreateNavigator();
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(reader.NameTable);
+
+            // determine if this pom only directs for subdirectories.
+            var sub_dirs = navigator
+                .Select("//modules/module", nsmgr)
+                .Cast<XPathNavigator>()
+                .Select(t => t.Value)
+                .ToList();
+            if (sub_dirs.Any())
+            {
+                foreach (var sd in sub_dirs)
+                {
+                    try
+                    {
+                        FollowPoms(cd + sd + "/");
+                    }
+                    catch (Exception e)
+                    {
+                        System.Console.WriteLine(
+                            "Driver generation failed for "
+                            + cd + sd + "/");
+                        System.Console.WriteLine(e);
+                    }
+                }
+            }
+            else
+            {
+                // Get antlr4-maven-plugin settings.
+                var pom_includes = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/includes/include", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                var pom_arguments = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/arguments/argument", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Where(t => t.Value != "")
+                    .Select(t => t.Value)
+                    .ToList();
+                var pom_source_directory = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/sourceDirectory", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Where(t => t.Value != "")
+                    .Select(t => t.Value)
+                    .ToList();
+                var pom_all_else = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/*[not(self::sourceDirectory or self::arguments or self::includes or self::visitor or self::listener)]", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .ToList();
+
+                var pom_grammar_name = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/grammarName", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                var pom_lexer_name = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/lexerName", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                var pom_entry_point = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/entryPoint", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                var pom_package_name = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/packageName", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Where(t => t.Value != "")
+                    .Select(t => t.Value)
+                    .ToList();
+
+                // grammarName is required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
+                if (!pom_grammar_name.Any())
+                {
+                    return;
+                }
+                // entryPoint required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
+                if (!pom_entry_point.Any())
+                {
+                    return;
+                }
+                // Check existance of files.
+                foreach (var x in pom_includes)
+                {
+                    if (!new Domemtech.Globbing.Glob()
+                     .RegexContents(x)
+                     .Where(f => f is FileInfo)
+                     .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                     .Any())
+                    {
+                        System.Console.Error.WriteLine("Error in pom.xml: <include>" + x + "</include> is for a file that does not exist.");
+                    }
+                }
+                // Check package naem. If there's a package name without an args list for
+                // the Antlr tool to generate for that package name, this will not be target
+                // independent.
+                if (pom_package_name.Any() && pom_package_name.First() != "")
+                {
+                    bool package_option = false;
+                    foreach (var a in pom_arguments)
+                    {
+                        if (a == "-package")
+                        {
+                            package_option = true;
+                            break;
+                        }
+                    }
+                    if (!package_option)
+                    {
+                        System.Console.Error.WriteLine("You have a package reference for the parser in the test of it, "
+                            + "but you don't have "
+                            + "a package option on the Antlr tool generator configuration. Therfore, it's likely you have a package defined in your grammar directly, which is "
+                            + "not target independent code, so it will not work other than for the default target.");
+                    }
+                }
+                // Check all other config options in antlr4-maven-plugin configuration.
+                if (pom_all_else.Any())
+                {
+                    System.Console.Error.WriteLine("Antlr4 maven config contains stuff that I don't understand.");
+                }
+
+                if (pom_source_directory.Any())
+                {
+                    source_directory = pom_source_directory
+                        .First()
+                        .Replace("${basedir}", "")
+                        .Trim();
+                    while (source_directory != "" && source_directory.StartsWith("/"))
+                    {
+                        source_directory = source_directory.Substring(1);
+                    }
+                    if (source_directory != "" && !source_directory.EndsWith("/"))
+                    {
+                        source_directory = source_directory + "/";
+                    }
+                }
+                else
+                {
+                    source_directory = "";
+                }
+
+                parser_name = pom_grammar_name.First() + "Parser";
+                for (; ; )
+                {
+                    // Probe for parser grammar. 
+                    {
+                        var parser_grammars_pattern =
+                            "^((?!.*(Generated/|target/|examples/))("
+                            + target_specific_src_directory + "/)(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Parser)).g4$";
+                        var any =
+                            new Domemtech.Globbing.Glob()
+                                .RegexContents(parser_grammars_pattern)
+                                .Where(f => f is FileInfo)
+                                .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                                .ToList();
+                        if (any.Any())
+                        {
+                            parser_src_grammar_file_name = any.First();
+                            break;
+                        }
+                    }
+                    {
+                        var parser_grammars_pattern =
+                            "^(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Parser).g4$";
+                        var any =
+                            new Domemtech.Globbing.Glob()
+                                .RegexContents(parser_grammars_pattern)
+                                .Where(f => f is FileInfo)
+                                .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                                .ToList();
+                        if (any.Any())
+                        {
+                            parser_src_grammar_file_name = any.First();
+                            break;
+                        }
+                    }
+                    {
+                        var parser_grammars_pattern =
+                            "^(" + source_directory + ")"
+                            + "(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Parser).g4$";
+                        var any =
+                            new Domemtech.Globbing.Glob()
+                                .RegexContents(parser_grammars_pattern)
+                                .Where(f => f is FileInfo)
+                                .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                                .ToList();
+                        if (any.Any())
+                        {
+                            parser_src_grammar_file_name = any.First();
+                            break;
+                        }
+                    }
+                    throw new Exception("Cannot find the parser grammar (" + pom_grammar_name.First() + " | " + pom_grammar_name.First() + "Parser).g4");
+                }
+                parser_grammar_file_name =
+                    (pom_package_name.Any() && pom_package_name.First() != ""
+                    ? pom_package_name.First().Replace('.', '/') + '/'
+                    : "")
+                    + Path.GetFileName(parser_src_grammar_file_name);
+                parser_generated_file_name =
+                    (pom_package_name.Any() && pom_package_name.First() != ""
+                    ? pom_package_name.First().Replace('.', '/') + '/'
+                    : "")
+                    + parser_name + suffix;
+
+                lexer_name = pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First() + "Lexer";
+                for (; ; )
+                {
+                    // Probe for lexer grammar. 
+                    {
+                        var lexer_grammars_pattern =
+                            "^((?!.*(Generated/|target/|examples/))("
+                            + target_specific_src_directory + "/)(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Lexer)).g4$";
+                        var any =
+                            new Domemtech.Globbing.Glob()
+                                .RegexContents(lexer_grammars_pattern)
+                                .Where(f => f is FileInfo)
+                                .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                                .ToList();
+                        if (any.Any())
+                        {
+                            lexer_src_grammar_file_name = any.First();
+                            break;
+                        }
+                    }
+                    {
+                        var lexer_grammars_pattern =
+                            "^(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Lexer).g4$";
+                        var any =
+                            new Domemtech.Globbing.Glob()
+                                .RegexContents(lexer_grammars_pattern)
+                                .Where(f => f is FileInfo)
+                                .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                                .ToList();
+                        if (any.Any())
+                        {
+                            lexer_src_grammar_file_name = any.First();
+                            break;
+                        }
+                    }
+                    {
+                        var lexer_grammars_pattern =
+                            "^(" + source_directory + ")"
+                            + "(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Lexer).g4$";
+                        var any =
+                            new Domemtech.Globbing.Glob()
+                                .RegexContents(lexer_grammars_pattern)
+                                .Where(f => f is FileInfo)
+                                .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                                .ToList();
+                        if (any.Any())
+                        {
+                            lexer_src_grammar_file_name = any.First();
+                            break;
+                        }
+                    }
+                    throw new Exception("Cannot find the lexer grammar (" + pom_grammar_name.First() + " | " + pom_grammar_name.First() + "Lexer).g4)");
+                }
+
+                lexer_grammar_file_name =
+                    (pom_package_name.Any() && pom_package_name.First() != ""
+                    ? pom_package_name.First().Replace('.', '/') + '/'
+                    : "")
+                    + Path.GetFileName(lexer_src_grammar_file_name);
+                lexer_generated_file_name =
+                    (pom_package_name.Any() && pom_package_name.First() != ""
+                    ? pom_package_name.First().Replace('.', '/') + '/'
+                    : "")
+                    + lexer_name + suffix;
+
+                if (pom_package_name.Any()) @namespace = pom_package_name.First();
+                tool_src_grammar_files = new HashSet<string>()
+                {
+                    lexer_src_grammar_file_name,
+                    parser_src_grammar_file_name
+                };
+                tool_grammar_files = new HashSet<string>()
+                {
+                    lexer_grammar_file_name,
+                    parser_grammar_file_name
+                };
+                startRule = pom_entry_point.First();
+                generated_files = new List<string>()
+                {
+                    lexer_generated_file_name,
+                    parser_generated_file_name,
+                };
+                GenerateSingle(cd);
+            }
+        }
+
+        private void GenerateSingle(string cd)
+        {
+            try
+            {
+                // Create a directory containing target build files.
+                Directory.CreateDirectory(outputDirectory);
+            }
+            catch (Exception)
+            {
+                throw;
             }
             // Include all other grammar files, but not if they are the main grammars.
             var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/|"
@@ -398,13 +551,13 @@
             // Find all source files.
             var all_source_pattern = "^(?!.*(Generated/|target/|examples/" + (!antlr4cs ? "|Antlr4cs/" : "") + ")).+" + target switch
             {
-                TargetType.CSharp => "cs",
-                TargetType.Java => "java",
-                TargetType.JavaScript => "js",
-                TargetType.Cpp => "([.]h|[.cpp])",
+                TargetType.CSharp => "[.]cs",
+                TargetType.Java => "[.]java",
+                TargetType.JavaScript => "[.]js",
+                TargetType.Cpp => "([.]h|[.]cpp)",
                 TargetType.Dart => "[.]dart",
                 TargetType.Go => "[.]go",
-                TargetType.Php => "[.php]",
+                TargetType.Php => "[.]php",
                 TargetType.Python2 => "[.]py",
                 TargetType.Python3 => "[.]py",
                 TargetType.Swift => "[.]swift",
@@ -413,7 +566,7 @@
             all_source_files = new Domemtech.Globbing.Glob()
                     .RegexContents(all_source_pattern)
                     .Where(f => f is FileInfo)
-                    .Select(f => f.FullName.Replace(cd, ""))
+                    .Select(f => f.FullName.Replace('\\','/').Replace(cd, ""))
                     .ToList();
 
             AddSourceFiles();
@@ -422,7 +575,6 @@
             AddMain();
             AddErrorListener();
             AddCaseFold();
-            return 0;
         }
 
         private void AddCaseFold()
@@ -752,6 +904,43 @@ fragment SIGN : ('+' | '-') ;
   <PropertyGroup Condition=""'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"" >
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <!--
+      need the CData since this blob is just going to
+      be embedded in a mini batch file by studio/msbuild
+    -->
+    <MyTester><![CDATA[
+set ERR=0
+for %%G in (..\examples\*) do (
+  setlocal EnableDelayedExpansion
+  set FILE=%%G
+  set X1=%%~xG
+  set X2=%%~nG
+  set X3=%%~pG
+  if !X1! neq .errors (
+    echo !FILE!
+    cat !FILE! | bin\Debug\net5.0\Test.exe
+    if not exist !FILE!.errors (
+      if ERRORLEVEL 1 set ERR=1
+    ) else (
+      echo Expected.
+    )
+  )
+)
+EXIT %ERR%
+]]></MyTester>
+</PropertyGroup>
+
+  <Target Name=""Test"" >
+    <Message Text=""testing"" />
+    <Exec Command=""echo."" />
+    <Exec Command=""$(MyTester)"" >
+       <Output TaskParameter=""ExitCode"" PropertyName =""ErrorCode"" />
+    </Exec>
+    <Message Importance=""high"" Text=""$(ErrorCode)""/>
+  </Target>
+
 </Project>");
                 var fn = outputDirectory + "Test.csproj";
                 System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));

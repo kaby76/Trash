@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "-m",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\fixed\\antlr\\antlr4"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\fixed\\"
     }
   }
 }
