@@ -22,6 +22,7 @@
         string outputDirectory = "Generated/";
         string target_directory;
         string source_directory;
+        string root_directory;
         string target_specific_src_directory;
         HashSet<string> tool_grammar_files = null;
         HashSet<string> tool_src_grammar_files = null;
@@ -102,7 +103,7 @@
             [Option('g', "grammar-files", Required = false, HelpText = "A list of vertical bar separated grammar file paths.")]
             public string GrammarFiles { get; set; }
 
-            [Option('k', "skip-list", Required = false, Separator = ':', HelpText = "A skip list for pom.xml.")]
+            [Option('k', "skip-list", Required = false, Separator = ',', HelpText = "A skip list for pom.xml.")]
             public IEnumerable<string> SkipList { get; set; }
 
             [Option('m', "maven", Required = false, Default = false, HelpText = "Read Antlr pom file and convert.")]
@@ -117,14 +118,14 @@
             [Option('p', "package", Required=false, HelpText="PackageReference's to include, in name/version pairs.")]
             public string Packages { get; set; }
 
-            [Option('x', "profile", Required = false, Default = false, HelpText = "Add in Antlr profiling code.")]
-            public bool Profiling { get; set; }
-            
             [Option('s', "start-rule", Required=false, HelpText="Start rule name.")]
             public string StartRule { get; set; }
 
             [Option('t', "target", Required = false, Default=TargetType.CSharp, HelpText = "The target language for the project.")]
             public TargetType Target { get; set; }
+
+            [Option('x', "profile", Required = false, Default = false, HelpText = "Add in Antlr profiling code.")]
+            public bool Profiling { get; set; }
         }
 
         static void Main(string[] args)
@@ -135,7 +136,7 @@
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine(e);
+                System.Environment.Exit(1);
             }
         }
 
@@ -199,12 +200,16 @@
 
             var path = Environment.CurrentDirectory;
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
+            root_directory = cd;
+
             if (maven)
             {
                 FollowPoms(cd);
                 if (failed_modules.Any())
-                    throw new Exception("Failed conversion of "
-                        + String.Join(", ", failed_modules));
+                {
+                    System.Console.WriteLine(String.Join(" ", failed_modules));
+                    throw new Exception();
+                }
             }
             else
             {
@@ -231,8 +236,13 @@
         private void FollowPoms(string cd)
         {
             Environment.CurrentDirectory = cd;
-            System.Console.WriteLine(cd);
-
+            System.Console.Error.WriteLine(cd);
+        
+            if (skip_list.Where(s => cd.Remove(cd.Length-1).EndsWith(s)).Any())
+            {
+                System.Console.Error.WriteLine("Skipping.");
+                return;
+            }
             target_directory = System.IO.Path.GetFullPath(cd + Path.DirectorySeparatorChar + outputDirectory);
 
             XmlTextReader reader = new XmlTextReader(cd + Path.DirectorySeparatorChar + @"pom.xml");
@@ -257,11 +267,12 @@
                     }
                     catch (Exception e)
                     {
-                        System.Console.WriteLine(
-                            "Driver generation failed for "
+                        var module = (cd + sd + "/").Replace(root_directory, "");
+                        module = module.Remove(module.Length - 1);
+                        System.Console.Error.WriteLine(
+                            "Failed: "
                             + cd + sd + "/");
-                        System.Console.WriteLine(e);
-                        failed_modules.Add(cd + sd + "/");
+                        failed_modules.Add(module);
                     }
                 }
             }
@@ -332,6 +343,7 @@
                      .Any())
                     {
                         System.Console.Error.WriteLine("Error in pom.xml: <include>" + x + "</include> is for a file that does not exist.");
+                        throw new Exception();
                     }
                 }
                 // Check package naem. If there's a package name without an args list for
