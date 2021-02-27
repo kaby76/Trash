@@ -228,7 +228,7 @@
                         var r = filter.IsMatch(f);
                         return r;
                     }).ToList()) tool_grammar_files.Add(xx);
-
+                tool_src_grammar_files = new HashSet<string>();
                 GenerateSingle(cd);
             }
         }
@@ -1546,6 +1546,12 @@ else
         {
             lexer_name = "";
             parser_name = "";
+            parser_src_grammar_file_name = "";
+            parser_grammar_file_name = "";
+            parser_generated_file_name = "";
+            lexer_src_grammar_file_name = "";
+            lexer_grammar_file_name = "";
+            lexer_generated_file_name = "";
             // lexer and parser are set if the grammar is partitioned.
             // rest is set if there are grammar is combined.
             var lexer = tool_grammar_files?.Where(d => d.EndsWith("Lexer.g4")).ToList();
@@ -1559,6 +1565,10 @@ else
                 lexer_name = "ArithmeticLexer";
                 parser_name = "ArithmeticParser";
                 startRule = "file";
+                lexer_generated_file_name = "ArithmeticLexer" + suffix;
+                parser_generated_file_name = "ArithmeticParser" + suffix;
+                lexer_grammar_file_name = "Arithmetic.g4";
+                parser_grammar_file_name = "Arithmetic.g4";
             }
             else if (lexer.Count == 1)
             {
