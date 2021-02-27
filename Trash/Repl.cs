@@ -164,7 +164,7 @@
                         DateTime before = DateTime.Now;
                         var tree = trees[c];
                         var is_piped = c > 0;
-                        if (false) ;
+                        if (false) { }
                         else if (tree.agl() is ReplParser.AglContext x_agl)
                         {
                             new CAgl().Execute(this, x_agl, is_piped);

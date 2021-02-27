@@ -87,10 +87,6 @@ Example:
         public void Execute(Repl repl, ReplParser.AglContext tree, bool piped)
         {
             string lines = repl.input_output_stack.Pop();
-            var doc = repl.stack.Peek();
-            var pr = ParsingResultsFactory.Create(doc);
-            var lexer = pr.Lexer;
-            var parser = pr.Parser;
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
@@ -98,7 +94,7 @@ Example:
             var nodes = parse_info.Nodes;
             System.Windows.Forms.Form form = new System.Windows.Forms.Form();
             Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-            Microsoft.Msagl.Drawing.Graph graph = CreateGraph(nodes, parser.RuleNames.ToList());
+            Microsoft.Msagl.Drawing.Graph graph = CreateGraph(nodes, parse_info.Parser.RuleNames.ToList());
             graph.LayoutAlgorithmSettings = new Microsoft.Msagl.Layout.Layered.SugiyamaLayoutSettings();
             viewer.Graph = graph;
             form.SuspendLayout();

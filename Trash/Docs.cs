@@ -60,9 +60,9 @@
                     document.Code = str;
                 }
             }
-            catch (IOException eeks)
+            catch (IOException)
             {
-                throw eeks;
+                throw;
             }
             return document;
         }

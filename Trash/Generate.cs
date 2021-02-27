@@ -71,7 +71,7 @@
         public void Run(Repl repl, string[] arguments)
         {
             var path = Environment.CurrentDirectory;
-            path = path + Path.DirectorySeparatorChar + "Generated";
+            var generated_path = path + Path.DirectorySeparatorChar + "Generated";
             var grammars = _repl._workspace.AllDocuments().Where(d => d.FullPath.EndsWith(".g4")).ToList();
             var old = Environment.CurrentDirectory;
             try
@@ -102,12 +102,11 @@
                 try
                 {
                     // Create a directory containing a C# project with grammars.
-                    Directory.CreateDirectory(path);
-                    Environment.CurrentDirectory = path;
+                    Directory.CreateDirectory(generated_path);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
 
                 // Create driver from dotnet and antlr template.
@@ -117,18 +116,17 @@
                     args.Add("antlr");
                     foreach (var grammar in grammars)
                     {
-                        args.Add("--grammar");
-                        args.Add("\"" + Path.GetFileName(grammar.FullPath) + "\" />");
+                        args.Add("-g");
+                        args.Add("\"" + Path.GetFileName(grammar.FullPath) + "\"");
                     }
-                    args.Add("--force");
                     if (@namespace != null)
                     {
-                        args.Add("--package");
-                        args.Add(@namespace);
+                        args.Add("-n");
+                        args.Add("\"" + @namespace + "\"");
                     }
-                    args.Add("--start");
+                    args.Add("-s");
                     args.Add(start);
-                    ProcessStartInfo startInfo = new ProcessStartInfo("dotnet", JoinArguments(args))
+                    ProcessStartInfo startInfo = new ProcessStartInfo("dotnet-antlr", JoinArguments(args))
                     {
                         UseShellExecute = false,
                         CreateNoWindow = true,
@@ -148,14 +146,8 @@
                     if (!success) throw new Exception("Build failed.");
                 }
 
-                // Copy all files in workspace to temporary directory.
-                foreach (var doc in _repl._workspace.AllDocuments())
                 {
-                    var fn = Path.GetFileName(doc.FullPath);
-                    var code = doc.Code;
-                    System.IO.File.WriteAllText(fn, code);
-                }
-                {
+                    Environment.CurrentDirectory = generated_path;
                     List<string> args = new List<string>();
                     args.Add("build");
                     ProcessStartInfo startInfo = new ProcessStartInfo("dotnet", JoinArguments(args))

@@ -79,9 +79,9 @@
             try
             {
                 Environment.CurrentDirectory = path;
-                Assembly asm = Assembly.LoadFile(path + "/bin/Debug/netcoreapp3.1/Test.dll");
+                Assembly asm = Assembly.LoadFile(path + "/bin/Debug/net5.0/Test.dll");
                 Type[] types = asm.GetTypes();
-                Type type = asm.GetType("Easy.Program");
+                Type type = asm.GetType("Program");
                 var methods = type.GetMethods();
                 MethodInfo methodInfo = type.GetMethod("Parse");
                 string txt = input;
