@@ -916,7 +916,7 @@ fragment SIGN : ('+' | '-') ;
     <PackageReference Include=""Antlr4.Runtime"" Version=""4.6.6"" />
   </ItemGroup>");
                 }
-                    sb.AppendLine(@"
+                sb.AppendLine(@"
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
@@ -929,7 +929,10 @@ fragment SIGN : ('+' | '-') ;
       need the CData since this blob is just going to
       be embedded in a mini batch file by studio/msbuild
     -->
-    <MyTester><![CDATA[
+    <MyTester><![CDATA[");
+                if (encoding == EncodingType.Windows)
+                {
+                    sb.AppendLine(@"
 set ERR=0
 for %%G in (..\examples\*) do (
   setlocal EnableDelayedExpansion
@@ -939,7 +942,7 @@ for %%G in (..\examples\*) do (
   set X3=%%~pG
   if !X1! neq .errors (
     echo !FILE!
-    cat !FILE! | bin\Debug\net5.0\Test.exe
+    cat !FILE! | bin\Debug\net5.0\Test" + (encoding == EncodingType.Windows ? ".exe" : "") + @"
     if not exist !FILE!.errors (
       if ERRORLEVEL 1 set ERR=1
     ) else (
@@ -948,12 +951,46 @@ for %%G in (..\examples\*) do (
   )
 )
 EXIT %ERR%
-]]></MyTester>
+");
+                }
+                else
+                {
+                    sb.AppendLine(@"
+err=0
+for g in ../examples/*
+do
+  file=$g
+  x1=""${g##*.}""
+  if [ ""$x1"" != ""errors"" ]
+  then
+    echo $file
+    cat $file | bin/Debug/net5.0/Test
+    status=""$?""
+    if [ -f ""$file"".errors ]
+    then
+      if [ ""$stat"" = ""0"" ]
+      then
+        echo Expected parse fail.
+        err=1
+      else
+        echo Expected.
+      fi
+    else
+      if [ ""$status"" != ""0"" ]
+      then
+        err = 1
+      fi
+    fi
+  fi
+done
+exit $err
+");
+                }
+                sb.AppendLine(@"]]></MyTester>
 </PropertyGroup>
 
   <Target Name=""Test"" >
     <Message Text=""testing"" />
-    <Exec Command=""echo."" />
     <Exec Command=""$(MyTester)"" >
        <Output TaskParameter=""ExitCode"" PropertyName =""ErrorCode"" />
     </Exec>

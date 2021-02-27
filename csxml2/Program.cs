@@ -11,6 +11,47 @@ namespace csxml2
     {
         static void Main(string[] args)
         {
+            if (args.Length == 0)
+            {
+                Process();
+            }
+            else
+            {
+                foreach (var arg in args)
+                {
+                    Process(arg);
+                }
+            }
+        }
+
+        private static void Process()
+        {
+            try
+            {
+                XDocument oldDocument = XDocument.Load(System.Console.In);
+                Process(oldDocument);
+            }
+            catch (Exception e)
+            {
+                System.Console.Error.WriteLine("Error in file ");
+            }
+        }
+
+        private static void Process(string file_name)
+        {
+            try
+            {
+                XDocument oldDocument = XDocument.Load(file_name);
+                Process(oldDocument);
+            }
+            catch (Exception e)
+            {
+                System.Console.Error.WriteLine("Error in file ");
+            }
+        }
+
+        private static void Process(XDocument oldDocument)
+        {
             string xslt = @"<xsl:stylesheet version=""1.0"" xmlns:xsl=""http://www.w3.org/1999/XSL/Transform"">
 
     <xsl:output method=""text"" indent=""no"" />
@@ -30,8 +71,6 @@ namespace csxml2
     </xsl:template>
 
 </xsl:stylesheet>";
-
-            XDocument oldDocument = XDocument.Load(System.Console.In);
             var newDocument = new XDocument();
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;
