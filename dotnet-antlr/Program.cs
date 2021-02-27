@@ -215,20 +215,6 @@
             {
                 // Find tool grammars.
                 startRule = GeneratedNames();
-                generated_files = new List<string>()
-                {
-                    lexer_name + suffix,
-                    parser_name + suffix,
-                };
-                var filter = new System.Text.RegularExpressions.Regex("^(?!.*(Generated/|target/|examples/)).+$");
-                tool_grammar_files = new HashSet<string>();
-                foreach (var xx in tool_grammar_files
-                    .Where(f =>
-                    {
-                        var r = filter.IsMatch(f);
-                        return r;
-                    }).ToList()) tool_grammar_files.Add(xx);
-                tool_src_grammar_files = new HashSet<string>();
                 GenerateSingle(cd);
             }
         }
@@ -1200,6 +1186,29 @@ using System.Runtime.CompilerServices;
 
 public class Program
 {
+    public static Parser Parser { get; set; }
+    public static Lexer Lexer { get; set; }
+    public static ITokenStream TokenStream { get; set; }
+    public static IParseTree Tree { get; set; }
+    public static IParseTree Parse(string input)
+    {
+        var str = new AntlrInputStream(input);
+        var lexer = new ");
+            sb.Append(lexer_name);
+            sb.Append(@"(str);
+        Lexer = lexer;
+        var tokens = new CommonTokenStream(lexer);
+        TokenStream = tokens;
+        var parser = new ");
+            sb.Append(parser_name);
+            sb.Append(@"(tokens);
+        Parser = parser;
+        var tree = parser." + startRule);
+            sb.AppendLine(@"();
+        Tree = tree;
+        return tree;
+    }
+
     static void Main(string[] args)
     {
         bool show_tree = false;
@@ -1581,6 +1590,7 @@ else
 
         private string GeneratedNames()
         {
+            var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             lexer_name = "";
             parser_name = "";
             parser_src_grammar_file_name = "";
@@ -1589,14 +1599,112 @@ else
             lexer_src_grammar_file_name = "";
             lexer_grammar_file_name = "";
             lexer_generated_file_name = "";
+            target_specific_src_directory = "";
+            for (; ; )
+            {
+                // Probe for parser grammar. 
+                {
+                    var parser_grammars_pattern =
+                        "^((?!.*(Generated/|target/|examples/))("
+                        + target_specific_src_directory + "/)"
+                        + "(.*|.*Parser)).g4$";
+                    var any =
+                        new Domemtech.Globbing.Glob()
+                            .RegexContents(parser_grammars_pattern)
+                            .Where(f => f is FileInfo)
+                            .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                            .ToList();
+                    if (any.Any())
+                    {
+                        parser_src_grammar_file_name = any.First();
+                        break;
+                    }
+                }
+                {
+                    var parser_grammars_pattern =
+                        "^(.*|.*Parser).g4$";
+                    var any =
+                        new Domemtech.Globbing.Glob()
+                            .RegexContents(parser_grammars_pattern)
+                            .Where(f => f is FileInfo)
+                            .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                            .ToList();
+                    if (any.Any())
+                    {
+                        parser_src_grammar_file_name = any.First();
+                        break;
+                    }
+                }
+                break;
+            }
+            parser_name = parser_src_grammar_file_name.Replace("Parser.g4", "").Replace(".g4", "") + "Parser";
+            parser_grammar_file_name =
+                Path.GetFileName(parser_src_grammar_file_name);
+            parser_generated_file_name =
+                parser_name + suffix;
+
+            for (; ; )
+            {
+                // Probe for lexer grammar. 
+                {
+                    var lexer_grammars_pattern =
+                           "^((?!.*(Generated/|target/|examples/))("
+                        + target_specific_src_directory + "/)"
+                        + "(.*|.*Lexer)).g4$";
+                    var any =
+                        new Domemtech.Globbing.Glob()
+                            .RegexContents(lexer_grammars_pattern)
+                            .Where(f => f is FileInfo)
+                            .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                            .ToList();
+                    if (any.Any())
+                    {
+                        lexer_src_grammar_file_name = any.First();
+                        break;
+                    }
+                }
+                {
+                    var lexer_grammars_pattern =
+                        "^(.*|.*Lexer).g4$";
+                    var any =
+                        new Domemtech.Globbing.Glob()
+                            .RegexContents(lexer_grammars_pattern)
+                            .Where(f => f is FileInfo)
+                            .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                            .ToList();
+                    if (any.Any())
+                    {
+                        lexer_src_grammar_file_name = any.First();
+                        break;
+                    }
+                }
+                break;
+            }
+
+            lexer_name = lexer_src_grammar_file_name.Replace("Lexer.g4", "").Replace(".g4", "") + "Lexer";
+            lexer_grammar_file_name =
+                Path.GetFileName(lexer_src_grammar_file_name);
+            lexer_generated_file_name =
+                lexer_name + suffix;
+
+            tool_src_grammar_files = new HashSet<string>()
+                {
+                    lexer_src_grammar_file_name,
+                    parser_src_grammar_file_name
+                };
+            tool_grammar_files = new HashSet<string>()
+                {
+                    lexer_grammar_file_name,
+                    parser_grammar_file_name
+                };
+            generated_files = new List<string>()
+                {
+                    lexer_generated_file_name,
+                    parser_generated_file_name,
+                };
             // lexer and parser are set if the grammar is partitioned.
             // rest is set if there are grammar is combined.
-            var lexer = tool_grammar_files?.Where(d => d.EndsWith("Lexer.g4")).ToList();
-            var parser = tool_grammar_files?.Where(d => d.EndsWith("Parser.g4")).ToList();
-            var rest = tool_grammar_files?.Where(d => !d.EndsWith("Parser.g4") && !d.EndsWith("Lexer.g4")).ToList();
-            if ((rest == null || rest.Count == 0)
-                && (lexer == null || lexer.Count == 0)
-                && (parser == null || parser.Count == 0))
+            if (lexer_src_grammar_file_name == "" || parser_src_grammar_file_name == "")
             {
                 // I have no clue what your grammars are.
                 lexer_name = "ArithmeticLexer";
@@ -1607,22 +1715,6 @@ else
                 lexer_grammar_file_name = "Arithmetic.g4";
                 parser_grammar_file_name = "Arithmetic.g4";
             }
-            else if (lexer.Count == 1)
-            {
-                lexer_name = Path.GetFileName(lexer.First().Replace(".g4", ""));
-                parser_name = Path.GetFileName(parser.First().Replace(".g4", ""));
-            }
-            else if (lexer.Count == 0)
-            {
-                // Combined.
-                if (rest.Count == 1)
-                {
-                    var combined_name = Path.GetFileName(rest.First()).Replace(".g4", "");
-                    lexer_name = combined_name + "Lexer";
-                    parser_name = combined_name + "Parser";
-                }
-            }
-
             return startRule;
         }
 
