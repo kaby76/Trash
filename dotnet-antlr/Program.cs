@@ -565,6 +565,8 @@
                     .Select(f => f.FullName.Replace(cd, ""))
                     .ToList();
 
+            System.Console.Error.WriteLine("additional grammars " + String.Join(" ", additional_grammar_files));
+
             // Find all source files.
             var all_source_pattern = "^(?!.*(Generated/|target/|examples/" + (!antlr4cs ? "|Antlr4cs/" : "") + ")).+" + target switch
             {
