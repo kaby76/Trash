@@ -964,7 +964,7 @@ do
     else
       if [ ""$status"" != ""0"" ]
       then
-        err = 1
+        err=1
       fi
     fi
   fi
