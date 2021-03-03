@@ -12,7 +12,7 @@
 
     class Program
     {
-        static string version = "2.1";
+        static string version = "2.2";
         List<string> failed_modules = new List<string>();
         IEnumerable<string> all_source_files = null;
         EncodingType encoding = GetOperatingSystem();
@@ -214,7 +214,7 @@
             else
             {
                 // Find tool grammars.
-                startRule = GeneratedNames();
+                GeneratedNames();
                 GenerateSingle(cd);
             }
         }
@@ -759,7 +759,7 @@ public class ErrorListener extends ConsoleErrorListener
 
         private void AddGrammars()
         {
-            if (tool_src_grammar_files.Any())
+            if (tool_src_grammar_files.Any() && tool_src_grammar_files.First() != "Arithmetic.g4")
             {
                 if (target == TargetType.Java)
                 {
@@ -1588,7 +1588,7 @@ else
             }
         }
 
-        private string GeneratedNames()
+        private void GeneratedNames()
         {
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             lexer_name = "";
@@ -1622,7 +1622,7 @@ else
                 }
                 {
                     var parser_grammars_pattern =
-                        "^(.*|.*Parser).g4$";
+                        "^(?!.*(Generated/|target/|examples/))(.*|.*Parser).g4$";
                     var any =
                         new Domemtech.Globbing.Glob()
                             .RegexContents(parser_grammars_pattern)
@@ -1635,6 +1635,7 @@ else
                         break;
                     }
                 }
+                parser_src_grammar_file_name = "Arithmetic.g4";
                 break;
             }
             parser_name = parser_src_grammar_file_name.Replace("Parser.g4", "").Replace(".g4", "") + "Parser";
@@ -1665,7 +1666,7 @@ else
                 }
                 {
                     var lexer_grammars_pattern =
-                        "^(.*|.*Lexer).g4$";
+                        "^(?!.*(Generated/|target/|examples/))(.*|.*Lexer).g4$";
                     var any =
                         new Domemtech.Globbing.Glob()
                             .RegexContents(lexer_grammars_pattern)
@@ -1678,6 +1679,7 @@ else
                         break;
                     }
                 }
+                lexer_src_grammar_file_name = "Arithmetic.g4";
                 break;
             }
 
@@ -1704,7 +1706,7 @@ else
                 };
             // lexer and parser are set if the grammar is partitioned.
             // rest is set if there are grammar is combined.
-            if (lexer_src_grammar_file_name == "" || parser_src_grammar_file_name == "")
+            if (lexer_src_grammar_file_name == "Arithmetic.g4" || parser_src_grammar_file_name == "Arithmetic.g4")
             {
                 // I have no clue what your grammars are.
                 lexer_name = "ArithmeticLexer";
@@ -1715,7 +1717,6 @@ else
                 lexer_grammar_file_name = "Arithmetic.g4";
                 parser_grammar_file_name = "Arithmetic.g4";
             }
-            return startRule;
         }
 
         static string Localize(EncodingType encoding, string code)
