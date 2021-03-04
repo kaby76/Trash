@@ -10,38 +10,38 @@
     using System.Xml;
     using System.Xml.XPath;
 
-    class Program
+    public class Program
     {
-        static string version = "2.2";
-        List<string> failed_modules = new List<string>();
-        IEnumerable<string> all_source_files = null;
-        EncodingType encoding = GetOperatingSystem();
-        bool antlr4cs = false;
-        TargetType target = TargetType.CSharp;
-        string @namespace = null;
-        string outputDirectory = "Generated/";
-        string target_directory;
-        string source_directory;
-        string root_directory;
-        string target_specific_src_directory;
-        HashSet<string> tool_grammar_files = null;
-        HashSet<string> tool_src_grammar_files = null;
-        List<string> generated_files = null;
-        List<string> additional_grammar_files = null;
-        bool profiling = false;
-        bool? case_fold = null;
-        string lexer_name = null;
-        string lexer_src_grammar_file_name = null;
-        string lexer_grammar_file_name = null;
-        string lexer_generated_file_name = null;
-        string parser_name = null;
-        string parser_src_grammar_file_name = null;
-        string parser_grammar_file_name = null;
-        string parser_generated_file_name = null;
-        string startRule;
-        string suffix;
-        private IEnumerable<string> skip_list;
-        bool maven = false;
+        public static string version = "2.2";
+        public List<string> failed_modules = new List<string>();
+        public IEnumerable<string> all_source_files = null;
+        public EncodingType encoding = GetOperatingSystem();
+        public bool antlr4cs = false;
+        public TargetType target = TargetType.CSharp;
+        public string @namespace = null;
+        public string outputDirectory = "Generated/";
+        public string target_directory;
+        public string source_directory;
+        public string root_directory;
+        public string target_specific_src_directory;
+        public HashSet<string> tool_grammar_files = null;
+        public HashSet<string> tool_src_grammar_files = null;
+        public List<string> generated_files = null;
+        public List<string> additional_grammar_files = null;
+        public bool profiling = false;
+        public bool? case_fold = null;
+        public string lexer_name = null;
+        public string lexer_src_grammar_file_name = null;
+        public string lexer_grammar_file_name = null;
+        public string lexer_generated_file_name = null;
+        public string parser_name = null;
+        public string parser_src_grammar_file_name = null;
+        public string parser_grammar_file_name = null;
+        public string parser_generated_file_name = null;
+        public string startRule;
+        public string suffix;
+        public IEnumerable<string> skip_list;
+        public bool maven = false;
 
         public enum TargetType
         {
@@ -84,7 +84,7 @@
             throw new Exception("Cannot determine operating system!");
         }
 
-        class Options
+        public class Options
         {
            // public Options() { }
 
@@ -140,7 +140,7 @@
             }
         }
 
-        void MainInternal(string[] args)
+        public void MainInternal(string[] args)
         {
             string tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
 
@@ -219,7 +219,7 @@
             }
         }
 
-        private void FollowPoms(string cd)
+        public void FollowPoms(string cd)
         {
             Environment.CurrentDirectory = cd;
             System.Console.Error.WriteLine(cd);
@@ -530,7 +530,7 @@
             }
         }
 
-        private void GenerateSingle(string cd)
+        public void GenerateSingle(string cd)
         {
             try
             {
@@ -574,15 +574,15 @@
                     .Select(f => f.FullName.Replace('\\','/').Replace(cd, ""))
                     .ToList();
 
-            AddSourceFiles();
-            AddBuildFile();
-            AddGrammars();
-            AddMain();
-            AddErrorListener();
+            AddSourceFiles.AddSource(this);
+            GenBuild.AddBuildFile(this);
+            GenGrammars.AddGrammars(this);
+            GenMain.AddMain(this);
+            GenListener.AddErrorListener(this);
             AddCaseFold();
         }
 
-        private void AddCaseFold()
+        public void AddCaseFold()
         {
             if (case_fold == null) return;
             StringBuilder sb = new StringBuilder();
@@ -732,23 +732,7 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        private void AddSourceFiles()
-        {
-            var cd = Environment.CurrentDirectory + "/";
-            var set = new HashSet<string>();
-            foreach (var path in all_source_files)
-            {
-                // Construct proper starting directory based on namespace.
-                var f = path.Replace('\\', '/');
-                var c = cd.Replace('\\', '/');
-                var e = f.Replace(c, "");
-                var m = Path.GetFileName(f);
-                var n = @namespace != null ? @namespace.Replace('.', '/') : "";
-                CopyFile(path, outputDirectory.Replace('\\', '/') + n + "/" + m);
-            }
-        }
-
-        private void CopyFile(string path, string v)
+        public void CopyFile(string path, string v)
         {
             path = path.Replace('\\', '/');
             v = v.Replace('\\', '/');
@@ -757,838 +741,7 @@ public class ErrorListener extends ConsoleErrorListener
             File.Copy(path, v, true);
         }
 
-        private void AddGrammars()
-        {
-            if (tool_src_grammar_files.Any() && tool_src_grammar_files.First() != "Arithmetic.g4")
-            {
-                if (target == TargetType.Java)
-                {
-                    var cd = Environment.CurrentDirectory + "/";
-                    var set = new HashSet<string>();
-                    foreach (var path in tool_src_grammar_files)
-                    {
-                        // Construct proper starting directory based on namespace.
-                        var f = path.Replace('\\', '/');
-                        var c = cd.Replace('\\', '/');
-                        var e = f.Replace(c, "");
-                        var m = Path.GetFileName(f);
-                        var n = (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + m;
-                        CopyFile(path, outputDirectory.Replace('\\', '/') + n);
-                    }
-                    foreach (var path in additional_grammar_files)
-                    {
-                        // Construct proper starting directory based on namespace.
-                        var f = path.Replace('\\', '/');
-                        var c = cd.Replace('\\', '/');
-                        var e = f.Replace(c, "");
-                        var m = Path.GetFileName(f);
-                        var n = (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + m;
-                        CopyFile(path, outputDirectory.Replace('\\', '/') + n);
-                    }
-                }
-                else
-                {
-                    foreach (var g in tool_src_grammar_files)
-                    {
-                        var i = System.IO.File.ReadAllText(g);
-                        var n = System.IO.Path.GetFileName(g);
-                        var fn = outputDirectory + n;
-                        System.IO.File.WriteAllText(fn, Localize(encoding, i));
-                    }
-                    foreach (var g in additional_grammar_files)
-                    {
-                        var i = System.IO.File.ReadAllText(g);
-                        var n = System.IO.Path.GetFileName(g);
-                        var fn = outputDirectory + n;
-                        System.IO.File.WriteAllText(fn, Localize(encoding, i));
-                    }
-                }
-            }
-            else
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append(@"
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
-
-grammar Arithmetic;
-
-file : expression (SEMI expression)* EOF;
-expression : expression POW expression | expression (TIMES | DIV) expression | expression (PLUS | MINUS) expression | LPAREN expression RPAREN | (PLUS | MINUS)* atom ;
-atom : scientific | variable ;
-scientific : SCIENTIFIC_NUMBER ;
-variable : VARIABLE ;
-
-VARIABLE : VALID_ID_START VALID_ID_CHAR* ;
-SCIENTIFIC_NUMBER : NUMBER (E SIGN? UNSIGNED_INTEGER)? ;
-LPAREN : '(' ;
-RPAREN : ')' ;
-PLUS : '+' ;
-MINUS : '-' ;
-TIMES : '*' ;
-DIV : '/' ;
-GT : '>' ;
-LT : '<' ;
-EQ : '=' ;
-POINT : '.' ;
-POW : '^' ;
-SEMI : ';' ;
-WS : [ \r\n\t] + -> channel(HIDDEN) ;
-
-fragment VALID_ID_START : ('a' .. 'z') | ('A' .. 'Z') | '_' ;
-fragment VALID_ID_CHAR : VALID_ID_START | ('0' .. '9') ;
-fragment NUMBER : ('0' .. '9') + ('.' ('0' .. '9') +)? ;
-fragment UNSIGNED_INTEGER : ('0' .. '9')+ ;
-fragment E : 'E' | 'e' ;
-fragment SIGN : ('+' | '-') ;
-");
-                var fn = outputDirectory + "Arithmetic.g4";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-        }
-
-        private void AddBuildFile()
-        {
-            StringBuilder sb = new StringBuilder();
-            if (target == TargetType.CSharp)
-            {
-                sb.AppendLine(@"<!-- Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @" -->
-<Project Sdk=""Microsoft.NET.Sdk"" >
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <OutputType>Exe</OutputType>
-  </PropertyGroup>
-  ");
-
-                if (!antlr4cs)
-                {
-                    sb.AppendLine("<ItemGroup>");
-                    if (tool_grammar_files != null && tool_grammar_files.Any())
-                    {
-                        foreach (var grammar in tool_grammar_files)
-                        {
-                            if (@namespace == null)
-                                sb.AppendLine("<Antlr4 Include=\"" + Path.GetFileName(grammar) + "\" />");
-                            else
-                            {
-                                sb.AppendLine("<Antlr4 Include=\"" + Path.GetFileName(grammar) + "\">");
-                                sb.AppendLine("<Package>" + @namespace + "</Package>");
-                                sb.AppendLine("</Antlr4>");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        sb.AppendLine(@"<Antlr4 Include=""Arithmetic.g4"" />");
-                    }
-                    sb.AppendLine("</ItemGroup>");
-                }
-
-                if (!antlr4cs)
-                {
-                    sb.AppendLine(@"
-  <ItemGroup>
-    <PackageReference Include=""Antlr4.Runtime.Standard"" Version =""4.9.1"" />
-    <PackageReference Include=""Antlr4BuildTasks"" Version = ""8.13"" PrivateAssets=""all"" />
-  </ItemGroup>");
-                }
-                else
-                {
-                    sb.AppendLine(@"
-  <ItemGroup>
-    <PackageReference Include=""Antlr4"" Version=""4.6.6"">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include=""Antlr4.Runtime"" Version=""4.6.6"" />
-  </ItemGroup>");
-                }
-                sb.AppendLine(@"
-  <PropertyGroup>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-  </PropertyGroup>
-  <PropertyGroup Condition=""'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"" >
-    <NoWarn>1701;1702;3021</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <!--
-      need the CData since this blob is just going to
-      be embedded in a mini batch file by studio/msbuild
-    -->
-    <MyTester><![CDATA[");
-                if (encoding == EncodingType.Windows)
-                {
-                    sb.AppendLine(@"
-set ERR=0
-for %%G in (..\examples\*) do (
-  setlocal EnableDelayedExpansion
-  set FILE=%%G
-  set X1=%%~xG
-  set X2=%%~nG
-  set X3=%%~pG
-  if !X1! neq .errors (
-    echo !FILE!
-    cat !FILE! | bin\Debug\net5.0\Test" + (encoding == EncodingType.Windows ? ".exe" : "") + @"
-    if not exist !FILE!.errors (
-      if ERRORLEVEL 1 set ERR=1
-    ) else (
-      echo Expected.
-    )
-  )
-)
-EXIT %ERR%
-");
-                }
-                else
-                {
-                    sb.AppendLine(@"
-err=0
-for g in ../examples/*
-do
-  file=$g
-  x1=""${g##*.}""
-  if [ ""$x1"" != ""errors"" ]
-  then
-    echo $file
-    cat $file | bin/Debug/net5.0/Test
-    status=""$?""
-    if [ -f ""$file"".errors ]
-    then
-      if [ ""$stat"" = ""0"" ]
-      then
-        echo Expected parse fail.
-        err=1
-      else
-        echo Expected.
-      fi
-    else
-      if [ ""$status"" != ""0"" ]
-      then
-        err=1
-      fi
-    fi
-  fi
-done
-exit $err
-");
-                }
-                sb.AppendLine(@"]]></MyTester>
-</PropertyGroup>
-
-  <Target Name=""Test"" >
-    <Message Text=""testing"" />
-    <Exec Command=""$(MyTester)"" >
-       <Output TaskParameter=""ExitCode"" PropertyName =""ErrorCode"" />
-    </Exec>
-    <Message Importance=""high"" Text=""$(ErrorCode)""/>
-  </Target>
-
-</Project>");
-                var fn = outputDirectory + "Test.csproj";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-            else if (target == TargetType.Java)
-            {
-                sb.AppendLine(@"
-# Generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
-# Makefile for " + String.Join(", ", tool_grammar_files) + @"
-
-JAR = ~/Downloads/antlr-4.9.1-complete.jar
-CLASSPATH = $(JAR)" + (encoding == EncodingType.Windows ? "\\;" : ":") + @".
-
-.SUFFIXES: .g4 .java .class
-
-.java.class:
-	javac -cp $(CLASSPATH) $*.java
-
-ANTLRGRAMMARS ?= $(wildcard *.g4)
-
-GENERATED = " + String.Join(" ", generated_files) + @"
-
-SOURCES = $(GENERATED) \
-    " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"Program.java \
-    " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"ErrorListener.java
-
-default: classes
-
-classes: $(GENERATED) $(SOURCES:.java=.class)
-
-clean:
-	rm -f " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"*.class
-	rm -f " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"*.interp
-	rm -f " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"*.tokens
-	rm -f $(GENERATED)
-
-run:
-	java -classpath $(CLASSPATH) " + (@namespace != null ? @namespace + "." : "") + @"Program $(RUNARGS)
-
-" + lexer_generated_file_name + " : " + lexer_grammar_file_name + @"
-	java -jar $(JAR) " + (@namespace != null ? " -package " + @namespace : "") + @" $<
-
-" + parser_generated_file_name + " : " + parser_grammar_file_name + @"
-	java -jar $(JAR) " + (@namespace != null ? " -package " + @namespace : "") + @" $<
-");
-                var fn = outputDirectory + "makefile";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-            else if (target == TargetType.JavaScript)
-            {
-                sb.AppendLine(@"
-# Generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
-# Makefile for " + String.Join(", ", tool_grammar_files) + @"
-
-JAR = ~/Downloads/antlr4-4.9.2-SNAPSHOT-complete.jar
-RT = ~/Downloads/antlr4-4.9.2-SNAPSHOT-runtime-js.zip
-
-CLASSPATH = $(JAR)" + (encoding == EncodingType.Windows ? "\\;" : ":") + @".
-
-.SUFFIXES: .g4 .js
-
-ANTLRGRAMMARS ?= $(wildcard *.g4)
-
-GENERATED = " + String.Join(" ", generated_files) + @"
-
-SOURCES = $(GENERATED) \
-    " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"index.js
-
-default: classes
-
-classes: $(SOURCES)
-	npm install
-	cd node_modules/antlr4; unzip -q -o $(RT)
-
-clean:
-	rm -rf node_modules
-	rm -f package-lock.json
-	rm -f " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"*.interp
-	rm -f " + (@namespace != null ? @namespace.Replace('.', '/') + '/' : "") + @"*.tokens
-	rm -f $(GENERATED)
-
-run:
-	node index.js $(RUNARGS)
-
-" + lexer_generated_file_name + " : " + lexer_grammar_file_name + @"
-	java -jar $(JAR) -Dlanguage=JavaScript " + (@namespace != null ? " -package " + @namespace : "") + @" $<
-
-" + parser_generated_file_name + " : " + parser_grammar_file_name + @"
-	java -jar $(JAR) -Dlanguage=JavaScript " + (@namespace != null ? " -package " + @namespace : "") + @" $<
-");
-                var fn = outputDirectory + "makefile";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-                sb = new StringBuilder();
-                sb.AppendLine(@"
-{
-  ""name"": ""i"",
-  ""version"": ""1.0.0"",
-  ""description"": """",
-  ""main"": ""index.js"",
-  ""scripts"": {
-    ""test"": ""echo \""Error: no test specified\"" && exit 1""
-  },
-  ""author"": """",
-  ""license"": ""ISC"",
-  ""dependencies"": {
-    ""antlr4"": ""^4.9.1"",
-    ""fs-extra"": ""^9.1.0"",
-    ""typescript-string-operations"": ""^1.4.1""
-  },
-  ""type"": ""module""
-}
-");
-                fn = outputDirectory + "package.json";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-        }
-
-        private void AddErrorListener()
-        {
-            StringBuilder sb = new StringBuilder();
-            if (target == TargetType.CSharp && !antlr4cs)
-            {
-                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
-                if (@namespace != null) sb.AppendLine("namespace " + @namespace + @"
-{");
-                sb.Append(@"
-using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-public class ErrorListener<S> : ConsoleErrorListener<S>
-{
-    public bool had_error;
-
-    public override void SyntaxError(TextWriter output, IRecognizer recognizer, S offendingSymbol, int line,
-        int col, string msg, RecognitionException e)
-    {
-        had_error = true;
-        base.SyntaxError(output, recognizer, offendingSymbol, line, col, msg, e);
-    }
-}
-");
-                if (@namespace != null) sb.AppendLine("}");
-                string fn = outputDirectory + "ErrorListener.cs";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-            else if (target == TargetType.Java)
-            {
-                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
-                if (@namespace != null) sb.AppendLine("package " + @namespace + @";");
-                sb.Append(@"
-import org.antlr.v4.runtime.*;
-
-public class ErrorListener extends ConsoleErrorListener
-{
-    public boolean had_error = false;
-    
-    @Override
-    public void syntaxError(Recognizer<?, ?> recognizer,
-        Object offendingSymbol,
-        int line,
-        int charPositionInLine,
-        String msg,
-        RecognitionException e)
-    {
-        had_error = true;
-        super.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
-    }
-}
-");
-                // Java code has to go into the directory corresponding to the namespace.
-                // Test to find an appropriate file name to place this into.
-                var p = @namespace != null ? @namespace.Replace(".", "/") + "/" : "";
-                string fn = outputDirectory + p + "ErrorListener.java";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-            else if (target == TargetType.JavaScript)
-            {
-            }
-        }
-
-        private void AddMain()
-        {
-            StringBuilder sb = new StringBuilder();
-            if (target == TargetType.CSharp)
-            {
-                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
-                if (@namespace != null) sb.AppendLine("namespace " + @namespace + @"
-{");
-                sb.Append(@"
-using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
-using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Runtime.CompilerServices;
-
-public class Program
-{
-    public static Parser Parser { get; set; }
-    public static Lexer Lexer { get; set; }
-    public static ITokenStream TokenStream { get; set; }
-    public static IParseTree Tree { get; set; }
-    public static IParseTree Parse(string input)
-    {
-        var str = new AntlrInputStream(input);
-        var lexer = new ");
-            sb.Append(lexer_name);
-            sb.Append(@"(str);
-        Lexer = lexer;
-        var tokens = new CommonTokenStream(lexer);
-        TokenStream = tokens;
-        var parser = new ");
-            sb.Append(parser_name);
-            sb.Append(@"(tokens);
-        Parser = parser;
-        var tree = parser." + startRule);
-            sb.AppendLine(@"();
-        Tree = tree;
-        return tree;
-    }
-
-    static void Main(string[] args)
-    {
-        bool show_tree = false;
-        bool show_tokens = false;
-        string file_name = null;
-        string input = null;
-        for (int i = 0; i < args.Length; ++i)
-        {
-            if (args[i].Equals(""-tokens""))
-            {
-                show_tokens = true;
-                continue;
-            }
-            else if (args[i].Equals(""-tree""))
-            {
-                show_tree = true;
-                continue;
-            }
-            else if (args[i].Equals(""-input""))
-                input = args[++i];
-            else if (args[i].Equals(""-file""))
-                file_name = args[++i];
-        }
-        ICharStream str = null;
-        if (input == null && file_name == null)
-        {
-            StringBuilder sb = new StringBuilder();
-            int ch;
-            while ((ch = System.Console.Read()) != -1)
-            {
-                sb.Append((char)ch);
-            }
-            input = sb.ToString();
-            ");
-                if (!antlr4cs)
-                    sb.Append(
-            @"str = CharStreams.fromString(input);");
-                else
-                    sb.Append(
-            @"str = new Antlr4.Runtime.AntlrInputStream(
-                    new MemoryStream(Encoding.UTF8.GetBytes(input ?? """")));");
-                sb.Append(@"
-        } else if (input != null)
-        {
-            ");
-                if (!antlr4cs)
-                    sb.Append(
-            @"str = CharStreams.fromString(input);");
-                else
-                    sb.Append(
-            @"str = new Antlr4.Runtime.AntlrInputStream(
-                    new MemoryStream(Encoding.UTF8.GetBytes(input ?? """")));");
-                sb.Append(@"
-        } else if (file_name != null)
-        {
-            ");
-                if (!antlr4cs)
-                    sb.Append(
-            @"str = CharStreams.fromPath(file_name);");
-                else
-                    sb.Append(
-            @"FileStream fs = new FileStream(file_name, FileMode.Open);
-                str = new Antlr4.Runtime.AntlrInputStream(fs);");
-                sb.Append(@"
-        }
-        ");
-                if (case_fold != null)
-                {
-                    sb.Append(@"str = new CaseChangingCharStream(str, "
-                        + ((bool)case_fold ? "true" : "false") + @");
-        ");
-                }
-                sb.Append(@"var lexer = new " + lexer_name + @"(str);
-        if (show_tokens)
-        {
-            StringBuilder new_s = new StringBuilder();
-            for (int i = 0; ; ++i)
-            {
-                var ro_token = lexer.NextToken();
-                var token = (CommonToken)ro_token;
-                token.TokenIndex = i;
-                new_s.AppendLine(token.ToString());
-                if (token.Type == Antlr4.Runtime.TokenConstants." + (antlr4cs ? "Eof" : "EOF") + @")
-                    break;
-            }
-            System.Console.Error.WriteLine(new_s.ToString());
-            lexer.Reset();
-        }
-        var tokens = new CommonTokenStream(lexer);
-        var parser = new " + parser_name + @"(tokens);
-        ");
-                if (!antlr4cs)
-                {
-                    sb.Append(@"var listener_lexer = new ErrorListener<int>();
-        var listener_parser = new ErrorListener<IToken>();
-        lexer.AddErrorListener(listener_lexer);
-        parser.AddErrorListener(listener_parser);");
-                    if (profiling)
-                    {
-                        sb.Append(@"
-        parser.Profile = true;");
-                    }
-                    sb.Append(@"
-        var tree = parser." + startRule + @"();
-        if (listener_lexer.had_error || listener_parser.had_error)
-        {
-            System.Console.Error.WriteLine(""parse failed."");
-        }
-        else
-        {
-            System.Console.Error.WriteLine(""parse succeeded."");
-        }
-        if (show_tree)
-        {
-            System.Console.Error.WriteLine(tree.ToStringTree(parser));
-        }");
-                    if (profiling)
-                    {
-                        sb.Append(@"System.Console.Out.WriteLine(String.Join("", "", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
-        ");
-                    }
-                    sb.Append(@"
-        System.Environment.Exit(listener_lexer.had_error || listener_parser.had_error ? 1 : 0);");
-                }
-                else
-                {
-                    if (profiling)
-                    {
-                        sb.Append(@"
-        parser.Profile = true;");
-                    }
-                    sb.Append(@"
-        var tree = parser." + startRule + @"();
-        if (parser.NumberOfSyntaxErrors != 0)
-        {
-            System.Console.Error.WriteLine(""parse failed."");
-        }
-        else
-        {
-            System.Console.Error.WriteLine(""parse succeeded."");
-        }
-        if (show_tree)
-        {
-            System.Console.Error.WriteLine(tree.ToStringTree(parser));
-        }
-");
-                    if (profiling)
-                    {
-                        sb.Append(@"System.Console.Out.WriteLine(String.Join("", "", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
-        ");
-                    }
-                    sb.Append(@"
-        System.Environment.Exit(parser.NumberOfSyntaxErrors != 0 ? 1 : 0);");
-                }
-                sb.Append(@"
-    }
-}
-");
-                if (@namespace != null) sb.AppendLine("}");
-                // Test to find an appropriate file name to place this into.
-                string fn = outputDirectory + "Program.cs";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-            else if (target == TargetType.Java)
-            {
-                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
-                if (@namespace != null) sb.AppendLine("package " + @namespace + @";");
-                sb.Append(@"
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTree;
-
-public class Program {
-    public static void main(String[] args) throws  FileNotFoundException, IOException
-    {
-        boolean show_tree = false;
-        boolean show_tokens = false;
-        String file_name = null;
-        String input = null;
-        for (int i = 0; i < args.length; ++i)
-        {
-            if (args[i].equals(""-tokens""))
-            {
-                show_tokens = true;
-                continue;
-            }
-            else if (args[i].equals(""-tree""))
-            {
-                show_tree = true;
-                continue;
-            }
-            else if (args[i].equals(""-input""))
-                input = args[++i];
-            else if (args[i].equals(""-file""))
-                file_name = args[++i];
-        }
-        CharStream str = null;
-        if (input == null && file_name == null)
-        {
-            str = CharStreams.fromStream(System.in);
-        } else if (input != null)
-        {
-            str = CharStreams.fromString(input);
-        } else if (file_name != null)
-        {
-            str = CharStreams.fromFileName(file_name);
-        }
-        " + lexer_name + " lexer = new " + lexer_name + @"(str);
-        if (show_tokens)
-        {
-            StringBuilder new_s = new StringBuilder();
-            for (int i = 0; ; ++i)
-            {
-                var ro_token = lexer.nextToken();
-                var token = (CommonToken)ro_token;
-                token.setTokenIndex(i);
-                new_s.append(token.toString());
-                new_s.append(System.getProperty(""line.separator""));
-                if (token.getType() == IntStream.EOF)
-                    break;
-            }
-            System.out.println(new_s.toString());
-            lexer.reset();
-        }
-        var tokens = new CommonTokenStream(lexer);
-        " + parser_name + " parser = new " + parser_name + @"(tokens);
-        ErrorListener lexer_listener = new ErrorListener();
-        ErrorListener listener = new ErrorListener();
-        parser.removeParseListeners();
-        parser.addErrorListener(listener);
-        lexer.addErrorListener(lexer_listener);");
-                if (profiling)
-                {
-                    sb.Append(@"
-        parser.setProfile(true);");
-                }
-                sb.Append(@"
-        ParseTree tree = parser." + startRule + @"();
-        if (listener.had_error || lexer_listener.had_error)
-            System.out.println(""error in parse."");
-        else
-            System.out.println(""parse completed."");
-        if (show_tree)
-        {
-            System.out.println(tree.toStringTree());
-        }
-        ");
-                if (profiling)
-                {
-                    sb.Append(@"System.out.print(string.join("", "", parser.getParseInfo().getDecisionInfo())));
-        ");
-                }
-                sb.Append(@"java.lang.System.exit(listener.had_error || lexer_listener.had_error ? 1 : 0);
-    }
-}
-");
-
-                // Java code has to go into the directory corresponding to the namespace.
-                // Test to find an appropriate file name to place this into.
-                var p = @namespace != null ? @namespace.Replace(".", "/") + "/" : "";
-                string fn = outputDirectory + p + "Program.java";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-            else if (target == TargetType.JavaScript)
-            {
-                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
-                sb.Append(@"
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const antlr4 = require('antlr4');
-import " + lexer_name + @" from './" + lexer_name + @".js';
-import " + parser_name + @" from './" + parser_name + @".js';
-const strops = require('typescript-string-operations');
-let fs = require('fs-extra')
-
-function getChar() {
-	let buffer = Buffer.alloc(1);
-	var xx = fs.readSync(0, buffer, 0, 1);
-	if (xx === 0) {
-		return '';
-	}
-    return buffer.toString('utf8');
-}
-
-class MyErrorListener extends antlr4.error.ErrorListener {
-	syntaxError(recognizer, offendingSymbol, line, column, msg, err) {
-		num_errors++;
-		console.error(`${offendingSymbol} line ${line}, col ${column}: ${msg}`);
-	}
-}
-
-var show_tokens = false;
-var show_tree = false;
-var input = null;
-var file_name = null;
-for (let i = 2; i < process.argv.length; ++i)
-{
-    switch (process.argv[i]) {
-        case '-tokens':
-            var show_tokens = true;
-            break;
-        case '-tree':
-            var show_tree = true;
-            break;
-        case '-input':
-            var input = process.argv[++i];
-            break;
-        case '-file':
-            var file_name = process.argv[++i];
-            break;
-        default:
-            console.log('unknown '.concat(process.argv[i]));
-    }
-}
-var str = null;
-if (input == null && file_name == null)
-{
-    var sb = new strops.StringBuilder();
-    var ch;
-    while ((ch = getChar()) != '')
-    {
-        sb.Append(ch);
-    }
-    var input = sb.ToString();
-    str = antlr4.CharStreams.fromString(input);
-} else if (input != null)
-{
-    str = antlr4.CharStreams.fromString(input);
-} else if (file_name != null)
-{
-    str = antlr4.CharStreams.fromPathSync(file_name, 'utf8');
-}
-var num_errors = 0;
-const lexer = new " + lexer_name + @"(str);
-lexer.strictMode = false;
-const tokens = new antlr4.CommonTokenStream(lexer);
-const parser = new " + parser_name + @"(tokens);
-lexer.removeErrorListeners();
-parser.removeErrorListeners();
-parser.addErrorListener(new MyErrorListener());
-lexer.addErrorListener(new MyErrorListener());
-if (show_tokens)
-{
-    for (var i = 0; ; ++i)
-    {
-        var ro_token = lexer.nextToken();
-        var token = ro_token;
-        token.TokenIndex = i;
-        console.log(token.toString());
-        if (token.type === antlr4.Token.EOF)
-            break;
-    }
-    lexer.reset();
-}
-const tree = parser." + startRule + @"();
-if (show_tree)
-{
-    console.log(tree.toStringTree(parser.ruleNames));
-}
-if (num_errors > 0)
-{
-    console.log('error in parse.');
-    process.exitCode = 1;
-}
-else
-{
-    console.log('parse completed.');
-    process.exitCode = 0;
-}
-");
-
-                // Test to find an appropriate file name to place this into.
-                string fn = outputDirectory + "index.js";
-                System.IO.File.WriteAllText(fn, Localize(encoding, sb.ToString()));
-            }
-        }
-
-        private void GeneratedNames()
+        public void GeneratedNames()
         {
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             lexer_name = "";
@@ -1711,7 +864,7 @@ else
                 // I have no clue what your grammars are.
                 lexer_name = "ArithmeticLexer";
                 parser_name = "ArithmeticParser";
-                startRule = "file";
+                startRule = "file_";
                 lexer_generated_file_name = "ArithmeticLexer" + suffix;
                 parser_generated_file_name = "ArithmeticParser" + suffix;
                 lexer_grammar_file_name = "Arithmetic.g4";
@@ -1719,7 +872,7 @@ else
             }
         }
 
-        static string Localize(EncodingType encoding, string code)
+        public static string Localize(EncodingType encoding, string code)
         {
             var is_win = code.Contains("\r\n");
             var is_mac = code.Contains("\n\r");
