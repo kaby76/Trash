@@ -886,16 +886,13 @@ public class ErrorListener extends ConsoleErrorListener
                     }
                 }
                 parser_src_grammar_file_name = "Arithmetic.g4";
-                if (target == TargetType.Dart) parser_src_grammar_file_name = "lib/" + parser_src_grammar_file_name;
                 startRule = "file_";
                 use_arithmetic = true;
                 break;
             }
             parser_name = Path.GetFileName(parser_src_grammar_file_name).Replace("Parser.g4", "").Replace(".g4", "") + "Parser";
             parser_grammar_file_name = Path.GetFileName(parser_src_grammar_file_name);
-            if (target == TargetType.Dart) parser_grammar_file_name = "lib/" + parser_grammar_file_name;
             parser_generated_file_name = parser_name + suffix;
-            if (target == TargetType.Dart) parser_generated_file_name = "lib/" + parser_generated_file_name;
 
             for (; ; )
             {
@@ -933,7 +930,6 @@ public class ErrorListener extends ConsoleErrorListener
                     }
                 }
                 lexer_src_grammar_file_name = "Arithmetic.g4";
-                if (target == TargetType.Dart) lexer_src_grammar_file_name = "lib/" + lexer_src_grammar_file_name;
                 startRule = "file_";
                 use_arithmetic = true;
                 break;
@@ -941,9 +937,7 @@ public class ErrorListener extends ConsoleErrorListener
 
             lexer_name = Path.GetFileName(lexer_src_grammar_file_name).Replace("Lexer.g4", "").Replace(".g4", "") + "Lexer";
             lexer_grammar_file_name = Path.GetFileName(lexer_src_grammar_file_name);
-            if (target == TargetType.Dart) lexer_grammar_file_name = "lib/" + lexer_grammar_file_name;
             lexer_generated_file_name = lexer_name + suffix;
-            if (target == TargetType.Dart) lexer_generated_file_name = "lib/" + lexer_generated_file_name;
             if (!use_arithmetic)
                 tool_src_grammar_files = new HashSet<string>()
                     {

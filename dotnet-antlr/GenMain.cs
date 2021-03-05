@@ -530,13 +530,11 @@ if __name__ == '__main__':
             }
             else if (p.target == Program.TargetType.Dart)
             {
-                try { Directory.CreateDirectory(p.outputDirectory + "bin"); }
-                catch (Exception) { throw; }
                 sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version);
                 sb.Append(@"
 import 'package:antlr4/antlr4.dart';
-import 'package:cli/" + p.parser_name + @".dart';
-import 'package:cli/" + p.lexer_name + @".dart';
+import '" + p.parser_generated_file_name + @"';
+import '" + p.lexer_generated_file_name + @"';
 import 'dart:io';
 import 'dart:convert';
 
@@ -618,7 +616,7 @@ void main(List<String> args) async {
 ");
 
                 // Test to find an appropriate file name to place this into.
-                string fn = p.outputDirectory + "bin/cli.dart";
+                string fn = p.outputDirectory + "cli.dart";
                 System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
         }

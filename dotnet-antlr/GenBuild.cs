@@ -303,9 +303,6 @@ run:
             }
             else if (p.target == Program.TargetType.Dart)
             {
-                try { Directory.CreateDirectory(p.outputDirectory + "lib"); }
-                catch (Exception) { throw; }
-
                 sb = new StringBuilder();
                 sb.AppendLine(@"
 include: package:pedantic/analysis_options.yaml
@@ -347,20 +344,20 @@ CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? 
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 GENERATED = " + String.Join(" ", p.generated_files) + @"
 SOURCES = $(GENERATED) \
-    bin/" + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"cli.dart
+    " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"cli.dart
 default: classes
 classes: $(SOURCES)
 	dart pub get
 clean:
-	rm -f lib/*.tokens lib/*.interp
+	rm -f *.tokens *.interp
 	rm -f $(GENERATED)
 	rm -f pubspec.lock
 run:
-	dart run bin/cli.dart $(RUNARGS)
+	dart run cli.dart $(RUNARGS)
 " + p.lexer_generated_file_name + " : " + p.lexer_grammar_file_name + @"
-	java -jar $(JAR) -Dlanguage=Dart -o lib " + (p.@namespace != null ? "-package " + p.@namespace : "") + @" $<
+	java -jar $(JAR) -Dlanguage=Dart " + (p.@namespace != null ? "-package " + p.@namespace : "") + @" $<
 " + p.parser_generated_file_name + " : " + p.parser_grammar_file_name + @"
-	java -jar $(JAR) -Dlanguage=Dart -o lib " + (p.@namespace != null ? "-package " + p.@namespace : "") + @" $<
+	java -jar $(JAR) -Dlanguage=Dart " + (p.@namespace != null ? "-package " + p.@namespace : "") + @" $<
 ");
                 fn = p.outputDirectory + "makefile";
                 System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
