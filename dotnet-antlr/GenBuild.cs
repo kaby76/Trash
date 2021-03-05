@@ -311,7 +311,7 @@ dev_dependencies:
 ");
                 fn = p.outputDirectory + "pubspec.yaml";
                 System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
-                
+
                 sb = new StringBuilder();
                 sb.AppendLine(@"
 # Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
@@ -338,6 +338,39 @@ run:
 	java -jar $(JAR) -Dlanguage=Dart " + (p.@namespace != null ? "-package " + p.@namespace : "") + @" $<
 ");
                 fn = p.outputDirectory + "makefile";
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
+            }
+            else if (p.target == Program.TargetType.Go)
+            {
+                sb = new StringBuilder();
+                sb.AppendLine(@"
+# Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
+# Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
+JAR = " + p.antlr_tool_path + @"
+CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
+.SUFFIXES: .g4 .go
+ANTLRGRAMMARS ?= $(wildcard *.g4)
+GENERATED = " + String.Join(" ", p.generated_files) + @"
+SOURCES = $(GENERATED) \
+    " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"Program.go
+default: classes
+classes: $(SOURCES)
+	@if [ ""$(GOPATH)"" = """" ]; then echo ""GOPATH must be defined, usually c:/users/youruserid/.""; exit 1; fi
+	@if [ ""$(GO111MODULE)"" = """" ]; then echo ""GO111MODULE must be defined, usually GO111MODULE=auto.""; exit 1; fi
+	go get github.com/antlr/antlr4/runtime/Go/antlr
+clean:
+	rm -f *.tokens *.interp
+	rm -f $(GENERATED)
+run:
+	go run Program.go $(RUNARGS)
+" + p.lexer_generated_file_name + " : " + p.lexer_grammar_file_name + @"
+	-mkdir parser
+	java -jar $(JAR) -Dlanguage=Go -o parser " + (p.@namespace != null ? "-package " + p.@namespace : "") + @" $<
+" + p.parser_generated_file_name + " : " + p.parser_grammar_file_name + @"
+	-mkdir parser
+	java -jar $(JAR) -Dlanguage=Go -o parser " + (p.@namespace != null ? "-package " + p.@namespace : "") + @" $<
+");
+                var fn = p.outputDirectory + "makefile";
                 System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
         }
