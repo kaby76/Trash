@@ -147,45 +147,49 @@ exit $err
 </Project>");
                 var fn = p.outputDirectory + "Test.csproj";
                 System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
+                
+                sb = new StringBuilder();
+                sb.AppendLine(@"
+# Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
+GENERATED = " + String.Join(" ", p.generated_files) + @"
+default:
+	dotnet restore
+	dotnet build
+run:
+	dotnet run $(RUNARGS)
+clean:
+	dotnet clean
+	rm -rf bin obj
+");
+                fn = p.outputDirectory + "makefile";
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
             else if (p.target == Program.TargetType.Java)
             {
                 sb.AppendLine(@"
 # Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
 # Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
-
-JAR = ~/Downloads/antlr-4.9.1-complete.jar
+JAR = " + p.antlr_tool_path + @"
 CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
-
 .SUFFIXES: .g4 .java .class
-
 .java.class:
 	javac -cp $(CLASSPATH) $*.java
-
 ANTLRGRAMMARS ?= $(wildcard *.g4)
-
 GENERATED = " + String.Join(" ", p.generated_files) + @"
-
 SOURCES = $(GENERATED) \
     " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"Program.java \
     " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"ErrorListener.java
-
 default: classes
-
 classes: $(GENERATED) $(SOURCES:.java=.class)
-
 clean:
 	rm -f " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"*.class
 	rm -f " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"*.interp
 	rm -f " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"*.tokens
 	rm -f $(GENERATED)
-
 run:
 	java -classpath $(CLASSPATH) " + (p.@namespace != null ? p.@namespace + "." : "") + @"Program $(RUNARGS)
-
 " + p.lexer_generated_file_name + " : " + p.lexer_grammar_file_name + @"
 	java -jar $(JAR) " + (p.@namespace != null ? " -package " + p.@namespace : "") + @" $<
-
 " + p.parser_generated_file_name + " : " + p.parser_grammar_file_name + @"
 	java -jar $(JAR) " + (p.@namespace != null ? " -package " + p.@namespace : "") + @" $<
 ");
@@ -195,42 +199,27 @@ run:
             else if (p.target == Program.TargetType.JavaScript)
             {
                 sb.AppendLine(@"
-# Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
 # Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
-
-JAR = ~/Downloads/antlr4-4.9.2-SNAPSHOT-complete.jar
-RT = ~/Downloads/antlr4-4.9.2-SNAPSHOT-runtime-js.zip
-
+JAR = " + p.antlr_tool_path + @"
 CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
-
 .SUFFIXES: .g4 .js
-
 ANTLRGRAMMARS ?= $(wildcard *.g4)
-
 GENERATED = " + String.Join(" ", p.generated_files) + @"
-
 SOURCES = $(GENERATED) \
     " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"index.js
-
 default: classes
-
 classes: $(SOURCES)
 	npm install
-	cd node_modules/antlr4; unzip -q -o $(RT)
-
 clean:
 	rm -rf node_modules
 	rm -f package-lock.json
 	rm -f " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"*.interp
 	rm -f " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"*.tokens
 	rm -f $(GENERATED)
-
 run:
 	node index.js $(RUNARGS)
-
 " + p.lexer_generated_file_name + " : " + p.lexer_grammar_file_name + @"
 	java -jar $(JAR) -Dlanguage=JavaScript " + (p.@namespace != null ? " -package " + p.@namespace : "") + @" $<
-
 " + p.parser_generated_file_name + " : " + p.parser_grammar_file_name + @"
 	java -jar $(JAR) -Dlanguage=JavaScript " + (p.@namespace != null ? " -package " + p.@namespace : "") + @" $<
 ");
@@ -264,37 +253,26 @@ run:
                 sb.AppendLine(@"
 # Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
 # Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
-
-JAR = ~/Downloads/antlr-4.9.1-complete.jar
+JAR = " + p.antlr_tool_path + @"
 CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
-
 .SUFFIXES: .g4 .py
-
 ANTLRGRAMMARS ?= $(wildcard *.g4)
-
 GENERATED = " + String.Join(" ", p.generated_files) + @"
-
 SOURCES = $(GENERATED) \
     " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"Program.py
-
 default: classes
-
 classes: $(SOURCES)
 	pip install antlr4-python3-runtime
 	pip install readchar
-
 clean:
 	rm -f *.tokens *.interp
 	rm -f " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"*.interp
 	rm -f " + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"*.tokens
 	rm -f $(GENERATED)
-
 run:
 	python Program.py $(RUNARGS)
-
 " + p.lexer_generated_file_name + " : " + p.lexer_grammar_file_name + @"
 	java -jar $(JAR) -Dlanguage=Python3 " + (p.@namespace != null ? " -package " + p.@namespace : "") + @" $<
-
 " + p.parser_generated_file_name + " : " + p.parser_grammar_file_name + @"
 	java -jar $(JAR) -Dlanguage=Python3 " + (p.@namespace != null ? " -package " + p.@namespace : "") + @" $<
 ");

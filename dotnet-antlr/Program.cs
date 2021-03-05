@@ -20,6 +20,7 @@
         public EnvType env_type;
         public PathType path_type;
         public string antlr_tool_path;
+        public string antlr_runtime_path;
         public bool antlr4cs = false;
         public TargetType target = TargetType.CSharp;
         public string @namespace = null;

@@ -294,7 +294,7 @@ public class Program {
             System.out.println(""parse completed."");
         if (show_tree)
         {
-            System.out.println(tree.toStringTree());
+            System.out.println(tree.toStringTree(parser));
         }
         ");
                 if (p.profiling)
