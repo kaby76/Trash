@@ -77,7 +77,7 @@ namespace dotnet_antlr
       be embedded in a mini batch file by studio/msbuild
     -->
     <MyTester><![CDATA[");
-                if (p.encoding == Program.EncodingType.Windows)
+                if (p.env_type == Program.EnvType.Windows)
                 {
                     sb.AppendLine(@"
 set ERR=0
@@ -89,7 +89,7 @@ for %%G in (..\examples\*) do (
   set X3=%%~pG
   if !X1! neq .errors (
     echo !FILE!
-    cat !FILE! | bin\Debug\net5.0\Test" + (p.encoding == Program.EncodingType.Windows ? ".exe" : "") + @"
+    cat !FILE! | bin\Debug\net5.0\Test.exe
     if not exist !FILE!.errors (
       if ERRORLEVEL 1 set ERR=1
     ) else (
@@ -146,7 +146,7 @@ exit $err
 
 </Project>");
                 var fn = p.outputDirectory + "Test.csproj";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
             else if (p.target == Program.TargetType.Java)
             {
@@ -155,7 +155,7 @@ exit $err
 # Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
 
 JAR = ~/Downloads/antlr-4.9.1-complete.jar
-CLASSPATH = $(JAR)" + (p.encoding == Program.EncodingType.Windows ? "\\;" : ":") + @".
+CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
 
 .SUFFIXES: .g4 .java .class
 
@@ -190,7 +190,7 @@ run:
 	java -jar $(JAR) " + (p.@namespace != null ? " -package " + p.@namespace : "") + @" $<
 ");
                 var fn = p.outputDirectory + "makefile";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
             else if (p.target == Program.TargetType.JavaScript)
             {
@@ -201,7 +201,7 @@ run:
 JAR = ~/Downloads/antlr4-4.9.2-SNAPSHOT-complete.jar
 RT = ~/Downloads/antlr4-4.9.2-SNAPSHOT-runtime-js.zip
 
-CLASSPATH = $(JAR)" + (p.encoding == Program.EncodingType.Windows ? "\\;" : ":") + @".
+CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
 
 .SUFFIXES: .g4 .js
 
@@ -235,7 +235,7 @@ run:
 	java -jar $(JAR) -Dlanguage=JavaScript " + (p.@namespace != null ? " -package " + p.@namespace : "") + @" $<
 ");
                 var fn = p.outputDirectory + "makefile";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
                 sb = new StringBuilder();
                 sb.AppendLine(@"
 {
@@ -257,7 +257,7 @@ run:
 }
 ");
                 fn = p.outputDirectory + "package.json";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
             else if (p.target == Program.TargetType.Python3)
             {
@@ -266,7 +266,7 @@ run:
 # Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
 
 JAR = ~/Downloads/antlr-4.9.1-complete.jar
-CLASSPATH = $(JAR)" + (p.encoding == Program.EncodingType.Windows ? "\\;" : ":") + @".
+CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
 
 .SUFFIXES: .g4 .py
 
@@ -299,7 +299,71 @@ run:
 	java -jar $(JAR) -Dlanguage=Python3 " + (p.@namespace != null ? " -package " + p.@namespace : "") + @" $<
 ");
                 var fn = p.outputDirectory + "makefile";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
+            }
+            else if (p.target == Program.TargetType.Dart)
+            {
+                try { Directory.CreateDirectory(p.outputDirectory + "lib"); }
+                catch (Exception) { throw; }
+
+                sb = new StringBuilder();
+                sb.AppendLine(@"
+include: package:pedantic/analysis_options.yaml
+analyzer:
+");
+                var fn = p.outputDirectory + "analysis_options.yaml";
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
+
+                sb = new StringBuilder();
+                sb.AppendLine(@"
+name: cli
+description: A sample command-line application.
+# version: 1.0.0
+# homepage: https://www.example.com
+
+environment:
+  sdk: '>=2.8.1 <3.0.0'
+
+#dependencies:
+#  path: ^1.7.0
+dependencies:
+  antlr4: 4.9.1
+
+dev_dependencies:
+  pedantic: ^1.9.0
+  test: ^1.14.4
+
+");
+                fn = p.outputDirectory + "pubspec.yaml";
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
+                
+                sb = new StringBuilder();
+                sb.AppendLine(@"
+# Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
+# Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
+JAR = " + p.antlr_tool_path + @"
+CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
+.SUFFIXES: .g4 .dart
+ANTLRGRAMMARS ?= $(wildcard *.g4)
+GENERATED = " + String.Join(" ", p.generated_files) + @"
+SOURCES = $(GENERATED) \
+    bin/" + (p.@namespace != null ? p.@namespace.Replace('.', '/') + '/' : "") + @"cli.dart
+default: classes
+classes: $(SOURCES)
+	dart pub get
+clean:
+	rm -f lib/*.tokens lib/*.interp
+	rm -f $(GENERATED)
+	rm -f pubspec.lock
+run:
+	dart run bin/cli.dart $(RUNARGS)
+" + p.lexer_generated_file_name + " : " + p.lexer_grammar_file_name + @"
+	java -jar $(JAR) -Dlanguage=Dart -o lib " + (p.@namespace != null ? "-package " + p.@namespace : "") + @" $<
+" + p.parser_generated_file_name + " : " + p.parser_grammar_file_name + @"
+	java -jar $(JAR) -Dlanguage=Dart -o lib " + (p.@namespace != null ? "-package " + p.@namespace : "") + @" $<
+");
+                fn = p.outputDirectory + "makefile";
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
         }
     }

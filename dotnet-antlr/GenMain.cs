@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.IO;
+using System.Text;
 
 namespace dotnet_antlr
 {
@@ -207,7 +209,7 @@ public class Program
                 if (p.@namespace != null) sb.AppendLine("}");
                 // Test to find an appropriate file name to place this into.
                 string fn = p.outputDirectory + "Program.cs";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
             else if (p.target == Program.TargetType.Java)
             {
@@ -309,7 +311,7 @@ public class Program {
                 // Test to find an appropriate file name to place this into.
                 var q = p.@namespace != null ? p.@namespace.Replace(".", "/") + "/" : "";
                 string fn = p.outputDirectory + q + "Program.java";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
             else if (p.target == Program.TargetType.JavaScript)
             {
@@ -421,7 +423,7 @@ else
 
                 // Test to find an appropriate file name to place this into.
                 string fn = p.outputDirectory + "index.js";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
             else if (p.target == Program.TargetType.Python3)
             {
@@ -524,7 +526,100 @@ if __name__ == '__main__':
 
                 // Test to find an appropriate file name to place this into.
                 string fn = p.outputDirectory + "Program.py";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
+            }
+            else if (p.target == Program.TargetType.Dart)
+            {
+                try { Directory.CreateDirectory(p.outputDirectory + "bin"); }
+                catch (Exception) { throw; }
+                sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version);
+                sb.Append(@"
+import 'package:antlr4/antlr4.dart';
+import 'package:cli/" + p.parser_name + @".dart';
+import 'package:cli/" + p.lexer_name + @".dart';
+import 'dart:io';
+import 'dart:convert';
+
+void main(List<String> args) async {
+    var show_tree = false;
+    var show_tokens = false;
+    var file_name = null;
+    var input = null;
+    var str = null;
+    for (int i = 0; i < args.length; ++i)
+    {
+        if (args[i] == ""-tokens"")
+        {
+            show_tokens = true;
+            continue;
+        }
+        else if (args[i] == ""-tree"")
+        {
+            show_tree = true;
+            continue;
+        }
+        else if (args[i] == ""-input"")
+            input = args[++i];
+        else if (args[i] == ""-file"")
+            file_name = args[++i];
+    }
+    " + p.parser_name + @".checkVersion();
+    " + p.lexer_name + @".checkVersion();
+    if (input == null && file_name == null)
+    {
+	    final List<int> bytes = <int>[];
+	    int byte = stdin.readByteSync();
+	    while (byte >= 0) {
+		    bytes.add(byte);
+		    byte = stdin.readByteSync();
+	    }
+	    input = utf8.decode(bytes);
+        str = await InputStream.fromString(input);
+    } else if (input != null)
+    {
+        str = await InputStream.fromString(input);
+    } else if (file_name != null)
+    {
+        str = await InputStream.fromPath(file_name);        
+    }
+    var lexer = " + p.lexer_name + @"(str);
+    if (show_tokens)
+    {
+        for (int i = 0; ; ++i)
+        {
+            var token = lexer.nextToken();
+	    print(token.toString());
+            if (token.type == -1)
+                break;
+        }
+        lexer.reset();
+    }
+    var tokens = CommonTokenStream(lexer);
+    var parser = " + p.parser_name + @"(tokens);
+//    var listener_lexer = ErrorListener();
+//    var listener_parser = ErrorListener();
+//    lexer.AddErrorListener(listener_lexer);
+//    parser.AddErrorListener(listener_parser);
+    var tree = parser." + p.startRule + @"();
+    if (parser.numberOfSyntaxErrors > 0)
+    {
+        print(""parse failed."");
+    }
+    else
+    {
+        print(""parse succeeded."");
+    }
+    if (show_tree)
+    {
+        print(tree.toStringTree(parser: parser));
+    }
+    exit(parser.numberOfSyntaxErrors > 0 ? 1 : 0);
+}
+");
+
+                // Test to find an appropriate file name to place this into.
+                string fn = p.outputDirectory + "bin/cli.dart";
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
         }
     }

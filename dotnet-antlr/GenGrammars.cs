@@ -44,14 +44,14 @@ namespace dotnet_antlr
                         var i = System.IO.File.ReadAllText(g);
                         var n = System.IO.Path.GetFileName(g);
                         var fn = p.outputDirectory + n;
-                        System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, i));
+                        System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, i));
                     }
                     foreach (var g in p.additional_grammar_files)
                     {
                         var i = System.IO.File.ReadAllText(g);
                         var n = System.IO.Path.GetFileName(g);
                         var fn = p.outputDirectory + n;
-                        System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, i));
+                        System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, i));
                     }
                 }
             }
@@ -92,8 +92,8 @@ fragment UNSIGNED_INTEGER : ('0' .. '9')+ ;
 fragment E : 'E' | 'e' ;
 fragment SIGN : ('+' | '-') ;
 ");
-                var fn = p.outputDirectory + "Arithmetic.g4";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                var fn = p.outputDirectory + p.parser_grammar_file_name;
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
         }
     }

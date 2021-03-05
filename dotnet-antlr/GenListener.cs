@@ -34,7 +34,7 @@ public class ErrorListener<S> : ConsoleErrorListener<S>
 ");
                 if (p.@namespace != null) sb.AppendLine("}");
                 string fn = p.outputDirectory + "ErrorListener.cs";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
             else if (p.target == Program.TargetType.Java)
             {
@@ -64,7 +64,7 @@ public class ErrorListener extends ConsoleErrorListener
                 // Test to find an appropriate file name to place this into.
                 var q = p.@namespace != null ? p.@namespace.Replace(".", "/") + "/" : "";
                 string fn = p.outputDirectory + q + "ErrorListener.java";
-                System.IO.File.WriteAllText(fn, Program.Localize(p.encoding, sb.ToString()));
+                System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
             }
             else if (p.target == Program.TargetType.JavaScript)
             {

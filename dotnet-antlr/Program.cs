@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
+    using System.Text.Json;
     using System.Xml;
     using System.Xml.XPath;
 
@@ -15,7 +16,10 @@
         public static string version = "2.2";
         public List<string> failed_modules = new List<string>();
         public IEnumerable<string> all_source_files = null;
-        public EncodingType encoding = GetOperatingSystem();
+        public LineTranslationType line_translation;
+        public EnvType env_type;
+        public PathType path_type;
+        public string antlr_tool_path;
         public bool antlr4cs = false;
         public TargetType target = TargetType.CSharp;
         public string @namespace = null;
@@ -42,6 +46,7 @@
         public string suffix;
         public IEnumerable<string> skip_list;
         public bool maven = false;
+        string SetupFfn = ".dotnet-antlr.rc";
 
         public enum TargetType
         {
@@ -58,7 +63,22 @@
             Antlr4cs,
         }
 
-        public enum EncodingType
+        public enum EnvType
+        {
+            Unix,
+            Windows,
+            Mac,
+        }
+
+        public enum LineTranslationType
+        {
+            Native,
+            LF,
+            CRLF,
+            CR,
+        }
+
+        public enum PathType
         {
             Native,
             Unix,
@@ -66,19 +86,61 @@
             Mac,
         }
 
-        public static EncodingType GetOperatingSystem()
+        public static LineTranslationType GetLineTranslationType()
         {
+            System.Console.Error.WriteLine("FrameworkDescription " + RuntimeInformation.FrameworkDescription);
+            System.Console.Error.WriteLine("OSArchitecture " + RuntimeInformation.OSArchitecture);
+            System.Console.Error.WriteLine("OSDescription " + RuntimeInformation.OSDescription);
+            System.Console.Error.WriteLine("ProcessArchitecture " + RuntimeInformation.ProcessArchitecture);
+            System.Console.Error.WriteLine("RuntimeIdentifier " + RuntimeInformation.RuntimeIdentifier);
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return EncodingType.Unix;
+                return LineTranslationType.LF;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return EncodingType.Windows;
+                return LineTranslationType.CRLF;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return EncodingType.Mac;
+                return LineTranslationType.CR;
+            }
+
+            throw new Exception("Cannot determine operating system!");
+        }
+
+        public static EnvType GetEnvType()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return EnvType.Unix;
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return EnvType.Windows;
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return EnvType.Mac;
+            }
+
+            throw new Exception("Cannot determine operating system!");
+        }
+
+        public static PathType GetPathType()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return PathType.Unix;
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return PathType.Windows;
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return PathType.Mac;
             }
 
             throw new Exception("Cannot determine operating system!");
@@ -86,16 +148,14 @@
 
         public class Options
         {
-           // public Options() { }
-
             [Option('a', "antlr4cs", Required=false, Default=false, HelpText = "Generate code for Antlr4cs runtime.")]
             public bool Antlr4cs { get; set; }
 
             [Option('c', "case-fold", Required=false, HelpText="Fold case of lexer. True = upper, false = lower.")]
             public bool? CaseFold { get; set; }
 
-            [Option('e', "encoding", Required = false, Default = EncodingType.Native, HelpText = "End of line encoding.")]
-            public EncodingType Encoding { get; set; }
+            [Option('e', "encoding", Required = false)]
+            public LineTranslationType? Encoding { get; set; }
 
             [Option('f', "file", Required=false, HelpText="The name of an input file to parse.")]
             public string InputFile { get; set; }
@@ -126,6 +186,18 @@
 
             [Option('x', "profile", Required = false, Default = false, HelpText = "Add in Antlr profiling code.")]
             public bool Profiling { get; set; }
+
+            [Option("envtype", Required = false)]
+            public EnvType? EnvType { get; set; }
+
+            [Option("pathtype", Required = false)]
+            public PathType? PathType { get; set; }
+
+            [Option("linetranslationtype", Required = false)]
+            public LineTranslationType? LineTranslationType { get; set; }
+
+            [Option("antlrtoolpath", Required = false)]
+            public string AntlrToolPath { get; set; }
         }
 
         static void Main(string[] args)
@@ -142,6 +214,30 @@
 
         public void MainInternal(string[] args)
         {
+            // Get default from OS.
+            line_translation = GetLineTranslationType();
+            env_type = GetEnvType();
+            path_type = GetPathType();
+
+            // Get any defaults from ~/.dotnet-antlr.rc
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + SetupFfn))
+            {
+                var jsonString = System.IO.File.ReadAllText(home + Path.DirectorySeparatorChar + SetupFfn);
+                var options = JsonSerializer.Deserialize<Options>(jsonString);
+                if (options.AntlrToolPath != null)
+                {
+                    antlr_tool_path = (string)options.AntlrToolPath;
+                } else if (path_type == PathType.Unix)
+                {
+                    antlr_tool_path = "~/Downloads/antlr-4.9.1-complete.jar";
+                } else if (path_type == PathType.Windows)
+                {
+                    antlr_tool_path = home.Replace("\\", "/")
+                        + "/Downloads/antlr-4.9.1-complete.jar";
+                }
+            }
+
             string tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
 
             // Parse options, stop if we see a bogus option, or something like --help.
@@ -156,7 +252,7 @@
                 profiling = o.Profiling;
                 antlr4cs = o.Antlr4cs;
                 maven = o.Maven;
-                encoding = o.Encoding == EncodingType.Native ? GetOperatingSystem() : o.Encoding;
+                if (o.Encoding != null) line_translation = (LineTranslationType)o.Encoding == LineTranslationType.Native ? GetLineTranslationType() : (LineTranslationType)o.Encoding;
                 if (antlr4cs) @namespace = "Test";
                 if (o.CaseFold != null) case_fold = o.CaseFold;
                 if (o.DefaultNamespace != null) @namespace = o.DefaultNamespace;
@@ -753,6 +849,7 @@ public class ErrorListener extends ConsoleErrorListener
             lexer_grammar_file_name = "";
             lexer_generated_file_name = "";
             target_specific_src_directory = "";
+            bool use_arithmetic = false;
             for (; ; )
             {
                 // Probe for parser grammar. 
@@ -789,13 +886,16 @@ public class ErrorListener extends ConsoleErrorListener
                     }
                 }
                 parser_src_grammar_file_name = "Arithmetic.g4";
+                if (target == TargetType.Dart) parser_src_grammar_file_name = "lib/" + parser_src_grammar_file_name;
+                startRule = "file_";
+                use_arithmetic = true;
                 break;
             }
-            parser_name = parser_src_grammar_file_name.Replace("Parser.g4", "").Replace(".g4", "") + "Parser";
-            parser_grammar_file_name =
-                Path.GetFileName(parser_src_grammar_file_name);
-            parser_generated_file_name =
-                parser_name + suffix;
+            parser_name = Path.GetFileName(parser_src_grammar_file_name).Replace("Parser.g4", "").Replace(".g4", "") + "Parser";
+            parser_grammar_file_name = Path.GetFileName(parser_src_grammar_file_name);
+            if (target == TargetType.Dart) parser_grammar_file_name = "lib/" + parser_grammar_file_name;
+            parser_generated_file_name = parser_name + suffix;
+            if (target == TargetType.Dart) parser_generated_file_name = "lib/" + parser_generated_file_name;
 
             for (; ; )
             {
@@ -833,20 +933,25 @@ public class ErrorListener extends ConsoleErrorListener
                     }
                 }
                 lexer_src_grammar_file_name = "Arithmetic.g4";
+                if (target == TargetType.Dart) lexer_src_grammar_file_name = "lib/" + lexer_src_grammar_file_name;
+                startRule = "file_";
+                use_arithmetic = true;
                 break;
             }
 
-            lexer_name = lexer_src_grammar_file_name.Replace("Lexer.g4", "").Replace(".g4", "") + "Lexer";
-            lexer_grammar_file_name =
-                Path.GetFileName(lexer_src_grammar_file_name);
-            lexer_generated_file_name =
-                lexer_name + suffix;
-
-            tool_src_grammar_files = new HashSet<string>()
-                {
-                    lexer_src_grammar_file_name,
-                    parser_src_grammar_file_name
-                };
+            lexer_name = Path.GetFileName(lexer_src_grammar_file_name).Replace("Lexer.g4", "").Replace(".g4", "") + "Lexer";
+            lexer_grammar_file_name = Path.GetFileName(lexer_src_grammar_file_name);
+            if (target == TargetType.Dart) lexer_grammar_file_name = "lib/" + lexer_grammar_file_name;
+            lexer_generated_file_name = lexer_name + suffix;
+            if (target == TargetType.Dart) lexer_generated_file_name = "lib/" + lexer_generated_file_name;
+            if (!use_arithmetic)
+                tool_src_grammar_files = new HashSet<string>()
+                    {
+                        lexer_src_grammar_file_name,
+                        parser_src_grammar_file_name
+                    };
+            else
+                tool_src_grammar_files = new HashSet<string>();
             tool_grammar_files = new HashSet<string>()
                 {
                     lexer_grammar_file_name,
@@ -859,39 +964,28 @@ public class ErrorListener extends ConsoleErrorListener
                 };
             // lexer and parser are set if the grammar is partitioned.
             // rest is set if there are grammar is combined.
-            if (lexer_src_grammar_file_name == "Arithmetic.g4" || parser_src_grammar_file_name == "Arithmetic.g4")
-            {
-                // I have no clue what your grammars are.
-                lexer_name = "ArithmeticLexer";
-                parser_name = "ArithmeticParser";
-                startRule = "file_";
-                lexer_generated_file_name = "ArithmeticLexer" + suffix;
-                parser_generated_file_name = "ArithmeticParser" + suffix;
-                lexer_grammar_file_name = "Arithmetic.g4";
-                parser_grammar_file_name = "Arithmetic.g4";
-            }
         }
 
-        public static string Localize(EncodingType encoding, string code)
+        public static string Localize(LineTranslationType encoding, string code)
         {
             var is_win = code.Contains("\r\n");
             var is_mac = code.Contains("\n\r");
             var is_uni = code.Contains("\n") && !(is_win || is_mac);
-            if (encoding == EncodingType.Windows)
+            if (encoding == LineTranslationType.CRLF)
             {
                 if (is_win) return code;
                 else if (is_mac) return code.Replace("\n\r", "\r\n");
                 else if (is_uni) return code.Replace("\n", "\r\n");
                 else return code;
             }
-            if (encoding == EncodingType.Mac)
+            if (encoding == LineTranslationType.CR)
             {
                 if (is_win) return code.Replace("\r\n", "\n\r");
                 else if (is_mac) return code;
                 else if (is_uni) return code.Replace("\n", "\n\r");
                 else return code;
             }
-            if (encoding == EncodingType.Unix)
+            if (encoding == LineTranslationType.LF)
             {
                 if (is_win) return code.Replace("\r\n", "\n");
                 else if (is_mac) return code.Replace("\n\r", "\n");
