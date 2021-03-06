@@ -154,11 +154,11 @@ public class Program
         var tree = parser." + p.startRule + @"();
         if (listener_lexer.had_error || listener_parser.had_error)
         {
-            System.Console.Error.WriteLine(""parse failed."");
+            System.Console.Error.WriteLine(""Parse failed."");
         }
         else
         {
-            System.Console.Error.WriteLine(""parse succeeded."");
+            System.Console.Error.WriteLine(""Parse succeeded."");
         }
         if (show_tree)
         {
@@ -183,11 +183,11 @@ public class Program
         var tree = parser." + p.startRule + @"();
         if (parser.NumberOfSyntaxErrors != 0)
         {
-            System.Console.Error.WriteLine(""parse failed."");
+            System.Console.Error.WriteLine(""Parse failed."");
         }
         else
         {
-            System.Console.Error.WriteLine(""parse succeeded."");
+            System.Console.Error.WriteLine(""Parse succeeded."");
         }
         if (show_tree)
         {
@@ -289,9 +289,9 @@ public class Program {
                 sb.Append(@"
         ParseTree tree = parser." + p.startRule + @"();
         if (listener.had_error || lexer_listener.had_error)
-            System.out.println(""error in parse."");
+            System.out.println(""Parse failed."");
         else
-            System.out.println(""parse completed."");
+            System.out.println(""Parse succeeded."");
         if (show_tree)
         {
             System.out.println(tree.toStringTree(parser));
@@ -411,12 +411,12 @@ if (show_tree)
 }
 if (num_errors > 0)
 {
-    console.log('error in parse.');
+    console.log('Parse failed.');
     process.exitCode = 1;
 }
 else
 {
-    console.log('parse completed.');
+    console.log('Parse succeeded.');
     process.exitCode = 0;
 }
 ");
@@ -513,10 +513,10 @@ def main(argv):
     if (show_tree):
         print(tree.toStringTree(recog=parser))
     if p_listener.num_errors > 0 or l_listener.num_errors > 0:
-        print('error in parse.');
+        print('Parse failed.');
         sys.exit(1)
     else:
-        print('parse completed.');
+        print('Parse succeeded.');
         sys.exit(0)
 
 if __name__ == '__main__':
@@ -600,11 +600,11 @@ void main(List<String> args) async {
     var tree = parser." + p.startRule + @"();
     if (parser.numberOfSyntaxErrors > 0)
     {
-        print(""parse failed."");
+        print(""Parse failed."");
     }
     else
     {
-        print(""parse succeeded."");
+        print(""Parse succeeded."");
     }
     if (show_tree)
     {
@@ -728,9 +728,9 @@ func main() {
     var tree = parser." + Cap(p.startRule) + @"()
 	// missing
     if parserErrors.errors > 0 || lexerErrors.errors > 0 {
-        fmt.Println(""parse failed."");
+        fmt.Println(""Parse failed."");
     } else {
-        fmt.Println(""parse succeeded."")
+        fmt.Println(""Parse succeeded."")
     }
     if show_tree {
 		ss := tree.ToStringTree(parser.RuleNames, parser)
