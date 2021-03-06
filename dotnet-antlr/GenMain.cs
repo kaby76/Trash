@@ -488,7 +488,6 @@ def main(argv):
     elif (file_name != None):
         str = FileStream(file_name, 'utf8');
 
-    lexer = ArithmeticLexer(str)
     lexer = " + p.lexer_name + @"(str);
     lexer.removeErrorListeners()
     l_listener = MyErrorListener()
@@ -510,7 +509,7 @@ def main(argv):
             if (token.type == -1):
                 break
         lexer.reset()
-    tree = parser.file_()
+    tree = parser."+ p.startRule + @"()
     if (show_tree):
         print(tree.toStringTree(recog=parser))
     if p_listener.num_errors > 0 or l_listener.num_errors > 0:
