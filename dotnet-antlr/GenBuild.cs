@@ -147,7 +147,7 @@ exit $err
 </Project>");
                 var fn = p.outputDirectory + "Test.csproj";
                 System.IO.File.WriteAllText(fn, Program.Localize(p.line_translation, sb.ToString()));
-                
+
                 sb = new StringBuilder();
                 sb.AppendLine(@"
 # Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
@@ -228,19 +228,16 @@ run:
                 sb = new StringBuilder();
                 sb.AppendLine(@"
 {
-  ""name"": ""i"",
+  ""name"": """ + p.parser_name + @""",
+  ""private"": true,
   ""version"": ""1.0.0"",
-  ""description"": """",
   ""main"": ""index.js"",
-  ""scripts"": {
-    ""test"": ""echo \""Error: no test specified\"" && exit 1""
-  },
-  ""author"": """",
-  ""license"": ""ISC"",
   ""dependencies"": {
     ""antlr4"": ""^4.9.1"",
-    ""fs-extra"": ""^9.1.0"",
-    ""typescript-string-operations"": ""^1.4.1""
+    ""get-stdin-with-tty"": ""^6.0.0""
+  },
+  ""engines"": {
+    ""node"": ""^14.8.0""
   },
   ""type"": ""module""
 }

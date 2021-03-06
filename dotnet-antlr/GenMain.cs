@@ -315,86 +315,63 @@ public class Program {
             {
                 sb.AppendLine(@"// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version);
                 sb.Append(@"
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const antlr4 = require('antlr4');
+import antlr4 from 'antlr4';
+import getStdin from 'get-stdin-with-tty';
 import " + p.lexer_name + @" from './" + p.lexer_name + @".js';
 import " + p.parser_name + @" from './" + p.parser_name + @".js';
-const strops = require('typescript-string-operations');
-let fs = require('fs-extra')
-
-function getChar() {
-	let buffer = Buffer.alloc(1);
-	var xx = fs.readSync(0, buffer, 0, 1);
-	if (xx === 0) {
-		return '';
-	}
-    return buffer.toString('utf8');
-}
 
 class MyErrorListener extends antlr4.error.ErrorListener {
-	syntaxError(recognizer, offendingSymbol, line, column, msg, err) {
-		num_errors++;
-		console.error(`${offendingSymbol} line ${line}, col ${column}: ${msg}`);
-	}
+    errorCount = 0;
+    syntaxError(_recognizer, offendingSymbol, line, column, msg, err) {
+        this.errorCount++;
+        console.error(`${offendingSymbol} line ${line}, col ${column}: ${msg}`);
+    }
 }
 
-var show_tokens = false;
-var show_tree = false;
-var input = null;
-var file_name = null;
-for (let i = 2; i < process.argv.length; ++i)
-{
+let show_tokens = false;
+let show_tree = false;
+let input = null;
+let file_name = null;
+for (let i = 2; i < process.argv.length; ++i) {
     switch (process.argv[i]) {
         case '-tokens':
-            var show_tokens = true;
+            show_tokens = true;
             break;
         case '-tree':
-            var show_tree = true;
+            show_tree = true;
             break;
         case '-input':
-            var input = process.argv[++i];
+            input = process.argv[++i];
             break;
         case '-file':
-            var file_name = process.argv[++i];
+            file_name = process.argv[++i];
             break;
         default:
             console.log('unknown '.concat(process.argv[i]));
     }
 }
-var str = null;
-if (input == null && file_name == null)
-{
-    var sb = new strops.StringBuilder();
-    var ch;
-    while ((ch = getChar()) != '')
-    {
-        sb.Append(ch);
-    }
-    var input = sb.ToString();
+
+let str = null;
+if (input != null) {
     str = antlr4.CharStreams.fromString(input);
-} else if (input != null)
-{
-    str = antlr4.CharStreams.fromString(input);
-} else if (file_name != null)
-{
+} else if (file_name != null) {
     str = antlr4.CharStreams.fromPathSync(file_name, 'utf8');
+} else {
+    str = antlr4.CharStreams.fromString(await getStdin());
 }
-var num_errors = 0;
+
 const lexer = new " + p.lexer_name + @"(str);
-lexer.strictMode = false;
 const tokens = new antlr4.CommonTokenStream(lexer);
 const parser = new " + p.parser_name + @"(tokens);
+const errorListener = new MyErrorListener();
 lexer.removeErrorListeners();
 parser.removeErrorListeners();
-parser.addErrorListener(new MyErrorListener());
-lexer.addErrorListener(new MyErrorListener());
-if (show_tokens)
-{
-    for (var i = 0; ; ++i)
-    {
-        var ro_token = lexer.nextToken();
-        var token = ro_token;
+parser.addErrorListener(errorListener);
+lexer.addErrorListener(errorListener);
+
+if (show_tokens) {
+    for (let i = 0; ; ++i) {
+        let token = lexer.nextToken();
         token.TokenIndex = i;
         console.log(token.toString());
         if (token.type === antlr4.Token.EOF)
@@ -403,17 +380,14 @@ if (show_tokens)
     lexer.reset();
 }
 const tree = parser." + p.startRule + @"();
-if (show_tree)
-{
+if (show_tree) {
     console.log(tree.toStringTree(parser.ruleNames));
 }
-if (num_errors > 0)
-{
+if (errorListener.errorCount > 0) {
     console.log('Parse failed.');
     process.exitCode = 1;
 }
-else
-{
+else {
     console.log('Parse succeeded.');
     process.exitCode = 0;
 }
