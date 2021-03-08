@@ -27,6 +27,5 @@ namespace dotnet_antlr
                 p.CopyFile(path, p.outputDirectory.Replace('\\', '/') + n + "/" + m);
             }
         }
-
     }
 }

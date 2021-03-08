@@ -10,6 +10,7 @@
     using System.Text.Json;
     using System.Xml;
     using System.Xml.XPath;
+    using Antlr4.StringTemplate;
 
     public class Program
     {
@@ -48,6 +49,7 @@
         public IEnumerable<string> skip_list;
         public bool maven = false;
         string SetupFfn = ".dotnet-antlr.rc";
+        bool do_templates = true;
 
         public enum TargetType
         {
@@ -638,45 +640,88 @@
             {
                 throw;
             }
-            // Include all other grammar files, but not if they are the main grammars.
-            var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/|"
-                + String.Join("|", tool_src_grammar_files)
-                + ")).+g4$";
-            additional_grammar_files = new Domemtech.Globbing.Glob()
-                    .RegexContents(additional_grammars_pattern)
-                    .Where(f => f is FileInfo)
-                    .Select(f => f.FullName.Replace(cd, ""))
-                    .ToList();
 
-            System.Console.Error.WriteLine("additional grammars " + String.Join(" ", additional_grammar_files));
-
-            // Find all source files.
-            var all_source_pattern = "^(?!.*(Generated/|target/|examples/" + (!antlr4cs ? "|Antlr4cs/" : "") + ")).+" + target switch
+            if (do_templates)
             {
-                TargetType.CSharp => "[.]cs",
-                TargetType.Java => "[.]java",
-                TargetType.JavaScript => "[.]js",
-                TargetType.Cpp => "([.]h|[.]cpp)",
-                TargetType.Dart => "[.]dart",
-                TargetType.Go => "[.]go",
-                TargetType.Php => "[.]php",
-                TargetType.Python2 => "[.]py",
-                TargetType.Python3 => "[.]py",
-                TargetType.Swift => "[.]swift",
-                _ => throw new NotImplementedException(),
-            } + "$";
-            all_source_files = new Domemtech.Globbing.Glob()
-                    .RegexContents(all_source_pattern)
-                    .Where(f => f is FileInfo)
-                    .Select(f => f.FullName.Replace('\\','/').Replace(cd, ""))
-                    .ToList();
+                GenFromTemplates(this);
+            }
+            else
+            {
 
-            AddSourceFiles.AddSource(this);
-            GenBuild.AddBuildFile(this);
-            GenGrammars.AddGrammars(this);
-            GenMain.AddMain(this);
-            GenListener.AddErrorListener(this);
-            AddCaseFold();
+                // Include all other grammar files, but not if they are the main grammars.
+                var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/|"
+                    + String.Join("|", tool_src_grammar_files)
+                    + ")).+g4$";
+                additional_grammar_files = new Domemtech.Globbing.Glob()
+                        .RegexContents(additional_grammars_pattern)
+                        .Where(f => f is FileInfo)
+                        .Select(f => f.FullName.Replace(cd, ""))
+                        .ToList();
+
+                System.Console.Error.WriteLine("additional grammars " + String.Join(" ", additional_grammar_files));
+
+                // Find all source files.
+                var all_source_pattern = "^(?!.*(Generated/|target/|examples/" + (!antlr4cs ? "|Antlr4cs/" : "") + ")).+" + target switch
+                {
+                    TargetType.CSharp => "[.]cs",
+                    TargetType.Java => "[.]java",
+                    TargetType.JavaScript => "[.]js",
+                    TargetType.Cpp => "([.]h|[.]cpp)",
+                    TargetType.Dart => "[.]dart",
+                    TargetType.Go => "[.]go",
+                    TargetType.Php => "[.]php",
+                    TargetType.Python2 => "[.]py",
+                    TargetType.Python3 => "[.]py",
+                    TargetType.Swift => "[.]swift",
+                    _ => throw new NotImplementedException(),
+                } + "$";
+                all_source_files = new Domemtech.Globbing.Glob()
+                        .RegexContents(all_source_pattern)
+                        .Where(f => f is FileInfo)
+                        .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                        .ToList();
+
+                AddSourceFiles.AddSource(this);
+                GenBuild.AddBuildFile(this);
+                GenGrammars.AddGrammars(this);
+                GenMain.AddMain(this);
+                GenListener.AddErrorListener(this);
+                AddCaseFold();
+            }
+        }
+
+        private void GenFromTemplates(Program p)
+        {
+            Type t = this.GetType();
+            var a = t.Assembly;
+            var l = a.Location;
+            var p2 = Path.GetDirectoryName(l);
+            var p3 = p2 + "/../../../templates/Arithmetic/"
+                + p.target_specific_src_directory;
+            var p4 = Path.GetFullPath(p3);
+            var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
+            var files = new Domemtech.Globbing.Glob(p4)
+                .RegexContents("^.*$")
+                .Where(f =>
+                {
+                    if (f is DirectoryInfo) return false;
+                    if (f.Attributes.HasFlag(FileAttributes.Directory)) return false;
+                    return true;
+                })
+                .Select(f => f.FullName.Replace('\\', '/'))
+                .ToList();
+            var set = new HashSet<string>();
+            foreach (var path in files)
+            {
+                // Construct proper starting directory based on namespace.
+                var f = path.Replace('\\', '/');
+                var c = cd.Replace('\\', '/');
+                var e = f.Replace(c, "");
+                var m = Path.GetFileName(f);
+                var n = p.@namespace != null ? p.@namespace.Replace('.', '/') : "";
+                var o = p.outputDirectory.Replace('\\', '/') + n + "/" + m;
+                p.EvalTemplateFile(path, o);
+            }
         }
 
         public void AddCaseFold()
@@ -829,13 +874,26 @@ public class ErrorListener extends ConsoleErrorListener
             }
         }
 
-        public void CopyFile(string path, string v)
+        public void CopyFile(string from, string to)
         {
-            path = path.Replace('\\', '/');
-            v = v.Replace('\\', '/');
-            var q = Path.GetDirectoryName(v).ToString().Replace('\\', '/');
+            from = from.Replace('\\', '/');
+            to = to.Replace('\\', '/');
+            var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
             Directory.CreateDirectory(q);
-            File.Copy(path, v, true);
+            File.Copy(from, to, true);
+        }
+
+        public void EvalTemplateFile(string from, string to)
+        {
+            from = from.Replace('\\', '/');
+            to = to.Replace('\\', '/');
+            var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
+            Directory.CreateDirectory(q);
+            var i = System.IO.File.ReadAllText(from);
+            Template t = new Template(i);
+            t.Add("version", Program.version);
+            var o = t.Render();
+            File.WriteAllText(to, o);
         }
 
         public void GeneratedNames()
@@ -849,7 +907,6 @@ public class ErrorListener extends ConsoleErrorListener
             lexer_src_grammar_file_name = "";
             lexer_grammar_file_name = "";
             lexer_generated_file_name = "";
-            target_specific_src_directory = "";
             bool use_arithmetic = false;
             for (; ; )
             {
