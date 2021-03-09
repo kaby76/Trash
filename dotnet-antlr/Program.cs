@@ -33,6 +33,7 @@
         public string target_specific_src_directory;
         public HashSet<string> tool_grammar_files = null;
         public HashSet<string> tool_src_grammar_files = null;
+        public List<GrammarPair> tool_grammar_pairs = null;
         public List<string> generated_files = null;
         public List<string> additional_grammar_files = null;
         public bool profiling = false;
@@ -145,16 +146,16 @@
 
         public class Options
         {
-            [Option('a', "antlr4cs", Required=false, Default=false, HelpText = "Generate code for Antlr4cs runtime.")]
+            [Option('a', "antlr4cs", Required = false, Default = false, HelpText = "Generate code for Antlr4cs runtime.")]
             public bool Antlr4cs { get; set; }
 
-            [Option('c', "case-fold", Required=false, HelpText="Fold case of lexer. True = upper, false = lower.")]
+            [Option('c', "case-fold", Required = false, HelpText = "Fold case of lexer. True = upper, false = lower.")]
             public bool? CaseFold { get; set; }
 
             [Option('e', "encoding", Required = false)]
             public LineTranslationType? Encoding { get; set; }
 
-            [Option('f', "file", Required=false, HelpText="The name of an input file to parse.")]
+            [Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
             public string InputFile { get; set; }
 
             [Option('g', "grammar-files", Required = false, HelpText = "A list of vertical bar separated grammar file paths.")]
@@ -166,19 +167,19 @@
             [Option('m', "maven", Required = false, Default = false, HelpText = "Read Antlr pom file and convert.")]
             public bool Maven { get; set; }
 
-            [Option('n', "namespace", Required=false, HelpText="The namespace for all generated files.")]
+            [Option('n', "namespace", Required = false, HelpText = "The namespace for all generated files.")]
             public string DefaultNamespace { get; set; }
 
-            [Option('o', "output-directory", Required=false, HelpText="The output directory for the project.")]
+            [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
             public string OutputDirectory { get; set; }
 
-            [Option('p', "package", Required=false, HelpText="PackageReference's to include, in name/version pairs.")]
+            [Option('p', "package", Required = false, HelpText = "PackageReference's to include, in name/version pairs.")]
             public string Packages { get; set; }
 
-            [Option('s', "start-rule", Required=false, HelpText="Start rule name.")]
+            [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
             public string StartRule { get; set; }
 
-            [Option('t', "target", Required = false, Default=TargetType.CSharp, HelpText = "The target language for the project.")]
+            [Option('t', "target", Required = false, Default = TargetType.CSharp, HelpText = "The target language for the project.")]
             public TargetType Target { get; set; }
 
             [Option('x', "profile", Required = false, Default = false, HelpText = "Add in Antlr profiling code.")]
@@ -270,7 +271,7 @@
             bool stop = false;
             result.WithNotParsed(o => { stop = true; });
             if (stop) return;
-            
+
             result.WithParsed(o =>
             {
                 target = o.Target;
@@ -344,8 +345,8 @@
         {
             Environment.CurrentDirectory = cd;
             System.Console.Error.WriteLine(cd);
-        
-            if (skip_list.Where(s => cd.Remove(cd.Length-1).EndsWith(s)).Any())
+
+            if (skip_list.Where(s => cd.Remove(cd.Length - 1).EndsWith(s)).Any())
             {
                 System.Console.Error.WriteLine("Skipping.");
                 return;
@@ -636,6 +637,11 @@
                     lexer_src_grammar_file_name,
                     parser_src_grammar_file_name
                 };
+                tool_grammar_pairs = new List<GrammarPair>()
+                {
+                    new GrammarPair(lexer_grammar_file_name, lexer_generated_file_name),
+                    new GrammarPair(parser_grammar_file_name, parser_generated_file_name),
+                };
                 tool_grammar_files = new HashSet<string>()
                 {
                     lexer_grammar_file_name,
@@ -742,30 +748,24 @@
 
         private void GenFromTemplates(Program p)
         {
-            Type ty = this.GetType();
-            System.Reflection.Assembly a = ty.Assembly;
-            var res = a.GetManifestResourceNames();
-            var cd = "AntlrTemplating.templates.";
-            var orig_files = ReadAllResourceLines(a, "AntlrTemplating.templates.files");
-            var files = res;
-            var filter_string = "^.*/Arithmetic/(?!.*("
-                + AllButTargetName(target)
-                + ")).*$";
-            var regex_string = filter_string;
+            System.Reflection.Assembly a = this.GetType().Assembly;
+            // Load resource file that contains the names of all files in templates/ directory,
+            // which were obtained by doing "cd templates/; find . -type f > files" at a Bash
+            // shell.
+            var orig_file_names = ReadAllResourceLines(a, "AntlrTemplating.templates.files");
+            var regex_string = "^.*/Arithmetic/(?!.*(" + AllButTargetName(target) + ")).*$";
             var regex = new Regex(regex_string);
-            var new_files = orig_files.Where(f => regex.IsMatch(f)).ToList();
+            var files_to_copy = orig_file_names.Where(f => regex.IsMatch(f)).ToList();
+            var prefix_to_remove = "AntlrTemplating.templates.";
             var set = new HashSet<string>();
-            foreach (var f in new_files)
+            foreach (var file in files_to_copy)
             {
-                // Construct proper file name.
-                // Construct proper starting directory based on namespace.
-                var from = f.Replace('\\', '/');
-                var c = cd.Replace('\\', '/');
-                var e = f.Replace(c, "");
-                var m = Path.GetFileName(f);
+                var from = file;
+                var e = file.Replace(prefix_to_remove, "");
+                var m = Path.GetFileName(file);
                 var n = p.@namespace != null ? p.@namespace.Replace('.', '/') : "";
                 var to = p.outputDirectory.Replace('\\', '/') + n + "/" + m;
-                from = cd + from.Replace('/', '.').Substring(2);
+                from = prefix_to_remove + from.Replace('/', '.').Substring(2);
                 to = to.Replace('\\', '/');
                 var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                 Directory.CreateDirectory(q);
@@ -776,10 +776,22 @@
                 t.Add("cli_cmd", this.env_type == EnvType.Windows);
                 t.Add("path_sep_semi", this.path_sep_type == PathSepType.Semi);
                 t.Add("path_sep_colon", this.path_sep_type == PathSepType.Colon);
+                t.Add("tool_grammar_files", this.tool_grammar_files);
+                t.Add("tool_grammar_pairs", this.tool_grammar_pairs);
                 var o = t.Render();
                 File.WriteAllText(to, o);
-
             }
+        }
+
+        public class GrammarPair
+        {
+            public GrammarPair(string grammar_file_name, string generated_file_name)
+            {
+                GrammarFileName = grammar_file_name;
+                GeneratedFileName = generated_file_name;
+            }
+            public string GrammarFileName { get; set; }
+            public string GeneratedFileName { get; set; }
         }
 
         public void AddCaseFold()
@@ -1058,6 +1070,11 @@ public class ErrorListener extends ConsoleErrorListener
                 {
                     lexer_generated_file_name,
                     parser_generated_file_name,
+                };
+            tool_grammar_pairs = new List<GrammarPair>()
+                {
+                    new GrammarPair(lexer_grammar_file_name, lexer_generated_file_name),
+                    new GrammarPair(parser_grammar_file_name, parser_generated_file_name),
                 };
             // lexer and parser are set if the grammar is partitioned.
             // rest is set if there are grammar is combined.

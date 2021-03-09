@@ -5,8 +5,8 @@
     \<OutputType>Exe\</OutputType>
   \</PropertyGroup>
   \<ItemGroup>
-     \<Antlr4 Include="Arithmetic.g4" />
-  \</ItemGroup>
+<tool_grammar_files:{x |    \<Antlr4 Include="<x>" />
+} >  \</ItemGroup>
   \<ItemGroup>
     \<PackageReference Include="Antlr4.Runtime.Standard" Version ="4.9.1" />
     \<PackageReference Include="Antlr4BuildTasks" Version = "8.13" PrivateAssets="all" />

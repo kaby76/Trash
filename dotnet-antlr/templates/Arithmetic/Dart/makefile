@@ -4,7 +4,7 @@ JAR = C:/Users/kenne/Downloads/antlr-4.9.1-complete.jar
 CLASSPATH = $(JAR)<if(path_sep_semi)>\;<else>:<endif>.
 .SUFFIXES: .g4 .dart
 ANTLRGRAMMARS ?= $(wildcard *.g4)
-GENERATED = ArithmeticLexer.dart ArithmeticParser.dart
+GENERATED = <tool_grammar_pairs:{x|<x.GeneratedFileName> }>
 SOURCES = $(GENERATED) \
     cli.dart
 default: classes
@@ -16,8 +16,7 @@ clean:
 	rm -f pubspec.lock
 run:
 	dart run cli.dart $(RUNARGS)
-ArithmeticLexer.dart : Arithmetic.g4
-	java -jar $(JAR) -Dlanguage=Dart  $\<
-ArithmeticParser.dart : Arithmetic.g4
-	java -jar $(JAR) -Dlanguage=Dart  $\<
+<tool_grammar_pairs:{x | <x.GeneratedFileName> : <x.GrammarFileName>
+	java -jar $(JAR) -Dlanguage=Dart $\<
+} >
 
