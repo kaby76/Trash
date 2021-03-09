@@ -1,4 +1,4 @@
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v __Version__
+// Template generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-public class ErrorListener<S> : ConsoleErrorListener<S>
+public class ErrorListener\<S> : ConsoleErrorListener\<S>
 {
     public bool had_error;
 

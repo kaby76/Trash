@@ -1,4 +1,4 @@
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v 2.2
+// Template generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 
 import org.antlr.v4.runtime.*;
 
@@ -7,7 +7,7 @@ public class ErrorListener extends ConsoleErrorListener
     public boolean had_error = false;
     
     @Override
-    public void syntaxError(Recognizer<?, ?> recognizer,
+    public void syntaxError(Recognizer\<?, ?> recognizer,
         Object offendingSymbol,
         int line,
         int charPositionInLine,

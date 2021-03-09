@@ -170,7 +170,7 @@ clean:
 # Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
 # Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
 JAR = " + p.antlr_tool_path + @"
-CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
+CLASSPATH = $(JAR)" + (p.path_sep_type == Program.PathSepType.Semi ? "\\;" : ":") + @".
 .SUFFIXES: .g4 .java .class
 .java.class:
 	javac -cp $(CLASSPATH) $*.java
@@ -201,7 +201,7 @@ run:
                 sb.AppendLine(@"
 # Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
 JAR = " + p.antlr_tool_path + @"
-CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
+CLASSPATH = $(JAR)" + (p.path_sep_type == Program.PathSepType.Semi ? "\\;" : ":") + @".
 .SUFFIXES: .g4 .js
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 GENERATED = " + String.Join(" ", p.generated_files) + @"
@@ -251,7 +251,7 @@ run:
 # Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
 # Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
 JAR = " + p.antlr_tool_path + @"
-CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
+CLASSPATH = $(JAR)" + (p.path_sep_type == Program.PathSepType.Semi ? "\\;" : ":") + @".
 .SUFFIXES: .g4 .py
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 GENERATED = " + String.Join(" ", p.generated_files) + @"
@@ -314,7 +314,7 @@ dev_dependencies:
 # Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
 # Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
 JAR = " + p.antlr_tool_path + @"
-CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
+CLASSPATH = $(JAR)" + (p.path_sep_type == Program.PathSepType.Semi ? "\\;" : ":") + @".
 .SUFFIXES: .g4 .dart
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 GENERATED = " + String.Join(" ", p.generated_files) + @"
@@ -344,7 +344,7 @@ run:
 # Generated code from Antlr4BuildTasks.dotnet-antlr v " + Program.version + @"
 # Makefile for " + String.Join(", ", p.tool_grammar_files) + @"
 JAR = " + p.antlr_tool_path + @"
-CLASSPATH = $(JAR)" + (p.line_translation == Program.LineTranslationType.CRLF ? "\\;" : ":") + @".
+CLASSPATH = $(JAR)" + (p.path_sep_type == Program.PathSepType.Semi ? "\\;" : ":") + @".
 .SUFFIXES: .g4 .go
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 GENERATED = " + String.Join(" ", p.generated_files) + @"

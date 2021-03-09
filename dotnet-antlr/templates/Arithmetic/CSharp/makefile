@@ -1,4 +1,4 @@
-# Generated code from Antlr4BuildTasks.dotnet-antlr v __Version__
+# Generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 GENERATED = ArithmeticLexer.cs ArithmeticParser.cs
 default:
 	dotnet restore

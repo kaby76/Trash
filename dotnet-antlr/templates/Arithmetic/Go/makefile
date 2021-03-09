@@ -1,8 +1,7 @@
-
-# Generated code from Antlr4BuildTasks.dotnet-antlr v 2.2
+# Generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 # Makefile for Arithmetic.g4
 JAR = C:/Users/kenne/Downloads/antlr-4.9.1-complete.jar
-CLASSPATH = $(JAR)\;.
+CLASSPATH = $(JAR)<if(path_sep_semi)>\;<else>:<endif>.
 .SUFFIXES: .g4 .go
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 GENERATED = ArithmeticLexer.go ArithmeticParser.go
@@ -20,8 +19,8 @@ run:
 	go run Program.go $(RUNARGS)
 ArithmeticLexer.go : Arithmetic.g4
 	-mkdir parser
-	java -jar $(JAR) -Dlanguage=Go -o parser  $<
+	java -jar $(JAR) -Dlanguage=Go -o parser $\<
 ArithmeticParser.go : Arithmetic.g4
 	-mkdir parser
-	java -jar $(JAR) -Dlanguage=Go -o parser  $<
+	java -jar $(JAR) -Dlanguage=Go -o parser  $\<
 

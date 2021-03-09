@@ -1,4 +1,4 @@
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v __Version__
+// Template generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
@@ -34,7 +34,7 @@ public class Program
         bool show_tokens = false;
         string file_name = null;
         string input = null;
-        for (int i = 0; i < args.Length; ++i)
+        for (int i = 0; i \< args.Length; ++i)
         {
             if (args[i].Equals("-tokens"))
             {
@@ -61,8 +61,7 @@ public class Program
                 sb.Append((char)ch);
             }
             input = sb.ToString();
-            
-str = CharStreams.fromString(input);
+            str = CharStreams.fromString(input);
         } else if (input != null)
         {
             str = CharStreams.fromString(input);
@@ -88,19 +87,13 @@ str = CharStreams.fromString(input);
         }
         var tokens = new CommonTokenStream(lexer);
         var parser = new ArithmeticParser(tokens);
-        var listener_lexer = new ErrorListener<int>();
-        var listener_parser = new ErrorListener<IToken>();
+        var listener_lexer = new ErrorListener\<int>();
+        var listener_parser = new ErrorListener\<IToken>();
         lexer.AddErrorListener(listener_lexer);
         parser.AddErrorListener(listener_parser);
         DateTime before = DateTime.Now;
         var tree = parser.file_();
         DateTime after = DateTime.Now;
-        System.Console.Error.WriteLine("Time: " + (after - before));
-        parser.Reset();
-        lexer.Reset();
-        before = DateTime.Now;
-        tree = parser.file_();
-        after = DateTime.Now;
         System.Console.Error.WriteLine("Time: " + (after - before));
         if (listener_lexer.had_error || listener_parser.had_error)
         {

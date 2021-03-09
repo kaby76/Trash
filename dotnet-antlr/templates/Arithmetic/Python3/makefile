@@ -2,7 +2,7 @@
 # Generated code from Antlr4BuildTasks.dotnet-antlr v 2.2
 # Makefile for Arithmetic.g4
 JAR = C:/Users/kenne/Downloads/antlr-4.9.1-complete.jar
-CLASSPATH = $(JAR)\;.
+CLASSPATH = $(JAR)<if(path_sep_semi)>\;<else>:<endif>.
 .SUFFIXES: .g4 .py
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 GENERATED = ArithmeticLexer.py ArithmeticParser.py

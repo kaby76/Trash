@@ -1,4 +1,4 @@
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v 2.2
+// Template generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
@@ -28,7 +28,7 @@ var show_tokens = false;
 var show_tree = false;
 var input = null;
 var file_name = null;
-for (let i = 2; i < process.argv.length; ++i)
+for (let i = 2; i \< process.argv.length; ++i)
 {
     switch (process.argv[i]) {
         case '-tokens':

@@ -1,4 +1,4 @@
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v 2.2
+// Template generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 
 package main
 import (
@@ -40,7 +40,7 @@ func main() {
     var file_name = ""
     var input = ""
 	var str antlr.CharStream = nil
-	for i := 0; i < len(os.Args); i = i + 1 {
+	for i := 0; i \< len(os.Args); i = i + 1 {
         if os.Args[i] == "-tokens" {
             show_tokens = true
             continue

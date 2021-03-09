@@ -1,28 +1,64 @@
-<!-- Template generated code from Antlr4BuildTasks.dotnet-antlr v __Version__ -->
-<Project Sdk="Microsoft.NET.Sdk" >
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <OutputType>Exe</OutputType>
-  </PropertyGroup>
-  <ItemGroup>
-     <Antlr4 Include="Arithmetic.g4" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version ="4.9.1" />
-    <PackageReference Include="Antlr4BuildTasks" Version = "8.13" PrivateAssets="all" />
-  </ItemGroup>
-  <PropertyGroup>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" >
-    <NoWarn>1701;1702;3021</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup>
-    <!--
+\<!-- Template generated code from Antlr4BuildTasks.dotnet-antlr v <version> -->
+\<Project Sdk="Microsoft.NET.Sdk" >
+  \<PropertyGroup>
+    \<TargetFramework>net5.0\</TargetFramework>
+    \<OutputType>Exe\</OutputType>
+  \</PropertyGroup>
+  \<ItemGroup>
+     \<Antlr4 Include="Arithmetic.g4" />
+  \</ItemGroup>
+  \<ItemGroup>
+    \<PackageReference Include="Antlr4.Runtime.Standard" Version ="4.9.1" />
+    \<PackageReference Include="Antlr4BuildTasks" Version = "8.13" PrivateAssets="all" />
+  \</ItemGroup>
+  \<PropertyGroup>
+    \<RestoreProjectStyle>PackageReference\</RestoreProjectStyle>
+  \</PropertyGroup>
+  \<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" >
+    \<NoWarn>1701;1702;3021\</NoWarn>
+  \</PropertyGroup>
+  \<PropertyGroup>
+<if(cli_bash)>
+    \<!--
       need the CData since this blob is just going to
       be embedded in a mini batch file by studio/msbuild
     -->
-    <MyTester><![CDATA[
+    \<MyTester>\<![CDATA[
+err=0
+for g in ../examples/*
+do
+  file=$g
+  x1="${g##*.}"
+  if [ "$x1" != "errors" ]
+  then
+    echo $file
+    cat $file | bin/Debug/net5.0/Test
+    status="$?"
+    if [ -f "$file".errors ]
+    then
+      if [ "$stat" = "0" ]
+      then
+        echo Expected parse fail.
+        err=1
+      else
+        echo Expected.
+      fi
+    else
+      if [ "$status" != "0" ]
+      then
+        err=1
+      fi
+    fi
+  fi
+done
+exit $err
+]]>\</MyTester>
+<elseif(cli_cmd)>
+    \<!--
+      need the CData since this blob is just going to
+      be embedded in a mini batch file by studio/msbuild
+    -->
+    \<MyTester>\<![CDATA[
 set ERR=0
 for %%G in (..\examples\*) do (
   setlocal EnableDelayedExpansion
@@ -41,13 +77,14 @@ for %%G in (..\examples\*) do (
   )
 )
 EXIT %ERR%
-]]></MyTester>
-</PropertyGroup>
-  <Target Name="Test" >
-    <Message Text="testing" />
-    <Exec Command="$(MyTester)" >
-       <Output TaskParameter="ExitCode" PropertyName ="ErrorCode" />
-    </Exec>
-    <Message Importance="high" Text="$(ErrorCode)"/>
-  </Target>
-</Project>
+]]>\</MyTester>
+<endif>
+  \</PropertyGroup>
+  \<Target Name="Test" >
+    \<Message Text="testing" />
+    \<Exec Command="$(MyTester)" >
+       \<Output TaskParameter="ExitCode" PropertyName ="ErrorCode" />
+    \</Exec>
+    \<Message Importance="high" Text="$(ErrorCode)"/>
+  \</Target>
+\</Project>

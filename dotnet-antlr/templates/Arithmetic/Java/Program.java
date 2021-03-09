@@ -1,5 +1,4 @@
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v 2.2
-
+// Template generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,7 +12,7 @@ public class Program {
         boolean show_tokens = false;
         String file_name = null;
         String input = null;
-        for (int i = 0; i < args.length; ++i)
+        for (int i = 0; i \< args.length; ++i)
         {
             if (args[i].equals("-tokens"))
             {

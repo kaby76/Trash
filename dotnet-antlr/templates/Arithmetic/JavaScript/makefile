@@ -1,7 +1,7 @@
-
+# Generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 # Makefile for Arithmetic.g4
 JAR = C:/Users/kenne/Downloads/antlr-4.9.1-complete.jar
-CLASSPATH = $(JAR)\;.
+CLASSPATH = $(JAR)<if(path_sep_semi)>\;<else>:<endif>.
 .SUFFIXES: .g4 .js
 ANTLRGRAMMARS ?= $(wildcard *.g4)
 GENERATED = ArithmeticLexer.js ArithmeticParser.js
@@ -19,7 +19,7 @@ clean:
 run:
 	node index.js $(RUNARGS)
 ArithmeticLexer.js : Arithmetic.g4
-	java -jar $(JAR) -Dlanguage=JavaScript  $<
+	java -jar $(JAR) -Dlanguage=JavaScript $\<
 ArithmeticParser.js : Arithmetic.g4
-	java -jar $(JAR) -Dlanguage=JavaScript  $<
+	java -jar $(JAR) -Dlanguage=JavaScript $\<
 

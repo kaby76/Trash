@@ -11,6 +11,7 @@
     using System.Xml;
     using System.Xml.XPath;
     using Antlr4.StringTemplate;
+    using System.Text.RegularExpressions;
 
     public class Program
     {
@@ -19,7 +20,7 @@
         public IEnumerable<string> all_source_files = null;
         public LineTranslationType line_translation;
         public EnvType env_type;
-        public PathType path_type;
+        public PathSepType path_sep_type;
         public string antlr_tool_path;
         public string antlr_runtime_path;
         public bool antlr4cs = false;
@@ -81,21 +82,19 @@
             CR,
         }
 
-        public enum PathType
+        public enum PathSepType
         {
-            Native,
-            Unix,
-            Windows,
-            Mac,
+            Semi,
+            Colon,
         }
 
         public static LineTranslationType GetLineTranslationType()
         {
-            System.Console.Error.WriteLine("FrameworkDescription " + RuntimeInformation.FrameworkDescription);
-            System.Console.Error.WriteLine("OSArchitecture " + RuntimeInformation.OSArchitecture);
-            System.Console.Error.WriteLine("OSDescription " + RuntimeInformation.OSDescription);
-            System.Console.Error.WriteLine("ProcessArchitecture " + RuntimeInformation.ProcessArchitecture);
-            System.Console.Error.WriteLine("RuntimeIdentifier " + RuntimeInformation.RuntimeIdentifier);
+            //System.Console.Error.WriteLine("FrameworkDescription " + RuntimeInformation.FrameworkDescription);
+            //System.Console.Error.WriteLine("OSArchitecture " + RuntimeInformation.OSArchitecture);
+            //System.Console.Error.WriteLine("OSDescription " + RuntimeInformation.OSDescription);
+            //System.Console.Error.WriteLine("ProcessArchitecture " + RuntimeInformation.ProcessArchitecture);
+            //System.Console.Error.WriteLine("RuntimeIdentifier " + RuntimeInformation.RuntimeIdentifier);
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
@@ -131,21 +130,16 @@
             throw new Exception("Cannot determine operating system!");
         }
 
-        public static PathType GetPathType()
+        public static PathSepType GetPathType()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return PathType.Unix;
+                return PathSepType.Semi;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return PathType.Windows;
+                return PathSepType.Colon;
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return PathType.Mac;
-            }
-
             throw new Exception("Cannot determine operating system!");
         }
 
@@ -194,13 +188,50 @@
             public EnvType? EnvType { get; set; }
 
             [Option("pathtype", Required = false)]
-            public PathType? PathType { get; set; }
+            public PathSepType? PathType { get; set; }
 
             [Option("linetranslationtype", Required = false)]
             public LineTranslationType? LineTranslationType { get; set; }
 
             [Option("antlrtoolpath", Required = false)]
             public string AntlrToolPath { get; set; }
+        }
+
+        static string TargetName(TargetType target)
+        {
+            return target switch
+            {
+                TargetType.CSharp => "CSharp",
+                TargetType.Java => "Java",
+                TargetType.JavaScript => "JavaScript",
+                TargetType.Cpp => "Cpp",
+                TargetType.Dart => "Dart",
+                TargetType.Go => "Go",
+                TargetType.Php => "Php",
+                TargetType.Python2 => "Python2",
+                TargetType.Python3 => "Python3",
+                TargetType.Swift => "Swift",
+                TargetType.Antlr4cs => "Antlr4cs",
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        static string AllButTargetName(TargetType target)
+        {
+            var all_but = new List<string>() {
+                "CSharp",
+                "Java",
+                "JavaScript",
+                "Cpp",
+                "Dart",
+                "Go",
+                "Php",
+                "Python2",
+                "Python3",
+                "Swift",
+                "Antlr4cs"};
+            var filter = String.Join("/|", all_but.Where(t => t != TargetName(target)));
+            return filter;
         }
 
         static void Main(string[] args)
@@ -211,6 +242,7 @@
             }
             catch (Exception e)
             {
+                System.Console.Error.WriteLine(e);
                 System.Environment.Exit(1);
             }
         }
@@ -220,7 +252,7 @@
             // Get default from OS.
             line_translation = GetLineTranslationType();
             env_type = GetEnvType();
-            path_type = GetPathType();
+            path_sep_type = GetPathType();
 
             // Get any defaults from ~/.dotnet-antlr.rc
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -228,17 +260,7 @@
             {
                 var jsonString = System.IO.File.ReadAllText(home + Path.DirectorySeparatorChar + SetupFfn);
                 var options = JsonSerializer.Deserialize<Options>(jsonString);
-                if (options.AntlrToolPath != null)
-                {
-                    antlr_tool_path = (string)options.AntlrToolPath;
-                } else if (path_type == PathType.Unix)
-                {
-                    antlr_tool_path = "~/Downloads/antlr-4.9.1-complete.jar";
-                } else if (path_type == PathType.Windows)
-                {
-                    antlr_tool_path = home.Replace("\\", "/")
-                        + "/Downloads/antlr-4.9.1-complete.jar";
-                }
+                path_sep_type = (PathSepType)options.PathType;
             }
 
             string tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
@@ -690,37 +712,73 @@
             }
         }
 
+        IEnumerable<string> EnumerateLines(TextReader reader)
+        {
+            string line;
+
+            while ((line = reader.ReadLine()) != null)
+            {
+                yield return line;
+            }
+        }
+
+        string[] ReadAllResourceLines(System.Reflection.Assembly a, string resourceName)
+        {
+            using (Stream stream = a.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return EnumerateLines(reader).ToArray();
+            }
+        }
+
+        string ReadAllResource(System.Reflection.Assembly a, string resourceName)
+        {
+            using (Stream stream = a.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
         private void GenFromTemplates(Program p)
         {
-            Type t = this.GetType();
-            var a = t.Assembly;
-            var l = a.Location;
-            var p2 = Path.GetDirectoryName(l);
-            var p3 = p2 + "/../../../templates/Arithmetic/"
-                + p.target_specific_src_directory;
-            var p4 = Path.GetFullPath(p3);
-            var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
-            var files = new Domemtech.Globbing.Glob(p4)
-                .RegexContents("^.*$")
-                .Where(f =>
-                {
-                    if (f is DirectoryInfo) return false;
-                    if (f.Attributes.HasFlag(FileAttributes.Directory)) return false;
-                    return true;
-                })
-                .Select(f => f.FullName.Replace('\\', '/'))
-                .ToList();
+            Type ty = this.GetType();
+            System.Reflection.Assembly a = ty.Assembly;
+            var res = a.GetManifestResourceNames();
+            var cd = "AntlrTemplating.templates.";
+            var orig_files = ReadAllResourceLines(a, "AntlrTemplating.templates.files");
+            var files = res;
+            var filter_string = "^.*/Arithmetic/(?!.*("
+                + AllButTargetName(target)
+                + ")).*$";
+            var regex_string = filter_string;
+            var regex = new Regex(regex_string);
+            var new_files = orig_files.Where(f => regex.IsMatch(f)).ToList();
             var set = new HashSet<string>();
-            foreach (var path in files)
+            foreach (var f in new_files)
             {
+                // Construct proper file name.
                 // Construct proper starting directory based on namespace.
-                var f = path.Replace('\\', '/');
+                var from = f.Replace('\\', '/');
                 var c = cd.Replace('\\', '/');
                 var e = f.Replace(c, "");
                 var m = Path.GetFileName(f);
                 var n = p.@namespace != null ? p.@namespace.Replace('.', '/') : "";
-                var o = p.outputDirectory.Replace('\\', '/') + n + "/" + m;
-                p.EvalTemplateFile(path, o);
+                var to = p.outputDirectory.Replace('\\', '/') + n + "/" + m;
+                from = cd + from.Replace('/', '.').Substring(2);
+                to = to.Replace('\\', '/');
+                var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
+                Directory.CreateDirectory(q);
+                string content = ReadAllResource(a, from);
+                Template t = new Template(content);
+                t.Add("version", Program.version);
+                t.Add("cli_bash", this.env_type == EnvType.Unix);
+                t.Add("cli_cmd", this.env_type == EnvType.Windows);
+                t.Add("path_sep_semi", this.path_sep_type == PathSepType.Semi);
+                t.Add("path_sep_colon", this.path_sep_type == PathSepType.Colon);
+                var o = t.Render();
+                File.WriteAllText(to, o);
+
             }
         }
 
@@ -881,19 +939,6 @@ public class ErrorListener extends ConsoleErrorListener
             var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
             Directory.CreateDirectory(q);
             File.Copy(from, to, true);
-        }
-
-        public void EvalTemplateFile(string from, string to)
-        {
-            from = from.Replace('\\', '/');
-            to = to.Replace('\\', '/');
-            var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
-            Directory.CreateDirectory(q);
-            var i = System.IO.File.ReadAllText(from);
-            Template t = new Template(i);
-            t.Add("version", Program.version);
-            var o = t.Render();
-            File.WriteAllText(to, o);
         }
 
         public void GeneratedNames()
