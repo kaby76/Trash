@@ -18,13 +18,13 @@ namespace dotnet_antlr
         public string? tool_grammar_files_pattern { get; set; }
 
         [Option('k', "skip-list", Required = false, Separator = ',', HelpText = "A skip list for pom.xml.")]
-        public IEnumerable<string>? SkipList { get; set; }
+        public IEnumerable<string>? skip_list { get; set; }
 
         [Option('m', "maven", Required = false, HelpText = "Read Antlr pom file and convert.")]
         public bool? maven { get; set; }
 
-        [Option('n', "namespace", Required = false, HelpText = "The namespace for all generated files.")]
-        public string? DefaultNamespace { get; set; }
+        [Option('n', "name-space", Required = false, HelpText = "The namespace for all generated files.")]
+        public string? name_space { get; set; }
 
         [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
         public string? output_directory { get; set; }

@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-m true",
+      "commandLineArgs": " -m true -t Antlr4cs",
       "workingDirectory": "C:\\Users\\kenne\\foofoo\\"
     }
   }

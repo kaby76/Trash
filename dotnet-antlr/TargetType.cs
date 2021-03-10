@@ -2,6 +2,7 @@
 {
     public enum TargetType
     {
+        Antlr4cs,
         Cpp,
         CSharp,
         Dart,
@@ -12,6 +13,5 @@
         Python2,
         Python3,
         Swift,
-        Antlr4cs,
     }
 }

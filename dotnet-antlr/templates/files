@@ -1,3 +1,6 @@
+./Antlr4cs/makefile
+./Antlr4cs/Program.cs
+./Antlr4cs/Test.csproj
 ./Arithmetic.g4
 ./CSharp/ErrorListener.cs
 ./CSharp/makefile
