@@ -5,6 +5,9 @@ namespace dotnet_antlr
 {
     public class Config
     {
+        [Option("all_source_pattern", Required = false, HelpText = "R.E. for all source files to use.")]
+        public string? all_source_pattern { get; set; }
+
         [Option('c', "case-fold", Required = false, HelpText = "Fold case of lexer. True = upper, false = lower.")]
         public bool? case_fold { get; set; }
 
@@ -58,6 +61,8 @@ namespace dotnet_antlr
 
         [Option("antlr-tool-path", Required = false)]
         public string? antlr_tool_path { get; set; }
-    }
 
+        [Option("template-sources-directory", Required = false)]
+        public string? template_sources_directory { get; set; }
+    }
 }

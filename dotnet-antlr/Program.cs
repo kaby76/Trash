@@ -192,6 +192,22 @@ namespace dotnet_antlr
                 if (o.name_space != null) config.name_space = o.name_space;
                 if (config.target == TargetType.Antlr4cs || config.target == TargetType.CSharp)
                     config.flatten = true;
+                if (o.all_source_pattern != null) config.all_source_pattern = config.all_source_pattern;
+                else config.all_source_pattern = "^(?!.*(Generated/|target/|examples/|" + AllButTargetName((TargetType)config.target) + "/)).+(" + config.target switch
+                {
+                    TargetType.Antlr4cs => "[.]cs",
+                    TargetType.CSharp => "[.]cs",
+                    TargetType.Java => "[.]java",
+                    TargetType.JavaScript => "[.]js",
+                    TargetType.Cpp => "([.]h|[.]cpp)",
+                    TargetType.Dart => "[.]dart",
+                    TargetType.Go => "[.]go",
+                    TargetType.Php => "[.]php",
+                    TargetType.Python2 => "[.]py",
+                    TargetType.Python3 => "[.]py",
+                    TargetType.Swift => "[.]swift",
+                    _ => throw new NotImplementedException(),
+                } + "|[.]g4)$";
             });
 
             suffix = config.target switch
@@ -585,26 +601,9 @@ namespace dotnet_antlr
                     .Select(f => f.FullName.Replace(cd, ""))
                     .ToList();
 
-            var regex_string = "^(?!.*(" + AllButTargetName((TargetType)config.target) + "/)).*$";
-
             // Find all source files.
-            var all_source_pattern = "^(?!.*(Generated/|target/|examples/|" + AllButTargetName((TargetType)config.target) + "/)).+(" + config.target switch
-            {
-                TargetType.Antlr4cs => "[.]cs",
-                TargetType.CSharp => "[.]cs",
-                TargetType.Java => "[.]java",
-                TargetType.JavaScript => "[.]js",
-                TargetType.Cpp => "([.]h|[.]cpp)",
-                TargetType.Dart => "[.]dart",
-                TargetType.Go => "[.]go",
-                TargetType.Php => "[.]php",
-                TargetType.Python2 => "[.]py",
-                TargetType.Python3 => "[.]py",
-                TargetType.Swift => "[.]swift",
-                _ => throw new NotImplementedException(),
-            } + "|[.]g4)$";
             all_source_files = new Domemtech.Globbing.Glob()
-                    .RegexContents(all_source_pattern)
+                    .RegexContents(config.all_source_pattern)
                     .Where(f => f is FileInfo)
                     .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
                     .ToList();
@@ -643,52 +642,106 @@ namespace dotnet_antlr
 
         private void GenFromTemplates(Program p)
         {
-            System.Reflection.Assembly a = this.GetType().Assembly;
-            // Load resource file that contains the names of all files in templates/ directory,
-            // which were obtained by doing "cd templates/; find . -type f > files" at a Bash
-            // shell.
-            var orig_file_names = ReadAllResourceLines(a, "AntlrTemplating.templates.files");
-            var regex_string = "^(?!.*(" + AllButTargetName((TargetType)config.target) + "/)).*$";
-            var regex = new Regex(regex_string);
-            var files_to_copy = orig_file_names.Where(f =>
+            if (config.template_sources_directory == null)
             {
-                if (config.parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
-                if (f == "./files") return false;
-                var v = regex.IsMatch(f);
-                return v;
-            }).ToList();
-            var prefix_to_remove = "AntlrTemplating.templates.";
-            var set = new HashSet<string>();
-            foreach (var file in files_to_copy)
+                System.Reflection.Assembly a = this.GetType().Assembly;
+                // Load resource file that contains the names of all files in templates/ directory,
+                // which were obtained by doing "cd templates/; find . -type f > files" at a Bash
+                // shell.
+                var orig_file_names = ReadAllResourceLines(a, "AntlrTemplating.templates.files");
+                var regex_string = "^(?!.*(" + AllButTargetName((TargetType)config.target) + "/)).*$";
+                var regex = new Regex(regex_string);
+                var files_to_copy = orig_file_names.Where(f =>
+                {
+                    if (config.parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
+                    if (f == "./files") return false;
+                    var v = regex.IsMatch(f);
+                    return v;
+                }).ToList();
+                var prefix_to_remove = "AntlrTemplating.templates.";
+                var set = new HashSet<string>();
+                foreach (var file in files_to_copy)
+                {
+                    var from = file;
+                    var e = file.Substring(prefix_to_remove.Length);
+                    var m = Path.GetFileName(file);
+                    var n = (p.config.name_space != null
+                        && p.config.flatten != null && !(bool)p.config.flatten)
+                        ? p.config.name_space.Replace('.', '/') : "";
+                    var to = ((string)config.output_directory).Replace('\\', '/') + n + "/" + m;
+                    from = prefix_to_remove + from.Replace('/', '.').Substring(2);
+                    to = to.Replace('\\', '/');
+                    var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
+                    Directory.CreateDirectory(q);
+                    string content = ReadAllResource(a, from);
+                    Template t = new Template(content);
+                    t.Add("cap_start_symbol", Cap(config.start_rule));
+                    t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
+                    t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
+                    t.Add("has_name_space", p.config.name_space != null);
+                    t.Add("lexer_name", config.lexer_name);
+                    t.Add("name_space", p.config.name_space);
+                    t.Add("parser_name", config.parser_name);
+                    t.Add("path_sep_colon", p.config.path_sep == PathSepType.Colon);
+                    t.Add("path_sep_semi", p.config.path_sep == PathSepType.Semi);
+                    t.Add("start_symbol", config.start_rule);
+                    t.Add("tool_grammar_files", this.tool_grammar_files);
+                    t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
+                    t.Add("version", Program.version);
+                    var o = t.Render();
+                    File.WriteAllText(to, o);
+                }
+            }
+            else
             {
-                var from = file;
-                var e = file.Replace(prefix_to_remove, "");
-                var m = Path.GetFileName(file);
-                var n = (p.config.name_space != null
-                    && p.config.flatten != null && !(bool)p.config.flatten)
-                    ? p.config.name_space.Replace('.', '/') : "";
-                var to = ((string)config.output_directory).Replace('\\', '/') + n + "/" + m;
-                from = prefix_to_remove + from.Replace('/', '.').Substring(2);
-                to = to.Replace('\\', '/');
-                var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
-                Directory.CreateDirectory(q);
-                string content = ReadAllResource(a, from);
-                Template t = new Template(content);
-                t.Add("cap_start_symbol", Cap(config.start_rule));
-                t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
-                t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
-                t.Add("has_name_space", p.config.name_space != null);
-                t.Add("lexer_name", config.lexer_name);
-                t.Add("name_space", p.config.name_space);
-                t.Add("parser_name", config.parser_name);
-                t.Add("path_sep_colon", p.config.path_sep == PathSepType.Colon);
-                t.Add("path_sep_semi", p.config.path_sep == PathSepType.Semi);
-                t.Add("start_symbol", config.start_rule);
-                t.Add("tool_grammar_files", this.tool_grammar_files);
-                t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
-                t.Add("version", Program.version);
-                var o = t.Render();
-                File.WriteAllText(to, o);
+                var regex_string = "^(?!.*(files|" + AllButTargetName((TargetType)config.target) + "/)).*$";
+                var files_to_copy = new Domemtech.Globbing.Glob(config.template_sources_directory)
+                    .RegexContents(regex_string)
+                    .Where(f =>
+                    {
+                        if (f.Attributes.HasFlag(FileAttributes.Directory)) return false;
+                        if (f is DirectoryInfo) return false;
+                        return true;
+                    })
+                    .Select(f => f.FullName.Replace('\\','/'))
+                    .Where(f =>
+                    {
+                        if (config.parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
+                        if (f == "./files") return false;
+                        return true;
+                    }).ToList();
+                var prefix_to_remove = config.template_sources_directory + '/';
+                var set = new HashSet<string>();
+                foreach (var file in files_to_copy)
+                {
+                    var from = file;
+                    var e = file.Substring(prefix_to_remove.Length);
+                    var m = Path.GetFileName(file);
+                    var n = (p.config.name_space != null
+                        && p.config.flatten != null && !(bool)p.config.flatten)
+                        ? p.config.name_space.Replace('.', '/') : "";
+                    var to = ((string)config.output_directory).Replace('\\', '/') + n + "/" + m;
+                    to = to.Replace('\\', '/');
+                    var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
+                    Directory.CreateDirectory(q);
+                    string content = File.ReadAllText(from);
+                    Template t = new Template(content);
+                    t.Add("cap_start_symbol", Cap(config.start_rule));
+                    t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
+                    t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
+                    t.Add("has_name_space", p.config.name_space != null);
+                    t.Add("lexer_name", config.lexer_name);
+                    t.Add("name_space", p.config.name_space);
+                    t.Add("parser_name", config.parser_name);
+                    t.Add("path_sep_colon", p.config.path_sep == PathSepType.Colon);
+                    t.Add("path_sep_semi", p.config.path_sep == PathSepType.Semi);
+                    t.Add("start_symbol", config.start_rule);
+                    t.Add("tool_grammar_files", this.tool_grammar_files);
+                    t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
+                    t.Add("version", Program.version);
+                    var o = t.Render();
+                    File.WriteAllText(to, o);
+                }
             }
         }
 
