@@ -3,7 +3,7 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const antlr4 = require('antlr4');
-<tool_grammar_tuples: {x | import <x.GrammarAutomName> './<x.GeneratedFileName>';
+<tool_grammar_tuples: {x | import <x.GrammarAutomName> from './<x.GeneratedFileName>';
 } >
 const strops = require('typescript-string-operations');
 let fs = require('fs-extra')

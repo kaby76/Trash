@@ -15,7 +15,7 @@
 
     public class Program
     {
-        public static string version = "2.2";
+        public static string version = "3.0";
         public List<string> failed_modules = new List<string>();
         public IEnumerable<string> all_source_files = null;
         public LineTranslationType line_translation;
@@ -669,53 +669,49 @@
                 throw;
             }
 
-            if (do_templates)
+
+            // Include all other grammar files, but not if they are the main grammars.
+            var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/|"
+                + String.Join("|", tool_src_grammar_files)
+                + ")).+g4$";
+            additional_grammar_files = new Domemtech.Globbing.Glob()
+                    .RegexContents(additional_grammars_pattern)
+                    .Where(f => f is FileInfo)
+                    .Select(f => f.FullName.Replace(cd, ""))
+                    .ToList();
+
+            System.Console.Error.WriteLine("additional grammars " + String.Join(" ", additional_grammar_files));
+            var regex_string = "^(?!.*(" + AllButTargetName(target) + "/)).*$";
+
+            // Find all source files.
+            var all_source_pattern = "^(?!.*(Generated/|target/|examples/|" + AllButTargetName(target) + "/)).+(" + target switch
             {
-                GenFromTemplates(this);
-            }
-            else
-            {
+                TargetType.CSharp => "[.]cs",
+                TargetType.Java => "[.]java",
+                TargetType.JavaScript => "[.]js",
+                TargetType.Cpp => "([.]h|[.]cpp)",
+                TargetType.Dart => "[.]dart",
+                TargetType.Go => "[.]go",
+                TargetType.Php => "[.]php",
+                TargetType.Python2 => "[.]py",
+                TargetType.Python3 => "[.]py",
+                TargetType.Swift => "[.]swift",
+                _ => throw new NotImplementedException(),
+            } + "|[.]g4)$";
+            all_source_files = new Domemtech.Globbing.Glob()
+                    .RegexContents(all_source_pattern)
+                    .Where(f => f is FileInfo)
+                    .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                    .ToList();
 
-                // Include all other grammar files, but not if they are the main grammars.
-                var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/|"
-                    + String.Join("|", tool_src_grammar_files)
-                    + ")).+g4$";
-                additional_grammar_files = new Domemtech.Globbing.Glob()
-                        .RegexContents(additional_grammars_pattern)
-                        .Where(f => f is FileInfo)
-                        .Select(f => f.FullName.Replace(cd, ""))
-                        .ToList();
+            AddSourceFiles.AddSource(this);
+            GenFromTemplates(this);
 
-                System.Console.Error.WriteLine("additional grammars " + String.Join(" ", additional_grammar_files));
+            //GenBuild.AddBuildFile(this);
+            //GenMain.AddMain(this);
+            //GenListener.AddErrorListener(this);
+            //AddCaseFold();
 
-                // Find all source files.
-                var all_source_pattern = "^(?!.*(Generated/|target/|examples/" + (!antlr4cs ? "|Antlr4cs/" : "") + ")).+" + target switch
-                {
-                    TargetType.CSharp => "[.]cs",
-                    TargetType.Java => "[.]java",
-                    TargetType.JavaScript => "[.]js",
-                    TargetType.Cpp => "([.]h|[.]cpp)",
-                    TargetType.Dart => "[.]dart",
-                    TargetType.Go => "[.]go",
-                    TargetType.Php => "[.]php",
-                    TargetType.Python2 => "[.]py",
-                    TargetType.Python3 => "[.]py",
-                    TargetType.Swift => "[.]swift",
-                    _ => throw new NotImplementedException(),
-                } + "$";
-                all_source_files = new Domemtech.Globbing.Glob()
-                        .RegexContents(all_source_pattern)
-                        .Where(f => f is FileInfo)
-                        .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                        .ToList();
-
-                AddSourceFiles.AddSource(this);
-                GenBuild.AddBuildFile(this);
-                GenGrammars.AddGrammars(this);
-                GenMain.AddMain(this);
-                GenListener.AddErrorListener(this);
-                AddCaseFold();
-            }
         }
 
         IEnumerable<string> EnumerateLines(TextReader reader)
