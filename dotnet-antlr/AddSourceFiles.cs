@@ -17,7 +17,8 @@ namespace dotnet_antlr
                 var c = cd.Replace('\\', '/');
                 var e = f.Replace(c, "");
                 var m = Path.GetFileName(f);
-                var n = p.config.name_space != null ? p.config.name_space.Replace('.', '/') : "";
+                var n = (p.config.name_space != null && p.config.flatten != null
+                    && !(bool)p.config.flatten) ? p.config.name_space.Replace('.', '/') : "";
                 p.CopyFile(path, p.config.output_directory.Replace('\\', '/') + n + "/" + m);
             }
         }

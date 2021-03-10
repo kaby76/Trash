@@ -14,6 +14,9 @@ namespace dotnet_antlr
         [Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
         public string? InputFile { get; set; }
 
+        [Option("flatten", Required = false, HelpText = "Flatten files in target into non-nested directory.")]
+        public bool? flatten { get; set; }
+
         [Option('g', "tool-grammar-files-pattern", Required = false, HelpText = "A list of vertical bar separated grammar file paths.")]
         public string? tool_grammar_files_pattern { get; set; }
 

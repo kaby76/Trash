@@ -28,7 +28,6 @@ namespace dotnet_antlr
         public List<GrammarTuple> tool_grammar_tuples = null;
         public List<string> generated_files = null;
         public List<string> additional_grammar_files = null;
-        public bool profiling = false;
         public bool? case_fold = null;
         public string lexer_src_grammar_file_name = null;
         public string lexer_grammar_file_name = null;
@@ -191,6 +190,8 @@ namespace dotnet_antlr
 
                 if (o.target != null && o.target == TargetType.Antlr4cs) config.name_space = "Test";
                 if (o.name_space != null) config.name_space = o.name_space;
+                if (config.target == TargetType.Antlr4cs || config.target == TargetType.CSharp)
+                    config.flatten = true;
             });
 
             suffix = config.target switch
@@ -663,7 +664,9 @@ namespace dotnet_antlr
                 var from = file;
                 var e = file.Replace(prefix_to_remove, "");
                 var m = Path.GetFileName(file);
-                var n = p.config.name_space != null ? p.config.name_space.Replace('.', '/') : "";
+                var n = (p.config.name_space != null
+                    && p.config.flatten != null && !(bool)p.config.flatten)
+                    ? p.config.name_space.Replace('.', '/') : "";
                 var to = ((string)config.output_directory).Replace('\\', '/') + n + "/" + m;
                 from = prefix_to_remove + from.Replace('/', '.').Substring(2);
                 to = to.Replace('\\', '/');
