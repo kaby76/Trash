@@ -1,12 +1,6 @@
-﻿using CommandLine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Xml;
-using System.Xml.XPath;
 
 namespace dotnet_antlr
 {
@@ -23,10 +17,10 @@ namespace dotnet_antlr
                 var c = cd.Replace('\\', '/');
                 var e = f.Replace(c, "");
                 var m = Path.GetFileName(f);
-                var n = p.@namespace != null ? p.@namespace.Replace('.', '/') : "";
-                p.CopyFile(path, p.outputDirectory.Replace('\\', '/') + n + "/" + m);
+                var n = (p.config.name_space != null && p.config.flatten != null
+                    && !(bool)p.config.flatten) ? p.config.name_space.Replace('.', '/') : "";
+                p.CopyFile(path, p.config.output_directory.Replace('\\', '/') + n + "/" + m);
             }
         }
-
     }
 }

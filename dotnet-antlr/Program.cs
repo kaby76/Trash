@@ -1,100 +1,48 @@
-﻿namespace dotnet_antlr
-{
-    using CommandLine;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Text;
-    using System.Text.Json;
-    using System.Xml;
-    using System.Xml.XPath;
+﻿using CommandLine;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.Json;
+using System.Xml;
+using System.Xml.XPath;
+using Antlr4.StringTemplate;
+using System.Text.RegularExpressions;
 
-    public class Program
+namespace dotnet_antlr
+{
+
+    public partial class Program
     {
-        public static string version = "2.2";
+        public Config config;
+        public static string version = "3.0";
         public List<string> failed_modules = new List<string>();
         public IEnumerable<string> all_source_files = null;
-        public LineTranslationType line_translation;
-        public EnvType env_type;
-        public PathType path_type;
-        public string antlr_tool_path;
         public string antlr_runtime_path;
-        public bool antlr4cs = false;
-        public TargetType target = TargetType.CSharp;
-        public string @namespace = null;
-        public string outputDirectory = "Generated/";
-        public string target_directory;
-        public string source_directory;
         public string root_directory;
         public string target_specific_src_directory;
         public HashSet<string> tool_grammar_files = null;
         public HashSet<string> tool_src_grammar_files = null;
+        public List<GrammarTuple> tool_grammar_tuples = null;
         public List<string> generated_files = null;
         public List<string> additional_grammar_files = null;
-        public bool profiling = false;
         public bool? case_fold = null;
-        public string lexer_name = null;
         public string lexer_src_grammar_file_name = null;
         public string lexer_grammar_file_name = null;
         public string lexer_generated_file_name = null;
-        public string parser_name = null;
         public string parser_src_grammar_file_name = null;
         public string parser_grammar_file_name = null;
         public string parser_generated_file_name = null;
-        public string startRule;
         public string suffix;
-        public IEnumerable<string> skip_list;
-        public bool maven = false;
+
         string SetupFfn = ".dotnet-antlr.rc";
-
-        public enum TargetType
-        {
-            Cpp,
-            CSharp,
-            Dart,
-            Go,
-            Java,
-            JavaScript,
-            Php,
-            Python2,
-            Python3,
-            Swift,
-            Antlr4cs,
-        }
-
-        public enum EnvType
-        {
-            Unix,
-            Windows,
-            Mac,
-        }
-
-        public enum LineTranslationType
-        {
-            Native,
-            LF,
-            CRLF,
-            CR,
-        }
-
-        public enum PathType
-        {
-            Native,
-            Unix,
-            Windows,
-            Mac,
-        }
+        public string target_directory;
+        public string source_directory;
 
         public static LineTranslationType GetLineTranslationType()
         {
-            System.Console.Error.WriteLine("FrameworkDescription " + RuntimeInformation.FrameworkDescription);
-            System.Console.Error.WriteLine("OSArchitecture " + RuntimeInformation.OSArchitecture);
-            System.Console.Error.WriteLine("OSDescription " + RuntimeInformation.OSDescription);
-            System.Console.Error.WriteLine("ProcessArchitecture " + RuntimeInformation.ProcessArchitecture);
-            System.Console.Error.WriteLine("RuntimeIdentifier " + RuntimeInformation.RuntimeIdentifier);
-
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 return LineTranslationType.LF;
@@ -107,7 +55,6 @@
             {
                 return LineTranslationType.CR;
             }
-
             throw new Exception("Cannot determine operating system!");
         }
 
@@ -125,80 +72,57 @@
             {
                 return EnvType.Mac;
             }
-
             throw new Exception("Cannot determine operating system!");
         }
 
-        public static PathType GetPathType()
+        public static PathSepType GetPathType()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return PathType.Unix;
+                return PathSepType.Semi;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return PathType.Windows;
+                return PathSepType.Colon;
             }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return PathType.Mac;
-            }
-
             throw new Exception("Cannot determine operating system!");
         }
 
-        public class Options
+        static string TargetName(TargetType target)
         {
-            [Option('a', "antlr4cs", Required=false, Default=false, HelpText = "Generate code for Antlr4cs runtime.")]
-            public bool Antlr4cs { get; set; }
+            return target switch
+            {
+                TargetType.Antlr4cs => "Antlr4cs",
+                TargetType.CSharp => "CSharp",
+                TargetType.Java => "Java",
+                TargetType.JavaScript => "JavaScript",
+                TargetType.Cpp => "Cpp",
+                TargetType.Dart => "Dart",
+                TargetType.Go => "Go",
+                TargetType.Php => "Php",
+                TargetType.Python2 => "Python2",
+                TargetType.Python3 => "Python3",
+                TargetType.Swift => "Swift",
+                _ => throw new NotImplementedException(),
+            };
+        }
 
-            [Option('c', "case-fold", Required=false, HelpText="Fold case of lexer. True = upper, false = lower.")]
-            public bool? CaseFold { get; set; }
-
-            [Option('e', "encoding", Required = false)]
-            public LineTranslationType? Encoding { get; set; }
-
-            [Option('f', "file", Required=false, HelpText="The name of an input file to parse.")]
-            public string InputFile { get; set; }
-
-            [Option('g', "grammar-files", Required = false, HelpText = "A list of vertical bar separated grammar file paths.")]
-            public string GrammarFiles { get; set; }
-
-            [Option('k', "skip-list", Required = false, Separator = ',', HelpText = "A skip list for pom.xml.")]
-            public IEnumerable<string> SkipList { get; set; }
-
-            [Option('m', "maven", Required = false, Default = false, HelpText = "Read Antlr pom file and convert.")]
-            public bool Maven { get; set; }
-
-            [Option('n', "namespace", Required=false, HelpText="The namespace for all generated files.")]
-            public string DefaultNamespace { get; set; }
-
-            [Option('o', "output-directory", Required=false, HelpText="The output directory for the project.")]
-            public string OutputDirectory { get; set; }
-
-            [Option('p', "package", Required=false, HelpText="PackageReference's to include, in name/version pairs.")]
-            public string Packages { get; set; }
-
-            [Option('s', "start-rule", Required=false, HelpText="Start rule name.")]
-            public string StartRule { get; set; }
-
-            [Option('t', "target", Required = false, Default=TargetType.CSharp, HelpText = "The target language for the project.")]
-            public TargetType Target { get; set; }
-
-            [Option('x', "profile", Required = false, Default = false, HelpText = "Add in Antlr profiling code.")]
-            public bool Profiling { get; set; }
-
-            [Option("envtype", Required = false)]
-            public EnvType? EnvType { get; set; }
-
-            [Option("pathtype", Required = false)]
-            public PathType? PathType { get; set; }
-
-            [Option("linetranslationtype", Required = false)]
-            public LineTranslationType? LineTranslationType { get; set; }
-
-            [Option("antlrtoolpath", Required = false)]
-            public string AntlrToolPath { get; set; }
+        static string AllButTargetName(TargetType target)
+        {
+            var all_but = new List<string>() {
+                "CSharp",
+                "Java",
+                "JavaScript",
+                "Cpp",
+                "Dart",
+                "Go",
+                "Php",
+                "Python2",
+                "Python3",
+                "Swift",
+                "Antlr4cs"};
+            var filter = String.Join("/|", all_but.Where(t => t != TargetName(target)));
+            return filter;
         }
 
         static void Main(string[] args)
@@ -209,62 +133,84 @@
             }
             catch (Exception e)
             {
+                System.Console.Error.WriteLine(e);
                 System.Environment.Exit(1);
             }
         }
 
         public void MainInternal(string[] args)
         {
-            // Get default from OS.
-            line_translation = GetLineTranslationType();
-            env_type = GetEnvType();
-            path_type = GetPathType();
+            config = new Config();
+
+            // Get default from OS, or just default.
+            config.line_translation = GetLineTranslationType();
+            config.env_type = GetEnvType();
+            config.path_sep = GetPathType();
+            config.antlr_tool_path = "~/Downloads/antlr-4.9.1-complete.jar";
+            config.target = TargetType.CSharp;
+            config.tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
+            config.output_directory = "Generated/";
 
             // Get any defaults from ~/.dotnet-antlr.rc
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + SetupFfn))
             {
                 var jsonString = System.IO.File.ReadAllText(home + Path.DirectorySeparatorChar + SetupFfn);
-                var options = JsonSerializer.Deserialize<Options>(jsonString);
-                if (options.AntlrToolPath != null)
+                var o = JsonSerializer.Deserialize<Config>(jsonString);
+                var ty = typeof(Config);
+                foreach (var prop in ty.GetProperties())
                 {
-                    antlr_tool_path = (string)options.AntlrToolPath;
-                } else if (path_type == PathType.Unix)
-                {
-                    antlr_tool_path = "~/Downloads/antlr-4.9.1-complete.jar";
-                } else if (path_type == PathType.Windows)
-                {
-                    antlr_tool_path = home.Replace("\\", "/")
-                        + "/Downloads/antlr-4.9.1-complete.jar";
+                    if (prop.GetValue(o, null) != null)
+                    {
+                        prop.SetValue(config, prop.GetValue(o, null));
+                    }
                 }
             }
 
-            string tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
-
             // Parse options, stop if we see a bogus option, or something like --help.
-            var result = Parser.Default.ParseArguments<Options>(args);
+            var result = Parser.Default.ParseArguments<Config>(args);
             bool stop = false;
-            result.WithNotParsed(o => { stop = true; });
+            result.WithNotParsed(
+                o =>
+                {
+                    stop = true;
+                });
             if (stop) return;
-            
+
             result.WithParsed(o =>
             {
-                target = o.Target;
-                profiling = o.Profiling;
-                antlr4cs = o.Antlr4cs;
-                maven = o.Maven;
-                if (o.Encoding != null) line_translation = (LineTranslationType)o.Encoding == LineTranslationType.Native ? GetLineTranslationType() : (LineTranslationType)o.Encoding;
-                if (antlr4cs) @namespace = "Test";
-                if (o.CaseFold != null) case_fold = o.CaseFold;
-                if (o.DefaultNamespace != null) @namespace = o.DefaultNamespace;
-                if (o.GrammarFiles != null) tool_grammar_files_pattern = o.GrammarFiles;
-                if (o.StartRule != null) startRule = o.StartRule;
-                if (o.OutputDirectory != null) outputDirectory = o.OutputDirectory;
-                if (o.SkipList != null) skip_list = o.SkipList;
+                var ty = typeof(Config);
+                foreach (var prop in ty.GetProperties())
+                {
+                    if (prop.GetValue(o, null) != null)
+                    {
+                        prop.SetValue(config, prop.GetValue(o, null));
+                    }
+                }
+
+                if (o.target != null && o.target == TargetType.Antlr4cs) config.name_space = "Test";
+                if (o.name_space != null) config.name_space = o.name_space;
+                if (config.target == TargetType.Antlr4cs || config.target == TargetType.CSharp)
+                    config.flatten = true;
+                if (o.all_source_pattern != null) config.all_source_pattern = config.all_source_pattern;
+                else config.all_source_pattern = "^(?!.*(Generated/|target/|examples/|" + AllButTargetName((TargetType)config.target) + "/)).+(" + config.target switch
+                {
+                    TargetType.Antlr4cs => "[.]cs",
+                    TargetType.CSharp => "[.]cs",
+                    TargetType.Java => "[.]java",
+                    TargetType.JavaScript => "[.]js",
+                    TargetType.Cpp => "([.]h|[.]cpp)",
+                    TargetType.Dart => "[.]dart",
+                    TargetType.Go => "[.]go",
+                    TargetType.Php => "[.]php",
+                    TargetType.Python2 => "[.]py",
+                    TargetType.Python3 => "[.]py",
+                    TargetType.Swift => "[.]swift",
+                    _ => throw new NotImplementedException(),
+                } + "|[.]g4)$";
             });
 
-            if (antlr4cs) target = TargetType.Antlr4cs;
-            suffix = target switch
+            suffix = config.target switch
             {
                 TargetType.CSharp => ".cs",
                 TargetType.Java => ".java",
@@ -279,7 +225,7 @@
                 TargetType.Antlr4cs => ".cs",
                 _ => throw new NotImplementedException(),
             };
-            target_specific_src_directory = target switch
+            target_specific_src_directory = config.target switch
             {
                 TargetType.CSharp => "CSharp",
                 TargetType.Java => "Java",
@@ -299,7 +245,7 @@
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             root_directory = cd;
 
-            if (maven)
+            if (config.maven != null && (bool)config.maven)
             {
                 FollowPoms(cd);
                 if (failed_modules.Any())
@@ -320,13 +266,13 @@
         {
             Environment.CurrentDirectory = cd;
             System.Console.Error.WriteLine(cd);
-        
-            if (skip_list.Where(s => cd.Remove(cd.Length-1).EndsWith(s)).Any())
+
+            if (config.skip_list.Where(s => cd.Remove(cd.Length - 1).EndsWith(s)).Any())
             {
                 System.Console.Error.WriteLine("Skipping.");
                 return;
             }
-            target_directory = System.IO.Path.GetFullPath(cd + Path.DirectorySeparatorChar + outputDirectory);
+            target_directory = System.IO.Path.GetFullPath(cd + Path.DirectorySeparatorChar + (string)config.output_directory);
 
             XmlTextReader reader = new XmlTextReader(cd + Path.DirectorySeparatorChar + @"pom.xml");
             reader.Namespaces = false;
@@ -477,7 +423,7 @@
                     source_directory = "";
                 }
 
-                parser_name = pom_grammar_name.First() + "Parser";
+                config.parser_name = pom_grammar_name.First() + "Parser";
                 for (; ; )
                 {
                     // Probe for parser grammar. 
@@ -539,9 +485,9 @@
                     (pom_package_name.Any() && pom_package_name.First() != ""
                     ? pom_package_name.First().Replace('.', '/') + '/'
                     : "")
-                    + parser_name + suffix;
+                    + (string)config.parser_name + suffix;
 
-                lexer_name = pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First() + "Lexer";
+                config.lexer_name = pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First() + "Lexer";
                 for (; ; )
                 {
                     // Probe for lexer grammar. 
@@ -604,20 +550,25 @@
                     (pom_package_name.Any() && pom_package_name.First() != ""
                     ? pom_package_name.First().Replace('.', '/') + '/'
                     : "")
-                    + lexer_name + suffix;
+                    + config.lexer_name + suffix;
 
-                if (pom_package_name.Any()) @namespace = pom_package_name.First();
+                if (pom_package_name.Any()) config.name_space = pom_package_name.First();
                 tool_src_grammar_files = new HashSet<string>()
                 {
                     lexer_src_grammar_file_name,
                     parser_src_grammar_file_name
+                };
+                tool_grammar_tuples = new List<GrammarTuple>()
+                {
+                    new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, config.lexer_name),
+                    new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, config.parser_name),
                 };
                 tool_grammar_files = new HashSet<string>()
                 {
                     lexer_grammar_file_name,
                     parser_grammar_file_name
                 };
-                startRule = pom_entry_point.First();
+                config.start_rule = pom_entry_point.First();
                 generated_files = new List<string>()
                 {
                     lexer_generated_file_name,
@@ -632,12 +583,14 @@
             try
             {
                 // Create a directory containing target build files.
-                Directory.CreateDirectory(outputDirectory);
+                Directory.CreateDirectory((string)config.output_directory);
             }
             catch (Exception)
             {
                 throw;
             }
+
+
             // Include all other grammar files, but not if they are the main grammars.
             var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/|"
                 + String.Join("|", tool_src_grammar_files)
@@ -648,46 +601,182 @@
                     .Select(f => f.FullName.Replace(cd, ""))
                     .ToList();
 
-            System.Console.Error.WriteLine("additional grammars " + String.Join(" ", additional_grammar_files));
-
             // Find all source files.
-            var all_source_pattern = "^(?!.*(Generated/|target/|examples/" + (!antlr4cs ? "|Antlr4cs/" : "") + ")).+" + target switch
-            {
-                TargetType.CSharp => "[.]cs",
-                TargetType.Java => "[.]java",
-                TargetType.JavaScript => "[.]js",
-                TargetType.Cpp => "([.]h|[.]cpp)",
-                TargetType.Dart => "[.]dart",
-                TargetType.Go => "[.]go",
-                TargetType.Php => "[.]php",
-                TargetType.Python2 => "[.]py",
-                TargetType.Python3 => "[.]py",
-                TargetType.Swift => "[.]swift",
-                _ => throw new NotImplementedException(),
-            } + "$";
             all_source_files = new Domemtech.Globbing.Glob()
-                    .RegexContents(all_source_pattern)
+                    .RegexContents(config.all_source_pattern)
                     .Where(f => f is FileInfo)
-                    .Select(f => f.FullName.Replace('\\','/').Replace(cd, ""))
+                    .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
                     .ToList();
 
             AddSourceFiles.AddSource(this);
-            GenBuild.AddBuildFile(this);
-            GenGrammars.AddGrammars(this);
-            GenMain.AddMain(this);
-            GenListener.AddErrorListener(this);
-            AddCaseFold();
+            GenFromTemplates(this);
+        }
+
+        IEnumerable<string> EnumerateLines(TextReader reader)
+        {
+            string line;
+
+            while ((line = reader.ReadLine()) != null)
+            {
+                yield return line;
+            }
+        }
+
+        string[] ReadAllResourceLines(System.Reflection.Assembly a, string resourceName)
+        {
+            using (Stream stream = a.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return EnumerateLines(reader).ToArray();
+            }
+        }
+
+        string ReadAllResource(System.Reflection.Assembly a, string resourceName)
+        {
+            using (Stream stream = a.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        private void GenFromTemplates(Program p)
+        {
+            if (config.template_sources_directory == null)
+            {
+                System.Reflection.Assembly a = this.GetType().Assembly;
+                // Load resource file that contains the names of all files in templates/ directory,
+                // which were obtained by doing "cd templates/; find . -type f > files" at a Bash
+                // shell.
+                var orig_file_names = ReadAllResourceLines(a, "AntlrTemplating.templates.files");
+                var regex_string = "^(?!.*(" + AllButTargetName((TargetType)config.target) + "/)).*$";
+                var regex = new Regex(regex_string);
+                var files_to_copy = orig_file_names.Where(f =>
+                {
+                    if (config.parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
+                    if (f == "./files") return false;
+                    var v = regex.IsMatch(f);
+                    return v;
+                }).ToList();
+                var prefix_to_remove = "AntlrTemplating.templates.";
+                var set = new HashSet<string>();
+                foreach (var file in files_to_copy)
+                {
+                    var from = file;
+                    var e = file.Substring(prefix_to_remove.Length);
+                    var m = Path.GetFileName(file);
+                    var n = (p.config.name_space != null
+                        && p.config.flatten != null && !(bool)p.config.flatten)
+                        ? p.config.name_space.Replace('.', '/') : "";
+                    var to = ((string)config.output_directory).Replace('\\', '/') + n + "/" + m;
+                    from = prefix_to_remove + from.Replace('/', '.').Substring(2);
+                    to = to.Replace('\\', '/');
+                    var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
+                    Directory.CreateDirectory(q);
+                    string content = ReadAllResource(a, from);
+                    Template t = new Template(content);
+                    t.Add("cap_start_symbol", Cap(config.start_rule));
+                    t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
+                    t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
+                    t.Add("has_name_space", p.config.name_space != null);
+                    t.Add("lexer_name", config.lexer_name);
+                    t.Add("name_space", p.config.name_space);
+                    t.Add("parser_name", config.parser_name);
+                    t.Add("path_sep_colon", p.config.path_sep == PathSepType.Colon);
+                    t.Add("path_sep_semi", p.config.path_sep == PathSepType.Semi);
+                    t.Add("start_symbol", config.start_rule);
+                    t.Add("tool_grammar_files", this.tool_grammar_files);
+                    t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
+                    t.Add("version", Program.version);
+                    var o = t.Render();
+                    File.WriteAllText(to, o);
+                }
+            }
+            else
+            {
+                var regex_string = "^(?!.*(files|" + AllButTargetName((TargetType)config.target) + "/)).*$";
+                var files_to_copy = new Domemtech.Globbing.Glob(config.template_sources_directory)
+                    .RegexContents(regex_string)
+                    .Where(f =>
+                    {
+                        if (f.Attributes.HasFlag(FileAttributes.Directory)) return false;
+                        if (f is DirectoryInfo) return false;
+                        return true;
+                    })
+                    .Select(f => f.FullName.Replace('\\','/'))
+                    .Where(f =>
+                    {
+                        if (config.parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
+                        if (f == "./files") return false;
+                        return true;
+                    }).ToList();
+                var prefix_to_remove = config.template_sources_directory + '/';
+                var set = new HashSet<string>();
+                foreach (var file in files_to_copy)
+                {
+                    var from = file;
+                    var e = file.Substring(prefix_to_remove.Length);
+                    var m = Path.GetFileName(file);
+                    var n = (p.config.name_space != null
+                        && p.config.flatten != null && !(bool)p.config.flatten)
+                        ? p.config.name_space.Replace('.', '/') : "";
+                    var to = ((string)config.output_directory).Replace('\\', '/') + n + "/" + m;
+                    to = to.Replace('\\', '/');
+                    var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
+                    Directory.CreateDirectory(q);
+                    string content = File.ReadAllText(from);
+                    Template t = new Template(content);
+                    t.Add("cap_start_symbol", Cap(config.start_rule));
+                    t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
+                    t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
+                    t.Add("has_name_space", p.config.name_space != null);
+                    t.Add("lexer_name", config.lexer_name);
+                    t.Add("name_space", p.config.name_space);
+                    t.Add("parser_name", config.parser_name);
+                    t.Add("path_sep_colon", p.config.path_sep == PathSepType.Colon);
+                    t.Add("path_sep_semi", p.config.path_sep == PathSepType.Semi);
+                    t.Add("start_symbol", config.start_rule);
+                    t.Add("tool_grammar_files", this.tool_grammar_files);
+                    t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
+                    t.Add("version", Program.version);
+                    var o = t.Render();
+                    File.WriteAllText(to, o);
+                }
+            }
+        }
+
+        static string Cap(string str)
+        {
+            if (str.Length == 0)
+                return str;
+            else if (str.Length == 1)
+                return char.ToUpper(str[0]).ToString();
+            else
+                return char.ToUpper(str[0]) + str.Substring(1);
+        }
+
+        public class GrammarTuple
+        {
+            public GrammarTuple(string grammar_file_name, string generated_file_name, string grammar_autom_name)
+            {
+                GrammarFileName = grammar_file_name;
+                GeneratedFileName = generated_file_name;
+                GrammarAutomName = grammar_autom_name;
+            }
+            public string GrammarFileName { get; set; }
+            public string GeneratedFileName { get; set; }
+            public string GrammarAutomName { get; set; }
         }
 
         public void AddCaseFold()
         {
-            if (case_fold == null) return;
+            if (config.case_fold == null) return;
             StringBuilder sb = new StringBuilder();
-            if (target == TargetType.CSharp)
+            if (config.target == TargetType.CSharp)
             {
                 sb.AppendLine(@"
 // Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
-                if (@namespace != null) sb.AppendLine("namespace " + @namespace + @"
+                if (config.name_space != null) sb.AppendLine("namespace " + config.name_space + @"
 {");
                 sb.Append(@"
 /* Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
@@ -795,15 +884,15 @@ namespace Antlr4.Runtime
         }
     }
 }");
-                if (@namespace != null) sb.AppendLine("}");
-                string fn = outputDirectory + "CaseChangingCharStream.cs";
+                if (config.name_space != null) sb.AppendLine("}");
+                string fn = (string)config.output_directory + "CaseChangingCharStream.cs";
                 System.IO.File.WriteAllText(fn, sb.ToString());
             }
-            else if (target == TargetType.Java)
+            else if (config.target == TargetType.Java)
             {
                 sb.Append(@"
 // Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
-package " + @namespace + @";
+package " + config.name_space + @";
 
 import org.antlr.v4.runtime.*;
 
@@ -824,32 +913,31 @@ public class ErrorListener extends ConsoleErrorListener
     }
 }
 ");
-                string fn = outputDirectory + "ErrorListener.java";
+                string fn = (string)config.output_directory + "ErrorListener.java";
                 System.IO.File.WriteAllText(fn, sb.ToString());
             }
         }
 
-        public void CopyFile(string path, string v)
+        public void CopyFile(string from, string to)
         {
-            path = path.Replace('\\', '/');
-            v = v.Replace('\\', '/');
-            var q = Path.GetDirectoryName(v).ToString().Replace('\\', '/');
+            from = from.Replace('\\', '/');
+            to = to.Replace('\\', '/');
+            var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
             Directory.CreateDirectory(q);
-            File.Copy(path, v, true);
+            File.Copy(from, to, true);
         }
 
         public void GeneratedNames()
         {
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
-            lexer_name = "";
-            parser_name = "";
+            config.lexer_name = "";
+            config.parser_name = "";
             parser_src_grammar_file_name = "";
             parser_grammar_file_name = "";
             parser_generated_file_name = "";
             lexer_src_grammar_file_name = "";
             lexer_grammar_file_name = "";
             lexer_generated_file_name = "";
-            target_specific_src_directory = "";
             bool use_arithmetic = false;
             for (; ; )
             {
@@ -887,13 +975,13 @@ public class ErrorListener extends ConsoleErrorListener
                     }
                 }
                 parser_src_grammar_file_name = "Arithmetic.g4";
-                startRule = "file_";
+                config.start_rule = "file_";
                 use_arithmetic = true;
                 break;
             }
-            parser_name = Path.GetFileName(parser_src_grammar_file_name).Replace("Parser.g4", "").Replace(".g4", "") + "Parser";
+            config.parser_name = Path.GetFileName(parser_src_grammar_file_name).Replace("Parser.g4", "").Replace(".g4", "") + "Parser";
             parser_grammar_file_name = Path.GetFileName(parser_src_grammar_file_name);
-            parser_generated_file_name = parser_name + suffix;
+            parser_generated_file_name = config.parser_name + suffix;
 
             for (; ; )
             {
@@ -931,14 +1019,14 @@ public class ErrorListener extends ConsoleErrorListener
                     }
                 }
                 lexer_src_grammar_file_name = "Arithmetic.g4";
-                startRule = "file_";
+                config.start_rule = "file_";
                 use_arithmetic = true;
                 break;
             }
 
-            lexer_name = Path.GetFileName(lexer_src_grammar_file_name).Replace("Lexer.g4", "").Replace(".g4", "") + "Lexer";
+            config.lexer_name = Path.GetFileName(lexer_src_grammar_file_name).Replace("Lexer.g4", "").Replace(".g4", "") + "Lexer";
             lexer_grammar_file_name = Path.GetFileName(lexer_src_grammar_file_name);
-            lexer_generated_file_name = lexer_name + suffix;
+            lexer_generated_file_name = config.lexer_name + suffix;
             if (!use_arithmetic)
                 tool_src_grammar_files = new HashSet<string>()
                     {
@@ -956,6 +1044,11 @@ public class ErrorListener extends ConsoleErrorListener
                 {
                     lexer_generated_file_name,
                     parser_generated_file_name,
+                };
+            tool_grammar_tuples = new List<GrammarTuple>()
+                {
+                    new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, config.lexer_name),
+                    new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, config.parser_name),
                 };
             // lexer and parser are set if the grammar is partitioned.
             // rest is set if there are grammar is combined.
