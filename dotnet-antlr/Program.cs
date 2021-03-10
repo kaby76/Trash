@@ -33,7 +33,7 @@
         public string target_specific_src_directory;
         public HashSet<string> tool_grammar_files = null;
         public HashSet<string> tool_src_grammar_files = null;
-        public List<GrammarPair> tool_grammar_pairs = null;
+        public List<GrammarTuple> tool_grammar_tuples = null;
         public List<string> generated_files = null;
         public List<string> additional_grammar_files = null;
         public bool profiling = false;
@@ -637,10 +637,10 @@
                     lexer_src_grammar_file_name,
                     parser_src_grammar_file_name
                 };
-                tool_grammar_pairs = new List<GrammarPair>()
+                tool_grammar_tuples = new List<GrammarTuple>()
                 {
-                    new GrammarPair(lexer_grammar_file_name, lexer_generated_file_name),
-                    new GrammarPair(parser_grammar_file_name, parser_generated_file_name),
+                    new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, lexer_name),
+                    new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, parser_name),
                 };
                 tool_grammar_files = new HashSet<string>()
                 {
@@ -753,9 +753,15 @@
             // which were obtained by doing "cd templates/; find . -type f > files" at a Bash
             // shell.
             var orig_file_names = ReadAllResourceLines(a, "AntlrTemplating.templates.files");
-            var regex_string = "^.*/Arithmetic/(?!.*(" + AllButTargetName(target) + ")).*$";
+            var regex_string = "^(?!.*(" + AllButTargetName(target) + "/)).*$";
             var regex = new Regex(regex_string);
-            var files_to_copy = orig_file_names.Where(f => regex.IsMatch(f)).ToList();
+            var files_to_copy = orig_file_names.Where(f =>
+            {
+                if (parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
+                if (f == "./files") return false;
+                var v = regex.IsMatch(f);
+                return v;
+            }).ToList();
             var prefix_to_remove = "AntlrTemplating.templates.";
             var set = new HashSet<string>();
             foreach (var file in files_to_copy)
@@ -777,21 +783,37 @@
                 t.Add("path_sep_semi", this.path_sep_type == PathSepType.Semi);
                 t.Add("path_sep_colon", this.path_sep_type == PathSepType.Colon);
                 t.Add("tool_grammar_files", this.tool_grammar_files);
-                t.Add("tool_grammar_pairs", this.tool_grammar_pairs);
+                t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
+                t.Add("lexer_name", lexer_name);
+                t.Add("parser_name", parser_name);
+                t.Add("start_symbol", startRule);
+                t.Add("cap_start_symbol", Cap(startRule));
                 var o = t.Render();
                 File.WriteAllText(to, o);
             }
         }
 
-        public class GrammarPair
+        static string Cap(string str)
         {
-            public GrammarPair(string grammar_file_name, string generated_file_name)
+            if (str.Length == 0)
+                return str;
+            else if (str.Length == 1)
+                return char.ToUpper(str[0]).ToString();
+            else
+                return char.ToUpper(str[0]) + str.Substring(1);
+        }
+
+        public class GrammarTuple
+        {
+            public GrammarTuple(string grammar_file_name, string generated_file_name, string grammar_autom_name)
             {
                 GrammarFileName = grammar_file_name;
                 GeneratedFileName = generated_file_name;
+                GrammarAutomName = grammar_autom_name;
             }
             public string GrammarFileName { get; set; }
             public string GeneratedFileName { get; set; }
+            public string GrammarAutomName { get; set; }
         }
 
         public void AddCaseFold()
@@ -1071,10 +1093,10 @@ public class ErrorListener extends ConsoleErrorListener
                     lexer_generated_file_name,
                     parser_generated_file_name,
                 };
-            tool_grammar_pairs = new List<GrammarPair>()
+            tool_grammar_tuples = new List<GrammarTuple>()
                 {
-                    new GrammarPair(lexer_grammar_file_name, lexer_generated_file_name),
-                    new GrammarPair(parser_grammar_file_name, parser_generated_file_name),
+                    new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, lexer_name),
+                    new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, parser_name),
                 };
             // lexer and parser are set if the grammar is partitioned.
             // rest is set if there are grammar is combined.

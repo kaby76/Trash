@@ -6,7 +6,7 @@ CLASSPATH = $(JAR)<if(path_sep_semi)>\;<else>:<endif>.
 .java.class:
 	javac -cp $(CLASSPATH) $*.java
 ANTLRGRAMMARS ?= $(wildcard *.g4)
-GENERATED = ArithmeticLexer.java ArithmeticParser.java
+GENERATED = <tool_grammar_tuples:{x|<x.GeneratedFileName> }>
 SOURCES = $(GENERATED) \
     Program.java \
     ErrorListener.java
@@ -19,8 +19,7 @@ clean:
 	rm -f $(GENERATED)
 run:
 	java -classpath $(CLASSPATH) Program $(RUNARGS)
-ArithmeticLexer.java : Arithmetic.g4
+<tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) $\<
-ArithmeticParser.java : Arithmetic.g4
-	java -jar $(JAR) $\<
+} >
 

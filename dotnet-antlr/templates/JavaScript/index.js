@@ -3,8 +3,8 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const antlr4 = require('antlr4');
-import ArithmeticLexer from './ArithmeticLexer.js';
-import ArithmeticParser from './ArithmeticParser.js';
+<tool_grammar_tuples: {x | import <x.GrammarAutomName> './<x.GeneratedFileName>';
+} >
 const strops = require('typescript-string-operations');
 let fs = require('fs-extra')
 
@@ -66,10 +66,10 @@ if (input == null && file_name == null)
     str = antlr4.CharStreams.fromPathSync(file_name, 'utf8');
 }
 var num_errors = 0;
-const lexer = new ArithmeticLexer(str);
+const lexer = new <lexer_name>(str);
 lexer.strictMode = false;
 const tokens = new antlr4.CommonTokenStream(lexer);
-const parser = new ArithmeticParser(tokens);
+const parser = new <parser_name>(tokens);
 lexer.removeErrorListeners();
 parser.removeErrorListeners();
 parser.addErrorListener(new MyErrorListener());
@@ -87,7 +87,7 @@ if (show_tokens)
     }
     lexer.reset();
 }
-const tree = parser.file_();
+const tree = parser.<start_symbol>();
 if (show_tree)
 {
     console.log(tree.toStringTree(parser.ruleNames));

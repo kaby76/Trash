@@ -4,9 +4,8 @@ JAR = C:/Users/kenne/Downloads/antlr-4.9.1-complete.jar
 CLASSPATH = $(JAR)<if(path_sep_semi)>\;<else>:<endif>.
 .SUFFIXES: .g4 .js
 ANTLRGRAMMARS ?= $(wildcard *.g4)
-GENERATED = ArithmeticLexer.js ArithmeticParser.js
-SOURCES = $(GENERATED) \
-    index.js
+GENERATED = <tool_grammar_tuples:{x|<x.GeneratedFileName> }>
+SOURCES = $(GENERATED) index.js
 default: classes
 classes: $(SOURCES)
 	npm install
@@ -18,8 +17,7 @@ clean:
 	rm -f $(GENERATED)
 run:
 	node index.js $(RUNARGS)
-ArithmeticLexer.js : Arithmetic.g4
+<tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) -Dlanguage=JavaScript $\<
-ArithmeticParser.js : Arithmetic.g4
-	java -jar $(JAR) -Dlanguage=JavaScript $\<
+} >
 

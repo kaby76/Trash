@@ -5,7 +5,7 @@ JAR = C:/Users/kenne/Downloads/antlr-4.9.1-complete.jar
 CLASSPATH = $(JAR)<if(path_sep_semi)>\;<else>:<endif>.
 .SUFFIXES: .g4 .py
 ANTLRGRAMMARS ?= $(wildcard *.g4)
-GENERATED = ArithmeticLexer.py ArithmeticParser.py
+GENERATED = <tool_grammar_tuples:{x|<x.GeneratedFileName> }>
 SOURCES = $(GENERATED) \
     Program.py
 default: classes
@@ -19,8 +19,7 @@ clean:
 	rm -f $(GENERATED)
 run:
 	python Program.py $(RUNARGS)
-ArithmeticLexer.py : Arithmetic.g4
-	java -jar $(JAR) -Dlanguage=Python3  $<
-ArithmeticParser.py : Arithmetic.g4
-	java -jar $(JAR) -Dlanguage=Python3  $<
+<tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
+	java -jar $(JAR) -Dlanguage=Python3 $\<
+} >
 

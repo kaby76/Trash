@@ -2,7 +2,6 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Dart",
       "workingDirectory": "C:\\Users\\kenne\\foofoo\\"
     }
   }

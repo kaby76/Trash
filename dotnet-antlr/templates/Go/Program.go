@@ -71,7 +71,7 @@ func main() {
     } else if file_name != "" {
         str, _ = antlr.NewFileStream(file_name);        
     }
-    var lexer = parser.NewArithmeticLexer(str);
+    var lexer = parser.New<lexer_name>(str);
     if show_tokens {
 		j := 0
 	    for {
@@ -92,7 +92,7 @@ func main() {
     }
 	// Requires additional 0??
     var tokens = antlr.NewCommonTokenStream(lexer, 0)
-    var parser = parser.NewArithmeticParser(tokens)
+    var parser = parser.New<parser_name>(tokens)
 
 	lexerErrors := &CustomErrorListener{}
 	lexer.RemoveErrorListeners()
@@ -103,7 +103,7 @@ func main() {
 	parser.AddErrorListener(parserErrors)
 
 	// mutated name--not lowercase.
-    var tree = parser.File_()
+    var tree = parser.<cap_start_symbol>()
 	// missing
     if parserErrors.errors > 0 || lexerErrors.errors > 0 {
         fmt.Println("Parse failed.");

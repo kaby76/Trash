@@ -1,8 +1,8 @@
 // Template generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 
 import 'package:antlr4/antlr4.dart';
-import 'ArithmeticParser.dart';
-import 'ArithmeticLexer.dart';
+<tool_grammar_tuples:{x | import '<x.GeneratedFileName>';
+} >
 import 'dart:io';
 import 'dart:convert';
 
@@ -29,8 +29,8 @@ void main(List\<String> args) async {
         else if (args[i] == "-file")
             file_name = args[++i];
     }
-    ArithmeticParser.checkVersion();
-    ArithmeticLexer.checkVersion();
+    <tool_grammar_tuples:{x|<x.GrammarAutomName>.checkVersion();
+    }>
     if (input == null && file_name == null)
     {
 	    final List\<int> bytes = \<int>[];
@@ -48,25 +48,25 @@ void main(List\<String> args) async {
     {
         str = await InputStream.fromPath(file_name);        
     }
-    var lexer = ArithmeticLexer(str);
+    var lexer = <lexer_name>(str);
     if (show_tokens)
     {
         for (int i = 0; ; ++i)
         {
             var token = lexer.nextToken();
-	    print(token.toString());
+	        print(token.toString());
             if (token.type == -1)
                 break;
         }
         lexer.reset();
     }
     var tokens = CommonTokenStream(lexer);
-    var parser = ArithmeticParser(tokens);
+    var parser = <parser_name>(tokens);
 //    var listener_lexer = ErrorListener();
 //    var listener_parser = ErrorListener();
 //    lexer.AddErrorListener(listener_lexer);
 //    parser.AddErrorListener(listener_parser);
-    var tree = parser.file_();
+    var tree = parser.<start_symbol>();
     if (parser.numberOfSyntaxErrors > 0)
     {
         print("Parse failed.");

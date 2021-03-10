@@ -4,8 +4,8 @@ import sys
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 from readchar import readchar
-from ArithmeticLexer import ArithmeticLexer;
-from ArithmeticParser import ArithmeticParser;
+from <lexer_name> import <lexer_name>;
+from <parser_name> import <parser_name>;
 
 def getChar():
     xx = readchar()
@@ -30,7 +30,7 @@ def main(argv):
     input = None
     file_name = None
     i = 1
-    while i < len(argv):
+    while i \< len(argv):
         arg = argv[i]
         if arg in ("-tokens"):
             show_tokens = True
@@ -59,13 +59,13 @@ def main(argv):
     elif (file_name != None):
         str = FileStream(file_name, 'utf8');
 
-    lexer = ArithmeticLexer(str);
+    lexer = <lexer_name>(str);
     lexer.removeErrorListeners()
     l_listener = MyErrorListener()
     lexer.addErrorListener(l_listener)
     # lexer.strictMode = false
     tokens = CommonTokenStream(lexer)
-    parser = ArithmeticParser(tokens)
+    parser = <parser_name>(tokens)
     parser.removeErrorListeners()
     p_listener = MyErrorListener()
     parser.addErrorListener(p_listener)
@@ -80,7 +80,7 @@ def main(argv):
             if (token.type == -1):
                 break
         lexer.reset()
-    tree = parser.file_()
+    tree = parser.<start_symbol>()
     if (show_tree):
         print(tree.toStringTree(recog=parser))
     if p_listener.num_errors > 0 or l_listener.num_errors > 0:

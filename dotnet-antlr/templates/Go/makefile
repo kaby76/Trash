@@ -4,9 +4,8 @@ JAR = C:/Users/kenne/Downloads/antlr-4.9.1-complete.jar
 CLASSPATH = $(JAR)<if(path_sep_semi)>\;<else>:<endif>.
 .SUFFIXES: .g4 .go
 ANTLRGRAMMARS ?= $(wildcard *.g4)
-GENERATED = ArithmeticLexer.go ArithmeticParser.go
-SOURCES = $(GENERATED) \
-    Program.go
+GENERATED = <tool_grammar_tuples:{x|<x.GeneratedFileName> }>
+SOURCES = $(GENERATED) Program.go
 default: classes
 classes: $(SOURCES)
 	@if [ "$(GOPATH)" = "" ]; then echo "GOPATH must be defined, usually c:/users/youruserid/."; exit 1; fi
@@ -17,10 +16,8 @@ clean:
 	rm -f $(GENERATED)
 run:
 	go run Program.go $(RUNARGS)
-ArithmeticLexer.go : Arithmetic.g4
+<tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	-mkdir parser
 	java -jar $(JAR) -Dlanguage=Go -o parser $\<
-ArithmeticParser.go : Arithmetic.g4
-	-mkdir parser
-	java -jar $(JAR) -Dlanguage=Go -o parser  $\<
+} >
 

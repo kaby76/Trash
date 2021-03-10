@@ -17,13 +17,13 @@ public class Program
     public static IParseTree Parse(string input)
     {
         var str = new AntlrInputStream(input);
-        var lexer = new ArithmeticLexer(str);
+        var lexer = new <lexer_name>(str);
         Lexer = lexer;
         var tokens = new CommonTokenStream(lexer);
         TokenStream = tokens;
-        var parser = new ArithmeticParser(tokens);
+        var parser = new <parser_name>(tokens);
         Parser = parser;
-        var tree = parser.file_();
+        var tree = parser.<start_symbol>();
         Tree = tree;
         return tree;
     }
@@ -69,7 +69,7 @@ public class Program
         {
             str = CharStreams.fromPath(file_name);
         }
-        var lexer = new ArithmeticLexer(str);
+        var lexer = new <lexer_name>(str);
         if (show_tokens)
         {
             StringBuilder new_s = new StringBuilder();
@@ -86,13 +86,13 @@ public class Program
             lexer.Reset();
         }
         var tokens = new CommonTokenStream(lexer);
-        var parser = new ArithmeticParser(tokens);
+        var parser = new <parser_name>(tokens);
         var listener_lexer = new ErrorListener\<int>();
         var listener_parser = new ErrorListener\<IToken>();
         lexer.AddErrorListener(listener_lexer);
         parser.AddErrorListener(listener_parser);
         DateTime before = DateTime.Now;
-        var tree = parser.file_();
+        var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;
         System.Console.Error.WriteLine("Time: " + (after - before));
         if (listener_lexer.had_error || listener_parser.had_error)

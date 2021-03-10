@@ -1,12 +1,6 @@
-﻿using CommandLine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Xml;
-using System.Xml.XPath;
 
 namespace dotnet_antlr
 {

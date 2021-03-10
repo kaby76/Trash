@@ -40,7 +40,7 @@ public class Program {
         {
             str = CharStreams.fromFileName(file_name);
         }
-        ArithmeticLexer lexer = new ArithmeticLexer(str);
+        <lexer_name> lexer = new <lexer_name>(str);
         if (show_tokens)
         {
             StringBuilder new_s = new StringBuilder();
@@ -58,13 +58,13 @@ public class Program {
             lexer.reset();
         }
         var tokens = new CommonTokenStream(lexer);
-        ArithmeticParser parser = new ArithmeticParser(tokens);
+        <parser_name> parser = new <parser_name>(tokens);
         ErrorListener lexer_listener = new ErrorListener();
         ErrorListener listener = new ErrorListener();
         parser.removeParseListeners();
         parser.addErrorListener(listener);
         lexer.addErrorListener(lexer_listener);
-        ParseTree tree = parser.file_();
+        ParseTree tree = parser.<start_symbol>();
         if (listener.had_error || lexer_listener.had_error)
             System.out.println("Parse failed.");
         else
