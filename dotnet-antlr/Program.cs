@@ -740,6 +740,7 @@ namespace dotnet_antlr
                     Directory.CreateDirectory(q);
                     string content = File.ReadAllText(from);
                     Template t = new Template(content);
+                    t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(config.start_rule));
                     t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
                     t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
@@ -753,7 +754,6 @@ namespace dotnet_antlr
                     t.Add("tool_grammar_files", this.tool_grammar_files);
                     t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
                     t.Add("version", Program.version);
-                    t.Add("antlr_tool_path", config.antlr_tool_path);
                     var o = t.Render();
                     File.WriteAllText(to, o);
                 }
