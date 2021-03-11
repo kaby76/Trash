@@ -1,6 +1,6 @@
 # Generated code from Antlr4BuildTasks.dotnet-antlr v <version>
 # Makefile for Arithmetic.g4
-JAR = C:/Users/kenne/Downloads/antlr-4.9.1-complete.jar
+JAR = <antlr_tool_path>
 CLASSPATH = $(JAR)<if(path_sep_semi)>\;<else>:<endif>.
 .SUFFIXES: .g4 .js
 ANTLRGRAMMARS ?= $(wildcard *.g4)

@@ -75,15 +75,29 @@ namespace dotnet_antlr
             throw new Exception("Cannot determine operating system!");
         }
 
-        public static PathSepType GetPathType()
+        public static PathSepType GetPathSep()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return PathSepType.Semi;
+                return PathSepType.Colon;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return PathSepType.Colon;
+                return PathSepType.Semi;
+            }
+            throw new Exception("Cannot determine operating system!");
+        }
+
+        public static string GetAntlrToolPath()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return "~/Downloads/antlr-4.9.1-complete.jar";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                return home + "/Downloads/antlr-4.9.1-complete.jar";
             }
             throw new Exception("Cannot determine operating system!");
         }
@@ -145,8 +159,8 @@ namespace dotnet_antlr
             // Get default from OS, or just default.
             config.line_translation = GetLineTranslationType();
             config.env_type = GetEnvType();
-            config.path_sep = GetPathType();
-            config.antlr_tool_path = "~/Downloads/antlr-4.9.1-complete.jar";
+            config.path_sep = GetPathSep();
+            config.antlr_tool_path = GetAntlrToolPath();
             config.target = TargetType.CSharp;
             config.tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
             config.output_directory = "Generated/";
@@ -477,12 +491,12 @@ namespace dotnet_antlr
                     throw new Exception("Cannot find the parser grammar (" + pom_grammar_name.First() + " | " + pom_grammar_name.First() + "Parser).g4");
                 }
                 parser_grammar_file_name =
-                    (pom_package_name.Any() && pom_package_name.First() != ""
+                    (config.flatten != null && !(bool)config.flatten && pom_package_name.Any() && pom_package_name.First() != ""
                     ? pom_package_name.First().Replace('.', '/') + '/'
                     : "")
                     + Path.GetFileName(parser_src_grammar_file_name);
                 parser_generated_file_name =
-                    (pom_package_name.Any() && pom_package_name.First() != ""
+                    (config.flatten != null && !(bool)config.flatten && pom_package_name.Any() && pom_package_name.First() != ""
                     ? pom_package_name.First().Replace('.', '/') + '/'
                     : "")
                     + (string)config.parser_name + suffix;
@@ -542,12 +556,12 @@ namespace dotnet_antlr
                 }
 
                 lexer_grammar_file_name =
-                    (pom_package_name.Any() && pom_package_name.First() != ""
+                    (config.flatten != null && !(bool)config.flatten && pom_package_name.Any() && pom_package_name.First() != ""
                     ? pom_package_name.First().Replace('.', '/') + '/'
                     : "")
                     + Path.GetFileName(lexer_src_grammar_file_name);
                 lexer_generated_file_name =
-                    (pom_package_name.Any() && pom_package_name.First() != ""
+                    (config.flatten != null && !(bool)config.flatten && pom_package_name.Any() && pom_package_name.First() != ""
                     ? pom_package_name.First().Replace('.', '/') + '/'
                     : "")
                     + config.lexer_name + suffix;
@@ -663,7 +677,6 @@ namespace dotnet_antlr
                 foreach (var file in files_to_copy)
                 {
                     var from = file;
-                    var e = file.Substring(prefix_to_remove.Length);
                     var m = Path.GetFileName(file);
                     var n = (p.config.name_space != null
                         && p.config.flatten != null && !(bool)p.config.flatten)
@@ -688,6 +701,7 @@ namespace dotnet_antlr
                     t.Add("tool_grammar_files", this.tool_grammar_files);
                     t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
                     t.Add("version", Program.version);
+                    t.Add("antlr_tool_path", config.antlr_tool_path);
                     var o = t.Render();
                     File.WriteAllText(to, o);
                 }
@@ -739,6 +753,7 @@ namespace dotnet_antlr
                     t.Add("tool_grammar_files", this.tool_grammar_files);
                     t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
                     t.Add("version", Program.version);
+                    t.Add("antlr_tool_path", config.antlr_tool_path);
                     var o = t.Render();
                     File.WriteAllText(to, o);
                 }
