@@ -1,4 +1,4 @@
-JAR=~/Downloads/antlr-4.9.1-complete.jar
+JAR=~/Downloads/antlr-4.9.2-complete.jar
 CLASSPATH=$JAR:.
 err=0
 for g in ../examples/*

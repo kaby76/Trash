@@ -92,12 +92,12 @@ namespace dotnet_antlr
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return "~/Downloads/antlr-4.9.1-complete.jar";
+                return "~/Downloads/antlr-4.9.2-complete.jar";
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                return home + "/Downloads/antlr-4.9.1-complete.jar";
+                return home + "/Downloads/antlr-4.9.2-complete.jar";
             }
             throw new Exception("Cannot determine operating system!");
         }
