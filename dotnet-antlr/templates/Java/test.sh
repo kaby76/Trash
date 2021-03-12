@@ -1,7 +1,7 @@
-JAR=~/Downloads/antlr-4.9.2-complete.jar
-CLASSPATH=$JAR:.
+JAR=<antlr_tool_path>
+CLASSPATH=$JAR<if(path_sep_semi)>\;<else>:<endif>.
 err=0
-for g in ../examples/*
+for g in `find ../examples -type f | grep -v '.errors$' | grep -v '.tree$'`
 do
   file=$g
   x1="${g##*.}"

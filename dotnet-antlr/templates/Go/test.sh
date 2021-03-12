@@ -1,5 +1,5 @@
 err=0
-for g in ../examples/*
+for g in `find ../examples -type f | grep -v '.errors$' | grep -v '.tree$'`
 do
   file=$g
   x1="${g##*.}"

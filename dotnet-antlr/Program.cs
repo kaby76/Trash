@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.0.1";
+        public static string version = "3.0.3";
         public List<string> failed_modules = new List<string>();
         public IEnumerable<string> all_source_files = null;
         public string antlr_runtime_path;
@@ -97,7 +97,7 @@ namespace dotnet_antlr
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                return home + "/Downloads/antlr-4.9.2-complete.jar";
+                return (home + "/Downloads/antlr-4.9.2-complete.jar").Replace('\\', '/');
             }
             throw new Exception("Cannot determine operating system!");
         }
@@ -155,7 +155,6 @@ namespace dotnet_antlr
         public void MainInternal(string[] args)
         {
             config = new Config();
-
             // Get default from OS, or just default.
             config.line_translation = GetLineTranslationType();
             config.env_type = GetEnvType();
@@ -254,7 +253,8 @@ namespace dotnet_antlr
                 TargetType.Antlr4cs => "Antlr4cs",
                 _ => throw new NotImplementedException(),
             };
-
+            if (config.template_sources_directory != null)
+                config.template_sources_directory = Path.GetFullPath(config.template_sources_directory);
             var path = Environment.CurrentDirectory;
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             root_directory = cd;
