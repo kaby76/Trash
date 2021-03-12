@@ -54,14 +54,7 @@ public class Program
         ICharStream str = null;
         if (input == null && file_name == null)
         {
-            StringBuilder sb = new StringBuilder();
-            int ch;
-            while ((ch = System.Console.Read()) != -1)
-            {
-                sb.Append((char)ch);
-            }
-            input = sb.ToString();
-            str = CharStreams.fromString(input);
+            str = CharStreams.fromStream(System.Console.OpenStandardInput());
         } else if (input != null)
         {
             str = CharStreams.fromString(input);

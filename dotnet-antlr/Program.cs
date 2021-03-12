@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.0";
+        public static string version = "3.0.1";
         public List<string> failed_modules = new List<string>();
         public IEnumerable<string> all_source_files = null;
         public string antlr_runtime_path;
