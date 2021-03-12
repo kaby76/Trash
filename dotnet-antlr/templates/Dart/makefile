@@ -19,4 +19,5 @@ run:
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) -Dlanguage=Dart $\<
 } >
-
+test:
+	bash test.sh

@@ -8,3 +8,5 @@ run:
 clean:
 	dotnet clean
 	rm -rf bin obj
+test:
+	dotnet build -t:test

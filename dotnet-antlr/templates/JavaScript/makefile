@@ -20,4 +20,5 @@ run:
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) -Dlanguage=JavaScript $\<
 } >
-
+test:
+	bash test.sh

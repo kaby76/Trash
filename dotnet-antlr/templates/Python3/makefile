@@ -1,4 +1,3 @@
-
 # Generated code from Antlr4BuildTasks.dotnet-antlr v 2.2
 # Makefile for Arithmetic.g4
 JAR = <antlr_tool_path>
@@ -22,4 +21,5 @@ run:
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) -Dlanguage=Python3 $\<
 } >
-
+test:
+	bash test.sh

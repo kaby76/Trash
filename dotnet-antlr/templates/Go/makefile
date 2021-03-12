@@ -20,4 +20,5 @@ run:
 	-mkdir parser
 	java -jar $(JAR) -Dlanguage=Go -o parser $\<
 } >
-
+test:
+	bash test.sh

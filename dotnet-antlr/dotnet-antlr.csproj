@@ -31,12 +31,7 @@ an Antlr parser.]]>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Domemtech.Globbing" Version="2.3.0" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Reference Include="Antlr4.StringTemplate">
-      <HintPath>..\..\GitHub\antlrcs\Antlr4.StringTemplate\bin\Debug\netstandard2.0\Antlr4.StringTemplate.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Domemtech.StringTemplate4" Version="4.0.9" />
   </ItemGroup>
 
 </Project>
