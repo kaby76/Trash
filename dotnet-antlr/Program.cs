@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.0.3";
+        public static string version = "3.0.4";
         public List<string> failed_modules = new List<string>();
         public IEnumerable<string> all_source_files = null;
         public string antlr_runtime_path;
@@ -147,7 +147,7 @@ namespace dotnet_antlr
             }
             catch (Exception e)
             {
-                System.Console.Error.WriteLine(e);
+                System.Console.Error.WriteLine(e.ToString());
                 System.Environment.Exit(1);
             }
         }
@@ -315,6 +315,7 @@ namespace dotnet_antlr
                         System.Console.Error.WriteLine(
                             "Failed: "
                             + cd + sd + "/");
+                        System.Console.Error.WriteLine(e.ToString());
                         failed_modules.Add(module);
                     }
                 }
@@ -687,6 +688,7 @@ namespace dotnet_antlr
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = ReadAllResource(a, from);
+                    System.Console.Error.WriteLine("File is " + from);
                     Template t = new Template(content);
                     t.Add("cap_start_symbol", Cap(config.start_rule));
                     t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
@@ -739,6 +741,7 @@ namespace dotnet_antlr
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = File.ReadAllText(from);
+                    System.Console.Error.WriteLine("File is " + from);
                     Template t = new Template(content);
                     t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(config.start_rule));
