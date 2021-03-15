@@ -6,10 +6,10 @@ using System;
 
 namespace dotnet_antlr_test
 {
-    [TestClass]
+    //[TestClass]
     public class UnitTest1
     {
-        [TestMethod]
+        //[TestMethod]
         public void TestMethod1()
         {
             // Try generating Arithmetic test.
@@ -96,7 +96,7 @@ namespace dotnet_antlr_test
             }
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void TestMethod2()
         {
             // Try test for CSharp grammar.

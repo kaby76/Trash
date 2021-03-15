@@ -36,7 +36,8 @@ namespace dotnet_antlr
         public string parser_grammar_file_name = null;
         public string parser_generated_file_name = null;
         public string suffix;
-
+        string ignore_string = null;
+        string ignore_file_name = ".dotnet-antlr-ignore";
         string SetupFfn = ".dotnet-antlr.rc";
         public string target_directory;
         public string source_directory;
@@ -198,6 +199,14 @@ namespace dotnet_antlr
                 });
             if (stop) return;
 
+            if (File.Exists(ignore_file_name))
+            {
+                var ignore = new StringBuilder();
+                var lines = File.ReadAllLines(ignore_file_name);
+                var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
+                ignore_string = string.Join("|", ignore_lines);
+            }
+
             result.WithParsed(o =>
             {
                 var ty = typeof(Config);
@@ -214,7 +223,7 @@ namespace dotnet_antlr
                 if (config.target == TargetType.Antlr4cs || config.target == TargetType.CSharp)
                     config.flatten = true;
                 if (o.all_source_pattern != null) config.all_source_pattern = config.all_source_pattern;
-                else config.all_source_pattern = "^(?!.*(ignore/|Generated/|target/|examples/|" + AllButTargetName((TargetType)config.target) + "/)).+(" + config.target switch
+                else config.all_source_pattern = "^(?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/|" + AllButTargetName((TargetType)config.target) + "/)).+(" + config.target switch
                 {
                     TargetType.Antlr4cs => "[.]cs",
                     TargetType.CSharp => "[.]cs",
@@ -446,13 +455,22 @@ namespace dotnet_antlr
                     source_directory = "";
                 }
 
+                // Check for existence of .dotnet-antlr-ignore file.
+                // If there is one, read and create pattern of what to ignore.
+                if (File.Exists(ignore_file_name))
+                {
+                    var ignore = new StringBuilder();
+                    var lines = File.ReadAllLines(ignore_file_name);
+                    var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
+                    ignore_string = string.Join("|", ignore_lines);
+                }
                 config.parser_name = pom_grammar_name.First() + "Parser";
                 for (; ; )
                 {
                     // Probe for parser grammar. 
                     {
                         var parser_grammars_pattern =
-                            "^((?!.*(ignore/|Generated/|target/|examples/))("
+                            "^((?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/))("
                             + target_specific_src_directory + "/)(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Parser)).g4$";
                         var any =
                             new Domemtech.Globbing.Glob()
@@ -516,7 +534,7 @@ namespace dotnet_antlr
                     // Probe for lexer grammar. 
                     {
                         var lexer_grammars_pattern =
-                            "^((?!.*(ignore/|Generated/|target/|examples/))("
+                            "^((?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/))("
                             + target_specific_src_directory + "/)(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Lexer)).g4$";
                         var any =
                             new Domemtech.Globbing.Glob()
@@ -615,7 +633,7 @@ namespace dotnet_antlr
 
 
             // Include all other grammar files, but not if they are the main grammars.
-            var additional_grammars_pattern = "^(?!.*(ignore/|Generated/|target/|examples/|"
+            var additional_grammars_pattern = "^(?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/|"
                 + String.Join("|", tool_src_grammar_files)
                 + ")).+g4$";
             additional_grammar_files = new Domemtech.Globbing.Glob()
