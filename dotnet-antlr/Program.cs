@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.0.4";
+        public static string version = "3.0.7";
         public List<string> failed_modules = new List<string>();
         public IEnumerable<string> all_source_files = null;
         public string antlr_runtime_path;
@@ -85,6 +85,10 @@ namespace dotnet_antlr
             {
                 return PathSepType.Semi;
             }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return PathSepType.Colon;
+            }
             throw new Exception("Cannot determine operating system!");
         }
 
@@ -98,6 +102,10 @@ namespace dotnet_antlr
             {
                 var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 return (home + "/Downloads/antlr-4.9.2-complete.jar").Replace('\\', '/');
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return "~/Downloads/antlr-4.9.2-complete.jar";
             }
             throw new Exception("Cannot determine operating system!");
         }
@@ -206,7 +214,7 @@ namespace dotnet_antlr
                 if (config.target == TargetType.Antlr4cs || config.target == TargetType.CSharp)
                     config.flatten = true;
                 if (o.all_source_pattern != null) config.all_source_pattern = config.all_source_pattern;
-                else config.all_source_pattern = "^(?!.*(Generated/|target/|examples/|" + AllButTargetName((TargetType)config.target) + "/)).+(" + config.target switch
+                else config.all_source_pattern = "^(?!.*(ignore/|Generated/|target/|examples/|" + AllButTargetName((TargetType)config.target) + "/)).+(" + config.target switch
                 {
                     TargetType.Antlr4cs => "[.]cs",
                     TargetType.CSharp => "[.]cs",
@@ -444,7 +452,7 @@ namespace dotnet_antlr
                     // Probe for parser grammar. 
                     {
                         var parser_grammars_pattern =
-                            "^((?!.*(Generated/|target/|examples/))("
+                            "^((?!.*(ignore/|Generated/|target/|examples/))("
                             + target_specific_src_directory + "/)(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Parser)).g4$";
                         var any =
                             new Domemtech.Globbing.Glob()
@@ -508,7 +516,7 @@ namespace dotnet_antlr
                     // Probe for lexer grammar. 
                     {
                         var lexer_grammars_pattern =
-                            "^((?!.*(Generated/|target/|examples/))("
+                            "^((?!.*(ignore/|Generated/|target/|examples/))("
                             + target_specific_src_directory + "/)(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Lexer)).g4$";
                         var any =
                             new Domemtech.Globbing.Glob()
@@ -607,7 +615,7 @@ namespace dotnet_antlr
 
 
             // Include all other grammar files, but not if they are the main grammars.
-            var additional_grammars_pattern = "^(?!.*(Generated/|target/|examples/|"
+            var additional_grammars_pattern = "^(?!.*(ignore/|Generated/|target/|examples/|"
                 + String.Join("|", tool_src_grammar_files)
                 + ")).+g4$";
             additional_grammar_files = new Domemtech.Globbing.Glob()
@@ -962,9 +970,9 @@ public class ErrorListener extends ConsoleErrorListener
                 // Probe for parser grammar. 
                 {
                     var parser_grammars_pattern =
-                        "^((?!.*(Generated/|target/|examples/))("
+                        "^((?!.*(ignore/|Generated/|target/|examples/))("
                         + target_specific_src_directory + "/)"
-                        + "(.*|.*Parser)).g4$";
+                        + "((?!.*Lexer)|.*Parser)).g4$";
                     var any =
                         new Domemtech.Globbing.Glob()
                             .RegexContents(parser_grammars_pattern)
@@ -979,7 +987,7 @@ public class ErrorListener extends ConsoleErrorListener
                 }
                 {
                     var parser_grammars_pattern =
-                        "^(?!.*(Generated/|target/|examples/))(.*|.*Parser).g4$";
+                        "^(?!.*(ignore/|Generated/|target/|examples/))((?!.*Lexer)|.*Parser).g4$";
                     var any =
                         new Domemtech.Globbing.Glob()
                             .RegexContents(parser_grammars_pattern)
@@ -1006,9 +1014,9 @@ public class ErrorListener extends ConsoleErrorListener
                 // Probe for lexer grammar. 
                 {
                     var lexer_grammars_pattern =
-                           "^((?!.*(Generated/|target/|examples/))("
+                           "^((?!.*(ignore/|Generated/|target/|examples/))("
                         + target_specific_src_directory + "/)"
-                        + "(.*|.*Lexer)).g4$";
+                        + "((?!.*Parser)|.*Lexer)).g4$";
                     var any =
                         new Domemtech.Globbing.Glob()
                             .RegexContents(lexer_grammars_pattern)
@@ -1023,7 +1031,7 @@ public class ErrorListener extends ConsoleErrorListener
                 }
                 {
                     var lexer_grammars_pattern =
-                        "^(?!.*(Generated/|target/|examples/))(.*|.*Lexer).g4$";
+                        "^(?!.*(ignore/|Generated/|target/|examples/))((?!.*Parser)|.*Lexer).g4$";
                     var any =
                         new Domemtech.Globbing.Glob()
                             .RegexContents(lexer_grammars_pattern)
