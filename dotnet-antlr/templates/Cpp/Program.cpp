@@ -15,16 +15,15 @@ std::string formatDuration(uint64_t duration) {
     long tseconds = duration / 1000000;
     long minutes = tseconds / 60;
     long seconds = tseconds % 60;
-    long rem_microseconds = duration % 1000000;
-    long milliseconds = rem_microseconds / 1000;
+    long microseconds = duration % 1000000;
     oss \<\< std::setfill('0')
         \<\< minutes
         \<\< ":"
         \<\< std::setw(2)
         \<\< seconds
         \<\< "."
-        \<\< std::setw(3)
-        \<\< milliseconds;
+        \<\< std::setw(6)
+        \<\< microseconds;
     return oss.str();
 }
 
@@ -57,7 +56,7 @@ int TryParse(std::vector\<std::string>& args)
         str = new antlr4::ANTLRInputStream(std::cin);
     } else if (input != nullptr)
     {
-        str = new antlr4::ANTLRInputStream(input);
+        str = new antlr4::ANTLRInputStream(*input);
     } else if (file_name != nullptr)
     {
         std::fstream fs(*file_name);
