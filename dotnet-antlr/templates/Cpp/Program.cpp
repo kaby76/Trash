@@ -11,20 +11,21 @@
 
 std::string formatDuration(uint64_t duration) {
 	std::stringstream oss;
-
-	oss \<\< std::setfill('0')
-			\<\< (duration % 60000000000) / 60000000
-			\<\< ":"
-			\<\< std::setw(2)
-			\<\< (duration % 60000000) / 1000000
-			\<\< "."
-			\<\< std::setw(3)
-			\<\< (duration % 1000000) / 1000
-			\<\< "."
-			\<\< std::setw(3)
-			\<\< duration % 1000;
-
-	return oss.str();
+    // duration is in microseconds units.
+    long tseconds = duration / 1000000;
+    long minutes = tseconds / 60;
+    long seconds = tseconds % 60;
+    long rem_microseconds = duration % 1000000;
+    long milliseconds = rem_microseconds / 1000;
+    oss \<\< std::setfill('0')
+        \<\< minutes
+        \<\< ":"
+        \<\< std::setw(2)
+        \<\< seconds
+        \<\< "."
+        \<\< std::setw(3)
+        \<\< milliseconds;
+    return oss.str();
 }
 
 int TryParse(std::vector\<std::string>& args)
@@ -56,27 +57,24 @@ int TryParse(std::vector\<std::string>& args)
         str = new antlr4::ANTLRInputStream(std::cin);
     } else if (input != nullptr)
     {
-      //  str = CharStreams.fromString(input);
+        str = new antlr4::ANTLRInputStream(input);
     } else if (file_name != nullptr)
     {
-        str = new antlr4::ANTLRInputStream(*file_name);
+        std::fstream fs(*file_name);
+        str = new antlr4::ANTLRInputStream(fs);
     }
     antlr4::Lexer * lexer = new <lexer_name>(str);
-//    if (show_tokens)
-//    {
-//        StringBuilder new_s = new StringBuilder();
-//        for (int i = 0; ; ++i)
-//        {
-//            var ro_token = lexer.NextToken();
-//            var token = (CommonToken)ro_token;
-//            token.TokenIndex = i;
-//            new_s.AppendLine(token.ToString());
-//            if (token.Type == Antlr4.Runtime.TokenConstants.EOF)
-//                break;
-//        }
-//        System.Console.Error.WriteLine(new_s.ToString());
-//        lexer.Reset();
-//    }
+    if (show_tokens)
+    {
+        for (int i = 0; ; ++i)
+        {
+            auto token = lexer->nextToken();
+            std::cout \<\< token->toString() \<\< std::endl;
+            if (token->getType() == antlr4::IntStream::EOF)
+                break;
+        }
+        lexer->reset();
+    }
     auto tokens = new antlr4::CommonTokenStream(lexer);
     auto * parser = new <parser_name>(tokens);
     auto listener_lexer = new ErrorListener();
