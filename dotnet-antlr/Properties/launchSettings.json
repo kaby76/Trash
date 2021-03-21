@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-s compilation_unit",
-      "workingDirectory": "C:\\Users\\kenne\\AppData\\Local\\Temp\\Foobar2"
+      "commandLineArgs": " -m true  -t Cpp --template-sources-directory ../templates-3x",
+      "workingDirectory": "C:\\Users\\kenne\\perf\\html"
     }
   }
 }

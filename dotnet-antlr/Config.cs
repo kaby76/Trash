@@ -23,6 +23,9 @@ namespace dotnet_antlr
         [Option("flatten", Required = false, HelpText = "Flatten files in target into non-nested directory.")]
         public bool? flatten { get; set; }
 
+        [Option("grammar-name", Required = false, HelpText = "The grammar name.")]
+        public string? grammar_name { get; set; }
+
         [Option("lexer-name", Required = false, HelpText = "The name of the lexer.")]
         public string? lexer_name { get; set; }
 

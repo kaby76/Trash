@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.0.7";
+        public static string version = "3.0.8";
         public List<string> failed_modules = new List<string>();
         public IEnumerable<string> all_source_files = null;
         public string antlr_runtime_path;
@@ -32,9 +32,11 @@ namespace dotnet_antlr
         public string lexer_src_grammar_file_name = null;
         public string lexer_grammar_file_name = null;
         public string lexer_generated_file_name = null;
+        public string lexer_generated_include_file_name = null;
         public string parser_src_grammar_file_name = null;
         public string parser_grammar_file_name = null;
         public string parser_generated_file_name = null;
+        public string parser_generated_include_file_name = null;
         public string suffix;
         string ignore_string = null;
         string ignore_file_name = ".dotnet-antlr-ignore";
@@ -172,6 +174,7 @@ namespace dotnet_antlr
             config.target = TargetType.CSharp;
             config.tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
             config.output_directory = "Generated/";
+            config.flatten = false;
 
             // Get any defaults from ~/.dotnet-antlr.rc
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -220,24 +223,15 @@ namespace dotnet_antlr
 
                 if (o.target != null && o.target == TargetType.Antlr4cs) config.name_space = "Test";
                 if (o.name_space != null) config.name_space = o.name_space;
-                if (config.target == TargetType.Antlr4cs || config.target == TargetType.CSharp)
-                    config.flatten = true;
+                if (o.flatten != null) config.flatten = o.flatten;
                 if (o.all_source_pattern != null) config.all_source_pattern = config.all_source_pattern;
-                else config.all_source_pattern = "^(?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/|" + AllButTargetName((TargetType)config.target) + "/)).+(" + config.target switch
-                {
-                    TargetType.Antlr4cs => "[.]cs",
-                    TargetType.CSharp => "[.]cs",
-                    TargetType.Java => "[.]java",
-                    TargetType.JavaScript => "[.]js",
-                    TargetType.Cpp => "([.]h|[.]cpp)",
-                    TargetType.Dart => "[.]dart",
-                    TargetType.Go => "[.]go",
-                    TargetType.Php => "[.]php",
-                    TargetType.Python2 => "[.]py",
-                    TargetType.Python3 => "[.]py",
-                    TargetType.Swift => "[.]swift",
-                    _ => throw new NotImplementedException(),
-                } + "|[.]g4)$";
+                else config.all_source_pattern =
+                    "^(?!.*(" +
+                     (ignore_string != null ? ignore_string + "|" : "")
+                     + "ignore/|Generated/|target/|examples/|"
+                     + AllButTargetName((TargetType)config.target)
+                     + "/)).+"
+                     + "$";
             });
 
             suffix = config.target switch
@@ -522,11 +516,13 @@ namespace dotnet_antlr
                     ? pom_package_name.First().Replace('.', '/') + '/'
                     : "")
                     + Path.GetFileName(parser_src_grammar_file_name);
-                parser_generated_file_name =
+                var pstem =
                     (config.flatten != null && !(bool)config.flatten && pom_package_name.Any() && pom_package_name.First() != ""
                     ? pom_package_name.First().Replace('.', '/') + '/'
                     : "")
-                    + (string)config.parser_name + suffix;
+                    + (string)config.parser_name;
+                parser_generated_file_name = pstem + suffix;
+                parser_generated_include_file_name = pstem + ".h";
 
                 config.lexer_name = pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First() + "Lexer";
                 for (; ; )
@@ -587,11 +583,13 @@ namespace dotnet_antlr
                     ? pom_package_name.First().Replace('.', '/') + '/'
                     : "")
                     + Path.GetFileName(lexer_src_grammar_file_name);
-                lexer_generated_file_name =
+                var lstem =
                     (config.flatten != null && !(bool)config.flatten && pom_package_name.Any() && pom_package_name.First() != ""
                     ? pom_package_name.First().Replace('.', '/') + '/'
                     : "")
-                    + config.lexer_name + suffix;
+                    + config.lexer_name;
+                lexer_generated_file_name = lstem + suffix;
+                lexer_generated_include_file_name = lstem + ".h";
 
                 if (pom_package_name.Any()) config.name_space = pom_package_name.First();
                 tool_src_grammar_files = new HashSet<string>()
@@ -601,8 +599,8 @@ namespace dotnet_antlr
                 };
                 tool_grammar_tuples = new List<GrammarTuple>()
                 {
-                    new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, config.lexer_name),
-                    new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, config.parser_name),
+                    new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, lexer_generated_include_file_name, config.lexer_name),
+                    new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, parser_generated_include_file_name, config.parser_name),
                 };
                 tool_grammar_files = new HashSet<string>()
                 {
@@ -640,13 +638,6 @@ namespace dotnet_antlr
                     .RegexContents(additional_grammars_pattern)
                     .Where(f => f is FileInfo)
                     .Select(f => f.FullName.Replace(cd, ""))
-                    .ToList();
-
-            // Find all source files.
-            all_source_files = new Domemtech.Globbing.Glob()
-                    .RegexContents(config.all_source_pattern)
-                    .Where(f => f is FileInfo)
-                    .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
                     .ToList();
 
             AddSourceFiles.AddSource(this);
@@ -704,11 +695,13 @@ namespace dotnet_antlr
                 foreach (var file in files_to_copy)
                 {
                     var from = file;
-                    var m = Path.GetFileName(file);
-                    var n = (p.config.name_space != null
-                        && p.config.flatten != null && !(bool)p.config.flatten)
-                        ? p.config.name_space.Replace('.', '/') : "";
-                    var to = ((string)config.output_directory).Replace('\\', '/') + n + "/" + m;
+                    // copy the file straight up if it doesn't begin
+                    // with target directory name. Otherwise,
+                    // remove the target dir name.
+                    var to = from.StartsWith("./" + TargetName((TargetType)p.config.target))
+                        ? from.Substring(("./" + TargetName((TargetType)p.config.target)).Length + 1)
+                        : from.Substring(2);
+                    to = ((string)config.output_directory).Replace('\\', '/') + to;
                     from = prefix_to_remove + from.Replace('/', '.').Substring(2);
                     to = to.Replace('\\', '/');
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
@@ -716,20 +709,28 @@ namespace dotnet_antlr
                     string content = ReadAllResource(a, from);
                     System.Console.Error.WriteLine("File is " + from);
                     Template t = new Template(content);
+                    t.Add("exec_name", p.config.env_type == EnvType.Windows ?
+                        "Test.exe" : "Test");
+		            t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(config.start_rule));
                     t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
                     t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
                     t.Add("has_name_space", p.config.name_space != null);
+                    t.Add("is_combined_grammar", p.tool_grammar_files.Count() == 1);
                     t.Add("lexer_name", config.lexer_name);
+                    t.Add("lexer_grammar_file", p.lexer_grammar_file_name);
                     t.Add("name_space", p.config.name_space);
+                    t.Add("grammar_name", config.grammar_name);
                     t.Add("parser_name", config.parser_name);
+                    t.Add("parser_grammar_file", p.parser_grammar_file_name);
                     t.Add("path_sep_colon", p.config.path_sep == PathSepType.Colon);
                     t.Add("path_sep_semi", p.config.path_sep == PathSepType.Semi);
                     t.Add("start_symbol", config.start_rule);
                     t.Add("tool_grammar_files", this.tool_grammar_files);
                     t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
                     t.Add("version", Program.version);
-                    t.Add("antlr_tool_path", config.antlr_tool_path);
+		            t.Add("cmake_target", p.config.env_type == EnvType.Windows
+			            ? "-G \"MSYS Makefiles\"" : "");
                     var o = t.Render();
                     File.WriteAllText(to, o);
                 }
@@ -759,30 +760,37 @@ namespace dotnet_antlr
                     var from = file;
                     var e = file.Substring(prefix_to_remove.Length);
                     var m = Path.GetFileName(file);
-                    var n = (p.config.name_space != null
-                        && p.config.flatten != null && !(bool)p.config.flatten)
-                        ? p.config.name_space.Replace('.', '/') : "";
-                    var to = ((string)config.output_directory).Replace('\\', '/') + n + "/" + m;
-                    to = to.Replace('\\', '/');
+		            var to = e.StartsWith(TargetName((TargetType)p.config.target))
+			             ? e.Substring((TargetName((TargetType)p.config.target)).Length + 1)
+			             : e.Substring(2);
+		            to = ((string)config.output_directory).Replace('\\', '/') + to;
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = File.ReadAllText(from);
                     System.Console.Error.WriteLine("File is " + from);
                     Template t = new Template(content);
+                    t.Add("exec_name", p.config.env_type == EnvType.Windows ?
+                        "Test.exe" : "Test");
                     t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(config.start_rule));
                     t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
                     t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
                     t.Add("has_name_space", p.config.name_space != null);
+		            t.Add("is_combined_grammar", p.tool_grammar_files.Count() == 1);
                     t.Add("lexer_name", config.lexer_name);
+		            t.Add("lexer_grammar_file", p.lexer_grammar_file_name);
                     t.Add("name_space", p.config.name_space);
+		            t.Add("grammar_name", config.grammar_name);
                     t.Add("parser_name", config.parser_name);
+		            t.Add("parser_grammar_file", p.parser_grammar_file_name);
                     t.Add("path_sep_colon", p.config.path_sep == PathSepType.Colon);
                     t.Add("path_sep_semi", p.config.path_sep == PathSepType.Semi);
                     t.Add("start_symbol", config.start_rule);
                     t.Add("tool_grammar_files", this.tool_grammar_files);
                     t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
                     t.Add("version", Program.version);
+		            t.Add("cmake_target", p.config.env_type == EnvType.Windows
+			            ? "-G \"MSYS Makefiles\"" : "");
                     var o = t.Render();
                     File.WriteAllText(to, o);
                 }
@@ -801,14 +809,16 @@ namespace dotnet_antlr
 
         public class GrammarTuple
         {
-            public GrammarTuple(string grammar_file_name, string generated_file_name, string grammar_autom_name)
+            public GrammarTuple(string grammar_file_name, string generated_file_name, string generated_include_file_name, string grammar_autom_name)
             {
                 GrammarFileName = grammar_file_name;
                 GeneratedFileName = generated_file_name;
+                GeneratedIncludeFileName = generated_include_file_name;
                 GrammarAutomName = grammar_autom_name;
             }
             public string GrammarFileName { get; set; }
             public string GeneratedFileName { get; set; }
+            public string GeneratedIncludeFileName { get; set; }
             public string GrammarAutomName { get; set; }
         }
 
@@ -1091,8 +1101,8 @@ public class ErrorListener extends ConsoleErrorListener
                 };
             tool_grammar_tuples = new List<GrammarTuple>()
                 {
-                    new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, config.lexer_name),
-                    new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, config.parser_name),
+                    new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, lexer_generated_include_file_name, config.lexer_name),
+                    new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, parser_generated_include_file_name, config.parser_name),
                 };
             // lexer and parser are set if the grammar is partitioned.
             // rest is set if there are grammar is combined.

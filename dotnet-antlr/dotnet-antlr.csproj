@@ -19,7 +19,7 @@ an Antlr parser.]]>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>3.0.7</Version>
+    <Version>3.0.8</Version>
   </PropertyGroup>
 
   <ItemGroup>

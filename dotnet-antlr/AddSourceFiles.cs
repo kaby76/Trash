@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace dotnet_antlr
 {
@@ -9,6 +10,13 @@ namespace dotnet_antlr
         public static void AddSource(Program p)
         {
             var cd = Environment.CurrentDirectory + "/";
+            // Find all source files.
+            p.all_source_files = new Domemtech.Globbing.Glob()
+                    .RegexContents(p.config.all_source_pattern)
+                    .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
+                    .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                    .ToList();
+
             var set = new HashSet<string>();
             foreach (var path in p.all_source_files)
             {
