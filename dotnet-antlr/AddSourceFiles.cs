@@ -10,24 +10,25 @@ namespace dotnet_antlr
         public static void AddSource(Program p)
         {
             var cd = Environment.CurrentDirectory + "/";
+            cd = cd.Replace('\\', '/');
             // Find all source files.
             p.all_source_files = new Domemtech.Globbing.Glob()
                     .RegexContents(p.config.all_source_pattern)
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
-                    .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
+                    .Select(f => f.FullName.Replace('\\', '/'))
                     .ToList();
 
             var set = new HashSet<string>();
             foreach (var path in p.all_source_files)
             {
                 // Construct proper starting directory based on namespace.
-                var f = path.Replace('\\', '/');
-                var c = cd.Replace('\\', '/');
-                var e = f.Replace(c, "");
-                var m = Path.GetFileName(f);
-                var n = (p.config.name_space != null && p.config.flatten != null
-                    && !(bool)p.config.flatten) ? p.config.name_space.Replace('.', '/') : "";
-                p.CopyFile(path, p.config.output_directory.Replace('\\', '/') + n + "/" + m);
+                var from = path;
+                var to = p.config.output_directory + path.Substring(cd.Length);
+                System.Console.Error.WriteLine("Copying source file from "
+                  + from
+                  + " to "
+                  + to);
+                p.CopyFile(from, to);
             }
         }
     }
