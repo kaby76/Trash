@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": " -m true  -t Cpp --template-sources-directory ../templates-3x",
-      "workingDirectory": "C:\\Users\\kenne\\perf\\html"
+      "commandLineArgs": " -m true  -t Cpp --template-sources-directory ../_scripts/templates --antlr-tool-path /tmp/antlr-4.9.2-complete.jar",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4\\agc"
     }
   }
 }

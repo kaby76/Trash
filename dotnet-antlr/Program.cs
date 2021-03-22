@@ -383,6 +383,7 @@ namespace dotnet_antlr
                 {
                     return;
                 }
+                config.grammar_name = pom_grammar_name.First();
                 // entryPoint required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
                 if (!pom_entry_point.Any())
                 {
@@ -691,6 +692,7 @@ namespace dotnet_antlr
                     return v;
                 }).ToList();
                 var prefix_to_remove = "AntlrTemplating.templates.";
+                System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
                 var set = new HashSet<string>();
                 foreach (var file in files_to_copy)
                 {
@@ -707,7 +709,10 @@ namespace dotnet_antlr
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = ReadAllResource(a, from);
-                    System.Console.Error.WriteLine("File is " + from);
+                    System.Console.Error.WriteLine("Rendering template file from "
+                        + from
+                        + " to "
+                        + to);
                     Template t = new Template(content);
                     t.Add("exec_name", p.config.env_type == EnvType.Windows ?
                         "Test.exe" : "Test");
@@ -717,6 +722,7 @@ namespace dotnet_antlr
                     t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
                     t.Add("has_name_space", p.config.name_space != null);
                     t.Add("is_combined_grammar", p.tool_grammar_files.Count() == 1);
+                    t.Add("grammar_file", p.tool_grammar_files.First());
                     t.Add("lexer_name", config.lexer_name);
                     t.Add("lexer_grammar_file", p.lexer_grammar_file_name);
                     t.Add("name_space", p.config.name_space);
@@ -729,8 +735,10 @@ namespace dotnet_antlr
                     t.Add("tool_grammar_files", this.tool_grammar_files);
                     t.Add("tool_grammar_tuples", this.tool_grammar_tuples);
                     t.Add("version", Program.version);
-		            t.Add("cmake_target", p.config.env_type == EnvType.Windows
-			            ? "-G \"MSYS Makefiles\"" : "");
+                    t.Add("cmake_target", p.config.env_type == EnvType.Windows
+                        ? "-G \"MSYS Makefiles\"" : "");
+                    t.Add("temp_dir", p.config.env_type == EnvType.Windows
+                        ? "c:/temp/" : "/tmp/");
                     var o = t.Render();
                     File.WriteAllText(to, o);
                 }
@@ -754,20 +762,25 @@ namespace dotnet_antlr
                         return true;
                     }).ToList();
                 var prefix_to_remove = config.template_sources_directory + '/';
+                prefix_to_remove = prefix_to_remove.Replace("\\", "/");
+                prefix_to_remove = prefix_to_remove.Replace("//", "/");
+                System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
                 var set = new HashSet<string>();
                 foreach (var file in files_to_copy)
                 {
                     var from = file;
                     var e = file.Substring(prefix_to_remove.Length);
-                    var m = Path.GetFileName(file);
 		            var to = e.StartsWith(TargetName((TargetType)p.config.target))
 			             ? e.Substring((TargetName((TargetType)p.config.target)).Length + 1)
-			             : e.Substring(2);
+			             : e;
 		            to = ((string)config.output_directory).Replace('\\', '/') + to;
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = File.ReadAllText(from);
-                    System.Console.Error.WriteLine("File is " + from);
+                    System.Console.Error.WriteLine("Rendering template file from "
+                        + from
+                        + " to "
+                        + to);
                     Template t = new Template(content);
                     t.Add("exec_name", p.config.env_type == EnvType.Windows ?
                         "Test.exe" : "Test");
@@ -777,6 +790,7 @@ namespace dotnet_antlr
                     t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
                     t.Add("has_name_space", p.config.name_space != null);
 		            t.Add("is_combined_grammar", p.tool_grammar_files.Count() == 1);
+                    t.Add("grammar_file", p.tool_grammar_files.First());
                     t.Add("lexer_name", config.lexer_name);
 		            t.Add("lexer_grammar_file", p.lexer_grammar_file_name);
                     t.Add("name_space", p.config.name_space);
@@ -791,6 +805,8 @@ namespace dotnet_antlr
                     t.Add("version", Program.version);
 		            t.Add("cmake_target", p.config.env_type == EnvType.Windows
 			            ? "-G \"MSYS Makefiles\"" : "");
+                    t.Add("temp_dir", p.config.env_type == EnvType.Windows
+                        ? "c:/temp/" : "/tmp/");
                     var o = t.Render();
                     File.WriteAllText(to, o);
                 }

@@ -14,14 +14,12 @@ include_directories(${ANTLR4_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/)
 find_package(ANTLR REQUIRED)
 
 <if(is_combined_grammar)>
-
-include_directories(${ANTLR4_INCLUDE_DIRS})
-
 antlr_target(
     <grammar_name>
     <grammar_file>
     )
 
+include_directories(${ANTLR4_INCLUDE_DIRS})
 include_directories(${ANTLR_<grammar_name>_OUTPUT_DIR})
 
 add_executable(Test
