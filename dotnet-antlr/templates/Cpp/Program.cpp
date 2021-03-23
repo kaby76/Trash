@@ -97,6 +97,7 @@ int TryParse(std::vector\<std::string>& args)
 //        System.Console.Error.WriteLine(tree.ToStringTree(parser));
     }
     std::cout \<\< "Time: " \<\< formatDuration(duration.count()) \<\< std::endl;
+    return 0;
 }
 
 int main(int argc, const char * argv[])
