@@ -17,9 +17,10 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.0.9";
+        public static string version = "3.0.10";
         public List<string> failed_modules = new List<string>();
-        public IEnumerable<string> all_source_files = null;
+        public List<string> all_source_files = null;
+        public List<string> all_target_files = null;
         public string antlr_runtime_path;
         public string root_directory;
         public string target_specific_src_directory;
@@ -113,7 +114,7 @@ namespace dotnet_antlr
             throw new Exception("Cannot determine operating system!");
         }
 
-        static string TargetName(TargetType target)
+        public static string TargetName(TargetType target)
         {
             return target switch
             {
@@ -132,7 +133,7 @@ namespace dotnet_antlr
             };
         }
 
-        static string AllButTargetName(TargetType target)
+        public static string AllButTargetName(TargetType target)
         {
             var all_but = new List<string>() {
                 "CSharp",
@@ -150,7 +151,7 @@ namespace dotnet_antlr
             return filter;
         }
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             try
             {
@@ -738,7 +739,14 @@ namespace dotnet_antlr
                     t.Add("cmake_target", p.config.env_type == EnvType.Windows
                         ? "-G \"MSYS Makefiles\"" : "");
                     t.Add("temp_dir", p.config.env_type == EnvType.Windows
-                        ? "c:/temp/" : "/tmp/");
+                        ? "c:/temp" : "/tmp");
+                    t.Add("additional_sources", p.all_target_files.Where(t =>
+                        {
+                            var ext = Path.GetExtension(t);
+                            return suffix.Contains(ext);
+                        })
+                        .Select(t => t.Substring(p.config.output_directory.Length))
+                        .ToList());
                     var o = t.Render();
                     File.WriteAllText(to, o);
                 }
@@ -806,7 +814,14 @@ namespace dotnet_antlr
 		            t.Add("cmake_target", p.config.env_type == EnvType.Windows
 			            ? "-G \"MSYS Makefiles\"" : "");
                     t.Add("temp_dir", p.config.env_type == EnvType.Windows
-                        ? "c:/temp/" : "/tmp/");
+                        ? "c:/temp" : "/tmp");
+                    t.Add("additional_sources", p.all_target_files.Where(t =>
+                        {
+                            var ext = Path.GetExtension(t);
+                            return suffix.Contains(ext);
+                        })
+                        .Select(t=> t.Substring(p.config.output_directory.Length))
+                        .ToList());
                     var o = t.Render();
                     File.WriteAllText(to, o);
                 }

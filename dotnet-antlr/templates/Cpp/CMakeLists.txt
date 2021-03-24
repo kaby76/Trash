@@ -26,7 +26,8 @@ add_executable(Test
     Program.cpp
     ErrorListener.cpp
     ErrorListener.h
-    ${ANTLR_<grammar_name>_CXX_OUTPUTS}
+    <additional_sources:{x | <x>
+    } >${ANTLR_<grammar_name>_CXX_OUTPUTS}
     )
 
 <else>
@@ -50,7 +51,8 @@ add_executable(Test
     Program.cpp
     ErrorListener.cpp
     ErrorListener.h
-    ${ANTLR_<lexer_name>_CXX_OUTPUTS}
+    <additional_sources:{x | <x>
+    } >${ANTLR_<lexer_name>_CXX_OUTPUTS}
     ${ANTLR_<parser_name>_CXX_OUTPUTS}
     )
 
