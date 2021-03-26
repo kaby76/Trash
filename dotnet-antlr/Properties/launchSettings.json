@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": " -m true ",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-2106\\kuka"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-2106\\kotlin\\kotlin-formal"
     }
   }
 }
