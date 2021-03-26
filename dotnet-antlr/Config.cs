@@ -8,6 +8,9 @@ namespace dotnet_antlr
         [Option("all_source_pattern", Required = false, HelpText = "R.E. for all source files to use.")]
         public string? all_source_pattern { get; set; }
 
+        [Option("antlr-tool-args", Required = false)]
+        public IEnumerable<string>? antlr_tool_args { get; set; }
+
         [Option("antlr-tool-path", Required = false)]
         public string? antlr_tool_path { get; set; }
 
@@ -27,7 +30,7 @@ namespace dotnet_antlr
         public string? grammar_name { get; set; }
 
         [Option("lexer-name", Required = false, HelpText = "The name of the lexer.")]
-        public string? lexer_name { get; set; }
+        public string? fully_qualified_lexer_name { get; set; }
 
         [Option('e', "line-translation", Required = false)]
         public LineTranslationType? line_translation { get; set; }
@@ -41,11 +44,11 @@ namespace dotnet_antlr
         [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
         public string? output_directory { get; set; }
 
-        [Option('p', "package", Required = false, HelpText = "PackageReference's to include, in name/version pairs.")]
-        public string? Packages { get; set; }
+        [Option('p', "package", Required = false, HelpText = "'-package' arg on Antlr tool call.")]
+        public string? Package { get; set; }
 
         [Option("parser-name", Required = false, HelpText = "The name of the parser.")]
-        public string? parser_name { get; set; }
+        public string? fully_qualified_parser_name { get; set; }
 
         [Option("path-sep", Required = false)]
         public PathSepType? path_sep { get; set; }
