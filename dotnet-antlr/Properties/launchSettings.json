@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": " -m true  -t Java",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-2102\\kotlin\\kotlin-formal"
+      "commandLineArgs": " -m true ",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-2106\\kuka"
     }
   }
 }

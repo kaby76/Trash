@@ -394,6 +394,10 @@ namespace dotnet_antlr
                     var ns = pom_antlr_tool_args[pom_antlr_tool_args.IndexOf("-package") + 1];
                     config.name_space = ns;
                 }
+                else
+                {
+                    config.name_space = null;
+                }
 
                 // entryPoint required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
                 if (!pom_entry_point.Any())
@@ -481,8 +485,7 @@ namespace dotnet_antlr
                 }
 
                 config.fully_qualified_parser_name =
-                    config.Package
-                    + '.'
+                    ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
                     + pom_grammar_name.First() + "Parser";
                 for (; ; )
                 {
@@ -545,8 +548,7 @@ namespace dotnet_antlr
                 parser_generated_include_file_name = (string)config.fully_qualified_parser_name.Replace('.', '/') + ".h";
 
                 config.fully_qualified_lexer_name =
-                    config.Package
-                    + '.'
+                    ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
                     + (pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First() + "Lexer");
                 for (; ; )
                 {
