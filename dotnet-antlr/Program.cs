@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.0.11";
+        public static string version = "3.0.12";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
@@ -451,10 +451,7 @@ namespace dotnet_antlr
                         .First()
                         .Replace("${basedir}", "")
                         .Trim();
-                    while (source_directory != "" && source_directory.StartsWith("/"))
-                    {
-                        source_directory = source_directory.Substring(1);
-                    }
+                    if (source_directory.StartsWith('/')) source_directory = source_directory.Substring(1);
                     if (source_directory != "" && !source_directory.EndsWith("/"))
                     {
                         source_directory = source_directory + "/";
@@ -492,7 +489,10 @@ namespace dotnet_antlr
                     // Probe for parser grammar. 
                     {
                         var parser_grammars_pattern =
-                            "^((?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/))("
+                            "^"
+                            + source_directory
+                            + ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
+                            + "((?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/))("
                             + target_specific_src_directory + "/)(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Parser)).g4$";
                         var any =
                             new Domemtech.Globbing.Glob()
@@ -508,8 +508,10 @@ namespace dotnet_antlr
                     }
                     {
                         var parser_grammars_pattern =
-                            "^(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Parser).g4$";
-                        var any =
+                            "^"
+                            + source_directory
+                            + "(" + pom_grammar_name.First() + " |" + pom_grammar_name.First() + "Parser).g4$";
+                            var any =
                             new Domemtech.Globbing.Glob()
                                 .RegexContents(parser_grammars_pattern)
                                 .Where(f => f is FileInfo)
@@ -539,11 +541,21 @@ namespace dotnet_antlr
                     }
                     throw new Exception("Cannot find the parser grammar (" + pom_grammar_name.First() + " | " + pom_grammar_name.First() + "Parser).g4");
                 }
-                parser_grammar_file_name =
-                    (config.flatten != null && !(bool)config.flatten && pom_package_name.Any() && pom_package_name.First() != ""
-                    ? pom_package_name.First().Replace('.', '/') + '/'
-                    : "")
-                    + Path.GetFileName(parser_src_grammar_file_name);
+                if (pom_package_name.Any())
+                {
+                    parser_grammar_file_name =
+                        pom_package_name.First().Replace('.', '/') + '/'
+                        + Path.GetFileName(parser_src_grammar_file_name);
+                }
+                else if (source_directory != null && source_directory != "")
+                {
+                    parser_grammar_file_name = parser_src_grammar_file_name;
+                }
+                else
+                {
+                    parser_grammar_file_name =
+                        Path.GetFileName(parser_src_grammar_file_name);
+                }
                 parser_generated_file_name = (string)config.fully_qualified_parser_name.Replace('.','/') + suffix;
                 parser_generated_include_file_name = (string)config.fully_qualified_parser_name.Replace('.', '/') + ".h";
 
@@ -602,12 +614,21 @@ namespace dotnet_antlr
                     }
                     throw new Exception("Cannot find the lexer grammar (" + pom_grammar_name.First() + " | " + pom_grammar_name.First() + "Lexer).g4)");
                 }
-
-                lexer_grammar_file_name =
-                    (config.flatten != null && !(bool)config.flatten && pom_package_name.Any() && pom_package_name.First() != ""
-                    ? pom_package_name.First().Replace('.', '/') + '/'
-                    : "")
-                    + Path.GetFileName(lexer_src_grammar_file_name);
+                if (pom_package_name.Any())
+                {
+                    lexer_grammar_file_name =
+                        pom_package_name.First().Replace('.', '/') + '/'
+                        + Path.GetFileName(lexer_src_grammar_file_name);
+                }
+                else if (source_directory != null && source_directory != "")
+                {
+                    lexer_grammar_file_name = lexer_src_grammar_file_name;
+                }
+                else
+                {
+                    lexer_grammar_file_name =
+                        Path.GetFileName(lexer_src_grammar_file_name);
+                }
                 lexer_generated_file_name = config.fully_qualified_lexer_name.Replace('.','/') + suffix;
                 lexer_generated_include_file_name = config.fully_qualified_lexer_name.Replace('.', '/') + ".h";
 
