@@ -1,69 +1,65 @@
-﻿// Template generated code from Antlr4BuildTasks.dotnet-antlr v <version>
+// Template generated code from Antlr4BuildTasks.dotnet-antlr v 3.0.13
 
-//
-/* Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
- * Use of this file is governed by the BSD 3-clause license that
- * can be found in the LICENSE.txt file in the project root.
- */
-//
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const antlr4 = require('antlr4');
 
-function CaseChangingStream(stream, upper)
-{
-	this._stream = stream;
-	this._upper = upper;
+export default class CaseChangingStream extends antlr4.InputStream {
+
+	constructor(stream, upper)
+	{
+		super(stream);
+		this._stream = stream;
+		this._upper = upper;
+	}
+
+	LA(offset) {
+		var c = this._stream.LA(offset);
+		if (c \<= 0)
+		{
+			return c;
+		}
+		return String.fromCodePoint(c)[this._upper ? "toUpperCase" : "toLowerCase"]().codePointAt(0);
+	}
+
+	reset() {
+		return this._stream.reset();
+	}
+
+	consume() {
+		return this._stream.consume();
+	}
+
+	LT(offset) {
+		return this._stream.LT(offset);
+	}
+
+	mark() {
+		return this._stream.mark();
+	}
+
+	release(marker) {
+		return this._stream.release(marker);
+	}
+
+	seek(_index) {
+		return this._stream.seek(_index);
+	}
+
+	getText(start, stop) {
+		return this._stream.getText(start, stop);
+	}
+
+	toString() {
+		return this._stream.toString();
+	}
+
+	get index(){
+		return this._index;
+	}
+
+	get size(){
+		return this._size;
+	}
 }
 
-CaseChangingStream.prototype.LA = function(offset) {
-	var c = this._stream.LA(offset);
-	if (c <= 0)
-	{
-		return c;
-	}
-	return String.fromCodePoint(c)[this._upper ? "toUpperCase" : "toLowerCase"]().codePointAt(0);
-};
-
-CaseChangingStream.prototype.reset = function() {
-	return this._stream.reset();
-};
-
-CaseChangingStream.prototype.consume = function() {
-	return this._stream.consume();
-};
-
-CaseChangingStream.prototype.LT = function(offset) {
-	return this._stream.LT(offset);
-};
-
-CaseChangingStream.prototype.mark = function() {
-	return this._stream.mark();
-};
-
-CaseChangingStream.prototype.release = function(marker) {
-	return this._stream.release(marker);
-};
-
-CaseChangingStream.prototype.seek = function(_index) {
-	return this._stream.seek(_index);
-};
-
-CaseChangingStream.prototype.getText = function(start, stop) {
-	return this._stream.getText(start, stop);
-};
-
-CaseChangingStream.prototype.toString = function() {
-	return this._stream.toString();
-};
-
-Object.defineProperty(CaseChangingStream.prototype, "index", {
-get: function() {
-		return this._stream.index;
-	}
-});
-
-Object.defineProperty(CaseChangingStream.prototype, "size", {
-get: function() {
-		return this._stream.size;
-	}
-});
-
-exports.CaseChangingStream = CaseChangingStream;
