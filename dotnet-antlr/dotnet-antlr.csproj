@@ -19,13 +19,24 @@ an Antlr parser.]]>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>3.0.12</Version>
+    <Version>3.0.13</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="templates\**" />
     <EmbeddedResource Include="templates\**" />
     <None Include="templates\**\*.*"></None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="templates\Antlr4cs\CaseChangingCharStream.cs" />
+    <None Remove="templates\Cpp\CaseChangingCharStream.cpp" />
+    <None Remove="templates\Cpp\CaseChangingCharStream.h" />
+    <None Remove="templates\CSharp\CaseChangingCharStream.cs" />
+    <None Remove="templates\Go\case_changing_stream.go" />
+    <None Remove="templates\JavaScript\CaseChangingStream.js" />
+    <None Remove="templates\Java\CaseChangingCharStream.java" />
+    <None Remove="templates\Python3\CaseChangingStream.py" />
   </ItemGroup>
 
   <ItemGroup>

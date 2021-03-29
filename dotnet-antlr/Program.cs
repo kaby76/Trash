@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.0.12";
+        public static string version = "3.0.13";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
@@ -378,6 +378,18 @@ namespace dotnet_antlr
                     .Where(t => t.Value != "")
                     .Select(t => t.Value)
                     .ToList();
+                var pom_case_insensitive_type = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/caseInsensitiveType", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Where(t => t.Value != "")
+                    .Select(t => t.Value)
+                    .ToList();
+                var pom_example_files = navigator
+                    .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/exampleFiles", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Where(t => t.Value != "")
+                    .Select(t => t.Value)
+                    .ToList();
 
                 // grammarName is required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
                 if (!pom_grammar_name.Any())
@@ -445,6 +457,20 @@ namespace dotnet_antlr
                     System.Console.Error.WriteLine("Antlr4 maven config contains stuff that I don't understand.");
                 }
 
+                // Check existance of example files.
+                if (pom_example_files.Any())
+                {
+                    config.example_files = pom_example_files.First();
+                    if (!Directory.Exists(pom_example_files.First()))
+                    {
+                        System.Console.Error.WriteLine("Examples directory doesn't exist " + pom_example_files.First());
+                    }
+                }
+                else
+                {
+                    config.example_files = "examples";
+                }
+
                 if (pom_source_directory.Any())
                 {
                     source_directory = pom_source_directory
@@ -461,6 +487,16 @@ namespace dotnet_antlr
                 {
                     source_directory = "";
                 }
+
+                if (pom_case_insensitive_type.Any())
+                {
+                    if (pom_case_insensitive_type.First().ToUpper() == "UPPER")
+                        config.case_insensitive_type = CaseInsensitiveType.Upper;
+                    else if (pom_case_insensitive_type.First().ToUpper() == "LOWER")
+                        config.case_insensitive_type = CaseInsensitiveType.Lower;
+                    else config.case_insensitive_type = null;
+                }
+                else config.case_insensitive_type = null;
 
                 // Check for existence of .dotnet-antlr-ignore file.
                 // If there is one, read and create pattern of what to ignore.
@@ -549,7 +585,7 @@ namespace dotnet_antlr
                 }
                 else if (source_directory != null && source_directory != "")
                 {
-                    parser_grammar_file_name = parser_src_grammar_file_name;
+                    parser_grammar_file_name = Path.GetFileName(parser_src_grammar_file_name);
                 }
                 else
                 {
@@ -622,7 +658,7 @@ namespace dotnet_antlr
                 }
                 else if (source_directory != null && source_directory != "")
                 {
-                    lexer_grammar_file_name = lexer_src_grammar_file_name;
+                    lexer_grammar_file_name = Path.GetFileName(lexer_src_grammar_file_name);
                 }
                 else
                 {
@@ -636,8 +672,8 @@ namespace dotnet_antlr
                 
                 tool_src_grammar_files = new HashSet<string>()
                 {
-                    lexer_src_grammar_file_name,
-                    parser_src_grammar_file_name
+                    lexer_grammar_file_name,
+                    parser_grammar_file_name
                 };
                 tool_grammar_tuples = new List<GrammarTuple>()
                 {
@@ -720,27 +756,30 @@ namespace dotnet_antlr
                 // Construct proper starting directory based on namespace.
                 var from = path;
                 var f = from.Substring(cd.Length);
+                // First, remove source_directory.
+                f = (
+                        f.StartsWith(source_directory)
+                        ? f.Substring((source_directory).Length)
+                        : f
+                        );
+                // Now remove target directory.
+                f = (
+                        f.StartsWith(
+                            Program.TargetName((TargetType)this.config.target) + '/')
+                        ? f.Substring((Program.TargetName((TargetType)this.config.target) + '/').Length)
+                        : f
+                        );
                 string to = null;
                 if (Path.GetExtension(from) == ".g4" && config.name_space != null)
                 {
                     to = this.config.output_directory
                         + config.name_space.Replace('.','/') + '/'
-                        + (
-                            f.StartsWith(
-                                Program.TargetName((TargetType)this.config.target) + '/')
-                            ? f.Substring((Program.TargetName((TargetType)this.config.target) + '/').Length)
-                            : f
-                            );
+                        + f;
                 }
                 if (to == null)
                 {
                     to = this.config.output_directory
-                        + (
-                            f.StartsWith(
-                                Program.TargetName((TargetType)this.config.target) + '/')
-                            ? f.Substring((Program.TargetName((TargetType)this.config.target) + '/').Length)
-                            : f
-                            );
+                        + f;
                 }
                 System.Console.Error.WriteLine("Copying source file from "
                   + from
@@ -803,10 +842,13 @@ namespace dotnet_antlr
                     t.Add("antlr_tool_args", config.antlr_tool_args);
                     t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(config.start_rule));
+                    t.Add("case_insensitive_type", config.case_insensitive_type);
                     t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
                     t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
                     t.Add("cmake_target", p.config.env_type == EnvType.Windows
                         ? "-G \"MSYS Makefiles\"" : "");
+                    t.Add("example_files_unix", RemoveTrailingSlash(p.config.example_files.Replace('\\', '/')));
+                    t.Add("example_files_win", RemoveTrailingSlash(p.config.example_files.Replace('/', '\\')));
                     t.Add("exec_name", p.config.env_type == EnvType.Windows ?
                         "Test.exe" : "Test");
                     t.Add("grammar_file", p.tool_grammar_files.First());
@@ -879,10 +921,13 @@ namespace dotnet_antlr
                     t.Add("antlr_tool_args", config.antlr_tool_args);
                     t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(config.start_rule));
+                    t.Add("case_insensitive_type", config.case_insensitive_type);
                     t.Add("cli_bash", (EnvType)p.config.env_type == EnvType.Unix);
                     t.Add("cli_cmd", (EnvType)p.config.env_type == EnvType.Windows);
                     t.Add("cmake_target", p.config.env_type == EnvType.Windows
                         ? "-G \"MSYS Makefiles\"" : "");
+                    t.Add("example_files_unix", RemoveTrailingSlash(p.config.example_files.Replace('\\', '/')));
+                    t.Add("example_files_win", RemoveTrailingSlash(p.config.example_files.Replace('/', '\\')));
                     t.Add("exec_name", p.config.env_type == EnvType.Windows ?
                       "Test.exe" : "Test");
                     t.Add("grammar_file", p.tool_grammar_files.First());
@@ -908,6 +953,19 @@ namespace dotnet_antlr
             }
         }
 
+        static string RemoveTrailingSlash(string str)
+        {
+            for (; ; )
+            {
+                if (str.EndsWith('/'))
+                    str = str.Substring(0, str.Length - 1);
+                else if (str.EndsWith('\\'))
+                    str = str.Substring(0, str.Length - 1);
+                else break;
+            }
+            return str;
+        }
+
         static string Cap(string str)
         {
             if (str.Length == 0)
@@ -931,156 +989,6 @@ namespace dotnet_antlr
             public string GeneratedFileName { get; set; }
             public string GeneratedIncludeFileName { get; set; }
             public string GrammarAutomName { get; set; }
-        }
-
-        public void AddCaseFold()
-        {
-            if (config.case_fold == null) return;
-            StringBuilder sb = new StringBuilder();
-            if (config.target == TargetType.CSharp)
-            {
-                sb.AppendLine(@"
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
-                if (config.name_space != null) sb.AppendLine("namespace " + config.name_space + @"
-{");
-                sb.Append(@"
-/* Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
- * Use of this file is governed by the BSD 3-clause license that
- * can be found in the LICENSE.txt file in the project root.
- */
-using System;
-using Antlr4.Runtime.Misc;
-
-namespace Antlr4.Runtime
-{
-    /// <summary>
-    /// This class supports case-insensitive lexing by wrapping an existing
-    /// <see cref=""ICharStream""/> and forcing the lexer to see either upper or
-    /// lowercase characters. Grammar literals should then be either upper or
-    /// lower case such as 'BEGIN' or 'begin'. The text of the character
-    /// stream is unaffected. Example: input 'BeGiN' would match lexer rule
-    /// 'BEGIN' if constructor parameter upper=true but getText() would return
-    /// 'BeGiN'.
-    /// </summary>
-    public class CaseChangingCharStream : ICharStream
-    {
-        private ICharStream stream;
-        private bool upper;
-
-        /// <summary>
-        /// Constructs a new CaseChangingCharStream wrapping the given <paramref name=""stream""/> forcing
-        /// all characters to upper case or lower case.
-        /// </summary>
-        /// <param name=""stream"">The stream to wrap.</param>
-        /// <param name=""upper"">If true force each symbol to upper case, otherwise force to lower.</param>
-        public CaseChangingCharStream(ICharStream stream, bool upper)
-        {
-            this.stream = stream;
-            this.upper = upper;
-        }
-
-        public int Index
-        {
-            get
-            {
-                return stream.Index;
-            }
-        }
-
-        public int Size
-        {
-            get
-            {
-                return stream.Size;
-            }
-        }
-
-        public string SourceName
-        {
-            get
-            {
-                return stream.SourceName;
-            }
-        }
-
-        public void Consume()
-        {
-            stream.Consume();
-        }
-
-        [return: NotNull]
-        public string GetText(Interval interval)
-        {
-            return stream.GetText(interval);
-        }
-
-        public int LA(int i)
-        {
-            int c = stream.LA(i);
-
-            if (c <= 0)
-            {
-                return c;
-            }
-
-            char o = (char)c;
-
-            if (upper)
-            {
-                return (int)char.ToUpperInvariant(o);
-            }
-
-            return (int)char.ToLowerInvariant(o);
-        }
-
-        public int Mark()
-        {
-            return stream.Mark();
-        }
-
-        public void Release(int marker)
-        {
-            stream.Release(marker);
-        }
-
-        public void Seek(int index)
-        {
-            stream.Seek(index);
-        }
-    }
-}");
-                if (config.name_space != null) sb.AppendLine("}");
-                string fn = (string)config.output_directory + "CaseChangingCharStream.cs";
-                System.IO.File.WriteAllText(fn, sb.ToString());
-            }
-            else if (config.target == TargetType.Java)
-            {
-                sb.Append(@"
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version + @"
-package " + config.name_space + @";
-
-import org.antlr.v4.runtime.*;
-
-public class ErrorListener extends ConsoleErrorListener
-{
-    public boolean had_error = false;
-    
-    @Override
-    public void syntaxError(Recognizer<?, ?> recognizer,
-        Object offendingSymbol,
-        int line,
-        int charPositionInLine,
-        String msg,
-        RecognitionException e)
-    {
-        had_error = true;
-        super.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
-    }
-}
-");
-                string fn = (string)config.output_directory + "ErrorListener.java";
-                System.IO.File.WriteAllText(fn, sb.ToString());
-            }
         }
 
         public void CopyFile(string from, string to)

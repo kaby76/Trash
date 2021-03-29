@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": " -m true ",
+      "commandLineArgs": " -m true  -t Java",
       "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-2106\\sql\\mysql"
     }
   }

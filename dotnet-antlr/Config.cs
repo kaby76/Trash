@@ -17,8 +17,14 @@ namespace dotnet_antlr
         [Option('c', "case-fold", Required = false, HelpText = "Fold case of lexer. True = upper, false = lower.")]
         public bool? case_fold { get; set; }
 
+        [Option("case-insensitive-type", Required = false)]
+        public CaseInsensitiveType? case_insensitive_type { get; set; }
+
         [Option("env-type", Required = false)]
         public EnvType? env_type { get; set; }
+
+        [Option("example-files", Required = false)]
+        public string? example_files { get; set; }
 
         [Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
         public string? InputFile { get; set; }
