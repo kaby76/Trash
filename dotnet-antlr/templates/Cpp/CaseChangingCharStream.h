@@ -11,9 +11,11 @@
 #include "tree/TerminalNodeImpl.h"
 #include "misc/Interval.h"
 #include "ConsoleErrorListener.h"
+#include "CharStream.h"
 
-namespace Antlr4::Runtime
-{
+namespace antlr4 {
+namespace runtime {
+
     /// \<summary>
     /// This class supports case-insensitive lexing by wrapping an existing
     /// \<see cref=""ICharStream""/> and forcing the lexer to see either upper or
@@ -23,10 +25,12 @@ namespace Antlr4::Runtime
     /// 'BEGIN' if constructor parameter upper=true but getText() would return
     /// 'BeGiN'.
     /// \</summary>
-    public class CaseChangingCharStream : ICharStream
+    class CaseChangingCharStream : public antlr4::CharStream
     {
-        private ICharStream stream;
-        private bool upper;
+    private:
+        antlr4::CharStream* stream;
+    private:
+        bool upper;
 
         /// \<summary>
         /// Constructs a new CaseChangingCharStream wrapping the given \<paramref name=""stream""/> forcing
@@ -35,79 +39,18 @@ namespace Antlr4::Runtime
         /// \<param name=""stream"">The stream to wrap.\</param>
         /// \<param name=""upper"">If true force each symbol to upper
         /// case, otherwise force to lower.\</param>
-        public CaseChangingCharStream(ICharStream stream, bool upper)
-        {
-            this.stream = stream;
-            this.upper = upper;
-        }
-
-        public int Index
-        {
-            get
-            {
-                return stream.Index;
-            }
-        }
-
-        public int Size
-        {
-            get
-            {
-                return stream.Size;
-            }
-        }
-
-        public string SourceName
-        {
-            get
-            {
-                return stream.SourceName;
-            }
-        }
-
-        public void Consume()
-        {
-            stream.Consume();
-        }
-
-        [return: NotNull]
-        public string GetText(Interval interval)
-        {
-            return stream.GetText(interval);
-        }
-
-        public int LA(int i)
-        {
-            int c = stream.LA(i);
-
-            if (c \<= 0)
-            {
-                return c;
-            }
-
-            char o = (char)c;
-
-            if (upper)
-            {
-                return (int)char.ToUpperInvariant(o);
-            }
-
-            return (int)char.ToLowerInvariant(o);
-        }
-
-        public int Mark()
-        {
-            return stream.Mark();
-        }
-
-        public void Release(int marker)
-        {
-            stream.Release(marker);
-        }
-
-        public void Seek(int index)
-        {
-            stream.Seek(index);
-        }
-    }
+    public:
+        CaseChangingCharStream(antlr4::CharStream* stream, bool upper);
+	virtual size_t index();
+	virtual size_t size();
+	virtual std::string getSourceName() const;
+	virtual void consume();
+	virtual std::string getText(const antlr4::misc::Interval& interval);
+	virtual size_t LA(ssize_t i);
+	virtual ssize_t mark();
+	virtual void release(ssize_t marker);
+	virtual void seek(size_t index);
+	virtual std::string toString() const;
+    };
+}
 }

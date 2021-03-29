@@ -1,108 +1,87 @@
-﻿// Template generated code from Antlr4BuildTasks.dotnet-antlr v " + version);
+﻿// Template generated code from Antlr4BuildTasks.dotnet-antlr <version>
+
+#include \<string>
+#include \<iostream>
+#include "ANTLRInputStream.h"
+#include "CommonTokenStream.h"
+#include "tree/ParseTree.h"
+#include "tree/TerminalNode.h"
+#include "tree/TerminalNodeImpl.h"
+#include "misc/Interval.h"
+#include "ConsoleErrorListener.h"
+#include "CharStream.h"
+#include "CaseChangingCharStream.h"
+#include \<iostream>
+#include \<string>
+#include \<cctype>
+#include \<cwctype>
+#include \<stdexcept>
 
 /* Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
  * Use of this file is governed by the BSD 3-clause license that
  * can be found in the LICENSE.txt file in the project root.
  */
-using System;
-using Antlr4.Runtime.Misc;
-
-namespace Antlr4.Runtime
+antlr4::runtime::CaseChangingCharStream::CaseChangingCharStream(antlr4::CharStream* stream, bool upper)
 {
-    /// \<summary>
-    /// This class supports case-insensitive lexing by wrapping an existing
-    /// \<see cref=""ICharStream""/> and forcing the lexer to see either upper or
-    /// lowercase characters. Grammar literals should then be either upper or
-    /// lower case such as 'BEGIN' or 'begin'. The text of the character
-    /// stream is unaffected. Example: input 'BeGiN' would match lexer rule
-    /// 'BEGIN' if constructor parameter upper=true but getText() would return
-    /// 'BeGiN'.
-    /// \</summary>
-    public class CaseChangingCharStream : ICharStream
+    this->stream = stream;
+    this->upper = upper;
+}
+
+size_t antlr4::runtime::CaseChangingCharStream::index()
+{
+    return stream->index();
+}
+
+size_t antlr4::runtime::CaseChangingCharStream::size()
+{
+    return stream->size();
+}
+
+std::string antlr4::runtime::CaseChangingCharStream::getSourceName() const
+{
+    return stream->getSourceName();
+}
+
+void antlr4::runtime::CaseChangingCharStream::consume()
+{
+    stream->consume();
+}
+
+std::string antlr4::runtime::CaseChangingCharStream::getText(const antlr4::misc::Interval& interval)
+{
+    return stream->getText(interval);
+}
+
+size_t antlr4::runtime::CaseChangingCharStream::LA(ssize_t i)
+{
+    ssize_t c = stream->LA(i);
+    if (c \<= 0)
     {
-        private ICharStream stream;
-        private bool upper;
-
-        /// \<summary>
-        /// Constructs a new CaseChangingCharStream wrapping the given \<paramref name=""stream""/> forcing
-        /// all characters to upper case or lower case.
-        /// \</summary>
-        /// \<param name=""stream"">The stream to wrap.\</param>
-        /// \<param name=""upper"">If true force each symbol to upper
-        /// case, otherwise force to lower.\</param>
-        public CaseChangingCharStream(ICharStream stream, bool upper)
-        {
-            this.stream = stream;
-            this.upper = upper;
-        }
-
-        public int Index
-        {
-            get
-            {
-                return stream.Index;
-            }
-        }
-
-        public int Size
-        {
-            get
-            {
-                return stream.Size;
-            }
-        }
-
-        public string SourceName
-        {
-            get
-            {
-                return stream.SourceName;
-            }
-        }
-
-        public void Consume()
-        {
-            stream.Consume();
-        }
-
-        [return: NotNull]
-        public string GetText(Interval interval)
-        {
-            return stream.GetText(interval);
-        }
-
-        public int LA(int i)
-        {
-            int c = stream.LA(i);
-
-            if (c \<= 0)
-            {
-                return c;
-            }
-
-            char o = (char)c;
-
-            if (upper)
-            {
-                return (int)char.ToUpperInvariant(o);
-            }
-
-            return (int)char.ToLowerInvariant(o);
-        }
-
-        public int Mark()
-        {
-            return stream.Mark();
-        }
-
-        public void Release(int marker)
-        {
-            stream.Release(marker);
-        }
-
-        public void Seek(int index)
-        {
-            stream.Seek(index);
-        }
+	    return c;
     }
+    if (upper)
+    {
+	    return (ssize_t)toupper(c);
+    }
+    return (ssize_t)tolower(c);
+}
+
+ssize_t antlr4::runtime::CaseChangingCharStream::mark()
+{
+    return stream->mark();
+}
+
+void antlr4::runtime::CaseChangingCharStream::release(ssize_t marker)
+{
+    stream->release(marker);
+}
+
+void antlr4::runtime::CaseChangingCharStream::seek(size_t index)
+{
+    stream->seek(index);
+}
+
+std::string antlr4::runtime::CaseChangingCharStream::toString() const
+{
+	return stream->toString();
 }
