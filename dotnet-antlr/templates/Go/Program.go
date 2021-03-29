@@ -7,6 +7,7 @@ import (
     "io"
     "github.com/antlr/antlr4/runtime/Go/antlr"
     "./parser"
+    "./case_insensitive_type"
 )
 type CustomErrorListener struct {
 	errors int
@@ -71,6 +72,9 @@ func main() {
     } else if file_name != "" {
         str, _ = antlr.NewFileStream(file_name);        
     }
+<if (case_insensitive_type)>
+    str = NewCaseChangingStream(str, "<case_insensitive_type>" == "Upper");
+<endif>
     var lexer = parser.New<lexer_name>(str);
     if show_tokens {
 		j := 0

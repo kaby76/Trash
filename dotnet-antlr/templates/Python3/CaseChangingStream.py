@@ -8,6 +8,6 @@
 
 	def LA(self, offset):
 		c = self._stream.LA(offset)
-		if c <= 0:
+		if c \<= 0:
 			return c
 		return ord(chr(c).upper() if self._upper else chr(c).lower())
