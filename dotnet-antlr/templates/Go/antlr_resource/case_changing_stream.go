@@ -26,10 +26,9 @@ func NewCaseChangingStream(in antlr.CharStream, upper bool) *CaseChangingStream 
 // LA gets the value of the symbol at offset from the current position
 // from the underlying CharStream and converts it to either upper case
 // or lower case.
-func(is *CaseChangingStream) LA(offset int) int
-{
+func(is *CaseChangingStream) LA(offset int) int {
 	in := is.CharStream.LA(offset)
-	if in < 0 {
+	if in \< 0 {
 		// Such as antlr.TokenEOF which is -1
 		return in
 	}

@@ -29,7 +29,7 @@
 ./Dart/pubspec.yaml
 ./Dart/test.sh
 ./files
-./Go/case_changing_stream.go
+./Go/antlr_resource/case_changing_stream.go
 ./Go/makefile
 ./Go/Program.go
 ./Go/test.sh

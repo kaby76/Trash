@@ -508,6 +508,7 @@ namespace dotnet_antlr
                     ignore_string = string.Join("|", ignore_lines);
                 }
                 config.Package = (pom_package_name.Any() ? pom_package_name.First() : "");
+                if (config.target == TargetType.Go) config.Package = "parser";
                 config.antlr_tool_args = pom_antlr_tool_args.ToList();
                 if (config.antlr_tool_args.Count() > 1)
                 {
@@ -519,7 +520,14 @@ namespace dotnet_antlr
 
                 config.fully_qualified_parser_name =
                     ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
-                    + pom_grammar_name.First() + "Parser";
+  //                  + (config.target == TargetType.Go ? "New" : "")
+                    + pom_grammar_name.First()
+                    + "Parser";
+                config.fully_qualified_go_parser_name =
+                    ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
+                    + (config.target == TargetType.Go ? "New" : "")
+                    + pom_grammar_name.First()
+                    + "Parser";
                 for (; ; )
                 {
                     // Probe for parser grammar. 
@@ -597,7 +605,13 @@ namespace dotnet_antlr
 
                 config.fully_qualified_lexer_name =
                     ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
-                    + (pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First() + "Lexer");
+                    + (pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First()
+                    + "Lexer");
+                config.fully_qualified_go_lexer_name =
+                    ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
+                    + (config.target == TargetType.Go ? "New" : "")
+                    + (pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First()
+                    + "Lexer");
                 for (; ; )
                 {
                     // Probe for lexer grammar. 
@@ -851,6 +865,8 @@ namespace dotnet_antlr
                     t.Add("example_files_win", RemoveTrailingSlash(p.config.example_files.Replace('/', '\\')));
                     t.Add("exec_name", p.config.env_type == EnvType.Windows ?
                         "Test.exe" : "Test");
+                    t.Add("go_lexer_name", config.fully_qualified_go_lexer_name);
+                    t.Add("go_parser_name", config.fully_qualified_go_parser_name);
                     t.Add("grammar_file", p.tool_grammar_files.First());
                     t.Add("grammar_name", config.grammar_name);
                     t.Add("has_name_space", p.config.name_space != null);
@@ -930,15 +946,17 @@ namespace dotnet_antlr
                     t.Add("example_files_win", RemoveTrailingSlash(p.config.example_files.Replace('/', '\\')));
                     t.Add("exec_name", p.config.env_type == EnvType.Windows ?
                       "Test.exe" : "Test");
+                    t.Add("go_lexer_name", config.fully_qualified_go_lexer_name);
+                    t.Add("go_parser_name", config.fully_qualified_go_parser_name);
                     t.Add("grammar_file", p.tool_grammar_files.First());
                     t.Add("grammar_name", config.grammar_name);
                     t.Add("has_name_space", p.config.name_space != null);
 		            t.Add("is_combined_grammar", p.tool_grammar_files.Count() == 1);
                     t.Add("lexer_name", config.fully_qualified_lexer_name);
-		            t.Add("lexer_grammar_file", p.lexer_grammar_file_name);
+                    t.Add("lexer_grammar_file", p.lexer_grammar_file_name);
                     t.Add("name_space", p.config.name_space);
                     t.Add("parser_name", config.fully_qualified_parser_name);
-		            t.Add("parser_grammar_file", p.parser_grammar_file_name);
+                    t.Add("parser_grammar_file", p.parser_grammar_file_name);
                     t.Add("path_sep_colon", p.config.path_sep == PathSepType.Colon);
                     t.Add("path_sep_semi", p.config.path_sep == PathSepType.Semi);
                     t.Add("start_symbol", config.start_rule);

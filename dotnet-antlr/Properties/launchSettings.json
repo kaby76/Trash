@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": " -m true  -t Python3",
+      "commandLineArgs": " -m true  -t Go",
       "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-2106\\sql\\mysql"
     }
   }

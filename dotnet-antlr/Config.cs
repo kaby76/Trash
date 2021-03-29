@@ -38,6 +38,9 @@ namespace dotnet_antlr
         [Option("lexer-name", Required = false, HelpText = "The name of the lexer.")]
         public string? fully_qualified_lexer_name { get; set; }
 
+        [Option("go-lexer-name", Required = false, HelpText = "The name of the lexer.")]
+        public string? fully_qualified_go_lexer_name { get; set; }
+
         [Option('e', "line-translation", Required = false)]
         public LineTranslationType? line_translation { get; set; }
 
@@ -55,6 +58,9 @@ namespace dotnet_antlr
 
         [Option("parser-name", Required = false, HelpText = "The name of the parser.")]
         public string? fully_qualified_parser_name { get; set; }
+
+        [Option("go-parser-name", Required = false)]
+        public string? fully_qualified_go_parser_name { get; set; }
 
         [Option("path-sep", Required = false)]
         public PathSepType? path_sep { get; set; }
