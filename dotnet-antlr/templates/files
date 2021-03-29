@@ -23,11 +23,13 @@
 ./CSharp/makefile
 ./CSharp/Program.cs
 ./CSharp/Test.csproj
+./CSharp/tester.psm1
 ./Dart/analysis_options.yaml
 ./Dart/cli.dart
 ./Dart/makefile
 ./Dart/pubspec.yaml
 ./Dart/test.sh
+./Dart/tester.psm1
 ./files
 ./Go/antlr_resource/case_changing_stream.go
 ./Go/makefile
@@ -46,4 +48,6 @@
 ./Python3/CaseChangingStream.py
 ./Python3/makefile
 ./Python3/Program.py
+./Python3/requirements.txt
 ./Python3/test.sh
+./Python3/tester.psm1
