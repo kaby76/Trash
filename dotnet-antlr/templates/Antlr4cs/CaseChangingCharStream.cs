@@ -71,9 +71,9 @@ namespace Antlr4.Runtime
             return stream.GetText(interval);
         }
 
-        public int LA(int i)
+        public int La(int i)
         {
-            int c = stream.LA(i);
+            int c = stream.La(i);
 
             if (c \<= 0)
             {
