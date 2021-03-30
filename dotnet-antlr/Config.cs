@@ -53,9 +53,6 @@ namespace dotnet_antlr
         [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
         public string? output_directory { get; set; }
 
-        [Option('p', "package", Required = false, HelpText = "'-package' arg on Antlr tool call.")]
-        public string? Package { get; set; }
-
         [Option("parser-name", Required = false, HelpText = "The name of the parser.")]
         public string? fully_qualified_parser_name { get; set; }
 

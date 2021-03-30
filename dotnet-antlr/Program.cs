@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.1.1";
+        public static string version = "3.1.2";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
@@ -415,10 +415,18 @@ namespace dotnet_antlr
                 // -package arg specified; source top level
                 //   => keep .g4 at top level, generate to directory
                 //      corresponding to arg.
-                if (pom_antlr_tool_args.Contains("-package"))
+                if (config.target == TargetType.JavaScript || config.target == TargetType.Dart)
+                {
+                    config.name_space = null;
+                }
+                else if (pom_antlr_tool_args.Contains("-package"))
                 {
                     var ns = pom_antlr_tool_args[pom_antlr_tool_args.IndexOf("-package") + 1];
                     config.name_space = ns;
+                }
+                else if (pom_package_name.Any())
+                {
+                    config.name_space = pom_package_name.First();
                 }
                 else
                 {
@@ -441,28 +449,6 @@ namespace dotnet_antlr
                     {
                         System.Console.Error.WriteLine("Error in pom.xml: <include>" + x + "</include> is for a file that does not exist.");
                         throw new Exception();
-                    }
-                }
-                // Check package naem. If there's a package name without an args list for
-                // the Antlr tool to generate for that package name, this will not be target
-                // independent.
-                if (pom_package_name.Any() && pom_package_name.First() != "")
-                {
-                    bool package_option = false;
-                    foreach (var a in pom_antlr_tool_args)
-                    {
-                        if (a == "-package")
-                        {
-                            package_option = true;
-                            break;
-                        }
-                    }
-                    if (!package_option)
-                    {
-                        System.Console.Error.WriteLine("You have a package reference for the parser in the test of it, "
-                            + "but you don't have "
-                            + "a package option on the Antlr tool generator configuration. Therfore, it's likely you have a package defined in your grammar directly, which is "
-                            + "not target independent code, so it will not work other than for the default target.");
                     }
                 }
                 // Check all other config options in antlr4-maven-plugin configuration.
@@ -521,27 +507,46 @@ namespace dotnet_antlr
                     var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
                     ignore_string = string.Join("|", ignore_lines);
                 }
-                config.Package = (pom_package_name.Any() ? pom_package_name.First() : "");
-                if (config.target == TargetType.Go) config.Package = "parser";
-                config.antlr_tool_args = pom_antlr_tool_args.ToList();
-                if (config.antlr_tool_args.Count() > 1)
+                if (config.target == TargetType.Go) config.name_space = "parser";
+
+                if (!(config.target == TargetType.JavaScript || config.target == TargetType.Dart))
                 {
-                    List<string> additional = config.antlr_tool_args.ToList();
-                    config.antlr_tool_args = additional;
-                    additional.Add("-o");
-                    additional.Add(config.Package.Replace('.','/'));
+                    config.antlr_tool_args = pom_antlr_tool_args.ToList();
+                    if (config.antlr_tool_args.Count() > 1)
+                    {
+                        List<string> additional = config.antlr_tool_args.ToList();
+                        config.antlr_tool_args = additional;
+                        // On Linux, the flies are automatically place in the package,
+                        // and they cannot be changed!
+                        if (config.name_space != null && config.name_space != "")
+                        {
+                            if (config.env_type == EnvType.Windows)
+                            {
+                                additional.Add("-o");
+                                additional.Add(config.name_space.Replace('.', '/'));
+                            }
+                            additional.Add("-lib");
+                            additional.Add(config.name_space.Replace('.', '/'));
+                        }
+                    }
                 }
 
+                // How to call the parser in the source code.
                 config.fully_qualified_parser_name =
-                    ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
-  //                  + (config.target == TargetType.Go ? "New" : "")
+                    ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
+//                  + (config.target == TargetType.Go ? "New" : "")
                     + pom_grammar_name.First()
                     + "Parser";
                 config.fully_qualified_go_parser_name =
-                    ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
+                    ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
                     + (config.target == TargetType.Go ? "New" : "")
                     + pom_grammar_name.First()
                     + "Parser";
+                // Where the parser generated code lives.
+                parser_generated_file_name =
+                    (string)config.fully_qualified_parser_name.Replace('.', '/')
+                    + suffix;
+                parser_generated_include_file_name = (string)config.fully_qualified_parser_name.Replace('.', '/') + ".h";
                 for (; ; )
                 {
                     // Probe for parser grammar. 
@@ -549,7 +554,7 @@ namespace dotnet_antlr
                         var parser_grammars_pattern =
                             "^"
                             + source_directory
-                            + ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
+                            + ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
                             + "((?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/))("
                             + target_specific_src_directory + "/)(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Parser)).g4$";
                         var any =
@@ -599,10 +604,10 @@ namespace dotnet_antlr
                     }
                     throw new Exception("Cannot find the parser grammar (" + pom_grammar_name.First() + " | " + pom_grammar_name.First() + "Parser).g4");
                 }
-                if (pom_package_name.Any())
+                if (config.name_space != null && config.name_space != "")
                 {
                     parser_grammar_file_name =
-                        pom_package_name.First().Replace('.', '/') + '/'
+                        config.name_space.Replace('.', '/') + '/'
                         + Path.GetFileName(parser_src_grammar_file_name);
                 }
                 else if (source_directory != null && source_directory != "")
@@ -614,18 +619,18 @@ namespace dotnet_antlr
                     parser_grammar_file_name =
                         Path.GetFileName(parser_src_grammar_file_name);
                 }
-                parser_generated_file_name = (string)config.fully_qualified_parser_name.Replace('.','/') + suffix;
-                parser_generated_include_file_name = (string)config.fully_qualified_parser_name.Replace('.', '/') + ".h";
 
                 config.fully_qualified_lexer_name =
-                    ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
+                    ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
                     + (pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First()
                     + "Lexer");
                 config.fully_qualified_go_lexer_name =
-                    ((config.Package != null && config.Package != "") ? config.Package + '.' : "")
+                    ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
                     + (config.target == TargetType.Go ? "New" : "")
                     + (pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First()
                     + "Lexer");
+                lexer_generated_file_name = config.fully_qualified_lexer_name.Replace('.', '/') + suffix;
+                lexer_generated_include_file_name = config.fully_qualified_lexer_name.Replace('.', '/') + ".h";
                 for (; ; )
                 {
                     // Probe for lexer grammar. 
@@ -678,10 +683,10 @@ namespace dotnet_antlr
                     }
                     throw new Exception("Cannot find the lexer grammar (" + pom_grammar_name.First() + " | " + pom_grammar_name.First() + "Lexer).g4)");
                 }
-                if (pom_package_name.Any())
+                if (config.name_space != null && config.name_space != "")
                 {
                     lexer_grammar_file_name =
-                        pom_package_name.First().Replace('.', '/') + '/'
+                        config.name_space.Replace('.', '/') + '/'
                         + Path.GetFileName(lexer_src_grammar_file_name);
                 }
                 else if (source_directory != null && source_directory != "")
@@ -693,10 +698,6 @@ namespace dotnet_antlr
                     lexer_grammar_file_name =
                         Path.GetFileName(lexer_src_grammar_file_name);
                 }
-                lexer_generated_file_name = config.fully_qualified_lexer_name.Replace('.','/') + suffix;
-                lexer_generated_include_file_name = config.fully_qualified_lexer_name.Replace('.', '/') + ".h";
-
-                if (pom_package_name.Any()) config.name_space = pom_package_name.First();
                 
                 tool_src_grammar_files = new HashSet<string>()
                 {
