@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.1.0";
+        public static string version = "3.1.1";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
@@ -797,6 +797,13 @@ namespace dotnet_antlr
                         ? f.Substring((Program.TargetName((TargetType)this.config.target) + '/').Length)
                         : f
                         );
+                // Remove "src/main/java", a royal hangover from the Maven plugin.
+                f = (
+                        f.StartsWith("src/main/java/")
+                        ? f.Substring("src/main/java".Length)
+                        : f
+                        );
+
                 string to = null;
                 if (Path.GetExtension(from) == ".g4" && config.name_space != null)
                 {
