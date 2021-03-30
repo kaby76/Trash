@@ -80,6 +80,9 @@ namespace dotnet_antlr
         [Option("template-sources-directory", Required = false)]
         public string? template_sources_directory { get; set; }
 
+        [Option("todo-pattern", Required = false, HelpText ="Replacement for skip-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
+        public string? todo_list { get; set; }
+
         [Option('g', "tool-grammar-files-pattern", Required = false, HelpText = "A list of vertical bar separated grammar file paths.")]
         public string? tool_grammar_files_pattern { get; set; }
     }

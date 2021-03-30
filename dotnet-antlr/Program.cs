@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.0.13";
+        public static string version = "3.1.0";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
@@ -276,6 +276,8 @@ namespace dotnet_antlr
                 FollowPoms(cd);
                 if (failed_modules.Any())
                 {
+                    // List out failed grammars. I really should say what failed,
+                    // what succeeded, what skipped, but I don't. TODO.
                     System.Console.WriteLine(String.Join(" ", failed_modules));
                     throw new Exception();
                 }
@@ -292,14 +294,6 @@ namespace dotnet_antlr
         {
             Environment.CurrentDirectory = cd;
             System.Console.Error.WriteLine(cd);
-
-            if (config.skip_list.Where(s => cd.Remove(cd.Length - 1).EndsWith(s)).Any())
-            {
-                System.Console.Error.WriteLine("Skipping.");
-                return;
-            }
-            target_directory = System.IO.Path.GetFullPath(cd + Path.DirectorySeparatorChar + (string)config.output_directory);
-
             XmlTextReader reader = new XmlTextReader(cd + Path.DirectorySeparatorChar + @"pom.xml");
             reader.Namespaces = false;
             XPathDocument document = new XPathDocument(reader);
@@ -334,6 +328,26 @@ namespace dotnet_antlr
             }
             else
             {
+                if (config.todo_list == null)
+                {
+                    // Do the old "skip_list" way.
+                    if (config.skip_list.Where(s => cd.Remove(cd.Length - 1).EndsWith(s)).Any())
+                    {
+                        System.Console.Error.WriteLine("Skipping.");
+                        return;
+                    }
+                }
+                else
+                {
+                    var te = !(new Regex(config.todo_list).IsMatch(cd));
+                    if (config.todo_list != null && te)
+                    {
+                        System.Console.Error.WriteLine("Skipping.");
+                        return;
+                    }
+                }
+                target_directory = System.IO.Path.GetFullPath(cd + Path.DirectorySeparatorChar + (string)config.output_directory);
+
                 // Get antlr4-maven-plugin settings.
                 var pom_includes = navigator
                     .Select("//plugins/plugin[artifactId=\"antlr4-maven-plugin\"]/configuration/includes/include", nsmgr)
