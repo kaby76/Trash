@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.1.2";
+        public static string version = "3.1.3";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
@@ -511,23 +511,19 @@ namespace dotnet_antlr
 
                 if (!(config.target == TargetType.JavaScript || config.target == TargetType.Dart))
                 {
-                    config.antlr_tool_args = pom_antlr_tool_args.ToList();
-                    if (config.antlr_tool_args.Count() > 1)
+                    List<string> additional = new List<string>();
+                    config.antlr_tool_args = additional;
+                    // On Linux, the flies are automatically place in the package,
+                    // and they cannot be changed!
+                    if (config.name_space != null && config.name_space != "")
                     {
-                        List<string> additional = config.antlr_tool_args.ToList();
-                        config.antlr_tool_args = additional;
-                        // On Linux, the flies are automatically place in the package,
-                        // and they cannot be changed!
-                        if (config.name_space != null && config.name_space != "")
+                        if (config.env_type == EnvType.Windows)
                         {
-                            if (config.env_type == EnvType.Windows)
-                            {
-                                additional.Add("-o");
-                                additional.Add(config.name_space.Replace('.', '/'));
-                            }
-                            additional.Add("-lib");
+                            additional.Add("-o");
                             additional.Add(config.name_space.Replace('.', '/'));
                         }
+                        additional.Add("-lib");
+                        additional.Add(config.name_space.Replace('.', '/'));
                     }
                 }
 
