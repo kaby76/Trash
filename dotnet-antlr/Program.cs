@@ -419,6 +419,10 @@ namespace dotnet_antlr
                 {
                     config.name_space = null;
                 }
+                else if (config.target == TargetType.Go)
+                {
+                    config.name_space = "parser";
+                }
                 else if (pom_antlr_tool_args.Contains("-package"))
                 {
                     var ns = pom_antlr_tool_args[pom_antlr_tool_args.IndexOf("-package") + 1];
@@ -507,7 +511,6 @@ namespace dotnet_antlr
                     var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
                     ignore_string = string.Join("|", ignore_lines);
                 }
-                if (config.target == TargetType.Go) config.name_space = "parser";
 
                 if (!(config.target == TargetType.JavaScript || config.target == TargetType.Dart))
                 {
