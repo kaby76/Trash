@@ -43,19 +43,19 @@
 		<PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.8.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.8.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.8.0" />
+		<PackageReference Include="Domemtech.TrashBase" Version="1.0.0" />
 	</ItemGroup>
-  
-        <ItemGroup>
-		<ProjectReference Include="..\Algorithms\Algorithms.csproj" />
-		<ProjectReference Include="..\AntlrJson\AntlrJson.csproj" />
-		<ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
-	</ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Domemtech.AutomaticGraphLayout" Version="1.1.4" />
     <PackageReference Include="Domemtech.AutomaticGraphLayout.Drawing" Version="1.1.4" />
     <PackageReference Include="Domemtech.AutomaticGraphLayout.GraphViewerGdi" Version="1.1.4" />
   </ItemGroup>
+
+<ItemGroup>
+<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+</ItemGroup>
+
 
   <PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
