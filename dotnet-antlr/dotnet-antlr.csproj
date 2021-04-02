@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <AssemblyName>dotnet_antlr</AssemblyName>
+    <PackageId>dotnet-antlr</PackageId>
+    <Description>
+      <![CDATA[dotnet Antlr template tool.
+This package can be installed as a dotnet global or local tool.
+This tool generates code around the files you placed in a directory for
+an Antlr parser.]]>
+    </Description>
+    <ToolCommandName>dotnet-antlr</ToolCommandName>
+    <RootNamespace>AntlrTemplating</RootNamespace>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>3.1.3</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="templates\**" />
+    <EmbeddedResource Include="templates\**" />
+    <None Include="templates\**\*.*"></None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="templates\Antlr4cs\CaseChangingCharStream.cs" />
+    <None Remove="templates\Cpp\CaseChangingCharStream.cpp" />
+    <None Remove="templates\Cpp\CaseChangingCharStream.h" />
+    <None Remove="templates\CSharp\CaseChangingCharStream.cs" />
+    <None Remove="templates\Go\case_changing_stream.go" />
+    <None Remove="templates\JavaScript\CaseChangingStream.js" />
+    <None Remove="templates\Java\CaseChangingCharStream.java" />
+    <None Remove="templates\Python3\CaseChangingStream.py" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="Domemtech.Globbing" Version="2.3.0" />
+    <PackageReference Include="Domemtech.StringTemplate4" Version="4.0.9" />
+  </ItemGroup>
+
+</Project>
