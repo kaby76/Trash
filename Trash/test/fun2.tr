@@ -1,0 +1,14 @@
+echo "Generate a parser."
+read Expr.g4
+parse
+
+echo "Rename a symbol in a grammar, save."
+rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
+print
+generate s
+
+echo "Parse and print out a parse tree."
+echo "1+2+3" | run | tree
+
+echo "Done with Expr.g4"
+pop

@@ -1,0 +1,3 @@
+read /users/kenne/documents/antlrvsix2/languageserver/ANTLRv3Lexer.g4
+parse
+quit

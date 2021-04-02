@@ -1,0 +1,16 @@
+lexer grammar FooLexer;
+INT : ('0' .. '9')+ ;
+MUL : '*' ;
+DIV : '/' ;
+ADD : '+' ;
+SUB : '-' ;
+LP : '(' ;
+RP : ')' ;
+ID : ( ('a' .. 'z') | ('A' .. 'Z') | '_' )+ ;
+WS : [ \r\n\t] + -> skip ;
+mode One;
+One_AA : 'AA' -> popMode;
+mode Two;
+Two_AA : 'AA' -> popMode;
+mode Three;
+Three_AA : 'AA' -> popMode;

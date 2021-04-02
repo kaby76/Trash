@@ -1,0 +1,2568 @@
+> read Expr.g4
+> parse
+> . | dot
+digraph G {
+Node35943562 [label="grammarSpec"];
+Node55056607 [label="grammarDecl"];
+Node25747420 [label="grammarType"];
+Node30400195 [label="grammar"];
+Node5166299 [label="identifier"];
+Node46496694 [label="Expr"];
+Node15817070 [label=";"];
+Node8135907 [label="rules"];
+Node6114302 [label="ruleSpec"];
+Node55028720 [label="parserRuleSpec"];
+Node25496434 [label="e"];
+Node28141317 [label=":"];
+Node51945267 [label="ruleBlock"];
+Node64854219 [label="ruleAltList"];
+Node46817064 [label="labeledAlt"];
+Node18700393 [label="alternative"];
+Node34085817 [label="element"];
+Node38336904 [label="atom"];
+Node9487824 [label="ruleref"];
+Node18281552 [label="e"];
+Node30316242 [label="element"];
+Node4410728 [label="ebnf"];
+Node39696553 [label="block"];
+Node21724664 [label="("];
+Node61304253 [label="altList"];
+Node14867369 [label="alternative"];
+Node66697461 [label="element"];
+Node63406242 [label="atom"];
+Node33785274 [label="terminal"];
+Node35632012 [label="'*'"];
+Node52252659 [label="|"];
+Node511887 [label="alternative"];
+Node4606985 [label="element"];
+Node41462866 [label="atom"];
+Node37621475 [label="terminal"];
+Node3048957 [label="'/'"];
+Node27440617 [label=")"];
+Node45638969 [label="element"];
+Node8097541 [label="atom"];
+Node5769005 [label="ruleref"];
+Node51921052 [label="e"];
+Node64636290 [label="|"];
+Node44855704 [label="labeledAlt"];
+Node1048160 [label="alternative"];
+Node9433441 [label="element"];
+Node17792110 [label="atom"];
+Node25911262 [label="ruleref"];
+Node31874772 [label="e"];
+Node18437496 [label="element"];
+Node31719739 [label="ebnf"];
+Node17042198 [label="block"];
+Node19162058 [label="("];
+Node38240801 [label="altList"];
+Node8622890 [label="alternative"];
+Node10497152 [label="element"];
+Node27365507 [label="atom"];
+Node44962972 [label="terminal"];
+Node2013564 [label="'+'"];
+Node18122076 [label="|"];
+Node28880957 [label="alternative"];
+Node58602024 [label="element"];
+Node57656175 [label="atom"];
+Node49143529 [label="terminal"];
+Node39638585 [label="'-'"];
+Node21202951 [label=")"];
+Node56608836 [label="element"];
+Node39717481 [label="atom"];
+Node21913016 [label="ruleref"];
+Node62999416 [label="e"];
+Node30123835 [label="|"];
+Node2679067 [label="labeledAlt"];
+Node24111608 [label="alternative"];
+Node15677883 [label="element"];
+Node6883221 [label="atom"];
+Node61948991 [label="terminal"];
+Node20670010 [label="'('"];
+Node51812368 [label="element"];
+Node63658128 [label="atom"];
+Node36052245 [label="ruleref"];
+Node56034750 [label="e"];
+Node34550710 [label="element"];
+Node42520941 [label="atom"];
+Node47144157 [label="terminal"];
+Node21644229 [label="')'"];
+Node60580335 [label="|"];
+Node8352109 [label="labeledAlt"];
+Node8060118 [label="alternative"];
+Node5432205 [label="element"];
+Node48889850 [label="ebnf"];
+Node37355470 [label="block"];
+Node654914 [label="("];
+Node5894231 [label="altList"];
+Node53048087 [label="alternative"];
+Node7670737 [label="element"];
+Node1927776 [label="atom"];
+Node17349988 [label="terminal"];
+Node21932166 [label="'-'"];
+Node63171767 [label="|"];
+Node31674992 [label="alternative"];
+Node16639474 [label="element"];
+Node15537542 [label="atom"];
+Node5620158 [label="terminal"];
+Node50581426 [label="'+'"];
+Node52579650 [label=")"];
+Node3454809 [label="blockSuffix"];
+Node31093287 [label="ebnfSuffix"];
+Node11404133 [label="*"];
+Node35528341 [label="element"];
+Node51319614 [label="atom"];
+Node59223347 [label="ruleref"];
+Node63248075 [label="a"];
+Node32361769 [label=";"];
+Node22820469 [label="exceptionGroup"];
+Node4057632 [label="ruleSpec"];
+Node36518691 [label="parserRuleSpec"];
+Node60232767 [label="a"];
+Node5223998 [label=":"];
+Node47015983 [label="ruleBlock"];
+Node20490669 [label="ruleAltList"];
+Node50198296 [label="labeledAlt"];
+Node49131481 [label="alternative"];
+Node39530145 [label="element"];
+Node20226985 [label="atom"];
+Node47825138 [label="terminal"];
+Node27773061 [label="INT"];
+Node48630964 [label=";"];
+Node35025494 [label="exceptionGroup"];
+Node46793998 [label="ruleSpec"];
+Node18492804 [label="parserRuleSpec"];
+Node32217513 [label="id"];
+Node21522166 [label=":"];
+Node59481773 [label="ruleBlock"];
+Node65573909 [label="ruleAltList"];
+Node53294272 [label="labeledAlt"];
+Node9886408 [label="alternative"];
+Node21868813 [label="element"];
+Node62601592 [label="atom"];
+Node26543418 [label="terminal"];
+Node37564172 [label="ID"];
+Node2533231 [label=";"];
+Node22799085 [label="exceptionGroup"];
+Node3865173 [label="ruleSpec"];
+Node34786562 [label="lexerRuleSpec"];
+Node44643603 [label="INT"];
+Node66248115 [label=":"];
+Node59362130 [label="lexerRuleBlock"];
+Node64497130 [label="lexerAltList"];
+Node43603258 [label="lexerAlt"];
+Node56885004 [label="lexerElements"];
+Node42202994 [label="lexerElement"];
+Node44282627 [label="lexerBlock"];
+Node62999330 [label="("];
+Node30123063 [label="lexerAltList"];
+Node2672115 [label="lexerAlt"];
+Node24049039 [label="lexerElements"];
+Node15114764 [label="lexerElement"];
+Node1815156 [label="lexerAtom"];
+Node16336406 [label="characterRange"];
+Node12809933 [label="'0'"];
+Node48180537 [label=".."];
+Node30971651 [label="'9'"];
+Node10309404 [label=")"];
+Node25675773 [label="ebnfSuffix"];
+Node29755367 [label="+"];
+Node66471715 [label=";"];
+Node61374531 [label="ruleSpec"];
+Node15499871 [label="lexerRuleSpec"];
+Node5281111 [label="MUL"];
+Node47530006 [label=":"];
+Node25116876 [label="lexerRuleBlock"];
+Node24725298 [label="lexerAltList"];
+Node21201098 [label="lexerAlt"];
+Node56592155 [label="lexerElements"];
+Node39567352 [label="lexerElement"];
+Node20561848 [label="lexerAtom"];
+Node50838910 [label="terminal"];
+Node54897010 [label="'*'"];
+Node24311045 [label=";"];
+Node17472816 [label="ruleSpec"];
+Node23037620 [label="lexerRuleSpec"];
+Node6011995 [label="DIV"];
+Node54107956 [label=":"];
+Node17209562 [label="lexerRuleBlock"];
+Node20668333 [label="lexerAltList"];
+Node51797270 [label="lexerAlt"];
+Node63522246 [label="lexerElements"];
+Node34829302 [label="lexerElement"];
+Node45028263 [label="lexerAtom"];
+Node2601186 [label="terminal"];
+Node23410681 [label="'/'"];
+Node9369539 [label=";"];
+Node17216995 [label="ruleSpec"];
+Node20735233 [label="lexerRuleSpec"];
+Node52399374 [label="ADD"];
+Node1832323 [label=":"];
+Node16490914 [label="lexerRuleBlock"];
+Node14200498 [label="lexerAltList"];
+Node60695621 [label="lexerAlt"];
+Node9389685 [label="lexerElements"];
+Node17398306 [label="lexerElement"];
+Node22367029 [label="lexerAtom"];
+Node67085535 [label="terminal"];
+Node66898905 [label="'+'"];
+Node65219236 [label=";"];
+Node50102218 [label="ruleSpec"];
+Node48266778 [label="lexerRuleSpec"];
+Node31747823 [label="SUB"];
+Node17294952 [label=":"];
+Node21436848 [label="lexerRuleBlock"];
+Node58713911 [label="lexerAltList"];
+Node58663159 [label="lexerAlt"];
+Node58206383 [label="lexerElements"];
+Node54095401 [label="lexerElement"];
+Node17096567 [label="lexerAtom"];
+Node19651376 [label="terminal"];
+Node42644663 [label="'-'"];
+Node48257652 [label=";"];
+Node31665688 [label="ruleSpec"];
+Node16555740 [label="lexerRuleSpec"];
+Node14783937 [label="LP"];
+Node65946577 [label=":"];
+Node56648283 [label="lexerRuleBlock"];
+Node40072506 [label="lexerAltList"];
+Node25108238 [label="lexerAlt"];
+Node24647552 [label="lexerElements"];
+Node20501377 [label="lexerElement"];
+Node50294666 [label="lexerAtom"];
+Node49998812 [label="terminal"];
+Node47336128 [label="'('"];
+Node23371976 [label=";"];
+Node9021196 [label="ruleSpec"];
+Node14081900 [label="lexerRuleSpec"];
+Node59628243 [label="RP"];
+Node66892145 [label=":"];
+Node65158399 [label="lexerRuleBlock"];
+Node49554687 [label="lexerAltList"];
+Node43339000 [label="lexerAlt"];
+Node54506685 [label="lexerElements"];
+Node20798117 [label="lexerElement"];
+Node52965331 [label="lexerAtom"];
+Node6925935 [label="terminal"];
+Node62333418 [label="')'"];
+Node24129853 [label=";"];
+Node15842089 [label="ruleSpec"];
+Node8361080 [label="lexerRuleSpec"];
+Node8140857 [label="ID"];
+Node6158855 [label=":"];
+Node55429698 [label="lexerRuleBlock"];
+Node29105235 [label="lexerAltList"];
+Node60620523 [label="lexerAlt"];
+Node8713795 [label="lexerElements"];
+Node11315292 [label="lexerElement"];
+Node34728767 [label="lexerBlock"];
+Node44123454 [label="("];
+Node61566768 [label="lexerAltList"];
+Node17230008 [label="lexerAlt"];
+Node20852350 [label="lexerElements"];
+Node53453427 [label="lexerElement"];
+Node11318800 [label="lexerBlock"];
+Node34760343 [label="("];
+Node44407631 [label="lexerAltList"];
+Node64124362 [label="lexerAlt"];
+Node40248354 [label="lexerElements"];
+Node26690871 [label="lexerElement"];
+Node38891250 [label="lexerAtom"];
+Node14476932 [label="characterRange"];
+Node63183526 [label="'a'"];
+Node31780825 [label=".."];
+Node17591975 [label="'z'"];
+Node24110047 [label=")"];
+Node15663836 [label="|"];
+Node6756797 [label="lexerAlt"];
+Node60811181 [label="lexerElements"];
+Node10429724 [label="lexerElement"];
+Node26758660 [label="lexerBlock"];
+Node39501348 [label="("];
+Node19967814 [label="lexerAltList"];
+Node45492604 [label="lexerAlt"];
+Node6780253 [label="lexerElements"];
+Node61022284 [label="lexerElement"];
+Node12329649 [label="lexerAtom"];
+Node43857981 [label="characterRange"];
+Node59177513 [label="'A'"];
+Node62835574 [label=".."];
+Node28649262 [label="'Z'"];
+Node56516768 [label=")"];
+Node38888871 [label="|"];
+Node14455523 [label="lexerAlt"];
+Node62990845 [label="lexerElements"];
+Node30046694 [label="lexerElement"];
+Node1984791 [label="lexerAtom"];
+Node17863121 [label="terminal"];
+Node26550365 [label="'_'"];
+Node37626701 [label=")"];
+Node3095993 [label="ebnfSuffix"];
+Node27863937 [label="+"];
+Node49448848 [label=";"];
+Node42386454 [label="ruleSpec"];
+Node45933772 [label="lexerRuleSpec"];
+Node10750772 [label="WS"];
+Node29648085 [label=":"];
+Node65506178 [label="lexerRuleBlock"];
+Node52684690 [label="lexerAltList"];
+Node4400168 [label="lexerAlt"];
+Node39601516 [label="lexerElements"];
+Node20869327 [label="lexerElement"];
+Node53606218 [label="lexerAtom"];
+Node12693918 [label="[ \r\n\t]"];
+Node47136405 [label="ebnfSuffix"];
+Node21574462 [label="+"];
+Node59952436 [label="lexerCommands"];
+Node2701015 [label="->"];
+Node24309136 [label="lexerCommand"];
+Node17455632 [label="lexerCommandName"];
+Node22882960 [label="identifier"];
+Node4620049 [label="skip"];
+Node41580444 [label=";"];
+Node38679683 [label=""];
+Node35943562 -> Node55056607;
+Node35943562 -> Node8135907;
+Node35943562 -> Node38679683;
+Node8135907 -> Node6114302;
+Node8135907 -> Node4057632;
+Node8135907 -> Node46793998;
+Node8135907 -> Node3865173;
+Node8135907 -> Node61374531;
+Node8135907 -> Node17472816;
+Node8135907 -> Node17216995;
+Node8135907 -> Node50102218;
+Node8135907 -> Node31665688;
+Node8135907 -> Node9021196;
+Node8135907 -> Node15842089;
+Node8135907 -> Node42386454;
+Node42386454 -> Node45933772;
+Node45933772 -> Node10750772;
+Node45933772 -> Node29648085;
+Node45933772 -> Node65506178;
+Node45933772 -> Node41580444;
+Node65506178 -> Node52684690;
+Node52684690 -> Node4400168;
+Node4400168 -> Node39601516;
+Node4400168 -> Node59952436;
+Node59952436 -> Node2701015;
+Node59952436 -> Node24309136;
+Node24309136 -> Node17455632;
+Node17455632 -> Node22882960;
+Node22882960 -> Node4620049;
+Node39601516 -> Node20869327;
+Node20869327 -> Node53606218;
+Node20869327 -> Node47136405;
+Node47136405 -> Node21574462;
+Node53606218 -> Node12693918;
+Node15842089 -> Node8361080;
+Node8361080 -> Node8140857;
+Node8361080 -> Node6158855;
+Node8361080 -> Node55429698;
+Node8361080 -> Node49448848;
+Node55429698 -> Node29105235;
+Node29105235 -> Node60620523;
+Node60620523 -> Node8713795;
+Node8713795 -> Node11315292;
+Node11315292 -> Node34728767;
+Node11315292 -> Node3095993;
+Node3095993 -> Node27863937;
+Node34728767 -> Node44123454;
+Node34728767 -> Node61566768;
+Node34728767 -> Node37626701;
+Node61566768 -> Node17230008;
+Node61566768 -> Node15663836;
+Node61566768 -> Node6756797;
+Node61566768 -> Node38888871;
+Node61566768 -> Node14455523;
+Node14455523 -> Node62990845;
+Node62990845 -> Node30046694;
+Node30046694 -> Node1984791;
+Node1984791 -> Node17863121;
+Node17863121 -> Node26550365;
+Node6756797 -> Node60811181;
+Node60811181 -> Node10429724;
+Node10429724 -> Node26758660;
+Node26758660 -> Node39501348;
+Node26758660 -> Node19967814;
+Node26758660 -> Node56516768;
+Node19967814 -> Node45492604;
+Node45492604 -> Node6780253;
+Node6780253 -> Node61022284;
+Node61022284 -> Node12329649;
+Node12329649 -> Node43857981;
+Node43857981 -> Node59177513;
+Node43857981 -> Node62835574;
+Node43857981 -> Node28649262;
+Node17230008 -> Node20852350;
+Node20852350 -> Node53453427;
+Node53453427 -> Node11318800;
+Node11318800 -> Node34760343;
+Node11318800 -> Node44407631;
+Node11318800 -> Node24110047;
+Node44407631 -> Node64124362;
+Node64124362 -> Node40248354;
+Node40248354 -> Node26690871;
+Node26690871 -> Node38891250;
+Node38891250 -> Node14476932;
+Node14476932 -> Node63183526;
+Node14476932 -> Node31780825;
+Node14476932 -> Node17591975;
+Node9021196 -> Node14081900;
+Node14081900 -> Node59628243;
+Node14081900 -> Node66892145;
+Node14081900 -> Node65158399;
+Node14081900 -> Node24129853;
+Node65158399 -> Node49554687;
+Node49554687 -> Node43339000;
+Node43339000 -> Node54506685;
+Node54506685 -> Node20798117;
+Node20798117 -> Node52965331;
+Node52965331 -> Node6925935;
+Node6925935 -> Node62333418;
+Node31665688 -> Node16555740;
+Node16555740 -> Node14783937;
+Node16555740 -> Node65946577;
+Node16555740 -> Node56648283;
+Node16555740 -> Node23371976;
+Node56648283 -> Node40072506;
+Node40072506 -> Node25108238;
+Node25108238 -> Node24647552;
+Node24647552 -> Node20501377;
+Node20501377 -> Node50294666;
+Node50294666 -> Node49998812;
+Node49998812 -> Node47336128;
+Node50102218 -> Node48266778;
+Node48266778 -> Node31747823;
+Node48266778 -> Node17294952;
+Node48266778 -> Node21436848;
+Node48266778 -> Node48257652;
+Node21436848 -> Node58713911;
+Node58713911 -> Node58663159;
+Node58663159 -> Node58206383;
+Node58206383 -> Node54095401;
+Node54095401 -> Node17096567;
+Node17096567 -> Node19651376;
+Node19651376 -> Node42644663;
+Node17216995 -> Node20735233;
+Node20735233 -> Node52399374;
+Node20735233 -> Node1832323;
+Node20735233 -> Node16490914;
+Node20735233 -> Node65219236;
+Node16490914 -> Node14200498;
+Node14200498 -> Node60695621;
+Node60695621 -> Node9389685;
+Node9389685 -> Node17398306;
+Node17398306 -> Node22367029;
+Node22367029 -> Node67085535;
+Node67085535 -> Node66898905;
+Node17472816 -> Node23037620;
+Node23037620 -> Node6011995;
+Node23037620 -> Node54107956;
+Node23037620 -> Node17209562;
+Node23037620 -> Node9369539;
+Node17209562 -> Node20668333;
+Node20668333 -> Node51797270;
+Node51797270 -> Node63522246;
+Node63522246 -> Node34829302;
+Node34829302 -> Node45028263;
+Node45028263 -> Node2601186;
+Node2601186 -> Node23410681;
+Node61374531 -> Node15499871;
+Node15499871 -> Node5281111;
+Node15499871 -> Node47530006;
+Node15499871 -> Node25116876;
+Node15499871 -> Node24311045;
+Node25116876 -> Node24725298;
+Node24725298 -> Node21201098;
+Node21201098 -> Node56592155;
+Node56592155 -> Node39567352;
+Node39567352 -> Node20561848;
+Node20561848 -> Node50838910;
+Node50838910 -> Node54897010;
+Node3865173 -> Node34786562;
+Node34786562 -> Node44643603;
+Node34786562 -> Node66248115;
+Node34786562 -> Node59362130;
+Node34786562 -> Node66471715;
+Node59362130 -> Node64497130;
+Node64497130 -> Node43603258;
+Node43603258 -> Node56885004;
+Node56885004 -> Node42202994;
+Node42202994 -> Node44282627;
+Node42202994 -> Node25675773;
+Node25675773 -> Node29755367;
+Node44282627 -> Node62999330;
+Node44282627 -> Node30123063;
+Node44282627 -> Node10309404;
+Node30123063 -> Node2672115;
+Node2672115 -> Node24049039;
+Node24049039 -> Node15114764;
+Node15114764 -> Node1815156;
+Node1815156 -> Node16336406;
+Node16336406 -> Node12809933;
+Node16336406 -> Node48180537;
+Node16336406 -> Node30971651;
+Node46793998 -> Node18492804;
+Node18492804 -> Node32217513;
+Node18492804 -> Node21522166;
+Node18492804 -> Node59481773;
+Node18492804 -> Node2533231;
+Node18492804 -> Node22799085;
+Node59481773 -> Node65573909;
+Node65573909 -> Node53294272;
+Node53294272 -> Node9886408;
+Node9886408 -> Node21868813;
+Node21868813 -> Node62601592;
+Node62601592 -> Node26543418;
+Node26543418 -> Node37564172;
+Node4057632 -> Node36518691;
+Node36518691 -> Node60232767;
+Node36518691 -> Node5223998;
+Node36518691 -> Node47015983;
+Node36518691 -> Node48630964;
+Node36518691 -> Node35025494;
+Node47015983 -> Node20490669;
+Node20490669 -> Node50198296;
+Node50198296 -> Node49131481;
+Node49131481 -> Node39530145;
+Node39530145 -> Node20226985;
+Node20226985 -> Node47825138;
+Node47825138 -> Node27773061;
+Node6114302 -> Node55028720;
+Node55028720 -> Node25496434;
+Node55028720 -> Node28141317;
+Node55028720 -> Node51945267;
+Node55028720 -> Node32361769;
+Node55028720 -> Node22820469;
+Node51945267 -> Node64854219;
+Node64854219 -> Node46817064;
+Node64854219 -> Node64636290;
+Node64854219 -> Node44855704;
+Node64854219 -> Node30123835;
+Node64854219 -> Node2679067;
+Node64854219 -> Node60580335;
+Node64854219 -> Node8352109;
+Node8352109 -> Node8060118;
+Node8060118 -> Node5432205;
+Node8060118 -> Node35528341;
+Node35528341 -> Node51319614;
+Node51319614 -> Node59223347;
+Node59223347 -> Node63248075;
+Node5432205 -> Node48889850;
+Node48889850 -> Node37355470;
+Node48889850 -> Node3454809;
+Node3454809 -> Node31093287;
+Node31093287 -> Node11404133;
+Node37355470 -> Node654914;
+Node37355470 -> Node5894231;
+Node37355470 -> Node52579650;
+Node5894231 -> Node53048087;
+Node5894231 -> Node63171767;
+Node5894231 -> Node31674992;
+Node31674992 -> Node16639474;
+Node16639474 -> Node15537542;
+Node15537542 -> Node5620158;
+Node5620158 -> Node50581426;
+Node53048087 -> Node7670737;
+Node7670737 -> Node1927776;
+Node1927776 -> Node17349988;
+Node17349988 -> Node21932166;
+Node2679067 -> Node24111608;
+Node24111608 -> Node15677883;
+Node24111608 -> Node51812368;
+Node24111608 -> Node34550710;
+Node34550710 -> Node42520941;
+Node42520941 -> Node47144157;
+Node47144157 -> Node21644229;
+Node51812368 -> Node63658128;
+Node63658128 -> Node36052245;
+Node36052245 -> Node56034750;
+Node15677883 -> Node6883221;
+Node6883221 -> Node61948991;
+Node61948991 -> Node20670010;
+Node44855704 -> Node1048160;
+Node1048160 -> Node9433441;
+Node1048160 -> Node18437496;
+Node1048160 -> Node56608836;
+Node56608836 -> Node39717481;
+Node39717481 -> Node21913016;
+Node21913016 -> Node62999416;
+Node18437496 -> Node31719739;
+Node31719739 -> Node17042198;
+Node17042198 -> Node19162058;
+Node17042198 -> Node38240801;
+Node17042198 -> Node21202951;
+Node38240801 -> Node8622890;
+Node38240801 -> Node18122076;
+Node38240801 -> Node28880957;
+Node28880957 -> Node58602024;
+Node58602024 -> Node57656175;
+Node57656175 -> Node49143529;
+Node49143529 -> Node39638585;
+Node8622890 -> Node10497152;
+Node10497152 -> Node27365507;
+Node27365507 -> Node44962972;
+Node44962972 -> Node2013564;
+Node9433441 -> Node17792110;
+Node17792110 -> Node25911262;
+Node25911262 -> Node31874772;
+Node46817064 -> Node18700393;
+Node18700393 -> Node34085817;
+Node18700393 -> Node30316242;
+Node18700393 -> Node45638969;
+Node45638969 -> Node8097541;
+Node8097541 -> Node5769005;
+Node5769005 -> Node51921052;
+Node30316242 -> Node4410728;
+Node4410728 -> Node39696553;
+Node39696553 -> Node21724664;
+Node39696553 -> Node61304253;
+Node39696553 -> Node27440617;
+Node61304253 -> Node14867369;
+Node61304253 -> Node52252659;
+Node61304253 -> Node511887;
+Node511887 -> Node4606985;
+Node4606985 -> Node41462866;
+Node41462866 -> Node37621475;
+Node37621475 -> Node3048957;
+Node14867369 -> Node66697461;
+Node66697461 -> Node63406242;
+Node63406242 -> Node33785274;
+Node33785274 -> Node35632012;
+Node34085817 -> Node38336904;
+Node38336904 -> Node9487824;
+Node9487824 -> Node18281552;
+Node55056607 -> Node25747420;
+Node55056607 -> Node5166299;
+Node55056607 -> Node15817070;
+Node5166299 -> Node46496694;
+Node25747420 -> Node30400195;
+}
+
+> . | xml
+<grammarSpec>
+    <grammarDecl>
+        <grammarType>
+            <t>grammar</t>
+        </grammarType>
+        <identifier>
+            <t>Expr</t>
+        </identifier>
+        <t>;</t>
+    </grammarDecl>
+    <rules>
+        <ruleSpec>
+            <parserRuleSpec>
+                <t>e</t>
+                <t>:</t>
+                <ruleBlock>
+                    <ruleAltList>
+                        <labeledAlt>
+                            <alternative>
+                                <element>
+                                    <atom>
+                                        <ruleref>
+                                            <t>e</t>
+                                        </ruleref>
+                                    </atom>
+                                </element>
+                                <element>
+                                    <ebnf>
+                                        <block>
+                                            <t>(</t>
+                                            <altList>
+                                                <alternative>
+                                                    <element>
+                                                        <atom>
+                                                            <terminal>
+                                                                <t>'*'</t>
+                                                            </terminal>
+                                                        </atom>
+                                                    </element>
+                                                </alternative>
+                                                <t>|</t>
+                                                <alternative>
+                                                    <element>
+                                                        <atom>
+                                                            <terminal>
+                                                                <t>'/'</t>
+                                                            </terminal>
+                                                        </atom>
+                                                    </element>
+                                                </alternative>
+                                            </altList>
+                                            <t>)</t>
+                                        </block>
+                                    </ebnf>
+                                </element>
+                                <element>
+                                    <atom>
+                                        <ruleref>
+                                            <t>e</t>
+                                        </ruleref>
+                                    </atom>
+                                </element>
+                            </alternative>
+                        </labeledAlt>
+                        <t>|</t>
+                        <labeledAlt>
+                            <alternative>
+                                <element>
+                                    <atom>
+                                        <ruleref>
+                                            <t>e</t>
+                                        </ruleref>
+                                    </atom>
+                                </element>
+                                <element>
+                                    <ebnf>
+                                        <block>
+                                            <t>(</t>
+                                            <altList>
+                                                <alternative>
+                                                    <element>
+                                                        <atom>
+                                                            <terminal>
+                                                                <t>'+'</t>
+                                                            </terminal>
+                                                        </atom>
+                                                    </element>
+                                                </alternative>
+                                                <t>|</t>
+                                                <alternative>
+                                                    <element>
+                                                        <atom>
+                                                            <terminal>
+                                                                <t>'-'</t>
+                                                            </terminal>
+                                                        </atom>
+                                                    </element>
+                                                </alternative>
+                                            </altList>
+                                            <t>)</t>
+                                        </block>
+                                    </ebnf>
+                                </element>
+                                <element>
+                                    <atom>
+                                        <ruleref>
+                                            <t>e</t>
+                                        </ruleref>
+                                    </atom>
+                                </element>
+                            </alternative>
+                        </labeledAlt>
+                        <t>|</t>
+                        <labeledAlt>
+                            <alternative>
+                                <element>
+                                    <atom>
+                                        <terminal>
+                                            <t>'('</t>
+                                        </terminal>
+                                    </atom>
+                                </element>
+                                <element>
+                                    <atom>
+                                        <ruleref>
+                                            <t>e</t>
+                                        </ruleref>
+                                    </atom>
+                                </element>
+                                <element>
+                                    <atom>
+                                        <terminal>
+                                            <t>')'</t>
+                                        </terminal>
+                                    </atom>
+                                </element>
+                            </alternative>
+                        </labeledAlt>
+                        <t>|</t>
+                        <labeledAlt>
+                            <alternative>
+                                <element>
+                                    <ebnf>
+                                        <block>
+                                            <t>(</t>
+                                            <altList>
+                                                <alternative>
+                                                    <element>
+                                                        <atom>
+                                                            <terminal>
+                                                                <t>'-'</t>
+                                                            </terminal>
+                                                        </atom>
+                                                    </element>
+                                                </alternative>
+                                                <t>|</t>
+                                                <alternative>
+                                                    <element>
+                                                        <atom>
+                                                            <terminal>
+                                                                <t>'+'</t>
+                                                            </terminal>
+                                                        </atom>
+                                                    </element>
+                                                </alternative>
+                                            </altList>
+                                            <t>)</t>
+                                        </block>
+                                        <blockSuffix>
+                                            <ebnfSuffix>
+                                                <t>*</t>
+                                            </ebnfSuffix>
+                                        </blockSuffix>
+                                    </ebnf>
+                                </element>
+                                <element>
+                                    <atom>
+                                        <ruleref>
+                                            <t>a</t>
+                                        </ruleref>
+                                    </atom>
+                                </element>
+                            </alternative>
+                        </labeledAlt>
+                    </ruleAltList>
+                </ruleBlock>
+                <t>;</t>
+                <exceptionGroup>
+                </exceptionGroup>
+            </parserRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <parserRuleSpec>
+                <t>a</t>
+                <t>:</t>
+                <ruleBlock>
+                    <ruleAltList>
+                        <labeledAlt>
+                            <alternative>
+                                <element>
+                                    <atom>
+                                        <terminal>
+                                            <t>INT</t>
+                                        </terminal>
+                                    </atom>
+                                </element>
+                            </alternative>
+                        </labeledAlt>
+                    </ruleAltList>
+                </ruleBlock>
+                <t>;</t>
+                <exceptionGroup>
+                </exceptionGroup>
+            </parserRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <parserRuleSpec>
+                <t>id</t>
+                <t>:</t>
+                <ruleBlock>
+                    <ruleAltList>
+                        <labeledAlt>
+                            <alternative>
+                                <element>
+                                    <atom>
+                                        <terminal>
+                                            <t>ID</t>
+                                        </terminal>
+                                    </atom>
+                                </element>
+                            </alternative>
+                        </labeledAlt>
+                    </ruleAltList>
+                </ruleBlock>
+                <t>;</t>
+                <exceptionGroup>
+                </exceptionGroup>
+            </parserRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <lexerRuleSpec>
+                <t>INT</t>
+                <t>:</t>
+                <lexerRuleBlock>
+                    <lexerAltList>
+                        <lexerAlt>
+                            <lexerElements>
+                                <lexerElement>
+                                    <lexerBlock>
+                                        <t>(</t>
+                                        <lexerAltList>
+                                            <lexerAlt>
+                                                <lexerElements>
+                                                    <lexerElement>
+                                                        <lexerAtom>
+                                                            <characterRange>
+                                                                <t>'0'</t>
+                                                                <t>..</t>
+                                                                <t>'9'</t>
+                                                            </characterRange>
+                                                        </lexerAtom>
+                                                    </lexerElement>
+                                                </lexerElements>
+                                            </lexerAlt>
+                                        </lexerAltList>
+                                        <t>)</t>
+                                    </lexerBlock>
+                                    <ebnfSuffix>
+                                        <t>+</t>
+                                    </ebnfSuffix>
+                                </lexerElement>
+                            </lexerElements>
+                        </lexerAlt>
+                    </lexerAltList>
+                </lexerRuleBlock>
+                <t>;</t>
+            </lexerRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <lexerRuleSpec>
+                <t>MUL</t>
+                <t>:</t>
+                <lexerRuleBlock>
+                    <lexerAltList>
+                        <lexerAlt>
+                            <lexerElements>
+                                <lexerElement>
+                                    <lexerAtom>
+                                        <terminal>
+                                            <t>'*'</t>
+                                        </terminal>
+                                    </lexerAtom>
+                                </lexerElement>
+                            </lexerElements>
+                        </lexerAlt>
+                    </lexerAltList>
+                </lexerRuleBlock>
+                <t>;</t>
+            </lexerRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <lexerRuleSpec>
+                <t>DIV</t>
+                <t>:</t>
+                <lexerRuleBlock>
+                    <lexerAltList>
+                        <lexerAlt>
+                            <lexerElements>
+                                <lexerElement>
+                                    <lexerAtom>
+                                        <terminal>
+                                            <t>'/'</t>
+                                        </terminal>
+                                    </lexerAtom>
+                                </lexerElement>
+                            </lexerElements>
+                        </lexerAlt>
+                    </lexerAltList>
+                </lexerRuleBlock>
+                <t>;</t>
+            </lexerRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <lexerRuleSpec>
+                <t>ADD</t>
+                <t>:</t>
+                <lexerRuleBlock>
+                    <lexerAltList>
+                        <lexerAlt>
+                            <lexerElements>
+                                <lexerElement>
+                                    <lexerAtom>
+                                        <terminal>
+                                            <t>'+'</t>
+                                        </terminal>
+                                    </lexerAtom>
+                                </lexerElement>
+                            </lexerElements>
+                        </lexerAlt>
+                    </lexerAltList>
+                </lexerRuleBlock>
+                <t>;</t>
+            </lexerRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <lexerRuleSpec>
+                <t>SUB</t>
+                <t>:</t>
+                <lexerRuleBlock>
+                    <lexerAltList>
+                        <lexerAlt>
+                            <lexerElements>
+                                <lexerElement>
+                                    <lexerAtom>
+                                        <terminal>
+                                            <t>'-'</t>
+                                        </terminal>
+                                    </lexerAtom>
+                                </lexerElement>
+                            </lexerElements>
+                        </lexerAlt>
+                    </lexerAltList>
+                </lexerRuleBlock>
+                <t>;</t>
+            </lexerRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <lexerRuleSpec>
+                <t>LP</t>
+                <t>:</t>
+                <lexerRuleBlock>
+                    <lexerAltList>
+                        <lexerAlt>
+                            <lexerElements>
+                                <lexerElement>
+                                    <lexerAtom>
+                                        <terminal>
+                                            <t>'('</t>
+                                        </terminal>
+                                    </lexerAtom>
+                                </lexerElement>
+                            </lexerElements>
+                        </lexerAlt>
+                    </lexerAltList>
+                </lexerRuleBlock>
+                <t>;</t>
+            </lexerRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <lexerRuleSpec>
+                <t>RP</t>
+                <t>:</t>
+                <lexerRuleBlock>
+                    <lexerAltList>
+                        <lexerAlt>
+                            <lexerElements>
+                                <lexerElement>
+                                    <lexerAtom>
+                                        <terminal>
+                                            <t>')'</t>
+                                        </terminal>
+                                    </lexerAtom>
+                                </lexerElement>
+                            </lexerElements>
+                        </lexerAlt>
+                    </lexerAltList>
+                </lexerRuleBlock>
+                <t>;</t>
+            </lexerRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <lexerRuleSpec>
+                <t>ID</t>
+                <t>:</t>
+                <lexerRuleBlock>
+                    <lexerAltList>
+                        <lexerAlt>
+                            <lexerElements>
+                                <lexerElement>
+                                    <lexerBlock>
+                                        <t>(</t>
+                                        <lexerAltList>
+                                            <lexerAlt>
+                                                <lexerElements>
+                                                    <lexerElement>
+                                                        <lexerBlock>
+                                                            <t>(</t>
+                                                            <lexerAltList>
+                                                                <lexerAlt>
+                                                                    <lexerElements>
+                                                                        <lexerElement>
+                                                                            <lexerAtom>
+                                                                                <characterRange>
+                                                                                    <t>'a'</t>
+                                                                                    <t>..</t>
+                                                                                    <t>'z'</t>
+                                                                                </characterRange>
+                                                                            </lexerAtom>
+                                                                        </lexerElement>
+                                                                    </lexerElements>
+                                                                </lexerAlt>
+                                                            </lexerAltList>
+                                                            <t>)</t>
+                                                        </lexerBlock>
+                                                    </lexerElement>
+                                                </lexerElements>
+                                            </lexerAlt>
+                                            <t>|</t>
+                                            <lexerAlt>
+                                                <lexerElements>
+                                                    <lexerElement>
+                                                        <lexerBlock>
+                                                            <t>(</t>
+                                                            <lexerAltList>
+                                                                <lexerAlt>
+                                                                    <lexerElements>
+                                                                        <lexerElement>
+                                                                            <lexerAtom>
+                                                                                <characterRange>
+                                                                                    <t>'A'</t>
+                                                                                    <t>..</t>
+                                                                                    <t>'Z'</t>
+                                                                                </characterRange>
+                                                                            </lexerAtom>
+                                                                        </lexerElement>
+                                                                    </lexerElements>
+                                                                </lexerAlt>
+                                                            </lexerAltList>
+                                                            <t>)</t>
+                                                        </lexerBlock>
+                                                    </lexerElement>
+                                                </lexerElements>
+                                            </lexerAlt>
+                                            <t>|</t>
+                                            <lexerAlt>
+                                                <lexerElements>
+                                                    <lexerElement>
+                                                        <lexerAtom>
+                                                            <terminal>
+                                                                <t>'_'</t>
+                                                            </terminal>
+                                                        </lexerAtom>
+                                                    </lexerElement>
+                                                </lexerElements>
+                                            </lexerAlt>
+                                        </lexerAltList>
+                                        <t>)</t>
+                                    </lexerBlock>
+                                    <ebnfSuffix>
+                                        <t>+</t>
+                                    </ebnfSuffix>
+                                </lexerElement>
+                            </lexerElements>
+                        </lexerAlt>
+                    </lexerAltList>
+                </lexerRuleBlock>
+                <t>;</t>
+            </lexerRuleSpec>
+        </ruleSpec>
+        <ruleSpec>
+            <lexerRuleSpec>
+                <t>WS</t>
+                <t>:</t>
+                <lexerRuleBlock>
+                    <lexerAltList>
+                        <lexerAlt>
+                            <lexerElements>
+                                <lexerElement>
+                                    <lexerAtom>
+                                        <t>[ \r\n\t]</t>
+                                    </lexerAtom>
+                                    <ebnfSuffix>
+                                        <t>+</t>
+                                    </ebnfSuffix>
+                                </lexerElement>
+                            </lexerElements>
+                            <lexerCommands>
+                                <t>-></t>
+                                <lexerCommand>
+                                    <lexerCommandName>
+                                        <identifier>
+                                            <t>skip</t>
+                                        </identifier>
+                                    </lexerCommandName>
+                                </lexerCommand>
+                            </lexerCommands>
+                        </lexerAlt>
+                    </lexerAltList>
+                </lexerRuleBlock>
+                <t>;</t>
+            </lexerRuleSpec>
+        </ruleSpec>
+    </rules>
+    <t></t>
+</grammarSpec>
+> . | json
+{
+"grammarSpec":
+[
+    {
+    "grammarDecl":
+    [
+        {
+        "grammarType":
+        [
+            {
+            "Text":"grammar"
+            }
+        ]
+        }
+        {
+        "identifier":
+        [
+            {
+            "Text":"Expr"
+            }
+        ]
+        }
+        {
+        "Text":";"
+        }
+    ]
+    }
+    {
+    "rules":
+    [
+        {
+        "ruleSpec":
+        [
+            {
+            "parserRuleSpec":
+            [
+                {
+                "Text":"e"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "ruleBlock":
+                [
+                    {
+                    "ruleAltList":
+                    [
+                        {
+                        "labeledAlt":
+                        [
+                            {
+                            "alternative":
+                            [
+                                {
+                                "element":
+                                [
+                                    {
+                                    "atom":
+                                    [
+                                        {
+                                        "ruleref":
+                                        [
+                                            {
+                                            "Text":"e"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                                {
+                                "element":
+                                [
+                                    {
+                                    "ebnf":
+                                    [
+                                        {
+                                        "block":
+                                        [
+                                            {
+                                            "Text":"("
+                                            }
+                                            {
+                                            "altList":
+                                            [
+                                                {
+                                                "alternative":
+                                                [
+                                                    {
+                                                    "element":
+                                                    [
+                                                        {
+                                                        "atom":
+                                                        [
+                                                            {
+                                                            "terminal":
+                                                            [
+                                                                {
+                                                                "Text":"'*'"
+                                                                }
+                                                            ]
+                                                            }
+                                                        ]
+                                                        }
+                                                    ]
+                                                    }
+                                                ]
+                                                }
+                                                {
+                                                "Text":"|"
+                                                }
+                                                {
+                                                "alternative":
+                                                [
+                                                    {
+                                                    "element":
+                                                    [
+                                                        {
+                                                        "atom":
+                                                        [
+                                                            {
+                                                            "terminal":
+                                                            [
+                                                                {
+                                                                "Text":"'/'"
+                                                                }
+                                                            ]
+                                                            }
+                                                        ]
+                                                        }
+                                                    ]
+                                                    }
+                                                ]
+                                                }
+                                            ]
+                                            }
+                                            {
+                                            "Text":")"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                                {
+                                "element":
+                                [
+                                    {
+                                    "atom":
+                                    [
+                                        {
+                                        "ruleref":
+                                        [
+                                            {
+                                            "Text":"e"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                        {
+                        "Text":"|"
+                        }
+                        {
+                        "labeledAlt":
+                        [
+                            {
+                            "alternative":
+                            [
+                                {
+                                "element":
+                                [
+                                    {
+                                    "atom":
+                                    [
+                                        {
+                                        "ruleref":
+                                        [
+                                            {
+                                            "Text":"e"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                                {
+                                "element":
+                                [
+                                    {
+                                    "ebnf":
+                                    [
+                                        {
+                                        "block":
+                                        [
+                                            {
+                                            "Text":"("
+                                            }
+                                            {
+                                            "altList":
+                                            [
+                                                {
+                                                "alternative":
+                                                [
+                                                    {
+                                                    "element":
+                                                    [
+                                                        {
+                                                        "atom":
+                                                        [
+                                                            {
+                                                            "terminal":
+                                                            [
+                                                                {
+                                                                "Text":"'+'"
+                                                                }
+                                                            ]
+                                                            }
+                                                        ]
+                                                        }
+                                                    ]
+                                                    }
+                                                ]
+                                                }
+                                                {
+                                                "Text":"|"
+                                                }
+                                                {
+                                                "alternative":
+                                                [
+                                                    {
+                                                    "element":
+                                                    [
+                                                        {
+                                                        "atom":
+                                                        [
+                                                            {
+                                                            "terminal":
+                                                            [
+                                                                {
+                                                                "Text":"'-'"
+                                                                }
+                                                            ]
+                                                            }
+                                                        ]
+                                                        }
+                                                    ]
+                                                    }
+                                                ]
+                                                }
+                                            ]
+                                            }
+                                            {
+                                            "Text":")"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                                {
+                                "element":
+                                [
+                                    {
+                                    "atom":
+                                    [
+                                        {
+                                        "ruleref":
+                                        [
+                                            {
+                                            "Text":"e"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                        {
+                        "Text":"|"
+                        }
+                        {
+                        "labeledAlt":
+                        [
+                            {
+                            "alternative":
+                            [
+                                {
+                                "element":
+                                [
+                                    {
+                                    "atom":
+                                    [
+                                        {
+                                        "terminal":
+                                        [
+                                            {
+                                            "Text":"'('"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                                {
+                                "element":
+                                [
+                                    {
+                                    "atom":
+                                    [
+                                        {
+                                        "ruleref":
+                                        [
+                                            {
+                                            "Text":"e"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                                {
+                                "element":
+                                [
+                                    {
+                                    "atom":
+                                    [
+                                        {
+                                        "terminal":
+                                        [
+                                            {
+                                            "Text":"')'"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                        {
+                        "Text":"|"
+                        }
+                        {
+                        "labeledAlt":
+                        [
+                            {
+                            "alternative":
+                            [
+                                {
+                                "element":
+                                [
+                                    {
+                                    "ebnf":
+                                    [
+                                        {
+                                        "block":
+                                        [
+                                            {
+                                            "Text":"("
+                                            }
+                                            {
+                                            "altList":
+                                            [
+                                                {
+                                                "alternative":
+                                                [
+                                                    {
+                                                    "element":
+                                                    [
+                                                        {
+                                                        "atom":
+                                                        [
+                                                            {
+                                                            "terminal":
+                                                            [
+                                                                {
+                                                                "Text":"'-'"
+                                                                }
+                                                            ]
+                                                            }
+                                                        ]
+                                                        }
+                                                    ]
+                                                    }
+                                                ]
+                                                }
+                                                {
+                                                "Text":"|"
+                                                }
+                                                {
+                                                "alternative":
+                                                [
+                                                    {
+                                                    "element":
+                                                    [
+                                                        {
+                                                        "atom":
+                                                        [
+                                                            {
+                                                            "terminal":
+                                                            [
+                                                                {
+                                                                "Text":"'+'"
+                                                                }
+                                                            ]
+                                                            }
+                                                        ]
+                                                        }
+                                                    ]
+                                                    }
+                                                ]
+                                                }
+                                            ]
+                                            }
+                                            {
+                                            "Text":")"
+                                            }
+                                        ]
+                                        }
+                                        {
+                                        "blockSuffix":
+                                        [
+                                            {
+                                            "ebnfSuffix":
+                                            [
+                                                {
+                                                "Text":"*"
+                                                }
+                                            ]
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                                {
+                                "element":
+                                [
+                                    {
+                                    "atom":
+                                    [
+                                        {
+                                        "ruleref":
+                                        [
+                                            {
+                                            "Text":"a"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+                {
+                "exceptionGroup":
+                [
+                ]
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "parserRuleSpec":
+            [
+                {
+                "Text":"a"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "ruleBlock":
+                [
+                    {
+                    "ruleAltList":
+                    [
+                        {
+                        "labeledAlt":
+                        [
+                            {
+                            "alternative":
+                            [
+                                {
+                                "element":
+                                [
+                                    {
+                                    "atom":
+                                    [
+                                        {
+                                        "terminal":
+                                        [
+                                            {
+                                            "Text":"INT"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+                {
+                "exceptionGroup":
+                [
+                ]
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "parserRuleSpec":
+            [
+                {
+                "Text":"id"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "ruleBlock":
+                [
+                    {
+                    "ruleAltList":
+                    [
+                        {
+                        "labeledAlt":
+                        [
+                            {
+                            "alternative":
+                            [
+                                {
+                                "element":
+                                [
+                                    {
+                                    "atom":
+                                    [
+                                        {
+                                        "terminal":
+                                        [
+                                            {
+                                            "Text":"ID"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+                {
+                "exceptionGroup":
+                [
+                ]
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "lexerRuleSpec":
+            [
+                {
+                "Text":"INT"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "lexerRuleBlock":
+                [
+                    {
+                    "lexerAltList":
+                    [
+                        {
+                        "lexerAlt":
+                        [
+                            {
+                            "lexerElements":
+                            [
+                                {
+                                "lexerElement":
+                                [
+                                    {
+                                    "lexerBlock":
+                                    [
+                                        {
+                                        "Text":"("
+                                        }
+                                        {
+                                        "lexerAltList":
+                                        [
+                                            {
+                                            "lexerAlt":
+                                            [
+                                                {
+                                                "lexerElements":
+                                                [
+                                                    {
+                                                    "lexerElement":
+                                                    [
+                                                        {
+                                                        "lexerAtom":
+                                                        [
+                                                            {
+                                                            "characterRange":
+                                                            [
+                                                                {
+                                                                "Text":"'0'"
+                                                                }
+                                                                {
+                                                                "Text":".."
+                                                                }
+                                                                {
+                                                                "Text":"'9'"
+                                                                }
+                                                            ]
+                                                            }
+                                                        ]
+                                                        }
+                                                    ]
+                                                    }
+                                                ]
+                                                }
+                                            ]
+                                            }
+                                        ]
+                                        }
+                                        {
+                                        "Text":")"
+                                        }
+                                    ]
+                                    }
+                                    {
+                                    "ebnfSuffix":
+                                    [
+                                        {
+                                        "Text":"+"
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "lexerRuleSpec":
+            [
+                {
+                "Text":"MUL"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "lexerRuleBlock":
+                [
+                    {
+                    "lexerAltList":
+                    [
+                        {
+                        "lexerAlt":
+                        [
+                            {
+                            "lexerElements":
+                            [
+                                {
+                                "lexerElement":
+                                [
+                                    {
+                                    "lexerAtom":
+                                    [
+                                        {
+                                        "terminal":
+                                        [
+                                            {
+                                            "Text":"'*'"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "lexerRuleSpec":
+            [
+                {
+                "Text":"DIV"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "lexerRuleBlock":
+                [
+                    {
+                    "lexerAltList":
+                    [
+                        {
+                        "lexerAlt":
+                        [
+                            {
+                            "lexerElements":
+                            [
+                                {
+                                "lexerElement":
+                                [
+                                    {
+                                    "lexerAtom":
+                                    [
+                                        {
+                                        "terminal":
+                                        [
+                                            {
+                                            "Text":"'/'"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "lexerRuleSpec":
+            [
+                {
+                "Text":"ADD"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "lexerRuleBlock":
+                [
+                    {
+                    "lexerAltList":
+                    [
+                        {
+                        "lexerAlt":
+                        [
+                            {
+                            "lexerElements":
+                            [
+                                {
+                                "lexerElement":
+                                [
+                                    {
+                                    "lexerAtom":
+                                    [
+                                        {
+                                        "terminal":
+                                        [
+                                            {
+                                            "Text":"'+'"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "lexerRuleSpec":
+            [
+                {
+                "Text":"SUB"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "lexerRuleBlock":
+                [
+                    {
+                    "lexerAltList":
+                    [
+                        {
+                        "lexerAlt":
+                        [
+                            {
+                            "lexerElements":
+                            [
+                                {
+                                "lexerElement":
+                                [
+                                    {
+                                    "lexerAtom":
+                                    [
+                                        {
+                                        "terminal":
+                                        [
+                                            {
+                                            "Text":"'-'"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "lexerRuleSpec":
+            [
+                {
+                "Text":"LP"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "lexerRuleBlock":
+                [
+                    {
+                    "lexerAltList":
+                    [
+                        {
+                        "lexerAlt":
+                        [
+                            {
+                            "lexerElements":
+                            [
+                                {
+                                "lexerElement":
+                                [
+                                    {
+                                    "lexerAtom":
+                                    [
+                                        {
+                                        "terminal":
+                                        [
+                                            {
+                                            "Text":"'('"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "lexerRuleSpec":
+            [
+                {
+                "Text":"RP"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "lexerRuleBlock":
+                [
+                    {
+                    "lexerAltList":
+                    [
+                        {
+                        "lexerAlt":
+                        [
+                            {
+                            "lexerElements":
+                            [
+                                {
+                                "lexerElement":
+                                [
+                                    {
+                                    "lexerAtom":
+                                    [
+                                        {
+                                        "terminal":
+                                        [
+                                            {
+                                            "Text":"')'"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "lexerRuleSpec":
+            [
+                {
+                "Text":"ID"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "lexerRuleBlock":
+                [
+                    {
+                    "lexerAltList":
+                    [
+                        {
+                        "lexerAlt":
+                        [
+                            {
+                            "lexerElements":
+                            [
+                                {
+                                "lexerElement":
+                                [
+                                    {
+                                    "lexerBlock":
+                                    [
+                                        {
+                                        "Text":"("
+                                        }
+                                        {
+                                        "lexerAltList":
+                                        [
+                                            {
+                                            "lexerAlt":
+                                            [
+                                                {
+                                                "lexerElements":
+                                                [
+                                                    {
+                                                    "lexerElement":
+                                                    [
+                                                        {
+                                                        "lexerBlock":
+                                                        [
+                                                            {
+                                                            "Text":"("
+                                                            }
+                                                            {
+                                                            "lexerAltList":
+                                                            [
+                                                                {
+                                                                "lexerAlt":
+                                                                [
+                                                                    {
+                                                                    "lexerElements":
+                                                                    [
+                                                                        {
+                                                                        "lexerElement":
+                                                                        [
+                                                                            {
+                                                                            "lexerAtom":
+                                                                            [
+                                                                                {
+                                                                                "characterRange":
+                                                                                [
+                                                                                    {
+                                                                                    "Text":"'a'"
+                                                                                    }
+                                                                                    {
+                                                                                    "Text":".."
+                                                                                    }
+                                                                                    {
+                                                                                    "Text":"'z'"
+                                                                                    }
+                                                                                ]
+                                                                                }
+                                                                            ]
+                                                                            }
+                                                                        ]
+                                                                        }
+                                                                    ]
+                                                                    }
+                                                                ]
+                                                                }
+                                                            ]
+                                                            }
+                                                            {
+                                                            "Text":")"
+                                                            }
+                                                        ]
+                                                        }
+                                                    ]
+                                                    }
+                                                ]
+                                                }
+                                            ]
+                                            }
+                                            {
+                                            "Text":"|"
+                                            }
+                                            {
+                                            "lexerAlt":
+                                            [
+                                                {
+                                                "lexerElements":
+                                                [
+                                                    {
+                                                    "lexerElement":
+                                                    [
+                                                        {
+                                                        "lexerBlock":
+                                                        [
+                                                            {
+                                                            "Text":"("
+                                                            }
+                                                            {
+                                                            "lexerAltList":
+                                                            [
+                                                                {
+                                                                "lexerAlt":
+                                                                [
+                                                                    {
+                                                                    "lexerElements":
+                                                                    [
+                                                                        {
+                                                                        "lexerElement":
+                                                                        [
+                                                                            {
+                                                                            "lexerAtom":
+                                                                            [
+                                                                                {
+                                                                                "characterRange":
+                                                                                [
+                                                                                    {
+                                                                                    "Text":"'A'"
+                                                                                    }
+                                                                                    {
+                                                                                    "Text":".."
+                                                                                    }
+                                                                                    {
+                                                                                    "Text":"'Z'"
+                                                                                    }
+                                                                                ]
+                                                                                }
+                                                                            ]
+                                                                            }
+                                                                        ]
+                                                                        }
+                                                                    ]
+                                                                    }
+                                                                ]
+                                                                }
+                                                            ]
+                                                            }
+                                                            {
+                                                            "Text":")"
+                                                            }
+                                                        ]
+                                                        }
+                                                    ]
+                                                    }
+                                                ]
+                                                }
+                                            ]
+                                            }
+                                            {
+                                            "Text":"|"
+                                            }
+                                            {
+                                            "lexerAlt":
+                                            [
+                                                {
+                                                "lexerElements":
+                                                [
+                                                    {
+                                                    "lexerElement":
+                                                    [
+                                                        {
+                                                        "lexerAtom":
+                                                        [
+                                                            {
+                                                            "terminal":
+                                                            [
+                                                                {
+                                                                "Text":"'_'"
+                                                                }
+                                                            ]
+                                                            }
+                                                        ]
+                                                        }
+                                                    ]
+                                                    }
+                                                ]
+                                                }
+                                            ]
+                                            }
+                                        ]
+                                        }
+                                        {
+                                        "Text":")"
+                                        }
+                                    ]
+                                    }
+                                    {
+                                    "ebnfSuffix":
+                                    [
+                                        {
+                                        "Text":"+"
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+            ]
+            }
+        ]
+        }
+        {
+        "ruleSpec":
+        [
+            {
+            "lexerRuleSpec":
+            [
+                {
+                "Text":"WS"
+                }
+                {
+                "Text":":"
+                }
+                {
+                "lexerRuleBlock":
+                [
+                    {
+                    "lexerAltList":
+                    [
+                        {
+                        "lexerAlt":
+                        [
+                            {
+                            "lexerElements":
+                            [
+                                {
+                                "lexerElement":
+                                [
+                                    {
+                                    "lexerAtom":
+                                    [
+                                        {
+                                        "Text":"[ \r\n\t]"
+                                        }
+                                    ]
+                                    }
+                                    {
+                                    "ebnfSuffix":
+                                    [
+                                        {
+                                        "Text":"+"
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                            {
+                            "lexerCommands":
+                            [
+                                {
+                                "Text":"->"
+                                }
+                                {
+                                "lexerCommand":
+                                [
+                                    {
+                                    "lexerCommandName":
+                                    [
+                                        {
+                                        "identifier":
+                                        [
+                                            {
+                                            "Text":"skip"
+                                            }
+                                        ]
+                                        }
+                                    ]
+                                    }
+                                ]
+                                }
+                            ]
+                            }
+                        ]
+                        }
+                    ]
+                    }
+                ]
+                }
+                {
+                "Text":";"
+                }
+            ]
+            }
+        ]
+        }
+    ]
+    }
+    {
+    "Text":""
+    }
+]
+}
+> quit
+Bye!
