@@ -17,7 +17,7 @@ namespace dotnet_antlr
     public partial class Program
     {
         public Config config;
-        public static string version = "3.1.3";
+        public static string version = "3.1.4";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
@@ -853,6 +853,12 @@ namespace dotnet_antlr
                     // copy the file straight up if it doesn't begin
                     // with target directory name. Otherwise,
                     // remove the target dir name.
+                    if (file.EndsWith("Arithmetic.g4")
+                        && config.grammar_name != "Arithmetic"
+                        && p.tool_src_grammar_files.Any())
+                    {
+                        continue;
+                    }
                     var to = from.StartsWith("./" + TargetName((TargetType)p.config.target))
                         ? from.Substring(("./" + TargetName((TargetType)p.config.target)).Length + 1)
                         : from.Substring(2);
@@ -934,6 +940,12 @@ namespace dotnet_antlr
                 var set = new HashSet<string>();
                 foreach (var file in files_to_copy)
                 {
+                    if (file.EndsWith("Arithmetic.g4")
+                        && config.grammar_name != "Arithmetic"
+                        && p.tool_src_grammar_files.Any())
+                    {
+                        continue;
+                    }
                     var from = file;
                     var e = file.Substring(prefix_to_remove.Length);
 		            var to = e.StartsWith(TargetName((TargetType)p.config.target))
