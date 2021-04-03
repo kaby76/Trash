@@ -6,7 +6,7 @@ do
   if [ "$x1" != "errors" ]
   then
     echo $file
-    dotnet run -file $file
+    cat $file | ./bin/Debug/net5.0/<exec_name>
     status="$?"
     if [ -f "$file".errors ]
     then
