@@ -1,0 +1,65 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+<!--    <PackAsTool>true</PackAsTool> -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <AssemblyName>tragl</AssemblyName>
+    <PackageId>tragl</PackageId>
+    <Description>
+      <![CDATA[tragl.
+Read a parse tree from stdin and open a Windows Form that displays the tree.
+This tool is part of Trash, Transformations for Antlr Shell.]]>
+    </Description>
+    <ToolCommandName>tragl</ToolCommandName>
+    <RootNamespace>tragl</RootNamespace>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.1" />
+                <PackageReference Include="Antlr4BuildTasks" Version="8.12">
+                    <PrivateAssets>all</PrivateAssets>
+                </PackageReference>
+		<PackageReference Include="Antlr4RuntimeShim" Version="0.0.2" />
+		<PackageReference Include="AntlrTreeEditing" Version="2.3" />
+		<PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Features" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.8.0" />
+		<PackageReference Include="Domemtech.TrashBase" Version="1.0.0" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="Domemtech.AutomaticGraphLayout" Version="1.1.4" />
+    <PackageReference Include="Domemtech.AutomaticGraphLayout.Drawing" Version="1.1.4" />
+    <PackageReference Include="Domemtech.AutomaticGraphLayout.GraphViewerGdi" Version="1.1.4" />
+  </ItemGroup>
+
+<ItemGroup>
+<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+</ItemGroup>
+
+
+  <PropertyGroup>
+		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<NoWarn>1701;1702;3021</NoWarn>
+	</PropertyGroup>
+
+
+</Project>

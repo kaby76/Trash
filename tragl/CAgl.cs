@@ -13,7 +13,8 @@
         public void Help()
         {
             System.Console.WriteLine(@"agl
-Read a tree from stdin and open a Windows Form that displays the graph.
+Read a parse tree from stdin and open a Windows Form that displays the tree.
+This tool is part of Trash, Transformations for Antlr Shell.
 
 Example:
     . | agl
@@ -84,9 +85,9 @@ Example:
                 FormatNodes(graph, tree.GetChild(i), parserRules, base_hash_code);
         }
 
-        public void Execute(Repl repl, ReplParser.AglContext tree, bool piped)
+        public void Execute()
         {
-            string lines = repl.input_output_stack.Pop();
+            var lines = System.Console.In.ReadToEnd();
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;

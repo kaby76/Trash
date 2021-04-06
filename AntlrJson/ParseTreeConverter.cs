@@ -428,7 +428,8 @@
                             stack.Push(c);
                         }
                     }
-                } else if (node is TerminalNodeImpl t)
+                }
+                else if (node is TerminalNodeImpl t)
                 {
                     if (t.Parent != null)
                     {

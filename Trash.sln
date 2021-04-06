@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trash", "Trash\Trash.csproj", "{03B32D14-44A4-4050-B00F-A0577A18B204}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrJson", "AntlrJson\AntlrJson.csproj", "{3CFDC502-53C4-4112-A4F1-026B52EAF492}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "csxml2", "csxml2\csxml2.csproj", "{1E2EADF3-8846-441A-9D71-B329EE06BCC4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-antlr", "dotnet-antlr\dotnet-antlr.csproj", "{B704AB40-2FBC-4808-A728-D8F614321112}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgen", "trgen\trgen.csproj", "{B704AB40-2FBC-4808-A728-D8F614321112}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-antlr-test", "dotnet-antlr-test\dotnet-antlr-test.csproj", "{ADC62819-D710-4994-969F-0764C340C045}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tragl", "tragl\tragl.csproj", "{D167DC66-0515-4376-88FB-98A5FF584CA9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trparse", "trparse\trparse.csproj", "{2BDE06C4-3A46-4DD0-A207-94DC28413D48}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtree", "trtree\trtree.csproj", "{8F4EB85A-DDDE-4EFD-A90D-40BAB5EE2110}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{03B32D14-44A4-4050-B00F-A0577A18B204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03B32D14-44A4-4050-B00F-A0577A18B204}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03B32D14-44A4-4050-B00F-A0577A18B204}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03B32D14-44A4-4050-B00F-A0577A18B204}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3CFDC502-53C4-4112-A4F1-026B52EAF492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3CFDC502-53C4-4112-A4F1-026B52EAF492}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CFDC502-53C4-4112-A4F1-026B52EAF492}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,10 +33,18 @@ Global
 		{B704AB40-2FBC-4808-A728-D8F614321112}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B704AB40-2FBC-4808-A728-D8F614321112}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B704AB40-2FBC-4808-A728-D8F614321112}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADC62819-D710-4994-969F-0764C340C045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADC62819-D710-4994-969F-0764C340C045}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADC62819-D710-4994-969F-0764C340C045}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADC62819-D710-4994-969F-0764C340C045}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D167DC66-0515-4376-88FB-98A5FF584CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D167DC66-0515-4376-88FB-98A5FF584CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D167DC66-0515-4376-88FB-98A5FF584CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D167DC66-0515-4376-88FB-98A5FF584CA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BDE06C4-3A46-4DD0-A207-94DC28413D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BDE06C4-3A46-4DD0-A207-94DC28413D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BDE06C4-3A46-4DD0-A207-94DC28413D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BDE06C4-3A46-4DD0-A207-94DC28413D48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F4EB85A-DDDE-4EFD-A90D-40BAB5EE2110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F4EB85A-DDDE-4EFD-A90D-40BAB5EE2110}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F4EB85A-DDDE-4EFD-A90D-40BAB5EE2110}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F4EB85A-DDDE-4EFD-A90D-40BAB5EE2110}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

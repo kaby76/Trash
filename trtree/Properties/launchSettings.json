@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trtree": {
+      "commandName": "Project",
+      "commandLineArgs": "o",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\Domemtech.Trash"
+    }
+  }
+}
