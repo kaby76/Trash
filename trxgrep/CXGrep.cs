@@ -1,6 +1,6 @@
 ﻿using org.eclipse.wst.xml.xpath2.processor.@internal.function;
 
-namespace Trash.Commands
+namespace Trash
 {
     using Algorithms;
     using Antlr4.Runtime;
@@ -22,18 +22,22 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.XgrepContext tree, bool piped)
+        public void Execute(Config config)
         {
-            var expr = repl.GetArg(tree.arg());
+            var expr = config.Expr;
             IParseTree[] atrees;
             Parser parser;
             Lexer lexer;
             string text;
             string fn;
             ITokenStream tokstream;
-            if (piped)
             {
-                var lines = repl.input_output_stack.Pop();
+                string lines = null;
+                for (; ; )
+                {
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
+                }
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;
@@ -44,18 +48,6 @@ Example:
                 parser = parse_info.Parser;
                 lexer = parse_info.Lexer;
                 tokstream = parse_info.Stream;
-            }
-            else
-            {
-                var doc = repl.stack.Peek();
-                var pr = ParsingResultsFactory.Create(doc);
-                parser = pr.Parser;
-                lexer = pr.Lexer;
-                text = pr.Code;
-                fn = pr.FullFileName;
-                tokstream = pr.TokStream;
-                IParseTree atree = pr.ParseTree;
-                atrees = new IParseTree[] { atree };
             }
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
             IParseTree root = atrees.First().Root();
@@ -72,7 +64,7 @@ Example:
                 serializeOptions.WriteIndented = false;
                 var parse_info_out = new AntlrJson.ParsingResultSet(){Text = text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = nodes };
                 string js1 = JsonSerializer.Serialize(parse_info_out, serializeOptions);
-                repl.input_output_stack.Push(js1);
+                System.Console.WriteLine(js1);
             }
         }
     }

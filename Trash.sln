@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trjson", "trjson\trjson.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtokens", "trtokens\trtokens.csproj", "{DA50A003-3FEA-4155-85D0-E5AAFD1B1895}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxgrep", "trxgrep\trxgrep.csproj", "{6B8D3D4B-2014-4A6E-B7A9-95AEB8F668A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{DA50A003-3FEA-4155-85D0-E5AAFD1B1895}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA50A003-3FEA-4155-85D0-E5AAFD1B1895}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA50A003-3FEA-4155-85D0-E5AAFD1B1895}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B8D3D4B-2014-4A6E-B7A9-95AEB8F668A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B8D3D4B-2014-4A6E-B7A9-95AEB8F668A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B8D3D4B-2014-4A6E-B7A9-95AEB8F668A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B8D3D4B-2014-4A6E-B7A9-95AEB8F668A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
