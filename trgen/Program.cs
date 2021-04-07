@@ -834,7 +834,7 @@ namespace dotnet_antlr
                 // Load resource file that contains the names of all files in templates/ directory,
                 // which were obtained by doing "cd templates/; find . -type f > files" at a Bash
                 // shell.
-                var orig_file_names = ReadAllResourceLines(a, "AntlrTemplating.templates.files");
+                var orig_file_names = ReadAllResourceLines(a, "trgen.templates.files");
                 var regex_string = "^(?!.*(" + AllButTargetName((TargetType)config.target) + "/)).*$";
                 var regex = new Regex(regex_string);
                 var files_to_copy = orig_file_names.Where(f =>
@@ -844,7 +844,7 @@ namespace dotnet_antlr
                     var v = regex.IsMatch(f);
                     return v;
                 }).ToList();
-                var prefix_to_remove = "AntlrTemplating.templates.";
+                var prefix_to_remove = "trgen.templates.";
                 System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
                 var set = new HashSet<string>();
                 foreach (var file in files_to_copy)
