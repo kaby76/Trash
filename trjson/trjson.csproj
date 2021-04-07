@@ -5,15 +5,15 @@
     <PackAsTool>true</PackAsTool>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <AssemblyName>trst</AssemblyName>
-    <PackageId>trst</PackageId>
+    <AssemblyName>trjson</AssemblyName>
+    <PackageId>trjson</PackageId>
     <Description>
-      <![CDATA[trst.
+      <![CDATA[trtree.
 Read a parse tree from stdin and open a Windows Form that displays the tree.
 This tool is part of Trash, Transformations for Antlr Shell.]]>
     </Description>
-    <ToolCommandName>trst</ToolCommandName>
-    <RootNamespace>trst</RootNamespace>
+    <ToolCommandName>trjson</ToolCommandName>
+    <RootNamespace>trjson</RootNamespace>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

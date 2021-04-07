@@ -22,9 +22,6 @@ This tool is part of Trash, Transformations for Antlr Shell.]]>
 
 	<ItemGroup>
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.1" />
-                <PackageReference Include="Antlr4BuildTasks" Version="8.12">
-                    <PrivateAssets>all</PrivateAssets>
-                </PackageReference>
 		<PackageReference Include="Antlr4RuntimeShim" Version="0.0.2" />
 		<PackageReference Include="AntlrTreeEditing" Version="2.3" />
 		<PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
@@ -42,9 +39,6 @@ This tool is part of Trash, Transformations for Antlr Shell.]]>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
-    <PackageReference Include="Domemtech.AutomaticGraphLayout" Version="1.1.4" />
-    <PackageReference Include="Domemtech.AutomaticGraphLayout.Drawing" Version="1.1.4" />
-    <PackageReference Include="Domemtech.AutomaticGraphLayout.GraphViewerGdi" Version="1.1.4" />
   </ItemGroup>
 
 <ItemGroup>

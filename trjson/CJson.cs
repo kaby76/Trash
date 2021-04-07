@@ -5,6 +5,7 @@
     using LanguageServer;
     using System;
     using System.Text.Json;
+    using Workspaces;
 
     class CJson
     {
@@ -87,18 +88,22 @@ Example:
             }
         }
 
-        public void Execute(Repl repl, ReplParser.JsonContext tree, bool piped)
+        public void Execute(Config config)
         {
-            var lines = repl.input_output_stack.Pop();
-            var doc = repl.stack.Peek();
-            var pr = ParsingResultsFactory.Create(doc);
-            var lexer = pr.Lexer;
-            var parser = pr.Parser;
+            string lines = null;
+            for (; ; )
+            {
+                lines = System.Console.In.ReadToEnd();
+                if (lines != null && lines != "") break;
+            }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
             var parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
             var nodes = parse_info.Nodes;
+            var parser = parse_info.Parser;
+            var lexer = parse_info.Lexer;
+            var fn = parse_info.FileName;
             foreach (var node in nodes)
             {
                 ParseTreeWalker.Default.Walk(new JsonWalk(parser), node);

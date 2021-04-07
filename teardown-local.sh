@@ -1,0 +1,10 @@
+
+dotnet nuget remove source "nuget-trgen"
+dotnet nuget remove source "nuget-trjson"
+dotnet nuget remove source "nuget-trparse"
+dotnet nuget remove source "nuget-trprint"
+dotnet nuget remove source "nuget-trst"
+dotnet nuget remove source "nuget-trtext"
+dotnet nuget remove source "nuget-trtokens"
+dotnet nuget remove source "nuget-trtree"
+dotnet nuget remove source "nuget-trxml"
