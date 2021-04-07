@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5</TargetFramework>
@@ -43,6 +43,7 @@ This tool is part of Trash, Transformations for Antlr Shell.]]>
 
 <ItemGroup>
 <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+<ProjectReference Include="..\Docs\Docs.csproj" />
 </ItemGroup>
 
 

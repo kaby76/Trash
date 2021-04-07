@@ -9,32 +9,6 @@
 
     class CXml
     {
-        public Workspace _workspace { get; set; } = new Workspace();
-
-        public Document ReadDoc(string path)
-        {
-            string file_name = path;
-            Document document = _workspace.FindDocument(file_name);
-            if (document == null)
-            {
-                throw new Exception("File does not exist.");
-            }
-            try
-            {   // Open the text file using a stream reader.
-                using (StreamReader sr = new StreamReader(file_name))
-                {
-                    // Read the stream to a string, and write the string to the console.
-                    string str = sr.ReadToEnd();
-                    document.Code = str;
-                }
-            }
-            catch (IOException)
-            {
-                throw;
-            }
-            return document;
-        }
-
         public void Help()
         {
             System.Console.WriteLine(@"xml
@@ -114,11 +88,7 @@ Example:
             var parser = parse_info.Parser;
             var lexer = parse_info.Lexer;
             var fn = parse_info.FileName;
-            Document doc = null;
-            if (!(fn == null || fn == "stdin"))
-            {
-                doc = _workspace.ReadDocument(fn);
-            }
+            Document doc = Docs.Class1.CreateDoc(parse_info);
             foreach (var node in parse_info.Nodes)
             {
                 ParseTreeWalker.Default.Walk(new XmlWalk(parser), node);

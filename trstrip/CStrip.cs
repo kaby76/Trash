@@ -1,7 +1,14 @@
-﻿
-namespace Trash.Commands
+﻿namespace Trash
 {
     using System.Text.Json;
+    using Antlr4.Runtime.Tree;
+    using AntlrJson;
+    using LanguageServer;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text.Json;
+    using Workspaces;
 
     class CStrip
     {
@@ -17,11 +24,36 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.StripContext tree, bool piped)
+        public void Execute(Config config)
         {
-            var doc = repl.stack.Peek();
+            string lines = null;
+            for (; ; )
+            {
+                lines = System.Console.In.ReadToEnd();
+                if (lines != null && lines != "") break;
+            }
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = false;
+            AntlrJson.ParsingResultSet parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
+            var doc = Docs.Class1.CreateDoc(parse_info);
             var results = LanguageServer.Transform.Strip(doc);
-            repl.EnactEdits(results);
+            Docs.Class1.EnactEdits(results);
+
+            var pr = ParsingResultsFactory.Create(doc);
+            IParseTree pt = pr.ParseTree;
+            var tuple = new ParsingResultSet()
+            {
+                Text = doc.Code,
+                FileName = doc.FullPath,
+                Stream = pr.TokStream,
+                Nodes = new IParseTree[] { pt },
+                Lexer = pr.Lexer,
+                Parser = pr.Parser
+            };
+            string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
+            System.Console.WriteLine(js1);
+
         }
     }
 }
