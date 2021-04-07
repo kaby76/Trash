@@ -1,7 +1,5 @@
-﻿namespace Trash.Commands
+﻿namespace Trash
 {
-    using Antlr4.Runtime.Tree;
-    using LanguageServer;
     using System.Text;
     using System.Text.Json;
 
@@ -17,9 +15,14 @@ Examples:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.StContext tree, bool piped)
+        public void Execute(Config config)
         {
-            var lines = repl.input_output_stack.Pop();
+            string lines = null;
+            for (; ; )
+            {
+                lines = System.Console.In.ReadToEnd();
+                if (lines != null && lines != "") break;
+            }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
@@ -32,7 +35,7 @@ Examples:
             {
                 sb.AppendLine(t.ToStringTree(parser));
             }
-            repl.input_output_stack.Push(sb.ToString());
+            System.Console.WriteLine(sb.ToString());
         }
     }
 }

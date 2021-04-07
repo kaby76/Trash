@@ -1,5 +1,7 @@
-﻿namespace Trash.Commands
+﻿namespace Trash
 {
+    using System.Text.Json;
+
     class CPrint
     {
         public void Help()
@@ -12,12 +14,26 @@ Example:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.PrintContext tree, bool piped)
+        public void Execute(Config config)
         {
-            var doc = repl.stack.Peek();
+            string lines = null;
+            for (; ; )
+            {
+                lines = System.Console.In.ReadToEnd();
+                if (lines != null && lines != "") break;
+            }
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = false;
+            var parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
+            var nodes = parse_info.Nodes;
+            var parser = parse_info.Parser;
+            var lexer = parse_info.Lexer;
+            var fn = parse_info.FileName;
+            var code = parse_info.Text;
             System.Console.Error.WriteLine();
-            System.Console.Error.WriteLine(doc.FullPath);
-            System.Console.WriteLine(doc.Code);
+            System.Console.Error.WriteLine(fn);
+            System.Console.WriteLine(code);
         }
     }
 }

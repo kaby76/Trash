@@ -1,8 +1,10 @@
-﻿namespace Trash.Commands
+﻿namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Text.Json;
@@ -10,6 +12,32 @@
 
     class CText
     {
+        public Workspace _workspace { get; set; } = new Workspace();
+
+        public Document ReadDoc(string path)
+        {
+            string file_name = path;
+            Document document = _workspace.FindDocument(file_name);
+            if (document == null)
+            {
+                throw new Exception("File does not exist.");
+            }
+            try
+            {   // Open the text file using a stream reader.
+                using (StreamReader sr = new StreamReader(file_name))
+                {
+                    // Read the stream to a string, and write the string to the console.
+                    string str = sr.ReadToEnd();
+                    document.Code = str;
+                }
+            }
+            catch (IOException)
+            {
+                throw;
+            }
+            return document;
+        }
+
         public void Help()
         {
             System.Console.WriteLine(@"text line-number?
@@ -67,24 +95,27 @@ Example:
             return sb.ToString();
         }
 
-        public void Execute(Repl repl, ReplParser.TextContext tree, bool piped)
+        public void Execute(Config config)
         {
-            var args = tree.arg();
-            var arg = args?.GetText();
-            var line_number = (arg == "line-number");
-            var lines = repl.input_output_stack.Pop();
-			var serializeOptions = new JsonSerializerOptions();
-			serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-			serializeOptions.WriteIndented = false;
-			var obj1 = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
-			var nodes = obj1.Nodes;
+            string lines = null;
+            for (; ; )
+            {
+                lines = System.Console.In.ReadToEnd();
+                if (lines != null && lines != "") break;
+            }
+            var line_number = config.LineNumber != null ? (bool)config.LineNumber : false;
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = false;
+            var obj1 = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
+            var nodes = obj1.Nodes;
             var parser = obj1.Parser;
             var lexer = obj1.Lexer;
             var fn = obj1.FileName;
             Document doc = null;
             if (!(fn == null || fn == "stdin"))
             {
-                doc = repl._docs.ReadDoc(fn);
+                doc = _workspace.ReadDocument(fn);
             }
             foreach (var node in nodes)
             {
