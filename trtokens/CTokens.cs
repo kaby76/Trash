@@ -30,31 +30,7 @@ Example:
                 var n = stack.Pop();
                 if (n is TerminalNodeImpl term)
                 {
-                    var s = term.Symbol.InputStream;
-                    var c = term.Payload.StartIndex;
-                    var d = term.Payload.StopIndex;
-                    if (last != -1 && c != -1 && c > last)
-                    {
-                        if (s != null)
-                        {
-                            var txt = s.GetText(new Antlr4.Runtime.Misc.Interval(last, c - 1));
-                            sb.Append(txt);
-                        }
-                    }
-                    if (c != -1 && d != -1)
-                    {
-                        if (s != null)
-                        {
-                            string txt = s.GetText(new Antlr4.Runtime.Misc.Interval(c, d));
-                            sb.Append(txt);
-                        }
-                        else
-                        {
-                            string txt = term.Symbol.Text;
-                            sb.Append(txt);
-                        }
-                    }
-                    last = d + 1;
+                    sb.Append(term.Symbol.ToString());
                 }
                 else
                     for (int i = n.ChildCount - 1; i >= 0; i--)
@@ -83,6 +59,7 @@ Example:
             var fn = parse_info.FileName;
             foreach (var node in nodes)
             {
+                System.Console.WriteLine(Reconstruct(node));
             }
         }
     }
