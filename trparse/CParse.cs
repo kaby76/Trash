@@ -47,9 +47,9 @@ namespace Trash
             return document;
         }
 
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trparse (antlr2 | antlr3 | antlr4 | bison | ebnf)? <string>
@@ -58,7 +58,7 @@ Parse the flie at the top of stack with the given parser type (antlr2, _antlr3, 
 Example:
     trparse <string>
     trparse antlr2 <string>
-");
+";
         }
 
         public void Execute(Config config)

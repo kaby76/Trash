@@ -9,9 +9,9 @@
 
     class CTokens
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trtokens
@@ -19,7 +19,7 @@ Print out the tokens for the parse tree.
 
 Example:
     trparse A.g4 | trtokens
-");
+";
         }
 
         private string Reconstruct(IParseTree tree)

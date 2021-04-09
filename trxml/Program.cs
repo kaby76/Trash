@@ -1,4 +1,5 @@
 using CommandLine;
+using CommandLine.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,14 +22,34 @@ namespace Trash
 			}
 		}
 
+		void DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
+		{
+			HelpText helpText = null;
+			if (errs.IsVersion())
+				helpText = HelpText.AutoBuild(result);
+			else
+			{
+				helpText = HelpText.AutoBuild(result, h =>
+				{
+					h.AdditionalNewLineAfterOption = false;
+					h.Heading = "trxml";
+					h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
+					h.AddPreOptionsText(new CXml().Help());
+					return HelpText.DefaultParsingErrorsHandler(result, h);
+				}, e => e);
+			}
+			Console.Error.WriteLine(helpText);
+		}
+
 		public void MainInternal(string[] args)
 		{
 			var config = new Config();
-			var result = Parser.Default.ParseArguments<Config>(args);
+			var result = new CommandLine.Parser().ParseArguments<Config>(args);
 			bool stop = false;
 			result.WithNotParsed(
-				o =>
+				errs =>
 				{
+					DisplayHelp(result, errs);
 					stop = true;
 				});
 			if (stop) return;

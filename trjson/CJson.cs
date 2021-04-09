@@ -7,9 +7,9 @@
 
     class CJson
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trjson
@@ -17,7 +17,7 @@ Read a tree from stdin and write a JSON represenation of it.
 
 Example:
     trparse A.g4 | trjson
-");
+";
         }
 
         class JsonWalk : IParseTreeListener

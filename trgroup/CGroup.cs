@@ -9,9 +9,9 @@
 
     class CGroup
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trgroup <string>
@@ -21,7 +21,7 @@ prefix and suffix is performed on the alternatives, and a new expression derived
 The process repeats for alternatives nested.
 Example:
     trparse A.g4 | trgroup //parserRuleSpec[RULE_REF/text()='additiveExpression']//altList
-");
+";
         }
 
         public void Execute(Config config)

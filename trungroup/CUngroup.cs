@@ -9,9 +9,9 @@
 
     class CUngroup
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trungroup <string>
@@ -19,7 +19,7 @@ Perform an ungroup transformation of the 'element' node(s) specified by the stri
 
 Example:
     trparse A.g4 | trungroup ""//parserRuleSpec[RULE_REF/text() = 'a']//ruleAltList""
-");
+";
         }
 
         public void Execute(Config config)

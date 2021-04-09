@@ -9,9 +9,9 @@
 
     class CXml
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trxml
@@ -19,7 +19,7 @@ Read a tree from stdin and write an XML represenation of it.
 
 Example:
     trparse A.g4 | trxml
-");
+";
         }
 
         class XmlWalk : IParseTreeListener

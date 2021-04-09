@@ -8,9 +8,9 @@
 
     class CXGrep
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trxgrep <string>
@@ -18,7 +18,7 @@ Find all sub-trees in the parsed file at the top of stack using the given XPath 
 
 Example:
     trparse A.g4 | trxgrep ""//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']""
-");
+";
         }
 
         public void Execute(Config config)

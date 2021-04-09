@@ -5,9 +5,9 @@
 
     class CSt
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trst
@@ -15,7 +15,7 @@ Output tree using the Antlr runtime ToStringTree().
 
 Examples:
     trparse A.g4 | trst
-");
+";
         }
 
         public void Execute(Config config)

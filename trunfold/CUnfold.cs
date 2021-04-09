@@ -10,9 +10,9 @@
 
 	class CUnfold
 	{
-		public void Help()
+		public string Help()
 		{
-			System.Console.WriteLine(@"
+			return @"
 This program is part of the Trash toolkit.
 
 trunfold <string>
@@ -25,7 +25,7 @@ stack.
 
 Example:
     trparse A.g4 | trunfold ""//parserRuleSpec//labeledAlt//RULE_REF[text() = 'markerAnnotation']""
-");
+";
 		}
 
 		public void Execute(Config config)

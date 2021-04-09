@@ -38,9 +38,9 @@
             return document;
         }
 
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trtext line-number?
@@ -49,7 +49,7 @@ specified, the line number range for the tree is printed.
 
 Example:
     trxgrep //lexerRuleSpec | trtext
-");
+";
         }
 
         public string Reconstruct(IParseTree tree)

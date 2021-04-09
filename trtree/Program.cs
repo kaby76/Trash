@@ -1,5 +1,7 @@
 using CommandLine;
+using CommandLine.Text;
 using System;
+using System.Collections.Generic;
 
 namespace Trash
 {
@@ -20,14 +22,34 @@ namespace Trash
 			}
 		}
 
+		void DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
+		{
+			HelpText helpText = null;
+			if (errs.IsVersion())  //check if error is version request
+				helpText = HelpText.AutoBuild(result);
+			else
+			{
+				helpText = HelpText.AutoBuild(result, h =>
+				{
+					h.AdditionalNewLineAfterOption = false;
+					h.Heading = "trtree";
+					h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
+					h.AddPreOptionsText(new CTree().Help());
+					return HelpText.DefaultParsingErrorsHandler(result, h);
+				}, e => e);
+			}
+			Console.Error.WriteLine(helpText);
+		}
+
 		public void MainInternal(string[] args)
 		{
 			var config = new Config();
-			var result = Parser.Default.ParseArguments<Config>(args);
+			var result = new CommandLine.Parser().ParseArguments<Config>(args);
 			bool stop = false;
 			result.WithNotParsed(
-				o =>
+				errs =>
 				{
+					DisplayHelp(result, errs);
 					stop = true;
 				});
 			if (stop) return;

@@ -7,9 +7,9 @@
 
     class CStrip
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trstrip
@@ -19,7 +19,7 @@ the grammar out using 'write'.
 
 Example:
     trparse A.g4 | trstrip
-");
+";
         }
 
         public void Execute(Config config)

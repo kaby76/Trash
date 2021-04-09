@@ -9,9 +9,9 @@
 
     class CKleene
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trkleene <string>?
@@ -22,7 +22,7 @@ right recursion.
 Examples:
     trparse A.g4 | trkleene
     trparse A.g4 | trkleene //parserRuleSpec/RULE_REF[text()='packageOrTypeName']
-");
+";
         }
 
         public void Execute(Config config)

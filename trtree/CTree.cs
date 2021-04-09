@@ -7,9 +7,9 @@
 
     class CTree
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"
+            return @"
 This program is part of the Trash toolkit.
 
 trtree
@@ -17,7 +17,7 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 Example:
     trparse A.g4 | trtree
-");
+";
         }
 
         public void Execute(Config config)

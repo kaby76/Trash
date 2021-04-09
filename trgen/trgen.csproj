@@ -9,10 +9,18 @@
     <AssemblyName>trgen</AssemblyName>
     <PackageId>trgen</PackageId>
     <Description>
-      <![CDATA[dotnet Antlr template tool.
-This package can be installed as a dotnet global or local tool.
-This tool generates code around the files you placed in a directory for
-an Antlr parser.]]>
+      <![CDATA[
+This program is part of the Trash toolkit.
+
+trgen <options>* 
+Generate a parser using the Antlr tool on the grammar specified by the current
+workspace. The generated parser is placed in the directory <current-directory>/Generated/.
+The given arg is the name of the start rule. After generating the parser and driver, it
+is compiled for use with the ""run"" command.
+
+Examples:
+    trgen -m true
+]]>
     </Description>
     <ToolCommandName>trgen</ToolCommandName>
     <RootNamespace>trgen</RootNamespace>
