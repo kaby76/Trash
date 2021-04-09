@@ -49,12 +49,15 @@ namespace Trash
 
         public void Help()
         {
-            System.Console.WriteLine(@"parse (antlr2 | antlr3 | antlr4 | bison | ebnf)?
+            System.Console.WriteLine(@"
+This program is part of the Trash toolkit.
+
+trparse (antlr2 | antlr3 | antlr4 | bison | ebnf)? <string>
 Parse the flie at the top of stack with the given parser type (antlr2, _antlr3, antlr4, bison, etc).
 
 Example:
-    parse
-    parse antlr2
+    trparse <string>
+    trparse antlr2 <string>
 ");
         }
 

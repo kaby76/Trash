@@ -11,11 +11,14 @@
     {
         public void Help()
         {
-            System.Console.WriteLine(@"xml
+            System.Console.WriteLine(@"
+This program is part of the Trash toolkit.
+
+trxml
 Read a tree from stdin and write an XML represenation of it.
 
 Example:
-    . | xml
+    trparse A.g4 | trxml
 ");
         }
 

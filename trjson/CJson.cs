@@ -2,20 +2,21 @@
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
-    using LanguageServer;
     using System;
     using System.Text.Json;
-    using Workspaces;
 
     class CJson
     {
         public void Help()
         {
-            System.Console.WriteLine(@"json
+            System.Console.WriteLine(@"
+This program is part of the Trash toolkit.
+
+trjson
 Read a tree from stdin and write a JSON represenation of it.
 
 Example:
-    . | json
+    trparse A.g4 | trjson
 ");
         }
 

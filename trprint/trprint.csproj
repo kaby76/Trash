@@ -8,9 +8,15 @@
     <AssemblyName>trprint</AssemblyName>
     <PackageId>trprint</PackageId>
     <Description>
-      <![CDATA[trtree.
-Read a parse tree from stdin and open a Windows Form that displays the tree.
-This tool is part of Trash, Transformations for Antlr Shell.]]>
+      <![CDATA[
+This program is part of the Trash toolkit.
+
+trprint
+Print out text file at the top of stack.
+
+Example:
+    trparse A.g4 | trprint
+]]>
     </Description>
     <ToolCommandName>trprint</ToolCommandName>
     <RootNamespace>trprint</RootNamespace>

@@ -11,14 +11,17 @@
     {
         public void Help()
         {
-            System.Console.WriteLine(@"kleene <string>?
+            System.Console.WriteLine(@"
+This program is part of the Trash toolkit.
+
+trkleene <string>?
 Replace a rule, whose symbol is identified by the xpath string, of the grammar
 at the top of the grammar with an EBNF form if it contains direct left or direct
 right recursion.
 
 Examples:
-    kleene
-    kleene //parserRuleSpec/RULE_REF[text()='packageOrTypeName']
+    trparse A.g4 | trkleene
+    trparse A.g4 | trkleene //parserRuleSpec/RULE_REF[text()='packageOrTypeName']
 ");
         }
 

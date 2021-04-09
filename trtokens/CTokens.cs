@@ -11,11 +11,14 @@
     {
         public void Help()
         {
-            System.Console.WriteLine(@"tokens
+            System.Console.WriteLine(@"
+This program is part of the Trash toolkit.
+
+trtokens
 Print out the tokens for the parse tree.
 
 Example:
-    . | tokens
+    trparse A.g4 | trtokens
 ");
         }
 

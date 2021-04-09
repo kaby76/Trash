@@ -8,9 +8,15 @@
     <AssemblyName>trxgrep</AssemblyName>
     <PackageId>trxgrep</PackageId>
     <Description>
-      <![CDATA[trparse.
-Read a parse tree from stdin and open a Windows Form that displays the tree.
-This tool is part of Trash, Transformations for Antlr Shell.]]>
+      <![CDATA[
+This program is part of the Trash toolkit.
+
+trxgrep <string>
+Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
+
+Example:
+    trparse A.g4 | trxgrep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+]]>
     </Description>
     <ToolCommandName>trxgrep</ToolCommandName>
     <RootNamespace>trxgrep</RootNamespace>

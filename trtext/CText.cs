@@ -40,12 +40,15 @@
 
         public void Help()
         {
-            System.Console.WriteLine(@"text line-number?
+            System.Console.WriteLine(@"
+This program is part of the Trash toolkit.
+
+trtext line-number?
 Reads a tree from stdin and prints the source text. If 'line-number' is
 specified, the line number range for the tree is printed.
 
 Example:
-    find //lexerRuleSpec | text
+    trxgrep //lexerRuleSpec | trtext
 ");
         }
 

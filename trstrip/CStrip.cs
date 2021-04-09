@@ -1,26 +1,24 @@
 ﻿namespace Trash
 {
-    using System.Text.Json;
     using Antlr4.Runtime.Tree;
     using AntlrJson;
     using LanguageServer;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
     using System.Text.Json;
-    using Workspaces;
 
     class CStrip
     {
         public void Help()
         {
-            System.Console.WriteLine(@"strip
+            System.Console.WriteLine(@"
+This program is part of the Trash toolkit.
+
+trstrip
 Replaces the grammar at the top of stack with one that has all comments, labels, and
 action blocks removed. The resulting grammar is a basic CFG. Once completed, you can write
 the grammar out using 'write'.
 
 Example:
-    strip
+    trparse A.g4 | trstrip
 ");
         }
 

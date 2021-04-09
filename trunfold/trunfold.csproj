@@ -1,26 +1,30 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5</TargetFramework>
     <PackAsTool>true</PackAsTool>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <AssemblyName>trparse</AssemblyName>
-    <PackageId>trparse</PackageId>
+    <AssemblyName>trunfold</AssemblyName>
+    <PackageId>trunfold</PackageId>
     <Description>
       <![CDATA[
 This program is part of the Trash toolkit.
 
-trparse (antlr2 | antlr3 | antlr4 | bison | ebnf)? <string>
-Parse the flie at the top of stack with the given parser type (antlr2, _antlr3, antlr4, bison, etc).
+trunfold <string>
+The unfold command applies the unfold transform to a collection of terminal nodes
+in the parse tree, which is identified with the supplied xpath expression. Prior
+to using this command, you must have the file parsed. An unfold operation substitutes
+the right-hand side of a parser or lexer rule into a reference of the rule name that
+occurs at the specified node. The resulting code is parsed and placed on the top of
+stack.
 
 Example:
-    trparse <string>
-    trparse antlr2 <string>
+    trparse A.g4 | trunfold ""//parserRuleSpec//labeledAlt//RULE_REF[text() = 'markerAnnotation']""
 ]]>
     </Description>
-    <ToolCommandName>trparse</ToolCommandName>
-    <RootNamespace>trparse</RootNamespace>
+    <ToolCommandName>trunfold</ToolCommandName>
+    <RootNamespace>trunfold</RootNamespace>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -28,10 +32,9 @@ Example:
     </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.1" />
-    <PackageReference Include="Antlr4RuntimeShim" Version="0.0.2" >
-    </PackageReference>
+    <PackageReference Include="Antlr4RuntimeShim" Version="0.0.2" />
 		<PackageReference Include="AntlrTreeEditing" Version="2.3" />
-		<PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
+    <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
     <PackageReference Include="Domemtech.TrashBase" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -39,10 +42,11 @@ Example:
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
-	</ItemGroup>
+    <ProjectReference Include="..\Docs\Docs.csproj" />
+  </ItemGroup>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-	</PropertyGroup>
+  </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<NoWarn>1701;1702;3021</NoWarn>
 	</PropertyGroup>

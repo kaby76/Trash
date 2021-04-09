@@ -8,9 +8,17 @@
     <AssemblyName>trstrip</AssemblyName>
     <PackageId>trstrip</PackageId>
     <Description>
-      <![CDATA[trparse.
-Read a parse tree from stdin and open a Windows Form that displays the tree.
-This tool is part of Trash, Transformations for Antlr Shell.]]>
+      <![CDATA[
+This program is part of the Trash toolkit.
+
+trstrip
+Replaces the grammar at the top of stack with one that has all comments, labels, and
+action blocks removed. The resulting grammar is a basic CFG. Once completed, you can write
+the grammar out using 'write'.
+
+Example:
+    trparse A.g4 | trstrip
+]]>
     </Description>
     <ToolCommandName>trstrip</ToolCommandName>
     <RootNamespace>trstrip</RootNamespace>

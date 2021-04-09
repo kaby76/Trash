@@ -9,11 +9,14 @@
     {
         public void Help()
         {
-            System.Console.WriteLine(@"tree
+            System.Console.WriteLine(@"
+This program is part of the Trash toolkit.
+
+trtree
 Reads a tree from stdin and prints the tree as an indented node list.
 
 Example:
-    . | tree
+    trparse A.g4 | trtree
 ");
         }
 

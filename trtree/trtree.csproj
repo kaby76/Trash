@@ -8,9 +8,15 @@
     <AssemblyName>trtree</AssemblyName>
     <PackageId>trtree</PackageId>
     <Description>
-      <![CDATA[trtree.
-Read a parse tree from stdin and open a Windows Form that displays the tree.
-This tool is part of Trash, Transformations for Antlr Shell.]]>
+      <![CDATA[
+This program is part of the Trash toolkit.
+
+trtree
+Reads a tree from stdin and prints the tree as an indented node list.
+
+Example:
+    trparse A.g4 | trtree
+]]>
     </Description>
     <ToolCommandName>trtree</ToolCommandName>
     <RootNamespace>trtree</RootNamespace>

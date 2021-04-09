@@ -6,11 +6,14 @@
     {
         public void Help()
         {
-            System.Console.WriteLine(@"print
+            System.Console.WriteLine(@"
+This program is part of the Trash toolkit.
+
+trprint
 Print out text file at the top of stack.
 
 Example:
-    print
+    trparse A.g4 | trprint
 ");
         }
 

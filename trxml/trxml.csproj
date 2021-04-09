@@ -8,9 +8,15 @@
     <AssemblyName>trxml</AssemblyName>
     <PackageId>trxml</PackageId>
     <Description>
-      <![CDATA[trtree.
-Read a parse tree from stdin and open a Windows Form that displays the tree.
-This tool is part of Trash, Transformations for Antlr Shell.]]>
+      <![CDATA[
+This program is part of the Trash toolkit.
+
+trxml
+Read a tree from stdin and write an XML represenation of it.
+
+Example:
+    trparse A.g4 | trxml
+]]>
     </Description>
     <ToolCommandName>trxml</ToolCommandName>
     <RootNamespace>trxml</RootNamespace>

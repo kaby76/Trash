@@ -8,9 +8,16 @@
     <AssemblyName>trtext</AssemblyName>
     <PackageId>trtext</PackageId>
     <Description>
-      <![CDATA[trtree.
-Read a parse tree from stdin and open a Windows Form that displays the tree.
-This tool is part of Trash, Transformations for Antlr Shell.]]>
+      <![CDATA[
+This program is part of the Trash toolkit.
+
+trtext line-number?
+Reads a tree from stdin and prints the source text. If 'line-number' is
+specified, the line number range for the tree is printed.
+
+Example:
+    trxgrep //lexerRuleSpec | trtext
+]]>
     </Description>
     <ToolCommandName>trtext</ToolCommandName>
     <RootNamespace>trtext</RootNamespace>

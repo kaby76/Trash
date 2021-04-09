@@ -7,11 +7,14 @@
     {
         public void Help()
         {
-            System.Console.WriteLine(@"st
+            System.Console.WriteLine(@"
+This program is part of the Trash toolkit.
+
+trst
 Output tree using the Antlr runtime ToStringTree().
 
 Examples:
-    . | st
+    trparse A.g4 | trst
 ");
         }
 

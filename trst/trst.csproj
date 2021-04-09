@@ -8,9 +8,15 @@
     <AssemblyName>trst</AssemblyName>
     <PackageId>trst</PackageId>
     <Description>
-      <![CDATA[trst.
-Read a parse tree from stdin and open a Windows Form that displays the tree.
-This tool is part of Trash, Transformations for Antlr Shell.]]>
+      <![CDATA[
+This program is part of the Trash toolkit.
+
+trst
+Output tree using the Antlr runtime ToStringTree().
+
+Examples:
+    trparse A.g4 | trst
+]]>
     </Description>
     <ToolCommandName>trst</ToolCommandName>
     <RootNamespace>trst</RootNamespace>
