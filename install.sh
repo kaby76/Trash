@@ -1,5 +1,6 @@
 dotnet tool install -g trgen
 dotnet tool install -g trjson
+dotnet tool install -g trkleene
 dotnet tool install -g trparse
 dotnet tool install -g trprint
 dotnet tool install -g trst

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "trxgrep": {
+      "commandName": "Project",
+      "commandLineArgs": "\"//ruleSpec\""
+    }
+  }
+}

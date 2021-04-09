@@ -1,10 +1,11 @@
-﻿namespace Trash.Commands
+﻿namespace Trash
 {
     using Antlr4.Runtime.Tree;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json;
 
     class CKleene
     {
@@ -21,10 +22,20 @@ Examples:
 ");
         }
 
-        public void Execute(Repl repl, ReplParser.KleeneContext tree, bool piped)
+        public void Execute(Config config)
         {
-            var expr = repl.GetString(tree.StringLiteral());
-            var doc = repl.stack.Peek();
+            var expr = config.Expr;
+            string lines = null;
+            for (; ; )
+            {
+                lines = System.Console.In.ReadToEnd();
+                if (lines != null && lines != "") break;
+            }
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = false;
+            AntlrJson.ParsingResultSet parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
+            var doc = Docs.Class1.CreateDoc(parse_info);
             var pr = ParsingResultsFactory.Create(doc);
             var aparser = pr.Parser;
             var atree = pr.ParseTree;
@@ -34,12 +45,12 @@ Examples:
                 if (expr != null)
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    nodes = engine.parseExpression(expr,
+                    nodes = engine.parseExpression(expr.First(),
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                 }
                 var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(doc, nodes);
-                repl.EnactEdits(results);
+                Docs.Class1.EnactEdits(results);
             }
         }
     }

@@ -20,8 +20,6 @@ namespace Trash
 
 		public void MainInternal(string[] args)
 		{
-			foreach (var arg in args)
-				System.Console.Error.WriteLine("arg " + arg);
 			var config = new Config();
 			var result = Parser.Default.ParseArguments<Config>(args);
 			bool stop = false;
@@ -43,7 +41,7 @@ namespace Trash
                 }
                 if (o.Expr != null) config.Expr = o.Expr;
             });
-			new CXGrep().Execute(config);
+			new CKleene().Execute(config);
 		}
 	}
 }

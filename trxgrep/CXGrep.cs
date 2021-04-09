@@ -24,7 +24,9 @@ Example:
 
         public void Execute(Config config)
         {
-            var expr = config.Expr;
+            var expr2 = config.Expr.First();
+            System.Console.Error.WriteLine("Expr = '" + expr2 + "'");
+            var expr = "//ruleSpec";
             IParseTree[] atrees;
             Parser parser;
             Lexer lexer;
@@ -58,7 +60,7 @@ Example:
                 var nodes = engine.parseExpression(expr,
                         new StaticContextBuilder()).evaluate(dynamicContext, l.ToArray() )
                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
-
+                System.Console.Error.WriteLine("Result size " + nodes.Count());
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = false;

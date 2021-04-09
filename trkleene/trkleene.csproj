@@ -5,15 +5,15 @@
     <PackAsTool>true</PackAsTool>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <AssemblyName>trxgrep</AssemblyName>
-    <PackageId>trxgrep</PackageId>
+    <AssemblyName>trkleene</AssemblyName>
+    <PackageId>trkleene</PackageId>
     <Description>
       <![CDATA[trparse.
 Read a parse tree from stdin and open a Windows Form that displays the tree.
 This tool is part of Trash, Transformations for Antlr Shell.]]>
     </Description>
-    <ToolCommandName>trxgrep</ToolCommandName>
-    <RootNamespace>trxgrep</RootNamespace>
+    <ToolCommandName>trkleene</ToolCommandName>
+    <RootNamespace>trkleene</RootNamespace>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -21,9 +21,10 @@ This tool is part of Trash, Transformations for Antlr Shell.]]>
     </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.1" />
-    <PackageReference Include="Antlr4RuntimeShim" Version="0.0.2" />
+    <PackageReference Include="Antlr4RuntimeShim" Version="0.0.2" >
+    </PackageReference>
 		<PackageReference Include="AntlrTreeEditing" Version="2.3" />
-    <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
+		<PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
     <PackageReference Include="Domemtech.TrashBase" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -31,7 +32,8 @@ This tool is part of Trash, Transformations for Antlr Shell.]]>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
-	</ItemGroup>
+    <ProjectReference Include="..\Docs\Docs.csproj" />
+  </ItemGroup>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 	</PropertyGroup>
