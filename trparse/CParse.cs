@@ -13,40 +13,6 @@ namespace Trash
     {
         public Workspace _workspace { get; set; } = new Workspace();
 
-        public void ParseDoc(Document document, int quiet_after, string grammar = null)
-        {
-            document.Changed = true;
-            document.ParseAs = grammar;
-            var pd = ParsingResultsFactory.Create(document);
-            pd.QuietAfter = quiet_after;
-            var workspace = document.Workspace;
-            _ = new LanguageServer.Module().Compile(workspace);
-        }
-
-        public Document ReadDoc(string path)
-        {
-            string file_name = path;
-            Document document = _workspace.FindDocument(file_name);
-            if (document == null)
-            {
-                throw new Exception("File does not exist.");
-            }
-            try
-            {   // Open the text file using a stream reader.
-                using (StreamReader sr = new StreamReader(file_name))
-                {
-                    // Read the stream to a string, and write the string to the console.
-                    string str = sr.ReadToEnd();
-                    document.Code = str;
-                }
-            }
-            catch (IOException)
-            {
-                throw;
-            }
-            return document;
-        }
-
         public string Help()
         {
             return @"
@@ -63,32 +29,43 @@ Example:
 
         public void Execute(Config config)
         {
-            Dictionary<string, Document> list = new Dictionary<string, Document>();
-            foreach (var f in config.Grammars)
+            // There are two ways to do this. One is a
+            // bootstrapped method using LanguageServer, the
+            // other is by using the generated code, with the loading
+            // and running of the parser. We need to determine which way.
+            // If Generated/exists, and it's a CSharp program that compiles,
+            // use that to parse the input.
+            // If Generated/ does not exist, then parse as Antlr4.
+            var path = Environment.CurrentDirectory;
+            path = path + Path.DirectorySeparatorChar + "Generated";
+            if (!(Directory.Exists(path)
+                    ))
             {
-                Document doc = ReadDoc(f);
-                list.Add(f, doc);
-            }
-            foreach (var p in list)
-            {
-                var doc = p.Value;
-                ParseDoc(doc, 0, config.Type);
+                Dictionary<string, Document> list = new Dictionary<string, Document>();
+                Document doc = Docs.Class1.ReadDoc(config.File);
+                list.Add(config.File, doc);
+                Docs.Class1.ParseDoc(doc, 0, config.Type);
                 var pr = ParsingResultsFactory.Create(doc);
                 IParseTree pt = pr.ParseTree;
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = true;
                 var tuple = new ParsingResultSet()
-                {
-                    Text = doc.Code,
-                    FileName = doc.FullPath,
-                    Stream = pr.TokStream,
-                    Nodes = new IParseTree[] { pt },
-                    Lexer = pr.Lexer,
-                    Parser = pr.Parser
-                };
+                    {
+                        Text = doc.Code,
+                        FileName = doc.FullPath,
+                        Stream = pr.TokStream,
+                        Nodes = new IParseTree[] { pt },
+                        Lexer = pr.Lexer,
+                        Parser = pr.Parser
+                    };
                 string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
                 System.Console.WriteLine(js1);
+            }
+            else
+            {
+                var grun = new Grun(config);
+                grun.Run();
             }
         }
     }

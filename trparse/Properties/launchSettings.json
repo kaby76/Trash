@@ -1,7 +1,9 @@
 {
   "profiles": {
     "trparse": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "-f c:\\users\\kenne\\documents\\split\\alt-cpp\\examples/xx.cpp",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\alt-cpp"
     }
   }
 }

@@ -2,12 +2,10 @@ using CommandLine;
 using CommandLine.Text;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace Trash
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{

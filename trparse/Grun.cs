@@ -15,11 +15,11 @@
 
     public class Grun
     {
-        private Repl _repl;
+        Config config;
 
-        public Grun(Repl repl)
+        public Grun(Config co)
         {
-            _repl = repl;
+            config = co;
         }
 
         public List<Document> Grammars { get; set; }
@@ -70,24 +70,41 @@
         {
         }
 
-        public void Run(Repl repl, string input)
+        public void Run()
         {
             var path = Environment.CurrentDirectory;
             path = path + Path.DirectorySeparatorChar + "Generated";
-            var grammars = _repl._workspace.AllDocuments().Where(d => d.FullPath.EndsWith(".g4")).ToList();
             var old = Environment.CurrentDirectory;
             try
             {
-                Environment.CurrentDirectory = path;
-                Assembly asm = Assembly.LoadFile(path + "/bin/Debug/net5.0/Test.dll");
+                var full_path = path + "\\bin\\Debug\\net5.0\\";
+           //     Environment.CurrentDirectory = full_path;
+                var exists = File.Exists(full_path + "Test.dll");
+                Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
+                Assembly asm = Assembly.LoadFile(full_path + "Test.dll");
+                var xxxxxx = asm1.GetTypes();
                 Type[] types = asm.GetTypes();
                 Type type = asm.GetType("Program");
                 var methods = type.GetMethods();
                 MethodInfo methodInfo = type.GetMethod("Parse");
-                string txt = input;
-                if (input == null)
+                string txt = config.Input;
+                if (config.Input == null && config.File == null)
                 {
-                    txt = repl.input_output_stack.Pop();
+                    string lines = null;
+                    for (; ; )
+                    {
+                        lines = System.Console.In.ReadToEnd();
+                        if (lines != null && lines != "") break;
+                    }
+                    txt = lines;
+                }
+                else if (config.Input != null)
+                {
+                    txt = config.Input;
+                }
+                else if (config.File != null)
+                {
+                    txt = File.ReadAllText(config.File);
                 }
                 object[] parm = new object[] {txt};
                 DateTime before = DateTime.Now;
@@ -112,7 +129,7 @@
                 serializeOptions.WriteIndented = false;
                 var tuple = new AntlrJson.ParsingResultSet() {Text = txt, FileName = "stdin", Stream = r4 as ITokenStream, Nodes = new IParseTree[]{t2}, Parser = r2 as Parser, Lexer = r3 as Lexer };
                 string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
-                repl.input_output_stack.Push(js1);
+                System.Console.WriteLine(js1);
             }
             finally
             {

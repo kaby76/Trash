@@ -27,9 +27,8 @@ Examples:
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.1" />
-		<PackageReference Include="Antlr4RuntimeShim" Version="0.0.2" />
-		<PackageReference Include="AntlrTreeEditing" Version="2.3" />
+		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" />
+		<PackageReference Include="AntlrTreeEditing" Version="2.5.0" />
 		<PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />

@@ -1,4 +1,4 @@
-﻿namespace dotnet_antlr
+﻿namespace Trash
 {
     public enum EnvType
     {

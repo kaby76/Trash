@@ -1,18 +1,13 @@
 ﻿using CommandLine;
+using CommandLine.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
-using System.Xml;
-using System.Xml.XPath;
-using Antlr4.StringTemplate;
-using System.Text.RegularExpressions;
-using CommandLine.Text;
 
-namespace dotnet_antlr
+namespace Trash
 {
 
     public partial class Program

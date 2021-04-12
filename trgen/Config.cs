@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using System.Collections.Generic;
 
-namespace dotnet_antlr
+namespace Trash
 {
     public class Config
     {

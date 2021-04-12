@@ -5,11 +5,11 @@ namespace Trash
 {
     public class Config
     {
-        [Option("version", Required = false, HelpText = "output version information and exit.")]
-        public bool? Version { get; set; }
+        [Option('i', "input")]
+        public string Input { get; set; }
 
-        [Value(0, Min = 1)]
-        public IEnumerable<string> Grammars { get; set; }
+        [Option('f', "file")]
+        public string File { get; set; }
 
         [Option("type", Required = false)]
         public string? Type { get; set; }

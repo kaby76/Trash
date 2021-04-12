@@ -20,11 +20,7 @@ The code is implemented in C#.
 
 ### Generate a parser
 
-	$ dotnet .../trash.dll
-	> read Expr.g4
-	> parse
-	> generate s
-	> quit
+	trgen
 
 ### Parse and print out a parse tree, as JSON, XML, or s-expressions
 
