@@ -2,7 +2,7 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-f c:\\users\\kenne\\documents\\split\\alt-cpp\\examples/xx.cpp",
+      "commandLineArgs": "--type antlr4 CPP14Parser.g4",
       "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\alt-cpp"
     }
   }

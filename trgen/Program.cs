@@ -111,7 +111,7 @@ namespace Trash
                 else config.all_source_pattern =
                     "^(?!.*(" +
                      (cgen.ignore_string != null ? cgen.ignore_string + "|" : "")
-                     + "ignore/|Generated/|target/|examples/|"
+                     + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
                      + CGen.AllButTargetName((TargetType)config.target)
                      + "/)).+"
                      + "$";

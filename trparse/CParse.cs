@@ -35,11 +35,15 @@ Example:
             // and running of the parser. We need to determine which way.
             // If Generated/exists, and it's a CSharp program that compiles,
             // use that to parse the input.
+            //
             // If Generated/ does not exist, then parse as Antlr4.
+            // If Type=="gen", then parse using Generated/.
+            // If Type=="antlr2", then parse using Antlr2.
+            // Etc.
+
             var path = Environment.CurrentDirectory;
             path = path + Path.DirectorySeparatorChar + "Generated";
-            if (!(Directory.Exists(path)
-                    ))
+            if (config.Type != null && config.Type != "gen" || !Directory.Exists(path))
             {
                 Dictionary<string, Document> list = new Dictionary<string, Document>();
                 Document doc = Docs.Class1.ReadDoc(config.File);

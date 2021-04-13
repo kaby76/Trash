@@ -86,6 +86,7 @@ Examples:
                 GenerateSingle(cd);
             }
         }
+
         public Config config;
         public static string version = "1.0.0";
         public List<string> failed_modules = new List<string>();

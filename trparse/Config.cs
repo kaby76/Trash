@@ -8,7 +8,7 @@ namespace Trash
         [Option('i', "input")]
         public string Input { get; set; }
 
-        [Option('f', "file")]
+        [Option('f', "file", Required = true)]
         public string File { get; set; }
 
         [Option("type", Required = false)]
