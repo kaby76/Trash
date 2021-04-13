@@ -1,4 +1,4 @@
-﻿namespace Trash.Commands
+﻿namespace Trash
 {
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
@@ -6,17 +6,17 @@
 
     class CDelete
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"delete <string>
+            return @"delete <string>
 Delete nodes in the parsed file at the top of stack specified by the XPath expression string.
 
 Example:
     delete ""//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']""
-");
+";
         }
 
-        public void Execute(Repl repl, ReplParser.DeleteContext tree, bool piped)
+        public void Execute(Config config)
         {
             var expr = repl.GetArg(tree.arg());
             var doc = repl.stack.Peek();
