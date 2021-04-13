@@ -23,7 +23,7 @@ Example:
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>1.0.0</Version>
+    <Version>0.5.0</Version>
   </PropertyGroup>
 
 	<ItemGroup>
