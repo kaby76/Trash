@@ -32,7 +32,7 @@ This tool is part of Trash, Transformations for Antlr Shell.]]>
 		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.8.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.9.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Features" Version="3.8.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.8.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.8.0" />
