@@ -1,4 +1,5 @@
 dotnet tool uninstall -g trfold
+dotnet tool uninstall -g trfoldlit
 dotnet tool uninstall -g trgen
 dotnet tool uninstall -g trgroup
 dotnet tool uninstall -g trjson
@@ -14,3 +15,4 @@ dotnet tool uninstall -g trunfold
 dotnet tool uninstall -g trungroup
 dotnet tool uninstall -g trxgrep
 dotnet tool uninstall -g trxml
+dotnet tool uninstall -g trxml2

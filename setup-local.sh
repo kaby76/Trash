@@ -1,5 +1,6 @@
 cwd=`pwd | sed 's%/c%c:%' | sed 's%/%\\\\%g'`
 dotnet nuget add source $cwd\\trfold\\bin\\Debug\\ --name "nuget-trfold"
+dotnet nuget add source $cwd\\trfoldlit\\bin\\Debug\\ --name "nuget-trfoldlit"
 dotnet nuget add source $cwd\\trgen\\bin\\Debug\\ --name "nuget-trgen"
 dotnet nuget add source $cwd\\trgroup\\bin\\Debug\\ --name "nuget-trgroup"
 dotnet nuget add source $cwd\\trjson\\bin\\Debug\\ --name "nuget-trjson"
@@ -15,3 +16,4 @@ dotnet nuget add source $cwd\\trunfold\\bin\\Debug\\ --name "nuget-trunfold"
 dotnet nuget add source $cwd\\trungroup\\bin\\Debug\\ --name "nuget-trungroup"
 dotnet nuget add source $cwd\\trxgrep\\bin\\Debug\\ --name "nuget-trxgrep"
 dotnet nuget add source $cwd\\trxml\\bin\\Debug\\ --name "nuget-trxml"
+dotnet nuget add source $cwd\\trxml2\\bin\\Debug\\ --name "nuget-trxml2"

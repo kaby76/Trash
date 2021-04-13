@@ -1,4 +1,5 @@
 dotnet tool install -g trfold
+dotnet tool install -g trfoldlit
 dotnet tool install -g trgen
 dotnet tool install -g trgroup
 dotnet tool install -g trjson
@@ -14,3 +15,4 @@ dotnet tool install -g trunfold
 dotnet tool install -g trungroup
 dotnet tool install -g trxgrep
 dotnet tool install -g trxml
+dotnet tool install -g trxml2

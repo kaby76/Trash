@@ -5,7 +5,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
 
-namespace csxml2
+namespace trxml2
 {
     class Program
     {

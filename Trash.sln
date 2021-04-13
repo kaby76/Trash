@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrJson", "AntlrJson\AntlrJson.csproj", "{3CFDC502-53C4-4112-A4F1-026B52EAF492}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "csxml2", "csxml2\csxml2.csproj", "{1E2EADF3-8846-441A-9D71-B329EE06BCC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxml2", "trxml2\trxml2.csproj", "{1E2EADF3-8846-441A-9D71-B329EE06BCC4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgen", "trgen\trgen.csproj", "{B704AB40-2FBC-4808-A728-D8F614321112}"
 EndProject
