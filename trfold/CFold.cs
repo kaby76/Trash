@@ -1,6 +1,5 @@
 ﻿namespace Trash
 {
-    using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using AntlrJson;
     using LanguageServer;
@@ -53,9 +52,10 @@ Example:
                 var nodes = engine.parseExpression(expr,
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                
                 var results = LanguageServer.Transform.Fold(nodes, doc);
+                
                 Docs.Class1.EnactEdits(results);
-
                 var pr = ParsingResultsFactory.Create(doc);
                 IParseTree pt = pr.ParseTree;
                 var tuple = new ParsingResultSet()
