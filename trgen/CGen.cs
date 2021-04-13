@@ -1012,6 +1012,16 @@ Examples:
             lexer_grammar_file_name = "";
             lexer_generated_file_name = "";
             bool use_arithmetic = false;
+
+            if (config.InputFile != null && config.InputFile != "")
+            {
+                var g = config.InputFile;
+                g = Path.GetFileName(g);
+                g = Path.GetFileNameWithoutExtension(g);
+                config.grammar_name = g.Replace("Parser", "");
+            }
+
+
             for (; ; )
             {
                 // Probe for parser grammar. 
@@ -1034,7 +1044,7 @@ Examples:
                 }
                 {
                     var parser_grammars_pattern =
-                        "^(?!.*(ignore/|Generated/|target/|examples/))((?!.*Lexer)|.*Parser).g4$";
+                        "^(?!.*(ignore/|Generated/|target/|examples/|Lexer)).*[.]g4$";
                     var any =
                         new Domemtech.Globbing.Glob()
                             .RegexContents(parser_grammars_pattern)
@@ -1078,7 +1088,7 @@ Examples:
                 }
                 {
                     var lexer_grammars_pattern =
-                        "^(?!.*(ignore/|Generated/|target/|examples/))((?!.*Parser)|.*Lexer).g4$";
+                        "^(?!.*(ignore/|Generated/|target/|examples/|Parser)).*[.]g4$";
                     var any =
                         new Domemtech.Globbing.Glob()
                             .RegexContents(lexer_grammars_pattern)

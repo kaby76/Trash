@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-m false --start-rule translationUnit",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\alt-cpp"
+      "commandLineArgs": "--file Expr.g4 --start-rule formula",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\a"
     }
   }
 }
