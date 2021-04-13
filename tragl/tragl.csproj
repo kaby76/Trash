@@ -36,7 +36,7 @@ This tool is part of Trash, Transformations for Antlr Shell.]]>
 		<PackageReference Include="Microsoft.CodeAnalysis.Features" Version="3.8.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.8.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="3.8.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.9.0" />
 		<PackageReference Include="Domemtech.TrashBase" Version="1.0.0" />
 	</ItemGroup>
 
