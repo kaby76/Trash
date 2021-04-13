@@ -68,7 +68,17 @@ Examples:
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             root_directory = cd;
 
-            if (config.maven != null && (bool)config.maven)
+            bool do_maven = false;
+            if (config.maven != null && !(bool)config.maven)
+                do_maven = false;
+            else if (config.maven != null && (bool)config.maven)
+                do_maven = true;
+            else if (File.Exists(cd + Path.DirectorySeparatorChar + @"pom.xml"))
+                do_maven = true;
+            else
+                do_maven = false;
+
+            if (do_maven)
             {
                 FollowPoms(cd);
                 if (failed_modules.Any())
