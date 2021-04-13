@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": " -m true ",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-2114\\cpp"
+      "commandLineArgs": "-m false --start-rule translationUnit",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\alt-cpp"
     }
   }
 }

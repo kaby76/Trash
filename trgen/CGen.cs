@@ -997,6 +997,12 @@ Examples:
         public void GeneratedNames()
         {
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
+            source_directory = cd;
+            if (source_directory != "" && !source_directory.EndsWith("/"))
+            {
+                source_directory = source_directory + "/";
+            }
+            config.example_files = "examples";
             config.fully_qualified_lexer_name = "";
             config.fully_qualified_parser_name = "";
             parser_src_grammar_file_name = "";

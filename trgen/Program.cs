@@ -25,7 +25,7 @@ namespace Trash
             }
         }
 
-        void DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
+        public static void DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
         {
             HelpText helpText = null;
             if (errs.IsVersion())  //check if error is version request
@@ -42,6 +42,11 @@ namespace Trash
                 }, e => e);
             }
             Console.Error.WriteLine(helpText);
+        }
+
+        private class MyError : Error
+        {
+            public MyError() : base(ErrorType.InvalidAttributeConfigurationError, true) { }
         }
 
         public void MainInternal(string[] args)
@@ -116,6 +121,16 @@ namespace Trash
                      + "/)).+"
                      + "$";
             });
+            if (config.maven != null && !(bool)config.maven)
+            {
+                if (config.start_rule == null || config.start_rule == "")
+                {
+                    System.Console.Error.WriteLine("Missing --start-rule option.");
+                    Program.DisplayHelp(result, new List<Error>() { new MyError() });
+                    stop = true;
+                }
+            }
+            if (stop) return;
 
             cgen.Execute(config);
         }
