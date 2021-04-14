@@ -22,56 +22,60 @@ The code is implemented in C#.
 
 	trgen
 
+If executed in an empty directory, `trgen` will create a program
+that has the Arithmetic grammar. If executed in a directory containing
+a Antlr Maven plugin (pom.xml), `trgen` will create a program according
+to the information specified in the pom.xml file. There are options
+for `trgen` to create a parser for a grammar and start symbol for
+a naked .g4 file. And, there are many other options.
+
 ### Parse and print out a parse tree, as JSON, XML, or s-expressions
 
-	$ dotnet .../trash.dll
-	> echo "1+2+3" | run | tree
-	> echo "1+2+3" | run | json
-	> echo "1+2+3" | run | xml
-	> echo "1+2+3" | run | st
-	> echo "1+2+3" | run | dot
-	> quit
+	$ trparse -i "1+2+3" | trtree
+	$ trparse -i "1+2+3" | trjson
+	$ trparse -i "1+2+3" | trxml
+	$ trparse -i "1+2+3" | trst
+	$ trparse -i "1+2+3" | trdot
 
-### Print out a parse tree using AGL (on Windows)
+After using `trgen` to generate a parser program in C#, and after building
+the program, you can run the parser using `trparse`, which takes arguments
+for input strings, files, or reading stdin. The output of `trparse`, like
+almost all programs in Trash, is parse tree data, which you can then
+print out in a number of different formats.
 
-	$ dotnet .../trash.dll
-	> echo "1+2+3" | run | agl
-	> quit
+### Find subtrees.
 
-### Find tokens
+	$ trparse -i "1+2+3" | trxgrep "//INT" | trst
 
-	$ dotnet .../trash.dll
-	> echo "1+2+3" | run | xgrep "//INT" | st
-	> quit
+Using `trparse`, you can create a parse tree that can be searched
+using `trxgrep`. The tool `trxgrep` uses XPath expressions to identify
+exactly what node(s) in the tree you want. Those sub-trees can be
+printed using any of the tools shown previously.
 
 ### Rename a symbol in a grammar, generate a parser for new grammar
 
-	$ dotnet .../trash.dll
-	> rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
-	> print
-	> generate s
-	> quit
+_Not yet ported from Antlrvsix._
+
+	cat previous-parse.data | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx" | trtext > new-source.g4
 
 ### Count method declarations in a Java source file
 
-	$ dotnet .../trash.dll
-	> read Java9.g4
-	> parse
-	> generate compilationUnit
-	> cat WindowState.java | run > save-tree
-	> cat save-tree | xgrep "//methodDeclaration" | st | wc
-	> quit
+	$ trgen --file Java9.g4 --start-rule compilationUnit
+	$ cd Generated/; dotnet build; cd ..
+	$ trparse --file WindowsState.java | trxgrep "//methodDeclaration" | trst | wc
+
+To count the number of methods in a Java source file, first generate a
+parser, build it, and then run `trparse` to create a parse tree for the
+input. Then, use `trxgrep` to pick off the methods, convert the nodes
+found into a one-per-line tree, and use `wc` to count the number.
 
 ### Strip a grammar of all non-essential CFG
 
-	$ dotnet .../trash.dll
-	> read Java9.g4
-	> parse
-	> strip
-	> write
-	> quit
+	$ trparse --file Java9.g4 | trstrip | trtext > new-grammar.g4
 
 ### Diff grammars
+
+_Not yet ported from Antlrvsix._
 
 	# From a Bash shell
 	$ alias trash='dotnet ...\\trash.dll'
@@ -96,44 +100,29 @@ The code is implemented in C#.
 *There is a built-in diff for grammars, but it is not
 practical except for small grammars in this release.*
 
-### Create a "here" doc.
-
- 	$ dotnet .../trash.dll
-    > read HERE
-    grammar A;
-    s : e ;
-    e : e '*' e | INT ;
-    INT : [0-9]+ ;
-    WS : [ \t\n]+ -> skip ;
-    HERE
-    > parse
-    > rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx"
-    > print
-    > quit
-
 ## Usage
 
-<pre>
-dotnet ...\\trash.dll [-script <em>string</em>]
-</pre>
+Each command in Trash has a set of options and required arguments.
+The list of currently available commands is:
 
-Trash reads stdin or a specified script file commands, one line at a time.
-Start a `Cmd` or `Powershell` or `Bash` shell, then
-
-(1) `dotnet ...\Trash.dll`
-
-where `...` is the path to the `Trash.dll`. This command
-starts an interactive shell, reading from stdin one line at a time
-until `quit` command is executed.
-
-Once in the interactive shell, type `help` to get a list of the
-commands.
-
-(2) `cat ex1.tr | dotnet ...\Trash.dll`
-
-where `...` is the path to the `Trash.dll`. This command
-reads commands from stdin one line at a time
-until `quit` or the end-of-file is read.
+	trfold
+	trfoldlit
+	trgen
+	trgroup
+	trjson
+	trkleene
+	trparse
+	trprint
+	trst
+	trstrip
+	trtext
+	trtokens
+	trtree
+	trunfold
+	trungroup
+	trxgrep
+	trxml
+	trxml2
 
 
 ## Parsing Result Sets -- the data passed between commands
