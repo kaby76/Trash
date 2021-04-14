@@ -159,34 +159,43 @@ See [this list](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/comman
 
 # Installation
 
-## Install via Antlrvsix or Antlrvs-vscode
+## Install 
 
-Install the Antlrvsix for VS2019 or Antlrvsix-vscode for VSCode
-extension. The Trash program
-will be installed in the extensions area for VS2019/VSCode.
-Use Find or similar
-command to find the Trash.dll.
+Just execute the following lines:
 
-## Nightly build
+	dotnet tool install -g trfold
+	dotnet tool install -g trfoldlit
+	dotnet tool install -g trgen
+	dotnet tool install -g trgroup
+	dotnet tool install -g trjson
+	dotnet tool install -g trkleene
+	dotnet tool install -g trparse
+	dotnet tool install -g trprint
+	dotnet tool install -g trst
+	dotnet tool install -g trstrip
+	dotnet tool install -g trtext
+	dotnet tool install -g trtokens
+	dotnet tool install -g trtree
+	dotnet tool install -g trunfold
+	dotnet tool install -g trungroup
+	dotnet tool install -g trxgrep
+	dotnet tool install -g trxml
+	dotnet tool install -g trxml2
+
+
+(Or you can download the [install.sh](https://github.com/kaby76/Domemtech.Trash/blob/main/install.sh)
+file and execute it in a shell.
 
 # Current release
 
-## 8.3 (30 Dec 2020)
+## 0.5.0 (14 Apr 2021)
 
-* Added a grammar diff program.
-* Added an ISO 14977 parser.
-* Added AGL (Automatic Graph Layout), XML, JSON output.
-* Added Cat, Echo, Wc, Strip commands.
-* Adding BNFC’s LBNF and other associated grammars. NB: This work is not yet complete, and only works for the simplest of grammars.
-* [Trash history should be limited; Alias setup should be separated from history. #113](https://github.com/kaby76/AntlrVSIX/issues/113)
-* [Include fix of Antlrv4parser.g4 grammar](https://github.com/antlr/grammars-v4/issues/1956)
-* [Fix Update to NET 5! #110](https://github.com/kaby76/AntlrVSIX/issues/110)
-* [Fix There should be a graph output command in Trash #108](https://github.com/kaby76/AntlrVSIX/issues/108)
-* [Fix TreeOutput.OutputTree should output tokens in similar format to parse tree nodes #107](https://github.com/kaby76/AntlrVSIX/issues/107)
-* [Fix "Find" should be renamed "XGrep" in Trash #106](https://github.com/kaby76/AntlrVSIX/issues/106)
-
+* Preliminary release of the toolset.
 
 # Documentation
+
+_NB: The following documentation is obsolete, carried over from the
+old Antlrvsix Trash shell._
 
 Please refer to
 the [documentation](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md).
