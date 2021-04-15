@@ -98,7 +98,7 @@ Examples:
         }
 
         public Config config;
-        public static string version = "1.0.0";
+        public static string version = "0.5.2";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
@@ -121,8 +121,8 @@ Examples:
         public string parser_generated_include_file_name = null;
         public string suffix;
         public string ignore_string = null;
-        public string ignore_file_name = ".dotnet-antlr-ignore";
-        public string SetupFfn = ".dotnet-antlr.rc";
+        public string ignore_file_name = ".trgen-ignore";
+        public string SetupFfn = ".trgen.rc";
         public string target_directory;
         public string source_directory;
 
@@ -445,7 +445,7 @@ Examples:
                 }
                 else config.case_insensitive_type = null;
 
-                // Check for existence of .dotnet-antlr-ignore file.
+                // Check for existence of .trgen-ignore file.
                 // If there is one, read and create pattern of what to ignore.
                 if (File.Exists(ignore_file_name))
                 {

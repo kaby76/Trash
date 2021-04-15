@@ -63,7 +63,7 @@ namespace Trash
             config.output_directory = "Generated/";
             config.flatten = false;
 
-            // Get any defaults from ~/.dotnet-antlr.rc
+            // Get any defaults from ~/.trgen.rc
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + cgen.SetupFfn))
             {
