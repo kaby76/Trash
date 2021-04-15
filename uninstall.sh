@@ -6,6 +6,7 @@ dotnet tool uninstall -g trjson
 dotnet tool uninstall -g trkleene
 dotnet tool uninstall -g trparse
 dotnet tool uninstall -g trprint
+dotnet tool uninstall -g trrename
 dotnet tool uninstall -g trst
 dotnet tool uninstall -g trstrip
 dotnet tool uninstall -g trtext

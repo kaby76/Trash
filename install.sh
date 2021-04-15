@@ -1,18 +1,20 @@
-dotnet tool install -g trfold
-dotnet tool install -g trfoldlit
-dotnet tool install -g trgen
-dotnet tool install -g trgroup
-dotnet tool install -g trjson
-dotnet tool install -g trkleene
-dotnet tool install -g trparse
-dotnet tool install -g trprint
-dotnet tool install -g trst
-dotnet tool install -g trstrip
-dotnet tool install -g trtext
-dotnet tool install -g trtokens
-dotnet tool install -g trtree
-dotnet tool install -g trunfold
-dotnet tool install -g trungroup
-dotnet tool install -g trxgrep
-dotnet tool install -g trxml
-dotnet tool install -g trxml2
+dotnet tool install -g trfold --version 0.5.0
+dotnet tool install -g trfoldlit --version 0.5.0
+dotnet tool install -g trgen --version 0.5.1
+dotnet tool install -g trgroup --version 0.5.0
+dotnet tool install -g trjson --version 0.5.0
+dotnet tool install -g trkleene --version 0.5.0
+dotnet tool install -g trparse --version 0.5.0
+dotnet tool install -g trprint --version 0.5.0
+dotnet tool install -g trrename --version 0.5.0
+dotnet tool install -g trst --version 0.5.0
+dotnet tool install -g trstrip --version 0.5.0
+dotnet tool install -g trtext --version 0.5.0
+dotnet tool install -g trtokens --version 0.5.0
+dotnet tool install -g trtree --version 0.5.0
+dotnet tool install -g trunfold --version 0.5.0
+dotnet tool install -g trungroup --version 0.5.0
+dotnet tool install -g trxgrep --version 0.5.0
+dotnet tool install -g trxml --version 0.5.0
+dotnet tool install -g trxml2 --version 0.5.0
+

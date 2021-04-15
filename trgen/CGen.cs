@@ -748,7 +748,7 @@ Examples:
                         );
 
                 string to = null;
-                if (Path.GetExtension(from) == ".g4" && config.name_space != null)
+                if (config.name_space != null)
                 {
                     to = this.config.output_directory
                         + config.name_space.Replace('.', '/') + '/'

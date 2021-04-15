@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <AssemblyName>trfold</AssemblyName>
+    <PackageId>trfold</PackageId>
+    <Description>
+      <![CDATA[
+This program is part of the Trash toolkit.
+
+trrename <string> <string>
+Rename a symbol, the first parameter as specified by the xpath expression string,
+to a new name, the second parameter as a string. The result may place all changed
+grammars that use the symbol on the stack.
+
+Example:
+    cat pt.data | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" xxx | trtext > new-grammar.g4
+]]>
+    </Description>
+    <ToolCommandName>trfold</ToolCommandName>
+    <RootNamespace>trfold</RootNamespace>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>0.5.0</Version>
+    </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" />
+		<PackageReference Include="AntlrTreeEditing" Version="2.5.0" />
+		<PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
+		<PackageReference Include="Domemtech.TrashBase" Version="1.0.0">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="CommandLineParser" Version="2.8.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+		<ProjectReference Include="..\Docs\Docs.csproj" />
+	</ItemGroup>
+	<PropertyGroup>
+		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<NoWarn>1701;1702;3021</NoWarn>
+	</PropertyGroup>
+</Project>
