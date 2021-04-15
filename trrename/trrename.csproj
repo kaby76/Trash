@@ -5,8 +5,8 @@
     <PackAsTool>true</PackAsTool>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <AssemblyName>trfold</AssemblyName>
-    <PackageId>trfold</PackageId>
+    <AssemblyName>trrename</AssemblyName>
+    <PackageId>trrename</PackageId>
     <Description>
       <![CDATA[
 This program is part of the Trash toolkit.
@@ -20,8 +20,8 @@ Example:
     cat pt.data | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" xxx | trtext > new-grammar.g4
 ]]>
     </Description>
-    <ToolCommandName>trfold</ToolCommandName>
-    <RootNamespace>trfold</RootNamespace>
+    <ToolCommandName>trrename</ToolCommandName>
+    <RootNamespace>trrename</RootNamespace>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

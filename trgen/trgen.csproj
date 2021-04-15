@@ -6,8 +6,8 @@
     <PackAsTool>true</PackAsTool>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <AssemblyName>trrename</AssemblyName>
-    <PackageId>trrename</PackageId>
+    <AssemblyName>trgen</AssemblyName>
+    <PackageId>trgen</PackageId>
     <Description>
       <![CDATA[
 This program is part of the Trash toolkit.
@@ -22,8 +22,8 @@ Examples:
     trgen -m true
 ]]>
     </Description>
-    <ToolCommandName>trrename</ToolCommandName>
-    <RootNamespace>trrename</RootNamespace>
+    <ToolCommandName>trgen</ToolCommandName>
+    <RootNamespace>trgen</RootNamespace>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
