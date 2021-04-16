@@ -9,13 +9,12 @@ SOURCES = $(GENERATED) Program.go
 default: classes
 classes: $(SOURCES)
 	@if [ "$(GOPATH)" = "" ]; then echo "GOPATH must be defined, usually c:/users/youruserid/."; exit 1; fi
-	@if [ "$(GO111MODULE)" = "" ]; then echo "GO111MODULE must be defined, usually GO111MODULE=auto."; exit 1; fi
-	go get github.com/antlr/antlr4/runtime/Go/antlr
+	export GO111MODULE=auto; go get github.com/antlr/antlr4/runtime/Go/antlr
 clean:
 	rm -f *.tokens *.interp
 	rm -f $(GENERATED)
 run:
-	go run Program.go $(RUNARGS)
+	export GO111MODULE=auto; go run Program.go $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) -Dlanguage=Go <antlr_tool_args:{y | <y> } > $\<
 } >

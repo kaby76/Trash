@@ -98,7 +98,7 @@ Examples:
         }
 
         public Config config;
-        public static string version = "0.5.2";
+        public static string version = "0.5.3";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
