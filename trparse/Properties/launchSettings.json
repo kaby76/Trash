@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "--type antlr4 -f CPP14Parser.g4",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\alt-cpp"
+      "commandLineArgs": " -t antlr4 -f TSqlParser.g4",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-new - Copy\\sql\\tsql\\Generated"
     }
   }
 }

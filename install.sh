@@ -1,6 +1,6 @@
 dotnet tool install -g trfold --version 0.5.0
 dotnet tool install -g trfoldlit --version 0.5.0
-dotnet tool install -g trgen --version 0.5.1
+dotnet tool install -g trgen --version 0.5.3
 dotnet tool install -g trgroup --version 0.5.0
 dotnet tool install -g trjson --version 0.5.0
 dotnet tool install -g trkleene --version 0.5.0

@@ -48,7 +48,7 @@ Example:
                 Dictionary<string, Document> list = new Dictionary<string, Document>();
                 Document doc = Docs.Class1.ReadDoc(config.File);
                 list.Add(config.File, doc);
-                Docs.Class1.ParseDoc(doc, 0, config.Type);
+                Docs.Class1.ParseDoc(doc, 10, config.Type);
                 var pr = ParsingResultsFactory.Create(doc);
                 IParseTree pt = pr.ParseTree;
                 var serializeOptions = new JsonSerializerOptions();
