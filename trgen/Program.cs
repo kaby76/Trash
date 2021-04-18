@@ -12,6 +12,8 @@ namespace Trash
 
     public partial class Program
     {
+        int return_value = 0;
+
         public static void Main(string[] args)
         {
             try
@@ -132,7 +134,7 @@ namespace Trash
             }
             if (stop) return;
 
-            cgen.Execute(config);
+            return_value = cgen.Execute(config);
         }
     }
 }

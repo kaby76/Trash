@@ -29,7 +29,7 @@ Examples:
 ";
 		}
 
-		public void Execute(Config co)
+		public int Execute(Config co)
 		{
             config = co;
             suffix = config.target switch
@@ -86,7 +86,7 @@ Examples:
                     // List out failed grammars. I really should say what failed,
                     // what succeeded, what skipped, but I don't. TODO.
                     System.Console.WriteLine(String.Join(" ", failed_modules));
-                    throw new Exception();
+                    return 1;
                 }
             }
             else
@@ -95,6 +95,7 @@ Examples:
                 GeneratedNames();
                 GenerateSingle(cd);
             }
+            return 0;
         }
 
         public Config config;

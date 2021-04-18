@@ -3,7 +3,9 @@
     using Antlr4.Runtime.Tree;
     using AntlrJson;
     using LanguageServer;
+    using org.eclipse.wst.xml.xpath2.processor.@internal.types;
     using org.eclipse.wst.xml.xpath2.processor.util;
+    using System.IO;
     using System.Linq;
     using System.Text.Json;
 
@@ -28,14 +30,20 @@ Example:
         public void Execute(Config config)
         {
             var expr = config.Expr;
-            var to_sym = config.NewName;
-
             System.Console.Error.WriteLine("Expr = '" + expr + "'");
+            var to_sym = config.NewName;
             string lines = null;
-            for (; ; )
+            if (!(config.File != null && config.File != ""))
             {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
+                for (; ; )
+                {
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
+                }
+            }
+            else
+            {
+                lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
@@ -48,6 +56,13 @@ Example:
             var lexer = parse_info.Lexer;
             var tokstream = parse_info.Stream;
             var doc = Docs.Class1.CreateDoc(parse_info);
+            doc.ParseTree = null;
+            doc.Changed = true;
+            ParsingResults ref_pd = ParsingResultsFactory.Create(doc);
+            ref_pd.ParseTree = null;
+            //ref_pd.Changed = true;
+            _ = new Module().GetQuickInfo(0, doc);
+            //Compile(workspace);
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
             IParseTree root = atrees.First().Root();
             var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
