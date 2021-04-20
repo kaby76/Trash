@@ -2,8 +2,8 @@
   "profiles": {
     "trrename": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \" //parserRuleSpec/RULE_REF[text() = 'literal']\" xxx ",
-      "workingDirectory": "c:/Users/kenne/Documents/split/alt-cpp"
+      "commandLineArgs": "-f o.pt primitive xxx ",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-new - Copy\\abb"
     }
   }
 }

@@ -8,10 +8,13 @@ namespace Trash
         [Option('f', "file", Required = false)]
         public string File { get; set; }
 
-        [Value(0)]
+        [Option('e', "expr", Required = false)]
         public string Expr { get; set; }
 
-        [Value(1)]
+        [Option('n', "new-name", Required = false)]
         public string NewName { get; set; }
+
+        [Option('r', "rename-map", Required = false)]
+        public string RenameMap { get; set; }
     }
 }

@@ -3,8 +3,7 @@
     using Antlr4.Runtime.Tree;
     using AntlrJson;
     using LanguageServer;
-    using org.eclipse.wst.xml.xpath2.processor.@internal.types;
-    using org.eclipse.wst.xml.xpath2.processor.util;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text.Json;
@@ -29,9 +28,9 @@ Example:
 
         public void Execute(Config config)
         {
-            var expr = config.Expr;
-            System.Console.Error.WriteLine("Expr = '" + expr + "'");
-            var to_sym = config.NewName;
+            //var expr = config.Expr;
+            //System.Console.Error.WriteLine("Expr = '" + expr + "'");
+            //var to_sym = config.NewName;
             string lines = null;
             if (!(config.File != null && config.File != ""))
             {
@@ -63,17 +62,21 @@ Example:
             //ref_pd.Changed = true;
             _ = new Module().GetQuickInfo(0, doc);
             //Compile(workspace);
-            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-            IParseTree root = atrees.First().Root();
-            var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
-            {
-                var nodes = engine.parseExpression(expr,
-                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                
-                var results = LanguageServer.Transform.Rename(nodes, to_sym, doc);
 
+            var l1 = config.RenameMap.Split(';').ToList();
+            var rename_map = new Dictionary<string, string>();
+            foreach (var l in l1)
+            {
+                var l2 = l.Split(',').ToList();
+                if (l2.Count != 2)
+                    throw new System.Exception("rename map not correct");
+                rename_map[l2[0]] = l2[1];
+            }
+
+            System.Collections.Generic.Dictionary<string, string> results = null;
+            results = LanguageServer.Transform.Rename(rename_map, doc);
+            if (results != null && results.Count > 0)
+            {
                 Docs.Class1.EnactEdits(results);
                 var pr = ParsingResultsFactory.Create(doc);
                 IParseTree pt = pr.ParseTree;
@@ -87,8 +90,49 @@ Example:
                     Parser = pr.Parser
                 };
                 string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
-                System.Console.WriteLine(js1);
+                System.Console.Write(js1);
             }
+            else
+            {
+                System.Console.Write(lines);
+            }
+
+            //org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+            //IParseTree root = atrees.First().Root();
+            //var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
+            //using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
+            //{
+            //    var nodes = engine.parseExpression(expr,
+            //            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+            //        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+
+            //    System.Collections.Generic.Dictionary<string, string> results = null;
+            //    if (nodes != null && nodes.Count > 0)
+            //    {
+            //        results = LanguageServer.Transform.Rename(nodes, to_sym, doc);
+            //    }
+            //    if (results != null && results.Count > 0)
+            //    {
+            //        Docs.Class1.EnactEdits(results);
+            //        var pr = ParsingResultsFactory.Create(doc);
+            //        IParseTree pt = pr.ParseTree;
+            //        var tuple = new ParsingResultSet()
+            //        {
+            //            Text = doc.Code,
+            //            FileName = doc.FullPath,
+            //            Stream = pr.TokStream,
+            //            Nodes = new IParseTree[] { pt },
+            //            Lexer = pr.Lexer,
+            //            Parser = pr.Parser
+            //        };
+            //        string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
+            //        System.Console.WriteLine(js1);
+            //    }
+            //    else
+            //    {
+            //        System.Console.WriteLine(lines);
+            //    }
+            //}
         }
     }
 }
