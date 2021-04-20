@@ -36,7 +36,7 @@ Example:
             var code = parse_info.Text;
             System.Console.Error.WriteLine();
             System.Console.Error.WriteLine(fn);
-            System.Console.WriteLine(code);
+            System.Console.Write(code);
         }
     }
 }

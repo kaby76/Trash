@@ -77,8 +77,8 @@ Example:
             results = LanguageServer.Transform.Rename(rename_map, doc);
             if (results != null && results.Count > 0)
             {
-                Docs.Class1.EnactEdits(results);
                 var pr = ParsingResultsFactory.Create(doc);
+                Docs.Class1.EnactEdits(results);
                 IParseTree pt = pr.ParseTree;
                 var tuple = new ParsingResultSet()
                 {

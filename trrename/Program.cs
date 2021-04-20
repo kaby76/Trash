@@ -41,8 +41,6 @@ namespace Trash
 
         public void MainInternal(string[] args)
         {
-            foreach (var arg in args)
-                System.Console.Error.WriteLine("arg " + arg);
             var config = new Config();
             var result = new CommandLine.Parser().ParseArguments<Config>(args);
             bool stop = false;
