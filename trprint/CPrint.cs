@@ -34,8 +34,6 @@ Example:
             var lexer = parse_info.Lexer;
             var fn = parse_info.FileName;
             var code = parse_info.Text;
-            System.Console.Error.WriteLine();
-            System.Console.Error.WriteLine(fn);
             System.Console.Write(code);
         }
     }
