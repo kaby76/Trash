@@ -1,3 +1,5 @@
+
+dotnet tool uninstall -g trconvert
 dotnet tool uninstall -g trfold
 dotnet tool uninstall -g trfoldlit
 dotnet tool uninstall -g trgen

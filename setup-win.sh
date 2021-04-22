@@ -1,4 +1,6 @@
+
 cwd=`pwd | sed 's%/c%c:%' | sed 's%/%\\\\%g'`
+dotnet nuget add source $cwd\\trconvert\\bin\\Debug\\ --name "nuget-trconvert"
 dotnet nuget add source $cwd\\trfold\\bin\\Debug\\ --name "nuget-trfold"
 dotnet nuget add source $cwd\\trfoldlit\\bin\\Debug\\ --name "nuget-trfoldlit"
 dotnet nuget add source $cwd\\trgen\\bin\\Debug\\ --name "nuget-trgen"

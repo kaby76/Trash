@@ -1,3 +1,5 @@
+
+dotnet nuget remove source "nuget-trconvert"
 dotnet nuget remove source "nuget-trfold"
 dotnet nuget remove source "nuget-trfoldlit"
 dotnet nuget remove source "nuget-trgen"

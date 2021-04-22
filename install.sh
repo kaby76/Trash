@@ -1,3 +1,5 @@
+
+dotnet tool install -g trconvert --version 0.5.0
 dotnet tool install -g trfold --version 0.5.0
 dotnet tool install -g trfoldlit --version 0.5.0
 dotnet tool install -g trgen --version 0.5.3

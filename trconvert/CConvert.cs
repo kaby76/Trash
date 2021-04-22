@@ -5,6 +5,7 @@
     using LanguageServer;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text.Json;
 
     class CConvert
@@ -75,13 +76,15 @@ Example:
             }
             
             Docs.Class1.EnactEdits(res);
-
-            var pr = ParsingResultsFactory.Create(doc);
+            var new_fn = res.Where(d => d.Key.EndsWith(".g4")).First().Key;
+            var new_code = res.Where(d => d.Key.EndsWith(".g4")).First().Value;
+            var converted_doc = Docs.Class1.CreateDoc(new_fn, new_code);
+            var pr = ParsingResultsFactory.Create(converted_doc);
             IParseTree pt = pr.ParseTree;
             var tuple = new ParsingResultSet()
             {
-                Text = doc.Code,
-                FileName = doc.FullPath,
+                Text = converted_doc.Code,
+                FileName = converted_doc.FullPath,
                 Stream = pr.TokStream,
                 Nodes = new IParseTree[] { pt },
                 Lexer = pr.Lexer,
