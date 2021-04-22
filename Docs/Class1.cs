@@ -18,7 +18,7 @@ namespace Docs
             document.Changed = true;
             document.ParseAs = grammar;
             var pd = LanguageServer.ParsingResultsFactory.Create(document);
-            pd.QuietAfter = quiet_after;
+            if (pd != null) pd.QuietAfter = quiet_after;
             var workspace = document.Workspace;
             _ = new LanguageServer.Module().Compile(workspace);
         }
@@ -59,6 +59,12 @@ namespace Docs
             }
             project.AddDocument(document);
             document.Code = parse_info.Text;
+            document.ParseAs = parse_info.Parser.GrammarFileName switch
+            {
+                "ANTLRv2Parser.g4" => "antlr2",
+                "ANTLRv3Parser.g4" => "antlr3",
+                "ANTLRv4Parser.g4" => "antlr4",
+            };
             var pr = LanguageServer.ParsingResultsFactory.Create(document);
             pr.Parser = parse_info.Parser;
             pr.Lexer = parse_info.Lexer;

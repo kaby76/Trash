@@ -1,12 +1,17 @@
-﻿namespace Trash.Commands
+﻿namespace Trash
 {
+    using Antlr4.Runtime.Tree;
+    using AntlrJson;
+    using LanguageServer;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Text.Json;
 
     class CConvert
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"convert (antlr2 | antlr3 | antlr4 | bison | ebnf)?
+            return @"convert (antlr2 | antlr3 | antlr4 | bison | ebnf)?
 Convert the parsed grammar file at the top of stack into Antlr4 syntax. If the type of
 grammar cannot be inferred from the file suffix, a type can be supplied with the command.
 The resulting Antlr4 grammar replaces the top of stack.
@@ -14,69 +19,51 @@ The resulting Antlr4 grammar replaces the top of stack.
 Example:
     (top of stack contains a grammar file that is Antlr2 or 3, Bison, or EBNF syntax.)
     combine antlr3
-");
+";
         }
 
-        public void Execute(Repl repl, ReplParser.ConvertContext tree, bool piped)
+        public void Execute(Config config)
         {
-            var type = tree.type()?.GetText();
-            var doc = repl.stack.Peek();
+            string lines = null;
+            if (!(config.File != null && config.File != ""))
+            {
+                for (; ; )
+                {
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
+                }
+            }
+            else
+            {
+                lines = File.ReadAllText(config.File);
+            }
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = false;
+            AntlrJson.ParsingResultSet parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
+            var doc = Docs.Class1.CreateDoc(parse_info);
             var f = doc.FullPath;
-            if (type == null || type == "")
+            var type = parse_info.Parser.GrammarFileName;
+            Dictionary<string, string> res = null;
+            if (type == "ANTLRv3Parser.g4")
             {
-                if (doc.FullPath.EndsWith(".g4")) type = "antlr4";
-                if (doc.FullPath.EndsWith(".g2")) type = "antlr2";
-                if (doc.FullPath.EndsWith(".g3")) type = "antlr3";
-                if (doc.FullPath.EndsWith(".y")) type = "bison";
-                if (doc.FullPath.EndsWith(".ebnf")) type = "ebnf";
-            }
-            if (type == "antlr3")
-            {
-                Dictionary<string, string> res = new Dictionary<string, string>();
                 var imp = new LanguageServer.Antlr3Import();
-                imp.Try(doc.FullPath, doc.Code, ref res);
-                foreach (var r in res)
-                {
-                    var new_doc = repl._docs.CreateDoc(r.Key, r.Value);
-                    repl.stack.Push(new_doc);
-                    if (new_doc.FullPath.EndsWith(".g4")) repl._docs.ParseDoc(repl.stack.Peek(), repl.QuietAfter);
-                }
+                res = imp.Try(doc.FullPath, doc.Code);
             }
-            else if (type == "antlr2")
+            else if (type == "ANTLRv2Parser.g4")
             {
-                Dictionary<string, string> res = new Dictionary<string, string>();
                 var imp = new LanguageServer.Antlr2Import();
-                imp.Try(doc.FullPath, doc.Code, ref res);
-                foreach (var r in res)
-                {
-                    var new_doc = repl._docs.CreateDoc(r.Key, r.Value);
-                    repl.stack.Push(new_doc);
-                    if (new_doc.FullPath.EndsWith(".g4")) repl._docs.ParseDoc(repl.stack.Peek(), repl.QuietAfter);
-                }
+                res = imp.Try(doc.FullPath, doc.Code);
             }
             else if (type == "bison")
             {
-                Dictionary<string, string> res = new Dictionary<string, string>();
                 var imp = new LanguageServer.BisonImport();
-                imp.Try(doc.FullPath, doc.Code, ref res);
-                foreach (var r in res)
-                {
-                    var new_doc = repl._docs.CreateDoc(r.Key, r.Value);
-                    repl.stack.Push(new_doc);
-                    if (new_doc.FullPath.EndsWith(".g4")) repl._docs.ParseDoc(repl.stack.Peek(), repl.QuietAfter);
-                }
+                res = imp.Try(doc.FullPath, doc.Code);
             }
             else if (type == "ebnf")
             {
-                Dictionary<string, string> res = new Dictionary<string, string>();
                 var imp = new LanguageServer.W3CebnfImport();
-                imp.Try(doc.FullPath, doc.Code, ref res);
-                foreach (var r in res)
-                {
-                    var new_doc = repl._docs.CreateDoc(r.Key, r.Value);
-                    repl.stack.Push(new_doc);
-                    if (new_doc.FullPath.EndsWith(".g4")) repl._docs.ParseDoc(repl.stack.Peek(), repl.QuietAfter);
-                }
+                res = imp.Try(doc.FullPath, doc.Code);
             }
             else if (type == "antlr4")
             {
@@ -86,6 +73,22 @@ Example:
             {
                 System.Console.WriteLine("Unknown type for conversion.");
             }
+            
+            Docs.Class1.EnactEdits(res);
+
+            var pr = ParsingResultsFactory.Create(doc);
+            IParseTree pt = pr.ParseTree;
+            var tuple = new ParsingResultSet()
+            {
+                Text = doc.Code,
+                FileName = doc.FullPath,
+                Stream = pr.TokStream,
+                Nodes = new IParseTree[] { pt },
+                Lexer = pr.Lexer,
+                Parser = pr.Parser
+            };
+            string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
+            System.Console.WriteLine(js1);
         }
     }
 }

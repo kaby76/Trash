@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdelete", "trdelete\trdele
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrename", "trrename\trrename.csproj", "{662B1475-ED9E-47F2-913A-06D117700FA7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trconvert", "trconvert\trconvert.csproj", "{0FB7A65D-868B-4625-BD57-90CE5FE7A99C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{662B1475-ED9E-47F2-913A-06D117700FA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{662B1475-ED9E-47F2-913A-06D117700FA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{662B1475-ED9E-47F2-913A-06D117700FA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FB7A65D-868B-4625-BD57-90CE5FE7A99C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FB7A65D-868B-4625-BD57-90CE5FE7A99C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FB7A65D-868B-4625-BD57-90CE5FE7A99C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FB7A65D-868B-4625-BD57-90CE5FE7A99C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

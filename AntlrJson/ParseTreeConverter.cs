@@ -36,6 +36,8 @@
             MyParser parser = new MyParser(out_token_stream);
             MyCharStream fake_char_stream = new MyCharStream();
             string text = null;
+            string parser_grammarFileName = null;
+            string lexer_grammarFileName = null;
 
             lexer.InputStream = fake_char_stream;
             if (!(reader.TokenType == JsonTokenType.StartObject)) throw new JsonException();
@@ -64,6 +66,18 @@
                     out_token_stream.Text = reader.GetString();
                     fake_char_stream.Text = out_token_stream.Text;
                     text = out_token_stream.Text;
+                    reader.Read();
+                }
+                else if (pn == "IdentityOfParser")
+                {
+                    var name = reader.GetString();
+                    parser_grammarFileName = name;
+                    reader.Read();
+                }
+                else if (pn == "IdentityOfLexer")
+                {
+                    var name = reader.GetString();
+                    lexer_grammarFileName = name;
                     reader.Read();
                 }
                 else if (pn == "Tokens")
@@ -254,9 +268,10 @@
 
             var vocab = new Vocabulary(literal_names.ToArray(), symbolic_names.ToArray());
             parser._vocabulary = vocab;
-            parser._grammarFileName = fake_char_stream.SourceName;
+            parser._grammarFileName = parser_grammarFileName;
             parser._ruleNames = parser_rule_names.ToArray();
             lexer._vocabulary = vocab;
+            lexer._grammarFileName = lexer_grammarFileName;
             lexer._ruleNames = lexer_rule_names.ToArray();
             lexer._tokenTypeMap = token_type_map;
             var res = new AntlrJson.ParsingResultSet()
@@ -312,6 +327,12 @@
 
             writer.WritePropertyName("Text");
             writer.WriteStringValue(tuple.Text);
+
+            writer.WritePropertyName("IdentityOfParser");
+            writer.WriteStringValue(tuple.Parser.GrammarFileName);
+
+            writer.WritePropertyName("IdentityOfLexer");
+            writer.WriteStringValue(tuple.Lexer.GrammarFileName);
 
             writer.WritePropertyName("Tokens");
             writer.WriteStartArray();
@@ -445,6 +466,7 @@
                 }
             }
             writer.WriteEndArray();
+
             writer.WriteEndObject();
         }
     }

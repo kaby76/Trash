@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trconvert": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\antlr4-upstream\\tool\\src\\org\\antlr\\v4\\parse"
+    }
+  }
+}
