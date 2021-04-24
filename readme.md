@@ -2,7 +2,7 @@
 
 **Trash** is a collection of command-line tools to support the editing,
 analyzing, refactoring, and converting from one format to anther, of
-CFG parsing tool grammars.
+Antlr grammars.
 The tools pipeline parse tree data through stdin and stdout so they
 may be combined to create complex edits on a grammar.
 The tools in Trash are implemented as Dotnet Tools, and can be run
@@ -28,6 +28,8 @@ a Antlr Maven plugin (pom.xml), `trgen` will create a program according
 to the information specified in the pom.xml file. There are options
 for `trgen` to create a parser for a grammar and start symbol for
 a naked .g4 file. And, there are many other options.
+
+Once a parser is generated, build the program using the NET SDK.
 
 ### Parse and print out a parse tree, as JSON, XML, or s-expressions
 
