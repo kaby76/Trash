@@ -56,17 +56,17 @@ Example:
                 var imp = new LanguageServer.Antlr2Import();
                 res = imp.Try(doc.FullPath, doc.Code);
             }
-            else if (type == "bison")
+            else if (type == "BisonParser.g4")
             {
                 var imp = new LanguageServer.BisonImport();
                 res = imp.Try(doc.FullPath, doc.Code);
             }
-            else if (type == "ebnf")
+            else if (type == "W3CebnfParser.g4")
             {
                 var imp = new LanguageServer.W3CebnfImport();
                 res = imp.Try(doc.FullPath, doc.Code);
             }
-            else if (type == "antlr4")
+            else if (type == "ANTLRv4Parser.g4")
             {
                 System.Console.WriteLine("Cannot convert an Antlr4 file to Antlr4.");
             }
