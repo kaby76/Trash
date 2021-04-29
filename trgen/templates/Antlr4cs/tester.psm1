@@ -1,14 +1,5 @@
 function Build-Grammar {
-<tool_grammar_files:{x |
-    $g = antlr <x> -Dlanguage=Python3 <antlr_tool_args:{y | <y> } >
-    if($LASTEXITCODE -ne 0){
-        return @{
-            Message = $g
-            Success = $false
-        \}
-    \}
-}>
-    $msg = pip install -r requirements.txt
+    $msg = dotnet build -o CSharp
     return @{
         Message = $msg
         Success = $LASTEXITCODE -eq 0
@@ -22,7 +13,7 @@ function Test-Case {
         $TreeFile,
         $ErrorFile
     )
-    $o = python Program.py -file $InputFile
+    $o = dotnet CSharp/Test.dll -file $InputFile
     $failed = $LASTEXITCODE -ne 0
     if ($failed -and $errorFile) {
         return $true

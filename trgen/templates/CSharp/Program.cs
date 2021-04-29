@@ -34,6 +34,7 @@ public class Program
         bool show_tokens = false;
         string file_name = null;
         string input = null;
+        System.Text.Encoding encoding = null;
         for (int i = 0; i \< args.Length; ++i)
         {
             if (args[i].Equals("-tokens"))
@@ -50,6 +51,16 @@ public class Program
                 input = args[++i];
             else if (args[i].Equals("-file"))
                 file_name = args[++i];
+            else if (args[i].Equals("-encoding"))
+            {
+                ++i;
+                encoding = Encoding.GetEncoding(
+                    args[i],
+                    new EncoderReplacementFallback("(unknown)"),
+                    new DecoderReplacementFallback("(error)"));
+                if (encoding == null)
+                    throw new Exception(@"Unknown encoding. Must be an Internet Assigned Numbers Authority (IANA) code page name. https://www.iana.org/assignments/character-sets/character-sets.xhtml");
+            }
         }
         ICharStream str = null;
         if (input == null && file_name == null)
@@ -60,7 +71,10 @@ public class Program
             str = CharStreams.fromString(input);
         } else if (file_name != null)
         {
-            str = CharStreams.fromPath(file_name);
+            if (encoding == null)
+                str = CharStreams.fromPath(file_name);
+            else
+                str = CharStreams.fromPath(file_name, encoding);
         }
 <if (case_insensitive_type)>
         str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
