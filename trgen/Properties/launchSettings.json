@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "--file Expr.g4 --start-rule formula",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\a"
+      "commandLineArgs": "-t Java",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-new\\asm\\masm"
     }
   }
 }

@@ -23,32 +23,25 @@ Example:
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>0.5.5</Version>
+    <Version>0.6.0</Version>
   </PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" />
-		<PackageReference Include="AntlrTreeEditing" Version="2.5.0" />
-		<PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
-		<PackageReference Include="Domemtech.TrashBase" Version="1.0.0" />
-	</ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" />
+    <PackageReference Include="AntlrTreeEditing" Version="2.5.0" />
+    <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
+    <PackageReference Include="Domemtech.TrashBase" Version="1.0.0" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
     <ProjectReference Include="..\Docs\Docs.csproj" />
   </ItemGroup>
-
   <PropertyGroup>
-		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<NoWarn>1701;1702;3021</NoWarn>
-	</PropertyGroup>
-
-
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;3021</NoWarn>
+  </PropertyGroup>
 </Project>

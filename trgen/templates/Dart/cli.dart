@@ -148,10 +148,10 @@ void main(List\<String> args) async {
         str = await InputStream.fromString(input);
     } else if (file_name != null)
     {
-        if (encoding == null)
+        //if (encoding == null)
             str = await InputStream.fromPath(file_name);
-        else
-            str = await InputStream.fromPath(file_name, encoding);
+        //else
+        //    str = await InputStream.fromPath(file_name, encoding);
     }
 <if (case_insensitive_type)>
     str = CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");

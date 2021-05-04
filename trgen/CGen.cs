@@ -748,6 +748,11 @@ Examples:
                         : f
                         );
 
+                if (config.grammar_name + ".g4" == f &&
+                    !(f == this.parser_src_grammar_file_name || f == this.lexer_src_grammar_file_name))
+                {
+                    continue;
+                }
                 string to = null;
                 if (config.name_space != null)
                 {

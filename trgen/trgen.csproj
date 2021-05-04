@@ -27,15 +27,13 @@ Examples:
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>0.5.6</Version>
+    <Version>0.6.1</Version>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="templates\**" />
     <EmbeddedResource Include="templates\**" />
     <None Include="templates\**\*.*"></None>
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="templates\Antlr4cs\CaseChangingCharStream.cs" />
     <None Remove="templates\Cpp\CaseChangingCharStream.cpp" />
@@ -46,11 +44,9 @@ Examples:
     <None Remove="templates\Java\CaseChangingCharStream.java" />
     <None Remove="templates\Python3\CaseChangingStream.py" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Domemtech.Globbing" Version="2.3.0" />
     <PackageReference Include="Domemtech.StringTemplate4" Version="4.0.9" />
   </ItemGroup>
-
 </Project>
