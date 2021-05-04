@@ -27,7 +27,7 @@ Examples:
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>0.6.1</Version>
+    <Version>0.6.3</Version>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="templates\**" />
