@@ -749,7 +749,7 @@ Examples:
                         );
 
                 if (config.grammar_name + ".g4" == f &&
-                    !(f == this.parser_grammar_file_name || f == this.lexer_grammar_file_name))
+                    !(f == Path.GetFileName(this.parser_grammar_file_name) || f == Path.GetFileName(this.lexer_grammar_file_name)))
                 {
                     continue;
                 }

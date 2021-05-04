@@ -2,7 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-new\\javascript\\ecmascript"
+      "commandLineArgs": "-t Java",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-new\\asm\\masm"
     }
   }
 }
