@@ -17,6 +17,7 @@ dotnet tool install -g trtokens --version $version
 dotnet tool install -g trtree --version $version
 dotnet tool install -g trunfold --version $version
 dotnet tool install -g trungroup --version $version
+dotnet tool install -g trwdog --version $version
 dotnet tool install -g trxgrep --version $version
 dotnet tool install -g trxml --version $version
 dotnet tool install -g trxml2 --version $version

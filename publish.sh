@@ -17,6 +17,7 @@ pushd "trtokens/bin/Debug/"; dotnet nuget push trtokens.$version.nupkg --api-key
 pushd "trtree/bin/Debug/"; dotnet nuget push trtree.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd
 pushd "trunfold/bin/Debug/"; dotnet nuget push trunfold.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd
 pushd "trungroup/bin/Debug/"; dotnet nuget push trungroup.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd
+pushd "trwdog/bin/Debug/"; dotnet nuget push trwdog.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd
 pushd "trxgrep/bin/Debug/"; dotnet nuget push trxgrep.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd
 pushd "trxml/bin/Debug/"; dotnet nuget push trxml.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd
 pushd "trxml2/bin/Debug/"; dotnet nuget push trxml2.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd
