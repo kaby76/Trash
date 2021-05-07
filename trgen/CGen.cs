@@ -850,6 +850,7 @@ Examples:
                     t.Add("lexer_grammar_file", p.lexer_grammar_file_name);
                     t.Add("lexer_name", config.fully_qualified_lexer_name);
                     t.Add("name_space", p.config.name_space);
+                    t.Add("os_win", (EnvType)p.config.env_type == EnvType.Windows);
                     t.Add("parser_name", config.fully_qualified_parser_name);
                     t.Add("parser_grammar_file", p.parser_grammar_file_name);
                     t.Add("path_sep_colon", p.config.path_sep == PathSepType.Colon);
@@ -937,6 +938,7 @@ Examples:
                     t.Add("lexer_name", config.fully_qualified_lexer_name);
                     t.Add("lexer_grammar_file", p.lexer_grammar_file_name);
                     t.Add("name_space", p.config.name_space);
+                    t.Add("os_win", (EnvType)p.config.env_type == EnvType.Windows);
                     t.Add("parser_name", config.fully_qualified_parser_name);
                     t.Add("parser_grammar_file", p.parser_grammar_file_name);
                     t.Add("path_sep_colon", p.config.path_sep == PathSepType.Colon);

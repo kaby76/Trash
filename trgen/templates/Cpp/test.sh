@@ -8,7 +8,7 @@ do
   if [ "$x1" != "errors" ]
   then
     echo "$file"
-    ./build/<exec_name> -file "$file"
+    trwdog ./build/<exec_name> -file "$file"
     status="$?"
     if [ -f "$file".errors ]
     then
@@ -16,6 +16,7 @@ do
       then
         echo Expected parse fail.
         err=1
+        break
       else
         echo Expected.
       fi
@@ -23,6 +24,7 @@ do
       if [ "$status" != "0" ]
       then
         err=1
+        break
       fi
     fi
   fi

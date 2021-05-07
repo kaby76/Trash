@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleApp13": {
       "commandName": "Project",
-      "commandLineArgs": "find c:/temp -name *.cs"
+      "commandLineArgs": "dart.bat"
     }
   }
 }

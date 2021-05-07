@@ -101,14 +101,20 @@ namespace Trash
             {
                 int exit_code = 0;
                 string cmd = command[0];
-                string rest = string.Join(" ", command.Skip(1));
+                string rest = string.Join(" ", command.Skip(1).Select(a=> '"' + a + '"'));
                 try
                 {
+                    if (cmd.EndsWith(".bat") && !Path.IsPathFullyQualified(cmd))
+                    {
+                        var p = FindExePath(cmd);
+                        if (p != null && p != "") cmd = p;
+                    }
                     var processInfo = new ProcessStartInfo(cmd, rest);
                     //System.Console.WriteLine("Cwd " + Directory.GetCurrentDirectory());
                     //System.Console.WriteLine("Starting " + cmd + " " + rest);
                     //processInfo.CreateNoWindow = true;
-                    //processInfo.UseShellExecute = false;
+                    //processInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    //processInfo.UseShellExecute = true;
                     //processInfo.RedirectStandardError = true;
                     //processInfo.RedirectStandardOutput = true;
                     using (Process process = Process.Start(processInfo))
@@ -143,6 +149,25 @@ namespace Trash
                 System.Environment.Exit(exit_code);
             });
             t.Start();
+        }
+
+        public static string FindExePath(string exe)
+        {
+            exe = Environment.ExpandEnvironmentVariables(exe);
+            if (!File.Exists(exe))
+            {
+                if (Path.GetDirectoryName(exe) == String.Empty)
+                {
+                    foreach (string test in (Environment.GetEnvironmentVariable("PATH") ?? "").Split(';'))
+                    {
+                        string path = test.Trim();
+                        if (!String.IsNullOrEmpty(path) && File.Exists(path = Path.Combine(path, exe)))
+                            return Path.GetFullPath(path);
+                    }
+                }
+                throw new FileNotFoundException(new FileNotFoundException().Message, exe);
+            }
+            return Path.GetFullPath(exe);
         }
     }
 }
