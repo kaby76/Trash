@@ -44,7 +44,8 @@ namespace Trash
 
         public void MainInternal(string[] args)
         {
-            int delay = 60000;
+            int secs = 60;
+            int delay = secs * 1000;
             // Find point in sequence of args and split options from program.
             var divide = 0;
             for (int i = 0; i < args.Length; ++i, divide = i)
@@ -89,8 +90,12 @@ namespace Trash
                     string sto = config.Timeout;
                     try
                     {
-                        int secs = int.Parse(sto);
-                        if (secs > 0) delay = secs * 1000;
+                        var tsecs = int.Parse(sto);
+                        if (secs > 0)
+                        {
+                            secs = tsecs;
+                            delay = secs * 1000;
+                        }
                     }
                     catch (Exception)
                     { }
@@ -121,6 +126,7 @@ namespace Trash
                     {
                         if (process == null)
                         {
+                            System.Console.Error.WriteLine("Cannot start process--Process.Start() returned null.");
                             exit_code = 1;
                             System.Environment.Exit(exit_code);
                         }
@@ -134,7 +140,7 @@ namespace Trash
                         }
                         else
                         {
-                            //System.Console.WriteLine("kill");
+                            System.Console.Error.WriteLine("Process is taking longer than " + secs + " seconds. Killing process.");
                             process.Kill(true);
                             exit_code = 1;
                         }
@@ -142,7 +148,7 @@ namespace Trash
                 }
                 catch (Exception ex)
                 {
-                    System.Console.WriteLine(ex.Message);
+                    System.Console.Error.WriteLine(ex.Message);
                     exit_code = 1;
                 }
                 //System.Console.WriteLine("Finished Post Process");
