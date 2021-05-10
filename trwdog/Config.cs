@@ -6,6 +6,6 @@ namespace Trash
     public class Config
     {
         [Option('t', "timeout", Required = false, HelpText = "Max time in seconds for command to run")]
-        public string? Timeout {get; set; }
+        public int? Timeout {get; set; }
     }
 }

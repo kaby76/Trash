@@ -82,5 +82,8 @@ namespace Trash
 
         [Option('g', "tool-grammar-files-pattern", Required = false, HelpText = "A list of vertical bar separated grammar file paths.")]
         public string? tool_grammar_files_pattern { get; set; }
+
+        [Option("watchdog-timeout", Required = false, Default = 60)]
+        public int? watchdog_timeout { get; set; }
     }
 }

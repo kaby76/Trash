@@ -55,6 +55,7 @@ namespace Trash
         {
             var cgen = new CGen();
             var config = new Config();
+
             // Get default from OS, or just default.
             config.line_translation = CGen.GetLineTranslationType();
             config.env_type = CGen.GetEnvType();

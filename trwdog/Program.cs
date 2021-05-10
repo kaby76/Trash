@@ -5,12 +5,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 
 namespace Trash
 {
     class Program
     {
+        public string SetupFfn = ".trwdog.rc";
+
         static void Main(string[] args)
         {
             try
@@ -44,8 +47,6 @@ namespace Trash
 
         public void MainInternal(string[] args)
         {
-            int secs = 60;
-            int delay = secs * 1000;
             // Find point in sequence of args and split options from program.
             var divide = 0;
             for (int i = 0; i < args.Length; ++i, divide = i)
@@ -65,7 +66,29 @@ namespace Trash
             var command = args.Skip(divide).ToArray();
             var opts = new string[divide];
             Array.Copy(args, opts, divide);
+
+
             var config = new Config();
+
+            // Get default from OS, or just default.
+            config.Timeout = 300;
+
+            // Get any defaults from ~/.trwdog.rc
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + SetupFfn))
+            {
+                var jsonString = System.IO.File.ReadAllText(home + Path.DirectorySeparatorChar + SetupFfn);
+                var o = JsonSerializer.Deserialize<Config>(jsonString);
+                var ty = typeof(Config);
+                foreach (var prop in ty.GetProperties())
+                {
+                    if (prop.GetValue(o, null) != null)
+                    {
+                        prop.SetValue(config, prop.GetValue(o, null));
+                    }
+                }
+            }
+
             var result = new CommandLine.Parser().ParseArguments<Config>(opts);
             bool stop = false;
             result.WithNotParsed(
@@ -85,22 +108,10 @@ namespace Trash
                         prop.SetValue(config, prop.GetValue(o, null));
                     }
                 }
-                if (config.Timeout != null && config.Timeout != "")
-                {
-                    string sto = config.Timeout;
-                    try
-                    {
-                        var tsecs = int.Parse(sto);
-                        if (secs > 0)
-                        {
-                            secs = tsecs;
-                            delay = secs * 1000;
-                        }
-                    }
-                    catch (Exception)
-                    { }
-                }
             });
+
+            int secs = (int)config.Timeout;
+            int delay = secs * 1000;
 
             var t = new Thread(delegate ()
             {
