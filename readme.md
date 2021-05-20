@@ -18,6 +18,10 @@ The code is implemented in C#.
 
 ## What can you do with Trash?
 
+### Examine an Antlr grammar
+
+trparse -f MyGrammar.g4 | trtree | vim -
+
 ### Generate a parser
 
 	trgen
@@ -107,6 +111,8 @@ practical except for small grammars in this release.*
 Each command in Trash has a set of options and required arguments.
 The list of currently available commands is:
 
+	tranalyze
+	trconvert
 	trfold
 	trfoldlit
 	trgen
@@ -115,6 +121,7 @@ The list of currently available commands is:
 	trkleene
 	trparse
 	trprint
+	trrename
 	trst
 	trstrip
 	trtext
@@ -122,6 +129,7 @@ The list of currently available commands is:
 	trtree
 	trunfold
 	trungroup
+	trwdog
 	trxgrep
 	trxml
 	trxml2
