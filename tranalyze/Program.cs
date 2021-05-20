@@ -30,8 +30,8 @@ namespace Trash
                 helpText = HelpText.AutoBuild(result, h =>
                 {
                     h.AdditionalNewLineAfterOption = false;
-                    h.Heading = "trtree";
-                    h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
+                    h.Heading = "tranalyze";
+                    h.Copyright = "Copyright (c) 2021 Ken Domino";
                     h.AddPreOptionsText(new CAnalyze().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);

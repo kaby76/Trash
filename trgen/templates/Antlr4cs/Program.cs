@@ -35,6 +35,8 @@ public class Program
     {
         bool show_tree = false;
         bool show_tokens = false;
+        bool old = false;
+        bool two_byte = false;
         string file_name = null;
         string input = null;
         for (int i = 0; i \< args.Length; ++i)
@@ -42,6 +44,16 @@ public class Program
             if (args[i].Equals("-tokens"))
             {
                 show_tokens = true;
+                continue;
+            }
+            else if (args[i].Equals("-two-byte"))
+            {
+                two_byte = true;
+                continue;
+            }
+            else if (args[i].Equals("-old"))
+            {
+                old = true;
                 continue;
             }
             else if (args[i].Equals("-tree"))
@@ -73,8 +85,13 @@ public class Program
                     new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
         } else if (file_name != null)
         {
-            FileStream fs = new FileStream(file_name, FileMode.Open);
-            str = new Antlr4.Runtime.AntlrInputStream(fs);
+            if (two_byte)
+                str = new TwoByteCharStream(file_name);
+            else
+            {
+                FileStream fs = new FileStream(file_name, FileMode.Open);
+                str = new Antlr4.Runtime.AntlrInputStream(fs);
+            }
         }
 <if (case_insensitive_type)>
         str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");

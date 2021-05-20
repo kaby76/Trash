@@ -2,8 +2,8 @@
   "profiles": {
     "tranalyze": {
       "commandName": "Project",
-      "commandLineArgs": "--file x.pt",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-new\\java\\java"
+      "commandLineArgs": "--file JavaLexer.pt",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\ex\\orig\\java"
     }
   }
 }

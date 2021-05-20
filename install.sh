@@ -1,5 +1,6 @@
 version=0.7.0
 
+dotnet tool install -g tranalyze --version $version
 dotnet tool install -g trconvert --version $version
 dotnet tool install -g trfold --version $version
 dotnet tool install -g trfoldlit --version $version

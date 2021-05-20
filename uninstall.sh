@@ -1,4 +1,5 @@
 
+dotnet tool uninstall -g tranalyze
 dotnet tool uninstall -g trconvert
 dotnet tool uninstall -g trfold
 dotnet tool uninstall -g trfoldlit

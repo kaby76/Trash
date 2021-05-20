@@ -1,5 +1,6 @@
 version=0.7.0
 
+pushd "tranalyze/bin/Debug/"; dotnet nuget push tranalyze.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd
 pushd "trconvert/bin/Debug/"; dotnet nuget push trconvert.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd
 pushd "trfold/bin/Debug/"; dotnet nuget push trfold.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd
 pushd "trfoldlit/bin/Debug/"; dotnet nuget push trfoldlit.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json; popd

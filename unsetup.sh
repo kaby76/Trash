@@ -1,4 +1,5 @@
 
+dotnet nuget remove source "nuget-tranalyze"
 dotnet nuget remove source "nuget-trconvert"
 dotnet nuget remove source "nuget-trfold"
 dotnet nuget remove source "nuget-trfoldlit"

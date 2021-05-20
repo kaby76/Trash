@@ -32,6 +32,8 @@ public class Program
     {
         bool show_tree = false;
         bool show_tokens = false;
+        bool old = false;
+        bool two_byte = false;
         string file_name = null;
         string input = null;
         System.Text.Encoding encoding = null;
@@ -40,6 +42,16 @@ public class Program
             if (args[i].Equals("-tokens"))
             {
                 show_tokens = true;
+                continue;
+            }
+            else if (args[i].Equals("-two-byte"))
+            {
+                two_byte = true;
+                continue;
+            }
+            else if (args[i].Equals("-old"))
+            {
+                old = true;
                 continue;
             }
             else if (args[i].Equals("-tree"))
@@ -71,7 +83,14 @@ public class Program
             str = CharStreams.fromString(input);
         } else if (file_name != null)
         {
-            if (encoding == null)
+            if (two_byte)
+                str = new TwoByteCharStream(file_name);
+            else if (old)
+            {
+                FileStream fs = new FileStream(file_name, FileMode.Open);
+                str = new Antlr4.Runtime.AntlrInputStream(fs);
+            }
+            else if (encoding == null)
                 str = CharStreams.fromPath(file_name);
             else
                 str = CharStreams.fromPath(file_name, encoding);
