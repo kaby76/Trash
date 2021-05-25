@@ -48,22 +48,22 @@ Example:
             Dictionary<string, string> res = null;
             if (type == "ANTLRv3Parser.g4")
             {
-                var imp = new LanguageServer.Antlr3Import();
+                var imp = new LanguageServer.ConvertAntlr3();
                 res = imp.Try(doc.FullPath, doc.Code);
             }
             else if (type == "ANTLRv2Parser.g4")
             {
-                var imp = new LanguageServer.Antlr2Import();
+                var imp = new LanguageServer.ConvertAntlr2();
                 res = imp.Try(doc.FullPath, doc.Code);
             }
             else if (type == "BisonParser.g4")
             {
-                var imp = new LanguageServer.BisonImport();
+                var imp = new LanguageServer.ConvertBison();
                 res = imp.Try(doc.FullPath, doc.Code);
             }
             else if (type == "W3CebnfParser.g4")
             {
-                var imp = new LanguageServer.W3CebnfImport();
+                var imp = new LanguageServer.ConvertW3Cebnf();
                 res = imp.Try(doc.FullPath, doc.Code);
             }
             else if (type == "ANTLRv4Parser.g4")
