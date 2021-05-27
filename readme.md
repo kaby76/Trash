@@ -1,8 +1,11 @@
 # Trash
 
-**Trash** is a collection of command-line tools to support the editing,
-analyzing, and refactoring of Antlr4 grammars, and the conversion of Antlr[23], Bison, and EBNF grammars
-to Antlr4. The toolkit can generate a parser for an Antlr4 grammar (for C#, Java, JavaScript, Python3, C++, Go, and Dart). For the C# target, the toolkit can run the generated parser and display/grep/edit the parse trees.
+**Trash** is a collection of command-line tools to support the analysis and editing
+of Antlr4 grammars, and the conversion of Antlr2/3, Bison, and EBNF grammars
+to Antlr4. The toolkit can generate a parser for an Antlr4 grammar (with target source code
+in C#, Java, JavaScript, Python3, C++, Go, or Dart.
+For the C# target, the toolkit can run the generated parser and display/grep/edit
+parse trees.
 All tools pass parse tree data through stdin and stdout so they
 may be combined to create complex commands.
 
