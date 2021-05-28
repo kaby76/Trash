@@ -1,12 +1,16 @@
 # Trash
 
-**Trash** is a collection of command-line tools to support the editing,
-analyzing, refactoring, and converting from one format to anther, of
-Antlr grammars.
-The tools pipeline parse tree data through stdin and stdout so they
-may be combined to create complex edits on a grammar.
-The tools in Trash are implemented as Dotnet Tools, and can be run
-on most OSes.
+**Trash** is a collection of command-line tools to support the analysis and editing
+of Antlr4 grammars, and the conversion of Antlr2/3, Bison, and EBNF grammars
+to Antlr4. The toolkit can generate a parser for an Antlr4 grammar (with target source code
+in C#, Java, JavaScript, Python3, C++, Go, or Dart.
+For the C# target, the toolkit can run the generated parser and display/grep/edit
+parse trees.
+All tools pass parse tree data through stdin and stdout so they
+may be combined to create complex commands.
+
+The tools are implemented as Dotnet Tools, except tragl because it uses WPF on Windows to display a parse tree.
+Consequently, the toolkit can be used on Windows, Linux, and Mac.
 
 The tool uses [Antlr](https://www.antlr.org/),
 [Antlr4BuildTasks](https://github.com/kaby76/Antlr4BuildTasks),
@@ -35,7 +39,7 @@ a naked .g4 file. And, there are many other options.
 
 Once a parser is generated, build the program using the NET SDK.
 
-### Parse and print out a parse tree, as JSON, XML, or s-expressions
+### Run the generated parser and print out a parse tree, as JSON, XML, or s-expressions
 
 	$ trparse -i "1+2+3" | trtree
 	$ trparse -i "1+2+3" | trjson
@@ -49,7 +53,7 @@ for input strings, files, or reading stdin. The output of `trparse`, like
 almost all programs in Trash, is parse tree data, which you can then
 print out in a number of different formats.
 
-### Find subtrees.
+### Find nodes in the parse tree using XPath
 
 	$ trparse -i "1+2+3" | trxgrep "//INT" | trst
 
@@ -198,7 +202,7 @@ file and execute it in a shell.
 
 # Current release
 
-## 0.5.0 (14 Apr 2021)
+## 0.8.0 (27 May 2021)
 
 * Preliminary release of the toolset.
 
