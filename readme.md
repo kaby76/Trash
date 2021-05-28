@@ -34,7 +34,15 @@ prints out the parse tree data as a simple
 using [trtree](https://github.com/kaby76/Domemtech.Trash/tree/main/trtree),
 then opens [vim](https://www.vim.org/) on the diagram. If you are not
 familiar with `Vim`, then you can save the output from `trtree` to a file
-and open that.
+and open that. trtree is only one of several ways to view parse tree data.
+Other programs for different output are
+[trjson](https://github.com/kaby76/Domemtech.Trash/tree/main/trjson) for [JSON output](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.json),
+[trxml](https://github.com/kaby76/Domemtech.Trash/tree/main/trxml) for [XML output](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.xml),
+[trst](https://github.com/kaby76/Domemtech.Trash/tree/main/trst) for [XML output](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.st),
+[trdot](https://github.com/kaby76/Domemtech.Trash/tree/main/trdot),
+[trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint) for input text for the parse,
+and
+[tragl](https://github.com/kaby76/Domemtech.Trash/tree/main/tragl).
 
 ### Convert grammars to Antlr4
 
@@ -61,13 +69,9 @@ to the information specified in the `pom.xml` file.
 But, if a parser is generated for the C# target, built using the NET SDK, then `trparse`
 can execute the generated parser, and can be used with all the other tools in Trash.
 
-### Run the generated parser and print out a parse tree, as JSON, XML, or s-expressions
+### Run the generated parser
 
-	$ trparse -i "1+2+3" | trtree
-	$ trparse -i "1+2+3" | trjson
-	$ trparse -i "1+2+3" | trxml
-	$ trparse -i "1+2+3" | trst
-	$ trparse -i "1+2+3" | trdot
+    trparse -i "1+2+3" | trtree
 
 After using `trgen` to generate a parser program in C#, and after building
 the program, you can run the parser using `trparse`, which takes arguments
@@ -77,12 +81,16 @@ print out in a number of different formats.
 
 ### Find nodes in the parse tree using XPath
 
-	$ trparse -i "1+2+3" | trxgrep "//INT" | trst
+    trparse -i "1+2+3" | trxgrep "//INT" | trst
 
 Using `trparse`, you can create a parse tree that can be searched
 using `trxgrep`. The tool `trxgrep` uses XPath expressions to identify
 exactly what node(s) in the tree you want. Those sub-trees can be
 printed using any of the tools shown previously.
+
+A major problem I noticed is a lack of a standardized way to identify
+nodes in parse trees. XPath is a well-defined language that should be
+used more often.
 
 ### Rename a symbol in a grammar, generate a parser for new grammar
 
