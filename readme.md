@@ -30,6 +30,16 @@ The code is implemented in C#.
 
 ## Example usages of Trash
 
+### Convert grammars to Antlr4
+
+    trparse -f ada.g2 -t antlr2 | trconvert | trprint > ada.g4
+
+This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g2)
+using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
+then converts the parse tree data to Antlr4 syntax and
+finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4)
+using [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert).
+
 ### Examine an Antlr grammar
 
     trparse -f ada.g4 | trtree | vim -
@@ -54,16 +64,6 @@ Other programs for different output are
 [trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint) for input text for the parse,
 and
 [tragl](https://github.com/kaby76/Domemtech.Trash/tree/main/tragl).
-
-### Convert grammars to Antlr4
-
-    trparse -f ada.g2 -t antlr2 | trconvert | trprint > ada.g4
-
-This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g2)
-using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
-then converts the parse tree data to Antlr4 syntax and
-finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4)
-using [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert).
 
 ### Generate a parser
 
