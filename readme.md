@@ -6,6 +6,8 @@ there are few--if any--static semantics compilers for those parser generators. I
 grammars are just like code: they require maintainance, extension, porting, and application
 on new systems.
 
+Being most familiar with Antlr, I decided to write a compiler for Antlr4 grammars in
+late 2016, but I've had the idea since grad school in the early 1980's.
 Trash is a collection of command-line tools to support the analysis and editing
 of Antlr4 grammars, and the conversion of Antlr2/3, Bison, and EBNF grammars
 to Antlr4. The toolkit can generate a parser for an Antlr4 grammar with target source code
