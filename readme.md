@@ -33,8 +33,11 @@ prints out the parse tree data as a simple
 [text-oriented diagram](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.tree)
 using [trtree](https://github.com/kaby76/Domemtech.Trash/tree/main/trtree),
 then opens [vim](https://www.vim.org/) on the diagram. If you are not
-familiar with `Vim`, then you can save the output from `trtree` to a file
-and open that. trtree is only one of several ways to view parse tree data.
+familiar with `Vim`, then you can use [less](http://www.greenwoodsoftware.com/less/),
+or save the output from `trtree` to a file
+and open that with any other editor you would like.
+
+`trtree` is only one of several ways to view parse tree data.
 Other programs for different output are
 [trjson](https://github.com/kaby76/Domemtech.Trash/tree/main/trjson) for [JSON output](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.json),
 [trxml](https://github.com/kaby76/Domemtech.Trash/tree/main/trxml) for [XML output](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.xml),
@@ -46,12 +49,12 @@ and
 
 ### Convert grammars to Antlr4
 
-    trparse -f OldGrammar.g2 -t antlr2 | trconvert | trprint > OldGrammar.g4
+    trparse -f ada.g2 -t antlr2 | trconvert | trprint > ada.g4
 
-This command parses an old Antlr2 grammar
+This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g2)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
 then converts the parse tree data to Antlr4 syntax and
-finally prints out the converted parse tree data
+finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4)
 using [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert).
 
 ### Generate a parser
