@@ -37,7 +37,8 @@ to the information specified in the pom.xml file. There are options
 for `trgen` to create a parser for a grammar and start symbol for
 a naked .g4 file. And, there are many other options.
 
-Once a parser is generated, build the program using the NET SDK.
+If a parser is generated for the C# target, build the program using the NET SDK. Then, you
+can use the `trparse` command to execute the parser.
 
 ### Run the generated parser and print out a parse tree, as JSON, XML, or s-expressions
 
