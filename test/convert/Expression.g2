@@ -1,0 +1,448 @@
+options
+{
+	language = "CSharp";
+	namespace = "App.Expressions";
+}
+
+class ExpressionParser extends Parser;
+
+options {
+	//ANTLR lookahead optimization
+	codeGenMakeSwitchThreshold = 3;
+	codeGenBitsetTestThreshold = 4;
+	
+	classHeaderPrefix = "internal"; 
+	buildAST=true;
+	
+	k = 2; //This specifies that the scanner will look at the next two characters of the input stream to determine which alternative to choose.
+}
+
+tokens {
+	EXPR;
+	OPERAND;
+	FALSE = "false";
+	TRUE = "true";
+	AND = "and";
+	OR = "or";
+	IN = "in";
+	IS = "is";
+	BETWEEN = "between";
+	LIKE = "like";
+	MATCHES = "matches";
+	FOREACH = "foreach";
+	NULL_LITERAL = "null";
+}
+
+{
+    // CLOVER:OFF
+    
+    public override void reportError(RecognitionException ex)
+    {
+		//base.reportError(ex);
+        throw ex;
+    }
+
+    public override void reportError(string error)
+    {
+		//base.reportError(error);
+        throw new RecognitionException(error);
+    }
+    
+    private string GetRelationalOperatorNodeType(string op)
+    {
+        switch (op)
+        {
+            case "==" : return "App.Expressions.EqualOperator";
+            case "!=" : return "App.Expressions.NotEqualOperator";
+            case "<" : return "App.Expressions.LessOperator";
+            case "<=" : return "App.Expressions.LessOrEqualOperator";
+            case ">" : return "App.Expressions.GreaterOperator";
+            case ">=" : return "App.Expressions.GreaterOrEqualOperator";
+            case "in" : return "App.Expressions.InOperator";
+            case "is" : return "App.Expressions.IsOperator";
+            case "between" : return "App.Expressions.BetweenOperator";
+            case "like" : return "App.Expressions.LikeOperator";
+            case "matches" : return "App.Expressions.MatchesOperator";
+			case "foreach" : return "App.Expressions.ForeachOperator";
+            default : 
+                throw new ArgumentException("Node type for operator '" + op + "' is not defined.");
+        }
+    }
+}
+//kalacak
+expr : expression EOF!;
+//kalacak
+exprList 
+    : LPAREN! expression (SEMI! expression)+ RPAREN!
+        { #exprList = #([EXPR,"expressionList","App.Expressions.NodeExpressionList"], #exprList); }
+    ;
+//bakacaz
+expression	:	logicalOrExpression 
+				(
+					(ASSIGN^ <AST = App.Expressions.AssignNode> logicalOrExpression) 
+				|   (DEFAULT^ <AST = App.Expressions.DefaultNode> logicalOrExpression) 
+				|	(QMARK^ <AST = App.Expressions.TernaryNode> expression COLON! expression)
+				)?
+			;
+//kalacak
+parenExpr
+    : LPAREN! expression RPAREN!;
+//kalacak
+logicalOrExpression : logicalAndExpression (OR^ <AST = App.Expressions.OrOperator> logicalAndExpression)* ;
+//kalacak               
+logicalAndExpression : relationalExpression (AND^ <AST = App.Expressions.AndOperator> relationalExpression)* ;                        
+//bakacaz
+relationalExpression
+    :   e1:sumExpr 
+          (op:relationalOperator! e2:sumExpr
+            {#relationalExpression = #(#[EXPR, op_AST.getText(), GetRelationalOperatorNodeType(op_AST.getText())], #relationalExpression);} 
+          )?
+    ;
+//kalacak
+sumExpr  : prodExpr (
+                        (PLUS^ <AST = App.Expressions.AddOperator> 
+                        | MINUS^ <AST = App.Expressions.SubtractOperator>) prodExpr)* ; 
+//kalacak
+prodExpr : powExpr (
+                        (STAR^ <AST = App.Expressions.MultiplyOperator> 
+                        | DIV^ <AST = App.Expressions.DivideOperator> 
+                        | MOD^ <AST = App.Expressions.ModulusOperator>) powExpr)* ;
+
+//kalacak
+powExpr  : unaryExpression (POWER^ <AST = App.Expressions.PowerOperator> unaryExpression)? ;
+//kalacak
+unaryExpression 
+	:	(PLUS^ <AST = App.Expressions.UnaryPlusOperator> 
+	    | MINUS^ <AST = App.Expressions.UnaryMinusOperator> 
+	    | BANG^ <AST = App.Expressions.NotOperator>) unaryExpression	
+	|	primaryExpression
+	;
+//kalacak
+unaryOperator
+	: PLUS | MINUS | BANG
+    ;
+	
+//bakacaz
+primaryExpression : startNode (node)?
+			{ #primaryExpression = #([EXPR,"expression","App.Expressions.Expression"], #primaryExpression); };
+
+startNode 
+    : 
+    (   (LPAREN expression SEMI) => exprList 
+    |   parenExpr
+	|	property
+	|	var
+	| 	indexer
+    |   literal 
+    |   constructor
+	|   listInitializer
+    |   mapInitializer
+    )
+    ;
+
+node : 
+    ( property  
+	| indexer
+    | exprList
+    |	DOT! 
+    )+
+    ;
+
+var : POUND! ID^ <AST = App.Expressions.VariableNode>;
+
+property
+    :  ID <AST = App.Expressions.PropertyOrFieldNode>
+    ;
+indexer
+	:	
+      LBRACKET^ <AST = App.Expressions.IndexerNode> argument (COMMA! argument)* RBRACKET!
+	;
+//kalacak
+constructor
+	:	("new" qualifiedId LPAREN) => "new"! type:qualifiedId! ctorArgs
+		   { #constructor = #([EXPR, type_AST.getText(), "App.Expressions.ConstructorNode"], #constructor); }
+	|   arrayConstructor
+	;
+//kalacak
+arrayConstructor
+	:	 "new"! type:qualifiedId! arrayRank (listInitializer)?
+	       { #arrayConstructor = #([EXPR, type_AST.getText(), "App.Expressions.ArrayConstructorNode"], #arrayConstructor); }
+	;
+//kalacak
+arrayRank
+    :   LBRACKET^ (expression (COMMA! expression)*)? RBRACKET!
+    ;
+//kalacak
+listInitializer
+    :   LCURLY^ <AST = App.Expressions.ListInitializerNode> expression (COMMA! expression)* RCURLY!
+    ;
+//kalacak
+mapInitializer
+    :   POUND! LCURLY^ <AST = App.Expressions.MapInitializerNode> mapEntry (COMMA! mapEntry)* RCURLY!
+    ;
+//kalacak
+mapEntry
+    :   expression COLON! expression
+          { #mapEntry = #([EXPR, "entry", "App.Expressions.MapEntryNode"], #mapEntry); }
+    ;
+ //kalacak    
+ctorArgs : LPAREN! (namedArgument (COMMA! namedArgument)*)? RPAREN!;
+  //kalacak          
+argument : expression;
+  //kalacak 
+namedArgument 
+    :   (ID ASSIGN) => ID^ <AST = App.Expressions.NamedArgumentNode> ASSIGN! expression 
+    |   argument 
+    ;
+
+//kalacak
+qualifiedId : ID^ <AST = App.Expressions.QualifiedIdentifier> (DOT ID)*
+    ;
+  
+//kalacak
+literal
+	:	NULL_LITERAL <AST = App.Expressions.NullLiteralNode>
+	|   INTEGER_LITERAL <AST = App.Expressions.IntLiteralNode>
+	|   HEXADECIMAL_INTEGER_LITERAL <AST = App.Expressions.HexLiteralNode>
+	|   REAL_LITERAL <AST = App.Expressions.RealLiteralNode>
+	|	STRING_LITERAL <AST = App.Expressions.StringLiteralNode>
+	|   boolLiteral
+	|   dateLiteral
+	;
+//kalacak
+boolLiteral
+    :   TRUE <AST = App.Expressions.BooleanLiteralNode>
+    |   FALSE <AST = App.Expressions.BooleanLiteralNode>
+    ;
+//kalacak
+dateLiteral
+    :   "date"^ <AST = App.Expressions.DateLiteralNode> 
+            LPAREN! STRING_LITERAL (COMMA! STRING_LITERAL)? RPAREN!
+    ;
+//kalacak
+relationalOperator
+    :   EQUAL 
+    |   NOT_EQUAL
+    |   LESS_THAN
+    |   LESS_THAN_OR_EQUAL      
+    |   GREATER_THAN            
+    |   GREATER_THAN_OR_EQUAL 
+    |   IN   
+    |   IS   
+    |   BETWEEN   
+    |   LIKE   
+    |   MATCHES   
+	|	FOREACH
+    ; 
+    
+
+class ExpressionLexer extends Lexer;
+
+options {
+    charVocabulary = '\u0000' .. '\uFFFE'; 
+	classHeaderPrefix = "internal"; 
+	k = 2;
+}
+
+{
+    // CLOVER:OFF
+}
+
+WS	:	(' '
+	|	'\t'
+	|	'\n'
+	|	'\r')
+		{ _ttype = Token.SKIP; }
+	;
+
+AT: '@'
+  ;
+
+PIPE: '|'
+  ;
+
+BANG: '!'
+  ;
+
+QMARK: '?'
+  ;
+
+DOLLAR: '$'
+  ;
+
+POUND: '#'
+  ;
+    
+LPAREN:	'('
+	;
+
+RPAREN:	')'
+	;
+
+LBRACKET:	'['
+	;
+
+RBRACKET:	']'
+	;
+
+LCURLY:	'{'
+	;
+
+RCURLY:	'}'
+	;
+
+COMMA : ','
+   ;
+
+SEMI: ';'
+  ;
+
+COLON: ':'
+  ;
+
+ASSIGN: '='
+  ;
+
+DEFAULT: "??"
+  ;
+  
+PLUS: '+'
+  ;
+
+MINUS: '-'
+  ;
+   
+DIV: '/'
+  ;
+
+STAR: '*'
+  ;
+
+MOD: '%'
+  ;
+
+POWER: '^'
+  ;
+  
+EQUAL: "=="
+  ;
+
+NOT_EQUAL: "!="
+  ;
+
+LESS_THAN: '<'
+  ;
+
+LESS_THAN_OR_EQUAL: "<="
+  ;
+
+GREATER_THAN: '>'
+  ;
+
+GREATER_THAN_OR_EQUAL: ">="
+  ;
+  
+PROJECT: "!{"
+  ;
+  
+SELECT: "?{"
+  ;
+
+SELECT_FIRST: "^{"
+  ;
+  
+SELECT_LAST: "${"
+  ;
+
+TYPE: "T("
+  ;
+
+LAMBDA: "{|"
+  ;
+
+DOT_ESCAPED: "\\."
+  ;
+  
+STRING_LITERAL
+	:	'\''! (APOS|~'\'')* '\''!
+	;
+
+protected 
+APOS : '\''! '\''
+    ;
+  
+ID
+options {
+	testLiterals = true;
+}
+	:	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|DOT_ESCAPED)*
+	;
+
+NUMERIC_LITERAL
+
+	// real
+	:	('.' DECIMAL_DIGIT) =>
+		 '.' (DECIMAL_DIGIT)+ (EXPONENT_PART)? (REAL_TYPE_SUFFIX)?
+		{$setType(REAL_LITERAL);}
+			
+	|	((DECIMAL_DIGIT)+ '.' DECIMAL_DIGIT) =>
+		 (DECIMAL_DIGIT)+ '.' (DECIMAL_DIGIT)+ (EXPONENT_PART)? (REAL_TYPE_SUFFIX)?
+		{$setType(REAL_LITERAL);}
+		
+	|	((DECIMAL_DIGIT)+ (EXPONENT_PART)) =>
+		 (DECIMAL_DIGIT)+ (EXPONENT_PART) (REAL_TYPE_SUFFIX)?
+		{$setType(REAL_LITERAL);}
+		
+	|	((DECIMAL_DIGIT)+ (REAL_TYPE_SUFFIX)) =>
+		 (DECIMAL_DIGIT)+ (REAL_TYPE_SUFFIX)		
+		{$setType(REAL_LITERAL);}
+		 
+	// integer
+	|	 (DECIMAL_DIGIT)+ (INTEGER_TYPE_SUFFIX)?	
+		{$setType(INTEGER_LITERAL);}
+	
+	// just a dot
+	| '.'{$setType(DOT);}
+	;
+
+	
+HEXADECIMAL_INTEGER_LITERAL
+	:	"0x"   (HEX_DIGIT)+   (INTEGER_TYPE_SUFFIX)?
+	;
+
+protected
+DECIMAL_DIGIT
+	: 	'0'..'9'
+	;
+protected	
+INTEGER_TYPE_SUFFIX
+	:
+	(	options {generateAmbigWarnings=false;}
+		:	"UL"	| "LU" 	| "ul"	| "lu"
+		|	"UL"	| "LU" 	| "uL"	| "lU"
+		|	"U"		| "L"	| "u"	| "l"
+	)
+	;
+		
+protected
+HEX_DIGIT
+	:	'0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 
+		'A' | 'B' | 'C' | 'D' | 'E' | 'F'  |
+		'a' | 'b' | 'c' | 'd' | 'e' | 'f'
+	;	
+	
+protected	
+EXPONENT_PART
+	:	"e"  (SIGN)*  (DECIMAL_DIGIT)+
+	|	"E"  (SIGN)*  (DECIMAL_DIGIT)+
+	;	
+	
+protected
+SIGN
+	:	'+' | '-'
+	;
+	
+protected
+REAL_TYPE_SUFFIX
+	: 'F' | 'f' | 'D' | 'd' | 'M' | 'm'
+	;
