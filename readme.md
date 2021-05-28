@@ -24,11 +24,13 @@ The code is implemented in C#.
 
 ### Examine an Antlr grammar
 
-    trparse -f MyGrammar.g4 | trtree | vim -
+    trparse -f ada.g4 | trtree | vim -
 
-This command, executed from Bash, parses the Antlr4 grammar MyGrammar.g4
+This command, executed from Bash, parses the Antlr4 grammar
+[ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
-prints out the parse tree data as a simple text-oriented diagram
+prints out the parse tree data as a simple
+[text-oriented diagram](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.tree)
 using [trtree](https://github.com/kaby76/Domemtech.Trash/tree/main/trtree),
 then opens [vim](https://www.vim.org/) on the diagram. If you are not
 familiar with `Vim`, then you can save the output from `trtree` to a file
