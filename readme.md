@@ -20,25 +20,44 @@ for Antlr parse trees,
 and a number of other tools.
 The code is implemented in C#.
 
-## What can you do with Trash?
+## Example usages of Trash
 
 ### Examine an Antlr grammar
 
-trparse -f MyGrammar.g4 | trtree | vim -
+    trparse -f MyGrammar.g4 | trtree | vim -
+
+This command, executed from Bash, parses the Antlr4 grammar MyGrammar.g4
+using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
+prints out the parse tree data as a simple text-oriented diagram
+using [trtree](https://github.com/kaby76/Domemtech.Trash/tree/main/trtree),
+then opens [vim](https://www.vim.org/) on the diagram. If you are not
+familiar with `Vim`, then you can save the output from `trtree` to a file
+and open that.
+
+### Convert grammars to Antlr4
+
+    trparse -f OldGrammar.g2 -t antlr2 | trconvert | trprint > OldGrammar.g4
+
+This command parses an old Antlr2 grammar
+using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
+then converts the parse tree data to Antlr4 syntax and
+finally prints out the converted parse tree data
+using [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert).
 
 ### Generate a parser
 
-	trgen
+    trgen
 
-If executed in an empty directory, `trgen` will create a program
-that has the Arithmetic grammar. If executed in a directory containing
-a Antlr Maven plugin (pom.xml), `trgen` will create a program according
-to the information specified in the pom.xml file. There are options
-for `trgen` to create a parser for a grammar and start symbol for
-a naked .g4 file. And, there are many other options.
+This command creates a parser application for the C# target.
+If executed in an empty directory, [trgen](https://github.com/kaby76/Domemtech.Trash/tree/main/trgen)
+creates an application using the Arithmetic grammar.
+If executed in a directory containing
+a Antlr Maven plugin (`pom.xml`), `trgen` will create a program according
+to the information specified in the `pom.xml` file.
 
-If a parser is generated for the C# target, build the program using the NET SDK. Then, you
-can use the `trparse` command to execute the parser.
+`trgen` has many options to generate a parser from any Antlr4 grammar, for any target.
+But, if a parser is generated for the C# target, built using the NET SDK, then `trparse`
+can execute the generated parser, and can be used with all the other tools in Trash.
 
 ### Run the generated parser and print out a parse tree, as JSON, XML, or s-expressions
 
