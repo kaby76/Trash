@@ -1,6 +1,12 @@
 # Trash
 
-**Trash** is a collection of command-line tools to support the analysis and editing
+**Trash** is a toolkit for grammars. While there are
+[dozens of parser generators](https://en.wikipedia.org/wiki/Comparison_of_parser_generators),
+there are few--if any--static semantics compilers for those parser generators. In my opinion,
+grammars are just like code: they require maintainance, extension, porting, and application
+on new systems.
+
+Trash is a collection of command-line tools to support the analysis and editing
 of Antlr4 grammars, and the conversion of Antlr2/3, Bison, and EBNF grammars
 to Antlr4. The toolkit can generate a parser for an Antlr4 grammar with target source code
 in C#, Java, JavaScript, Python3, C++, Go, or Dart.
