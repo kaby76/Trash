@@ -75,7 +75,8 @@ If executed in an empty directory, [trgen](https://github.com/kaby76/Domemtech.T
 creates an application using the Arithmetic grammar.
 If executed in a directory containing
 a Antlr Maven plugin (`pom.xml`), `trgen` will create a program according
-to the information specified in the `pom.xml` file.
+to the information specified in the `pom.xml` file. Either way, it creates a directory
+`Generated/`, and places the source code there.
 
 `trgen` has many options to generate a parser from any Antlr4 grammar, for any target.
 But, if a parser is generated for the C# target, built using the NET SDK, then `trparse`
@@ -86,10 +87,12 @@ can execute the generated parser, and can be used with all the other tools in Tr
     trparse -i "1+2+3" | trtree
 
 After using `trgen` to generate a parser program in C#, and after building
-the program, you can run the parser using `trparse`, which takes arguments
-for input strings, files, or reading stdin. The output of `trparse`, like
-almost all programs in Trash, is parse tree data, which you can then
-print out in a number of different formats.
+the program, you can run the parser using `trparse`. This program 
+looks for the generated parser in directory `Generated/`. If it exists,
+it will run the parser application in the directory. You can pass
+as command-line arguments an input string or input file. If no command-line
+arguments are supplied, the program will read stdin. The output of `trparse`, as
+with most tools of Trash, is parse tree data.
 
 ### Find nodes in the parse tree using XPath
 
