@@ -40,7 +40,7 @@ then converts the parse tree data to Antlr4 syntax and
 finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4)
 using [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert).
 
-### Examine an Antlr grammar
+### Parse an Antlr grammar
 
     trparse -f ada.g4 | trtree | vim -
 
@@ -53,7 +53,8 @@ using [trtree](https://github.com/kaby76/Domemtech.Trash/tree/main/trtree),
 then opens [vim](https://www.vim.org/) on the diagram. If you are not
 familiar with `Vim`, then you can use [less](http://www.greenwoodsoftware.com/less/),
 or save the output from `trtree` to a file
-and open that with any other editor you would like.
+and open that with any other editor you would like. `trparse` can infer the type of
+parse from the file name suffix.
 
 `trtree` is only one of several ways to view parse tree data.
 Other programs for different output are
