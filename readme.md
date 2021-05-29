@@ -33,10 +33,10 @@ The code is implemented in C#.
 
     trparse -f ada.g2 -t antlr2 | trconvert | trprint > ada.g4
 
-This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g2)
+This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert2/ada.g2)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
 then converts the parse tree data to Antlr4 syntax and
-finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4)
+finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert2/ada.g4)
 using [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert).
 
 ### Parse an Antlr grammar
