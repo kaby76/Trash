@@ -4,6 +4,7 @@
     using AntlrJson;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
+    using System.IO;
     using System.Linq;
     using System.Text.Json;
 
@@ -11,16 +12,11 @@
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trfold <string>
-Replace a sequence of symbols on the RHS of a rule
-with the rule LHS symbol.
-
-Example:
-    trparse A.g4 | trfold ""//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']""
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trfold.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)

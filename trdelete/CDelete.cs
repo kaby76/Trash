@@ -1,16 +1,10 @@
 ﻿namespace Trash
 {
-	using Antlr4.Runtime.Tree;
-	using AntlrJson;
-	using LanguageServer;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Linq;
-	using System.Text.Json;
     using Antlr4.Runtime.Tree;
     using AntlrJson;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
+    using System.IO;
     using System.Linq;
     using System.Text.Json;
 
@@ -18,11 +12,11 @@
     {
         public string Help()
         {
-		using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trdelete.readme.md"))
-				using (StreamReader reader = new StreamReader(stream))
-		{
-			return reader.ReadToEnd();
-		}
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trdelete.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)

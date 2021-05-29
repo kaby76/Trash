@@ -1,13 +1,9 @@
 ﻿namespace Trash
 {
-    using Antlr4.Runtime.Tree;
-    using AntlrJson;
     using LanguageServer;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Text.Json;
-    
+
     class CAnalyze
     {
         public string Help()
