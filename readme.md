@@ -34,7 +34,7 @@ Linux: Right-click, "save target as" of file
 , then run the script in the Bash shell (or `bash install.sh`).
 
 Windows: Right-click, "save target as" of file
-<a href="https://raw.githubusercontent.com/kaby76/Domemtech.Trash/master/_scripts/install.sh">install.ps1</a>
+<a href="https://raw.githubusercontent.com/kaby76/Domemtech.Trash/master/_scripts/install.ps1">install.ps1</a>
 , then run the script in Powershell (or `powershell install.ps1`).
 
 ## Examples
