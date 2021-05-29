@@ -12,13 +12,11 @@
     {
         public string Help()
         {
-            return @"analyze
-Trash can perform an analysis of a grammar. The analysis includes a count of symbol
-type, cycles, and unused symbols.
-
-Example:
-    analyze
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("tranalyze.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)
