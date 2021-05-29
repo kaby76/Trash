@@ -14,7 +14,8 @@ parse trees.
 All tools pass parse tree data through stdin and stdout so they
 may be combined to create complex commands.
 
-The tools are implemented as Dotnet Tools, except 
+Each app in `Trash` is implemented as a [Dotnet Tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) console application,
+except 
 [tragl](https://github.com/kaby76/Domemtech.Trash/tree/main/tragl)
 because it uses WPF on Windows to display a parse tree.
 Consequently, the toolkit can be used on Windows, Linux, or Mac.
