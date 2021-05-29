@@ -12,11 +12,11 @@
     {
         public string Help()
         {
-		using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trconvert.readme.md"))
-				using (StreamReader reader = new StreamReader(stream))
-		{
-			return reader.ReadToEnd();
-		}
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trconvert.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)
