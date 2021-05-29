@@ -35,9 +35,12 @@ The code is implemented in C#.
 
 This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert2/ada.g2)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
-then converts the parse tree data to Antlr4 syntax and
+converts the parse tree data to Antlr4 syntax using
+ [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert)
+ and
 finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert2/ada.g4)
-using [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert).
+using
+[trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint).
 
 ### Parse an Antlr grammar
 
