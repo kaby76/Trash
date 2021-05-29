@@ -19,8 +19,11 @@ except
 [tragl](https://github.com/kaby76/Domemtech.Trash/tree/main/tragl)
 because it uses WPF on Windows to display a parse tree.
 Consequently, the toolkit can be used on Windows, Linux, or Mac.
+No prerequisites are required other than installing the
+[NET SDK](https://dotnet.microsoft.com/), and the toolchains
+for any other targets you want to use.
 
-The tool uses [Antlr](https://www.antlr.org/) and
+The toolkit uses [Antlr](https://www.antlr.org/) and
 [XPath2](https://en.wikipedia.org/wiki/XPath).
 The code is implemented in C#.
 
