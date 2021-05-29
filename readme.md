@@ -43,12 +43,12 @@ Windows: Right-click, "save target as" of file
 
     trparse -f ada.g2 -t antlr2 | trconvert | trprint > ada.g4
 
-This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert2/ada.g2)
+This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g2)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
 converts the parse tree data to Antlr4 syntax using
  [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert)
  and
-finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert2/ada.g4)
+finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
 using
 [trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint).
 
@@ -57,10 +57,10 @@ using
     trparse -f ada.g4 | trtree | vim -
 
 This command, executed from Bash, parses the Antlr4 grammar
-[ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4)
+[ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
 prints out the parse tree data as a simple
-[text-oriented diagram](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.tree)
+[text-oriented diagram](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4.tree)
 using [trtree](https://github.com/kaby76/Domemtech.Trash/tree/main/trtree),
 then opens [vim](https://www.vim.org/) on the diagram. If you are not
 familiar with `Vim`, then you can use [less](http://www.greenwoodsoftware.com/less/),
@@ -70,9 +70,9 @@ parse from the file name suffix.
 
 `trtree` is only one of several ways to view parse tree data.
 Other programs for different output are
-[trjson](https://github.com/kaby76/Domemtech.Trash/tree/main/trjson) for [JSON output](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.json),
-[trxml](https://github.com/kaby76/Domemtech.Trash/tree/main/trxml) for [XML output](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.xml),
-[trst](https://github.com/kaby76/Domemtech.Trash/tree/main/trst) for [XML output](https://github.com/kaby76/Domemtech.Trash/blob/main/_test/convert/ada.g4.st),
+[trjson](https://github.com/kaby76/Domemtech.Trash/tree/main/trjson) for [JSON output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4.json),
+[trxml](https://github.com/kaby76/Domemtech.Trash/tree/main/trxml) for [XML output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4.xml),
+[trst](https://github.com/kaby76/Domemtech.Trash/tree/main/trst) for [XML output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4.st),
 [trdot](https://github.com/kaby76/Domemtech.Trash/tree/main/trdot),
 [trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint) for input text for the parse,
 and

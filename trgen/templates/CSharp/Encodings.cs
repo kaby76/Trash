@@ -91,7 +91,7 @@ public class TwoByteCharStream : BaseInputCharStream
 
     public TwoByteCharStream(string file_name)
     {
-        byte[] input = File.ReadAllBytes(file_name);
+        byte[] input = System.IO.File.ReadAllBytes(file_name);
         var input_length = input.Length;
         this.data = new int[input_length / 2];
         int dataIdx = 0;
