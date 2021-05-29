@@ -9,16 +9,8 @@
     <PackageId>trconvert</PackageId>
     <Description>
       <![CDATA[
-This program is part of the Trash toolkit.
-
-trconvert <string> <string>
-Rename a symbol, the first parameter as specified by the xpath expression string,
-to a new name, the second parameter as a string. The result may place all changed
-grammars that use the symbol on the stack.
-
-Example:
-    cat pt.data | trconvert "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" xxx | trtext > new-grammar.g4
-]]>
+Reads a grammar from stdin and converts the grammar to Antlr version 4
+syntax. This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>trconvert</ToolCommandName>
     <RootNamespace>trconvert</RootNamespace>
@@ -46,4 +38,19 @@ Example:
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>

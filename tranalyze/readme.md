@@ -1,13 +1,16 @@
-# tranalyze
+# Tranalyze
 
-Reads parse tree data for an Antlr4 grammar from stdin and analyzes it for problems.
+Reads an Antlr4 grammar from stdin and identifies problems in the grammar.
+The input is Parse Tree Data, and output text.
+
+# Usage
+
+    tranalyze
 
 # Example
 
     trparse -f A.g4 | tranalyze
 
-# Version information
+# Current version
 
-## 0.8.1
-Release notes placed in release-notes.txt.
-
+0.8.1 -- Improved help and documentation.

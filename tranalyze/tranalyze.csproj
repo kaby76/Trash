@@ -8,7 +8,7 @@
     <AssemblyName>tranalyze</AssemblyName>
     <PackageId>tranalyze</PackageId>
     <Description>
-      <![CDATA[Reads a parse tree grammar from stdin and analyzes it for problems.
+      <![CDATA[Reads an Antlr4 grammar from stdin and identifies problems in the grammar.
 This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>tranalyze</ToolCommandName>
@@ -31,12 +31,12 @@ This program is part of the Trash toolkit.]]>
     <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
     <ProjectReference Include="..\Docs\Docs.csproj" />
   </ItemGroup>
-  <PropertyGroup>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-    <PackageReleaseNotes>(Edit release-notes.txt.)</PackageReleaseNotes>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
   </PropertyGroup>
   <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
     <ReadLinesFromFile File="readme.md">

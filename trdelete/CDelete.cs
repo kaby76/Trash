@@ -1,5 +1,12 @@
 ﻿namespace Trash
 {
+	using Antlr4.Runtime.Tree;
+	using AntlrJson;
+	using LanguageServer;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
+	using System.Text.Json;
     using Antlr4.Runtime.Tree;
     using AntlrJson;
     using LanguageServer;
@@ -11,12 +18,11 @@
     {
         public string Help()
         {
-            return @"delete <string>
-Delete nodes in the parsed file at the top of stack specified by the XPath expression string.
-
-Example:
-    delete ""//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']""
-";
+		using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trdelete.readme.md"))
+				using (StreamReader reader = new StreamReader(stream))
+		{
+			return reader.ReadToEnd();
+		}
         }
 
         public void Execute(Config config)

@@ -12,15 +12,11 @@
     {
         public string Help()
         {
-            return @"convert (antlr2 | antlr3 | antlr4 | bison | ebnf)?
-Convert the parsed grammar file at the top of stack into Antlr4 syntax. If the type of
-grammar cannot be inferred from the file suffix, a type can be supplied with the command.
-The resulting Antlr4 grammar replaces the top of stack.
-
-Example:
-    (top of stack contains a grammar file that is Antlr2 or 3, Bison, or EBNF syntax.)
-    combine antlr3
-";
+		using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trconvert.readme.md"))
+				using (StreamReader reader = new StreamReader(stream))
+		{
+			return reader.ReadToEnd();
+		}
         }
 
         public void Execute(Config config)
