@@ -2,30 +2,25 @@
 
 **Trash** is a toolkit for grammars. While there are
 [dozens of parser generators](https://en.wikipedia.org/wiki/Comparison_of_parser_generators),
-there are few--if any--static semantics compilers for those parser generators. In my opinion,
-grammars are just like code: they require maintainance, extension, porting, and application
-on new systems.
+there are few--if any--static semantics compilers for the grammars of those parser generators.
+In my opinion, grammars are just like code: they require debugging, extension,
+porting, and conversion to work with new parser generators.
 
-Being most familiar with Antlr, I decided to write a compiler for Antlr4 grammars in
-late 2016, but I've had the idea since grad school in the early 1980's.
 Trash is a collection of command-line tools to support the analysis and editing
-of Antlr4 grammars, and the conversion of Antlr2/3, Bison, and EBNF grammars
-to Antlr4. The toolkit can generate a parser for an Antlr4 grammar with target source code
-in C#, Java, JavaScript, Python3, C++, Go, or Dart.
+of grammars, specifically for Antlr4. The toolkit can generate a parser for an Antlr4 grammar
+with target source code in C#, Java, JavaScript, Python3, C++, Go, or Dart.
 For the C# target, the toolkit can run the generated parser and display/grep/edit
 parse trees.
 All tools pass parse tree data through stdin and stdout so they
 may be combined to create complex commands.
 
-The tools are implemented as Dotnet Tools, except tragl because it uses WPF on Windows to display a parse tree.
-Consequently, the toolkit can be used on Windows, Linux, and Mac.
+The tools are implemented as Dotnet Tools, except 
+[tragl](https://github.com/kaby76/Domemtech.Trash/tree/main/tragl)
+because it uses WPF on Windows to display a parse tree.
+Consequently, the toolkit can be used on Windows, Linux, or Mac.
 
-The tool uses [Antlr](https://www.antlr.org/),
-[Antlr4BuildTasks](https://github.com/kaby76/Antlr4BuildTasks),
-[XPath2](https://en.wikipedia.org/wiki/XPath), 
-[S-expressions](https://en.wikipedia.org/wiki/S-expression)
-for Antlr parse trees,
-and a number of other tools.
+The tool uses [Antlr](https://www.antlr.org/) and
+[XPath2](https://en.wikipedia.org/wiki/XPath).
 The code is implemented in C#.
 
 ## Example usages of Trash
