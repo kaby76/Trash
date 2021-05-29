@@ -27,7 +27,17 @@ The toolkit uses [Antlr](https://www.antlr.org/) and
 [XPath2](https://en.wikipedia.org/wiki/XPath).
 The code is implemented in C#.
 
-## Example usages of Trash
+## Install
+
+Linux: Right-click, "save target as" of file
+<a href="https://raw.githubusercontent.com/kaby76/Domemtech.Trash/master/_scripts/install.sh">install.sh</a>
+, then run the script in the Bash shell (or `bash install.sh`).
+
+Windows: Right-click, "save target as" of file
+<a href="https://raw.githubusercontent.com/kaby76/Domemtech.Trash/master/_scripts/install.sh">install.ps1</a>
+, then run the script in Powershell (or `powershell install.ps1`).
+
+## Examples
 
 ### Convert grammars to Antlr4
 
@@ -217,35 +227,6 @@ See [this list](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/comman
 | LBNF | .cf |
 | W3C EBNF | .ebnf |
 | ISO 14977 | .iso14977, .iso |
-
-# Installation
-
-## Install 
-
-Just execute the following lines:
-
-	dotnet tool install -g trfold
-	dotnet tool install -g trfoldlit
-	dotnet tool install -g trgen
-	dotnet tool install -g trgroup
-	dotnet tool install -g trjson
-	dotnet tool install -g trkleene
-	dotnet tool install -g trparse
-	dotnet tool install -g trprint
-	dotnet tool install -g trst
-	dotnet tool install -g trstrip
-	dotnet tool install -g trtext
-	dotnet tool install -g trtokens
-	dotnet tool install -g trtree
-	dotnet tool install -g trunfold
-	dotnet tool install -g trungroup
-	dotnet tool install -g trxgrep
-	dotnet tool install -g trxml
-	dotnet tool install -g trxml2
-
-
-(Or you can download the [install.sh](https://github.com/kaby76/Domemtech.Trash/blob/main/install.sh)
-file and execute it in a shell.
 
 # Current release
 
