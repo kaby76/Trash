@@ -1,10 +1,15 @@
 # Trash
 
-**Trash** is a toolkit for grammars. While there are
+**Trash** is a toolkit for analyzing and editing grammars. While there are
 [dozens of parser generators](https://en.wikipedia.org/wiki/Comparison_of_parser_generators),
-there are few--if any--static semantics compilers for the grammars of those parser generators.
+there are few, if any, static semantics compilers for grammars.
 In my opinion, grammars are just like code: they require debugging, extension,
-porting, and conversion to work with new parser generators.
+porting, and conversion to work with new parser generators. It's been
+50 years since Yacc was first developed, but we are still typing in grammars from books,
+still informally specifying programming languages, still hand-writing parsers (insisting
+that a hand-written parser is faster and better than a generated one--even if from a
+hand-tweaked template!), modifying the hand-written parser even before defining
+what the syntax is supposed to be, and still...still using Yacc!
 
 Trash is a collection of command-line tools to support the analysis and editing
 of grammars, specifically for Antlr4. The toolkit can generate a parser for an Antlr4 grammar
