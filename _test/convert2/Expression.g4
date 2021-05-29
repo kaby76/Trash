@@ -1,6 +1,6 @@
 
 
-grammar ExpressionParser;
+grammar Expression;
 //kalacak
 expr : expression EOF;
 //kalacak

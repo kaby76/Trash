@@ -1,5 +1,5 @@
 
-grammar mumathParser;
+grammar mumath;
 program : ((functionDefinition|assignment|functionDesignator)
    (SEMI|DOLLAR) )* EOF ;
 

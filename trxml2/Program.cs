@@ -33,7 +33,7 @@ namespace trxml2
             }
             catch (Exception e)
             {
-                System.Console.Error.WriteLine("Error in file ");
+                System.Console.Error.WriteLine("Error in file " + e.ToString());
             }
         }
 
@@ -46,7 +46,7 @@ namespace trxml2
             }
             catch (Exception e)
             {
-                System.Console.Error.WriteLine("Error in file ");
+                System.Console.Error.WriteLine("Error in file " + e.ToString());
             }
         }
 

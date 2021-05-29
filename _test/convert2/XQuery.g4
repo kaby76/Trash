@@ -1,6 +1,6 @@
 
 
-grammar XQueryParser;
+grammar XQuery;
 
 xpath 
 :

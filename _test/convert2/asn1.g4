@@ -6,7 +6,7 @@
 //*************************************************************************
 
 
-grammar ASNParser;
+grammar ASN;
 
 // Grammar Definitions
 

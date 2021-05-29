@@ -7,7 +7,7 @@
  * $Id: //depot/code/org.antlr/release/antlr-2.7.7/antlr/antlr.g#2 $
  */
 
-grammar ANTLRParser;
+grammar ANTLR;
 
 grammar_
    :

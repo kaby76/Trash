@@ -53,7 +53,7 @@
  *
  *  REQUIRES ANTLR 2.7.3rc3 at least (to resolve a FOLLOW bug).
  */
-grammar PythonParser;
+grammar Python;
 
 // Start symbols for the grammar:
 //	single_input is a single interactive statement;

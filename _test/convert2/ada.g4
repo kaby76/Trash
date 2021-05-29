@@ -4,7 +4,7 @@
 //-----------------------------------------------------------------------------
 // Define a Parser, calling it AdaParser
 //-----------------------------------------------------------------------------
-grammar AdaParser;
+grammar Ada;
 
 // Compilation Unit:  This is the start rule for this parser.
 // The rules in this grammar are listed in the order in which

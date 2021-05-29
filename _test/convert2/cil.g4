@@ -4,7 +4,7 @@
 
 /* PARSER */
 
-grammar CILParser;
+grammar CIL;
 
 options
 {

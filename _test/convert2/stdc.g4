@@ -1,7 +1,7 @@
 
 
                      
-grammar StdCParser;
+grammar StdC;
 
 
 
