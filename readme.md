@@ -46,7 +46,7 @@ Windows: Right-click, "save target as" of file
 
 ### Convert grammars to Antlr4
 
-    trparse -f ada.g2 -t antlr2 | trconvert | trprint > ada.g4
+    trparse -f ada.g2 | trconvert | trprint > ada.g4
 
 This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g2)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
