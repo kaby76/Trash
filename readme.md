@@ -44,24 +44,11 @@ Windows: Right-click, "save target as" of file
 
 ## Examples
 
-### Convert grammars to Antlr4
-
-    trparse -f ada.g2 | trconvert | trprint > ada.g4
-
-This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g2)
-using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
-converts the parse tree data to Antlr4 syntax using
- [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert)
- and
-finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
-using
-[trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint).
-
-### Parse an Antlr grammar
+### Parse a grammar
 
     trparse -f ada.g4 | trtree | vim -
 
-This command, executed from Bash, parses the Antlr4 grammar
+This command parses the Antlr4 grammar
 [ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
 prints out the parse tree data as a simple
@@ -82,6 +69,21 @@ Other programs for different output are
 [trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint) for input text for the parse,
 and
 [tragl](https://github.com/kaby76/Domemtech.Trash/tree/main/tragl).
+
+### Convert grammars to Antlr4
+
+    trparse -f ada.g2 | trconvert | trprint > ada.g4
+
+This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g2)
+using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
+converts the parse tree data to Antlr4 syntax using
+ [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert)
+ and
+finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
+using
+[trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint). Other
+grammar that can be converted are Antlr3, Bison, and ISO EBNF. In order to
+use the grammar to parse data, you will need to convert it to an Antlr4 grammar.
 
 ### Generate a parser
 
