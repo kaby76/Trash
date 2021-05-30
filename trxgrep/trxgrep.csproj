@@ -29,7 +29,7 @@ Example:
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" />
     <PackageReference Include="AntlrTreeEditing" Version="2.5.0" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
-    <PackageReference Include="Domemtech.TrashBase" Version="1.1.0">
+    <PackageReference Include="Domemtech.TrashBase" Version="1.2.0">
     <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
