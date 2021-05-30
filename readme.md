@@ -119,7 +119,7 @@ with most tools of Trash, is parse tree data.
 
 ### Find nodes in the parse tree using XPath
 
-    trparse -i "1+2+3" | trxgrep "//SCIENTIFIC_NUMBER" | trst
+    trparse -i "1+2+3" | trxgrep " //SCIENTIFIC_NUMBER" | trst
 
 Using `trparse`, you can create a parse tree that can be searched
 using `trxgrep`. The tool `trxgrep` uses XPath expressions to identify
