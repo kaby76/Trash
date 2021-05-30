@@ -272,11 +272,10 @@ check out my [blog](http://codinggorilla.com).
 
 # Building
 
-1) git clone https://github.com/kaby76/Domemtech.Trash
-2) cd Domemtech.Trash
-3) # From a `Developer Command Prompt for VS2019`
-4) dotnet restore
-5) dotnet build
+    git clone https://github.com/kaby76/Domemtech.Trash
+    cd Domemtech.Trash
+    dotnet restore
+    dotnet build
 
 You must have the NET SDK installed to build and run.
 
