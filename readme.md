@@ -130,15 +130,14 @@ used more often.
 
 ### Rename a symbol in a grammar, generate a parser for new grammar
 
-_Not yet ported from Antlrvsix._
-
-	cat previous-parse.data | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" "xxx" | trtext > new-source.g4
+	trparse -f Arithmetic.g4 | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'expression']" "xxx" | trtext > new-source.g4
+	trparse -f Arithmetic.g4 | trrename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
 
 ### Count method declarations in a Java source file
 
-	$ trgen --file Java9.g4 --start-rule compilationUnit
-	$ cd Generated/; dotnet build; cd ..
-	$ trparse --file WindowsState.java | trxgrep "//methodDeclaration" | trst | wc
+	trgen --file Java9.g4 --start-rule compilationUnit
+	cd Generated/; dotnet build; cd ..
+	trparse --file WindowsState.java | trxgrep "//methodDeclaration" | trst | wc
 
 To count the number of methods in a Java source file, first generate a
 parser, build it, and then run `trparse` to create a parse tree for the
@@ -149,36 +148,24 @@ found into a one-per-line tree, and use `wc` to count the number.
 
 	$ trparse --file Java9.g4 | trstrip | trtext > new-grammar.g4
 
-### Diff grammars
+## Parsing Result Sets -- the data passed between commands
 
-_Not yet ported from Antlrvsix._
+A *result set* is a JSON serialization of:
 
-	# From a Bash shell
-	$ alias trash='dotnet ...\\trash.dll'
-	$ echo version | trash
+* A set of parse tree nodes.
+* Parser information related to the parse tree nodes.
+* Lexer information related to the parse tree nodes.
+* The name of the input corresponding to the parse tree nodes.
+* The input text corresponding to the parse tree nodes.
 
-	$ cat << HERE1 | dotnet ...\\trash.dll > v1.temp
-	read v1.g4
-	parse
-	strip
-	print
-	HERE1
+Most commands in Trash, e.g., "." or "xgrep", read and/or write result sets and
+perform an operation on the result set. Other commands in Trash,
+e.g., "wc", "cat", or "echo", are standard character-orient data
+passed. At the end of executing the command, either is just printed
+to stdout.
 
-	$ cat << HERE2 | dotnet ...\\trash.dll > v2.temp
-	read v2.g4
-	parse
-	strip
-	print
-	HERE2
+## Commands of Trash
 
-	$ diff v1.temp v2.temp
-
-*There is a built-in diff for grammars, but it is not
-practical except for small grammars in this release.*
-
-## Usage
-
-Each command in Trash has a set of options and required arguments.
 The list of currently available commands is:
 
 	tranalyze
@@ -204,27 +191,6 @@ The list of currently available commands is:
 	trxml
 	trxml2
 
-
-## Parsing Result Sets -- the data passed between commands
-
-A *result set* is a JSON serialization of:
-
-* A set of parse tree nodes.
-* Parser information related to the parse tree nodes.
-* Lexer information related to the parse tree nodes.
-* The name of the input corresponding to the parse tree nodes.
-* The input text corresponding to the parse tree nodes.
-
-Most commands in Trash, e.g., "." or "xgrep", read and/or write result sets and
-perform an operation on the result set. Other commands in Trash,
-e.g., "wc", "cat", or "echo", are standard character-orient data
-passed. At the end of executing the command, either is just printed
-to stdout.
-
-## Commands of Trash
-
-See [this list](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md) of commands available in Trash.
-
 ## Supported grammars
 
 | Grammars | File suffix |
@@ -242,14 +208,6 @@ See [this list](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/comman
 ## 0.8.0 (27 May 2021)
 
 * Preliminary release of the toolset.
-
-# Documentation
-
-_NB: The following documentation is obsolete, carried over from the
-old Antlrvsix Trash shell._
-
-Please refer to
-the [documentation](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md).
 
 ## Analysis
 
@@ -314,15 +272,13 @@ check out my [blog](http://codinggorilla.com).
 
 # Building
 
-1) git clone https://github.com/kaby76/AntlrVSIX
-2) cd AntlrVSIX
+1) git clone https://github.com/kaby76/Domemtech.Trash
+2) cd Domemtech.Trash
 3) # From a `Developer Command Prompt for VS2019`
-4) msbuild /t:restore
-5) msbuild
+4) dotnet restore
+5) dotnet build
 
-Trash.dll is at ./Trash/bin/Debug/net5-windows
-after building successfully. You must have Net5 SDK installed
-to build and run.
+You must have the NET SDK installed to build and run.
 
 # Prior Releases
 
@@ -330,10 +286,10 @@ to build and run.
 
 # Roadmap
 
-## Planned for v9
+## Planned for v1
 
 * Place Trash in it's own repo, independent of Antlrvsix.
 * Replace Trash shell and commands with Bash and independent programs.
+* Provide full documentation.
 
-
-Any questions, email me at ken.domino <at> gmail.com
+If you have any questions, email me at ken.domino <at> gmail.com
