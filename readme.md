@@ -12,10 +12,12 @@ hand-tweaked template!), modifying the hand-written parser even before defining
 what the syntax is supposed to be, and still...still using Yacc!
 
 Trash is a collection of command-line tools to support the analysis and editing
-of grammars, currently and specifically for Antlr4. The toolkit can generate a parser for an Antlr4 grammar
+of grammars, currently and specifically for Antlr4. The toolkit can generate a parser
+application for an Antlr4 grammar
 with target source code in C#, Java, JavaScript, Python3, C++, Go, or Dart.
-For the C# target, the toolkit can run the generated parser and display/grep/edit
-parse trees.
+For the C# target, the generated parser can be used seemlessly with the
+rest of the toolkit, such as with the display/grep/edit
+of the parse trees.
 All tools pass parse tree data through stdin and stdout so they
 may be combined to create complex commands.
 
