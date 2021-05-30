@@ -87,7 +87,7 @@ using
 grammar that can be converted are Antlr3, Bison, and ISO EBNF. In order to
 use the grammar to parse data, you will need to convert it to an Antlr4 grammar.
 
-### Generate a parser
+### Generate a parser application
 
     trgen
 
@@ -105,7 +105,7 @@ can execute the generated parser, and can be used with all the other tools in Tr
 In order to use the generate parser application, you must first build it: **cd Generated;
 dotnet restore; dotnet build; cd ..**._
 
-### Run the generated parser
+### Run the generated parser application
 
     trparse -i "1+2+3" | trtree
 
