@@ -23,10 +23,15 @@
             var list = config.Files.ToList();
             var doc1 = Docs.Class1.ReadDoc(list[0]);
             var doc2 = Docs.Class1.ReadDoc(list[1]);
+            Docs.Class1.ParseDoc(doc1, 10);
+            _ = ParsingResultsFactory.Create(doc1);
+            Docs.Class1.ParseDoc(doc2, 10);
+            _ = ParsingResultsFactory.Create(doc2);
             var results = LanguageServer.Transform.CombineGrammars(doc1, doc2);
             Docs.Class1.EnactEdits(results);
 
             var doc = Docs.Class1.CreateDoc(results.First().Key, results.First().Value);
+            Docs.Class1.ParseDoc(doc, 10);
             var pr = ParsingResultsFactory.Create(doc);
             var pt = pr.ParseTree;
             var tuple = new ParsingResultSet()

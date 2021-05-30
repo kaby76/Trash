@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trcombine": {
+      "commandName": "Project",
+      "commandLineArgs": "ArithmeticParser.g4 ArithmeticLexer.g4",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\combine"
+    }
+  }
+}
