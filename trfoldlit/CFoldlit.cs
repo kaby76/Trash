@@ -11,12 +11,11 @@
     {
         public string Help()
         {
-            return @"trfoldlit <string>
-Replace a literal on the RHS of a rule with the lexer rule LHS symbol.
-
-Example:
-    trparse --file foo | refoldlit ""//lexerRuleSpec/TOKEN_REF""
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trfoldlit.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)

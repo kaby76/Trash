@@ -13,24 +13,17 @@ namespace Trash
 {
     class CGen
     {
-		public string Help()
-		{
-			return @"
-This program is part of the Trash toolkit.
+        public string Help()
+        {
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trgen.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
 
-trgen <options>* 
-Generate a parser using the Antlr tool on the grammar specified by the current
-workspace. The generated parser is placed in the directory <current-directory>/Generated/.
-The given arg is the name of the start rule. After generating the parser and driver, it
-is compiled for use with the ""run"" command.
-
-Examples:
-    trgen -m true
-";
-		}
-
-		public int Execute(Config co)
-		{
+        public int Execute(Config co)
+        {
             config = co;
             suffix = config.target switch
             {

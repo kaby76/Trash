@@ -8,16 +8,8 @@
     <AssemblyName>trfoldlit</AssemblyName>
     <PackageId>trfoldlit</PackageId>
     <Description>
-      <![CDATA[
-This program is part of the Trash toolkit.
-
-trfoldlit <string>
-Replace a sequence of symbols on the RHS of a rule
-with the rule LHS symbol.
-
-Example:
-    trparse A.g4 | trfoldlit "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
-]]>
+      <![CDATA[Replace a sequence of symbols on the RHS of a rule with the rule LHS symbol.
+This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>trfoldlit</ToolCommandName>
     <RootNamespace>trfoldlit</RootNamespace>
@@ -45,4 +37,19 @@ Example:
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>

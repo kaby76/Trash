@@ -9,18 +9,8 @@
     <AssemblyName>trgen</AssemblyName>
     <PackageId>trgen</PackageId>
     <Description>
-      <![CDATA[
-This program is part of the Trash toolkit.
-
-trgen <options>* 
-Generate a parser using the Antlr tool on the grammar specified by the current
-workspace. The generated parser is placed in the directory <current-directory>/Generated/.
-The given arg is the name of the start rule. After generating the parser and driver, it
-is compiled for use with the ""run"" command.
-
-Examples:
-    trgen -m true
-]]>
+      <![CDATA[Generate a parser application using the Antlr tool and application templates.
+This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>trgen</ToolCommandName>
     <RootNamespace>trgen</RootNamespace>
@@ -48,5 +38,20 @@ Examples:
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Domemtech.Globbing" Version="2.3.0" />
     <PackageReference Include="Domemtech.StringTemplate4" Version="4.0.9" />
+  </ItemGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
   </ItemGroup>
 </Project>
