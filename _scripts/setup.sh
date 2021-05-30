@@ -14,7 +14,7 @@ then
 else
     cwd=`pwd`
 fi
-for i in tranalyze trconvert trdelete trfold trfoldlit trgen trgroup trjson trkleene trparse trprint trrename trst trstrip trtext trtokens trtree trunfold trungroup trwdog trxgrep trxml trxml2
+for i in tranalyze trcombine trconvert trdelete trfold trfoldlit trgen trgroup trjson trkleene trparse trprint trrename trst trstrip trtext trtokens trtree trunfold trungroup trwdog trxgrep trxml trxml2
 do
     echo $i
     dotnet nuget add source $cwd/$i/bin/Debug/ --name nuget-$i

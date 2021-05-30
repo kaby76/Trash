@@ -1,26 +1,48 @@
-﻿namespace Trash.Commands
+﻿namespace Trash
 {
+    using Antlr4.Runtime.Tree;
+    using AntlrJson;
+    using LanguageServer;
+    using System.IO;
+    using System.Linq;
+    using System.Text.Json;
+
     class CCombine
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"combine
-Combine two grammars on top of stack into one grammar.
-One grammar must be a lexer grammar, the other a parser grammar,
-order is irrelevant.
-
-Example:
-    (top of stack contains a lexer file and a parser file, both parsed.)
-    combine
-");
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("tranalyze.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
-        public void Execute(Repl repl, ReplParser.CombineContext tree, bool piped)
+        public void Execute(Config config)
         {
-            var doc1 = repl.stack.PeekTop(0);
-            var doc2 = repl.stack.PeekTop(1);
+            var list = config.Files.ToList();
+            var doc1 = Docs.Class1.ReadDoc(list[0]);
+            var doc2 = Docs.Class1.ReadDoc(list[1]);
             var results = LanguageServer.Transform.CombineGrammars(doc1, doc2);
-            repl.EnactEdits(results);
+            Docs.Class1.EnactEdits(results);
+
+            var doc = Docs.Class1.CreateDoc(results.First().Key, results.First().Value);
+            var pr = ParsingResultsFactory.Create(doc);
+            var pt = pr.ParseTree;
+            var tuple = new ParsingResultSet()
+            {
+                Text = doc.Code,
+                FileName = doc.FullPath,
+                Stream = pr.TokStream,
+                Nodes = new IParseTree[] { pt },
+                Lexer = pr.Lexer,
+                Parser = pr.Parser
+            };
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = false;
+            string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
+            System.Console.WriteLine(js1);
         }
     }
 }
