@@ -101,7 +101,9 @@ to the information specified in the `pom.xml` file. Either way, it creates a dir
 
 `trgen` has many options to generate a parser from any Antlr4 grammar, for any target.
 But, if a parser is generated for the C# target, built using the NET SDK, then `trparse`
-can execute the generated parser, and can be used with all the other tools in Trash.
+can execute the generated parser, and can be used with all the other tools in Trash. _NB:
+In order to use the generate parser application, you must first build it: **cd Generated;
+dotnet restore; dotnet build; cd ..**._
 
 ### Run the generated parser
 
