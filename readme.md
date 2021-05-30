@@ -132,14 +132,14 @@ used more often.
 
 ### Rename a symbol in a grammar, generate a parser for new grammar
 
-	trparse -f Arithmetic.g4 | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'expression']" "xxx" | trtext > new-source.g4
-	trparse -f Arithmetic.g4 | trrename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
+    trparse -f Arithmetic.g4 | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'expression']" "xxx" | trtext > new-source.g4
+    trparse -f Arithmetic.g4 | trrename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
 
 ### Count method declarations in a Java source file
 
-	trgen --file Java9.g4 --start-rule compilationUnit
-	cd Generated/; dotnet build; cd ..
-	trparse --file WindowsState.java | trxgrep "//methodDeclaration" | trst | wc
+    trgen --file Java9.g4 --start-rule compilationUnit
+    cd Generated/; dotnet build; cd ..
+    trparse --file WindowsState.java | trxgrep "//methodDeclaration" | trst | wc
 
 To count the number of methods in a Java source file, first generate a
 parser, build it, and then run `trparse` to create a parse tree for the
@@ -148,7 +148,25 @@ found into a one-per-line tree, and use `wc` to count the number.
 
 ### Strip a grammar of all non-essential CFG
 
-	$ trparse --file Java9.g4 | trstrip | trtext > new-grammar.g4
+    trparse --file Java9.g4 | trstrip | trtext > new-grammar.g4
+
+### Split a grammar
+
+Since Antlr2, grammars could be combined or split
+into separate files. While it's not hard to split or combine
+a grammar, it's tedious. For automating transformations, it's
+necessary because Antlr4 requires the grammars to be split
+when super classes are needed for different targets.
+
+    trcombine ArithmeticLexer.g4 ArithmeticParser.g4 | trprint > Arithmetic.g4
+
+This command calls [trcombine](https://github.com/kaby76/Domemtech.Trash/tree/main/trcombine)
+which parses two split grammar files
+[ArithmeticLexer.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/combine/ArithmeticLexer.g4)
+and
+[ArithmeticParser.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/combine/ArithmeticParser.g4),
+and creates a [combined grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/combine/Arithmetic.g4)
+for the two.
 
 ## Parsing Result Sets -- the data passed between commands
 
@@ -160,38 +178,34 @@ A *result set* is a JSON serialization of:
 * The name of the input corresponding to the parse tree nodes.
 * The input text corresponding to the parse tree nodes.
 
-Most commands in Trash, e.g., "." or "xgrep", read and/or write result sets and
-perform an operation on the result set. Other commands in Trash,
-e.g., "wc", "cat", or "echo", are standard character-orient data
-passed. At the end of executing the command, either is just printed
-to stdout.
+Most commands in Trash read and/or write parse result sets.
 
 ## Commands of Trash
 
 The list of currently available commands is:
 
-	tranalyze
-	trconvert
-	trfold
-	trfoldlit
-	trgen
-	trgroup
-	trjson
-	trkleene
-	trparse
-	trprint
-	trrename
-	trst
-	trstrip
-	trtext
-	trtokens
-	trtree
-	trunfold
-	trungroup
-	trwdog
-	trxgrep
-	trxml
-	trxml2
+    tranalyze
+    trconvert
+    trfold
+    trfoldlit
+    trgen
+    trgroup
+    trjson
+    trkleene
+    trparse
+    trprint
+    trrename
+    trst
+    trstrip
+    trtext
+    trtokens
+    trtree
+    trunfold
+    trungroup
+    trwdog
+    trxgrep
+    trxml
+    trxml2
 
 ## Supported grammars
 
