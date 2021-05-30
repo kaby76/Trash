@@ -1,25 +1,17 @@
-# Tranalyze
+# Trcombine
 
-Reads an Antlr4 grammar from stdin and identifies problems in the grammar.
-The input is Parse Tree Data, and output text.
+Combine two grammars into one grammar.
+One grammar must be a lexer grammar, the other a parser grammar,
+order is irrelevant. The output is parse tree data.
 
 # Usage
 
-    tranalyze
+    trcombine <grammar1> <grammar2>
 
 # Example
 
-    trparse -f A.g4 | tranalyze
+    trcombine ArithmeticLexer.g4 ArithmeticParser.g4 | trprint > Arithmetic.g4
 
 # Current version
 
 0.8.1 -- Improved help and documentation.
-
-
-Combine two grammars on top of stack into one grammar.
-One grammar must be a lexer grammar, the other a parser grammar,
-order is irrelevant.
-
-Example:
-    (top of stack contains a lexer file and a parser file, both parsed.)
-    combine
