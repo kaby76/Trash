@@ -48,7 +48,7 @@ Windows: Right-click, "save target as" of file
 
 ### Parse a grammar
 
-    trparse -f ada.g4 | trtree | vim -
+    trparse ada.g4 | trtree | vim -
 
 This command parses the Antlr4 grammar
 [ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
@@ -74,7 +74,7 @@ and
 
 ### Convert grammars to Antlr4
 
-    trparse -f ada.g2 | trconvert | trprint > ada.g4
+    trparse ada.g2 | trconvert | trprint > ada.g4
 
 This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g2)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
@@ -132,14 +132,14 @@ used more often.
 
 ### Rename a symbol in a grammar, generate a parser for new grammar
 
-    trparse -f Arithmetic.g4 | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'expression']" "xxx" | trtext > new-source.g4
-    trparse -f Arithmetic.g4 | trrename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
+    trparse Arithmetic.g4 | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'expression']" "xxx" | trtext > new-source.g4
+    trparse Arithmetic.g4 | trrename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
 
 ### Count method declarations in a Java source file
 
-    trgen --file Java9.g4 --start-rule compilationUnit
+    trgen --start-rule compilationUnit
     cd Generated/; dotnet build; cd ..
-    trparse --file WindowsState.java | trxgrep "//methodDeclaration" | trst | wc
+    trparse WindowsState.java | trxgrep "//methodDeclaration" | trst | wc
 
 To count the number of methods in a Java source file, first generate a
 parser, build it, and then run `trparse` to create a parse tree for the
@@ -148,7 +148,7 @@ found into a one-per-line tree, and use `wc` to count the number.
 
 ### Strip a grammar of all non-essential CFG
 
-    trparse --file Java9.g4 | trstrip | trtext > new-grammar.g4
+    trparse Java9.g4 | trstrip | trtext > new-grammar.g4
 
 ### Split a grammar
 
