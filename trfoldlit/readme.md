@@ -10,7 +10,7 @@ to stdout. The input and output are Parse Tree Data.
 
 # Examples
 
-    trparse --file foo.g4 | refoldlit ""//lexerRuleSpec/TOKEN_REF""
+    trparse Foo.g4 | trfoldlit " //lexerRuleSpec/TOKEN_REF"
 
 # Current version
 

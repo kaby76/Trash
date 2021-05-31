@@ -10,7 +10,7 @@ to stdout. The input and output are Parse Tree Data.
 
 # Example
 
-    trparse -f Java.g4 | trdelete " //parserRuleSpec[RULE_REF/text() = 'normalAnnotation']" | trtree | vim -
+    trparse Java.g4 | trdelete " //parserRuleSpec[RULE_REF/text() = 'normalAnnotation']" | trtree | vim -
 
 # Current version
 

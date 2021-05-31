@@ -9,7 +9,7 @@ The input is Parse Tree Data, and output text.
 
 # Example
 
-    trparse -f A.g4 | tranalyze
+    trparse A.g4 | tranalyze
 
 # Current version
 

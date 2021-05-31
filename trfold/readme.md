@@ -10,7 +10,7 @@ to stdout. The input and output are Parse Tree Data.
 
 # Example
 
-    trparse -f A.g4 | trfold " //parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+    trparse A.g4 | trfold " //parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
 # Current version
 

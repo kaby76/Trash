@@ -7,11 +7,11 @@ outputed as parse tree data.
 
 # Usage
 
-    trsplit <grammar>
+    trsplit
 
 # Example
 
-    trsplit Arithmetic.g4 | trtee
+    trparse Arithmetic.g4 | trsplit | trsponge
 
 # Current version
 

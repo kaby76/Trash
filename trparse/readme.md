@@ -7,7 +7,7 @@ the `Generated/` sub-directory, then the tool will use the
 parser in `Generated/`. Otherwise, the parse type will depend
 on other inputs.
 
-With the `--file` command-line option,
+With the positional args,
 a file is parse. If not using the `Generated/` parser,
 the type of parse will be based on the file suffix:
 
@@ -31,14 +31,13 @@ the `--type` command-line option:
     
     trparse _options_
     -i, --input String input.
-    -f, --file  File input.
     -t, --type  Specifies type of parse, antlr4, antlr3, antlr2, bison, ebnf, gen 
 
 # Examples
 
-    trparse -f Java.g2
+    trparse Java.g2
     trparse -i "1+2+3"
-    trparse -f Foobar.g -t antlr2
+    trparse Foobar.g -t antlr2
     echo "1+2+3" | trparse | trtree
 
 # Current version

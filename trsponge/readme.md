@@ -9,7 +9,7 @@ results to file(s).
 
 # Example
 
-    trparse -f Arithmetic.g4 | trsplit | trsponge
+    trparse Arithmetic.g4 | trsplit | trsponge
 
 # Current version
 

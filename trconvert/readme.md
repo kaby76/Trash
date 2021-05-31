@@ -10,7 +10,7 @@ Bison, or W3C EBNF). The input and output are Parse Tree Data.
 
 # Examples
 
-    trparse -f A.g2 -t antlr2 | trconvert | trprint > A.g4
+    trparse A.g2 | trconvert | trprint > A.g4
 
 # Current version
 

@@ -11,8 +11,6 @@ create a parser for the Arithmetic.g4 grammar.
 
     trgen <options>* 
 
-
-
 # Examples
 
     trgen
