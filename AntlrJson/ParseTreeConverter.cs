@@ -38,7 +38,6 @@
             string text = null;
             string parser_grammarFileName = null;
             string lexer_grammarFileName = null;
-
             lexer.InputStream = fake_char_stream;
             if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
             reader.Read();
@@ -280,6 +279,7 @@
                 lexer._grammarFileName = lexer_grammarFileName;
                 lexer._ruleNames = lexer_rule_names.ToArray();
                 lexer._tokenTypeMap = token_type_map;
+                lexer.Tokens = out_token_stream.GetTokens;
                 var res = new AntlrJson.ParsingResultSet()
                 {
                     FileName = fake_char_stream.SourceName,

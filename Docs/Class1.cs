@@ -4,6 +4,7 @@ using AntlrJson;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
+using Antlr4.Runtime;
 
 namespace Docs
 {
@@ -68,7 +69,9 @@ namespace Docs
             var pr = LanguageServer.ParsingResultsFactory.Create(document);
             pr.Parser = parse_info.Parser;
             pr.Lexer = parse_info.Lexer;
-            pr.ParseTree = parse_info.Nodes.First();
+	        pr.ParseTree = parse_info.Nodes.First();
+            pr.TokStream = new CommonTokenStream(pr.Lexer);
+            pr.TokStream.Fill();
             return document;
         }
         

@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trdelabel": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trdelabel"
+    }
+  }
+}
