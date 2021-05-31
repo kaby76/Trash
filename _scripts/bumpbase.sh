@@ -8,3 +8,11 @@ do
 	mv asdfasdf *.csproj	
 	popd
 done
+for i in tragl
+do
+	pushd $i
+	rm -f asdfasdf
+	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version\"%" > asdfasdf
+	mv asdfasdf *.csproj	
+	popd
+done
