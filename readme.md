@@ -2,7 +2,7 @@
 
 **Trash** is a toolkit for analyzing and editing grammars. While there are
 [dozens of parser generators](https://en.wikipedia.org/wiki/Comparison_of_parser_generators),
-there are few, if any, static semantics compilers for grammars.
+there are few, if any, compiler-based tools to help edit those grammars.
 In my opinion, grammars are just like code: they require debugging, extension,
 porting, and conversion to work with new parser generators. It's been
 50 years since Yacc was first developed, but we are still typing in grammars from books,
