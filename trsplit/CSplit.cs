@@ -47,9 +47,8 @@
                 var fn = parse_info.FileName;
                 var code = parse_info.Text;
                 var doc_in = Docs.Class1.CreateDoc(fn, code);
-                //                Docs.Class1.ParseDoc(doc_in, 10);
+                Docs.Class1.ParseDoc(doc_in, 10);
                 var pr2 = ParsingResultsFactory.Create(doc_in);
-                pr2.ParseTree = nodes[0];
                 var res = LanguageServer.Transform.SplitGrammar(doc_in);
                 Docs.Class1.EnactEdits(res);
                 foreach (var r in res)
