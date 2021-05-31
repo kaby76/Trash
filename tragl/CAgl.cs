@@ -22,7 +22,7 @@
             }
         }
 
-        public static Graph CreateGraph(IParseTree[] trees, IList<string> parserRules)
+        public static Graph CreateGraph(IParseTree[] trees, IList<string> parserRules, IList<string> lexerRules)
         {
             var graph = new Graph();
             foreach (var tree in trees)
@@ -33,7 +33,7 @@
                         graph.AddNode(tree.GetHashCode().ToString());
                     else
                         GraphEdges(graph, tree, tree.GetHashCode());
-                    FormatNodes(graph, tree, parserRules, tree.GetHashCode());
+                    FormatNodes(graph, tree, parserRules, lexerRules, tree.GetHashCode());
                 }
             }
             return graph;
@@ -51,39 +51,40 @@
             }
         }
 
-        private static void FormatNodes(Graph graph, ITree tree, IList<string> parserRules, int base_hash_code)
+        private static void FormatNodes(Graph graph, ITree tree, IList<string> parserRules, IList<string> lexerRules, int base_hash_code)
         {
             var node = graph.FindNode((base_hash_code + tree.GetHashCode()).ToString());
             if (node != null)
             {
                 node.LabelText = Trees.GetNodeText(tree, parserRules);
-
                 var ruleFailedAndMatchedNothing = false;
-
                 if (tree is ParserRuleContext context)
+                {
                     ruleFailedAndMatchedNothing =
                        // ReSharper disable once ComplexConditionExpression
                        context.exception != null &&
                        context.Stop != null
                        && context.Stop.TokenIndex < context.Start.TokenIndex;
-
+                }
+                else if (tree is TerminalNodeImpl term)
+                {
+                    var token = term.Symbol.Type;
+                    var token_value = term.Symbol.Text;
+                    node.LabelText = token > 0 ?
+                        (lexerRules[token-1] + "/" + token_value) : "EOF";
+                }
                 if (tree is IErrorNode || ruleFailedAndMatchedNothing)
                     node.Label.FontColor = Color.Red;
                 else
                     node.Label.FontColor = Color.Black;
-
                 node.Attr.Color = Color.Black;
-
+                node.UserData = tree;
                 //if (BackgroundColor.HasValue)
                 //    node.Attr.FillColor = BackgroundColor.Value;
-
-                node.Attr.Color = Color.Black;
-
-                node.UserData = tree;
             }
 
             for (int i = 0; i < tree.ChildCount; i++)
-                FormatNodes(graph, tree.GetChild(i), parserRules, base_hash_code);
+                FormatNodes(graph, tree.GetChild(i), parserRules, lexerRules, base_hash_code);
         }
 
         public static void DoWork(object p)
@@ -92,7 +93,7 @@
             var nodes = parse_info.Nodes;
             System.Windows.Forms.Form form = new System.Windows.Forms.Form();
             Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-            Microsoft.Msagl.Drawing.Graph graph = CreateGraph(nodes, parse_info.Parser.RuleNames.ToList());
+            Microsoft.Msagl.Drawing.Graph graph = CreateGraph(nodes, parse_info.Parser.RuleNames.ToList(), parse_info.Lexer.RuleNames.ToList());
             graph.LayoutAlgorithmSettings = new Microsoft.Msagl.Layout.Layered.SugiyamaLayoutSettings();
             viewer.Graph = graph;
             form.SuspendLayout();
