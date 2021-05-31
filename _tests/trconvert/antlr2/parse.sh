@@ -3,7 +3,7 @@
 for i in *.g2
 do
 	echo $i
-	trparse -f $i -t antlr2 | trprint > o
+	trparse $i -t antlr2 | trprint > o
 	diff o $i
 	rm -f o
 done
@@ -12,7 +12,7 @@ do
 	echo $i
 	extension="${i##*.}"
 	filename="${i%.*}"
-	trparse -f $i -t antlr2 | trconvert | trprint > "$filename.g4"
+	trparse $i -t antlr2 | trconvert | trprint > "$filename.g4"
 done
 for i in *.g4
 do
