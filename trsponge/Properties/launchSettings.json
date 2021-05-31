@@ -2,8 +2,8 @@
   "profiles": {
     "trsponge": {
       "commandName": "Project",
-      "commandLineArgs": "-f oo2.pt",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\combine"
+      "commandLineArgs": "-f o.pt --overwrite true",
+      "workingDirectory": "C:\\Users\\kenne\\xx"
     }
   }
 }

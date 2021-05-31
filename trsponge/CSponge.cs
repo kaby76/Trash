@@ -44,7 +44,7 @@
                 var lexer = parse_info.Lexer;
                 var fn = parse_info.FileName;
                 var code = parse_info.Text;
-                if (File.Exists(fn) && (config.Overwrite == null || (bool)config.Overwrite ))
+                if (File.Exists(fn) && (config.Overwrite == null || !(bool)config.Overwrite ))
                     throw new System.Exception("Attempting to overwrite '" + fn + "'. Use --overwrite option if it is intended.");
                 System.Console.Error.WriteLine("Writing to " + fn);
                 File.WriteAllText(fn, code);
