@@ -270,7 +270,8 @@
                     else
                         throw new JsonException();
                 }
-
+                if (!(reader.TokenType == JsonTokenType.EndObject)) throw new JsonException();
+                reader.Read();
                 var vocab = new Vocabulary(literal_names.ToArray(), symbolic_names.ToArray());
                 parser._vocabulary = vocab;
                 parser._grammarFileName = parser_grammarFileName;

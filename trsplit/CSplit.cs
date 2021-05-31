@@ -53,7 +53,7 @@
                 Docs.Class1.EnactEdits(res);
                 foreach (var r in res)
                 {
-                    var doc = Docs.Class1.CreateDoc(res.First().Key, res.First().Value);
+                    var doc = Docs.Class1.CreateDoc(r.Key, r.Value);
                     Docs.Class1.ParseDoc(doc, 10);
                     var pr = ParsingResultsFactory.Create(doc);
                     var pt = pr.ParseTree;

@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "trsplit": {
+    "trsponge": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt",
+      "commandLineArgs": "-f oo2.pt",
       "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\combine"
     }
   }
