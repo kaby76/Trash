@@ -1,4 +1,4 @@
-﻿namespace Trash.Commands
+﻿namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -7,21 +7,22 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.Json;
+    using System.IO;
+    using System.Threading;
+    using AntlrJson;
 
     class CAgl
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"agl
-Read a parse tree from stdin and open a Windows Form that displays the tree.
-This tool is part of Trash, Transformations for Antlr Shell.
-
-Example:
-    . | agl
-");
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("tranalyze.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
-        public Graph CreateGraph(IParseTree[] trees, IList<string> parserRules)
+        public static Graph CreateGraph(IParseTree[] trees, IList<string> parserRules)
         {
             var graph = new Graph();
             foreach (var tree in trees)
@@ -38,7 +39,7 @@ Example:
             return graph;
         }
 
-        private void GraphEdges(Graph graph, ITree tree, int base_hash_code)
+        private static void GraphEdges(Graph graph, ITree tree, int base_hash_code)
         {
             for (var i = tree.ChildCount - 1; i > -1; i--)
             {
@@ -50,7 +51,7 @@ Example:
             }
         }
 
-        private void FormatNodes(Graph graph, ITree tree, IList<string> parserRules, int base_hash_code)
+        private static void FormatNodes(Graph graph, ITree tree, IList<string> parserRules, int base_hash_code)
         {
             var node = graph.FindNode((base_hash_code + tree.GetHashCode()).ToString());
             if (node != null)
@@ -85,13 +86,9 @@ Example:
                 FormatNodes(graph, tree.GetChild(i), parserRules, base_hash_code);
         }
 
-        public void Execute()
+        public static void DoWork(object p)
         {
-            var lines = System.Console.In.ReadToEnd();
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-            serializeOptions.WriteIndented = false;
-            var parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
+            var parse_info = (ParsingResultSet)p;
             var nodes = parse_info.Nodes;
             System.Windows.Forms.Form form = new System.Windows.Forms.Form();
             Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
@@ -103,6 +100,33 @@ Example:
             form.Controls.Add(viewer);
             form.ResumeLayout();
             form.ShowDialog();
+        }
+
+        public void Execute(Config config)
+        {
+            string lines = null;
+            if (!(config.File != null && config.File != ""))
+            {
+                for (; ; )
+                {
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
+                }
+            }
+            else
+            {
+                lines = File.ReadAllText(config.File);
+            }
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = false;
+            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            foreach (var parse_info in data)
+            {
+                // Thread thread1 = new Thread(DoWork);
+                // thread1.Start(parse_info);
+                DoWork(parse_info);
+            }
         }
     }
 }

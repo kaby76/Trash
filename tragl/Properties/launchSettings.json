@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "tragl": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\dotnet\\dotnet.exe",
+      "commandLineArgs": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\tragl\\bin\\Debug\\net5-windows\\tragl.dll -f c:\\users\\kenne\\xx\\o.pt"
+    }
+  }
+}

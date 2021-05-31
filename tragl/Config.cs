@@ -5,7 +5,7 @@ namespace Trash
 {
 	public class Config
 	{
-		[Option("version", Required = false, HelpText = "output version information and exit.")]
-		public bool? version { get; set; }
+		[Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
+		public string File { get; set; }
 	}
 }

@@ -64,6 +64,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsplit", "trsplit\trsplit.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsponge", "trsponge\trsponge.csproj", "{CFBBEC3B-1EEB-42CA-A231-8971CBCB93BB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tragl", "tragl\tragl.csproj", "{D7B02A65-FCC7-4426-BB96-EBAD348BD1DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -182,6 +184,10 @@ Global
 		{CFBBEC3B-1EEB-42CA-A231-8971CBCB93BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFBBEC3B-1EEB-42CA-A231-8971CBCB93BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFBBEC3B-1EEB-42CA-A231-8971CBCB93BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7B02A65-FCC7-4426-BB96-EBAD348BD1DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7B02A65-FCC7-4426-BB96-EBAD348BD1DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7B02A65-FCC7-4426-BB96-EBAD348BD1DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7B02A65-FCC7-4426-BB96-EBAD348BD1DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

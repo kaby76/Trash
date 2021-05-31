@@ -10,9 +10,8 @@
     <AssemblyName>tragl</AssemblyName>
     <PackageId>tragl</PackageId>
     <Description>
-      <![CDATA[tragl.
-Read a parse tree from stdin and open a Windows Form that displays the tree.
-This tool is part of Trash, Transformations for Antlr Shell.]]>
+      <![CDATA[Read a parse tree from stdin and open a Windows Form that displays the tree.
+This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>tragl</ToolCommandName>
     <RootNamespace>tragl</RootNamespace>
@@ -44,4 +43,19 @@ This tool is part of Trash, Transformations for Antlr Shell.]]>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>

@@ -34,7 +34,7 @@ namespace Trash
 					h.AdditionalNewLineAfterOption = false;
 					h.Heading = "tragl";
 					h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
-					//h.AddPreOptionsText(new CTokens().Help());
+					h.AddPreOptionsText(new CAgl().Help());
 					return HelpText.DefaultParsingErrorsHandler(result, h);
 				}, e => e);
 			}
@@ -44,6 +44,27 @@ namespace Trash
 		public void MainInternal(string[] args)
 		{
 			var config = new Config();
+			var result = new CommandLine.Parser().ParseArguments<Config>(args);
+			bool stop = false;
+			result.WithNotParsed(
+				errs =>
+				{
+					DisplayHelp(result, errs);
+					stop = true;
+				});
+			if (stop) return;
+			result.WithParsed(o =>
+			{
+				var ty = typeof(Config);
+				foreach (var prop in ty.GetProperties())
+				{
+					if (prop.GetValue(o, null) != null)
+					{
+						prop.SetValue(config, prop.GetValue(o, null));
+					}
+				}
+			});
+			new CAgl().Execute(config);
 		}
 	}
 }
