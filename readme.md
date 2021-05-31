@@ -152,8 +152,9 @@ found into a one-per-line tree, and use `wc` to count the number.
 
 ### Split a grammar
 
-Since Antlr2, grammars could be combined or split
-into separate files. While it's not hard to split or combine
+Since Antlr2, one can written a combined parser/lexer in one file,
+or a split parser/lexer in two files.
+While it's not hard to split or combine
 a grammar, it's tedious. For automating transformations, it's
 necessary because Antlr4 requires the grammars to be split
 when super classes are needed for different targets.
@@ -167,6 +168,15 @@ and
 [ArithmeticParser.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/combine/ArithmeticParser.g4),
 and creates a [combined grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/combine/Arithmetic.g4)
 for the two.
+
+    trparse Arithmetic.g4 | trsplit | trsponge -o
+
+This command calls [trsplit](https://github.com/kaby76/Domemtech.Trash/tree/main/trsplit)
+which splits the grammar into two parse tree results, one that defines
+ArithmeticLexer.g4 and the other that defines ArithmeticParser.g4.
+The tool [trsponge](https://github.com/kaby76/Domemtech.Trash/tree/main/trsponge)
+is similar to the [tee](https://en.wikipedia.org/wiki/Tee_(command)) in
+Linux: the parse tree data is split and placed in files.
 
 ## Parsing Result Sets -- the data passed between commands
 
