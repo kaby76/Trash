@@ -36,24 +36,27 @@ Examples:
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-            serializeOptions.WriteIndented = false;
-            AntlrJson.ParsingResultSet parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
-            var doc = Docs.Class1.CreateDoc(parse_info);
-            var pr = ParsingResultsFactory.Create(doc);
-            var aparser = pr.Parser;
-            var atree = pr.ParseTree;
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
+            serializeOptions.WriteIndented = true;
+            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            foreach (var parse_info in data)
             {
-                List<IParseTree> nodes = null;
-                if (expr != null)
+                var doc = Docs.Class1.CreateDoc(parse_info);
+                var pr = ParsingResultsFactory.Create(doc);
+                var aparser = pr.Parser;
+                var atree = pr.ParseTree;
+                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
                 {
-                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    nodes = engine.parseExpression(expr.First(),
-                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    List<IParseTree> nodes = null;
+                    if (expr != null)
+                    {
+                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                        nodes = engine.parseExpression(expr.First(),
+                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    }
+                    var res = LanguageServer.Transform.ConvertRecursionToKleeneOperator(doc, nodes);
+                    Docs.Class1.EnactEdits(res);
                 }
-                var results = LanguageServer.Transform.ConvertRecursionToKleeneOperator(doc, nodes);
-                Docs.Class1.EnactEdits(results);
             }
         }
     }

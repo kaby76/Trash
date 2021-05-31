@@ -1,17 +1,15 @@
-# Trsplit
+# Trsponge
 
-The split command attempts to split a grammar. The grammar
-must be a combined lexer/parser grammar for the transformation to proceed. The
-transformation creates a lexer grammar and a parser grammar,
-outputed as parse tree data.
+Read the parse tree data from stdin and write the
+results to file(s).
 
 # Usage
 
-    trsplit <grammar>
+    trsponge <options>
 
 # Example
 
-    trsplit Arithmetic.g4 | trtee
+    trparse -f Arithmetic.g4 | trsplit | trsponge
 
 # Current version
 

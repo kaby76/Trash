@@ -99,15 +99,18 @@ Example:
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-            serializeOptions.WriteIndented = false;
-            var parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
-            var nodes = parse_info.Nodes;
-            var parser = parse_info.Parser;
-            var lexer = parse_info.Lexer;
-            var fn = parse_info.FileName;
-            foreach (var node in nodes)
+            serializeOptions.WriteIndented = true;
+            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            foreach (var parse_info in data)
             {
-                ParseTreeWalker.Default.Walk(new JsonWalk(parser), node);
+                var nodes = parse_info.Nodes;
+                var parser = parse_info.Parser;
+                var lexer = parse_info.Lexer;
+                var fn = parse_info.FileName;
+                foreach (var node in nodes)
+                {
+                    ParseTreeWalker.Default.Walk(new JsonWalk(parser), node);
+                }
             }
         }
     }

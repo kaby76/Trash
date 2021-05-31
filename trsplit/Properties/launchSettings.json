@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "trparse": {
+    "trsplit": {
       "commandName": "Project",
-      "commandLineArgs": "-f Arithmetic.g4",
+      "commandLineArgs": "-f o.pt",
       "workingDirectory": "C:\\Users\\kenne\\xx"
     }
   }

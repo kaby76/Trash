@@ -31,24 +31,27 @@ Example:
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
-            var in_tuple = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
-            var nodes = in_tuple.Nodes;
-            var lexer = in_tuple.Lexer;
-            var parser = in_tuple.Parser;
-            StringBuilder sb = new StringBuilder();
-            foreach (var node in nodes)
+            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            foreach (var in_tuple in data)
             {
-                TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
-                var ts = x.Payload.TokenSource;
-                sb.AppendLine();
-                sb.AppendLine(
-                    TreeOutput.OutputTree(
-                        node,
-                        lexer,
-                        parser,
-                        null).ToString());
+                var nodes = in_tuple.Nodes;
+                var lexer = in_tuple.Lexer;
+                var parser = in_tuple.Parser;
+                StringBuilder sb = new StringBuilder();
+                foreach (var node in nodes)
+                {
+                    TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
+                    var ts = x.Payload.TokenSource;
+                    sb.AppendLine();
+                    sb.AppendLine(
+                        TreeOutput.OutputTree(
+                            node,
+                            lexer,
+                            parser,
+                            null).ToString());
+                }
+                System.Console.WriteLine(sb.ToString());
             }
-            System.Console.WriteLine(sb.ToString());
         }
     }
 }

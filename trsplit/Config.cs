@@ -4,7 +4,7 @@ namespace Trash
 
     public class Config
     {
-        [Value(0, Min = 1)]
+        [Option('f', "file", Required = false)]
         public string File { get; set; }
     }
 }

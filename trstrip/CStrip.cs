@@ -3,6 +3,7 @@
     using Antlr4.Runtime.Tree;
     using AntlrJson;
     using LanguageServer;
+    using System.Collections.Generic;
     using System.Text.Json;
 
     class CStrip
@@ -31,27 +32,31 @@ Example:
                 if (lines != null && lines != "") break;
             }
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-            serializeOptions.WriteIndented = false;
-            AntlrJson.ParsingResultSet parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
-            var doc = Docs.Class1.CreateDoc(parse_info);
-            var results = Transform.Strip(doc);
-            Docs.Class1.EnactEdits(results);
-
-            var pr = ParsingResultsFactory.Create(doc);
-            IParseTree pt = pr.ParseTree;
-            var tuple = new ParsingResultSet()
+            serializeOptions.Converters.Add(new ParseTreeConverter());
+            serializeOptions.WriteIndented = true;
+            var data = JsonSerializer.Deserialize<ParsingResultSet[]>(lines, serializeOptions);
+            var results = new List<ParsingResultSet>();
+            foreach (var parse_info in data)
             {
-                Text = doc.Code,
-                FileName = doc.FullPath,
-                Stream = pr.TokStream,
-                Nodes = new IParseTree[] { pt },
-                Lexer = pr.Lexer,
-                Parser = pr.Parser
-            };
-            string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
-            System.Console.WriteLine(js1);
+                var doc = Docs.Class1.CreateDoc(parse_info);
+                var res = Transform.Strip(doc);
+                Docs.Class1.EnactEdits(res);
 
+                var pr = ParsingResultsFactory.Create(doc);
+                IParseTree pt = pr.ParseTree;
+                var tuple = new ParsingResultSet()
+                {
+                    Text = doc.Code,
+                    FileName = doc.FullPath,
+                    Stream = pr.TokStream,
+                    Nodes = new IParseTree[] { pt },
+                    Lexer = pr.Lexer,
+                    Parser = pr.Parser
+                };
+                results.Add(tuple);
+            }
+            string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+            System.Console.WriteLine(js1);
         }
     }
 }

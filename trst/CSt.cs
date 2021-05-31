@@ -28,17 +28,20 @@ Examples:
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-            serializeOptions.WriteIndented = false;
-            var parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
-            var lexer = parse_info.Lexer;
-            var parser = parse_info.Parser;
-            var nodes = parse_info.Nodes;
-            StringBuilder sb = new StringBuilder();
-            foreach (var t in nodes)
+            serializeOptions.WriteIndented = true;
+            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            foreach (var parse_info in data)
             {
-                sb.AppendLine(t.ToStringTree(parser));
+                var lexer = parse_info.Lexer;
+                var parser = parse_info.Parser;
+                var nodes = parse_info.Nodes;
+                StringBuilder sb = new StringBuilder();
+                foreach (var t in nodes)
+                {
+                    sb.AppendLine(t.ToStringTree(parser));
+                }
+                System.Console.WriteLine(sb.ToString());
             }
-            System.Console.WriteLine(sb.ToString());
         }
     }
 }

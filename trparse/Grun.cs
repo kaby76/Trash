@@ -126,9 +126,11 @@
                 Environment.CurrentDirectory = old;
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-                serializeOptions.WriteIndented = false;
+                serializeOptions.WriteIndented = true;
                 var tuple = new AntlrJson.ParsingResultSet() {Text = txt, FileName = "stdin", Stream = r4 as ITokenStream, Nodes = new IParseTree[]{t2}, Parser = r2 as Parser, Lexer = r3 as Lexer };
-                string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
+                var data = new List<AntlrJson.ParsingResultSet>();
+                data.Add(tuple);
+                string js1 = JsonSerializer.Serialize(data.ToArray(), serializeOptions);
                 System.Console.WriteLine(js1);
             }
             finally

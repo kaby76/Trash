@@ -44,57 +44,62 @@ Example:
                 lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-            serializeOptions.WriteIndented = false;
-            AntlrJson.ParsingResultSet parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
-            var text = parse_info.Text;
-            var fn = parse_info.FileName;
-            var atrees = parse_info.Nodes;
-            var parser = parse_info.Parser;
-            var lexer = parse_info.Lexer;
-            var tokstream = parse_info.Stream;
-            var doc = Docs.Class1.CreateDoc(parse_info);
-            doc.ParseTree = null;
-            doc.Changed = true;
-            ParsingResults ref_pd = ParsingResultsFactory.Create(doc);
-            ref_pd.ParseTree = null;
-            //ref_pd.Changed = true;
-            _ = new Module().GetQuickInfo(0, doc);
-            //Compile(workspace);
-
-            var l1 = config.RenameMap.Split(';').ToList();
-            var rename_map = new Dictionary<string, string>();
-            foreach (var l in l1)
+            serializeOptions.Converters.Add(new ParseTreeConverter());
+            serializeOptions.WriteIndented = true;
+            var data = JsonSerializer.Deserialize<ParsingResultSet[]>(lines, serializeOptions);
+            var results = new List<ParsingResultSet>();
+            foreach (var parse_info in data)
             {
-                var l2 = l.Split(',').ToList();
-                if (l2.Count != 2)
-                    throw new System.Exception("rename map not correct");
-                rename_map[l2[0]] = l2[1];
-            }
+                var text = parse_info.Text;
+                var fn = parse_info.FileName;
+                var atrees = parse_info.Nodes;
+                var parser = parse_info.Parser;
+                var lexer = parse_info.Lexer;
+                var tokstream = parse_info.Stream;
+                var doc = Docs.Class1.CreateDoc(parse_info);
+                doc.ParseTree = null;
+                doc.Changed = true;
+                ParsingResults ref_pd = ParsingResultsFactory.Create(doc);
+                ref_pd.ParseTree = null;
+                //ref_pd.Changed = true;
+                _ = new Module().GetQuickInfo(0, doc);
+                //Compile(workspace);
 
-            System.Collections.Generic.Dictionary<string, string> results = null;
-            results = LanguageServer.Transform.Rename(rename_map, doc);
-            if (results != null && results.Count > 0)
-            {
-                var pr = ParsingResultsFactory.Create(doc);
-                Docs.Class1.EnactEdits(results);
-                IParseTree pt = pr.ParseTree;
-                var tuple = new ParsingResultSet()
+                var l1 = config.RenameMap.Split(';').ToList();
+                var rename_map = new Dictionary<string, string>();
+                foreach (var l in l1)
                 {
-                    Text = doc.Code,
-                    FileName = doc.FullPath,
-                    Stream = pr.TokStream,
-                    Nodes = new IParseTree[] { pt },
-                    Lexer = pr.Lexer,
-                    Parser = pr.Parser
-                };
-                string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
-                System.Console.Write(js1);
+                    var l2 = l.Split(',').ToList();
+                    if (l2.Count != 2)
+                        throw new System.Exception("rename map not correct");
+                    rename_map[l2[0]] = l2[1];
+                }
+
+                System.Collections.Generic.Dictionary<string, string> res = null;
+                res = LanguageServer.Transform.Rename(rename_map, doc);
+                if (res != null && res.Count > 0)
+                {
+                    var pr = ParsingResultsFactory.Create(doc);
+                    Docs.Class1.EnactEdits(res);
+                    IParseTree pt = pr.ParseTree;
+                    var tuple = new ParsingResultSet()
+                    {
+                        Text = doc.Code,
+                        FileName = doc.FullPath,
+                        Stream = pr.TokStream,
+                        Nodes = new IParseTree[] { pt },
+                        Lexer = pr.Lexer,
+                        Parser = pr.Parser
+                    };
+                    results.Add(tuple);
+                }
+                else
+                {
+                    System.Console.Write(lines);
+                }
             }
-            else
-            {
-                System.Console.Write(lines);
-            }
+            string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+            System.Console.Write(js1);
 
             //org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
             //IParseTree root = atrees.First().Root();

@@ -49,7 +49,8 @@ namespace Trash
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = true;
-                var tuple = new ParsingResultSet()
+                var tuple = new ParsingResultSet[1]{
+                    new ParsingResultSet()
                     {
                         Text = doc.Code,
                         FileName = doc.FullPath,
@@ -57,7 +58,8 @@ namespace Trash
                         Nodes = new IParseTree[] { pt },
                         Lexer = pr.Lexer,
                         Parser = pr.Parser
-                    };
+                    }
+                };
                 string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
                 System.Console.WriteLine(js1);
             }

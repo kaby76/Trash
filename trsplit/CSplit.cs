@@ -3,6 +3,7 @@
     using Antlr4.Runtime.Tree;
     using AntlrJson;
     using LanguageServer;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text.Json;
@@ -20,33 +21,57 @@
 
         public void Execute(Config config)
         {
-            var file = config.File;
-            var doc_in = Docs.Class1.ReadDoc(file);
-            Docs.Class1.ParseDoc(doc_in, 10);
-            _ = ParsingResultsFactory.Create(doc_in);
-            var results = LanguageServer.Transform.SplitGrammar(doc_in);
-            Docs.Class1.EnactEdits(results);
-            foreach (var r in results)
+            string lines = null;
+            if (!(config.File != null && config.File != ""))
             {
-                var doc = Docs.Class1.CreateDoc(results.First().Key, results.First().Value);
-                Docs.Class1.ParseDoc(doc, 10);
-                var pr = ParsingResultsFactory.Create(doc);
-                var pt = pr.ParseTree;
-                var tuple = new ParsingResultSet()
+                for (; ; )
                 {
-                    Text = doc.Code,
-                    FileName = doc.FullPath,
-                    Stream = pr.TokStream,
-                    Nodes = new IParseTree[] { pt },
-                    Lexer = pr.Lexer,
-                    Parser = pr.Parser
-                };
-                var serializeOptions = new JsonSerializerOptions();
-                serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-                serializeOptions.WriteIndented = false;
-                string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
-                System.Console.WriteLine(js1);
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
+                }
             }
+            else
+            {
+                lines = File.ReadAllText(config.File);
+            }
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = true;
+            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            var results = new List<ParsingResultSet>();
+            foreach (var parse_info in data)
+            {
+                var lexer = parse_info.Lexer;
+                var parser = parse_info.Parser;
+                var nodes = parse_info.Nodes;
+                var fn = parse_info.FileName;
+                var code = parse_info.Text;
+                var doc_in = Docs.Class1.CreateDoc(fn, code);
+                //                Docs.Class1.ParseDoc(doc_in, 10);
+                var pr2 = ParsingResultsFactory.Create(doc_in);
+                pr2.ParseTree = nodes[0];
+                var res = LanguageServer.Transform.SplitGrammar(doc_in);
+                Docs.Class1.EnactEdits(res);
+                foreach (var r in res)
+                {
+                    var doc = Docs.Class1.CreateDoc(res.First().Key, res.First().Value);
+                    Docs.Class1.ParseDoc(doc, 10);
+                    var pr = ParsingResultsFactory.Create(doc);
+                    var pt = pr.ParseTree;
+                    var tuple = new ParsingResultSet()
+                    {
+                        Text = doc.Code,
+                        FileName = doc.FullPath,
+                        Stream = pr.TokStream,
+                        Nodes = new IParseTree[] { pt },
+                        Lexer = pr.Lexer,
+                        Parser = pr.Parser
+                    };
+                    results.Add(tuple);
+                }
+            }
+            string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+            System.Console.WriteLine(js1);
         }
     }
 }

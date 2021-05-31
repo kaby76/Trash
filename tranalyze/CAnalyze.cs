@@ -33,15 +33,18 @@
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
-            AntlrJson.ParsingResultSet parse_info = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet>(lines, serializeOptions);
-            var doc = Docs.Class1.CreateDoc(parse_info);
-            var f = doc.FullPath;
-            doc.ParseTree = null;
-            doc.Changed = true;
-            ParsingResults ref_pd = ParsingResultsFactory.Create(doc);
-            ref_pd.ParseTree = null;
-            _ = new Module().GetQuickInfo(0, doc);
-            AnalyzeDoc(doc);
+            AntlrJson.ParsingResultSet[] data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            foreach (var parse_info in data)
+            {
+                var doc = Docs.Class1.CreateDoc(parse_info);
+                var f = doc.FullPath;
+                doc.ParseTree = null;
+                doc.Changed = true;
+                ParsingResults ref_pd = ParsingResultsFactory.Create(doc);
+                ref_pd.ParseTree = null;
+                _ = new Module().GetQuickInfo(0, doc);
+                AnalyzeDoc(doc);
+            }
         }
 
 		public void AnalyzeDoc(Workspaces.Document document)

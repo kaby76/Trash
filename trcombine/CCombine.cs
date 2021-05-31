@@ -34,15 +34,18 @@
             Docs.Class1.ParseDoc(doc, 10);
             var pr = ParsingResultsFactory.Create(doc);
             var pt = pr.ParseTree;
-            var tuple = new ParsingResultSet()
-            {
-                Text = doc.Code,
-                FileName = doc.FullPath,
-                Stream = pr.TokStream,
-                Nodes = new IParseTree[] { pt },
-                Lexer = pr.Lexer,
-                Parser = pr.Parser
-            };
+            var tuple = new ParsingResultSet[1]
+                {
+                    new ParsingResultSet()
+                    {
+                        Text = doc.Code,
+                        FileName = doc.FullPath,
+                        Stream = pr.TokStream,
+                        Nodes = new IParseTree[] { pt },
+                        Lexer = pr.Lexer,
+                        Parser = pr.Parser
+                    }
+                };
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
