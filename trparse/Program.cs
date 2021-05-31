@@ -63,10 +63,6 @@ namespace Trash
                         prop.SetValue(config, prop.GetValue(o, null));
                     }
                 }
-
-                if (o.File != null) config.File = o.File;
-				if (o.Input != null) config.Input = o.Input;
-                if (o.Type != null) config.Type = o.Type;
             });
 			new CParse().Execute(config);
 		}

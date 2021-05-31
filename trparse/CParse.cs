@@ -41,16 +41,18 @@ namespace Trash
             if (config.Type != null && config.Type != "gen" || !Directory.Exists(path))
             {
                 Dictionary<string, Document> list = new Dictionary<string, Document>();
-                Document doc = Docs.Class1.ReadDoc(config.File);
-                list.Add(config.File, doc);
-                Docs.Class1.ParseDoc(doc, 10, config.Type);
-                var pr = ParsingResultsFactory.Create(doc);
-                IParseTree pt = pr.ParseTree;
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = true;
-                var tuple = new ParsingResultSet[1]{
-                    new ParsingResultSet()
+                var results = new List<ParsingResultSet>();
+                foreach (var file in config.Files)
+                {
+                    Document doc = Docs.Class1.ReadDoc(file);
+                    list.Add(file, doc);
+                    Docs.Class1.ParseDoc(doc, 10, config.Type);
+                    var pr = ParsingResultsFactory.Create(doc);
+                    IParseTree pt = pr.ParseTree;
+                    var tuple = new ParsingResultSet()
                     {
                         Text = doc.Code,
                         FileName = doc.FullPath,
@@ -58,9 +60,10 @@ namespace Trash
                         Nodes = new IParseTree[] { pt },
                         Lexer = pr.Lexer,
                         Parser = pr.Parser
-                    }
-                };
-                string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
+                    };
+                    results.Add(tuple);
+                }
+                string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
                 System.Console.WriteLine(js1);
             }
             else

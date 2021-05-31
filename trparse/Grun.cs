@@ -39,7 +39,7 @@
                 if (builder.Length > 0)
                     builder.Append(' ');
 
-                if (argument.IndexOfAny(new[] {'"', ' '}) < 0)
+                if (argument.IndexOfAny(new[] { '"', ' ' }) < 0)
                 {
                     builder.Append(argument);
                     continue;
@@ -72,23 +72,11 @@
 
         public void Run()
         {
-            var path = Environment.CurrentDirectory;
-            path = path + Path.DirectorySeparatorChar + "Generated";
-            var old = Environment.CurrentDirectory;
             try
             {
-                var full_path = path + "\\bin\\Debug\\net5.0\\";
-           //     Environment.CurrentDirectory = full_path;
-                var exists = File.Exists(full_path + "Test.dll");
-                Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
-                Assembly asm = Assembly.LoadFile(full_path + "Test.dll");
-                var xxxxxx = asm1.GetTypes();
-                Type[] types = asm.GetTypes();
-                Type type = asm.GetType("Program");
-                var methods = type.GetMethods();
-                MethodInfo methodInfo = type.GetMethod("Parse");
+                var data = new List<AntlrJson.ParsingResultSet>();
                 string txt = config.Input;
-                if (config.Input == null && config.File == null)
+                if (config.Input == null && config.Files == null)
                 {
                     string lines = null;
                     for (; ; )
@@ -97,46 +85,67 @@
                         if (lines != null && lines != "") break;
                     }
                     txt = lines;
+                    Doit(txt, data);
                 }
                 else if (config.Input != null)
                 {
                     txt = config.Input;
+                    Doit(txt, data);
                 }
-                else if (config.File != null)
+                else if (config.Files != null)
                 {
-                    txt = File.ReadAllText(config.File);
+                    foreach (var file in config.Files)
+                    {
+                        txt = File.ReadAllText(file);
+                        Doit(txt, data);
+                    }
                 }
-                object[] parm = new object[] {txt};
-                DateTime before = DateTime.Now;
-                var res = methodInfo.Invoke(null, parm);
-                DateTime after = DateTime.Now;
-                System.Console.Error.WriteLine("Time to parse: " + (after - before));
-                var tree = res as IParseTree;
-                var t2 = tree as ParserRuleContext;
-                var m2 = type.GetProperty("Parser");
-                object[] p2 = new object[0];
-                var r2 = m2.GetValue(null, p2);
-                var m3 = type.GetProperty("Lexer");
-                object[] p3 = new object[0];
-                var r3 = m3.GetValue(null, p3);
-                var m4 = type.GetProperty("TokenStream");
-                object[] p4 = new object[0];
-                var r4 = m4.GetValue(null, p4);
-                System.Console.Error.WriteLine("# tokens per sec = " + (r4 as ITokenStream).Size / (after-before).TotalSeconds);
-                Environment.CurrentDirectory = old;
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = true;
-                var tuple = new AntlrJson.ParsingResultSet() {Text = txt, FileName = "stdin", Stream = r4 as ITokenStream, Nodes = new IParseTree[]{t2}, Parser = r2 as Parser, Lexer = r3 as Lexer };
-                var data = new List<AntlrJson.ParsingResultSet>();
-                data.Add(tuple);
                 string js1 = JsonSerializer.Serialize(data.ToArray(), serializeOptions);
                 System.Console.WriteLine(js1);
             }
             finally
             {
-                Environment.CurrentDirectory = old;
             }
+        }
+
+        void Doit(string txt, List<AntlrJson.ParsingResultSet> data)
+        {
+            var path = Environment.CurrentDirectory;
+            path = path + Path.DirectorySeparatorChar + "Generated";
+            var old = Environment.CurrentDirectory;
+            var full_path = path + "\\bin\\Debug\\net5.0\\";
+            //     Environment.CurrentDirectory = full_path;
+            var exists = File.Exists(full_path + "Test.dll");
+            Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
+            Assembly asm = Assembly.LoadFile(full_path + "Test.dll");
+            var xxxxxx = asm1.GetTypes();
+            Type[] types = asm.GetTypes();
+            Type type = asm.GetType("Program");
+            var methods = type.GetMethods();
+            MethodInfo methodInfo = type.GetMethod("Parse");
+            object[] parm = new object[] { txt };
+            DateTime before = DateTime.Now;
+            var res = methodInfo.Invoke(null, parm);
+            DateTime after = DateTime.Now;
+            System.Console.Error.WriteLine("Time to parse: " + (after - before));
+            var tree = res as IParseTree;
+            var t2 = tree as ParserRuleContext;
+            var m2 = type.GetProperty("Parser");
+            object[] p2 = new object[0];
+            var r2 = m2.GetValue(null, p2);
+            var m3 = type.GetProperty("Lexer");
+            object[] p3 = new object[0];
+            var r3 = m3.GetValue(null, p3);
+            var m4 = type.GetProperty("TokenStream");
+            object[] p4 = new object[0];
+            var r4 = m4.GetValue(null, p4);
+            System.Console.Error.WriteLine("# tokens per sec = " + (r4 as ITokenStream).Size / (after - before).TotalSeconds);
+            Environment.CurrentDirectory = old;
+            var tuple = new AntlrJson.ParsingResultSet() { Text = txt, FileName = "stdin", Stream = r4 as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = r2 as Parser, Lexer = r3 as Lexer };
+            data.Add(tuple);
         }
 
         //public void BuildIt()
