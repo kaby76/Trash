@@ -138,9 +138,6 @@ QNAME
 fragment CHAR
 	: ('\u0009' | '\u000A' | '\u000D' | '\u0020'..'\uD7FF' | '\uE000'..'\uFFFD' )
 	;
-fragment MYCHAR
-	: [\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]
-	;
 
 fragment DIGITS 	   
 	: ('0'..'9')+
@@ -197,14 +194,14 @@ fragment ESCAPEAPOS
 	: APOS APOS
 	;
 	
-fragment F1 : ~CHAR;  // illegal
-fragment F2 : ~MYCHAR; // illegal
-fragment F3 : F2 | ["]; // ok
-fragment F4 : ~F3; // illegal
-fragment F5 : ~([abc] | [d]); // ok
-fragment F6 : ~([abc] | 'd'); // ok
-fragment CHARNOQUOTE	   	: ~(F2 | QUOTE);
-fragment CHARNOAPOS	   	: ~(F2 | APOS);
+fragment CHARNOQUOTE	   
+	: ~(~CHAR | QUOTE)
+	;
+	
+
+fragment CHARNOAPOS	   
+	: ~(~CHAR | APOS)
+	;
 
 
 STRINGLITERAL		   
@@ -218,6 +215,9 @@ This lexer rule for comments handles multiline, nested comments
 */
 COMMENT_CONTENTS
         :       '(:'
+                {
+                        $channel=98;
+                }
                 (       ~('('|':')
                         | '('
                         | ':'
@@ -228,7 +228,7 @@ COMMENT_CONTENTS
 
 
 WS		
-	: (' '|'\r'|'\t'|'\u000C'|'\n')+
+	: (' '|'\r'|'\t'|'\u000C'|'\n')+ {$channel = HIDDEN;}
 	;
 
 
