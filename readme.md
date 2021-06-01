@@ -141,6 +141,14 @@ used more often in compiler construction.
     trparse Arithmetic.g4 | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'expression']" "xxx" | trtext > new-source.g4
     trparse Arithmetic.g4 | trrename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
 
+In these two examples, the Arithmetic grammar is parsed.
+[trrename](https://github.com/kaby76/Domemtech.Trash/tree/main/trrename) reads the parse tree data and
+modifies it by renaming the `expression` symbol two ways: first by XPath expression identifying the LHS terminal
+symbol of the `expression` symbol, and the second by assumption that the tree is an Antlr4 parse tree,
+then renaming a semi-colon-separated list of paired renames. The resulting code is reconstructed and saved.
+`trrename` does not rename symbols in actions, nor does it rename identifiers corresponding to the
+grammar symbols in any support source code (but it could if the tool is extended).
+
 ### Count method declarations in a Java source file
 
     git clone https://github.com/antlr/grammars-v4.git; \
