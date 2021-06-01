@@ -40,16 +40,11 @@
 
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trtext line-number?
-Reads a tree from stdin and prints the source text. If 'line-number' is
-specified, the line number range for the tree is printed.
-
-Example:
-    trxgrep //lexerRuleSpec | trtext
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trtext.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public string Reconstruct(IParseTree tree)

@@ -8,15 +8,9 @@
     <AssemblyName>trtext</AssemblyName>
     <PackageId>trtext</PackageId>
     <Description>
-      <![CDATA[
-This program is part of the Trash toolkit.
-
-trtext line-number?
-Reads a tree from stdin and prints the source text. If 'line-number' is
+      <![CDATA[Reads a tree from stdin and prints the source text. If 'line-number' is
 specified, the line number range for the tree is printed.
-
-Example:
-    trxgrep //lexerRuleSpec | trtext
+This program is part of the Trash toolkit.
 ]]>
     </Description>
     <ToolCommandName>trtext</ToolCommandName>
@@ -44,4 +38,19 @@ Example:
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>

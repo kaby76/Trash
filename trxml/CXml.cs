@@ -5,21 +5,16 @@
     using System;
     using System.IO;
     using System.Text.Json;
-    using Workspaces;
 
     class CXml
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trxml
-Read a tree from stdin and write an XML represenation of it.
-
-Example:
-    trparse A.g4 | trxml
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trxml.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         class XmlWalk : IParseTreeListener
