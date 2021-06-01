@@ -4,6 +4,7 @@
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text.Json;
 
@@ -11,18 +12,11 @@
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trkleene <string>?
-Replace a rule, whose symbol is identified by the xpath string, of the grammar
-at the top of the grammar with an EBNF form if it contains direct left or direct
-right recursion.
-
-Examples:
-    trparse A.g4 | trkleene
-    trparse A.g4 | trkleene //parserRuleSpec/RULE_REF[text()='packageOrTypeName']
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trkleene.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)

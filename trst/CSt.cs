@@ -1,5 +1,6 @@
 ﻿namespace Trash
 {
+    using System.IO;
     using System.Text;
     using System.Text.Json;
 
@@ -7,15 +8,11 @@
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trst
-Output tree using the Antlr runtime ToStringTree().
-
-Examples:
-    trparse A.g4 | trst
-";
+			using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trst.readme.md"))
+			using (StreamReader reader = new StreamReader(stream))
+			{
+				return reader.ReadToEnd();
+			}
         }
 
         public void Execute(Config config)

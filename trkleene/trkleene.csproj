@@ -9,16 +9,8 @@
     <PackageId>trkleene</PackageId>
     <Description>
       <![CDATA[
+Replace a rule with an EBNF form if it contains direct left or direct right recursion.
 This program is part of the Trash toolkit.
-
-trkleene <string>?
-Replace a rule, whose symbol is identified by the xpath string, of the grammar
-at the top of the grammar with an EBNF form if it contains direct left or direct
-right recursion.
-
-Examples:
-    trparse A.g4 | trkleene
-    trparse A.g4 | trkleene //parserRuleSpec/RULE_REF[text()='packageOrTypeName']
 ]]>
     </Description>
     <ToolCommandName>trkleene</ToolCommandName>
@@ -47,4 +39,19 @@ Examples:
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>
