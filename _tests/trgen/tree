@@ -1,0 +1,19 @@
+
+( file_
+  ( expression
+    ( expression
+      ( atom
+        ( scientific
+          ( SCIENTIFIC_NUMBER i=0 txt=1 tt=2 DEFAULT_TOKEN_CHANNEL
+    ) ) ) ) 
+    ( PLUS i=1 txt=+ tt=5 DEFAULT_TOKEN_CHANNEL
+    ) 
+    ( expression
+      ( atom
+        ( scientific
+          ( SCIENTIFIC_NUMBER i=2 txt=2 tt=2 DEFAULT_TOKEN_CHANNEL
+  ) ) ) ) ) 
+  ( EOF i=3 txt= tt=-1 DEFAULT_TOKEN_CHANNEL
+) ) 
+
+

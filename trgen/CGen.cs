@@ -1028,7 +1028,7 @@ namespace Trash
                 // Probe for parser grammar. 
                 {
                     var parser_grammars_pattern =
-                        "^((?!.*(ignore/|Generated/|target/|examples/))("
+                        "^((?!.*(" + (ignore_string != null ? ignore_string + "|" : "")  + "ignore/|Generated/|target/|examples/))("
                         + target_specific_src_directory + "/)"
                         + "((?!.*Lexer)|.*Parser)).g4$";
                     var any =
@@ -1045,7 +1045,7 @@ namespace Trash
                 }
                 {
                     var parser_grammars_pattern =
-                        "^(?!.*(ignore/|Generated/|target/|examples/|Lexer)).*[.]g4$";
+                        "^(?!.*(" + (ignore_string != null ? ignore_string + "|" : "")  + "ignore/|Generated/|target/|examples/|Lexer)).*[.]g4$";
                     var any =
                         new Domemtech.Globbing.Glob()
                             .RegexContents(parser_grammars_pattern)
@@ -1072,7 +1072,7 @@ namespace Trash
                 // Probe for lexer grammar. 
                 {
                     var lexer_grammars_pattern =
-                           "^((?!.*(ignore/|Generated/|target/|examples/))("
+                           "^((?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/))("
                         + target_specific_src_directory + "/)"
                         + "((?!.*Parser)|.*Lexer)).g4$";
                     var any =
@@ -1089,7 +1089,7 @@ namespace Trash
                 }
                 {
                     var lexer_grammars_pattern =
-                        "^(?!.*(ignore/|Generated/|target/|examples/|Parser)).*[.]g4$";
+                        "^(?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/|Parser)).*[.]g4$";
                     var any =
                         new Domemtech.Globbing.Glob()
                             .RegexContents(lexer_grammars_pattern)

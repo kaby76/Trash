@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\ex\\solutions\\java"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trgen"
     }
   }
 }
