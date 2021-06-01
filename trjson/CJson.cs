@@ -3,21 +3,18 @@
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using System;
+    using System.IO;
     using System.Text.Json;
 
     class CJson
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trjson
-Read a tree from stdin and write a JSON represenation of it.
-
-Example:
-    trparse A.g4 | trjson
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trjson.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         class JsonWalk : IParseTreeListener

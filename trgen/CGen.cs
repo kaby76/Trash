@@ -1,16 +1,16 @@
-﻿using Antlr4.StringTemplate;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.XPath;
-
-namespace Trash
+﻿namespace Trash
 {
+    using Antlr4.StringTemplate;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Xml;
+    using System.Xml.XPath;
+
     class CGen
     {
         public string Help()

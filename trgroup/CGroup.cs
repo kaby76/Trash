@@ -5,6 +5,7 @@
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text.Json;
 
@@ -12,17 +13,11 @@
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trgroup <string>
-Perform a recursive left- and right- factorization of alternatives for rules.
-The nodes specified must be for ruleAltList, lexerAltList, or altList. A common
-prefix and suffix is performed on the alternatives, and a new expression derived.
-The process repeats for alternatives nested.
-Example:
-    trparse A.g4 | trgroup //parserRuleSpec[RULE_REF/text()='additiveExpression']//altList
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trgroup.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)
@@ -59,7 +54,6 @@ Example:
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
 
                     var res = LanguageServer.Transform.Group(nodes, doc);
-
                     Docs.Class1.EnactEdits(res);
                     var pr = ParsingResultsFactory.Create(doc);
                     IParseTree pt = pr.ParseTree;

@@ -48,7 +48,8 @@ Windows: Right-click, "save target as" of file
 
 ### Parse a grammar
 
-    trparse ada.g4 | trtree | vim -
+    git clone https://github.com/kaby76/Domemtech.Trash.git; cd Domemtech.Trash/_tests/trconvert/antlr2; \
+        trparse ada.g4 | trtree | vim -
 
 This command parses the Antlr4 grammar
 [ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
@@ -74,14 +75,14 @@ and
 
 ### Convert grammars to Antlr4
 
-    trparse ada.g2 | trconvert | trprint > ada.g4
+    trparse ada.g2 | trconvert | trprint | less
 
 This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g2)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
 converts the parse tree data to Antlr4 syntax using
  [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert)
  and
-finally [prints out the converted parse tree data](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
+finally [prints out the converted parse tree data, ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
 using
 [trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint). Other
 grammar that can be converted are Antlr3, Bison, and ISO EBNF. In order to
@@ -89,10 +90,12 @@ use the grammar to parse data, you will need to convert it to an Antlr4 grammar.
 
 ### Generate a parser application
 
-    trgen
+    mkdir foobar; cd foobar; \
+        trgen
 
 This command creates a parser application for the C# target.
-If executed in an empty directory, [trgen](https://github.com/kaby76/Domemtech.Trash/tree/main/trgen)
+If executed in an empty directory, which is done in the example
+shown above, [trgen](https://github.com/kaby76/Domemtech.Trash/tree/main/trgen)
 creates an application using the Arithmetic grammar.
 If executed in a directory containing
 a Antlr Maven plugin (`pom.xml`), `trgen` will create a program according
@@ -109,8 +112,8 @@ dotnet restore; dotnet build; cd ..**._
 
     trparse -i "1+2+3" | trtree
 
-After using `trgen` to generate a parser program in C#, and after building
-the program, you can run the parser using `trparse`. This program 
+After using `trgen` to generate a parser program in C#, shown previously,
+and after building the program, you can run the parser using `trparse`. This program 
 looks for the generated parser in directory `Generated/`. If it exists,
 it will run the parser application in the directory. You can pass
 as command-line arguments an input string or input file. If no command-line

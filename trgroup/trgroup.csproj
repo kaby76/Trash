@@ -8,17 +8,8 @@
     <AssemblyName>trgroup</AssemblyName>
     <PackageId>trgroup</PackageId>
     <Description>
-      <![CDATA[
-This program is part of the Trash toolkit.
-
-trgroup <string>
-Perform a recursive left- and right- factorization of alternatives for rules.
-The nodes specified must be for ruleAltList, lexerAltList, or altList. A common
-prefix and suffix is performed on the alternatives, and a new expression derived.
-The process repeats for alternatives nested.
-Example:
-    trparse A.g4 | trgroup //parserRuleSpec[RULE_REF/text()='additiveExpression']//altList
-]]>
+      <![CDATA[Perform a recursive left- and right- factorization of alternatives for rules.
+This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>trgroup</ToolCommandName>
     <RootNamespace>trgroup</RootNamespace>
@@ -46,4 +37,19 @@ Example:
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>
