@@ -36,9 +36,16 @@ namespace Trash
             // If Type=="antlr2", then parse using Antlr2.
             // Etc.
 
-            var path = Environment.CurrentDirectory;
-            path = path + Path.DirectorySeparatorChar + "Generated";
-            if (config.Type != null && config.Type != "gen" || !Directory.Exists(path))
+            var path = Environment.CurrentDirectory + Path.DirectorySeparatorChar;
+            var full_path = path + "Generated\\bin\\Debug\\net5.0\\";
+            var exists = File.Exists(full_path + "Test.dll");
+            if (!exists)
+            {
+                full_path = path + "bin\\Debug\\net5.0\\";
+                exists = File.Exists(full_path + "Test.dll");
+            }
+
+            if (config.Type != null && config.Type != "gen" || !exists)
             {
                 Dictionary<string, Document> list = new Dictionary<string, Document>();
                 var serializeOptions = new JsonSerializerOptions();

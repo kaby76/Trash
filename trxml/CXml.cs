@@ -78,10 +78,17 @@ Example:
         public void Execute(Config config)
         {
             string lines = null;
-            for (; ; )
+            if (!(config.File != null && config.File != ""))
             {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
+                for (; ; )
+                {
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
+                }
+            }
+            else
+            {
+                lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
@@ -93,7 +100,6 @@ Example:
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
                 var fn = parse_info.FileName;
-                Document doc = Docs.Class1.CreateDoc(parse_info);
                 foreach (var node in parse_info.Nodes)
                 {
                     ParseTreeWalker.Default.Walk(new XmlWalk(parser), node);

@@ -2,14 +2,12 @@
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
-    using LanguageServer;
+    using AntlrJson;
     using Microsoft.Msagl.Drawing;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text.Json;
-    using System.IO;
-    using System.Threading;
-    using AntlrJson;
 
     class CAgl
     {

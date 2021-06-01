@@ -113,12 +113,10 @@
 
         void Doit(string txt, List<AntlrJson.ParsingResultSet> data)
         {
-            var path = Environment.CurrentDirectory;
-            path = path + Path.DirectorySeparatorChar + "Generated";
-            var old = Environment.CurrentDirectory;
-            var full_path = path + "\\bin\\Debug\\net5.0\\";
-            //     Environment.CurrentDirectory = full_path;
+            var path = Environment.CurrentDirectory + Path.DirectorySeparatorChar;
+            var full_path = path + "Generated\\bin\\Debug\\net5.0\\";
             var exists = File.Exists(full_path + "Test.dll");
+            if (!exists) full_path = path + "bin\\Debug\\net5.0\\";
             Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
             Assembly asm = Assembly.LoadFile(full_path + "Test.dll");
             var xxxxxx = asm1.GetTypes();
@@ -143,7 +141,6 @@
             object[] p4 = new object[0];
             var r4 = m4.GetValue(null, p4);
             System.Console.Error.WriteLine("# tokens per sec = " + (r4 as ITokenStream).Size / (after - before).TotalSeconds);
-            Environment.CurrentDirectory = old;
             var tuple = new AntlrJson.ParsingResultSet() { Text = txt, FileName = "stdin", Stream = r4 as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = r2 as Parser, Lexer = r3 as Lexer };
             data.Add(tuple);
         }
