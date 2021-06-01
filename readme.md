@@ -146,7 +146,7 @@ used more often in compiler construction.
     git clone https://github.com/antlr/grammars-v4.git; \
         cd grammars-v4/java/java9; \
         trgen; dotnet build Generated/Test.csproj;\
-        trparse examples/AllInOne8.java | trxgrep "//methodDeclaration" | trst | wc
+        trparse examples/AllInOne8.java | trxgrep " //methodDeclaration" | trst | wc
 
 This command clones the Antlr4 grammars-v4 repo, generates a parser for the Java9 grammar,
 then runs the parser on [examples/AllInOne8.java](https://github.com/antlr/grammars-v4/blob/master/java/java9/examples/AllInOne8.java).
