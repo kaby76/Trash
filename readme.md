@@ -119,16 +119,22 @@ with most tools of Trash, is parse tree data.
 
 ### Find nodes in the parse tree using XPath
 
-    trparse -i "1+2+3" | trxgrep " //SCIENTIFIC_NUMBER" | trst
+    mkdir empty; cd empty; trgen; dotnet build Generated/Test.csproj; \
+        trparse -i "1+2+3" | trxgrep " //SCIENTIFIC_NUMBER" | trst
 
-Using `trparse`, you can create a parse tree that can be searched
-using `trxgrep`. The tool `trxgrep` uses XPath expressions to identify
-exactly what node(s) in the tree you want. Those sub-trees can be
-printed using any of the tools shown previously.
+With this command, a directory is created, the Arithmetic grammar generated, build,
+and then run using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse).
+The `trparse` tool unifies all parsing, whether it's parsing a grammar or parsing input
+using a generated parser application. The output from the `trparse` tool is a parse
+tree which you can search. [Trxgrep](https://github.com/kaby76/Domemtech.Trash/tree/main/trxgrep)
+is the generalized search program for parse trees. `Trxgrep` uses XPath expressions to
+precisely identify nodes in the parse tree.
 
-A major problem I noticed is a lack of a standardized way to identify
-nodes in parse trees. XPath is a well-defined language that should be
-used more often.
+XPath was added to Antlr4, but `Trash` takes the idea
+further with the addition of an XPath2 engine ported from the
+[Eclipse Web toolkit](https://git.eclipse.org/r/admin/repos/sourceediting%2Fwebtools.sourceediting).
+XPath is a well-defined language that should be
+used more often in compiler construction.
 
 ### Rename a symbol in a grammar, generate a parser for new grammar
 
@@ -137,18 +143,20 @@ used more often.
 
 ### Count method declarations in a Java source file
 
-    trgen --start-rule compilationUnit
-    cd Generated/; dotnet build; cd ..
-    trparse WindowsState.java | trxgrep "//methodDeclaration" | trst | wc
+    git clone https://github.com/antlr/grammars-v4.git; \
+        cd grammars-v4/java/java9; \
+        trgen; dotnet build Generated/Test.csproj;\
+        trparse examples/AllInOne8.java | trxgrep "//methodDeclaration" | trst | wc
 
-To count the number of methods in a Java source file, first generate a
-parser, build it, and then run `trparse` to create a parse tree for the
-input. Then, use `trxgrep` to pick off the methods, convert the nodes
-found into a one-per-line tree, and use `wc` to count the number.
+This command clones the Antlr4 grammars-v4 repo, generates a parser for the Java9 grammar,
+then runs the parser on [examples/AllInOne8.java](https://github.com/antlr/grammars-v4/blob/master/java/java9/examples/AllInOne8.java).
+The parse tree is then piped to `trxgrep` to find all parse tree nodes that are
+a `methodDeclaration` type, converts it to a simple string, and counts the result using
+`wc`.
 
 ### Strip a grammar of all non-essential CFG
 
-    trparse Java9.g4 | trstrip | trtext > new-grammar.g4
+    trparse Java9.g4 | trstrip | trtext > Essential-Java9.g4
 
 ### Split a grammar
 
