@@ -1,9 +1,5 @@
 lexer grammar ArithmeticLexer;
 
-
-
-
-
 VARIABLE : VALID_ID_START VALID_ID_CHAR* ;
 SCIENTIFIC_NUMBER : NUMBER (E SIGN? UNSIGNED_INTEGER)? ;
 LPAREN : '(' ;
