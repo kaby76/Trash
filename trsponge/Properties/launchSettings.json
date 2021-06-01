@@ -3,7 +3,7 @@
     "trsponge": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt --overwrite true",
-      "workingDirectory": "C:\\Users\\kenne\\xx"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trcombine"
     }
   }
 }

@@ -188,7 +188,7 @@ and
 and creates a [combined grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/combine/Arithmetic.g4)
 for the two.
 
-    trparse Arithmetic.g4 | trsplit | trsponge -o
+    trparse Arithmetic.g4 | trsplit | trsponge -o true
 
 This command calls [trsplit](https://github.com/kaby76/Domemtech.Trash/tree/main/trsplit)
 which splits the grammar into two parse tree results, one that defines
