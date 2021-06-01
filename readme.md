@@ -52,10 +52,10 @@ Windows: Right-click, "save target as" of file
         trparse ada.g4 | trtree | vim -
 
 This command parses the Antlr4 grammar
-[ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
+[ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
 prints out the parse tree data as a simple
-[text-oriented diagram](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4.tree)
+[text-oriented diagram](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4.tree)
 using [trtree](https://github.com/kaby76/Domemtech.Trash/tree/main/trtree),
 then opens [vim](https://www.vim.org/) on the diagram. If you are not
 familiar with `Vim`, then you can use [less](http://www.greenwoodsoftware.com/less/),
@@ -77,12 +77,12 @@ and
 
     trparse ada.g2 | trconvert | trprint | less
 
-This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g2)
+This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g2)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
 converts the parse tree data to Antlr4 syntax using
  [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert)
  and
-finally [prints out the converted parse tree data, ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/convert2/ada.g4)
+finally [prints out the converted parse tree data, ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4)
 using
 [trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint). Other
 grammar that can be converted are Antlr3, Bison, and ISO EBNF. In order to
