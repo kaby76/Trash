@@ -74,7 +74,7 @@ parse from the file name suffix.
 Other programs for different output are
 [trjson](https://github.com/kaby76/Domemtech.Trash/tree/main/trjson) for [JSON output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4.json),
 [trxml](https://github.com/kaby76/Domemtech.Trash/tree/main/trxml) for [XML output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4.xml),
-[trst](https://github.com/kaby76/Domemtech.Trash/tree/main/trst) for [XML output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4.st),
+[trst](https://github.com/kaby76/Domemtech.Trash/tree/main/trst) for [Antlr runtime ToStringTree output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4.st),
 [trdot](https://github.com/kaby76/Domemtech.Trash/tree/main/trdot),
 [trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint) for input text for the parse,
 and
