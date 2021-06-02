@@ -1,7 +1,8 @@
 # Trash
 
 It's been
-50 years since Yacc was first developed, but the state of development hasn't
+50 years since Yacc was first developed, but the state of development
+of grammars hasn't
 progressed that much: we are still entering in grammars manually
 from books,
 still informally specifying programming languages (now with online "user manuals"
