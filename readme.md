@@ -332,6 +332,10 @@ You must have the NET SDK installed to build and run.
 ## 0.8.1 (1 Jun 2021)
 
 * Preliminary release of the toolset. Incompatible with 0.8.0.
+Many changes to trgen, trparse, trsponge, trxml2, trcombine, trsplit,
+tragl, trdelabel, trxml, trwdog, tragl, etc, in order
+to handle new parsing result
+sets, new self-help documentation, new options, bugs, etc.
 
 # Prior Releases
 
