@@ -6,6 +6,7 @@
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Collections.Generic;
     using System.Data;
+    using System.IO;
     using System.Linq;
     using System.Text.Json;
 
@@ -13,15 +14,11 @@
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trxgrep <string>
-Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
-
-Example:
-    trparse A.g4 | trxgrep ""//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']""
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trxgrep.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)
