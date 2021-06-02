@@ -1,9 +1,11 @@
 # Trash
 
 It's been
-50 years since Yacc was first developed, but we are still entering in grammars manually
+50 years since Yacc was first developed, but the state of development hasn't
+progressed that much: we are still entering in grammars manually
 from books,
-still informally specifying programming languages, still hand-writing parsers (insisting
+still informally specifying programming languages (now with online "user manuals"),
+still hand-writing parsers insisting
 that a hand-written parser is faster and better than a generated one--even if from a
 hand-tweaked template!), modifying the hand-written parser even before defining
 what the syntax is supposed to be, and still...still using Yacc!
