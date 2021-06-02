@@ -257,12 +257,6 @@ The list of currently available commands is:
 | W3C EBNF | .ebnf |
 | ISO 14977 | .iso14977, .iso |
 
-# Current release
-
-## 0.8.0 (27 May 2021)
-
-* Preliminary release of the toolset.
-
 ## Analysis
 
 ### Recursion
@@ -333,9 +327,17 @@ check out my [blog](http://codinggorilla.com).
 
 You must have the NET SDK installed to build and run.
 
+# Current release
+
+## 0.8.1 (1 Jun 2021)
+
+* Preliminary release of the toolset. Incompatible with 0.8.0.
+
 # Prior Releases
 
-(Incomplete.)
+## 0.8.0 (27 May 2021)
+
+* Preliminary release of the toolset.
 
 # Roadmap
 
