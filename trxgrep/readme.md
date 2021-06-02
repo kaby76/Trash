@@ -13,4 +13,3 @@ Find all sub-trees in a parse tree using the given XPath expression.
 # Current version
 
 0.8.1 -- Improved help and documentation.
-
