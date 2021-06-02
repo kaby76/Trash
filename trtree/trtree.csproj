@@ -8,14 +8,8 @@
     <AssemblyName>trtree</AssemblyName>
     <PackageId>trtree</PackageId>
     <Description>
-      <![CDATA[
+      <![CDATA[Reads a tree from stdin and prints the tree as an indented node list.
 This program is part of the Trash toolkit.
-
-trtree
-Reads a tree from stdin and prints the tree as an indented node list.
-
-Example:
-    trparse A.g4 | trtree
 ]]>
     </Description>
     <ToolCommandName>trtree</ToolCommandName>
@@ -43,4 +37,19 @@ Example:
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 {
     using Antlr4.Runtime.Tree;
     using LanguageServer;
+    using System.IO;
     using System.Text;
     using System.Text.Json;
 
@@ -9,15 +10,11 @@
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trtree
-Reads a tree from stdin and prints the tree as an indented node list.
-
-Example:
-    trparse A.g4 | trtree
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trtree.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)
