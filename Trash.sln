@@ -68,6 +68,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tragl", "tragl\tragl.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdelabel", "trdelabel\trdelabel.csproj", "{BEE77854-573F-4088-9B1D-F3B4C12372A6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trmvsr", "trmvsr\trmvsr.csproj", "{8EC09E42-D369-4AF8-8C9C-4151FA5BBE15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,6 +196,10 @@ Global
 		{BEE77854-573F-4088-9B1D-F3B4C12372A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEE77854-573F-4088-9B1D-F3B4C12372A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEE77854-573F-4088-9B1D-F3B4C12372A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EC09E42-D369-4AF8-8C9C-4151FA5BBE15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EC09E42-D369-4AF8-8C9C-4151FA5BBE15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EC09E42-D369-4AF8-8C9C-4151FA5BBE15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EC09E42-D369-4AF8-8C9C-4151FA5BBE15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
