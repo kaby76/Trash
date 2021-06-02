@@ -9,14 +9,8 @@
     <AssemblyName>trwdog</AssemblyName>
     <PackageId>trwdog</PackageId>
     <Description>
-      <![CDATA[
+      <![CDATA[Execute a command with a watchdog timer.
 This program is part of the Trash toolkit.
-
-trwdog <arg>+
-Execute a command with a watchdog timer.
-
-Example:
-    trwdog make test
 ]]>
     </Description>
     <ToolCommandName>trwdog</ToolCommandName>
@@ -31,5 +25,19 @@ Example:
     <PackageReference Include="System.Management" Version="5.0.0" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
   </ItemGroup>
-
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>
