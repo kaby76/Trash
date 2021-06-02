@@ -8,9 +8,9 @@ still informally specifying programming languages (now with online "user manuals
 still hand-writing parsers insisting
 that a hand-written parser is faster and better than a generated one--even if from a
 hand-tweaked template!), modifying the hand-written parser even before defining
-what the syntax is supposed to be, and still...still using Yacc!
+what the syntax is supposed to be, and still...[still using Yacc](https://stackoverflow.com/search?tab=newest&q=bison)!
 
-Of course, there are
+Of course, parsing algorithms have changed, and there are
 [dozens of parser generators](https://en.wikipedia.org/wiki/Comparison_of_parser_generators).
 But, there are few, if any, compiler-based tools to help edit grammars and to convert a grammar
 from one generator to the next.
