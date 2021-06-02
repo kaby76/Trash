@@ -80,7 +80,6 @@
             }
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.Write(js1);
-
         }
     }
 }
