@@ -4,7 +4,8 @@ It's been
 50 years since Yacc was first developed, but the state of development hasn't
 progressed that much: we are still entering in grammars manually
 from books,
-still informally specifying programming languages (now with online "user manuals"),
+still informally specifying programming languages (now with online "user manuals"
+and [abandoning stating the CFG altogether](https://docs.julialang.org/en/v1/)),
 still hand-writing parsers insisting
 that a hand-written parser is faster and better than a generated one--even if from a
 hand-tweaked template!), modifying the hand-written parser even before defining
