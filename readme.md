@@ -208,7 +208,7 @@ Linux: the parse tree data is split and placed in files.
 
 ## Parsing Result Sets -- the data passed between commands
 
-A *result set* is a JSON serialization of:
+A *parsing result set* is a JSON serialization of an array of:
 
 * A set of parse tree nodes.
 * Parser information related to the parse tree nodes.
@@ -216,7 +216,7 @@ A *result set* is a JSON serialization of:
 * The name of the input corresponding to the parse tree nodes.
 * The input text corresponding to the parse tree nodes.
 
-Most commands in Trash read and/or write parse result sets.
+Most commands in Trash read and/or write parsing result sets.
 
 ## Commands of Trash
 
