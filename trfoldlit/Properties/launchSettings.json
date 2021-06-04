@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trfoldlit": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt \" //lexerRuleSpec/TOKEN_REF\"",
+      "workingDirectory": "C:\\msys64\\home\\kenne\\scannerless\\Generated"
+    }
+  }
+}
