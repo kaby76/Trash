@@ -8,7 +8,10 @@ namespace Trash
         [Option('f', "file", Required = false)]
         public string File { get; set; }
 
-        [Option('o', "overwrite", Required = false)]
-        public bool? Overwrite { get; set; }
+        [Option('c', "clobber", Required = false)]
+        public bool? Clobber { get; set; }
+
+        [Option('o', "output-directory", Required = false)]
+        public string OutputDirectory { get; set; }
     }
 }
