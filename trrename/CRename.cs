@@ -12,17 +12,11 @@
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trrename <string> <string>
-Rename a symbol, the first parameter as specified by the xpath expression string,
-to a new name, the second parameter as a string. The result may place all changed
-grammars that use the symbol on the stack.
-
-Example:
-    cat pt.data | trrename ""//parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']"" xxx | trtext > new-grammar.g4
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trkleene.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)

@@ -12,4 +12,4 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 # Current version
 
-0.8.1 -- Improved help and documentation.
+0.8.2 -- Improved help and documentation.

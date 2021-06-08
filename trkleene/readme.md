@@ -4,7 +4,7 @@ Replace a rule with an EBNF form if it contains direct left or direct right recu
 
 # Usage
 
-trkleene <string>?
+    trkleene <string>?
 
 # Examples
 
@@ -13,4 +13,4 @@ trkleene <string>?
 
 # Current version
 
-0.8.1 -- Improved help and documentation.
+0.8.2 -- Improved help and documentation.

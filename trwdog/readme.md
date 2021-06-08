@@ -12,4 +12,4 @@ Execute a command with a watchdog timer.
 
 # Current version
 
-0.8.1 -- Improved help and documentation.
+0.8.2 -- Improved help and documentation.
