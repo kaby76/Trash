@@ -1,5 +1,4 @@
 ./Antlr4cs/CaseChangingCharStream.cs
-./Antlr4cs/Encodings.cs
 ./Antlr4cs/makefile
 ./Antlr4cs/Program.cs
 ./Antlr4cs/Test.csproj

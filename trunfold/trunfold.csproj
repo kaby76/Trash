@@ -8,19 +8,8 @@
     <AssemblyName>trunfold</AssemblyName>
     <PackageId>trunfold</PackageId>
     <Description>
-      <![CDATA[
-This program is part of the Trash toolkit.
-
-trunfold <string>
-The unfold command applies the unfold transform to a collection of terminal nodes
-in the parse tree, which is identified with the supplied xpath expression. Prior
-to using this command, you must have the file parsed. An unfold operation substitutes
-the right-hand side of a parser or lexer rule into a reference of the rule name that
-occurs at the specified node. The resulting code is parsed and placed on the top of
-stack.
-
-Example:
-    trparse A.g4 | trunfold ""//parserRuleSpec//labeledAlt//RULE_REF[text() = 'markerAnnotation']""
+      <![CDATA[Apply the unfold transform to a collection of terminal nodes
+in the parse tree. This program is part of the Trash toolkit.
 ]]>
     </Description>
     <ToolCommandName>trunfold</ToolCommandName>
@@ -49,4 +38,18 @@ Example:
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>

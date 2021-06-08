@@ -27,32 +27,34 @@
             config = co;
             suffix = config.target switch
             {
-                TargetType.CSharp => ".cs",
-                TargetType.Java => ".java",
-                TargetType.JavaScript => ".js",
+                TargetType.Antlr4cs => ".cs",
                 TargetType.Cpp => ".cpp",
+                TargetType.CSharp => ".cs",
                 TargetType.Dart => ".dart",
                 TargetType.Go => ".go",
+                TargetType.Java => ".java",
+                TargetType.JavaScript => ".js",
                 TargetType.Php => ".php",
                 TargetType.Python2 => ".py",
                 TargetType.Python3 => ".py",
                 TargetType.Swift => ".swift",
-                TargetType.Antlr4cs => ".cs",
+                TargetType.TypeScript => ".ts",
                 _ => throw new NotImplementedException(),
             };
             target_specific_src_directory = config.target switch
             {
-                TargetType.CSharp => "CSharp",
-                TargetType.Java => "Java",
-                TargetType.JavaScript => "JavaScript",
+                TargetType.Antlr4cs => "Antlr4cs",
                 TargetType.Cpp => "Cpp",
+		TargetType.CSharp => "CSharp",
                 TargetType.Dart => "Dart",
                 TargetType.Go => "Go",
+		TargetType.Java => "Java",
+		TargetType.JavaScript => "JavaScript",
                 TargetType.Php => "Php",
                 TargetType.Python2 => "Python2",
                 TargetType.Python3 => "Python3",
                 TargetType.Swift => "Swift",
-                TargetType.Antlr4cs => "Antlr4cs",
+		TargetType.TypeScript => "TypeScript",
                 _ => throw new NotImplementedException(),
             };
             if (config.template_sources_directory != null)
@@ -194,16 +196,17 @@
             return target switch
             {
                 TargetType.Antlr4cs => "Antlr4cs",
+		TargetType.Cpp => "Cpp",
                 TargetType.CSharp => "CSharp",
-                TargetType.Java => "Java",
-                TargetType.JavaScript => "JavaScript",
-                TargetType.Cpp => "Cpp",
                 TargetType.Dart => "Dart",
                 TargetType.Go => "Go",
+		TargetType.Java => "Java",
+		TargetType.JavaScript => "JavaScript",
                 TargetType.Php => "Php",
                 TargetType.Python2 => "Python2",
                 TargetType.Python3 => "Python3",
-                TargetType.Swift => "Swift",
+		TargetType.Swift => "Swift",
+		TargetType.TypeScript => "TypeScript",
                 _ => throw new NotImplementedException(),
             };
         }
@@ -211,17 +214,19 @@
         public static string AllButTargetName(TargetType target)
         {
             var all_but = new List<string>() {
-                "CSharp",
-                "Java",
-                "JavaScript",
+                "Antlr4cs",
                 "Cpp",
+		"CSharp",
                 "Dart",
                 "Go",
+		"Java",
+		"JavaScript",
                 "Php",
                 "Python2",
                 "Python3",
-                "Swift",
-                "Antlr4cs"};
+		"Swift",
+		"TypeScript",
+	    };
             var filter = String.Join("/|", all_but.Where(t => t != TargetName(target)));
             return filter;
         }

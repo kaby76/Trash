@@ -13,5 +13,6 @@
         Python2,
         Python3,
         Swift,
+        TypeScript,
     }
 }

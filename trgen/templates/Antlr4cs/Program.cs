@@ -85,13 +85,8 @@ public class Program
                     new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
         } else if (file_name != null)
         {
-            if (two_byte)
-                str = new TwoByteCharStream(file_name);
-            else
-            {
-                FileStream fs = new FileStream(file_name, FileMode.Open);
-                str = new Antlr4.Runtime.AntlrInputStream(fs);
-            }
+            FileStream fs = new FileStream(file_name, FileMode.Open);
+            str = new Antlr4.Runtime.AntlrInputStream(fs);
         }
 <if (case_insensitive_type)>
         str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");

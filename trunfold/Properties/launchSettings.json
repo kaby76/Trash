@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trunfold": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt \" //parserRuleSpec/RULE_REF[text() = 'atom']\" ",
+      "workingDirectory": "C:\\msys64\\home\\kenne\\plsql\\plsql"
+    }
+  }
+}
