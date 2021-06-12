@@ -1,20 +1,17 @@
 ﻿namespace Trash
 {
+    using System.IO;
     using System.Text.Json;
 
     class CPrint
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trprint
-Print out text file at the top of stack.
-
-Example:
-    trparse A.g4 | trprint
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trprint.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)

@@ -8,15 +8,8 @@
     <AssemblyName>trtokens</AssemblyName>
     <PackageId>trtokens</PackageId>
     <Description>
-      <![CDATA[
-This program is part of the Trash toolkit.
-
-trtokens
-Print out the tokens for the parse tree.
-
-Example:
-    trparse A.g4 | trtokens
-]]>
+      <![CDATA[Print out the tokens for the parse tree.
+This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>trtokens</ToolCommandName>
     <RootNamespace>trtokens</RootNamespace>
@@ -43,4 +36,18 @@ Example:
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>

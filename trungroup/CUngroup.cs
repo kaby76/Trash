@@ -5,6 +5,7 @@
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text.Json;
 
@@ -12,15 +13,11 @@
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trungroup <string>
-Perform an ungroup transformation of the 'element' node(s) specified by the string.
-
-Example:
-    trparse A.g4 | trungroup ""//parserRuleSpec[RULE_REF/text() = 'a']//ruleAltList""
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trungroup.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)

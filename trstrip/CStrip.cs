@@ -4,23 +4,18 @@
     using AntlrJson;
     using LanguageServer;
     using System.Collections.Generic;
+    using System.IO;
     using System.Text.Json;
 
     class CStrip
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trstrip
-Replaces the grammar at the top of stack with one that has all comments, labels, and
-action blocks removed. The resulting grammar is a basic CFG. Once completed, you can write
-the grammar out using 'write'.
-
-Example:
-    trparse A.g4 | trstrip
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trstrip.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public void Execute(Config config)

@@ -8,9 +8,8 @@
     <AssemblyName>trxml</AssemblyName>
     <PackageId>trxml</PackageId>
     <Description>
-      <![CDATA[This program is part of the Trash toolkit.
-Read a tree from stdin and write an XML represenation of it.
-]]>
+      <![CDATA[Read a tree from stdin and write an XML represenation of it.
+This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>trxml</ToolCommandName>
     <RootNamespace>trxml</RootNamespace>
@@ -39,7 +38,6 @@ Read a tree from stdin and write an XML represenation of it.
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
   </PropertyGroup>
   <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">

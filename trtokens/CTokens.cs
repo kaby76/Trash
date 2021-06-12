@@ -3,6 +3,7 @@
     using Antlr4.Runtime.Tree;
     using LanguageServer;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Text.Json;
@@ -11,15 +12,11 @@
     {
         public string Help()
         {
-            return @"
-This program is part of the Trash toolkit.
-
-trtokens
-Print out the tokens for the parse tree.
-
-Example:
-    trparse A.g4 | trtokens
-";
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trtokens.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         private string Reconstruct(IParseTree tree)

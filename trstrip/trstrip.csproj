@@ -8,17 +8,9 @@
     <AssemblyName>trstrip</AssemblyName>
     <PackageId>trstrip</PackageId>
     <Description>
-      <![CDATA[
-This program is part of the Trash toolkit.
-
-trstrip
-Replaces the grammar at the top of stack with one that has all comments, labels, and
-action blocks removed. The resulting grammar is a basic CFG. Once completed, you can write
-the grammar out using 'write'.
-
-Example:
-    trparse A.g4 | trstrip
-]]>
+      <![CDATA[Read the parse tree data from stdin and strip the grammar
+of all comments, labels, and action blocks.
+This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>trstrip</ToolCommandName>
     <RootNamespace>trstrip</RootNamespace>
@@ -46,4 +38,18 @@ Example:
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>

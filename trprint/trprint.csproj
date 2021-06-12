@@ -8,15 +8,8 @@
     <AssemblyName>trprint</AssemblyName>
     <PackageId>trprint</PackageId>
     <Description>
-      <![CDATA[
-This program is part of the Trash toolkit.
-
-trprint
-Print out text file at the top of stack.
-
-Example:
-    trparse A.g4 | trprint
-]]>
+      <![CDATA[Read stdin and print out the text for the tree.
+This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>trprint</ToolCommandName>
     <RootNamespace>trprint</RootNamespace>
@@ -43,4 +36,19 @@ Example:
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>

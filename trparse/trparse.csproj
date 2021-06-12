@@ -39,7 +39,6 @@ This program is part of the Trash toolkit.]]>
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
   </PropertyGroup>
   <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">

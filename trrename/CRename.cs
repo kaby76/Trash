@@ -12,7 +12,7 @@
     {
         public string Help()
         {
-            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trkleene.readme.md"))
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trrename.readme.md"))
             using (StreamReader reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
