@@ -19,6 +19,12 @@ do
 	popd
 done
 
+pushd trgen
+rm -f asdfasdf
+cat CGen.cs | sed -e 's%"[0123456789][.][0123456789][.][0123456789]"%"'$version'"%' > asdfasdf
+mv asdfasdf CGen.cs
+popd
+
 version="0.8.2"
 for i in tranalyze trcombine trconvert trdelabel trdelete trfold trfoldlit trgen trgroup trjson trkleene trmvsr trparse trprint trrename trsplit trsponge trst trstrip trtext trtokens trtree trunfold trungroup trwdog trxgrep trxml trxml2
 do
