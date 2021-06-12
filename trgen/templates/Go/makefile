@@ -1,5 +1,4 @@
-# Generated code from Antlr4BuildTasks.dotnet-antlr v <version>
-# Makefile for Arithmetic.g4
+# Template generated code from trgen <version>
 JAR = <antlr_tool_path>
 CLASSPATH = $(JAR)<if(path_sep_semi)>\;<else>:<endif>.
 .SUFFIXES: .g4 .go

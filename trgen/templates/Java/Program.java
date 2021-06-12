@@ -1,4 +1,4 @@
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v <version>
+// Template generated code from trgen <version>
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

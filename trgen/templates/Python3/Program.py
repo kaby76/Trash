@@ -1,4 +1,4 @@
-# Template generated code from Antlr4BuildTasks.dotnet-antlr v 2.2
+# Template generated code from trgen <version>
 
 import sys
 from antlr4 import *

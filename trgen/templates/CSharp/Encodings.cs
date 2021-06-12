@@ -1,3 +1,5 @@
+// Template generated code from trgen <version>
+
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using System;

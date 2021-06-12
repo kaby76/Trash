@@ -1,4 +1,4 @@
-# Generated code from Antlr4BuildTasks.dotnet-antlr v <version>
+# Template generated code from trgen <version>
 default:
 	rm -rf build; mkdir build; cd build; cmake .. <cmake_target>; $(MAKE)
 run:

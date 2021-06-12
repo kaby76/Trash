@@ -1,4 +1,4 @@
-// Template generated code from Antlr4BuildTasks.dotnet-antlr v <version>
+// Template generated code from trgen <version>
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
