@@ -8,10 +8,8 @@
     <AssemblyName>trxml2</AssemblyName>
     <PackageId>trxml2</PackageId>
     <Description>
-      <![CDATA[trxml2.
-This package can be installed as a dotnet global or local tool.
-This tool converts an XML file into a list of XPATH expressions corresponding to
-the leaves of the tree. This tool is analogous to XML2.]]>
+      <![CDATA[Read an xml file and enumerate all paths to elements in xpath syntax.
+This program is part of the Trash toolkit.]]>
     </Description>
     <ToolCommandName>trxml2</ToolCommandName>
     <RootNamespace>trxml2</RootNamespace>
@@ -20,4 +18,21 @@ the leaves of the tree. This tool is analogous to XML2.]]>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Version>0.8.3</Version>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
 </Project>

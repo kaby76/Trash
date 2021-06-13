@@ -1,93 +1,68 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-
-namespace trxml2
+﻿namespace Trash
 {
+    using CommandLine;
+    using CommandLine.Text;
+    using System;
+    using System.Collections.Generic;
+
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            if (args.Length == 0)
+            try
             {
-                Process();
+                new Program().MainInternal(args);
             }
+            catch (Exception e)
+            {
+                System.Console.Error.WriteLine(e.ToString());
+                System.Environment.Exit(1);
+            }
+        }
+
+        void DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
+        {
+            HelpText helpText = null;
+            if (errs.IsVersion())  //check if error is version request
+                helpText = HelpText.AutoBuild(result);
             else
             {
-                foreach (var arg in args)
+                helpText = HelpText.AutoBuild(result, h =>
                 {
-                    Process(arg);
+                    h.AdditionalNewLineAfterOption = false;
+                    h.Heading = "trparse";
+                    h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
+                    h.AddPreOptionsText(new CXml2().Help());
+                    return HelpText.DefaultParsingErrorsHandler(result, h);
+                }, e => e);
+            }
+            Console.Error.WriteLine(helpText);
+        }
+
+        public void MainInternal(string[] args)
+        {
+            var config = new Config();
+            var result = new CommandLine.Parser().ParseArguments<Config>(args);
+            bool stop = false;
+            result.WithNotParsed(
+                errs =>
+                {
+                    DisplayHelp(result, errs);
+                    stop = true;
+                });
+            if (stop) return;
+            result.WithParsed(o =>
+            {
+                var ty = typeof(Config);
+                foreach (var prop in ty.GetProperties())
+                {
+                    if (prop.GetValue(o, null) != null)
+                    {
+                        prop.SetValue(config, prop.GetValue(o, null));
+                    }
                 }
-            }
-        }
-
-        private static void Process()
-        {
-            try
-            {
-                XDocument oldDocument = XDocument.Load(System.Console.In);
-                Process(oldDocument);
-            }
-            catch (Exception e)
-            {
-                System.Console.Error.WriteLine("Error in file " + e.ToString());
-            }
-        }
-
-        private static void Process(string file_name)
-        {
-            try
-            {
-                XDocument oldDocument = XDocument.Load(file_name);
-                Process(oldDocument);
-            }
-            catch (Exception e)
-            {
-                System.Console.Error.WriteLine("Error in file " + e.ToString());
-            }
-        }
-
-        private static void Process(XDocument oldDocument)
-        {
-            string xslt = @"<xsl:stylesheet version=""1.0"" xmlns:xsl=""http://www.w3.org/1999/XSL/Transform"">
-
-    <xsl:output method=""text"" indent=""no"" />
-
-    <xsl:template match=""*[not(*)]"">
-        <xsl:for-each select=""ancestor-or-self::*"">
-            <xsl:value-of select=""concat('/', name())""/>
-        </xsl:for-each>
-        <xsl:text>=</xsl:text>
-        <xsl:value-of select="".""/>
-        <xsl:text>&#xA;</xsl:text>
-        <xsl:apply-templates select=""*""/>
-    </xsl:template>
-
-    <xsl:template match=""*"">
-        <xsl:apply-templates select=""*""/>
-    </xsl:template>
-
-</xsl:stylesheet>";
-            var newDocument = new XDocument();
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.OmitXmlDeclaration = true;
-            settings.Encoding = Encoding.Unicode;
-            settings.ConformanceLevel = ConformanceLevel.Auto;
-            MemoryStream strm = new MemoryStream();
-            XmlWriter writer = XmlWriter.Create(strm, settings);
-            var stringReader = new StringReader(xslt);
-            XmlReader xsltReader = XmlReader.Create(stringReader);
-            var transformer = new XslCompiledTransform();
-            transformer.Load(xsltReader);
-            XmlReader oldDocumentReader = oldDocument.CreateReader();
-            transformer.Transform(oldDocumentReader, writer);
-            writer.Flush();
-            writer.Close();
-            var result = Encoding.Unicode.GetString(strm.ToArray()).Substring(1);
-            Console.WriteLine(result);
+            });
+            new CXml2().Execute(config);
         }
     }
 }
