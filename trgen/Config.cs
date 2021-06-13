@@ -8,6 +8,9 @@ namespace Trash
         [Option("all_source_pattern", Required = false, HelpText = "R.E. for all source files to use.")]
         public string all_source_pattern { get; set; }
 
+        [Option("antlr-encoding", Required = false, Default = "utf-8")]
+        public string antlr_encoding { get; set; }
+
         [Option("antlr-tool-args", Required = false)]
         public IEnumerable<string> antlr_tool_args { get; set; }
 

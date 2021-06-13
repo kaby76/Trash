@@ -17,7 +17,7 @@ clean:
 run:
 	trwdog python Program.py $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
-	java -jar $(JAR) -Dlanguage=Python3 <antlr_tool_args:{y | <y> } > $\<
+	java -jar $(JAR) -encoding <antlr_encoding> -Dlanguage=Python3 <antlr_tool_args:{y | <y> } > $\<
 } >
 test:
 	bash test.sh

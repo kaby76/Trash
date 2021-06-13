@@ -17,7 +17,7 @@ clean:
 run:
 	trwdog node index.js $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
-	java -jar $(JAR) -Dlanguage=JavaScript <antlr_tool_args:{y | <y> } > $\<
+	java -jar $(JAR) -encoding <antlr_encoding> -Dlanguage=JavaScript <antlr_tool_args:{y | <y> } > $\<
 } >
 test:
 	bash test.sh

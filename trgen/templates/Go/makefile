@@ -15,7 +15,7 @@ clean:
 run:
 	export GO111MODULE=auto; trwdog go run Program.go $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
-	java -jar $(JAR) -Dlanguage=Go <antlr_tool_args:{y | <y> } > $\<
+	java -jar $(JAR) -encoding <antlr_encoding> -Dlanguage=Go <antlr_tool_args:{y | <y> } > $\<
 } >
 	export GO111MODULE=auto; go build Program.go
 test:

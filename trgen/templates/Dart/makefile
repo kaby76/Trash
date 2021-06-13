@@ -17,7 +17,7 @@ clean:
 run:
 	trwdog <if(os_win)>dart.bat<else>dart<endif> run cli.dart $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
-	java -jar $(JAR) -Dlanguage=Dart <antlr_tool_args:{y | <y> } > $\<
+	java -jar $(JAR) -encoding <antlr_encoding> -Dlanguage=Dart <antlr_tool_args:{y | <y> } > $\<
 } >
 test:
 	bash test.sh

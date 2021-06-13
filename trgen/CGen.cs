@@ -45,16 +45,16 @@
             {
                 TargetType.Antlr4cs => "Antlr4cs",
                 TargetType.Cpp => "Cpp",
-		TargetType.CSharp => "CSharp",
+                TargetType.CSharp => "CSharp",
                 TargetType.Dart => "Dart",
                 TargetType.Go => "Go",
-		TargetType.Java => "Java",
-		TargetType.JavaScript => "JavaScript",
+                TargetType.Java => "Java",
+                TargetType.JavaScript => "JavaScript",
                 TargetType.Php => "Php",
                 TargetType.Python2 => "Python2",
                 TargetType.Python3 => "Python3",
                 TargetType.Swift => "Swift",
-		TargetType.TypeScript => "TypeScript",
+                TargetType.TypeScript => "TypeScript",
                 _ => throw new NotImplementedException(),
             };
             if (config.template_sources_directory != null)
@@ -196,17 +196,17 @@
             return target switch
             {
                 TargetType.Antlr4cs => "Antlr4cs",
-		TargetType.Cpp => "Cpp",
+                TargetType.Cpp => "Cpp",
                 TargetType.CSharp => "CSharp",
                 TargetType.Dart => "Dart",
                 TargetType.Go => "Go",
-		TargetType.Java => "Java",
-		TargetType.JavaScript => "JavaScript",
+                TargetType.Java => "Java",
+                TargetType.JavaScript => "JavaScript",
                 TargetType.Php => "Php",
                 TargetType.Python2 => "Python2",
                 TargetType.Python3 => "Python3",
-		TargetType.Swift => "Swift",
-		TargetType.TypeScript => "TypeScript",
+                TargetType.Swift => "Swift",
+                TargetType.TypeScript => "TypeScript",
                 _ => throw new NotImplementedException(),
             };
         }
@@ -216,17 +216,17 @@
             var all_but = new List<string>() {
                 "Antlr4cs",
                 "Cpp",
-		"CSharp",
+                "CSharp",
                 "Dart",
                 "Go",
-		"Java",
-		"JavaScript",
+                "Java",
+                "JavaScript",
                 "Php",
                 "Python2",
                 "Python3",
-		"Swift",
-		"TypeScript",
-	    };
+                "Swift",
+                "TypeScript",
+            };
             var filter = String.Join("/|", all_but.Where(t => t != TargetName(target)));
             return filter;
         }
@@ -827,6 +827,7 @@
                     })
                         .Select(t => t.Substring(p.config.output_directory.Length))
                         .ToList());
+                    t.Add("antlr_encoding", config.antlr_encoding);
                     t.Add("antlr_tool_args", config.antlr_tool_args);
                     t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(config.start_rule));
@@ -915,6 +916,7 @@
                     })
                         .Select(t => t.Substring(p.config.output_directory.Length))
                         .ToList());
+                    t.Add("antlr_encoding", config.antlr_encoding);
                     t.Add("antlr_tool_args", config.antlr_tool_args);
                     t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(config.start_rule));

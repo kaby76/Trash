@@ -22,7 +22,7 @@ clean:
 run:
 	trwdog java -classpath $(CLASSPATH) Program $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
-	java -jar $(JAR) <antlr_tool_args:{y | <y> } > $\<
+	java -jar $(JAR) -encoding <antlr_encoding> <antlr_tool_args:{y | <y> } > $\<
 } >
 test:
 	bash test.sh
