@@ -13,4 +13,4 @@ results to file(s).
 
 # Current version
 
-0.8.2 -- Improved help and documentation.
+0.8.3 -- Updated trfoldlit, trgen and templates, trmvsr, trsponge, trunfold, trxml2

@@ -13,4 +13,4 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 # Current version
 
-0.8.2 -- Improved help and documentation.
+0.8.3 -- Updated trfoldlit, trgen and templates, trmvsr, trsponge, trunfold, trxml2
