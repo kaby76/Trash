@@ -94,7 +94,7 @@
         }
 
         public Config config;
-        public static string version = "0.8.3";
+        public static string version = "0.8.4";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;

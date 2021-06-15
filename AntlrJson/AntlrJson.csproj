@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-		<PackageReference Include="Domemtech.TrashBase" Version="1.3.0" />
+		<PackageReference Include="Domemtech.TrashBase" Version="1.4.0" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
