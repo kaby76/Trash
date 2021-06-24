@@ -42,4 +42,4 @@ the `--type` command-line option:
 
 # Current version
 
-0.8.3 -- Updated trfoldlit, trgen and templates, trmvsr, trsponge, trunfold, trxml2
+0.8.4 -- Updated tranalyze with detection of infinite recursion within rule. Updated basic graph implementations.
