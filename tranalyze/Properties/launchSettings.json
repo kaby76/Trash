@@ -3,7 +3,7 @@
     "tranalyze": {
       "commandName": "Project",
       "commandLineArgs": "--file o.pt",
-      "workingDirectory": "C:\\msys64\\home\\kenne\\foo\\Generated"
+      "workingDirectory": "c:/Users/kenne/Documents/GitHub/grammars-upstream/csharp/"
     }
   }
 }
