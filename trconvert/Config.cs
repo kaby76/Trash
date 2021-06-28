@@ -6,5 +6,9 @@ namespace Trash
     {
         [Option('f', "file", Required = false)]
         public string File { get; set; }
+
+        [Option('t', "type", Required = false)]
+        public string Type { get; set; }
+
     }
 }

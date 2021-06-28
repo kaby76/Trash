@@ -44,11 +44,12 @@
                 var doc = Docs.Class1.CreateDoc(parse_info);
                 var f = doc.FullPath;
                 var type = parse_info.Parser.GrammarFileName;
+                var out_type = config.Type;
                 Dictionary<string, string> res = null;
                 if (type == "ANTLRv3Parser.g4")
                 {
                     var imp = new LanguageServer.ConvertAntlr3();
-                    res = imp.Try(doc.FullPath, doc.Code);
+                    res = imp.Try(doc.FullPath, doc.Code, out_type);
                 }
                 else if (type == "ANTLRv2Parser.g4")
                 {
