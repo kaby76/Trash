@@ -54,17 +54,22 @@
                 else if (type == "ANTLRv2Parser.g4")
                 {
                     var imp = new LanguageServer.ConvertAntlr2();
-                    res = imp.Try(doc.FullPath, doc.Code);
+                    res = imp.Try(doc.FullPath, doc.Code, out_type);
                 }
                 else if (type == "BisonParser.g4")
                 {
                     var imp = new LanguageServer.ConvertBison();
-                    res = imp.Try(doc.FullPath, doc.Code);
+                    res = imp.Try(doc.FullPath, doc.Code, out_type);
                 }
                 else if (type == "W3CebnfParser.g4")
                 {
                     var imp = new LanguageServer.ConvertW3Cebnf();
-                    res = imp.Try(doc.FullPath, doc.Code);
+                    res = imp.Try(doc.FullPath, doc.Code, out_type);
+                }
+                else if (type == "LarkParser.g4")
+                {
+                    var imp = new LanguageServer.ConvertLark();
+                    res = imp.Try(doc.FullPath, doc.Code, out_type);
                 }
                 else if (type == "ANTLRv4Parser.g4")
                 {
