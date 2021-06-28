@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-i \"1+2\"",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trgen\\empty\\Generated"
+      "commandLineArgs": "-t lark ab.lark",
+      "workingDirectory": "c:/Users/kenne/Documents/GitHub/i2248/lark/examples"
     }
   }
 }
