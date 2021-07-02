@@ -22,7 +22,68 @@ of `trconvert` is a parse tree containing the converted grammar.
 
 # Examples
 
-    trparse A.g2 | trconvert | trprint > A.g4
+_Conversion of Antlr4 Abnf to Lark Abnf_
+
+    grammar Abnf;
+
+    rulelist : rule_* EOF ;
+    rule_ : ID '=' '/'? elements ;
+    elements : alternation ;
+    alternation : concatenation ( '/' concatenation )* ;
+    concatenation : repetition + ;
+    repetition : repeat_? element ;
+    repeat_ : INT | ( INT? '*' INT? ) ;
+    element : ID | group | option | STRING | NumberValue | ProseValue ;
+    group : '(' alternation ')' ;
+    option : '[' alternation ']' ;
+    NumberValue : '%' ( BinaryValue | DecimalValue | HexValue ) ;
+    fragment BinaryValue : 'b' BIT+ ( ( '.' BIT+ )+ | ( '-' BIT+ ) )? ;
+    fragment DecimalValue : 'd' DIGIT+ ( ( '.' DIGIT+ )+ | ( '-' DIGIT+ ) )? ;
+    fragment HexValue : 'x' HEX_DIGIT+ ( ( '.' HEX_DIGIT+ )+ | ( '-' HEX_DIGIT+ ) )? ;
+    ProseValue : '<' ( ~ '>' )* '>' ;
+    ID : LETTER ( LETTER | DIGIT | '-' )* ;
+    INT : '0' .. '9'+ ;
+    COMMENT : ';' ~ ( '\n' | '\r' )* '\r'? '\n' -> channel ( HIDDEN ) ;
+    WS : ( ' ' | '\t' | '\r' | '\n' ) -> channel ( HIDDEN ) ;
+    STRING : ( '%s' | '%i' )? '"' ( ~ '"' )* '"' ;
+    fragment LETTER : 'a' .. 'z' | 'A' .. 'Z' ;
+    fragment BIT : '0' .. '1' ;
+    fragment DIGIT : '0' .. '9' ;
+    fragment HEX_DIGIT : ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ;
+
+_Command_
+
+    trparse Abnf.g4 | trconvert -t lark | trprint > Abnf.lark
+
+_Output_
+
+    rulelist :  rule_ * EOF 
+    rule_ :  ID "=" "/" ? elements 
+    elements :  alternation 
+    alternation :  concatenation ( "/" concatenation ) * 
+    concatenation :  repetition + 
+    repetition :  repeat_ ? element 
+    repeat_ :  INT | ( INT ? "*" INT ? ) 
+    element :  ID | group | option | STRING | NUMBERVALUE | PROSEVALUE 
+    group :  "(" alternation ")" 
+    option :  "[" alternation "]" 
+    NUMBERVALUE :  "%" ( BINARYVALUE | DECIMALVALUE | HEXVALUE ) 
+    BINARYVALUE :  "b" BIT + ( ( "." BIT + ) + | ( "-" BIT + ) ) ? 
+    DECIMALVALUE :  "d" DIGIT + ( ( "." DIGIT + ) + | ( "-" DIGIT + ) ) ? 
+    HEXVALUE :  "x" HEX_DIGIT + ( ( "." HEX_DIGIT + ) + | ( "-" HEX_DIGIT + ) ) ? 
+    PROSEVALUE :  "<" ( /(?!>)/ ) * ">" 
+    ID :  LETTER ( LETTER | DIGIT | "-" ) * 
+    INT :  "0" .. "9" + 
+    COMMENT :  ";" /(?!\n|\r)/ * "\r" ? "\n" 
+    WS :  ( " " | "\t" | "\r" | "\n" ) 
+    STRING :  ( "%s" | "%i" ) ? "\"" ( /(?!")/ ) * "\"" 
+    LETTER :  "a" .. "z" | "A" .. "Z" 
+    BIT :  "0" .. "1" 
+    DIGIT :  "0" .. "9" 
+    HEX_DIGIT :  ( "0" .. "9" | "a" .. "f" | "A" .. "F" ) 
+
+    %ignore COMMENT
+    %ignore WS
 
 # Current version
 
