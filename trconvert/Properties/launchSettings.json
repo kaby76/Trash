@@ -3,7 +3,7 @@
     "trconvert": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt -t lark",
-      "workingDirectory": "C:\\Users\\kenne\\documents\\github\\i2248\\abb\\"
+      "workingDirectory": "C:\\Users\\kenne\\documents\\github\\i2248\\abnf"
     }
   }
 }
