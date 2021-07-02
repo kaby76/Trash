@@ -73,7 +73,8 @@
                 }
                 else if (type == "ANTLRv4Parser.g4")
                 {
-                    System.Console.WriteLine("Cannot convert an Antlr4 file to Antlr4.");
+                    var imp = new LanguageServer.ConvertAntlr4();
+                    res = imp.Try(doc.FullPath, doc.Code, out_type);
                 }
                 else
                 {
@@ -81,8 +82,8 @@
                 }
 
                 Docs.Class1.EnactEdits(res);
-                var new_fn = res.Where(d => d.Key.EndsWith(".g4")).First().Key;
-                var new_code = res.Where(d => d.Key.EndsWith(".g4")).First().Value;
+                var new_fn = res.First().Key;
+                var new_code = res.First().Value;
                 var converted_doc = Docs.Class1.CreateDoc(new_fn, new_code);
                 var pr = ParsingResultsFactory.Create(converted_doc);
                 IParseTree pt = pr.ParseTree;
