@@ -21,10 +21,35 @@ numbers that are over 32-bits.
 * Check for useless parentheses.
 * Identify if a symbol derives the empty string, a non-empty string, or both.
 * Check for unhalting nonterminals symbols in a single rule or group of rules.
- 
+
 # Example
 
-    trparse A.g4 | tranalyze
+Consider the following combined grammar.
+
+_Input to command_
+
+	grammar Test;
+
+	start : 'a';
+	unused : 'b';
+	infinite : (infinite 'c')+ ;
+	empty : ;
+
+_Command_
+
+    trparse Test.g4 | tranalyze
+
+_Output_
+
+	4 occurrences of a Antlr - nonterminal def
+	1 occurrences of a Antlr - nonterminal ref
+	1 occurrences of a Antlr - keyword
+	3 occurrences of a Antlr - literal
+	Rule start is NonEmpty
+	Rule unused is NonEmpty
+	Rule infinite is NonEmpty
+	Rule empty is Empty
+	Rule infinite is malformed. It does not derive a string with referencing itself.
 
 # Current version
 

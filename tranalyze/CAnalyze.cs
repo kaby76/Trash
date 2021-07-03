@@ -47,15 +47,15 @@
             }
         }
 
-		public void AnalyzeDoc(Workspaces.Document document)
-		{
-			_ = ParsingResultsFactory.Create(document);
-			var results = LanguageServer.Analysis.PerformAnalysis(document);
-			foreach (var r in results)
-			{
-				System.Console.Write(r.Document + " " + r.Severify + " " + r.Start + " " + r.Message);
-				System.Console.WriteLine();
-			}
-		}
+        public void AnalyzeDoc(Workspaces.Document document)
+        {
+            _ = ParsingResultsFactory.Create(document);
+            var results = LanguageServer.Analysis.PerformAnalysis(document);
+            foreach (var r in results)
+            {
+                System.Console.Write((r.Start != 0 ? r.Start + " " : "") + r.Message);
+                System.Console.WriteLine();
+            }
+        }
     }
 }
