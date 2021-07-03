@@ -30,9 +30,11 @@ _Input to command_
 
 	grammar Test;
 
-	start : 'a';
+	start : 'a' empty infinite0 infinite1 infinite2 ;
 	unused : 'b';
-	infinite : (infinite 'c')+ ;
+	infinite0 : (infinite0 'c')* ;  // Not legal in Antlr4 MLR, but okay
+	infinite1 : (infinite1 'c')+ ;  // Not legal in Antlr4 MLR, infinite
+	infinite2 : ('c' infinite2)+ ;  // Not flagged by Antlr4, infinite
 	empty : ;
 
 _Command_
@@ -41,15 +43,19 @@ _Command_
 
 _Output_
 
-	4 occurrences of a Antlr - nonterminal def
-	1 occurrences of a Antlr - nonterminal ref
-	1 occurrences of a Antlr - keyword
-	3 occurrences of a Antlr - literal
+	6 occurrences of Antlr - nonterminal def
+	7 occurrences of Antlr - nonterminal ref
+	1 occurrences of Antlr - keyword
+	5 occurrences of Antlr - literal
 	Rule start is NonEmpty
 	Rule unused is NonEmpty
-	Rule infinite is NonEmpty
+	Rule infinite0 is NonEmpty
+	Rule infinite1 is NonEmpty
+	Rule infinite2 is NonEmpty
 	Rule empty is Empty
-	Rule infinite is malformed. It does not derive a string with referencing itself.
+	Rule infinite1 is malformed. It does not derive a string with referencing itself.
+	Rule infinite2 is malformed. It does not derive a string with referencing itself.
+
 
 # Current version
 
