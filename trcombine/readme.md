@@ -15,9 +15,10 @@ order is irrelevant. The output is parse tree data.
 into one grammar, known as a "combined grammar". This refactoring is
 useful if a simplified grammar grammar is wanted, and if possible if
 the split grammar does not use the "superClass" option in one or the other
-grammars. The opposite refactoring is implemented by `trsplit`.
+grammars. The opposite refactoring is implemented by
+[trsplit](https://github.com/kaby76/Domemtech.Trash/tree/main/trsplit).
 
-The refactoring performs several operations:
+The split refactoring performs several operations:
 
 * Combine the two files together, parser grammar first, then lexer grammar.
 * Remove the `grammarDecl` for the lexer rules, and change the `grammarDecl`
