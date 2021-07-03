@@ -1,6 +1,6 @@
-# Trcombine
+# trcombine
 
-Combine two grammars into one grammar.
+Combine two grammars into one.
 One grammar must be a lexer grammar, the other a parser grammar,
 order is irrelevant. The output is parse tree data.
 
@@ -10,8 +10,14 @@ order is irrelevant. The output is parse tree data.
 
 # Details
 
-`trcombine` converts grammars that are split into Antlr4 lexer and parser grammars
-and combines them into one file. Surprisely, this requires several operations:
+`trcombine` combines grammars that are known as "split grammars"
+(separate Antlr4 lexer and parser grammars)
+into one grammar, known as a "combined grammar". This refactoring is
+useful if a simplified grammar grammar is wanted, and if possible if
+the split grammar does not use the "superClass" option in one or the other
+grammars. The opposite refactoring is implemented by `trsplit`.
+
+The refactoring performs several operations:
 
 * Combine the two files together, parser grammar first, then lexer grammar.
 * Remove the `grammarDecl` for the lexer rules, and change the `grammarDecl`
