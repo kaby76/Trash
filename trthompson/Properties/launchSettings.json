@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trtree": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "C:\\msys64\\home\\kenne\\bar"
+    }
+  }
+}

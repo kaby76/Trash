@@ -32,9 +32,9 @@ namespace Trash
                 helpText = HelpText.AutoBuild(result, h =>
                 {
                     h.AdditionalNewLineAfterOption = false;
-                    h.Heading = "trtree";
+                    h.Heading = "trthompson";
                     h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
-                    h.AddPreOptionsText(new CTree().Help());
+                    h.AddPreOptionsText(new CThompson().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
             }
@@ -64,7 +64,7 @@ namespace Trash
                     }
                 }
             });
-            new CTree().Execute(config);
+            new CThompson().Execute(config);
         }
     }
 }
