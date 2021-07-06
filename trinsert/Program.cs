@@ -30,9 +30,9 @@ namespace Trash
                 helpText = HelpText.AutoBuild(result, h =>
                 {
                     h.AdditionalNewLineAfterOption = false;
-                    h.Heading = "trdelete";
+                    h.Heading = "trinsert";
                     h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
-                    h.AddPreOptionsText(new CDelete().Help());
+                    h.AddPreOptionsText(new CInsert().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
             }
@@ -65,7 +65,7 @@ namespace Trash
                 }
                 if (o.Expr != null) config.Expr = o.Expr;
             });
-            new CDelete().Execute(config);
+            new CInsert().Execute(config);
         }
     }
 }

@@ -5,14 +5,14 @@
     <PackAsTool>true</PackAsTool>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <AssemblyName>trfoldlit</AssemblyName>
-    <PackageId>trfoldlit</PackageId>
+    <AssemblyName>trinsert</AssemblyName>
+    <PackageId>trinsert</PackageId>
     <Description>
-      <![CDATA[Replace a sequence of symbols on the RHS of a rule with the rule LHS symbol.
+      <![CDATA[Inserts arbitrary text in a parse tree.
 This program is part of the Trash toolkit.]]>
     </Description>
-    <ToolCommandName>trfoldlit</ToolCommandName>
-    <RootNamespace>trfoldlit</RootNamespace>
+    <ToolCommandName>trinsert</ToolCommandName>
+    <RootNamespace>trinsert</RootNamespace>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
