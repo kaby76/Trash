@@ -15,4 +15,4 @@ The process repeats for alternatives nested.
 
 # Current version
 
-0.8.4 -- Updated tranalyze with detection of infinite recursion within rule. Updated basic graph implementations.
+0.8.5 -- Updated trdot, trthompson, trparse (Lark grammar), trconvert, tranalyze, trcombine, trsplit.
