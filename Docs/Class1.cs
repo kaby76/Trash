@@ -17,7 +17,7 @@ namespace Docs
         public static void ParseDoc(Document document, int quiet_after, string grammar = null)
         {
             document.Changed = true;
-            document.ParseAs = grammar;
+            if (grammar != null) document.ParseAs = grammar;
             var pd = LanguageServer.ParsingResultsFactory.Create(document);
             if (pd != null) pd.QuietAfter = quiet_after;
             var workspace = document.Workspace;
@@ -60,12 +60,7 @@ namespace Docs
             }
             project.AddDocument(document);
             document.Code = parse_info.Text;
-            document.ParseAs = parse_info.Parser.GrammarFileName switch
-            {
-                "ANTLRv2Parser.g4" => "antlr2",
-                "ANTLRv3Parser.g4" => "antlr3",
-                "ANTLRv4Parser.g4" => "antlr4",
-            };
+            document.ParseAs = parse_info.Parser.GrammarFileName;
             var pr = LanguageServer.ParsingResultsFactory.Create(document);
             pr.Parser = parse_info.Parser;
             pr.Lexer = parse_info.Lexer;

@@ -2,8 +2,8 @@
   "profiles": {
     "trconvert": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt -t lark",
-      "workingDirectory": "C:\\Users\\kenne\\documents\\github\\i2248\\abnf"
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "c:\\Users\\kenne\\Documents\\GitHub\\postgres\\src\\backend\\parser"
     }
   }
 }
