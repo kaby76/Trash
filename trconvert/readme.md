@@ -87,4 +87,4 @@ _Output_
 
 # Current version
 
-0.8.5 -- Updated trdot, trthompson, trparse (Lark grammar), trconvert, tranalyze, trcombine, trsplit.
+0.8.6 -- Updated trinsert, trconvert (Issue #1).
