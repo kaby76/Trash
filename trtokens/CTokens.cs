@@ -19,7 +19,7 @@
             }
         }
 
-        private string Reconstruct(IParseTree tree)
+        private string OutputTokens(IParseTree tree)
         {
             Stack<IParseTree> stack = new Stack<IParseTree>();
             stack.Push(tree);
@@ -29,7 +29,7 @@
                 var n = stack.Pop();
                 if (n is TerminalNodeImpl term)
                 {
-                    sb.Append(term.Symbol.ToString());
+                    sb.AppendLine(term.Symbol.ToString());
                 }
                 else
                     for (int i = n.ChildCount - 1; i >= 0; i--)
@@ -60,7 +60,7 @@
                 var fn = parse_info.FileName;
                 foreach (var node in nodes)
                 {
-                    System.Console.WriteLine(Reconstruct(node));
+                    System.Console.WriteLine(OutputTokens(node));
                 }
             }
         }
