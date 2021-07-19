@@ -64,8 +64,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsplit", "trsplit\trsplit.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsponge", "trsponge\trsponge.csproj", "{CFBBEC3B-1EEB-42CA-A231-8971CBCB93BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tragl", "tragl\tragl.csproj", "{D7B02A65-FCC7-4426-BB96-EBAD348BD1DF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdelabel", "trdelabel\trdelabel.csproj", "{BEE77854-573F-4088-9B1D-F3B4C12372A6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trmvsr", "trmvsr\trmvsr.csproj", "{8EC09E42-D369-4AF8-8C9C-4151FA5BBE15}"
