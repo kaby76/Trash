@@ -1,12 +1,12 @@
 
-version="0.8.6"
+version="0.8.7"
 for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfold trfoldlit trgen trgroup trinsert trjson trkleene trmvsr trparse trprint trrename trsplit trsponge trst trstrip trtext trthompson trtokens trtree trunfold trungroup trwdog trxgrep trxml trxml2
 do
 	echo $i
 	pushd $i
 	rm -f asdfasdf
 	touch readme.md
-	cat readme.md | sed -e 's%0[.]8[.][0123456789][ ][-][-].*$'"%$version -- Updated trinsert, trconvert (Issue #1).%" > asdfasdf
+	cat readme.md | sed -e 's%0[.]8[.][0123456789][ ][-][-].*$'"%$version -- Updated trparse for Linux.%" > asdfasdf
 	mv asdfasdf readme.md
 	popd
 done
@@ -16,7 +16,7 @@ do
 	pushd $i
 	rm -f asdfasdf
 	touch readme.md
-	cat readme.md | sed -e 's%0[.]8[.][0123456789][ ][-][-].*$'"%$version -- Updated trinsert, trconvert (Issue #1).%" > asdfasdf
+	cat readme.md | sed -e 's%0[.]8[.][0123456789][ ][-][-].*$'"%$version -- Updated trparse for Linux.%" > asdfasdf
 	mv asdfasdf readme.md
 	popd
 done

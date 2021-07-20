@@ -12,4 +12,4 @@ Find all sub-trees in a parse tree using the given XPath expression.
 
 # Current version
 
-0.8.6 -- Updated trinsert, trconvert (Issue #1).
+0.8.7 -- Updated trparse for Linux.

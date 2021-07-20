@@ -13,4 +13,4 @@ Replace a rule with an EBNF form if it contains direct left or direct right recu
 
 # Current version
 
-0.8.6 -- Updated trinsert, trconvert (Issue #1).
+0.8.7 -- Updated trparse for Linux.
