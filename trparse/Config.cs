@@ -13,5 +13,8 @@ namespace Trash
 
         [Option('t', "type", Required = false)]
         public string Type { get; set; }
+
+        [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
+        public string start_rule { get; set; }
     }
 }

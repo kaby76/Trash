@@ -66,7 +66,9 @@ namespace Trash
                         Stream = pr.TokStream,
                         Nodes = new IParseTree[] { pt },
                         Lexer = pr.Lexer,
-                        Parser = pr.Parser
+                        Parser = pr.Parser,
+                        StartSymbol = "",
+                        MetaStartSymbol = ""
                     };
                     results.Add(tuple);
                 }

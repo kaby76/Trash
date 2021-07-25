@@ -14,6 +14,7 @@ public class Program
     public static Lexer Lexer { get; set; }
     public static ITokenStream TokenStream { get; set; }
     public static IParseTree Tree { get; set; }
+    public static string StartSymbol { get; set; } = "<start_symbol>";
     public static IParseTree Parse(string input)
     {
         var str = new AntlrInputStream(input);

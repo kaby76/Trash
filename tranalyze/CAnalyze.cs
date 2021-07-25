@@ -1,6 +1,7 @@
 ﻿namespace Trash
 {
     using LanguageServer;
+    using System.Collections;
     using System.IO;
     using System.Text.Json;
 
@@ -34,7 +35,7 @@
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
             AntlrJson.ParsingResultSet[] data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-            foreach (var parse_info in data)
+            foreach (AntlrJson.ParsingResultSet parse_info in data)
             {
                 var doc = Docs.Class1.CreateDoc(parse_info);
                 var f = doc.FullPath;
@@ -43,14 +44,14 @@
                 ParsingResults ref_pd = ParsingResultsFactory.Create(doc);
                 ref_pd.ParseTree = null;
                 _ = new Module().GetQuickInfo(0, doc);
-                AnalyzeDoc(doc);
+                AnalyzeDoc(doc, config.start_rules);
             }
         }
 
-        public void AnalyzeDoc(Workspaces.Document document)
+        public void AnalyzeDoc(Workspaces.Document document, System.Collections.Generic.IEnumerable<string> start_rules)
         {
             _ = ParsingResultsFactory.Create(document);
-            var results = LanguageServer.Analysis.PerformAnalysis(document);
+            var results = LanguageServer.Analysis.PerformAnalysis(document, start_rules);
             foreach (var r in results)
             {
                 System.Console.Write((r.Start != 0 ? r.Start + " " : "") + r.Message);

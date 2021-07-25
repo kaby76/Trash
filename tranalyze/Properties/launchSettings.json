@@ -2,8 +2,8 @@
   "profiles": {
     "tranalyze": {
       "commandName": "Project",
-      "commandLineArgs": "--file o.pt",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-upstream\\webidl"
+      "commandLineArgs": "--file o.pt -s parse",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\i2248\\sql\\sqlite"
     }
   }
 }
