@@ -42,9 +42,25 @@ a, .btn-link {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+#graphContainer {
+    box-sizing: border-box;
+    border: 1px solid black;
+    min-height: 300px;
+    min-width: 300px;
+}
+
+#graphView {
+    height: 100%;
+    width: 100%;
+}
+
+#working {
+    display: none;
+}

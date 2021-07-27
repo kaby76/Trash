@@ -1,0 +1,50 @@
+@inject IJSRuntime _jsRuntime
+
+@page "/thompson"
+
+<h1>Thompson</h1>
+    <div id="controls">
+        Nodes:
+        <input type="number" id="nodeCount" value="100"/>
+        Edges:
+        <input type="number" id="edgeCount" value="100"/>
+        <span>Edge routing mode:</span>
+        <select id="edgeRoutingSelect">
+            <option value="splines">Splines</option>
+            <option value="splinesbundling">Splines with Bundling</option>
+            <option value="straightline">Straight Line</option>
+            <option value="sugiyamasplines" selected>Sugiyama Splines</option>
+            <option value="rectilinear">Rectilinear</option>
+            <option value="rectilineartocenter">Rectilinear to Center</option>
+        </select>
+        <input type="checkbox" class="graphToolbarCheckBox" id="layeredLayoutCheckBox" checked />
+        <span>Layered layout</span>
+        <button id="startButton">START</button>
+        <button id="stopButton" disabled>STOP</button>
+        <span id="working">WORKING...</span>
+        <span id="elapsed"></span>
+    </div>
+    <div id="graphContainer">
+    <div id="graphView">
+    </div></div>
+
+<button class="btn btn-primary" @onclick="DoThompson">Compute Thompson Construction</button>
+
+@code {
+    private string Title { get; set; } = "Hello, World!";
+
+    private async void UpdateTitle()
+    {
+        await _jsRuntime.InvokeAsync<object>("accessDOMElement");
+        Title = "Hello, Blazor!";
+    }
+}
+@code {
+    private string TheGrammar = "";
+
+    private async void DoThompson()
+    {
+        var x = new wrap.ExampleJsInterop(_jsRuntime);
+        await x.Prompt("hi");
+    }
+}
