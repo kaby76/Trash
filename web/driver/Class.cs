@@ -1024,10 +1024,21 @@ namespace driver
             {
                 n.GeometryNode.BoundaryCurve = CurveFactory.CreateRectangleWithRoundedCorners(60, 40, 3, 2, new Point(0, 0));
             }
+            foreach (var de in graph.Edges)
+            {
+                // again setting the dimensions, that should depend on Drawing.Label and the viewer, blindly
+                if (de.Label != null)
+                {
+                    de.Label.GeometryLabel.Width = 55;
+                    de.Label.GeometryLabel.Height = 33;
+                }
+            }
             //AssignLabelsDimensions(graph);
             LayoutHelpers.CalculateLayout(graph.GeometryGraph, new SugiyamaLayoutSettings(), null);
             return graph;
         }
+
+
 
         public static Graph CreateGraph(IParseTree[] trees, IList<string> parserRules, IList<string> lexerRules)
         {
@@ -1092,13 +1103,6 @@ namespace driver
 
             for (int i = 0; i < tree.ChildCount; i++)
                 FormatNodes(graph, tree.GetChild(i), parserRules, lexerRules, base_hash_code);
-        }
-
-
-        static void Foo(string grammar)
-        {
-            Graph graph = new Graph();
-            PrintSvgAsString(graph);
         }
 
         public static string PrintSvgAsString(Graph graph)

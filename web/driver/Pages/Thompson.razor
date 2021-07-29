@@ -1,0 +1,31 @@
+﻿@inject IJSRuntime _jsRuntime
+
+@page "/thompson"
+
+<h1>Thompson</h1>
+
+<div id="svgcontainer">
+    @{
+        @(Init())
+    }
+</div>
+
+
+@code {
+
+    MarkupString Init()
+    {
+        return (MarkupString)Grammars.Svg;
+    }
+
+    private async void Foo()
+    {
+        await _jsRuntime.InvokeVoidAsync("doit");
+    }
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        Foo();
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+}
