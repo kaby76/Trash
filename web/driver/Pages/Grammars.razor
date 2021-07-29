@@ -1,0 +1,25 @@
+﻿@inject IJSRuntime _jsRuntime
+@inject NavigationManager NavManager
+
+@page "/grammars"
+
+<h1>Grammars</h1>
+
+<label>Enter grammar(s):</label><br />
+<textarea id="text" name="text" rows="10" cols="80" @bind="TextAreaValue"></textarea><br />
+<button class="btn btn-primary" @onclick="Click">Compute Thompson Construction</button>
+
+@code {
+    public static string TextAreaValue;
+    public static string Svg;
+
+    private async void Click()
+    {
+        var graph = Class.Parse(TextAreaValue, "antlr4");
+        var svg = Class.PrintSvgAsString(graph);
+        int start = 74;
+        Svg = svg.Substring(start);
+        NavManager.NavigateTo("/thompson");
+    }
+
+}

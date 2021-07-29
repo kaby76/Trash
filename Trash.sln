@@ -80,6 +80,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wrap", "web\wrap\wrap.cspro
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web", "web", "{5C34D5B1-04A2-4ADC-B033-AF606E71C9DC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tragl", "tragl\tragl.csproj", "{14AA0E29-AFB2-4AD1-A9C9-6FA410416FBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -226,6 +228,9 @@ Global
 		{EC549FC6-9D4D-4979-BF49-9FF0B2E1D2FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC549FC6-9D4D-4979-BF49-9FF0B2E1D2FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC549FC6-9D4D-4979-BF49-9FF0B2E1D2FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14AA0E29-AFB2-4AD1-A9C9-6FA410416FBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14AA0E29-AFB2-4AD1-A9C9-6FA410416FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14AA0E29-AFB2-4AD1-A9C9-6FA410416FBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

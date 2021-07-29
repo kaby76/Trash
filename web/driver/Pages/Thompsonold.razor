@@ -1,6 +1,6 @@
 @inject IJSRuntime _jsRuntime
 
-@page "/thompson"
+@page "/thompsonold"
 
 <h1>Thompson</h1>
     <div id="controls">
@@ -31,7 +31,7 @@
 <button class="btn btn-primary" @onclick="DoThompson">Compute Thompson Construction</button>
 
 @code {
-    private string Title { get; set; } = "Hello, World!";
+    private string Title { get; set; } = "Thompson graph";
 
     private async void UpdateTitle()
     {
