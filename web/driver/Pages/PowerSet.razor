@@ -1,8 +1,8 @@
 ﻿@inject IJSRuntime _jsRuntime
 
-@page "/thompson"
+@page "/powerset"
 
-<h1>Thompson</h1>
+<h3>PowerSet</h3>
 
 <div id="svgcontainer">
     @{
@@ -10,12 +10,11 @@
     }
 </div>
 
-
 @code {
 
     MarkupString Init()
     {
-        return (MarkupString)Model.ThompsonsSvg;
+        return (MarkupString)Model.PowerSetSvg;
     }
 
     private async void Foo()

@@ -11,14 +11,10 @@
 
 @code {
     public static string TextAreaValue;
-    public static string Svg;
 
     private async void Click()
     {
-        var graph = Class.Parse(TextAreaValue, "antlr4");
-        var svg = Class.PrintSvgAsString(graph);
-        int start = 74;
-        Svg = svg.Substring(start);
+        Model.ComputeModel(TextAreaValue);
         NavManager.NavigateTo("/thompson");
     }
 
