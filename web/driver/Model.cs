@@ -1004,7 +1004,7 @@ namespace driver
             Digraph<string, SymbolEdge<string>> t = Parse(input);
             ThompsonsGraph = ToAGL(t);
             var svg = Model.PrintSvgAsString(ThompsonsGraph);
-            int start = 74; // magic number to avoid xml header tag which we cannot have in display.
+            var start = svg.IndexOf("<svg");
             ThompsonsSvg = svg.Substring(start);
             Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> m = ToPowerSet(t);
             Digraph<string, SymbolEdge<string>> m2 = FlattenStates(m);
