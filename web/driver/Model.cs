@@ -1017,9 +1017,11 @@ namespace driver
         {
             var redo = new Digraph<string, SymbolEdge<string>>();
             var rename = new Dictionary<MyHashSet<string>, string>();
+            int s = 0;
             foreach (var v in m.Vertices)
             {
-                string n = String.Join(',', v.Select(x => x)) ;
+                //string n = String.Join(',', v.Select(x => x)) ;
+                string n = s.ToString();
                 rename[v] = n;
                 redo.AddVertex(n);
                 if (m.StartVertices.Contains(v))
