@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Algorithms;
 using Antlr4.Runtime;
@@ -1221,6 +1222,10 @@ namespace driver
             var start = result.IndexOf("<svg");
             result = result.Substring(start);
             //result = "<svg>" + result + "</svg>";
+            Regex re1 = new Regex(@"width=""[^""]+""");
+            result = re1.Replace(result, "width=\"auto\"", 1);
+            Regex re2 = new Regex(@"height=""[^""]+""");
+            result = re2.Replace(result, "height=\"999\"", 1);
             return result;
         }
     }
