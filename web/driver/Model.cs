@@ -1003,14 +1003,11 @@ namespace driver
         {
             Digraph<string, SymbolEdge<string>> t = Parse(input);
             ThompsonsGraph = ToAGL(t);
-            var svg = Model.PrintSvgAsString(ThompsonsGraph);
-            var start = svg.IndexOf("<svg");
-            ThompsonsSvg = svg.Substring(start);
+            ThompsonsSvg = Model.PrintSvgAsString(ThompsonsGraph);
             Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> m = ToPowerSet(t);
             Digraph<string, SymbolEdge<string>> m2 = FlattenStates(m);
             PowerSetGraph = ToAGL(m2);
-            var svg2 = Model.PrintSvgAsString(PowerSetGraph);
-            PowerSetSvg = svg2.Substring(start);
+            PowerSetSvg = Model.PrintSvgAsString(PowerSetGraph);
         }
 
         private static Digraph<string, SymbolEdge<string>> FlattenStates(Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> m)
@@ -1021,7 +1018,7 @@ namespace driver
             foreach (var v in m.Vertices)
             {
                 //string n = String.Join(',', v.Select(x => x)) ;
-                string n = s.ToString();
+                string n = s++.ToString();
                 rename[v] = n;
                 redo.AddVertex(n);
                 if (m.StartVertices.Contains(v))
@@ -1058,11 +1055,11 @@ namespace driver
             }
             while (unmarked.Any())
             {
-                var t = unmarked.First();
-                unmarked.Remove(t);
-                marked.Add(t);
+                MyHashSet<string> tttt = unmarked.First();
+                unmarked.Remove(tttt);
+                marked.Add(tttt);
                 HashSet<string> alphabetReach = new HashSet<string>();
-                foreach (var x in t)
+                foreach (string x in tttt)
                 {
                     foreach (var e in NFA.SuccessorEdges(x))
                     {
@@ -1070,7 +1067,15 @@ namespace driver
                         var v = e.To;
                         var u = EpsilonClosureOf(NFA, v);
                         Add(unmarked, NFA, DFA, u);
-                        DFA.AddEdge(new SymbolEdge<MyHashSet<string>>() { From = t, To = u, _symbol = e._symbol });
+                        if (!(DFA.Edges
+                            .Where(prev =>
+                            {
+                                var test1 = prev.From.Equals(tttt);
+                                var test2 = prev.To.Equals(u);
+                                var test3 = prev._symbol.Equals(e._symbol);
+                                return test1 && test2 && test3;
+                            }).Any()))
+                            DFA.AddEdge(new SymbolEdge<MyHashSet<string>>() { From = tttt, To = u, _symbol = e._symbol });
                     }
                 }
             }
@@ -1105,7 +1110,7 @@ namespace driver
             s.Push(theState);
             while (s.Any())
             {
-                var v = s.Pop();
+                string v = s.Pop();
                 if (visited.Contains(v)) continue;
                 visited.Add(v);
                 result.Add(v);
@@ -1204,71 +1209,6 @@ namespace driver
             return graph;
         }
 
-        public static Graph CreateGraph(IParseTree[] trees, IList<string> parserRules, IList<string> lexerRules)
-        {
-            var graph = new Graph();
-            foreach (var tree in trees)
-            {
-                if (tree != null)
-                {
-                    if (tree.ChildCount == 0)
-                        graph.AddNode(tree.GetHashCode().ToString());
-                    else
-                        GraphEdges(graph, tree, tree.GetHashCode());
-                    FormatNodes(graph, tree, parserRules, lexerRules, tree.GetHashCode());
-                }
-            }
-            return graph;
-        }
-
-        private static void GraphEdges(Graph graph, ITree tree, int base_hash_code)
-        {
-            for (var i = tree.ChildCount - 1; i > -1; i--)
-            {
-                var child = tree.GetChild(i);
-                graph.AddEdge((base_hash_code + tree.GetHashCode()).ToString(),
-                    (base_hash_code + child.GetHashCode()).ToString());
-
-                GraphEdges(graph, child, base_hash_code);
-            }
-        }
-
-        private static void FormatNodes(Graph graph, ITree tree, IList<string> parserRules, IList<string> lexerRules, int base_hash_code)
-        {
-            var node = graph.FindNode((base_hash_code + tree.GetHashCode()).ToString());
-            if (node != null)
-            {
-                node.LabelText = Trees.GetNodeText(tree, parserRules);
-                var ruleFailedAndMatchedNothing = false;
-                if (tree is ParserRuleContext context)
-                {
-                    ruleFailedAndMatchedNothing =
-                        // ReSharper disable once ComplexConditionExpression
-                        context.exception != null &&
-                        context.Stop != null
-                        && context.Stop.TokenIndex < context.Start.TokenIndex;
-                }
-                else if (tree is TerminalNodeImpl term)
-                {
-                    var token = term.Symbol.Type;
-                    var token_value = term.Symbol.Text;
-                    node.LabelText = token > 0 ?
-                    (lexerRules[token - 1] + "/" + token_value) : "EOF";
-                }
-                if (tree is IErrorNode || ruleFailedAndMatchedNothing)
-                    node.Label.FontColor = Color.Red;
-                else
-                    node.Label.FontColor = Color.Black;
-                node.Attr.Color = Color.Black;
-                node.UserData = tree;
-                //if (BackgroundColor.HasValue)
-                //    node.Attr.FillColor = BackgroundColor.Value;
-            }
-
-            for (int i = 0; i < tree.ChildCount; i++)
-                FormatNodes(graph, tree.GetChild(i), parserRules, lexerRules, base_hash_code);
-        }
-
         public static string PrintSvgAsString(Graph graph)
         {
             var ms = new MemoryStream();
@@ -1278,6 +1218,9 @@ namespace driver
             ms.Position = 0;
             var sr = new StreamReader(ms);
             var result = sr.ReadToEnd();
+            var start = result.IndexOf("<svg");
+            result = result.Substring(start);
+            //result = "<svg>" + result + "</svg>";
             return result;
         }
     }
