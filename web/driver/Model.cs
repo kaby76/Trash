@@ -1221,11 +1221,17 @@ namespace driver
             var result = sr.ReadToEnd();
             var start = result.IndexOf("<svg");
             result = result.Substring(start);
-            //result = "<svg>" + result + "</svg>";
-            Regex re1 = new Regex(@"width=""[^""]+""");
-            result = re1.Replace(result, "width=\"auto\"", 1);
-            Regex re2 = new Regex(@"height=""[^""]+""");
-            result = re2.Replace(result, "height=\"999\"", 1);
+            //result = "<svg viewBox=\"0 0 100 100\" width=\"100%\">" + result + "</svg>";
+            Regex re1 = new Regex(@"width=""([^""]+)""");
+            var vw = re1.Match(result);
+            var v1 = vw.Groups[1].Value;
+            Regex re2 = new Regex(@"height=""([^""]+)""");
+            var vh = re2.Match(result);
+            var v2 = vh.Groups[1].Value;
+            // result = re1.Replace(result, @"viewBox=""0 0 400 400"" width=""100%""", 1);
+            result = re1.Replace(result, "viewBox=\"0 0 " + v1 + " " + v2 + "\"", 1);
+        //    result = re2.Replace(result, @"height=""100%""", 1);
+           
             return result;
         }
     }
