@@ -1,20 +1,23 @@
 # Trrename
 
-Rename a symbol, the first parameter as specified by the xpath expression string,
-to a new name, the second parameter as a string. The result may place all changed
-grammars that use the symbol on the stack.
+Rename a symbol in a grammar.
 
 # Usage
 
-    trrename <string> <string>
+    trrename -r <string>
 
-or
+# Details
 
-    trrename 
+`trrename` renames rule symbols in a grammar.
+
+The `-r` option is required. It
+is a list of semi-colon delimited pairs of symbol names, which are separated
+by a comma, e.g., `id,identifier;name,name_`. If you are using Bash,
+make sure to enclose the argument as it contains semi-colons.
 
 # Examples
 
-    trparse Foobar.g4 | trrename " //parserRuleSpec//labeledAlt//RULE_REF[text() = 'e']" xxx | trprint > new-grammar.g4
+    trparse Foobar.g4 | trrename "a,b;c,d" | trprint > new-grammar.g4
 
 # Current version
 
