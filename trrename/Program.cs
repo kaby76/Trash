@@ -61,7 +61,6 @@ namespace Trash
                         prop.SetValue(config, prop.GetValue(o, null));
                     }
                 }
-                if (o.Expr != null) config.Expr = o.Expr;
             });
             new CRename().Execute(config);
         }
