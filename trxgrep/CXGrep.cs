@@ -32,16 +32,24 @@
             string fn;
             ITokenStream tokstream;
             string lines = null;
-            for (; ; )
+            if (!(config.File != null && config.File != ""))
             {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
+                for (; ; )
+                {
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
+                }
+            }
+            else
+            {
+                lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
+            bool do_rs = true;
             foreach (var parse_info in data)
             {
                 text = parse_info.Text;
@@ -58,14 +66,32 @@
                     var l = atrees.Select(t => ate.FindDomNode(t));
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, l.ToArray())
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToArray();
+                        .Select(x => (x.NativeValue)).ToArray();
                     System.Console.Error.WriteLine("Result size " + nodes.Count());
-                    var parse_info_out = new AntlrJson.ParsingResultSet() { Text = text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = nodes };
-                    results.Add(parse_info_out);
+                    List<IParseTree> res = new List<IParseTree>();
+                    foreach(var v in nodes)
+                    {
+                        if (v is AntlrTreeEditing.AntlrDOM.AntlrElement)
+                        {
+                            var q = v as AntlrTreeEditing.AntlrDOM.AntlrElement;
+                            IParseTree r = q.AntlrIParseTree;
+                            res.Add(r);
+                        }
+                        else
+                        {
+                            do_rs = false;
+                            System.Console.Error.WriteLine(v);
+                        }
+                    }
+                    var parse_info_out = new AntlrJson.ParsingResultSet() { Text = text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = res.ToArray() };
+                    results.Add(parse_info_out);                    
                 }
             }
-            string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
-            System.Console.WriteLine(js1);
+            if (do_rs)
+            {
+                string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+                System.Console.WriteLine(js1);
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-version="1.8.0"
+version="1.9.0"
 
 for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfold trfoldlit trgen trgroup trinsert trjson trkleene trmvsr trparse trprint trrename trsplit trsponge trst trstrip trtext trthompson trtokens trtree trunfold trungroup trwdog trxgrep trxml trxml2
 do
@@ -6,7 +6,7 @@ do
 	rm -f asdfasdf
 	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version\"%" > asdfasdf
 	mv asdfasdf *.csproj	
-	cat *.csproj | sed -e "s%\"AntlrTreeEditing\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"2.8.0\"%" > asdfasdf
+	cat *.csproj | sed -e "s%\"AntlrTreeEditing\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"2.9.0\"%" > asdfasdf
 	mv asdfasdf *.csproj	
 	popd
 done
@@ -16,7 +16,7 @@ do
 	rm -f asdfasdf
 	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version\"%" > asdfasdf
 	mv asdfasdf *.csproj	
-	cat *.csproj | sed -e "s%\"AntlrTreeEditing\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"2.7.0\"%" > asdfasdf
+	cat *.csproj | sed -e "s%\"AntlrTreeEditing\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"2.9.0\"%" > asdfasdf
 	mv asdfasdf *.csproj	
 	popd
 done
