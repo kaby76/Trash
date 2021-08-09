@@ -106,27 +106,31 @@ class CaseChangingCharStream extends CharStream {
 void main(List\<String> args) async {
     var show_tree = false;
     var show_tokens = false;
-    var file_name = null;
-    var input = null;
-    var str = null;
-    var encoding = null;
-    for (int i = 0; i \< args.length; ++i)
+    var file_name;
+    var input;
+    var str;
+    var encoding;
+    for (var i = 0; i \< args.length; ++i)
     {
-        if (args[i] == "-tokens")
+        if (args[i] == '-tokens')
         {
             show_tokens = true;
             continue;
         }
-        else if (args[i] == "-tree")
+        else if (args[i] == '-tree')
         {
             show_tree = true;
             continue;
         }
-        else if (args[i] == "-input")
+        else if (args[i] == '-input')
+        {
             input = args[++i];
-        else if (args[i] == "-file")
+        }
+        else if (args[i] == '-file')
+        {
             file_name = args[++i];
-        else if (args[i] == "-encoding")
+        }
+        else if (args[i] == '-encoding')
         {
             encoding = Encoding.getByName(args[++i]);
         }
@@ -135,17 +139,17 @@ void main(List\<String> args) async {
     }>
     if (input == null && file_name == null)
     {
-        final List\<int> bytes = \<int>[];
-        int byte = stdin.readByteSync();
+        var bytes = \<int>[];
+        var byte = stdin.readByteSync();
         while (byte >= 0) {
             bytes.add(byte);
             byte = stdin.readByteSync();
         }
         input = utf8.decode(bytes);
-        str = await InputStream.fromString(input);
+        str = InputStream.fromString(input);
     } else if (input != null)
     {
-        str = await InputStream.fromString(input);
+        str = InputStream.fromString(input);
     } else if (file_name != null)
     {
         //if (encoding == null)
@@ -154,17 +158,19 @@ void main(List\<String> args) async {
         //    str = await InputStream.fromPath(file_name, encoding);
     }
 <if (case_insensitive_type)>
-    str = CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
+    str = CaseChangingCharStream(str, '<case_insensitive_type>' == 'Upper');
 <endif>
     var lexer = <lexer_name>(str);
     if (show_tokens)
     {
-        for (int i = 0; ; ++i)
+        for (var i = 0; ; ++i)
         {
             var token = lexer.nextToken();
             print(token.toString());
             if (token.type == -1)
+            {
                 break;
+            }
         }
         lexer.reset();
     }
@@ -177,11 +183,11 @@ void main(List\<String> args) async {
     var tree = parser.<start_symbol>();
     if (parser.numberOfSyntaxErrors > 0)
     {
-        stderr.writeln("Parse failed.");
+        stderr.writeln('Parse failed.');
     }
     else
     {
-        stderr.writeln("Parse succeeded.");
+        stderr.writeln('Parse succeeded.');
     }
     if (show_tree)
     {
