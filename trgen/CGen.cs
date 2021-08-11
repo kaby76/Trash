@@ -1029,6 +1029,20 @@
                 config.grammar_name = g.Replace("Parser", "");
             }
 
+            if (config.target == TargetType.JavaScript || config.target == TargetType.Dart)
+            {
+                config.name_space = null;
+            }
+            else if (config.target == TargetType.Go)
+            {
+                config.name_space = "parser";
+            }
+            else
+            {
+                config.name_space = null;
+            }
+
+
 
             for (; ; )
             {
@@ -1046,6 +1060,19 @@
                             .ToList();
                     if (any.Any())
                     {
+                        if (any.Count() >= 2)
+                        {
+                            // Remove from "any" list "preprocessor" grammars.
+                            var new_any = new List<string>();
+                            foreach (var a in any)
+                            {
+                                if (!a.ToLower().Contains("preprocessor"))
+                                {
+                                    new_any.Add(a);
+                                }
+                            }
+                            any = new_any;
+                        }
                         parser_src_grammar_file_name = any.First();
                         break;
                     }
@@ -1061,6 +1088,19 @@
                             .ToList();
                     if (any.Any())
                     {
+                        if (any.Count() >= 2)
+                        {
+                            // Remove from "any" list "preprocessor" grammars.
+                            var new_any = new List<string>();
+                            foreach (var a in any)
+                            {
+                                if (!a.ToLower().Contains("preprocessor"))
+                                {
+                                    new_any.Add(a);
+                                }
+                            }
+                            any = new_any;
+                        }
                         parser_src_grammar_file_name = any.First();
                         break;
                     }
@@ -1073,6 +1113,9 @@
             config.fully_qualified_parser_name = Path.GetFileName(parser_src_grammar_file_name).Replace("Parser.g4", "").Replace(".g4", "") + "Parser";
             parser_grammar_file_name = Path.GetFileName(parser_src_grammar_file_name);
             parser_generated_file_name = config.fully_qualified_parser_name + suffix;
+            var temp = Path.GetFileName(parser_grammar_file_name);
+            temp = Path.GetFileNameWithoutExtension(temp);
+            config.grammar_name = temp.Replace("Parser", "");
 
             for (; ; )
             {
@@ -1090,6 +1133,19 @@
                             .ToList();
                     if (any.Any())
                     {
+                        if (any.Count() >= 2)
+                        {
+                            // Remove from "any" list "preprocessor" grammars.
+                            var new_any = new List<string>();
+                            foreach (var a in any)
+                            {
+                                if (!a.ToLower().Contains("preprocessor"))
+                                {
+                                    new_any.Add(a);
+                                }
+                            }
+                            any = new_any;
+                        }
                         lexer_src_grammar_file_name = any.First();
                         break;
                     }
@@ -1105,6 +1161,19 @@
                             .ToList();
                     if (any.Any())
                     {
+                        if (any.Count() >= 2)
+                        {
+                            // Remove from "any" list "preprocessor" grammars.
+                            var new_any = new List<string>();
+                            foreach (var a in any)
+                            {
+                                if (!a.ToLower().Contains("preprocessor"))
+                                {
+                                    new_any.Add(a);
+                                }
+                            }
+                            any = new_any;
+                        }
                         lexer_src_grammar_file_name = any.First();
                         break;
                     }
@@ -1141,6 +1210,14 @@
                     new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, lexer_generated_include_file_name, config.fully_qualified_lexer_name),
                     new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, parser_generated_include_file_name, config.fully_qualified_parser_name),
                 };
+            if (config.start_rule == null)
+            {
+                throw new Exception("Start rule not specified. Use '-s parser-rule-name' to set.");
+            }
+            if (config.grammar_name == null)
+            {
+                throw new Exception("Internal error. config.grammar_name null.");
+            }
             // lexer and parser are set if the grammar is partitioned.
             // rest is set if there are grammar is combined.
         }
