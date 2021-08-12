@@ -82,21 +82,25 @@
                 }
 
                 Docs.Class1.EnactEdits(res);
-                var new_fn = res.First().Key;
-                var new_code = res.First().Value;
-                var converted_doc = Docs.Class1.CreateDoc(new_fn, new_code);
-                var pr = ParsingResultsFactory.Create(converted_doc);
-                IParseTree pt = pr.ParseTree;
-                var tuple = new ParsingResultSet()
+                foreach (var r in res)
                 {
-                    Text = converted_doc.Code,
-                    FileName = converted_doc.FullPath,
-                    Stream = pr.TokStream,
-                    Nodes = new IParseTree[] { pt },
-                    Lexer = pr.Lexer,
-                    Parser = pr.Parser
-                };
-                results.Add(tuple);
+                    var new_fn = r.Key;
+                    var new_code = r.Value;
+                    var converted_doc = Docs.Class1.CreateDoc(new_fn, new_code);
+                    var pr = ParsingResultsFactory.Create(converted_doc);
+                    var node_arr = new IParseTree[0];
+                    if (pr != null) node_arr = new IParseTree[] { pr.ParseTree };
+                    var tuple = new ParsingResultSet()
+                    {
+                        Text = converted_doc.Code,
+                        FileName = converted_doc.FullPath,
+                        Stream = pr != null ? pr.TokStream : null,
+                        Nodes = node_arr,
+                        Lexer = pr != null ? pr.Lexer : null,
+                        Parser = pr != null ? pr.Parser : null
+                    };
+                    results.Add(tuple);
+                }
             }
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);

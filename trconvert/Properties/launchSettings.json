@@ -3,7 +3,7 @@
     "trconvert": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "c:\\Users\\kenne\\Documents\\GitHub\\postgres\\src\\backend\\parser"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trconvert\\antlr2"
     }
   }
 }

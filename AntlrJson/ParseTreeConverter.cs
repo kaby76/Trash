@@ -335,150 +335,172 @@
             {
                 writer.WriteStartObject();
 
-                writer.WritePropertyName("FileName");
-                writer.WriteStringValue(tuple.FileName);
-
-                writer.WritePropertyName("Text");
-                writer.WriteStringValue(tuple.Text);
-
-                writer.WritePropertyName("IdentityOfParser");
-                writer.WriteStringValue(tuple.Parser.GrammarFileName);
-
-                writer.WritePropertyName("IdentityOfLexer");
-                writer.WriteStringValue(tuple.Lexer.GrammarFileName);
-
-                writer.WritePropertyName("Tokens");
-                writer.WriteStartArray();
-                var in_token_stream = tuple.Stream as ITokenStream;
-                in_token_stream.Seek(0);
-                for (int i = 0; ; ++i)
+                if (tuple.FileName != null)
                 {
-                    var token = in_token_stream.Get(i);
-                    writer.WriteNumberValue(token.Type);
-                    writer.WriteNumberValue(token.StartIndex);
-                    writer.WriteNumberValue(token.StopIndex);
-                    writer.WriteNumberValue(token.Line);
-                    writer.WriteNumberValue(token.Column);
-                    writer.WriteNumberValue(token.Channel);
-                    if (token.Type == Antlr4.Runtime.TokenConstants.EOF) break;
+                    writer.WritePropertyName("FileName");
+                    writer.WriteStringValue(tuple.FileName);
                 }
-                writer.WriteEndArray();
 
-                writer.WritePropertyName("ModeNames");
-                writer.WriteStartArray();
-                var lexer = tuple.Lexer as Lexer;
-                foreach (var n in lexer.ModeNames)
+                if (tuple.Text != null)
                 {
-                    writer.WriteStringValue(n);
+                    writer.WritePropertyName("Text");
+                    writer.WriteStringValue(tuple.Text);
                 }
-                writer.WriteEndArray();
-                writer.WritePropertyName("ChannelNames");
-                writer.WriteStartArray();
-                foreach (var n in lexer.ChannelNames)
-                {
-                    writer.WriteStringValue(n);
-                }
-                writer.WriteEndArray();
 
-                writer.WritePropertyName("LiteralNames");
-                writer.WriteStartArray();
-                // ROYAL PAIN IN THE ASS ANTLR HIDING.
-                var vocab = lexer.Vocabulary;
-                var vocab_type = vocab.GetType();
-                FieldInfo myFieldInfo1 = vocab_type.GetField("literalNames",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-                var literal_names = myFieldInfo1.GetValue(vocab) as string[];
-                FieldInfo myFieldInfo2 = vocab_type.GetField("symbolicNames",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-                var symbolic_names = myFieldInfo2.GetValue(vocab) as string[];
-                foreach (var n in literal_names)
+                if (tuple.Parser != null && tuple.Parser.GrammarFileName != null)
                 {
-                    writer.WriteStringValue(n);
+                    writer.WritePropertyName("IdentityOfParser");
+                    writer.WriteStringValue(tuple.Parser.GrammarFileName);
                 }
-                writer.WriteEndArray();
-                writer.WritePropertyName("SymbolicNames");
-                writer.WriteStartArray();
-                foreach (var n in symbolic_names)
-                {
-                    writer.WriteStringValue(n);
-                }
-                writer.WriteEndArray();
 
-                writer.WritePropertyName("LexerRuleNames");
-                writer.WriteStartArray();
-                foreach (var n in lexer.RuleNames)
+                if (tuple.Lexer != null && tuple.Lexer.GrammarFileName != null)
                 {
-                    writer.WriteStringValue(n);
+                    writer.WritePropertyName("IdentityOfLexer");
+                    writer.WriteStringValue(tuple.Lexer.GrammarFileName);
                 }
-                writer.WriteEndArray();
 
-                writer.WritePropertyName("ParserRuleNames");
-                writer.WriteStartArray();
-                var parser = tuple.Parser as Parser;
-                foreach (var n in parser.RuleNames)
+                if (tuple.Stream != null)
                 {
-                    writer.WriteStringValue(n);
-                }
-                writer.WriteEndArray();
-
-                writer.WritePropertyName("TokenTypeMap");
-                writer.WriteStartArray();
-                foreach (var pair in lexer.TokenTypeMap)
-                {
-                    writer.WriteStringValue(pair.Key);
-                    writer.WriteNumberValue(pair.Value);
-                }
-                writer.WriteEndArray();
-
-                writer.WritePropertyName("Nodes");
-                writer.WriteStartArray();
-                Stack<IParseTree> stack = new Stack<IParseTree>();
-                foreach (var node in tuple.Nodes) stack.Push(node as IParseTree);
-                Dictionary<IParseTree, int> preorder = new Dictionary<IParseTree, int>();
-                int number = 1;
-                while (stack.Any())
-                {
-                    var node = stack.Pop();
-                    preorder[node] = number++;
-                    if (node is ParserRuleContext n)
+                    writer.WritePropertyName("Tokens");
+                    writer.WriteStartArray();
+                    var in_token_stream = tuple.Stream as ITokenStream;
+                    in_token_stream.Seek(0);
+                    for (int i = 0; ; ++i)
                     {
-                        if (n.Parent != null)
+                        var token = in_token_stream.Get(i);
+                        writer.WriteNumberValue(token.Type);
+                        writer.WriteNumberValue(token.StartIndex);
+                        writer.WriteNumberValue(token.StopIndex);
+                        writer.WriteNumberValue(token.Line);
+                        writer.WriteNumberValue(token.Column);
+                        writer.WriteNumberValue(token.Channel);
+                        if (token.Type == Antlr4.Runtime.TokenConstants.EOF) break;
+                    }
+                    writer.WriteEndArray();
+                }
+
+                if (tuple.Lexer != null)
+                {
+                    writer.WritePropertyName("ModeNames");
+                    writer.WriteStartArray();
+                    var lexer = tuple.Lexer as Lexer;
+                    foreach (var n in lexer.ModeNames)
+                    {
+                        writer.WriteStringValue(n);
+                    }
+                    writer.WriteEndArray();
+                    writer.WritePropertyName("ChannelNames");
+                    writer.WriteStartArray();
+                    foreach (var n in lexer.ChannelNames)
+                    {
+                        writer.WriteStringValue(n);
+                    }
+                    writer.WriteEndArray();
+
+                    writer.WritePropertyName("LiteralNames");
+                    writer.WriteStartArray();
+                    // ROYAL PAIN IN THE ASS ANTLR HIDING.
+                    var vocab = lexer.Vocabulary;
+                    var vocab_type = vocab.GetType();
+                    FieldInfo myFieldInfo1 = vocab_type.GetField("literalNames",
+                        BindingFlags.NonPublic | BindingFlags.Instance);
+                    var literal_names = myFieldInfo1.GetValue(vocab) as string[];
+                    FieldInfo myFieldInfo2 = vocab_type.GetField("symbolicNames",
+                        BindingFlags.NonPublic | BindingFlags.Instance);
+                    var symbolic_names = myFieldInfo2.GetValue(vocab) as string[];
+                    foreach (var n in literal_names)
+                    {
+                        writer.WriteStringValue(n);
+                    }
+                    writer.WriteEndArray();
+                    writer.WritePropertyName("SymbolicNames");
+                    writer.WriteStartArray();
+                    foreach (var n in symbolic_names)
+                    {
+                        writer.WriteStringValue(n);
+                    }
+                    writer.WriteEndArray();
+
+                    writer.WritePropertyName("LexerRuleNames");
+                    writer.WriteStartArray();
+                    foreach (var n in lexer.RuleNames)
+                    {
+                        writer.WriteStringValue(n);
+                    }
+                    writer.WriteEndArray();
+                    writer.WritePropertyName("TokenTypeMap");
+                    writer.WriteStartArray();
+                    foreach (var pair in lexer.TokenTypeMap)
+                    {
+                        writer.WriteStringValue(pair.Key);
+                        writer.WriteNumberValue(pair.Value);
+                    }
+                    writer.WriteEndArray();
+                }
+                if (tuple.Parser != null)
+                {
+                    writer.WritePropertyName("ParserRuleNames");
+                    writer.WriteStartArray();
+                    var parser = tuple.Parser as Parser;
+                    foreach (var n in parser.RuleNames)
+                    {
+                        writer.WriteStringValue(n);
+                    }
+                    writer.WriteEndArray();
+                }
+
+                if (tuple.Nodes != null && tuple.Nodes.Any())
+                {
+                    writer.WritePropertyName("Nodes");
+                    writer.WriteStartArray();
+                    Stack<IParseTree> stack = new Stack<IParseTree>();
+                    foreach (var node in tuple.Nodes) stack.Push(node as IParseTree);
+                    Dictionary<IParseTree, int> preorder = new Dictionary<IParseTree, int>();
+                    int number = 1;
+                    while (stack.Any())
+                    {
+                        var node = stack.Pop();
+                        preorder[node] = number++;
+                        if (node is ParserRuleContext n)
                         {
-                            // Note, the node may have a parent, but the tree that is being serialized may be
-                            // a sub tree. If there is no key for the node, write out zero.
-                            if (preorder.ContainsKey(n.Parent))
-                                writer.WriteNumberValue(preorder[n.Parent]);
+                            if (n.Parent != null)
+                            {
+                                // Note, the node may have a parent, but the tree that is being serialized may be
+                                // a sub tree. If there is no key for the node, write out zero.
+                                if (preorder.ContainsKey(n.Parent))
+                                    writer.WriteNumberValue(preorder[n.Parent]);
+                                else
+                                    writer.WriteNumberValue(0);
+                            }
                             else
                                 writer.WriteNumberValue(0);
-                        }
-                        else
-                            writer.WriteNumberValue(0);
-                        var type = n.RuleIndex;
-                        writer.WriteNumberValue(type);
-                        if (n.children != null)
-                        {
-                            foreach (var c in n.children.Reverse())
+                            var type = n.RuleIndex;
+                            writer.WriteNumberValue(type);
+                            if (n.children != null)
                             {
-                                stack.Push(c);
+                                foreach (var c in n.children.Reverse())
+                                {
+                                    stack.Push(c);
+                                }
                             }
                         }
-                    }
-                    else if (node is TerminalNodeImpl t)
-                    {
-                        if (t.Parent != null)
+                        else if (node is TerminalNodeImpl t)
                         {
-                            if (preorder.ContainsKey(t.Parent))
-                                writer.WriteNumberValue(preorder[t.Parent]);
+                            if (t.Parent != null)
+                            {
+                                if (preorder.ContainsKey(t.Parent))
+                                    writer.WriteNumberValue(preorder[t.Parent]);
+                                else
+                                    writer.WriteNumberValue(0);
+                            }
                             else
                                 writer.WriteNumberValue(0);
+                            var type = t.Symbol.TokenIndex + 1000000;
+                            writer.WriteNumberValue(type);
                         }
-                        else
-                            writer.WriteNumberValue(0);
-                        var type = t.Symbol.TokenIndex + 1000000;
-                        writer.WriteNumberValue(type);
                     }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
 
                 writer.WriteEndObject();
             }

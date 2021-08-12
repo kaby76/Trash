@@ -1,5 +1,5 @@
 build:
-	rm -rf */obj
+	rm -rf */bin */obj
 	dotnet restore --ignore-failed-sources
 	dotnet build
 
