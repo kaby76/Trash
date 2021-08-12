@@ -2,7 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trgen"
+      "commandLineArgs": "-t Go -s compilation_unit",
+      "workingDirectory": "C:\\msys64\\home\\kenne\\csharp"
     }
   }
 }

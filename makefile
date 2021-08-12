@@ -1,6 +1,6 @@
 build:
 	rm -rf */obj
-	dotnet restore
+	dotnet restore --ignore-failed-sources
 	dotnet build
 
 install:

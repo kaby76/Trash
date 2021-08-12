@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trformat": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o2.pt",
+      "workingDirectory": "C:\\msys64\\home\\kenne"
+    }
+  }
+}
