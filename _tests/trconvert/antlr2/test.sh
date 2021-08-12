@@ -12,11 +12,11 @@ do
 	echo $i
 	extension="${i##*.}"
 	filename="${i%.*}"
-	trparse $i -t antlr2 | trconvert | trprint > "$filename.g4"
+	trparse $i -t antlr2 | trconvert | trsponge -c true
 done
 for i in *.g4
 do
 	echo $i
-	java -jar ~/Downloads/antlr-4.9.1-complete.jar $i
+	java -jar ~/Downloads/antlr-4.9.2-complete.jar $i
 	rm -f *.java *.interp *.tokens
 done
