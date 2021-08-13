@@ -57,4 +57,4 @@ The output will be:
 
 # Current version
 
-0.8.7 -- Updated trparse for Linux.
+0.8.9 -- Updated all app, but especially for tranalyze, trconvert, trformat, trgen, trrename.

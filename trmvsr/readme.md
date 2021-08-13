@@ -11,4 +11,4 @@ Move the rule, whose symbol is identified by the xpath string, to the top of the
 
 # Current version
 
-0.8.7 -- Updated trparse for Linux.
+0.8.9 -- Updated all app, but especially for tranalyze, trconvert, trformat, trgen, trrename.
