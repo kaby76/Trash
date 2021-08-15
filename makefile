@@ -5,7 +5,6 @@ build:
 
 install:
 	-bash _scripts/setup.sh
-	-bash _scripts/uninstall.sh
 	-bash _scripts/install.sh
 
 clean:
