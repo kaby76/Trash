@@ -76,7 +76,7 @@
             {
                 var data = new List<AntlrJson.ParsingResultSet>();
                 string txt = config.Input;
-                if (config.Input == null && config.Files == null)
+                if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
                 {
                     string lines = null;
                     for (; ; )
