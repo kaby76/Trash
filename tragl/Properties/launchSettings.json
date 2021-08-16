@@ -3,7 +3,7 @@
     "tragl": {
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\dotnet\\dotnet.exe",
-      "commandLineArgs": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\tragl\\bin\\Debug\\net5-windows\\tragl.dll -f c:/Users/kenne/Documents/GitHub/Domemtech.Trash/_tests/trgen/empty/o.pt"
+      "commandLineArgs": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\tragl\\bin\\Debug\\net5-windows\\tragl.dll -f c:/Users/kenne/Documents/GitHub/Domemtech.Trash/_tests/xgrep/o.pt"
     }
   }
 }

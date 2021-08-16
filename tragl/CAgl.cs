@@ -27,9 +27,9 @@
             {
                 if (tree != null)
                 {
-                    if (tree.ChildCount == 0)
-                        graph.AddNode(tree.GetHashCode().ToString());
-                    else
+                    var base_hash_code = tree.GetHashCode();
+                    graph.AddNode((base_hash_code + tree.GetHashCode()).ToString());
+                    if (tree.ChildCount != 0)
                         GraphEdges(graph, tree, tree.GetHashCode());
                     FormatNodes(graph, tree, parserRules, lexerRules, tree.GetHashCode());
                 }
