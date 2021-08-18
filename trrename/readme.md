@@ -17,7 +17,7 @@ make sure to enclose the argument as it contains semi-colons.
 
 # Examples
 
-    trparse Foobar.g4 | trrename "a,b;c,d" | trprint > new-grammar.g4
+    trparse Foobar.g4 | trrename -r "a,b;c,d" | trprint > new-grammar.g4
 
 # Current version
 
