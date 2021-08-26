@@ -17,5 +17,5 @@ stack.
 
 # Current version
 
-0.8.9 -- Updated all app, but especially for tranalyze, trconvert, trformat, trgen, trrename.
+0.9.0 -- Updated trsplit.
 

@@ -12,4 +12,4 @@ Read a tree from stdin and write a JSON represenation of it.
 
 # Current version
 
-0.8.9 -- Updated all app, but especially for tranalyze, trconvert, trformat, trgen, trrename.
+0.9.0 -- Updated trsplit.
