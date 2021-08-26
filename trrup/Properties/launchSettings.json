@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trrup": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\Domemtech.TrashBase\\supported_grammars\\xtext"
+    }
+  }
+}

@@ -1,50 +1,94 @@
-﻿namespace Trash.Commands
+﻿namespace Trash
 {
     using Antlr4.Runtime.Tree;
-    using LanguageServer;
+    using AntlrJson;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Text.Json;
 
     class CRup
     {
-        public void Help()
+        public string Help()
         {
-            System.Console.WriteLine(@"rup <string>?
-Find all altLists as specified by the xpath expression in the parsed file at 
-the top of stack. If the xpath expression is not given, the transform is applied
-to the whole file. Rewrite the node with the parentheses removed, if the altList
-satifies three constraints: (1) the expression must be a altList type in the Antlr4
-grammar; (2) the altList node doesn't contain more than one child, or if it does,
-then the containing altList/labeledAlt/alterative each does not contain more than
-one child; (3) the ebnf parent of block must not contain a blockSuffix.
-
-Example:
-    rup
-");
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trrup.readme.md"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
-        public void Execute(Repl repl, ReplParser.RupContext tree, bool piped)
+        public void Execute(Config config)
         {
-            var expr = tree.StringLiteral()?.GetText();
-            expr = expr?.Substring(1, expr.Length - 2);
-            var doc = repl.stack.Peek();
-            var pr = ParsingResultsFactory.Create(doc);
-            var aparser = pr.Parser;
-            var atree = pr.ParseTree;
-            List<IParseTree> nodes = null;
-            if (expr != null)
+            string lines = null;
+            if (!(config.File != null && config.File != ""))
             {
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
+                for (; ; )
                 {
-                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    nodes = engine.parseExpression(expr,
-                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
                 }
             }
-            var results = LanguageServer.Transform.RemoveUselessParentheses(doc, nodes);
-            repl.EnactEdits(results);
+            else
+            {
+                lines = File.ReadAllText(config.File);
+            }
+            var expr = config.Expr;
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.WriteIndented = false;
+            var results = new List<ParsingResultSet>();
+            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            var docs = new List<Workspaces.Document>();
+            foreach (var parse_info in data)
+            {
+                var text = parse_info.Text;
+                var fn = parse_info.FileName;
+                var atrees = parse_info.Nodes;
+                var parser = parse_info.Parser;
+                var lexer = parse_info.Lexer;
+                var tokstream = parse_info.Stream;
+                var doc = Docs.Class1.CreateDoc(parse_info);
+                docs.Add(doc);
+            }
+            foreach (var doc in docs)
+            {
+                var pr = LanguageServer.ParsingResultsFactory.Create(doc);
+                var workspace = doc.Workspace;
+                _ = new LanguageServer.Module().Compile(workspace);
+                var text = doc.Code;
+                var fn = doc.FullPath;
+                var tree = pr.ParseTree;
+                var parser = pr.Parser;
+                var lexer = pr.Lexer;
+                List<IParseTree> nodes = null;
+                if (expr != null)
+                {
+                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                    {
+                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                        nodes = engine.parseExpression(expr,
+                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    }
+                }
+                var res = LanguageServer.Transform.RemoveUselessParentheses(doc, nodes);
+                Docs.Class1.EnactEdits(res);
+                IParseTree pt = pr.ParseTree;
+                var tuple = new ParsingResultSet()
+                {
+                    Text = doc.Code,
+                    FileName = doc.FullPath,
+                    Stream = pr.TokStream,
+                    Nodes = new IParseTree[] { pt },
+                    Lexer = pr.Lexer,
+                    Parser = pr.Parser
+                };
+                results.Add(tuple);
+            }
+            string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+            System.Console.WriteLine(js1);
         }
     }
 }
