@@ -9,29 +9,27 @@ Remove useless parentheses from a grammar.
 
 # Details
 
-`trrup` finds all altLists as specified by the xpath expression in the parsed file,
-or the entire file if the xpath expression is not given. Transform the
-grammar by removing useless parentheses.
+`trrup` removes useless parentheses in a grammar, at a specific point
+in the grammar as specified by the xpath expression, or the entire
+file if the xpath expression is not given.
 
 # Example
 
-Consider the following grammar to remove useless parentheses.
-
 _Input to command_
 
-Lexer grammar in ExpressionLexer.g4:
+grammar:
 
-    lexer grammar ExpressionLexer;
-    VARIABLE : ( VALID_ID_START VALID_ID_CHAR* ) ;
+    grammar Expression;
+    v : ( ( VALID_ID_START  ( VALID_ID_CHAR*) ) ) ;
 
 _Command_
 
-    trparse ExpressionLexer.g4 | trrup | trprint
+    trparse Expression.g4 | trrup | trprint
 
 _Result_
 
-    lexer grammar ExpressionLexer;
-    VARIABLE : VALID_ID_START VALID_ID_CHAR* ;
+    grammar Expression;
+    v : VALID_ID_START VALID_ID_CHAR* ;
 
 # Current version
 
