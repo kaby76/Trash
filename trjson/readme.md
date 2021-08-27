@@ -12,4 +12,4 @@ Read a tree from stdin and write a JSON represenation of it.
 
 # Current version
 
-0.9.0 -- Updated trsplit.
+0.9.0 -- Updated trsplit, add trrup.

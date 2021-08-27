@@ -13,4 +13,4 @@ Replace a rule with an EBNF form if it contains direct left or direct right recu
 
 # Current version
 
-0.9.0 -- Updated trsplit.
+0.9.0 -- Updated trsplit, add trrup.

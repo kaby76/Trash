@@ -13,4 +13,4 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 # Current version
 
-0.9.0 -- Updated trsplit.
+0.9.0 -- Updated trsplit, add trrup.

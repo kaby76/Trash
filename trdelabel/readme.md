@@ -14,4 +14,4 @@ Remove all labels from an Antlr4 grammar.
 
 # Current version
 
-0.9.0 -- Updated trsplit.
+0.9.0 -- Updated trsplit, add trrup.

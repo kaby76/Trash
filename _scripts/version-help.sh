@@ -6,7 +6,7 @@ do
 	pushd $i
 	rm -f asdfasdf
 	touch readme.md
-	cat readme.md | sed -e 's%0[.][89][.][0123456789][ ][-][-].*$'"%$version -- Updated trsplit.%" > asdfasdf
+	cat readme.md | sed -e 's%0[.][89][.][0123456789][ ][-][-].*$'"%$version -- Updated trsplit, add trrup.%" > asdfasdf
 	mv asdfasdf readme.md
 	popd
 done
@@ -16,7 +16,7 @@ do
 	pushd $i
 	rm -f asdfasdf
 	touch readme.md
-	cat readme.md | sed -e 's%0[.][89][.][0123456789][ ][-][-].*$'"%$version -- Updated trsplit.%" > asdfasdf
+	cat readme.md | sed -e 's%0[.][89][.][0123456789][ ][-][-].*$'"%$version -- Updated trsplit, add trrup.%" > asdfasdf
 	mv asdfasdf readme.md
 	popd
 done
