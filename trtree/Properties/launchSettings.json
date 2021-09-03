@@ -2,8 +2,8 @@
   "profiles": {
     "trtree": {
       "commandName": "Project",
-      "commandLineArgs": "--help",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\Domemtech.Trash"
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\Domemtech.TrashBase\\supported_grammars\\pegen\\Generated"
     }
   }
 }

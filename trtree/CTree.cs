@@ -20,10 +20,17 @@
         public void Execute(Config config)
         {
             string lines = null;
-            for (; ; )
+            if (!(config.File != null && config.File != ""))
             {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
+                for (; ; )
+                {
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
+                }
+            }
+            else
+            {
+                lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
