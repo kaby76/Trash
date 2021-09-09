@@ -223,28 +223,40 @@ Most commands in Trash read and/or write parsing result sets.
 
 The list of currently available commands is:
 
-    tranalyze
-    trconvert
-    trfold
-    trfoldlit
-    trgen
-    trgroup
-    trjson
-    trkleene
-    trparse
-    trprint
-    trrename
-    trst
-    trstrip
-    trtext
-    trtokens
-    trtree
-    trunfold
-    trungroup
-    trwdog
-    trxgrep
-    trxml
-    trxml2
+    tragl -- display a parse tree using Microsoft Automatic Graph Layout
+    tranalyze -- analyze a grammar
+    trcombine -- combine a split Antlr4 grammar
+    trconvert -- convert a grammar from one for to another
+    trdelabel -- remove labels from an Antlr4 grammar
+    trdelete -- delete a point in a parse tree
+    trdot -- print a parse tree in Graphvis Dot format
+    trfold -- perform fold transform on a grammar
+    trfoldlit -- perform fold transform on grammar with literals
+    trformat -- perform reformat of grammar using machine learning
+    trgen -- generate an Antlr4 parser for a given target language
+    trgroup -- perform a group transform on a grammar
+    trinsert -- insert a string into a point in a parse tree
+    trjson -- print a parse tree in JSON
+    trkleene -- perform a Kleene transform of a grammar
+    trmvsr -- move a rule to the top of a grammar
+    trparse -- parse a grammar or use generated parse to parse input
+    trprint -- print a parse tree leaves
+    trrename -- rename symbols in a grammar
+    trrr -- convert left recursion in a grammar to right recursion
+    trrup -- remove useless parentheses in a grammar
+    trsplit -- split a combined Antlr4 grammar
+    trsponge -- extract parsing results output of Trash command into files
+    trst -- print a parse tree in Antlr4 ToStringTree()
+    trstrip -- strip a grammar of all actions, labels, etc.
+    trtext -- print a parse tree leaves
+    trtokens -- print tokens in a parse tree
+    trtree -- print a parse tree in a human-readable format
+    trunfold -- perform an unfold transform on a grammar
+    trungroup -- perform an ungroup transform on a grammar
+    trwdog -- kill a program that runs too long
+    trxgrep -- grep for nodes in a parse tree using XPath
+    trxml -- print a parse tree in XML
+    trxml2 -- print an enumeration of all paths in a parse tree to leaves
 
 ## Supported grammars
 
@@ -330,26 +342,25 @@ You must have the NET SDK installed to build and run.
 
 # Current release
 
-## 0.8.1 (1 Jun 2021)
-
-* Preliminary release of the toolset. Incompatible with 0.8.0.
-Many changes to trgen, trparse, trsponge, trxml2, trcombine, trsplit,
-tragl, trdelabel, trxml, trwdog, tragl, etc, in order
-to handle new parsing result
-sets, new self-help documentation, new options, bugs, etc.
-
 # Prior Releases
-
-## 0.8.0 (27 May 2021)
-
-* Preliminary release of the toolset.
 
 # Roadmap
 
 ## Planned for v1
 
-* Place Trash in it's own repo, independent of Antlrvsix.
-* Replace Trash shell and commands with Bash and independent programs.
-* Provide full documentation.
+I'm envisioning for the "first" release to support:
+
+* reading and conversion of ABNF, Antlr2/3/4, Bison, Coco/R,
+ISO14977, JavaCC, Lark, LBNF, Pegen, Peg.js, Pest, Rex,
+W3C EBNF, XText
+* xgrep
+* print a parse tree in various formats
+* sponge
+* basic refactorings (insert, delete, rename, reorder, split,
+combine, fold, unfold)
+* basic analyses (indirect and direct recursion, infinite recursion,
+LL(1), LR(1), LALR(1),
+SLR(1), LR(0), etc)
+* full documentation
 
 If you have any questions, email me at ken.domino <at> gmail.com
