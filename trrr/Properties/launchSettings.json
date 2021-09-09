@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trrr": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt \"//ruleSpec/parserRuleSpec/RULE_REF[text() = 'a']\"",
+      "workingDirectory": "C:\\msys64\\home\\kenne\\xj"
+    }
+  }
+}

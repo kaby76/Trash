@@ -86,6 +86,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrup", "trrup\trrup.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trformat", "trformat\trformat.csproj", "{648F598E-6560-438D-A67B-B3775699A085}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrr", "trrr\trrr.csproj", "{87DDFEAD-0E27-4144-9C6E-49F2792C6E4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -241,6 +243,10 @@ Global
 		{648F598E-6560-438D-A67B-B3775699A085}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{648F598E-6560-438D-A67B-B3775699A085}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{648F598E-6560-438D-A67B-B3775699A085}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87DDFEAD-0E27-4144-9C6E-49F2792C6E4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87DDFEAD-0E27-4144-9C6E-49F2792C6E4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87DDFEAD-0E27-4144-9C6E-49F2792C6E4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87DDFEAD-0E27-4144-9C6E-49F2792C6E4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
