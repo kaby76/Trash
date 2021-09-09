@@ -21,4 +21,4 @@ make sure to enclose the argument as it contains semi-colons.
 
 # Current version
 
-0.9.0 -- Updated trsplit, add trrup.
+0.10.0 -- Updated trsplit, trtree, add trrup, trrr.

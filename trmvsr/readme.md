@@ -11,4 +11,4 @@ Move the rule, whose symbol is identified by the xpath string, to the top of the
 
 # Current version
 
-0.9.0 -- Updated trsplit, add trrup.
+0.10.0 -- Updated trsplit, trtree, add trrup, trrr.

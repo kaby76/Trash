@@ -87,4 +87,4 @@ _Output_
 
 # Current version
 
-0.9.0 -- Updated trsplit, add trrup.
+0.10.0 -- Updated trsplit, trtree, add trrup, trrr.

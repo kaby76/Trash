@@ -12,4 +12,4 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 # Current version
 
-0.9.0 -- Updated trsplit, add trrup.
+0.10.0 -- Updated trsplit, trtree, add trrup, trrr.
