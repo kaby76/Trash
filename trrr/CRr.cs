@@ -22,7 +22,7 @@
         public void Execute(Config config)
         {
             var expr = config.Expr;
-            System.Console.Error.WriteLine("Expr = '" + expr + "'");
+            //System.Console.Error.WriteLine("Expr = '" + expr + "'");
             string lines = null;
             if (!(config.File != null && config.File != ""))
             {

@@ -24,7 +24,7 @@
         public void Execute(Config config)
         {
             var expr = config.Expr.First();
-            System.Console.Error.WriteLine("Expr = '" + expr + "'");
+            //System.Console.Error.WriteLine("Expr = '" + expr + "'");
             IParseTree[] atrees;
             Parser parser;
             Lexer lexer;

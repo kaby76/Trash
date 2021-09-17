@@ -24,7 +24,7 @@
         {
             var expr = config.Expr.First();
             var str = config.Expr.Skip(1).First();
-            System.Console.Error.WriteLine("Expr = '" + expr + "'");
+//          System.Console.Error.WriteLine("Expr = '" + expr + "'");
             string lines = null;
             if (!(config.File != null && config.File != ""))
             {
