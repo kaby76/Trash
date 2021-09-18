@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trinsert": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt \"//grammarDecl\" \"/* hi there */\"",
+      "workingDirectory": "C:\\msys64\\home\\kenne\\foo"
+    }
+  }
+}

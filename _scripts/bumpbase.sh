@@ -1,22 +1,32 @@
-version="1.9.3"
+#!/bin/bash
 
-for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfold trfoldlit trformat trgen trgroup trinsert trjson trkleene trmvsr trparse trprint trrename trrr trrup trsplit trsponge trst trstrip trtext trthompson trtokens trtree trunfold trungroup trwdog trxgrep trxml trxml2
+version="1.9.3"
+directories=`find . -maxdepth 1 -type d`
+for i in $directories
 do
-	pushd $i
+	if [ "$i" == "." ]
+	then
+		continue
+	fi
+	cd $i
+	csproj=`find . -maxdepth 1 -name '*.csproj'`
+	echo csproj = "'"$csproj"'"
+	if [[ "$csproj" == "" ]]
+	then
+		cd ..
+		continue
+	fi
+	if [[ ! -f "$i.csproj" ]]
+	then
+		echo $i
+		echo nope
+		exit 1
+	fi
+	echo $i
 	rm -f asdfasdf
 	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version\"%" > asdfasdf
 	mv asdfasdf *.csproj	
 	cat *.csproj | sed -e "s%\"AntlrTreeEditing\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"3.0.0\"%" > asdfasdf
 	mv asdfasdf *.csproj	
-	popd
-done
-for i in tragl Docs AntlrJson
-do
-	pushd $i
-	rm -f asdfasdf
-	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version\"%" > asdfasdf
-	mv asdfasdf *.csproj	
-	cat *.csproj | sed -e "s%\"AntlrTreeEditing\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"3.0.0\"%" > asdfasdf
-	mv asdfasdf *.csproj	
-	popd
+	cd ..
 done
