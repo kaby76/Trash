@@ -24,6 +24,7 @@ do
 		exit 1
 	fi
 	echo $i
-	dotnet tool install -g $i $version
+	tool=${i##*/}
+	dotnet tool install -g $tool $version
 	cd ..
 done

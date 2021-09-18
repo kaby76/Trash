@@ -37,7 +37,8 @@ do
 		exit 1
 	fi
 	echo $i
-	dotnet nuget add source $cwd/$i/bin/Debug/ --name nuget-$i
+	tool=${i##*/}
+	dotnet nuget add source $cwd/$tool/bin/Debug/ --name nuget-$tool
 	cd ..
 done
 dotnet nuget list source

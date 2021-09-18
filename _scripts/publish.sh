@@ -22,7 +22,8 @@ do
 	echo $i
 	pushd .
 	cd bin/Debug
-	dotnet nuget push $i.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json
+	tool=${i##*/}
+	dotnet nuget push $tool.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json
 	popd
 	cd ..
 done

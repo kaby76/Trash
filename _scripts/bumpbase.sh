@@ -22,6 +22,7 @@ do
 		exit 1
 	fi
 	echo $i
+	echo ${i##*/}
 	rm -f asdfasdf
 	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version\"%" > asdfasdf
 	mv asdfasdf *.csproj	

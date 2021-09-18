@@ -21,6 +21,7 @@ do
 		exit 1
 	fi
 	echo $i
-	dotnet tool uninstall -g $i
+	tool=${i##*/}
+	dotnet tool uninstall -g $tool
 	cd ..
 done

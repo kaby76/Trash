@@ -19,6 +19,7 @@ do
 		exit 1
 	fi
 	echo $i
-	$i --version
+	tool=${i##*/}
+	$tool --version
 	cd ..
 done
