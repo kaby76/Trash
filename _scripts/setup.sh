@@ -32,13 +32,15 @@ do
 	fi
 	if [[ ! -f "$i.csproj" ]]
 	then
-		echo $i
-		echo nope
-		exit 1
+		cd ..
+		continue
 	fi
-	echo $i
 	tool=${i##*/}
-	dotnet nuget add source $cwd/$tool/bin/Debug/ --name nuget-$tool
+	if [[ -d "$cwd/$tool/bin/Debug/" ]]
+	then
+		echo $i
+		dotnet nuget add source $cwd/$tool/bin/Debug/ --name nuget-$tool > /dev/null 2>&1
+	fi
 	cd ..
 done
 dotnet nuget list source
