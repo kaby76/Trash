@@ -1,10 +1,24 @@
-for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfold trfoldlit trformat trgen trgroup trinsert trjson trkleene trmvsr trparse trprint trrename trrr trrup trsplit trsponge trst trstrip trtext trthompson trtokens trtree trunfold trungroup trwdog trxgrep trxml trxml2
+directories=`find . -maxdepth 1 -type d`
+for i in $directories
 do
+	if [ "$i" == "." ]
+	then
+		continue
+	fi
+	cd $i
+	csproj=`find . -maxdepth 1 -name '*.csproj'`
+	if [[ "$csproj" == "" ]]
+	then
+		cd ..
+		continue
+	fi
+	if [[ ! -f "$i.csproj" ]]
+	then
+		echo $i
+		echo nope
+		exit 1
+	fi
 	echo $i
 	$i --version
-done
-for i in tragl
-do
-	echo $i
-	$i --version
+	cd ..
 done

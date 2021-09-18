@@ -10,7 +10,6 @@ do
 	fi
 	cd $i
 	csproj=`find . -maxdepth 1 -name '*.csproj'`
-	echo csproj = "'"$csproj"'"
 	if [[ "$csproj" == "" ]]
 	then
 		cd ..
