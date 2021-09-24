@@ -45,8 +45,8 @@ The code is implemented in C#.
 ## Install
 
 Linux: Right-click, "save target as" of file
-<a href="https://raw.githubusercontent.com/kaby76/Domemtech.Trash/master/_scripts/install.sh">install.sh</a>
-, then run the script in the Bash shell (or `bash install.sh`).
+<a href="https://raw.githubusercontent.com/kaby76/Domemtech.Trash/master/_scripts/simple-install.sh">simple-install.sh</a>
+, then run the script in the Bash shell (or `bash simple-install.sh`).
 
 Windows: Right-click, "save target as" of file
 <a href="https://raw.githubusercontent.com/kaby76/Domemtech.Trash/master/_scripts/install.ps1">install.ps1</a>

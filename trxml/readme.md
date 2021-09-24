@@ -12,4 +12,4 @@ Read a tree from stdin and write an XML represenation of it.
 
 # Current version
 
-0.10.0 -- Updated trsplit, trtree, add trrup, trrr.
+0.11.0 -- Updated trkleen. Added trreplace.

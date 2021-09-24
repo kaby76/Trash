@@ -20,4 +20,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.10.0 -- Updated trsplit, trtree, add trrup, trrr.
+0.11.0 -- Updated trkleen. Added trreplace.

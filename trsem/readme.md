@@ -12,4 +12,4 @@ Read a static semantics spec file and generate code.
 
 # Current version
 
-0.10.0 -- Updated trsplit, trtree, add trrup, trrr.
+0.11.0 -- Updated trkleen. Added trreplace.

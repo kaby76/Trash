@@ -39,4 +39,4 @@ modified.
 
 # Current version
 
-0.10.0 -- Updated trsplit, trtree, add trrup, trrr.
+0.11.0 -- Updated trkleen. Added trreplace.
