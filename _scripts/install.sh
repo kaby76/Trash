@@ -19,12 +19,11 @@ do
 	fi
 	if [[ ! -f "$i.csproj" ]]
 	then
-		echo $i
-		echo nope
-		exit 1
+		cd ..
+		continue
 	fi
 	echo $i
 	tool=${i##*/}
-	dotnet tool install -g $tool $version
+	dotnet tool install -g $tool $version > /dev/null 2>&1
 	cd ..
 done

@@ -88,7 +88,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trformat", "trformat\trform
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrr", "trrr\trrr.csproj", "{87DDFEAD-0E27-4144-9C6E-49F2792C6E4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trsem", "trsem\trsem.csproj", "{22C7B6FE-A350-4942-9553-59D2A8180A28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsem", "trsem\trsem.csproj", "{22C7B6FE-A350-4942-9553-59D2A8180A28}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trreplace", "trreplace\trreplace.csproj", "{311AF1A0-4F7C-40C1-82C0-D3A0B9AE7902}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -253,6 +255,10 @@ Global
 		{22C7B6FE-A350-4942-9553-59D2A8180A28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22C7B6FE-A350-4942-9553-59D2A8180A28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22C7B6FE-A350-4942-9553-59D2A8180A28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{311AF1A0-4F7C-40C1-82C0-D3A0B9AE7902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{311AF1A0-4F7C-40C1-82C0-D3A0B9AE7902}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{311AF1A0-4F7C-40C1-82C0-D3A0B9AE7902}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{311AF1A0-4F7C-40C1-82C0-D3A0B9AE7902}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

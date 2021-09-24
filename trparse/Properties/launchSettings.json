@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-t lark ab.lark",
-      "workingDirectory": "c:/Users/kenne/Documents/GitHub/i2248/lark/examples"
+      "commandLineArgs": "c:/Users/kenne/Documents/scrape-c-plus-plus-spec/gram/Generated/hw.cpp",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\scrape-c-plus-plus-spec\\gram\\Generated"
     }
   }
 }

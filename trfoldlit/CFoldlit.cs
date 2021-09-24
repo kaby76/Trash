@@ -22,7 +22,7 @@
 
         public void Execute(Config config)
         {
-            var expr = config.Expr.First();
+            var expr = config.Expr != null && config.Expr.Any() ? config.Expr.First() : null;
             //System.Console.Error.WriteLine("Expr = '" + expr + "'");
             string lines = null;
             if (!(config.File != null && config.File != ""))
@@ -64,31 +64,33 @@
                 var atrees = doc.ParseTree;
                 var parser = pr.Parser;
                 var lexer = pr.Lexer;
-               // var doc = Docs.Class1.CreateDoc(parse_info);
+                // var doc = Docs.Class1.CreateDoc(parse_info);
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 IParseTree root = atrees.Root();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
+                List<IParseTree> nodes = null;
+                if (expr != null && expr != "")
                 {
-                    var nodes = engine.parseExpression(expr,
-                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as IParseTree).ToList();
-
-                    var res = LanguageServer.Transform.Foldlit(nodes, doc);
-
-                    Docs.Class1.EnactEdits(res);
-                    IParseTree pt = pr.ParseTree;
-                    var tuple = new ParsingResultSet()
+                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
                     {
-                        Text = doc.Code,
-                        FileName = doc.FullPath,
-                        Stream = pr.TokStream,
-                        Nodes = new IParseTree[] { pt },
-                        Lexer = pr.Lexer,
-                        Parser = pr.Parser
-                    };
-                    results.Add(tuple);
+                        nodes = engine.parseExpression(expr,
+                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as IParseTree).ToList();
+                    }
                 }
+                var res = LanguageServer.Transform.Foldlit(nodes, doc);
+                Docs.Class1.EnactEdits(res);
+                IParseTree pt = pr.ParseTree;
+                var tuple = new ParsingResultSet()
+                {
+                    Text = doc.Code,
+                    FileName = doc.FullPath,
+                    Stream = pr.TokStream,
+                    Nodes = new IParseTree[] { pt },
+                    Lexer = pr.Lexer,
+                    Parser = pr.Parser
+                };
+                results.Add(tuple);
             }
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);

@@ -2,8 +2,8 @@
   "profiles": {
     "trfoldlit": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \" //lexerRuleSpec/TOKEN_REF\"",
-      "workingDirectory": "C:\\msys64\\home\\kenne\\scannerless\\Generated"
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "c:\\Users\\kenne\\Documents\\scrape-c-plus-plus-spec"
     }
   }
 }

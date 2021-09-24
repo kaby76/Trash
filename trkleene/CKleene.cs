@@ -22,7 +22,7 @@
 
         public void Execute(Config config)
         {
-            var expr = config.Expr.First();
+            var expr = config.Expr != null && config.Expr.Any() ? config.Expr.First() : null;
             //          System.Console.Error.WriteLine("Expr = '" + expr + "'");
             string lines = null;
             if (!(config.File != null && config.File != ""))
@@ -42,18 +42,28 @@
             serializeOptions.WriteIndented = true;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
+            var docs = new List<Workspaces.Document>();
             foreach (var parse_info in data)
             {
+                var text = parse_info.Text;
+                var fn = parse_info.FileName;
+                var parser = parse_info.Parser;
+                var lexer = parse_info.Lexer;
+                var tokstream = parse_info.Stream;
                 var doc = Docs.Class1.CreateDoc(parse_info);
-                var f = doc.FullPath;
-                doc.ParseTree = null;
-                doc.Changed = true;
-                ParsingResults pr = ParsingResultsFactory.Create(doc);
-                pr.ParseTree = null;
-                _ = new Module().GetQuickInfo(0, doc);
-                var aparser = pr.Parser;
-                var atree = pr.ParseTree;
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
+                docs.Add(doc);
+            }
+            foreach (var doc in docs)
+            {
+                var pr = LanguageServer.ParsingResultsFactory.Create(doc);
+                var workspace = doc.Workspace;
+                _ = new LanguageServer.Module().Compile(workspace);
+                var text = doc.Code;
+                var fn = doc.FullPath;
+                var tree = doc.ParseTree;
+                var parser = pr.Parser;
+                var lexer = pr.Lexer;
+                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     List<IParseTree> nodes = null;
                     if (expr != null)
