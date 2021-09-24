@@ -1,29 +1,31 @@
-version=0.10.0
+version=0.11.0
 directories=`find . -maxdepth 1 -type d`
+cwd=`pwd`
 for i in $directories
 do
 	if [ "$i" == "." ]
 	then
 		continue
 	fi
-	cd $i
-	csproj=`find . -maxdepth 1 -name '*.csproj'`
-	if [[ "$csproj" == "" ]]
+	cd $cwd/$i
+	if [[ "$?" != "0" ]]
 	then
-		cd ..
 		continue
 	fi
 	if [[ ! -f "$i.csproj" ]]
 	then
-		echo $i
-		echo nope
-		exit 1
+		continue
+	fi
+	if [[ ! -f "bin/Debug/$i.$version.nupkg" ]]
+	then
+		continue
 	fi
 	echo $i
-	pushd .
 	cd bin/Debug
+	if [[ "$?" != "0" ]]
+	then
+		continue
+	fi
 	tool=${i##*/}
 	dotnet nuget push $tool.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json
-	popd
-	cd ..
 done
