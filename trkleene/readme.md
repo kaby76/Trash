@@ -6,6 +6,19 @@ Replace a rule with an EBNF form if it contains direct left or direct right recu
 
     trkleene <string>?
 
+# Details
+
+`trkleene` refactors rules in a grammar with direct left or direct right
+recursion. The program first reads from stdin the parse tree data of
+grammar files(x). It then searches
+the parse tree for the nodes identified by the XPath expression argument
+or if none given, all parser and lexer rules in the grammar.
+The XPath argument can select any node for the rule (e.g., the LHS symbol,
+any RHS symbol, the colon in the rule, etc). The program will finally
+replace the RHS of each rule selected with a "Kleene" version of the rule,
+removing the recursion. The updated grammar(s) as parse tree data
+is outputed to stdout.
+
 # Examples
 
     trparse A.g4 | trkleene
