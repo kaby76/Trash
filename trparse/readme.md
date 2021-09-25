@@ -26,8 +26,8 @@ the `--type` command-line option:
 
 # Usage
     
-    trparse _options_
-    -i, --input String input.
+    trparse (<string> | <options>)*
+    -i, --input Parse the given string as input.
     -t, --type  Specifies type of parse, antlr4, antlr3, antlr2, bison, ebnf, gen 
 
 # Examples
