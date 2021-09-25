@@ -12,4 +12,4 @@ Read a tree from stdin and write a JSON represenation of it.
 
 # Current version
 
-0.11.0 -- Updated trkleen. Added trreplace.
+0.11.0 -- Updated trkleene. Added trreplace.

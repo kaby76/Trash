@@ -13,4 +13,4 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 # Current version
 
-0.11.0 -- Updated trkleen. Added trreplace.
+0.11.0 -- Updated trkleene. Added trreplace.

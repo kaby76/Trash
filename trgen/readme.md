@@ -17,4 +17,4 @@ create a parser for the Arithmetic.g4 grammar.
 
 # Current version
 
-0.11.0 -- Updated trkleen. Added trreplace.
+0.11.0 -- Updated trkleene. Added trreplace.

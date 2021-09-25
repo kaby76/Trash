@@ -29,6 +29,6 @@ do
 	echo $i
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- Updated trkleen. Added trreplace.%" > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- Updated trkleene. Added trreplace.%" > asdfasdf2
 	mv asdfasdf2 readme.md
 done
