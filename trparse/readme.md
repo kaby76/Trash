@@ -1,15 +1,12 @@
 # Trparse
 
-Parse a file, command-line string argument, or stdin
-using a built-in or generated parser, and output to stdout the
-parse tree data. If the current directory contains a parser in
-the `Generated/` sub-directory, then the tool will use the
-parser in `Generated/`. Otherwise, the parse type will depend
-on other inputs.
+Parse files and output to stdout parse tree data.
+If the current directory contains a generated parser
+(`Generated/` or the current directory is within `Generated/`)
+the tool will use the generated parser.
 
-With the positional args,
-a file is parse. If not using the `Generated/` parser,
-the type of parse will be based on the file suffix:
+If using positional args on the command line, a file is parse
+depending on the extension of the file name:
 
 * `.g2` for an Antlr2
 * `.g3` for an Antlr3
@@ -39,6 +36,7 @@ the `--type` command-line option:
     trparse -i "1+2+3"
     trparse Foobar.g -t antlr2
     echo "1+2+3" | trparse | trtree
+    mkdir out; trparse MyParser.g4 MyLexer.g4 | trkleene | trsponge -o out
 
 # Current version
 
