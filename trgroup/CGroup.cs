@@ -22,7 +22,13 @@
 
         public void Execute(Config config)
         {
-            var expr = config.Expr.First();
+            var exprs = config.Expr;
+            if (exprs == null || !exprs.Any())
+            {
+                var e = new List<string>();
+                e.Add("//(ruleAltList | lexerAltList | altList)");
+                exprs = e;
+            }
             //System.Console.Error.WriteLine("Expr = '" + expr + "'");
             string lines = null;
             if (!(config.File != null && config.File != ""))
@@ -65,13 +71,15 @@
                 var lexer = pr.Lexer;
                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
-                    List<IParseTree> nodes = null;
-                    if (expr != null)
+                    List<IParseTree> nodes = new List<IParseTree>();
+                        nodes = new List<IParseTree>();
+                    foreach (var expr in exprs)
                     {
                         org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        nodes = engine.parseExpression(expr,
+                        var to_add = engine.parseExpression(expr,
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        nodes.AddRange(to_add);
                     }
                     var res = LanguageServer.Transform.Group(nodes, doc);
                     Docs.Class1.EnactEdits(res);
