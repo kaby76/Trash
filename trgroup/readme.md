@@ -31,7 +31,11 @@ _Input to command (file "temp.g4")_
 
 _Command_
 
-    trparse temp.g4 | trgroup "//parserRuleSpec[RULE_REF/text()='additiveExpression']//ruleAltList" | trsponge -c true
+    trparse temp.g4 | trgroup "//parserRuleSpec[RULE_REF/text()='a']//ruleAltList" | trsponge -c true
+    
+    # Or, a file-wide group refactoring, over all parser and lexer rules:
+    
+    trparse temp.g4 | trgroup | trsponge -c true
 
 _Output_
 
