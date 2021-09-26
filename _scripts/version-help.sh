@@ -1,5 +1,5 @@
 
-version="0.11.0"
+version="0.11.2"
 directories=`find . -maxdepth 1 -type d`
 cwd=`pwd`
 for i in $directories
@@ -29,6 +29,6 @@ do
 	echo $i
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- Updated trkleene. Added trreplace.%" > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- Updated trgroup.%" > asdfasdf2
 	mv asdfasdf2 readme.md
 done

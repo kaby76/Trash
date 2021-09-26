@@ -39,4 +39,4 @@ modified.
 
 # Current version
 
-0.11.0 -- Updated trkleene. Added trreplace.
+0.11.2 -- Updated trgroup.
