@@ -3,7 +3,7 @@
     "trtree": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\Domemtech.TrashBase\\supported_grammars\\pegen\\Generated"
+      "workingDirectory": "C:\\msys64\\home\\kenne\\temp"
     }
   }
 }

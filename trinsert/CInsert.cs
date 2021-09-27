@@ -43,17 +43,29 @@
             serializeOptions.WriteIndented = true;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
+            var docs = new List<Workspaces.Document>();
             foreach (var parse_info in data)
             {
                 var text = parse_info.Text;
                 var fn = parse_info.FileName;
-                var atrees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
                 var tokstream = parse_info.Stream;
                 var doc = Docs.Class1.CreateDoc(parse_info);
+                docs.Add(doc);
+            }
+            foreach (var doc in docs)
+            {
+                var pr = LanguageServer.ParsingResultsFactory.Create(doc);
+                var workspace = doc.Workspace;
+                _ = new LanguageServer.Module().Compile(workspace);
+                var text = doc.Code;
+                var fn = doc.FullPath;
+                var tree = doc.ParseTree;
+                var parser = pr.Parser;
+                var lexer = pr.Lexer;
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                IParseTree root = atrees.First();
+                IParseTree root = tree;
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
                 {
@@ -61,18 +73,22 @@
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
 
-                    var res = LanguageServer.Transform.Insert(nodes, str, doc);
+                    Dictionary<string, string> res;
+                    if (config.After)
+                        res = LanguageServer.Transform.InsertBefore(nodes, str, doc);
+                    else
+                        res = LanguageServer.Transform.InsertAfter(nodes, str, doc);
                     Docs.Class1.EnactEdits(res);
-                    var pr = ParsingResultsFactory.Create(doc);
-                    IParseTree pt = pr.ParseTree;
+                    var pr2 = ParsingResultsFactory.Create(doc);
+                    IParseTree pt2 = pr2.ParseTree;
                     var tuple = new ParsingResultSet()
                     {
                         Text = doc.Code,
                         FileName = doc.FullPath,
-                        Stream = pr.TokStream,
-                        Nodes = new IParseTree[] { pt },
-                        Lexer = pr.Lexer,
-                        Parser = pr.Parser
+                        Stream = pr2.TokStream,
+                        Nodes = new IParseTree[] { pt2 },
+                        Lexer = pr2.Lexer,
+                        Parser = pr2.Parser
                     };
                     results.Add(tuple);
                 }

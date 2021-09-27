@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "c:/Users/kenne/Documents/scrape-c-plus-plus-spec/gram/Generated/hw.cpp",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\scrape-c-plus-plus-spec\\gram\\Generated"
+      "commandLineArgs": "temp.g4",
+      "workingDirectory": "C:\\msys64\\home\\kenne\\temp"
     }
   }
 }

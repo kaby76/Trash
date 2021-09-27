@@ -44,8 +44,6 @@
                 StringBuilder sb = new StringBuilder();
                 foreach (var node in nodes)
                 {
-                    TerminalNodeImpl x = TreeEdits.LeftMostToken(node);
-                    var ts = x.Payload.TokenSource;
                     sb.AppendLine();
                     sb.AppendLine(
                         TreeOutput.OutputTree(

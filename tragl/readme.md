@@ -13,4 +13,4 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 # Current version
 
-0.11.2 -- Updated trgroup.
+0.11.3 -- Updated trtree, trinsert.

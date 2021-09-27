@@ -55,7 +55,7 @@
                         config.OutputDirectory = config.OutputDirectory + "/";
                     fn = config.OutputDirectory + Path.GetFileName(fn);
                 }
-                if (File.Exists(fn) && (config.Clobber == null || !(bool)config.Clobber ))
+                if (File.Exists(fn) && (!(bool)config.Clobber ))
                     throw new System.Exception("Attempting to overwrite '" + fn + "'. Use --overwrite option if it is intended.");
                 System.Console.Error.WriteLine("Writing to " + fn);
                 File.WriteAllText(fn, code);

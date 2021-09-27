@@ -39,4 +39,4 @@ modified.
 
 # Current version
 
-0.11.2 -- Updated trgroup.
+0.11.3 -- Updated trtree, trinsert.

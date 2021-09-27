@@ -98,7 +98,6 @@
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
-        public string antlr_runtime_path;
         public string root_directory;
         public string target_specific_src_directory;
         public HashSet<string> tool_grammar_files = null;

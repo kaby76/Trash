@@ -8,6 +8,9 @@ namespace Trash
         [Option('f', "file", Required = false)]
         public string File { get; set; }
 
+        [Option('a', "after", Required = false, Default = false)]
+        public bool After { get; set; }
+
         [Value(0, Min = 1)]
         public IEnumerable<string> Expr { get; set; }
     }
