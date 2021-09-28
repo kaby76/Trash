@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//SCIENTIFIC_NUMBER[count(ancestor::*) > 333]\"",
-      "workingDirectory": "C:\\msys64\\home\\kenne\\f3\\Generated"
+      "commandLineArgs": "-f o.pt \"//parserRuleSpec[//alternative[count(*)=0]]\"",
+      "workingDirectory": "C:\\msys64\\home\\kenne\\temp"
     }
   }
 }

@@ -75,9 +75,9 @@
 
                     Dictionary<string, string> res;
                     if (config.After)
-                        res = LanguageServer.Transform.InsertBefore(nodes, str, doc);
-                    else
                         res = LanguageServer.Transform.InsertAfter(nodes, str, doc);
+                    else
+                        res = LanguageServer.Transform.InsertBefore(nodes, str, doc);
                     Docs.Class1.EnactEdits(res);
                     var pr2 = ParsingResultsFactory.Create(doc);
                     IParseTree pt2 = pr2.ParseTree;

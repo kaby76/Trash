@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trgroup": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-upstream\\sql\\postgresql"
+    }
+  }
+}
