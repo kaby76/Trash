@@ -16,4 +16,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.11.3 -- Updated trtree, trinsert.
+0.11.3 -- Updated trinsert, trsponge, trtree.

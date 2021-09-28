@@ -87,4 +87,4 @@ _Output_
 
 # Current version
 
-0.11.3 -- Updated trtree, trinsert.
+0.11.3 -- Updated trinsert, trsponge, trtree.
