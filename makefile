@@ -11,4 +11,4 @@ clean:
 	-rm -rf */obj */bin
 	-bash _scripts/uninstall.sh
 	-bash _scripts/unsetup.sh
-
+	-rm -rf nuget.config

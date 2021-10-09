@@ -6,9 +6,10 @@ case "${unameOut}" in
     Darwin*)    machine=Mac;;
     CYGWIN*)    machine=Cygwin;;
     MINGW*)     machine=MinGw;;
+    MSYS_NT*)   machine=Msys;;
     *)          machine="UNKNOWN:${unameOut}"
 esac
-if [[ "$machine" == "MinGw" ]]
+if [[ "$machine" == "MinGw" || "$machine" == "Msys" ]]
 then
     cwd=`pwd | sed 's%/c%c:%' | sed 's%/%\\\\%g'`
 else
