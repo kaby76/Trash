@@ -2,8 +2,8 @@
   "profiles": {
     "trkleene": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//lexerRuleSpec/TOKEN_REF[text()='Hexadecimal_escape_sequence']\"",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\scrape-c-plus-plus-spec"
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trkleene"
     }
   }
 }
