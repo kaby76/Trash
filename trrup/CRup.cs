@@ -34,7 +34,6 @@
             {
                 lines = File.ReadAllText(config.File);
             }
-            var expr = config.Expr;
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
@@ -62,18 +61,7 @@
                 var tree = pr.ParseTree;
                 var parser = pr.Parser;
                 var lexer = pr.Lexer;
-                List<IParseTree> nodes = null;
-                if (expr != null)
-                {
-                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
-                    {
-                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                        nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                    }
-                }
-                var res = LanguageServer.Transform.RemoveUselessParentheses(doc, nodes);
+                var res = LanguageServer.Transform.RemoveUselessParentheses(doc);
                 Docs.Class1.EnactEdits(res);
                 IParseTree pt = pr.ParseTree;
                 var tuple = new ParsingResultSet()

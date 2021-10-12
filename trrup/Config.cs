@@ -7,8 +7,5 @@ namespace Trash
     {
         [Option('f', "file", Required = false)]
         public string File { get; set; }
-
-        [Value(0, Required = false)]
-        public string Expr { get; set; }
     }
 }

@@ -3,7 +3,7 @@
     "trrup": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\split\\Domemtech.TrashBase\\supported_grammars\\xtext"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trrup"
     }
   }
 }
