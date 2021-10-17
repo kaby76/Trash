@@ -12,4 +12,4 @@ Read a tree from stdin and write a JSON represenation of it.
 
 # Current version
 
-0.11.3 -- Updated trinsert, trsponge, trtree.
+0.11.4 -- Bug fixes in trkleene, trrup.

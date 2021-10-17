@@ -12,4 +12,4 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 # Current version
 
-0.11.3 -- Updated trinsert, trsponge, trtree.
+0.11.4 -- Bug fixes in trkleene, trrup.

@@ -57,4 +57,4 @@ The output will be:
 
 # Current version
 
-0.11.3 -- Updated trinsert, trsponge, trtree.
+0.11.4 -- Bug fixes in trkleene, trrup.

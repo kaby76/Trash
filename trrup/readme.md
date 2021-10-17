@@ -4,13 +4,11 @@ Remove useless parentheses from a grammar.
 
 # Usage
 
-    trrup <string>?
+    trrup
 
 # Details
 
-`trrup` removes useless parentheses in a grammar, at a specific point
-in the grammar as specified by the xpath expression, or the entire
-file if the xpath expression is not given.
+`trrup` removes useless parentheses in a grammar.
 
 # Example
 
@@ -38,4 +36,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.11.3 -- Updated trinsert, trsponge, trtree.
+0.11.4 -- Bug fixes in trkleene, trrup.
