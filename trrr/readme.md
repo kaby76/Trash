@@ -38,4 +38,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.11.4 -- Bug fixes in trkleene, trrup.
+0.11.5 -- Bug fixes in trkleene, trrup.

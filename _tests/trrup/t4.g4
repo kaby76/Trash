@@ -16,3 +16,6 @@ d : ((a b) | c);
 d : ((a b) | c)?;
 d : x ((a b) | c) y;
 assignment : ( ( ( ( '=>' ) ) | ( ( '->' ) ) ) ? ( ( validID ) ) ( ( ( '+=' | '=' | '?=' ) ) ) ( ( assignableTerminal ) ) ) ;
+foo: bar (baz)?;
+bar: 'bar';
+baz: 'baz';

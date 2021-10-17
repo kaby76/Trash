@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="2.1.0"
+version="2.2.0"
 directories=`find . -maxdepth 1 -type d`
 for i in $directories
 do

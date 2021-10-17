@@ -40,4 +40,4 @@ the `--type` command-line option:
 
 # Current version
 
-0.11.4 -- Bug fixes in trkleene, trrup.
+0.11.5 -- Bug fixes in trkleene, trrup.
