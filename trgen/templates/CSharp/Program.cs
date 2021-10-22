@@ -25,6 +25,8 @@ public class Program
         var parser = new <parser_name>(tokens);
         Parser = parser;
         var tree = parser.<start_symbol>();
+        Input = lexer.InputStream.ToString();
+        TokenStream = parser.TokenStream;
         Tree = tree;
         return tree;
     }

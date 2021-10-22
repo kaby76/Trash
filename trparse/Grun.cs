@@ -131,31 +131,13 @@
             System.Console.Error.WriteLine("Time to parse: " + (after - before));
             var tree = res as IParseTree;
             var t2 = tree as ParserRuleContext;
-            var m2 = type.GetProperty("Parser");
-            object[] p2 = new object[0];
-            var r2 = m2.GetValue(null, p2);
-            var m3 = type.GetProperty("Lexer");
-            object[] p3 = new object[0];
-            var r3 = m3.GetValue(null, p3);
-            var m4 = type.GetProperty("TokenStream");
-            object[] p4 = new object[0];
-            var r4 = m4.GetValue(null, p4);
+            var r2 = type.GetProperty("Parser").GetValue(null, new object[0]);
+            var r3 = type.GetProperty("Lexer").GetValue(null, new object[0]);
+            var r4 = type.GetProperty("TokenStream").GetValue(null, new object[0]);
+            var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
             System.Console.Error.WriteLine("# tokens per sec = " + (r4 as ITokenStream).Size / (after - before).TotalSeconds);
-            var tuple = new AntlrJson.ParsingResultSet() { Text = txt, FileName = "stdin", Stream = r4 as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = r2 as Parser, Lexer = r3 as Lexer };
+            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Stream = r4 as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = r2 as Parser, Lexer = r3 as Lexer };
             data.Add(tuple);
         }
-
-        //public void BuildIt()
-        //{
-        //    // Create a workspace.
-        //    //var msbuild_workspace = MSBuildWorkspace.Create();
-
-        //    //var project = msbuild_workspace.OpenProjectAsync("Test.csproj").Result;
-        //    //var compilation = project.GetCompilationAsync().Result;
-        //    //var assembly = compilation.Assembly;
-        //    //Compilation? compilation = msbuild_project.GetCompilationAsync().Result;
-        //    //IAssemblySymbol assembly = compilation.Assembly;
-        //    //var file = compilation.AssemblyName;
-        //}
     }
 }
