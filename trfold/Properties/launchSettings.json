@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "trfold": {
+      "commandName": "Project",
+      "commandLineArgs": " -f c:\\msys64\\home\\Kenne\\xx\\o.pt   \"//parserRuleSpec/RULE_REF[text()='number_operation']\""
+    }
+  }
+}

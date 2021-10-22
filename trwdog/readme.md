@@ -12,4 +12,4 @@ Execute a command with a watchdog timer.
 
 # Current version
 
-0.11.5 -- Bug fixes in trkleene, trrup.
+0.12.0 -- Updates to trparse, trfold, trsponge.

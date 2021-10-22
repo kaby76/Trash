@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "temp.g4",
-      "workingDirectory": "C:\\msys64\\home\\kenne\\temp"
+      "commandLineArgs": "hw.cc",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\scrape-c-plus-plus-spec\\g2\\Generated"
     }
   }
 }

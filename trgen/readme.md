@@ -17,4 +17,4 @@ create a parser for the Arithmetic.g4 grammar.
 
 # Current version
 
-0.11.5 -- Bug fixes in trkleene, trrup.
+0.12.0 -- Updates to trparse, trfold, trsponge.
