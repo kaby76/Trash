@@ -18,6 +18,7 @@ public class Program
     public static ITokenStream TokenStream { get; set; }
     public static IParseTree Tree { get; set; }
     public static string StartSymbol { get; set; } = "<start_symbol>";
+    public static string Input { get; set; }
     public static IParseTree Parse(string input)
     {
         var str = new AntlrInputStream(input);
@@ -28,6 +29,8 @@ public class Program
         var parser = new Test.<parser_name>(tokens);
         Parser = parser;
         var tree = parser.<start_symbol>();
+	Input = lexer.InputStream.ToString();
+	TokenStream = parser.TokenStream;
         Tree = tree;
         return tree;
     }
