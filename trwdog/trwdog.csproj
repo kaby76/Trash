@@ -22,7 +22,7 @@ This program is part of the Trash toolkit.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Management" Version="5.0.0" />
+    <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
   </ItemGroup>
   <PropertyGroup>
