@@ -1,5 +1,6 @@
-rm -rf bin obj
-dotnet restore
-dotnet build
-echo "1 + 2 + 3" | ../../trparse/bin/Debug/net5.0/trparse.exe | trxgrep ' //SCIENTIFIC_NUMBER' | trtree > gold.txt
+rm -rf Generated
+trgen
+cd Generated
+make
+echo "1 + 2 + 3" | ../../../trparse/bin/Debug/net5.0/trparse.exe | ../../../trxgrep/bin/Debug/net5.0/trxgrep.exe ' //SCIENTIFIC_NUMBER' | ../../../trtree/bin/Debug/net5.0/trtree.exe > gold.txt
 
