@@ -1,6 +1,7 @@
 #!/bin/bash
 
-version="2.2.0"
+version_antlr="3.0.0"
+version_tree="4.0.0"
 directories=`find . -maxdepth 1 -type d`
 for i in $directories
 do
@@ -24,9 +25,9 @@ do
 	echo $i
 	echo ${i##*/}
 	rm -f asdfasdf
-	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version\"%" > asdfasdf
+	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version_antlr\"%" > asdfasdf
 	mv asdfasdf *.csproj	
-	cat *.csproj | sed -e "s%\"AntlrTreeEditing\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"3.1.0\"%" > asdfasdf
+	cat *.csproj | sed -e "s%\"AntlrTreeEditing\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"$version_tree\"%" > asdfasdf
 	mv asdfasdf *.csproj	
 	cd ..
 done

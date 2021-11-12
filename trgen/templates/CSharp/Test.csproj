@@ -10,9 +10,9 @@
 \</Antlr4>
 } >  \</ItemGroup>
   \<ItemGroup>
-    \<PackageReference Include="Antlr4.Runtime.Standard" Version ="4.9.2" />
-    \<PackageReference Include="Antlr4BuildTasks" Version = "8.16" PrivateAssets="all" />
-    \<PackageReference Include="AntlrTreeEditing" Version="3.1.0" />
+    \<PackageReference Include="Antlr4.Runtime.Standard" Version ="4.9.3" />
+    \<PackageReference Include="Antlr4BuildTasks" Version = "8.17" PrivateAssets="all" />
+    \<PackageReference Include="AntlrTreeEditing" Version="4.0.0" />
   \</ItemGroup>
   \<PropertyGroup>
     \<RestoreProjectStyle>PackageReference\</RestoreProjectStyle>
