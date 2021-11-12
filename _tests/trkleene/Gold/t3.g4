@@ -1,3 +1,3 @@
 grammar t3;
-xx : yy * ;
+xx : yy* ;
 yy: 'b' ;
