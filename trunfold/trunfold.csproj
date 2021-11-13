@@ -21,7 +21,7 @@ in the parse tree. This program is part of the Trash toolkit.
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.3" />
-    <PackageReference Include="AntlrTreeEditing" Version="4.0.0" />
+    <PackageReference Include="AntlrTreeEditing" Version="4.1.0" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
