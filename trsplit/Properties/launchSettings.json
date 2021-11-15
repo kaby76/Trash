@@ -3,7 +3,7 @@
     "trsplit": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trcombine"
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\scrape-c-plus-plus-spec"
     }
   }
 }
