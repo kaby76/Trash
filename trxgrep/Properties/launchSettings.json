@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//parserRuleSpec[//alternative[count(*)=0]]\"",
-      "workingDirectory": "C:\\msys64\\home\\kenne\\temp"
+      "commandLineArgs": "-f o.pt \"//STRING_LITERAL[text()='''any member of the source character set except new_line and \"\"''']\"",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\scrape-c-plus-plus-spec"
     }
   }
 }

@@ -16,5 +16,8 @@ namespace Trash
 
         [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
         public string start_rule { get; set; }
+
+        [Option('v', "verbose", Required = false)]
+        public bool Verbose { get; set; }
     }
 }

@@ -24,7 +24,11 @@
         {
             var expr = config.Expr.First();
             var str = config.Expr.Skip(1).First();
-//          System.Console.Error.WriteLine("Expr = '" + expr + "'");
+	    if (config.Verbose)
+	    {
+		    System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
+		    System.Console.Error.WriteLine("Repl = >>>" + str + "<<<");
+	    }
             string lines = null;
             if (!(config.File != null && config.File != ""))
             {

@@ -13,5 +13,8 @@ namespace Trash
 
         [Option('o', "output-directory", Required = false)]
         public string OutputDirectory { get; set; }
+
+        [Option('v', "verbose", Required = false)]
+        public bool Verbose { get; set; }
     }
 }

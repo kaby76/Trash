@@ -10,5 +10,7 @@ namespace Trash
         [Option('t', "type", Required = false, Default = "antlr4")]
         public string Type { get; set; }
 
+        [Option('v', "verbose", Required = false)]
+        public bool Verbose { get; set; }
     }
 }

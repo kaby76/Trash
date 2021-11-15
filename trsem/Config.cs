@@ -17,6 +17,7 @@ namespace Trash
         [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
         public string output_directory { get; set; }
 
-
+        [Option('v', "verbose", Required = false)]
+        public bool Verbose { get; set; }
     }
 }

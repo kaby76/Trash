@@ -10,5 +10,8 @@ namespace Trash
 
         [Option('s', "start-rules", Required = false, HelpText = "Start rule names.")]
         public IEnumerable<string> start_rules { get; set; }
+
+        [Option('v', "verbose", Required = false)]
+        public bool Verbose { get; set; }
     }
 }

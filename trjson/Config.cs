@@ -5,7 +5,10 @@ namespace Trash
 {
 	public class Config
 	{
-		[Option("version", Required = false, HelpText = "output version information and exit.")]
-		public bool? Version { get; set; }
+		[Option('f', "file", Required = false)]
+		public string File { get; set; }
+
+		[Option('v', "verbose", Required = false)]
+		public bool Verbose { get; set; }
 	}
 }

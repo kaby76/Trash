@@ -10,5 +10,8 @@ namespace Trash
 
         [Option('r', "rename-map", Required = true)]
         public string RenameMap { get; set; }
+
+        [Option('v', "verbose", Required = false)]
+        public bool Verbose { get; set; }
     }
 }

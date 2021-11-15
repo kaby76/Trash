@@ -88,5 +88,8 @@ namespace Trash
 
         [Option("watchdog-timeout", Required = false, Default = 60)]
         public int? watchdog_timeout { get; set; }
+
+        [Option('v', "verbose", Required = false)]
+        public bool Verbose { get; set; }
     }
 }
