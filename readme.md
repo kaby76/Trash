@@ -238,7 +238,6 @@ The list of currently available commands is:
     trinsert -- insert a string into a point in a parse tree
     trjson -- print a parse tree in JSON
     trkleene -- perform a Kleene transform of a grammar
-    trmvsr -- move a rule to the top of a grammar
     trparse -- parse a grammar or use generated parse to parse input
     trprint -- print a parse tree leaves
     trrename -- rename symbols in a grammar

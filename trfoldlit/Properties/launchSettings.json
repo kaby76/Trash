@@ -3,7 +3,7 @@
     "trfoldlit": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "c:\\Users\\kenne\\Documents\\scrape-c-plus-plus-spec"
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\scrape-c-plus-plus-spec"
     }
   }
 }
