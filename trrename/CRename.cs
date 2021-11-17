@@ -89,7 +89,10 @@
                 }
                 else
                 {
-                    System.Console.Write(lines);
+                    System.Console.Error.WriteLine("Warning: No changes in "
+                        + doc.FullPath
+                        + " with rename map " + config.RenameMap);
+                    results.Add(parse_info);
                 }
             }
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
