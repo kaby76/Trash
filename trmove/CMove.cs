@@ -24,14 +24,18 @@
         {
             var from = config.Expr.First();
             var to = config.Expr.Skip(1).First();
-	    if (config.Verbose)
-	    {
-		    System.Console.Error.WriteLine("from = >>>" + from + "<<<");
-		    System.Console.Error.WriteLine("to = >>>" + to + "<<<");
-	    }
+	        if (config.Verbose)
+	        {
+		        System.Console.Error.WriteLine("from = >>>" + from + "<<<");
+		        System.Console.Error.WriteLine("to = >>>" + to + "<<<");
+	        }
             string lines = null;
             if (!(config.File != null && config.File != ""))
             {
+                if (config.Verbose)
+                {
+                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
+                }
                 for (; ; )
                 {
                     lines = System.Console.In.ReadToEnd();
@@ -40,6 +44,10 @@
             }
             else
             {
+                if (config.Verbose)
+                {
+                    System.Console.Error.WriteLine("reading from stdin");
+                }
                 lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();

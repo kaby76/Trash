@@ -23,12 +23,27 @@
         public void Execute(Config config)
         {
             var expr = config.Expr.First();
-//          System.Console.Error.WriteLine("Expr = '" + expr + "'");
+            //          System.Console.Error.WriteLine("Expr = '" + expr + "'");
             string lines = null;
-            for (; ; )
+            if (!(config.File != null && config.File != ""))
             {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
+                if (config.Verbose)
+                {
+                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
+                }
+                for (; ; )
+                {
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
+                }
+            }
+            else
+            {
+                if (config.Verbose)
+                {
+                    System.Console.Error.WriteLine("reading from stdin");
+                }
+                lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());

@@ -37,6 +37,10 @@
             string lines = null;
             if (!(config.File != null && config.File != ""))
             {
+                if (config.Verbose)
+                {
+                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
+                }
                 for (; ; )
                 {
                     lines = System.Console.In.ReadToEnd();
@@ -45,6 +49,10 @@
             }
             else
             {
+                if (config.Verbose)
+                {
+                    System.Console.Error.WriteLine("reading from stdin");
+                }
                 lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
