@@ -78,7 +78,7 @@
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, l.ToArray())
                         .Select(x => (x.NativeValue)).ToArray();
-                    System.Console.Error.WriteLine("Result size " + nodes.Count());
+                    if (config.Verbose) System.Console.Error.WriteLine("Result size " + nodes.Count());
                     List<IParseTree> res = new List<IParseTree>();
                     foreach(var v in nodes)
                     {

@@ -218,6 +218,7 @@
                 MyLexer lexer = new MyLexer(null);
                 MyParser parser = new MyParser(out_token_stream);
                 MyCharStream fake_char_stream = new MyCharStream();
+                fake_char_stream.SourceName = file_name;
                 fake_char_stream.Text = text;
                 out_token_stream.TokenSource = lexer;
                 lexer.InputStream = fake_char_stream;

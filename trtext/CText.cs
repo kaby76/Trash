@@ -116,11 +116,15 @@
                 }
                 lines = File.ReadAllText(config.File);
             }
-            var line_number = config.LineNumber != null ? (bool)config.LineNumber : false;
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            bool more_than_one_fn = data.Count() > 1;
+            bool files_with_matches = config.FilesWithMatches;
+            bool files_without_match = config.FilesWithoutMatch;
+            bool line_number = config.LineNumber;
+            bool count = config.Count;
             foreach (var obj1 in data)
             {
                 var nodes = obj1.Nodes;
@@ -132,25 +136,45 @@
                 {
                     doc = _workspace.ReadDocument(fn);
                 }
-                foreach (var node in nodes)
+                bool output_fn = false;
+                if (files_with_matches)
                 {
-                    if (line_number && doc != null)
+                    if (nodes.Any()) System.Console.WriteLine(fn);
+                    continue;
+                }
+                if (files_without_match)
+                {
+                    if (! nodes.Any()) System.Console.WriteLine(fn);
+                    continue;
+                }
+                if (count)
+                {
+                    if (more_than_one_fn)
+                        System.Console.Write(fn + ":");
+                    System.Console.WriteLine(nodes.Count());
+                    continue;
+                }
+                {
+                    foreach (var node in nodes)
                     {
-                        var source_interval = node.SourceInterval;
-                        int a = source_interval.a;
-                        int b = source_interval.b;
-                        IToken ta = parser.TokenStream.Get(a);
-                        IToken tb = parser.TokenStream.Get(b);
-                        var start = ta.StartIndex;
-                        var stop = tb.StopIndex + 1;
-                        var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
-                        var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
-                        System.Console.Write(System.IO.Path.GetFileName(doc.FullPath)
-                                             + ":" + line_a + "," + col_a
-                                + "-" + line_b + "," + col_b
-                                + "\t");
+                        if (more_than_one_fn)
+                            System.Console.Write(fn + ":");
+                        if (line_number)
+                        {
+                            var source_interval = node.SourceInterval;
+                            int a = source_interval.a;
+                            int b = source_interval.b;
+                            IToken ta = parser.TokenStream.Get(a);
+                            IToken tb = parser.TokenStream.Get(b);
+                            var start = ta.StartIndex;
+                            var stop = tb.StopIndex + 1;
+                            var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
+                            var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
+                            System.Console.Write(line_a + "," + col_a
+                                    + "-" + line_b + "," + col_b + ":");
+                        }
+                        System.Console.WriteLine(this.Reconstruct(node));
                     }
-                    System.Console.WriteLine(this.Reconstruct(node));
                 }
             }
         }

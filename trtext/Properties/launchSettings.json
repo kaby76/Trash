@@ -2,8 +2,8 @@
   "profiles": {
     "trtext": {
       "commandName": "Project",
-      "commandLineArgs": "-f o2.pt",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\grammars-issue-2390\\abb"
+      "commandLineArgs": "-f oo.pt",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-issue-2390\\abb"
     }
   }
 }

@@ -59,10 +59,11 @@ namespace Trash
                     Docs.Class1.ParseDoc(doc, 10, config.Type);
                     var pr = ParsingResultsFactory.Create(doc);
                     IParseTree pt = pr.ParseTree;
+                    var rel_path = Path.GetRelativePath(Environment.CurrentDirectory, doc.FullPath);
                     var tuple = new ParsingResultSet()
                     {
                         Text = doc.Code,
-                        FileName = doc.FullPath,
+                        FileName = rel_path,
                         Stream = pr.TokStream,
                         Nodes = new IParseTree[] { pt },
                         Lexer = pr.Lexer,
