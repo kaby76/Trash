@@ -34,7 +34,7 @@
             {
                 if (config.Verbose)
                 {
-                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
+                    System.Console.Error.WriteLine("reading from stdin");
                 }
                 for (; ; )
                 {
@@ -46,7 +46,7 @@
             {
                 if (config.Verbose)
                 {
-                    System.Console.Error.WriteLine("reading from stdin");
+                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
                 }
                 lines = File.ReadAllText(config.File);
             }
