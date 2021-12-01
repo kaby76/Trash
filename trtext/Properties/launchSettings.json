@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "trparse": {
+    "trtext": {
       "commandName": "Project",
-      "commandLineArgs": "-t antlr4 abbLexer.g4 abbParser.g4",
+      "commandLineArgs": "-f o2.pt",
       "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\grammars-issue-2390\\abb"
     }
   }

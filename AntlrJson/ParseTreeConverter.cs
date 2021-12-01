@@ -31,14 +31,6 @@
 
         public override ParsingResultSet[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            MyTokenStream out_token_stream = new MyTokenStream();
-            MyLexer lexer = new MyLexer(null);
-            MyParser parser = new MyParser(out_token_stream);
-            MyCharStream fake_char_stream = new MyCharStream();
-            string text = null;
-            string parser_grammarFileName = null;
-            string lexer_grammarFileName = null;
-            lexer.InputStream = fake_char_stream;
             if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
             reader.Read();
             List<ParsingResultSet> results = new List<ParsingResultSet>();
@@ -46,6 +38,10 @@
             {
                 if (!(reader.TokenType == JsonTokenType.StartObject)) throw new JsonException();
                 reader.Read();
+                string file_name = "";
+                string text = null;
+                string parser_grammarFileName = null;
+                string lexer_grammarFileName = null;
                 List<string> mode_names = new List<string>();
                 List<string> channel_names = new List<string>();
                 List<string> lexer_rule_names = new List<string>();
@@ -54,34 +50,32 @@
                 Dictionary<string, int> token_type_map = new Dictionary<string, int>();
                 List<string> parser_rule_names = new List<string>();
                 Dictionary<int, IParseTree> nodes = new Dictionary<int, IParseTree>();
+                List<MyToken> list_of_tokens = new List<MyToken>();
                 List<IParseTree> result = new List<IParseTree>();
+                List<int> parents = new List<int>();
+                List<int> type_of_nodes = new List<int>();
                 while (reader.TokenType == JsonTokenType.PropertyName)
                 {
                     string pn = reader.GetString();
                     reader.Read();
                     if (pn == "FileName")
                     {
-                        var name = reader.GetString();
-                        fake_char_stream.SourceName = name;
+                        file_name = reader.GetString();
                         reader.Read();
                     }
                     else if (pn == "Text")
                     {
-                        out_token_stream.Text = reader.GetString();
-                        fake_char_stream.Text = out_token_stream.Text;
-                        text = out_token_stream.Text;
+                        text = reader.GetString();
                         reader.Read();
                     }
                     else if (pn == "IdentityOfParser")
                     {
-                        var name = reader.GetString();
-                        parser_grammarFileName = name;
+                        parser_grammarFileName = reader.GetString();
                         reader.Read();
                     }
                     else if (pn == "IdentityOfLexer")
                     {
-                        var name = reader.GetString();
-                        lexer_grammarFileName = name;
+                        lexer_grammarFileName = reader.GetString();
                         reader.Read();
                     }
                     else if (pn == "Tokens")
@@ -110,14 +104,9 @@
                             token.Line = line;
                             token.Column = column;
                             token.Channel = channel;
-                            token.InputStream = lexer.InputStream;
-                            token.TokenSource = lexer;
                             token.TokenIndex = token_index++;
-                            token.Text =
-                                out_token_stream.Text.Substring(token.StartIndex, token.StopIndex - token.StartIndex + 1);
-                            out_token_stream.Add(token);
+                            list_of_tokens.Add(token);
                         }
-
                         reader.Read();
                     }
                     else if (pn == "ModeNames")
@@ -131,7 +120,6 @@
                         }
 
                         reader.Read();
-                        lexer._modeNames = mode_names.ToArray();
                     }
                     else if (pn == "ChannelNames")
                     {
@@ -142,9 +130,7 @@
                             channel_names.Add(reader.GetString());
                             reader.Read();
                         }
-
                         reader.Read();
-                        lexer._channelNames = channel_names.ToArray();
                     }
                     else if (pn == "LiteralNames")
                     {
@@ -155,7 +141,6 @@
                             literal_names.Add(reader.GetString());
                             reader.Read();
                         }
-
                         reader.Read();
                     }
                     else if (pn == "SymbolicNames")
@@ -167,7 +152,6 @@
                             symbolic_names.Add(reader.GetString());
                             reader.Read();
                         }
-
                         reader.Read();
                     }
                     else if (pn == "LexerRuleNames")
@@ -179,7 +163,6 @@
                             lexer_rule_names.Add(reader.GetString());
                             reader.Read();
                         }
-
                         reader.Read();
                     }
                     else if (pn == "ParserRuleNames")
@@ -192,7 +175,6 @@
                             parser_rule_names.Add(name);
                             reader.Read();
                         }
-
                         reader.Read();
                     }
                     else if (pn == "TokenTypeMap")
@@ -207,7 +189,6 @@
                             reader.Read();
                             token_type_map[name] = tt;
                         }
-
                         reader.Read();
                     }
                     else if (pn == "Nodes")
@@ -215,55 +196,15 @@
                         List<IParseTree> list_of_nodes = new List<IParseTree>();
                         if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
                         reader.Read();
-                        int current = 1;
                         while (reader.TokenType == JsonTokenType.Number)
                         {
                             int parent = reader.GetInt32();
+                            parents.Add(parent);
                             reader.Read();
                             int type_of_node = reader.GetInt32();
+                            type_of_nodes.Add(type_of_node);
                             reader.Read();
-                            var parent_node = parent > 0 ? nodes[parent] as MyParserRuleContext : null;
-                            if (type_of_node < 1000000)
-                            {
-                                MyParserRuleContext foo = new MyParserRuleContext(parent_node, 0)
-                                {
-                                    _ruleIndex = type_of_node
-                                };
-                                nodes[current] = foo;
-                                if (parent_node == null)
-                                {
-                                    result.Add(foo);
-                                }
-                                else
-                                {
-                                    parent_node.AddChild((Antlr4.Runtime.RuleContext)foo);
-                                }
-                            }
-                            else
-                            {
-                                var index = type_of_node - 1000000;
-                                var symbol = out_token_stream.Get(index);
-                                var foo = new MyTerminalNodeImpl(symbol);
-                                nodes[current] = foo;
-                                foo.Parent = parent_node;
-                                if (parent_node == null)
-                                {
-                                    result.Add(foo);
-                                }
-                                else
-                                {
-                                    parent_node.AddChild(foo);
-                                }
-                            }
-
-                            current++;
                         }
-
-                        foreach (var n in result)
-                        {
-                            Sweep(n);
-                        }
-
                         reader.Read();
                     }
                     else
@@ -272,6 +213,21 @@
                 if (!(reader.TokenType == JsonTokenType.EndObject)) throw new JsonException();
                 reader.Read();
                 var vocab = new Vocabulary(literal_names.ToArray(), symbolic_names.ToArray());
+                MyTokenStream out_token_stream = new MyTokenStream();
+                out_token_stream.Text = text;
+                MyLexer lexer = new MyLexer(null);
+                MyParser parser = new MyParser(out_token_stream);
+                MyCharStream fake_char_stream = new MyCharStream();
+                fake_char_stream.Text = text;
+                out_token_stream.TokenSource = lexer;
+                lexer.InputStream = fake_char_stream;
+                foreach (var t in list_of_tokens)
+                {
+                    t.TokenSource = lexer;
+                    t.InputStream = lexer.InputStream;
+                    t.Text = out_token_stream.Text.Substring(t.StartIndex, t.StopIndex - t.StartIndex + 1);
+                    out_token_stream.Add(t);
+                }
                 parser._vocabulary = vocab;
                 parser._grammarFileName = parser_grammarFileName;
                 parser._ruleNames = parser_rule_names.ToArray();
@@ -279,7 +235,53 @@
                 lexer._grammarFileName = lexer_grammarFileName;
                 lexer._ruleNames = lexer_rule_names.ToArray();
                 lexer._tokenTypeMap = token_type_map;
+                lexer._modeNames = mode_names.ToArray();
                 lexer.Tokens = out_token_stream.GetTokens;
+                lexer._channelNames = channel_names.ToArray();
+                int current = 1;
+                for (int k = 0; k < parents.Count; ++k)
+                {
+                    var parent = parents[k];
+                    var type_of_node = type_of_nodes[k];
+                    var parent_node = parent > 0 ? nodes[parent] as MyParserRuleContext : null;
+                    if (type_of_node < 1000000)
+                    {
+                        MyParserRuleContext foo = new MyParserRuleContext(parent_node, 0)
+                        {
+                            _ruleIndex = type_of_node
+                        };
+                        nodes[current] = foo;
+                        if (parent_node == null)
+                        {
+                            result.Add(foo);
+                        }
+                        else
+                        {
+                            parent_node.AddChild((Antlr4.Runtime.RuleContext)foo);
+                        }
+                    }
+                    else
+                    {
+                        var index = type_of_node - 1000000;
+                        var symbol = out_token_stream.Get(index);
+                        var foo = new MyTerminalNodeImpl(symbol);
+                        nodes[current] = foo;
+                        foo.Parent = parent_node;
+                        if (parent_node == null)
+                        {
+                            result.Add(foo);
+                        }
+                        else
+                        {
+                            parent_node.AddChild(foo);
+                        }
+                    }
+                    current++;
+                }
+                foreach (var n in result)
+                {
+                    Sweep(n);
+                }
                 var res = new AntlrJson.ParsingResultSet()
                 {
                     FileName = fake_char_stream.SourceName,
