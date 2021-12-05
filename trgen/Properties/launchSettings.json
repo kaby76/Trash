@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Go -s compilation_unit",
-      "workingDirectory": "C:\\msys64\\home\\kenne\\csharp"
+      "commandLineArgs": "-s start",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\scrape-c-plus-plus-spec\\x"
     }
   }
 }

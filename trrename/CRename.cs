@@ -73,7 +73,9 @@
                 {
                     var l2 = l.Split(',').ToList();
                     if (l2.Count != 2)
-                        throw new System.Exception("rename map not correct");
+                        throw new System.Exception("Rename map not correct. '"
+                            + l
+                            + "' doesn't have correct number of commans, should be 'oldval,newval'.");
                     rename_map[l2[0]] = l2[1];
                 }
 

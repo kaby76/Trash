@@ -176,16 +176,16 @@
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return "~/Downloads/antlr-4.9.2-complete.jar";
+                return "~/Downloads/antlr-4.9.3-complete.jar";
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                return (home + "/Downloads/antlr-4.9.2-complete.jar").Replace('\\', '/');
+                return (home + "/Downloads/antlr-4.9.3-complete.jar").Replace('\\', '/');
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return "~/Downloads/antlr-4.9.2-complete.jar";
+                return "~/Downloads/antlr-4.9.3-complete.jar";
             }
             throw new Exception("Cannot determine operating system!");
         }
@@ -675,8 +675,15 @@
             {
                 throw;
             }
-            AddSource();
+            // Find all source files.
+            this.all_target_files = new List<string>();
+            this.all_source_files = new Domemtech.Globbing.Glob()
+                    .RegexContents(this.config.all_source_pattern)
+                    .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
+                    .Select(f => f.FullName.Replace('\\', '/'))
+                    .ToList();
             GenFromTemplates(this);
+            AddSource();
         }
 
         IEnumerable<string> EnumerateLines(TextReader reader)
@@ -711,14 +718,6 @@
         {
             var cd = Environment.CurrentDirectory + "/";
             cd = cd.Replace('\\', '/');
-            // Find all source files.
-            this.all_target_files = new List<string>();
-            this.all_source_files = new Domemtech.Globbing.Glob()
-                    .RegexContents(this.config.all_source_pattern)
-                    .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
-                    .Select(f => f.FullName.Replace('\\', '/'))
-                    .ToList();
-
             var set = new HashSet<string>();
             foreach (var path in this.all_source_files)
             {
