@@ -1,16 +1,55 @@
 # Trfoldlit
 
-Reads a parse tree from stdin, replaces a sequence of symbols on
-the RHS of a rule with the rule LHS symbol, and writes the modified tree
-to stdout. The input and output are Parse Tree Data.
+Reads a parse tree from stdin, replaces a string literals on
+the RHS of a rule with the lexer rule LHS symbol, and writes
+the modified parsing result set to stdout. The input and
+output are Parse Tree Data.
 
 # Usage
 
-    trfold <string>
+    trfoldlit
 
 # Examples
 
-    trparse Foo.g4 | trfoldlit " //lexerRuleSpec/TOKEN_REF"
+Before:
+
+    grammar Expression;
+    e : e ('*' | '/') e
+      | e ('+' | '-') e
+      | '(' e ')'
+      | ('-' | '+')* a
+      ;
+    a : INT ;
+    INT : ('0' .. '9')+ ;
+    MUL : '*' ;
+    DIV : '/' ;
+    ADD : '+' ;
+    SUB : '-' ;
+    LP : '(' ;
+    RP : ')' ;
+    WS : [ \r\n\t] + -> skip ;
+
+Command:
+
+    trparse Expression.g4 | trfoldlit | trsponge
+
+After:
+
+    grammar Expression;
+    e : e (MUL | DIV) e
+      | e (ADD | SUB) e
+      | LP e RP
+      | (SUB | ADD)* a
+      ;
+    a : INT ;
+    INT : ('0' .. '9')+ ;
+    MUL : '*' ;
+    DIV : '/' ;
+    ADD : '+' ;
+    SUB : '-' ;
+    LP : '(' ;
+    RP : ')' ;
+    WS : [ \r\n\t] + -> skip ;
 
 # Notes
 

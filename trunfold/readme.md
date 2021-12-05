@@ -15,6 +15,8 @@ stack.
 
     trparse A.g4 | trunfold "//parserRuleSpec/RULE_REF[text() = 'markerAnnotation']"
 
+
+
 # Notes
 
 If you are running MSYS2 on Windows, you may notice that XPaths are not being
