@@ -13,8 +13,29 @@ stack.
 
 # Examples
 
-    trparse A.g4 | trunfold "//parserRuleSpec/RULE_REF[text() = 'markerAnnotation']"
+Before:
 
+	grammar Expresion;
+	s : e ;
+	e : e '*' e       # Mult
+	    | INT           # primary
+	    ;
+	INT : [0-9]+ ;
+	WS : [ \t\n]+ -> skip ;
+
+Command:
+
+    trparse Expression.g4 | trunfold "//parserRuleSpec[RULE_REF/text() = 's']//labeledAlt//RULE_REF[text() = 'e']" | trsponge -c
+
+After:
+
+	grammar Expression;
+	s : ( e '*' e | INT ) ;
+	e : e '*' e           # Mult
+		| INT               # primary
+		;
+	INT : [0-9]+ ;
+	WS : [ \t\n]+ -> skip ;
 
 
 # Notes

@@ -31,7 +31,7 @@ Before:
 
 Command:
 
-    trparse Expression.g4 | trfoldlit | trsponge
+    trparse Expression.g4 | trfoldlit | trsponge -c
 
 After:
 

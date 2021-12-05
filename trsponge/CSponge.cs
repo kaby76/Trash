@@ -49,12 +49,8 @@
                 var code = parse_info.Text;
                 var fn = parse_info.FileName;
                 if (config.OutputDirectory != null)
-                {
-                    if (!Directory.Exists(config.OutputDirectory))
-                    {
-                        throw new System.Exception("Diectory " + config.OutputDirectory
-                            + " does not exist. Quiting.");
-                    }
+		{
+                    Directory.CreateDirectory(config.OutputDirectory);
                     if (!(config.OutputDirectory.EndsWith("\\") || config.OutputDirectory.EndsWith("/")))
                         config.OutputDirectory = config.OutputDirectory + "/";
                     fn = config.OutputDirectory + Path.GetFileName(fn);
