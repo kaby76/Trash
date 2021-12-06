@@ -29,7 +29,13 @@
                 e.Add("//(ruleAltList | lexerAltList | altList)");
                 exprs = e;
             }
-            //System.Console.Error.WriteLine("Expr = '" + expr + "'");
+            if (config.Verbose)
+            {
+                foreach (var e in exprs)
+                {
+                    System.Console.Error.WriteLine("Exprs = >>>" + e + "<<<");
+                }
+            }
             string lines = null;
             if (!(config.File != null && config.File != ""))
             {

@@ -21,9 +21,6 @@
 
         public void Execute(Config config)
         {
-            //var expr = config.Expr;
-            //System.Console.Error.WriteLine("Expr = '" + expr + "'");
-            //var to_sym = config.NewName;
             string lines = null;
             if (!(config.File != null && config.File != ""))
             {

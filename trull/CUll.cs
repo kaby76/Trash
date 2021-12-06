@@ -2,18 +2,19 @@
 {
     using Antlr4.Runtime.Tree;
     using AntlrJson;
+    using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text.Json;
 
-    class CUnfold
+    class CUll
     {
         public string Help()
         {
             using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trunfold.readme.md"))
-            using (StreamReader reader = new StreamReader(stream))
+                    using (StreamReader reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
             }
@@ -21,7 +22,7 @@
 
         public void Execute(Config config)
         {
-            var expr = config.Expr.First();
+            var expr = config.Expr != null && config.Expr.Any() ? config.Expr.First() : null;
             if (config.Verbose)
             {
                 System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
@@ -74,28 +75,32 @@
                 var atrees = pr.ParseTree;
                 var parser = pr.Parser;
                 var lexer = pr.Lexer;
-                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                IParseTree root = atrees.Root();
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
+                List<TerminalNodeImpl> nodes = new List<TerminalNodeImpl>();
+                if (expr != null)
                 {
-                    var nodes = engine.parseExpression(expr,
-                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                    var res = LanguageServer.Transform.Unfold(nodes, doc);
-                    Docs.Class1.EnactEdits(res);
-                    IParseTree pt = pr.ParseTree;
-                    var tuple = new ParsingResultSet()
+                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                    IParseTree root = atrees.Root();
+                    var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
+                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
                     {
-                        Text = doc.Code,
-                        FileName = doc.FullPath,
-                        Stream = pr.TokStream,
-                        Nodes = new IParseTree[] { pt },
-                        Lexer = pr.Lexer,
-                        Parser = pr.Parser
-                    };
-                    results.Add(tuple);
+                        nodes = engine.parseExpression(expr,
+                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                    }
                 }
+                var res = LanguageServer.Transform.UpperLowerCaseLiteral(nodes, doc);
+                Docs.Class1.EnactEdits(res);
+                IParseTree pt = pr.ParseTree;
+                var tuple = new ParsingResultSet()
+                {
+                    Text = doc.Code,
+                    FileName = doc.FullPath,
+                    Stream = pr.TokStream,
+                    Nodes = new IParseTree[] { pt },
+                    Lexer = pr.Lexer,
+                    Parser = pr.Parser
+                };
+                results.Add(tuple);
             }
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);

@@ -29,8 +29,6 @@
                 System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
                 System.Console.Error.WriteLine("str = >>>" + str + "<<<");
             }
-
-            //          System.Console.Error.WriteLine("Expr = '" + expr + "'");
             string lines = null;
             if (!(config.File != null && config.File != ""))
             {

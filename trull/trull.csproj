@@ -5,14 +5,15 @@
     <PackAsTool>true</PackAsTool>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <AssemblyName>trfold</AssemblyName>
-    <PackageId>trfold</PackageId>
+    <AssemblyName>trull</AssemblyName>
+    <PackageId>trull</PackageId>
     <Description>
-      <![CDATA[Replace a sequence of symbols on the RHS of a rule with the rule LHS symbol.
-This program is part of the Trash toolkit.]]>
+      <![CDATA[Apply the upper- and lowercase transform to a grammar.
+This program is part of the Trash toolkit.
+]]>
     </Description>
-    <ToolCommandName>trfold</ToolCommandName>
-    <RootNamespace>trfold</RootNamespace>
+    <ToolCommandName>trull</ToolCommandName>
+    <RootNamespace>trull</RootNamespace>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -39,7 +40,6 @@ This program is part of the Trash toolkit.]]>
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
   </PropertyGroup>
   <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
