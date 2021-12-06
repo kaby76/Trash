@@ -10,7 +10,45 @@ to stdout. The input and output are Parse Tree Data.
 
 # Example
 
-    trparse Java.g4 | trdelete "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']" | trtree | vim -
+Before:
+
+    grammar Expression;
+    e : e ('*' | '/') e
+      | e ('+' | '-') e
+      | '(' e ')'
+      | ('-' | '+')* a
+      ;
+    a : INT ;
+    INT : ('0' .. '9')+ ;
+    MUL : '*' ;
+    DIV : '/' ;
+    ADD : '+' ;
+    SUB : '-' ;
+    LP : '(' ;
+    RP : ')' ;
+    WS : [ \r\n\t] + -> skip ;
+
+Command:
+
+    trparse Expression.g4 | trdelete "//parserRuleSpec[RULE_REF/text() = 'a']" | trprint
+
+After:
+
+    grammar Expression;
+    e : e ('*' | '/') e
+      | e ('+' | '-') e
+      | '(' e ')'
+      | ('-' | '+')* a
+      ;
+    a : INT ;
+    INT : ('0' .. '9')+ ;
+    MUL : '*' ;
+    DIV : '/' ;
+    ADD : '+' ;
+    SUB : '-' ;
+    LP : '(' ;
+    RP : ')' ;
+    WS : [ \r\n\t] + -> skip ;
 
 # Notes
 
@@ -20,4 +58,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.12.0 -- Bug fixes for: parsing result sets reading; update to Antlr 4.9.3; standardize -f, -v options across tools; fix trkleene, trrup, trrename, trparse, trfold, trsponge; remove trmvsr, add trmove.
+0.12.0 -- Bug fixes for: parsing result sets reading; update to Antlr 4.9.3; standardize -f, -v options across tools; fix trkleene, trrup, trrename, trparse, trfold, trsponge; remove trmvsr, add trmove, trull.

@@ -11,9 +11,43 @@ whole file.
 
 # Examples
 
+Before:
+
+    grammar KeywordFun;
+    a : 'abc';
+    b : 'def';
+    A : 'abc';
+    B : 'def';
+    C : 'uvw' 'xyz'?;
+    D : 'uvw' 'xyz'+;
+
 Command:
 
-    trull "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL"
+    trparse KeywordFun.g4 | trull "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL" | trprint
+
+After:
+
+    grammar KeywordFun;
+    a : 'abc';
+    b : 'def';
+    A :  [aA] [bB] [cC];
+    B : 'def';
+    C : 'uvw' 'xyz'?;
+    D : 'uvw' 'xyz'+;
+
+Command:
+
+    trparse KeywordFun.g4 | trull | trprint
+
+After:
+
+    grammar KeywordFun;
+    a : 'abc';
+    b : 'def';
+    A :  [aA] [bB] [cC];
+    B :  [dD] [eE] [fF];
+    C :  [uU] [vV] [wW] ( [xX] [yY] [zZ] )?;
+    D :  [uU] [vV] [wW] ( [xX] [yY] [zZ] )+;
 
 # Notes
 
@@ -23,4 +57,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.12.0 -- Bug fixes for: parsing result sets reading; update to Antlr 4.9.3; standardize -f, -v options across tools; fix trkleene, trrup, trrename, trparse, trfold, trsponge; remove trmvsr, add trmove.
+0.12.0 -- Bug fixes for: parsing result sets reading; update to Antlr 4.9.3; standardize -f, -v options across tools; fix trkleene, trrup, trrename, trparse, trfold, trsponge; remove trmvsr, add trmove, trull.

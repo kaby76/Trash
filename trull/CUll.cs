@@ -13,7 +13,7 @@
     {
         public string Help()
         {
-            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trunfold.readme.md"))
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trull.readme.md"))
                     using (StreamReader reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
