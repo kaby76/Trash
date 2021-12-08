@@ -1,5 +1,5 @@
 
-version="0.12.0"
+version="0.12.1"
 directories=`find . -maxdepth 1 -type d`
 cwd=`pwd`
 for i in $directories
@@ -29,6 +29,6 @@ do
 	echo $i
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- Bug fixes for: parsing result sets reading; update to Antlr 4.9.3; standardize -f, -v options across tools; fix trkleene, trrup, trrename, trparse, trfold, trsponge; remove trmvsr, add trmove, trull.%" > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- N.A.%" > asdfasdf2
 	mv asdfasdf2 readme.md
 done
