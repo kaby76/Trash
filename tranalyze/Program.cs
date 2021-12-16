@@ -32,7 +32,7 @@ namespace Trash
                     h.AdditionalNewLineAfterOption = false;
                     h.Heading = "tranalyze";
                     h.Copyright = "Copyright (c) 2021 Ken Domino";
-                    h.AddPreOptionsText(new CAnalyze().Help());
+                    h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
             }
@@ -62,7 +62,7 @@ namespace Trash
                     }
                 }
             });
-            new CAnalyze().Execute(config);
+            new Command().Execute(config);
         }
     }
 }

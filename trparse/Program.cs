@@ -34,7 +34,7 @@ namespace Trash
 					h.AdditionalNewLineAfterOption = false;
 					h.Heading = "trparse";
 					h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
-					h.AddPreOptionsText(new CParse().Help());
+					h.AddPreOptionsText(new Command().Help());
 					return HelpText.DefaultParsingErrorsHandler(result, h);
 				}, e => e);
 			}
@@ -64,7 +64,7 @@ namespace Trash
                     }
                 }
             });
-			new CParse().Execute(config);
+			new Command().Execute(config);
 		}
 	}
 }

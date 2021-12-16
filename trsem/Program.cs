@@ -39,7 +39,7 @@ namespace Trash
                     h.AdditionalNewLineAfterOption = false;
                     h.Heading = "trsem";
                     h.Copyright = "Copyright (c) 2021 Ken Domino";
-                    h.AddPreOptionsText(new CSem().Help());
+                    h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
             }
@@ -53,7 +53,6 @@ namespace Trash
 
         public void MainInternal(string[] args)
         {
-            var csem = new CSem();
             var config = new Config();
 
             // Get default from OS, or just default.
@@ -85,7 +84,7 @@ namespace Trash
                 }
             });
 
-            return_value = csem.Execute(config);
+            return_value = new Command().Execute(config);
         }
     }
 }

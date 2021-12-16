@@ -39,7 +39,7 @@ namespace Trash
                     h.AdditionalNewLineAfterOption = false;
                     h.Heading = "trgen2";
                     h.Copyright = "Copyright (c) 2021 Ken Domino";
-                    h.AddPreOptionsText(new CGen().Help());
+                    h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
             }
@@ -53,7 +53,6 @@ namespace Trash
 
         public void MainInternal(string[] args)
         {
-            var cgen = new CGen();
             var config = new Config();
 
             // Get default from OS, or just default.
@@ -90,7 +89,7 @@ namespace Trash
             });
             if (stop) return;
 
-            return_value = cgen.Execute(config);
+            return_value = new Command().Execute(config);
         }
     }
 }

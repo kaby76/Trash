@@ -32,7 +32,7 @@ namespace Trash
                     h.AdditionalNewLineAfterOption = false;
                     h.Heading = "trcombine";
                     h.Copyright = "Copyright (c) 2021 Ken Domino";
-                    h.AddPreOptionsText(new CCombine().Help());
+                    h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
             }
@@ -62,7 +62,7 @@ namespace Trash
                     }
                 }
             });
-            new CCombine().Execute(config);
+            new Command().Execute(config);
         }
     }
 }

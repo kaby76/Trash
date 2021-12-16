@@ -34,7 +34,7 @@ namespace Trash
 					h.AdditionalNewLineAfterOption = false;
 					h.Heading = "trst";
 					h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
-					h.AddPreOptionsText(new CSt().Help());
+					h.AddPreOptionsText(new Command().Help());
 					return HelpText.DefaultParsingErrorsHandler(result, h);
 				}, e => e);
 			}
@@ -64,7 +64,7 @@ namespace Trash
 					}
 				}
 			});
-			new CSt().Execute(config);
+			new Command().Execute(config);
 		}
 	}
 }

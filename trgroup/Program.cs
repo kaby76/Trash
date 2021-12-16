@@ -32,7 +32,7 @@ namespace Trash
 					h.AdditionalNewLineAfterOption = false;
 					h.Heading = "trgroup";
 					h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
-					h.AddPreOptionsText(new CGroup().Help());
+					h.AddPreOptionsText(new Command().Help());
 					return HelpText.DefaultParsingErrorsHandler(result, h);
 				}, e => e);
 			}
@@ -65,7 +65,7 @@ namespace Trash
                 }
                 if (o.Expr != null) config.Expr = o.Expr;
             });
-			new CGroup().Execute(config);
+			new Command().Execute(config);
 		}
 	}
 }

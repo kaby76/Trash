@@ -39,7 +39,7 @@ namespace Trash
                     h.AdditionalNewLineAfterOption = false;
                     h.Heading = "trgen";
                     h.Copyright = "Copyright (c) 2021 Ken Domino";
-                    h.AddPreOptionsText(new CGen().Help());
+                    h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
             }
@@ -53,14 +53,14 @@ namespace Trash
 
         public void MainInternal(string[] args)
         {
-            var cgen = new CGen();
+            var cgen = new Command();
             var config = new Config();
 
             // Get default from OS, or just default.
-            config.line_translation = CGen.GetLineTranslationType();
-            config.env_type = CGen.GetEnvType();
-            config.path_sep = CGen.GetPathSep();
-            config.antlr_tool_path = CGen.GetAntlrToolPath();
+            config.line_translation = Command.GetLineTranslationType();
+            config.env_type = Command.GetEnvType();
+            config.path_sep = Command.GetPathSep();
+            config.antlr_tool_path = Command.GetAntlrToolPath();
             config.target = TargetType.CSharp;
             config.tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
             config.output_directory = "Generated/";
@@ -120,7 +120,7 @@ namespace Trash
                     "^(?!.*(" +
                      (cgen.ignore_string != null ? cgen.ignore_string + "|" : "")
                      + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
-                     + CGen.AllButTargetName((TargetType)config.target)
+                     + Command.AllButTargetName((TargetType)config.target)
                      + "/)).+"
                      + "$";
             });
