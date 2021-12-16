@@ -59,27 +59,7 @@ namespace Trash
             // Get default from OS, or just default.
             config.output_directory = "Generated/";
 
-            // Get any defaults from ~/.trgen.rc
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + cgen.SetupFfn))
-            {
-                var jsonString = System.IO.File.ReadAllText(home + Path.DirectorySeparatorChar + cgen.SetupFfn);
-                var o = JsonSerializer.Deserialize<Config>(jsonString);
-                var ty = typeof(Config);
-                foreach (var prop in ty.GetProperties())
-                {
-                    if (prop.GetValue(o, null) != null)
-                    {
-                        prop.SetValue(config, prop.GetValue(o, null));
-                    }
-                }
-                if (o.all_source_pattern != null) config.all_source_pattern = config.all_source_pattern;
-                else config.all_source_pattern =
-                    "^(?!.*(" +
-                     (cgen.ignore_string != null ? cgen.ignore_string + "|" : "")
-                     + "ignore/|Generated/|target/|examples/|.git/|.gitignore|/)).+"
-                     + "$";
-            }
 
             // Parse options, stop if we see a bogus option, or something like --help.
             var result = new CommandLine.Parser().ParseArguments<Config>(args);

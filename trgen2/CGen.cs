@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
+    using System.Text.Json;
     using System.Text.RegularExpressions;
     using System.Xml;
     using System.Xml.XPath;
@@ -30,41 +31,17 @@
             var path = Environment.CurrentDirectory;
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             root_directory = cd;
-
-            {
-                // Find tool grammars.
-                GeneratedNames();
-                GenerateSingle(cd);
-            }
+            GenerateSingle(cd);
             return 0;
         }
 
         public Config config;
         public static string version = "0.10.0";
-        public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
         public string root_directory;
-        public string target_specific_src_directory;
-        public HashSet<string> tool_grammar_files = null;
-        public HashSet<string> tool_src_grammar_files = null;
-        public List<GrammarTuple> tool_grammar_tuples = null;
-        public List<string> generated_files = null;
-        public List<string> additional_grammar_files = null;
-        public bool? case_fold = null;
-        public string lexer_src_grammar_file_name = null;
-        public string lexer_grammar_file_name = null;
-        public string lexer_generated_file_name = null;
-        public string lexer_generated_include_file_name = null;
-        public string parser_src_grammar_file_name = null;
-        public string parser_grammar_file_name = null;
-        public string parser_generated_file_name = null;
-        public string parser_generated_include_file_name = null;
         public string suffix;
         public string ignore_string = null;
-        public string ignore_file_name = ".trgen-ignore";
-        public string SetupFfn = ".trgen.rc";
-        public string target_directory;
         public string source_directory;
 
 
@@ -122,6 +99,11 @@
 
         public void GenerateSingle(string cd)
         {
+            source_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
+            if (source_directory != "" && !source_directory.EndsWith("/"))
+            {
+                source_directory = source_directory + "/";
+            }
             try
             {
                 // Create a directory containing target build files.
@@ -202,6 +184,12 @@
             }
         }
 
+        public class Params
+        {
+            public string AttrName { get; set; }
+            public string AttrValue { get; set; }
+        }
+
         private void GenFromTemplates(CGen p)
         {
             if (config.template_sources_directory == null)
@@ -222,9 +210,10 @@
                 var prefix_to_remove = "trgen2.templates.";
                 System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
                 var resources = a.GetManifestResourceNames();
-                string parameters = ReadAllResource(a, prefix_to_remove
+                string param_str = ReadAllResource(a, prefix_to_remove
                     + config.template + ".parameters.json");
-                var set = new HashSet<string>();
+                var parameters = JsonSerializer.Deserialize<List<Params>>(param_str);
+                var cd = Path.GetFileName(Environment.CurrentDirectory);
                 foreach (var file in files_to_copy)
                 {
                     var from = file;
@@ -241,6 +230,7 @@
                     to = ((string)config.output_directory).Replace('\\', '/') + to;
                     from = prefix_to_remove + from.Replace('/', '.').Substring(2);
                     to = to.Replace('\\', '/');
+                    to = to.Replace("#dir_name#", cd);
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = ReadAllResource(a, from);
@@ -256,7 +246,11 @@
                     })
                         .Select(t => t.Substring(p.config.output_directory.Length))
                         .ToList());
-                    //t.Add("antlr_encoding", config.antlr_encoding);
+                    foreach (var pair in parameters)
+                    {
+                        t.Add(pair.AttrName, pair.AttrValue);
+                    }
+                    t.Add("dir_name", cd);
                     var o = t.Render();
                     File.WriteAllText(to, o);
                 }
@@ -332,21 +326,6 @@
                 return char.ToUpper(str[0]) + str.Substring(1);
         }
 
-        public class GrammarTuple
-        {
-            public GrammarTuple(string grammar_file_name, string generated_file_name, string generated_include_file_name, string grammar_autom_name)
-            {
-                GrammarFileName = grammar_file_name;
-                GeneratedFileName = generated_file_name;
-                GeneratedIncludeFileName = generated_include_file_name;
-                GrammarAutomName = grammar_autom_name;
-            }
-            public string GrammarFileName { get; set; }
-            public string GeneratedFileName { get; set; }
-            public string GeneratedIncludeFileName { get; set; }
-            public string GrammarAutomName { get; set; }
-        }
-
         public void CopyFile(string from, string to)
         {
             from = from.Replace('\\', '/');
@@ -354,16 +333,6 @@
             var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
             Directory.CreateDirectory(q);
             File.Copy(from, to, true);
-        }
-
-        public void GeneratedNames()
-        {
-            var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
-            source_directory = cd;
-            if (source_directory != "" && !source_directory.EndsWith("/"))
-            {
-                source_directory = source_directory + "/";
-            }
         }
 
         public static string Localize(LineTranslationType encoding, string code)

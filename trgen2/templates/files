@@ -1,8 +1,8 @@
 ./files
+./IntellijIDEA/#dir_name#.iml
 ./IntellijIDEA/.idea/.gitignore
 ./IntellijIDEA/.idea/misc.xml
 ./IntellijIDEA/.idea/modules.xml
 ./IntellijIDEA/.idea/workspace.xml
 ./IntellijIDEA/parameters.json
 ./IntellijIDEA/src/Main.java
-./IntellijIDEA/<project_name>.iml
