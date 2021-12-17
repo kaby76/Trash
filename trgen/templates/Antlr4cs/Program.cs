@@ -19,21 +19,6 @@ public class Program
     public static IParseTree Tree { get; set; }
     public static string StartSymbol { get; set; } = "<start_symbol>";
     public static string Input { get; set; }
-    public static IParseTree Parse(string input)
-    {
-        var str = new AntlrInputStream(input);
-        var lexer = new Test.<lexer_name>(str);
-        Lexer = lexer;
-        var tokens = new CommonTokenStream(lexer);
-        TokenStream = tokens;
-        var parser = new Test.<parser_name>(tokens);
-        Parser = parser;
-        var tree = parser.<start_symbol>();
-	Input = lexer.InputStream.ToString();
-	TokenStream = parser.TokenStream;
-        Tree = tree;
-        return tree;
-    }
 
     static void Main(string[] args)
     {
