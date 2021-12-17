@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t IntellijIDEA",
+      "commandLineArgs": "-t Eclipse",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\jav"
     }
   }

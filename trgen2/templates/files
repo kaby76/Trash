@@ -6,3 +6,6 @@
 ./IntellijIDEA/.idea/workspace.xml
 ./IntellijIDEA/parameters.json
 ./IntellijIDEA/src/Main.java
+./Netbeans/HelloWorld/pom.xml
+./Netbeans/HelloWorld/src/main/java/com/mycompany/helloworld/Main.java
+./Netbeans/parameters.json
