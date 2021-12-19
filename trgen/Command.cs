@@ -156,7 +156,7 @@
         List<string> pom_entry_point = null;
 
         public Config config;
-        public static string version = "0.10.0";
+        public static string version = "0.12.1";
         public List<string> failed_modules = new List<string>();
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;

@@ -29,6 +29,6 @@ done
 
 pushd trgen
 rm -f asdfasdf
-cat CGen.cs | sed -e 's%"[0123456789][.][0123456789][.][0123456789]"%"'$version'"%' > asdfasdf
-mv asdfasdf CGen.cs
+cat Command.cs | sed -e 's%public static string version = "[^"]*";%public static string version = "'$version'";%' > asdfasdf
+mv asdfasdf Command.cs
 popd
