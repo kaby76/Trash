@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\jav"
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-2430\\csharp"
     }
   }
 }
