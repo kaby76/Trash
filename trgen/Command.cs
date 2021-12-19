@@ -131,29 +131,55 @@
         List<XPathNavigator> pom_all_else = null;
 
         /// <summary>
-        /// pom_grammar_name is a string list, but it should be just one.
         /// This is the name of the parser to test, used by the Antlr4 test
         /// plugin.
+        /// pom_grammar_name is a string list, but it should be just one.
         /// The xpath for the list is
         /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/grammarName
         /// </summary>
         List<string> pom_grammar_name = null;
 
         /// <summary>
-        /// pom_lexer_name is a string list, but it should be just one.
         /// This is the name of the lexer used in the Antlr4 test of the parser.
+        /// pom_lexer_name is a string list, but it should be just one.
         /// The xpath for the list is
         /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/grammarName
         /// </summary>
         List<string> pom_lexer_name = null;
 
         /// <summary>
-        /// pom_entry_point is a string list, but it should be just one.
         /// This is the name of the start rule used in the Antlr4 test of the parser.
+        /// pom_entry_point is a string list, but it should be just one.
         /// The xpath for the list is
         /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/entryPoint
         /// </summary>
         List<string> pom_entry_point = null;
+
+        /// <summary>
+        /// This is the name of the package name used in the Antlr4 test of the parser.
+        /// pom_package_name is a string list, but it should be just one.
+        /// The xpath for the list is
+        /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/packageName
+        /// </summary>
+        List<string> pom_package_name = null;
+
+        /// <summary>
+        /// This is used in the Antlr4 test of the parser for case-insensitive parsing.
+        /// The values can be UPPER, LOWER, TRUE, or NONE.
+        /// pom_case_insensitive_type is a string list, but it should be just one.
+        /// The xpath for the list is
+        /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/caseInsensitiveType
+        /// </summary>
+        List<string> pom_case_insensitive_type = null;
+
+        /// <summary>
+        /// This is used in the Antlr4 test of the parser for the directory
+        /// containing the files to parse.
+        /// pom_case_insensitive_type is a string list, but it should be just one.
+        /// The xpath for the list is
+        /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/exampleFiles
+        /// </summary>
+        List<string> pom_example_files = null;
 
         public Config config;
         public static string version = "0.12.1";
@@ -397,20 +423,20 @@
                 .Cast<XPathNavigator>()
                 .Select(t => t.Value)
                 .ToList();
-            var pom_package_name = navigator
-                .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/packageName", nsmgr)
+            pom_package_name = navigator
+                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/packageName", nsmgr)
                 .Cast<XPathNavigator>()
                 .Where(t => t.Value != "")
                 .Select(t => t.Value)
                 .ToList();
-            var pom_case_insensitive_type = navigator
-                .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/caseInsensitiveType", nsmgr)
+            pom_case_insensitive_type = navigator
+                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/caseInsensitiveType", nsmgr)
                 .Cast<XPathNavigator>()
                 .Where(t => t.Value != "")
                 .Select(t => t.Value)
                 .ToList();
-            var pom_example_files = navigator
-                .Select("//plugins/plugin[artifactId=\"antlr4test-maven-plugin\"]/configuration/exampleFiles", nsmgr)
+            pom_example_files = navigator
+                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/exampleFiles", nsmgr)
                 .Cast<XPathNavigator>()
                 .Where(t => t.Value != "")
                 .Select(t => t.Value)
