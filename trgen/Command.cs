@@ -694,7 +694,7 @@
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
-                    var g = new GrammarTuple(gfn, genfn, "", autom_name);
+                    var g = new GrammarTuple(gfn, name, genfn, "", autom_name);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else if (is_lexer_grammar)
@@ -703,7 +703,7 @@
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
-                    var g = new GrammarTuple(gfn, genfn, "", autom_name);
+                    var g = new GrammarTuple(gfn, name, genfn, "", autom_name);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else
@@ -714,7 +714,8 @@
                                 ? config.name_space + '.' : "")
                             + name
                             + "Parser";
-                        var g = new GrammarTuple(gfn, genfn, "", autom_name);
+                        var g = new GrammarTuple(gfn, name, genfn, "", autom_name);
+                        per_grammar.tool_grammar_tuples.Add(g);
                     }
                     {
                         var genfn = name + "Lexer" + Suffix(config);
@@ -722,7 +723,8 @@
                                 ? config.name_space + '.' : "")
                             + name
                             + "Lexer";
-                        var g = new GrammarTuple(gfn, genfn, "", autom_name);
+                        var g = new GrammarTuple(gfn, name, genfn, "", autom_name);
+                        per_grammar.tool_grammar_tuples.Add(g);
                     }
                 }
             }
@@ -733,79 +735,28 @@
             // Use Trash compiler to get dependencies.
             ComputeSort(per_grammar);
 
-            // How to call the parser in the source code.
+            // How to call the parser in the source code. Remember, there are
+            // actually up to two tests in the pom file, one for running the
+            // Antlr tool, and the other to test the generated parser.
             per_grammar.fully_qualified_parser_name =
-                ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
-                //                  + (config.target == TargetType.Go ? "New" : "")
-                + pom_grammar_name.First()
-                + "Parser";
+                per_grammar.tool_grammar_tuples
+                .Where(t => t.GrammarName == pom_grammar_name.First()
+                    || t.GrammarAutomName.Contains(t.GrammarName + "Parser"))
+                .Select(t => t.GrammarAutomName).First();
             config.fully_qualified_go_parser_name =
-                ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
-                + (config.target == TargetType.Go ? "New" : "")
-                + pom_grammar_name.First()
-                + "Parser";
+                per_grammar.tool_grammar_tuples
+                .Where(t => t.GrammarName == pom_grammar_name.First()
+                    || t.GrammarAutomName.Contains(t.GrammarName + "Parser"))
+                .Select(t => t.GrammarAutomName).First();
+
             // Where the parser generated code lives.
             parser_generated_file_name =
                 (string)per_grammar.fully_qualified_parser_name.Replace('.', '/')
                 + Suffix(config);
             var parser_generated_include_file_name = (string)per_grammar.fully_qualified_parser_name.Replace('.', '/') + ".h";
-            for (; ; )
-            {
-                // Probe for parser grammar. 
-                {
-                    var parser_grammars_pattern =
-                        "^"
-                        + per_grammar.source_directory
-                        + ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
-                        + "((?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/))("
-                        + TargetSpecificSrcDirectory(config) + "/)(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Parser)).g4$";
-                    var any =
-                        new Domemtech.Globbing.Glob()
-                            .RegexContents(parser_grammars_pattern)
-                            .Where(f => f is FileInfo)
-                            .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                            .ToList();
-                    if (any.Any())
-                    {
-                        parser_src_grammar_file_name = any.First();
-                        break;
-                    }
-                }
-                {
-                    var parser_grammars_pattern =
-                        "^"
-                        + per_grammar.source_directory
-                        + "(" + pom_grammar_name.First() + " |" + pom_grammar_name.First() + "Parser).g4$";
-                    var any =
-                    new Domemtech.Globbing.Glob()
-                        .RegexContents(parser_grammars_pattern)
-                        .Where(f => f is FileInfo)
-                        .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                        .ToList();
-                    if (any.Any())
-                    {
-                        parser_src_grammar_file_name = any.First();
-                        break;
-                    }
-                }
-                {
-                    var parser_grammars_pattern =
-                        "^(" + per_grammar.source_directory + ")"
-                        + "(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Parser).g4$";
-                    var any =
-                        new Domemtech.Globbing.Glob()
-                            .RegexContents(parser_grammars_pattern)
-                            .Where(f => f is FileInfo)
-                            .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                            .ToList();
-                    if (any.Any())
-                    {
-                        parser_src_grammar_file_name = any.First();
-                        break;
-                    }
-                }
-                throw new Exception("Cannot find the parser grammar (" + pom_grammar_name.First() + " | " + pom_grammar_name.First() + "Parser).g4");
-            }
+            parser_src_grammar_file_name =
+                per_grammar.tool_grammar_tuples.Where(t => t.GrammarName == pom_grammar_name.First()).Select(t
+                    => t.GrammarFileName).First();
             if (config.name_space != null && config.name_space != "")
             {
                 parser_grammar_file_name =
@@ -833,58 +784,9 @@
                 + "Lexer");
             lexer_generated_file_name = per_grammar.fully_qualified_lexer_name.Replace('.', '/') + Suffix(config);
             lexer_generated_include_file_name = per_grammar.fully_qualified_lexer_name.Replace('.', '/') + ".h";
-            for (; ; )
-            {
-                // Probe for lexer grammar. 
-                {
-                    var lexer_grammars_pattern =
-                        "^((?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/))("
-                        + TargetSpecificSrcDirectory(config) + "/)(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Lexer)).g4$";
-                    var any =
-                        new Domemtech.Globbing.Glob()
-                            .RegexContents(lexer_grammars_pattern)
-                            .Where(f => f is FileInfo)
-                            .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                            .ToList();
-                    if (any.Any())
-                    {
-                        lexer_src_grammar_file_name = any.First();
-                        break;
-                    }
-                }
-                {
-                    var lexer_grammars_pattern =
-                        "^(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Lexer).g4$";
-                    var any =
-                        new Domemtech.Globbing.Glob()
-                            .RegexContents(lexer_grammars_pattern)
-                            .Where(f => f is FileInfo)
-                            .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                            .ToList();
-                    if (any.Any())
-                    {
-                        lexer_src_grammar_file_name = any.First();
-                        break;
-                    }
-                }
-                {
-                    var lexer_grammars_pattern =
-                        "^(" + per_grammar.source_directory + ")"
-                        + "(" + pom_grammar_name.First() + "|" + pom_grammar_name.First() + "Lexer).g4$";
-                    var any =
-                        new Domemtech.Globbing.Glob()
-                            .RegexContents(lexer_grammars_pattern)
-                            .Where(f => f is FileInfo)
-                            .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
-                            .ToList();
-                    if (any.Any())
-                    {
-                        lexer_src_grammar_file_name = any.First();
-                        break;
-                    }
-                }
-                throw new Exception("Cannot find the lexer grammar (" + pom_grammar_name.First() + " | " + pom_grammar_name.First() + "Lexer).g4)");
-            }
+            lexer_src_grammar_file_name =
+                per_grammar.tool_grammar_tuples.Where(t => t.GrammarName == pom_grammar_name.First()).Select(t
+                    => t.GrammarFileName).First();
             if (config.name_space != null && config.name_space != "")
             {
                 lexer_grammar_file_name =
@@ -1446,8 +1348,8 @@
                 };
             per_grammar.tool_grammar_tuples = new List<GrammarTuple>()
                 {
-                    new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name),
-                    new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name),
+                    new GrammarTuple(lexer_grammar_file_name, null, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name),
+                    new GrammarTuple(parser_grammar_file_name, null, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name),
                 };
             per_grammar.parser_grammar_file_name = parser_grammar_file_name;
             per_grammar.lexer_grammar_file_name = lexer_grammar_file_name;
