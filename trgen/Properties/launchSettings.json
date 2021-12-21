@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-2430\\csharp"
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-updated-trgen\\r"
     }
   }
 }

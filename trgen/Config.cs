@@ -17,17 +17,11 @@ namespace Trash
         [Option("antlr-tool-path", Required = false)]
         public string antlr_tool_path { get; set; }
 
-        [Option('c', "case-fold", Required = false, HelpText = "Fold case of lexer. True = upper, false = lower.")]
-        public bool? case_fold { get; set; }
-
         [Option("case-insensitive-type", Required = false)]
         public CaseInsensitiveType? case_insensitive_type { get; set; }
 
         [Option("env-type", Required = false)]
         public EnvType? env_type { get; set; }
-
-        [Option("example-files", Required = false)]
-        public string example_files { get; set; }
 
         [Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
         public string InputFile { get; set; }
@@ -35,11 +29,6 @@ namespace Trash
         [Option("flatten", Required = false, HelpText = "Flatten files in target into non-nested directory.")]
         public bool? flatten { get; set; }
 
-        [Option("grammar-name", Required = false, HelpText = "The grammar name.")]
-        public string grammar_name { get; set; }
-
-        [Option("lexer-name", Required = false, HelpText = "The name of the lexer.")]
-        public string fully_qualified_lexer_name { get; set; }
 
         [Option("go-lexer-name", Required = false, HelpText = "The name of the lexer.")]
         public string fully_qualified_go_lexer_name { get; set; }
@@ -55,9 +44,6 @@ namespace Trash
 
         [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
         public string output_directory { get; set; }
-
-        [Option("parser-name", Required = false, HelpText = "The name of the parser.")]
-        public string fully_qualified_parser_name { get; set; }
 
         [Option("go-parser-name", Required = false)]
         public string fully_qualified_go_parser_name { get; set; }

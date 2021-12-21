@@ -87,4 +87,4 @@ _Output_
 
 # Current version
 
-0.12.1 -- add trgen2; fix trull; rewrite of trkleene base code.
+0.13.0 -- add trgen2; fix trull; rewrite of trkleene base code; rewrite of trgen to include Trash parse of grammars for information extraction.
