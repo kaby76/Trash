@@ -688,15 +688,17 @@
                 if (is_parser_grammar)
                 {
                     var genfn = name + Suffix(config);
+                    var genincfn = name + ".h";
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
-                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, "", autom_name);
+                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else if (is_lexer_grammar)
                 {
                     var genfn = name + Suffix(config);
+                    var genincfn = name + ".h";
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
@@ -707,20 +709,22 @@
                 {
                     {
                         var genfn = name + "Parser" + Suffix(config);
+                        var genincfn = name + "Parser.h";
                         var autom_name = ((config.name_space != null && config.name_space != "")
                                 ? config.name_space + '.' : "")
                             + name
                             + "Parser";
-                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, "", autom_name);
+                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                     {
                         var genfn = name + "Lexer" + Suffix(config);
+                        var genincfn = name + "Lexer.h";
                         var autom_name = ((config.name_space != null && config.name_space != "")
                                 ? config.name_space + '.' : "")
                             + name
                             + "Lexer";
-                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, "", autom_name);
+                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                 }
@@ -755,7 +759,7 @@
                 per_grammar.tool_grammar_tuples
                 .Where(t => t.GrammarName == pom_grammar_name.First()
                     || t.GrammarName == pom_grammar_name.First() + "Parser").Select(t
-                    => t.TargetGrammarFileName).First();
+                    => t.GrammarFileName).First();
 
             per_grammar.fully_qualified_lexer_name =
                 per_grammar.tool_grammar_tuples
@@ -773,7 +777,7 @@
                 per_grammar.tool_grammar_tuples
                 .Where(t => t.GrammarName == pom_grammar_name.First()
                     || t.GrammarName == pom_grammar_name.First() + "Lexer").Select(t
-                    => t.TargetGrammarFileName).First();
+                    => t.GrammarFileName).First();
             per_grammar.tool_src_grammar_files = new HashSet<string>()
                 {
                     lexer_src_grammar_file_name,
@@ -784,11 +788,11 @@
             //        new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name),
             //        new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name),
             //    };
-            per_grammar.tool_grammar_files = per_grammar.tool_grammar_tuples.Select(t => t.TargetGrammarFileName).ToHashSet().ToList();
-            per_grammar.parser_grammar_file_name = parser_grammar_file_name;
+            per_grammar.tool_grammar_files = per_grammar.tool_grammar_tuples.Select(t => t.GrammarFileName).ToHashSet().ToList();
+            per_grammar.parser_grammar_file_name = parser_src_grammar_file_name;
             per_grammar.start_rule = pom_entry_point.First();
             per_grammar.generated_files = per_grammar.tool_grammar_tuples.Select(t => t.GeneratedFileName).ToHashSet().ToList();
-            per_grammar.lexer_grammar_file_name = lexer_grammar_file_name;
+            per_grammar.lexer_grammar_file_name = lexer_src_grammar_file_name;
             GenerateSingle(per_grammar);
         }
 
@@ -882,7 +886,11 @@
                 if (to == null)
                 {
                     to = this.config.output_directory
-                        + f.Replace(per_grammar.source_directory,"");
+                        + (
+                            f.StartsWith(per_grammar.source_directory)
+                            ? f.Substring(per_grammar.source_directory.Length)
+                            : f
+                            );
                 }
                 System.Console.Error.WriteLine("Copying source file from "
                   + from
@@ -1366,7 +1374,7 @@
             Digraph<string> graph = new Digraph<string>();
             foreach (var t in per_grammar.tool_grammar_tuples)
             {
-                var f = t.GrammarFileName;
+                var f = t.OriginalSourceFileName;
                 var doc = Docs.Class1.ReadDoc(f);
                 var pr = LanguageServer.ParsingResultsFactory.Create(doc);
                 var workspace = doc.Workspace;

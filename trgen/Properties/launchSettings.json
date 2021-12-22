@@ -2,7 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-updated-trgen\\sql\\hive"
+      "commandLineArgs": "-t Cpp",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-upstream\\html"
     }
   }
 }
