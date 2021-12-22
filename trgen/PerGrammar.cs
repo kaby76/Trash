@@ -19,5 +19,6 @@ namespace Trash
         public string parser_grammar_file_name = null;
         public string example_files { get; set; }
         public string start_rule { get; set; }
+        public string package;
     }
 }

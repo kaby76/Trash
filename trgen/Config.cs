@@ -61,7 +61,7 @@ namespace Trash
         public string start_rule { get; set; }
 
         [Option('t', "target", Required = false, HelpText = "The target language for the project.")]
-        public TargetType? target { get; set; }
+        public string target { get; set; }
 
         [Option("template-sources-directory", Required = false)]
         public string template_sources_directory { get; set; }

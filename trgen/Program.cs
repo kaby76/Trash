@@ -61,7 +61,7 @@ namespace Trash
             config.env_type = Command.GetEnvType();
             config.path_sep = Command.GetPathSep();
             config.antlr_tool_path = Command.GetAntlrToolPath();
-            config.target = TargetType.CSharp;
+            config.target = "CSharp";
             config.tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
             config.output_directory = "Generated/";
             config.flatten = false;
@@ -112,7 +112,7 @@ namespace Trash
                     }
                 }
 
-                if (o.target != null && o.target == TargetType.Antlr4cs) config.name_space = "Test";
+                if (o.target != null && o.target == "Antlr4cs") config.name_space = "Test";
                 if (o.name_space != null) config.name_space = o.name_space;
                 if (o.flatten != null) config.flatten = o.flatten;
                 if (o.all_source_pattern != null) config.all_source_pattern = config.all_source_pattern;
@@ -120,7 +120,7 @@ namespace Trash
                     "^(?!.*(" +
                      (cgen.ignore_string != null ? cgen.ignore_string + "|" : "")
                      + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
-                     + Command.AllButTargetName((TargetType)config.target)
+                     + Command.AllButTargetName(config.target)
                      + "/)).+"
                      + "$";
             });

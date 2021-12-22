@@ -174,18 +174,18 @@
         {
             return config.target switch
             {
-                TargetType.Antlr4cs => ".cs",
-                TargetType.Cpp => ".cpp",
-                TargetType.CSharp => ".cs",
-                TargetType.Dart => ".dart",
-                TargetType.Go => ".go",
-                TargetType.Java => ".java",
-                TargetType.JavaScript => ".js",
-                TargetType.Php => ".php",
-                TargetType.Python2 => ".py",
-                TargetType.Python3 => ".py",
-                TargetType.Swift => ".swift",
-                TargetType.TypeScript => ".ts",
+                "Antlr4cs" => ".cs",
+                "Cpp" => ".cpp",
+                "CSharp" => ".cs",
+                "Dart" => ".dart",
+                "Go" => ".go",
+                "Java" => ".java",
+                "JavaScript" => ".js",
+                "Php" => ".php",
+                "Python2" => ".py",
+                "Python3" => ".py",
+                "Swift" => ".swift",
+                "TypeScript" => ".ts",
                 _ => throw new NotImplementedException(),
             };
         }
@@ -263,27 +263,27 @@
             throw new Exception("Cannot determine operating system!");
         }
 
-        public static string TargetName(TargetType target)
+        public static string TargetName(string target)
         {
             return target switch
             {
-                TargetType.Antlr4cs => "Antlr4cs",
-                TargetType.Cpp => "Cpp",
-                TargetType.CSharp => "CSharp",
-                TargetType.Dart => "Dart",
-                TargetType.Go => "Go",
-                TargetType.Java => "Java",
-                TargetType.JavaScript => "JavaScript",
-                TargetType.Php => "Php",
-                TargetType.Python2 => "Python2",
-                TargetType.Python3 => "Python3",
-                TargetType.Swift => "Swift",
-                TargetType.TypeScript => "TypeScript",
+                "Antlr4cs" => "Antlr4cs",
+                "Cpp" => "Cpp",
+                "CSharp" => "CSharp",
+                "Dart" => "Dart",
+                "Go" => "Go",
+                "Java" => "Java",
+                "JavaScript" => "JavaScript",
+                "Php" => "Php",
+                "Python2" => "Python2",
+                "Python3" => "Python3",
+                "Swift" => "Swift",
+                "TypeScript" => "TypeScript",
                 _ => throw new NotImplementedException(),
             };
         }
 
-        public static string AllButTargetName(TargetType target)
+        public static string AllButTargetName(string target)
         {
             var all_but = new List<string>() {
                 "Antlr4cs",
@@ -305,22 +305,7 @@
 
         public static string TargetSpecificSrcDirectory(Config config)
         {
-            return config.target switch
-            {
-                TargetType.Antlr4cs => "Antlr4cs",
-                TargetType.Cpp => "Cpp",
-                TargetType.CSharp => "CSharp",
-                TargetType.Dart => "Dart",
-                TargetType.Go => "Go",
-                TargetType.Java => "Java",
-                TargetType.JavaScript => "JavaScript",
-                TargetType.Php => "Php",
-                TargetType.Python2 => "Python2",
-                TargetType.Python3 => "Python3",
-                TargetType.Swift => "Swift",
-                TargetType.TypeScript => "TypeScript",
-                _ => throw new NotImplementedException(),
-            };
+            return TargetName(config.target);
         }
 
         public void DoMavenGenerate(string cd)
@@ -469,11 +454,11 @@
             // -package arg specified; source top level
             //   => keep .g4 at top level, generate to directory
             //      corresponding to arg.
-            if (config.target == TargetType.JavaScript || config.target == TargetType.Dart)
+            if (config.target == "JavaScript" || config.target == "Dart")
             {
                 config.name_space = null;
             }
-            else if (config.target == TargetType.Go)
+            else if (config.target == "Go")
             {
                 config.name_space = "parser";
             }
@@ -572,7 +557,7 @@
                 ignore_string = string.Join("|", ignore_lines);
             }
 
-            if (!(config.target == TargetType.JavaScript || config.target == TargetType.Dart))
+            if (!(config.target == "JavaScript" || config.target == "Dart"))
             {
                 List<string> additional = new List<string>();
                 config.antlr_tool_args = additional;
@@ -599,6 +584,8 @@
             string lexer_src_grammar_file_name = null;
             string lexer_generated_include_file_name = null;
 
+            per_grammar.package = pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "";
+
             // Let's first parse the input grammar files and gather information
             // about them. Note, people pump in all sorts of bullshit, so
             // be ready to handle the worse of the worse.
@@ -609,27 +596,37 @@
                 // the current directory. That's because this is the Maven
                 // Antlr4 tool plugin so it doesn't fish around to find the grammar,
                 // except possibley in the "source directory".
-                string gfn;
+                string sgfn;
+                string tgfn;
                 if (File.Exists(f))
-                    gfn = f;
+                {
+                    sgfn = f;
+                    tgfn = per_grammar.package.Replace(".", "/") + f;
+                }
                 else if (File.Exists(per_grammar.source_directory + f))
-                    gfn = per_grammar.source_directory + f;
+                {
+                    sgfn = per_grammar.source_directory + f;
+                    tgfn = per_grammar.package.Replace(".", "/") + f;
+                }
                 else if (File.Exists(config.target + "/" + f))
-                    gfn = config.target + "/" + f;
+                {
+                    sgfn = config.target + "/" + f;
+                    tgfn = per_grammar.package.Replace(".", "/") + f;
+                }
                 else
                 {
                     System.Console.Error.WriteLine("Error in pom.xml: <include>" + f + "</include> is for a file that does not exist.");
                     throw new Exception();
                 }
 
-                var doc = Docs.Class1.ReadDoc(gfn);
+                var doc = Docs.Class1.ReadDoc(sgfn);
                 var pr = LanguageServer.ParsingResultsFactory.Create(doc);
                 var workspace = doc.Workspace;
                 _ = new LanguageServer.Module().Compile(workspace);
                 if (pr.Errors.Any())
                 {
                     System.Console.Error.WriteLine("Your grammar "
-                        + gfn
+                        + sgfn
                         + " does not compile as an Antlr4 grammar! Please check it.");
                     throw new Exception();
                 }
@@ -648,14 +645,14 @@
                 if (nodes == null)
                 {
                     System.Console.Error.WriteLine("Your grammar "
-                        + gfn
+                        + sgfn
                         + " does not compile as an Antlr4 grammar! Please check it.");
                     throw new Exception();
                 }
                 if (nodes.Count() == 0 || nodes.Count() > 1)
                 {
                     System.Console.Error.WriteLine("Your grammar "
-                        + gfn
+                        + sgfn
                         + " does not compile as an Antlr4 grammar! Please check it.");
                     throw new Exception();
                 }
@@ -663,7 +660,7 @@
                 if (nodes.Count() == 0 || nodes.Count() > 1)
                 {
                     System.Console.Error.WriteLine("Your grammar "
-                        + gfn
+                        + sgfn
                         + " does not compile as an Antlr4 grammar! Please check it.");
                     throw new Exception();
                 }
@@ -676,14 +673,14 @@
                     || !is_combined && !is_parser_grammar && is_lexer_grammar))
                 {
                     System.Console.Error.WriteLine("Your grammar "
-                        + gfn
+                        + sgfn
                         + " is malformed! Please check it.");
                     throw new Exception();
                 }
                 if (!is_combined && !is_parser_grammar && !is_lexer_grammar)
                 {
                     System.Console.Error.WriteLine("Your grammar "
-                        + gfn
+                        + sgfn
                         + " is malformed! Please check it.");
                     throw new Exception();
                 }
@@ -694,7 +691,7 @@
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
-                    var g = new GrammarTuple(gfn, name, genfn, "", autom_name);
+                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, "", autom_name);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else if (is_lexer_grammar)
@@ -703,7 +700,7 @@
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
-                    var g = new GrammarTuple(gfn, name, genfn, "", autom_name);
+                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, "", autom_name);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else
@@ -714,7 +711,7 @@
                                 ? config.name_space + '.' : "")
                             + name
                             + "Parser";
-                        var g = new GrammarTuple(gfn, name, genfn, "", autom_name);
+                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, "", autom_name);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                     {
@@ -723,7 +720,7 @@
                                 ? config.name_space + '.' : "")
                             + name
                             + "Lexer";
-                        var g = new GrammarTuple(gfn, name, genfn, "", autom_name);
+                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, "", autom_name);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                 }
@@ -740,13 +737,13 @@
             // Antlr tool, and the other to test the generated parser.
             per_grammar.fully_qualified_parser_name =
                 per_grammar.tool_grammar_tuples
-                .Where(t => t.GrammarName == pom_grammar_name.First()
-                    || t.GrammarAutomName.Contains(t.GrammarName + "Parser"))
+                .Where(t => t.GrammarAutomName.EndsWith(pom_grammar_name.First())
+                    || t.GrammarAutomName.EndsWith(pom_grammar_name.First() + "Parser"))
                 .Select(t => t.GrammarAutomName).First();
             config.fully_qualified_go_parser_name =
                 per_grammar.tool_grammar_tuples
-                .Where(t => t.GrammarName == pom_grammar_name.First()
-                    || t.GrammarAutomName.Contains(t.GrammarName + "Parser"))
+                .Where(t => t.GrammarAutomName.EndsWith(pom_grammar_name.First())
+                    || t.GrammarAutomName.EndsWith(pom_grammar_name.First() + "Parser"))
                 .Select(t => t.GrammarAutomName).First();
 
             // Where the parser generated code lives.
@@ -755,65 +752,39 @@
                 + Suffix(config);
             var parser_generated_include_file_name = (string)per_grammar.fully_qualified_parser_name.Replace('.', '/') + ".h";
             parser_src_grammar_file_name =
-                per_grammar.tool_grammar_tuples.Where(t => t.GrammarName == pom_grammar_name.First()).Select(t
-                    => t.GrammarFileName).First();
-            if (config.name_space != null && config.name_space != "")
-            {
-                parser_grammar_file_name =
-                    config.name_space.Replace('.', '/') + '/'
-                    + Path.GetFileName(parser_src_grammar_file_name);
-            }
-            else if (per_grammar.source_directory != null && per_grammar.source_directory != "")
-            {
-                parser_grammar_file_name = Path.GetFileName(parser_src_grammar_file_name);
-            }
-            else
-            {
-                parser_grammar_file_name =
-                    Path.GetFileName(parser_src_grammar_file_name);
-            }
+                per_grammar.tool_grammar_tuples
+                .Where(t => t.GrammarName == pom_grammar_name.First()
+                    || t.GrammarName == pom_grammar_name.First() + "Parser").Select(t
+                    => t.TargetGrammarFileName).First();
 
             per_grammar.fully_qualified_lexer_name =
-                ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
-                + (pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First()
-                + "Lexer");
+                per_grammar.tool_grammar_tuples
+                .Where(t => t.GrammarAutomName.EndsWith(pom_grammar_name.First())
+                    || t.GrammarAutomName.EndsWith(pom_grammar_name.First() + "Lexer"))
+                .Select(t => t.GrammarAutomName).First();
             config.fully_qualified_go_lexer_name =
                 ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
-                + (config.target == TargetType.Go ? "New" : "")
+                + (config.target == "Go" ? "New" : "")
                 + (pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First()
                 + "Lexer");
             lexer_generated_file_name = per_grammar.fully_qualified_lexer_name.Replace('.', '/') + Suffix(config);
             lexer_generated_include_file_name = per_grammar.fully_qualified_lexer_name.Replace('.', '/') + ".h";
             lexer_src_grammar_file_name =
-                per_grammar.tool_grammar_tuples.Where(t => t.GrammarName == pom_grammar_name.First()).Select(t
-                    => t.GrammarFileName).First();
-            if (config.name_space != null && config.name_space != "")
-            {
-                lexer_grammar_file_name =
-                    config.name_space.Replace('.', '/') + '/'
-                    + Path.GetFileName(lexer_src_grammar_file_name);
-            }
-            else if (per_grammar.source_directory != null && per_grammar.source_directory != "")
-            {
-                lexer_grammar_file_name = Path.GetFileName(lexer_src_grammar_file_name);
-            }
-            else
-            {
-                lexer_grammar_file_name =
-                    Path.GetFileName(lexer_src_grammar_file_name);
-            }
-
+                per_grammar.tool_grammar_tuples
+                .Where(t => t.GrammarName == pom_grammar_name.First()
+                    || t.GrammarName == pom_grammar_name.First() + "Lexer").Select(t
+                    => t.TargetGrammarFileName).First();
             per_grammar.tool_src_grammar_files = new HashSet<string>()
                 {
-                    lexer_grammar_file_name,
-                    parser_grammar_file_name
+                    lexer_src_grammar_file_name,
+                    parser_src_grammar_file_name
                 };
             //per_grammar.tool_grammar_tuples = new List<GrammarTuple>()
             //    {
             //        new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name),
             //        new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name),
             //    };
-            per_grammar.tool_grammar_files = per_grammar.tool_grammar_tuples.Select(t => t.GrammarFileName).ToHashSet().ToList();
+            per_grammar.tool_grammar_files = per_grammar.tool_grammar_tuples.Select(t => t.TargetGrammarFileName).ToHashSet().ToList();
             per_grammar.parser_grammar_file_name = parser_grammar_file_name;
             per_grammar.start_rule = pom_entry_point.First();
             per_grammar.generated_files = per_grammar.tool_grammar_tuples.Select(t => t.GeneratedFileName).ToHashSet().ToList();
@@ -881,17 +852,17 @@
                 // Construct proper starting directory based on namespace.
                 var from = path;
                 var f = from.Substring(cd.Length);
-                // First, remove source_directory.
-                f = (
-                        f.StartsWith(per_grammar.source_directory)
-                        ? f.Substring((per_grammar.source_directory).Length)
-                        : f
-                        );
+                //// First, remove source_directory.
+                //f = (
+                //        f.StartsWith(per_grammar.source_directory)
+                //        ? f.Substring((per_grammar.source_directory).Length)
+                //        : f
+                //        );
                 // Now remove target directory.
                 f = (
                         f.StartsWith(
-                            Command.TargetName((TargetType)this.config.target) + '/')
-                        ? f.Substring((Command.TargetName((TargetType)this.config.target) + '/').Length)
+                            Command.TargetName(this.config.target) + '/')
+                        ? f.Substring((Command.TargetName(this.config.target) + '/').Length)
                         : f
                         );
                 // Remove "src/main/java", a royal hangover from the Maven plugin.
@@ -901,11 +872,6 @@
                         : f
                         );
 
-                if (per_grammar.grammar_name + ".g4" == f &&
-                    !(f == Path.GetFileName(per_grammar.parser_grammar_file_name) || f == Path.GetFileName(per_grammar.lexer_grammar_file_name)))
-                {
-                    continue;
-                }
                 string to = null;
                 if (config.name_space != null)
                 {
@@ -916,7 +882,7 @@
                 if (to == null)
                 {
                     to = this.config.output_directory
-                        + f;
+                        + f.Replace(per_grammar.source_directory,"");
                 }
                 System.Console.Error.WriteLine("Copying source file from "
                   + from
@@ -929,7 +895,7 @@
 
         private void GenFromTemplates(Command p, PerGrammar per_grammar)
         {
-            var append_namespace = (!(p.config.target == TargetType.CSharp || p.config.target == TargetType.Antlr4cs));
+            var append_namespace = (!(p.config.target == "CSharp" || p.config.target == "Antlr4cs"));
             if (config.template_sources_directory == null)
             {
                 System.Reflection.Assembly a = this.GetType().Assembly;
@@ -937,7 +903,7 @@
                 // which were obtained by doing "cd templates/; find . -type f > files" at a Bash
                 // shell.
                 var orig_file_names = ReadAllResourceLines(a, "trgen.templates.files");
-                var regex_string = "^(?!.*(" + AllButTargetName((TargetType)config.target) + "/)).*$";
+                var regex_string = "^(?!.*(" + AllButTargetName(config.target) + "/)).*$";
                 var regex = new Regex(regex_string);
                 var files_to_copy = orig_file_names.Where(f =>
                 {
@@ -961,8 +927,8 @@
                     {
                         continue;
                     }
-                    var to = from.StartsWith("./" + TargetName((TargetType)p.config.target))
-                        ? from.Substring(("./" + TargetName((TargetType)p.config.target)).Length + 1)
+                    var to = from.StartsWith("./" + TargetName(p.config.target))
+                        ? from.Substring(("./" + TargetName(p.config.target)).Length + 1)
                         : from.Substring(2);
                     to = ((string)config.output_directory).Replace('\\', '/') + to;
                     from = prefix_to_remove + from.Replace('/', '.').Substring(2);
@@ -1021,7 +987,7 @@
             }
             else
             {
-                var regex_string = "^(?!.*(files|" + AllButTargetName((TargetType)config.target) + "/)).*$";
+                var regex_string = "^(?!.*(files|" + AllButTargetName(config.target) + "/)).*$";
                 var files_to_copy = new Domemtech.Globbing.Glob(config.template_sources_directory)
                     .RegexContents(regex_string)
                     .Where(f =>
@@ -1052,8 +1018,8 @@
                     }
                     var from = file;
                     var e = file.Substring(prefix_to_remove.Length);
-                    var to = e.StartsWith(TargetName((TargetType)p.config.target))
-                         ? e.Substring((TargetName((TargetType)p.config.target)).Length + 1)
+                    var to = e.StartsWith(TargetName(p.config.target))
+                         ? e.Substring((TargetName(p.config.target)).Length + 1)
                          : e;
                     to = ((string)config.output_directory).Replace('\\', '/') + to;
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
@@ -1172,11 +1138,11 @@
                 per_grammar.grammar_name = g.Replace("Parser", "");
             }
 
-            if (config.target == TargetType.JavaScript || config.target == TargetType.Dart)
+            if (config.target == "JavaScript" || config.target == "Dart")
             {
                 config.name_space = null;
             }
-            else if (config.target == TargetType.Go)
+            else if (config.target == "Go")
             {
                 config.name_space = "parser";
             }
@@ -1348,8 +1314,8 @@
                 };
             per_grammar.tool_grammar_tuples = new List<GrammarTuple>()
                 {
-                    new GrammarTuple(lexer_grammar_file_name, null, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name),
-                    new GrammarTuple(parser_grammar_file_name, null, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name),
+                    new GrammarTuple(lexer_grammar_file_name, lexer_grammar_file_name, null, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name),
+                    new GrammarTuple(parser_grammar_file_name, parser_grammar_file_name, null, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name),
                 };
             per_grammar.parser_grammar_file_name = parser_grammar_file_name;
             per_grammar.lexer_grammar_file_name = lexer_grammar_file_name;
@@ -1408,10 +1374,12 @@
                 var imports = pr.Imports;
                 foreach (var d in imports)
                 {
+                    var dd = d.Replace("\\", "/");
                     // Import file names are in absolute path names. Change
                     // it back to relative paths.
                     var v = per_grammar.tool_grammar_tuples.Select(t => t.GrammarFileName)
-                        .Where(t => d.EndsWith(t)).FirstOrDefault();
+                        .Where(t => dd.EndsWith(t)).FirstOrDefault();
+                    if (v == null) continue;
                     DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
                     graph.AddEdge(e);
                 }
