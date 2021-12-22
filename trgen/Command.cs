@@ -702,7 +702,7 @@
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
-                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, "", autom_name);
+                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else

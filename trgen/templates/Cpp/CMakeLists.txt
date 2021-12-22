@@ -3,7 +3,7 @@
 cmake_minimum_required (VERSION 3.14)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(ANTLR_EXECUTABLE "<antlr_tool_path>")
 set(Java_JAVA_EXECUTABLE "java")
 set(ANTLR4_TAG e4c1a74)
