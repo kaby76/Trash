@@ -249,7 +249,7 @@
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return "~/Downloads/antlr-4.9.3-complete.jar";
+                return "/tmp/antlr-4.9.3-complete.jar";
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {

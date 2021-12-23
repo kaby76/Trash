@@ -4,6 +4,6 @@ default:
 run:
 	cd build; trwdog ./<exec_name> $(RUNARGS)
 clean:
-	rm -rf build
+	rm -rf build <temp_dir>/antlr4_runtime
 test:
 	bash test.sh
