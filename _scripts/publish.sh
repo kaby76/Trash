@@ -1,4 +1,4 @@
-version=0.12.0
+version=0.13.0
 directories=`find . -maxdepth 1 -type d`
 cwd=`pwd`
 for i in $directories

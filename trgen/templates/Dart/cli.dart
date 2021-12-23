@@ -8,97 +8,64 @@ import 'dart:convert';
 
 <if (case_insensitive_type)>
 
+/// This class supports case-insensitive lexing by wrapping an existing
+/// {@link CharStream} and forcing the lexer to see either upper or
+/// lowercase characters. Grammar literals should then be either upper or
+/// lower case such as 'BEGIN' or 'begin'. The text of the character
+/// stream is unaffected. Example: input 'BeGiN' would match lexer rule
+/// 'BEGIN' if constructor parameter upper=true but getText() would return
+/// 'BeGiN'.
 class CaseChangingCharStream extends CharStream {
-        CharStream stream;
-        bool upper;
+  final CharStream stream;
+  final bool upper;
 
-    CaseChangingCharStream(CharStream str, bool up)
-    {
-        stream = str;
-        upper = up;
+  /// Constructs a new CaseChangingCharStream wrapping the given [stream] forcing
+  /// all characters to upper case or lower case depending on [upper].
+  CaseChangingCharStream(this.stream, this.upper);
+
+  @override
+  int? LA(int i) {
+    int? c = stream.LA(i);
+    if (c == null || c \<= 0) {
+      return c;
     }
-
-    @override
-    int get index {
-        return stream.index;
+    String newCaseStr;
+    if (upper) {
+      newCaseStr = String.fromCharCode(c).toUpperCase();
+    } else {
+      newCaseStr = String.fromCharCode(c).toLowerCase();
     }
-
-    @override
-    int get size {
-        return stream.size;
+    // Skip changing case if length changes (e.g., ß -> SS).
+    if (newCaseStr.length != 1) {
+      return c;
+    } else {
+      return newCaseStr.codeUnitAt(0);
     }
+  }
 
-//  @override
-//  void reset() {
-//      stream.reset();
-//  }
+  @override
+  String get sourceName => stream.sourceName;
 
-    @override
-    void consume() {
-        stream.consume();
-    }
+  @override
+  void consume() => stream.consume();
 
-    @override
-    int LA(int offset) {
-            int c = stream.LA(offset);
+  @override
+  String getText(Interval interval) => stream.getText(interval);
 
-            if (c \<= 0)
-            {
-                return c;
-            }
+  @override
+  int get index => stream.index;
 
-            int o = c;
-            if (upper)
-            {
-                // Dart extremely painful--there is no simple function that
-                // maps a single character to upper-/lower- case. Do this the
-                // old fashion way to just get some damn thing working. I am
-                // not an expert at pouring over 1000's of web pages to find the
-                // function and SO has nothing.
-                if (97 \<= o && o \<= 122)
-                    o = o + (65 - 97);
-                return o;
-            }
-            else {
-                if (65 \<= o && o \<= 90)
-                    o = o + (97 - 65);
-                return o;
-            }
-    }
+  @override
+  int mark() => stream.mark();
 
-    @override
-    int mark() {
-        return stream.mark();
-    }
+  @override
+  void release(int marker) => stream.release(marker);
 
-    @override
-    void release(int marker) {
-        stream.release(marker);
-    }
+  @override
+  void seek(int index) => stream.seek(index);
 
-    @override
-    void seek(int _index) {
-        stream.seek(_index);
-    }
-
-//  String getText(Interval interval)
-//  {
-//      this.stream.getText(interval);
-//  }
-
-    @override
-    String toString() {
-        return this.stream.toString();
-    }
-
-    @override
-    String get sourceName {
-        return stream.sourceName;
-    }
-
-@override
-    noSuchMethod(Invocation msg) => "got ${msg.memberName} "
-                      "with arguments ${msg.positionalArguments}";
+  @override
+  int get size => stream.size;
 }
 
 <endif>
@@ -106,71 +73,57 @@ class CaseChangingCharStream extends CharStream {
 void main(List\<String> args) async {
     var show_tree = false;
     var show_tokens = false;
-    var file_name;
-    var input;
-    var str;
-    var encoding;
-    for (var i = 0; i \< args.length; ++i)
+    var file_name = null;
+    var input = null;
+    var str = null;
+    for (int i = 0; i \< args.length; ++i)
     {
-        if (args[i] == '-tokens')
+        if (args[i] == "-tokens")
         {
             show_tokens = true;
             continue;
         }
-        else if (args[i] == '-tree')
+        else if (args[i] == "-tree")
         {
             show_tree = true;
             continue;
         }
-        else if (args[i] == '-input')
-        {
+        else if (args[i] == "-input")
             input = args[++i];
-        }
-        else if (args[i] == '-file')
-        {
+        else if (args[i] == "-file")
             file_name = args[++i];
-        }
-        else if (args[i] == '-encoding')
-        {
-            encoding = Encoding.getByName(args[++i]);
-        }
     }
     <tool_grammar_tuples:{x|<x.GrammarAutomName>.checkVersion();
     }>
     if (input == null && file_name == null)
     {
-        var bytes = \<int>[];
-        var byte = stdin.readByteSync();
+        final List\<int> bytes = \<int>[];
+        int byte = stdin.readByteSync();
         while (byte >= 0) {
             bytes.add(byte);
             byte = stdin.readByteSync();
         }
         input = utf8.decode(bytes);
-        str = InputStream.fromString(input);
+        str = await InputStream.fromString(input);
     } else if (input != null)
     {
-        str = InputStream.fromString(input);
+        str = await InputStream.fromString(input);
     } else if (file_name != null)
     {
-        //if (encoding == null)
-            str = await InputStream.fromPath(file_name);
-        //else
-        //    str = await InputStream.fromPath(file_name, encoding);
+        str = await InputStream.fromPath(file_name);
     }
 <if (case_insensitive_type)>
-    str = CaseChangingCharStream(str, '<case_insensitive_type>' == 'Upper');
+    str = CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
 <endif>
     var lexer = <lexer_name>(str);
     if (show_tokens)
     {
-        for (var i = 0; ; ++i)
+        for (int i = 0; ; ++i)
         {
             var token = lexer.nextToken();
             print(token.toString());
             if (token.type == -1)
-            {
                 break;
-            }
         }
         lexer.reset();
     }
@@ -183,11 +136,11 @@ void main(List\<String> args) async {
     var tree = parser.<start_symbol>();
     if (parser.numberOfSyntaxErrors > 0)
     {
-        stderr.writeln('Parse failed.');
+        stderr.writeln("Parse failed.");
     }
     else
     {
-        stderr.writeln('Parse succeeded.');
+        stderr.writeln("Parse succeeded.");
     }
     if (show_tree)
     {
