@@ -362,7 +362,7 @@
             else
             {
                 var te = !(new Regex(config.todo_list).IsMatch(cd));
-                if (config.todo_list != null && te)
+                if (te)
                 {
                     System.Console.Error.WriteLine("Skipping.");
                     return;
