@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version_antlr="3.2.0"
+version_antlr="3.3.0"
 version_tree="4.1.0"
 directories=`find . -maxdepth 1 -type d`
 for i in $directories

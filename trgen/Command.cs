@@ -162,7 +162,7 @@
         List<string> pom_example_files = null;
 
         public Config config;
-        public static string version = "0.13.0";
+        public static string version = "0.13.1";
 
         // For maven-generated code.
         public string root_directory;
@@ -584,7 +584,7 @@
             string lexer_src_grammar_file_name = null;
             string lexer_generated_include_file_name = null;
 
-            per_grammar.package = pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "";
+            per_grammar.package = (config.target == "Go" ? "parser." : "") + (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
 
             // Let's first parse the input grammar files and gather information
             // about them. Note, people pump in all sorts of bullshit, so
@@ -687,44 +687,54 @@
 
                 if (is_parser_grammar)
                 {
-                    var genfn = name + Suffix(config);
+                    var genfn = (config.target == "Go" ? "parser/" : "") + name + Suffix(config);
                     var genincfn = name + ".h";
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
-                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name);
+                    var goname = "parser.New" + name;
+                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else if (is_lexer_grammar)
                 {
-                    var genfn = name + Suffix(config);
+                    var genfn = (config.target == "Go" ? "parser/" : "") + name + Suffix(config);
                     var genincfn = name + ".h";
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
-                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name);
+                    var goname = "parser.New" + name;
+                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else
                 {
                     {
-                        var genfn = name + "Parser" + Suffix(config);
+                        var genfn = (config.target == "Go" ? "parser/" : "") + name + "Parser" + Suffix(config);
                         var genincfn = name + "Parser.h";
                         var autom_name = ((config.name_space != null && config.name_space != "")
                                 ? config.name_space + '.' : "")
                             + name
                             + "Parser";
-                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name);
+                        var goname = ((config.name_space != null && config.name_space != "")
+                                ? config.name_space + '.' : "")
+                            + "New" + name
+                            + "Parser";
+                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                     {
-                        var genfn = name + "Lexer" + Suffix(config);
+                        var genfn = (config.target == "Go" ? "parser/" : "") + name + "Lexer" + Suffix(config);
                         var genincfn = name + "Lexer.h";
                         var autom_name = ((config.name_space != null && config.name_space != "")
                                 ? config.name_space + '.' : "")
                             + name
                             + "Lexer";
-                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name);
+                        var goname = ((config.name_space != null && config.name_space != "")
+                                 ? config.name_space + '.' : "")
+                             + "New" + name
+                             + "Lexer";
+                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                 }
@@ -748,7 +758,7 @@
                 per_grammar.tool_grammar_tuples
                 .Where(t => t.GrammarAutomName.EndsWith(pom_grammar_name.First())
                     || t.GrammarAutomName.EndsWith(pom_grammar_name.First() + "Parser"))
-                .Select(t => t.GrammarAutomName).First();
+                .Select(t => t.GrammarGoNewName).First();
 
             // Where the parser generated code lives.
             parser_generated_file_name =
@@ -767,10 +777,10 @@
                     || t.GrammarAutomName.EndsWith(pom_grammar_name.First() + "Lexer"))
                 .Select(t => t.GrammarAutomName).First();
             config.fully_qualified_go_lexer_name =
-                ((config.name_space != null && config.name_space != "") ? config.name_space + '.' : "")
-                + (config.target == "Go" ? "New" : "")
-                + (pom_lexer_name.Any() ? pom_lexer_name.First() : pom_grammar_name.First()
-                + "Lexer");
+                per_grammar.tool_grammar_tuples
+                .Where(t => t.GrammarAutomName.EndsWith(pom_grammar_name.First())
+                    || t.GrammarAutomName.EndsWith(pom_grammar_name.First() + "Lexer"))
+                .Select(t => t.GrammarGoNewName).First();
             lexer_generated_file_name = per_grammar.fully_qualified_lexer_name.Replace('.', '/') + Suffix(config);
             lexer_generated_include_file_name = per_grammar.fully_qualified_lexer_name.Replace('.', '/') + ".h";
             lexer_src_grammar_file_name =
@@ -1322,8 +1332,8 @@
                 };
             per_grammar.tool_grammar_tuples = new List<GrammarTuple>()
                 {
-                    new GrammarTuple(lexer_grammar_file_name, lexer_grammar_file_name, null, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name),
-                    new GrammarTuple(parser_grammar_file_name, parser_grammar_file_name, null, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name),
+                    new GrammarTuple(lexer_grammar_file_name, lexer_grammar_file_name, null, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name, ""),
+                    new GrammarTuple(parser_grammar_file_name, parser_grammar_file_name, null, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name, ""),
                 };
             per_grammar.parser_grammar_file_name = parser_grammar_file_name;
             per_grammar.lexer_grammar_file_name = lexer_grammar_file_name;
@@ -1372,27 +1382,36 @@
         void ComputeSort(PerGrammar per_grammar)
         {
             Digraph<string> graph = new Digraph<string>();
+            Workspaces.Workspace workspace = new Workspaces.Workspace();
             foreach (var t in per_grammar.tool_grammar_tuples)
             {
                 var f = t.OriginalSourceFileName;
                 var doc = Docs.Class1.ReadDoc(f);
                 var pr = LanguageServer.ParsingResultsFactory.Create(doc);
-                var workspace = doc.Workspace;
-                _ = new LanguageServer.Module().Compile(workspace);
+                workspace = doc.Workspace;
+            }
+            _ = new LanguageServer.Module().Compile(workspace);
+            foreach (var t in per_grammar.tool_grammar_tuples)
+            {
+                var f = t.OriginalSourceFileName;
+                var doc = Docs.Class1.ReadDoc(f);
+                var pr = LanguageServer.ParsingResultsFactory.Create(doc);
+                workspace = doc.Workspace;
                 var imports = pr.Imports;
                 foreach (var d in imports)
                 {
                     var dd = d.Replace("\\", "/");
                     // Import file names are in absolute path names. Change
                     // it back to relative paths.
-                    var v = per_grammar.tool_grammar_tuples.Select(t => t.GrammarFileName)
+                    var v = per_grammar.tool_grammar_tuples.Select(t => t.OriginalSourceFileName.Replace("\\","/"))
                         .Where(t => dd.EndsWith(t)).FirstOrDefault();
                     if (v == null) continue;
                     DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
                     graph.AddEdge(e);
                 }
             }
-            var sort = new TopologicalSort<string, DirectedEdge<string>>(graph, new List<string>());
+            var subset = graph.Vertices.ToList();
+            var sort = new TopologicalSort<string, DirectedEdge<string>>(graph, subset);
             List<string> order = sort.Topological_sort();
             per_grammar.tool_grammar_tuples.Sort(new GrammarOrderCompare(order));
         }
@@ -1421,9 +1440,9 @@
                     {
                         try
                         {
-                            var ix = _order.IndexOf(x.GrammarFileName);
-                            var iy = _order.IndexOf(y.GrammarFileName);
-                            return iy.CompareTo(ix);
+                            var ix = _order.IndexOf(x.OriginalSourceFileName);
+                            var iy = _order.IndexOf(y.OriginalSourceFileName);
+                            return ix.CompareTo(iy);
                         }
                         catch(Exception e)
                         { }

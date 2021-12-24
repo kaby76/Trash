@@ -13,4 +13,4 @@ of all comments, labels, and action blocks.
 
 # Current version
 
-0.13.0 -- add trgen2; fix trull; rewrite of trkleene base code; rewrite of trgen to include Trash parse of grammars for information extraction.
+0.13.1 -- add trgen2; fix trull; rewrite of trkleene base code; rewrite of trgen to include Trash parse of grammars for information extraction.

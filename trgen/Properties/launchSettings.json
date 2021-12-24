@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Cpp",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-upstream\\html"
+      "commandLineArgs": "-t Go",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\g-linux\\abb"
     }
   }
 }
