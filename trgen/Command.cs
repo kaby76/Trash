@@ -350,18 +350,18 @@
             //
             // Determine if we skip this grammar.
             //
-            if (config.todo_list == null)
+            if (config.todo_pattern != null)
             {
-                // Do the old "skip_list" way.
-                if (config.skip_list.Where(s => cd.Remove(cd.Length - 1).EndsWith(s)).Any())
+                var te = new Regex(config.todo_pattern).IsMatch(cd);
+                if (!te)
                 {
                     System.Console.Error.WriteLine("Skipping.");
                     return;
                 }
             }
-            else
+            else if (config.skip_pattern != null)
             {
-                var te = !(new Regex(config.todo_list).IsMatch(cd));
+                var te = new Regex(config.skip_pattern).IsMatch(cd);
                 if (te)
                 {
                     System.Console.Error.WriteLine("Skipping.");

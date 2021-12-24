@@ -54,9 +54,6 @@ namespace Trash
         [Option('x', "profile", Required = false, HelpText = "Add in Antlr profiling code.")]
         public bool? profile { get; set; }
 
-        [Option('k', "skip-list", Required = false, Separator = ',', HelpText = "A skip list for pom.xml.")]
-        public IEnumerable<string> skip_list { get; set; }
-
         [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
         public string start_rule { get; set; }
 
@@ -66,8 +63,11 @@ namespace Trash
         [Option("template-sources-directory", Required = false)]
         public string template_sources_directory { get; set; }
 
-        [Option("todo-pattern", Required = false, HelpText ="Replacement for skip-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
-        public string todo_list { get; set; }
+        [Option("skip-pattern", Required = false, HelpText ="Replacement for skip-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
+        public string skip_pattern { get; set; }
+
+	    [Option("todo-pattern", Required = false, HelpText ="Replacement for todo-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
+	    public string todo_pattern { get; set; }
 
         [Option('g', "tool-grammar-files-pattern", Required = false, HelpText = "A list of vertical bar separated grammar file paths.")]
         public string tool_grammar_files_pattern { get; set; }
