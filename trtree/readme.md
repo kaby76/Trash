@@ -12,4 +12,4 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 # Current version
 
-0.13.1 -- fix trgen.
+0.13.2 -- fix trgen double negative.

@@ -162,7 +162,7 @@
         List<string> pom_example_files = null;
 
         public Config config;
-        public static string version = "0.13.1";
+        public static string version = "0.13.2";
 
         // For maven-generated code.
         public string root_directory;

@@ -12,4 +12,4 @@ Read stdin and print out the text for the tree.
 
 # Current version
 
-0.13.1 -- fix trgen.
+0.13.2 -- fix trgen double negative.

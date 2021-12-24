@@ -1,4 +1,4 @@
-version="0.13.1"
+version="0.13.2"
 
 directories=`find . -maxdepth 1 -type d`
 for i in $directories

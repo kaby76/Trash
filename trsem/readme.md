@@ -12,4 +12,4 @@ Read a static semantics spec file and generate code.
 
 # Current version
 
-0.13.1 -- fix trgen.
+0.13.2 -- fix trgen double negative.
