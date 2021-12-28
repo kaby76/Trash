@@ -12,4 +12,4 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 # Current version
 
-0.13.2 -- fix trgen double negative.
+0.13.3 -- (setting up for next release, nothing yet).

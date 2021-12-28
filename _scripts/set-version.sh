@@ -1,13 +1,18 @@
-version="0.13.2"
+version="0.13.3"
 
 directories=`find . -maxdepth 1 -type d`
+cwd=`pwd`
 for i in $directories
 do
 	if [ "$i" == "." ]
 	then
 		continue
 	fi
-	cd $i
+	cd $cwd/$i
+	if [[ "$?" != "0" ]]
+	then
+		continue
+	fi
 	csproj=`find . -maxdepth 1 -name '*.csproj'`
 	if [[ "$csproj" == "" ]]
 	then
@@ -16,14 +21,20 @@ do
 	fi
 	if [[ ! -f "$i.csproj" ]]
 	then
-		echo $i
-		echo nope
-		exit 1
+		continue
+	fi
+	if [[ ! -f "readme.md" ]]
+	then
+		continue;
 	fi
 	echo $i
 	rm -f asdfasdf
 	cat *.csproj | sed -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" > asdfasdf
 	mv asdfasdf *.csproj	
+	rm -f asdfasdf2
+	touch readme.md
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- (setting up for next release, nothing yet).%" > asdfasdf2
+	mv asdfasdf2 readme.md
 	cd ..
 done
 
