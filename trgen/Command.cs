@@ -437,6 +437,55 @@
                 .Select(t => t.Value)
                 .ToList();
 
+            var pom_all_test = navigator
+                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/*", nsmgr)
+                .Cast<XPathNavigator>()
+                .Select(t => t)
+                .ToList();
+
+            // Check all other config options in antlr4-maven-plugin configuration.
+            bool pom_all_else_bad = false;
+            foreach (var e in pom_all_else)
+            {
+                System.Console.Error.WriteLine("Invalid element \"//plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/"
+                    + e.Name
+                    + ". Correct the pom.xml!");
+                pom_all_else_bad = true;
+            }
+            if (pom_all_else_bad)
+            {
+                throw new Exception();
+            }
+
+
+            // Go through all elements under configuration and check if nonsense.
+            bool pom_all_test_bad = false;
+            foreach (var e in pom_all_test)
+            {
+                // straight from https://github.com/antlr/antlr4test-maven-plugin
+                if (e.Name == "grammarName") continue;
+                if (e.Name == "caseInsensitiveType") continue;
+                if (e.Name == "entryPoint") continue;
+                if (e.Name == "binary") continue;
+                if (e.Name == "enabled") continue;
+                if (e.Name == "verbose") continue;
+                if (e.Name == "showTree") continue;
+                if (e.Name == "exampleFiles") continue;
+                if (e.Name == "packageName") continue;
+                if (e.Name == "testFileExtension") continue;
+                if (e.Name == "fileEncoding") continue;
+                if (e.Name == "grammarInitializer") continue;
+
+                System.Console.Error.WriteLine("Invalid element \"//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/"
+                    + e.Name
+                    + ". Correct the pom.xml!");
+                pom_all_test_bad = true;
+            }
+            if (pom_all_test_bad)
+            {
+                throw new Exception();
+            }
+
 
             // grammarName is required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
             if (!pom_grammar_name.Any())
@@ -500,12 +549,6 @@
                 }
             }
 
-            // Check all other config options in antlr4-maven-plugin configuration.
-            if (pom_all_else.Any())
-            {
-                System.Console.Error.WriteLine("Antlr4 maven config contains stuff that I don't understand.");
-            }
-
             // Check existance of example files.
             if (pom_example_files.Any())
             {
@@ -543,7 +586,8 @@
                     config.case_insensitive_type = CaseInsensitiveType.Upper;
                 else if (pom_case_insensitive_type.First().ToUpper() == "LOWER")
                     config.case_insensitive_type = CaseInsensitiveType.Lower;
-                else config.case_insensitive_type = null;
+                else throw new Exception("Case fold has invalid value: '"
+                    + pom_case_insensitive_type.First() + "'.");
             }
             else config.case_insensitive_type = null;
 
