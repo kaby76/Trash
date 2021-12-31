@@ -38,8 +38,11 @@ do
 	cd ..
 done
 
-pushd trgen
-rm -f asdfasdf
-cat Command.cs | sed -e 's%public static string version = "[^"]*";%public static string version = "'$version'";%' > asdfasdf
-mv asdfasdf Command.cs
-popd
+for i in trgen trgen2
+do
+    pushd $i
+	rm -f asdfasdf
+	cat Command.cs | sed -e 's%public static string version = "[^"]*";%public static string version = "'$version'";%' > asdfasdf
+	mv asdfasdf Command.cs
+	popd
+done

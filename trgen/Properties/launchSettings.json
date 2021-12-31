@@ -2,7 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-v4-2433\\rust"
+      "commandLineArgs": "-t Go",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\issue-2452\\sql\\plsql"
     }
   }
 }

@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Eclipse",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\jav"
+      "commandLineArgs": "-f o.xml -t dfs -s c:\\msys64\\home\\Kenne\\transform\\templates",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\transform\\x"
     }
   }
 }

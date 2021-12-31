@@ -509,7 +509,7 @@
             }
             else if (config.target == "Go")
             {
-                config.name_space = "parser";
+                config.name_space = null;
             }
             else if (pom_antlr_tool_args.Contains("-package"))
             {
@@ -628,7 +628,7 @@
             string lexer_src_grammar_file_name = null;
             string lexer_generated_include_file_name = null;
 
-            per_grammar.package = (config.target == "Go" ? "parser." : "") + (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
+            per_grammar.package = (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
 
             // Let's first parse the input grammar files and gather information
             // about them. Note, people pump in all sorts of bullshit, so
@@ -645,17 +645,17 @@
                 if (File.Exists(f))
                 {
                     sgfn = f;
-                    tgfn = per_grammar.package.Replace(".", "/") + f;
+                    tgfn = per_grammar.package.Replace(".", "/") + (config.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
                 }
                 else if (File.Exists(per_grammar.source_directory + f))
                 {
                     sgfn = per_grammar.source_directory + f;
-                    tgfn = per_grammar.package.Replace(".", "/") + f;
+                    tgfn = per_grammar.package.Replace(".", "/") + (config.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
                 }
                 else if (File.Exists(config.target + "/" + f))
                 {
                     sgfn = config.target + "/" + f;
-                    tgfn = per_grammar.package.Replace(".", "/") + f;
+                    tgfn = per_grammar.package.Replace(".", "/") + (config.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
                 }
                 else
                 {
@@ -731,54 +731,56 @@
 
                 if (is_parser_grammar)
                 {
-                    var genfn = (config.target == "Go" ? "parser/" : "") + name + Suffix(config);
+                    var genfn = (config.target == "Go" ? name.Replace("Parser", "") + "/" : "") + name + Suffix(config);
                     var genincfn = name + ".h";
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
-                    var goname = "parser.New" + name;
-                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname);
+                    var goname = name.Replace("Parser","") + ".New" + name;
+                    var antlr_args = (config.target == "Go" ? "-o " + per_grammar.grammar_name + " -lib " + per_grammar.grammar_name + " -package " + per_grammar.grammar_name : "");
+                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else if (is_lexer_grammar)
                 {
-                    var genfn = (config.target == "Go" ? "parser/" : "") + name + Suffix(config);
+                    var genfn = (config.target == "Go" ? name.Replace("Lexer", "") + "/" : "") + name + Suffix(config);
                     var genincfn = name + ".h";
                     var autom_name = ((config.name_space != null && config.name_space != "")
                             ? config.name_space + '.' : "")
                         + name;
-                    var goname = "parser.New" + name;
-                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname);
+                    var goname = name.Replace("Lexer","") + ".New" + name;
+                    var antlr_args = (config.target == "Go" ? "-o " + per_grammar.grammar_name + " -lib " + per_grammar.grammar_name + " -package " + per_grammar.grammar_name : "");
+                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else
                 {
                     {
-                        var genfn = (config.target == "Go" ? "parser/" : "") + name + "Parser" + Suffix(config);
+                        var genfn = (config.target == "Go" ? name + "/" : "") + name + "Parser" + Suffix(config);
                         var genincfn = name + "Parser.h";
                         var autom_name = ((config.name_space != null && config.name_space != "")
                                 ? config.name_space + '.' : "")
                             + name
                             + "Parser";
-                        var goname = ((config.name_space != null && config.name_space != "")
-                                ? config.name_space + '.' : "")
+                        var goname = name + '.'
                             + "New" + name
                             + "Parser";
-                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname);
+                        var antlr_args = (config.target == "Go" ? "-o " + per_grammar.grammar_name + " -lib " + per_grammar.grammar_name + " -package " + per_grammar.grammar_name : "");
+                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                     {
-                        var genfn = (config.target == "Go" ? "parser/" : "") + name + "Lexer" + Suffix(config);
+                        var genfn = (config.target == "Go" ? name + "/" : "") + name + "Lexer" + Suffix(config);
                         var genincfn = name + "Lexer.h";
                         var autom_name = ((config.name_space != null && config.name_space != "")
                                 ? config.name_space + '.' : "")
                             + name
                             + "Lexer";
-                        var goname = ((config.name_space != null && config.name_space != "")
-                                 ? config.name_space + '.' : "")
+                        var goname = name + '.'
                              + "New" + name
                              + "Lexer";
-                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname);
+                        var antlr_args = (config.target == "Go" ? "-o " + per_grammar.grammar_name + " -lib " + per_grammar.grammar_name + " -package " + per_grammar.grammar_name : "");
+                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                 }
@@ -893,6 +895,7 @@
 
         string ReadAllResource(System.Reflection.Assembly a, string resourceName)
         {
+            var names = a.GetManifestResourceNames();
             using (Stream stream = a.GetManifestResourceStream(resourceName))
             using (StreamReader reader = new StreamReader(stream))
             {
@@ -910,41 +913,43 @@
                 // Construct proper starting directory based on namespace.
                 var from = path;
                 var f = from.Substring(cd.Length);
-                //// First, remove source_directory.
-                //f = (
-                //        f.StartsWith(per_grammar.source_directory)
-                //        ? f.Substring((per_grammar.source_directory).Length)
-                //        : f
-                //        );
-                // Now remove target directory.
-                f = (
-                        f.StartsWith(
-                            Command.TargetName(this.config.target) + '/')
-                        ? f.Substring((Command.TargetName(this.config.target) + '/').Length)
-                        : f
-                        );
-                // Remove "src/main/java", a royal hangover from the Maven plugin.
-                f = (
-                        f.StartsWith("src/main/java/")
-                        ? f.Substring("src/main/java".Length)
-                        : f
-                        );
-
                 string to = null;
-                if (config.name_space != null)
+                if (per_grammar.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileName).Any())
                 {
                     to = this.config.output_directory
-                        + config.name_space.Replace('.', '/') + '/'
-                        + f;
+                        + per_grammar.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileName).First();
                 }
-                if (to == null)
+                else
                 {
-                    to = this.config.output_directory
-                        + (
-                            f.StartsWith(per_grammar.source_directory)
-                            ? f.Substring(per_grammar.source_directory.Length)
+                    // Now remove target directory.
+                    f = (
+                            f.StartsWith(
+                                Command.TargetName(this.config.target) + '/')
+                            ? f.Substring((Command.TargetName(this.config.target) + '/').Length)
                             : f
                             );
+                    // Remove "src/main/java", a royal hangover from the Maven plugin.
+                    f = (
+                            f.StartsWith("src/main/java/")
+                            ? f.Substring("src/main/java".Length)
+                            : f
+                            );
+
+                    if (config.name_space != null)
+                    {
+                        to = this.config.output_directory
+                            + config.name_space.Replace('.', '/') + '/'
+                            + f;
+                    }
+                    if (to == null)
+                    {
+                        to = this.config.output_directory
+                            + (
+                                f.StartsWith(per_grammar.source_directory)
+                                ? f.Substring(per_grammar.source_directory.Length)
+                                : f
+                                );
+                    }
                 }
                 System.Console.Error.WriteLine("Copying source file from "
                   + from
@@ -965,6 +970,7 @@
                 // which were obtained by doing "cd templates/; find . -type f > files" at a Bash
                 // shell.
                 var orig_file_names = ReadAllResourceLines(a, "trgen.templates.files");
+                var prefix = "trgen.templates.";
                 var regex_string = "^(?!.*(" + AllButTargetName(config.target) + "/)).*$";
                 var regex = new Regex(regex_string);
                 var files_to_copy = orig_file_names.Where(f =>
@@ -973,9 +979,7 @@
                     if (f == "./files") return false;
                     var v = regex.IsMatch(f);
                     return v;
-                }).ToList();
-                var prefix_to_remove = "trgen.templates.";
-                System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
+                }).Select(f => f.Substring(("./").Length)).ToList();
                 var set = new HashSet<string>();
                 foreach (var file in files_to_copy)
                 {
@@ -989,15 +993,22 @@
                     {
                         continue;
                     }
-                    var to = from.StartsWith("./" + TargetName(p.config.target))
-                        ? from.Substring(("./" + TargetName(p.config.target)).Length + 1)
-                        : from.Substring(2);
-                    to = ((string)config.output_directory).Replace('\\', '/') + to;
-                    from = prefix_to_remove + from.Replace('/', '.').Substring(2);
+                    string to = null;
+                    if (from.StartsWith(config.target)) to = from.Substring(config.target.Length + 1);
+                    else to = from;
+                    if (per_grammar.tool_grammar_tuples.Where(t => from.Substring(config.target.Length) == t.OriginalSourceFileName).Select(t => t.GrammarFileName).Any())
+                    {
+                        to = this.config.output_directory
+                            + per_grammar.tool_grammar_tuples.Where(t => to == t.OriginalSourceFileName).Select(t => t.GrammarFileName).First();
+                    }
+                    else
+                    {
+                        to = (config.output_directory).Replace('\\', '/') + to;
+                    }
                     to = to.Replace('\\', '/');
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
-                    string content = ReadAllResource(a, from);
+                    string content = ReadAllResource(a, prefix + from.Replace('/','.'));
                     System.Console.Error.WriteLine("Rendering template file from "
                         + from
                         + " to "
@@ -1376,8 +1387,8 @@
                 };
             per_grammar.tool_grammar_tuples = new List<GrammarTuple>()
                 {
-                    new GrammarTuple(lexer_grammar_file_name, lexer_grammar_file_name, null, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name, ""),
-                    new GrammarTuple(parser_grammar_file_name, parser_grammar_file_name, null, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name, ""),
+                    new GrammarTuple(lexer_grammar_file_name, lexer_grammar_file_name, null, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name, "", ""),
+                    new GrammarTuple(parser_grammar_file_name, parser_grammar_file_name, null, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name, "", ""),
                 };
             per_grammar.parser_grammar_file_name = parser_grammar_file_name;
             per_grammar.lexer_grammar_file_name = lexer_grammar_file_name;

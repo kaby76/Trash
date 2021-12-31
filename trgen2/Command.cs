@@ -3,6 +3,8 @@
     using Antlr4.StringTemplate;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Dynamic;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
@@ -14,6 +16,8 @@
 
     class Command
     {
+        Config _config;
+
         public string Help()
         {
             using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trgen2.readme.md"))
@@ -23,20 +27,43 @@
             }
         }
 
-        public int Execute(Config co)
+        public int Execute(Config config)
         {
-            config = co;
-            if (config.template_sources_directory != null)
-                config.template_sources_directory = Path.GetFullPath(config.template_sources_directory);
+            _config = config;
+            string lines = null;
+            if (!(_config.File != null && _config.File != ""))
+            {
+                if (_config.Verbose)
+                {
+                    System.Console.Error.WriteLine("reading from stdin");
+                }
+                for (; ; )
+                {
+                    lines = System.Console.In.ReadToEnd();
+                    if (lines != null && lines != "") break;
+                }
+            }
+            else
+            {
+                if (_config.Verbose)
+                {
+                    System.Console.Error.WriteLine("reading from file >>>" + _config.File + "<<<");
+                }
+                lines = File.ReadAllText(_config.File);
+            }
+            var xml = string.Join("", lines);
+            // Convert xml to tree.
+            dynamic root = Antlr4.StringTemplate.Misc.DynamicXml.Parse(xml);
+            if (_config.templates != null)
+                _config.templates = Path.GetFullPath(_config.templates);
             var path = Environment.CurrentDirectory;
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             root_directory = cd;
-            GenerateSingle(cd);
+            GenerateSingle(root);
             return 0;
         }
 
-        public Config config;
-        public static string version = "0.10.0";
+        public static string version = "0.13.3";
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
         public string root_directory;
@@ -97,7 +124,7 @@
         }
 
 
-        public void GenerateSingle(string cd)
+        public void GenerateSingle(object root)
         {
             source_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             if (source_directory != "" && !source_directory.EndsWith("/"))
@@ -107,7 +134,7 @@
             try
             {
                 // Create a directory containing target build files.
-                Directory.CreateDirectory((string)config.output_directory);
+                Directory.CreateDirectory((string)_config.output_directory);
             }
             catch (Exception)
             {
@@ -116,11 +143,11 @@
             // Find all source files.
             this.all_target_files = new List<string>();
             this.all_source_files = new Domemtech.Globbing.Glob()
-                    .RegexContents(this.config.all_source_pattern)
+                    .RegexContents(this._config.all_source_pattern)
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                     .Select(f => f.FullName.Replace('\\', '/'))
                     .ToList();
-            GenFromTemplates();
+            GenFromTemplates(root);
             AddSource();
         }
 
@@ -172,7 +199,7 @@
                 string to = null;
                 if (to == null)
                 {
-                    to = this.config.output_directory
+                    to = this._config.output_directory
                         + f;
                 }
                 System.Console.Error.WriteLine("Copying source file from "
@@ -190,16 +217,16 @@
             public string AttrValue { get; set; }
         }
 
-        private void GenFromTemplates()
+        private void GenFromTemplates(object root)
         {
-            if (config.template_sources_directory == null)
+            if (_config.templates == null)
             {
                 System.Reflection.Assembly a = this.GetType().Assembly;
                 // Load resource file that contains the names of all files in templates/ directory,
                 // which were obtained by doing "cd templates/; find . -type f > files" at a Bash
                 // shell.
                 var orig_file_names = ReadAllResourceLines(a, "trgen2.templates.files");
-                var regex_string = "^(?=.*" + config.template + "/).*$";
+                var regex_string = "^(?=.*" + _config.template + "/).*$";
                 var regex = new Regex(regex_string);
                 var files_to_copy = orig_file_names.Where(f =>
                 {
@@ -211,7 +238,7 @@
                 System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
                 var resources = a.GetManifestResourceNames();
                 string param_str = ReadAllResource(a, prefix_to_remove
-                    + config.template + ".parameters.json");
+                    + _config.template + ".parameters.json");
                 var parameters = JsonSerializer.Deserialize<List<Params>>(param_str);
                 var cd = Path.GetFileName(Environment.CurrentDirectory);
                 foreach (var file in files_to_copy)
@@ -224,10 +251,10 @@
                     {
                         continue;
                     }
-                    var to = from.StartsWith("./" + config.template)
-                        ? from.Substring(("./" + config.template).Length + 1)
+                    var to = from.StartsWith("./" + _config.template)
+                        ? from.Substring(("./" + _config.template).Length + 1)
                         : from.Substring(2);
-                    to = ((string)config.output_directory).Replace('\\', '/') + to;
+                    to = ((string)_config.output_directory).Replace('\\', '/') + to;
                     from = prefix_to_remove + from.Replace('/', '.').Substring(2);
                     to = to.Replace('\\', '/');
                     to = to.Replace("#dir_name#", cd);
@@ -244,7 +271,7 @@
                         var ext = Path.GetExtension(t);
                         return suffix.Contains(ext);
                     })
-                        .Select(t => t.Substring(config.output_directory.Length))
+                        .Select(t => t.Substring(_config.output_directory.Length))
                         .ToList());
                     foreach (var pair in parameters)
                     {
@@ -257,8 +284,8 @@
             }
             else
             {
-                var regex_string = "^(?.*(files|" + config.template + "/)).*$";
-                var files_to_copy = new Domemtech.Globbing.Glob(config.template_sources_directory)
+                var regex_string = "^(.*(files|" + _config.template + "/)).*$";
+                var files_to_copy = new Domemtech.Globbing.Glob(_config.templates)
                     .RegexContents(regex_string)
                     .Where(f =>
                     {
@@ -268,7 +295,7 @@
                     })
                     .Select(f => f.FullName.Replace('\\', '/'))
                     .ToList();
-                var prefix_to_remove = config.template_sources_directory + '/';
+                var prefix_to_remove = _config.templates + '/';
                 prefix_to_remove = prefix_to_remove.Replace("\\", "/");
                 prefix_to_remove = prefix_to_remove.Replace("//", "/");
                 System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
@@ -277,10 +304,13 @@
                 {
                     var from = file;
                     var e = file.Substring(prefix_to_remove.Length);
-                    var to = e.StartsWith(config.template)
-                         ? e.Substring(config.template.Length + 1)
+                    var to = e.StartsWith(_config.template)
+                         ? e.Substring(_config.template.Length + 1)
                          : e;
-                    to = ((string)config.output_directory).Replace('\\', '/') + to;
+                    if (e == "files") continue;
+                    e = e.Substring(_config.template.Length + 1);
+                    if (e == "parameters.json") continue;
+                    to = ((string)_config.output_directory).Replace('\\', '/') + to;
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = File.ReadAllText(from);
@@ -294,8 +324,9 @@
                         var ext = Path.GetExtension(t);
                         return suffix.Contains(ext);
                     })
-                        .Select(t => t.Substring(config.output_directory.Length))
+                        .Select(t => t.Substring(_config.output_directory.Length))
                         .ToList());
+                    t.Add("root", root);
                     //t.Add("is_combined_grammar", p.tool_grammar_files.Count() == 1);
                     var o = t.Render();
                     File.WriteAllText(to, o);
@@ -362,6 +393,19 @@
                 else return code;
             }
             return code;
+        }
+    }
+
+
+    public class Goof : GetMemberBinder
+    {
+        public Goof(string name, bool ignoreCase) : base(name, ignoreCase)
+        {
+        }
+
+        public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
+        {
+            return null;
         }
     }
 }

@@ -22,6 +22,6 @@ run:
 test: FORCE
 	bash test.sh
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
-	java -jar $(JAR) -encoding <antlr_encoding> -Dlanguage=Go <antlr_tool_args:{y | <y> } > $\<
+	java -jar $(JAR) -encoding <antlr_encoding> -Dlanguage=Go <x.AntlrArgs> <antlr_tool_args:{y | <y> } > $\<
 } >
 FORCE: ;
