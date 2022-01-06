@@ -1,56 +1,13 @@
 ﻿using CommandLine;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
 namespace Trash
 {
     public class Config
     {
-        [Option("all_source_pattern", Required = false, HelpText = "R.E. for all source files to use.")]
-        public string all_source_pattern { get; set; }
-
-        [Option("antlr-encoding", Required = false, Default = "utf-8")]
-        public string antlr_encoding { get; set; }
-
-        [Option("antlr-tool-args", Required = false)]
-        public IEnumerable<string> antlr_tool_args { get; set; }
-
-        [Option("antlr-tool-path", Required = false)]
-        public string antlr_tool_path { get; set; }
-
-        [Option("case-insensitive-type", Required = false)]
-        public CaseInsensitiveType? case_insensitive_type { get; set; }
-
-        [Option("env-type", Required = false)]
-        public EnvType? env_type { get; set; }
-
-        [Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
-        public string InputFile { get; set; }
-
-        [Option("flatten", Required = false, HelpText = "Flatten files in target into non-nested directory.")]
-        public bool? flatten { get; set; }
-
-
-        [Option("go-lexer-name", Required = false, HelpText = "The name of the lexer.")]
-        public string fully_qualified_go_lexer_name { get; set; }
-
-        [Option('e', "line-translation", Required = false)]
-        public LineTranslationType? line_translation { get; set; }
-
-        [Option('m', "maven", Required = false, HelpText = "Read Antlr pom file and convert.")]
-        public bool? maven { get; set; }
-
-        [Option('n', "name-space", Required = false, HelpText = "The namespace for all generated files.")]
-        public string name_space { get; set; }
-
-        [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
-        public string output_directory { get; set; }
-
-        [Option("go-parser-name", Required = false)]
-        public string fully_qualified_go_parser_name { get; set; }
-
-        [Option("path-sep", Required = false)]
-        public PathSepType? path_sep { get; set; }
-
         [Option('x', "profile", Required = false, HelpText = "Add in Antlr profiling code.")]
         public bool? profile { get; set; }
 
@@ -60,22 +17,100 @@ namespace Trash
         [Option('t', "target", Required = false, HelpText = "The target language for the project.")]
         public string target { get; set; }
 
-        [Option("template-sources-directory", Required = false)]
-        public string template_sources_directory { get; set; }
+        [Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
+        public string InputFile { get; set; }
 
-        [Option("skip-pattern", Required = false, HelpText ="Replacement for skip-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
+        [Option("antlr-tool-path", Required = false)]
+        public string antlr_tool_path { get; set; }
+
+        [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
+        public string output_directory { get; set; }
+
+        [Option("template-sources-directory", Required = false)]
+        public string template_sources_directory { get { return _template_sources_directory; } set { value = Path.GetFullPath(value); } }
+        public string _template_sources_directory;
+
+        [Option("skip-pattern", Required = false, HelpText = "Replacement for skip-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
         public string skip_pattern { get; set; }
 
-	    [Option("todo-pattern", Required = false, HelpText ="Replacement for todo-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
-	    public string todo_pattern { get; set; }
-
-        [Option('g', "tool-grammar-files-pattern", Required = false, HelpText = "A list of vertical bar separated grammar file paths.")]
-        public string tool_grammar_files_pattern { get; set; }
-
-        [Option("watchdog-timeout", Required = false, Default = 60)]
-        public int? watchdog_timeout { get; set; }
+        [Option("todo-pattern", Required = false, HelpText = "Replacement for todo-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
+        public string todo_pattern { get; set; }
 
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
+
+
+
+
+        public string all_source_pattern { get; set; }
+        public string antlr_encoding { get; set; }
+        public IEnumerable<string> antlr_tool_args { get; set; }
+        public CaseInsensitiveType? case_insensitive_type { get; set; }
+        public EnvType? env_type { get; set; }
+        public bool? flatten { get; set; }
+        public string fully_qualified_go_lexer_name { get; set; }
+        public LineTranslationType? line_translation { get; set; }
+        public bool? maven { get; set; }
+        public string name_space { get; set; }
+        public string fully_qualified_go_parser_name { get; set; }
+        public PathSepType? path_sep { get; set; }
+        public string tool_grammar_files_pattern { get; set; }
+        public int? watchdog_timeout { get; set; }
+        public string ignore_string = null;
+        public string SetupFfn = ".trgen.rc";
+        public string root_directory;
+
+        public Config()
+        {
+            // Get default from OS, or just default.
+            this.line_translation = Command.GetLineTranslationType();
+            this.env_type = Command.GetEnvType();
+            this.path_sep = Command.GetPathSep();
+            this.antlr_tool_path = Command.GetAntlrToolPath();
+            this.target = "CSharp";
+            this.tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
+            this.output_directory = "Generated/";
+            this.flatten = false;
+            this.all_source_pattern =
+                     "^(?!.*(" +
+                      (ignore_string != null ? ignore_string + "|" : "")
+                      + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
+                      + Command.AllButTargetName(this.target)
+                      + "/)).+"
+                      + "$"; // Get any defaults from ~/.trgen.rc
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + SetupFfn))
+            {
+                var jsonString = System.IO.File.ReadAllText(home + Path.DirectorySeparatorChar + SetupFfn);
+                var o = JsonSerializer.Deserialize<Config>(jsonString);
+                var ty = typeof(Config);
+                foreach (var prop in ty.GetProperties())
+                {
+                    if (prop.GetValue(o, null) != null)
+                    {
+                        prop.SetValue(this, prop.GetValue(o, null));
+                    }
+                }
+            }
+            var path = Environment.CurrentDirectory;
+            string cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
+            this.root_directory = cd;
+            if (this.maven == null)
+            {
+                maven = File.Exists(cd + Path.DirectorySeparatorChar + @"pom.xml");
+            }
+        }
+
+        public Config(Config copy)
+        {
+            var ty = typeof(Config);
+            foreach (var prop in ty.GetProperties())
+            {
+                if (prop.GetValue(copy, null) != null)
+                {
+                    prop.SetValue(this, prop.GetValue(copy, null));
+                }
+            }
+        }
     }
 }

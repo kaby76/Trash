@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-t antlr4 abbLexer.g4 abbParser.g4",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\grammars-issue-2390\\abb"
+      "commandLineArgs": "PlSqlParser.g4",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\issue-2452\\sql\\plsql-for-csharp"
     }
   }
 }
