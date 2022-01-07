@@ -1357,11 +1357,6 @@
                     };
             else
                 per_grammar.tool_src_grammar_files = new HashSet<string>();
-            per_grammar.tool_grammar_files = new List<string>()
-                {
-                    lexer_grammar_file_name,
-                    parser_grammar_file_name
-                };
             per_grammar.generated_files = new List<string>()
                 {
                     lexer_generated_file_name,
@@ -1369,9 +1364,10 @@
                 };
             per_grammar.tool_grammar_tuples = new List<GrammarTuple>()
                 {
-                    new GrammarTuple(lexer_grammar_file_name, lexer_grammar_file_name, null, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name, "", ""),
-                    new GrammarTuple(parser_grammar_file_name, parser_grammar_file_name, null, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name, "", ""),
+                    new GrammarTuple(lexer_grammar_file_name, lexer_grammar_file_name, per_grammar.grammar_name, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name, "", ""),
+                    new GrammarTuple(parser_grammar_file_name, parser_grammar_file_name, per_grammar.grammar_name, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name, "", ""),
                 };
+            per_grammar.tool_grammar_files = per_grammar.tool_grammar_tuples.Select(t => t.GrammarFileName).ToHashSet().ToList();
             per_grammar.parser_grammar_file_name = parser_grammar_file_name;
             per_grammar.lexer_grammar_file_name = lexer_grammar_file_name;
             if (per_grammar.start_rule == null)
