@@ -68,14 +68,6 @@ namespace Trash
             result.WithParsed(o =>
             {
                 config = o;
-                if (File.Exists(cgen.ignore_file_name))
-                {
-                    var ignore = new StringBuilder();
-                    var lines = File.ReadAllLines(cgen.ignore_file_name);
-                    var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
-                    o.ignore_string = string.Join("|", ignore_lines);
-                }
-
                 // Overwrite the defaults with what was passed on the command line.
                 var ty = typeof(Config);
                 foreach (var prop in ty.GetProperties())

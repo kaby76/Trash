@@ -7,7 +7,7 @@ import (
     "io"
     "time"
     "github.com/antlr/antlr4/runtime/Go/antlr"
-    "example.com/myparser/<grammar_name>"
+    "example.com/myparser/<package_name>"
 <if (case_insensitive_type)>
     "example.com/myparser/antlr_resource"
 <endif>
@@ -85,14 +85,14 @@ func main() {
             t := lexer.NextToken()
             fmt.Print(j)
             fmt.Print(" ")
-            fmt.Println(t.String())
+            // missing fmt.Println(t.String())
+            fmt.Println(t.GetText())
             if t.GetTokenType() == antlr.TokenEOF {
                 break
             }
             j = j + 1
         }
-        // missing
-        // lexer.reset()
+        // missing lexer.Reset()
     }
     // Requires additional 0??
     var tokens = antlr.NewCommonTokenStream(lexer, 0)

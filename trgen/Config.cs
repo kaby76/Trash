@@ -19,19 +19,8 @@ namespace Trash
         public string target
         {
             get { return _backing_target; }
-            set {
-                _backing_target = value;
-                all_source_pattern = "^(?!.*(" +
-                    (ignore_string != null ? ignore_string + "|" : "")
-                    + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
-                    + Command.AllButTargetName(this.target)
-                    + "/)).+"
-                    + "$";
-            }
+            set { _backing_target = value; }
         }
-
-        [Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
-        public string InputFile { get; set; }
 
         [Option("antlr-tool-path", Required = false)]
         public string antlr_tool_path { get; set; }
@@ -52,27 +41,15 @@ namespace Trash
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
 
-
-
-        private string _backing_all_source_pattern;
-        public string all_source_pattern {
-            get { return _backing_all_source_pattern; }
-            set { _backing_all_source_pattern = value; }
-        }
-        public string antlr_encoding { get; set; }
         public IEnumerable<string> antlr_tool_args { get; set; }
-        public CaseInsensitiveType? case_insensitive_type { get; set; }
         public EnvType? env_type { get; set; }
         public bool? flatten { get; set; }
-        public string fully_qualified_go_lexer_name { get; set; }
         public LineTranslationType? line_translation { get; set; }
         public bool? maven { get; set; }
         public string name_space { get; set; }
-        public string fully_qualified_go_parser_name { get; set; }
         public PathSepType? path_sep { get; set; }
         public string tool_grammar_files_pattern { get; set; }
         public int? watchdog_timeout { get; set; }
-        public string ignore_string = null;
         public string SetupFfn = ".trgen.rc";
         public string root_directory;
 
@@ -87,14 +64,6 @@ namespace Trash
             this.tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
             this.output_directory = "Generated/";
             this.flatten = false;
-            this.antlr_encoding = "utf-8";
-            this.all_source_pattern =
-                     "^(?!.*(" +
-                      (ignore_string != null ? ignore_string + "|" : "")
-                      + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
-                      + Command.AllButTargetName(this.target)
-                      + "/)).+"
-                      + "$"; // Get any defaults from ~/.trgen.rc
             this.watchdog_timeout = 60;
             if (target == "Go")
             {
