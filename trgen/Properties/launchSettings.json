@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-s bbb",
+      "commandLineArgs": "-s bbb -t Java",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\foo"
     }
   }

@@ -703,8 +703,10 @@
                 if (is_parser_grammar)
                 {
                     //var genfn = (_config.target == "Go" ? name.Replace("Parser", "") + "/" : "") + name + Suffix(_config);
-                    var genfn = per_grammar.package + "/" + name + Suffix(_config);
-                    var genincfn = per_grammar.package + "/" + name + ".h";
+                    var p1 = per_grammar.package.Replace("/", ".");
+                    var pre1 = p1 == "" ? "" : p1 + "/";
+                    var genfn = p1 + name + Suffix(_config);
+                    var genincfn = p1 + name + ".h";
                     var p2 = per_grammar.package.Replace("/", ".");
                     var pre2 = p2 == "" ? "" : p2 + ".";
                     var autom_name = pre2 + name;
@@ -716,8 +718,10 @@
                 else if (is_lexer_grammar)
                 {
                     //var genfn = (_config.target == "Go" ? name.Replace("Lexer", "") + "/" : "") + name + Suffix(_config);
-                    var genfn = per_grammar.package + "/" + name + Suffix(_config);
-                    var genincfn = per_grammar.package + "/" + name + ".h";
+                    var p1 = per_grammar.package.Replace("/", ".");
+                    var pre1 = p1 == "" ? "" : p1 + "/";
+                    var genfn = p1 + name + Suffix(_config);
+                    var genincfn = p1 + name + ".h";
                     var p2 = per_grammar.package.Replace("/", ".");
                     var pre2 = p2 == "" ? "" : p2 + ".";
                     var autom_name = pre2 + name;
@@ -730,8 +734,10 @@
                 {
                     {
                         //var genfn = (_config.target == "Go" ? name + "/" : "") + name + "Parser" + Suffix(_config);
-                        var genfn = per_grammar.package + "/" + name + "Parser" + Suffix(_config);
-                        var genincfn = per_grammar.package + "/" + name + "Parser.h";
+                        var p1 = per_grammar.package.Replace("/", ".");
+                        var pre1 = p1 == "" ? "" : p1 + "/";
+                        var genfn = p1 + name + "Parser" + Suffix(_config);
+                        var genincfn = p1 + name + "Parser.h";
                         var p2 = per_grammar.package.Replace("/", ".");
                         var pre2 = p2 == "" ? "" : p2 + ".";
                         var autom_name = pre2
@@ -746,8 +752,10 @@
                     }
                     {
                         //var genfn = (_config.target == "Go" ? name + "/" : "") + name + "Lexer" + Suffix(_config);
-                        var genfn = per_grammar.package + "/" + name + "Lexer" + Suffix(_config);
-                        var genincfn = per_grammar.package + "/" + name + "Lexer.h";
+                        var p1 = per_grammar.package.Replace("/", ".");
+                        var pre1 = p1 == "" ? "" : p1 + "/";
+                        var genfn = p1 + name + "Lexer" + Suffix(_config);
+                        var genincfn = p1 + name + "Lexer.h";
                         var p2 = per_grammar.package.Replace("/", ".");
                         var pre2 = p2 == "" ? "" : p2 + ".";
                         var autom_name = pre2
