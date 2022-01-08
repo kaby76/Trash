@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Go -s zip",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\test\\test"
+      "commandLineArgs": "-s bbb",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\foo"
     }
   }
 }
