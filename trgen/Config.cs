@@ -96,6 +96,14 @@ namespace Trash
                       + "/)).+"
                       + "$"; // Get any defaults from ~/.trgen.rc
             this.watchdog_timeout = 60;
+            if (target == "Go")
+            {
+                name_space = "parser";
+            }
+            else
+            {
+                name_space = null;
+            }
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + SetupFfn))
             {

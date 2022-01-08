@@ -482,15 +482,7 @@
             // -package arg specified; source top level
             //   => keep .g4 at top level, generate to directory
             //      corresponding to arg.
-            if (_config.target == "JavaScript" || _config.target == "Dart")
-            {
-                _config.name_space = null;
-            }
-            else if (_config.target == "Go")
-            {
-                _config.name_space = null;
-            }
-            else if (pom_antlr_tool_args.Contains("-package"))
+            if (pom_antlr_tool_args.Contains("-package"))
             {
                 var ns = pom_antlr_tool_args[pom_antlr_tool_args.IndexOf("-package") + 1];
                 _config.name_space = ns;
@@ -498,10 +490,6 @@
             else if (pom_package_name.Any())
             {
                 _config.name_space = pom_package_name.First();
-            }
-            else
-            {
-                _config.name_space = null;
             }
 
             // entryPoint required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
@@ -598,7 +586,6 @@
                 }
             }
 
-
             string lexer_generated_file_name = null;
             string parser_src_grammar_file_name = null;
             string parser_grammar_file_name = null;
@@ -608,6 +595,7 @@
             string lexer_generated_include_file_name = null;
 
             per_grammar.package = (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
+            per_grammar.package = _config.target == "Go" ? "parser" : per_grammar.package;
 
             // Let's first parse the input grammar files and gather information
             // about them. Note, people pump in all sorts of bullshit, so
@@ -624,17 +612,18 @@
                 if (File.Exists(f))
                 {
                     sgfn = f;
-                    tgfn = per_grammar.package.Replace(".", "/") + (_config.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
+                    //tgfn = per_grammar.package.Replace(".", "/") + (_config.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
+                    tgfn = per_grammar.package.Replace(".", "/") + "/" + f;
                 }
                 else if (File.Exists(per_grammar.source_directory + f))
                 {
                     sgfn = per_grammar.source_directory + f;
-                    tgfn = per_grammar.package.Replace(".", "/") + (_config.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
+                    tgfn = per_grammar.package.Replace(".", "/") + "/" + f;
                 }
                 else if (File.Exists(_config.target + "/" + f))
                 {
                     sgfn = _config.target + "/" + f;
-                    tgfn = per_grammar.package.Replace(".", "/") + (_config.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
+                    tgfn = per_grammar.package.Replace(".", "/") + "/" + f;
                 }
                 else
                 {
@@ -710,55 +699,53 @@
 
                 if (is_parser_grammar)
                 {
-                    var genfn = (_config.target == "Go" ? name.Replace("Parser", "") + "/" : "") + name + Suffix(_config);
-                    var genincfn = name + ".h";
-                    var autom_name = ((_config.name_space != null && _config.name_space != "")
-                            ? _config.name_space + '.' : "")
-                        + name;
-                    var goname = name.Replace("Parser","") + ".New" + name;
-                    var antlr_args = (_config.target == "Go" ? "-o " + per_grammar.grammar_name + " -lib " + per_grammar.grammar_name + " -package " + per_grammar.grammar_name : "");
+                   //var genfn = (_config.target == "Go" ? name.Replace("Parser", "") + "/" : "") + name + Suffix(_config);
+                    var genfn = per_grammar.package + "/" + name + Suffix(_config);
+                    var genincfn = per_grammar.package + "/" + name + ".h";
+                    var autom_name = per_grammar.package.Replace("/", ".") + "." + name;
+                    var goname = per_grammar.package.Replace("/", ".") + "." + "New" + name;
+                    var antlr_args = (_config.target == "Go" ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : "");
                     var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else if (is_lexer_grammar)
                 {
-                    var genfn = (_config.target == "Go" ? name.Replace("Lexer", "") + "/" : "") + name + Suffix(_config);
-                    var genincfn = name + ".h";
-                    var autom_name = ((_config.name_space != null && _config.name_space != "")
-                            ? _config.name_space + '.' : "")
-                        + name;
-                    var goname = name.Replace("Lexer","") + ".New" + name;
-                    var antlr_args = (_config.target == "Go" ? "-o " + per_grammar.grammar_name + " -lib " + per_grammar.grammar_name + " -package " + per_grammar.grammar_name : "");
+                    //var genfn = (_config.target == "Go" ? name.Replace("Lexer", "") + "/" : "") + name + Suffix(_config);
+                    var genfn = per_grammar.package + "/" + name + Suffix(_config);
+                    var genincfn = per_grammar.package + "/" + name + ".h";
+                    var autom_name = per_grammar.package.Replace("/",".") + "." + name;
+                    var goname = per_grammar.package.Replace("/", ".") + "." + "New" + name;
+                    var antlr_args = (_config.target == "Go" ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : "");
                     var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else
                 {
                     {
-                        var genfn = (_config.target == "Go" ? name + "/" : "") + name + "Parser" + Suffix(_config);
-                        var genincfn = name + "Parser.h";
-                        var autom_name = ((_config.name_space != null && _config.name_space != "")
-                                ? _config.name_space + '.' : "")
-                            + name
+                        //var genfn = (_config.target == "Go" ? name + "/" : "") + name + "Parser" + Suffix(_config);
+                        var genfn = per_grammar.package + "/" + name + "Parser" + Suffix(_config);
+                        var genincfn = per_grammar.package + "/" + name + "Parser.h";
+                        var autom_name = per_grammar.package.Replace("/", ".")
+                            + "." + name
                             + "Parser";
-                        var goname = name + '.'
-                            + "New" + name
+                        var goname = per_grammar.package.Replace("/", ".")
+                            + "." + "New" + name
                             + "Parser";
-                        var antlr_args = (_config.target == "Go" ? "-o " + per_grammar.grammar_name + " -lib " + per_grammar.grammar_name + " -package " + per_grammar.grammar_name : "");
+                        var antlr_args = (_config.target == "Go" ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : "");
                         var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                     {
-                        var genfn = (_config.target == "Go" ? name + "/" : "") + name + "Lexer" + Suffix(_config);
-                        var genincfn = name + "Lexer.h";
-                        var autom_name = ((_config.name_space != null && _config.name_space != "")
-                                ? _config.name_space + '.' : "")
-                            + name
+                        //var genfn = (_config.target == "Go" ? name + "/" : "") + name + "Lexer" + Suffix(_config);
+                        var genfn = per_grammar.package + "/" + name + "Lexer" + Suffix(_config);
+                        var genincfn = per_grammar.package + "/" + name + "Lexer.h";
+                        var autom_name = per_grammar.package.Replace("/", ".")
+                            + "." + name
                             + "Lexer";
-                        var goname = name + '.'
-                             + "New" + name
+                        var goname = per_grammar.package.Replace("/", ".")
+                             + "." + "New" + name
                              + "Lexer";
-                        var antlr_args = (_config.target == "Go" ? "-o " + per_grammar.grammar_name + " -lib " + per_grammar.grammar_name + " -package " + per_grammar.grammar_name : "");
+                        var antlr_args = (_config.target == "Go" ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : "");
                         var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
