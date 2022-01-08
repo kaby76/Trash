@@ -14,8 +14,21 @@ namespace Trash
         [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
         public string start_rule { get; set; }
 
+        private string _backing_target;
         [Option('t', "target", Required = false, HelpText = "The target language for the project.")]
-        public string target { get; set; }
+        public string target
+        {
+            get { return _backing_target; }
+            set {
+                _backing_target = value;
+                all_source_pattern = "^(?!.*(" +
+                    (ignore_string != null ? ignore_string + "|" : "")
+                    + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
+                    + Command.AllButTargetName(this.target)
+                    + "/)).+"
+                    + "$";
+            }
+        }
 
         [Option('f', "file", Required = false, HelpText = "The name of an input file to parse.")]
         public string InputFile { get; set; }
@@ -26,9 +39,9 @@ namespace Trash
         [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
         public string output_directory { get; set; }
 
+        private string _backing_template_sources_directory;
         [Option("template-sources-directory", Required = false)]
-        public string template_sources_directory { get { return _template_sources_directory; } set { value = Path.GetFullPath(value); } }
-        public string _template_sources_directory;
+        public string template_sources_directory { get { return _backing_template_sources_directory; } set { value = Path.GetFullPath(value); } }
 
         [Option("skip-pattern", Required = false, HelpText = "Replacement for skip-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
         public string skip_pattern { get; set; }
@@ -41,8 +54,11 @@ namespace Trash
 
 
 
-
-        public string all_source_pattern { get; set; }
+        private string _backing_all_source_pattern;
+        public string all_source_pattern {
+            get { return _backing_all_source_pattern; }
+            set { _backing_all_source_pattern = value; }
+        }
         public string antlr_encoding { get; set; }
         public IEnumerable<string> antlr_tool_args { get; set; }
         public CaseInsensitiveType? case_insensitive_type { get; set; }
@@ -71,6 +87,7 @@ namespace Trash
             this.tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
             this.output_directory = "Generated/";
             this.flatten = false;
+            this.antlr_encoding = "utf-8";
             this.all_source_pattern =
                      "^(?!.*(" +
                       (ignore_string != null ? ignore_string + "|" : "")
@@ -78,6 +95,7 @@ namespace Trash
                       + Command.AllButTargetName(this.target)
                       + "/)).+"
                       + "$"; // Get any defaults from ~/.trgen.rc
+            this.watchdog_timeout = 60;
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + SetupFfn))
             {
