@@ -21,4 +21,4 @@ make sure to enclose the argument as it contains semi-colons.
 
 # Current version
 
-0.13.3 -- (setting up for next release, nothing yet).
+0.13.3 -- updates to trgen for Go.

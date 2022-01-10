@@ -12,4 +12,4 @@ Print out the tokens for the parse tree.
 
 # Current version
 
-0.13.3 -- (setting up for next release, nothing yet).
+0.13.3 -- updates to trgen for Go.

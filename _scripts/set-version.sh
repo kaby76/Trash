@@ -33,7 +33,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- (setting up for next release, nothing yet).%" > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- updates to trgen for Go.%" > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
