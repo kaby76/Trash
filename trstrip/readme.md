@@ -13,4 +13,4 @@ of all comments, labels, and action blocks.
 
 # Current version
 
-0.13.3 -- updates to trgen for Go.
+0.13.4 -- updates to trgen for Go.

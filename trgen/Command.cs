@@ -50,7 +50,7 @@
 
 
         public Config _config;
-        public static string version = "0.13.3";
+        public static string version = "0.13.4";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1004,6 +1004,13 @@
                     })
                         .Select(t => t.Substring(p._config.output_directory.Length))
                         .ToList());
+			        t.Add("additional_sources", per_grammar.all_target_files.Where(t =>
+			        {
+				        var ext = Path.GetExtension(t);
+				        return Suffix(_config).Contains(ext);
+			        })
+			              .Select(t => t.Substring(p._config.output_directory.Length))
+					        .ToList());
                     t.Add("antlr_encoding", per_grammar.antlr_encoding);
                     t.Add("antlr_tool_args", _config.antlr_tool_args);
                     t.Add("antlr_tool_path", _config.antlr_tool_path);
@@ -1025,7 +1032,7 @@
                     t.Add("is_combined_grammar", per_grammar.tool_grammar_files.Count() == 1);
                     t.Add("lexer_grammar_file", per_grammar.lexer_grammar_file_name);
                     t.Add("lexer_name", per_grammar.fully_qualified_lexer_name);
-                    t.Add("name_space", per_grammar.package.Replace("/","."));
+                    t.Add("name_space", per_grammar.package.Replace("/", "."));
                     t.Add("package_name", per_grammar.package.Replace(".", "/"));
                     t.Add("os_win", (EnvType)p._config.env_type == EnvType.Windows);
                     t.Add("parser_name", per_grammar.fully_qualified_parser_name);
@@ -1113,8 +1120,8 @@
                     t.Add("grammar_name", per_grammar.grammar_name);
                     t.Add("has_name_space", p._config.name_space != null);
                     t.Add("is_combined_grammar", per_grammar.tool_grammar_files.Count() == 1);
-                    t.Add("lexer_name", per_grammar.fully_qualified_lexer_name);
                     t.Add("lexer_grammar_file", per_grammar.lexer_grammar_file_name);
+		    t.Add("lexer_name", per_grammar.fully_qualified_lexer_name);
                     t.Add("name_space", per_grammar.package.Replace("/", "."));
                     t.Add("package_name", per_grammar.package.Replace(".", "/"));
                     t.Add("os_win", (EnvType)p._config.env_type == EnvType.Windows);

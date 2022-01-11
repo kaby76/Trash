@@ -30,7 +30,7 @@ namespace Trash
 
         private string _backing_template_sources_directory;
         [Option("template-sources-directory", Required = false)]
-        public string template_sources_directory { get { return _backing_template_sources_directory; } set { value = Path.GetFullPath(value); } }
+        public string template_sources_directory { get { return _backing_template_sources_directory; } set { _backing_template_sources_directory = Path.GetFullPath(value); } }
 
         [Option("skip-pattern", Required = false, HelpText = "Replacement for skip-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
         public string skip_pattern { get; set; }
