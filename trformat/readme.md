@@ -12,4 +12,4 @@ Read stdin and format the grammar.
 
 # Current version
 
-0.13.6 -- updates to trgen for Go.
+0.13.7 -- updates to trgen for Go.

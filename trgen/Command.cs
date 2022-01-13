@@ -50,7 +50,7 @@
 
 
         public Config _config;
-        public static string version = "0.13.6";
+        public static string version = "0.13.7";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -700,6 +700,13 @@
                     throw new Exception();
                 }
 
+                // The following code computes the names of the parser and lexer generated files,
+                // grammar name, constructor to call, etc. It duplicates some of the code in the Antlr
+                // tool:
+                // https://github.com/antlr/antlr4/blob/1b144fa7b40f6d1177c9e4f400a6a04f4103d02e/tool/src/org/antlr/v4/codegen/Target.java#L433
+                // => https://github.com/antlr/antlr4/blob/1b144fa7b40f6d1177c9e4f400a6a04f4103d02e/tool/src/org/antlr/v4/tool/Grammar.java#L595
+                // => https://github.com/antlr/antlr4/blob/1b144fa7b40f6d1177c9e4f400a6a04f4103d02e/tool/src/org/antlr/v4/tool/Grammar.java#L1164
+                // => https://github.com/antlr/antlr4/blob/1b144fa7b40f6d1177c9e4f400a6a04f4103d02e/tool/src/org/antlr/v4/codegen/target/GoTarget.java#L118
                 if (is_parser_grammar)
                 {
                     //var genfn = (_config.target == "Go" ? name.Replace("Parser", "") + "/" : "") + name + Suffix(_config);
@@ -778,37 +785,93 @@
                 {
                     {
                         //var genfn = (_config.target == "Go" ? name + "/" : "") + name + "Parser" + Suffix(_config);
-                        var p1 = per_grammar.package.Replace("/", ".");
+                        var p1 = per_grammar.package;
                         var pre1 = p1 == "" ? "" : p1 + "/";
-                        var genfn = pre1 + name + "Parser" + Suffix(_config);
-                        var genincfn = pre1 + name + "Parser.h";
                         var p2 = per_grammar.package.Replace("/", ".");
                         var pre2 = p2 == "" ? "" : p2 + ".";
-                        var autom_name = pre2
-                            + name
-                            + "Parser";
-                        var goname = pre2
-                            + "New" + name
-                            + "Parser";
-                        var antlr_args = (_config.target == "Go" ? (_config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package : "") + " -package " + per_grammar.package : "");
+                        string genfn; // name of the generated parser/lexer file in the output directory.
+                        string genincfn; // name of the include file for parser/lexer, for C++.
+                        string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
+                        string autom_name; // The name of the parser or lexer function, fully qualified with package.
+                        string goname; // The name of the parser or lexer functionj for Go.
+                        if (_config.target == "Go")
+                        {
+                            genfn = pre1 + name.ToLower() + "_parser" + Suffix(_config);
+                            genincfn = "";
+                            autom_name = pre2
+                               + name
+                               + "Parser";
+                            goname = pre2
+                              + "New" + name
+                              + "Parser";
+                            if (per_grammar.package != null && per_grammar.package != "")
+                                antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                            else
+                                antlr_args = "";
+                            autom_name = pre2 + name;
+                            goname = pre2 + "New" + name;
+                        }
+                        else
+                        {
+                            genfn = pre1 + name + "Parser" + Suffix(_config);
+                            genincfn = pre1 + name + "Parser.h";
+                            autom_name = pre2
+                               + name
+                               + "Parser";
+                            goname = "";
+                            if (per_grammar.package != null && per_grammar.package != "")
+                                antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                            else
+                                antlr_args = "";
+                            autom_name = pre2 + name;
+                            goname = "";
+                        }
                         var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                     {
                         //var genfn = (_config.target == "Go" ? name + "/" : "") + name + "Lexer" + Suffix(_config);
-                        var p1 = per_grammar.package.Replace("/", ".");
+                        var p1 = per_grammar.package;
                         var pre1 = p1 == "" ? "" : p1 + "/";
-                        var genfn = pre1 + name + "Lexer" + Suffix(_config);
-                        var genincfn = pre1 + name + "Lexer.h";
                         var p2 = per_grammar.package.Replace("/", ".");
                         var pre2 = p2 == "" ? "" : p2 + ".";
-                        var autom_name = pre2
-                            + name
-                            + "Lexer";
-                        var goname = pre2
-                             + "New" + name
-                             + "Lexer";
-                        var antlr_args = (_config.target == "Go" ? (_config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package : "") + " -package " + per_grammar.package : "");
+                        string genfn; // name of the generated parser/lexer file in the output directory.
+                        string genincfn; // name of the include file for parser/lexer, for C++.
+                        string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
+                        string autom_name; // The name of the parser or lexer function, fully qualified with package.
+                        string goname; // The name of the parser or lexer functionj for Go.
+                        if (_config.target == "Go")
+                        {
+                            genfn = pre1 + name.ToLower() + "_lexer" + Suffix(_config);
+                            genincfn = "";
+                            autom_name = pre2
+                               + name
+                               + "Lexer";
+                            goname = pre2
+                              + "New" + name
+                              + "Lexer";
+                            if (per_grammar.package != null && per_grammar.package != "")
+                                antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                            else
+                                antlr_args = "";
+                            autom_name = pre2 + name;
+                            goname = pre2 + "New" + name;
+                        }
+                        else
+                        {
+                            genfn = pre1 + name + "Lexer" + Suffix(_config);
+                            genincfn = pre1 + name + "Lexer.h";
+                            autom_name = pre2
+                               + name
+                               + "Lexer";
+                            goname = "";
+                            if (per_grammar.package != null && per_grammar.package != "")
+                                antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                            else
+                                antlr_args = "";
+                            autom_name = pre2 + name;
+                            goname = "";
+                        }
                         var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
@@ -1072,7 +1135,7 @@
                     t.Add("go_parser_name", per_grammar.fully_qualified_go_parser_name);
                     t.Add("grammar_file", per_grammar.tool_grammar_files.First());
                     t.Add("grammar_name", per_grammar.grammar_name);
-                    t.Add("has_name_space", p._config.name_space != null);
+                    t.Add("has_name_space", per_grammar.package != null && per_grammar.package != "");
                     t.Add("is_combined_grammar", per_grammar.tool_grammar_files.Count() == 1);
                     t.Add("lexer_grammar_file", per_grammar.lexer_grammar_file_name);
                     t.Add("lexer_name", per_grammar.fully_qualified_lexer_name);
@@ -1162,10 +1225,10 @@
                     t.Add("go_parser_name", per_grammar.fully_qualified_go_parser_name);
                     t.Add("grammar_file", per_grammar.tool_grammar_files.First());
                     t.Add("grammar_name", per_grammar.grammar_name);
-                    t.Add("has_name_space", p._config.name_space != null);
+                    t.Add("has_name_space", per_grammar.package != null && per_grammar.package != "");
                     t.Add("is_combined_grammar", per_grammar.tool_grammar_files.Count() == 1);
                     t.Add("lexer_grammar_file", per_grammar.lexer_grammar_file_name);
-		    t.Add("lexer_name", per_grammar.fully_qualified_lexer_name);
+		            t.Add("lexer_name", per_grammar.fully_qualified_lexer_name);
                     t.Add("name_space", per_grammar.package.Replace("/", "."));
                     t.Add("package_name", per_grammar.package.Replace(".", "/"));
                     t.Add("os_win", (EnvType)p._config.env_type == EnvType.Windows);
