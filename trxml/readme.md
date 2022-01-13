@@ -12,4 +12,4 @@ Read a tree from stdin and write an XML represenation of it.
 
 # Current version
 
-0.13.4 -- updates to trgen for Go.
+0.13.6 -- updates to trgen for Go.

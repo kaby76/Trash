@@ -57,4 +57,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.13.4 -- updates to trgen for Go.
+0.13.6 -- updates to trgen for Go.

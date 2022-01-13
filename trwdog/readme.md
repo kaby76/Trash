@@ -12,4 +12,4 @@ Execute a command with a watchdog timer.
 
 # Current version
 
-0.13.4 -- updates to trgen for Go.
+0.13.6 -- updates to trgen for Go.
