@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Java",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-upstream\\abb"
+      "commandLineArgs": "-t Dart",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\issue-2452\\fen"
     }
   }
 }

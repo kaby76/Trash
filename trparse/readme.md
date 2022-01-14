@@ -40,4 +40,4 @@ the `--type` command-line option:
 
 # Current version
 
-0.13.7 -- updates to trgen for Go.
+0.13.8 -- updates to trgen for Go.

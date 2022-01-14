@@ -50,7 +50,7 @@
 
 
         public Config _config;
-        public static string version = "0.13.7";
+        public static string version = "0.13.8";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -808,8 +808,6 @@
                                 antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                             else
                                 antlr_args = "";
-                            autom_name = pre2 + name;
-                            goname = pre2 + "New" + name;
                         }
                         else
                         {
@@ -823,8 +821,6 @@
                                 antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                             else
                                 antlr_args = "";
-                            autom_name = pre2 + name;
-                            goname = "";
                         }
                         var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                         per_grammar.tool_grammar_tuples.Add(g);
@@ -854,8 +850,6 @@
                                 antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                             else
                                 antlr_args = "";
-                            autom_name = pre2 + name;
-                            goname = pre2 + "New" + name;
                         }
                         else
                         {
@@ -869,8 +863,6 @@
                                 antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                             else
                                 antlr_args = "";
-                            autom_name = pre2 + name;
-                            goname = "";
                         }
                         var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                         per_grammar.tool_grammar_tuples.Add(g);
