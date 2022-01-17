@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "PlSqlParser.g4",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\issue-2452\\sql\\plsql-for-csharp"
+      "commandLineArgs": "-input \"8*4/2\"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\sol"
     }
   }
 }
