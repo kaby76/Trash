@@ -45,5 +45,5 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.13.8 -- updates to trgen for Go.
+0.14.0 -- updates to trgen for PHP.
 
