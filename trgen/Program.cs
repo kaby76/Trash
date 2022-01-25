@@ -80,15 +80,6 @@ namespace Trash
 
                 if (o.target != null && o.target == "Antlr4cs") config.name_space = "Test";
             });
-            if (config.maven != null && !(bool)config.maven)
-            {
-                if (config.start_rule == null || config.start_rule == "")
-                {
-                    System.Console.Error.WriteLine("Missing --start-rule option.");
-                    Program.DisplayHelp(result, new List<Error>() { new MyError() });
-                    stop = true;
-                }
-            }
             if (stop) return;
 
             return_value = cgen.Execute(config);

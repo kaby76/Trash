@@ -66,7 +66,7 @@
                 "Go" => ".go",
                 "Java" => ".java",
                 "JavaScript" => ".js",
-                "Php" => ".php",
+                "PHP" => ".php",
                 "Python2" => ".py",
                 "Python3" => ".py",
                 "Swift" => ".swift",
@@ -157,7 +157,7 @@
                 "Go" => "Go",
                 "Java" => "Java",
                 "JavaScript" => "JavaScript",
-                "Php" => "Php",
+                "PHP" => "PHP",
                 "Python2" => "Python2",
                 "Python3" => "Python3",
                 "Swift" => "Swift",
@@ -597,6 +597,13 @@
 
         public void Doit(PerGrammar per_grammar, HashSet<string> merged_list)
         {
+            if ((_config.start_rule == null || _config.start_rule == "") && !merged_list.Any())
+            {
+                merged_list = new HashSet<string>() { "Arithmetic.g4" };
+                _config.start_rule = "file_";
+                per_grammar.start_rule = _config.start_rule;
+            }
+
             // Let's first parse the input grammar files and gather information
             // about them. Note, people pump in all sorts of bullshit, so
             // be ready to handle the worse of the worse.
@@ -609,40 +616,71 @@
                 // except possibley in the "source directory".
                 string sgfn;  // Where the grammar is.
                 string tgfn; // Where the grammar existed in the generated output parser directory.
+                Workspaces.Document doc = null;
+                LanguageServer.ParsingResults pr = null;
+                Workspaces.Workspace workspace = null;
                 var p = per_grammar.package.Replace(".", "/");
                 var pre = p == "" ? "" : p + "/";
-                if (File.Exists(f))
+                if (f == "Arithmetic.g4")
                 {
                     sgfn = f;
-                    //tgfn = per_grammar.package.Replace(".", "/") + (_config.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
                     tgfn = pre + f;
-                }
-                else if (File.Exists(per_grammar.source_directory + f))
-                {
-                    sgfn = per_grammar.source_directory + f;
-                    tgfn = pre + f;
-                }
-                else if (File.Exists(_config.target + "/" + f))
-                {
-                    sgfn = _config.target + "/" + f;
-                    tgfn = pre + f;
+                    string code = null;
+                    if (_config.template_sources_directory == null)
+                    {
+                        System.Reflection.Assembly a = this.GetType().Assembly;
+                        code = ReadAllResource(a, "trgen.templates." + f);
+                    }
+                    else
+                    {
+                        code = File.ReadAllText(f);
+                    }
+                    doc = Docs.Class1.CreateDoc(sgfn, code);
+                    pr = LanguageServer.ParsingResultsFactory.Create(doc);
+                    workspace = doc.Workspace;
+                    _ = new LanguageServer.Module().Compile(workspace);
+                    if (pr.Errors.Any())
+                    {
+                        System.Console.Error.WriteLine("Your grammar "
+                            + sgfn
+                            + " does not compile as an Antlr4 grammar! Please check it.");
+                        throw new Exception();
+                    }
                 }
                 else
                 {
-                    System.Console.Error.WriteLine("Error in pom.xml: <include>" + f + "</include> is for a file that does not exist.");
-                    throw new Exception();
-                }
-
-                var doc = Docs.Class1.ReadDoc(sgfn);
-                var pr = LanguageServer.ParsingResultsFactory.Create(doc);
-                var workspace = doc.Workspace;
-                _ = new LanguageServer.Module().Compile(workspace);
-                if (pr.Errors.Any())
-                {
-                    System.Console.Error.WriteLine("Your grammar "
-                        + sgfn
-                        + " does not compile as an Antlr4 grammar! Please check it.");
-                    throw new Exception();
+                    if (File.Exists(f))
+                    {
+                        sgfn = f;
+                        //tgfn = per_grammar.package.Replace(".", "/") + (_config.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
+                        tgfn = pre + f;
+                    }
+                    else if (File.Exists(per_grammar.source_directory + f))
+                    {
+                        sgfn = per_grammar.source_directory + f;
+                        tgfn = pre + f;
+                    }
+                    else if (File.Exists(_config.target + "/" + f))
+                    {
+                        sgfn = _config.target + "/" + f;
+                        tgfn = pre + f;
+                    }
+                    else
+                    {
+                        System.Console.Error.WriteLine("Unknown grammar file" + f);
+                        throw new Exception();
+                    }
+                    doc = Docs.Class1.ReadDoc(sgfn);
+                    pr = LanguageServer.ParsingResultsFactory.Create(doc);
+                    workspace = doc.Workspace;
+                    _ = new LanguageServer.Module().Compile(workspace);
+                    if (pr.Errors.Any())
+                    {
+                        System.Console.Error.WriteLine("Your grammar "
+                            + sgfn
+                            + " does not compile as an Antlr4 grammar! Please check it.");
+                        throw new Exception();
+                    }
                 }
 
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -1346,7 +1384,7 @@
             foreach (var t in per_grammar.tool_grammar_tuples)
             {
                 var f = t.OriginalSourceFileName;
-                var doc = Docs.Class1.ReadDoc(f);
+                var doc = Docs.Class1._workspace.FindDocument(f);
                 var pr = LanguageServer.ParsingResultsFactory.Create(doc);
                 workspace = doc.Workspace;
             }
@@ -1354,7 +1392,7 @@
             foreach (var t in per_grammar.tool_grammar_tuples)
             {
                 var f = t.OriginalSourceFileName;
-                var doc = Docs.Class1.ReadDoc(f);
+                var doc = Docs.Class1._workspace.FindDocument(f);
                 var pr = LanguageServer.ParsingResultsFactory.Create(doc);
                 workspace = doc.Workspace;
                 var imports = pr.Imports;

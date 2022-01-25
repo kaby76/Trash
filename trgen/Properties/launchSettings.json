@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Dart",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\issue-2452\\fen"
+      "commandLineArgs": "-t PHP -s f",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\test"
     }
   }
 }
