@@ -1,6 +1,6 @@
 #!/bin/bash
 
-directories=`find . -maxdepth 1 -type d`
+directories=`find . -maxdepth 1 -type d -name "tr*"`
 for i in $directories
 do
 	if [ "$i" == "." ]

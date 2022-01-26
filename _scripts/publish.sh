@@ -1,5 +1,5 @@
 version=0.14.0
-directories=`find . -maxdepth 1 -type d`
+directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
 for i in $directories
 do
@@ -7,7 +7,7 @@ do
 	then
 		continue
 	fi
-	cd $cwd/$i
+	cd "$cwd/$i"
 	if [[ "$?" != "0" ]]
 	then
 		continue

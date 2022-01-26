@@ -2,8 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t PHP -s f",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\test"
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\issue-2488\\kotlin\\kotlin"
     }
   }
 }

@@ -3,7 +3,7 @@
 version=""
 #version="--version 0.8.1"
 
-directories=`find . -maxdepth 1 -type d`
+directories=`find . -maxdepth 1 -type d -name "tr*"`
 for i in $directories
 do
 	if [ "$i" == "." ]
@@ -22,8 +22,15 @@ do
 		cd ..
 		continue
 	fi
+	trxml2 "$i.csproj" | grep -i PackAsTool 2> /dev/null 1> /dev/null
+	if [[ "$?" != "0" ]]
+	then
+		cd ..
+		continue
+	fi
 	echo $i
 	tool=${i##*/}
 	dotnet tool install -g $tool $version > /dev/null 2>&1
+	$tool --version
 	cd ..
 done

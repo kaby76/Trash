@@ -50,7 +50,7 @@
 
 
         public Config _config;
-        public static string version = "0.14.0";
+        public static string version = "0.14.1";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -465,7 +465,8 @@
             }
             if (pom_all_test_bad)
             {
-                throw new Exception();
+                // Disable for now.
+                // throw new Exception();
             }
 
 
@@ -550,14 +551,20 @@
                 per_grammar.source_directory = "";
             }
 
+            per_grammar.case_insensitive_type = null;
             if (pom_case_insensitive_type.Any())
             {
                 if (pom_case_insensitive_type.First().ToUpper() == "UPPER")
                     per_grammar.case_insensitive_type = CaseInsensitiveType.Upper;
                 else if (pom_case_insensitive_type.First().ToUpper() == "LOWER")
                     per_grammar.case_insensitive_type = CaseInsensitiveType.Lower;
-                else throw new Exception("Case fold has invalid value: '"
+                else
+                {
+                    System.Console.Error.WriteLine("Case fold has invalid value: '"
                     + pom_case_insensitive_type.First() + "'.");
+                }
+                //else throw new Exception("Case fold has invalid value: '"
+                //    + pom_case_insensitive_type.First() + "'.");
             }
             else per_grammar.case_insensitive_type = null;
 

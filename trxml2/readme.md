@@ -12,4 +12,4 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 # Current version
 
-0.14.0 -- updates to trgen for PHP.
+0.14.1 -- updates to trgen for PHP.

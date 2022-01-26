@@ -36,6 +36,12 @@ do
 		cd ..
 		continue
 	fi
+	trxml2 "$i.csproj" | grep -i PackAsTool 2> /dev/null 1> /dev/null
+	if [[ "$?" != "0" ]]
+	then
+		cd ..
+		continue
+	fi
 	tool=${i##*/}
 	if [[ -d "$cwd/$tool/bin/Debug/" ]]
 	then

@@ -1,6 +1,6 @@
-version="0.14.0"
+version="0.14.1"
 
-directories=`find . -maxdepth 1 -type d`
+directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
 for i in $directories
 do
@@ -20,6 +20,11 @@ do
 		continue
 	fi
 	if [[ ! -f "$i.csproj" ]]
+	then
+		continue
+	fi
+	trxml2 "$i.csproj" | grep -i PackAsTool 2> /dev/null 1> /dev/null
+	if [[ "$?" != "0" ]]
 	then
 		continue
 	fi

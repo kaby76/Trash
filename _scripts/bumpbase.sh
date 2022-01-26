@@ -2,7 +2,7 @@
 
 version_antlr="3.3.0"
 version_tree="4.1.0"
-directories=`find . -maxdepth 1 -type d`
+directories=`find . -maxdepth 1 -type d -name "tr*"`
 for i in $directories
 do
 	if [ "$i" == "." ]
@@ -18,9 +18,14 @@ do
 	fi
 	if [[ ! -f "$i.csproj" ]]
 	then
-		echo $i
-		echo nope
-		exit 1
+		cd ..
+		continue
+	fi
+	trxml2 "$i.csproj" | grep -i PackAsTool 2> /dev/null 1> /dev/null
+	if [[ "$?" != "0" ]]
+	then
+		cd ..
+		continue
 	fi
 	echo $i
 	echo ${i##*/}

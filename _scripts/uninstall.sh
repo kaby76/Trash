@@ -1,27 +1,24 @@
 #!/bin/bash
 
-directories=`find . -maxdepth 1 -type d`
+directories=`find . -maxdepth 1 -type d -name "tr*"`
+cwd=`pwd`
 for i in $directories
 do
 	if [ "$i" == "." ]
 	then
 		continue
 	fi
-	cd $i
+	cd "$cwd/$i"
 	csproj=`find . -maxdepth 1 -name '*.csproj'`
 	if [[ "$csproj" == "" ]]
 	then
-		cd ..
 		continue
 	fi
 	if [[ ! -f "$i.csproj" ]]
 	then
-		echo $i
-		echo nope
-		exit 1
+		continue
 	fi
 	echo $i
 	tool=${i##*/}
 	dotnet tool uninstall -g $tool
-	cd ..
 done
