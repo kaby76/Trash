@@ -435,7 +435,8 @@
             }
             if (pom_all_else_bad)
             {
-                throw new Exception();
+                // Disable for now.
+                // throw new Exception();
             }
 
 
