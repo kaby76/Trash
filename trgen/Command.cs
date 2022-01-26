@@ -176,7 +176,7 @@
                 "Go",
                 "Java",
                 "JavaScript",
-                "Php",
+                "PHP",
                 "Python2",
                 "Python3",
                 "Swift",
