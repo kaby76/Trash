@@ -3,6 +3,8 @@
 version=""
 #version="--version 0.8.1"
 
+dotnet tool install -g trxml2 $version > /dev/null 2>&1
+
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 for i in $directories
 do
