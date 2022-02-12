@@ -97,4 +97,4 @@ The original grammars are left unchanged.
 
 # Current version
 
-0.14.1 -- updates to trgen for PHP.
+0.14.2 -- updates to trxgrep.

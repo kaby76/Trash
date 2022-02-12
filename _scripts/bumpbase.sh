@@ -1,7 +1,7 @@
 #!/bin/bash
 
 version_antlr="3.3.0"
-version_tree="4.1.0"
+version_tree="4.2.0"
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 for i in $directories
 do

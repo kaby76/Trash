@@ -13,4 +13,4 @@ specified, the line number range for the tree is printed.
 
 # Current version
 
-0.14.1 -- updates to trgen for PHP.
+0.14.2 -- updates to trxgrep.

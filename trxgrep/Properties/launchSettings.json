@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \" //parserRuleSpec[*//TOKEN_REF/text()='EOF']/RULE_REF\"",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\grammars-issue-2390\\abb"
+      "commandLineArgs": "-f o.pt \"//expr/@ChildCount\"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\e\\Generated"
     }
   }
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31605.320
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrJson", "AntlrJson\AntlrJson.csproj", "{3CFDC502-53C4-4112-A4F1-026B52EAF492}"
 EndProject
@@ -95,6 +95,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trull", "trull\trull.csproj", "{8A875F76-D1CF-4F31-BF8B-E483507538D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgen2", "trgen2\trgen2.csproj", "{0CD827AB-5266-4FE4-A662-EC15802CA07C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tritext", "tritext\tritext.csproj", "{442F9D45-76FD-4334-B92D-24FB9D8C37C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -271,6 +273,10 @@ Global
 		{0CD827AB-5266-4FE4-A662-EC15802CA07C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CD827AB-5266-4FE4-A662-EC15802CA07C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CD827AB-5266-4FE4-A662-EC15802CA07C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{442F9D45-76FD-4334-B92D-24FB9D8C37C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{442F9D45-76FD-4334-B92D-24FB9D8C37C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{442F9D45-76FD-4334-B92D-24FB9D8C37C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{442F9D45-76FD-4334-B92D-24FB9D8C37C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

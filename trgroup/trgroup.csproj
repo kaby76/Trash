@@ -16,13 +16,13 @@ This program is part of the Trash toolkit.]]>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>0.14.1</Version>
+    <Version>0.14.2</Version>
     <RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/trgroup</RepositoryUrl> 
     <RepositoryType>git</RepositoryType> 
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.3" />
-    <PackageReference Include="AntlrTreeEditing" Version="4.1.0" />
+    <PackageReference Include="AntlrTreeEditing" Version="4.2.0" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />

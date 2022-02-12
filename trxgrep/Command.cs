@@ -78,7 +78,7 @@
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, l.ToArray())
                         .Select(x => (x.NativeValue)).ToArray();
-                    if (config.Verbose) System.Console.Error.WriteLine("Result size " + nodes.Count());
+		            if (config.Verbose) System.Console.Error.WriteLine("Result size " + nodes.Count());
                     List<IParseTree> res = new List<IParseTree>();
                     foreach(var v in nodes)
                     {
@@ -87,6 +87,20 @@
                             var q = v as AntlrTreeEditing.AntlrDOM.AntlrElement;
                             IParseTree r = q.AntlrIParseTree;
                             res.Add(r);
+                        }
+                        else if (v is AntlrTreeEditing.AntlrDOM.AntlrText)
+                        {
+                            var q = v as AntlrTreeEditing.AntlrDOM.AntlrText;
+                            var s = q.AntlrIParseTree.GetText();
+                            do_rs = false;
+                            System.Console.Error.WriteLine(s);
+                        }
+                        else if (v is AntlrTreeEditing.AntlrDOM.AntlrAttr)
+                        {
+                            var q = v as AntlrTreeEditing.AntlrDOM.AntlrAttr;
+                            var s = q.Value;
+                            do_rs = false;
+                            System.Console.Error.WriteLine(s);
                         }
                         else
                         {

@@ -12,4 +12,4 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 # Current version
 
-0.14.1 -- updates to trgen for PHP.
+0.14.2 -- updates to trxgrep.

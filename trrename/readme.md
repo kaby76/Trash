@@ -21,4 +21,4 @@ make sure to enclose the argument as it contains semi-colons.
 
 # Current version
 
-0.14.1 -- updates to trgen for PHP.
+0.14.2 -- updates to trxgrep.

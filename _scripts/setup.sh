@@ -17,6 +17,7 @@ else
 fi
 echo "$machine"
 echo "$cwd"
+dotnet tool install -g trxml2
 directories=`find . -maxdepth 1 -type d`
 for i in $directories
 do
