@@ -74,9 +74,14 @@
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
                 {
-                    var l = atrees.Select(t => ate.FindDomNode(t));
+                    //IEnumerable<AntlrTreeEditing.AntlrDOM.AntlrNode> l = atrees.Select(t => ate.FindDomNode(t));
+                    List<AntlrTreeEditing.AntlrDOM.AntlrNode> a1 = new List<AntlrTreeEditing.AntlrDOM.AntlrNode>();
+                    a1.Add(dynamicContext.Document);
+                    List<AntlrTreeEditing.AntlrDOM.AntlrNode> a = new List<AntlrTreeEditing.AntlrDOM.AntlrNode>();
+                    a.Add(dynamicContext.Document);
+                    AntlrTreeEditing.AntlrDOM.AntlrNode[] l = a.ToArray();
                     var nodes = engine.parseExpression(expr,
-                            new StaticContextBuilder()).evaluate(dynamicContext, l.ToArray())
+                            new StaticContextBuilder()).evaluate(dynamicContext, l)
                         .Select(x => (x.NativeValue)).ToArray();
 		            if (config.Verbose) System.Console.Error.WriteLine("Result size " + nodes.Count());
                     List<IParseTree> res = new List<IParseTree>();
@@ -101,6 +106,12 @@
                             var s = q.Value;
                             do_rs = false;
                             System.Console.Error.WriteLine(s);
+                        }
+                        else if (v is AntlrTreeEditing.AntlrDOM.AntlrDocument)
+                        {
+                            var q = v as AntlrTreeEditing.AntlrDOM.AntlrDocument;
+                            do_rs = false;
+                            System.Console.Error.WriteLine(v);
                         }
                         else
                         {

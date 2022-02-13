@@ -2,7 +2,7 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//expr/@ChildCount\"",
+      "commandLineArgs": "-f o.pt \"/\"",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\e\\Generated"
     }
   }
