@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"/\"",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\e\\Generated"
+      "commandLineArgs": "-f o.pt \"//classDeclaration/concat(./identifier/IDENTIFIER/text(), ' ', ./classBody/classBodyDeclaration/memberDeclaration/fieldDeclaration/typeType/classOrInterfaceType/identifier/IDENTIFIER/text())\"",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-upstream\\java\\java\\Generated"
     }
   }
 }
