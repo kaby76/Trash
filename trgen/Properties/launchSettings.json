@@ -2,7 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\issue-2488\\kotlin\\kotlin"
+      "commandLineArgs": "-s s",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\e"
     }
   }
 }

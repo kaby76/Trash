@@ -11,8 +11,12 @@ namespace Trash
         [Option('x', "profile", Required = false, HelpText = "Add in Antlr profiling code.")]
         public bool? profile { get; set; }
 
+        // This is for overriding pom.xml, or for non-pom grammars.
         [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
         public string start_rule { get; set; }
+
+        [Option('g', "grammar-name", Required = false, HelpText = "Grammar for parse.")]
+        public string grammar_name { get; set; }
 
         private string _backing_target;
         [Option('t', "target", Required = false, HelpText = "The target language for the project.")]

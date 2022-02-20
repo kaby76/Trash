@@ -50,7 +50,7 @@
 
 
         public Config _config;
-        public static string version = "0.14.2";
+        public static string version = "0.14.3";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -728,7 +728,6 @@
                 var is_lexer_grammar = grammarDecl.grammarType()?.LEXER() != null;
                 var is_combined = !is_parser_grammar && !is_lexer_grammar;
                 var name = grammarDecl.identifier().GetText();
-                per_grammar.grammar_name = name;
                 if (!(is_combined && !is_parser_grammar && !is_lexer_grammar
                     || !is_combined && is_parser_grammar && !is_lexer_grammar
                     || !is_combined && !is_parser_grammar && is_lexer_grammar))
@@ -787,7 +786,7 @@
                         autom_name = pre2 + name;
                         goname = "";
                     }
-                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
+                    var g = new GrammarTuple(GrammarTuple.Type.Parser, sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else if (is_lexer_grammar)
@@ -824,7 +823,7 @@
                         autom_name = pre2 + name;
                         goname = "";
                     }
-                    var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
+                    var g = new GrammarTuple(GrammarTuple.Type.Lexer, sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                     per_grammar.tool_grammar_tuples.Add(g);
                 }
                 else
@@ -868,7 +867,7 @@
                             else
                                 antlr_args = "";
                         }
-                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
+                        var g = new GrammarTuple(GrammarTuple.Type.Parser, sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                     {
@@ -910,10 +909,26 @@
                             else
                                 antlr_args = "";
                         }
-                        var g = new GrammarTuple(sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
+                        var g = new GrammarTuple(GrammarTuple.Type.Lexer, sgfn, tgfn, name, genfn, genincfn, autom_name, goname, antlr_args);
                         per_grammar.tool_grammar_tuples.Add(g);
                     }
                 }
+            }
+
+            // Pick a damn grammar if none specified. If more than one fuck it.
+            if (per_grammar.grammar_name == null)
+            {
+                var a = per_grammar.tool_grammar_tuples.Where(t => t.WhatType == GrammarTuple.Type.Parser).FirstOrDefault()?.GrammarName;
+                if (a != null) per_grammar.grammar_name = a;
+                if (per_grammar.grammar_name == null)
+                {
+                    var b = per_grammar.tool_grammar_tuples.Where(t => t.WhatType == GrammarTuple.Type.Combined).FirstOrDefault()?.GrammarName;
+                    if (b != null) per_grammar.grammar_name = b;
+                }
+            }
+            if (per_grammar.grammar_name == null)
+            {
+                throw new Exception("Can't figure out the grammar name.");
             }
 
             // Sort tool_grammar_tuples because there are dependencies!
@@ -927,11 +942,15 @@
             // Antlr tool, and the other to test the generated parser.
             per_grammar.fully_qualified_parser_name =
                 per_grammar.tool_grammar_tuples
-                .Where(t => t.GrammarAutomName.EndsWith("Parser"))
+                .Where(t => t.WhatType == GrammarTuple.Type.Parser &&
+                    (t.GrammarName == per_grammar.grammar_name + "Parser"
+                    || t.GrammarName == per_grammar.grammar_name) )
                 .Select(t => t.GrammarAutomName).First();
             per_grammar.fully_qualified_go_parser_name =
                 per_grammar.tool_grammar_tuples
-                .Where(t => t.GrammarAutomName.EndsWith("Parser"))
+                .Where(t => t.WhatType == GrammarTuple.Type.Parser &&
+                    (t.GrammarName == per_grammar.grammar_name + "Parser"
+                     || t.GrammarName == per_grammar.grammar_name) )
                 .Select(t => t.GrammarGoNewName).First();
 
             // Where the parser generated code lives.

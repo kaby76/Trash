@@ -143,8 +143,7 @@ namespace Trash
 
         public virtual ICollection<EventType> GetSupportedEvents()
         {
-            return JavaCollectionsUtil.UnmodifiableSet(new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(
-                EventType.RENDER_TEXT)));
+            return null;
         }
 
         /// <summary>Returns the result so far.</summary>
