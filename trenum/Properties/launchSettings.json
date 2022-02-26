@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trull": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trull"
+    }
+  }
+}
