@@ -50,4 +50,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.14.3 -- updates to trgen for multiple parser grammars.
+0.14.3 -- updates to trxgrep, trgen.

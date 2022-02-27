@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-s s",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\e"
+      "commandLineArgs": "-t Go",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\current\\tests"
     }
   }
 }
