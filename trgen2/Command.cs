@@ -63,7 +63,7 @@
             return 0;
         }
 
-        public static string version = "0.14.3";
+        public static string version = "0.15.0";
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
         public string root_directory;

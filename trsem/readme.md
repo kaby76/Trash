@@ -12,4 +12,4 @@ Read a static semantics spec file and generate code.
 
 # Current version
 
-0.14.3 -- updates to trxgrep, trgen.
+0.15.0 -- updates to trgen.

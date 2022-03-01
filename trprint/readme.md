@@ -12,4 +12,4 @@ Read stdin and print out the text for the tree.
 
 # Current version
 
-0.14.3 -- updates to trxgrep, trgen.
+0.15.0 -- updates to trgen.

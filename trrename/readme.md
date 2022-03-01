@@ -21,4 +21,4 @@ make sure to enclose the argument as it contains semi-colons.
 
 # Current version
 
-0.14.3 -- updates to trxgrep, trgen.
+0.15.0 -- updates to trgen.

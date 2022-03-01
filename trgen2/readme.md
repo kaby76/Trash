@@ -13,4 +13,4 @@ The generated parser is placed in the directory <current-directory>/Generated/.
 
 # Current version
 
-0.14.3 -- updates to trxgrep, trgen.
+0.15.0 -- updates to trgen.
