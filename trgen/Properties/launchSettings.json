@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Go",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\current\\tests"
+      "commandLineArgs": "-t PHP",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\current\\grammars-v4\\swift-fin"
     }
   }
 }
