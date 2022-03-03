@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "-t PHP",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\current\\grammars-v4\\swift-fin"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\current\\tests"
     }
   }
 }

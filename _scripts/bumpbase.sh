@@ -1,7 +1,7 @@
 #!/bin/bash
 
 framework="net6.0"
-version_antlr="3.3.0"
+version_antlr="3.4.0"
 version_tree="4.2.0"
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 for i in $directories
