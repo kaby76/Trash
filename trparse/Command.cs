@@ -37,11 +37,11 @@ namespace Trash
             // Etc.
 
             var path = Environment.CurrentDirectory + Path.DirectorySeparatorChar;
-            var full_path = path + "Generated/bin/Debug/net5.0/";
+            var full_path = path + "Generated/bin/Debug/net6.0/";
             var exists = File.Exists(full_path + "Test.dll");
             if (!exists)
             {
-                full_path = path + "bin/Debug/net5.0/";
+                full_path = path + "bin/Debug/net6.0/";
                 exists = File.Exists(full_path + "Test.dll");
             }
 
