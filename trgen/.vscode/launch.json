@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net5.0/dotnet_antlr.dll",
+            "program": "${workspaceFolder}/bin/Debug/net6.0/dotnet_antlr.dll",
             "args": ["-m","true", "-t", "CSharp", "--template-sources-directory", "../_scripts/templates/"],
             "cwd": "/mnt/c/Users/kenne/Documents/GitHub/fixed-grammars-v4/abb",
             "console": "internalConsole",

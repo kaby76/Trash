@@ -12,4 +12,4 @@ Read a tree from stdin and write an XML represenation of it.
 
 # Current version
 
-0.15.0 -- updates to trgen.
+0.15.0 -- Upgrade to net6.

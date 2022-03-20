@@ -13,4 +13,4 @@ of all comments, labels, and action blocks.
 
 # Current version
 
-0.15.0 -- updates to trgen.
+0.15.0 -- Upgrade to net6.

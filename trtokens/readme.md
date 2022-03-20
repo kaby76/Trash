@@ -12,4 +12,4 @@ Print out the tokens for the parse tree.
 
 # Current version
 
-0.15.0 -- updates to trgen.
+0.15.0 -- Upgrade to net6.

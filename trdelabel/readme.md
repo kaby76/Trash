@@ -14,4 +14,4 @@ Remove all labels from an Antlr4 grammar.
 
 # Current version
 
-0.15.0 -- updates to trgen.
+0.15.0 -- Upgrade to net6.

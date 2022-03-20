@@ -12,4 +12,4 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 # Current version
 
-0.15.0 -- updates to trgen.
+0.15.0 -- Upgrade to net6.

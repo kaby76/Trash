@@ -12,3 +12,6 @@ clean:
 	-bash _scripts/uninstall.sh
 	-bash _scripts/unsetup.sh
 	-rm -rf nuget.config
+
+publish:
+	bash _scripts/publish.sh
