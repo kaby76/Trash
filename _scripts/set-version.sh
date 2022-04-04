@@ -1,4 +1,4 @@
-version="0.15.0"
+version="0.15.1"
 
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
@@ -38,7 +38,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- Upgrade to net6.%" > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- Update CSharp templates.%" > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
