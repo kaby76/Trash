@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/__init__.py",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issue\\grammars-v4\\python\\python3\\Generated"
+      "commandLineArgs": "test.in",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\so71698815\\Generated"
     }
   }
 }

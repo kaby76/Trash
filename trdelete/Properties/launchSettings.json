@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "trdelete": {
+      "commandName": "Project",
+      "commandLineArgs": "-f c:\\msys64\\home\\Kenne\\api-changes\\csharp\\Generated\\o.pt \"//class_body\""
+    }
+  }
+}
