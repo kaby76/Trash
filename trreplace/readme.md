@@ -20,4 +20,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.15.0 -- Upgrade to net6.
+0.15.1 -- Update CSharp templates.

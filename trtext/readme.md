@@ -13,4 +13,4 @@ specified, the line number range for the tree is printed.
 
 # Current version
 
-0.15.0 -- Upgrade to net6.
+0.15.1 -- Update CSharp templates.

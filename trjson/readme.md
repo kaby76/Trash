@@ -12,4 +12,4 @@ Read a tree from stdin and write a JSON represenation of it.
 
 # Current version
 
-0.15.0 -- Upgrade to net6.
+0.15.1 -- Update CSharp templates.

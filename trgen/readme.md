@@ -17,4 +17,4 @@ create a parser for the Arithmetic.g4 grammar.
 
 # Current version
 
-0.15.0 -- Upgrade to net6.
+0.15.1 -- Update CSharp templates.

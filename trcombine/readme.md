@@ -97,4 +97,4 @@ The original grammars are left unchanged.
 
 # Current version
 
-0.15.0 -- Upgrade to net6.
+0.15.1 -- Update CSharp templates.
