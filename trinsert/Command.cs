@@ -134,6 +134,7 @@
                             tokstream.Seek(i);
                             ts.Text = new_buffer;
                             text = new_buffer;
+                            tokstream.Text = new_buffer;
                             for (; ; )
                             {
                                 if (i >= tokstream.Size) break;
@@ -143,11 +144,20 @@
                                 var (line, col) = LanguageServer.Util.GetLineColumn(old_indices[i], text);
                                 tok.Line = line;
                                 tok.Column = col;
+                                tok.StartIndex += add;
+                                tok.StopIndex += add;
                                 ++i;
                             }
                         }
                     }
                     var after_tokens = tokstream.GetTokens();
+
+                    StringBuilder sb = new StringBuilder();
+                    TreeEdits.Reconstruct(sb, trees[0], new Dictionary<TerminalNodeImpl, string>());
+                    var jjj = sb.ToString();
+
+                    var kkk = OutputTokens(trees[0]);
+
                     var tuple = new ParsingResultSet()
                     {
                         Text = text,
@@ -163,5 +173,27 @@
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);
         }
+
+        private string OutputTokens(IParseTree tree)
+        {
+            Stack<IParseTree> stack = new Stack<IParseTree>();
+            stack.Push(tree);
+            StringBuilder sb = new StringBuilder();
+            while (stack.Any())
+            {
+                var n = stack.Pop();
+                if (n is TerminalNodeImpl term)
+                {
+                    sb.AppendLine(term.Symbol.ToString());
+                }
+                else
+                    for (int i = n.ChildCount - 1; i >= 0; i--)
+                    {
+                        stack.Push(n.GetChild(i));
+                    }
+            }
+            return sb.ToString();
+        }
+
     }
 }
