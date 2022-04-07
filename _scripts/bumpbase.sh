@@ -1,8 +1,8 @@
 #!/bin/bash
 
 framework="net6.0"
-version_antlr="3.6.0"
-version_tree="4.4.0"
+version_base="3.5.0"
+version_tree="4.5.0"
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 for i in $directories
 do
@@ -33,7 +33,7 @@ do
 	rm -f asdfasdf
 	cat *.csproj | sed -e "s%<TargetFramework>.*</TargetFramework>%<TargetFramework>"$framework"</TargetFramework>%" > asdfasdf
 	mv asdfasdf *.csproj	
-	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version_antlr\"%" > asdfasdf
+	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version_base\"%" > asdfasdf
 	mv asdfasdf *.csproj	
 	cat *.csproj | sed -e "s%\"AntlrTreeEditing\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"$version_tree\"%" > asdfasdf
 	mv asdfasdf *.csproj	

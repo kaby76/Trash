@@ -11,6 +11,9 @@ namespace Trash
         [Option('a', "after", Required = false, Default = false)]
         public bool After { get; set; }
 
+        [Option('t', "as-tree", Required = false, Default = false)]
+        public bool AsTree { get; set; }
+
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
 

@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Text.Json;
 
     class Command
@@ -55,52 +56,106 @@
             serializeOptions.WriteIndented = true;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
-            var docs = new List<Workspaces.Document>();
             foreach (var parse_info in data)
             {
+                var trees = parse_info.Nodes;
                 var text = parse_info.Text;
                 var fn = parse_info.FileName;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream;
-                var doc = Docs.Class1.CreateDoc(parse_info);
-                docs.Add(doc);
-            }
-            foreach (var doc in docs)
-            {
-                var pr = LanguageServer.ParsingResultsFactory.Create(doc);
-                var workspace = doc.Workspace;
-                _ = new LanguageServer.Module().Compile(workspace);
-                var text = doc.Code;
-                var fn = doc.FullPath;
-                var tree = doc.ParseTree;
-                var parser = pr.Parser;
-                var lexer = pr.Lexer;
+                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+                var before_tokens = tokstream.GetTokens();
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                IParseTree root = tree;
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
+                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
                 {
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
 
-                    Dictionary<string, string> res;
-                    if (config.After)
-                        res = LanguageServer.Transform.InsertAfter(nodes, str, doc);
-                    else
-                        res = LanguageServer.Transform.InsertBefore(nodes, str, doc);
-                    Docs.Class1.EnactEdits(res);
-                    var pr2 = ParsingResultsFactory.Create(doc);
-                    IParseTree pt2 = pr2.ParseTree;
+                    foreach (var node in nodes)
+                    {
+                        var leaf = TreeEdits.Frontier(node).First();
+                        // There are two ways to insert text: as a token/tree node,
+                        // or in the intertoken character range between tokens in the
+                        // token stream. Both have issues, but
+                        // there are differences.
+
+                        if (config.AsTree)
+                        {
+                            throw new System.NotImplementedException();
+                            //AltAntlr.MyToken myToken = new AltAntlr.MyToken()
+                            //{
+                            //    Type = type,
+                            //    StartIndex = start,
+                            //    StopIndex = stop,
+                            //    Line = line,
+                            //    Column = column,
+                            //    Channel = channel,
+                            //    TokenIndex = token_index
+                            //};
+                            // All this code needs to be rewritten.
+                            // We need to create a AltAntlr.MyToken,
+                            // My
+                            //TerminalNodeImpl inserted_node;
+                            //if (config.After)
+                            //    inserted_node = TreeEdits.InsertAfter(node, str);
+                            //else
+                            //    inserted_node = TreeEdits.InsertBefore(node, str);
+                            //// Fix tokstream.
+                            //var token = inserted_node.Payload;
+                        }
+                        else
+                        {
+                            // Insert in the char stream and adjust tokens.
+                            var t = node.Payload as AltAntlr.MyToken;
+                            var ts = t.InputStream as AltAntlr.MyCharStream;
+                            var old_buffer = ts.Text;
+                            var index = LanguageServer.Util.GetIndex(t.Line, t.Column, old_buffer);
+                            var add = str.Length;
+                            var new_buffer = old_buffer.Insert(index, str);
+                            var start = leaf.Payload.StartIndex;
+                            Dictionary<int,int> old_indices = new Dictionary<int,int>();
+                            var i = start;
+                            tokstream.Seek(i);
+                            for (; ; )
+                            {
+                                if (i >= tokstream.Size) break;
+                                var tt = tokstream.Get(i);
+                                if (tt.Type == -1) break;
+                                var tok = tt as AltAntlr.MyToken;
+                                var line = tok.Line;
+                                var col = tok.Column;
+                                var i2 = LanguageServer.Util.GetIndex(line, col, old_buffer);
+                                old_indices[i] = i2;
+                                ++i;
+                            }
+                            i = start;
+                            tokstream.Seek(i);
+                            ts.Text = new_buffer;
+                            text = new_buffer;
+                            for (; ; )
+                            {
+                                if (i >= tokstream.Size) break;
+                                var tt = tokstream.Get(i);
+                                if (tt.Type == -1) break;
+                                var tok = tt as AltAntlr.MyToken;
+                                var (line, col) = LanguageServer.Util.GetLineColumn(old_indices[i], text);
+                                tok.Line = line;
+                                tok.Column = col;
+                                ++i;
+                            }
+                        }
+                    }
+                    var after_tokens = tokstream.GetTokens();
                     var tuple = new ParsingResultSet()
                     {
-                        Text = doc.Code,
-                        FileName = doc.FullPath,
-                        Stream = pr2.TokStream,
-                        Nodes = new IParseTree[] { pt2 },
-                        Lexer = pr2.Lexer,
-                        Parser = pr2.Parser
+                        Text = text,
+                        FileName = fn,
+                        Stream = tokstream,
+                        Nodes = trees,
+                        Lexer = lexer,
+                        Parser = parser
                     };
                     results.Add(tuple);
                 }

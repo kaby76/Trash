@@ -12,4 +12,4 @@ Read stdin and print out the text for the tree.
 
 # Current version
 
-0.15.1 -- Update CSharp templates.
+0.15.2 -- Update CSharp templates.

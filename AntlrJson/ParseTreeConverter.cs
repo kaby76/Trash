@@ -220,8 +220,8 @@
                 MyCharStream fake_char_stream = new MyCharStream();
                 fake_char_stream.SourceName = file_name;
                 fake_char_stream.Text = text;
-                out_token_stream.TokenSource = lexer;
-                lexer.InputStream = fake_char_stream;
+                out_token_stream._tokenSource = lexer;
+                lexer._inputstream = fake_char_stream;
                 foreach (var t in list_of_tokens)
                 {
                     t.TokenSource = lexer;
@@ -237,7 +237,7 @@
                 lexer._ruleNames = lexer_rule_names.ToArray();
                 lexer._tokenTypeMap = token_type_map;
                 lexer._modeNames = mode_names.ToArray();
-                lexer.Tokens = out_token_stream.GetTokens;
+                lexer.Tokens = out_token_stream.GetTokens();
                 lexer._channelNames = channel_names.ToArray();
                 int current = 1;
                 for (int k = 0; k < parents.Count; ++k)

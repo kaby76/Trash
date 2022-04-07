@@ -2,8 +2,8 @@
   "profiles": {
     "trinsert": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//grammarDecl\" \"/* hi there */\"",
-      "workingDirectory": "C:\\msys64\\home\\kenne\\foo"
+      "commandLineArgs": "-f o.pt \"//SCIENTIFIC_NUMBER[text() = '1']\"   \"+\"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\te2\\Generated"
     }
   }
 }
