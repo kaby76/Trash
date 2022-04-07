@@ -40,4 +40,4 @@ the `--type` command-line option:
 
 # Current version
 
-0.15.2 -- Update CSharp templates.
+0.16.0 -- Token/character stream refactorings changed (#94).

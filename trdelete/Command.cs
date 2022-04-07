@@ -62,7 +62,6 @@
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
                 var tokstream = parse_info.Stream;
-                Workspaces.Document doc = null; //Docs.Class1.CreateDoc(parse_info);
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 IParseTree[] root = atrees.ToArray();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();

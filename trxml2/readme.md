@@ -12,4 +12,4 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 # Current version
 
-0.15.2 -- Update CSharp templates.
+0.16.0 -- Token/character stream refactorings changed (#94).

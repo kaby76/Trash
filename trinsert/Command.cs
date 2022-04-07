@@ -84,26 +84,6 @@
                         if (config.AsTree)
                         {
                             throw new System.NotImplementedException();
-                            //AltAntlr.MyToken myToken = new AltAntlr.MyToken()
-                            //{
-                            //    Type = type,
-                            //    StartIndex = start,
-                            //    StopIndex = stop,
-                            //    Line = line,
-                            //    Column = column,
-                            //    Channel = channel,
-                            //    TokenIndex = token_index
-                            //};
-                            // All this code needs to be rewritten.
-                            // We need to create a AltAntlr.MyToken,
-                            // My
-                            //TerminalNodeImpl inserted_node;
-                            //if (config.After)
-                            //    inserted_node = TreeEdits.InsertAfter(node, str);
-                            //else
-                            //    inserted_node = TreeEdits.InsertBefore(node, str);
-                            //// Fix tokstream.
-                            //var token = inserted_node.Payload;
                         }
                         else
                         {
