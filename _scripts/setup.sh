@@ -51,4 +51,6 @@ do
 	fi
 	cd ..
 done
+dotnet nuget add source "$cwd/AntlrJson/bin/Debug/" --name nuget-AntlrJson > /dev/null 2>&1
+dotnet nuget add source "$cwd/Docs/bin/Debug/" --name nuget-Docs > /dev/null 2>&1
 dotnet nuget list source

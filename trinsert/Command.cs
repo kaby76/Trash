@@ -75,7 +75,7 @@
 
                     foreach (var node in nodes)
                     {
-                        var leaf = TreeEdits.Frontier(node).First();
+                        TerminalNodeImpl leaf = TreeEdits.Frontier(node).First();
                         // There are two ways to insert text: as a token/tree node,
                         // or in the intertoken character range between tokens in the
                         // token stream. Both have issues, but
@@ -130,14 +130,6 @@
                             }
                         }
                     }
-                    var after_tokens = tokstream.GetTokens();
-
-                    StringBuilder sb = new StringBuilder();
-                    TreeEdits.Reconstruct(sb, trees[0], new Dictionary<TerminalNodeImpl, string>());
-                    var jjj = sb.ToString();
-
-                    var kkk = OutputTokens(trees[0]);
-
                     var tuple = new ParsingResultSet()
                     {
                         Text = text,

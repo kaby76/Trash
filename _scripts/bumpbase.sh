@@ -1,8 +1,11 @@
 #!/bin/bash
 
+dotnet tool install -g trxml2 > /dev/null 2>&1
+
 framework="net6.0"
 version_base="3.5.0"
 version_tree="4.5.0"
+version_stringtemplate="4.2.0"
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 for i in $directories
 do
@@ -36,6 +39,8 @@ do
 	cat *.csproj | sed -e "s%\"Domemtech.TrashBase\" Version=\".*\"%\"Domemtech.TrashBase\" Version=\"$version_base\"%" > asdfasdf
 	mv asdfasdf *.csproj	
 	cat *.csproj | sed -e "s%\"AntlrTreeEditing\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"$version_tree\"%" > asdfasdf
+	mv asdfasdf *.csproj	
+	cat *.csproj | sed -e "s%\"Domemtech.StringTemplate4\" Version=\".*\"%\"Domemtech.StringTemplate4\" Version=\"$version_stringtemplate\"%" > asdfasdf
 	mv asdfasdf *.csproj	
 	cd ..
 done

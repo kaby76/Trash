@@ -38,7 +38,7 @@ This program is part of the Trash toolkit.]]>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Domemtech.Globbing" Version="2.3.0" />
-    <PackageReference Include="Domemtech.StringTemplate4" Version="4.1.0" />
+    <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.3" />
     <PackageReference Include="AntlrTreeEditing" Version="4.5.0" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />

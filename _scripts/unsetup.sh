@@ -24,4 +24,7 @@ do
 	dotnet nuget remove source nuget-$tool > /dev/null 2>&1
 	cd ..
 done
+
+dotnet nuget remove source nuget-AntlrJson > /dev/null 2>&1
+dotnet nuget remove source nuget-Docs > /dev/null 2>&1
 dotnet nuget list source
