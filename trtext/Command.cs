@@ -136,7 +136,6 @@
                 {
                     doc = _workspace.ReadDocument(fn);
                 }
-                bool output_fn = false;
                 if (files_with_matches)
                 {
                     if (nodes.Any()) System.Console.WriteLine(fn);

@@ -1469,7 +1469,7 @@
                             var iy = _order.IndexOf(y.OriginalSourceFileName);
                             return ix.CompareTo(iy);
                         }
-                        catch(Exception e)
+                        catch(Exception)
                         { }
                         // ...and y is not null, compare the
                         // if one is a parser vs lexer.

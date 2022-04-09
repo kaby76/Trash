@@ -67,7 +67,7 @@
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
         public string root_directory;
-        public string suffix;
+        public string suffix = "";
         public string ignore_string = null;
         public string source_directory;
 
