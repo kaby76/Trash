@@ -19,23 +19,18 @@
             }
         }
 
-        private string OutputTokens(IParseTree tree)
+        private string OutputTokens(AltAntlr.MyTokenStream tokstream, IParseTree tree)
         {
-            Stack<IParseTree> stack = new Stack<IParseTree>();
-            stack.Push(tree);
+            var frontier = TreeEdits.Frontier(tree);
+            var first = frontier.First();
+            var last = frontier.Last();
+            var first_index = first.Payload.TokenIndex;
+            var last_index = last.Payload.TokenIndex;
             StringBuilder sb = new StringBuilder();
-            while (stack.Any())
+            for (var i = first_index; i <= last_index; i++)
             {
-                var n = stack.Pop();
-                if (n is TerminalNodeImpl term)
-                {
-                    sb.AppendLine(term.Symbol.ToString());
-                }
-                else
-                    for (int i = n.ChildCount - 1; i >= 0; i--)
-                    {
-                        stack.Push(n.GetChild(i));
-                    }
+                var token = tokstream.Get(i);
+                sb.AppendLine(token.ToString());
             }
             return sb.ToString();
         }
@@ -73,9 +68,10 @@
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
                 var fn = parse_info.FileName;
+                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
                 foreach (var node in nodes)
                 {
-                    System.Console.WriteLine(OutputTokens(node));
+                    System.Console.WriteLine(OutputTokens(tokstream, node));
                 }
             }
         }
