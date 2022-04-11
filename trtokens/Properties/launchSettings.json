@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "trdelete": {
+    "trtokens": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt //expression[TIMES]",
+      "commandLineArgs": "-f o2.pt",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\te3\\Generated"
     }
   }
