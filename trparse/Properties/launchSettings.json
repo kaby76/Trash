@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "test.in",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\so71698815\\Generated"
+      "commandLineArgs": "-p csharp src/AntlrFileStream.cs",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\api-changes"
     }
   }
 }

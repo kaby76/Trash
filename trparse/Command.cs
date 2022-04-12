@@ -36,7 +36,10 @@ namespace Trash
             // If Type=="antlr2", then parse using Antlr2.
             // Etc.
 
-            var path = Environment.CurrentDirectory + Path.DirectorySeparatorChar;
+            string path = config.ParserLocation != null ? config.ParserLocation
+                : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
+            path = path.Replace("\\", "/");
+            if (!path.EndsWith("/")) path = path + "/";
             var full_path = path + "Generated/bin/Debug/net6.0/";
             var exists = File.Exists(full_path + "Test.dll");
             if (!exists)

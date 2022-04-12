@@ -17,6 +17,9 @@ namespace Trash
         [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
         public string start_rule { get; set; }
 
+        [Option('p', "parser", Required =false, HelpText = "Location of pre-built parser (aka the trgen Generated/ directory)")]
+        public string ParserLocation { get; set; }
+
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
     }

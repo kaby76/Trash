@@ -1,9 +1,10 @@
 # Trparse
 
 Parse files and output to stdout parse tree data.
-If the current directory contains a generated parser
-(`Generated/` or the current directory is within `Generated/`)
-the tool will use the generated parser.
+The tool requires a pre-built parser via trgen for a grammar
+for anything other than the standard parser grammars that
+are supported. To specify the grammar, you can either
+be in a trgen-generated parser directory, or use the -p option.
 
 If using positional args on the command line, a file is parse
 depending on the extension of the file name:
@@ -27,8 +28,10 @@ the `--type` command-line option:
 # Usage
     
     trparse (<string> | <options>)*
-    -i, --input Parse the given string as input.
-    -t, --type  Specifies type of parse, antlr4, antlr3, antlr2, bison, ebnf, gen 
+    -i, --input      Parse the given string as input.
+    -t, --type       Specifies type of parse, antlr4, antlr3, antlr2, bison, ebnf, gen 
+    -s, --start-rule Start rule name.
+    -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
 
 # Examples
 
