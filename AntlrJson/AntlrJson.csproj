@@ -5,13 +5,13 @@
    </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.3" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.0" />
     <PackageReference Include="System.IO.Pipes" Version="4.3.0" />
     <PackageReference Include="System.IO.Pipes.AccessControl" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-		<PackageReference Include="Domemtech.TrashBase" Version="3.5.0" />
+		<PackageReference Include="Domemtech.TrashBase" Version="4.0.0" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
