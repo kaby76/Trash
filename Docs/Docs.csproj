@@ -9,9 +9,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.0" />
-    <PackageReference Include="AntlrTreeEditing" Version="5.0.0" />
+    <PackageReference Include="AntlrTreeEditing" Version="5.1.0" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
-    <PackageReference Include="Domemtech.TrashBase" Version="4.0.0"/>
+    <PackageReference Include="Domemtech.TrashBase" Version="4.1.0"/>
  </ItemGroup>
 
 </Project>

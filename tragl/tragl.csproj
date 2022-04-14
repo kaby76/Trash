@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5-windows</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
 <!--    <PackAsTool>true</PackAsTool> -->
@@ -24,11 +24,11 @@ This program is part of the Trash toolkit.]]>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.0" />
-    <PackageReference Include="Antlr4BuildTasks" Version="10.0.0">
+    <PackageReference Include="AntlrTreeEditing" Version="10.2">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="AntlrTreeEditing" Version="5.0.0" />
-    <PackageReference Include="Domemtech.TrashBase" Version="4.0.0" />
+    <PackageReference Include="AntlrTreeEditing" Version="5.1.0" />
+    <PackageReference Include="Domemtech.TrashBase" Version="4.1.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />

@@ -1,7 +1,7 @@
 <!-- Template generated code from Antlr4BuildTasks.dotnet-antlr v 0.7.0 -->
 <Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
@@ -10,7 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.0" />
-    <PackageReference Include="Antlr4BuildTasks" Version="10.0" PrivateAssets="all" />
+    <PackageReference Include="AntlrTreeEditing" Version="10.2" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

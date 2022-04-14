@@ -73,7 +73,7 @@ public class Program {
         ErrorListener lexer_listener = new ErrorListener();
         ErrorListener listener = new ErrorListener();
         parser.removeErrorListeners();
-	lexer.removeErrorListeners();
+	    lexer.removeErrorListeners();
         parser.addErrorListener(listener);
         lexer.addErrorListener(lexer_listener);
         ParseTree tree = parser.<start_symbol>();
