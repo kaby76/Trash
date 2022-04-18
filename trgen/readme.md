@@ -17,4 +17,4 @@ create a parser for the Arithmetic.g4 grammar.
 
 # Current version
 
-0.16.0 -- Token/character stream refactorings changed (#94).
+0.16.1 -- Fixes to Antlr4BuildTasks.

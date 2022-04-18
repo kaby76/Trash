@@ -12,4 +12,4 @@ Read a tree from stdin and write a JSON represenation of it.
 
 # Current version
 
-0.16.0 -- Token/character stream refactorings changed (#94).
+0.16.1 -- Fixes to Antlr4BuildTasks.

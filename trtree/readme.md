@@ -12,4 +12,4 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 # Current version
 
-0.16.0 -- Token/character stream refactorings changed (#94).
+0.16.1 -- Fixes to Antlr4BuildTasks.

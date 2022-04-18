@@ -21,4 +21,4 @@ make sure to enclose the argument as it contains semi-colons.
 
 # Current version
 
-0.16.0 -- Token/character stream refactorings changed (#94).
+0.16.1 -- Fixes to Antlr4BuildTasks.
