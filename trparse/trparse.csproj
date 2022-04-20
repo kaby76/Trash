@@ -22,7 +22,7 @@ This program is part of the Trash toolkit.]]>
     <RepositoryType>git</RepositoryType> 
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.0" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
     <PackageReference Include="AntlrTreeEditing" Version="5.1.0" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
