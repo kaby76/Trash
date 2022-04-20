@@ -24,7 +24,7 @@ This program is part of the Trash toolkit.]]>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.0" />
-    <PackageReference Include="Antlr4BuildTasks" Version="10.2.0">
+    <PackageReference Include="Antlr4BuildTasks" Version="10.3.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="AntlrTreeEditing" Version="5.1.0" />
