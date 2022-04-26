@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-p csharp src/AntlrFileStream.cs",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\api-changes"
+      "commandLineArgs": "../examples/alter_mv.sql",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-v4-i2572-p2\\sql\\plsql\\x\\Generated"
     }
   }
 }
