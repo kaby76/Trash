@@ -4,6 +4,7 @@ using LanguageServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Workspaces;
 
@@ -40,12 +41,17 @@ namespace Trash
                 : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
             path = path.Replace("\\", "/");
             if (!path.EndsWith("/")) path = path + "/";
-            var full_path = path + "Generated/bin/Debug/net6.0/";
-            var exists = File.Exists(full_path + "Test.dll");
-            if (!exists)
+            var fp = new Domemtech.Globbing.Glob()
+                .RegexContents("^(bin|Generated).*Test.dll$")
+                .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
+                .Select(f => f.FullName.Replace('\\', '/'))
+                .ToList();
+            var exists = fp.Count == 1;
+            string full_path = null;
+            if (exists)
             {
-                full_path = path + "bin/Debug/net6.0/";
-                exists = File.Exists(full_path + "Test.dll");
+                full_path = fp.First();
+                exists = File.Exists(full_path);
             }
 
             if (config.Type != null && config.Type != "gen" || !exists)

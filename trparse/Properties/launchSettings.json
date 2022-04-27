@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/alter_mv.sql",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-v4-i2572-p2\\sql\\plsql\\x\\Generated"
+      "commandLineArgs": "1+2",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\Generated"
     }
   }
 }
