@@ -9,8 +9,8 @@
 </Antlr4>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.0" />
-    <PackageReference Include="AntlrTreeEditing" Version="10.2" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
+    <PackageReference Include="AntlrTreeEditing" Version="5.1.0" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "1+2",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\Generated"
+      "commandLineArgs": "PhpParser.g4",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\ivan\\grammars-v4\\php"
     }
   }
 }

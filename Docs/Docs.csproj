@@ -11,7 +11,7 @@
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
     <PackageReference Include="AntlrTreeEditing" Version="5.1.0" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
-    <PackageReference Include="Domemtech.TrashBase" Version="4.1.0"/>
+    <PackageReference Include="Domemtech.TrashBase" Version="4.2.0"/>
  </ItemGroup>
 
 </Project>
