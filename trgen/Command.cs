@@ -50,7 +50,7 @@
 
 
         public Config _config;
-        public static string version = "0.16.1";
+        public static string version = "0.16.2";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1140,19 +1140,7 @@
                     {
                         continue;
                     }
-                    string to = null;
-                    if (from.StartsWith(_config.target)) to = from.Substring(_config.target.Length + 1);
-                    else to = from;
-                    if (per_grammar.tool_grammar_tuples.Where(t => from.Substring(_config.target.Length) == t.OriginalSourceFileName).Select(t => t.GrammarFileName).Any())
-                    {
-                        to = this._config.output_directory
-                            + per_grammar.tool_grammar_tuples.Where(t => to == t.OriginalSourceFileName).Select(t => t.GrammarFileName).First();
-                    }
-                    else
-                    {
-                        to = (_config.output_directory).Replace('\\', '/') + to;
-                    }
-                    to = to.Replace('\\', '/');
+                    var to = FixedName(from, per_grammar);
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = ReadAllResource(a, prefix + from.Replace('/','.'));
@@ -1161,16 +1149,16 @@
                         + " to "
                         + to);
                     Template t = new Template(content);
-                    t.Add("additional_sources", per_grammar.all_target_files.Where(t =>
-                    {
-                        var ext = Path.GetExtension(t);
-                        return Suffix(_config).Contains(ext);
-                    })
-                        .Select(t => t.Substring(p._config.output_directory.Length))
-                        .ToList());
-			        t.Add("additional_sources", per_grammar.all_target_files.Where(t =>
+                    var yo1 = per_grammar.all_source_files
+                        .Select(t =>
+                            FixedName(t, per_grammar)
+                            .Substring(p._config.output_directory.Length))
+                        .Where(t => t.Contains(Suffix(p._config)))
+                        .ToList();
+                    t.Add("additional_sources", yo1);
+			        t.Add("additional_targets", per_grammar.all_target_files.Where(xx =>
 			        {
-				        var ext = Path.GetExtension(t);
+				        var ext = Path.GetExtension(xx);
 				        return Suffix(_config).Contains(ext);
 			        })
 			              .Select(t => t.Substring(p._config.output_directory.Length))
@@ -1441,6 +1429,23 @@
             per_grammar.tool_grammar_tuples.Sort(new GrammarOrderCompare(order));
         }
 
+        string FixedName(string from, Trash.PerGrammar per_grammar)
+        {
+            string to = null;
+            if (from.StartsWith(_config.target)) to = from.Substring(_config.target.Length + 1);
+            else to = from;
+            if (per_grammar.tool_grammar_tuples.Where(t => from.Substring(_config.target.Length) == t.OriginalSourceFileName).Select(t => t.GrammarFileName).Any())
+            {
+                to = this._config.output_directory
+                    + per_grammar.tool_grammar_tuples.Where(t => to == t.OriginalSourceFileName).Select(t => t.GrammarFileName).First();
+            }
+            else
+            {
+                to = (_config.output_directory).Replace('\\', '/') + to;
+            }
+            to = to.Replace('\\', '/');
+            return to;
+        }
         class GrammarOrderCompare : IComparer<GrammarTuple>
         {
             List<string> _order;

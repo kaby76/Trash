@@ -32,4 +32,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 # Current version
 
-0.16.1 -- Fixes to Antlr4BuildTasks.
+0.16.2 -- Fix to trgen and Cpp target.

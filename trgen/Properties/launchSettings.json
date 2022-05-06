@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t PHP",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\current\\tests"
+      "commandLineArgs": "-t Cpp",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\pr\\grammars-v4\\antlr\\antlr4"
     }
   }
 }
