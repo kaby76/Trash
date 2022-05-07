@@ -50,7 +50,7 @@
 
 
         public Config _config;
-        public static string version = "0.16.2";
+        public static string version = "0.16.3";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1246,13 +1246,12 @@
                         + " to "
                         + to);
                     Template t = new Template(content);
-                    t.Add("additional_sources", per_grammar.all_target_files.Where(t =>
-                    {
-                        var ext = Path.GetExtension(t);
-                        return Suffix(_config).Contains(ext);
-                    })
-                        .Select(t => t.Substring(p._config.output_directory.Length))
-                        .ToList());
+		            var yo1 = per_grammar.all_source_files
+			              .Select(t => FixedName(t, per_grammar)
+					         .Substring(p._config.output_directory.Length))
+			              .Where(t => t.Contains(Suffix(p._config)))
+			              .ToList();
+                    t.Add("additional_sources", yo1);
                     t.Add("antlr_encoding", per_grammar.antlr_encoding);
                     t.Add("antlr_tool_args", _config.antlr_tool_args);
                     t.Add("antlr_tool_path", _config.antlr_tool_path);
