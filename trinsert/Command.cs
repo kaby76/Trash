@@ -89,12 +89,14 @@
                         {
                             // Insert in the char stream and adjust tokens.
                             var t = node.Payload as AltAntlr.MyToken;
-                            var ts = t.InputStream as AltAntlr.MyCharStream;
-                            var old_buffer = ts.Text;
+                            var cs = t.InputStream as AltAntlr.MyCharStream;
+                            var old_buffer = cs.Text;
                             var index = LanguageServer.Util.GetIndex(t.Line, t.Column, old_buffer);
+                            if (config.After) index += t.Text.Length;
                             var add = str.Length;
                             var new_buffer = old_buffer.Insert(index, str);
                             var start = leaf.Payload.StartIndex;
+                            if (config.After) start += +1;
                             Dictionary<int,int> old_indices = new Dictionary<int,int>();
                             var i = start;
                             tokstream.Seek(i);
@@ -112,7 +114,7 @@
                             }
                             i = start;
                             tokstream.Seek(i);
-                            ts.Text = new_buffer;
+                            cs.Text = new_buffer;
                             text = new_buffer;
                             tokstream.Text = new_buffer;
                             for (; ; )

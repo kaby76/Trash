@@ -2,8 +2,8 @@
   "profiles": {
     "trinsert": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//SCIENTIFIC_NUMBER[text() = '1']\"   \"+\"",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\te2\\Generated"
+      "commandLineArgs": "-a -f o.pt \"//ruleSpec/parserRuleSpec[RULE_REF/text()='singleLineString']/COLON\"   \"xxxxxxxx\"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec\\xxx"
     }
   }
 }

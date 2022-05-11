@@ -98,25 +98,25 @@
                             var q = v as AntlrTreeEditing.AntlrDOM.AntlrText;
                             var s = q.AntlrIParseTree.GetText();
                             do_rs = false;
-                            System.Console.Error.WriteLine(s);
+                            System.Console.WriteLine(s);
                         }
                         else if (v is AntlrTreeEditing.AntlrDOM.AntlrAttr)
                         {
                             var q = v as AntlrTreeEditing.AntlrDOM.AntlrAttr;
                             var s = q.Value;
                             do_rs = false;
-                            System.Console.Error.WriteLine(s);
+                            System.Console.WriteLine(s);
                         }
                         else if (v is AntlrTreeEditing.AntlrDOM.AntlrDocument)
                         {
                             var q = v as AntlrTreeEditing.AntlrDOM.AntlrDocument;
                             do_rs = false;
-                            System.Console.Error.WriteLine(v);
+                            System.Console.WriteLine(v);
                         }
                         else
                         {
                             do_rs = false;
-                            System.Console.Error.WriteLine(v);
+                            System.Console.WriteLine(v);
                         }
                     }
                     var parse_info_out = new AntlrJson.ParsingResultSet() { Text = text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = res.ToArray() };

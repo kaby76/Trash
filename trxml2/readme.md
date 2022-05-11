@@ -12,4 +12,4 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 # Current version
 
-0.16.3 -- Fix to trgen and Cpp target.
+0.16.4 -- Fix to trxgrep stdout results.

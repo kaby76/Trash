@@ -2,8 +2,8 @@
   "profiles": {
     "trunfold": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \" //parserRuleSpec/RULE_REF[text() = 'atom']\" ",
-      "workingDirectory": "C:\\msys64\\home\\kenne\\plsql\\plsql"
+      "commandLineArgs": "-f o.pt \"//lexerRuleSpec[TOKEN_REF/text()='SIMPLE_STRING_INTERPOLATION']//TOKEN_REF[text()='BUILT_IN_IDENTIFIER']\" ",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec\\xxx"
     }
   }
 }

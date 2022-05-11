@@ -46,4 +46,4 @@ Output:
 
 # Current version
 
-0.16.3 -- Fix to trgen and Cpp target.
+0.16.4 -- Fix to trxgrep stdout results.
