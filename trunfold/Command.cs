@@ -64,35 +64,35 @@
                 var doc = Docs.Class1.CreateDoc(parse_info);
                 docs.Add(doc);
             }
-            foreach (var doc in docs)
+            foreach (var parse_info in data)
             {
+                var text = parse_info.Text;
+                var fn = parse_info.FileName;
+                var atrees = parse_info.Nodes;
+                var parser = parse_info.Parser;
+                var lexer = parse_info.Lexer;
+                var tokstream = parse_info.Stream;
+                var doc = Docs.Class1.CreateDoc(parse_info);
                 var pr = LanguageServer.ParsingResultsFactory.Create(doc);
                 var workspace = doc.Workspace;
-                _ = new LanguageServer.Module().Compile(workspace);
-                var text = doc.Code;
-                var fn = doc.FullPath;
-                var atrees = pr.ParseTree;
-                var parser = pr.Parser;
-                var lexer = pr.Lexer;
+                _ = new LanguageServer.Module().Compile(workspace, false);
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                IParseTree root = atrees.Root();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
+                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
                 {
-                    var nodes = engine.parseExpression(expr,
+                    List<TerminalNodeImpl> nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
-                    var res = LanguageServer.Transform.Unfold(nodes, doc);
-                    Docs.Class1.EnactEdits(res);
-                    IParseTree pt = pr.ParseTree;
+                    LanguageServer.Transform.Unfold(nodes, doc);
+                    var t = LanguageServer.TreeOutput.OutputTree(atrees.First(), lexer, parser, null).ToString();
                     var tuple = new ParsingResultSet()
                     {
                         Text = doc.Code,
                         FileName = doc.FullPath,
                         Stream = pr.TokStream,
-                        Nodes = new IParseTree[] { pt },
-                        Lexer = pr.Lexer,
-                        Parser = pr.Parser
+                        Nodes = atrees,
+                        Lexer = lexer,
+                        Parser = parser
                     };
                     results.Add(tuple);
                 }

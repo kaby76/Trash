@@ -2,7 +2,7 @@
 
 version_framework="net6.0"
 version_base="4.3.0"
-version_tree="5.1.0"
+version_tree="5.2.0"
 version_antlr4buildtasks="10.3"
 version_stringtemplate="4.2.0"
 version_antlrruntime="4.10.1"
@@ -29,10 +29,10 @@ do
 	mv asdfasdf $i
 done
 
-subset=`grep -l -e Antlr4BuildTasks $files`
+subset=`grep -l -e TargetFramework $files`
 for i in $subset
 do
-	cat $i | sed -e "s%<TargetFramework>.*</TargetFramework>%<TargetFramework>"$version_framework"</TargetFramework>%" > asdfasdf
+	cat $i | sed -e "s%<TargetFramework>[^\]*</TargetFramework>%<TargetFramework>"$version_framework"</TargetFramework>%" > asdfasdf
 	mv asdfasdf $i
 done
 

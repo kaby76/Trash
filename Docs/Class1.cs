@@ -51,7 +51,7 @@ namespace Docs
         public static Document CreateDoc(AntlrJson.ParsingResultSet parse_info)
         {
             string file_name = parse_info.FileName;
-            Document document = new Workspaces.Document(file_name);
+            var document = _workspace.FindDocument(file_name);
             Project project = _workspace.FindProject("Misc");
             if (project == null)
             {
@@ -65,8 +65,9 @@ namespace Docs
             pr.Parser = parse_info.Parser;
             pr.Lexer = parse_info.Lexer;
 	        pr.ParseTree = parse_info.Nodes.First();
-            pr.TokStream = new CommonTokenStream(pr.Lexer);
-            pr.TokStream.Fill();
+            pr.TokStream = parse_info.Stream as BufferedTokenStream;
+            var xxx = LanguageServer.DFSVisitor.DFS(parse_info.Nodes.First() as ParserRuleContext).ToList();
+            pr.AllNodes = xxx;
             return document;
         }
         
