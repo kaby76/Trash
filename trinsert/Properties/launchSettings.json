@@ -2,8 +2,8 @@
   "profiles": {
     "trinsert": {
       "commandName": "Project",
-      "commandLineArgs": "-a -f o.pt \"//ruleSpec/parserRuleSpec[RULE_REF/text()='singleLineString']/COLON\"   \"xxxxxxxx\"",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec\\xxx"
+      "commandLineArgs": "-f o.pt \"//ruleSpec/lexerRuleSpec/TOKEN_REF[text()='EXPONENT']\"   \"frag,emt\"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec"
     }
   }
 }

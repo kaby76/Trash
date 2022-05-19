@@ -87,15 +87,28 @@
                         }
                         else
                         {
-                            // Insert in the char stream and adjust tokens.
-                            var t = node.Payload as AltAntlr.MyToken;
-                            var cs = t.InputStream as AltAntlr.MyCharStream;
+                            // 'node' is either a terminal node or an internal node.
+                            // Payload means different things for the two.
+                            AltAntlr.MyCharStream cs;
+                            AltAntlr.MyToken t;
+                            if (node is TerminalNodeImpl)
+                            {
+                                // Insert in the char stream and adjust tokens.
+                                t = node.Payload as AltAntlr.MyToken;
+                                cs = t.InputStream as AltAntlr.MyCharStream;
+                            }
+                            else
+                            {
+                                var lmf = TreeEdits.LeftMostToken(node);
+                                t = lmf.Payload as AltAntlr.MyToken;
+                                cs = t.InputStream as AltAntlr.MyCharStream;
+                            }
                             var old_buffer = cs.Text;
                             var index = LanguageServer.Util.GetIndex(t.Line, t.Column, old_buffer);
                             if (config.After) index += t.Text.Length;
                             var add = str.Length;
                             var new_buffer = old_buffer.Insert(index, str);
-                            var start = leaf.Payload.StartIndex;
+                            var start = leaf.Payload.TokenIndex;
                             if (config.After) start += +1;
                             Dictionary<int,int> old_indices = new Dictionary<int,int>();
                             var i = start;
