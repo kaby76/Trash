@@ -8,7 +8,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.4" PrivateAssets="all" />
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
-    <PackageReference Include="AntlrTreeEditing" Version="5.2.0" />
     <PackageReference Include="Domemtech.AutomaticGraphLayout" Version="1.1.4" />
     <PackageReference Include="Domemtech.AutomaticGraphLayout.Drawing" Version="1.1.4" />
     <PackageReference Include="Domemtech.AutomaticGraphLayout.GraphViewerGdi" Version="1.1.4" />

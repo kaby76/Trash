@@ -23,7 +23,6 @@ This program is part of the Trash toolkit.
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
-    <PackageReference Include="AntlrTreeEditing" Version="5.2.0" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />

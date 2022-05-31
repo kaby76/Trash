@@ -91,9 +91,9 @@
                             // Payload means different things for the two.
                             AltAntlr.MyCharStream cs;
                             AltAntlr.MyToken t;
+                            // Gather all information before modifying the token and char streams.
                             if (node is TerminalNodeImpl)
                             {
-                                // Insert in the char stream and adjust tokens.
                                 t = node.Payload as AltAntlr.MyToken;
                                 cs = t.InputStream as AltAntlr.MyCharStream;
                             }
@@ -136,7 +136,8 @@
                                 var tt = tokstream.Get(i);
                                 if (tt.Type == -1) break;
                                 var tok = tt as AltAntlr.MyToken;
-                                var (line, col) = LanguageServer.Util.GetLineColumn(old_indices[i], text);
+                                var new_index = old_indices[i] + add;
+                                var (line, col) = LanguageServer.Util.GetLineColumn(new_index, new_buffer);
                                 tok.Line = line;
                                 tok.Column = col;
                                 tok.StartIndex += add;

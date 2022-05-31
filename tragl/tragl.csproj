@@ -24,10 +24,6 @@ This program is part of the Trash toolkit.]]>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
-    <PackageReference Include="AntlrTreeEditing" Version="5.2.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="AntlrTreeEditing" Version="5.2.0" />
     <PackageReference Include="Domemtech.TrashBase" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
