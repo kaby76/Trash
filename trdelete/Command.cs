@@ -73,79 +73,12 @@
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                     foreach (var node in nodes)
                     {
-                        AltAntlr.MyCharStream ts = null;
-                        var leaves = TreeEdits.Frontier(node);
-                        var first = leaves.First() as AltAntlr.MyTerminalNodeImpl;
-                        var first_token = first.Payload as AltAntlr.MyToken;
-                        var last = leaves.Last() as AltAntlr.MyTerminalNodeImpl;
-                        var last_token = last.Payload as AltAntlr.MyToken;
-                        int sub = 0;
-                        int index = 0;
-                        var s = first_token.StartIndex;
-                        var e = last_token.StopIndex;
-                        sub = 1 + e - s;
-                        index = s;
-                        ts = first_token.InputStream as AltAntlr.MyCharStream;
-                        var old_buffer = ts.Text;
-                        var new_buffer = old_buffer.Remove(index, sub);
-                        var start = last.Payload.TokenIndex + 1;
-                        Dictionary<int, int> old_indices = new Dictionary<int, int>();
-                        var i = start;
-                        tokstream.Seek(i);
-                        for (; ; )
-                        {
-                            if (i >= tokstream.Size) break;
-                            var tt = tokstream.Get(i);
-                            var tok = tt as AltAntlr.MyToken;
-                            var line = tok.Line;
-                            var col = tok.Column;
-                            var i2 = LanguageServer.Util.GetIndex(line, col, old_buffer);
-                            old_indices[i] = i2;
-                            if (tt.Type == -1) break;
-                            ++i;
-                        }
-                        i = start;
-                        tokstream.Seek(i);
-                        ts.Text = new_buffer;
-                        text = new_buffer;
-                        tokstream.Text = new_buffer;
-                        for (; ; )
-                        {
-                            if (i >= tokstream.Size) break;
-                            var tt = tokstream.Get(i);
-                            var tok = tt as AltAntlr.MyToken;
-                            var new_index = old_indices[i] - sub;
-                            if (new_index >= 0)
-                            {
-                                var (line, col) = LanguageServer.Util.GetLineColumn(new_index, text);
-                                tok.Line = line;
-                                tok.Column = col;
-                            }
-                            tok.StartIndex -= sub;
-                            tok.StopIndex -= sub;
-                            if (tt.Type == -1) break;
-                            ++i;
-                        }
-                        TreeEdits.Delete(node);
-                        // Nuke tokens in token stream.
-                        tokstream.Seek(first_token.TokenIndex);
-                        for (i = first_token.TokenIndex; i <= last_token.TokenIndex; ++i)
-                            tokstream.Delete();
-
-                        for (i = 0; i < tokstream.Size; ++i)
-                        {
-                            var t = tokstream.Get(i) as AltAntlr.MyToken;
-                            t.TokenIndex = i;
-                        }
-
-                        // Adjust intervals up the tree.
-                        foreach (var tree in trees)
-                            Reset(tree);
+                        TreeEdits.Delete(tokstream, node);
                     }
 
                     var tuple = new ParsingResultSet()
                     {
-                        Text = text,
+                        Text = tokstream.Text,
                         FileName = fn,
                         Stream = tokstream,
                         Nodes = trees,
@@ -172,54 +105,6 @@
                 sb.AppendLine(token.ToString());
             }
             return sb.ToString();
-        }
-
-        private void Reset(IParseTree tree)
-        {
-            if (tree is AltAntlr.MyTerminalNodeImpl l)
-            {
-                var t = l.Payload as AltAntlr.MyToken;
-                l.Start = t.TokenIndex;
-                l.Stop = t.TokenIndex;
-                l._sourceInterval = new Antlr4.Runtime.Misc.Interval(t.TokenIndex, t.TokenIndex);
-            }
-            else if (tree is AltAntlr.MyParserRuleContext p)
-            {
-                var res = p.SourceInterval;
-                int min = int.MaxValue;
-                int max = int.MinValue;
-                for (int i = 0; i < tree.ChildCount; ++i)
-                {
-                    var c = tree.GetChild(i);
-                    Reset(c);
-                    min = Math.Min(min, c.SourceInterval.a);
-                    max = Math.Max(max, c.SourceInterval.b);
-                }
-                p._sourceInterval = res;
-            }
-        }
-
-        private void Adjust(IParseTree tree)
-        {
-            Reset(tree);
-            var leaves = TreeEdits.Frontier(tree);
-            Stack<IParseTree> stack = new Stack<IParseTree>();
-            foreach (var leaf in leaves) stack.Push(leaf);
-            while (stack.Count > 0)
-            {
-                var leaf = stack.Pop();
-                if (leaf is AltAntlr.MyTerminalNodeImpl l)
-                {
-                    var t = l.Payload as AltAntlr.MyToken;
-                    l._sourceInterval = new Antlr4.Runtime.Misc.Interval(t.TokenIndex, t.TokenIndex);
-                }
-                else if (leaf is AltAntlr.MyParserRuleContext p)
-                {
-                    var s = p.Start;
-                    var e = p.Stop;
-                    
-                }
-            }
         }
     }
 }

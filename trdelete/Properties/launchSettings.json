@@ -2,8 +2,8 @@
   "profiles": {
     "trdelete": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt //expression[TIMES]",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\te3\\Generated"
+      "commandLineArgs": "-f o.pt //parserRuleSpec[RULE_REF/text()='initializedVariableDeclaration']/COLON",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec"
     }
   }
 }

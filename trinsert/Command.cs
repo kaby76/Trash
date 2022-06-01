@@ -87,63 +87,8 @@
                         }
                         else
                         {
-                            // 'node' is either a terminal node or an internal node.
-                            // Payload means different things for the two.
-                            AltAntlr.MyCharStream cs;
-                            AltAntlr.MyToken t;
-                            // Gather all information before modifying the token and char streams.
-                            if (node is TerminalNodeImpl)
-                            {
-                                t = node.Payload as AltAntlr.MyToken;
-                                cs = t.InputStream as AltAntlr.MyCharStream;
-                            }
-                            else
-                            {
-                                var lmf = TreeEdits.LeftMostToken(node);
-                                t = lmf.Payload as AltAntlr.MyToken;
-                                cs = t.InputStream as AltAntlr.MyCharStream;
-                            }
-                            var old_buffer = cs.Text;
-                            var index = LanguageServer.Util.GetIndex(t.Line, t.Column, old_buffer);
-                            if (config.After) index += t.Text.Length;
-                            var add = str.Length;
-                            var new_buffer = old_buffer.Insert(index, str);
-                            var start = leaf.Payload.TokenIndex;
-                            if (config.After) start += +1;
-                            Dictionary<int,int> old_indices = new Dictionary<int,int>();
-                            var i = start;
-                            tokstream.Seek(i);
-                            for (; ; )
-                            {
-                                if (i >= tokstream.Size) break;
-                                var tt = tokstream.Get(i);
-                                if (tt.Type == -1) break;
-                                var tok = tt as AltAntlr.MyToken;
-                                var line = tok.Line;
-                                var col = tok.Column;
-                                var i2 = LanguageServer.Util.GetIndex(line, col, old_buffer);
-                                old_indices[i] = i2;
-                                ++i;
-                            }
-                            i = start;
-                            tokstream.Seek(i);
-                            cs.Text = new_buffer;
-                            text = new_buffer;
-                            tokstream.Text = new_buffer;
-                            for (; ; )
-                            {
-                                if (i >= tokstream.Size) break;
-                                var tt = tokstream.Get(i);
-                                if (tt.Type == -1) break;
-                                var tok = tt as AltAntlr.MyToken;
-                                var new_index = old_indices[i] + add;
-                                var (line, col) = LanguageServer.Util.GetLineColumn(new_index, new_buffer);
-                                tok.Line = line;
-                                tok.Column = col;
-                                tok.StartIndex += add;
-                                tok.StopIndex += add;
-                                ++i;
-                            }
+                            if (!config.After) TreeEdits.InsertBeforeInStreams(tokstream, node, str);
+                            else TreeEdits.InsertAfterInStreams(tokstream, leaf, str);
                         }
                     }
                     var tuple = new ParsingResultSet()
