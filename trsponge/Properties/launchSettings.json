@@ -2,8 +2,8 @@
   "profiles": {
     "trsponge": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt --overwrite true",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trcombine"
+      "commandLineArgs": "-f o.pt -c true",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec\\xxx"
     }
   }
 }

@@ -62,29 +62,23 @@
                 var atrees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream;
-                var doc = Docs.Class1.CreateDoc(parse_info);
+                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                IParseTree root = atrees.First();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
+                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
                 {
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-
-                    var res = LanguageServer.Transform.Replace(nodes, str, doc);
-                    Docs.Class1.EnactEdits(res);
-                    var pr = ParsingResultsFactory.Create(doc);
-                    IParseTree pt = pr.ParseTree;
+                    TreeEdits.Replace(tokstream, nodes, str);
                     var tuple = new ParsingResultSet()
                     {
-                        Text = doc.Code,
-                        FileName = doc.FullPath,
-                        Stream = pr.TokStream,
-                        Nodes = new IParseTree[] { pt },
-                        Lexer = pr.Lexer,
-                        Parser = pr.Parser
+                        Text = ((AltAntlr.MyTokenStream)tokstream).Text,
+                        FileName = fn,
+                        Stream = tokstream,
+                        Nodes = atrees,
+                        Lexer = lexer,
+                        Parser = parser
                     };
                     results.Add(tuple);
                 }

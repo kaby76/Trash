@@ -2,7 +2,7 @@
   "profiles": {
     "trinsert": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//ruleSpec/lexerRuleSpec/TOKEN_REF[text()='NEWLINE']\"   \"fragment\"",
+      "commandLineArgs": "-f o.pt \"//ruleSpec/lexerRuleSpec/TOKEN_REF[text()='NEWLINE']\" \"fragment \"",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec"
     }
   }

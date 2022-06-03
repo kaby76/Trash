@@ -93,7 +93,7 @@
                     }
                     var tuple = new ParsingResultSet()
                     {
-                        Text = text,
+                        Text = tokstream.Text,
                         FileName = fn,
                         Stream = tokstream,
                         Nodes = trees,
