@@ -36,7 +36,7 @@
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
             }
-            Console.Error.WriteLine(helpText);
+            Console.WriteLine(helpText);
         }
 
         public void MainInternal(string[] args)

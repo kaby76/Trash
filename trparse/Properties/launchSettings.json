@@ -2,7 +2,7 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "temp.g4",
+      "commandLineArgs": "t1.in",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec\\xxx"
     }
   }

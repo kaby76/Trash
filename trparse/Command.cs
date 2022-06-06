@@ -41,8 +41,19 @@ namespace Trash
                 : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
             path = path.Replace("\\", "/");
             if (!path.EndsWith("/")) path = path + "/";
+            for (; ; )
+            {
+                if (path.StartsWith(".")) { path = path.Substring(1); continue; }
+                if (path.StartsWith("/")) { path = path.Substring(1); continue; }
+                break;
+            }
+            var expr = path + "(Generated/)?bin/.*/Test.dll$";
+            var e2 = "^c:/msys64/home/Kenne/dart/ScrapeDartSpec/xxx/Generated$";
+            var f2 = new Domemtech.Globbing.Glob()
+                .RegexContents(e2).ToList();
+
             var fp = new Domemtech.Globbing.Glob()
-                .RegexContents("^(bin|Generated).*Test.dll$")
+                .RegexContents(expr)
                 .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                 .Select(f => f.FullName.Replace('\\', '/'))
                 .ToList();

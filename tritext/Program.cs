@@ -32,13 +32,13 @@ namespace Trash
                 helpText = HelpText.AutoBuild(result, h =>
                 {
                     h.AdditionalNewLineAfterOption = false;
-                    h.Heading = "trdot";
+                    h.Heading = "tritext";
                     h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
                     h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
             }
-            Console.Error.WriteLine(helpText);
+            Console.WriteLine(helpText);
         }
 
         public void MainInternal(string[] args)
