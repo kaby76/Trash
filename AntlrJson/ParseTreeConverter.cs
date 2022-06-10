@@ -221,6 +221,7 @@
                 fake_char_stream.SourceName = file_name;
                 fake_char_stream.Text = text;
                 out_token_stream._tokenSource = lexer;
+                lexer.TokenStream = out_token_stream;
                 lexer._inputstream = fake_char_stream;
                 foreach (var t in list_of_tokens)
                 {

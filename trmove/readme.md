@@ -1,13 +1,13 @@
-# trinsert
+# trmove
 
-Reads a parse tree from stdin, inserts text before or after
+Reads a parse tree from stdin, moves
 nodes in the tree using
 the specified XPath expression, and writes the modified tree
 to stdout. The input and output are Parse Tree Data.
 
 # Usage
 
-    trinsert <-a>? <xpath-string> <text-string>
+    trmove <-a>? <xpath-string-1> <xpath-string-2>
 
 # Details
 
