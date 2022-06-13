@@ -352,7 +352,7 @@ There are many bug fixes in this release. Generated driver programs from trgen a
 have timing information. trsplit is again working. trinsert, trdelete, trmove have all
 been changed to not reparse the changed parse tree data. trparse now has a "-p" option to
 specify where the built generated parser driver program. It also has a "-e" option to only
-output the errors from the parse and avoid outputing parse tree data.
+output the errors from the parse and avoid outputing parse tree data. "trsort" was added.
 
 # Prior Releases
 
