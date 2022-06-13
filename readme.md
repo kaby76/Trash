@@ -18,6 +18,9 @@ The toolkit uses [Antlr](https://www.antlr.org/) and
 [XPath2](https://en.wikipedia.org/wiki/XPath).
 The code is implemented in C#.
 
+An application of the toolkit was used to scrape and refactor the Dart2
+grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/blob/master/refactor.sh).
+
 ## Install
 
 Linux: Right-click, "save target as" of file
