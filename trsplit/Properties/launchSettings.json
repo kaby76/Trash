@@ -3,7 +3,7 @@
     "trsplit": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\scrape-c-plus-plus-spec"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec"
     }
   }
 }
