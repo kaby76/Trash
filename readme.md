@@ -1,24 +1,5 @@
 # Trash
 
-It's been
-50 years since Yacc was first developed, but the state of development
-of grammars hasn't
-progressed that much: we are still entering in grammars manually
-from books,
-still informally specifying programming languages (now with online "user manuals"
-and [abandoning stating the CFG altogether](https://docs.julialang.org/en/v1/)),
-still hand-writing parsers insisting
-that a hand-written parser is faster and better than a generated one--even if from a
-hand-tweaked template!), modifying the hand-written parser even before defining
-what the syntax is supposed to be, and still...[still using Yacc](https://stackoverflow.com/search?tab=newest&q=bison)!
-
-While parsing algorithms have changed, and new
-[parser generators](https://en.wikipedia.org/wiki/Comparison_of_parser_generators)
-pop up year after year, there are few, if any, compiler-based tools to help edit
-grammars and to convert a grammar from one generator to the next.
-In my opinion, grammars are just like code: they require debugging, extension,
-porting, and conversion to work with new parser generators. 
-
 Trash is a collection of command-line tools to support the analysis and editing
 of grammars and parse tree data with Antlr4. The toolkit can generate a parser
 application for an Antlr4 grammar for targets in C++, C#, Dart, Go, Java,
