@@ -354,6 +354,9 @@ been changed to not reparse the changed parse tree data. trparse now has a "-p" 
 specify where the built generated parser driver program. It also has a "-e" option to only
 output the errors from the parse and avoid outputing parse tree data. "trsort" was added.
 
+This version of the toolkit was used to scrape and refactor the Dart2 grammar from the
+[Dart Language Specification](https://github.com/dart-lang/language/blob/master/specification/dartLangSpec.tex).
+
 # Prior Releases
 
 # Roadmap
