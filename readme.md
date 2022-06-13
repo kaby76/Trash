@@ -12,28 +12,23 @@ that a hand-written parser is faster and better than a generated one--even if fr
 hand-tweaked template!), modifying the hand-written parser even before defining
 what the syntax is supposed to be, and still...[still using Yacc](https://stackoverflow.com/search?tab=newest&q=bison)!
 
-Of course, parsing algorithms have changed, and there are
-[dozens of parser generators](https://en.wikipedia.org/wiki/Comparison_of_parser_generators).
-But, there are few, if any, compiler-based tools to help edit grammars and to convert a grammar
-from one generator to the next.
+While parsing algorithms have changed, and new
+[parser generators](https://en.wikipedia.org/wiki/Comparison_of_parser_generators)
+pop up year after year, there are few, if any, compiler-based tools to help edit
+grammars and to convert a grammar from one generator to the next.
 In my opinion, grammars are just like code: they require debugging, extension,
 porting, and conversion to work with new parser generators. 
 
 Trash is a collection of command-line tools to support the analysis and editing
-of grammars, currently and specifically for Antlr4. The toolkit can generate a parser
-application for an Antlr4 grammar
-with target source code in C#, Java, JavaScript, Python3, C++, Go, or Dart.
-For the C# target, the generated parser can be used seemlessly with the
-rest of the toolkit, such as with the display/grep/edit
-of the parse trees.
-All tools pass parse tree data through stdin and stdout so they
-may be combined to create complex commands.
+of grammars and parse tree data with Antlr4. The toolkit can generate a parser
+application for an Antlr4 grammar for targets in C++, C#, Dart, Go, Java,
+JavaScript, PHP, or Python3.
+The toolkit supports operations
+on parse trees including grammars themselves as they are represented as parse trees.
+Parse trees from one app in the toolkit can be passed to another,
+using standard input and output, which allows for very complicated refactorings.
 
-Each app in `Trash` is implemented as a [Dotnet Tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) console application,
-except 
-[tragl](https://github.com/kaby76/Domemtech.Trash/tree/main/tragl)
-because it uses WPF on Windows to display a parse tree.
-Consequently, the toolkit can be used on Windows, Linux, or Mac.
+Each app in `Trash` is implemented as a [Dotnet Tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) console application, and can be used on Windows, Linux, or Mac.
 No prerequisites are required other than installing the
 [NET SDK](https://dotnet.microsoft.com/), and the toolchains
 for any other targets you want to use.
@@ -340,6 +335,23 @@ check out my [blog](http://codinggorilla.com).
 You must have the NET SDK installed to build and run.
 
 # Current release
+
+## 0.16.4.
+
+This release contains significant changes in the representation and operations
+on parse tree data, which is passed from one app to another of the toolkit. trinsert,
+trdelete, and trmove now perform editing on the Antlr data structures to provide a
+consistent data structure. For example, when a sub-tree is deleted from a parse tree, the
+associated token stream and character stream need to be adjusted to delete tokens and
+characters in the input file. This goes far beyond anything offered in the Antlr4 runtime: [TokenStreamRewriter](https://www.antlr.org/api/Java/org/antlr/v4/runtime/TokenStreamRewriter.html) allows one to 
+insert character input, but it does not modify the token stream or underlying buffer.
+Everything is kept consistent.
+
+There are many bug fixes in this release. Generated driver programs from trgen all now
+have timing information. trsplit is again working. trinsert, trdelete, trmove have all
+been changed to not reparse the changed parse tree data. trparse now has a "-p" option to
+specify where the built generated parser driver program. It also has a "-e" option to only
+output the errors from the parse and avoid outputing parse tree data.
 
 # Prior Releases
 
