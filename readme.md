@@ -345,7 +345,8 @@ consistent data structure. For example, when a sub-tree is deleted from a parse 
 associated token stream and character stream need to be adjusted to delete tokens and
 characters in the input file. This goes far beyond anything offered in the Antlr4 runtime: [TokenStreamRewriter](https://www.antlr.org/api/Java/org/antlr/v4/runtime/TokenStreamRewriter.html) allows one to 
 insert character input, but it does not modify the token stream or underlying buffer.
-Everything is kept consistent.
+Char stream, token stream and parse tree are all kept consistent. This allows for faster
+chained operations.
 
 There are many bug fixes in this release. Generated driver programs from trgen all now
 have timing information. trsplit is again working. trinsert, trdelete, trmove have all
@@ -359,6 +360,7 @@ output the errors from the parse and avoid outputing parse tree data.
 
 ## Planned for v1
 
+Trash is a long-term project (already going on 3 years).
 I'm envisioning for the "first" release to support:
 
 * reading and conversion of ABNF, Antlr2/3/4, Bison, Coco/R,
@@ -366,12 +368,14 @@ ISO14977, JavaCC, Lark, LBNF, Pegen, Peg.js, Pest, Rex,
 W3C EBNF, XText
 * xgrep
 * print a parse tree in various formats
-* sponge
+* sponge (converts parse tree data into files)
 * basic refactorings (insert, delete, rename, reorder, split,
 combine, fold, unfold)
 * basic analyses (indirect and direct recursion, infinite recursion,
 LL(1), LR(1), LALR(1),
 SLR(1), LR(0), etc)
+* string generation from grammars
+* grammar extraction from pdfs and text files
 * full documentation
 
 If you have any questions, email me at ken.domino <at> gmail.com
