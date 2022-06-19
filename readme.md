@@ -311,11 +311,14 @@ check out my [blog](http://codinggorilla.com).
 
 # Building
 
+    git clone https://github.com/kaby76/Domemtech.TrashBase
+    cd Domemtech.TrashBase
+    make
+    cd ..
     git clone https://github.com/kaby76/Domemtech.Trash
     cd Domemtech.Trash
-    dotnet restore
-    dotnet build
-
+    make; make install
+    
 You must have the NET SDK installed to build and run.
 
 # Current release
