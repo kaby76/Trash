@@ -113,6 +113,7 @@ namespace Trash
                     };
                     results.Add(tuple);
                 }
+                if (config.DisplayErrorsOnly) return;
                 string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
                 System.Console.WriteLine(js1);
             }
