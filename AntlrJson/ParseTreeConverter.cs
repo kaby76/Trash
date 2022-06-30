@@ -369,7 +369,7 @@
                     writer.WriteStartArray();
                     var in_token_stream = tuple.Stream as ITokenStream;
                     in_token_stream.Seek(0);
-                    for (int i = 0; ; ++i)
+                    for (int i = 0; i < in_token_stream.Size; ++i)
                     {
                         var token = in_token_stream.Get(i);
                         writer.WriteNumberValue(token.Type);

@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/aggregate01.sql",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2405\\sql\\plsql\\Generated"
+      "commandLineArgs": "test.in",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2405\\scala\\Generated"
     }
   }
 }
