@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-e -p ../../../../../../ScrapeDartSpec/test/reference/tools/spec_parser/Generated/ parser.dart",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\sdk\\pkg\\_fe_analyzer_shared\\lib\\src\\parser"
+      "commandLineArgs": "te.in",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\fix-issue-2597\\scala"
     }
   }
 }

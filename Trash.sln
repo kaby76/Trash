@@ -102,6 +102,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domemtech.Globbing", "..\Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsort", "trsort\trsort.csproj", "{03BFD2A2-C631-452E-BD2F-DC631533DFFE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trperf", "trperf\trperf.csproj", "{DA945D78-D218-4A86-9A5E-DFBCC1B5C596}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -289,6 +291,10 @@ Global
 		{03BFD2A2-C631-452E-BD2F-DC631533DFFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03BFD2A2-C631-452E-BD2F-DC631533DFFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03BFD2A2-C631-452E-BD2F-DC631533DFFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA945D78-D218-4A86-9A5E-DFBCC1B5C596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA945D78-D218-4A86-9A5E-DFBCC1B5C596}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA945D78-D218-4A86-9A5E-DFBCC1B5C596}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA945D78-D218-4A86-9A5E-DFBCC1B5C596}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

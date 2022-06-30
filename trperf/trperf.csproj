@@ -5,20 +5,21 @@
     <PackAsTool>true</PackAsTool>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <AssemblyName>trull</AssemblyName>
-    <PackageId>trull</PackageId>
+    <AssemblyName>trperf</AssemblyName>
+    <PackageId>trperf</PackageId>
     <Description>
-      <![CDATA[Apply the upper- and lowercase transform to a grammar.
-This program is part of the Trash toolkit.
-]]>
+      <![CDATA[
+Parses a file, arg, or stdin using a built-in or generated parser
+with performance analysis.
+This program is part of the Trash toolkit.]]>
     </Description>
-    <ToolCommandName>trull</ToolCommandName>
-    <RootNamespace>trull</RootNamespace>
+    <ToolCommandName>trperf</ToolCommandName>
+    <RootNamespace>trperf</RootNamespace>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Version>0.16.5</Version>
-    <RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/trull</RepositoryUrl> 
+    <RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/trperf</RepositoryUrl> 
     <RepositoryType>git</RepositoryType> 
   </PropertyGroup>
   <ItemGroup>
@@ -32,6 +33,7 @@ This program is part of the Trash toolkit.
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+    <ProjectReference Include="..\..\Domemtech.Globbing\Domemtech.Globbing.csproj" />
     <ProjectReference Include="..\Docs\Docs.csproj" />
   </ItemGroup>
   <PropertyGroup>

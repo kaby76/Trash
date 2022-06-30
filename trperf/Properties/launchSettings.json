@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trperf": {
+      "commandName": "Project",
+      "commandLineArgs": "../examples/robdata.sys",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2405\\abb\\Generated"
+    }
+  }
+}

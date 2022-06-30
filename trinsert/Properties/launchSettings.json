@@ -2,8 +2,8 @@
   "profiles": {
     "trinsert": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//ruleSpec/lexerRuleSpec/TOKEN_REF[text()='NEWLINE']\" \"fragment \"",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec"
+      "commandLineArgs": "-f o \"//parserRuleSpec[RULE_REF/text()='acmeCompUnit']/SEMI\" \"EOF\"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\fix-issue-2597\\acme\\Generated"
     }
   }
 }

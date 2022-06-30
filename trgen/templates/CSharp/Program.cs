@@ -10,19 +10,19 @@ using System.Runtime.CompilerServices;
 
 public class Program
 {
-    public static Parser Parser { get; set; }
+    public static <parser_name> Parser { get; set; }
     public static Lexer Lexer { get; set; }
     public static ITokenStream TokenStream { get; set; }
     public static IParseTree Tree { get; set; }
     public static string StartSymbol { get; set; } = "<start_symbol>";
     public static string Input { get; set; }
-    public static IParseTree Parse(string input)
+    public static void SetupParse2(string input)
     {
         ICharStream str = new AntlrInputStream(input);
-<if (case_insensitive_type)>
-        str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
-<endif>
-        var lexer = new <lexer_name>(str);
+        <if (case_insensitive_type)>
+                str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
+        <endif>
+                var lexer = new <lexer_name>(str);
         Lexer = lexer;
         var tokens = new CommonTokenStream(lexer);
         TokenStream = tokens;
@@ -33,10 +33,13 @@ public class Program
         lexer.RemoveErrorListeners();
         parser.RemoveErrorListeners();
         lexer.AddErrorListener(listener_lexer);
-        parser.AddErrorListener(listener_parser);
-        var tree = parser.<start_symbol>();
-        Input = lexer.InputStream.ToString();
-        TokenStream = parser.TokenStream;
+		parser.AddErrorListener(listener_parser);
+    }
+    public static IParseTree Parse2()
+    {
+        var tree = Parser.<start_symbol>();
+        Input = Lexer.InputStream.ToString();
+        TokenStream = Parser.TokenStream;
         Tree = tree;
         return tree;
     }

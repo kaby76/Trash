@@ -1,4 +1,4 @@
-version="0.16.4"
+version="0.16.5"
 
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
@@ -38,7 +38,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- Fixes to Java, Dart, Python, PHP templates in trgen; trxgrep results sent now to stdout; changes to trinsert, -a option; changes to Parsing Result Set data; fixes to trparse, trunfold, trinsert, trreplace, trdelete, add trsort.%" > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*[ ]*[-][-].*$'"%$version -- Add trperf/update templates.%" > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
