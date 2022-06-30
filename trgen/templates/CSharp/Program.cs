@@ -43,6 +43,30 @@ public class Program
         Tree = tree;
         return tree;
     }
+    public static IParseTree Parse(string input)
+    {
+        ICharStream str = new AntlrInputStream(input);
+    <if (case_insensitive_type)>
+            str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
+    < endif >
+            var lexer = new < lexer_name > (str);
+        Lexer = lexer;
+        var tokens = new CommonTokenStream(lexer);
+        TokenStream = tokens;
+        var parser = new < parser_name > (tokens);
+        Parser = parser;
+        var listener_lexer = new ErrorListener\< int > ();
+        var listener_parser = new ErrorListener\< IToken > ();
+        lexer.RemoveErrorListeners();
+        parser.RemoveErrorListeners();
+        lexer.AddErrorListener(listener_lexer);
+        parser.AddErrorListener(listener_parser);
+        var tree = parser.< start_symbol > ();
+        Input = lexer.InputStream.ToString();
+        TokenStream = parser.TokenStream;
+        Tree = tree;
+        return tree;
+    }
 
     static void Main(string[] args)
     {
