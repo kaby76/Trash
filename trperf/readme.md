@@ -9,7 +9,8 @@ be in a trgen-generated parser directory, or use the -p option.
 
 # Usage
     
-    trparse (<string> | <options>)*
+    trperf (<string> | <options>)*
+    -i, --input      String to parse.
     -s, --start-rule Start rule name.
     -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
 
