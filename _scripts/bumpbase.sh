@@ -1,7 +1,7 @@
 #!/bin/bash
 
 version_framework="net6.0"
-version_base="4.3.0"
+version_base="4.4.0"
 version_tree="5.2.0"
 version_antlr4buildtasks="10.3"
 version_stringtemplate="4.2.0"

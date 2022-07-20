@@ -2,8 +2,8 @@
   "profiles": {
     "trtree": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-v4-i2572-p2\\sql\\plsql\\x\\Generated"
+      "commandLineArgs": "-f o2.pt",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\tst\\Generated"
     }
   }
 }

@@ -71,23 +71,27 @@
                 var atrees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream;
+                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 var doc = Docs.Class1.CreateDoc(parse_info);
                 var pr = LanguageServer.ParsingResultsFactory.Create(doc);
                 var workspace = doc.Workspace;
                 _ = new LanguageServer.Module().Compile(workspace, false);
-                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
                 {
                     List<TerminalNodeImpl> nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                    var (text_before, other) = LanguageServer.TreeEdits.TextToLeftOfLeaves(tokstream, atrees[0]);
                     LanguageServer.Transform.Unfold(nodes, doc);
                     var t = LanguageServer.TreeOutput.OutputTree(atrees.First(), lexer, parser, null).ToString();
+                    var xx = new System.Text.StringBuilder();
+                    LanguageServer.TreeEdits.Reconstruct(xx, atrees[0], text_before);
+                    var zz = xx.ToString();
                     var tuple = new ParsingResultSet()
                     {
-                        Text = doc.Code,
+                        Text = ((AltAntlr.MyTokenStream)tokstream).Text,
                         FileName = doc.FullPath,
                         Stream = pr.TokStream,
                         Nodes = atrees,

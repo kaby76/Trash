@@ -23,6 +23,9 @@ namespace Trash
         [Option('e', "errors", Required = false, HelpText = "Output parse errors only.")]
         public bool DisplayErrorsOnly { get; set; }
 
+        [Option('g', "encoding", Required = false, HelpText = "Set the encoding for the grammar.")]
+        public string Encoding { get; set; }
+
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
     }

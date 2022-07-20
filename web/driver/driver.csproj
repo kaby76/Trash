@@ -11,7 +11,7 @@
     <PackageReference Include="Domemtech.AutomaticGraphLayout" Version="1.1.4" />
     <PackageReference Include="Domemtech.AutomaticGraphLayout.Drawing" Version="1.1.4" />
     <PackageReference Include="Domemtech.AutomaticGraphLayout.GraphViewerGdi" Version="1.1.4" />
-    <PackageReference Include="Domemtech.TrashBase" Version="4.3.0" />
+    <PackageReference Include="Domemtech.TrashBase" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,8 +2,8 @@
   "profiles": {
     "trunfold": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//lexerRuleSpec[TOKEN_REF/text()='SIMPLE_STRING_INTERPOLATION']//TOKEN_REF[text()='BUILT_IN_IDENTIFIER']\" ",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\dart\\ScrapeDartSpec\\xxx"
+      "commandLineArgs": "-f o.pt \"//parserRuleSpec[RULE_REF/text()='repeatable_command']//RULE_REF[text()='repeated_command']\" ",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2405\\bcpl\\x"
     }
   }
 }

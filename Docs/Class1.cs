@@ -24,7 +24,7 @@ namespace Docs
             _ = new LanguageServer.Module().Compile(workspace);
         }
         
-        public static Document ReadDoc(string path)
+        public static Document ReadDoc(string path, string encoding = "utf8")
         {
             string file_name = path;
             Document document = _workspace.FindDocument(file_name);
@@ -33,12 +33,21 @@ namespace Docs
                 throw new Exception("File does not exist.");
             }
             try
-            {   // Open the text file using a stream reader.
-                using (StreamReader sr = new StreamReader(file_name))
+            {
+                // Open the text file using a stream reader.
+                System.Text.Encoding en;
+                if (encoding.ToLower() == "utf8")
+                    en = System.Text.Encoding.UTF8;
+                else if (encoding.ToLower() == "ascii")
+                    en = System.Text.Encoding.ASCII;
+                else
+                    en = System.Text.Encoding.Unicode;
+                using (StreamReader sr = new StreamReader(file_name, en))
                 {
                     // Read the stream to a string, and write the string to the console.
                     string str = sr.ReadToEnd();
                     document.Code = str;
+                    document.Encoding = encoding;
                 }
             }
             catch (IOException)

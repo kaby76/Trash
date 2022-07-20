@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "test.in",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2405\\scala\\Generated"
+      "commandLineArgs": "xx",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\tst\\Generated"
     }
   }
 }

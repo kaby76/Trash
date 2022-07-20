@@ -55,9 +55,6 @@ namespace Trash
         {
             var config = new Config();
 
-            // Get default from OS, or just default.
-            config.output_directory = "Generated/";
-
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
             // Parse options, stop if we see a bogus option, or something like --help.
@@ -81,11 +78,6 @@ namespace Trash
                         prop.SetValue(config, prop.GetValue(o, null));
                     }
                 }
-                if (o.all_source_pattern != null) config.all_source_pattern = config.all_source_pattern;
-                else config.all_source_pattern =
-                    "^(?!.*("
-                     + "Generated/|.git/|.gitignore)).+"
-                     + "$";
             });
             if (stop) return;
 

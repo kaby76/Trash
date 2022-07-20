@@ -1,0 +1,20 @@
+(:
+ Consider this input, arithmetic with comments.
+
+    1
+       // add in factor.
+       + 2 * (3-1)
+
+ Output text with modifications for two forms of expression node,
+ with the root node still an expression node, but only in name. Intertoken
+ spacing remains for tree. All else remains the same.
+
+ '{{' and '}}' denote output text or a replacement tree node.
+
+ Text within '<' ... '>' is an XPath expression. These get placed as new children.
+
+ :)
+
+/file_/expression {{<expression[1]><expression[2]><*[2]>}}
+(: )//expression[count(atom) = 1] {{<atom><node[0]>}} :)
+
