@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "dotnet-antlr": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\trgen2\\doc",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\tst\\Generated"
+    }
+  }
+}

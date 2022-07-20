@@ -37,8 +37,8 @@ namespace Trash
                 helpText = HelpText.AutoBuild(result, h =>
                 {
                     h.AdditionalNewLineAfterOption = false;
-                    h.Heading = "trgen2";
-                    h.Copyright = "Copyright (c) 2021 Ken Domino";
+                    h.Heading = "trpiggy";
+                    h.Copyright = "Copyright (c) 2022 Ken Domino";
                     h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
@@ -54,9 +54,6 @@ namespace Trash
         public void MainInternal(string[] args)
         {
             var config = new Config();
-
-            // Get default from OS, or just default.
-            config.output_directory = "Generated/";
 
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
@@ -81,11 +78,6 @@ namespace Trash
                         prop.SetValue(config, prop.GetValue(o, null));
                     }
                 }
-                if (o.all_source_pattern != null) config.all_source_pattern = config.all_source_pattern;
-                else config.all_source_pattern =
-                    "^(?!.*("
-                     + "Generated/|.git/|.gitignore)).+"
-                     + "$";
             });
             if (stop) return;
 

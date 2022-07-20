@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <AssemblyName>trpiggy</AssemblyName>
+    <PackageId>trpiggy</PackageId>
+    <Description>
+      <![CDATA[Modify trees from template.
+This program is part of the Trash toolkit.]]>
+    </Description>
+    <ToolCommandName>trpiggy</ToolCommandName>
+    <RootNamespace>trpiggy</RootNamespace>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>0.16.5</Version>
+    <RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/trpiggy</RepositoryUrl> 
+    <RepositoryType>git</RepositoryType> 
+  </PropertyGroup>
+  <ItemGroup>
+    <Antlr4 Include="TreeMLLexer.g4" />
+    <Antlr4 Include="TreeMLParser.g4" />
+    <Antlr4 Include="TemplateLexer.g4" />
+    <Antlr4 Include="TemplateParser.g4" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Domemtech.Globbing" Version="2.3.0">
+      <Aliases>MainGlobbing</Aliases>
+    </PackageReference>
+        <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
+        <PackageReference Include="Antlr4BuildTasks" Version="10.7.0" />
+	  <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
+	  <PackageReference Include="cs-codebuff" Version="4.0.0" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	  <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
+	  <PackageReference Include="Domemtech.TrashBase" Version="4.4.0" />
+	  <PackageReference Include="Microsoft.CodeAnalysis" Version="4.2.0" />
+	  <PackageReference Include="CommandLineParser" Version="2.9.1" />
+  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+		<ProjectReference Include="..\Docs\Docs.csproj" />
+	</ItemGroup>
+	<PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+  </PropertyGroup>
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="readme.md">
+      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="readme.md" />
+  </ItemGroup>
+</Project>

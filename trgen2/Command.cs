@@ -1,25 +1,23 @@
-﻿extern alias MainGlobbing;
-
-namespace Trash
+﻿namespace Trash
 {
-    using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
-    using AntlrJson;
+    using Antlr4.StringTemplate;
     using System;
     using System.Collections.Generic;
-    using System.Data;
+    using System.ComponentModel;
     using System.Dynamic;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Text;
     using System.Text.Json;
-    using LanguageServer;
-    using org.eclipse.wst.xml.xpath2.processor.util;
+    using System.Text.RegularExpressions;
+    using System.Xml;
+    using System.Xml.XPath;
 
     class Command
     {
         Config _config;
-        
+
         public string Help()
         {
             using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trgen2.readme.md"))
@@ -33,7 +31,7 @@ namespace Trash
         {
             _config = config;
             string lines = null;
-            if (!(_config.TreeFile != null && _config.TreeFile != ""))
+            if (!(_config.File != null && _config.File != ""))
             {
                 if (_config.Verbose)
                 {
@@ -49,35 +47,29 @@ namespace Trash
             {
                 if (_config.Verbose)
                 {
-                    System.Console.Error.WriteLine("reading from file >>>" + _config.TreeFile + "<<<");
+                    System.Console.Error.WriteLine("reading from file >>>" + _config.File + "<<<");
                 }
-                lines = File.ReadAllText(_config.TreeFile);
+                lines = File.ReadAllText(_config.File);
             }
-            ICharStream str = CharStreams.fromPath(config.TemplateFile.First());
-            var spec_lexer = new TreeMLLexer(str);
-            var ts = new Antlr4.Runtime.CommonTokenStream(spec_lexer);
-            var spec_parser = new TreeMLParser(ts);
-            var spec = spec_parser.file_();
             var xml = string.Join("", lines);
-            if (spec_parser.NumberOfSyntaxErrors > 0)
-                return 0;
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-            serializeOptions.WriteIndented = false;
-            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            // Convert xml to tree.
+            dynamic root = Antlr4.StringTemplate.Misc.DynamicXml.Parse(xml);
+            if (_config.templates != null)
+                _config.templates = Path.GetFullPath(_config.templates);
             var path = Environment.CurrentDirectory;
             var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             root_directory = cd;
-            GenerateSingle(spec, data);
+            GenerateSingle(root);
             return 0;
         }
 
-        public static string version = "0.16.5";
+        public static string version = "0.16.4";
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
         public string root_directory;
         public string suffix = "";
         public string ignore_string = null;
+        public string source_directory;
 
 
         public static LineTranslationType GetLineTranslationType()
@@ -132,103 +124,31 @@ namespace Trash
         }
 
 
-        public void GenerateSingle(TreeMLParser.File_Context spec_tree, AntlrJson.ParsingResultSet[] data)
+        public void GenerateSingle(object root)
         {
-            // Collect all patterns.
-            var pattern = spec_tree.patterns().pattern();
-            var results = new List<ParsingResultSet>();
-            bool do_rs = true;
-            foreach (var parse_info in data)
+            source_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
+            if (source_directory != "" && !source_directory.EndsWith("/"))
             {
-                var text = parse_info.Text;
-                var fn = parse_info.FileName;
-                var atrees = parse_info.Nodes;
-                var parser = parse_info.Parser;
-                var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
-                foreach (var pat in pattern)
-                {
-                    var expr = pat.xpath().GetText();
-                    var template_source = pat.text().GetText();
-                    var template_lexer = new TemplateLexer(CharStreams.fromString(template_source));
-                    var template_parser = new TemplateParser(new Antlr4.Runtime.CommonTokenStream(template_lexer));
-                    var template_tree = template_parser.file_();
-                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
-                    {
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue)).ToArray();
-                        if (_config.Verbose) System.Console.Error.WriteLine("Result size " + nodes.Count());
-                        List<IParseTree> res = new List<IParseTree>();
-                        foreach (var v in nodes)
-                        {
-                            if (v is AntlrTreeEditing.AntlrDOM.AntlrElement)
-                            {
-                                var q = v as AntlrTreeEditing.AntlrDOM.AntlrElement;
-                                var r = q.AntlrIParseTree as AltAntlr.MyParserRuleContext;
-                                var leaf = TreeEdits.LeftMostToken(r);
-                                var first_child = r.GetChild(0);
-                                var place_holder = new AltAntlr.MyTerminalNodeImpl(new AltAntlr.MyToken() { Text = "xxx" }) ;
-                                if (first_child != null)
-                                {
-                                    TreeEdits.InsertBeforeInStreams(tokstream, first_child, place_holder);
-                                }
-                                else
-                                {
-                                    r.AddChild(place_holder);
-                                }
-                                var old_children = r.children.ToList();
-                                place_holder.Parent = r;
-                                for (int c = 0; c < template_tree.ChildCount; ++c)
-                                {
-                                    var new_child = template_tree.GetChild(c);
-                                    var new_intertext = new_child.GetText().Replace("{{","").Replace("}}","");
-                                    var xx = new_child as TerminalNodeImpl;
-                                    if (xx.Symbol.Type == TemplateLexer.Any)
-                                    {
-                                        var new_text = xx.Symbol.Text.Replace("{{", "").Replace("}}", "");
-                                        if (new_text != null && new_text != "")
-                                            TreeEdits.InsertBeforeInStreams(tokstream, r, new_text);
-                                    }
-                                    else
-                                    {
-                                        // From code, get xpath.
-                                        var xpath_expr = xx.Symbol.Text.Substring(0, xx.Symbol.Text.Length - 1).Substring(1);
-                                        var nodes2 = engine.parseExpression(xpath_expr,
-                                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { v })
-                                                .Select(x => (x.NativeValue)).ToArray();
-                                        if (_config.Verbose) System.Console.Error.WriteLine("Result size " + nodes2.Count());
-                                        foreach (var z in nodes2)
-                                        {
-                                            if (z is AntlrTreeEditing.AntlrDOM.AntlrElement)
-                                            {
-                                                var q2 = z as AntlrTreeEditing.AntlrDOM.AntlrElement;
-                                                var r2 = q2.AntlrIParseTree;
-                                                if (r2 == null) throw new Exception("null value.");
-                                                TreeEdits.MoveBefore(r2, place_holder);
-                                            }
-                                        }
-                                    }
-
-                                }
-                                var before_del_frontier = TreeEdits.Frontier(atrees[0]).ToArray();
-                                TreeEdits.Delete(tokstream, place_holder);
-                                var after_del_frontier = TreeEdits.Frontier(atrees[0]).ToArray();
-                                var sb = LanguageServer.TreeOutput.OutputTree(r, lexer, parser, null);
-                            }
-                        }
-                    }
-                }
-                var parse_info_out = new AntlrJson.ParsingResultSet() { Text = text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = atrees };
-                results.Add(parse_info_out);
+                source_directory = source_directory + "/";
             }
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-            serializeOptions.WriteIndented = true;
-            string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
-            System.Console.WriteLine(js1);
+            try
+            {
+                // Create a directory containing target build files.
+                Directory.CreateDirectory((string)_config.output_directory);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            // Find all source files.
+            this.all_target_files = new List<string>();
+            this.all_source_files = new Domemtech.Globbing.Glob()
+                    .RegexContents(this._config.all_source_pattern)
+                    .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
+                    .Select(f => f.FullName.Replace('\\', '/'))
+                    .ToList();
+            GenFromTemplates(root);
+            AddSource();
         }
 
         IEnumerable<string> EnumerateLines(TextReader reader)
@@ -259,10 +179,159 @@ namespace Trash
             }
         }
 
+        public void AddSource()
+        {
+            var cd = Environment.CurrentDirectory + "/";
+            cd = cd.Replace('\\', '/');
+            var set = new HashSet<string>();
+            foreach (var path in this.all_source_files)
+            {
+                // Construct proper starting directory based on namespace.
+                var from = path;
+                var f = from.Substring(cd.Length);
+                // First, remove source_directory.
+                f = (
+                        f.StartsWith(source_directory)
+                        ? f.Substring((source_directory).Length)
+                        : f
+                        );
+
+                string to = null;
+                if (to == null)
+                {
+                    to = this._config.output_directory
+                        + f;
+                }
+                System.Console.Error.WriteLine("Copying source file from "
+                  + from
+                  + " to "
+                  + to);
+                this.all_target_files.Add(to);
+                this.CopyFile(from, to);
+            }
+        }
+
         public class Params
         {
             public string AttrName { get; set; }
             public string AttrValue { get; set; }
+        }
+
+        private void GenFromTemplates(object root)
+        {
+            if (_config.templates == null)
+            {
+                System.Reflection.Assembly a = this.GetType().Assembly;
+                // Load resource file that contains the names of all files in templates/ directory,
+                // which were obtained by doing "cd templates/; find . -type f > files" at a Bash
+                // shell.
+                var orig_file_names = ReadAllResourceLines(a, "trgen2.templates.files");
+                var regex_string = "^(?=.*" + _config.template + "/).*$";
+                var regex = new Regex(regex_string);
+                var files_to_copy = orig_file_names.Where(f =>
+                {
+                    if (f == "./files") return false;
+                    var v = regex.IsMatch(f);
+                    return v;
+                }).ToList();
+                var prefix_to_remove = "trgen2.templates.";
+                System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
+                var resources = a.GetManifestResourceNames();
+                string param_str = ReadAllResource(a, prefix_to_remove
+                    + _config.template + ".parameters.json");
+                var parameters = JsonSerializer.Deserialize<List<Params>>(param_str);
+                var cd = Path.GetFileName(Environment.CurrentDirectory);
+                foreach (var file in files_to_copy)
+                {
+                    var from = file;
+                    // copy the file straight up if it doesn't begin
+                    // with target directory name. Otherwise,
+                    // remove the target dir name.
+                    if (file.EndsWith("parameters.json"))
+                    {
+                        continue;
+                    }
+                    var to = from.StartsWith("./" + _config.template)
+                        ? from.Substring(("./" + _config.template).Length + 1)
+                        : from.Substring(2);
+                    to = ((string)_config.output_directory).Replace('\\', '/') + to;
+                    from = prefix_to_remove + from.Replace('/', '.').Substring(2);
+                    to = to.Replace('\\', '/');
+                    to = to.Replace("#dir_name#", cd);
+                    var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
+                    Directory.CreateDirectory(q);
+                    string content = ReadAllResource(a, from);
+                    System.Console.Error.WriteLine("Rendering template file from "
+                        + from
+                        + " to "
+                        + to);
+                    Template t = new Template(content);
+                    t.Add("additional_sources", all_target_files.Where(t =>
+                    {
+                        var ext = Path.GetExtension(t);
+                        return suffix.Contains(ext);
+                    })
+                        .Select(t => t.Substring(_config.output_directory.Length))
+                        .ToList());
+                    foreach (var pair in parameters)
+                    {
+                        t.Add(pair.AttrName, pair.AttrValue);
+                    }
+                    t.Add("dir_name", cd);
+                    var o = t.Render();
+                    File.WriteAllText(to, o);
+                }
+            }
+            else
+            {
+                var regex_string = "^(.*(files|" + _config.template + "/)).*$";
+                var files_to_copy = new Domemtech.Globbing.Glob(_config.templates)
+                    .RegexContents(regex_string)
+                    .Where(f =>
+                    {
+                        if (f.Attributes.HasFlag(FileAttributes.Directory)) return false;
+                        if (f is DirectoryInfo) return false;
+                        return true;
+                    })
+                    .Select(f => f.FullName.Replace('\\', '/'))
+                    .ToList();
+                var prefix_to_remove = _config.templates + '/';
+                prefix_to_remove = prefix_to_remove.Replace("\\", "/");
+                prefix_to_remove = prefix_to_remove.Replace("//", "/");
+                System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
+                var set = new HashSet<string>();
+                foreach (var file in files_to_copy)
+                {
+                    var from = file;
+                    var e = file.Substring(prefix_to_remove.Length);
+                    var to = e.StartsWith(_config.template)
+                         ? e.Substring(_config.template.Length + 1)
+                         : e;
+                    if (e == "files") continue;
+                    e = e.Substring(_config.template.Length + 1);
+                    if (e == "parameters.json") continue;
+                    to = ((string)_config.output_directory).Replace('\\', '/') + to;
+                    var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
+                    Directory.CreateDirectory(q);
+                    string content = File.ReadAllText(from);
+                    System.Console.Error.WriteLine("Rendering template file from "
+                        + from
+                        + " to "
+                        + to);
+                    Template t = new Template(content);
+                    t.Add("additional_sources", all_target_files.Where(t =>
+                    {
+                        var ext = Path.GetExtension(t);
+                        return suffix.Contains(ext);
+                    })
+                        .Select(t => t.Substring(_config.output_directory.Length))
+                        .ToList());
+                    t.Add("root", root);
+                    //t.Add("is_combined_grammar", p.tool_grammar_files.Count() == 1);
+                    var o = t.Render();
+                    File.WriteAllText(to, o);
+                }
+            }
         }
 
         static string RemoveTrailingSlash(string str)
