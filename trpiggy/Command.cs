@@ -174,14 +174,14 @@ namespace Trash
                                 if (first_child != null)
                                 {
                                     TreeEdits.InsertBeforeInStreams(tokstream, first_child, place_holder);
+                                    if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
                                 }
                                 else
                                 {
-                                    r.AddChild(place_holder);
+                                    throw new Exception("Unimplemented.");
                                 }
-                                var old_children = r.children.ToList();
                                 place_holder.Parent = r;
-                                for (int c = 0; c < template_tree.ChildCount; ++c)
+                                for (int c = 0; c < template_tree.ChildCount - 1; ++c)
                                 {
                                     var new_child = template_tree.GetChild(c);
                                     var new_intertext = new_child.GetText().Replace("{{","").Replace("}}","");
@@ -189,8 +189,12 @@ namespace Trash
                                     if (xx.Symbol.Type == TemplateLexer.Any)
                                     {
                                         var new_text = xx.Symbol.Text.Replace("{{", "").Replace("}}", "");
+                                        var z5 = LanguageServer.TreeOutput.OutputTree(r, lexer, parser, null).ToString();
                                         if (new_text != null && new_text != "")
-                                            TreeEdits.InsertBeforeInStreams(tokstream, r, new_text);
+                                        {
+                                            TreeEdits.InsertBeforeInStreams(tokstream, place_holder, new_text);
+                                            if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
+                                        }
                                     }
                                     else
                                     {
@@ -207,21 +211,29 @@ namespace Trash
                                                 var q2 = z as AntlrTreeEditing.AntlrDOM.AntlrElement;
                                                 var r2 = q2.AntlrIParseTree;
                                                 if (r2 == null) throw new Exception("null value.");
-                                                TreeEdits.MoveBefore(r2, place_holder);
+                                                TreeEdits.MoveBeforeInStreams(tokstream, r2, place_holder);
+                                                if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
                                             }
                                         }
                                     }
-
                                 }
-                                var before_del_frontier = TreeEdits.Frontier(atrees[0]).ToArray();
-                                TreeEdits.Delete(tokstream, place_holder);
-                                var after_del_frontier = TreeEdits.Frontier(atrees[0]).ToArray();
-                                var sb = LanguageServer.TreeOutput.OutputTree(r, lexer, parser, null);
+                                // Nuke all from place_holder and on.
+                                int i = 0;
+                                for (; i < place_holder.Parent.ChildCount; ++i)
+                                    if (place_holder.Parent.GetChild(i) == place_holder)
+                                        break;
+                                var old_children = (place_holder.Parent as AltAntlr.MyParserRuleContext).children.ToArray();
+                                for (int j = old_children.Length - 1; j >= i; --j)
+                                {
+                                    var ch = old_children[j];
+                                    TreeEdits.Delete(tokstream, ch);
+                                    if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
+                                }
                             }
                         }
                     }
                 }
-                var parse_info_out = new AntlrJson.ParsingResultSet() { Text = text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = atrees };
+                var parse_info_out = new AntlrJson.ParsingResultSet() { Text = tokstream.Text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = atrees };
                 results.Add(parse_info_out);
             }
             var serializeOptions = new JsonSerializerOptions();

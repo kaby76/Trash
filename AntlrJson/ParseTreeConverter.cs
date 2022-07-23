@@ -282,7 +282,7 @@
                 }
                 foreach (var n in result)
                 {
-                    Sweep(n);
+                    Reset(n);
                 }
                 var res = new AntlrJson.ParsingResultSet()
                 {
@@ -300,35 +300,36 @@
             return results.ToArray();
         }
 
-        private void Sweep(IParseTree node)
+        private void Reset(IParseTree tree)
         {
-            Stack<IParseTree> s = new Stack<IParseTree>();
-            Stack<IParseTree> t = new Stack<IParseTree>();
-            s.Push(node);
-            while (s.Any())
+            if (tree is AltAntlr.MyTerminalNodeImpl l)
             {
-                var n = s.Pop();
-                t.Push(n);
-                for (int i = n.ChildCount - 1; i >= 0; --i)
-                {
-                    var c = n.GetChild(i);
-                    s.Push(c);
-                }
+                var t = l.Payload as AltAntlr.MyToken;
+                l.Start = t.TokenIndex;
+                l.Stop = t.TokenIndex;
+                l._sourceInterval = new Antlr4.Runtime.Misc.Interval(t.TokenIndex, t.TokenIndex);
             }
-            while (t.Any())
+            else if (tree is AltAntlr.MyParserRuleContext p)
             {
-                var n = t.Pop();
-                if (n is MyParserRuleContext x)
+                var res = p.SourceInterval;
+                if (p.ChildCount > 0)
                 {
-                    if (n.ChildCount > 0)
+                    int min = int.MaxValue;
+                    int max = int.MinValue;
+                    for (int i = 0; i < tree.ChildCount; ++i)
                     {
-                        x._sourceInterval = new Interval(n.GetChild(0).SourceInterval.a, n.GetChild(n.ChildCount - 1).SourceInterval.b);
+                        var c = tree.GetChild(i);
+                        Reset(c);
+                        min = Math.Min(min, c.SourceInterval.a);
+                        max = Math.Max(max, c.SourceInterval.b);
                     }
+                    res = new Interval(min, max);
                 }
-                else if (n is MyTerminalNodeImpl y)
+                else
                 {
-                    y._sourceInterval = new Interval(y.Symbol.StartIndex, y.Symbol.StartIndex);
+                    res = new Interval(int.MaxValue, -1);
                 }
+                p._sourceInterval = res;
             }
         }
 

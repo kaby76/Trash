@@ -143,12 +143,15 @@
             System.Console.Error.WriteLine("Time to parse: " + (after - before));
             var tree = res as IParseTree;
             var t2 = tree as ParserRuleContext;
-            var r2 = type.GetProperty("Parser").GetValue(null, new object[0]);
-            var r3 = type.GetProperty("Lexer").GetValue(null, new object[0]);
-            var r4 = type.GetProperty("TokenStream").GetValue(null, new object[0]);
+            var parser = type.GetProperty("Parser").GetValue(null, new object[0]) as Antlr4.Runtime.Parser;
+            var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
+            var tokstream = type.GetProperty("TokenStream").GetValue(null, new object[0]) as ITokenStream;
+            var commontokstream = tokstream as CommonTokenStream;
             var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
-            System.Console.Error.WriteLine("# tokens per sec = " + (r4 as ITokenStream).Size / (after - before).TotalSeconds);
-            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Stream = r4 as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = r2 as Parser, Lexer = r3 as Lexer };
+            System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
+            if (config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
+            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Stream = tokstream as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = parser, Lexer = lexer };
+            
             data.Add(tuple);
         }
     }

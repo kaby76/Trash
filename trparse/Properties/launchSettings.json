@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "xx",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\tst\\Generated"
+      "commandLineArgs": "-v x",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2703\\lua\\Generated"
     }
   }
 }

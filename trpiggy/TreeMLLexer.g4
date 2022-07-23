@@ -163,12 +163,9 @@ fragment FragChar : '\u0009' | '\u000a' | '\u000d'
 
 Whitespace :  ('\u000d' | '\u000a' | '\u0020' | '\u0009')+ -> channel(HIDDEN) ;
 
-// Not per spec. Specified for testing.
 SEMI : ';' ;
-
 LDel : '{{' -> more, pushMode(Template);
-
-
+CommentLine : '##' ~[\n\r]* -> channel(HIDDEN) ;
 
 mode Template;
 TEXT : '}}' -> popMode ;
