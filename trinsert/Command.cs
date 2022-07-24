@@ -87,8 +87,8 @@
                         }
                         else
                         {
-                            if (!config.After) TreeEdits.InsertBeforeInStreams(tokstream, node, str);
-                            else TreeEdits.InsertAfterInStreams(tokstream, leaf, str);
+                            if (!config.After) TreeEdits.InsertBeforeInStreams(node, str);
+                            else TreeEdits.InsertAfterInStreams(leaf, str);
                         }
                     }
                     var tuple = new ParsingResultSet()

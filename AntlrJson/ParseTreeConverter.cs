@@ -282,7 +282,7 @@
                 }
                 foreach (var n in result)
                 {
-                    Reset(n);
+                    Reset(n, parser, lexer, out_token_stream, fake_char_stream);
                 }
                 var res = new AntlrJson.ParsingResultSet()
                 {
@@ -300,10 +300,15 @@
             return results.ToArray();
         }
 
-        private void Reset(IParseTree tree)
+        
+        private void Reset(IParseTree tree, MyParser parser, MyLexer lexer, MyTokenStream ts, MyCharStream cs)
         {
             if (tree is AltAntlr.MyTerminalNodeImpl l)
             {
+                l.Parser = parser;
+                l.Lexer = lexer;
+                l.TokenStream = ts;
+                l.InputStream = cs;
                 var t = l.Payload as AltAntlr.MyToken;
                 l.Start = t.TokenIndex;
                 l.Stop = t.TokenIndex;
@@ -311,6 +316,10 @@
             }
             else if (tree is AltAntlr.MyParserRuleContext p)
             {
+                p.Parser = parser;
+                p.Lexer = lexer;
+                p.TokenStream = ts;
+                p.InputStream = cs;
                 var res = p.SourceInterval;
                 if (p.ChildCount > 0)
                 {
@@ -319,7 +328,7 @@
                     for (int i = 0; i < tree.ChildCount; ++i)
                     {
                         var c = tree.GetChild(i);
-                        Reset(c);
+                        Reset(c, parser, lexer, ts, cs);
                         min = Math.Min(min, c.SourceInterval.a);
                         max = Math.Max(max, c.SourceInterval.b);
                     }

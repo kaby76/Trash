@@ -143,9 +143,10 @@ namespace Trash
                 var text = parse_info.Text;
                 var fn = parse_info.FileName;
                 var atrees = parse_info.Nodes;
-                var parser = parse_info.Parser;
-                var lexer = parse_info.Lexer;
+                var parser = parse_info.Parser as AltAntlr.MyParser;
+                var lexer = parse_info.Lexer as AltAntlr.MyLexer;
                 var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+                var charstream = lexer.InputStream as AltAntlr.MyCharStream;
                 foreach (var pat in pattern)
                 {
                     var expr = pat.xpath().GetText();
@@ -170,10 +171,10 @@ namespace Trash
                                 var r = q.AntlrIParseTree as AltAntlr.MyParserRuleContext;
                                 var leaf = TreeEdits.LeftMostToken(r);
                                 var first_child = r.GetChild(0);
-                                var place_holder = new AltAntlr.MyTerminalNodeImpl(new AltAntlr.MyToken() { Text = "xxx" }) ;
+                                var place_holder = new AltAntlr.MyTerminalNodeImpl(new AltAntlr.MyToken() { Text = "xxx"}) { Parser = parser, Lexer = lexer, TokenStream = tokstream, InputStream = charstream } ;
                                 if (first_child != null)
                                 {
-                                    TreeEdits.InsertBeforeInStreams(tokstream, first_child, place_holder);
+                                    TreeEdits.InsertBeforeInStreams(first_child, place_holder);
                                     if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
                                 }
                                 else
@@ -189,10 +190,9 @@ namespace Trash
                                     if (xx.Symbol.Type == TemplateLexer.Any)
                                     {
                                         var new_text = xx.Symbol.Text.Replace("{{", "").Replace("}}", "");
-                                        var z5 = LanguageServer.TreeOutput.OutputTree(r, lexer, parser, null).ToString();
                                         if (new_text != null && new_text != "")
                                         {
-                                            TreeEdits.InsertBeforeInStreams(tokstream, place_holder, new_text);
+                                            TreeEdits.InsertBeforeInStreams(place_holder, new_text);
                                             if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
                                         }
                                     }
@@ -211,7 +211,7 @@ namespace Trash
                                                 var q2 = z as AntlrTreeEditing.AntlrDOM.AntlrElement;
                                                 var r2 = q2.AntlrIParseTree;
                                                 if (r2 == null) throw new Exception("null value.");
-                                                TreeEdits.MoveBeforeInStreams(tokstream, r2, place_holder);
+                                                TreeEdits.MoveBeforeInStreams(r2, place_holder);
                                                 if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
                                             }
                                         }
