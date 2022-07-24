@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt doc2",
+      "commandLineArgs": "-v -f o.pt doc2",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2703\\lua\\Generated"
     }
   }
