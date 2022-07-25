@@ -4,11 +4,9 @@ options {
     tokenVocab = TreeMLLexer;
 }
 
-file_ : mode_? target? patterns EOF ;
-mode_ : MODE StringLiteral SEMI ;
-target : TARGET StringLiteral SEMI ;
+file_ : patterns EOF ;
 patterns : pattern* ;
-pattern : xpath text ;
+pattern : xpath ARROW text SEMI ;
 text : TEXT;
 
 // [1]
