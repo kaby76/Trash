@@ -53,22 +53,11 @@ namespace Trash
                 }
                 lines = File.ReadAllText(_config.TreeFile);
             }
-            ICharStream str = CharStreams.fromPath(config.TemplateFile.First());
-            var spec_lexer = new TreeMLLexer(str);
-            var ts = new Antlr4.Runtime.CommonTokenStream(spec_lexer);
-            var spec_parser = new TreeMLParser(ts);
-            var spec = spec_parser.file_();
-            var xml = string.Join("", lines);
-            if (spec_parser.NumberOfSyntaxErrors > 0)
-                return 0;
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
             serializeOptions.WriteIndented = false;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-            var path = Environment.CurrentDirectory;
-            var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
-            root_directory = cd;
-            GenerateSingle(spec, data);
+            GenerateSingle(data);
             return 0;
         }
 
@@ -132,12 +121,20 @@ namespace Trash
         }
 
 
-        public void GenerateSingle(TreeMLParser.File_Context spec_tree, AntlrJson.ParsingResultSet[] data)
+        public void GenerateSingle(AntlrJson.ParsingResultSet[] data)
         {
-            // Collect all patterns.
-            var pattern = spec_tree.patterns().pattern();
+            var spec_file_contents = File.ReadAllText(_config.TemplateFile.First());
+            ICharStream str = CharStreams.fromString(spec_file_contents);
+            var spec_lexer = new TreeMLLexer(str);
+            var ts = new Antlr4.Runtime.CommonTokenStream(spec_lexer);
+            var spec_parser = new TreeMLParser(ts);
+            var spec = spec_parser.file_();
+            if (spec_parser.NumberOfSyntaxErrors > 0) return;
+            var path = Environment.CurrentDirectory;
+            var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
+            root_directory = cd;
+            var pattern = spec.patterns().pattern();
             var results = new List<ParsingResultSet>();
-            bool do_rs = true;
             foreach (var parse_info in data)
             {
                 var text = parse_info.Text;
@@ -149,7 +146,12 @@ namespace Trash
                 var charstream = lexer.InputStream as AltAntlr.MyCharStream;
                 foreach (var pat in pattern)
                 {
-                    var expr = pat.xpath().GetText();
+                    var expr = pat.xpath();
+                    var frontier_expr = TreeEdits.Frontier(expr).ToList();
+                    var expr_s = frontier_expr.First().Payload.StartIndex;
+                    var expr_e = frontier_expr.Last().Payload.StopIndex;
+                    var expr_text = spec_file_contents.Substring(expr_s, expr_e - expr_s + 1);
+                    if (_config.Verbose) System.Console.Error.WriteLine("Pattern " + expr_text);
                     var template_source = pat.text().GetText();
                     var template_lexer = new TemplateLexer(CharStreams.fromString(template_source));
                     var template_parser = new TemplateParser(new Antlr4.Runtime.CommonTokenStream(template_lexer));
@@ -158,7 +160,7 @@ namespace Trash
                     var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                     using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
                     {
-                        var nodes = engine.parseExpression(expr,
+                        var nodes = engine.parseExpression(expr_text,
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue)).ToArray();
                         if (_config.Verbose) System.Console.Error.WriteLine("Result size " + nodes.Count());
