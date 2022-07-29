@@ -2,8 +2,8 @@
   "profiles": {
     "trperf": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/robdata.sys",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2405\\abb\\Generated"
+      "commandLineArgs": "in2",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\discussion"
     }
   }
 }

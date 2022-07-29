@@ -13,4 +13,4 @@ results to file(s).
 
 # Current version
 
-0.16.5 -- Add trperf/update templates.
+0.16.6 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
