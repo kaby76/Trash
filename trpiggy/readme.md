@@ -12,7 +12,48 @@ that defines children.
 
 # Examples
 
-    trparse "1+2+3" | trpiggy modify.txt | trtext
+Assume "lua.g4" grammar.
+
+Doc input "input.txt":
+```
+local   tbl = {
+   SomeObject = {
+      Key = "Value",
+      AnotherKey = {
+         Key1 = "Value 1",
+         Key2 = "Value 2",
+         Key3 = "Value 3",
+      }
+   },
+   AnotherObject = {
+      Key = "Value",
+      AnotherKey = {
+         Key1 = "Value 1",
+         Key2 = "Value 2",
+         Key3 = "Value 3",
+      }
+   }
+}
+```
+Template input "templates.txt":
+```
+//chunk -> {{<block>}} ;
+//block -> {{<stat>}} ;
+//stat[attnamelist and explist] -> {{<explist>}} ;
+//explist -> {{ {<exp>} }} ;
+//exp[position()=1 and tableconstructor] -> {{<tableconstructor>}} ;
+//exp[position()>1 and tableconstructor] -> {{, <tableconstructor>}} ;
+//fieldlist -> {{<field>}} ;
+//field[position()>1] -> {{, "<NAME>" : <exp> }} ;
+//field[position()=1] -> {{ "<NAME>" : <exp> }} ;
+```
+
+    trparse input.txt  | trpiggy templates.txt | trprint
+
+Output:
+```
+ {{ "SomeObject " : { "Key " : "Value"  , "AnotherKey " : { "Key1 " : "Value 1"  , "Key2 " : "Value 2" , "Key3 " : "Value 3"  } } , "AnotherObject " : { "Key " : "Value"  , "AnotherKey " : { "Key1 " : "Value 1"  , "Key2 " : "Value 2" , "Key3 " : "Value 3"  } } }}
+```
 
 # Current version
 
