@@ -159,12 +159,19 @@ fragment FragChar : '\u0009' | '\u000a' | '\u000d'
  ;
 
 Whitespace :  ('\u000d' | '\u000a' | '\u0020' | '\u0009')+ -> channel(HIDDEN) ;
-
-ARROW : '->' ;
-SEMI : ';' ;
-LDel : '{{' -> more, pushMode(Template);
 CommentLine : '##' ~[\n\r]* -> channel(HIDDEN) ;
+ARROW : '->' -> pushMode(TemplateStart);
+SEMI : ';' ;
 
-mode Template;
-TEXT : '}}' -> popMode ;
-MORESTUFF: . -> more ;
+mode TemplateStart;
+Nothing : [ \t\n\r]+ -> channel(HIDDEN);
+StartWithIntertoken : '{+' -> more, popMode, pushMode(Template1);
+StartWithoutIntertoken : '{{' -> more, popMode, pushMode(Template2);
+
+mode Template1;
+TemplateWithIntertoken : '+}' -> popMode ;
+Continue1 : . -> more ;
+
+mode Template2;
+TemplateWithoutIntertoken : '}}' -> popMode ;
+Continue2 : . -> more ;

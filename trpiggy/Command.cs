@@ -153,6 +153,7 @@ namespace Trash
                     var expr_text = spec_file_contents.Substring(expr_s, expr_e - expr_s + 1);
                     if (_config.Verbose) System.Console.Error.WriteLine("Pattern " + expr_text);
                     var template_source = pat.text().GetText();
+                    var without_intertokens = (pat?.text()?.GetChild(0) as TerminalNodeImpl)?.Payload.Type == TreeMLLexer.TemplateWithoutIntertoken;
                     var template_lexer = new TemplateLexer(CharStreams.fromString(template_source));
                     var template_parser = new TemplateParser(new Antlr4.Runtime.CommonTokenStream(template_lexer));
                     var template_tree = template_parser.file_();
@@ -171,6 +172,11 @@ namespace Trash
                             {
                                 var q = v as AntlrTreeEditing.AntlrDOM.AntlrElement;
                                 var r = q.AntlrIParseTree as AltAntlr.MyParserRuleContext;
+                                if (without_intertokens)
+                                {
+                                    TreeEdits.NukeTokensSurrounding(r);
+                                    if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
+                                }
                                 var leaf = TreeEdits.LeftMostToken(r);
                                 var first_child = r.GetChild(0);
                                 var place_holder = new AltAntlr.MyTerminalNodeImpl(new AltAntlr.MyToken() { Text = "xxx"}) { Parser = parser, Lexer = lexer, TokenStream = tokstream, InputStream = charstream } ;

@@ -7,7 +7,7 @@ options {
 file_ : patterns EOF ;
 patterns : pattern* ;
 pattern : xpath ARROW text SEMI ;
-text : TEXT;
+text : TemplateWithoutIntertoken | TemplateWithIntertoken ;
 
 // [1]
 xpath : expr ;
