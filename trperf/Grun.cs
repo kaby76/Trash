@@ -164,16 +164,17 @@
                     var state = atn.decisionToState[decision];
                     var rule_index = state.ruleIndex;
                     var rule_name = parser.RuleNames[rule_index];
+                    var maxLook = Math.Max(r.LL_MaxLook, r.SLL_MaxLook);                    
                     System.Console.WriteLine(
                         decision
                         + "\t" + rule_name
                         + "\t" + r.invocations
-                        + "\t" + r.timeInPrediction
-                        + "\t" + r.LL_TotalLook
-                        + "\t" + r.LL_MaxLook
+                        + "\t" + r.timeInPrediction / (1000.0 * 1000.0)
+                        + "\t" + (r.LL_TotalLook + r.SLL_TotalLook)
+                        + "\t" + maxLook
                         + "\t" + r.LL_Fallback
                         + "\t" + r.ambiguities.Count
-                        + "\t" + r.errors.Count
+                        + "\t" + (r.SLL_ATNTransitions + r.LL_ATNTransitions)
                         );
                 }
             }
