@@ -27,13 +27,15 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '6.0.102'
-      - name: Do not trust Dotnet env
+      - name: Check Dotnet env
         run: |
           dotnet --version
           dotnet --info
           dotnet --list-runtimes
           dotnet --list-sdks
+      - name: Build
           make build
           make install
+      - name: Test
           cd _tests
           bash all-tests.sh

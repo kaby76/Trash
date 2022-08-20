@@ -25,11 +25,25 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 
 ## Install
 
-Linux: Right-click, "save target as" of file
-<a href="https://raw.githubusercontent.com/kaby76/Domemtech.Trash/master/_scripts/simple-install.sh">simple-install.sh</a>
-, then run the script in the Bash shell (or `bash simple-install.sh`).
-
-Windows: Right-click, "save target as" of file
+### Linux
+```
+#
+for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfold trfoldlit trformat trgen trgroup trinsert tritext trjson trkleene trmove trparse trperf trpiggy trprint trrename trreplace trrr trrup trsort trsplit trsponge trst trstrip trtext trtokens trtree trull trunfold trungroup trwdog trxgrep trxml trxml2; do dotnet tool install -g $i; done
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
+if [[ "$machine" == "MinGw" || "$machine" == "Msys" ]]
+then
+    git clone https://github.com/kaby76/Domemtech.Trash.git; cd Domemtech.Trash/tragl; dotnet build; cwd=`pwd`; a tragl="$cwd/bin/Debug/net6.0/tragl.exe"
+fi
+```
+### Windows
+Right-click, "save target as" of file
 <a href="https://raw.githubusercontent.com/kaby76/Domemtech.Trash/master/_scripts/install.ps1">install.ps1</a>
 , then run the script in Powershell (or `powershell install.ps1`).
 
