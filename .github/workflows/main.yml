@@ -34,8 +34,10 @@ jobs:
           dotnet --list-runtimes
           dotnet --list-sdks
       - name: Build
+        run: |
           make build
           make install
       - name: Test
+        run: |
           cd _tests
           bash all-tests.sh
