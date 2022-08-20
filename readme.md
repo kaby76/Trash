@@ -24,6 +24,8 @@ An application of the toolkit was used to scrape and refactor the Dart2
 grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/blob/master/refactor.sh).
 
 ## Install
+### Requirements
+[Install Dotnet 6.0.x](https://dotnet.microsoft.com/en-us/download)
 
 ### Linux or Cywin/MSYS2
 Copy this script and execute it in a Bash shell.
@@ -43,10 +45,15 @@ then
     git clone https://github.com/kaby76/Domemtech.Trash.git; cd Domemtech.Trash/tragl; dotnet build; cwd=`pwd`; a tragl="$cwd/bin/Debug/net6.0/tragl.exe"
 fi
 ```
-### Windows CMD or Powershell
-Right-click, "save target as" of file
-<a href="https://raw.githubusercontent.com/kaby76/Domemtech.Trash/master/_scripts/install.ps1">install.ps1</a>
-, then run the script in Powershell (or `powershell install.ps1`).
+### Windows or Linux Powershell
+Copy this script and execute it in a Powershell shell.
+```
+# $version = "--version 0.16.6"
+$apps = @('tranalyze','trcombine','trconvert','trdelabel','trdelete','trdot','trfold','trfoldlit','trformat','trgen','trgroup','trinsert','tritext','trjson','trkleene','trmove','trparse','trperf','trpiggy','trprint','trrename','trreplace','trrr','trrup','trsort','trsplit','trsponge','trst','trstrip','trtext','trtokens','trtree','trull','trunfold','trungroup','trwdog','trxgrep','trxml','trxml2')
+foreach ($i in $apps) {
+	dotnet tool install -g $i $version
+}
+```
 
 ## Examples
 
