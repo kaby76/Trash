@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "tritext": {
+      "commandName": "Project",
+      "commandLineArgs": "ECMA-262_13th_edition_june_2022.pdf",
+      "workingDirectory": "c:\\Users\\Kenne\\Downloads"
+    }
+  }
+}

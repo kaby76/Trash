@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+	<TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Domemtech.Globbing</RootNamespace>
+    <AssemblyName>Domemtech.Globbing</AssemblyName>
+
+    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <FileVersion>2.3.0.0</FileVersion>
+
+    <Description>A file system globbing package for C#.</Description>
+    <Copyright>Ken Domino</Copyright>
+    <Company>Domemtech</Company>
+    <AssemblyTitle>Domemtech.Globbing</AssemblyTitle>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <CodeAnalysisRuleSet>ExtendedDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://github.com/kaby76/Globbing/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/kaby76/Globbing</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kaby76/Globbing</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>globbing</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>2.3</Version>
+    <Authors>Ken Domino</Authors>
+  </PropertyGroup>
+</Project>

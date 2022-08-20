@@ -37,7 +37,6 @@ This program is part of the Trash toolkit.]]>
     <None Remove="templates\Python3\CaseChangingStream.py" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Domemtech.Globbing" Version="2.3.0" />
     <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
@@ -50,6 +49,7 @@ This program is part of the Trash toolkit.]]>
   <ItemGroup>
     <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
     <ProjectReference Include="..\Docs\Docs.csproj" />
+    <ProjectReference Include="../Globbing/Domemtech.Globbing.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

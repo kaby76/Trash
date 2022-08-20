@@ -24,14 +24,15 @@ This program is part of the Trash toolkit.]]>
   <ItemGroup>
     <Antlr4 Include="TreeMLLexer.g4" />
     <Antlr4 Include="TreeMLParser.g4" />
-    <Antlr4 Include="TemplateLexer.g4" />
-    <Antlr4 Include="TemplateParser.g4" />
+	  <Antlr4 Include="TemplateLexer.g4" />
+	  <Antlr4 Include="TemplateParser.g4" />
+	  <Antlr4 Include="JSON.g4" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Domemtech.Globbing" Version="2.3.0">
+    <ProjectReference Include="../Globbing/Domemtech.Globbing.csproj">
       <Aliases>MainGlobbing</Aliases>
-    </PackageReference>
+    </ProjectReference>
         <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
         <PackageReference Include="Antlr4BuildTasks" Version="10.7.0" />
 	  <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />

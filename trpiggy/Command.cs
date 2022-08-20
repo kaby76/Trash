@@ -15,6 +15,7 @@ namespace Trash
     using System.Text.Json;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
+    using System.Text;
 
     class Command
     {
@@ -128,6 +129,21 @@ namespace Trash
             var spec_lexer = new TreeMLLexer(str);
             var ts = new Antlr4.Runtime.CommonTokenStream(spec_lexer);
             var spec_parser = new TreeMLParser(ts);
+            if (_config.Verbose)
+            {
+                StringBuilder new_s = new StringBuilder();
+                for (int i = 0; ; ++i)
+                {
+                    var ro_token = spec_lexer.NextToken();
+                    var token = (CommonToken)ro_token;
+                    token.TokenIndex = i;
+                    new_s.AppendLine(token.ToString());
+                    if (token.Type == Antlr4.Runtime.TokenConstants.EOF)
+                        break;
+                }
+                System.Console.Error.WriteLine(new_s.ToString());
+                spec_lexer.Reset();
+            }
             var spec = spec_parser.file_();
             if (spec_parser.NumberOfSyntaxErrors > 0) return;
             var path = Environment.CurrentDirectory;
@@ -153,7 +169,7 @@ namespace Trash
                     var expr_text = spec_file_contents.Substring(expr_s, expr_e - expr_s + 1);
                     if (_config.Verbose) System.Console.Error.WriteLine("Pattern " + expr_text);
                     var template_source = pat.text().GetText();
-                    var without_intertokens = (pat?.text()?.GetChild(0) as TerminalNodeImpl)?.Payload.Type == TreeMLLexer.TemplateWithoutIntertoken;
+                    var without_intertokens = (pat?.text()?.hack()?.GetChild(0) as TerminalNodeImpl)?.Payload.Type == TreeMLLexer.TemplateWithoutIntertoken;
                     var template_lexer = new TemplateLexer(CharStreams.fromString(template_source));
                     var template_parser = new TemplateParser(new Antlr4.Runtime.CommonTokenStream(template_lexer));
                     var template_tree = template_parser.file_();

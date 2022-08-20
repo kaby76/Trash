@@ -28,8 +28,8 @@ This program is part of the Trash toolkit.]]>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Domemtech.Globbing" Version="2.3.0" />
     <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
+    <ProjectReference Include="../Globbing/Domemtech.Globbing.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

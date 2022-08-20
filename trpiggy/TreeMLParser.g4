@@ -7,7 +7,38 @@ options {
 file_ : patterns EOF ;
 patterns : pattern* ;
 pattern : xpath ARROW text SEMI ;
-text : TemplateWithoutIntertoken | TemplateWithIntertoken ;
+text : json | xml | xpath | hack ;
+hack : TemplateWithoutIntertoken;
+
+// JSON grammar
+json_text : TemplateWithoutIntertoken | TemplateWithIntertoken ;
+json : json_element ;
+json_value : json_object_ | json_array_ | json_string_ | json_number | 'true' | 'false' | 'null' ;
+json_object_ : OC json_members CC | OC CC | LT xpath GT ;
+json_members : json_member ( COMMA json_member )* ;
+json_member : json_string_ COLON json_element | LT xpath GT ;
+json_array_ : OB json_elements CB | OB CB ;
+json_elements : json_element ( COMMA json_element )* ;
+json_element : json_value ;
+json_string_ : StringLiteral ;
+json_number : IntegerLiteral | DecimalLiteral | DoubleLiteral ;
+
+
+// XML grammar
+xml : xml_element ;
+xml_content     :   xml_chardata?
+                ((xml_element | xml_reference | CDATA | PI | COMMENT) xml_chardata?)*
+            ;
+xml_element     :   LT xml_name xml_attribute* GT xml_content LT INSIDE_SLASH xml_name GT
+            |   LT xml_name xml_attribute* SLASH_CLOSE
+            ;
+xml_reference   :   EntityRef | CharRef ;
+xml_attribute   :   xml_name EQUALS STRING ; // Our STRING is AttValue in spec
+xml_chardata    :   TEXT | SEA_WS ;
+xml_misc        :   COMMENT | PI | SEA_WS ;
+xml_name : Name | KW_NODE;
+
+// XPATH grammar
 
 // [1]
 xpath : expr ;
@@ -227,3 +258,5 @@ eqname : QName | URIQualifiedName
  ;
 
 auxilary : (expr SEMI )+ EOF;
+
+

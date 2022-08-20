@@ -98,7 +98,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgen2", "trgen2\trgen2.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tritext", "tritext\tritext.csproj", "{442F9D45-76FD-4334-B92D-24FB9D8C37C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domemtech.Globbing", "..\Domemtech.Globbing\Domemtech.Globbing.csproj", "{06A45399-B20D-4E45-AC49-2006689550F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Globbing", "Globbing\Domemtech.Globbing.csproj", "{06A45399-B20D-4E45-AC49-2006689550F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsort", "trsort\trsort.csproj", "{03BFD2A2-C631-452E-BD2F-DC631533DFFE}"
 EndProject

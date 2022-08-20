@@ -1,6 +1,6 @@
 lexer grammar TreeMLLexer;
 
-
+ARROW : '->';
 AT : '@' ;
 BANG : '!' ;
 CB : ']' ;
@@ -21,7 +21,7 @@ GG : '>>' ;
 GT : '>' ;
 LE : '<=' ;
 LL : '<<' ;
-LT : '<' ;
+LT : '<';
 MINUS : '-' ;
 NE : '!=' ;
 OB : '[' ;
@@ -33,6 +33,7 @@ POUND : '#' ;
 PP : '||' ;
 QM : '?' ;
 SC : '*:' ;
+SEMI : ';' ;
 SLASH : '/' ;
 SS : '//' ;
 STAR : '*' ;
@@ -59,6 +60,7 @@ KW_EMPTY_SEQUENCE : 'empty-sequence' ;
 KW_EQ : 'eq' ;
 KW_EVERY : 'every' ;
 KW_EXCEPT : 'except' ;
+KW_FALSE : 'false' ;
 KW_FOLLOWING : 'following' ;
 KW_FOLLOWING_SIBLING : 'following-sibling' ;
 KW_FOR : 'for' ;
@@ -81,6 +83,7 @@ KW_NAMESPACE : 'namespace' ;
 KW_NAMESPACE_NODE : 'namespace-node' ;
 KW_NE : 'ne' ;
 KW_NODE : 'node' ;
+KW_NULL : 'null' ;
 KW_OF : 'of' ;
 KW_OR : 'or' ;
 KW_PARENT : 'parent' ;
@@ -97,11 +100,8 @@ KW_TEXT : 'text' ;
 KW_THEN : 'then' ;
 KW_TO : 'to' ;
 KW_TREAT : 'treat' ;
+KW_TRUE : 'true' ;
 KW_UNION : 'union' ;
-
-// A.2.1. TEMINAL SYMBOLS
-// This isn't a complete list of tokens in the language.
-// Keywords and symbols are terminals.
 
 IntegerLiteral : FragDigits ;
 DecimalLiteral : ('.' FragDigits) | (FragDigits '.' [0-9]*) ;
@@ -160,18 +160,61 @@ fragment FragChar : '\u0009' | '\u000a' | '\u000d'
 
 Whitespace :  ('\u000d' | '\u000a' | '\u0020' | '\u0009')+ -> channel(HIDDEN) ;
 CommentLine : '##' ~[\n\r]* -> channel(HIDDEN) ;
-ARROW : '->' -> pushMode(TemplateStart);
-SEMI : ';' ;
 
-mode TemplateStart;
-Nothing : [ \t\n\r]+ -> channel(HIDDEN);
-StartWithIntertoken : '{+' -> more, popMode, pushMode(Template1);
-StartWithoutIntertoken : '{{' -> more, popMode, pushMode(Template2);
 
-mode Template1;
-TemplateWithIntertoken : '+}' -> popMode ;
-Continue1 : . -> more ;
+// Default "mode": Everything OUTSIDE of a tag
+COMMENT     :   '<!--' .*? '-->' ;
+CDATA       :   '<![CDATA[' .*? ']]>' ;
+/** Scarf all DTD stuff, Entity Declarations like <!ENTITY ...>,
+ *  and Notation Declarations <!NOTATION ...>
+ */
+DTD         :   '<!' .*? '>'  -> channel(HIDDEN) ;
+EntityRef   :   '&' Name ';' ;
+CharRef     :   '&#' DIGIT+ ';'
+            |   '&#x' HEXDIGIT+ ';'
+            ;
+SEA_WS      :   (' '|'\t'|'\r'? '\n')+ ;
 
-mode Template2;
-TemplateWithoutIntertoken : '}}' -> popMode ;
-Continue2 : . -> more ;
+XMLDeclOpen :   '<?xml' ;
+SPECIAL_OPEN:   '<?' Name  ;
+SPECIAL_CLOSE:  '?>' ; // close <?xml...?>
+SLASH_CLOSE :   '/>' ;
+INSIDE_SLASH       :   '/' ;
+STRING      :   '"' ~[<"]* '"'
+            |   '\'' ~[<']* '\''
+            ;
+Name        :   NameStartChar NameChar* ;
+
+fragment
+HEXDIGIT    :   [a-fA-F0-9] ;
+
+fragment
+DIGIT       :   [0-9] ;
+
+fragment
+NameChar    :   NameStartChar
+            |   '-' | '_' | '.' | DIGIT
+            |   '\u00B7'
+            |   '\u0300'..'\u036F'
+            |   '\u203F'..'\u2040'
+            ;
+
+fragment
+NameStartChar
+            :   [:a-zA-Z]
+            |   '\u2070'..'\u218F'
+            |   '\u2C00'..'\u2FEF'
+            |   '\u3001'..'\uD7FF'
+            |   '\uF900'..'\uFDCF'
+            |   '\uFDF0'..'\uFFFD'
+            ;
+
+PI          :   '?>'                    -> popMode ; // close <?...?>
+
+StartWithIntertoken : '{+' ;
+StartWithoutIntertoken : '{{' ;
+TemplateWithIntertoken : '+}';
+TemplateWithoutIntertoken : '}}';
+
+IGNORE : .  -> more ;
+

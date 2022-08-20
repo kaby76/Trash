@@ -1,4 +1,4 @@
-version="0.16.6"
+version="0.16.7"
 
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`

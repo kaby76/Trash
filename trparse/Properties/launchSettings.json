@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-v x",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2703\\lua\\Generated"
+      "commandLineArgs": "-v condition.py",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2703\\python\\python\\Generated"
     }
   }
 }
