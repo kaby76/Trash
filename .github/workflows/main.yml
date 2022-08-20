@@ -33,5 +33,7 @@ jobs:
           dotnet --info
           dotnet --list-runtimes
           dotnet --list-sdks
+          make build
+          make install
           cd _tests
           bash all-tests.sh
