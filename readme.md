@@ -1,5 +1,7 @@
 # Trash
 
+[![Build](https://github.com/kaby76/Domemtech.Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Domemtech.Trash/actions?query=workflow%3ACI)
+
 Trash is a collection of command-line tools to support the analysis and editing
 of grammars and parse tree data with Antlr4. The toolkit can generate a parser
 application for an Antlr4 grammar for targets in C++, C#, Dart, Go, Java,
