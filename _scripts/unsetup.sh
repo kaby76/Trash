@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 for i in $directories
 do

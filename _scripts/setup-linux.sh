@@ -36,7 +36,7 @@ do
 		continue
 	fi
 	tool=${i##*/}
-	if [[ -d "$cwd/$tool/bin/Debug/" ]]
+	if [[ -d "$cwd/src/$tool/bin/Debug/" ]]
 	then
 		echo $i
 		dotnet nuget add source $cwd/$tool/bin/Debug/ --name nuget-$tool > /dev/null 2>&1
