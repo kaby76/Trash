@@ -2,14 +2,14 @@
 
 [![Build](https://github.com/kaby76/Domemtech.Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Domemtech.Trash/actions?query=workflow%3ACI)
 
-Trash is a collection of command-line tools to support the analysis and editing
-of grammars and parse tree data with Antlr4. The toolkit can generate a parser
-application for an Antlr4 grammar for targets in C++, C#, Dart, Go, Java,
-JavaScript, PHP, or Python3.
-The toolkit supports operations
-on parse trees including grammars themselves as they are represented as parse trees.
-Parse trees from one app in the toolkit can be passed to another,
-using standard input and output, which allows for very complicated refactorings.
+Trash is a collection of command-line tools to analyze and transform
+Antlr parse trees and grammars. The toolkit can generate a parser
+application for an Antlr4 grammar for any target and any OS.
+
+The toolkit is designed around a JSON representation of
+parse trees and command-line tools that read, modify, and write
+parse trees, which can be chained together to form 
+complex refactorings.
 
 Each app in `Trash` is implemented as a [Dotnet Tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) console application, and can be used on Windows, Linux, or Mac.
 No prerequisites are required other than installing the
