@@ -1,12 +1,13 @@
 #!/bin/bash
 
 version_framework="net6.0"
-version_base="4.4.0"
+version_base="4.5.0"
 version_tree="5.2.0"
 version_antlr4buildtasks="10.3"
 version_stringtemplate="4.2.0"
 version_antlrruntime="4.10.1"
 
+cd src
 files=`find . -name '*.csproj'`
 subset=`grep -l -e Antlr4.Runtime.Standard $files`
 for i in $subset

@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-		<PackageReference Include="Domemtech.TrashBase" Version="4.4.0" />
+    <ProjectReference Include="..\AltAntlr\AltAntlr.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

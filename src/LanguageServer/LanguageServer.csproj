@@ -1,0 +1,85 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Antlr4 Remove="LexBasic.g4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Antlr4 Include="ANTLRv2Parser.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="ANTLRv2Lexer.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="ANTLRv3Parser.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="ANTLRv3Lexer.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="ANTLRv4Lexer.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="ANTLRv4Parser.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="BisonLexer.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="BisonParser.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="Iso14977Lexer.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="Iso14977Parser.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="lbnfLexer.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="lbnfParser.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="W3CebnfParser.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+    <Antlr4 Include="W3CebnfLexer.g4">
+      <Package>LanguageServer</Package>
+    </Antlr4>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
+<!-- <PackageReference Include="Antlr4BuildTasks" Version="10.2">
+                    <PrivateAssets>all</PrivateAssets>
+                </PackageReference> -->
+    <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
+    <PackageReference Include="cs-codebuff" Version="4.0.0" />
+
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Algorithms\Algorithms.csproj" />
+    <ProjectReference Include="..\AltAntlr\AltAntlr.csproj" />
+    <ProjectReference Include="..\AntlrTreeEditing\AntlrTreeEditing.csproj" />
+    <ProjectReference Include="..\Logger\Logger.csproj" />
+    <ProjectReference Include="..\NWayDiff\NWayDiff.csproj" />
+    <ProjectReference Include="..\Workspaces\Workspaces.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;3021</NoWarn>
+  </PropertyGroup>
+
+</Project>

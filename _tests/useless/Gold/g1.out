@@ -1,0 +1,5 @@
+Has 4 useless parentheses.
+line 2 col 4 "('a')"
+line 3 col 4 "('b')"
+line 4 col 8 "(a)"
+line 5 col 4 "(b|c)"

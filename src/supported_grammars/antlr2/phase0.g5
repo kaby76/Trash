@@ -1,0 +1,92 @@
+parserSpec
+{
+    if (Global["Type"] == GrammarType.Lexer)
+		Global["Type"] = GrammarType.Combined;
+    else
+		Global["Type"] = GrammarType.Parser;
+}
+
+lexerSpec
+{
+    if (Global["Type"] == GrammarType.Lexer)
+		Global["Type"] = GrammarType.Combined;
+    else
+		Global["Type"] = GrammarType.Parser;
+}
+
+rules
+{
+    if (Global["saw_tokenVocab_option"])
+    {
+		return;
+    }
+
+    if (Global["Type"] != GrammarType.Lexer)
+    {
+		string file = _pd.Item.FullPath;
+		string dep = file.Replace("Lexer.g2", "Parser.g2");
+		if (dep == file)
+		{
+			return;
+		}
+		string dir = System.IO.Path.GetDirectoryName(file);
+		_pd.Imports.Add(dep);
+		if (!_pd.InverseImports.ContainsKey(dep))
+		{
+			_pd.InverseImports.Add(dep, new HashSet<string>());
+		}
+		bool found = false;
+		foreach (string f in _pd.InverseImports[dep])
+		{
+			if (f == file)
+			{
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+		{
+			_pd.InverseImports[dep].Add(file);
+		}
+	}
+	if (Global["Type"] != GrammarType.Parser)
+	{
+		string file = _pd.Item.FullPath;
+		string dep = file.Replace("Parser.g2", "Lexer.g2");
+		if (dep == file)
+		{
+			return;
+		}
+		string dir = System.IO.Path.GetDirectoryName(file);
+		_pd.Imports.Add(dep);
+		if (!_pd.InverseImports.ContainsKey(dep))
+		{
+			_pd.InverseImports.Add(dep, new HashSet<string>());
+		}
+		bool found = false;
+		foreach (string f in _pd.InverseImports[dep])
+		{
+			if (f == file)
+			{
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+		{
+			_pd.InverseImports[dep].Add(file);
+		}
+    }
+}
+
+
+grammar classes {
+	{
+		name: "nonterminal",
+		def: true,
+		ref: true,
+		st: Attributes,
+
+
+
+}

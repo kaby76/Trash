@@ -1,0 +1,24 @@
+grammar_ -> production .
+grammar_ -> grammar_ production .
+production -> SYMBOL CCEQ .
+production -> SYMBOL CCEQ choice .
+production -> SYMBOL CCEQ CONSTRAINT .
+choice -> sequence_or_difference .
+choice -> choice ALT sequence_or_difference .
+choice -> choice ALT .
+sequence_or_difference -> item M item .
+sequence_or_difference -> items .
+items -> item .
+items -> items item .
+item -> primary .
+item -> primary sitems .
+sitems -> sitem .
+sitems -> sitems sitem .
+sitem -> Q .
+sitem -> S .
+sitem -> P .
+primary -> SYMBOL .
+primary -> STRING .
+primary -> HEX .
+primary -> SET .
+primary -> OP choice CP .

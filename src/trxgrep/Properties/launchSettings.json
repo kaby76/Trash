@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//classDeclaration/concat(./identifier/IDENTIFIER/text(), ' ', ./classBody/classBodyDeclaration/memberDeclaration/fieldDeclaration/typeType/classOrInterfaceType/identifier/IDENTIFIER/text())\"",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-upstream\\java\\java\\Generated"
+      "commandLineArgs": "-f o.pt \" for $i in //(altList | labeledAlt)/alternative/element[ebnf[not(child::blockSuffix)]/block/altList[not(@ChildCount > 1)]] | //(altList | labeledAlt)[not(@ChildCount > 1)]/alternative[not(@ChildCount > 1)]/element[ebnf[not(child::blockSuffix)]/block/altList[@ChildCount > 1]] return $i/@Line \"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\useless"
     }
   }
 }

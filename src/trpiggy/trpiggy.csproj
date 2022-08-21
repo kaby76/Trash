@@ -33,21 +33,20 @@ This program is part of the Trash toolkit.]]>
     <ProjectReference Include="../Globbing/Domemtech.Globbing.csproj">
       <Aliases>MainGlobbing</Aliases>
     </ProjectReference>
-        <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
-        <PackageReference Include="Antlr4BuildTasks" Version="10.7.0" />
-	  <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
-	  <PackageReference Include="cs-codebuff" Version="4.0.0" />
-	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-	  <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
-	  <PackageReference Include="Domemtech.TrashBase" Version="4.4.0" />
-	  <PackageReference Include="Microsoft.CodeAnalysis" Version="4.2.0" />
-	  <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Antlr4BuildTasks" Version = "10.7" PrivateAssets="all" />
+    <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
+    <PackageReference Include="cs-codebuff" Version="4.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.2.0" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
   </ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
-		<ProjectReference Include="../Docs/Docs.csproj" />
-	</ItemGroup>
-	<PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+    <ProjectReference Include="../Docs/Docs.csproj" />
+  </ItemGroup>
+  <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
   </PropertyGroup>

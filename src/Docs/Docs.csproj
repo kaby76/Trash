@@ -6,11 +6,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AntlrJson\AntlrJson.csproj" />
+    <ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
+    <ProjectReference Include="..\Workspaces\Workspaces.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
-    <PackageReference Include="Domemtech.TrashBase" Version="4.4.0"/>
  </ItemGroup>
 
 </Project>

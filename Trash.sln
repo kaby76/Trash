@@ -3,108 +3,124 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrJson", "src/AntlrJson/AntlrJson.csproj", "{3CFDC502-53C4-4112-A4F1-026B52EAF492}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrJson", "src\AntlrJson\AntlrJson.csproj", "{3CFDC502-53C4-4112-A4F1-026B52EAF492}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxml2", "src/trxml2/trxml2.csproj", "{1E2EADF3-8846-441A-9D71-B329EE06BCC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxml2", "src\trxml2\trxml2.csproj", "{1E2EADF3-8846-441A-9D71-B329EE06BCC4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgen", "src/trgen/trgen.csproj", "{B704AB40-2FBC-4808-A728-D8F614321112}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgen", "src\trgen\trgen.csproj", "{B704AB40-2FBC-4808-A728-D8F614321112}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trparse", "src/trparse/trparse.csproj", "{2BDE06C4-3A46-4DD0-A207-94DC28413D48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trparse", "src\trparse\trparse.csproj", "{2BDE06C4-3A46-4DD0-A207-94DC28413D48}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtree", "src/trtree/trtree.csproj", "{8F4EB85A-DDDE-4EFD-A90D-40BAB5EE2110}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtree", "src\trtree\trtree.csproj", "{8F4EB85A-DDDE-4EFD-A90D-40BAB5EE2110}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtext", "src/trtext/trtext.csproj", "{35315780-A2B9-46DC-A19F-8F479A52FA0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtext", "src\trtext\trtext.csproj", "{35315780-A2B9-46DC-A19F-8F479A52FA0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trst", "src/trst/trst.csproj", "{215AA501-DF63-42D6-B5F3-964365B591B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trst", "src\trst\trst.csproj", "{215AA501-DF63-42D6-B5F3-964365B591B9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxml", "src/trxml/trxml.csproj", "{24D91B9C-5107-4847-BA52-C46ED91B4222}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxml", "src\trxml\trxml.csproj", "{24D91B9C-5107-4847-BA52-C46ED91B4222}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trprint", "src/trprint/trprint.csproj", "{ED656F97-2049-43F3-BB84-47E64068788F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trprint", "src\trprint\trprint.csproj", "{ED656F97-2049-43F3-BB84-47E64068788F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trjson", "src/trjson/trjson.csproj", "{44488488-568F-4E0F-A721-BA0B9A15FF3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trjson", "src\trjson\trjson.csproj", "{44488488-568F-4E0F-A721-BA0B9A15FF3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtokens", "src/trtokens/trtokens.csproj", "{DA50A003-3FEA-4155-85D0-E5AAFD1B1895}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtokens", "src\trtokens\trtokens.csproj", "{DA50A003-3FEA-4155-85D0-E5AAFD1B1895}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxgrep", "src/trxgrep/trxgrep.csproj", "{6B8D3D4B-2014-4A6E-B7A9-95AEB8F668A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxgrep", "src\trxgrep\trxgrep.csproj", "{6B8D3D4B-2014-4A6E-B7A9-95AEB8F668A3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trstrip", "src/trstrip/trstrip.csproj", "{6946E15D-8A2A-48C6-ADC4-B5F2ABC17065}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trstrip", "src\trstrip\trstrip.csproj", "{6946E15D-8A2A-48C6-ADC4-B5F2ABC17065}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Docs", "src/Docs/Docs.csproj", "{D9E29308-8162-4806-85C1-7808D41A3F27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Docs", "src\Docs\Docs.csproj", "{D9E29308-8162-4806-85C1-7808D41A3F27}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trkleene", "src/trkleene/trkleene.csproj", "{5257C48E-6465-4458-B3D6-E5E28FB50674}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trkleene", "src\trkleene\trkleene.csproj", "{5257C48E-6465-4458-B3D6-E5E28FB50674}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trfold", "src/trfold/trfold.csproj", "{5F6937C0-CEC8-4B29-8690-097FA6FB465A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trfold", "src\trfold\trfold.csproj", "{5F6937C0-CEC8-4B29-8690-097FA6FB465A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgroup", "src/trgroup/trgroup.csproj", "{E3A8943B-55F9-44BD-9162-B2F095FDCE99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgroup", "src\trgroup\trgroup.csproj", "{E3A8943B-55F9-44BD-9162-B2F095FDCE99}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trunfold", "src/trunfold/trunfold.csproj", "{4F4EB251-2A3D-423B-A62C-979D5E0255D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trunfold", "src\trunfold\trunfold.csproj", "{4F4EB251-2A3D-423B-A62C-979D5E0255D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trungroup", "src/trungroup/trungroup.csproj", "{FC9E166F-20C6-4A38-A605-2ED85C33D894}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trungroup", "src\trungroup\trungroup.csproj", "{FC9E166F-20C6-4A38-A605-2ED85C33D894}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trfoldlit", "src/trfoldlit/trfoldlit.csproj", "{2A9DA02F-24D1-406D-9BB7-F03B5A209A3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trfoldlit", "src\trfoldlit\trfoldlit.csproj", "{2A9DA02F-24D1-406D-9BB7-F03B5A209A3E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdelete", "src/trdelete/trdelete.csproj", "{23034F3C-4445-4F84-A016-5680623E722E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdelete", "src\trdelete\trdelete.csproj", "{23034F3C-4445-4F84-A016-5680623E722E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrename", "src/trrename/trrename.csproj", "{662B1475-ED9E-47F2-913A-06D117700FA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrename", "src\trrename\trrename.csproj", "{662B1475-ED9E-47F2-913A-06D117700FA7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trconvert", "src/trconvert/trconvert.csproj", "{0FB7A65D-868B-4625-BD57-90CE5FE7A99C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trconvert", "src\trconvert\trconvert.csproj", "{0FB7A65D-868B-4625-BD57-90CE5FE7A99C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tranalyze", "src/tranalyze/tranalyze.csproj", "{D1E35A3B-E470-403F-A4A2-45D8DC5C7F0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tranalyze", "src\tranalyze\tranalyze.csproj", "{D1E35A3B-E470-403F-A4A2-45D8DC5C7F0A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trwdog", "src/trwdog/trwdog.csproj", "{9F4751DB-BF6A-4124-BFC1-8CB5602DAEDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trwdog", "src\trwdog\trwdog.csproj", "{9F4751DB-BF6A-4124-BFC1-8CB5602DAEDB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A189346E-045A-41EE-8F02-02AD1A8F26B8}"
 	ProjectSection(SolutionItems) = preProject
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trcombine", "src/trcombine/trcombine.csproj", "{71FA41D9-6BE1-4498-B2FF-C1562AC648B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trcombine", "src\trcombine\trcombine.csproj", "{71FA41D9-6BE1-4498-B2FF-C1562AC648B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsplit", "src/trsplit/trsplit.csproj", "{9E19B447-23BD-48B7-9C46-8314E150F4E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsplit", "src\trsplit\trsplit.csproj", "{9E19B447-23BD-48B7-9C46-8314E150F4E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsponge", "src/trsponge/trsponge.csproj", "{CFBBEC3B-1EEB-42CA-A231-8971CBCB93BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsponge", "src\trsponge\trsponge.csproj", "{CFBBEC3B-1EEB-42CA-A231-8971CBCB93BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdelabel", "src/trdelabel/trdelabel.csproj", "{BEE77854-573F-4088-9B1D-F3B4C12372A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdelabel", "src\trdelabel\trdelabel.csproj", "{BEE77854-573F-4088-9B1D-F3B4C12372A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trthompson", "src/trthompson/trthompson.csproj", "{7664FAF4-2D70-4ECE-83A2-D07EA38C5510}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trthompson", "src\trthompson\trthompson.csproj", "{7664FAF4-2D70-4ECE-83A2-D07EA38C5510}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdot", "src/trdot/trdot.csproj", "{0A48EF88-0FB7-4ACC-AC18-CD9A508EAF9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdot", "src\trdot\trdot.csproj", "{0A48EF88-0FB7-4ACC-AC18-CD9A508EAF9D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trinsert", "src/trinsert/trinsert.csproj", "{45E3B1F9-1EC1-4F9A-B996-8E3A618694CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trinsert", "src\trinsert\trinsert.csproj", "{45E3B1F9-1EC1-4F9A-B996-8E3A618694CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "driver", "src/web/driver/driver.csproj", "{ADA6CCAB-4E47-45DB-87D1-CB823D6D4E35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "driver", "src\web\driver\driver.csproj", "{ADA6CCAB-4E47-45DB-87D1-CB823D6D4E35}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wrap", "src/web/wrap/wrap.csproj", "{EC549FC6-9D4D-4979-BF49-9FF0B2E1D2FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wrap", "src\web\wrap\wrap.csproj", "{EC549FC6-9D4D-4979-BF49-9FF0B2E1D2FB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web", "src/web", "{5C34D5B1-04A2-4ADC-B033-AF606E71C9DC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web", "web", "{5C34D5B1-04A2-4ADC-B033-AF606E71C9DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tragl", "src/tragl/tragl.csproj", "{14AA0E29-AFB2-4AD1-A9C9-6FA410416FBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tragl", "src\tragl\tragl.csproj", "{14AA0E29-AFB2-4AD1-A9C9-6FA410416FBF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrup", "src/trrup/trrup.csproj", "{19213CC7-FE3B-4A8B-A2DF-1180E5FF7C12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrup", "src\trrup\trrup.csproj", "{19213CC7-FE3B-4A8B-A2DF-1180E5FF7C12}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trformat", "src/trformat/trformat.csproj", "{648F598E-6560-438D-A67B-B3775699A085}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trformat", "src\trformat\trformat.csproj", "{648F598E-6560-438D-A67B-B3775699A085}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrr", "src/trrr/trrr.csproj", "{87DDFEAD-0E27-4144-9C6E-49F2792C6E4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrr", "src\trrr\trrr.csproj", "{87DDFEAD-0E27-4144-9C6E-49F2792C6E4A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsem", "src/trsem/trsem.csproj", "{22C7B6FE-A350-4942-9553-59D2A8180A28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsem", "src\trsem\trsem.csproj", "{22C7B6FE-A350-4942-9553-59D2A8180A28}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trreplace", "src/trreplace/trreplace.csproj", "{311AF1A0-4F7C-40C1-82C0-D3A0B9AE7902}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trreplace", "src\trreplace\trreplace.csproj", "{311AF1A0-4F7C-40C1-82C0-D3A0B9AE7902}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trmove", "src/trmove/trmove.csproj", "{480EE365-2BE8-4FD4-8B24-97F5FC1E50D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trmove", "src\trmove\trmove.csproj", "{480EE365-2BE8-4FD4-8B24-97F5FC1E50D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trull", "src/trull/trull.csproj", "{8A875F76-D1CF-4F31-BF8B-E483507538D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trull", "src\trull\trull.csproj", "{8A875F76-D1CF-4F31-BF8B-E483507538D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgen2", "src/trgen2/trgen2.csproj", "{0CD827AB-5266-4FE4-A662-EC15802CA07C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgen2", "src\trgen2\trgen2.csproj", "{0CD827AB-5266-4FE4-A662-EC15802CA07C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tritext", "src/tritext/tritext.csproj", "{442F9D45-76FD-4334-B92D-24FB9D8C37C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tritext", "src\tritext\tritext.csproj", "{442F9D45-76FD-4334-B92D-24FB9D8C37C6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Globbing", "src/Globbing/Domemtech.Globbing.csproj", "{06A45399-B20D-4E45-AC49-2006689550F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domemtech.Globbing", "src\Globbing\Domemtech.Globbing.csproj", "{06A45399-B20D-4E45-AC49-2006689550F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsort", "src/trsort/trsort.csproj", "{03BFD2A2-C631-452E-BD2F-DC631533DFFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsort", "src\trsort\trsort.csproj", "{03BFD2A2-C631-452E-BD2F-DC631533DFFE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trperf", "src/trperf/trperf.csproj", "{DA945D78-D218-4A86-9A5E-DFBCC1B5C596}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trperf", "src\trperf\trperf.csproj", "{DA945D78-D218-4A86-9A5E-DFBCC1B5C596}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trpiggy", "src/trpiggy/trpiggy.csproj", "{51B934F4-3E3A-4C14-8C3F-B6265AC66772}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trpiggy", "src\trpiggy\trpiggy.csproj", "{51B934F4-3E3A-4C14-8C3F-B6265AC66772}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Algorithms", "src\Algorithms\Algorithms.csproj", "{A231C02C-2985-4417-A568-97D817AB2F9C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AltAntlr", "src\AltAntlr\AltAntlr.csproj", "{669399E7-B8BC-4D26-9882-B9F9A772F0D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrTreeEditing", "src\AntlrTreeEditing\AntlrTreeEditing.csproj", "{08B1EDE6-1960-408A-97A5-628937F75A22}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LanguageServer", "src\LanguageServer\LanguageServer.csproj", "{E5FB7560-2E6D-40ED-BA31-99454855D595}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logger", "src\Logger\Logger.csproj", "{C833A0C6-5184-4BB4-92A3-51125C2F2928}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NWayDiff", "src\NWayDiff\NWayDiff.csproj", "{4692A6CE-B371-4DF9-A59D-7AAE5FBD17E5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Options", "src\Options\Options.csproj", "{36A849B8-7D7E-45A6-990C-1A8809EECE84}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workspaces", "src\Workspaces\Workspaces.csproj", "{248B9C0A-4B9B-437E-9BDA-8EF3E7D7218A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -301,6 +317,38 @@ Global
 		{51B934F4-3E3A-4C14-8C3F-B6265AC66772}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51B934F4-3E3A-4C14-8C3F-B6265AC66772}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51B934F4-3E3A-4C14-8C3F-B6265AC66772}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A231C02C-2985-4417-A568-97D817AB2F9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A231C02C-2985-4417-A568-97D817AB2F9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A231C02C-2985-4417-A568-97D817AB2F9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A231C02C-2985-4417-A568-97D817AB2F9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{669399E7-B8BC-4D26-9882-B9F9A772F0D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{669399E7-B8BC-4D26-9882-B9F9A772F0D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{669399E7-B8BC-4D26-9882-B9F9A772F0D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{669399E7-B8BC-4D26-9882-B9F9A772F0D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08B1EDE6-1960-408A-97A5-628937F75A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08B1EDE6-1960-408A-97A5-628937F75A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08B1EDE6-1960-408A-97A5-628937F75A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08B1EDE6-1960-408A-97A5-628937F75A22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5FB7560-2E6D-40ED-BA31-99454855D595}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5FB7560-2E6D-40ED-BA31-99454855D595}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5FB7560-2E6D-40ED-BA31-99454855D595}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5FB7560-2E6D-40ED-BA31-99454855D595}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C833A0C6-5184-4BB4-92A3-51125C2F2928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C833A0C6-5184-4BB4-92A3-51125C2F2928}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C833A0C6-5184-4BB4-92A3-51125C2F2928}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C833A0C6-5184-4BB4-92A3-51125C2F2928}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4692A6CE-B371-4DF9-A59D-7AAE5FBD17E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4692A6CE-B371-4DF9-A59D-7AAE5FBD17E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4692A6CE-B371-4DF9-A59D-7AAE5FBD17E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4692A6CE-B371-4DF9-A59D-7AAE5FBD17E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36A849B8-7D7E-45A6-990C-1A8809EECE84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36A849B8-7D7E-45A6-990C-1A8809EECE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36A849B8-7D7E-45A6-990C-1A8809EECE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36A849B8-7D7E-45A6-990C-1A8809EECE84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{248B9C0A-4B9B-437E-9BDA-8EF3E7D7218A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{248B9C0A-4B9B-437E-9BDA-8EF3E7D7218A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{248B9C0A-4B9B-437E-9BDA-8EF3E7D7218A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{248B9C0A-4B9B-437E-9BDA-8EF3E7D7218A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

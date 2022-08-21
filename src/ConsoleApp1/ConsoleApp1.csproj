@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Algorithms\Algorithms.csproj" />
+    <ProjectReference Include="..\AltAntlr\AltAntlr.csproj" />
+    <ProjectReference Include="..\AntlrTreeEditing\AntlrTreeEditing.csproj" />
+    <ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
+    <ProjectReference Include="..\Workspaces\Workspaces.csproj" />
+  </ItemGroup>
+
+</Project>

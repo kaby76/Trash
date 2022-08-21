@@ -1,0 +1,55 @@
+{
+    "Suffix":".java"
+    ,"ParserLocation":"c:/Users/kenne/Documents/GitHub/i2248/java/java/Generated/bin/Debug/net5.0/Test.dll"
+    ,"Classes":[
+       {"Name":"NonterminalDef"
+        ,"ToVSCodeName":"class"
+	,"NodeName":"RULE_REF"
+	,"Classifier":"..[parent::parserRuleSpec]"
+       }
+       ,{"Name":"NonterminalRef"
+        ,"ToVSCodeName":"struct"
+	,"NodeName":"RULE_REF"
+	,"Classifier":"..[parent::ruleref | parent::identifier]"
+	,"RefClassifier":"//parserRuleSpec/RULE_REF"
+       }
+       ,{"Name":"TerminalDef"
+        ,"ToVSCodeName":"class"
+	,"NodeName":"TOKEN_REF"
+	,"Classifier":"..[../../parent::tokensSpec | parent::lexerRuleSpec]"
+       }
+       ,{"Name":"TerminalRef"
+        ,"ToVSCodeName":"struct"
+	,"NodeName":"TOKEN_REF"
+	,"Classifier":"..[parent::identifier]"
+	,"RefClassifier":"//parserRuleSpec/RULE_REF"
+       },
+       ,{"Name":"Comment"
+        ,"ToVSCodeName":"comment"
+	,"NodeName":"COMMENT"
+	,"Classifier":".."
+       }
+       ,{"Name":"ModeDef"
+        ,"ToVSCodeName":"class"
+	,"NodeName":"TOKEN_REF"
+	,"Classifier":"..[../../parent::tokensSpec | parent::lexerRuleSpec]"
+       }
+       ,{"Name":"ModeRef"
+        ,"ToVSCodeName":"struct"
+	,"NodeName":"TOKEN_REF"
+	,"Classifier":"..[parent::identifier]"
+	,"RefClassifier":"//parserRuleSpec/RULE_REF"
+       }
+       ,{"Name":"ChannelDef"
+        ,"ToVSCodeName":"class"
+	,"NodeName":"TOKEN_REF"
+	,"Classifier":"..[../../parent::tokensSpec | parent::lexerRuleSpec]"
+       }
+       ,{"Name":"ChannelRef"
+        ,"ToVSCodeName":"struct"
+	,"NodeName":"TOKEN_REF"
+	,"Classifier":"..[parent::identifier]"
+	,"RefClassifier":"//parserRuleSpec/RULE_REF"
+       }
+    ]
+}
