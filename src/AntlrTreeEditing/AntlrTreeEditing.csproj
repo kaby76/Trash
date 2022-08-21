@@ -19,10 +19,10 @@
     <Antlr4 Include="org\eclipse\wst\xml\xpath2\processor\internal\XPath31Parser.g4">
       <Package>xpath.org.eclipse.wst.xml.xpath2.processor.@internal</Package>
     </Antlr4>
-		<Antlr4 Include="XmlDom/XMLParser.g4">
+		<Antlr4 Include="XmlDOM/XMLParser.g4">
 			<Package>XmlDOM</Package>
 		</Antlr4>
-		<Antlr4 Include="XmlDom/XMLLexer.g4">
+		<Antlr4 Include="XmlDOM/XMLLexer.g4">
 			<Package>XmlDOM</Package>
 		</Antlr4>
     <Antlr4 Include="CTree/AstLexer.g4">
