@@ -8,8 +8,8 @@ application for an Antlr4 grammar for any target and any OS.
 
 The toolkit is designed around a JSON representation of
 parse trees and command-line tools that read, modify, and write
-parse trees, which can be chained together to form 
-complex refactorings.
+those tree via standard input and output. Complex refactorings can be
+achieved by chaining different commands together.
 
 Each app in `Trash` is implemented as a [Dotnet Tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) console application, and can be used on Windows, Linux, or Mac.
 No prerequisites are required other than installing the
