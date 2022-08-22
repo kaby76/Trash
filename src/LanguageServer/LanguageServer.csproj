@@ -61,7 +61,7 @@
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
 
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.2.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" />
   </ItemGroup>
 
