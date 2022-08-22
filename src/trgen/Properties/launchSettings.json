@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Go",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\workspace\\sparql"
+      "commandLineArgs": "-s parse",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\tem3"
     }
   }
 }

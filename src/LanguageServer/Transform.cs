@@ -1252,6 +1252,8 @@
                 pd_parser2 = s1;
             }
 
+            // Use XPath to pick out parts and merge together.
+
             TableOfRules table1 = new TableOfRules(pd_parser1, document1);
             table1.ReadRules();
             table1.FindPartitions();
