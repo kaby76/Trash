@@ -299,7 +299,7 @@
                 {
                     var attr = new AntlrAttr(null);
                     var interval = t.SourceInterval;
-                    if (interval.a <= interval.b)
+                    if (interval.a <= interval.b && t is AltAntlr.MyParserRuleContext)
                     {
                         var n = t as AltAntlr.MyParserRuleContext;
                         var s = n.TokenStream.Get(interval.a);
@@ -319,7 +319,7 @@
                 {
                     var attr = new AntlrAttr(null);
                     var interval = t.SourceInterval;
-                    if (interval.a <= interval.b)
+                    if (interval.a <= interval.b && t is AltAntlr.MyParserRuleContext)
                     {
                         var n = t as AltAntlr.MyParserRuleContext;
                         var s = n.TokenStream.Get(interval.a);
