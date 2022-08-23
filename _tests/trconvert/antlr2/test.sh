@@ -1,0 +1,21 @@
+#!/bin/sh
+
+export MSYS2_ARG_CONV_EXCL="*"
+where=`dirname -- "$0"`
+for i in "$where/*.g2"
+do
+	echo $i
+	extension="${i##*.}"
+	filename="${i%.*}"
+	trparse $i -t antlr2 | trconvert | trsponge -c -o "$where/Generated"
+done
+echo rm -f "$where"/Generated/*.txt2
+rm -f "$where"/Generated/*.txt2
+diff -r "$where/Gold" "$where/Generated"
+if [ "$?" != "0" ]
+then
+	echo Test failed.
+	exit 1
+else
+	echo Test succeeded.
+fi

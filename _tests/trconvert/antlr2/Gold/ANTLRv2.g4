@@ -9,7 +9,7 @@
 
 grammar ANTLR;
 
-grammar_
+grammar
    :
         (
                 'header'
@@ -302,7 +302,7 @@ elementNoOptionSpec
                 tree
         ;
 
-tree_ :TREE_BEGIN
+tree :TREE_BEGIN
         rootNode
         ( element )+
         RPAREN
