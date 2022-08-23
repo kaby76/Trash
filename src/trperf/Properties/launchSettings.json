@@ -2,8 +2,8 @@
   "profiles": {
     "trperf": {
       "commandName": "Project",
-      "commandLineArgs": "../in.txt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\so73423828\\uno"
+      "commandLineArgs": "../in2.txt",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\tem4\\mod"
     }
   }
 }

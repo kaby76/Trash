@@ -156,9 +156,10 @@
                    + "\t" + "Ambiguities"
                    + "\t" + "Errors"
                    );
-                for (int i = 0; i < parser.ParseInfo.getDecisionInfo().Length; i++)
+                var di = parser.ParseInfo.getDecisionInfo();
+                for (int i = 0; i < di.Length; i++)
                 {
-                    var r = parser.ParseInfo.getDecisionInfo()[i];
+                    var r = di[i];
                     var decision = r.decision;
                     var atn = parser.Atn;
                     var state = atn.decisionToState[decision];
