@@ -3,11 +3,14 @@
 # "Setting MSYS2_ARG_CONV_EXCL so that Trash XPaths do not get mutulated."
 export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
-rm -rf "$where/Generated"
-mkdir "$where/Generated"
-bash "$where/find-useless.sh" "$where/g1.g4" > "$where/Generated/g1.out"
-bash "$where/find-useless.sh" "$where/g2.g4" > "$where/Generated/g2.out"
-diff -r "$where/Gold" "$where/Generated"
+cd "$where"
+rm -rf Generated
+mkdir Generated
+for i in *.g4
+do
+	bash find-useless.sh $i > Generated/$i.out
+done
+diff -r Gold Generated
 if [ "$?" != "0" ]
 then
 	echo Test failed.
