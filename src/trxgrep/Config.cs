@@ -5,6 +5,9 @@ namespace Trash
 {
     public class Config
     {
+        [Option('e', "no-prs", Required = false, HelpText = "No parsing result sets.")]
+        public bool NoParsingResultSets { get; set; }
+
         [Option('f', "file", Required = false)]
         public string File { get; set; }
 

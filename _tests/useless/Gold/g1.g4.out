@@ -5,3 +5,7 @@ line 3 col 4 "('b')"
 line 4 col 8 "(a)"
 Type 2 errors:
 line 5 col 4 "(b|c)"
+Type 3 errors:
+line 2 col 4 "('a')"
+line 3 col 4 "('b')"
+line 4 col 8 "(a)"

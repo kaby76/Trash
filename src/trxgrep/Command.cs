@@ -60,7 +60,7 @@
             serializeOptions.WriteIndented = false;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
-            bool do_rs = true;
+            bool do_rs = !config.NoParsingResultSets;
             foreach (var parse_info in data)
             {
                 text = parse_info.Text;

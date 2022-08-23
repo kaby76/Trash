@@ -107,7 +107,7 @@
                         Doit(txt, data);
                     }
                 }
-                if (config.DisplayErrorsOnly) return;
+                if (config.NoParsingResultSets) return;
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = true;
