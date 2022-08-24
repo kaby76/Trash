@@ -7073,6 +7073,29 @@ and not(lexerRuleBlock//ebnfSuffix)
                 new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(trees, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+
+                {
+                    var n1 = engine.parseExpression(
+                            @"/grammarSpec",
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Count();
+                    if (n1 != 1)
+                    {
+                        throw new LanguageServerException("A grammar file is not selected.");
+                    }
+                }
+                {
+                    var n1 = engine.parseExpression(
+                            @"/grammarSpec/grammarDecl/grammarType[GRAMMAR and not(LEXER)]",
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Count();
+                    if (n1 != 1)
+                    {
+                        throw new LanguageServerException("Can only operate on a split parser or combined grammar file.");
+                    }
+                }
                 {
                     var nodes = engine.parseExpression(
                             @"//labeledAlt/(POUND | identifier)",
