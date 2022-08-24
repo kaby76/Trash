@@ -1,9 +1,9 @@
 grammar Arithmetic;
 file_ : expression (SEMI expression)* EOF;
-expression : e1=expression POW e2=expression
+expression : expression POW expression
  | expression (TIMES | DIV) expression | expression (PLUS | MINUS) expression | LPAREN expression RPAREN | (PLUS | MINUS)* atom ;
-atom : scientific # label1
- | variable # label2
+atom : scientific  
+ | variable  
 ;
 scientific : SCIENTIFIC_NUMBER ;
 variable : VARIABLE ;

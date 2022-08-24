@@ -7066,29 +7066,11 @@ and not(lexerRuleBlock//ebnfSuffix)
             return result;
         }
 
-        public static Dictionary<string, string> Delabel(Document document)
+        public static void Delabel(AltAntlr.MyParser parser, AltAntlr.MyLexer lexer, AltAntlr.MyTokenStream tokstream, List<AltAntlr.MyParserRuleContext> trees)
         {
-            Dictionary<string, string> result = new Dictionary<string, string>();
-
-            // Check if initial file is a grammar.
-            if (!(ParsingResultsFactory.Create(document) is ParsingResults pd_parser))
-                throw new LanguageServerException("A grammar file is not selected. Please select one first.");
-            ExtractGrammarType egt = new ExtractGrammarType();
-            ParseTreeWalker.Default.Walk(egt, pd_parser.ParseTree);
-            bool is_grammar = egt.Type == ExtractGrammarType.GrammarType.Parser
-                              || egt.Type == ExtractGrammarType.GrammarType.Combined
-                              || egt.Type == ExtractGrammarType.GrammarType.Lexer;
-            if (!is_grammar)
-            {
-                throw new LanguageServerException("A grammar file is not selected. Please select one first.");
-            }
-
-            // Get all intertoken text immediately for source reconstruction.
-            var (text_before, other) = TreeEdits.TextToLeftOfLeaves(pd_parser.TokStream, pd_parser.ParseTree);
-
-            var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
+            // Verify antlr4 grammar.
             using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(trees, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 {
@@ -7097,7 +7079,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
                         .ToArray();
-                    foreach (var n in nodes) TreeEdits.Delete(n);
+                    foreach (var n in nodes) TreeEdits.Delete(tokstream, n);
                 }
                 {
                     var nodes = engine.parseExpression(
@@ -7105,7 +7087,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
                         .ToArray();
-                    foreach (var n in nodes) TreeEdits.Delete(n);
+                    foreach (var n in nodes) TreeEdits.Delete(tokstream, n);
                 }
                 {
                     var nodes = engine.parseExpression(
@@ -7113,18 +7095,24 @@ and not(lexerRuleBlock//ebnfSuffix)
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
                         .ToArray();
-                    foreach (var n in nodes) TreeEdits.Delete(n);
+                    foreach (var n in nodes) TreeEdits.Delete(tokstream, n);
                 }
-            }
 
-            StringBuilder sb = new StringBuilder();
-            TreeEdits.Reconstruct(sb, pd_parser.ParseTree, text_before);
-            var new_code = sb.ToString();
-            if (new_code != pd_parser.Code)
-            {
-                result.Add(document.FullPath, new_code);
+
+            // Check if initial file is a grammar.
+            //if (!(ParsingResultsFactory.Create(document) is ParsingResults pd_parser))
+            //    throw new LanguageServerException("A grammar file is not selected. Please select one first.");
+            //ExtractGrammarType egt = new ExtractGrammarType();
+            //ParseTreeWalker.Default.Walk(egt, pd_parser.ParseTree);
+            //bool is_grammar = egt.Type == ExtractGrammarType.GrammarType.Parser
+            //                  || egt.Type == ExtractGrammarType.GrammarType.Combined
+            //                  || egt.Type == ExtractGrammarType.GrammarType.Lexer;
+            //if (!is_grammar)
+            //{
+            //    throw new LanguageServerException("A grammar file is not selected. Please select one first.");
+            //}
+
             }
-            return result;
         }
 
         public static IParseTree NextSib(IParseTree p)

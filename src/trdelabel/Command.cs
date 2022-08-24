@@ -2,10 +2,10 @@
 {
     using Antlr4.Runtime.Tree;
     using AntlrJson;
-    using LanguageServer;
     using System.Collections.Generic;
     using System.IO;
 	using System.Text.Json;
+	using System.Linq;
 
 	class Command
 	{
@@ -46,29 +46,21 @@
 			{
 				var text = parse_info.Text;
 				var fn = parse_info.FileName;
-				var atrees = parse_info.Nodes;
-				var parser = parse_info.Parser;
-				var lexer = parse_info.Lexer;
-				var tokstream = parse_info.Stream;
-				var doc = Docs.Class1.CreateDoc(parse_info);
-				var res = LanguageServer.Transform.Delabel(doc);
-				foreach (var r in res)
+				var atrees = parse_info.Nodes.Select(t => t as AltAntlr.MyParserRuleContext).ToList();
+				var parser = parse_info.Parser as AltAntlr.MyParser;
+				var lexer = parse_info.Lexer as AltAntlr.MyLexer;
+				var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+				LanguageServer.Transform.Delabel(parser, lexer, tokstream, atrees);
+				var tuple = new ParsingResultSet()
 				{
-					var doc2 = Docs.Class1.CreateDoc(r.Key, r.Value);
-					Docs.Class1.ParseDoc(doc2, 10);
-					var pr = ParsingResultsFactory.Create(doc2);
-					var pt = pr.ParseTree;
-					var tuple = new ParsingResultSet()
-					{
-						Text = doc2.Code,
-						FileName = doc2.FullPath,
-						Stream = pr.TokStream,
-						Nodes = new IParseTree[] { pt },
-						Lexer = pr.Lexer,
-						Parser = pr.Parser
-					};
-					results.Add(tuple);
-				}
+					Text = tokstream.Text,
+					FileName = fn,
+					Stream = tokstream,
+					Nodes = atrees.ToArray(),
+					Lexer = lexer,
+					Parser = parser,
+				};
+				results.Add(tuple);
 			}
 			string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
 			System.Console.WriteLine(js1);
