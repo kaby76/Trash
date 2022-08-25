@@ -1,4 +1,4 @@
-﻿namespace LanguageServer
+namespace LanguageServer
 {
     using Antlr4.Runtime;
     using org.eclipse.wst.xml.xpath2.processor.util;

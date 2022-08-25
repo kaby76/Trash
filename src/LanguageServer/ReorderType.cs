@@ -1,4 +1,4 @@
-﻿namespace LspAntlr
+namespace LspAntlr
 {
     public enum ReorderType
     {

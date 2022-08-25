@@ -1,4 +1,4 @@
-﻿namespace LanguageServer
+namespace LanguageServer
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;

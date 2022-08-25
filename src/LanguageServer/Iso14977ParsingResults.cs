@@ -1,4 +1,4 @@
-﻿namespace LanguageServer
+namespace LanguageServer
 {
     using AltAntlr;
     using Antlr4.Runtime;

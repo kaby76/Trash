@@ -1,4 +1,4 @@
-﻿namespace ZhangShashaCSharp
+namespace ZhangShashaCSharp
 {
 	using System;
 	using System.Collections.Generic;
