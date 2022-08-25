@@ -33,7 +33,7 @@ This program is part of the Trash toolkit.]]>
     <ProjectReference Include="../Globbing/Domemtech.Globbing.csproj">
       <Aliases>MainGlobbing</Aliases>
     </ProjectReference>
-    <PackageReference Include="Antlr4BuildTasks" Version = "11.0.0" PrivateAssets="all" />
+    <PackageReference Include="Antlr4BuildTasks" Version = "11.1.0" PrivateAssets="all" />
     <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />

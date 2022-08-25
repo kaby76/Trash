@@ -55,7 +55,7 @@
 
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
-<!-- <PackageReference Include="Antlr4BuildTasks" Version="10.2">
+<!-- <PackageReference Include="Antlr4BuildTasks" Version="11.1">
                     <PrivateAssets>all</PrivateAssets>
                 </PackageReference> -->
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
