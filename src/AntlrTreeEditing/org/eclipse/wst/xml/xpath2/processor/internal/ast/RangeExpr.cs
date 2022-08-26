@@ -47,12 +47,12 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.ast
 
         public override ICollection<XPathNode> GetAllChildren()
         {
-            throw new System.NotImplementedException();
-        }
+			return new List<XPathNode>() { left(), right() };
+		}
 
-        public override string QuickInfo()
+		public override string QuickInfo()
         {
-            throw new System.NotImplementedException();
+			return this.left().QuickInfo() + " to " + this.right().QuickInfo();
         }
     }
 

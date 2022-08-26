@@ -1,0 +1,28 @@
+
+NonterminalDef
+	define(n)
+		RULE_REF[parent::parserRuleSpec])
+	find(n)
+		f.dependent_files.Select(d => d.find(n).defs()).ToList();
+
+NonterminalRef
+	define(n)
+		RULE_REF[parent::ruleref | parent::identifier]
+	find(n)
+		f.dependent_files.Select(d => d.find(n)).ToList();
+
+TerminalDef
+	define(n)
+		TOKEN_REF[parent::lexerRuleSpec]
+	find(n)
+		f.dependent_files.Select(d => d.find(n).defs()).ToList();
+
+TerminalRef
+	define(n)
+		TOKEN_REF[parent::setElement | parent::terminal | parent::identifier]
+	find(n)
+		f.dependent_files.Select(d => d.find(n)).ToList();
+
+dependent_files
+	//optionsSpec/option/optionValue[../identifier/text() = 'tokenVocab']
+	//delegateGrammars/delegateGrammar/identifier[..[count() != 3]]

@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \" for $i in //(altList | labeledAlt)/alternative/element[ebnf[not(child::blockSuffix)]/block/altList[not(@ChildCount > 1)]] | //(altList | labeledAlt)[not(@ChildCount > 1)]/alternative[not(@ChildCount > 1)]/element[ebnf[not(child::blockSuffix)]/block/altList[@ChildCount > 1]] return $i/@Line \"",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\useless"
+      "commandLineArgs": "-e -f o.pt \" for $i in (1 to 3) return //elementOptions/preceding-sibling::*/text() \"",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\piggy"
     }
   }
 }
