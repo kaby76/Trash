@@ -8,10 +8,11 @@ file_ : patterns EOF ;
 patterns : pattern* ;
 pattern : xpath ARROW text SEMI ;
 text : json | xml | xpath | hack ;
-hack : TemplateWithoutIntertoken;
+hack : StartWithoutIntertoken replace* TemplateWithoutIntertoken;
+replace : '<' xpath '>';
 
 // JSON grammar
-json_text : TemplateWithoutIntertoken | TemplateWithIntertoken ;
+json_text : json;
 json : json_element ;
 json_value : json_object_ | json_array_ | json_string_ | json_number | 'true' | 'false' | 'null' ;
 json_object_ : OC json_members CC | OC CC | LT xpath GT ;

@@ -201,7 +201,7 @@ NameChar    :   NameStartChar
 
 fragment
 NameStartChar
-            :   [:a-zA-Z]
+            :   [a-zA-Z]
             |   '\u2070'..'\u218F'
             |   '\u2C00'..'\u2FEF'
             |   '\u3001'..'\uD7FF'

@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-v -f o.pt doc5",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2703\\lua\\Generated"
+      "commandLineArgs": "-v -f o.pt repeat.pig",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\piggy"
     }
   }
 }

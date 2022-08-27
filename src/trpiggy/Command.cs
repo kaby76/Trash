@@ -168,7 +168,9 @@ namespace Trash
                     var expr_e = frontier_expr.Last().Payload.StopIndex;
                     var expr_text = spec_file_contents.Substring(expr_s, expr_e - expr_s + 1);
                     if (_config.Verbose) System.Console.Error.WriteLine("Pattern " + expr_text);
-                    var template_source = pat.text().GetText();
+                    TreeMLParser.TextContext pat_node = pat.text();
+                    string pat_text = GetExactText(pat_node, spec_file_contents);
+                    var template_source = pat_text;
                     var without_intertokens = (pat?.text()?.hack()?.GetChild(0) as TerminalNodeImpl)?.Payload.Type == TreeMLLexer.TemplateWithoutIntertoken;
                     var template_lexer = new TemplateLexer(CharStreams.fromString(template_source));
                     var template_parser = new TemplateParser(new Antlr4.Runtime.CommonTokenStream(template_lexer));
@@ -265,6 +267,16 @@ namespace Trash
             serializeOptions.WriteIndented = true;
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);
+        }
+
+        private string GetExactText(TreeMLParser.TextContext pat_node, string str)
+        {
+            var start = pat_node.Start;
+            var start_c = start.StartIndex;
+            var stop = pat_node.Stop;
+            var stop_c = stop.StopIndex;
+            var text = str.Substring(start_c, stop_c - start_c + 1);
+            return text;
         }
 
         IEnumerable<string> EnumerateLines(TextReader reader)
