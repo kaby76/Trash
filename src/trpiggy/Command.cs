@@ -239,6 +239,16 @@ namespace Trash
                                                 if (r2 == null) throw new Exception("null value.");
                                                 TreeEdits.MoveBeforeInStreams(r2, place_holder);
                                                 if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
+                                            } else if (z is AntlrTreeEditing.AntlrDOM.AntlrText)
+                                            {
+                                                var q2 = z as AntlrTreeEditing.AntlrDOM.AntlrText;
+                                                string to_replace = q2.Data;
+                                            }
+                                            else if (z is string)
+                                            {
+                                                string new_text = z as string;
+                                                TreeEdits.InsertBeforeInStreams(place_holder, new_text);
+                                                if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
                                             }
                                         }
                                     }

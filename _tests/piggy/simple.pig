@@ -1,1 +1,1 @@
-//elementOptions[LT and INT] -> {{ <INT/text()> }};
+//elementOptions[LT and INT] -> {{ <preceeding-sibling::*/text()> }};
