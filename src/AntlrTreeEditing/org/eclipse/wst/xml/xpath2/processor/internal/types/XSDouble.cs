@@ -554,7 +554,7 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.types
 		///         number stored </returns>
 		public override NumericType floor()
 		{
-			return new XSDouble(Math.Floor(double_value()));
+			return new XSInteger((int)Math.Floor(double_value()));
 		}
 
 		/// <summary>
