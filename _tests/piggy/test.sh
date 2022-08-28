@@ -11,10 +11,13 @@ trap 'ERROR_CODE=$?; FAILED_COMMAND=$LAST_COMMAND; tput setaf 1; echo "ERROR: co
 export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
 cd "$where/antlr4"
-rm -rf Generated
+rm -rf "$where/Generated"
+pwd
 trgen
 dotnet build Generated/Test.csproj
 cd ..
-trparse -p antlr4/Generated "$where/Repeat.g4" | trpiggy "$where/repeat.pig" | trtree > "$where/Generated/Repeat.g4"
-diff -r "$where/Gold" "$where/Generated"
+rm -rf Generated
+mkdir Generated
+trparse -p "antlr4/Generated" "Repeat.g4" | trpiggy "repeat.pig" | trtext > "Generated/Repeat.g4"
+diff -r "Gold" "Generated"
 echo "Test suceeded."
