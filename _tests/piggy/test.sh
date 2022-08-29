@@ -15,9 +15,20 @@ rm -rf "$where/Generated"
 pwd
 trgen
 dotnet build Generated/Test.csproj
+echo PWD:
+pwd
+echo ls -R
+ls -R
 cd ..
+echo PWD:
+pwd
 rm -rf Generated
 mkdir Generated
+echo Right before trparse call
+echo PWD:
+pwd
+echo ls -R
+ls -R
 trparse -p "antlr4/Generated" "Repeat.g4" | trpiggy "repeat.pig" | trtext > "Generated/Repeat.g4"
 diff -r "Gold" "Generated"
 echo "Test suceeded."
