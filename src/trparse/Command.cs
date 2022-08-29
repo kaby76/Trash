@@ -54,6 +54,7 @@ namespace Trash
             if (config.ParserLocation != null && !exists)
             {
                 System.Console.Error.WriteLine("Parser doesn't exist");
+                System.Console.Error.WriteLine("fp " + String.Join(" ", fp));
                 var is_generated_cs = new Domemtech.Globbing.Glob(path)
                     .RegexContents("(Generated/)*.cs")
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
