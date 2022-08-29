@@ -29,8 +29,8 @@ echo PWD:
 pwd
 echo ls -R
 ls -R
-echo trparse -p "antlr4" "Repeat.g4"
-trparse -p "antlr4" "Repeat.g4" > o1.pt
+echo trparse -p "antlr4/Generated" "Repeat.g4"
+trparse -p "antlr4/Generated" "Repeat.g4" > o1.pt
 echo trpiggy "repeat.pig"
 cat o1.pt | trpiggy "repeat.pig" > o2.pt
 echo trtext
