@@ -46,7 +46,7 @@ namespace Trash
             if (!path.EndsWith("/")) path = path + "/";
             System.Console.Error.WriteLine("Path to parser " + path);
             var fp = new Domemtech.Globbing.Glob(path)
-                .RegexContents("(Generated/)?bin/.*/Test.dll$")
+                .RegexContents("(Generated/)?bin/.*(?!ref)/Test.dll$")
                 .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                 .Select(f => f.FullName.Replace('\\', '/'))
                 .ToList();
