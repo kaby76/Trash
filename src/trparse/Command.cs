@@ -44,6 +44,7 @@ namespace Trash
             path = Path.GetFullPath(path);
             path = path.Replace("\\", "/");
             if (!path.EndsWith("/")) path = path + "/";
+            System.Console.Error.WriteLine("Path to parser " + path);
             var fp = new Domemtech.Globbing.Glob(path)
                 .RegexContents("(Generated/)?bin/.*/Test.dll$")
                 .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
@@ -52,16 +53,19 @@ namespace Trash
             var exists = fp.Count == 1;
             if (config.ParserLocation != null && !exists)
             {
+                System.Console.Error.WriteLine("Parser doesn't exist");
                 var is_generated_cs = new Domemtech.Globbing.Glob(path)
                     .RegexContents("(Generated/)*.cs")
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                     .Select(f => f.FullName.Replace('\\', '/'))
                     .ToList();
+                System.Console.Error.WriteLine("is_generated_cs = " + String.Join(" ", is_generated_cs));
                 var is_generated_java = new Domemtech.Globbing.Glob(path)
                     .RegexContents("(Generated/)*.java")
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                     .Select(f => f.FullName.Replace('\\', '/'))
                     .ToList();
+                System.Console.Error.WriteLine("is_generated_java = " + String.Join(" ", is_generated_java));
                 if (is_generated_cs.Count > 0 && is_generated_java.Count == 0)
                 {
                     throw new Exception("-p specified, but the parser doesn't exist. Did you do a 'dotnet build'?");
