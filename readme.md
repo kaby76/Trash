@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/kaby76/Domemtech.Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Domemtech.Trash/actions?query=workflow%3ACI)
 
-Trash is a collection of command-line tools to analyze and transform
+Trash is a collection of ~40 command-line tools to analyze and transform
 Antlr parse trees and grammars. The toolkit can generate a parser
 application for an Antlr4 grammar for any target and any OS.
 
@@ -65,23 +65,36 @@ foreach ($i in $apps) {
 
 ## Examples
 
-### Parse a grammar
-
-    git clone https://github.com/kaby76/Domemtech.Trash.git; cd Domemtech.Trash/_tests/trconvert/antlr2; \
-        trparse ada.g4 | trtree | vim -
-
-This command parses the Antlr4 grammar
-[ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4)
-using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
-prints out the parse tree data as a simple
-[text-oriented diagram](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4.tree)
-using [trtree](https://github.com/kaby76/Domemtech.Trash/tree/main/trtree),
-then opens [vim](https://www.vim.org/) on the diagram. If you are not
-familiar with `Vim`, then you can use [less](http://www.greenwoodsoftware.com/less/),
-or save the output from `trtree` to a file
-and open that with any other editor you would like. `trparse` can infer the type of
-parse from the file name suffix.
-
+### Parse a grammar, create a parser for the grammar, build, and test
+```
+git clone https://github.com/antlr/grammars-v4
+cd grammars-v4/python/python
+trparse *.g4 | trxgrep ' //grammarDecl' | trtext
+# Output:
+# PythonLexer.g4:lexer grammar PythonLexer;
+# PythonParser.g4:parser grammar PythonParser;
+trgen
+cd Generated
+dotnet build
+cat - <<EOF | trparse | trxgrep ' //test' | trtext
+x == y
+x == y if z == b else a == u
+lambda: a
+lambda x, y: a
+EOF
+# Output:
+# a
+# lambda x, y: a
+# a
+# lambda: a
+# a == u
+# x == y if z == b else a == u
+# x == y
+```
+### Display parse tree
+```
+trparse -i "a == b" | trtree
+```
 `trtree` is only one of several ways to view parse tree data.
 Other programs for different output are
 [trjson](https://github.com/kaby76/Domemtech.Trash/tree/main/trjson) for [JSON output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4.json),
@@ -93,9 +106,9 @@ and
 [tragl](https://github.com/kaby76/Domemtech.Trash/tree/main/tragl).
 
 ### Convert grammars to Antlr4
-
-    trparse ada.g2 | trconvert | trprint | less
-
+```
+trparse ada.g2 | trconvert | trprint | less
+```
 This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g2)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
 converts the parse tree data to Antlr4 syntax using
@@ -107,11 +120,10 @@ using
 grammar that can be converted are Antlr3, Bison, and ISO EBNF. In order to
 use the grammar to parse data, you will need to convert it to an Antlr4 grammar.
 
-### Generate a parser application
-
-    mkdir foobar; cd foobar; \
-        trgen
-
+### Generate an Arithmetic parser application
+```
+mkdir foobar; cd foobar; trgen
+```
 This command creates a parser application for the C# target.
 If executed in an empty directory, which is done in the example
 shown above, [trgen](https://github.com/kaby76/Domemtech.Trash/tree/main/trgen)
