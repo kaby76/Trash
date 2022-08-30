@@ -31,27 +31,35 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 Copy this script and execute it in a Bash shell.
 ```
 #
-for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfold trfoldlit trformat trgen trgroup trinsert tritext trjson trkleene trmove trparse trperf trpiggy trprint trrename trreplace trrr trrup trsort trsplit trsponge trst trstrip trtext trtokens trtree trull trunfold trungroup trwdog trxgrep trxml trxml2; do dotnet tool install -g $i; done
-unameOut="$(uname -s)"
-case "${unameOut}" in
-    Linux*)     machine=Linux;;
-    Darwin*)    machine=Mac;;
-    CYGWIN*)    machine=Cygwin;;
-    MINGW*)     machine=MinGw;;
-    *)          machine="UNKNOWN:${unameOut}"
-esac
-if [[ "$machine" == "MinGw" || "$machine" == "Msys" ]]
-then
-    git clone https://github.com/kaby76/Domemtech.Trash.git; cd Domemtech.Trash/tragl; dotnet build; cwd=`pwd`; a tragl="$cwd/bin/Debug/net6.0/tragl.exe"
-fi
+for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfold trfoldlit trformat trgen trgroup trinsert tritext trjson trkleene trmove trparse trperf trpiggy trprint trrename trreplace trrr trrup trsort trsplit trsponge trst trstrip trtext trtokens trtree trull trunfold trungroup trwdog trxgrep trxml trxml2
+do
+    dotnet tool install -g $i
+done
 ```
 ### Windows or Linux Powershell
 Copy this script and execute it in a Powershell shell.
 ```
-# $version = "--version 0.16.6"
 $apps = @('tranalyze','trcombine','trconvert','trdelabel','trdelete','trdot','trfold','trfoldlit','trformat','trgen','trgroup','trinsert','tritext','trjson','trkleene','trmove','trparse','trperf','trpiggy','trprint','trrename','trreplace','trrr','trrup','trsort','trsplit','trsponge','trst','trstrip','trtext','trtokens','trtree','trull','trunfold','trungroup','trwdog','trxgrep','trxml','trxml2')
 foreach ($i in $apps) {
-	dotnet tool install -g $i $version
+	dotnet tool install -g $i
+}
+```
+## Uninstall
+### Linux or Cywin/MSYS2
+Copy this script and execute it in a Bash shell.
+```
+#
+for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfold trfoldlit trformat trgen trgroup trinsert tritext trjson trkleene trmove trparse trperf trpiggy trprint trrename trreplace trrr trrup trsort trsplit trsponge trst trstrip trtext trtokens trtree trull trunfold trungroup trwdog trxgrep trxml trxml2
+do
+    dotnet tool uninstall -g $i
+done
+```
+### Windows or Linux Powershell
+Copy this script and execute it in a Powershell shell.
+```
+$apps = @('tranalyze','trcombine','trconvert','trdelabel','trdelete','trdot','trfold','trfoldlit','trformat','trgen','trgroup','trinsert','tritext','trjson','trkleene','trmove','trparse','trperf','trpiggy','trprint','trrename','trreplace','trrr','trrup','trsort','trsplit','trsponge','trst','trstrip','trtext','trtokens','trtree','trull','trunfold','trungroup','trwdog','trxgrep','trxml','trxml2')
+foreach ($i in $apps) {
+	dotnet tool uninstall -g $i
 }
 ```
 
