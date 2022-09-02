@@ -91,13 +91,9 @@ namespace Trash
                     }
                 }
             }
-            var path = Environment.CurrentDirectory;
             string cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             this.root_directory = cd;
-            if (this.maven == null)
-            {
-                maven = File.Exists(cd + Path.DirectorySeparatorChar + @"pom.xml");
-            }
+            if (this.maven == null) maven = File.Exists(cd + Path.DirectorySeparatorChar + @"pom.xml");
         }
 
         public Config(Config copy)

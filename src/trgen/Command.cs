@@ -193,7 +193,6 @@
             XPathDocument document = new XPathDocument(reader);
             XPathNavigator navigator = document.CreateNavigator();
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(reader.NameTable);
-
             // determine if this pom only directs for subdirectories.
             var sub_dirs = navigator
                 .Select("//modules/module", nsmgr)
@@ -221,7 +220,6 @@
                 }
                 return;
             }
-
             //
             // Determine if we skip this grammar.
             //
@@ -243,12 +241,10 @@
                     return;
                 }
             }
-
             //
             // Process grammar pom.xml here.
             //
             PerGrammar per_grammar = new PerGrammar();
-
             /// <summary>
             /// pom_includes is the entry in pom.xml listing the antrl4 grammar .g4 files.
             /// It should not list.g4 files that are "imported" by other grammars.
@@ -256,7 +252,6 @@
             /// //plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/includes/include
             /// </summary>
             List<string> pom_includes = null;
-
             /// <summary>
             /// pom_grammars is the entry in pom.xml listing, via an alternative to
             /// "includes/include", the antrl4 grammar .g4 files.
@@ -265,7 +260,6 @@
             /// //plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/grammars
             /// </summary>
             List<string> pom_grammars = null;
-
             /// <summary>
             /// pom_antlr_tool_args is the entry in pom.xml listing the Antlr4
             /// tool arguments. It is typically used for setting the package/namespace
@@ -274,7 +268,6 @@
             /// //plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/arguments/argument
             /// </summary>
             List<string> pom_antlr_tool_args = null;
-
             /// <summary>
             /// pom_source_directory is the entry in pom.xml for Maven to
             /// find the Java source files used with the generated parser.
@@ -285,7 +278,6 @@
             /// //plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/sourceDirectory
             /// </summary>
             List<string> pom_source_directory = null;
-
             /// <summary>
             /// pom_all_else is a list of strings for anything in the pom.xml
             /// file that is a "catch-all" for anything that I didn't understand,
@@ -294,7 +286,6 @@
             /// //plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/*[not(self::sourceDirectory or self::arguments or self::includes or self::visitor or self::listener)]
             /// </summary>
             List<XPathNavigator> pom_all_else = null;
-
             /// <summary>
             /// This is the name of the parser to test, used by the Antlr4 test
             /// plugin.
@@ -303,7 +294,6 @@
             /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/grammarName
             /// </summary>
             List<string> pom_grammar_name = null;
-
             /// <summary>
             /// This is the name of the lexer used in the Antlr4 test of the parser.
             /// pom_lexer_name is a string list, but it should be just one.
@@ -311,7 +301,6 @@
             /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/grammarName
             /// </summary>
             List<string> pom_lexer_name = null;
-
             /// <summary>
             /// This is the name of the start rule used in the Antlr4 test of the parser.
             /// pom_entry_point is a string list, but it should be just one.
@@ -319,7 +308,6 @@
             /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/entryPoint
             /// </summary>
             List<string> pom_entry_point = null;
-
             /// <summary>
             /// This is the name of the package name used in the Antlr4 test of the parser.
             /// pom_package_name is a string list, but it should be just one.
@@ -327,7 +315,6 @@
             /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/packageName
             /// </summary>
             List<string> pom_package_name = null;
-
             /// <summary>
             /// This is used in the Antlr4 test of the parser for case-insensitive parsing.
             /// The values can be UPPER, LOWER, TRUE, or NONE.
@@ -336,7 +323,6 @@
             /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/caseInsensitiveType
             /// </summary>
             List<string> pom_case_insensitive_type = null;
-
             /// <summary>
             /// This is used in the Antlr4 test of the parser for the directory
             /// containing the files to parse.
@@ -345,8 +331,6 @@
             /// //plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/exampleFiles
             /// </summary>
             List<string> pom_example_files = null;
-
-
             // Get grammar and testing information from pom.xml.
             // I'd love to have these self documenting, but C# only allows
             // self documentation for fields, not local variables.
@@ -409,13 +393,11 @@
                 .Where(t => t.Value != "")
                 .Select(t => t.Value)
                 .ToList();
-
             var pom_all_test = navigator
                 .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/*", nsmgr)
                 .Cast<XPathNavigator>()
                 .Select(t => t)
                 .ToList();
-
             // Check all other config options in antlr4-maven-plugin configuration.
             bool pom_all_else_bad = false;
             foreach (var e in pom_all_else)
@@ -430,8 +412,6 @@
                 // Disable for now.
                 // throw new Exception();
             }
-
-
             // Go through all elements under configuration and check if nonsense.
             bool pom_all_test_bad = false;
             foreach (var e in pom_all_test)
@@ -449,7 +429,6 @@
                 if (e.Name == "testFileExtension") continue;
                 if (e.Name == "fileEncoding") continue;
                 if (e.Name == "grammarInitializer") continue;
-
                 System.Console.Error.WriteLine("Invalid element \"//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/"
                     + e.Name
                     + ". Correct the pom.xml!");
@@ -460,19 +439,15 @@
                 // Disable for now.
                 // throw new Exception();
             }
-
-
             // grammarName is required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
             if (!pom_grammar_name.Any())
             {
                 return;
             }
-
             // The grammar name in pom is a mess. That's because
             // people define multiple parser grammars in the pom includes/grammars,
             // and a driver (see grammars-v4/r). So, take it on faith.
             per_grammar.grammar_name = pom_grammar_name.First();
-
             // Pom is a mess. There are many cases here in computing the namespace/package.
             // People even add bullshit @headers in the grammar; minds of a planaria.
             // -package arg specified; source top level
@@ -487,13 +462,11 @@
             {
                 _config.name_space = pom_package_name.First();
             }
-
             // entryPoint required. https://github.com/antlr/antlr4test-maven-plugin#grammarname
             if (!pom_entry_point.Any())
             {
                 return;
             }
-
             // Make sure all the grammar files actually existance.
             // People don't check their bullshit.
             var merged_list = new HashSet<string>();
@@ -511,7 +484,6 @@
                     throw new Exception();
                 }
             }
-
             // Check existance of example files.
             if (pom_example_files.Any())
             {
@@ -525,7 +497,6 @@
             {
                 per_grammar.example_files = "examples";
             }
-
             if (pom_source_directory.Any())
             {
                 per_grammar.current_directory = pom_source_directory
@@ -542,7 +513,6 @@
             {
                 per_grammar.current_directory = "";
             }
-
             per_grammar.case_insensitive_type = null;
             if (pom_case_insensitive_type.Any())
             {
@@ -559,7 +529,6 @@
                 //    + pom_case_insensitive_type.First() + "'.");
             }
             else per_grammar.case_insensitive_type = null;
-
             // Check for existence of .trgen-ignore file.
             // If there is one, read and create pattern of what to ignore.
             if (File.Exists(ignore_list_of_files))
@@ -570,7 +539,6 @@
                 per_grammar.ignore_string = string.Join("|", ignore_lines);
             }
             else per_grammar.ignore_string = null;
-
             if (!(_config.target == "JavaScript" || _config.target == "Dart"))
             {
                 List<string> additional = new List<string>();
@@ -591,8 +559,59 @@
             per_grammar.package = (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
             per_grammar.package = _config.target == "Go" ? "parser" : per_grammar.package;
             per_grammar.start_rule = _config.start_rule != null && _config.start_rule != "" ? _config.start_rule : pom_entry_point.First();
-
             Doit(per_grammar, merged_list);
+        }
+
+        public void DoNonMavenGenerate()
+        {
+            var per_grammar = new PerGrammar();
+            per_grammar.current_directory = _config.root_directory;
+            if (per_grammar.current_directory != "" && !per_grammar.current_directory.EndsWith("/"))
+            {
+                per_grammar.current_directory = per_grammar.current_directory + "/";
+            }
+            // Check for existence of .trgen-ignore file.
+            // If there is one, read and create pattern of what to ignore.
+            if (File.Exists(ignore_list_of_files))
+            {
+                var ignore = new StringBuilder();
+                var lines = File.ReadAllLines(ignore_list_of_files);
+                var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
+                per_grammar.ignore_string = string.Join("|", ignore_lines);
+            }
+            else per_grammar.ignore_string = null;
+            // In this mode, you should specify the grammars to generate parsers for.
+            // From that, we'll find the included grammars.
+            // Every parser grammar or combined grammar must have:
+            // * a start rule
+            // * an encoding
+            per_grammar.start_rule = _config.start_rule;
+            per_grammar.example_files = "examples";
+            per_grammar.fully_qualified_lexer_name = "";
+            per_grammar.fully_qualified_parser_name = "";
+            per_grammar.package = _config.target == "Go" ? "parser" : "";
+            var all_grammars_pattern = "^(?!.*(" +
+                 (per_grammar.ignore_string != null ? per_grammar.ignore_string + "|" : "")
+                 + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
+                 + Command.AllButTargetName(_config.target)
+                 + "/)).+[.]g4"
+                 + "$";
+            var grammar_list = new Domemtech.Globbing.Glob(per_grammar.current_directory)
+                .RegexContents(all_grammars_pattern)
+                .Where(f =>
+                {
+                    if (f.Attributes.HasFlag(FileAttributes.Directory)) return false;
+                    if (f is DirectoryInfo) return false;
+                    return true;
+                })
+                .Select(f => f.FullName.Replace('\\', '/'))
+                .Where(f =>
+                {
+                    if (per_grammar.fully_qualified_parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
+                    if (f == "./files") return false;
+                    return true;
+                }).Select(f => f.Replace(per_grammar.current_directory, "")).ToHashSet();
+            Doit(per_grammar, grammar_list);
         }
 
         public void Doit(PerGrammar per_grammar, HashSet<string> merged_list)
@@ -1314,58 +1333,6 @@
             var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
             Directory.CreateDirectory(q);
             File.Copy(from, to, true);
-        }
-
-        public void DoNonMavenGenerate()
-        {
-            var per_grammar = new PerGrammar();
-            per_grammar.current_directory = _config.root_directory;
-            if (per_grammar.current_directory != "" && !per_grammar.current_directory.EndsWith("/"))
-            {
-                per_grammar.current_directory = per_grammar.current_directory + "/";
-            }
-            // Check for existence of .trgen-ignore file.
-            // If there is one, read and create pattern of what to ignore.
-            if (File.Exists(ignore_list_of_files))
-            {
-                var ignore = new StringBuilder();
-                var lines = File.ReadAllLines(ignore_list_of_files);
-                var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
-                per_grammar.ignore_string = string.Join("|", ignore_lines);
-            }
-            else per_grammar.ignore_string = null;
-            // In this mode, you should specify the grammars to generate parsers for.
-            // From that, we'll find the included grammars.
-            // Every parser grammar or combined grammar must have:
-            // * a start rule
-            // * an encoding
-            per_grammar.start_rule = _config.start_rule;
-            per_grammar.example_files = "examples";
-            per_grammar.fully_qualified_lexer_name = "";
-            per_grammar.fully_qualified_parser_name = "";
-            per_grammar.package = _config.target == "Go" ? "parser" : "";
-            var all_grammars_pattern = "^(?!.*(" +
-                 (per_grammar.ignore_string != null ? per_grammar.ignore_string + "|" : "")
-                 + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
-                 + Command.AllButTargetName(_config.target)
-                 + "/)).+[.]g4"
-                 + "$";
-            var grammar_list = new Domemtech.Globbing.Glob(per_grammar.current_directory)
-                .RegexContents(all_grammars_pattern)
-                .Where(f =>
-                {
-                    if (f.Attributes.HasFlag(FileAttributes.Directory)) return false;
-                    if (f is DirectoryInfo) return false;
-                    return true;
-                })
-                .Select(f => f.FullName.Replace('\\', '/'))
-                .Where(f =>
-                {
-                    if (per_grammar.fully_qualified_parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
-                    if (f == "./files") return false;
-                    return true;
-                }).Select(f => f.Replace(per_grammar.current_directory, "")).ToHashSet();
-            Doit(per_grammar, grammar_list);
         }
 
         public static string Localize(LineTranslationType encoding, string code)
