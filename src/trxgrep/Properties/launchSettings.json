@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-e -f o.pt \" for $i in (1 to 3) return //elementOptions/preceding-sibling::*/text() \"",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\piggy"
+      "commandLineArgs": "-f o.pt \"  //parserRuleSpec//alternative/element/following-sibling::* \"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\x"
     }
   }
 }

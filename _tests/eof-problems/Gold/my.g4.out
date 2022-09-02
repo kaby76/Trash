@@ -1,0 +1,1 @@
+my.g4 has an EOF in one alt, but not in another.

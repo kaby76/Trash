@@ -1,5 +1,1 @@
-Abnf.g4 has 1 useless parentheses.
-Type 1 errors:
 line 75 col 11 "(INT?'*'INT?)"
-Type 2 errors:
-Type 3 errors:

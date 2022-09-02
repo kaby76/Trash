@@ -10,8 +10,7 @@ namespace Trash
         public List<GrammarTuple> tool_grammar_tuples = null; 
         public List<string> all_target_files = null;
         public List<string> all_source_files = null;
-        internal string current_directory;
-        public string source_directory;
+        public string current_directory;
         public string fully_qualified_lexer_name { get; set; }
         public string fully_qualified_parser_name { get; set; }
         public string fully_qualified_go_parser_name { get; set; }

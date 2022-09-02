@@ -1,5 +1,1 @@
-abbParser.g4 has 1 useless parentheses.
-Type 1 errors:
-Type 2 errors:
 line 85 col 6 "(TOOLDATA|WOBJDATA|SPEEDDATA|ZONEDATA|CLOCK|BOOL)"
-Type 3 errors:

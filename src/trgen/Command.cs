@@ -28,22 +28,14 @@
         public int Execute(Config co)
         {
             _config = co;
-            var per_grammar = new PerGrammar();
-            per_grammar.current_directory = _config.root_directory;
             if ((bool)_config.maven)
-            {
                 DoMavenGenerate(_config.root_directory);
-                if (failed_modules.Any())
-                {
-                    // List out failed grammars. I really should say what failed,
-                    // what succeeded, what skipped, but I don't. TODO.
-                    System.Console.WriteLine(String.Join(" ", failed_modules));
-                    return 1;
-                }
-            }
             else
+                DoNonMavenGenerate();
+            if (failed_modules.Any())
             {
-                DoNonMavenGenerate(per_grammar);
+                System.Console.WriteLine(String.Join(" ", failed_modules));
+                return 1;
             }
             return 0;
         }
@@ -75,7 +67,7 @@
             };
         }
 
-        public string ignore_file_name = ".trgen-ignore";
+        public string ignore_list_of_files = ".trgen-ignore";
 
         public static LineTranslationType GetLineTranslationType()
         {
@@ -536,19 +528,19 @@
 
             if (pom_source_directory.Any())
             {
-                per_grammar.source_directory = pom_source_directory
+                per_grammar.current_directory = pom_source_directory
                     .First()
                     .Replace("${basedir}", "")
                     .Trim();
-                if (per_grammar.source_directory.StartsWith('/')) per_grammar.source_directory = per_grammar.source_directory.Substring(1);
-                if (per_grammar.source_directory != "" && !per_grammar.source_directory.EndsWith("/"))
+                if (per_grammar.current_directory.StartsWith('/')) per_grammar.current_directory = per_grammar.current_directory.Substring(1);
+                if (per_grammar.current_directory != "" && !per_grammar.current_directory.EndsWith("/"))
                 {
-                    per_grammar.source_directory = per_grammar.source_directory + "/";
+                    per_grammar.current_directory = per_grammar.current_directory + "/";
                 }
             }
             else
             {
-                per_grammar.source_directory = "";
+                per_grammar.current_directory = "";
             }
 
             per_grammar.case_insensitive_type = null;
@@ -568,16 +560,16 @@
             }
             else per_grammar.case_insensitive_type = null;
 
-
             // Check for existence of .trgen-ignore file.
             // If there is one, read and create pattern of what to ignore.
-            if (File.Exists(ignore_file_name))
+            if (File.Exists(ignore_list_of_files))
             {
                 var ignore = new StringBuilder();
-                var lines = File.ReadAllLines(ignore_file_name);
+                var lines = File.ReadAllLines(ignore_list_of_files);
                 var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
                 per_grammar.ignore_string = string.Join("|", ignore_lines);
             }
+            else per_grammar.ignore_string = null;
 
             if (!(_config.target == "JavaScript" || _config.target == "Dart"))
             {
@@ -663,9 +655,9 @@
                         //tgfn = per_grammar.package.Replace(".", "/") + (_config.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
                         tgfn = pre + f;
                     }
-                    else if (File.Exists(per_grammar.source_directory + f))
+                    else if (File.Exists(per_grammar.current_directory + f))
                     {
-                        sgfn = per_grammar.source_directory + f;
+                        sgfn = per_grammar.current_directory + f;
                         tgfn = pre + f;
                     }
                     else if (File.Exists(_config.target + "/" + f))
@@ -1092,8 +1084,8 @@
                     {
                         to = this._config.output_directory
                             + (
-                                f.StartsWith(per_grammar.source_directory)
-                                ? f.Substring(per_grammar.source_directory.Length)
+                                f.StartsWith(per_grammar.current_directory)
+                                ? f.Substring(per_grammar.current_directory.Length)
                                 : f
                                 );
                     }
@@ -1324,15 +1316,29 @@
             File.Copy(from, to, true);
         }
 
-        public void DoNonMavenGenerate(PerGrammar per_grammar)
+        public void DoNonMavenGenerate()
         {
-            var cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
-            per_grammar.source_directory = cd;
-            if (per_grammar.source_directory != "" && !per_grammar.source_directory.EndsWith("/"))
+            var per_grammar = new PerGrammar();
+            per_grammar.current_directory = _config.root_directory;
+            if (per_grammar.current_directory != "" && !per_grammar.current_directory.EndsWith("/"))
             {
-                per_grammar.source_directory = per_grammar.source_directory + "/";
+                per_grammar.current_directory = per_grammar.current_directory + "/";
             }
-
+            // Check for existence of .trgen-ignore file.
+            // If there is one, read and create pattern of what to ignore.
+            if (File.Exists(ignore_list_of_files))
+            {
+                var ignore = new StringBuilder();
+                var lines = File.ReadAllLines(ignore_list_of_files);
+                var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
+                per_grammar.ignore_string = string.Join("|", ignore_lines);
+            }
+            else per_grammar.ignore_string = null;
+            // In this mode, you should specify the grammars to generate parsers for.
+            // From that, we'll find the included grammars.
+            // Every parser grammar or combined grammar must have:
+            // * a start rule
+            // * an encoding
             per_grammar.start_rule = _config.start_rule;
             per_grammar.example_files = "examples";
             per_grammar.fully_qualified_lexer_name = "";
