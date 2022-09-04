@@ -29,9 +29,9 @@
         {
             _config = co;
             if ((bool)_config.maven)
-                DoMavenGenerate(_config.root_directory);
+                DoPomDirectedGenerate(_config.root_directory);
             else
-                DoNonMavenGenerate();
+                DoNonPomDirectedGenerate();
             if (failed_modules.Any())
             {
                 System.Console.WriteLine(String.Join(" ", failed_modules));
@@ -183,7 +183,7 @@
             return TargetName(config.target);
         }
 
-        public void DoMavenGenerate(string cd)
+        public void DoPomDirectedGenerate(string cd)
         {
             // Read pom.xml in current directory.
             Environment.CurrentDirectory = cd;
@@ -205,7 +205,7 @@
                 {
                     try
                     {
-                        DoMavenGenerate(cd + sd + "/");
+                        DoPomDirectedGenerate(cd + sd + "/");
                     }
                     catch (Exception e)
                     {
@@ -559,17 +559,17 @@
             per_grammar.package = (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
             per_grammar.package = _config.target == "Go" ? "parser" : per_grammar.package;
             per_grammar.start_rule = _config.start_rule != null && _config.start_rule != "" ? _config.start_rule : pom_entry_point.First();
+        
             Doit(per_grammar, merged_list);
         }
 
-        public void DoNonMavenGenerate()
+        public void DoNonPomDirectedGenerate()
         {
+            // In this mode, you don't need to specify anything, because the
+            // code will check the grammar.
             var per_grammar = new PerGrammar();
             per_grammar.current_directory = _config.root_directory;
-            if (per_grammar.current_directory != "" && !per_grammar.current_directory.EndsWith("/"))
-            {
-                per_grammar.current_directory = per_grammar.current_directory + "/";
-            }
+            if (per_grammar.current_directory != "" && !per_grammar.current_directory.EndsWith("/")) per_grammar.current_directory = per_grammar.current_directory + "/";
             // Check for existence of .trgen-ignore file.
             // If there is one, read and create pattern of what to ignore.
             if (File.Exists(ignore_list_of_files))
@@ -580,11 +580,6 @@
                 per_grammar.ignore_string = string.Join("|", ignore_lines);
             }
             else per_grammar.ignore_string = null;
-            // In this mode, you should specify the grammars to generate parsers for.
-            // From that, we'll find the included grammars.
-            // Every parser grammar or combined grammar must have:
-            // * a start rule
-            // * an encoding
             per_grammar.start_rule = _config.start_rule;
             per_grammar.example_files = "examples";
             per_grammar.fully_qualified_lexer_name = "";
@@ -611,6 +606,11 @@
                     if (f == "./files") return false;
                     return true;
                 }).Select(f => f.Replace(per_grammar.current_directory, "")).ToHashSet();
+            // Find parser and combined grammars, start rules, etc.
+            if (per_grammar.start_rule == null)
+            {
+
+            }
             Doit(per_grammar, grammar_list);
         }
 

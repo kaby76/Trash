@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-s st",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\k"
+      "commandLineArgs": "",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\grammars-upstream\\abb"
     }
   }
 }
