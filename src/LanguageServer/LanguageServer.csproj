@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
     <PackageReference Include="Antlr4BuildTasks" Version="11.1" PrivateAssets="all" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />

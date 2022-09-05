@@ -35,7 +35,7 @@ This program is part of the Trash toolkit.]]>
     </ProjectReference>
     <PackageReference Include="Antlr4BuildTasks" Version = "11.1.0" PrivateAssets="all" />
     <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
