@@ -117,6 +117,11 @@
                     else
                     {
                         var name = vocab.GetSymbolicName(x);
+                        var lname = vocab.GetLiteralName(x);
+                        var dname = vocab.GetDisplayName(x);
+                        if (name == null && lname != null) name = lname;
+                        if (name == null && dname != null) name = dname;
+                        if (name == null) name = "(" + x + ")";
                         list.Add(name);
                     }
                 }
