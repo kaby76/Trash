@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
@@ -18,13 +18,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Algorithms\Algorithms.csproj" />
-		<ProjectReference Include="..\AntlrTreeEditing\AntlrTreeEditing.csproj" />
-		<ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
-		<ProjectReference Include="..\Logger\Logger.csproj" />
-		<ProjectReference Include="..\NWayDiff\NWayDiff.csproj" />
-		<ProjectReference Include="..\Options\Options.csproj" />
-		<ProjectReference Include="..\Workspaces\Workspaces.csproj" />
+		<ProjectReference Include="../Algorithms/Algorithms.csproj" />
+		<ProjectReference Include="../AntlrTreeEditing/AntlrTreeEditing.csproj" />
+		<ProjectReference Include="../LanguageServer/LanguageServer.csproj" />
+		<ProjectReference Include="../Logger/Logger.csproj" />
+		<ProjectReference Include="../NWayDiff/NWayDiff.csproj" />
+		<ProjectReference Include="../Options/Options.csproj" />
+		<ProjectReference Include="../Workspaces/Workspaces.csproj" />
 	</ItemGroup>
 
 </Project>

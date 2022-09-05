@@ -8,10 +8,12 @@ install:
 	-bash _scripts/install.sh
 
 clean:
-	-rm -rf */obj */bin
-	-bash _scripts/uninstall.sh
-	-bash _scripts/unsetup.sh
-	-rm -rf nuget.config
+	-bash _scripts/uninstall.sh 2> /dev/null
+	-bash _scripts/unsetup.sh 2> /dev/null
+	-rm -rf nuget.config 2> /dev/null
+	-find . -name obj -type d -exec rm -rf '{}' ';' 2> /dev/null
+	-find . -name bin -type d -exec rm -rf '{}' ';' 2> /dev/null
+	-cd _tests; find . -name Generated -type d -exec rm -rf '{}' ';' 2> /dev/null
 
 publish:
 	bash _scripts/publish.sh

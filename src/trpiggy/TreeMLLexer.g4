@@ -179,7 +179,7 @@ XMLDeclOpen :   '<?xml' ;
 SPECIAL_OPEN:   '<?' Name  ;
 SPECIAL_CLOSE:  '?>' ; // close <?xml...?>
 SLASH_CLOSE :   '/>' ;
-INSIDE_SLASH       :   '/' ;
+//INSIDE_SLASH       :   '/' ;
 STRING      :   '"' ~[<"]* '"'
             |   '\'' ~[<']* '\''
             ;
@@ -209,12 +209,12 @@ NameStartChar
             |   '\uFDF0'..'\uFFFD'
             ;
 
-PI          :   '?>'                    -> popMode ; // close <?...?>
+//PI          :   '?>'                    -> popMode ; // close <?...?>
 
 StartWithIntertoken : '{+' ;
 StartWithoutIntertoken : '{{' ;
 TemplateWithIntertoken : '+}';
 TemplateWithoutIntertoken : '}}';
 
-IGNORE : .  -> more ;
+IGNORE : . ;
 

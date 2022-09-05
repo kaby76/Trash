@@ -5,9 +5,8 @@ version_base="4.5.0"
 version_tree="5.2.0"
 version_antlr4buildtasks="10.3"
 version_stringtemplate="4.2.0"
-version_antlrruntime="4.10.1"
+version_antlrruntime="4.11.1"
 
-cd src
 files=`find . -name '*.csproj'`
 subset=`grep -l -e Antlr4.Runtime.Standard $files`
 for i in $subset
@@ -26,7 +25,7 @@ done
 subset=`grep -l -e Antlr4BuildTasks $files`
 for i in $subset
 do
-	cat $i | sed -e "s%\"Antlr4BuildTasks\" Version=\".*\"%\"AntlrTreeEditing\" Version=\"$version_antlr4buildtasks\"%" > asdfasdf
+	cat $i | sed -e "s%\"Antlr4BuildTasks\" Version=\".*\"%\"Antlr4BuildTasks\" Version=\"$version_antlr4buildtasks\"%" > asdfasdf
 	mv asdfasdf $i
 done
 

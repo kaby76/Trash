@@ -10,7 +10,7 @@
     public class MyTokenStream : BufferedTokenStream, ITokenStream
     {
         public ITokenSource _tokenSource;
-        protected new internal List<IToken> _tokens;
+        protected internal List<IToken> _tokens;
         protected internal int n;
         protected new internal int p = 0;
         protected internal int numMarkers = 0;

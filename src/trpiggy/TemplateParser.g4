@@ -1,5 +1,5 @@
 parser grammar TemplateParser;
 
-options { lexerVocab = TemplateLexer; }
+options { tokenVocab = TemplateLexer; }
 
 file_ : (Any | Code)+ EOF ;

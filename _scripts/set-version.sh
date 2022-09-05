@@ -1,9 +1,11 @@
-version="0.16.7"
+version="0.17.0"
 
+cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
 for i in $directories
 do
+	echo $i
 	if [ "$i" == "." ]
 	then
 		continue

@@ -116,17 +116,19 @@
                     if (x == -1) list.Add("EOF");
                     else
                     {
-                        var name = vocab.GetSymbolicName(x);
+                        string name = null;
                         var lname = vocab.GetLiteralName(x);
-                        var dname = vocab.GetDisplayName(x);
                         if (name == null && lname != null) name = lname;
+                        var dname = vocab.GetDisplayName(x);
                         if (name == null && dname != null) name = dname;
+                        var sname = vocab.GetSymbolicName(x);
+                        if (name == null && sname != null) name = sname;
                         if (name == null) name = "(" + x + ")";
                         list.Add(name);
                     }
                 }
                 list.Sort();
-                System.Console.Out.WriteLine(" " + String.Join(" ", list));
+                System.Console.Out.WriteLine("\t" + String.Join(" ", list));
             }
         }
     }

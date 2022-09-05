@@ -17,7 +17,7 @@ This program is part of the Trash toolkit.]]>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>0.16.6</Version>
+    <Version>0.17.0</Version>
     <RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/trpiggy</RepositoryUrl> 
     <RepositoryType>git</RepositoryType> 
   </PropertyGroup>
@@ -29,13 +29,12 @@ This program is part of the Trash toolkit.]]>
     <Antlr4 Include="JSON.g4" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <ProjectReference Include="../Globbing/Domemtech.Globbing.csproj">
       <Aliases>MainGlobbing</Aliases>
     </ProjectReference>
     <PackageReference Include="Antlr4BuildTasks" Version = "11.1.0" PrivateAssets="all" />
     <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />

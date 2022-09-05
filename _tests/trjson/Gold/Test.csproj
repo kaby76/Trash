@@ -9,7 +9,7 @@
 </Antlr4>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
     <PackageReference Include="Antlr4BuildTasks" Version = "10.0" PrivateAssets="all" />
   </ItemGroup>
   <PropertyGroup>

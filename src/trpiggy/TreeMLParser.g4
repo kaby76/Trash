@@ -28,15 +28,15 @@ json_number : IntegerLiteral | DecimalLiteral | DoubleLiteral ;
 // XML grammar
 xml : xml_element ;
 xml_content     :   xml_chardata?
-                ((xml_element | xml_reference | CDATA | PI | COMMENT) xml_chardata?)*
+                ((xml_element | xml_reference | CDATA | /* PI */ SPECIAL_CLOSE | COMMENT) xml_chardata?)*
             ;
-xml_element     :   LT xml_name xml_attribute* GT xml_content LT INSIDE_SLASH xml_name GT
+xml_element     :   LT xml_name xml_attribute* GT xml_content LT /* INSIDE_SLASH */ SLASH xml_name GT
             |   LT xml_name xml_attribute* SLASH_CLOSE
             ;
 xml_reference   :   EntityRef | CharRef ;
-xml_attribute   :   xml_name EQUALS STRING ; // Our STRING is AttValue in spec
-xml_chardata    :   TEXT | SEA_WS ;
-xml_misc        :   COMMENT | PI | SEA_WS ;
+xml_attribute   :   xml_name EQ STRING ; // Our STRING is AttValue in spec
+xml_chardata    :   IGNORE | SEA_WS ;
+xml_misc        :   COMMENT | /* PI */ SPECIAL_CLOSE | SEA_WS ;
 xml_name : Name | KW_NODE;
 
 // XPATH grammar

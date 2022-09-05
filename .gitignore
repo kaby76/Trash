@@ -41,3 +41,5 @@ packages-microsoft-prod.deb
 _tests/trcombine/o3.pt
 _tests/trcombine/o1.pt
 _tests/trcombine/o2.pt
+_tests/piggy/o1.pt
+_tests/piggy/o2.pt

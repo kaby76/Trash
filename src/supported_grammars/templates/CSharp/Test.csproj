@@ -10,9 +10,9 @@
 \</Antlr4>
 } >  \</ItemGroup>
   \<ItemGroup>
-    \<PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.0" />
-    \<PackageReference Include="Antlr4BuildTasks" Version="11.1" PrivateAssets="all" />
-    \<PackageReference Include="Domemtech.TrashBase" Version="1.9.1" />
+    \<PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
+    \<PackageReference Include="AntlrTreeEditing" Version="5.2.0" />
+    \<PackageReference Include="Domemtech.TrashBase" Version="4.5.0" />
   \</ItemGroup>
   \<PropertyGroup>
     \<RestoreProjectStyle>PackageReference\</RestoreProjectStyle>
