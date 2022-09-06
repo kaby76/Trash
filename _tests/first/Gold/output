@@ -1,3 +1,12 @@
+T1.g4
+s	'-' '(' '+' EOF SCIENTIFIC_NUMBER VARIABLE
+equation	'-' '(' '+' SCIENTIFIC_NUMBER VARIABLE
+expression	'-' '(' '+' SCIENTIFIC_NUMBER VARIABLE
+atom	SCIENTIFIC_NUMBER VARIABLE
+scientific	SCIENTIFIC_NUMBER
+variable	VARIABLE
+relop	'<' '=' '>'
+T3.g4
 s	'a' 'b'
 a	'a'
 b	'b'

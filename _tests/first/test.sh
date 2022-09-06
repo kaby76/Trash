@@ -15,6 +15,7 @@ do
 	cd Generated
 	dotnet build
 	cd ..
+	echo $i >> ../Generated/output
 	trfirst >> ../Generated/output
 	cd ..
 	rm -rf grammar-temp
