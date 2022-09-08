@@ -48,7 +48,7 @@ namespace ConsoleApp1
             return this.Count;
         }
     }
-    class Program
+    class XXX
     {
         private static MyHashSet<string> EpsilonClosureOf(Digraph<string, SymbolEdge<string>> graph, string theState)
         {

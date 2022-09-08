@@ -124,16 +124,16 @@
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return "/tmp/antlr4-4.10.1-complete.jar";
+                return "/tmp/antlr4-4.11.1-complete.jar";
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                return (home + "/Downloads/antlr4-4.10.1-complete.jar").Replace('\\', '/');
+                return (home + "/Downloads/antlr4-4.11.1-complete.jar").Replace('\\', '/');
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return "~/Downloads/antlr4-4.10.1-complete.jar";
+                return "~/Downloads/antlr4-4.11.1-complete.jar";
             }
             throw new Exception("Cannot determine operating system!");
         }
