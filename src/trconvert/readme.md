@@ -4,11 +4,11 @@ Reads a grammar from stdin and converts the grammar to/from Antlr version 4
 syntax. The original grammar must be for a supported type (Antlr2, Antlr3,
 Bison, W3C EBNF, Lark). The input and output are Parse Tree Data.
 
-# Usage
+## Usage
 
     trconvert [-t <type>]
 
-# Details
+## Details
 
 This command converts a grammar from one type to another. Most
 conversions will handle only simple syntax differences. More complicated
@@ -20,7 +20,7 @@ implemented yet.
 is to convert the input of whatever type to Antlr4 syntax. The output
 of `trconvert` is a parse tree containing the converted grammar.
 
-# Examples
+## Examples
 
 _Conversion of Antlr4 Abnf to Lark Abnf_
 
@@ -85,6 +85,6 @@ _Output_
     %ignore COMMENT
     %ignore WS
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

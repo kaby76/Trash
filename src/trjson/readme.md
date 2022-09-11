@@ -2,14 +2,14 @@
 
 Read a tree from stdin and write a JSON represenation of it.
 
-# Usage
+## Usage
 
     trjson
 
-# Examples
+## Examples
 
     trparse A.g4 | trjson | less
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

@@ -4,11 +4,11 @@ The trtokens command reads standard in for a parsing result set and prints out
 the tokens for each result. For each tree in a set, the first and last tokens
 for the tree are computed and printed, with a blank line separator.
 
-# Usage
+## Usage
 
     trtokens
 
-# Examples
+## Examples
 
 Input:
 
@@ -44,6 +44,6 @@ Output:
     [@7,7:7=' ',<15>,channel=1,1:7]
     [@8,8:8='3',<2>,1:8]
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

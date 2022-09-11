@@ -3,14 +3,14 @@
 Read the parse tree data from stdin and strip the grammar
 of all comments, labels, and action blocks.
 
-# Usage
+## Usage
 
     trstrip
 
-# Examples
+## Examples
 
     trparse A.g4 | trstrip
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

@@ -6,11 +6,11 @@ as the first argument to the command. The template extends the well-known visito
 pattern used by Antlr with a template that contains strings and xpath expressions
 that defines children.
 
-# Usage
+## Usage
 
     trpiggy template-spec
 
-# Examples
+## Examples
 
 Assume "lua.g4" grammar.
 
@@ -55,6 +55,6 @@ Output:
  {{ "SomeObject " : { "Key " : "Value"  , "AnotherKey " : { "Key1 " : "Value 1"  , "Key2 " : "Value 2" , "Key3 " : "Value 3"  } } , "AnotherObject " : { "Key " : "Value"  , "AnotherKey " : { "Key1 " : "Value 1"  , "Key2 " : "Value 2" , "Key3 " : "Value 3"  } } }}
 ```
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

@@ -7,11 +7,11 @@ outputed as parse tree data with the two grammars.
 [trsponge](https://github.com/kaby76/Domemtech.Trash/tree/main/trsponge)
 is used to instantiate the two files in the file system.
 
-# Usage
+## Usage
 
     trsplit
 
-# Details
+## Details
 
 The `trsplit` application splits a combined grammar into two files.
 It does this as follows:
@@ -33,10 +33,10 @@ must follow, including:
 modified.
 * Parser options do not apply to lexer grammars. Remove or replace.
 
-# Example
+## Example
 
     trparse Arithmetic.g4 | trsplit | trsponge
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

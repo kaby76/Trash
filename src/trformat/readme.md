@@ -2,14 +2,14 @@
 
 Read stdin and format the grammar.
 
-# Usage
+## Usage
 
     trformat
 
-# Examples
+## Examples
 
     trparse A.g4 | trformat
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

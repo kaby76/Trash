@@ -2,11 +2,11 @@
 
 Perform a recursive left- and right- factorization of alternatives for rules.
 
-# Usage
+## Usage
 
     trgroup <string>
 
-# Details
+## Details
 
 The command reads all parse tree data. Then, for each parse tree,
 the XPath expression argument specified will be evaluated.
@@ -22,7 +22,7 @@ A "unification" of all the non-'|' children in the node is performed,
 which results in a single sequence of elements with groupings. It is
 possible for there to be multiple groups in the set of alternatives.
 
-# Examples
+## Examples
 
 _Input to command (file "temp.g4")_
 
@@ -48,6 +48,6 @@ If you are running MSYS2 on Windows, you may notice that XPaths are not being
 processed by this command correctly. To avoid the Bash shell from altering
 XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

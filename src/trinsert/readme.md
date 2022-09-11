@@ -5,11 +5,11 @@ nodes in the tree using
 the specified XPath expression, and writes the modified tree
 to stdout. The input and output are Parse Tree Data.
 
-# Usage
+## Usage
 
     trinsert <-a>? <xpath-string> <text-string>
 
-# Details
+## Details
 
 The command reads all parse tree data. Then, for each parse tree,
 the XPath expression argument specified will be evaluated.
@@ -25,16 +25,16 @@ is inserted after the node.
 After performing the insert, if it is a grammar, the text is reparsed
 and an entire new parse tree outputed.
 
-# Example
+## Example
 
     trparse Java.g4 | trinsert "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']" " /* This is a comment */" | trtree | vim -
 
-# Notes
+## Notes
 
 If you are running MSYS2 on Windows, you may notice that XPaths are not being
 processed by this command correctly. To avoid the Bash shell from altering
 XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

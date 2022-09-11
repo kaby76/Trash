@@ -6,11 +6,11 @@ to using this command, you must have the file parsed. An unfold operation substi
 the right-hand side of a parser or lexer rule into a reference of the rule name that
 occurs at the specified node.
 
-# Usage
+## Usage
 
     trunfold <string>
 
-# Examples
+## Examples
 
 Before:
 
@@ -37,13 +37,13 @@ After:
 	WS : [ \t\n]+ -> skip ;
 
 
-# Notes
+## Notes
 
 If you are running MSYS2 on Windows, you may notice that XPaths are not being
 processed by this command correctly. To avoid the Bash shell from altering
 XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
 

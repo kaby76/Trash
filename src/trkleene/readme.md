@@ -2,11 +2,11 @@
 
 Replace a rule with an EBNF form if it contains direct left or direct right recursion.
 
-# Usage
+## Usage
 
     trkleene <string>?
 
-# Details
+## Details
 
 `trkleene` refactors rules in a grammar with direct left or direct right
 recursion. The program first reads from stdin the parse tree data of
@@ -19,17 +19,17 @@ replace the RHS of each rule selected with a "Kleene" version of the rule,
 removing the recursion. The updated grammar(s) as parse tree data
 is outputed to stdout.
 
-# Examples
+## Examples
 
     trparse A.g4 | trkleene
     trparse A.g4 | trkleene "//parserRuleSpec/RULE_REF[text()='packageOrTypeName']"
 
-# Notes
+## Notes
 
 If you are running MSYS2 on Windows, you may notice that XPaths are not being
 processed by this command correctly. To avoid the Bash shell from altering
 XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

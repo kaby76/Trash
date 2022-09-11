@@ -7,18 +7,18 @@ for anything other than the standard parser grammars that
 are supported. To specify the grammar, you can either
 be in a trgen-generated parser directory, or use the -p option.
 
-# Usage
+## Usage
     
     trperf (<string> | <options>)*
     -i, --input      String to parse.
     -s, --start-rule Start rule name.
     -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
 
-# Examples
+## Examples
 
     # print out performance data for a parse, ignore the header line, sort on "Max k", and output in a formatted table.
     trperf aggregate01.sql | tail -n +2 | sort -k6 -n -r | column -t
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

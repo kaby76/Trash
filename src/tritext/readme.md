@@ -2,11 +2,11 @@
 
 Reads a tree from stdin and prints the tree as a Dot graph.
 
-# Usage
+## Usage
 
     trdot
 
-# Details
+## Details
 
 `trdot` reads parse tree data via stdin and outputs
 a Dot graph specification. The stdout can be redirected to
@@ -17,7 +17,7 @@ parse of a grammar, the parse tree of a simple expression grammar,
 or a list of parse tree nodes obtained via
 [trxgrep](https://github.com/kaby76/Domemtech.Trash/tree/main/trxgrep).
 
-# Examples
+## Examples
 
 Consider the Expression grammar, obtained via
 
@@ -55,6 +55,6 @@ The output will be:
     Node48285313 -> Node31914638;
     }
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

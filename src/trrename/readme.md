@@ -2,11 +2,11 @@
 
 Rename a symbol in a grammar.
 
-# Usage
+## Usage
 
     trrename -r <string>
 
-# Details
+## Details
 
 `trrename` renames rule symbols in a grammar.
 
@@ -15,10 +15,10 @@ is a list of semi-colon delimited pairs of symbol names, which are separated
 by a comma, e.g., `id,identifier;name,name_`. If you are using Bash,
 make sure to enclose the argument as it contains semi-colons.
 
-# Examples
+## Examples
 
     trparse Foobar.g4 | trrename -r "a,b;c,d" | trprint > new-grammar.g4
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

@@ -25,7 +25,7 @@ the `--type` command-line option:
 * `ebnf` for ISO EBNF
 * `gen` for the `Generated/` parser
 
-# Usage
+## Usage
     
     trparse (<string> | <options>)*
     -i, --input      Parse the given string as input.
@@ -33,7 +33,7 @@ the `--type` command-line option:
     -s, --start-rule Start rule name.
     -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
 
-# Examples
+## Examples
 
     trparse Java.g2
     trparse -i "1+2+3"
@@ -41,6 +41,6 @@ the `--type` command-line option:
     echo "1+2+3" | trparse | trtree
     mkdir out; trparse MyParser.g4 MyLexer.g4 | trkleene | trsponge -o out
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

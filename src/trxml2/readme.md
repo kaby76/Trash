@@ -2,14 +2,14 @@
 
 Read an xml file and enumerate all paths to elements in xpath syntax.
 
-# Usage
+## Usage
 
     trxml2
 
-# Examples
+## Examples
 
     cat pom.xml | trxml2
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

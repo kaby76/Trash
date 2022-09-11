@@ -4,11 +4,11 @@ Combine two grammars into one.
 One grammar must be a lexer grammar, the other a parser grammar,
 order is irrelevant. The output is parse tree data.
 
-# Usage
+## Usage
 
     trcombine <grammar1> <grammar2>
 
-# Details
+## Details
 
 `trcombine` combines grammars that are known as "split grammars"
 (separate Antlr4 lexer and parser grammars)
@@ -95,6 +95,6 @@ Combined grammar in Expression.g4:
 
 The original grammars are left unchanged.
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

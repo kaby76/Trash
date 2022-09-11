@@ -1,604 +1,1505 @@
 # Trash, a shell for transforming grammars
 
 ## Commands
+### tranalyze
 
-### Agl
+Reads an Antlr4 grammar in the form of parse tree data from stdin,
+searches for problems in the grammar, and outputs the results to stdout.
 
-<pre>
-agl
-</pre>
+#### Usage
 
-Read stdin and display the graph using an
-Automatic Graph Layout library window.
+    tranalyze
 
-Example:
+#### Details
 
-    . | agl
+`tranalyze` performs a multi-pass search of a grammar in the
+form of a parse result (from `trparse`), looking for problems in the
+grammar.
 
-### Alias
+* Classify each node type and output a count for each type.
+* Check for unused symbols.
+* Check for Unicode literals of the type '\unnnn' with
+numbers that are over 32-bits.
+* Check for common groupings in alts.
+* Check for useless parentheses.
+* Identify if a symbol derives the empty string, a non-empty string, or both.
+* Check for unhalting nonterminals symbols in a single rule or group of rules.
 
-Aliases allow a string to be substituted for a word when it is used as the
-first word of a simple command. The shell maintains a list of aliases that
-may be set and unset with the alias and unalias builtin commands.
+#### Example
 
-The first word of each simple command is checked to see if it has an alias.
-If so, that word is replaced by the text of the alias.
-Only [a-zA-Z_] appear in an alias name. The replacement text may contain
-any valid shell input, including shell metacharacters. The first word of
- the replacement text is tested for aliases, but a word that is identical
- to an alias being expanded is not expanded a second time. This means that
- one may alias ls to "ls -F", for instance, and Bash does not try to recursively
- expand the replacement text. If the last character of the alias value is a
- blank, then the next command word following the alias is also checked
- for alias expansion.
+Consider the following combined grammar.
 
-Aliases are created and listed with the alias command, and removed with the
- unalias command.
+_Input to command_
 
-<pre>
-alias <em>id</em> = <em>string</em>
-</pre>
+	grammar Test;
 
-Set up an alias that assigns <em>string</em> to <em>id</em>. The command <em>string</em> 
-is executed with <em>id</em>.
+	start : 'a' empty infinite0 infinite1 infinite2 ;
+	unused : 'b';
+	infinite0 : (infinite0 'c')* ;  // Not legal in Antlr4 MLR, but okay
+	infinite1 : (infinite1 'c')+ ;  // Not legal in Antlr4 MLR, infinite
+	infinite2 : ('c' infinite2)+ ;  // Not flagged by Antlr4, infinite
+	empty : ;
 
-Example:
+_Command_
 
-    alias h=history
-    h
+    trparse Test.g4 | tranalyze
 
-### Analyze
+_Output_
 
-_Trash_ can perform an analysis of a grammar. The analysis includes a count of symbol
-type, cycles, and unused symbols.
+	6 occurrences of Antlr - nonterminal def
+	7 occurrences of Antlr - nonterminal ref
+	1 occurrences of Antlr - keyword
+	5 occurrences of Antlr - literal
+	Rule start is NonEmpty
+	Rule unused is NonEmpty
+	Rule infinite0 is NonEmpty
+	Rule infinite1 is NonEmpty
+	Rule infinite2 is NonEmpty
+	Rule empty is Empty
+	Rule infinite1 is malformed. It does not derive a string with referencing itself.
+	Rule infinite2 is malformed. It does not derive a string with referencing itself.
 
-<pre>
-analyze
-</pre>
 
-Example:
+#### Current version
 
-    analyze
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trcombine
 
-### History expansion
-
-_Trash_ keeps a persistent history of prior commands in ~/.trash.rc that is read
-when the program starts. 
-History expansions introduce words from the history list into the input stream,
-making it easy to repeat commands. Currently there is no editing
-capability.
-
-<pre>
-!!
-</pre>
-
-Execute the previous command.
-
-<pre>
-!<em>int</em>
-</pre>
-
-Execute the command line <em>int</em>.
-
-<pre>
-!<em>id</em>
-</pre>
-
-Execute the command that begins with <em>string</em>.
-
-### Cat
-
-<pre>
-cat
-</pre>
-
-"Cat" the contents of a file to stdout.
-
-Example:
-
-    cat input.txt | run | tree
-
-### Cd
-
-<pre>
-cd <em>string</em>?
-</pre>
-
-Change current directory. If string is not given, change to the user's home directory.
-`cd` accepts wildcards.
-
-Example:
-
-    cd
-    cd *foo
-
-### Combine
-
-<pre>
-combine
-</pre>
-
-Combine two grammars on top of stack into one grammar.
+Combine two grammars into one.
 One grammar must be a lexer grammar, the other a parser grammar,
-order is irrelevant.
+order is irrelevant. The output is parse tree data.
 
-Example:
+#### Usage
 
-    (top of stack contains a lexer file and a parser file, both parsed.)
-    combine
+    trcombine <grammar1> <grammar2>
 
-### Convert
+#### Details
 
-<pre>
-convert (antlr2 | antlr3 | antlr4 | bison | ebnf)?
-</pre>
+`trcombine` combines grammars that are known as "split grammars"
+(separate Antlr4 lexer and parser grammars)
+into one grammar, known as a "combined grammar". This refactoring is
+useful if a simplified grammar grammar is wanted, and if possible if
+the split grammar does not use the "superClass" option in one or the other
+grammars. The opposite refactoring is implemented by
+[trsplit](https://github.com/kaby76/Domemtech.Trash/tree/main/trsplit).
 
-Convert the parsed grammar file at the top of stack into Antlr4 syntax. If the type of
-grammar cannot be inferred from the file suffix, a type can be supplied with the command.
-The resulting Antlr4 grammar replaces the top of stack.
+The split refactoring performs several operations:
 
-Example:
+* Combine the two files together, parser grammar first, then lexer grammar.
+* Remove the `grammarDecl` for the lexer rules, and change the `grammarDecl`
+for the parser rules to be a combined grammar declaration. Rename the name
+of the parser grammar to not have "Parser" at the tail of the name.
+* Remove the `optionsSpec` for the lexer section.
+* Remove any occurrence of "tokenVocab" from the `optionsSpec` of the parser section.
+* If the `optionsSpec` is empty, it is removed.
 
-    (top of stack contains a grammar file that is Antlr2 or 3, Bison, or EBNF syntax.)
-    combine antlr3
+The order of the two grammars is ignored: the parser rules always will appear
+before the lexer rules.
 
-### "."
+Lexer modes will require manual fix-up.
 
-<pre>
-.
-</pre>
+### Example
 
-Print out the parse tree for the file at the top of stack.
+Consider the following grammar that is split.
 
-Example:
+_Input to command_
 
-    .
+Lexer grammar in ExpressionLexer.g4:
 
+    lexer grammar ExpressionLexer;
+    VARIABLE : VALID_ID_START VALID_ID_CHAR* ;
+    fragment VALID_ID_START : ('a' .. 'z') | ('A' .. 'Z') | '_' ;
+    fragment VALID_ID_CHAR : VALID_ID_START | ('0' .. '9') ;
+    INT : ('0' .. '9')+ ;
+    MUL : '*' ;
+    DIV : '/' ;
+    ADD : '+' ;
+    SUB : '-' ;
+    LP : '(' ;
+    RP : ')' ;
+    WS : [ \r\n\t] + -> skip ;
+
+Parser grammar in ExpressionParser.g4:
+
+    parser grammar ExpressionParser;
+    e : e ('*' | '/') e
+     | e ('+' | '-') e
+     | '(' e ')'
+     | ('-' | '+')* a
+     ;
+    a : number | variable ;
+    number : INT ;
+    variable : VARIABLE ;
+
+_Command_
+
+    trcombine ExpressionLexer.g4 ExpressionParser.g4 | trprint > Expression.g4
+
+Combined grammar in Expression.g4:
+
+    grammar Expression;
+    e : e ('*' | '/') e
+     | e ('+' | '-') e
+     | '(' e ')'
+     | ('-' | '+')* a
+     ;
+    a : number | variable ;
+    number : INT ;
+    variable : VARIABLE ;
+    VARIABLE : VALID_ID_START VALID_ID_CHAR* ;
+    fragment VALID_ID_START : ('a' .. 'z') | ('A' .. 'Z') | '_' ;
+    fragment VALID_ID_CHAR : VALID_ID_START | ('0' .. '9') ;
+    INT : ('0' .. '9')+ ;
+    MUL : '*' ;
+    DIV : '/' ;
+    ADD : '+' ;
+    SUB : '-' ;
+    LP : '(' ;
+    RP : ')' ;
+    WS : [ \r\n\t] + -> skip ;
+
+The original grammars are left unchanged.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trconvert
+
+Reads a grammar from stdin and converts the grammar to/from Antlr version 4
+syntax. The original grammar must be for a supported type (Antlr2, Antlr3,
+Bison, W3C EBNF, Lark). The input and output are Parse Tree Data.
+
+#### Usage
+
+    trconvert [-t <type>]
+
+#### Details
+
+This command converts a grammar from one type to another. Most
+conversions will handle only simple syntax differences. More complicated
+scenarios are supported depending on the source and target grammar types.
+For example, Bison is converted to Antlr4, but the reverse is not
+implemented yet.
+
+`trconvert` takes an option target type. If it is not used, the default
+is to convert the input of whatever type to Antlr4 syntax. The output
+of `trconvert` is a parse tree containing the converted grammar.
+
+#### Examples
+
+_Conversion of Antlr4 Abnf to Lark Abnf_
+
+    grammar Abnf;
+
+    rulelist : rule_* EOF ;
+    rule_ : ID '=' '/'? elements ;
+    elements : alternation ;
+    alternation : concatenation ( '/' concatenation )* ;
+    concatenation : repetition + ;
+    repetition : repeat_? element ;
+    repeat_ : INT | ( INT? '*' INT? ) ;
+    element : ID | group | option | STRING | NumberValue | ProseValue ;
+    group : '(' alternation ')' ;
+    option : '[' alternation ']' ;
+    NumberValue : '%' ( BinaryValue | DecimalValue | HexValue ) ;
+    fragment BinaryValue : 'b' BIT+ ( ( '.' BIT+ )+ | ( '-' BIT+ ) )? ;
+    fragment DecimalValue : 'd' DIGIT+ ( ( '.' DIGIT+ )+ | ( '-' DIGIT+ ) )? ;
+    fragment HexValue : 'x' HEX_DIGIT+ ( ( '.' HEX_DIGIT+ )+ | ( '-' HEX_DIGIT+ ) )? ;
+    ProseValue : '<' ( ~ '>' )* '>' ;
+    ID : LETTER ( LETTER | DIGIT | '-' )* ;
+    INT : '0' .. '9'+ ;
+    COMMENT : ';' ~ ( '\n' | '\r' )* '\r'? '\n' -> channel ( HIDDEN ) ;
+    WS : ( ' ' | '\t' | '\r' | '\n' ) -> channel ( HIDDEN ) ;
+    STRING : ( '%s' | '%i' )? '"' ( ~ '"' )* '"' ;
+    fragment LETTER : 'a' .. 'z' | 'A' .. 'Z' ;
+    fragment BIT : '0' .. '1' ;
+    fragment DIGIT : '0' .. '9' ;
+    fragment HEX_DIGIT : ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ;
+
+_Command_
+
+    trparse Abnf.g4 | trconvert -t lark | trprint > Abnf.lark
+
+_Output_
+
+    rulelist :  rule_ * EOF 
+    rule_ :  ID "=" "/" ? elements 
+    elements :  alternation 
+    alternation :  concatenation ( "/" concatenation ) * 
+    concatenation :  repetition + 
+    repetition :  repeat_ ? element 
+    repeat_ :  INT | ( INT ? "*" INT ? ) 
+    element :  ID | group | option | STRING | NUMBERVALUE | PROSEVALUE 
+    group :  "(" alternation ")" 
+    option :  "[" alternation "]" 
+    NUMBERVALUE :  "%" ( BINARYVALUE | DECIMALVALUE | HEXVALUE ) 
+    BINARYVALUE :  "b" BIT + ( ( "." BIT + ) + | ( "-" BIT + ) ) ? 
+    DECIMALVALUE :  "d" DIGIT + ( ( "." DIGIT + ) + | ( "-" DIGIT + ) ) ? 
+    HEXVALUE :  "x" HEX_DIGIT + ( ( "." HEX_DIGIT + ) + | ( "-" HEX_DIGIT + ) ) ? 
+    PROSEVALUE :  "<" ( /(?!>)/ ) * ">" 
+    ID :  LETTER ( LETTER | DIGIT | "-" ) * 
+    INT :  "0" .. "9" + 
+    COMMENT :  ";" /(?!\n|\r)/ * "\r" ? "\n" 
+    WS :  ( " " | "\t" | "\r" | "\n" ) 
+    STRING :  ( "%s" | "%i" ) ? "\"" ( /(?!")/ ) * "\"" 
+    LETTER :  "a" .. "z" | "A" .. "Z" 
+    BIT :  "0" .. "1" 
+    DIGIT :  "0" .. "9" 
+    HEX_DIGIT :  ( "0" .. "9" | "a" .. "f" | "A" .. "F" ) 
+
+    %ignore COMMENT
+    %ignore WS
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
 ### Delabel
 
-<pre>
-delabel
-</pre>
+Remove all labels from an Antlr4 grammar.
 
-Remove all labels from an Antlr4 grammar that is on the top of stack, e.g.,
-"expr : lhs=expr (PLUS | MINUS) rhs=expr # foobar1 ....." => "expr : expr (PLUS | MINUS) expr ....."
+    "expr : lhs=expr (PLUS | MINUS) rhs=expr # foobar1 ....." => "expr : expr (PLUS | MINUS) expr ....."
 
-Example:
+#### Usage
 
-    delabel
+    trdelabel
 
-### Delete
+#### Example
 
-<pre>
-delete <em>string</em>
-</pre>
+    trparse A.g4 | delabel | trprint
 
-Delete nodes in the parsed file at the top of stack specified by the XPath expression string.
+#### Current version
 
-Example:
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trdelete
 
-    delete "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+Reads a parse tree from stdin, deletes nodes in the tree using
+the specified XPath expression, and writes the modified tree
+to stdout. The input and output are Parse Tree Data.
 
-For further details, see the [Delete parse tree node](refactoring.md#delete-parse-tree-node) refactoring details.
+#### Usage
 
-### Diff
+    trdelete <string>
 
-<pre>
-diff <em>file1</em> <em>file2</em>
-</pre>
+#### Example
 
-Computes the diff between grammars using Zhang-Shasha. Note, this
-algorithm is very, very slow for anything but the simplest of grammars.
-The files are the names of files containing the result sets of the parse
-of each grammar.
+Before:
 
-Example:
+    grammar Expression;
+    e : e ('*' | '/') e
+      | e ('+' | '-') e
+      | '(' e ')'
+      | ('-' | '+')* a
+      ;
+    a : INT ;
+    INT : ('0' .. '9')+ ;
+    MUL : '*' ;
+    DIV : '/' ;
+    ADD : '+' ;
+    SUB : '-' ;
+    LP : '(' ;
+    RP : ')' ;
+    WS : [ \r\n\t] + -> skip ;
 
-    read orig.g4
-    parse
-    . > orig.rs
-    read mod.g4
-    parse
-    . > mod.rs
-    diff orig.rs mod.rs
+Command:
 
-### Dot
+    trparse Expression.g4 | trdelete "//parserRuleSpec[RULE_REF/text() = 'a']" | trprint
 
-<pre>
-dot
-</pre>
+After:
 
-Read the result set from a command and convert it into a Dot representation.
-You can then [visualize the graph online](https://dreampuf.github.io/GraphvizOnline/#digraph%20G%20%7B%0A%0A%20%20subgraph%20cluster_0%20%7B%0A%20%20%20%20style%3Dfilled%3B%0A%20%20%20%20color%3Dlightgrey%3B%0A%20%20%20%20node%20%5Bstyle%3Dfilled%2Ccolor%3Dwhite%5D%3B%0A%20%20%20%20a0%20-%3E%20a1%20-%3E%20a2%20-%3E%20a3%3B%0A%20%20%20%20label%20%3D%20%22process%20%231%22%3B%0A%20%20%7D%0A%0A%20%20subgraph%20cluster_1%20%7B%0A%20%20%20%20node%20%5Bstyle%3Dfilled%5D%3B%0A%20%20%20%20b0%20-%3E%20b1%20-%3E%20b2%20-%3E%20b3%3B%0A%20%20%20%20label%20%3D%20%22process%20%232%22%3B%0A%20%20%20%20color%3Dblue%0A%20%20%7D%0A%20%20start%20-%3E%20a0%3B%0A%20%20start%20-%3E%20b0%3B%0A%20%20a1%20-%3E%20b3%3B%0A%20%20b2%20-%3E%20a3%3B%0A%20%20a3%20-%3E%20a0%3B%0A%20%20a3%20-%3E%20end%3B%0A%20%20b3%20-%3E%20end%3B%0A%0A%20%20start%20%5Bshape%3DMdiamond%5D%3B%0A%20%20end%20%5Bshape%3DMsquare%5D%3B%0A%7D)
-(or [here](http://graphviz.it/#/gallery/unix.gv)) or with [Graphviz](https://graphviz.org/).
+    grammar Expression;
+    e : e ('*' | '/') e
+      | e ('+' | '-') e
+      | '(' e ')'
+      | ('-' | '+')* a
+      ;
+    a : INT ;
+    INT : ('0' .. '9')+ ;
+    MUL : '*' ;
+    DIV : '/' ;
+    ADD : '+' ;
+    SUB : '-' ;
+    LP : '(' ;
+    RP : ')' ;
+    WS : [ \r\n\t] + -> skip ;
 
-### Echo
+#### Notes
 
-<pre>
-echo <em>string</em>
-</pre>
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
-Echo a string literal to stdout (e.g., to be used with `run`).
+#### Current version
 
-### Fold
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trdot
 
-<pre>
-fold <em>string</em>
-</pre>
+Reads a tree from stdin and prints the tree as a Dot graph.
 
-Replace a sequence of symbols on the RHS of a rule
-with the rule LHS symbol.
+#### Usage
 
-For further details, see the [fold](refactoring.md#Fold) refactoring details.
+    trdot
 
-### Foldlit
+#### Details
 
-<pre>
-fold <em>string</em>
-</pre>
+`trdot` reads parse tree data via stdin and outputs
+a Dot graph specification. The stdout can be redirected to
+save the output to a file. Or, you can copy the output and
+use an online Dot graph visualizer to make a plot.
+Any parse tree data can be converted to Dot, include a
+parse of a grammar, the parse tree of a simple expression grammar,
+or a list of parse tree nodes obtained via
+[trxgrep](https://github.com/kaby76/Domemtech.Trash/tree/main/trxgrep).
 
-Replace a literal on the RHS of a rule
-with the lexer rule LHS symbol.
+#### Examples
 
-For further details, see the [fold literal](refactoring.md#replace-literals-in-parser-with-lexer-token-symbols) refactoring details.
+Consider the Expression grammar, obtained via
 
-### Generate
+    mkdir foo; cd foo; trgen; cd Generated; dotnet build
 
-<pre>
-generate <em>string</em>
-</pre>
+Let's parse the expression "1+2" and print the parse tree as a Dot graph:
 
-Generate a C# parser using the stack files. Make sure to `read` all
-dependent source code if your grammar reference classes in different
-source files. The command will then create a `generated/` directory
-containing the code and compile it with NET Core `dotnet`. Afterward,
-use `run` to run the parser.
+    trparse -i "1+2" | trdot
 
-### Group
+The output will be:
 
-<pre>
-group <em>string</em>
-</pre>
+    digraph G {
+    Node18643596 [label="file_"];
+    Node33574638 [label="expression"];
+    Node33736294 [label="expression"];
+    Node35191196 [label="atom"];
+    Node48285313 [label="scientific"];
+    Node31914638 [label="1"];
+    Node18796293 [label="+"];
+    Node34948909 [label="expression"];
+    Node46104728 [label="atom"];
+    Node12289376 [label="scientific"];
+    Node43495525 [label="2"];
+    Node55915408 [label="EOF"];
+    Node18643596 -> Node33574638;
+    Node18643596 -> Node55915408;
+    Node33574638 -> Node33736294;
+    Node33574638 -> Node18796293;
+    Node33574638 -> Node34948909;
+    Node34948909 -> Node46104728;
+    Node46104728 -> Node12289376;
+    Node12289376 -> Node43495525;
+    Node33736294 -> Node35191196;
+    Node35191196 -> Node48285313;
+    Node48285313 -> Node31914638;
+    }
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trenum
+
+#### Usage
+
+#### Examples
+
+#### Notes
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trfirst
+
+Outputs first sets of a grammar.
+
+#### Usage
+
+trfirst k
+
+#### Details
+
+#### Example
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trfold
+
+Reads a parse tree from stdin, replaces a sequence of symbols on
+the RHS of a rule with the rule LHS symbol, and writes the modified tree
+to stdout. The input and output are Parse Tree Data.
+
+#### Usage
+
+    trfold <string>
+
+#### Example
+
+    trparse A.g4 | trfold "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trfoldlit
+
+Reads a parse tree from stdin, replaces a string literals on
+the RHS of a rule with the lexer rule LHS symbol, and writes
+the modified parsing result set to stdout. The input and
+output are Parse Tree Data.
+
+#### Usage
+
+    trfoldlit
+
+#### Examples
+
+Before:
+
+    grammar Expression;
+    e : e ('*' | '/') e
+      | e ('+' | '-') e
+      | '(' e ')'
+      | ('-' | '+')* a
+      ;
+    a : INT ;
+    INT : ('0' .. '9')+ ;
+    MUL : '*' ;
+    DIV : '/' ;
+    ADD : '+' ;
+    SUB : '-' ;
+    LP : '(' ;
+    RP : ')' ;
+    WS : [ \r\n\t] + -> skip ;
+
+Command:
+
+    trparse Expression.g4 | trfoldlit | trsponge -c
+
+After:
+
+    grammar Expression;
+    e : e (MUL | DIV) e
+      | e (ADD | SUB) e
+      | LP e RP
+      | (SUB | ADD)* a
+      ;
+    a : INT ;
+    INT : ('0' .. '9')+ ;
+    MUL : '*' ;
+    DIV : '/' ;
+    ADD : '+' ;
+    SUB : '-' ;
+    LP : '(' ;
+    RP : ')' ;
+    WS : [ \r\n\t] + -> skip ;
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trprint
+
+Read stdin and format the grammar.
+
+#### Usage
+
+    trformat
+
+#### Examples
+
+    trparse A.g4 | trformat
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trgen
+
+Generate a parser application using the Antlr tool and application templates.
+The generated parser is placed in the directory <current-directory>/Generated/.
+If there is a `pom.xml` file in the current directory, `trgen` will read
+it for information on the grammar. If there is no `pom.xml` file, the start
+rule must be provided. If the current directory is empty, `trgen` will
+create a parser for the Arithmetic.g4 grammar.
+
+#### Usage
+
+    trgen <options>* 
+
+#### Examples
+
+    trgen
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trgen2
+
+Generate files from template and a parameterize list of names and values.
+The generated parser is placed in the directory <current-directory>/Generated/.
+
+#### Usage
+
+    trgen2 <options>* 
+
+#### Examples
+
+    trgen
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trgroup
 
 Perform a recursive left- and right- factorization of alternatives for rules.
-The nodes specified must be for `ruleAltList`, `lexerAltList`, or `altList`.
-A common prefix and suffix is performed on the alternatives, and
-a new expression derived. The process repeats for alternatives nested. 
 
-For further details, see the [Group alts](refactoring.md#group-alts) refactoring details.
+#### Usage
 
-### Has
+    trgroup <string>
 
-<pre>
-has (dr | ir) (left | right) <em>string</em>
-</pre>
+#### Details
 
-Print out whether the rule specified by the xpath expression pointing to the LHS symbol
-of a parser or lexer rule has left or right recursion.
+The command reads all parse tree data. Then, for each parse tree,
+the XPath expression argument specified will be evaluated.
 
-For further details, see the [analysis](analysis.md#has-directindirect-recursion) section.
+The nodes specified in the XPath arg must be for one or more
+ruleAltList, lexerAltList, or altList. These node types contain
+a sequence of children alternating with an "|"-operator
+(`ruleAltList : labeledAlt ('|' labeledAlt)*`,
+`lexerAltList : lexerAlt ('|' lexerAlt)*, and
+`altList : alternative ('|' alternative)*`).
 
-### Help
+A "unification" of all the non-'|' children in the node is performed,
+which results in a single sequence of elements with groupings. It is
+possible for there to be multiple groups in the set of alternatives.
 
-<pre>
-help
-</pre>
+#### Examples
 
-Print out a list of commands.
+_Input to command (file "temp.g4")_
 
-### History
+    grammar temp;
+    a : 'X' 'B' 'Z' | 'X' 'C' 'Z' | 'X' 'D' 'Z' ;
 
-<pre>
-history
-</pre>
+_Command_
 
-Print out the shell command history.
+    trparse temp.g4 | trgroup "//parserRuleSpec[RULE_REF/text()='a']//ruleAltList" | trsponge -c true
+    
+    # Or, a file-wide group refactoring, over all parser and lexer rules:
+    
+    trparse temp.g4 | trgroup | trsponge -c true
 
-### Json
+_Output_
 
-<pre>
-json
-</pre>
+    grammar temp;
+    a : 'X' ( 'B' | 'C' | 'D' ) 'Z' ;
 
-Read from stdin the result set and print out it as JSON.
+### Notes
 
-### Kleene
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
-<pre>
-kleene <em>string</em>
-</pre>
+#### Current version
 
-Replace a rule, whose symbol is identified by the xpath string,
-of the grammar at the top of the grammar with an EBNF
-form if it contains direct left or direct right recursion.
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trinsert
 
-### Ls
+Reads a parse tree from stdin, inserts text before or after
+nodes in the tree using
+the specified XPath expression, and writes the modified tree
+to stdout. The input and output are Parse Tree Data.
 
-<pre>
-ls <em>string</em>
-</pre>
+#### Usage
 
-List directory contents. If string is not given, list the current directory contents.
-`ls` accepts wildcards.
+    trinsert <-a>? <xpath-string> <text-string>
 
-### Mvsr
+#### Details
 
-<pre>
-mvsr <em>string</em>
-</pre>
+The command reads all parse tree data. Then, for each parse tree,
+the XPath expression argument specified will be evaluated.
 
-Move the rule, whose symbol is identified by the xpath string,
-to the top of the grammar.
+The nodes specified in the XPath arg are for one or more
+nodes of any type in a parse tree of any type.
 
-### Parse
+For each node, the program inserts a string node in the parent's
+list of children nodes prior to the node. Off-channel tokens occur
+before the inserted text. If you specify the `-a` option, the text
+is inserted after the node.
 
-<pre>
-parse (antlr2 | antlr3 | antlr4 | bison | ebnf)?
-</pre>
+After performing the insert, if it is a grammar, the text is reparsed
+and an entire new parse tree outputed.
 
-Parse the flie at the top of stack with the given parser type (_antlr2_, _antlr3, _antlr4_, _bison_, etc).
+#### Example
 
-### Pop
+    trparse Java.g4 | trinsert "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']" " /* This is a comment */" | trtree | vim -
 
-<pre>
-pop
-</pre>
+#### Notes
 
-Pop the top document from the stack. If the stack is empty, nothing is further popped.
-There is no check as to whether the document has been written to disk. If you want to write
-the file, use `write`.
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
-### Print
+#### Current version
 
-<pre>
-print
-</pre>
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trdot
 
-Print out text file at the top of stack.
+Reads a tree from stdin and prints the tree as a Dot graph.
 
-### Pwd
+#### Usage
 
-<pre>
-pwd
-</pre>
+    trdot
 
-Print out the current working directory.
+#### Details
 
-### Quit
+`trdot` reads parse tree data via stdin and outputs
+a Dot graph specification. The stdout can be redirected to
+save the output to a file. Or, you can copy the output and
+use an online Dot graph visualizer to make a plot.
+Any parse tree data can be converted to Dot, include a
+parse of a grammar, the parse tree of a simple expression grammar,
+or a list of parse tree nodes obtained via
+[trxgrep](https://github.com/kaby76/Domemtech.Trash/tree/main/trxgrep).
 
-<pre>
-(quit | exit)
-</pre>
+#### Examples
 
-Exit the shell program.
+Consider the Expression grammar, obtained via
 
-### Read
+    mkdir foo; cd foo; trgen; cd Generated; dotnet build
 
-<pre>
-read <em>string</em>
-</pre>
+Let's parse the expression "1+2" and print the parse tree as a Dot graph:
 
-Read the text file _file-name_ and place it on the top of the stack.
-`read` accepts wildcards.
+    trparse -i "1+2" | trdot
 
-### Rename
+The output will be:
 
-<pre>
-rename <em>string</em> <em>string</em>
-</pre>
+    digraph G {
+    Node18643596 [label="file_"];
+    Node33574638 [label="expression"];
+    Node33736294 [label="expression"];
+    Node35191196 [label="atom"];
+    Node48285313 [label="scientific"];
+    Node31914638 [label="1"];
+    Node18796293 [label="+"];
+    Node34948909 [label="expression"];
+    Node46104728 [label="atom"];
+    Node12289376 [label="scientific"];
+    Node43495525 [label="2"];
+    Node55915408 [label="EOF"];
+    Node18643596 -> Node33574638;
+    Node18643596 -> Node55915408;
+    Node33574638 -> Node33736294;
+    Node33574638 -> Node18796293;
+    Node33574638 -> Node34948909;
+    Node34948909 -> Node46104728;
+    Node46104728 -> Node12289376;
+    Node12289376 -> Node43495525;
+    Node33736294 -> Node35191196;
+    Node35191196 -> Node48285313;
+    Node48285313 -> Node31914638;
+    }
 
-Rename a symbol, the first parameter as specified by the xpath expression string,
-to a new name, the second parameter as a string. The result may
-place all changed grammars that use the symbol on the stack.
+#### Current version
 
-For further details, see the [Rename](refactoring.md#rename) refactoring details.
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trjson
 
-### Reorder
+Read a tree from stdin and write a JSON represenation of it.
 
-<pre>
-reorder alpha
-reorder bfs <em>string</em>
-reorder dfs <em>string</em>
-</pre>
+#### Usage
 
-Reorder the parser rules according to the specified type. For
-BFS and DFS, an XPath expression must be supplied to specify
-all the start rule symbols. For alphabetic reordering, all parser
-rules are retained, and simply reordered alphabetically. 
-For BFS and DFS, if the rule is unreachable from a start node,
-then the rule is dropped from the grammar.
+    trjson
 
-### Rotate
+#### Examples
 
-<pre>
-rotate
-</pre>
+    trparse A.g4 | trjson | less
 
-Rotate the stack once.
+#### Current version
 
-### RR
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trkleene
 
-<pre>
-rr
-</pre>
+Replace a rule with an EBNF form if it contains direct left or direct right recursion.
 
-Replace left indirect or direct recursion with right recursion.
+#### Usage
 
-### Run
+    trkleene <string>?
 
-<pre>
-run arg1 (arg2 arg3? )?
-</pre>
+#### Details
 
-Generate a parser using the Antlr tool on 
-the grammar specified by the current workspace
-run the generated parser, output a tree or 
-find elements in the tree.
+`trkleene` refactors rules in a grammar with direct left or direct right
+recursion. The program first reads from stdin the parse tree data of
+grammar files(x). It then searches
+the parse tree for the nodes identified by the XPath expression argument
+or if none given, all parser and lexer rules in the grammar.
+The XPath argument can select any node for the rule (e.g., the LHS symbol,
+any RHS symbol, the colon in the rule, etc). The program will finally
+replace the RHS of each rule selected with a "Kleene" version of the rule,
+removing the recursion. The updated grammar(s) as parse tree data
+is outputed to stdout.
 
-### Rup
+#### Examples
 
-<pre>
-rup <em>string</em>?
-</pre>
+    trparse A.g4 | trkleene
+    trparse A.g4 | trkleene "//parserRuleSpec/RULE_REF[text()='packageOrTypeName']"
 
-Find all altLists as specified by the xpath expression in the parsed file at the top of stack.
-If the xpath expression is not given, the transform is applied to the whole file.
-Rewrite the node with the parentheses removed, if the altList satifies three constraints:
-(1) the expression must be a `altList` type in the Antlr4 grammar;
-(2) the `altList` node doesn't contain more than one child, or if it does, then the containing altList/labeledAlt/alterative each does not contain more than one child;
-(3) the `ebnf` parent of `block` must not contain a `blockSuffix`.
+#### Notes
 
-For further details, see the [remove useless parentheses](refactoring.md#remove-useless-parentheses) refactoring details.
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
-### Split
+#### Current version
 
-<pre>
-split
-</pre>
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trmove
 
-The `split` command attempts to split a grammar at the top of the stack.
-The grammar must be a combined lexer/parser grammar for the transformation to
-proceed. The transformation creates a lexer grammar and a parser grammar and places them
-on the stack. The original grammar is popped off the stack.
+Reads a parse tree from stdin, moves
+nodes in the tree using
+the specified XPath expression, and writes the modified tree
+to stdout. The input and output are Parse Tree Data.
 
-For further details, see the [split grammar](refactoring.md#splitting-and-combining-grammars) refactoring details.
+#### Usage
 
-### Stack
+    trmove <-a>? <xpath-string-1> <xpath-string-2>
 
-<pre>
-stack
-</pre>
+#### Details
 
-Print the stack of files.
+The command reads all parse tree data. Then, for each parse tree,
+the XPath expression argument specified will be evaluated.
 
-### Strip
+The nodes specified in the XPath arg are for one or more
+nodes of any type in a parse tree of any type.
 
-<pre>
-strip
-</pre>
+For each node, the program inserts a string node in the parent's
+list of children nodes prior to the node. Off-channel tokens occur
+before the inserted text. If you specify the `-a` option, the text
+is inserted after the node.
 
-Strip the top-of-stack grammar completely of all non-essential CFG
-rules, including labels, comments, actions, and format one rule per line.
+After performing the insert, if it is a grammar, the text is reparsed
+and an entire new parse tree outputed.
 
-### Text
+#### Example
 
-<pre>
-text
-</pre>
+    trparse Java.g4 | trinsert "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']" " /* This is a comment */" | trtree | vim -
 
-Read stdin the result set and output the corresponding text for it.
+#### Notes
 
-### Tokens
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
-<pre>
-tokens
-</pre>
+#### Current version
 
-Read stdin the result set and output the corresponding tokens for it.
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trparse
 
-### ULLiteral
+Parse files and output to stdout parse tree data.
+The tool requires a pre-built parser via trgen for a grammar
+for anything other than the standard parser grammars that
+are supported. To specify the grammar, you can either
+be in a trgen-generated parser directory, or use the -p option.
 
-<pre>
-ulliteral <em>string</em>?
-</pre>
+If using positional args on the command line, a file is parse
+depending on the extension of the file name:
 
-The ulliteral command applies the "upper- and lower-case string literal"
-transform to a collection of terminal nodes in the parse tree,
-which is identified with the supplied xpath expression.
-If the xpath expression is not given, the transform is applied to the whole
-file.
-Prior to using this command,
-the document must have been parsed.
-The ulliteral operation substitutes a sequence of 
-sets containing an upper and lower case characters
-for a `STRING_LITERAL`.
-The expression must point to the right-hand side `STRING_LITERAL` of
-a parser or lexer rule.
-The resulting code is parsed and placed
-on the top of stack.
+* `.g2` for an Antlr2
+* `.g3` for an Antlr3
+* `.g4` for an Antlr4
+* `.y` for a Bison
+* `.ebnf` for ISO EBNF
+
+You can force the type of parse with
+the `--type` command-line option:
+
+* `antlr2` for Antlr2
+* `antlr3` for Antlr3
+* `antlr4` for Antlr4
+* `bison` for Bison
+* `ebnf` for ISO EBNF
+* `gen` for the `Generated/` parser
+
+#### Usage
+    
+    trparse (<string> | <options>)*
+    -i, --input      Parse the given string as input.
+    -t, --type       Specifies type of parse, antlr4, antlr3, antlr2, bison, ebnf, gen 
+    -s, --start-rule Start rule name.
+    -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
 
-### Unalias
+#### Examples
 
-<pre>
-unalias <em>id</em>
-</pre>
+    trparse Java.g2
+    trparse -i "1+2+3"
+    trparse Foobar.g -t antlr2
+    echo "1+2+3" | trparse | trtree
+    mkdir out; trparse MyParser.g4 MyLexer.g4 | trkleene | trsponge -o out
 
-Remove an aliased command.
+#### Current version
 
-### Unfold
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trperf
 
-<pre>
-unfold <em>string</em>
-</pre>
+Parse files and output to stdout parse tree data using
+performance analysis turned on.
+The tool requires a pre-built parser via trgen for a grammar
+for anything other than the standard parser grammars that
+are supported. To specify the grammar, you can either
+be in a trgen-generated parser directory, or use the -p option.
 
-The unfold command applies the unfold transform to a collection of terminal nodes in the parse tree,
-which is identified with the supplied xpath expression. Prior to using this command, you must have the file parsed.
-An unfold operation substitutes the right-hand side of a parser or lexer rule
-into a reference of the rule name that occurs at the specified node.
-The resulting code is parsed and placed
-on the top of stack.
+#### Usage
+    
+    trperf (<string> | <options>)*
+    -i, --input      String to parse.
+    -s, --start-rule Start rule name.
+    -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
 
-### Ungroup
+#### Examples
 
-<pre>
-ungroup <em>string</em>
-</pre>
+    # print out performance data for a parse, ignore the header line, sort on "Max k", and output in a formatted table.
+    trperf aggregate01.sql | tail -n +2 | sort -k6 -n -r | column -t
 
-Perform an ungroup transformation of the `element` node(s) specified
-by the string.
+#### Current version
 
-For further details, see the [Ungroup alts](refactoring.md#ungroup-alts) refactoring details.
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trpiggy
 
+Read from stdin a parsing result set, modify the trees using a template engine, then
+output the modified parsing result set. The command also reads a template to follow
+as the first argument to the command. The template extends the well-known visitor
+pattern used by Antlr with a template that contains strings and xpath expressions
+that defines children.
 
-### Version
+#### Usage
 
-<pre>
-version
-</pre>
+    trpiggy template-spec
 
-Output to stdout the current version of Trash.
+#### Examples
 
-### Wc
+Assume "lua.g4" grammar.
 
-<pre>
-wc
-</pre>
+Doc input "input.txt":
+```
+local   tbl = {
+   SomeObject = {
+      Key = "Value",
+      AnotherKey = {
+         Key1 = "Value 1",
+         Key2 = "Value 2",
+         Key3 = "Value 3",
+      }
+   },
+   AnotherObject = {
+      Key = "Value",
+      AnotherKey = {
+         Key1 = "Value 1",
+         Key2 = "Value 2",
+         Key3 = "Value 3",
+      }
+   }
+}
+```
+Template input "templates.txt":
+```
+//chunk -> {{<block>}} ;
+//block -> {{<stat>}} ;
+//stat[attnamelist and explist] -> {{<explist>}} ;
+//explist -> {{ {<exp>} }} ;
+//exp[position()=1 and tableconstructor] -> {{<tableconstructor>}} ;
+//exp[position()>1 and tableconstructor] -> {{, <tableconstructor>}} ;
+//fieldlist -> {{<field>}} ;
+//field[position()>1] -> {{, "<NAME>" : <exp> }} ;
+//field[position()=1] -> {{ "<NAME>" : <exp> }} ;
+```
 
-Read stdin and output the count of the number of lines.
+    trparse input.txt  | trpiggy templates.txt | trprint
 
-### Workspace
+Output:
+```
+ {{ "SomeObject " : { "Key " : "Value"  , "AnotherKey " : { "Key1 " : "Value 1"  , "Key2 " : "Value 2" , "Key3 " : "Value 3"  } } , "AnotherObject " : { "Key " : "Value"  , "AnotherKey " : { "Key1 " : "Value 1"  , "Key2 " : "Value 2" , "Key3 " : "Value 3"  } } }}
+```
 
-<pre>
-workspace
-</pre>
+#### Current version
 
-Create a new workspace.
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trprint
 
-### Write
+Read stdin and print out the text for the tree.
 
-<pre>
-write
-</pre>
+#### Usage
 
-Pop the stack, and write out the file specified.
+    trprint
 
-### XGrep
+#### Examples
 
-<pre>
-xgrep <em>string</em>
-</pre>
+    trparse A.g4 | trprint
 
-Find all sub-trees in the parsed file at the top of stack using the given XPath expression string.
+#### Current version
 
-Example:
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trrename
 
-    . | xgrep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+Rename a symbol in a grammar.
 
-### Xml
+#### Usage
 
-<pre>
-xml
-</pre>
+    trrename -r <string>
 
-Read from stdin the result set and print out it as XML.
+#### Details
 
+`trrename` renames rule symbols in a grammar.
+
+The `-r` option is required. It
+is a list of semi-colon delimited pairs of symbol names, which are separated
+by a comma, e.g., `id,identifier;name,name_`. If you are using Bash,
+make sure to enclose the argument as it contains semi-colons.
+
+#### Examples
+
+    trparse Foobar.g4 | trrename -r "a,b;c,d" | trprint > new-grammar.g4
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trreplace
+
+Reads a parse tree from stdin, replaces nodes with text using
+the specified XPath expression, and writes the modified tree
+to stdout. The input and output are Parse Tree Data.
+
+#### Usage
+
+    trreplace <xpath-string> <text-string>
+
+#### Example
+
+    trparse Java.g4 | trreplace "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']" "nnn" | trtree | vim -
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trrup
+
+Remove useless parentheses from a grammar.
+
+#### Usage
+
+    trrup <string>?
+
+#### Details
+
+`trrup` removes useless parentheses in a grammar, at a specific point
+in the grammar as specified by the xpath expression, or the entire
+file if the xpath expression is not given.
+
+#### Example
+
+_Input to command_
+
+grammar:
+
+    grammar Expression;
+    v : ( ( VALID_ID_START  ( VALID_ID_CHAR*) ) ) ;
+
+_Command_
+
+    trparse Expression.g4 | trrup | trprint
+
+_Result_
+
+    grammar Expression;
+    v : VALID_ID_START VALID_ID_CHAR* ;
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trrup
+
+Remove useless parentheses from a grammar.
+
+#### Usage
+
+    trrup
+
+#### Details
+
+`trrup` removes useless parentheses in a grammar.
+
+#### Example
+
+_Input to command_
+
+grammar:
+
+    grammar Expression;
+    v : ( ( VALID_ID_START  ( VALID_ID_CHAR*) ) ) ;
+
+_Command_
+
+    trparse Expression.g4 | trrup | trprint
+
+_Result_
+
+    grammar Expression;
+    v : VALID_ID_START VALID_ID_CHAR* ;
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trsem
+
+Read a static semantics spec file and generate code.
+
+#### Usage
+
+    trsem
+
+#### Examples
+
+    trsem
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trsort
+
+Reads a parse tree from stdin, move rules according to the named
+operation, and writes the modified tree
+to stdout. The input and output are Parse Tree Data.
+
+#### Usage
+
+    trsort bfs <string>
+    trsort dfs <string>
+
+#### Details
+
+Reorder the parser rules according to the specified type and start rule.
+For BFS and DFS, an XPath expression must be supplied to specify all the start
+rule symbols. For alphabetic reordering, all parser rules are retained, and
+simply reordered alphabetically. For BFS and DFS, if the rule is unreachable
+from a start node set that is specified via <string>, then the rule is dropped
+from the grammar.
+
+#### Example
+
+    trparse Java.g4 | trsort alpha | trtext
+    trparse Java.g4 | trsort dfs ""//parserRuleSpec/RULE_REF[text()='libraryDefinition']"" | trtext
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trsplit
+
+The split command splits one grammar into two. The input grammar
+must be a combined lexer/parser grammar implemented in one file.
+The transformation creates a lexer grammar and a parser grammar,
+outputed as parse tree data with the two grammars.
+[trsponge](https://github.com/kaby76/Domemtech.Trash/tree/main/trsponge)
+is used to instantiate the two files in the file system.
+
+#### Usage
+
+    trsplit
+
+#### Details
+
+The `trsplit` application splits a combined grammar into two files.
+It does this as follows:
+
+* Partition the rules in the grammar into parser and lexer rules. This
+is done by examining the LHS symbol: parser rules start with a lowercase
+LHS symbol name; lexer rules start with an uppercase LHS symbol name.
+* In the parser grammar, insert an `optionsSpec` declaration that
+contains a `tokenVocab` specification for the name of the vocabulary
+generated for the lexer grammar.
+* Add `grammarDecl` statements to the top of the new files to declare
+the parser and lexer grammars.
+
+After splitting, use `trsponge` to output the files. The resulting files
+may require hand-tweaking due to various constraints that split grammars
+must follow, including:
+
+* String literals that do not have a corresponding lexer rule must be
+modified.
+* Parser options do not apply to lexer grammars. Remove or replace.
+
+#### Example
+
+    trparse Arithmetic.g4 | trsplit | trsponge
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trsponge
+
+Read the parse tree data from stdin and write the
+results to file(s).
+
+#### Usage
+
+    trsponge <options>
+
+#### Example
+
+    trparse Arithmetic.g4 | trsplit | trsponge
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trst
+
+Output tree using the Antlr runtime ToStringTree().
+
+#### Usage
+
+    trst
+
+#### Examples
+
+    trparse A.g4 | trst
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trstrip
+
+Read the parse tree data from stdin and strip the grammar
+of all comments, labels, and action blocks.
+
+#### Usage
+
+    trstrip
+
+#### Examples
+
+    trparse A.g4 | trstrip
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trtext
+
+Reads a tree from stdin and prints the source text. If 'line-number' is
+specified, the line number range for the tree is printed.
+
+#### Usage
+
+    trtext line-number?
+
+#### Examples
+
+    trxgrep //lexerRuleSpec | trtext
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trtree
+
+Reads a tree from stdin and prints the tree as an indented node list.
+
+#### Usage
+
+    trtree
+
+#### Examples
+
+    trparse A.g4 | trtree
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trtokens
+
+The trtokens command reads standard in for a parsing result set and prints out
+the tokens for each result. For each tree in a set, the first and last tokens
+for the tree are computed and printed, with a blank line separator.
+
+#### Usage
+
+    trtokens
+
+#### Examples
+
+Input:
+
+    Assume the Arithmetic.g4 parser has been built.
+
+Command:
+
+    trparse -i "1 * 2 + 3" | trxgrep " //expression" | trtokens
+
+Output:
+
+    Time to parse: 00:00:00.0778212
+    # tokens per sec = 128.49968903075256
+    [@4,4:4='2',<2>,1:4]
+
+    [@0,0:0='1',<2>,1:0]
+
+    [@8,8:8='3',<2>,1:8]
+
+    [@0,0:0='1',<2>,1:0]
+    [@1,1:1=' ',<15>,channel=1,1:1]
+    [@2,2:2='*',<7>,1:2]
+    [@3,3:3=' ',<15>,channel=1,1:3]
+    [@4,4:4='2',<2>,1:4]
+
+    [@0,0:0='1',<2>,1:0]
+    [@1,1:1=' ',<15>,channel=1,1:1]
+    [@2,2:2='*',<7>,1:2]
+    [@3,3:3=' ',<15>,channel=1,1:3]
+    [@4,4:4='2',<2>,1:4]
+    [@5,5:5=' ',<15>,channel=1,1:5]
+    [@6,6:6='+',<5>,1:6]
+    [@7,7:7=' ',<15>,channel=1,1:7]
+    [@8,8:8='3',<2>,1:8]
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trtree
+
+Reads a tree from stdin and prints the tree as an indented node list.
+
+#### Usage
+
+    trtree
+
+#### Examples
+
+    trparse A.g4 | trtree
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trull
+
+The ulliteral command applies the upper- and lowercase string literal transform
+to a collection of terminal nodes in the parse tree, which is identified with the supplied
+xpath expression. If the xpath expression is not given, the transform is applied to the
+whole file.
+
+#### Usage
+
+    trull <xpath>?
+
+#### Examples
+
+Before:
+
+    grammar KeywordFun;
+    a : 'abc';
+    b : 'def';
+    A : 'abc';
+    B : 'def';
+    C : 'uvw' 'xyz'?;
+    D : 'uvw' 'xyz'+;
+
+Command:
+
+    trparse KeywordFun.g4 | trull "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL" | trprint
+
+After:
+
+    grammar KeywordFun;
+    a : 'abc';
+    b : 'def';
+    A :  [aA] [bB] [cC];
+    B : 'def';
+    C : 'uvw' 'xyz'?;
+    D : 'uvw' 'xyz'+;
+
+Command:
+
+    trparse KeywordFun.g4 | trull | trprint
+
+After:
+
+    grammar KeywordFun;
+    a : 'abc';
+    b : 'def';
+    A :  [aA] [bB] [cC];
+    B :  [dD] [eE] [fF];
+    C :  [uU] [vV] [wW] ( [xX] [yY] [zZ] )?;
+    D :  [uU] [vV] [wW] ( [xX] [yY] [zZ] )+;
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### Trunfold
+
+The unfold command applies the unfold transform to a collection of terminal nodes
+in the parse tree, which is identified with the supplied xpath expression. Prior
+to using this command, you must have the file parsed. An unfold operation substitutes
+the right-hand side of a parser or lexer rule into a reference of the rule name that
+occurs at the specified node.
+
+#### Usage
+
+    trunfold <string>
+
+#### Examples
+
+Before:
+
+	grammar Expresion;
+	s : e ;
+	e : e '*' e       # Mult
+	    | INT           # primary
+	    ;
+	INT : [0-9]+ ;
+	WS : [ \t\n]+ -> skip ;
+
+Command:
+
+    trparse Expression.g4 | trunfold "//parserRuleSpec[RULE_REF/text() = 's']//labeledAlt//RULE_REF[text() = 'e']" | trsponge -c
+
+After:
+
+	grammar Expression;
+	s : ( e '*' e | INT ) ;
+	e : e '*' e           # Mult
+		| INT               # primary
+		;
+	INT : [0-9]+ ;
+	WS : [ \t\n]+ -> skip ;
+
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+
+### trungroup
+
+Perform an ungroup transformation of the 'element' node(s) specified by the string.
+
+#### Usage
+
+    trungroup <string>
+
+#### Examples
+
+    trparse A.g4 | trungroup "//parserRuleSpec[RULE_REF/text() = 'a']//ruleAltList"
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trwdog
+
+Execute a command with a watchdog timer.
+
+#### Usage
+
+    trwdog <arg>+
+
+#### Examples
+
+    trwdog make test
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trxgrep
+
+Find all sub-trees in a parse tree using the given XPath expression.
+
+#### Usage
+
+    trxgrep <string>
+
+#### Examples
+
+    trparse A.g4 | trxgrep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+
+#### Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trxml
+
+Read a tree from stdin and write an XML represenation of it.
+
+#### Usage
+
+    trxml
+
+#### Examples
+
+    trparse A.g4 | trxml
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
+### trxml2
+
+Read an xml file and enumerate all paths to elements in xpath syntax.
+
+#### Usage
+
+    trxml2
+
+#### Examples
+
+    cat pom.xml | trxml2
+
+#### Current version
+
+0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

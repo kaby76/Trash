@@ -7,14 +7,14 @@ it for information on the grammar. If there is no `pom.xml` file, the start
 rule must be provided. If the current directory is empty, `trgen` will
 create a parser for the Arithmetic.g4 grammar.
 
-# Usage
+## Usage
 
     trgen <options>* 
 
-# Examples
+## Examples
 
     trgen
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

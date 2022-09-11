@@ -2,14 +2,14 @@
 
 Reads a tree from stdin and prints the tree as an indented node list.
 
-# Usage
+## Usage
 
     trtree
 
-# Examples
+## Examples
 
     trparse A.g4 | trtree
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.

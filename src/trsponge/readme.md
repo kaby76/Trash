@@ -3,14 +3,14 @@
 Read the parse tree data from stdin and write the
 results to file(s).
 
-# Usage
+## Usage
 
     trsponge <options>
 
-# Example
+## Example
 
     trparse Arithmetic.g4 | trsplit | trsponge
 
-# Current version
+## Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
