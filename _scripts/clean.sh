@@ -1,4 +1,4 @@
 #!/bin/sh
 
-rm -rf */obj
-rm -rf */bin
+rm -rf */bin */obj
+rm -rf src/*/bin src/*/obj
