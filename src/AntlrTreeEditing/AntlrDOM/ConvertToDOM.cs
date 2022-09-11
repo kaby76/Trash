@@ -25,6 +25,7 @@
             AntlrNodeList nl = new AntlrNodeList();
             document.ChildNodes = nl;
             AntlrDynamicContext result = new AntlrDynamicContext(document);
+            result.Document = document;
             foreach (var tree in trees)
             {
                 var node = FindDomNode(tree);
