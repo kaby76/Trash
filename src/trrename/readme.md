@@ -1,6 +1,12 @@
-# Trrename
+# trrename
 
-Rename a symbol in a grammar.
+## Summary
+
+Rename symbols in a grammar
+
+## Description
+
+Rename symbols in a grammar.
 
 ## Usage
 

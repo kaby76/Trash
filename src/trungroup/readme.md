@@ -1,5 +1,11 @@
 # trungroup
 
+## Summary
+
+Perform an ungroup transform on a grammar
+
+## Description
+
 Perform an ungroup transformation of the 'element' node(s) specified by the string.
 
 ## Usage

@@ -1,5 +1,11 @@
 # trxgrep
 
+## Summary
+
+"Grep" for nodes in a parse tree using XPath
+
+## Description
+
 Find all sub-trees in a parse tree using the given XPath expression.
 
 ## Usage

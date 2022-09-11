@@ -1,4 +1,10 @@
-# Trconvert
+# trconvert
+
+## Summary
+
+Convert a grammar from one for to another
+
+## Description
 
 Reads a grammar from stdin and converts the grammar to/from Antlr version 4
 syntax. The original grammar must be for a supported type (Antlr2, Antlr3,

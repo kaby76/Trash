@@ -1,4 +1,10 @@
-# Trpiggy
+# trpiggy
+
+## Summary
+
+Perform a parse tree rewrite
+
+## Description
 
 Read from stdin a parsing result set, modify the trees using a template engine, then
 output the modified parsing result set. The command also reads a template to follow

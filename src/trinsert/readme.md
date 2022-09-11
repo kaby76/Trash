@@ -1,5 +1,11 @@
 # trinsert
 
+## Summary
+
+Insert string into points in a parse tree
+
+## Description
+
 Reads a parse tree from stdin, inserts text before or after
 nodes in the tree using
 the specified XPath expression, and writes the modified tree

@@ -1,5 +1,11 @@
 # trsem
 
+## Summary
+
+Read static semantics and generate code
+
+## Description
+
 Read a static semantics spec file and generate code.
 
 ## Usage

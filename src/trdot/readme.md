@@ -1,5 +1,11 @@
 # trdot
 
+## Summary
+
+Print a parse tree in Graphvis Dot format
+
+## Description
+
 Reads a tree from stdin and prints the tree as a Dot graph.
 
 ## Usage

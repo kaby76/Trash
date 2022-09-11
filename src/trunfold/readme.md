@@ -1,4 +1,10 @@
-# Trunfold
+# trunfold
+
+## Summary
+
+Perform an unfold transform on a grammar
+
+## Description
 
 The unfold command applies the unfold transform to a collection of terminal nodes
 in the parse tree, which is identified with the supplied xpath expression. Prior

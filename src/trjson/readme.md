@@ -1,6 +1,12 @@
-# Trjson
+# trjson
 
-Read a tree from stdin and write a JSON represenation of it.
+## Summary
+
+Print a parse tree in JSON structured format
+
+## Description
+
+Read a parse tree from stdin and write a JSON represenation of it.
 
 ## Usage
 

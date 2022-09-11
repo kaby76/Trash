@@ -1,6 +1,12 @@
-# trprint
+# trformat
 
-Read stdin and format the grammar.
+## Summary
+
+Format a grammar
+
+## Description
+
+Format of grammar using machine learning.
 
 ## Usage
 

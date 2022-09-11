@@ -1,5 +1,11 @@
 # tranalyze
 
+## Summary
+
+Analyze a grammar
+
+## Description
+
 Reads an Antlr4 grammar in the form of parse tree data from stdin,
 searches for problems in the grammar, and outputs the results to stdout.
 

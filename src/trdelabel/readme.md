@@ -1,4 +1,10 @@
-# Delabel
+# trdelabel
+
+## Summary
+
+Remove labels from an Antlr4 grammar
+
+## Description
 
 Remove all labels from an Antlr4 grammar.
 

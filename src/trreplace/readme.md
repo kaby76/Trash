@@ -1,5 +1,11 @@
 # trreplace
 
+## Summary
+
+Replace nodes in a parse tree with text
+
+## Description
+
 Reads a parse tree from stdin, replaces nodes with text using
 the specified XPath expression, and writes the modified tree
 to stdout. The input and output are Parse Tree Data.

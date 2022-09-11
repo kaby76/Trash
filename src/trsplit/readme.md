@@ -1,4 +1,10 @@
-# Trsplit
+# trsplit
+
+## Summary
+
+Split a combined Antlr4 grammar
+
+## Description
 
 The split command splits one grammar into two. The input grammar
 must be a combined lexer/parser grammar implemented in one file.

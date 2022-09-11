@@ -1,5 +1,11 @@
 # trstrip
 
+## Summary
+
+Strip a grammar of all actions, labels, etc.
+
+## Description
+
 Read the parse tree data from stdin and strip the grammar
 of all comments, labels, and action blocks.
 

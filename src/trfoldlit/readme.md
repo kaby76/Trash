@@ -1,4 +1,10 @@
-# Trfoldlit
+# trfoldlit
+
+## Summary
+
+Perform fold transform on grammar with literals
+
+## Description
 
 Reads a parse tree from stdin, replaces a string literals on
 the RHS of a rule with the lexer rule LHS symbol, and writes

@@ -1,14 +1,14 @@
-# trtree
+# trthompson
 
-Reads a tree from stdin and prints the tree as an indented node list.
+## Summary
+
+(No description.)
+
+## Description
 
 ## Usage
 
-    trtree
-
 ## Examples
-
-    trparse A.g4 | trtree
 
 ## Current version
 

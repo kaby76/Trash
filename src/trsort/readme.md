@@ -1,5 +1,11 @@
 # trsort
 
+## Summary
+
+Sort rules in a grammar
+
+## Description
+
 Reads a parse tree from stdin, move rules according to the named
 operation, and writes the modified tree
 to stdout. The input and output are Parse Tree Data.

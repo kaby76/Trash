@@ -1,4 +1,10 @@
-# Trparse
+# trparse
+
+## Summary
+
+Parse a grammar or use generated parse to parse input
+
+## Description
 
 Parse files and output to stdout parse tree data.
 The tool requires a pre-built parser via trgen for a grammar

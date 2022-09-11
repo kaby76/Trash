@@ -1,4 +1,10 @@
-# Trgen2
+# trgen2
+
+## Summary
+
+Generate files from template and XML doc list.
+
+## Description
 
 Generate files from template and a parameterize list of names and values.
 The generated parser is placed in the directory <current-directory>/Generated/.

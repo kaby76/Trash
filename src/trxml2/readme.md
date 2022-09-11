@@ -1,5 +1,11 @@
 # trxml2
 
+## Summary
+
+Print an enumeration of all paths in a parse tree to leaves
+
+## Description
+
 Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Usage

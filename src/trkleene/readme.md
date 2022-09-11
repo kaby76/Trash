@@ -1,5 +1,11 @@
 # trkleene
 
+## Summary
+
+Perform a Kleene transform of a grammar
+
+## Description
+
 Replace a rule with an EBNF form if it contains direct left or direct right recursion.
 
 ## Usage

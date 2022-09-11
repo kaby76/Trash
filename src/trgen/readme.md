@@ -1,4 +1,10 @@
-# Trgen
+# trgen
+
+## Summary
+
+Generate an Antlr4 parser for a given target language
+
+## Description
 
 Generate a parser application using the Antlr tool and application templates.
 The generated parser is placed in the directory <current-directory>/Generated/.

@@ -62,6 +62,51 @@ foreach ($i in $apps) {
 	dotnet tool uninstall -g $i
 }
 ```
+## List of commands
+
+1) <a href="src/tranalyze/readme.md">tranalyze</a> -- Analyze a grammar
+1) <a href="src/trcombine/readme.md">trcombine</a> -- Combine a split Antlr4 grammar
+1) <a href="src/trconvert/readme.md">trconvert</a> -- Convert a grammar from one for to another
+1) <a href="src/trdelabel/readme.md">trdelabel</a> -- Remove labels from an Antlr4 grammar
+1) <a href="src/trdelete/readme.md">trdelete</a> -- Delete nodes in a parse tree
+1) <a href="src/trdot/readme.md">trdot</a> -- Print a parse tree in Graphvis Dot format
+1) <a href="src/trenum/readme.md">trenum</a> -- 1) <a href="src/trfirst/readme.md">trfirst</a> -- Outputs first sets of a grammar
+1) <a href="src/trfold/readme.md">trfold</a> -- Perform fold transform on a grammar
+1) <a href="src/trfoldlit/readme.md">trfoldlit</a> -- Perform fold transform on grammar with literals
+1) <a href="src/trformat/readme.md">trformat</a> -- Format a grammar
+1) <a href="src/trgen/readme.md">trgen</a> -- Generate an Antlr4 parser for a given target language
+1) <a href="src/trgen2/readme.md">trgen2</a> -- Generate files from template and XML doc list.
+1) <a href="src/trgroup/readme.md">trgroup</a> -- Perform a group transform on a grammar
+1) <a href="src/trinsert/readme.md">trinsert</a> -- Insert string into points in a parse tree
+1) <a href="src/tritext/readme.md">tritext</a> -- Get strings from a PDF file
+1) <a href="src/trjson/readme.md">trjson</a> -- Print a parse tree in JSON structured format
+1) <a href="src/trkleene/readme.md">trkleene</a> -- Perform a Kleene transform of a grammar
+1) <a href="src/trmove/readme.md">trmove</a> -- Move nodes in a parse tree
+1) <a href="src/trparse/readme.md">trparse</a> -- Parse a grammar or use generated parse to parse input
+1) <a href="src/trperf/readme.md">trperf</a> -- Perform performance analysis of an Antlr grammar parse
+1) <a href="src/trpiggy/readme.md">trpiggy</a> -- Perform a parse tree rewrite
+1) <a href="src/trprint/readme.md">trprint</a> -- Print a parse tree, including off-token characters
+1) <a href="src/trrename/readme.md">trrename</a> -- Rename symbols in a grammar
+1) <a href="src/trreplace/readme.md">trreplace</a> -- Replace nodes in a parse tree with text
+1) <a href="src/trrr/readme.md">trrr</a> -- (No description.)
+1) <a href="src/trrup/readme.md">trrup</a> -- Remove useless parentheses in a grammar
+1) <a href="src/trsem/readme.md">trsem</a> -- Read static semantics and generate code
+1) <a href="src/trsort/readme.md">trsort</a> -- Sort rules in a grammar
+1) <a href="src/trsplit/readme.md">trsplit</a> -- Split a combined Antlr4 grammar
+1) <a href="src/trsponge/readme.md">trsponge</a> -- Extract parsing results output of Trash command into files
+1) <a href="src/trst/readme.md">trst</a> -- Print a parse tree in Antlr4 ToStringTree()
+1) <a href="src/trstrip/readme.md">trstrip</a> -- Strip a grammar of all actions, labels, etc.
+1) <a href="src/trtext/readme.md">trtext</a> -- Print a parse tree with a specific interval
+1) <a href="src/trthompson/readme.md">trthompson</a> -- (No description.)
+1) <a href="src/trtokens/readme.md">trtokens</a> -- Print tokens in a parse tree
+1) <a href="src/trtree/readme.md">trtree</a> -- Print a parse tree in a human-readable format
+1) <a href="src/trull/readme.md">trull</a> -- Transform a grammar with upper- and lowercase string literals
+1) <a href="src/trunfold/readme.md">trunfold</a> -- Perform an unfold transform on a grammar
+1) <a href="src/trungroup/readme.md">trungroup</a> -- Perform an ungroup transform on a grammar
+1) <a href="src/trwdog/readme.md">trwdog</a> -- Kill a program that runs too long
+1) <a href="src/trxgrep/readme.md">trxgrep</a> -- "Grep" for nodes in a parse tree using XPath
+1) <a href="src/trxml/readme.md">trxml</a> -- Print a parse tree in XML structured format
+1) <a href="src/trxml2/readme.md">trxml2</a> -- Print an enumeration of all paths in a parse tree to leaves
 
 ## Examples
 
@@ -241,44 +286,6 @@ A *parsing result set* is a JSON serialization of an array of:
 * The input text corresponding to the parse tree nodes.
 
 Most commands in Trash read and/or write parsing result sets.
-
-## Commands of Trash
-
-The list of currently available commands is:
-
-    tragl -- display a parse tree using Microsoft Automatic Graph Layout
-    tranalyze -- analyze a grammar
-    trcombine -- combine a split Antlr4 grammar
-    trconvert -- convert a grammar from one for to another
-    trdelabel -- remove labels from an Antlr4 grammar
-    trdelete -- delete a point in a parse tree
-    trdot -- print a parse tree in Graphvis Dot format
-    trfold -- perform fold transform on a grammar
-    trfoldlit -- perform fold transform on grammar with literals
-    trformat -- perform reformat of grammar using machine learning
-    trgen -- generate an Antlr4 parser for a given target language
-    trgroup -- perform a group transform on a grammar
-    trinsert -- insert a string into a point in a parse tree
-    trjson -- print a parse tree in JSON
-    trkleene -- perform a Kleene transform of a grammar
-    trparse -- parse a grammar or use generated parse to parse input
-    trprint -- print a parse tree leaves
-    trrename -- rename symbols in a grammar
-    trrr -- convert left recursion in a grammar to right recursion
-    trrup -- remove useless parentheses in a grammar
-    trsplit -- split a combined Antlr4 grammar
-    trsponge -- extract parsing results output of Trash command into files
-    trst -- print a parse tree in Antlr4 ToStringTree()
-    trstrip -- strip a grammar of all actions, labels, etc.
-    trtext -- print a parse tree leaves
-    trtokens -- print tokens in a parse tree
-    trtree -- print a parse tree in a human-readable format
-    trunfold -- perform an unfold transform on a grammar
-    trungroup -- perform an ungroup transform on a grammar
-    trwdog -- kill a program that runs too long
-    trxgrep -- grep for nodes in a parse tree using XPath
-    trxml -- print a parse tree in XML
-    trxml2 -- print an enumeration of all paths in a parse tree to leaves
 
 ## Supported grammars
 

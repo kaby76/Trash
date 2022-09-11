@@ -1,5 +1,11 @@
 # trfirst
 
+## Summary
+
+Outputs first sets of a grammar
+
+## Description
+
 Outputs first sets of a grammar.
 
 ## Usage

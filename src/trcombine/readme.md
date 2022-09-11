@@ -1,5 +1,11 @@
 # trcombine
 
+## Summary
+
+Combine a split Antlr4 grammar
+
+## Description
+
 Combine two grammars into one.
 One grammar must be a lexer grammar, the other a parser grammar,
 order is irrelevant. The output is parse tree data.

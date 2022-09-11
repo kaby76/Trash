@@ -1,4 +1,10 @@
-# Trull
+# trull
+
+## Summary
+
+Transform a grammar with upper- and lowercase string literals
+
+## Description
 
 The ulliteral command applies the upper- and lowercase string literal transform
 to a collection of terminal nodes in the parse tree, which is identified with the supplied

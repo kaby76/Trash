@@ -1,5 +1,11 @@
 # trrup
 
+## Summary
+
+Remove useless parentheses in a grammar
+
+## Description
+
 Remove useless parentheses from a grammar.
 
 ## Usage

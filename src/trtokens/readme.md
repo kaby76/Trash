@@ -1,5 +1,11 @@
 # trtokens
 
+## Summary
+
+Print tokens in a parse tree
+
+## Description
+
 The trtokens command reads standard in for a parsing result set and prints out
 the tokens for each result. For each tree in a set, the first and last tokens
 for the tree are computed and printed, with a blank line separator.

@@ -1,4 +1,10 @@
-# Trfold
+# trfold
+
+## Summary
+
+Perform fold transform on a grammar
+
+## Description
 
 Reads a parse tree from stdin, replaces a sequence of symbols on
 the RHS of a rule with the rule LHS symbol, and writes the modified tree

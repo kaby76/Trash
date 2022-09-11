@@ -1,4 +1,10 @@
-# Trperf
+# trperf
+
+## Summary
+
+Perform performance analysis of an Antlr grammar parse
+
+## Description
 
 Parse files and output to stdout parse tree data using
 performance analysis turned on.

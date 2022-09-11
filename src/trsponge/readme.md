@@ -1,4 +1,10 @@
-# Trsponge
+# trsponge
+
+## Summary
+
+Extract parsing results output of Trash command into files
+
+## Description
 
 Read the parse tree data from stdin and write the
 results to file(s).

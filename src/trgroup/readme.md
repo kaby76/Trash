@@ -1,4 +1,10 @@
-# Trgroup
+# trgroup
+
+## Summary
+
+Perform a group transform on a grammar
+
+## Description
 
 Perform a recursive left- and right- factorization of alternatives for rules.
 
