@@ -296,11 +296,11 @@ The list of currently available commands is:
 
 ### Recursion
 
-* [Has direct/indirect recursion](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/analysis.md#has-directindirect-recursion)
+* [Has direct/indirect recursion](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/analysis.md#has-directindirect-recursion)
 
 ## Refactoring
 
-Antlrvsix provides a number of transformations that can help to make grammars cleaner (reformatting),
+Trash provides a number of transformations that can help to make grammars cleaner (reformatting),
 more readable (reducing the length of the RHS of a rule),
 and more efficient (reducing the number of non-terminals) for Antlr.
 
@@ -311,42 +311,42 @@ The refactorings implemented are:
 
 ### Raw tree editing
 
-* [Delete parse tree node](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#delete-parse-tree-node)
+* [Delete parse tree node](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#delete-parse-tree-node)
 
 ### Reordering
 
-* [Move start rule to top](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#move-start-rule)
-* [Reorder parser rules](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#reorder-parser-rules)
-* [Sort modes](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#sort-modes)
+* [Move start rule to top](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#move-start-rule)
+* [Reorder parser rules](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#reorder-parser-rules)
+* [Sort modes](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#sort-modes)
 
 ### Changing rules
 
-* [Remove useless parentheses](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#remove-useless-parentheses)
-* [Remove useless parser rules](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#remove-useless-productions)
-* [Rename lexer or parser symbol](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#rename)
-* [Unfold](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#Unfold)
-* [Group alts](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#group-alts)
-* [Ungroup alts](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#ungroup-alts)
-* [Upper and lower case string literals](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#upper-and-lower-case-string-literals)
-* [Fold](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#Fold)
+* [Remove useless parentheses](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#remove-useless-parentheses)
+* [Remove useless parser rules](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#remove-useless-productions)
+* [Rename lexer or parser symbol](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#rename)
+* [Unfold](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#Unfold)
+* [Group alts](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#group-alts)
+* [Ungroup alts](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#ungroup-alts)
+* [Upper and lower case string literals](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#upper-and-lower-case-string-literals)
+* [Fold](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#Fold)
 * Replace direct left recursion with right recursion
-* [Replace direct left/right recursion with Kleene operator](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#Kleene)
+* [Replace direct left/right recursion with Kleene operator](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#Kleene)
 * Replace indirect left recursion with right recursion
 * Replace parser rule symbols that conflict with Antlr keywords
-* [Replace string literals in parser with lexer symbols](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#replace-literals-in-parser-with-lexer-token-symbols)
+* [Replace string literals in parser with lexer symbols](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#replace-literals-in-parser-with-lexer-token-symbols)
 * Replace string literals in parser with lexer symbols, with lexer rule create
-* [Delabel removes the annoying and mostly useless labeling in an Antlr grammar](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#delabel)
+* [Delabel removes the annoying and mostly useless labeling in an Antlr grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#delabel)
 
 ### Splitting and combining
 
-* [Split combined grammars](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#splitting-and-combining-grammars)
-* [Combine splitted grammars](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/refactoring.md#splitting-and-combining-grammars)
+* [Split combined grammars](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#splitting-and-combining-grammars)
+* [Combine splitted grammars](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#splitting-and-combining-grammars)
 
 ## Conversion
 
-* [Antlr3 import](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/Import.md#antlr3)
-* [Antlr2 import](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/Import.md#antlr2)
-* [Bison import](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/Import.md#bison)
+* [Antlr3 import](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/Import.md#antlr3)
+* [Antlr2 import](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/Import.md#antlr2)
+* [Bison import](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/Import.md#bison)
 
 ---------
 
