@@ -33,7 +33,7 @@ before the lexer rules.
 
 Lexer modes will require manual fix-up.
 
-# Example
+## Example
 
 Consider the following grammar that is split.
 
