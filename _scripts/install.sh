@@ -1,8 +1,6 @@
-#!/bin/bash
-
+#!/usr/bin/bash
 version=""
 #version="--version 0.8.1"
-
 dotnet tool install -g trxml2 $version > /dev/null 2>&1
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
