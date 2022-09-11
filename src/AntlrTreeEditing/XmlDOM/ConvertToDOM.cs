@@ -254,9 +254,9 @@ namespace XmlDOM
 
         public GregorianCalendar CurrentDateTime { get; }
         public Duration TimezoneOffset { get; }
-        public Document getDocument(URI uri)
+        public IEnumerable<Document> getDocument(URI uri)
         {
-            return Document;
+            return new List<Document>() { Document };
         }
 
         public IDictionary<string, IList<Document>> Collections { get; }

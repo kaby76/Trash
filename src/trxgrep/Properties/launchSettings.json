@@ -2,7 +2,7 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"  //parserRuleSpec//alternative/element/following-sibling::* \"",
+      "commandLineArgs": "-f o.pt //parserRuleSpec|doc('*')//lexerRuleSpec",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\x"
     }
   }

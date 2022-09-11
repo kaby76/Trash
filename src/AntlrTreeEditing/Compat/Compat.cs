@@ -31,6 +31,11 @@ namespace java.net
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return @string;
+        }
     }
 
     public class MalformedURLException : Exception

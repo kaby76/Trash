@@ -8,11 +8,18 @@
     using org.w3c.dom;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using DynamicContext = org.eclipse.wst.xml.xpath2.api.DynamicContext;
 
     public class AntlrDynamicContext : DynamicContext, IDisposable
     {
-        public AntlrDynamicContext() { }
+        private static List<AntlrDynamicContext> _instances = new List<AntlrDynamicContext>();
+
+        public AntlrDynamicContext(Document document)
+        {
+            this.Document = Document;
+            _instances.Add(this);
+        }
 
         public Node LimitNode { get; }
         public AntlrDocument Document { get; set; }
@@ -23,14 +30,21 @@
 
         public URI resolveUri(string uri)
         {
-            throw new NotImplementedException();
+            if (uri == "*")
+                return new URI(uri);
+            else
+                throw new NotImplementedException();
         }
 
         public GregorianCalendar CurrentDateTime { get; }
         public Duration TimezoneOffset { get; }
-        public Document getDocument(URI uri)
+        public IEnumerable<Document> getDocument(URI uri)
         {
-            return Document;
+            if ("*" == uri.ToString())
+            {
+                return _instances.Select(i => i.Document);
+            }
+            else return new List<Document>() { Document };
         }
 
         public void Dispose()

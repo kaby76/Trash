@@ -80,7 +80,7 @@ namespace org.eclipse.wst.xml.xpath2.processor.util
 
 		private IDictionary<string, IList<Document>> _collections;
 
-		private IDictionary<URI, Document> _loaded_documents = new Dictionary<URI, Document>();
+		private IDictionary<URI, IEnumerable<Document>> _loaded_documents = new Dictionary<URI, IEnumerable<Document>>();
 
 		public DynamicContextBuilder(StaticContext sc)
 		{
@@ -132,24 +132,28 @@ namespace org.eclipse.wst.xml.xpath2.processor.util
 			return _variables[name];
 		}
 
-		public virtual Document getDocument(URI resolved)
+		public virtual IEnumerable<Document> getDocument(URI resolved)
 		{
-			Document doc = null;
-			if (_loaded_documents.ContainsKey(resolved))
+			if (resolved.ToString() == "*")
+            {
+				throw new NotImplementedException();
+            }
+			else if (_loaded_documents.ContainsKey(resolved))
 			{
-				 //tried before
-				doc = _loaded_documents[resolved];
+				//tried before
+				var docs = _loaded_documents[resolved];
+				return docs;
 			}
 			else
 			{
-				doc = retrieve_doc(resolved);
-				_loaded_documents[resolved] = doc;
+				var docs = retrieve_doc(resolved);
+				_loaded_documents[resolved] = docs;
+				return docs;
 			}
-			return doc;
 		}
 
 		// XXX make it nice, and move it out as a utility function
-		private Document retrieve_doc(URI uri)
+		private IEnumerable<Document> retrieve_doc(URI uri)
 		{
 			try
 			{

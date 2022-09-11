@@ -96,7 +96,7 @@ namespace org.eclipse.wst.xml.xpath2.api
 		/// <param name="uri">
 		///            is the URI of the document. </param>
 		/// <returns> document. </returns>
-		Document getDocument(URI uri);
+		IEnumerable<Document> getDocument(URI uri);
 
 		/// <summary>
 		/// [Definition: Available collections. This is a mapping of

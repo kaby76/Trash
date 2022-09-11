@@ -24,8 +24,7 @@
             document.NodeType = NodeConstants.DOCUMENT_NODE;
             AntlrNodeList nl = new AntlrNodeList();
             document.ChildNodes = nl;
-            AntlrDynamicContext result = new AntlrDynamicContext();
-            result.Document = document;
+            AntlrDynamicContext result = new AntlrDynamicContext(document);
             foreach (var tree in trees)
             {
                 var node = FindDomNode(tree);
@@ -79,7 +78,7 @@
             AntlrNodeList nl = new AntlrNodeList();
             nl.Add(converted_tree);
             document.ChildNodes = nl;
-            AntlrDynamicContext result = new AntlrDynamicContext();
+            AntlrDynamicContext result = new AntlrDynamicContext(document);
             result.Document = document;
             return result;
         }

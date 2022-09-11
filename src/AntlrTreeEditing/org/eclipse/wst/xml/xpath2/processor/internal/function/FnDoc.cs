@@ -102,13 +102,20 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.function
 				throw DynamicError.invalid_doc(null);
 			}
 
-			Document doc = dc.getDocument(resolved);
-			if (doc == null)
+			var docs = dc.getDocument(resolved);
+			if (docs == null)
 			{
 				throw DynamicError.doc_not_found(null);
 			}
 
-			return new DocType(doc, ec.StaticContext.TypeModel);
+			var rb = new org.eclipse.wst.xml.xpath2.api.ResultBuffer();
+			foreach (var doc in docs)
+            {
+				var dt = new DocType(doc, ec.StaticContext.TypeModel);
+				rb.add(dt);
+			}
+
+			return rb.Sequence;
 		}
 
 		/// <summary>

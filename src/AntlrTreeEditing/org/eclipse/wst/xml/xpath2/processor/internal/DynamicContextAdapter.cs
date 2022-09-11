@@ -98,14 +98,21 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal
 			}
 		}
 
-		public virtual Document getDocument(URI uri)
+		public virtual IEnumerable<Document> getDocument(URI uri)
 		{
 			org.eclipse.wst.xml.xpath2.processor.ResultSequence rs = dc.get_doc(uri);
 			if (rs == null || rs.empty())
 			{
 				return null;
 			}
-			return ((DocType)(rs.get(0))).value();
+			List<Document> result = new List<Document>();
+			foreach (var x in rs)
+            {
+				var r = (DocType)x;
+				var d = r.value();
+				result.Add(d);
+            }
+			return result;
 		}
 
 		public virtual IDictionary<string, IList<Document>> Collections
