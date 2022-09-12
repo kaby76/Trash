@@ -3,8 +3,13 @@
 [![Build](https://github.com/kaby76/Domemtech.Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Domemtech.Trash/actions?query=workflow%3ACI)
 
 Trash is a collection of ~40 command-line tools to analyze and transform
-Antlr parse trees and grammars. The toolkit can generate a parser
-application for an Antlr4 grammar for any target and any OS.
+Antlr parse trees and grammars. The toolkit can: generate a parser
+application for an Antlr4 grammar for any target and any OS; analyze the
+grammar for common problems; automate changes applied to a grammar scraped
+from a specification; transform parse trees for transpilating
+and proprocessing source code. With the [Antlr toolkit](https://www.antlr.org/)
+and the [collection of Antlr grammars](https://github.com/antlr/grammars-v4),
+one can write programming language tools quickly and easily.
 
 The toolkit is designed around a JSON representation of
 parse trees and command-line tools that read, modify, and write
