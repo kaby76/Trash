@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 echo $1
-trparse Problems.g4 \
-   | trxgrep '
+trparse $1 \
+   | trxgrep -e '
       for $i in (
          //parserRuleSpec//TOKEN_REF
             [text()=doc("*")//lexerRuleSpec
