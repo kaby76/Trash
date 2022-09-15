@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using GOTO = org.apache.bcel.generic.GOTO;
@@ -87,7 +86,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (!XML11Char.isXML11ValidQName(name))
 			{
 				ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, name, this);
-				parser.reportError(Constants_Fields.ERROR, err);
+				parser.reportError(Constants.ERROR, err);
 			}
 
 			// Parse key name and add to symbol table
@@ -126,7 +125,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -152,24 +151,24 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// DOM.getStringValueX(nodeIndex) => String
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getNodeValue = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_NODE_VALUE, "(I)"+Constants_Fields.STRING_SIG);
-		int getNodeValue = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_NODE_VALUE, "(I)" + Constants_Fields.STRING_SIG);
+//ORIGINAL LINE: final int getNodeValue = cpg.addInterfaceMethodref(DOM_INTF, GET_NODE_VALUE, "(I)"+STRING_SIG);
+		int getNodeValue = cpg.addInterfaceMethodref(DOM_INTF, GET_NODE_VALUE, "(I)" + STRING_SIG);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getNodeIdent = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNodeIdent", "(I)"+Constants_Fields.NODE_SIG);
-		int getNodeIdent = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNodeIdent", "(I)" + Constants_Fields.NODE_SIG);
+//ORIGINAL LINE: final int getNodeIdent = cpg.addInterfaceMethodref(DOM_INTF, "getNodeIdent", "(I)"+NODE_SIG);
+		int getNodeIdent = cpg.addInterfaceMethodref(DOM_INTF, "getNodeIdent", "(I)" + NODE_SIG);
 
 		// AbstractTranslet.SetKeyIndexDom(name, Dom) => void
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int keyDom = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "setKeyIndexDom", "("+Constants_Fields.STRING_SIG+Constants_Fields.DOM_INTF_SIG+")V");
-		int keyDom = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "setKeyIndexDom", "(" + Constants_Fields.STRING_SIG + Constants_Fields.DOM_INTF_SIG + ")V");
+//ORIGINAL LINE: final int keyDom = cpg.addMethodref(TRANSLET_CLASS, "setKeyIndexDom", "("+STRING_SIG+DOM_INTF_SIG+")V");
+		int keyDom = cpg.addMethodref(TRANSLET_CLASS, "setKeyIndexDom", "(" + STRING_SIG + DOM_INTF_SIG + ")V");
 
 
 		// This variable holds the id of the node we found with the "match"
@@ -180,7 +179,7 @@ namespace org.apache.xalan.xsltc.compiler
 		LocalVariableGen parentNode = methodGen.addLocalVariable("parentNode", Util.getJCRefType("I"), null, null);
 
 		// Get the 'parameter' from the stack and store it in a local var.
-		parentNode.Start = il.append(new ISTORE(parentNode.Index));
+		parentNode.setStart(il.append(new ISTORE(parentNode.getIndex())));
 
 		// Save current node and current iterator on the stack
 		il.append(methodGen.loadCurrentNode());
@@ -201,7 +200,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Prepare to call buildKeyIndex(String name, int node, String value);
 		il.append(classGen.loadTranslet());
 		il.append(new PUSH(cpg, _name.ToString()));
-		parentNode.End = il.append(new ILOAD(parentNode.Index));
+		parentNode.setEnd(il.append(new ILOAD(parentNode.getIndex())));
 
 		// Now get the node value and push it on the parameter stack
 		il.append(methodGen.loadDOM());
@@ -216,7 +215,7 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(methodGen.loadDOM());
 		il.append(new INVOKEVIRTUAL(keyDom));
 
-		nextNode.Target = il.append(methodGen.loadIterator());
+		nextNode.setTarget(il.append(methodGen.loadIterator()));
 		il.append(methodGen.nextNode());
 
 		il.append(DUP);
@@ -237,32 +236,32 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int current = methodGen.getLocalIndex("current");
 		int current = methodGen.getLocalIndex("current");
 
 		// AbstractTranslet.buildKeyIndex(name,node_id,value) => void
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int key = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "buildKeyIndex", "("+Constants_Fields.STRING_SIG+"I"+Constants_Fields.OBJECT_SIG+")V");
-		int key = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "buildKeyIndex", "(" + Constants_Fields.STRING_SIG + "I" + Constants_Fields.OBJECT_SIG + ")V");
+//ORIGINAL LINE: final int key = cpg.addMethodref(TRANSLET_CLASS, "buildKeyIndex", "("+STRING_SIG+"I"+OBJECT_SIG+")V");
+		int key = cpg.addMethodref(TRANSLET_CLASS, "buildKeyIndex", "(" + STRING_SIG + "I" + OBJECT_SIG + ")V");
 
 		// AbstractTranslet.SetKeyIndexDom(name, Dom) => void
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int keyDom = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "setKeyIndexDom", "("+Constants_Fields.STRING_SIG+Constants_Fields.DOM_INTF_SIG+")V");
-		int keyDom = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "setKeyIndexDom", "(" + Constants_Fields.STRING_SIG + Constants_Fields.DOM_INTF_SIG + ")V");
+//ORIGINAL LINE: final int keyDom = cpg.addMethodref(TRANSLET_CLASS, "setKeyIndexDom", "("+STRING_SIG+DOM_INTF_SIG+")V");
+		int keyDom = cpg.addMethodref(TRANSLET_CLASS, "setKeyIndexDom", "(" + STRING_SIG + DOM_INTF_SIG + ")V");
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getNodeIdent = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNodeIdent", "(I)"+Constants_Fields.NODE_SIG);
-		int getNodeIdent = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNodeIdent", "(I)" + Constants_Fields.NODE_SIG);
+//ORIGINAL LINE: final int getNodeIdent = cpg.addInterfaceMethodref(DOM_INTF, "getNodeIdent", "(I)"+NODE_SIG);
+		int getNodeIdent = cpg.addInterfaceMethodref(DOM_INTF, "getNodeIdent", "(I)" + NODE_SIG);
 
 		// DOM.getAxisIterator(root) => NodeIterator
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int git = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getAxisIterator", "(I)"+Constants_Fields.NODE_ITERATOR_SIG);
-		int git = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getAxisIterator", "(I)" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int git = cpg.addInterfaceMethodref(DOM_INTF, "getAxisIterator", "(I)"+NODE_ITERATOR_SIG);
+		int git = cpg.addInterfaceMethodref(DOM_INTF, "getAxisIterator", "(I)" + NODE_ITERATOR_SIG);
 
 		il.append(methodGen.loadCurrentNode());
 		il.append(methodGen.loadIterator());
@@ -329,8 +328,8 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(methodGen.storeIterator());
 		il.append(methodGen.storeCurrentNode());
 
-		nextNode.Target = skip;
-		skipNode.Target = skip;
+		nextNode.setTarget(skip);
+		skipNode.setTarget(skip);
 		}
 	}
 

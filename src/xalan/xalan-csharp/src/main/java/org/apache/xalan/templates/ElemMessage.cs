@@ -36,8 +36,8 @@ namespace org.apache.xalan.templates
 	///   terminate (yes|no) "no"
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#message">message in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.message">message in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemMessage : ElemTemplateElement
 	{
@@ -73,8 +73,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for this element </returns>
 	  public override int XSLToken
 	  {
@@ -107,7 +107,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {

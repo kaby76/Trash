@@ -25,7 +25,6 @@ namespace org.apache.xalan.templates
 {
 
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using OutputPropertiesFactory = org.apache.xml.serializer.OutputPropertiesFactory;
@@ -41,9 +40,9 @@ namespace org.apache.xalan.templates
 	/// <para>An OutputProperties list can contain another OutputProperties list as
 	/// its "defaults"; this second property list is searched if the property key
 	/// is not found in the original property list.</para> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#output">xsl:output in XSLT Specification</a>
-	///  </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.output">xsl:output in XSLT Specification</a>"
+	/// />
 	[Serializable]
 	public class OutputProperties : ElemTemplateElement, ICloneable
 	{
@@ -106,7 +105,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="key"> the key to be placed into the property list. </param>
 	  /// <param name="value"> the value corresponding to <tt>key</tt>. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual void setProperty(QName key, string value)
 	  {
 		setProperty(key.toNamespacedString(), value);
@@ -117,7 +116,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="key"> the key to be placed into the property list. </param>
 	  /// <param name="value"> the value corresponding to <tt>key</tt>. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual void setProperty(string key, string value)
 	  {
 		if (key.Equals(OutputKeys.METHOD))
@@ -168,7 +167,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="key"> the key to be placed into the property list. </param>
 	  /// <param name="value"> the value corresponding to <tt>key</tt>. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual void setBooleanProperty(QName key, bool value)
 	  {
 		m_properties.put(key.toNamespacedString(), value ? "yes" : "no");
@@ -179,7 +178,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="key"> the key to be placed into the property list. </param>
 	  /// <param name="value"> the value corresponding to <tt>key</tt>. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual void setBooleanProperty(string key, bool value)
 	  {
 		m_properties.put(key, value ? "yes" : "no");
@@ -220,7 +219,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="key"> the key to be placed into the property list. </param>
 	  /// <param name="value"> the value corresponding to <tt>key</tt>. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual void setIntProperty(QName key, int value)
 	  {
 		setIntProperty(key.toNamespacedString(), value);
@@ -231,7 +230,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="key"> the key to be placed into the property list. </param>
 	  /// <param name="value"> the value corresponding to <tt>key</tt>. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual void setIntProperty(string key, int value)
 	  {
 		m_properties.put(key, Convert.ToString(value));
@@ -274,7 +273,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="key"> the key to be placed into the property list. </param>
 	  /// <param name="value"> the value corresponding to <tt>key</tt>. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual void setQNameProperty(QName key, QName value)
 	  {
 		setQNameProperty(key.toNamespacedString(), value);
@@ -284,7 +283,7 @@ namespace org.apache.xalan.templates
 	  /// Reset the default properties based on the method.
 	  /// </summary>
 	  /// <param name="method"> the method value. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual string MethodDefaults
 	  {
 		  set
@@ -292,13 +291,6 @@ namespace org.apache.xalan.templates
 				string defaultMethod = m_properties.getProperty(OutputKeys.METHOD);
     
 				if ((null == defaultMethod) || !defaultMethod.Equals(value) || defaultMethod.Equals("xml"))
-				 // bjm - add the next condition as a hack
-				 // but it is because both output_xml.properties and
-				 // output_unknown.properties have the same value=xml
-				 // for their default. Otherwise we end up with
-				 // a ToUnknownStream wraping a ToXMLStream even
-				 // when the users says value="xml"
-				 //
 				{
 					Properties savedProps = m_properties;
 					Properties newDefaults = OutputPropertiesFactory.getDefaultMethodProperties(value);
@@ -315,7 +307,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="key"> the key to be placed into the property list. </param>
 	  /// <param name="value"> the value corresponding to <tt>key</tt>. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual void setQNameProperty(string key, QName value)
 	  {
 		setProperty(key, value.toNamespacedString());
@@ -380,7 +372,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="key"> the key to be placed into the property list. </param>
 	  /// <param name="v"> non-null list of QNames corresponding to <tt>key</tt>. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual void setQNameProperties(QName key, ArrayList v)
 	  {
 		setQNameProperties(key.toNamespacedString(), v);
@@ -392,7 +384,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="key"> the key to be placed into the property list. </param>
 	  /// <param name="v"> non-null list of QNames corresponding to <tt>key</tt>. </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
 	  public virtual void setQNameProperties(string key, ArrayList v)
 	  {
 
@@ -520,7 +512,7 @@ namespace org.apache.xalan.templates
 	  /// This function is called to recompose all of the output format extended elements.
 	  /// </summary>
 	  /// <param name="root"> non-null reference to the stylesheet root object. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void recompose(StylesheetRoot root) throws javax.xml.transform.TransformerException
 	  public override void recompose(StylesheetRoot root)
 	  {
@@ -533,7 +525,7 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
@@ -615,7 +607,7 @@ namespace org.apache.xalan.templates
 	  /// key already exists, this method will not reset it.
 	  /// </summary>
 	  /// <param name="opsrc"> non-null reference to an OutputProperties. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void copyFrom(OutputProperties opsrc) throws javax.xml.transform.TransformerException
 	  public virtual void copyFrom(OutputProperties opsrc)
 	  {

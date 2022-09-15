@@ -22,7 +22,6 @@ namespace org.apache.xalan.extensions
 {
 
 
-
 	/// <summary>
 	/// A sample implementation of XPathFunction, with support for
 	/// EXSLT extension functions and Java extension functions.
@@ -42,10 +41,10 @@ namespace org.apache.xalan.extensions
 			m_funcName = funcName;
 		}
 
-		/// <seealso cref= javax.xml.xpath.XPathFunction#evaluate(java.util.List) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="javax.xml.xpath.XPathFunction.evaluate(java.util.List)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object evaluate(java.util.List args) throws javax.xml.xpath.XPathFunctionException
-		public virtual object evaluate(IList args)
+		public virtual object evaluate(System.Collections.IList args)
 		{
 			ArrayList argsVec = listToVector(args);
 
@@ -64,7 +63,7 @@ namespace org.apache.xalan.extensions
 		/// Convert a java.util.List to a java.util.Vector. 
 		/// No conversion is done if the List is already a Vector.
 		/// </summary>
-		private static ArrayList listToVector(IList args)
+		private static ArrayList listToVector(System.Collections.IList args)
 		{
 			if (args == null)
 			{

@@ -20,6 +20,7 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
+	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 
 	/// <summary>
 	/// This class serves as a default base for implementations of mutable
@@ -56,7 +57,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// The handle to the start, or root, of the iteration.
 	  /// Set this to END to construct an empty iterator.
 	  /// </summary>
-	  protected internal int _startNode = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+	  protected internal int _startNode = DTMAxisIterator.END;
 
 	  /// <summary>
 	  /// True if the start node should be considered part of the iteration.
@@ -153,7 +154,7 @@ namespace org.apache.xml.dtm.@ref
 			  do
 			  {
 				_last++;
-			  } while (next() != org.apache.xml.dtm.DTMAxisIterator_Fields.END);
+			  } while (next() != END);
     
 			  gotoMark(); // Restore saved state
 			  _position = temp;
@@ -226,9 +227,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="node"> Node handle which iteration is about to yield.
 	  /// </param>
 	  /// <returns> The node handle passed in.   </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: protected final int returnNode(final int node)
-	  protected internal int returnNode(int node)
+	  protected internal int returnNode(in int node)
 	  {
 		_position++;
 
@@ -297,7 +296,7 @@ namespace org.apache.xml.dtm.@ref
 //ORIGINAL LINE: final int pos = isReverse() ? getLast() - position + 1 : position;
 		  int pos = Reverse ? Last - position + 1 : position;
 		  int node;
-		  while ((node = next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+		  while ((node = next()) != DTMAxisIterator.END)
 		  {
 			if (pos == Position)
 			{
@@ -305,7 +304,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 		}
-		return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		return END;
 	  }
 
 	}

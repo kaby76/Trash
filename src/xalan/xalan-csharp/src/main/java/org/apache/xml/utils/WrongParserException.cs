@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// Certain functions may throw this error if they are paired with
 	/// the incorrect parser.

@@ -46,7 +46,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Force the argument to this function to be a literal string.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -107,11 +107,11 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final boolean result = getResult();
 		bool result = Result;
-		methodGen.InstructionList.append(new PUSH(cpg, result));
+		methodGen.getInstructionList().append(new PUSH(cpg, result));
 		}
 	}
 

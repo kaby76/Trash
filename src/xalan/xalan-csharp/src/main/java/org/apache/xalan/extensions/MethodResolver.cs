@@ -24,7 +24,6 @@ using System.Text;
 namespace org.apache.xalan.extensions
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using DTM = org.apache.xml.dtm.DTM;
@@ -78,20 +77,20 @@ namespace org.apache.xalan.extensions
 	  /// <returns> A constructor that will work with the argsOut array. </returns>
 	  /// <exception cref="TransformerException"> may be thrown for Xalan conversion
 	  /// exceptions. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public static Constructor getConstructor(Class classObj, Object[] argsIn, Object[][] argsOut, ExpressionContext exprContext) throws NoSuchMethodException, SecurityException, javax.xml.transform.TransformerException
-	  public static Constructor getConstructor(Type classObj, object[] argsIn, object[][] argsOut, ExpressionContext exprContext)
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public static java.lang.reflect.Constructor getConstructor(Class classObj, Object[] argsIn, Object[][] argsOut, ExpressionContext exprContext) throws NoSuchMethodException, SecurityException, javax.xml.transform.TransformerException
+	  public static System.Reflection.ConstructorInfo getConstructor(Type classObj, object[] argsIn, object[][] argsOut, ExpressionContext exprContext)
 	  {
-		Constructor bestConstructor = null;
+		System.Reflection.ConstructorInfo bestConstructor = null;
 		Type[] bestParamTypes = null;
-		Constructor[] constructors = classObj.GetConstructors();
+		System.Reflection.ConstructorInfo[] constructors = classObj.GetConstructors();
 		int nMethods = constructors.Length;
 		int bestScore = int.MaxValue;
 		int bestScoreCount = 0;
 		for (int i = 0; i < nMethods; i++)
 		{
-		  Constructor ctor = constructors[i];
-		  Type[] paramTypes = ctor.ParameterTypes;
+		  System.Reflection.ConstructorInfo ctor = constructors[i];
+		  Type[] paramTypes = ctor.getParameterTypes();
 		  int numberMethodParams = paramTypes.Length;
 		  int paramStart = 0;
 		  bool isFirstExpressionContext = false;
@@ -103,7 +102,7 @@ namespace org.apache.xalan.extensions
 		  {
 			Type javaClass = paramTypes[0];
 			// System.out.println("first javaClass: "+javaClass.getName());
-			if (javaClass.IsSubclassOf(typeof(ExpressionContext)))
+			if (javaClass.IsAssignableFrom(typeof(ExpressionContext)))
 			{
 			  isFirstExpressionContext = true;
 			  scoreStart = 0;
@@ -176,9 +175,9 @@ namespace org.apache.xalan.extensions
 	  /// <returns> A method that will work with the argsOut array. </returns>
 	  /// <exception cref="TransformerException"> may be thrown for Xalan conversion
 	  /// exceptions. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public static Method getMethod(Class classObj, String name, Object[] argsIn, Object[][] argsOut, ExpressionContext exprContext, int searchMethod) throws NoSuchMethodException, SecurityException, javax.xml.transform.TransformerException
-	  public static Method getMethod(Type classObj, string name, object[] argsIn, object[][] argsOut, ExpressionContext exprContext, int searchMethod)
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public static java.lang.reflect.Method getMethod(Class classObj, String name, Object[] argsIn, Object[][] argsOut, ExpressionContext exprContext, int searchMethod) throws NoSuchMethodException, SecurityException, javax.xml.transform.TransformerException
+	  public static System.Reflection.MethodInfo getMethod(Type classObj, string name, object[] argsIn, object[][] argsOut, ExpressionContext exprContext, int searchMethod)
 	  {
 		// System.out.println("---> Looking for method: "+name);
 		// System.out.println("---> classObj: "+classObj);
@@ -186,21 +185,21 @@ namespace org.apache.xalan.extensions
 		{
 		  name = replaceDash(name);
 		}
-		Method bestMethod = null;
+		System.Reflection.MethodInfo bestMethod = null;
 		Type[] bestParamTypes = null;
-		Method[] methods = classObj.GetMethods();
+		System.Reflection.MethodInfo[] methods = classObj.GetMethods();
 		int nMethods = methods.Length;
 		int bestScore = int.MaxValue;
 		int bestScoreCount = 0;
 		bool isStatic;
 		for (int i = 0; i < nMethods; i++)
 		{
-		  Method method = methods[i];
+		  System.Reflection.MethodInfo method = methods[i];
 		  // System.out.println("looking at method: "+method);
 		  int xsltParamStart = 0;
-		  if (method.Name.Equals(name))
+		  if (method.getName().Equals(name))
 		  {
-			isStatic = Modifier.isStatic(method.Modifiers);
+			isStatic = Modifier.isStatic(method.getModifiers());
 			switch (searchMethod)
 			{
 			  case STATIC_ONLY:
@@ -228,7 +227,7 @@ namespace org.apache.xalan.extensions
 			break;
 			}
 			int javaParamStart = 0;
-			Type[] paramTypes = method.ParameterTypes;
+			Type[] paramTypes = method.getParameterTypes();
 			int numberMethodParams = paramTypes.Length;
 			bool isFirstExpressionContext = false;
 			int scoreStart;
@@ -239,7 +238,7 @@ namespace org.apache.xalan.extensions
 			if (numberMethodParams == (argsLen - xsltParamStart + 1))
 			{
 			  Type javaClass = paramTypes[0];
-			  if (javaClass.IsSubclassOf(typeof(ExpressionContext)))
+			  if (javaClass.IsAssignableFrom(typeof(ExpressionContext)))
 			  {
 				isFirstExpressionContext = true;
 				scoreStart = 0;
@@ -332,23 +331,23 @@ namespace org.apache.xalan.extensions
 	  /// <returns> A method that will work to be called as an element. </returns>
 	  /// <exception cref="TransformerException"> may be thrown for Xalan conversion
 	  /// exceptions. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public static Method getElementMethod(Class classObj, String name) throws NoSuchMethodException, SecurityException, javax.xml.transform.TransformerException
-	  public static Method getElementMethod(Type classObj, string name)
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public static java.lang.reflect.Method getElementMethod(Class classObj, String name) throws NoSuchMethodException, SecurityException, javax.xml.transform.TransformerException
+	  public static System.Reflection.MethodInfo getElementMethod(Type classObj, string name)
 	  {
 		// System.out.println("---> Looking for element method: "+name);
 		// System.out.println("---> classObj: "+classObj);
-		Method bestMethod = null;
-		Method[] methods = classObj.GetMethods();
+		System.Reflection.MethodInfo bestMethod = null;
+		System.Reflection.MethodInfo[] methods = classObj.GetMethods();
 		int nMethods = methods.Length;
 		int bestScoreCount = 0;
 		for (int i = 0; i < nMethods; i++)
 		{
-		  Method method = methods[i];
+		  System.Reflection.MethodInfo method = methods[i];
 		  // System.out.println("looking at method: "+method);
-		  if (method.Name.Equals(name))
+		  if (method.getName().Equals(name))
 		  {
-			Type[] paramTypes = method.ParameterTypes;
+			Type[] paramTypes = method.getParameterTypes();
 			if ((paramTypes.Length == 2) && paramTypes[1].IsAssignableFrom(typeof(org.apache.xalan.templates.ElemExtensionCall)) && paramTypes[0].IsAssignableFrom(typeof(org.apache.xalan.extensions.XSLProcessorContext)))
 			{
 			  if (++bestScoreCount == 1)
@@ -385,7 +384,7 @@ namespace org.apache.xalan.extensions
 	  /// size as argsIn and argsOut. </param>
 	  /// <exception cref="TransformerException"> may be thrown for Xalan conversion
 	  /// exceptions. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static void convertParams(Object[] argsIn, Object[][] argsOut, Class[] paramTypes, ExpressionContext exprContext) throws javax.xml.transform.TransformerException
 	  public static void convertParams(object[] argsIn, object[][] argsOut, Type[] paramTypes, ExpressionContext exprContext)
 	  {
@@ -399,7 +398,7 @@ namespace org.apache.xalan.extensions
 		  int nParams = paramTypes.Length;
 		  argsOut[0] = new object[nParams];
 		  int paramIndex = 0;
-		  if ((nParams > 0) && paramTypes[0].IsSubclassOf(typeof(ExpressionContext)))
+		  if ((nParams > 0) && paramTypes[0].IsAssignableFrom(typeof(ExpressionContext)))
 		  {
 			argsOut[0][0] = exprContext;
 			// System.out.println("Incrementing paramIndex in convertParams: "+paramIndex);
@@ -684,7 +683,7 @@ namespace org.apache.xalan.extensions
 	  /// function in the args array, which may be null in some cases. </param>
 	  /// <exception cref="TransformerException"> may be thrown for Xalan conversion
 	  /// exceptions. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Object convert(Object xsltObj, Class javaClass) throws javax.xml.transform.TransformerException
 	  internal static object convert(object xsltObj, Type javaClass)
 	  {
@@ -843,7 +842,7 @@ namespace org.apache.xalan.extensions
 				// iterator positioned at the beginning.
 				DTMIterator ni = xobj.iter();
 				int handle = ni.nextNode();
-				if (handle != org.apache.xml.dtm.DTM_Fields.NULL)
+				if (handle != DTM.NULL)
 				{
 				  return ni.getDTM(handle).getNode(handle); // may be null.
 				}
@@ -979,7 +978,7 @@ namespace org.apache.xalan.extensions
 	  /// Format the message for the NoSuchMethodException containing 
 	  /// all the information about the method we're looking for.
 	  /// </summary>
-	  private static string errString(string callType, string searchType, Type classObj, string funcName, int searchMethod, object[] xsltArgs) // "method" or "constructor" -  "function" or "element"
+	  private static string errString(string callType, string searchType, Type classObj, string funcName, int searchMethod, object[] xsltArgs)
 	  {
 		string resultString = "For extension " + callType + ", could not find " + searchType + " ";
 		switch (searchMethod)

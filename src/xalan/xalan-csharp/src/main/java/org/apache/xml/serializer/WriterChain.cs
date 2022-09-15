@@ -1,4 +1,6 @@
-﻿/*
+﻿using System.IO;
+
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -51,37 +53,37 @@ namespace org.apache.xml.serializer
 	{
 		/// <summary>
 		/// This method forces us to over-ride the method defined in java.io.Writer </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(int val) throws java.io.IOException;
 		void write(int val);
 		/// <summary>
 		/// This method forces us to over-ride the method defined in java.io.Writer </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(char[] chars) throws java.io.IOException;
 		void write(char[] chars);
 		/// <summary>
 		/// This method forces us to over-ride the method defined in java.io.Writer </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(char[] chars, int start, int count) throws java.io.IOException;
 		void write(char[] chars, int start, int count);
 		/// <summary>
 		/// This method forces us to over-ride the method defined in java.io.Writer </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(String chars) throws java.io.IOException;
 		void write(string chars);
 		/// <summary>
 		/// This method forces us to over-ride the method defined in java.io.Writer </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(String chars, int start, int count) throws java.io.IOException;
 		void write(string chars, int start, int count);
 		/// <summary>
 		/// This method forces us to over-ride the method defined in java.io.Writer </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void flush() throws java.io.IOException;
 		void flush();
 		/// <summary>
 		/// This method forces us to over-ride the method defined in java.io.Writer </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void close() throws java.io.IOException;
 		void close();
 
@@ -98,7 +100,7 @@ namespace org.apache.xml.serializer
 		/// If this method returns null, getWriter() must return non-null.
 		/// Get the OutputStream that this writer sends its output to.
 		/// </summary>
-		System.IO.Stream OutputStream {get;}
+		Stream OutputStream {get;}
 	}
 
 }

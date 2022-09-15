@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.xsltc
 {
-
 	/// <summary>
 	/// Interface for SAXImpl which adds methods used at run-time, over and above
 	/// those provided by the XSLTC DOM interface. An attempt to avoid the current

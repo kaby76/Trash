@@ -24,7 +24,6 @@
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using GOTO = org.apache.bcel.generic.GOTO;
@@ -55,9 +54,9 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("ForEach");
-		indent(indent + IndentIncrement);
+		this.indent(indent + IndentIncrement);
 		Util.println("select " + _select.ToString());
 		displayContents(indent + IndentIncrement);
 		}
@@ -75,7 +74,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -99,10 +98,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Save current node and current iterator on the stack
 		il.append(methodGen.loadCurrentNode());
@@ -133,7 +132,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (sortObjects.Count > 0)
 			{
 			ErrorMsg msg = new ErrorMsg(ErrorMsg.RESULT_TREE_SORT_ERR,this);
-			Parser.reportError(Constants_Fields.WARNING, msg);
+			Parser.reportError(WARNING, msg);
 			}
 
 			// Put the result tree on the stack (DOM)
@@ -179,7 +178,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		translateContents(classGen, methodGen);
 
-		nextNode.Target = il.append(methodGen.loadIterator());
+		nextNode.setTarget(il.append(methodGen.loadIterator()));
 		il.append(methodGen.nextNode());
 		il.append(DUP);
 		il.append(methodGen.storeCurrentNode());
@@ -224,8 +223,8 @@ namespace org.apache.xalan.xsltc.compiler
 			object child = Contents[i];
 			if (child is Variable)
 			{
-			Variable @var = (Variable)child;
-			@var.initialize(classGen, methodGen);
+			Variable var = (Variable)child;
+			var.initialize(classGen, methodGen);
 			}
 		}
 		}

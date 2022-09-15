@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Text;
 
 /*
@@ -24,7 +25,6 @@ using System.Text;
  */
 namespace org.apache.xml.serializer
 {
-
 
 	using MsgKey = org.apache.xml.serializer.utils.MsgKey;
 	using SystemIDResolver = org.apache.xml.serializer.utils.SystemIDResolver;
@@ -148,7 +148,7 @@ namespace org.apache.xml.serializer
 		/// <para>
 		/// m_charToString is not created here only for performance reasons,
 		/// to avoid creating a Hashtable that will be replaced when
-		/// making a mutable copy, <seealso cref="#mutableCopyOf(CharInfo)"/>. 
+		/// making a mutable copy, <seealso cref="mutableCopyOf(CharInfo)"/>. 
 		/// 
 		/// </para>
 		/// </summary>
@@ -200,7 +200,7 @@ namespace org.apache.xml.serializer
 
 			if (entities != null)
 			{
-				System.Collections.IEnumerator keys = entities.Keys;
+				System.Collections.IEnumerator keys = entities.getKeys();
 				while (keys.MoveNext())
 				{
 					string name = (string) keys.Current;
@@ -215,7 +215,7 @@ namespace org.apache.xml.serializer
 			}
 			else
 			{
-				System.IO.Stream @is = null;
+				Stream @is = null;
 
 				// Load user specified resource file by using URL loading, it
 				// requires a valid URI as parameter
@@ -274,14 +274,14 @@ namespace org.apache.xml.serializer
 					// on the air until we're ready to officially decommit from
 					// VJ++.
 
-					System.IO.StreamReader reader;
+					StreamReader reader;
 					try
 					{
-						reader = new System.IO.StreamReader(@is, Encoding.UTF8);
+						reader = new StreamReader(@is, Encoding.UTF8);
 					}
 					catch (UnsupportedEncodingException)
 					{
-						reader = new System.IO.StreamReader(@is);
+						reader = new StreamReader(@is);
 					}
 
 					string line = reader.ReadLine();
@@ -489,9 +489,7 @@ namespace org.apache.xml.serializer
 
 
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private static CharInfo getCharInfoBasedOnPrivilege(final String entitiesFileName, final String method, final boolean internal)
-		private static CharInfo getCharInfoBasedOnPrivilege(string entitiesFileName, string method, bool @internal)
+		private static CharInfo getCharInfoBasedOnPrivilege(in string entitiesFileName, in string method, in bool @internal)
 		{
 				return (CharInfo) AccessController.doPrivileged(new PrivilegedActionAnonymousInnerClass(entitiesFileName, method, @internal));
 		}
@@ -509,7 +507,7 @@ namespace org.apache.xml.serializer
 				this.@internal = @internal;
 			}
 
-			public virtual object run()
+			public object run()
 			{
 				return new CharInfo(entitiesFileName, method, @internal);
 			}

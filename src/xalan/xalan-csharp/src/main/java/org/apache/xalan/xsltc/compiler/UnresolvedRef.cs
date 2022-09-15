@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
 	using MethodGenerator = org.apache.xalan.xsltc.compiler.util.MethodGenerator;
@@ -53,7 +52,7 @@ namespace org.apache.xalan.xsltc.compiler
 		private ErrorMsg reportError()
 		{
 		ErrorMsg err = new ErrorMsg(ErrorMsg.VARIABLE_UNDEF_ERR, _variableName, this);
-		Parser.reportError(Constants_Fields.ERROR, err);
+		Parser.reportError(Constants.ERROR, err);
 		return (err);
 		}
 
@@ -87,7 +86,7 @@ namespace org.apache.xalan.xsltc.compiler
 			return null;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{

@@ -1,4 +1,6 @@
-﻿/*
+﻿using System.IO;
+
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +22,6 @@
  */
 namespace org.apache.xml.serializer
 {
-
 
 	/// <summary>
 	/// This class wraps the real writer, it only purpose is to send
@@ -110,7 +111,7 @@ namespace org.apache.xml.serializer
 		/// call. This method simple informs the listener of what has already
 		/// happened. </summary>
 		/// <exception cref="IOException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void flushBuffer() throws java.io.IOException
 		private void flushBuffer()
 		{
@@ -126,7 +127,7 @@ namespace org.apache.xml.serializer
 
 				if (m_tracer != null)
 				{
-					m_tracer.fireGenerateEvent(SerializerTrace_Fields.EVENTTYPE_OUTPUT_CHARACTERS, chars, 0, chars.Length);
+					m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_OUTPUT_CHARACTERS, chars, 0, chars.Length);
 				}
 
 				count = 0;
@@ -135,8 +136,8 @@ namespace org.apache.xml.serializer
 
 		/// <summary>
 		/// Flush the internal buffer and flush the Writer </summary>
-		/// <seealso cref= java.io.Writer#flush() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="java.io.Writer.flush()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void flush() throws java.io.IOException
 		public void flush()
 		{
@@ -152,8 +153,8 @@ namespace org.apache.xml.serializer
 
 		/// <summary>
 		/// Flush the internal buffer and close the Writer </summary>
-		/// <seealso cref= java.io.Writer#close() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="java.io.Writer.close()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void close() throws java.io.IOException
 		public void close()
 		{
@@ -180,10 +181,9 @@ namespace org.apache.xml.serializer
 		/// </summary>
 		/// <param name="c">  int specifying a character to be written. </param>
 		/// <exception cref="IOException">  If an I/O error occurs </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(final int c) throws java.io.IOException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public void write(int c)
+		public void write(in int c)
 		{
 			// send to the real writer
 			if (m_writer != null)
@@ -228,10 +228,9 @@ namespace org.apache.xml.serializer
 		/// <exception cref="IOException">  If an I/O error occurs
 		/// </exception>
 		/// <exception cref="java.io.IOException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(final char chars[], final int start, final int length) throws java.io.IOException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public void write(char[] chars, int start, int length)
+		public void write(in char[] chars, in int start, in int length)
 		{
 			// send to the real writer
 			if (m_writer != null)
@@ -268,11 +267,11 @@ namespace org.apache.xml.serializer
 //ORIGINAL LINE: final char c = chars[i];
 				char c = chars[i];
 
-				if (c < 0x80)
+				if (c < (char)0x80)
 				{
 					buf[count++] = (sbyte)(c);
 				}
-				else if (c < 0x800)
+				else if (c < (char)0x800)
 				{
 					buf[count++] = unchecked((sbyte)(0xc0 + (c >> 6)));
 					buf[count++] = unchecked((sbyte)(0x80 + (c & 0x3f)));
@@ -293,10 +292,9 @@ namespace org.apache.xml.serializer
 		/// <param name="s">  String to be written
 		/// </param>
 		/// <exception cref="IOException">  If an I/O error occurs </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(final String s) throws java.io.IOException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public void write(string s)
+		public void write(in string s)
 		{
 			// send to the real writer
 			if (m_writer != null)
@@ -337,11 +335,11 @@ namespace org.apache.xml.serializer
 //ORIGINAL LINE: final char c = s.charAt(i);
 				char c = s[i];
 
-				if (c < 0x80)
+				if (c < (char)0x80)
 				{
 					buf[count++] = (sbyte)(c);
 				}
-				else if (c < 0x800)
+				else if (c < (char)0x800)
 				{
 					buf[count++] = unchecked((sbyte)(0xc0 + (c >> 6)));
 					buf[count++] = unchecked((sbyte)(0x80 + (c & 0x3f)));
@@ -370,11 +368,11 @@ namespace org.apache.xml.serializer
 		/// Get the OutputStream that is the at the end of the
 		/// chain of writers.
 		/// </summary>
-		public System.IO.Stream OutputStream
+		public Stream OutputStream
 		{
 			get
 			{
-				System.IO.Stream retval = null;
+				Stream retval = null;
 				if (m_writer is WriterChain)
 				{
 					retval = ((WriterChain) m_writer).OutputStream;

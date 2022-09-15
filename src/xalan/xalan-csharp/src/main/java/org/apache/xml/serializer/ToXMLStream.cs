@@ -99,7 +99,7 @@
 		///            wrapping another exception.
 		/// </exception>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocumentInternal() throws org.xml.sax.SAXException
 		public override void startDocumentInternal()
 		{
@@ -182,7 +182,7 @@
 		///            wrapping another exception.
 		/// </exception>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 		public virtual void endDocument()
 		{
@@ -220,7 +220,7 @@
 		/// </para>
 		/// </summary>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startPreserving() throws org.xml.sax.SAXException
 		public virtual void startPreserving()
 		{
@@ -234,10 +234,10 @@
 		/// <summary>
 		/// Ends a whitespace preserving section.
 		/// </summary>
-		/// <seealso cref= #startPreserving
-		/// </seealso>
+		/// <seealso cref=".startPreserving"
+		////>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endPreserving() throws org.xml.sax.SAXException
 		public virtual void endPreserving()
 		{
@@ -256,7 +256,7 @@
 		///            wrapping another exception.
 		/// </exception>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws org.xml.sax.SAXException
 		public virtual void processingInstruction(string target, string data)
 		{
@@ -360,7 +360,7 @@
 		/// <param name="name"> The name of the entity.
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void entityReference(String name) throws org.xml.sax.SAXException
 		public override void entityReference(string name)
 		{
@@ -404,7 +404,7 @@
 		/// <param name="value"> the value of the attribute which can contain only
 		/// ASCII printable characters characters in the range 32 to 127 inclusive. </param>
 		/// <param name="flags"> the bit values of this integer give optimization information. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void addUniqueAttribute(String name, String value, int flags) throws org.xml.sax.SAXException
 		public override void addUniqueAttribute(string name, string value, int flags)
 		{
@@ -419,7 +419,7 @@
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.Writer writer = m_writer;
 					java.io.Writer writer = m_writer;
-					if ((flags & ExtendedContentHandler_Fields.NO_BAD_CHARS) > 0 && m_xmlcharInfo.onlyQuotAmpLtGt)
+					if ((flags & NO_BAD_CHARS) > 0 && m_xmlcharInfo.onlyQuotAmpLtGt)
 					{
 						// "flags" has indicated that the characters
 						// '>'  '<'   '&'  and '"' are not in the value and
@@ -459,7 +459,7 @@
 		/// <param name="xslAttribute"> true if this attribute is from an xsl:attribute,
 		/// false if declared within the elements opening tag. </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void addAttribute(String uri, String localName, String rawName, String type, String value, boolean xslAttribute) throws org.xml.sax.SAXException
 		public override void addAttribute(string uri, string localName, string rawName, string type, string value, bool xslAttribute)
 		{
@@ -510,7 +510,7 @@
 				{
 					// Prepare to issue the warning message
 					Transformer tran = base.Transformer;
-					ErrorListener errHandler = tran.ErrorListener;
+					ErrorListener errHandler = tran.getErrorListener();
 
 
 					// Issue the warning message
@@ -536,8 +536,8 @@
 			}
 		}
 
-		/// <seealso cref= ExtendedContentHandler#endElement(String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="ExtendedContentHandler.endElement(String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String elemName) throws org.xml.sax.SAXException
 		public override void endElement(string elemName)
 		{
@@ -551,17 +551,16 @@
 		/// element that is soon to be seen with a startElement() call. The official SAX call 
 		/// does not apply to the current element, hence the reason for this method.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void namespaceAfterStartElement(final String prefix, final String uri) throws org.xml.sax.SAXException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public override void namespaceAfterStartElement(string prefix, string uri)
+		public override void namespaceAfterStartElement(in string prefix, in string uri)
 		{
 
 			// hack for XSLTC with finding URI for default namespace
 			if (string.ReferenceEquals(m_elemContext.m_elementURI, null))
 			{
 				string prefix1 = getPrefixPart(m_elemContext.m_elementName);
-				if (string.ReferenceEquals(prefix1, null) && SerializerConstants_Fields.EMPTYSTRING.Equals(prefix))
+				if (string.ReferenceEquals(prefix1, null) && EMPTYSTRING.Equals(prefix))
 				{
 					// the elements URI is not known yet, and it
 					// doesn't have a prefix, and we are currently
@@ -640,13 +639,13 @@
 			get
 			{
 				string xmlVersion = Version;
-				if (string.ReferenceEquals(xmlVersion, null) || xmlVersion.Equals(SerializerConstants_Fields.XMLVERSION10))
+				if (string.ReferenceEquals(xmlVersion, null) || xmlVersion.Equals(XMLVERSION10))
 				{
-					xmlVersion = SerializerConstants_Fields.XMLVERSION10;
+					xmlVersion = XMLVERSION10;
 				}
-				else if (xmlVersion.Equals(SerializerConstants_Fields.XMLVERSION11))
+				else if (xmlVersion.Equals(XMLVERSION11))
 				{
-					xmlVersion = SerializerConstants_Fields.XMLVERSION11;
+					xmlVersion = XMLVERSION11;
 				}
 				else
 				{
@@ -655,7 +654,7 @@
 					{
 						// Prepare to issue the warning message
 						Transformer tran = base.Transformer;
-						ErrorListener errHandler = tran.ErrorListener;
+						ErrorListener errHandler = tran.getErrorListener();
 						// Issue the warning message
 						if (null != errHandler && m_sourceLocator != null)
 						{
@@ -669,7 +668,7 @@
 					catch (Exception)
 					{
 					}
-					xmlVersion = SerializerConstants_Fields.XMLVERSION10;
+					xmlVersion = XMLVERSION10;
 				}
 				return xmlVersion;
 			}

@@ -54,14 +54,14 @@ namespace org.apache.xml.serializer
 		/// <param name="value"> the value of the attribute </param>
 		/// <param name="XSLAttribute"> true if the added attribute is coming from an xsl:attribute element </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void addAttribute(String uri, String localName, String rawName, String type, String value, boolean XSLAttribute) throws org.xml.sax.SAXException;
 		void addAttribute(string uri, string localName, string rawName, string type, string value, bool XSLAttribute);
 		/// <summary>
 		/// Add attributes to the current element </summary>
 		/// <param name="atts"> the attributes to add. </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void addAttributes(org.xml.sax.Attributes atts) throws org.xml.sax.SAXException;
 		void addAttributes(org.xml.sax.Attributes atts);
 		/// <summary>
@@ -77,7 +77,7 @@ namespace org.apache.xml.serializer
 		/// as a character String rather than the standard character array. </summary>
 		/// <param name="chars"> the character data </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(String chars) throws org.xml.sax.SAXException;
 		void characters(string chars);
 
@@ -86,7 +86,7 @@ namespace org.apache.xml.serializer
 		/// as a DOM Node rather than the standard character array. </summary>
 		/// <param name="node"> a DOM Node containing text. </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(org.w3c.dom.Node node) throws org.xml.sax.SAXException;
 		void characters(org.w3c.dom.Node node);
 		/// <summary>
@@ -100,7 +100,7 @@ namespace org.apache.xml.serializer
 		/// its implementation. </summary>
 		/// <param name="elemName"> the fully qualified element name. </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String elemName) throws org.xml.sax.SAXException;
 		void endElement(string elemName);
 
@@ -116,7 +116,7 @@ namespace org.apache.xml.serializer
 		/// <param name="qName"> the qualified name of the element
 		/// </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localName, String qName) throws org.xml.sax.SAXException;
 		void startElement(string uri, string localName, string qName);
 
@@ -124,7 +124,7 @@ namespace org.apache.xml.serializer
 		/// This method is used to notify of the start of an element </summary>
 		/// <param name="qName"> the fully qualified name of the element </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String qName) throws org.xml.sax.SAXException;
 		void startElement(string qName);
 		/// <summary>
@@ -144,7 +144,7 @@ namespace org.apache.xml.serializer
 		/// <param name="uri"> the namespace URI being declared </param>
 		/// <param name="prefix"> the prefix that maps to the given namespace </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void namespaceAfterStartElement(String uri, String prefix) throws org.xml.sax.SAXException;
 		void namespaceAfterStartElement(string uri, string prefix);
 
@@ -160,14 +160,14 @@ namespace org.apache.xml.serializer
 		/// other words we are just re-declaring), true if this is a new, never
 		/// before seen mapping for the element. </returns>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean startPrefixMapping(String prefix, String uri, boolean shouldFlush) throws org.xml.sax.SAXException;
 		bool startPrefixMapping(string prefix, string uri, bool shouldFlush);
 		/// <summary>
 		/// Notify of an entity reference. </summary>
 		/// <param name="entityName"> the name of the entity </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void entityReference(String entityName) throws org.xml.sax.SAXException;
 		void entityReference(string entityName);
 
@@ -210,10 +210,13 @@ namespace org.apache.xml.serializer
 
 		// The attribute value contains no bad characters. A "bad" character is one which
 		// is greater than 126 or it is one of '<', '>', '&' or '"'.
+		public static int NO_BAD_CHARS = 0x1;
 
 		// An HTML empty attribute (e.g. <OPTION selected>).
+		public static int HTML_ATTREMPTY = 0x2;
 
 		// An HTML URL attribute
+		public static int HTML_ATTRURL = 0x4;
 
 		/// <summary>
 		/// Add a unique attribute to the current element.
@@ -225,7 +228,7 @@ namespace org.apache.xml.serializer
 		/// <param name="qName"> the fully qualified attribute name. </param>
 		/// <param name="value"> the attribute value </param>
 		/// <param name="flags"> a bitwise flag </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void addUniqueAttribute(String qName, String value, int flags) throws org.xml.sax.SAXException;
 		void addUniqueAttribute(string qName, string value, int flags);
 
@@ -234,9 +237,7 @@ namespace org.apache.xml.serializer
 		/// <param name="qName"> the qualified attribute name (prefix:localName) </param>
 		/// <param name="value"> the attributes value </param>
 		/// <param name="uri"> the uri that the prefix of the qName is mapped to. </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void addXSLAttribute(String qName, final String value, final String uri);
-		void addXSLAttribute(string qName, string value, string uri);
+		void addXSLAttribute(string qName, in string value, in string uri);
 
 		/// <summary>
 		/// Add at attribute to the current element, not from an xsl:attribute
@@ -247,16 +248,9 @@ namespace org.apache.xml.serializer
 		/// <param name="type"> the attribute type typically character data (CDATA) </param>
 		/// <param name="value"> the value of the attribute </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void addAttribute(String uri, String localName, String rawName, String type, String value) throws org.xml.sax.SAXException;
 		void addAttribute(string uri, string localName, string rawName, string type, string value);
-	}
-
-	public static class ExtendedContentHandler_Fields
-	{
-		public const int NO_BAD_CHARS = 0x1;
-		public const int HTML_ATTREMPTY = 0x2;
-		public const int HTML_ATTRURL = 0x4;
 	}
 
 }

@@ -23,7 +23,6 @@
 namespace org.apache.xalan.transformer
 {
 
-
 	using KeyDeclaration = org.apache.xalan.templates.KeyDeclaration;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
@@ -95,7 +94,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="keyDeclarations"> The stylesheet's xsl:key declarations.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public KeyTable(int doc, org.apache.xml.utils.PrefixResolver nscontext, org.apache.xml.utils.QName name, java.util.Vector keyDeclarations, org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public KeyTable(int doc, PrefixResolver nscontext, QName name, ArrayList keyDeclarations, XPathContext xctxt)
 	  {
@@ -206,7 +205,7 @@ namespace org.apache.xalan.transformer
 			  // initial capacity set to a prime number to improve hash performance
 			  m_refsTable = new Hashtable(89);
     
-			  KeyIterator ki = (KeyIterator)(m_keyNodes).ContainedIter;
+			  KeyIterator ki = (KeyIterator)(m_keyNodes).getContainedIter();
 			  XPathContext xctxt = ki.XPathContext;
     
 			  ArrayList keyDecls = KeyDeclarations;
@@ -214,7 +213,7 @@ namespace org.apache.xalan.transformer
     
 			  int currentNode;
 			  m_keyNodes.reset();
-			  while (org.apache.xml.dtm.DTM_Fields.NULL != (currentNode = m_keyNodes.nextNode()))
+			  while (DTM.NULL != (currentNode = m_keyNodes.nextNode()))
 			  {
 				try
 				{
@@ -233,7 +232,7 @@ namespace org.apache.xalan.transformer
 					  DTMIterator i = ((XNodeSet)xuse).iterRaw();
 					  int currentNodeInUseClause;
     
-					  while (org.apache.xml.dtm.DTM_Fields.NULL != (currentNodeInUseClause = i.nextNode()))
+					  while (DTM.NULL != (currentNodeInUseClause = i.nextNode()))
 					  {
 						DTM dtm = xctxt.getDTM(currentNodeInUseClause);
 						XMLString exprResult = dtm.getStringValue(currentNodeInUseClause);

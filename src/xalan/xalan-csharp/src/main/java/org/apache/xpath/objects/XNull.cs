@@ -22,8 +22,8 @@
  */
 namespace org.apache.xpath.objects
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
+	using XPathContext = org.apache.xpath.XPathContext;
 
 	/// <summary>
 	/// This class represents an XPath null object, and is capable of
@@ -105,7 +105,7 @@ namespace org.apache.xpath.objects
 	  {
 		// DTM frag = support.createDocumentFragment();
 		// %REVIEW%
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	//  /**

@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.serializer.utils
 {
-
 	/// <summary>
 	/// This class is not a public API,
 	/// It is used internally by serializer and is public,

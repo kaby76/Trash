@@ -26,6 +26,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 {
 
 	using Type = org.apache.bcel.generic.Type;
+	using Constants = org.apache.xalan.xsltc.compiler.Constants;
 	using XML11Char = org.apache.xml.utils.XML11Char;
 
 	/// <summary>
@@ -215,7 +216,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int index = qname.lastIndexOf(':');
 		int index = qname.LastIndexOf(':');
-		return (index > 0) ? qname.Substring(0, index) : org.apache.xalan.xsltc.compiler.Constants_Fields.EMPTYSTRING;
+		return (index > 0) ? qname.Substring(0, index) : Constants.EMPTYSTRING;
 		}
 
 		/// <summary>
@@ -241,7 +242,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// </summary>
 		public static bool isValidQNames(string str)
 		{
-			if ((!string.ReferenceEquals(str, null)) && (!str.Equals(org.apache.xalan.xsltc.compiler.Constants_Fields.EMPTYSTRING)))
+			if ((!string.ReferenceEquals(str, null)) && (!str.Equals(Constants.EMPTYSTRING)))
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.StringTokenizer tokens = new java.util.StringTokenizer(str);

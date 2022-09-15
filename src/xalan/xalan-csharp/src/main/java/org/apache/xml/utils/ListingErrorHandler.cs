@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 /*
@@ -24,7 +25,6 @@ using System.Text;
 
 namespace org.apache.xml.utils
 {
-
 
 
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
@@ -93,8 +93,8 @@ namespace org.apache.xml.utils
 		///                  SAX parse exception. </param>
 		/// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 		/// wrapping another exception; only if setThrowOnWarning is true. </exception>
-		/// <seealso cref= org.xml.sax.SAXParseException  </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.SAXParseException "/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warning(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException
 		public virtual void warning(SAXParseException exception)
 		{
@@ -134,8 +134,8 @@ namespace org.apache.xml.utils
 		///                  SAX parse exception. </param>
 		/// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 		/// wrapping another exception; only if setThrowOnErroris true. </exception>
-		/// <seealso cref= org.xml.sax.SAXParseException  </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.SAXParseException "/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException
 		public virtual void error(SAXParseException exception)
 		{
@@ -168,8 +168,8 @@ namespace org.apache.xml.utils
 		///                  SAX parse exception. </param>
 		/// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 		/// wrapping another exception; only if setThrowOnFatalError is true. </exception>
-		/// <seealso cref= org.xml.sax.SAXParseException </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.SAXParseException"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fatalError(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException
 		public virtual void fatalError(SAXParseException exception)
 		{
@@ -203,8 +203,8 @@ namespace org.apache.xml.utils
 		/// <exception cref="javax.xml.transform.TransformerException">  only if 
 		/// setThrowOnWarning is true.
 		/// </exception>
-		/// <seealso cref= javax.xml.transform.TransformerException </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="javax.xml.transform.TransformerException"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warning(javax.xml.transform.TransformerException exception) throws javax.xml.transform.TransformerException
 		public virtual void warning(TransformerException exception)
 		{
@@ -232,8 +232,8 @@ namespace org.apache.xml.utils
 		/// <exception cref="javax.xml.transform.TransformerException">  only if 
 		/// setThrowOnError is true.
 		/// </exception>
-		/// <seealso cref= javax.xml.transform.TransformerException </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="javax.xml.transform.TransformerException"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(javax.xml.transform.TransformerException exception) throws javax.xml.transform.TransformerException
 		public virtual void error(TransformerException exception)
 		{
@@ -262,8 +262,8 @@ namespace org.apache.xml.utils
 		/// <exception cref="javax.xml.transform.TransformerException">  only if 
 		/// setThrowOnError is true.
 		/// </exception>
-		/// <seealso cref= javax.xml.transform.TransformerException </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="javax.xml.transform.TransformerException"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fatalError(javax.xml.transform.TransformerException exception) throws javax.xml.transform.TransformerException
 		public virtual void fatalError(TransformerException exception)
 		{
@@ -314,7 +314,7 @@ namespace org.apache.xml.utils
 				}
 				else if (cause is TransformerException)
 				{
-					SourceLocator causeLocator = ((TransformerException)cause).Locator;
+					SourceLocator causeLocator = ((TransformerException)cause).getLocator();
 					if (null != causeLocator)
 					{
 						locator = causeLocator;
@@ -332,7 +332,7 @@ namespace org.apache.xml.utils
 				}
 				else if (cause is SAXException)
 				{
-					cause = ((SAXException)cause).Exception;
+					cause = ((SAXException)cause).getException();
 				}
 				else
 				{
@@ -345,9 +345,9 @@ namespace org.apache.xml.utils
 			//  systemId:L=1;C=2: message-here
 			if (null != locator)
 			{
-				string id = (locator.PublicId != locator.PublicId) ? locator.PublicId : (null != locator.SystemId) ? locator.SystemId : "SystemId-Unknown";
+				string id = (locator.getPublicId() != locator.getPublicId()) ? locator.getPublicId() : (null != locator.getSystemId()) ? locator.getSystemId() : "SystemId-Unknown";
 
-				pw.print(id + ":Line=" + locator.LineNumber + ";Column=" + locator.ColumnNumber + ": ");
+				pw.print(id + ":Line=" + locator.getLineNumber() + ";Column=" + locator.getColumnNumber() + ": ");
 				pw.println("exception:" + exception.Message);
 				pw.println("root-cause:" + ((null != cause) ? cause.Message : "null"));
 				logSourceLine(pw, locator);
@@ -380,7 +380,7 @@ namespace org.apache.xml.utils
 				pw = new PrintWriter(System.err, true);
 			}
 
-			string url = locator.SystemId;
+			string url = locator.getSystemId();
 			// Bail immediately if we get SystemId-Unknown
 			//@todo future improvement: attempt to get resource 
 			//  from a publicId if possible
@@ -395,8 +395,8 @@ namespace org.apache.xml.utils
 
 			try
 			{
-				int line = locator.LineNumber;
-				int column = locator.ColumnNumber;
+				int line = locator.getLineNumber();
+				int column = locator.getColumnNumber();
 				pw.println("line: " + getSourceLine(url, line));
 				StringBuilder buf = new StringBuilder("line: ");
 				for (int i = 1; i < column; i++)
@@ -420,7 +420,7 @@ namespace org.apache.xml.utils
 		/// 
 		/// @author shane_curcuru@us.ibm.com
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected static String getSourceLine(String sourceUrl, int lineNum) throws Exception
 		protected internal static string getSourceLine(string sourceUrl, int lineNum)
 		{
@@ -451,14 +451,14 @@ namespace org.apache.xml.utils
 			}
 
 			string line = null;
-			System.IO.Stream @is = null;
-			System.IO.StreamReader br = null;
+			Stream @is = null;
+			StreamReader br = null;
 			try
 			{
 				// Open the URL and read to our specified line
 				URLConnection uc = url.openConnection();
-				@is = uc.InputStream;
-				br = new System.IO.StreamReader(@is);
+				@is = uc.getInputStream();
+				br = new StreamReader(@is);
 
 				// Not the most efficient way, but it works
 				// (Feel free to patch to seek to the appropriate line)

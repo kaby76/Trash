@@ -22,19 +22,20 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using Expression = org.apache.xpath.Expression;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using OpMap = org.apache.xpath.compiler.OpMap;
 
 	/// <summary>
 	/// This class implements a general iterator for
 	/// those LocationSteps with only one step, and perhaps a predicate. </summary>
-	/// <seealso cref= org.apache.xpath.axes#LocPathIterator
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="org.apache.xpath.axes.LocPathIterator"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class OneStepIterator : ChildTestIterator
 	{
@@ -55,7 +56,7 @@ namespace org.apache.xpath.axes
 	  /// location path expression for this itterator.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: OneStepIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis) throws javax.xml.transform.TransformerException
 	  internal OneStepIterator(Compiler compiler, int opPos, int analysis) : base(compiler, opPos, analysis)
 	  {
@@ -73,14 +74,14 @@ namespace org.apache.xpath.axes
 	  /// <param name="axis"> One of Axis.Child, etc., or -1 if the axis is unknown.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public OneStepIterator(org.apache.xml.dtm.DTMAxisIterator iterator, int axis) throws javax.xml.transform.TransformerException
 	  public OneStepIterator(DTMAxisIterator iterator, int axis) : base(null)
 	  {
 
 		m_iterator = iterator;
 		m_axis = axis;
-		int whatToShow = org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL;
+		int whatToShow = DTMFilter.SHOW_ALL;
 		initNodeTest(whatToShow);
 	  }
 
@@ -138,7 +139,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A new iterator that can be used without mutating this one.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public override object clone()
 	  {
@@ -160,7 +161,7 @@ namespace org.apache.xpath.axes
 	  ///  <returns> A cloned NodeIterator set of the start of the query.
 	  /// </returns>
 	  ///  <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator cloneWithReset() throws CloneNotSupportedException
 	  public override DTMIterator cloneWithReset()
 	  {
@@ -228,7 +229,7 @@ namespace org.apache.xpath.axes
 			int count = 1;
 			int next;
 
-			while (org.apache.xml.dtm.DTM_Fields.NULL != (next = clone.nextNode()))
+			while (DTM.NULL != (next = clone.nextNode()))
 			{
 			  count++;
 			}
@@ -292,7 +293,7 @@ namespace org.apache.xpath.axes
     
 			  int next;
     
-			  while (org.apache.xml.dtm.DTM_Fields.NULL != (next = clone.nextNode()))
+			  while (DTM.NULL != (next = clone.nextNode()))
 			  {
 				count++;
 			  }
@@ -356,7 +357,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		  if (!base.deepEquals(expr))

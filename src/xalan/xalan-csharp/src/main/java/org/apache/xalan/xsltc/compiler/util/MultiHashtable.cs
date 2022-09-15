@@ -24,7 +24,6 @@
 namespace org.apache.xalan.xsltc.compiler.util
 {
 
-
 	/// <summary>
 	/// @author Jacek Ambroziak
 	/// @author Santiago Pericas-Geertsen

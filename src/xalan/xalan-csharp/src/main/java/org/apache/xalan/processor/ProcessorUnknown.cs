@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.processor
 {
-
 	/// <summary>
 	/// This class processes an unknown template element.  It is used both 
 	/// for unknown top-level elements, and for elements in the 

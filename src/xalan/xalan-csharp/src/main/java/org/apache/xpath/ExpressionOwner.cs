@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath
 {
-
 	/// <summary>
 	/// Classes that implement this interface own an expression, which 
 	/// can be rewritten.

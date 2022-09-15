@@ -25,6 +25,13 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 {
 
 
+	using DTM = org.apache.xml.dtm.DTM;
+	using DTMManager = org.apache.xml.dtm.DTMManager;
+	using DTMWSFilter = org.apache.xml.dtm.DTMWSFilter;
+	using DTMDefaultBaseIterators = org.apache.xml.dtm.@ref.DTMDefaultBaseIterators;
+	using DTMManagerDefault = org.apache.xml.dtm.@ref.DTMManagerDefault;
+	using ExpandedNameTable = org.apache.xml.dtm.@ref.ExpandedNameTable;
+	using IncrementalSAXSource = org.apache.xml.dtm.@ref.IncrementalSAXSource;
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
 	using XMLMessages = org.apache.xml.res.XMLMessages;
 	using FastStringBuffer = org.apache.xml.utils.FastStringBuffer;
@@ -81,7 +88,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  /// The current position in the DTM tree. Who children reference as their 
 	  /// previous sib. 
 	  /// </summary>
-	  private int m_last_kid = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_last_kid = NULL;
 
 	  /// <summary>
 	  /// The top of the subtree.
@@ -130,10 +137,10 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  {
 
 		// Initialize DOM navigation
-		m_pos = m_root = domSource.Node;
+		m_pos = m_root = domSource.getNode();
 		// Initialize DTM navigation
-		m_last_parent = m_last_kid = org.apache.xml.dtm.DTM_Fields.NULL;
-		m_last_kid = addNode(m_root, m_last_parent,m_last_kid, org.apache.xml.dtm.DTM_Fields.NULL);
+		m_last_parent = m_last_kid = NULL;
+		m_last_kid = addNode(m_root, m_last_parent,m_last_kid, NULL);
 
 		// Apparently the domSource root may not actually be the
 		// Document node. If it's an Element node, we need to immediately
@@ -146,24 +153,24 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			//
 			// %ISSUE% What about inherited namespaces in this case?
 			// Do we need to special-case initialize them into the DTM model?
-		if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == m_root.NodeType)
+		if (ELEMENT_NODE == m_root.getNodeType())
 		{
-		  NamedNodeMap attrs = m_root.Attributes;
-		  int attrsize = (attrs == null) ? 0 : attrs.Length;
+		  NamedNodeMap attrs = m_root.getAttributes();
+		  int attrsize = (attrs == null) ? 0 : attrs.getLength();
 		  if (attrsize > 0)
 		  {
-			int attrIndex = org.apache.xml.dtm.DTM_Fields.NULL; // start with no previous sib
+			int attrIndex = NULL; // start with no previous sib
 			for (int i = 0;i < attrsize;++i)
 			{
 			  // No need to force nodetype in this case;
 			  // addNode() will take care of switching it from
 			  // Attr to Namespace if necessary.
-			  attrIndex = addNode(attrs.item(i),0,attrIndex,org.apache.xml.dtm.DTM_Fields.NULL);
-			  m_firstch.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,attrIndex);
+			  attrIndex = addNode(attrs.item(i),0,attrIndex,NULL);
+			  m_firstch.setElementAt(DTM.NULL,attrIndex);
 			}
 			// Terminate list of attrs, and make sure they aren't
 			// considered children of the element
-			m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,attrIndex);
+			m_nextsib.setElementAt(DTM.NULL,attrIndex);
 
 			// IMPORTANT: This does NOT change m_last_parent or m_last_kid!
 		  } // if attrs exist
@@ -217,9 +224,9 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		// ensureSize(nodeIndex);
 
 		int type;
-		if (org.apache.xml.dtm.DTM_Fields.NULL == forceNodeType)
+		if (NULL == forceNodeType)
 		{
-			type = node.NodeType;
+			type = node.getNodeType();
 		}
 		else
 		{
@@ -245,11 +252,11 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		// to DOM Attr Nodes.
 		if (Node.ATTRIBUTE_NODE == type)
 		{
-		  string name = node.NodeName;
+		  string name = node.getNodeName();
 
 		  if (name.StartsWith("xmlns:", StringComparison.Ordinal) || name.Equals("xmlns"))
 		  {
-			type = org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE;
+			type = DTM.NAMESPACE_NODE;
 		  }
 		}
 
@@ -260,7 +267,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		m_prevsib.setElementAt(previousSibling,nodeIndex);
 		m_parent.setElementAt(parentIndex,nodeIndex);
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != parentIndex && type != org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE && type != org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE)
+		if (DTM.NULL != parentIndex && type != DTM.ATTRIBUTE_NODE && type != DTM.NAMESPACE_NODE)
 		{
 		  // If the DTM parent had no children, this becomes its first child.
 		  if (NOTPROCESSED == m_firstch.elementAt(parentIndex))
@@ -269,17 +276,17 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  }
 		}
 
-		string nsURI = node.NamespaceURI;
+		string nsURI = node.getNamespaceURI();
 
 		// Deal with the difference between Namespace spec and XSLT
 		// definitions of local name. (The former says PIs don't have
 		// localnames; the latter says they do.)
-		string localName = (type == Node.PROCESSING_INSTRUCTION_NODE) ? node.NodeName : node.LocalName;
+		string localName = (type == Node.PROCESSING_INSTRUCTION_NODE) ? node.getNodeName() : node.getLocalName();
 
 		// Hack to make DOM1 sort of work...
 		if (((type == Node.ELEMENT_NODE) || (type == Node.ATTRIBUTE_NODE)) && null == localName)
 		{
-		  localName = node.NodeName; // -sb
+		  localName = node.getNodeName(); // -sb
 		}
 
 		ExpandedNameTable exnt = m_expandedNameTable;
@@ -292,7 +299,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		// those will participate in namespace processing, this is
 		// officially accepted as Not Our Fault. But it might be nice to
 		// issue a diagnostic message!
-		if (node.LocalName == null && (type == Node.ELEMENT_NODE || type == Node.ATTRIBUTE_NODE))
+		if (node.getLocalName() == null && (type == Node.ELEMENT_NODE || type == Node.ATTRIBUTE_NODE))
 		{
 			// warning("DOM 'level 1' node "+node.getNodeName()+" won't be mapped properly in DOM2DTM.");
 		}
@@ -303,14 +310,14 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 
 		indexNode(expandedNameID, nodeIndex);
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != previousSibling)
+		if (DTM.NULL != previousSibling)
 		{
 		  m_nextsib.setElementAt(nodeIndex,previousSibling);
 		}
 
 		// This should be done after m_exptype has been set, and probably should
 		// always be the last thing we do
-		if (type == org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE)
+		if (type == DTM.NAMESPACE_NODE)
 		{
 			declareNamespaceInContext(parentIndex,nodeIndex);
 		}
@@ -352,7 +359,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		// point of view?  Or is this a false microoptimization?
 		Node pos = m_pos;
 		Node next = null;
-		int nexttype = org.apache.xml.dtm.DTM_Fields.NULL;
+		int nexttype = NULL;
 
 		// Navigate DOM tree
 		do
@@ -360,26 +367,26 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			// Look down to first child.
 			if (pos.hasChildNodes())
 			{
-				next = pos.FirstChild;
+				next = pos.getFirstChild();
 
 				// %REVIEW% There's probably a more elegant way to skip
 				// the doctype. (Just let it go and Suppress it?
-				if (next != null && org.apache.xml.dtm.DTM_Fields.DOCUMENT_TYPE_NODE == next.NodeType)
+				if (next != null && DOCUMENT_TYPE_NODE == next.getNodeType())
 				{
-				  next = next.NextSibling;
+				  next = next.getNextSibling();
 				}
 
 				// Push DTM context -- except for children of Entity References, 
 				// which have no DTM equivalent and cause no DTM navigation.
-				if (org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE != pos.NodeType)
+				if (ENTITY_REFERENCE_NODE != pos.getNodeType())
 				{
 					m_last_parent = m_last_kid;
-					m_last_kid = org.apache.xml.dtm.DTM_Fields.NULL;
+					m_last_kid = NULL;
 					// Whitespace-handler context stacking
 					if (null != m_wsfilter)
 					{
 					  short wsv = m_wsfilter.getShouldStripSpace(makeNodeHandle(m_last_parent),this);
-					  bool shouldStrip = (org.apache.xml.dtm.DTMWSFilter_Fields.INHERIT == wsv) ? ShouldStripWhitespace : (org.apache.xml.dtm.DTMWSFilter_Fields.STRIP == wsv);
+					  bool shouldStrip = (DTMWSFilter.INHERIT == wsv) ? ShouldStripWhitespace : (DTMWSFilter.STRIP == wsv);
 					  pushShouldStripWhitespace(shouldStrip);
 					} // if(m_wsfilter)
 				}
@@ -388,24 +395,24 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			// If that fails, look up and right (but not past root!)
 			else
 			{
-				if (m_last_kid != org.apache.xml.dtm.DTM_Fields.NULL)
+				if (m_last_kid != NULL)
 				{
 					// Last node posted at this level had no more children
 					// If it has _no_ children, we need to record that.
 					if (m_firstch.elementAt(m_last_kid) == NOTPROCESSED)
 					{
-					  m_firstch.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,m_last_kid);
+					  m_firstch.setElementAt(NULL,m_last_kid);
 					}
 				}
 
-				while (m_last_parent != org.apache.xml.dtm.DTM_Fields.NULL)
+				while (m_last_parent != NULL)
 				{
 					// %REVIEW% There's probably a more elegant way to
 					// skip the doctype. (Just let it go and Suppress it?
-					next = pos.NextSibling;
-					if (next != null && org.apache.xml.dtm.DTM_Fields.DOCUMENT_TYPE_NODE == next.NodeType)
+					next = pos.getNextSibling();
+					if (next != null && DOCUMENT_TYPE_NODE == next.getNodeType())
 					{
-					  next = next.NextSibling;
+					  next = next.getNextSibling();
 					}
 
 					if (next != null)
@@ -414,7 +421,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 					}
 
 					// No next-sibling found. Pop the DOM.
-					pos = pos.ParentNode;
+					pos = pos.getParentNode();
 					if (pos == null)
 					{
 						// %TBD% Should never arise, but I want to be sure of that...
@@ -431,7 +438,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 					// The only parents in the DTM are Elements.  However,
 					// the DOM could contain EntityReferences.  If we
 					// encounter one, pop it _without_ popping DTM.
-					if (pos != null && org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE == pos.NodeType)
+					if (pos != null && ENTITY_REFERENCE_NODE == pos.getNodeType())
 					{
 						// Nothing needs doing
 						if (JJK_DEBUG)
@@ -443,18 +450,18 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 					{
 						popShouldStripWhitespace();
 						// Fix and pop DTM
-						if (m_last_kid == org.apache.xml.dtm.DTM_Fields.NULL)
+						if (m_last_kid == NULL)
 						{
-						  m_firstch.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,m_last_parent); // Popping from an element
+						  m_firstch.setElementAt(NULL,m_last_parent); // Popping from an element
 						}
 						else
 						{
-						  m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,m_last_kid); // Popping from anything else
+						  m_nextsib.setElementAt(NULL,m_last_kid); // Popping from anything else
 						}
 						m_last_parent = m_parent.elementAt(m_last_kid = m_last_parent);
 					}
 				}
-				if (m_last_parent == org.apache.xml.dtm.DTM_Fields.NULL)
+				if (m_last_parent == NULL)
 				{
 				  next = null;
 				}
@@ -462,7 +469,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 
 			if (next != null)
 			{
-			  nexttype = next.NodeType;
+			  nexttype = next.getNodeType();
 			}
 
 			// If it's an entity ref, advance past it.
@@ -470,16 +477,16 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			// %REVIEW% Should we let this out the door and just suppress it?
 			// More work, but simpler code, more likely to be correct, and
 			// it doesn't happen very often. We'd get rid of the loop too.
-			if (org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE == nexttype)
+			if (ENTITY_REFERENCE_NODE == nexttype)
 			{
 			  pos = next;
 			}
-		} while (org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE == nexttype);
+		} while (ENTITY_REFERENCE_NODE == nexttype);
 
 		// Did we run out of the tree?
 		if (next == null)
 		{
-			m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,0);
+			m_nextsib.setElementAt(NULL,0);
 			m_nodesAreProcessed = true;
 			m_pos = null;
 
@@ -513,10 +520,10 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		bool suppressNode = false;
 		Node lastTextNode = null;
 
-		nexttype = next.NodeType;
+		nexttype = next.getNodeType();
 
 		// nexttype=pos.getNodeType();
-		if (org.apache.xml.dtm.DTM_Fields.TEXT_NODE == nexttype || org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE == nexttype)
+		if (TEXT_NODE == nexttype || CDATA_SECTION_NODE == nexttype)
 		{
 			// If filtering, initially assume we're going to suppress the node
 			suppressNode = ((null != m_wsfilter) && ShouldStripWhitespace);
@@ -528,13 +535,13 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			{
 				lastTextNode = n;
 				// Any Text node means DTM considers it all Text
-				if (org.apache.xml.dtm.DTM_Fields.TEXT_NODE == n.NodeType)
+				if (TEXT_NODE == n.getNodeType())
 				{
-				  nexttype = org.apache.xml.dtm.DTM_Fields.TEXT_NODE;
+				  nexttype = TEXT_NODE;
 				}
 				// Any non-whitespace in this sequence blocks whitespace
 				// suppression
-				suppressNode &= XMLCharacterRecognizer.isWhiteSpace(n.NodeValue);
+				suppressNode &= XMLCharacterRecognizer.isWhiteSpace(n.getNodeValue());
 
 				n = logicalNextDOMTextNode(n);
 			}
@@ -545,9 +552,9 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		// spec, but is considered a "wrong but tolerable" temporary
 		// workaround pending proper handling of these fields in DOM Level
 		// 3. We want to recognize and reject that case.
-		else if (org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE == nexttype)
+		else if (PROCESSING_INSTRUCTION_NODE == nexttype)
 		{
-			suppressNode = (pos.NodeName.ToLower().Equals("xml"));
+			suppressNode = (pos.getNodeName().ToLower().Equals("xml"));
 		}
 
 
@@ -560,13 +567,13 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 
 			m_last_kid = nextindex;
 
-			if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == nexttype)
+			if (ELEMENT_NODE == nexttype)
 			{
-				int attrIndex = org.apache.xml.dtm.DTM_Fields.NULL; // start with no previous sib
+				int attrIndex = NULL; // start with no previous sib
 				// Process attributes _now_, rather than waiting.
 				// Simpler control flow, makes NS cache available immediately.
-				NamedNodeMap attrs = next.Attributes;
-				int attrsize = (attrs == null) ? 0 : attrs.Length;
+				NamedNodeMap attrs = next.getAttributes();
+				int attrsize = (attrs == null) ? 0 : attrs.getLength();
 				if (attrsize > 0)
 				{
 					for (int i = 0;i < attrsize;++i)
@@ -574,8 +581,8 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 						// No need to force nodetype in this case;
 						// addNode() will take care of switching it from
 						// Attr to Namespace if necessary.
-						attrIndex = addNode(attrs.item(i), nextindex,attrIndex,org.apache.xml.dtm.DTM_Fields.NULL);
-						m_firstch.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,attrIndex);
+						attrIndex = addNode(attrs.item(i), nextindex,attrIndex,NULL);
+						m_firstch.setElementAt(DTM.NULL,attrIndex);
 
 						// If the xml: prefix is explicitly declared
 						// we don't need to synthesize one.
@@ -586,7 +593,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 				// safer for now to test the QName and trust the
 				// parsers to prevent anyone from redefining the
 				// reserved xmlns: prefix
-						if (!m_processedFirstElement && "xmlns:xml".Equals(attrs.item(i).NodeName))
+						if (!m_processedFirstElement && "xmlns:xml".Equals(attrs.item(i).getNodeName()))
 						{
 						  m_processedFirstElement = true;
 						}
@@ -602,19 +609,19 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 				  // have to synthesize one. You can think of this as
 				  // being a default attribute defined by the XML
 				  // Namespaces spec rather than by the DTD.
-				  attrIndex = addNode(new DOM2DTMdefaultNamespaceDeclarationNode((Element)next,"xml",NAMESPACE_DECL_NS, makeNodeHandle(((attrIndex == org.apache.xml.dtm.DTM_Fields.NULL)?nextindex:attrIndex) + 1)), nextindex,attrIndex,org.apache.xml.dtm.DTM_Fields.NULL);
-				  m_firstch.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,attrIndex);
+				  attrIndex = addNode(new DOM2DTMdefaultNamespaceDeclarationNode((Element)next,"xml",NAMESPACE_DECL_NS, makeNodeHandle(((attrIndex == NULL)?nextindex:attrIndex) + 1)), nextindex,attrIndex,NULL);
+				  m_firstch.setElementAt(DTM.NULL,attrIndex);
 				  m_processedFirstElement = true;
 				}
-				if (attrIndex != org.apache.xml.dtm.DTM_Fields.NULL)
+				if (attrIndex != NULL)
 				{
-				  m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,attrIndex);
+				  m_nextsib.setElementAt(DTM.NULL,attrIndex);
 				}
 			} //if(ELEMENT_NODE)
 		} // (if !suppressNode)
 
 		// Text postprocessing: Act on values stored above
-		if (org.apache.xml.dtm.DTM_Fields.TEXT_NODE == nexttype || org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE == nexttype)
+		if (TEXT_NODE == nexttype || CDATA_SECTION_NODE == nexttype)
 		{
 			// %TBD% If nexttype was forced to TEXT, patch the DTM node
 
@@ -667,7 +674,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		{
 		  if (!nextNode())
 		  {
-			identity = org.apache.xml.dtm.DTM_Fields.NULL;
+			identity = DTM.NULL;
 		  }
 		}
 
@@ -716,7 +723,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  } while (isMore || i < len);
 		}
 
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -740,14 +747,14 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  // Is Node actually within the same document? If not, don't search!
 		  // This would be easier if m_root was always the Document node, but
 		  // we decided to allow wrapping a DTM around a subtree.
-		  if ((m_root == node) || (m_root.NodeType == org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE && m_root == node.OwnerDocument) || (m_root.NodeType != org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE && m_root.OwnerDocument == node.OwnerDocument))
+		  if ((m_root == node) || (m_root.getNodeType() == DOCUMENT_NODE && m_root == node.getOwnerDocument()) || (m_root.getNodeType() != DOCUMENT_NODE && m_root.getOwnerDocument() == node.getOwnerDocument()))
 		  {
 			  // If node _is_ in m_root's tree, find its handle
 			  //
 			  // %OPT% This check may be improved significantly when DOM
 			  // Level 3 nodeKey and relative-order tests become
 			  // available!
-			  for (Node cursor = node; cursor != null; cursor = (cursor.NodeType != org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE) ? cursor.ParentNode : ((Attr)cursor).OwnerElement)
+			  for (Node cursor = node; cursor != null; cursor = (cursor.getNodeType() != ATTRIBUTE_NODE) ? cursor.getParentNode() : ((Attr)cursor).getOwnerElement())
 			  {
 				  if (cursor == m_root)
 				  {
@@ -758,7 +765,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  } // if node and m_root in same Document
 		} // if node!=null
 
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -783,13 +790,13 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 
 		int type = getNodeType(nodeHandle);
 
-		if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == type)
+		if (DTM.ELEMENT_NODE == type)
 		{
 
 		  // Assume that attributes immediately follow the element.
 		  int identity = makeNodeIdentity(nodeHandle);
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (identity = getNextNodeIdentity(identity)))
+		  while (DTM.NULL != (identity = getNextNodeIdentity(identity)))
 		  {
 			// Assume this can not be null.
 			type = _type(identity);
@@ -801,17 +808,17 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 					// (If we REALLY insist on it, this code should become a subroutine
 					// of both -- retrieve the node, then test if the type matches
 					// what you're looking for.)
-			if (type == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE || type == org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE)
+			if (type == DTM.ATTRIBUTE_NODE || type == DTM.NAMESPACE_NODE)
 			{
 			  Node node = lookupNode(identity);
-			  string nodeuri = node.NamespaceURI;
+			  string nodeuri = node.getNamespaceURI();
 
 			  if (null == nodeuri)
 			  {
 				nodeuri = "";
 			  }
 
-			  string nodelocalname = node.LocalName;
+			  string nodelocalname = node.getLocalName();
 
 			  if (nodeuri.Equals(namespaceURI) && name.Equals(nodelocalname))
 			  {
@@ -826,7 +833,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  }
 		}
 
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -844,7 +851,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		Node node = getNode(nodeHandle);
 		// %TBD% If an element only has one text node, we should just use it 
 		// directly.
-		if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == type || org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE == type || org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE == type)
+		if (DTM.ELEMENT_NODE == type || DTM.DOCUMENT_NODE == type || DTM.DOCUMENT_FRAGMENT_NODE == type)
 		{
 		  FastStringBuffer buf = StringBufferPool.get();
 		  string s;
@@ -862,7 +869,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 
 		  return m_xstrf.newstr(s);
 		}
-		else if (org.apache.xml.dtm.DTM_Fields.TEXT_NODE == type || org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE == type)
+		else if (TEXT_NODE == type || CDATA_SECTION_NODE == type)
 		{
 		  // If this is a DTM text node, it may be made of multiple DOM text
 		  // nodes -- including navigating into Entity References. DOM2DTM
@@ -874,7 +881,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  FastStringBuffer buf = StringBufferPool.get();
 		  while (node != null)
 		  {
-			buf.append(node.NodeValue);
+			buf.append(node.getNodeValue());
 			node = logicalNextDOMTextNode(node);
 		  }
 		  string s = (buf.length() > 0) ? buf.ToString() : "";
@@ -883,7 +890,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		}
 		else
 		{
-		  return m_xstrf.newstr(node.NodeValue);
+		  return m_xstrf.newstr(node.getNodeValue());
 		}
 	  }
 
@@ -897,7 +904,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  {
 		  int type = getNodeType(nodeHandle);
 		Node node = getNode(nodeHandle);
-		  if (org.apache.xml.dtm.DTM_Fields.TEXT_NODE == type || org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE == type)
+		  if (TEXT_NODE == type || CDATA_SECTION_NODE == type)
 		  {
 		  // If this is a DTM text node, it may be made of multiple DOM text
 		  // nodes -- including navigating into Entity References. DOM2DTM
@@ -909,7 +916,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  FastStringBuffer buf = StringBufferPool.get();
 		  while (node != null)
 		  {
-			buf.append(node.NodeValue);
+			buf.append(node.getNodeValue());
 			node = logicalNextDOMTextNode(node);
 		  }
 		 bool b = buf.isWhitespace(0, buf.length());
@@ -946,13 +953,13 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  protected internal static void getNodeData(Node node, FastStringBuffer buf)
 	  {
 
-		switch (node.NodeType)
+		switch (node.getNodeType())
 		{
 		case Node.DOCUMENT_FRAGMENT_NODE :
 		case Node.DOCUMENT_NODE :
 		case Node.ELEMENT_NODE :
 		{
-		  for (Node child = node.FirstChild; null != child; child = child.NextSibling)
+		  for (Node child = node.getFirstChild(); null != child; child = child.getNextSibling())
 		  {
 			getNodeData(child, buf);
 		  }
@@ -961,7 +968,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		case Node.TEXT_NODE :
 		case Node.CDATA_SECTION_NODE :
 		case Node.ATTRIBUTE_NODE : // Never a child but might be our starting node
-		  buf.append(node.NodeValue);
+		  buf.append(node.getNodeValue());
 		  break;
 		case Node.PROCESSING_INSTRUCTION_NODE :
 		  // warning(XPATHErrorResources.WG_PARSING_AND_PREPARING);        
@@ -986,7 +993,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		Node node = getNode(nodeHandle);
 
 		// Assume non-null.
-		return node.NodeName;
+		return node.getNodeName();
 	  }
 
 	  /// <summary>
@@ -1004,12 +1011,12 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 
 		switch (type)
 		{
-		case org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE :
+		case DTM.NAMESPACE_NODE :
 		{
 		  Node node = getNode(nodeHandle);
 
 		  // assume not null.
-		  name = node.NodeName;
+		  name = node.getNodeName();
 		  if (name.StartsWith("xmlns:", StringComparison.Ordinal))
 		  {
 			name = QName.getLocalPart(name);
@@ -1020,15 +1027,15 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  }
 		}
 		break;
-		case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
-		case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
-		case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE :
-		case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+		case DTM.ATTRIBUTE_NODE :
+		case DTM.ELEMENT_NODE :
+		case DTM.ENTITY_REFERENCE_NODE :
+		case DTM.PROCESSING_INSTRUCTION_NODE :
 		{
 		  Node node = getNode(nodeHandle);
 
 		  // assume not null.
-		  name = node.NodeName;
+		  name = node.getNodeName();
 		}
 		break;
 		default :
@@ -1051,16 +1058,16 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		if (JJK_NEWCODE)
 		{
 		  int id = makeNodeIdentity(nodeHandle);
-		  if (org.apache.xml.dtm.DTM_Fields.NULL == id)
+		  if (NULL == id)
 		  {
 			  return null;
 		  }
 		  Node newnode = (Node)m_nodes[id];
-		  string newname = newnode.LocalName;
+		  string newname = newnode.getLocalName();
 		  if (null == newname)
 		  {
 		// XSLT treats PIs, and possibly other things, as having QNames.
-		string qname = newnode.NodeName;
+		string qname = newnode.getNodeName();
 		if ('#' == qname[0])
 		{
 		  //  Match old default for this function
@@ -1081,20 +1088,20 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  short type = getNodeType(nodeHandle);
 		  switch (type)
 		  {
-		  case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
-		  case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
-		  case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE :
-		  case org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE :
-		  case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+		  case DTM.ATTRIBUTE_NODE :
+		  case DTM.ELEMENT_NODE :
+		  case DTM.ENTITY_REFERENCE_NODE :
+		  case DTM.NAMESPACE_NODE :
+		  case DTM.PROCESSING_INSTRUCTION_NODE :
 		  {
 		  Node node = getNode(nodeHandle);
 
 		  // assume not null.
-		  name = node.LocalName;
+		  name = node.getLocalName();
 
 		  if (null == name)
 		  {
-			string qname = node.NodeName;
+			string qname = node.getNodeName();
 			int index = qname.IndexOf(':');
 
 			name = (index < 0) ? qname : qname.Substring(index + 1);
@@ -1128,24 +1135,24 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 
 		switch (type)
 		{
-		case org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE :
+		case DTM.NAMESPACE_NODE :
 		{
 		  Node node = getNode(nodeHandle);
 
 		  // assume not null.
-		  string qname = node.NodeName;
+		  string qname = node.getNodeName();
 		  int index = qname.IndexOf(':');
 
 		  prefix = (index < 0) ? "" : qname.Substring(index + 1);
 		}
 		break;
-		case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
-		case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
+		case DTM.ATTRIBUTE_NODE :
+		case DTM.ELEMENT_NODE :
 		{
 		  Node node = getNode(nodeHandle);
 
 		  // assume not null.
-		  string qname = node.NodeName;
+		  string qname = node.getNodeName();
 		  int index = qname.IndexOf(':');
 
 		  prefix = (index < 0) ? "" : qname.Substring(0, index);
@@ -1174,12 +1181,12 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		if (JJK_NEWCODE)
 		{
 		  int id = makeNodeIdentity(nodeHandle);
-		  if (id == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (id == NULL)
 		  {
 			  return null;
 		  }
 		  Node node = (Node)m_nodes[id];
-		  return node.NamespaceURI;
+		  return node.getNamespaceURI();
 		}
 		else
 		{
@@ -1188,16 +1195,16 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 
 		  switch (type)
 		  {
-		  case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
-		  case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
-		  case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE :
-		  case org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE :
-		  case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+		  case DTM.ATTRIBUTE_NODE :
+		  case DTM.ELEMENT_NODE :
+		  case DTM.ENTITY_REFERENCE_NODE :
+		  case DTM.NAMESPACE_NODE :
+		  case DTM.PROCESSING_INSTRUCTION_NODE :
 		  {
 		  Node node = getNode(nodeHandle);
 
 		  // assume not null.
-		  nsuri = node.NamespaceURI;
+		  nsuri = node.getNamespaceURI();
 
 		  // %TBD% Handle DOM1?
 		  }
@@ -1222,13 +1229,13 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  /// </summary>
 	  private Node logicalNextDOMTextNode(Node n)
 	  {
-			Node p = n.NextSibling;
+			Node p = n.getNextSibling();
 			if (p == null)
 			{
 					// Walk out of any EntityReferenceNodes that ended with text
-					for (n = n.ParentNode; n != null && org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE == n.NodeType; n = n.ParentNode)
+					for (n = n.getParentNode(); n != null && ENTITY_REFERENCE_NODE == n.getNodeType(); n = n.getParentNode())
 					{
-							p = n.NextSibling;
+							p = n.getNextSibling();
 							if (p != null)
 							{
 									break;
@@ -1236,23 +1243,23 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 					}
 			}
 			n = p;
-			while (n != null && org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE == n.NodeType)
+			while (n != null && ENTITY_REFERENCE_NODE == n.getNodeType())
 			{
 					// Walk into any EntityReferenceNodes that start with text
 					if (n.hasChildNodes())
 					{
-							n = n.FirstChild;
+							n = n.getFirstChild();
 					}
 					else
 					{
-							n = n.NextSibling;
+							n = n.getNextSibling();
 					}
 			}
 			if (n != null)
 			{
 					// Found a logical next sibling. Is it text?
-					int ntype = n.NodeType;
-					if (org.apache.xml.dtm.DTM_Fields.TEXT_NODE != ntype && org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE != ntype)
+					int ntype = n.getNodeType();
+					if (TEXT_NODE != ntype && CDATA_SECTION_NODE != ntype)
 					{
 							n = null;
 					}
@@ -1276,11 +1283,11 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		// time, and was wrong anyway since it wasn't coverting handle to
 		// identity. Inlined it.
 		int type = _exptype(makeNodeIdentity(nodeHandle));
-		type = (org.apache.xml.dtm.DTM_Fields.NULL != type) ? getNodeType(nodeHandle) : org.apache.xml.dtm.DTM_Fields.NULL;
+		type = (NULL != type) ? getNodeType(nodeHandle) : NULL;
 
-		if (org.apache.xml.dtm.DTM_Fields.TEXT_NODE != type && org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE != type)
+		if (TEXT_NODE != type && CDATA_SECTION_NODE != type)
 		{
-		  return getNode(nodeHandle).NodeValue;
+		  return getNode(nodeHandle).getNodeValue();
 		}
 
 		// If this is a DTM text node, it may be made of multiple DOM text
@@ -1294,14 +1301,14 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		Node n = logicalNextDOMTextNode(node);
 		if (n == null)
 		{
-		  return node.NodeValue;
+		  return node.getNodeValue();
 		}
 
 		FastStringBuffer buf = StringBufferPool.get();
-			buf.append(node.NodeValue);
+			buf.append(node.getNodeValue());
 		while (n != null)
 		{
-		  buf.append(n.NodeValue);
+		  buf.append(n.getNodeValue());
 		  n = logicalNextDOMTextNode(n);
 		}
 		string s = (buf.length() > 0) ? buf.ToString() : "";
@@ -1323,22 +1330,22 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
     
 			Document doc;
     
-			if (m_root.NodeType == Node.DOCUMENT_NODE)
+			if (m_root.getNodeType() == Node.DOCUMENT_NODE)
 			{
 			  doc = (Document) m_root;
 			}
 			else
 			{
-			  doc = m_root.OwnerDocument;
+			  doc = m_root.getOwnerDocument();
 			}
     
 			if (null != doc)
 			{
-			  DocumentType dtd = doc.Doctype;
+			  DocumentType dtd = doc.getDoctype();
     
 			  if (null != dtd)
 			  {
-				return dtd.SystemId;
+				return dtd.getSystemId();
 			  }
 			}
     
@@ -1360,22 +1367,22 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
     
 			Document doc;
     
-			if (m_root.NodeType == Node.DOCUMENT_NODE)
+			if (m_root.getNodeType() == Node.DOCUMENT_NODE)
 			{
 			  doc = (Document) m_root;
 			}
 			else
 			{
-			  doc = m_root.OwnerDocument;
+			  doc = m_root.getOwnerDocument();
 			}
     
 			if (null != doc)
 			{
-			  DocumentType dtd = doc.Doctype;
+			  DocumentType dtd = doc.getDoctype();
     
 			  if (null != dtd)
 			  {
-				return dtd.PublicId;
+				return dtd.getPublicId();
 			  }
 			}
     
@@ -1402,7 +1409,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  public override int getElementById(string elementId)
 	  {
 
-		Document doc = (m_root.NodeType == Node.DOCUMENT_NODE) ? (Document) m_root : m_root.OwnerDocument;
+		Document doc = (m_root.getNodeType() == Node.DOCUMENT_NODE) ? (Document) m_root : m_root.getOwnerDocument();
 
 		if (null != doc)
 		{
@@ -1411,10 +1418,10 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  {
 			int elemHandle = getHandleFromNode(elem);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == elemHandle)
+			if (DTM.NULL == elemHandle)
 			{
 			  int identity = m_nodes.Count - 1;
-			  while (org.apache.xml.dtm.DTM_Fields.NULL != (identity = getNextNodeIdentity(identity)))
+			  while (DTM.NULL != (identity = getNextNodeIdentity(identity)))
 			  {
 				Node node = getNode(identity);
 				if (node == elem)
@@ -1429,7 +1436,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  }
 
 		}
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -1473,15 +1480,15 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  {
 
 		string url = "";
-		Document doc = (m_root.NodeType == Node.DOCUMENT_NODE) ? (Document) m_root : m_root.OwnerDocument;
+		Document doc = (m_root.getNodeType() == Node.DOCUMENT_NODE) ? (Document) m_root : m_root.getOwnerDocument();
 
 		if (null != doc)
 		{
-		  DocumentType doctype = doc.Doctype;
+		  DocumentType doctype = doc.getDoctype();
 
 		  if (null != doctype)
 		  {
-			NamedNodeMap entities = doctype.Entities;
+			NamedNodeMap entities = doctype.getEntities();
 			if (null == entities)
 			{
 			  return url;
@@ -1492,7 +1499,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			  return url;
 			}
 
-			string notationName = entity.NotationName;
+			string notationName = entity.getNotationName();
 
 			if (null != notationName) // then it's unparsed
 			{
@@ -1505,11 +1512,11 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			  // the resource containing the entity declaration as the base 
 			  // URI [RFC2396]."
 			  // So I'm falling a bit short here.
-			  url = entity.SystemId;
+			  url = entity.getSystemId();
 
 			  if (null == url)
 			  {
-				url = entity.PublicId;
+				url = entity.getPublicId();
 			  }
 			  else
 			  {
@@ -1535,10 +1542,10 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  {
 		int type = getNodeType(attributeHandle);
 
-		if (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == type)
+		if (DTM.ATTRIBUTE_NODE == type)
 		{
 		  Attr attr = (Attr)getNode(attributeHandle);
-		  return attr.Specified;
+		  return attr.getSpecified();
 		}
 		return false;
 	  }
@@ -1680,7 +1687,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(int nodeHandle, org.xml.sax.ContentHandler ch, boolean normalize) throws org.xml.sax.SAXException
 	  public override void dispatchCharactersEvents(int nodeHandle, ContentHandler ch, bool normalize)
 	  {
@@ -1697,7 +1704,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		  dispatchNodeData(node, ch, 0);
 			  // Text coalition -- a DTM text node may represent multiple
 			  // DOM nodes.
-			  if (org.apache.xml.dtm.DTM_Fields.TEXT_NODE == type || org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE == type)
+			  if (TEXT_NODE == type || CDATA_SECTION_NODE == type)
 			  {
 					  while (null != (node = logicalNextDOMTextNode(node)))
 					  {
@@ -1729,18 +1736,18 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  /// </summary>
 	  /// <param name="node"> Node whose subtree is to be walked, gathering the
 	  /// contents of all Text or CDATASection nodes. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected static void dispatchNodeData(org.w3c.dom.Node node, org.xml.sax.ContentHandler ch, int depth) throws org.xml.sax.SAXException
 	  protected internal static void dispatchNodeData(Node node, ContentHandler ch, int depth)
 	  {
 
-		switch (node.NodeType)
+		switch (node.getNodeType())
 		{
 		case Node.DOCUMENT_FRAGMENT_NODE :
 		case Node.DOCUMENT_NODE :
 		case Node.ELEMENT_NODE :
 		{
-		  for (Node child = node.FirstChild; null != child; child = child.NextSibling)
+		  for (Node child = node.getFirstChild(); null != child; child = child.getNextSibling())
 		  {
 			dispatchNodeData(child, ch, depth + 1);
 		  }
@@ -1757,7 +1764,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		case Node.TEXT_NODE :
 		case Node.CDATA_SECTION_NODE :
 		case Node.ATTRIBUTE_NODE :
-		  string str = node.NodeValue;
+		  string str = node.getNodeValue();
 		  if (ch is CharacterNodeHandler)
 		  {
 			((CharacterNodeHandler)ch).characters(node);
@@ -1785,7 +1792,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException
 	  public override void dispatchToEvents(int nodeHandle, ContentHandler ch)
 	  {
@@ -1811,7 +1818,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 
 	  public interface CharacterNodeHandler
 	  {
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(org.w3c.dom.Node node) throws org.xml.sax.SAXException;
 		void characters(Node node);
 	  }

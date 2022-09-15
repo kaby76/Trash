@@ -20,7 +20,8 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
-
+	using DTM = org.apache.xml.dtm.DTM;
+	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using Node = org.w3c.dom.Node;
 
 	/// <summary>
@@ -119,7 +120,7 @@ namespace org.apache.xml.dtm.@ref
 			if (m_iter != null)
 			{
 				int handle = m_iter.item(index);
-				if (handle == org.apache.xml.dtm.DTM_Fields.NULL)
+				if (handle == DTM.NULL)
 				{
 					return null;
 				}

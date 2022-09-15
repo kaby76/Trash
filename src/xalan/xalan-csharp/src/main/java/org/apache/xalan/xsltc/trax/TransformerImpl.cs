@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Text;
 
 /*
@@ -27,7 +28,11 @@ namespace org.apache.xalan.xsltc.trax
 {
 
 
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using DOMCache = org.apache.xalan.xsltc.DOMCache;
+	using StripFilter = org.apache.xalan.xsltc.StripFilter;
+	using Translet = org.apache.xalan.xsltc.Translet;
+	using TransletException = org.apache.xalan.xsltc.TransletException;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
 	using DOMWSFilter = org.apache.xalan.xsltc.dom.DOMWSFilter;
 	using SAXImpl = org.apache.xalan.xsltc.dom.SAXImpl;
@@ -127,7 +132,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// A reference to the output stream, if we create one in our code.
 		/// </summary>
-		private System.IO.Stream _ostream = null;
+		private Stream _ostream = null;
 
 		/// <summary>
 		/// A reference to the XSLTCDTMManager which is used to build the DOM/DTM
@@ -264,7 +269,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="source"> Contains the input XML document </param>
 		/// <param name="result"> Will contain the output from the transformation </param>
 		/// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transform(javax.xml.transform.Source source, javax.xml.transform.Result result) throws javax.xml.transform.TransformerException
 		public void transform(Source source, Result result)
 		{
@@ -303,7 +308,7 @@ namespace org.apache.xalan.xsltc.trax
 
 		if (result is DOMResult)
 		{
-			((DOMResult)result).Node = _tohFactory.Node;
+			((DOMResult)result).setNode(_tohFactory.Node);
 		}
 		}
 
@@ -312,7 +317,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// the type and contents of the TrAX Result object passed to the 
 		/// transform() method. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.serializer.SerializationHandler getOutputHandler(javax.xml.transform.Result result) throws javax.xml.transform.TransformerException
 		public SerializationHandler getOutputHandler(Result result)
 		{
@@ -346,7 +351,7 @@ namespace org.apache.xalan.xsltc.trax
 					SAXResult target = (SAXResult)result;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.xml.sax.ContentHandler handler = target.getHandler();
-					ContentHandler handler = target.Handler;
+					ContentHandler handler = target.getHandler();
 
 			_tohFactory.Handler = handler;
 
@@ -355,7 +360,7 @@ namespace org.apache.xalan.xsltc.trax
 					/// If the lexicalHandler is set then we need to get that
 					/// for obtaining the lexical information 
 					/// </summary>
-					LexicalHandler lexicalHandler = target.LexicalHandler;
+					LexicalHandler lexicalHandler = target.getLexicalHandler();
 
 					if (lexicalHandler != null)
 					{
@@ -367,8 +372,8 @@ namespace org.apache.xalan.xsltc.trax
 			}
 			else if (result is DOMResult)
 			{
-			_tohFactory.Node = ((DOMResult) result).Node;
-			_tohFactory.NextSibling = ((DOMResult) result).NextSibling;
+			_tohFactory.Node = ((DOMResult) result).getNode();
+			_tohFactory.NextSibling = ((DOMResult) result).getNextSibling();
 			_tohFactory.OutputType = TransletOutputHandlerFactory.DOM;
 			return _tohFactory.SerializationHandler;
 			}
@@ -388,7 +393,7 @@ namespace org.apache.xalan.xsltc.trax
 			// try to get a Writer from Result object
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.Writer writer = target.getWriter();
-			Writer writer = target.Writer;
+			Writer writer = target.getWriter();
 			if (writer != null)
 			{
 				_tohFactory.Writer = writer;
@@ -398,7 +403,7 @@ namespace org.apache.xalan.xsltc.trax
 			// or try to get an OutputStream from Result object
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.OutputStream ostream = target.getOutputStream();
-			System.IO.Stream ostream = target.OutputStream;
+			Stream ostream = target.getOutputStream();
 			if (ostream != null)
 			{
 				_tohFactory.OutputStream = ostream;
@@ -406,7 +411,7 @@ namespace org.apache.xalan.xsltc.trax
 			}
 
 			// or try to get just a systemId string from Result object
-			string systemId = result.SystemId;
+			string systemId = result.getSystemId();
 			if (string.ReferenceEquals(systemId, null))
 			{
 				ErrorMsg err = new ErrorMsg(ErrorMsg.JAXP_NO_RESULT_ERR);
@@ -420,7 +425,7 @@ namespace org.apache.xalan.xsltc.trax
 			if (systemId.StartsWith("file:", StringComparison.Ordinal))
 			{
 						url = new URL(systemId);
-				_tohFactory.OutputStream = _ostream = new System.IO.FileStream(url.File, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+				_tohFactory.OutputStream = _ostream = new FileStream(url.getFile(), FileMode.Create, FileAccess.Write);
 				return _tohFactory.SerializationHandler;
 			}
 					else if (systemId.StartsWith("http:", StringComparison.Ordinal))
@@ -429,14 +434,14 @@ namespace org.apache.xalan.xsltc.trax
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.net.URLConnection connection = url.openConnection();
 						URLConnection connection = url.openConnection();
-				_tohFactory.OutputStream = _ostream = connection.OutputStream;
+				_tohFactory.OutputStream = _ostream = connection.getOutputStream();
 				return _tohFactory.SerializationHandler;
 					}
 					else
 					{
 						// system id is just a filename
 						url = (new File(systemId)).toURL();
-				_tohFactory.OutputStream = _ostream = new System.IO.FileStream(url.File, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+				_tohFactory.OutputStream = _ostream = new FileStream(url.getFile(), FileMode.Create, FileAccess.Write);
 				return _tohFactory.SerializationHandler;
 					}
 			}
@@ -472,7 +477,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Builds an internal DOM from a TrAX Source object
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private org.apache.xalan.xsltc.DOM getDOM(javax.xml.transform.Source source) throws javax.xml.transform.TransformerException
 		private DOM getDOM(Source source)
 		{
@@ -496,7 +501,7 @@ namespace org.apache.xalan.xsltc.trax
 
 					 if (_dtmManager == null)
 					 {
-						 _dtmManager = (XSLTCDTMManager)_tfactory.DTMManagerClass.newInstance();
+						 _dtmManager = (XSLTCDTMManager)System.Activator.CreateInstance(_tfactory.DTMManagerClass);
 					 }
 					 dom = (DOM)_dtmManager.getDTM(source, false, wsfilter, true, false, false, 0, hasIdCall);
 				}
@@ -554,14 +559,14 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void transformIdentity(javax.xml.transform.Source source, org.apache.xml.serializer.SerializationHandler handler) throws Exception
 		private void transformIdentity(Source source, SerializationHandler handler)
 		{
 			// Get systemId from source
 			if (source != null)
 			{
-				_sourceSystemId = source.SystemId;
+				_sourceSystemId = source.getSystemId();
 			}
 
 			if (source is StreamSource)
@@ -571,10 +576,10 @@ namespace org.apache.xalan.xsltc.trax
 				StreamSource stream = (StreamSource) source;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.InputStream streamInput = stream.getInputStream();
-				System.IO.Stream streamInput = stream.InputStream;
+				Stream streamInput = stream.getInputStream();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.Reader streamReader = stream.getReader();
-				Reader streamReader = stream.Reader;
+				Reader streamReader = stream.getReader();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.xml.sax.XMLReader reader = _readerManager.getXMLReader();
 				XMLReader reader = _readerManager.XMLReader;
@@ -590,19 +595,19 @@ namespace org.apache.xalan.xsltc.trax
 					{
 						// Falls through
 					}
-					reader.ContentHandler = handler;
+					reader.setContentHandler(handler);
 
 					// Create input source from source
 					InputSource input;
 					if (streamInput != null)
 					{
 						input = new InputSource(streamInput);
-						input.SystemId = _sourceSystemId;
+						input.setSystemId(_sourceSystemId);
 					}
 					else if (streamReader != null)
 					{
 						input = new InputSource(streamReader);
-						input.SystemId = _sourceSystemId;
+						input.setSystemId(_sourceSystemId);
 					}
 					else if (!string.ReferenceEquals(_sourceSystemId, null))
 					{
@@ -627,10 +632,10 @@ namespace org.apache.xalan.xsltc.trax
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final javax.xml.transform.sax.SAXSource sax = (javax.xml.transform.sax.SAXSource) source;
 				SAXSource sax = (SAXSource) source;
-				XMLReader reader = sax.XMLReader;
+				XMLReader reader = sax.getXMLReader();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.xml.sax.InputSource input = sax.getInputSource();
-				InputSource input = sax.InputSource;
+				InputSource input = sax.getInputSource();
 				bool userReader = true;
 
 				try
@@ -651,7 +656,7 @@ namespace org.apache.xalan.xsltc.trax
 					{
 						// Falls through
 					}
-					reader.ContentHandler = handler;
+					reader.setContentHandler(handler);
 
 					// Start pushing SAX events
 					reader.parse(input);
@@ -669,7 +674,7 @@ namespace org.apache.xalan.xsltc.trax
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final javax.xml.transform.dom.DOMSource domsrc = (javax.xml.transform.dom.DOMSource) source;
 				DOMSource domsrc = (DOMSource) source;
-				(new DOM2TO(domsrc.Node, handler)).parse();
+				(new DOM2TO(domsrc.getNode(), handler)).parse();
 			}
 			else if (source is XSLTCSource)
 			{
@@ -688,7 +693,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Internal transformation method - uses the internal APIs of XSLTC
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void transform(javax.xml.transform.Source source, org.apache.xml.serializer.SerializationHandler handler, String encoding) throws javax.xml.transform.TransformerException
 		private void transform(Source source, SerializationHandler handler, string encoding)
 		{
@@ -702,17 +707,17 @@ namespace org.apache.xalan.xsltc.trax
 				 * situations, since there is no clear spec. how to create 
 				 * an empty tree when both SAXSource() and StreamSource() are used.
 				 */
-				if ((source is StreamSource && source.SystemId == null && ((StreamSource)source).InputStream == null && ((StreamSource)source).Reader == null) || (source is SAXSource && ((SAXSource)source).InputSource == null && ((SAXSource)source).XMLReader == null) || (source is DOMSource && ((DOMSource)source).Node == null))
+				if ((source is StreamSource && source.getSystemId() == null && ((StreamSource)source).getInputStream() == null && ((StreamSource)source).getReader() == null) || (source is SAXSource && ((SAXSource)source).getInputSource() == null && ((SAXSource)source).getXMLReader() == null) || (source is DOMSource && ((DOMSource)source).getNode() == null))
 				{
 							DocumentBuilderFactory builderF = DocumentBuilderFactory.newInstance();
 							DocumentBuilder builder = builderF.newDocumentBuilder();
-							string systemID = source.SystemId;
+							string systemID = source.getSystemId();
 							source = new DOMSource(builder.newDocument());
 
 							// Copy system ID from original, empty Source to new
 							if (!string.ReferenceEquals(systemID, null))
 							{
-							  source.SystemId = systemID;
+							  source.setSystemId(systemID);
 							}
 				}
 			if (_isIdentity)
@@ -921,7 +926,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// </summary>
 		/// <param name="name"> A non-null string that contains the name of the property </param>
 		/// <exception cref="IllegalArgumentException"> if the property name is not known </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getOutputProperty(String name) throws IllegalArgumentException
 		public string getOutputProperty(string name)
 		{
@@ -943,7 +948,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="name"> The name of the property to set </param>
 		/// <param name="value"> The value to assign to the property </param>
 		/// <exception cref="IllegalArgumentException"> Never, errors are ignored </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setOutputProperty(String name, String value) throws IllegalArgumentException
 		public void setOutputProperty(string name, string value)
 		{
@@ -1384,18 +1389,18 @@ namespace org.apache.xalan.xsltc.trax
 		/// exception. </param>
 		/// <exception cref="TransformerException"> if the application chooses to discontinue
 		/// the transformation (always does in our case). </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(javax.xml.transform.TransformerException e) throws javax.xml.transform.TransformerException
 		public void error(TransformerException e)
 		{
-			Exception wrapped = e.Exception;
+			Exception wrapped = e.getException();
 			if (wrapped != null)
 			{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.ERROR_PLUS_WRAPPED_MSG, e.MessageAndLocation, wrapped.Message));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.ERROR_PLUS_WRAPPED_MSG, e.getMessageAndLocation(), wrapped.Message));
 			}
 			else
 			{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.ERROR_MSG, e.MessageAndLocation));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.ERROR_MSG, e.getMessageAndLocation()));
 			}
 			throw e;
 		}
@@ -1412,18 +1417,18 @@ namespace org.apache.xalan.xsltc.trax
 		/// exception. </param>
 		/// <exception cref="TransformerException"> if the application chooses to discontinue
 		/// the transformation (always does in our case). </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fatalError(javax.xml.transform.TransformerException e) throws javax.xml.transform.TransformerException
 		public void fatalError(TransformerException e)
 		{
-			Exception wrapped = e.Exception;
+			Exception wrapped = e.getException();
 			if (wrapped != null)
 			{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.FATAL_ERR_PLUS_WRAPPED_MSG, e.MessageAndLocation, wrapped.Message));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.FATAL_ERR_PLUS_WRAPPED_MSG, e.getMessageAndLocation(), wrapped.Message));
 			}
 			else
 			{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.FATAL_ERR_MSG, e.MessageAndLocation));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.FATAL_ERR_MSG, e.getMessageAndLocation()));
 			}
 			throw e;
 		}
@@ -1440,18 +1445,18 @@ namespace org.apache.xalan.xsltc.trax
 		/// exception. </param>
 		/// <exception cref="TransformerException"> if the application chooses to discontinue
 		/// the transformation (never does in our case). </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warning(javax.xml.transform.TransformerException e) throws javax.xml.transform.TransformerException
 		public void warning(TransformerException e)
 		{
-			Exception wrapped = e.Exception;
+			Exception wrapped = e.getException();
 			if (wrapped != null)
 			{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.WARNING_PLUS_WRAPPED_MSG, e.MessageAndLocation, wrapped.Message));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.WARNING_PLUS_WRAPPED_MSG, e.getMessageAndLocation(), wrapped.Message));
 			}
 			else
 			{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.WARNING_MSG, e.MessageAndLocation));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.WARNING_MSG, e.getMessageAndLocation()));
 			}
 		}
 

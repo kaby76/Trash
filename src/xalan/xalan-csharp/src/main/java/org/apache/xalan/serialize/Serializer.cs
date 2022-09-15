@@ -1,4 +1,6 @@
-﻿/*
+﻿using System.IO;
+
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +22,6 @@
  */
 namespace org.apache.xalan.serialize
 {
-
 
 	using ContentHandler = org.xml.sax.ContentHandler;
 
@@ -46,7 +47,7 @@ namespace org.apache.xalan.serialize
 	  /// <param name="output"> The output stream
 	  /// </param>
 	  /// @deprecated Use org.apache.xml.serializer.Serializer 
-	  System.IO.Stream OutputStream {set;get;}
+	  Stream OutputStream {set;get;}
 
 
 	  /// <summary>
@@ -87,7 +88,7 @@ namespace org.apache.xalan.serialize
 	  ///  or null if the serializer is not SAX 2 capable </returns>
 	  /// <exception cref="IOException"> An I/O exception occured </exception>
 	  /// @deprecated Use org.apache.xml.serializer.Serializer 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.xml.sax.ContentHandler asContentHandler() throws java.io.IOException;
 	  ContentHandler asContentHandler();
 
@@ -100,7 +101,7 @@ namespace org.apache.xalan.serialize
 	  ///  or null if the serializer is not DOM capable </returns>
 	  /// <exception cref="IOException"> An I/O exception occured </exception>
 	  /// @deprecated Use org.apache.xml.serializer.Serializer 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public DOMSerializer asDOMSerializer() throws java.io.IOException;
 	  DOMSerializer asDOMSerializer();
 

@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath.objects
 {
-
 	/// <summary>
 	/// This class doesn't have any XPathContext, so override
 	/// whatever to ensure it works OK.

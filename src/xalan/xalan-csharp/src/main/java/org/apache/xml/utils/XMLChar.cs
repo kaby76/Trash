@@ -21,7 +21,6 @@
 
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// This class defines the basic XML character properties. The data
 	/// in this class can be used to verify that a character is a valid
@@ -614,7 +613,7 @@ namespace org.apache.xml.utils
 		   {
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String prefix = str.substring(0,colon);
-			   string prefix = str.Substring(0,colon);
+			   string prefix = str.Substring(0, colon);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String localPart = str.substring(colon+1);
 			   string localPart = str.Substring(colon + 1);

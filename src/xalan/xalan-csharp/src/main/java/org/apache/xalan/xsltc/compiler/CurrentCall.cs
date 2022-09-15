@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using MethodGenerator = org.apache.xalan.xsltc.compiler.util.MethodGenerator;
 
@@ -37,7 +36,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void translate(ClassGenerator classGen, MethodGenerator methodGen)
 		{
-		methodGen.InstructionList.append(methodGen.loadCurrentNode());
+		methodGen.getInstructionList().append(methodGen.loadCurrentNode());
 		}
 	}
 

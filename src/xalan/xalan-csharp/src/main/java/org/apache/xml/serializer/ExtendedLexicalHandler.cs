@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.serializer
 {
-
 	using SAXException = org.xml.sax.SAXException;
 
 	/// <summary>
@@ -35,7 +34,7 @@ namespace org.apache.xml.serializer
 		/// <param name="comment"> the comment, but unlike the SAX comment() method this
 		/// method takes a String rather than a character array. </param>
 		/// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(String comment) throws org.xml.sax.SAXException;
 		void comment(string comment);
 	}

@@ -23,10 +23,12 @@ using System.Collections;
  */
 namespace org.apache.xpath.axes
 {
-
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using OpCodes = org.apache.xpath.compiler.OpCodes;
 	using OpMap = org.apache.xpath.compiler.OpMap;
@@ -40,7 +42,7 @@ namespace org.apache.xpath.axes
 	/// @xsl.usage advanced
 	/// </summary>
 	[Serializable]
-	public class UnionPathIterator : LocPathIterator, ICloneable, DTMIterator, PathComponent
+	public class UnionPathIterator : LocPathIterator, Cloneable, DTMIterator, PathComponent
 	{
 		internal new const long serialVersionUID = -3910351546843826781L;
 
@@ -153,7 +155,7 @@ namespace org.apache.xpath.axes
 	  /// opcode list from the compiler.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public UnionPathIterator(org.apache.xpath.compiler.Compiler compiler, int opPos) throws javax.xml.transform.TransformerException
 	  public UnionPathIterator(Compiler compiler, int opPos) : base()
 	  {
@@ -175,7 +177,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> Object that is derived from LocPathIterator.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static LocPathIterator createUnionIterator(org.apache.xpath.compiler.Compiler compiler, int opPos) throws javax.xml.transform.TransformerException
 	  public static LocPathIterator createUnionIterator(Compiler compiler, int opPos)
 	  {
@@ -257,7 +259,7 @@ namespace org.apache.xpath.axes
 	  /// </param>
 	  /// <exception cref="java.io.IOException"> </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void readObject(java.io.ObjectInputStream stream) throws java.io.IOException, javax.xml.transform.TransformerException
 	  private void readObject(java.io.ObjectInputStream stream)
 	  {
@@ -279,7 +281,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A clone of this iterator that holds the same node position.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public override object clone()
 	  {
@@ -311,7 +313,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> New location path iterator.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected LocPathIterator createDTMIterator(org.apache.xpath.compiler.Compiler compiler, int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual LocPathIterator createDTMIterator(Compiler compiler, int opPos)
 	  {
@@ -329,7 +331,7 @@ namespace org.apache.xpath.axes
 	  /// <param name="count"> The insert position of the iterator.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void loadLocationPaths(org.apache.xpath.compiler.Compiler compiler, int opPos, int count) throws javax.xml.transform.TransformerException
 	  protected internal virtual void loadLocationPaths(Compiler compiler, int opPos, int count)
 	  {
@@ -388,12 +390,12 @@ namespace org.apache.xpath.axes
 	  {
 		  if (m_foundLast)
 		  {
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return DTM.NULL;
 		  }
 
 		// Loop through the iterators getting the current fetched 
 		// node, and get the earliest occuring in document order
-		int earliestNode = org.apache.xml.dtm.DTM_Fields.NULL;
+		int earliestNode = DTM.NULL;
 
 		if (null != m_iterators)
 		{
@@ -404,11 +406,11 @@ namespace org.apache.xpath.axes
 		  {
 			int node = m_iterators[i].CurrentNode;
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == node)
+			if (DTM.NULL == node)
 			{
 			  continue;
 			}
-			else if (org.apache.xml.dtm.DTM_Fields.NULL == earliestNode)
+			else if (DTM.NULL == earliestNode)
 			{
 			  iteratorUsed = i;
 			  earliestNode = node;
@@ -434,7 +436,7 @@ namespace org.apache.xpath.axes
 			}
 		  }
 
-		  if (org.apache.xml.dtm.DTM_Fields.NULL != earliestNode)
+		  if (DTM.NULL != earliestNode)
 		  {
 			m_iterators[iteratorUsed].nextNode();
 
@@ -512,7 +514,7 @@ namespace org.apache.xpath.axes
 			  m_index = index;
 		  }
 
-		/// <seealso cref= ExpressionOwner#getExpression() </seealso>
+		/// <seealso cref="ExpressionOwner.getExpression()"/>
 		public virtual Expression Expression
 		{
 			get
@@ -546,7 +548,7 @@ namespace org.apache.xpath.axes
 
 	  }
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
 	  {
 			   if (visitor.visitUnionPath(owner, this))
@@ -562,7 +564,7 @@ namespace org.apache.xpath.axes
 			   }
 	  }
 
-		/// <seealso cref= Expression#deepEquals(Expression) </seealso>
+		/// <seealso cref="Expression.deepEquals(Expression)"/>
 		public override bool deepEquals(Expression expr)
 		{
 		  if (!base.deepEquals(expr))

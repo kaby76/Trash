@@ -21,7 +21,8 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using Translet = org.apache.xalan.xsltc.Translet;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using Axis = org.apache.xml.dtm.Axis;
 
@@ -32,7 +33,7 @@ namespace org.apache.xalan.xsltc.dom
 	/// </summary>
 	public abstract class SingleNodeCounter : NodeCounter
 	{
-		private static readonly int[] EmptyArray = new int[] { };
+		private static readonly int[] EmptyArray = new int[] {};
 		internal DTMAxisIterator _countSiblings = null;
 
 		public SingleNodeCounter(Translet translet, DOM document, DTMAxisIterator iterator) : base(translet, document, iterator)

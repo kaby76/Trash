@@ -22,7 +22,6 @@ namespace org.apache.xml.res
 {
 
 
-
 	/// <summary>
 	/// Set up error messages.
 	/// We build a two dimensional array of message keys and
@@ -224,7 +223,7 @@ namespace org.apache.xml.res
 				new object[] {"BAD_CODE", "Parameter na createMessage bol mimo ohrani\u010denia"},
 				new object[] {"FORMAT_FAILED", "V\u00fdnimka po\u010das volania messageFormat"},
 				new object[] {"line", "Riadok #"},
-				new object[] {"column","St\u013apec #"}
+				new object[] {"column", "St\u013apec #"}
 			};
 		  }
 	  }
@@ -236,12 +235,12 @@ namespace org.apache.xml.res
 	  ///   <param name="className"> the name of the class that implements the resource bundle. </param>
 	  ///   <returns> the ResourceBundle </returns>
 	  ///   <exception cref="MissingResourceException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static final XMLErrorResources loadResourceBundle(String className) throws java.util.MissingResourceException
 	  public static XMLErrorResources loadResourceBundle(string className)
 	  {
 
-		Locale locale = Locale.Default;
+		Locale locale = Locale.getDefault();
 		string suffix = getResourceSuffix(locale);
 
 		try
@@ -279,8 +278,8 @@ namespace org.apache.xml.res
 	  private static string getResourceSuffix(Locale locale)
 	  {
 
-		string suffix = "_" + locale.Language;
-		string country = locale.Country;
+		string suffix = "_" + locale.getLanguage();
+		string country = locale.getCountry();
 
 		if (country.Equals("TW"))
 		{

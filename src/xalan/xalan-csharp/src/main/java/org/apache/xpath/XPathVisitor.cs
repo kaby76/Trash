@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath
 {
-
 	using LocPathIterator = org.apache.xpath.axes.LocPathIterator;
 	using UnionPathIterator = org.apache.xpath.axes.UnionPathIterator;
 	using Function = org.apache.xpath.functions.Function;
@@ -126,7 +125,7 @@ namespace org.apache.xpath
 		///              be reset if rewriting takes place. </param>
 		/// <param name="var"> The variable reference object. </param>
 		/// <returns> true if the sub expressions should be traversed. </returns>
-		public virtual bool visitVariableRef(ExpressionOwner owner, Variable @var)
+		public virtual bool visitVariableRef(ExpressionOwner owner, Variable var)
 		{
 			return true;
 		}

@@ -64,7 +64,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Console.Write("CallTemplate");
 		Util.println(" name " + _name);
 		displayContents(indent + IndentIncrement);
@@ -85,7 +85,7 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!XML11Char.isXML11ValidQName(name))
 				{
 					ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, name, this);
-					parser.reportError(Constants_Fields.ERROR, err);
+					parser.reportError(Constants.ERROR, err);
 				}
 				_name = parser.getQNameIgnoreDefaultNs(name);
 			}
@@ -99,7 +99,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Verify that a template with this name exists.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -125,10 +125,10 @@ namespace org.apache.xalan.xsltc.compiler
 		Stylesheet stylesheet = classGen.Stylesheet;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 			// If there are Params in the stylesheet or WithParams in this call?
 		if (stylesheet.hasLocalParams() || hasContents())
@@ -146,8 +146,8 @@ namespace org.apache.xalan.xsltc.compiler
 			{
 				// Push parameter frame
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int push = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.PUSH_PARAM_FRAME, Constants_Fields.PUSH_PARAM_FRAME_SIG);
-				int push = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.PUSH_PARAM_FRAME, Constants_Fields.PUSH_PARAM_FRAME_SIG);
+//ORIGINAL LINE: final int push = cpg.addMethodref(TRANSLET_CLASS, PUSH_PARAM_FRAME, PUSH_PARAM_FRAME_SIG);
+				int push = cpg.addMethodref(TRANSLET_CLASS, PUSH_PARAM_FRAME, PUSH_PARAM_FRAME_SIG);
 				il.append(classGen.loadTranslet());
 				il.append(new INVOKEVIRTUAL(push));
 				translateContents(classGen, methodGen);
@@ -168,7 +168,7 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(methodGen.loadCurrentNode());
 
 			// Initialize prefix of method signature
-		StringBuilder methodSig = new StringBuilder("(" + Constants_Fields.DOM_INTF_SIG + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.TRANSLET_OUTPUT_SIG + Constants_Fields.NODE_SIG);
+		StringBuilder methodSig = new StringBuilder("(" + DOM_INTF_SIG + NODE_ITERATOR_SIG + TRANSLET_OUTPUT_SIG + NODE_SIG);
 
 			// If calling a simply named template, push actual arguments
 		if (_calleeTemplate != null)
@@ -179,7 +179,7 @@ namespace org.apache.xalan.xsltc.compiler
 			for (int i = 0; i < numParams; i++)
 			{
 				SyntaxTreeNode node = (SyntaxTreeNode)_parameters[i];
-					methodSig.Append(Constants_Fields.OBJECT_SIG); // append Object to signature
+					methodSig.Append(OBJECT_SIG); // append Object to signature
 
 					// Push 'null' if Param to indicate no actual parameter specified
 					if (node is Param)
@@ -203,8 +203,8 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			// Pop parameter frame
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int pop = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.POP_PARAM_FRAME, Constants_Fields.POP_PARAM_FRAME_SIG);
-			int pop = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.POP_PARAM_FRAME, Constants_Fields.POP_PARAM_FRAME_SIG);
+//ORIGINAL LINE: final int pop = cpg.addMethodref(TRANSLET_CLASS, POP_PARAM_FRAME, POP_PARAM_FRAME_SIG);
+			int pop = cpg.addMethodref(TRANSLET_CLASS, POP_PARAM_FRAME, POP_PARAM_FRAME_SIG);
 			il.append(classGen.loadTranslet());
 			il.append(new INVOKEVIRTUAL(pop));
 		}

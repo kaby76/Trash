@@ -45,10 +45,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		if (argumentCount() > 0)
 		{
 			argument().translate(classGen, methodGen);
@@ -58,7 +58,7 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(methodGen.loadContextNode());
 			Type.Node.translateTo(classGen, methodGen, Type.String);
 		}
-		il.append(new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.STRING_CLASS, "length", "()I")));
+		il.append(new INVOKEVIRTUAL(cpg.addMethodref(STRING_CLASS, "length", "()I")));
 		}
 	}
 

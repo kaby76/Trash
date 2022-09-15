@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +23,6 @@ using System.Collections;
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 
@@ -137,7 +135,7 @@ namespace org.apache.xalan.xsltc.dom
 				}
 				startBit = 0;
 			}
-			return (org.apache.xml.dtm.DTMAxisIterator_Fields.END);
+			return (DTMAxisIterator.END);
 		}
 
 		/// <summary>
@@ -303,7 +301,7 @@ namespace org.apache.xalan.xsltc.dom
 		return (new BitArray(_intSize, _bits));
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void writeExternal(java.io.ObjectOutput out) throws java.io.IOException
 		public virtual void writeExternal(ObjectOutput @out)
 		{
@@ -316,8 +314,8 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Read the whole tree from a file (serialized)
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void readExternal(java.io.ObjectInput in) throws java.io.IOException, ClassNotFoundException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void readExternal(java.io.ObjectInput in) throws IOException, ClassNotFoundException
 		public virtual void readExternal(ObjectInput @in)
 		{
 		_bitSize = @in.readInt();

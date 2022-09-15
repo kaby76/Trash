@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKEINTERFACE = org.apache.bcel.generic.INVOKEINTERFACE;
 	using INVOKEVIRTUAL = org.apache.bcel.generic.INVOKEVIRTUAL;
@@ -47,9 +46,9 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void display(int indent)
 		{
-			indent(indent);
+			this.indent(indent);
 			Util.println("ValueOf");
-			indent(indent + IndentIncrement);
+			this.indent(indent + IndentIncrement);
 			Util.println("select " + _select.ToString());
 		}
 
@@ -72,7 +71,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -113,13 +112,13 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-			ConstantPoolGen cpg = classGen.ConstantPool;
+			ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
+			InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int setEscaping = cpg.addInterfaceMethodref(Constants_Fields.OUTPUT_HANDLER, "setEscaping","(Z)Z");
-			int setEscaping = cpg.addInterfaceMethodref(Constants_Fields.OUTPUT_HANDLER, "setEscaping","(Z)Z");
+//ORIGINAL LINE: final int setEscaping = cpg.addInterfaceMethodref(OUTPUT_HANDLER, "setEscaping","(Z)Z");
+			int setEscaping = cpg.addInterfaceMethodref(OUTPUT_HANDLER, "setEscaping","(Z)Z");
 
 			// Turn off character escaping if so is wanted.
 			if (!_escaping)
@@ -137,8 +136,8 @@ namespace org.apache.xalan.xsltc.compiler
 			if (_isString)
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int characters = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.CHARACTERSW, Constants_Fields.CHARACTERSW_SIG);
-				int characters = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.CHARACTERSW, Constants_Fields.CHARACTERSW_SIG);
+//ORIGINAL LINE: final int characters = cpg.addMethodref(TRANSLET_CLASS, CHARACTERSW, CHARACTERSW_SIG);
+				int characters = cpg.addMethodref(TRANSLET_CLASS, CHARACTERSW, CHARACTERSW_SIG);
 
 				il.append(classGen.loadTranslet());
 				_select.translate(classGen, methodGen);
@@ -148,8 +147,8 @@ namespace org.apache.xalan.xsltc.compiler
 			else
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int characters = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.CHARACTERS, Constants_Fields.CHARACTERS_SIG);
-				int characters = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.CHARACTERS, Constants_Fields.CHARACTERS_SIG);
+//ORIGINAL LINE: final int characters = cpg.addInterfaceMethodref(DOM_INTF, CHARACTERS, CHARACTERS_SIG);
+				int characters = cpg.addInterfaceMethodref(DOM_INTF, CHARACTERS, CHARACTERS_SIG);
 
 				il.append(methodGen.loadDOM());
 				_select.translate(classGen, methodGen);

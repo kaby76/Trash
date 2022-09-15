@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.serializer.utils
 {
-
 	using Node = org.w3c.dom.Node;
 
 	/// <summary>
@@ -71,7 +70,7 @@ namespace org.apache.xml.serializer.utils
 	  public string getLocalNameOfNode(Node n)
 	  {
 
-		string name = n.LocalName;
+		string name = n.getLocalName();
 
 		return (null == name) ? getLocalNameOfNodeFallback(n) : name;
 	  }
@@ -89,7 +88,7 @@ namespace org.apache.xml.serializer.utils
 	  private string getLocalNameOfNodeFallback(Node n)
 	  {
 
-		string qname = n.NodeName;
+		string qname = n.getNodeName();
 		int index = qname.IndexOf(':');
 
 		return (index < 0) ? qname : qname.Substring(index + 1);
@@ -113,7 +112,7 @@ namespace org.apache.xml.serializer.utils
 	  /// at the time the Node was created. </returns>
 	  public string getNamespaceOfNode(Node n)
 	  {
-		return n.NamespaceURI;
+		return n.getNamespaceURI();
 	  }
 
 	  /// <summary>

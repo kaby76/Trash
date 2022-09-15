@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.dtm
 {
-
 	/// <summary>
 	/// A class that implements traverses DTMAxisTraverser interface can traverse
 	/// a set of nodes, usually as defined by an XPath axis.  It is different from
@@ -95,7 +94,7 @@ namespace org.apache.xml.dtm
 	  /// context is in the set, you must use the first() method instead.
 	  /// </param>
 	  /// <returns> the next node in the iteration, or DTM.NULL. </returns>
-	  /// <seealso cref= #first(int) </seealso>
+	  /// <seealso cref=".first(int)"/>
 	  public abstract int next(int context, int current);
 
 	  /// <summary>
@@ -112,7 +111,7 @@ namespace org.apache.xml.dtm
 	  /// <param name="extendedTypeID"> The extended type ID that must match.
 	  /// </param>
 	  /// <returns> the next node in the iteration, or DTM.NULL. </returns>
-	  /// <seealso cref= #first(int,int) </seealso>
+	  /// <seealso cref=".first(int,int)"/>
 	  public abstract int next(int context, int current, int extendedTypeID);
 	}
 

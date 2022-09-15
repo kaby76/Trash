@@ -22,11 +22,11 @@
  */
 namespace org.apache.xpath.objects
 {
-
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using OneStepIterator = org.apache.xpath.axes.OneStepIterator;
 
 
@@ -54,13 +54,13 @@ namespace org.apache.xpath.objects
 		{
 		  result = new XString((string) val);
 		}
-		else if (val is bool?)
+		else if (val is Boolean)
 		{
-		  result = new XBoolean((bool?)val);
+		  result = new XBoolean(((bool?)val).Value);
 		}
-		else if (val is double?)
+		else if (val is Double)
 		{
-		  result = new XNumber(((double?) val));
+		  result = new XNumber(((double?) val).Value);
 		}
 		else
 		{
@@ -92,9 +92,9 @@ namespace org.apache.xpath.objects
 		{
 		  result = new XString((string) val);
 		}
-		else if (val is bool?)
+		else if (val is Boolean)
 		{
-		  result = new XBoolean((bool?)val);
+		  result = new XBoolean(((bool?)val).Value);
 		}
 		else if (val is Number)
 		{

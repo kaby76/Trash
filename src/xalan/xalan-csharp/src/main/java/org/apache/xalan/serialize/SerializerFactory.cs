@@ -1,4 +1,6 @@
-﻿/*
+﻿using System.IO;
+
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +22,6 @@
  */
 namespace org.apache.xalan.serialize
 {
-
 
 	using Node = org.w3c.dom.Node;
 	using ContentHandler = org.xml.sax.ContentHandler;
@@ -74,7 +75,7 @@ namespace org.apache.xalan.serialize
 
 			}
 
-			public virtual System.IO.Stream OutputStream
+			public virtual Stream OutputStream
 			{
 				set
 				{
@@ -113,7 +114,7 @@ namespace org.apache.xalan.serialize
 			}
 
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.xml.sax.ContentHandler asContentHandler() throws java.io.IOException
 			public virtual ContentHandler asContentHandler()
 			{
@@ -121,8 +122,8 @@ namespace org.apache.xalan.serialize
 			}
 
 			/// <returns> an old style DOMSerializer that wraps a new one. </returns>
-			/// <seealso cref= org.apache.xalan.serialize.Serializer#asDOMSerializer() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+			/// <seealso cref="org.apache.xalan.serialize.Serializer.asDOMSerializer()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public DOMSerializer asDOMSerializer() throws java.io.IOException
 			public virtual DOMSerializer asDOMSerializer()
 			{
@@ -132,7 +133,7 @@ namespace org.apache.xalan.serialize
 				}
 				return m_old_DOMSerializer;
 			}
-			/// <seealso cref= org.apache.xalan.serialize.Serializer#reset() </seealso>
+			/// <seealso cref="org.apache.xalan.serialize.Serializer.reset()"/>
 			public virtual bool reset()
 			{
 				return m_serializer.reset();
@@ -153,7 +154,7 @@ namespace org.apache.xalan.serialize
 				m_dom = domser;
 			}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void serialize(org.w3c.dom.Node node) throws java.io.IOException
 			public virtual void serialize(Node node)
 			{

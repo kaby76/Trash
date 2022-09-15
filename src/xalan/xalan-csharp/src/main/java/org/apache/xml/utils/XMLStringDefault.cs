@@ -50,7 +50,7 @@ namespace org.apache.xml.utils
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException
 	  public virtual void dispatchCharactersEvents(org.xml.sax.ContentHandler ch)
 	  {
@@ -64,7 +64,7 @@ namespace org.apache.xml.utils
 	  /// <param name="lh"> A non-null reference to a LexicalHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchAsComment(org.xml.sax.ext.LexicalHandler lh) throws org.xml.sax.SAXException
 	  public virtual void dispatchAsComment(org.xml.sax.ext.LexicalHandler lh)
 	  {
@@ -153,8 +153,8 @@ namespace org.apache.xml.utils
 	  /// <param name="obj2">   the object to compare this <code>String</code> against. </param>
 	  /// <returns>  <code>true</code> if the <code>String</code>s are equal;
 	  ///          <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     java.lang.String#compareTo(java.lang.String) </seealso>
-	  /// <seealso cref=     java.lang.String#equalsIgnoreCase(java.lang.String) </seealso>
+	  /// <seealso cref="java.lang.String.compareTo(java.lang.String)"/>
+	  /// <seealso cref="java.lang.String.equalsIgnoreCase(java.lang.String)"/>
 	  public virtual bool Equals(string obj2)
 	  {
 		  return m_str.Equals(obj2);
@@ -170,8 +170,8 @@ namespace org.apache.xml.utils
 	  ///                     against. </param>
 	  /// <returns>  <code>true</code> if the <code>String </code>are equal;
 	  ///          <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     java.lang.String#compareTo(java.lang.String) </seealso>
-	  /// <seealso cref=     java.lang.String#equalsIgnoreCase(java.lang.String) </seealso>
+	  /// <seealso cref="java.lang.String.compareTo(java.lang.String)"/>
+	  /// <seealso cref="java.lang.String.equalsIgnoreCase(java.lang.String)"/>
 	  public virtual bool Equals(XMLString anObject)
 	  {
 		return m_str.Equals(anObject.ToString());
@@ -188,8 +188,8 @@ namespace org.apache.xml.utils
 	  ///                     against. </param>
 	  /// <returns>  <code>true</code> if the <code>String </code>are equal;
 	  ///          <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     java.lang.String#compareTo(java.lang.String) </seealso>
-	  /// <seealso cref=     java.lang.String#equalsIgnoreCase(java.lang.String) </seealso>
+	  /// <seealso cref="java.lang.String.compareTo(java.lang.String)"/>
+	  /// <seealso cref="java.lang.String.equalsIgnoreCase(java.lang.String)"/>
 	  public override bool Equals(object anObject)
 	  {
 		return m_str.Equals(anObject);
@@ -206,12 +206,12 @@ namespace org.apache.xml.utils
 	  /// <returns>  <code>true</code> if the argument is not <code>null</code>
 	  ///          and the <code>String</code>s are equal,
 	  ///          ignoring case; <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     #equals(Object) </seealso>
-	  /// <seealso cref=     java.lang.Character#toLowerCase(char) </seealso>
-	  /// <seealso cref= java.lang.Character#toUpperCase(char) </seealso>
+	  /// <seealso cref=".equals(Object)"/>
+	  /// <seealso cref="java.lang.Character.toLowerCase(char)"/>
+	  /// <seealso cref="java.lang.Character.toUpperCase(char)"/>
 	  public virtual bool equalsIgnoreCase(string anotherString)
 	  {
-		return m_str.Equals(anotherString, StringComparison.CurrentCultureIgnoreCase);
+		return m_str.Equals(anotherString, StringComparison.OrdinalIgnoreCase);
 	  }
 
 	  /// <summary>
@@ -227,7 +227,7 @@ namespace org.apache.xml.utils
 	  ///          is <code>null</code>. </exception>
 	  public virtual int compareTo(XMLString anotherString)
 	  {
-		return m_str.CompareTo(anotherString.ToString());
+		return string.CompareOrdinal(m_str, anotherString.ToString());
 	  }
 
 	  /// <summary>
@@ -247,11 +247,11 @@ namespace org.apache.xml.utils
 	  /// <returns>  a negative integer, zero, or a positive integer as the
 	  ///          the specified String is greater than, equal to, or less
 	  ///          than this String, ignoring case considerations. </returns>
-	  /// <seealso cref=     java.text.Collator#compare(String, String)
-	  /// @since   1.2 </seealso>
+	  /// <seealso cref="java.text.Collator.compare(String, String)"
+	  /// @since   1.2/>
 	  public virtual int compareToIgnoreCase(XMLString str)
 	  {
-		return m_str.compareToIgnoreCase(str.ToString());
+		return string.Compare(m_str, str.ToString(), StringComparison.OrdinalIgnoreCase);
 	  }
 
 	  /// <summary>
@@ -310,7 +310,7 @@ namespace org.apache.xml.utils
 	  ///          Note also that <code>true</code> will be returned if the
 	  ///          argument is an empty string or is equal to this
 	  ///          <code>String</code> object as determined by the
-	  ///          <seealso cref="#equals(Object)"/> method. </returns>
+	  ///          <seealso cref="equals(Object)"/> method. </returns>
 	  /// <exception cref="java.lang.NullPointerException"> if <code>prefix</code> is
 	  ///          <code>null</code>.
 	  /// @since   JDK1. 0 </exception>
@@ -329,7 +329,7 @@ namespace org.apache.xml.utils
 	  ///          Note also that <code>true</code> will be returned if the
 	  ///          argument is an empty string or is equal to this
 	  ///          <code>String</code> object as determined by the
-	  ///          <seealso cref="#equals(Object)"/> method. </returns>
+	  ///          <seealso cref="equals(Object)"/> method. </returns>
 	  /// <exception cref="java.lang.NullPointerException"> if <code>prefix</code> is
 	  ///          <code>null</code>.
 	  /// @since   JDK1. 0 </exception>
@@ -347,7 +347,7 @@ namespace org.apache.xml.utils
 	  ///          this object; <code>false</code> otherwise. Note that the
 	  ///          result will be <code>true</code> if the argument is the
 	  ///          empty string or is equal to this <code>String</code> object
-	  ///          as determined by the <seealso cref="#equals(Object)"/> method. </returns>
+	  ///          as determined by the <seealso cref="equals(Object)"/> method. </returns>
 	  /// <exception cref="java.lang.NullPointerException"> if <code>suffix</code> is
 	  ///          <code>null</code>. </exception>
 	  public virtual bool endsWith(string suffix)
@@ -657,8 +657,8 @@ namespace org.apache.xml.utils
 	  /// </summary>
 	  /// <param name="locale"> use the case transformation rules for this locale </param>
 	  /// <returns> the String, converted to lowercase. </returns>
-	  /// <seealso cref=     java.lang.Character#toLowerCase(char) </seealso>
-	  /// <seealso cref=     java.lang.String#toUpperCase(Locale) </seealso>
+	  /// <seealso cref="java.lang.Character.toLowerCase(char)"/>
+	  /// <seealso cref="java.lang.String.toUpperCase(Locale)"/>
 	  public virtual XMLString toLowerCase(Locale locale)
 	  {
 		return new XMLStringDefault(m_str.ToLower(locale));
@@ -673,8 +673,8 @@ namespace org.apache.xml.utils
 	  /// </para>
 	  /// </summary>
 	  /// <returns>  the string, converted to lowercase. </returns>
-	  /// <seealso cref=     java.lang.Character#toLowerCase(char) </seealso>
-	  /// <seealso cref=     java.lang.String#toLowerCase(Locale) </seealso>
+	  /// <seealso cref="java.lang.Character.toLowerCase(char)"/>
+	  /// <seealso cref="java.lang.String.toLowerCase(Locale)"/>
 	  public virtual XMLString toLowerCase()
 	  {
 		return new XMLStringDefault(m_str.ToLower());
@@ -685,8 +685,8 @@ namespace org.apache.xml.utils
 	  /// case using the rules of the given locale. </summary>
 	  /// <param name="locale"> use the case transformation rules for this locale </param>
 	  /// <returns> the String, converted to uppercase. </returns>
-	  /// <seealso cref=     java.lang.Character#toUpperCase(char) </seealso>
-	  /// <seealso cref=     java.lang.String#toLowerCase(Locale) </seealso>
+	  /// <seealso cref="java.lang.Character.toUpperCase(char)"/>
+	  /// <seealso cref="java.lang.String.toLowerCase(Locale)"/>
 	  public virtual XMLString toUpperCase(Locale locale)
 	  {
 		return new XMLStringDefault(m_str.ToUpper(locale));
@@ -719,8 +719,8 @@ namespace org.apache.xml.utils
 	  /// </para>
 	  /// </summary>
 	  /// <returns>  the string, converted to uppercase. </returns>
-	  /// <seealso cref=     java.lang.Character#toUpperCase(char) </seealso>
-	  /// <seealso cref=     java.lang.String#toUpperCase(Locale) </seealso>
+	  /// <seealso cref="java.lang.Character.toUpperCase(char)"/>
+	  /// <seealso cref="java.lang.String.toUpperCase(Locale)"/>
 	  public virtual XMLString toUpperCase()
 	  {
 		return new XMLStringDefault(m_str.ToUpper());
@@ -753,7 +753,7 @@ namespace org.apache.xml.utils
 	  /// </para>
 	  /// <para>
 	  /// This method may be used to trim
-	  /// <seealso cref="Character#isSpace(char) whitespace"/> from the beginning and end
+	  /// <seealso cref="Character.isSpace(char) whitespace"/> from the beginning and end
 	  /// of a string; in fact, it trims all ASCII control characters as well.
 	  /// 
 	  /// </para>

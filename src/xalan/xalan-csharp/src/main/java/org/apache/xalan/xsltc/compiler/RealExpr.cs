@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using PUSH = org.apache.bcel.generic.PUSH;
@@ -43,7 +42,7 @@ namespace org.apache.xalan.xsltc.compiler
 		_value = value;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -57,8 +56,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void translate(ClassGenerator classGen, MethodGenerator methodGen)
 		{
-		ConstantPoolGen cpg = classGen.ConstantPool;
-		InstructionList il = methodGen.InstructionList;
+		ConstantPoolGen cpg = classGen.getConstantPool();
+		InstructionList il = methodGen.getInstructionList();
 		il.append(new PUSH(cpg, _value));
 		}
 	}

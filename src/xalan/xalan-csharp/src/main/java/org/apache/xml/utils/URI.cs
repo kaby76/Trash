@@ -24,7 +24,6 @@ using System.Text;
 namespace org.apache.xml.utils
 {
 
-
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
 	using XMLMessages = org.apache.xml.res.XMLMessages;
 
@@ -192,7 +191,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <exception cref="MalformedURIException"> if p_uriSpec violates any syntax
 	  ///                                   rules </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public URI(String p_uriSpec) throws MalformedURIException
 	  public URI(string p_uriSpec) : this((URI) null, p_uriSpec)
 	  {
@@ -209,7 +208,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <exception cref="MalformedURIException"> if p_uriSpec violates any syntax
 	  ///                                  rules </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public URI(URI p_base, String p_uriSpec) throws MalformedURIException
 	  public URI(URI p_base, string p_uriSpec)
 	  {
@@ -227,7 +226,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <exception cref="MalformedURIException"> if p_scheme violates any
 	  ///                                  syntax rules </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public URI(String p_scheme, String p_schemeSpecificPart) throws MalformedURIException
 	  public URI(string p_scheme, string p_schemeSpecificPart)
 	  {
@@ -266,7 +265,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <exception cref="MalformedURIException"> if any of the parameters violates
 	  ///                                  syntax rules or semantic rules </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public URI(String p_scheme, String p_host, String p_path, String p_queryString, String p_fragment) throws MalformedURIException
 	  public URI(string p_scheme, string p_host, string p_path, string p_queryString, string p_fragment) : this(p_scheme, null, p_host, -1, p_path, p_queryString, p_fragment)
 	  {
@@ -296,7 +295,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <exception cref="MalformedURIException"> if any of the parameters violates
 	  ///                                  syntax rules or semantic rules </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public URI(String p_scheme, String p_userinfo, String p_host, int p_port, String p_path, String p_queryString, String p_fragment) throws MalformedURIException
 	  public URI(string p_scheme, string p_userinfo, string p_host, int p_port, string p_path, string p_queryString, string p_fragment)
 	  {
@@ -372,7 +371,7 @@ namespace org.apache.xml.utils
 	  /// <exception cref="MalformedURIException"> if p_base is null and p_uriSpec
 	  ///                                  is not an absolute URI or if
 	  ///                                  p_uriSpec violates syntax rules </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void initialize(URI p_base, String p_uriSpec) throws MalformedURIException
 	  private void initialize(URI p_base, string p_uriSpec)
 	  {
@@ -604,7 +603,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <exception cref="MalformedURIException"> if URI does not have a conformant
 	  ///                                  scheme </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void initializeScheme(String p_uriSpec) throws MalformedURIException
 	  private void initializeScheme(string p_uriSpec)
 	  {
@@ -645,7 +644,7 @@ namespace org.apache.xml.utils
 	  /// <param name="p_uriSpec"> the URI specification (cannot be null)
 	  /// </param>
 	  /// <exception cref="MalformedURIException"> if p_uriSpec violates syntax rules </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void initializeAuthority(String p_uriSpec) throws MalformedURIException
 	  private void initializeAuthority(string p_uriSpec)
 	  {
@@ -748,7 +747,7 @@ namespace org.apache.xml.utils
 	  /// <param name="p_uriSpec"> the URI specification (cannot be null)
 	  /// </param>
 	  /// <exception cref="MalformedURIException"> if p_uriSpec violates syntax rules </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void initializePath(String p_uriSpec) throws MalformedURIException
 	  private void initializePath(string p_uriSpec)
 	  {
@@ -1205,7 +1204,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <exception cref="MalformedURIException"> if p_addToPath contains syntax
 	  ///                                  errors </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void appendPath(String p_addToPath) throws MalformedURIException
 	  public virtual void appendPath(string p_addToPath)
 	  {

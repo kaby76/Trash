@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using GOTO = org.apache.bcel.generic.GOTO;
 	using InstructionHandle = org.apache.bcel.generic.InstructionHandle;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
@@ -57,8 +56,8 @@ namespace org.apache.xalan.xsltc.compiler
 		public LogicalExpr(int op, Expression left, Expression right)
 		{
 		_op = op;
-		(_left = left).Parent = this;
-		(_right = right).Parent = this;
+		(_left = left).setParent(this);
+		(_right = right).setParent(this);
 		}
 
 		/// <summary>
@@ -145,7 +144,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type-check this expression, and possibly child expressions.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -195,7 +194,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final SyntaxTreeNode parent = getParent();
 		SyntaxTreeNode parent = Parent;
@@ -263,7 +262,7 @@ namespace org.apache.xalan.xsltc.compiler
 			_right.translateDesynthesized(classGen, methodGen);
 
 			_left._trueList.backPatch(ih);
-			_left._falseList.backPatch(ih.Next);
+			_left._falseList.backPatch(ih.getNext());
 
 			_falseList.append(_right._falseList);
 			_trueList.add(ih).append(_right._trueList);

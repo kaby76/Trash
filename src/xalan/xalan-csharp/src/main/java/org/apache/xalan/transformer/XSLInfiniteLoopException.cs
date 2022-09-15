@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.transformer
 {
-
 	/// <summary>
 	/// Class used to create an Infinite Loop Exception 
 	/// @xsl.usage internal

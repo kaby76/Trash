@@ -38,10 +38,10 @@ namespace org.apache.xalan.processor
 
 	/// <summary>
 	/// TransformerFactory class for xsl:include markup. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#include">include in XSLT Specification</a>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.include">include in XSLT Specification</a>"
 	/// 
-	/// @xsl.usage internal </seealso>
+	/// @xsl.usage internal/>
 	[Serializable]
 	public class ProcessorInclude : XSLTElementProcessor
 	{
@@ -114,7 +114,7 @@ namespace org.apache.xalan.processor
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {
@@ -177,7 +177,7 @@ namespace org.apache.xalan.processor
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void parse(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  protected internal virtual void parse(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {
@@ -204,7 +204,7 @@ namespace org.apache.xalan.processor
 
 			if (null != source && source is DOMSource)
 			{
-			  Node node = ((DOMSource)source).Node;
+			  Node node = ((DOMSource)source).getNode();
 
 			  // There is a user provided URI resolver.
 			  // At the startElement() call we would
@@ -254,7 +254,7 @@ namespace org.apache.xalan.processor
 		  if (source is SAXSource)
 		  {
 			SAXSource saxSource = (SAXSource)source;
-			reader = saxSource.XMLReader; // may be null
+			reader = saxSource.getXMLReader(); // may be null
 		  }
 
 		  InputSource inputSource = SAXSource.sourceToInputSource(source);
@@ -265,7 +265,7 @@ namespace org.apache.xalan.processor
 			try
 			{
 			  javax.xml.parsers.SAXParserFactory factory = javax.xml.parsers.SAXParserFactory.newInstance();
-			  factory.NamespaceAware = true;
+			  factory.setNamespaceAware(true);
 
 			  if (handler.StylesheetProcessor.SecureProcessing)
 			  {
@@ -279,7 +279,7 @@ namespace org.apache.xalan.processor
 			  }
 
 			  javax.xml.parsers.SAXParser jaxpParser = factory.newSAXParser();
-			  reader = jaxpParser.XMLReader;
+			  reader = jaxpParser.getXMLReader();
 
 			}
 			catch (javax.xml.parsers.ParserConfigurationException ex)
@@ -304,11 +304,11 @@ namespace org.apache.xalan.processor
 
 		  if (null != reader)
 		  {
-			reader.ContentHandler = handler;
+			reader.setContentHandler(handler);
 
 			// Push the absolute URI of the included/imported
 			// stylesheet module onto the stack.
-			handler.pushBaseIndentifier(inputSource.SystemId);
+			handler.pushBaseIndentifier(inputSource.getSystemId());
 
 			try
 			{
@@ -346,7 +346,7 @@ namespace org.apache.xalan.processor
 	  /// obtained from the user's URIResolver, if there is no user provided 
 	  /// URIResolver null is returned.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private javax.xml.transform.Source getSourceFromUriResolver(StylesheetHandler handler) throws javax.xml.transform.TransformerException
 	  private Source getSourceFromUriResolver(StylesheetHandler handler)
 	  {
@@ -373,7 +373,7 @@ namespace org.apache.xalan.processor
 		/// and maintains state </param>
 		/// <param name="s"> The Source object from a URIResolver, for the included stylesheet module,
 		/// so this will be null if there is no URIResolver set. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private String getBaseURIOfIncludedStylesheet(StylesheetHandler handler, javax.xml.transform.Source s) throws javax.xml.transform.TransformerException
 		private string getBaseURIOfIncludedStylesheet(StylesheetHandler handler, Source s)
 		{
@@ -382,7 +382,7 @@ namespace org.apache.xalan.processor
 
 			string baseURI;
 			string idFromUriResolverSource;
-			if (s != null && !string.ReferenceEquals((idFromUriResolverSource = s.SystemId), null))
+			if (s != null && !string.ReferenceEquals((idFromUriResolverSource = s.getSystemId()), null))
 			{
 				// We have a Source obtained from a users's URIResolver,
 				// and the system ID is set on it, so return that as the base URI

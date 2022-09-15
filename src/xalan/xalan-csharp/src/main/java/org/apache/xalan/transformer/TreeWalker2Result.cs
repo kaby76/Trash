@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.transformer
 {
-
 	using SerializerUtils = org.apache.xalan.serialize.SerializerUtils;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMTreeWalker = org.apache.xml.dtm.@ref.DTMTreeWalker;
@@ -66,7 +65,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="pos"> Start node for traversal
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void traverse(int pos) throws org.xml.sax.SAXException
 	  public override void traverse(int pos)
 	  {
@@ -83,12 +82,12 @@ namespace org.apache.xalan.transformer
 			/// <param name="node"> Node we just finished processing
 			/// </param>
 			/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void endNode(int node) throws org.xml.sax.SAXException
 	  protected internal override void endNode(int node)
 	  {
 		base.endNode(node);
-		if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == m_dtm.getNodeType(node))
+		if (DTM.ELEMENT_NODE == m_dtm.getNodeType(node))
 		{
 		  m_transformer.XPathContext.popCurrentNode();
 		}
@@ -101,7 +100,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="node"> Starting node for traversal
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void startNode(int node) throws org.xml.sax.SAXException
 	  protected internal override void startNode(int node)
 	  {
@@ -110,7 +109,7 @@ namespace org.apache.xalan.transformer
 		try
 		{
 
-		  if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == m_dtm.getNodeType(node))
+		  if (DTM.ELEMENT_NODE == m_dtm.getNodeType(node))
 		  {
 			xcntxt.pushCurrentNode(node);
 
@@ -129,13 +128,13 @@ namespace org.apache.xalan.transformer
 			  m_handler.startElement(@namespace, localName, elemName);
 			  bool hasNSDecls = false;
 			  DTM dtm = m_dtm;
-			  for (int ns = dtm.getFirstNamespaceNode(node, true); org.apache.xml.dtm.DTM_Fields.NULL != ns; ns = dtm.getNextNamespaceNode(node, ns, true))
+			  for (int ns = dtm.getFirstNamespaceNode(node, true); DTM.NULL != ns; ns = dtm.getNextNamespaceNode(node, ns, true))
 			  {
 				SerializerUtils.ensureNamespaceDeclDeclared(m_handler,dtm, ns);
 			  }
 
 
-			  for (int attr = dtm.getFirstAttribute(node); org.apache.xml.dtm.DTM_Fields.NULL != attr; attr = dtm.getNextAttribute(attr))
+			  for (int attr = dtm.getFirstAttribute(node); DTM.NULL != attr; attr = dtm.getNextAttribute(attr))
 			  {
 				SerializerUtils.addAttribute(m_handler, attr);
 			  }

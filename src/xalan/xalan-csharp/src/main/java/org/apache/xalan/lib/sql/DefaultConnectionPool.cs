@@ -25,7 +25,6 @@ using System.Threading;
 namespace org.apache.xalan.lib.sql
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 
@@ -125,7 +124,7 @@ namespace org.apache.xalan.lib.sql
 	  {
 		// Iterate over the entire pool closing the
 		// JDBC Connections.
-		IEnumerator i = m_pool.GetEnumerator();
+		System.Collections.IEnumerator i = m_pool.GetEnumerator();
 		while (i.MoveNext())
 		{
 		  PooledConnection pcon = (PooledConnection) i.Current;
@@ -233,11 +232,11 @@ namespace org.apache.xalan.lib.sql
 
 		  if (DEBUG)
 		  {
-			DatabaseMetaData dma = conn.MetaData;
+			DatabaseMetaData dma = conn.getMetaData();
 
-			Console.WriteLine("\nConnected to " + dma.URL);
-			Console.WriteLine("Driver   " + dma.DriverName);
-			Console.WriteLine("Version  " + dma.DriverVersion);
+			Console.WriteLine("\nConnected to " + dma.getURL());
+			Console.WriteLine("Driver   " + dma.getDriverName());
+			Console.WriteLine("Version  " + dma.getDriverVersion());
 			Console.WriteLine("");
 		  }
 
@@ -274,7 +273,7 @@ namespace org.apache.xalan.lib.sql
 	  /// <returns> Connection </returns>
 	  /// <exception cref="SQLException"> </exception>
 	  /// <exception cref="IllegalArgumentException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized java.sql.Connection getConnection()throws IllegalArgumentException, java.sql.SQLException
 	  public virtual Connection Connection
 	  {
@@ -336,7 +335,7 @@ namespace org.apache.xalan.lib.sql
 	  /// <param name="con">
 	  /// </param>
 	  /// <exception cref="SQLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized void releaseConnection(java.sql.Connection con)throws java.sql.SQLException
 	  public virtual void releaseConnection(Connection con)
 	  {
@@ -384,7 +383,7 @@ namespace org.apache.xalan.lib.sql
 	  /// <param name="con">
 	  /// </param>
 	  /// <exception cref="SQLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized void releaseConnectionOnError(java.sql.Connection con)throws java.sql.SQLException
 	  public virtual void releaseConnectionOnError(Connection con)
 	  {
@@ -420,7 +419,7 @@ namespace org.apache.xalan.lib.sql
 
 	  /// 
 	  /// <exception cref="SQLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private java.sql.Connection createConnection()throws java.sql.SQLException
 	  private Connection createConnection()
 	  {
@@ -437,7 +436,7 @@ namespace org.apache.xalan.lib.sql
 	  /// 
 	  /// <exception cref="IllegalArgumentException"> </exception>
 	  /// <exception cref="SQLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized void initializePool()throws IllegalArgumentException, java.sql.SQLException
 	  public virtual void initializePool()
 	  {
@@ -531,7 +530,7 @@ namespace org.apache.xalan.lib.sql
 
 	  /// 
 	  /// <exception cref="Throwable"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void finalize()throws Throwable
 	  ~DefaultConnectionPool()
 	  {

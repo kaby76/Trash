@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.extensions
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using StylesheetRoot = org.apache.xalan.templates.StylesheetRoot;
@@ -56,7 +55,7 @@ namespace org.apache.xalan.extensions
 	  /// ExtensionHandler for each extension namespace.
 	  /// @xsl.usage advanced
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ExtensionsTable(org.apache.xalan.templates.StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public ExtensionsTable(StylesheetRoot sroot)
 	  {
@@ -106,7 +105,7 @@ namespace org.apache.xalan.extensions
 	  /// <returns> whether the given function is available or not.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean functionAvailable(String ns, String funcName) throws javax.xml.transform.TransformerException
 	  public virtual bool functionAvailable(string ns, string funcName)
 	  {
@@ -131,7 +130,7 @@ namespace org.apache.xalan.extensions
 	  /// <returns> whether the given element is available or not.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean elementAvailable(String ns, String elemName) throws javax.xml.transform.TransformerException
 	  public virtual bool elementAvailable(string ns, string elemName)
 	  {
@@ -161,7 +160,7 @@ namespace org.apache.xalan.extensions
 	  /// <returns> result of executing the function
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object extFunction(String ns, String funcName, java.util.Vector argVec, Object methodKey, ExpressionContext exprContext) throws javax.xml.transform.TransformerException
 	  public virtual object extFunction(string ns, string funcName, ArrayList argVec, object methodKey, ExpressionContext exprContext)
 	  {
@@ -204,7 +203,7 @@ namespace org.apache.xalan.extensions
 	  /// <returns> result of executing the function
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object extFunction(org.apache.xpath.functions.FuncExtFunction extFunction, java.util.Vector argVec, ExpressionContext exprContext) throws javax.xml.transform.TransformerException
 	  public virtual object extFunction(FuncExtFunction extFunction, ArrayList argVec, ExpressionContext exprContext)
 	  {

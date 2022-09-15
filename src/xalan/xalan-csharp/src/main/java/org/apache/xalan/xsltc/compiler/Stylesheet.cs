@@ -25,7 +25,6 @@ using System.Collections;
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using SystemIDResolver = org.apache.xml.utils.SystemIDResolver;
 	using ANEWARRAY = org.apache.bcel.generic.ANEWARRAY;
 	using BasicType = org.apache.bcel.generic.BasicType;
@@ -194,7 +193,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		/// <summary>
 		/// Set to true to enable template inlining optimization. </summary>
-		/// <seealso cref= XSLTC#_templateInlining </seealso>
+		/// <seealso cref="XSLTC._templateInlining"/>
 		private bool _templateInlining = false;
 
 		/// <summary>
@@ -366,9 +365,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void setImportPrecedence(final int precedence)
-		public int ImportPrecedence
+		public in int ImportPrecedence
 		{
 			set
 			{
@@ -378,7 +375,7 @@ namespace org.apache.xalan.xsltc.compiler
 			// Set import value for all included stylesheets
 	//JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 	//ORIGINAL LINE: final java.util.Enumeration elements = elements();
-			System.Collections.IEnumerator elements = elements();
+			System.Collections.IEnumerator elements = this.elements();
 			while (elements.MoveNext())
 			{
 				SyntaxTreeNode child = (SyntaxTreeNode)elements.Current;
@@ -603,7 +600,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <param name="uri"> Namespace URI. </param>
 		protected internal override void addPrefixMapping(string prefix, string uri)
 		{
-		if (prefix.Equals(Constants_Fields.EMPTYSTRING) && uri.Equals(Constants_Fields.XHTML_URI))
+		if (prefix.Equals(EMPTYSTRING) && uri.Equals(XHTML_URI))
 		{
 			return;
 		}
@@ -683,7 +680,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			// Error: more that one stylesheet defined
 			ErrorMsg err = new ErrorMsg(ErrorMsg.MULTIPLE_STYLESHEET_ERR,this);
-			parser.reportError(Constants_Fields.ERROR, err);
+			parser.reportError(Constants.ERROR, err);
 		}
 
 		// If this is a simplified stylesheet we must create a template that
@@ -693,7 +690,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// method that handles this (parseSimplified()).
 		if (_simplified)
 		{
-			stable.excludeURI(Constants_Fields.XSLT_URI);
+			stable.excludeURI(XSLT_URI);
 			Template template = new Template();
 			template.parseSimplified(this, parser);
 		}
@@ -721,7 +718,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 			// Exclude XSLT uri 
 			stable.pushExcludedNamespacesContext();
-			stable.excludeURI(Constants_Fields.XSLT_URI);
+			stable.excludeURI(Constants.XSLT_URI);
 			stable.excludeNamespaces(excludePrefixes);
 			stable.excludeNamespaces(extensionPrefixes);
 
@@ -771,7 +768,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 		if (_defaultMode == null)
 		{
-			_defaultMode = new Mode(null, this, Constants_Fields.EMPTYSTRING);
+			_defaultMode = new Mode(null, this, Constants.EMPTYSTRING);
 		}
 		_defaultMode.processPatterns(_keys);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -807,7 +804,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			if (_defaultMode == null)
 			{
-			_defaultMode = new Mode(null, this, Constants_Fields.EMPTYSTRING);
+			_defaultMode = new Mode(null, this, Constants.EMPTYSTRING);
 			}
 			return _defaultMode;
 		}
@@ -817,7 +814,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (mode == null)
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String suffix = Convert.ToString(_nextModeSerial++);
+//ORIGINAL LINE: final String suffix = System.Convert.ToString(_nextModeSerial++);
 			string suffix = Convert.ToString(_nextModeSerial++);
 			_modes[modeName] = mode = new Mode(modeName, this, suffix);
 			}
@@ -828,7 +825,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type check all the children of this node.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -839,8 +836,8 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final VariableBase var = (VariableBase)_globals.elementAt(i);
-			VariableBase @var = (VariableBase)_globals[i];
-			@var.typeCheck(stable);
+			VariableBase var = (VariableBase)_globals[i];
+			var.typeCheck(stable);
 		}
 		return typeCheckContents(stable);
 		}
@@ -856,9 +853,9 @@ namespace org.apache.xalan.xsltc.compiler
 		private void addDOMField(ClassGenerator classGen)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.bcel.generic.FieldGen fgen = new org.apache.bcel.generic.FieldGen(Constants_Fields.ACC_PUBLIC, org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), Constants_Fields.DOM_FIELD, classGen.getConstantPool());
-		FieldGen fgen = new FieldGen(Constants_Fields.ACC_PUBLIC, Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), Constants_Fields.DOM_FIELD, classGen.ConstantPool);
-		classGen.addField(fgen.Field);
+//ORIGINAL LINE: final org.apache.bcel.generic.FieldGen fgen = new org.apache.bcel.generic.FieldGen(ACC_PUBLIC, org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(DOM_INTF_SIG), DOM_FIELD, classGen.getConstantPool());
+		FieldGen fgen = new FieldGen(ACC_PUBLIC, Util.getJCRefType(DOM_INTF_SIG), DOM_FIELD, classGen.getConstantPool());
+		classGen.addField(fgen.getField());
 		}
 
 		/// <summary>
@@ -867,9 +864,9 @@ namespace org.apache.xalan.xsltc.compiler
 		private void addStaticField(ClassGenerator classGen, string type, string name)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.bcel.generic.FieldGen fgen = new org.apache.bcel.generic.FieldGen(Constants_Fields.ACC_PROTECTED|Constants_Fields.ACC_STATIC, org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(type), name, classGen.getConstantPool());
-			FieldGen fgen = new FieldGen(Constants_Fields.ACC_PROTECTED | Constants_Fields.ACC_STATIC, Util.getJCRefType(type), name, classGen.ConstantPool);
-			classGen.addField(fgen.Field);
+//ORIGINAL LINE: final org.apache.bcel.generic.FieldGen fgen = new org.apache.bcel.generic.FieldGen(ACC_PROTECTED|ACC_STATIC, org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(type), name, classGen.getConstantPool());
+			FieldGen fgen = new FieldGen(ACC_PROTECTED | ACC_STATIC, Util.getJCRefType(type), name, classGen.getConstantPool());
+			classGen.addField(fgen.getField());
 
 		}
 
@@ -882,8 +879,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Define a new class by extending TRANSLET_CLASS
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ClassGenerator classGen = new org.apache.xalan.xsltc.compiler.util.ClassGenerator(_className, Constants_Fields.TRANSLET_CLASS, Constants_Fields.EMPTYSTRING, Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_SUPER, null, this);
-		ClassGenerator classGen = new ClassGenerator(_className, Constants_Fields.TRANSLET_CLASS, Constants_Fields.EMPTYSTRING, Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_SUPER, null, this);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ClassGenerator classGen = new org.apache.xalan.xsltc.compiler.util.ClassGenerator(_className, TRANSLET_CLASS, Constants.EMPTYSTRING, ACC_PUBLIC | ACC_SUPER, null, this);
+		ClassGenerator classGen = new ClassGenerator(_className, TRANSLET_CLASS, Constants.EMPTYSTRING, ACC_PUBLIC | ACC_SUPER, null, this);
 
 		addDOMField(classGen);
 
@@ -894,7 +891,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Translate all non-template elements and filter out all templates
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Enumeration elements = elements();
-		System.Collections.IEnumerator elements = elements();
+		System.Collections.IEnumerator elements = this.elements();
 		while (elements.MoveNext())
 		{
 			object element = elements.Current;
@@ -938,7 +935,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		if (!Parser.errorsFound())
 		{
-			XSLTC.dumpClass(classGen.JavaClass);
+			XSLTC.dumpClass(classGen.getJavaClass());
 		}
 		}
 
@@ -1001,19 +998,19 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator staticConst = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC|Constants_Fields.ACC_STATIC, org.apache.bcel.generic.Type.VOID, null, null, "<clinit>", _className, il, cpg);
-		MethodGenerator staticConst = new MethodGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_STATIC, org.apache.bcel.generic.Type.VOID, null, null, "<clinit>", _className, il, cpg);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator staticConst = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC|ACC_STATIC, org.apache.bcel.generic.Type.VOID, null, null, "<clinit>", _className, il, cpg);
+		MethodGenerator staticConst = new MethodGenerator(ACC_PUBLIC | ACC_STATIC, org.apache.bcel.generic.Type.VOID, null, null, "<clinit>", _className, il, cpg);
 
-		addStaticField(classGen, "[" + Constants_Fields.STRING_SIG, Constants_Fields.STATIC_NAMES_ARRAY_FIELD);
-		addStaticField(classGen, "[" + Constants_Fields.STRING_SIG, Constants_Fields.STATIC_URIS_ARRAY_FIELD);
-		addStaticField(classGen, "[I", Constants_Fields.STATIC_TYPES_ARRAY_FIELD);
-		addStaticField(classGen, "[" + Constants_Fields.STRING_SIG, Constants_Fields.STATIC_NAMESPACE_ARRAY_FIELD);
+		addStaticField(classGen, "[" + STRING_SIG, STATIC_NAMES_ARRAY_FIELD);
+		addStaticField(classGen, "[" + STRING_SIG, STATIC_URIS_ARRAY_FIELD);
+		addStaticField(classGen, "[I", STATIC_TYPES_ARRAY_FIELD);
+		addStaticField(classGen, "[" + STRING_SIG, STATIC_NAMESPACE_ARRAY_FIELD);
 			// Create fields of type char[] that will contain literal text from
 			// the stylesheet.
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -1021,7 +1018,7 @@ namespace org.apache.xalan.xsltc.compiler
 			int charDataFieldCount = XSLTC.CharacterDataCount;
 			for (int i = 0; i < charDataFieldCount; i++)
 			{
-				addStaticField(classGen, Constants_Fields.STATIC_CHAR_DATA_FIELD_SIG, Constants_Fields.STATIC_CHAR_DATA_FIELD + i);
+				addStaticField(classGen, STATIC_CHAR_DATA_FIELD_SIG, STATIC_CHAR_DATA_FIELD + i);
 			}
 
 		// Put the names array into the translet - used for dom/translet mapping
@@ -1045,17 +1042,17 @@ namespace org.apache.xalan.xsltc.compiler
 			index = index + 1;
 			if (encodedName[index] == '@')
 			{
-				typesArray[i] = org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE;
+				typesArray[i] = DTM.ATTRIBUTE_NODE;
 				index++;
 			}
 			else if (encodedName[index] == '?')
 			{
-				typesArray[i] = org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE;
+				typesArray[i] = DTM.NAMESPACE_NODE;
 				index++;
 			}
 			else
 			{
-				typesArray[i] = org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE;
+				typesArray[i] = DTM.ELEMENT_NODE;
 			}
 
 			if (index == 0)
@@ -1070,8 +1067,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 			staticConst.markChunkStart();
 		il.append(new PUSH(cpg, size));
-		il.append(new ANEWARRAY(cpg.addClass(Constants_Fields.STRING)));
-			int namesArrayRef = cpg.addFieldref(_className, Constants_Fields.STATIC_NAMES_ARRAY_FIELD, Constants_Fields.NAMES_INDEX_SIG);
+		il.append(new ANEWARRAY(cpg.addClass(STRING)));
+			int namesArrayRef = cpg.addFieldref(_className, STATIC_NAMES_ARRAY_FIELD, NAMES_INDEX_SIG);
 		il.append(new PUTSTATIC(namesArrayRef));
 			staticConst.markChunkEnd();
 
@@ -1090,8 +1087,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 			staticConst.markChunkStart();
 		il.append(new PUSH(cpg, size));
-		il.append(new ANEWARRAY(cpg.addClass(Constants_Fields.STRING)));
-			int urisArrayRef = cpg.addFieldref(_className, Constants_Fields.STATIC_URIS_ARRAY_FIELD, Constants_Fields.URIS_INDEX_SIG);
+		il.append(new ANEWARRAY(cpg.addClass(STRING)));
+			int urisArrayRef = cpg.addFieldref(_className, STATIC_URIS_ARRAY_FIELD, URIS_INDEX_SIG);
 		il.append(new PUTSTATIC(urisArrayRef));
 			staticConst.markChunkEnd();
 
@@ -1111,7 +1108,7 @@ namespace org.apache.xalan.xsltc.compiler
 			staticConst.markChunkStart();
 		il.append(new PUSH(cpg, size));
 		il.append(new NEWARRAY(BasicType.INT));
-			int typesArrayRef = cpg.addFieldref(_className, Constants_Fields.STATIC_TYPES_ARRAY_FIELD, Constants_Fields.TYPES_INDEX_SIG);
+			int typesArrayRef = cpg.addFieldref(_className, STATIC_TYPES_ARRAY_FIELD, TYPES_INDEX_SIG);
 		il.append(new PUTSTATIC(typesArrayRef));
 			staticConst.markChunkEnd();
 
@@ -1134,8 +1131,8 @@ namespace org.apache.xalan.xsltc.compiler
 		ArrayList namespaces = XSLTC.NamespaceIndex;
 			staticConst.markChunkStart();
 		il.append(new PUSH(cpg, namespaces.Count));
-		il.append(new ANEWARRAY(cpg.addClass(Constants_Fields.STRING)));
-			int namespaceArrayRef = cpg.addFieldref(_className, Constants_Fields.STATIC_NAMESPACE_ARRAY_FIELD, Constants_Fields.NAMESPACE_INDEX_SIG);
+		il.append(new ANEWARRAY(cpg.addClass(STRING)));
+			int namespaceArrayRef = cpg.addFieldref(_className, STATIC_NAMESPACE_ARRAY_FIELD, NAMESPACE_INDEX_SIG);
 		il.append(new PUTSTATIC(namespaceArrayRef));
 			staticConst.markChunkEnd();
 
@@ -1158,11 +1155,11 @@ namespace org.apache.xalan.xsltc.compiler
 			ArrayList namespaceAncestors = XSLTC.NSAncestorPointers;
 			if (namespaceAncestors != null && namespaceAncestors.Count != 0)
 			{
-				addStaticField(classGen, Constants_Fields.NS_ANCESTORS_INDEX_SIG, Constants_Fields.STATIC_NS_ANCESTORS_ARRAY_FIELD);
+				addStaticField(classGen, NS_ANCESTORS_INDEX_SIG, STATIC_NS_ANCESTORS_ARRAY_FIELD);
 				staticConst.markChunkStart();
 				il.append(new PUSH(cpg, namespaceAncestors.Count));
 				il.append(new NEWARRAY(BasicType.INT));
-				int namespaceAncestorsArrayRef = cpg.addFieldref(_className, Constants_Fields.STATIC_NS_ANCESTORS_ARRAY_FIELD, Constants_Fields.NS_ANCESTORS_INDEX_SIG);
+				int namespaceAncestorsArrayRef = cpg.addFieldref(_className, STATIC_NS_ANCESTORS_ARRAY_FIELD, NS_ANCESTORS_INDEX_SIG);
 				il.append(new PUTSTATIC(namespaceAncestorsArrayRef));
 				staticConst.markChunkEnd();
 				for (int i = 0; i < namespaceAncestors.Count; i++)
@@ -1183,11 +1180,11 @@ namespace org.apache.xalan.xsltc.compiler
 			ArrayList prefixURIPairsIdx = XSLTC.PrefixURIPairsIdx;
 			if (prefixURIPairsIdx != null && prefixURIPairsIdx.Count != 0)
 			{
-				addStaticField(classGen, Constants_Fields.PREFIX_URIS_IDX_SIG, Constants_Fields.STATIC_PREFIX_URIS_IDX_ARRAY_FIELD);
+				addStaticField(classGen, PREFIX_URIS_IDX_SIG, STATIC_PREFIX_URIS_IDX_ARRAY_FIELD);
 				staticConst.markChunkStart();
 				il.append(new PUSH(cpg, prefixURIPairsIdx.Count));
 				il.append(new NEWARRAY(BasicType.INT));
-				int prefixURIPairsIdxArrayRef = cpg.addFieldref(_className, Constants_Fields.STATIC_PREFIX_URIS_IDX_ARRAY_FIELD, Constants_Fields.PREFIX_URIS_IDX_SIG);
+				int prefixURIPairsIdxArrayRef = cpg.addFieldref(_className, STATIC_PREFIX_URIS_IDX_ARRAY_FIELD, PREFIX_URIS_IDX_SIG);
 				il.append(new PUTSTATIC(prefixURIPairsIdxArrayRef));
 				staticConst.markChunkEnd();
 				for (int i = 0; i < prefixURIPairsIdx.Count; i++)
@@ -1209,12 +1206,12 @@ namespace org.apache.xalan.xsltc.compiler
 			ArrayList prefixURIPairs = XSLTC.PrefixURIPairs;
 			if (prefixURIPairs != null && prefixURIPairs.Count != 0)
 			{
-				addStaticField(classGen, Constants_Fields.PREFIX_URIS_ARRAY_SIG, Constants_Fields.STATIC_PREFIX_URIS_ARRAY_FIELD);
+				addStaticField(classGen, PREFIX_URIS_ARRAY_SIG, STATIC_PREFIX_URIS_ARRAY_FIELD);
 
 				staticConst.markChunkStart();
 				il.append(new PUSH(cpg, prefixURIPairs.Count));
-				il.append(new ANEWARRAY(cpg.addClass(Constants_Fields.STRING)));
-				int prefixURIPairsRef = cpg.addFieldref(_className, Constants_Fields.STATIC_PREFIX_URIS_ARRAY_FIELD, Constants_Fields.PREFIX_URIS_ARRAY_SIG);
+				il.append(new ANEWARRAY(cpg.addClass(STRING)));
+				int prefixURIPairsRef = cpg.addFieldref(_className, STATIC_PREFIX_URIS_ARRAY_FIELD, PREFIX_URIS_ARRAY_SIG);
 				il.append(new PUTSTATIC(prefixURIPairsRef));
 				staticConst.markChunkEnd();
 				for (int i = 0; i < prefixURIPairs.Count; i++)
@@ -1234,14 +1231,14 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final int charDataCount = getXSLTC().getCharacterDataCount();
 			int charDataCount = XSLTC.CharacterDataCount;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int toCharArray = cpg.addMethodref(Constants_Fields.STRING, "toCharArray", "()[C");
-			int toCharArray = cpg.addMethodref(Constants_Fields.STRING, "toCharArray", "()[C");
+//ORIGINAL LINE: final int toCharArray = cpg.addMethodref(STRING, "toCharArray", "()[C");
+			int toCharArray = cpg.addMethodref(STRING, "toCharArray", "()[C");
 			for (int i = 0; i < charDataCount; i++)
 			{
 				staticConst.markChunkStart();
 				il.append(new PUSH(cpg, XSLTC.getCharacterData(i)));
 				il.append(new INVOKEVIRTUAL(toCharArray));
-				il.append(new PUTSTATIC(cpg.addFieldref(_className, Constants_Fields.STATIC_CHAR_DATA_FIELD + i, Constants_Fields.STATIC_CHAR_DATA_FIELD_SIG)));
+				il.append(new PUTSTATIC(cpg.addFieldref(_className, STATIC_CHAR_DATA_FIELD + i, STATIC_CHAR_DATA_FIELD_SIG)));
 				staticConst.markChunkEnd();
 			}
 
@@ -1259,47 +1256,47 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator constructor = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, null, null, "<init>", _className, il, cpg);
-		MethodGenerator constructor = new MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, null, null, "<init>", _className, il, cpg);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator constructor = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, null, null, "<init>", _className, il, cpg);
+		MethodGenerator constructor = new MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, null, null, "<init>", _className, il, cpg);
 
 		// Call the constructor in the AbstractTranslet superclass
 		il.append(classGen.loadTranslet());
-		il.append(new INVOKESPECIAL(cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "<init>", "()V")));
+		il.append(new INVOKESPECIAL(cpg.addMethodref(TRANSLET_CLASS, "<init>", "()V")));
 
 			constructor.markChunkStart();
 		il.append(classGen.loadTranslet());
-		il.append(new GETSTATIC(cpg.addFieldref(_className, Constants_Fields.STATIC_NAMES_ARRAY_FIELD, Constants_Fields.NAMES_INDEX_SIG)));
-		il.append(new PUTFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.NAMES_INDEX, Constants_Fields.NAMES_INDEX_SIG)));
+		il.append(new GETSTATIC(cpg.addFieldref(_className, STATIC_NAMES_ARRAY_FIELD, NAMES_INDEX_SIG)));
+		il.append(new PUTFIELD(cpg.addFieldref(TRANSLET_CLASS, NAMES_INDEX, NAMES_INDEX_SIG)));
 			constructor.markChunkEnd();
 
 			constructor.markChunkStart();
 		il.append(classGen.loadTranslet());
-		il.append(new GETSTATIC(cpg.addFieldref(_className, Constants_Fields.STATIC_URIS_ARRAY_FIELD, Constants_Fields.URIS_INDEX_SIG)));
-		il.append(new PUTFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.URIS_INDEX, Constants_Fields.URIS_INDEX_SIG)));
+		il.append(new GETSTATIC(cpg.addFieldref(_className, STATIC_URIS_ARRAY_FIELD, URIS_INDEX_SIG)));
+		il.append(new PUTFIELD(cpg.addFieldref(TRANSLET_CLASS, URIS_INDEX, URIS_INDEX_SIG)));
 			constructor.markChunkEnd();
 
 			constructor.markChunkStart();
 		il.append(classGen.loadTranslet());
-		il.append(new GETSTATIC(cpg.addFieldref(_className, Constants_Fields.STATIC_TYPES_ARRAY_FIELD, Constants_Fields.TYPES_INDEX_SIG)));
-		il.append(new PUTFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.TYPES_INDEX, Constants_Fields.TYPES_INDEX_SIG)));
+		il.append(new GETSTATIC(cpg.addFieldref(_className, STATIC_TYPES_ARRAY_FIELD, TYPES_INDEX_SIG)));
+		il.append(new PUTFIELD(cpg.addFieldref(TRANSLET_CLASS, TYPES_INDEX, TYPES_INDEX_SIG)));
 			constructor.markChunkEnd();
 
 			constructor.markChunkStart();
 		il.append(classGen.loadTranslet());
-		il.append(new GETSTATIC(cpg.addFieldref(_className, Constants_Fields.STATIC_NAMESPACE_ARRAY_FIELD, Constants_Fields.NAMESPACE_INDEX_SIG)));
-		il.append(new PUTFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.NAMESPACE_INDEX, Constants_Fields.NAMESPACE_INDEX_SIG)));
+		il.append(new GETSTATIC(cpg.addFieldref(_className, STATIC_NAMESPACE_ARRAY_FIELD, NAMESPACE_INDEX_SIG)));
+		il.append(new PUTFIELD(cpg.addFieldref(TRANSLET_CLASS, NAMESPACE_INDEX, NAMESPACE_INDEX_SIG)));
 			constructor.markChunkEnd();
 
 			constructor.markChunkStart();
 		il.append(classGen.loadTranslet());
 			il.append(new PUSH(cpg, AbstractTranslet.CURRENT_TRANSLET_VERSION));
-		il.append(new PUTFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.TRANSLET_VERSION_INDEX, Constants_Fields.TRANSLET_VERSION_INDEX_SIG)));
+		il.append(new PUTFIELD(cpg.addFieldref(TRANSLET_CLASS, TRANSLET_VERSION_INDEX, TRANSLET_VERSION_INDEX_SIG)));
 			constructor.markChunkEnd();
 
 		if (_hasIdCall)
@@ -1307,7 +1304,7 @@ namespace org.apache.xalan.xsltc.compiler
 				constructor.markChunkStart();
 			il.append(classGen.loadTranslet());
 			il.append(new PUSH(cpg, true));
-			il.append(new PUTFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.HASIDCALL_INDEX, Constants_Fields.HASIDCALL_INDEX_SIG)));
+			il.append(new PUTFIELD(cpg.addFieldref(TRANSLET_CLASS, HASIDCALL_INDEX, HASIDCALL_INDEX_SIG)));
 				constructor.markChunkEnd();
 		}
 
@@ -1350,23 +1347,23 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.bcel.generic.Type[] argTypes = { org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.TRANSLET_OUTPUT_SIG) };
-		org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[] {Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), Util.getJCRefType(Constants_Fields.TRANSLET_OUTPUT_SIG)};
+//ORIGINAL LINE: final org.apache.bcel.generic.Type[] argTypes = { org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(DOM_INTF_SIG), org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(NODE_ITERATOR_SIG), org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(TRANSLET_OUTPUT_SIG) };
+		org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[] {Util.getJCRefType(DOM_INTF_SIG), Util.getJCRefType(NODE_ITERATOR_SIG), Util.getJCRefType(TRANSLET_OUTPUT_SIG)};
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String[] argNames = { Constants_Fields.DOCUMENT_PNAME, Constants_Fields.ITERATOR_PNAME, Constants_Fields.TRANSLET_OUTPUT_PNAME };
-		string[] argNames = new string[] {Constants_Fields.DOCUMENT_PNAME, Constants_Fields.ITERATOR_PNAME, Constants_Fields.TRANSLET_OUTPUT_PNAME};
+//ORIGINAL LINE: final String[] argNames = { DOCUMENT_PNAME, ITERATOR_PNAME, TRANSLET_OUTPUT_PNAME };
+		string[] argNames = new string[] {DOCUMENT_PNAME, ITERATOR_PNAME, TRANSLET_OUTPUT_PNAME};
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator toplevel = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "topLevel", _className, il, classGen.getConstantPool());
-		MethodGenerator toplevel = new MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "topLevel", _className, il, classGen.ConstantPool);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator toplevel = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "topLevel", _className, il, classGen.getConstantPool());
+		MethodGenerator toplevel = new MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "topLevel", _className, il, classGen.getConstantPool());
 
 		toplevel.addException("org.apache.xalan.xsltc.TransletException");
 
@@ -1376,20 +1373,20 @@ namespace org.apache.xalan.xsltc.compiler
 		LocalVariableGen current = toplevel.addLocalVariable("current", org.apache.bcel.generic.Type.INT, null, null);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int setFilter = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "setFilter", "(Lorg/apache/xalan/xsltc/StripFilter;)V");
-		int setFilter = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "setFilter", "(Lorg/apache/xalan/xsltc/StripFilter;)V");
+//ORIGINAL LINE: final int setFilter = cpg.addInterfaceMethodref(DOM_INTF, "setFilter", "(Lorg/apache/xalan/xsltc/StripFilter;)V");
+		int setFilter = cpg.addInterfaceMethodref(DOM_INTF, "setFilter", "(Lorg/apache/xalan/xsltc/StripFilter;)V");
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int gitr = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getIterator", "()"+Constants_Fields.NODE_ITERATOR_SIG);
-		int gitr = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getIterator", "()" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int gitr = cpg.addInterfaceMethodref(DOM_INTF, "getIterator", "()"+NODE_ITERATOR_SIG);
+		int gitr = cpg.addInterfaceMethodref(DOM_INTF, "getIterator", "()" + NODE_ITERATOR_SIG);
 		il.append(toplevel.loadDOM());
 		il.append(new INVOKEINTERFACE(gitr, 1));
 			il.append(toplevel.nextNode());
-		current.Start = il.append(new ISTORE(current.Index));
+		current.setStart(il.append(new ISTORE(current.getIndex())));
 
 		// Create a new list containing variables/params + keys
 		ArrayList varDepElements = new ArrayList(_globals);
-		System.Collections.IEnumerator elements = elements();
+		System.Collections.IEnumerator elements = this.elements();
 		while (elements.MoveNext())
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -1425,7 +1422,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Compile code for other top-level elements
 		ArrayList whitespaceRules = new ArrayList();
-		elements = elements();
+		elements = this.elements();
 		while (elements.MoveNext())
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -1449,7 +1446,7 @@ namespace org.apache.xalan.xsltc.compiler
 			Whitespace.translateRules(whitespaceRules,classGen);
 		}
 
-		if (classGen.containsMethod(Constants_Fields.STRIP_SPACE, Constants_Fields.STRIP_SPACE_PARAMS) != null)
+		if (classGen.containsMethod(STRIP_SPACE, STRIP_SPACE_PARAMS) != null)
 		{
 			il.append(toplevel.loadDOM());
 			il.append(classGen.loadTranslet());
@@ -1461,7 +1458,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Compute max locals + stack and add method to class
 		classGen.addMethod(toplevel);
 
-		return ("(" + Constants_Fields.DOM_INTF_SIG + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.TRANSLET_OUTPUT_SIG + ")V");
+		return ("(" + DOM_INTF_SIG + NODE_ITERATOR_SIG + TRANSLET_OUTPUT_SIG + ")V");
 		}
 
 		/// <summary>
@@ -1498,8 +1495,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Vector dep = vde.getDependencies();
 			ArrayList dep = vde.Dependencies;
-//JAVA TO C# CONVERTER TODO TASK: There is no .NET equivalent to the java.util.Collection 'containsAll' method:
-			if (dep == null || result.containsAll(dep))
+			if (dep == null || result.ContainsAll(dep))
 			{
 				result.Add(vde);
 				input.RemoveAt(i);
@@ -1515,7 +1511,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (!changed)
 			{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.CIRCULAR_VARIABLE_ERR, input.ToString(), this);
-			Parser.reportError(Constants_Fields.ERROR, err);
+			Parser.reportError(Constants.ERROR, err);
 			return (result);
 			}
 		}
@@ -1541,29 +1537,29 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.bcel.generic.Type[] argTypes = { org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.TRANSLET_OUTPUT_SIG), org.apache.bcel.generic.Type.INT };
-		org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[] {Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), Util.getJCRefType(Constants_Fields.TRANSLET_OUTPUT_SIG), org.apache.bcel.generic.Type.INT};
+//ORIGINAL LINE: final org.apache.bcel.generic.Type[] argTypes = { org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(DOM_INTF_SIG), org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(NODE_ITERATOR_SIG), org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(TRANSLET_OUTPUT_SIG), org.apache.bcel.generic.Type.INT };
+		org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[] {Util.getJCRefType(DOM_INTF_SIG), Util.getJCRefType(NODE_ITERATOR_SIG), Util.getJCRefType(TRANSLET_OUTPUT_SIG), org.apache.bcel.generic.Type.INT};
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String[] argNames = { Constants_Fields.DOCUMENT_PNAME, Constants_Fields.ITERATOR_PNAME, Constants_Fields.TRANSLET_OUTPUT_PNAME, "current" };
-		string[] argNames = new string[] {Constants_Fields.DOCUMENT_PNAME, Constants_Fields.ITERATOR_PNAME, Constants_Fields.TRANSLET_OUTPUT_PNAME, "current"};
+//ORIGINAL LINE: final String[] argNames = { DOCUMENT_PNAME, ITERATOR_PNAME, TRANSLET_OUTPUT_PNAME, "current" };
+		string[] argNames = new string[] {DOCUMENT_PNAME, ITERATOR_PNAME, TRANSLET_OUTPUT_PNAME, "current"};
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator buildKeys = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "buildKeys", _className, il, classGen.getConstantPool());
-		MethodGenerator buildKeys = new MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "buildKeys", _className, il, classGen.ConstantPool);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator buildKeys = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "buildKeys", _className, il, classGen.getConstantPool());
+		MethodGenerator buildKeys = new MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "buildKeys", _className, il, classGen.getConstantPool());
 
 		buildKeys.addException("org.apache.xalan.xsltc.TransletException");
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Enumeration elements = elements();
-		System.Collections.IEnumerator elements = elements();
+		System.Collections.IEnumerator elements = this.elements();
 		while (elements.MoveNext())
 		{
 			// xsl:key
@@ -1585,7 +1581,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Add method to class
 			classGen.addMethod(buildKeys);
 
-		return ("(" + Constants_Fields.DOM_INTF_SIG + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.TRANSLET_OUTPUT_SIG + "I)V");
+		return ("(" + DOM_INTF_SIG + NODE_ITERATOR_SIG + TRANSLET_OUTPUT_SIG + "I)V");
 		}
 
 		/// <summary>
@@ -1597,7 +1593,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 
 		/* 
 		 * Define the the method transform with the following signature:
@@ -1606,23 +1602,23 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[3];
 		org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[3];
-		argTypes[0] = Util.getJCRefType(Constants_Fields.DOM_INTF_SIG);
-		argTypes[1] = Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG);
-		argTypes[2] = Util.getJCRefType(Constants_Fields.TRANSLET_OUTPUT_SIG);
+		argTypes[0] = Util.getJCRefType(DOM_INTF_SIG);
+		argTypes[1] = Util.getJCRefType(NODE_ITERATOR_SIG);
+		argTypes[2] = Util.getJCRefType(TRANSLET_OUTPUT_SIG);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String[] argNames = new String[3];
 		string[] argNames = new string[3];
-		argNames[0] = Constants_Fields.DOCUMENT_PNAME;
-		argNames[1] = Constants_Fields.ITERATOR_PNAME;
-		argNames[2] = Constants_Fields.TRANSLET_OUTPUT_PNAME;
+		argNames[0] = DOCUMENT_PNAME;
+		argNames[1] = ITERATOR_PNAME;
+		argNames[2] = TRANSLET_OUTPUT_PNAME;
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator transf = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "transform", _className, il, classGen.getConstantPool());
-		MethodGenerator transf = new MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "transform", _className, il, classGen.ConstantPool);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator transf = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "transform", _className, il, classGen.getConstantPool());
+		MethodGenerator transf = new MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "transform", _className, il, classGen.getConstantPool());
 		transf.addException("org.apache.xalan.xsltc.TransletException");
 
 		// Define and initialize current with the root node
@@ -1636,8 +1632,8 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final int applyTemplates = cpg.addMethodref(getClassName(), "applyTemplates", applyTemplatesSig);
 		int applyTemplates = cpg.addMethodref(ClassName, "applyTemplates", applyTemplatesSig);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int domField = cpg.addFieldref(getClassName(), Constants_Fields.DOM_FIELD, Constants_Fields.DOM_INTF_SIG);
-		int domField = cpg.addFieldref(ClassName, Constants_Fields.DOM_FIELD, Constants_Fields.DOM_INTF_SIG);
+//ORIGINAL LINE: final int domField = cpg.addFieldref(getClassName(), DOM_FIELD, DOM_INTF_SIG);
+		int domField = cpg.addFieldref(ClassName, DOM_FIELD, DOM_INTF_SIG);
 
 		// push translet for PUTFIELD
 		il.append(classGen.loadTranslet());
@@ -1645,20 +1641,20 @@ namespace org.apache.xalan.xsltc.compiler
 
 		if (MultiDocument)
 		{
-			il.append(new NEW(cpg.addClass(Constants_Fields.MULTI_DOM_CLASS)));
+			il.append(new NEW(cpg.addClass(MULTI_DOM_CLASS)));
 			il.append(DUP);
 		}
 
 		il.append(classGen.loadTranslet());
 		il.append(transf.loadDOM());
-		il.append(new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "makeDOMAdapter", "(" + Constants_Fields.DOM_INTF_SIG + ")" + Constants_Fields.DOM_ADAPTER_SIG)));
+		il.append(new INVOKEVIRTUAL(cpg.addMethodref(TRANSLET_CLASS, "makeDOMAdapter", "(" + DOM_INTF_SIG + ")" + DOM_ADAPTER_SIG)));
 		// DOMAdapter is on the stack
 
 		if (MultiDocument)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int init = cpg.addMethodref(Constants_Fields.MULTI_DOM_CLASS, "<init>", "("+Constants_Fields.DOM_INTF_SIG+")V");
-			int init = cpg.addMethodref(Constants_Fields.MULTI_DOM_CLASS, "<init>", "(" + Constants_Fields.DOM_INTF_SIG + ")V");
+//ORIGINAL LINE: final int init = cpg.addMethodref(MULTI_DOM_CLASS, "<init>", "("+DOM_INTF_SIG+")V");
+			int init = cpg.addMethodref(MULTI_DOM_CLASS, "<init>", "(" + DOM_INTF_SIG + ")V");
 			il.append(new INVOKESPECIAL(init));
 			// MultiDOM is on the stack
 		}
@@ -1668,19 +1664,19 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// continue with globals initialization
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int gitr = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getIterator", "()"+Constants_Fields.NODE_ITERATOR_SIG);
-		int gitr = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getIterator", "()" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int gitr = cpg.addInterfaceMethodref(DOM_INTF, "getIterator", "()"+NODE_ITERATOR_SIG);
+		int gitr = cpg.addInterfaceMethodref(DOM_INTF, "getIterator", "()" + NODE_ITERATOR_SIG);
 		il.append(transf.loadDOM());
 		il.append(new INVOKEINTERFACE(gitr, 1));
 			il.append(transf.nextNode());
-		current.Start = il.append(new ISTORE(current.Index));
+		current.setStart(il.append(new ISTORE(current.getIndex())));
 
 		// Transfer the output settings to the output post-processor
 		il.append(classGen.loadTranslet());
 		il.append(transf.loadHandler());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int index = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "transferOutputSettings", "("+Constants_Fields.OUTPUT_HANDLER_SIG+")V");
-		int index = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "transferOutputSettings", "(" + Constants_Fields.OUTPUT_HANDLER_SIG + ")V");
+//ORIGINAL LINE: final int index = cpg.addMethodref(TRANSLET_CLASS, "transferOutputSettings", "("+OUTPUT_HANDLER_SIG+")V");
+		int index = cpg.addMethodref(TRANSLET_CLASS, "transferOutputSettings", "(" + OUTPUT_HANDLER_SIG + ")V");
 		il.append(new INVOKEVIRTUAL(index));
 
 			/*
@@ -1751,11 +1747,11 @@ namespace org.apache.xalan.xsltc.compiler
 		const string pattern = "`aload'`pop'`instruction'";
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.util.InstructionFinder find = new org.apache.bcel.util.InstructionFinder(il);
 		InstructionFinder find = new InstructionFinder(il);
-		for (IEnumerator iter = find.search(pattern); iter.MoveNext();)
+		for (System.Collections.IEnumerator iter = find.search(pattern); iter.MoveNext();)
 		{
 			InstructionHandle[] match = (InstructionHandle[])iter.Current;
 			try
@@ -1783,7 +1779,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("Stylesheet");
 		displayContents(indent + IndentIncrement);
 		}

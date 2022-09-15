@@ -59,14 +59,14 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getName = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_NODE_NAME, Constants_Fields.GET_NODE_NAME_SIG);
-		int getName = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_NODE_NAME, Constants_Fields.GET_NODE_NAME_SIG);
+//ORIGINAL LINE: final int getName = cpg.addInterfaceMethodref(DOM_INTF, GET_NODE_NAME, GET_NODE_NAME_SIG);
+		int getName = cpg.addInterfaceMethodref(DOM_INTF, GET_NODE_NAME, GET_NODE_NAME_SIG);
 		base.translate(classGen, methodGen);
 		il.append(new INVOKEINTERFACE(getName, 2));
 		}

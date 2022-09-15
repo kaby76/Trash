@@ -23,7 +23,6 @@ using System.Collections;
  */
 namespace org.apache.xalan.templates
 {
-
 	using XPath = org.apache.xpath.XPath;
 
 	/// <summary>
@@ -35,8 +34,8 @@ namespace org.apache.xalan.templates
 	///   %space-att;
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Conditional-Processing-with-xsl:choose">XXX in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Conditional-Processing-with-xsl:choose">XXX in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemWhen : ElemTemplateElement
 	{
@@ -73,7 +72,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> An integer representation of the element, defined in the
 	  ///     Constants class. </returns>
-	  /// <seealso cref= org.apache.xalan.templates.Constants </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"/>
 	  public override int XSLToken
 	  {
 		  get
@@ -88,15 +87,15 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
 		base.compose(sroot);
-		ArrayList vnames = sroot.getComposeState().VariableNames;
+		ArrayList vnames = sroot.ComposeState.VariableNames;
 		if (null != m_test)
 		{
-		  m_test.fixupVariables(vnames, sroot.getComposeState().GlobalsSize);
+		  m_test.fixupVariables(vnames, sroot.ComposeState.GlobalsSize);
 		}
 	  }
 

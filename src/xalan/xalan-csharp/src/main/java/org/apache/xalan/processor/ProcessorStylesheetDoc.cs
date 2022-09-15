@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.processor
 {
-
 	/// <summary>
 	/// This class processes the xsl:stylesheet element.  At the 
 	/// moment, it defers all methods to it's superclass.

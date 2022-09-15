@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// Primary constants used by the XSLT Processor
 	/// @xsl.usage advanced
@@ -79,8 +78,6 @@ namespace org.apache.xml.utils
 	  /// Xalan extension namespaces.
 	  /// </summary>
 	  public const string S_EXTENSIONS_OLD_JAVA_URL = "http://xml.apache.org/xslt/java", S_EXTENSIONS_JAVA_URL = "http://xml.apache.org/xalan/java", S_EXTENSIONS_LOTUSXSL_JAVA_URL = "http://xsl.lotus.com/java", S_EXTENSIONS_XALANLIB_URL = "http://xml.apache.org/xalan", S_EXTENSIONS_REDIRECT_URL = "http://xml.apache.org/xalan/redirect", S_EXTENSIONS_PIPE_URL = "http://xml.apache.org/xalan/PipeDocument", S_EXTENSIONS_SQL_URL = "http://xml.apache.org/xalan/sql";
-		// The old namespace for Java extension
-		// The new namespace for Java extension
 
 	  /// <summary>
 	  /// EXSLT extension namespaces.

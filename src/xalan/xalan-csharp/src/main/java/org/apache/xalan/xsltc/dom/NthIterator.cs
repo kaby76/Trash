@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using DTMAxisIteratorBase = org.apache.xml.dtm.@ref.DTMAxisIteratorBase;
@@ -77,7 +76,7 @@ namespace org.apache.xalan.xsltc.dom
 			_ready = false;
 			return _source.getNodeByPosition(_position);
 		}
-		return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		return DTMAxisIterator.END;
 		/*
 		if (_ready && _position > 0) {
 				final int pos = _source.isReverse()
@@ -96,9 +95,7 @@ namespace org.apache.xalan.xsltc.dom
 		*/
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator setStartNode(final int node)
-		public override DTMAxisIterator setStartNode(int node)
+		public override DTMAxisIterator setStartNode(in int node)
 		{
 		if (_isRestartable)
 		{

@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using BranchInstruction = org.apache.bcel.generic.BranchInstruction;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKESTATIC = org.apache.bcel.generic.INVOKESTATIC;
@@ -55,8 +54,8 @@ namespace org.apache.xalan.xsltc.compiler
 		public RelationalExpr(int op, Expression left, Expression right)
 		{
 		_op = op;
-		(_left = left).Parent = this;
-		(_right = right).Parent = this;
+		(_left = left).setParent(this);
+		(_right = right).setParent(this);
 		}
 
 		public override Parser Parser
@@ -109,7 +108,7 @@ namespace org.apache.xalan.xsltc.compiler
 		return _left.Type is NodeSetType || _right.Type is NodeSetType;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -135,8 +134,8 @@ namespace org.apache.xalan.xsltc.compiler
 			if (_left is VariableRefBase)
 			{
 				VariableRefBase @ref = (VariableRefBase)_left;
-				VariableBase @var = @ref.Variable;
-				typeL = @var.Type;
+				VariableBase var = @ref.Variable;
+				typeL = var.Type;
 			}
 			}
 			if (tright is ReferenceType)
@@ -144,8 +143,8 @@ namespace org.apache.xalan.xsltc.compiler
 			if (_right is VariableRefBase)
 			{
 				VariableRefBase @ref = (VariableRefBase)_right;
-				VariableBase @var = @ref.Variable;
-				typeR = @var.Type;
+				VariableBase var = @ref.Variable;
+				typeR = var.Type;
 			}
 			}
 			// bug fix # 2838 
@@ -244,10 +243,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-			ConstantPoolGen cpg = classGen.ConstantPool;
+			ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
+			InstructionList il = methodGen.getInstructionList();
 
 			// Call compare() from the BasisLibrary
 			_left.translate(classGen, methodGen);
@@ -258,7 +257,7 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(new PUSH(cpg, _op));
 			il.append(methodGen.loadDOM());
 
-			int index = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "compare", "(" + _left.Type.toSignature() + _right.Type.toSignature() + "I" + Constants_Fields.DOM_INTF_SIG + ")Z");
+			int index = cpg.addMethodref(BASIS_LIBRARY_CLASS, "compare", "(" + _left.Type.toSignature() + _right.Type.toSignature() + "I" + DOM_INTF_SIG + ")Z");
 			il.append(new INVOKESTATIC(index));
 		}
 		else
@@ -280,7 +279,7 @@ namespace org.apache.xalan.xsltc.compiler
 			BranchInstruction bi = null;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
+			InstructionList il = methodGen.getInstructionList();
 
 			_left.translate(classGen, methodGen);
 			_right.translate(classGen, methodGen);
@@ -317,7 +316,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 			default:
 			ErrorMsg msg = new ErrorMsg(ErrorMsg.ILLEGAL_RELAT_OP_ERR,this);
-			Parser.reportError(Constants_Fields.FATAL, msg);
+			Parser.reportError(Constants.FATAL, msg);
 		break;
 			}
 

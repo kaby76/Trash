@@ -23,8 +23,10 @@ using System.Collections;
  */
 namespace org.apache.xpath.functions
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 
 	/// <summary>
 	/// Base class for functions that accept two arguments.
@@ -81,7 +83,7 @@ namespace org.apache.xpath.functions
 	  /// <param name="argNum"> The argument number index.
 	  /// </param>
 	  /// <exception cref="WrongNumberArgsException"> If the argNum parameter is greater than 1. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setArg(org.apache.xpath.Expression arg, int argNum) throws WrongNumberArgsException
 	  public override void setArg(Expression arg, int argNum)
 	  {
@@ -109,7 +111,7 @@ namespace org.apache.xpath.functions
 	  /// <param name="argNum"> The number of arguments that is being passed to the function.
 	  /// </param>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void checkNumberArgs(int argNum) throws WrongNumberArgsException
 	  public override void checkNumberArgs(int argNum)
 	  {
@@ -124,7 +126,7 @@ namespace org.apache.xpath.functions
 	  /// message for this function object.
 	  /// </summary>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void reportWrongNumberArgs() throws WrongNumberArgsException
 	  protected internal override void reportWrongNumberArgs()
 	  {
@@ -150,7 +152,7 @@ namespace org.apache.xpath.functions
 			  this.outerInstance = outerInstance;
 		  }
 
-		/// <seealso cref= ExpressionOwner#getExpression() </seealso>
+		/// <seealso cref="ExpressionOwner.getExpression()"/>
 		public virtual Expression Expression
 		{
 			get
@@ -168,7 +170,7 @@ namespace org.apache.xpath.functions
 	  }
 
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callArgVisitors(XPathVisitor visitor)
 	  {
 		  base.callArgVisitors(visitor);
@@ -178,7 +180,7 @@ namespace org.apache.xpath.functions
 		  }
 	  }
 
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		  if (!base.deepEquals(expr))

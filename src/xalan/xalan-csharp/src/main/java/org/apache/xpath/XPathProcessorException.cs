@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath
 {
-
 	/// <summary>
 	/// Derived from XPathException in order that XPath processor
 	/// exceptions may be specifically caught.

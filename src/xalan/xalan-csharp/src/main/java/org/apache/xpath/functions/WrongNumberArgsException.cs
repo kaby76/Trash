@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath.functions
 {
-
 	/// <summary>
 	/// An exception that is thrown if the wrong number of arguments to an exception 
 	/// are specified by the stylesheet.

@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using DTMAxisIteratorBase = org.apache.xml.dtm.@ref.DTMAxisIteratorBase;
 
@@ -94,7 +93,7 @@ namespace org.apache.xalan.xsltc.dom
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int result = _node;
 		int result = _node;
-		_node = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		_node = DTMAxisIterator.END;
 		return returnNode(result);
 		}
 

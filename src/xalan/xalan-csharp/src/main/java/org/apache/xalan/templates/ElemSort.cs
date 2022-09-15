@@ -23,7 +23,6 @@ using System.Collections;
  */
 namespace org.apache.xalan.templates
 {
-
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using XPath = org.apache.xpath.XPath;
 
@@ -44,8 +43,8 @@ namespace org.apache.xalan.templates
 	/// <!-- xsl:sort cannot occur after any other elements or
 	/// any non-whitespace character -->
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#sorting">sorting in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.sorting">sorting in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemSort : ElemTemplateElement
 	{
@@ -229,8 +228,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID of the element </returns>
 	  public override int XSLToken
 	  {
@@ -260,12 +259,12 @@ namespace org.apache.xalan.templates
 	  /// <returns> Child just added to the child list
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node appendChild(org.w3c.dom.Node newChild) throws org.w3c.dom.DOMException
 	  public override Node appendChild(Node newChild)
 	  {
 
-		error(XSLTErrorResources.ER_CANNOT_ADD, new object[]{newChild.NodeName, this.NodeName}); //"Can not add " +((ElemTemplateElement)newChild).m_elemName +
+		error(XSLTErrorResources.ER_CANNOT_ADD, new object[]{newChild.getNodeName(), this.NodeName}); //"Can not add " +((ElemTemplateElement)newChild).m_elemName +
 
 		//" to " + this.m_elemName);
 		return null;
@@ -277,12 +276,12 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
 		base.compose(sroot);
-		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		StylesheetRoot.ComposeState cstate = sroot.ComposeState;
 		ArrayList vnames = cstate.VariableNames;
 		if (null != m_caseorder_avt)
 		{

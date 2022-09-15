@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.processor
 {
-
 	using ElemApplyImport = org.apache.xalan.templates.ElemApplyImport;
 	using ElemApplyTemplates = org.apache.xalan.templates.ElemApplyTemplates;
 	using ElemAttribute = org.apache.xalan.templates.ElemAttribute;
@@ -62,7 +61,7 @@ namespace org.apache.xalan.processor
 	  /// Start an ElemExsltFunction. Verify that it is top level and that it has a name attribute with a
 	  /// namespace.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {
@@ -95,7 +94,7 @@ namespace org.apache.xalan.processor
 	  /// <summary>
 	  /// Must include; super doesn't suffice!
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void appendAndPush(StylesheetHandler handler, org.apache.xalan.templates.ElemTemplateElement elem) throws org.xml.sax.SAXException
 	  protected internal override void appendAndPush(StylesheetHandler handler, ElemTemplateElement elem)
 	  {
@@ -109,7 +108,7 @@ namespace org.apache.xalan.processor
 	  /// <summary>
 	  /// End an ElemExsltFunction, and verify its validity.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(StylesheetHandler handler, String uri, String localName, String rawName) throws org.xml.sax.SAXException
 	  public override void endElement(StylesheetHandler handler, string uri, string localName, string rawName)
 	  {
@@ -123,7 +122,7 @@ namespace org.apache.xalan.processor
 	  /// there are no literal result elements except within a func:result element and that
 	  /// the func:result element does not contain any following siblings except xsl:fallback.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void validate(org.apache.xalan.templates.ElemTemplateElement elem, StylesheetHandler handler) throws org.xml.sax.SAXException
 	  public virtual void validate(ElemTemplateElement elem, StylesheetHandler handler)
 	  {

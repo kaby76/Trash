@@ -58,15 +58,15 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Returns the string value for a node in the DOM
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getNamespace = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNamespaceName", "(I)"+Constants_Fields.STRING_SIG);
-		int getNamespace = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNamespaceName", "(I)" + Constants_Fields.STRING_SIG);
+//ORIGINAL LINE: final int getNamespace = cpg.addInterfaceMethodref(DOM_INTF, "getNamespaceName", "(I)"+STRING_SIG);
+		int getNamespace = cpg.addInterfaceMethodref(DOM_INTF, "getNamespaceName", "(I)" + STRING_SIG);
 		base.translate(classGen, methodGen);
 		il.append(new INVOKEINTERFACE(getNamespace, 2));
 		}

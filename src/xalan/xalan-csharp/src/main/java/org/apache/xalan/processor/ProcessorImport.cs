@@ -22,15 +22,14 @@
  */
 namespace org.apache.xalan.processor
 {
-
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 
 	/// <summary>
 	/// This class processes parse events for an xsl:import element. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#import">import in XSLT Specification</a>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.import">import in XSLT Specification</a>"
 	/// 
-	/// @xsl.usage internal </seealso>
+	/// @xsl.usage internal/>
 	[Serializable]
 	public class ProcessorImport : ProcessorInclude
 	{

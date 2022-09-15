@@ -27,6 +27,9 @@ namespace org.apache.xpath.objects
 	using XMLCharacterRecognizer = org.apache.xml.utils.XMLCharacterRecognizer;
 	using XMLString = org.apache.xml.utils.XMLString;
 	using XMLStringFactory = org.apache.xml.utils.XMLStringFactory;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 
 	/// <summary>
 	/// This class represents an XPath string object, and is capable of
@@ -121,7 +124,7 @@ namespace org.apache.xpath.objects
 		for (int i = 0; i < s.length(); i++)
 		{
 			char c = s.charAt(i);
-		if (c != '-' && c != '.' && (c < 0X30 || c > 0x39))
+		if (c != '-' && c != '.' && (c < (char)0X30 || c > (char)0x39))
 		{
 				// The character is not a '-' or a '.' or a digit
 				// then return NaN because something is wrong.
@@ -193,12 +196,12 @@ namespace org.apache.xpath.objects
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException
 	  public override void dispatchCharactersEvents(org.xml.sax.ContentHandler ch)
 	  {
 
-		string str = str();
+		string str = this.str();
 
 		ch.characters(str.ToCharArray(), 0, str.Length);
 	  }
@@ -211,12 +214,12 @@ namespace org.apache.xpath.objects
 	  /// <param name="lh"> A non-null reference to a LexicalHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchAsComment(org.xml.sax.ext.LexicalHandler lh) throws org.xml.sax.SAXException
 	  public virtual void dispatchAsComment(org.xml.sax.ext.LexicalHandler lh)
 	  {
 
-		string str = str();
+		string str = this.str();
 
 		lh.comment(str.ToCharArray(), 0, str.Length);
 	  }
@@ -327,8 +330,8 @@ namespace org.apache.xpath.objects
 	  /// <param name="obj2">   the object to compare this <code>String</code> against. </param>
 	  /// <returns>  <code>true</code> if the <code>String</code>s are equal;
 	  ///          <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     java.lang.String#compareTo(java.lang.String) </seealso>
-	  /// <seealso cref=     java.lang.String#equalsIgnoreCase(java.lang.String) </seealso>
+	  /// <seealso cref="java.lang.String.compareTo(java.lang.String)"/>
+	  /// <seealso cref="java.lang.String.equalsIgnoreCase(java.lang.String)"/>
 	  public virtual bool Equals(string obj2)
 	  {
 		return str().Equals(obj2);
@@ -344,8 +347,8 @@ namespace org.apache.xpath.objects
 	  ///                     against. </param>
 	  /// <returns>  <code>true</code> if the <code>String </code>are equal;
 	  ///          <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     java.lang.String#compareTo(java.lang.String) </seealso>
-	  /// <seealso cref=     java.lang.String#equalsIgnoreCase(java.lang.String) </seealso>
+	  /// <seealso cref="java.lang.String.compareTo(java.lang.String)"/>
+	  /// <seealso cref="java.lang.String.equalsIgnoreCase(java.lang.String)"/>
 	  public virtual bool Equals(XMLString obj2)
 	  {
 		if (obj2 != null)
@@ -372,8 +375,8 @@ namespace org.apache.xpath.objects
 	  ///                     against. </param>
 	  /// <returns>  <code>true</code> if the <code>String </code>are equal;
 	  ///          <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     java.lang.String#compareTo(java.lang.String) </seealso>
-	  /// <seealso cref=     java.lang.String#equalsIgnoreCase(java.lang.String) </seealso>
+	  /// <seealso cref="java.lang.String.compareTo(java.lang.String)"/>
+	  /// <seealso cref="java.lang.String.equalsIgnoreCase(java.lang.String)"/>
 	  public override bool Equals(object obj2)
 	  {
 
@@ -410,12 +413,12 @@ namespace org.apache.xpath.objects
 	  /// <returns>  <code>true</code> if the argument is not <code>null</code>
 	  ///          and the <code>String</code>s are equal,
 	  ///          ignoring case; <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     #equals(Object) </seealso>
-	  /// <seealso cref=     java.lang.Character#toLowerCase(char) </seealso>
-	  /// <seealso cref= java.lang.Character#toUpperCase(char) </seealso>
+	  /// <seealso cref=".equals(Object)"/>
+	  /// <seealso cref="java.lang.Character.toLowerCase(char)"/>
+	  /// <seealso cref="java.lang.Character.toUpperCase(char)"/>
 	  public virtual bool equalsIgnoreCase(string anotherString)
 	  {
-		return str().Equals(anotherString, StringComparison.CurrentCultureIgnoreCase);
+		return str().Equals(anotherString, StringComparison.OrdinalIgnoreCase);
 	  }
 
 	  /// <summary>
@@ -473,8 +476,8 @@ namespace org.apache.xpath.objects
 	  /// <returns>  a negative integer, zero, or a positive integer as the
 	  ///          the specified String is greater than, equal to, or less
 	  ///          than this String, ignoring case considerations. </returns>
-	  /// <seealso cref=     java.text.Collator#compare(String, String)
-	  /// @since   1.2 </seealso>
+	  /// <seealso cref="java.text.Collator.compare(String, String)"
+	  /// @since   1.2/>
 	  public virtual int compareToIgnoreCase(XMLString str)
 	  {
 		// %REVIEW%  Like it says, @since 1.2. Doesn't exist in earlier
@@ -521,7 +524,7 @@ namespace org.apache.xpath.objects
 	  ///          Note also that <code>true</code> will be returned if the
 	  ///          argument is an empty string or is equal to this
 	  ///          <code>String</code> object as determined by the
-	  ///          <seealso cref="#equals(Object)"/> method. </returns>
+	  ///          <seealso cref="equals(Object)"/> method. </returns>
 	  /// <exception cref="java.lang.NullPointerException"> if <code>prefix</code> is
 	  ///          <code>null</code>. </exception>
 	  public virtual bool startsWith(string prefix)
@@ -585,7 +588,7 @@ namespace org.apache.xpath.objects
 	  ///          Note also that <code>true</code> will be returned if the
 	  ///          argument is an empty string or is equal to this
 	  ///          <code>String</code> object as determined by the
-	  ///          <seealso cref="#equals(Object)"/> method. </returns>
+	  ///          <seealso cref="equals(Object)"/> method. </returns>
 	  /// <exception cref="java.lang.NullPointerException"> if <code>prefix</code> is
 	  ///          <code>null</code>. </exception>
 	  public virtual bool startsWith(XMLString prefix)
@@ -602,7 +605,7 @@ namespace org.apache.xpath.objects
 	  ///          this object; <code>false</code> otherwise. Note that the
 	  ///          result will be <code>true</code> if the argument is the
 	  ///          empty string or is equal to this <code>String</code> object
-	  ///          as determined by the <seealso cref="#equals(Object)"/> method. </returns>
+	  ///          as determined by the <seealso cref="equals(Object)"/> method. </returns>
 	  /// <exception cref="java.lang.NullPointerException"> if <code>suffix</code> is
 	  ///          <code>null</code>. </exception>
 	  public virtual bool endsWith(string suffix)
@@ -747,7 +750,7 @@ namespace org.apache.xpath.objects
 	  ///          <code>null</code>. </exception>
 	  public virtual int indexOf(string str)
 	  {
-		return str().IndexOf(str, StringComparison.Ordinal);
+		return this.str().IndexOf(str, StringComparison.Ordinal);
 	  }
 
 	  /// <summary>
@@ -768,7 +771,7 @@ namespace org.apache.xpath.objects
 	  ///          <code>null</code>. </exception>
 	  public virtual int indexOf(XMLString str)
 	  {
-		return str().IndexOf(str.ToString(), StringComparison.Ordinal);
+		return this.str().IndexOf(str.ToString(), StringComparison.Ordinal);
 	  }
 
 	  /// <summary>
@@ -800,7 +803,7 @@ namespace org.apache.xpath.objects
 	  ///          <code>null</code> </exception>
 	  public virtual int indexOf(string str, int fromIndex)
 	  {
-		return str().IndexOf(str, fromIndex, StringComparison.Ordinal);
+		return this.str().IndexOf(str, fromIndex, StringComparison.Ordinal);
 	  }
 
 	  /// <summary>
@@ -822,7 +825,7 @@ namespace org.apache.xpath.objects
 	  ///          <code>null</code>. </exception>
 	  public virtual int lastIndexOf(string str)
 	  {
-		return str().LastIndexOf(str, StringComparison.Ordinal);
+		return this.str().LastIndexOf(str, StringComparison.Ordinal);
 	  }
 
 	  /// <summary>
@@ -846,7 +849,7 @@ namespace org.apache.xpath.objects
 	  ///          <code>null</code>. </exception>
 	  public virtual int lastIndexOf(string str, int fromIndex)
 	  {
-		return str().LastIndexOf(str, fromIndex, StringComparison.Ordinal);
+		return this.str().LastIndexOf(str, fromIndex, StringComparison.Ordinal);
 	  }
 
 	  /// <summary>
@@ -905,7 +908,7 @@ namespace org.apache.xpath.objects
 	  {
 
 		// %REVIEW% Make an FSB here?
-		return new XString(str() + str);
+		return new XString(this.str() + str);
 	  }
 
 	  /// <summary>
@@ -914,8 +917,8 @@ namespace org.apache.xpath.objects
 	  /// </summary>
 	  /// <param name="locale"> use the case transformation rules for this locale </param>
 	  /// <returns> the String, converted to lowercase. </returns>
-	  /// <seealso cref=     java.lang.Character#toLowerCase(char) </seealso>
-	  /// <seealso cref=     java.lang.String#toUpperCase(Locale) </seealso>
+	  /// <seealso cref="java.lang.Character.toLowerCase(char)"/>
+	  /// <seealso cref="java.lang.String.toUpperCase(Locale)"/>
 	  public virtual XMLString toLowerCase(Locale locale)
 	  {
 		return new XString(str().ToLower(locale));
@@ -930,8 +933,8 @@ namespace org.apache.xpath.objects
 	  /// </para>
 	  /// </summary>
 	  /// <returns>  the string, converted to lowercase. </returns>
-	  /// <seealso cref=     java.lang.Character#toLowerCase(char) </seealso>
-	  /// <seealso cref=     java.lang.String#toLowerCase(Locale) </seealso>
+	  /// <seealso cref="java.lang.Character.toLowerCase(char)"/>
+	  /// <seealso cref="java.lang.String.toLowerCase(Locale)"/>
 	  public virtual XMLString toLowerCase()
 	  {
 		return new XString(str().ToLower());
@@ -942,8 +945,8 @@ namespace org.apache.xpath.objects
 	  /// case using the rules of the given locale. </summary>
 	  /// <param name="locale"> use the case transformation rules for this locale </param>
 	  /// <returns> the String, converted to uppercase. </returns>
-	  /// <seealso cref=     java.lang.Character#toUpperCase(char) </seealso>
-	  /// <seealso cref=     java.lang.String#toLowerCase(Locale) </seealso>
+	  /// <seealso cref="java.lang.Character.toUpperCase(char)"/>
+	  /// <seealso cref="java.lang.String.toLowerCase(Locale)"/>
 	  public virtual XMLString toUpperCase(Locale locale)
 	  {
 		return new XString(str().ToUpper(locale));
@@ -976,8 +979,8 @@ namespace org.apache.xpath.objects
 	  /// </para>
 	  /// </summary>
 	  /// <returns>  the string, converted to uppercase. </returns>
-	  /// <seealso cref=     java.lang.Character#toUpperCase(char) </seealso>
-	  /// <seealso cref=     java.lang.String#toUpperCase(Locale) </seealso>
+	  /// <seealso cref="java.lang.Character.toUpperCase(char)"/>
+	  /// <seealso cref="java.lang.String.toUpperCase(Locale)"/>
 	  public virtual XMLString toUpperCase()
 	  {
 		return new XString(str().ToUpper());
@@ -1103,7 +1106,7 @@ namespace org.apache.xpath.objects
 		return edit ? xsf.newstr(new string(buf, start, d - start)) : this;
 	  }
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
 	  {
 		  visitor.visitStringLiteral(owner, this);

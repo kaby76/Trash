@@ -26,7 +26,10 @@ namespace org.apache.xalan.xsltc.dom
 {
 
 
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using DOMCache = org.apache.xalan.xsltc.DOMCache;
+	using DOMEnhancedForDTM = org.apache.xalan.xsltc.DOMEnhancedForDTM;
+	using Translet = org.apache.xalan.xsltc.Translet;
 	using AbstractTranslet = org.apache.xalan.xsltc.runtime.AbstractTranslet;
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using Constants = org.apache.xalan.xsltc.runtime.Constants;
@@ -81,13 +84,13 @@ namespace org.apache.xalan.xsltc.dom
 			// Initialise statistics variables
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final long stamp = System.currentTimeMillis();
-			long stamp = DateTimeHelperClass.CurrentUnixTimeMillis();
+			long stamp = DateTimeHelper.CurrentUnixTimeMillis();
 			_firstReferenced = stamp;
 			_lastReferenced = stamp;
 			_accessCount = 0;
 			loadDocument(uri);
 
-			_buildTime = DateTimeHelperClass.CurrentUnixTimeMillis() - stamp;
+			_buildTime = DateTimeHelper.CurrentUnixTimeMillis() - stamp;
 		}
 
 		/// <summary>
@@ -100,7 +103,7 @@ namespace org.apache.xalan.xsltc.dom
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final long stamp = System.currentTimeMillis();
-			long stamp = DateTimeHelperClass.CurrentUnixTimeMillis();
+			long stamp = DateTimeHelper.CurrentUnixTimeMillis();
 					_dom = (DOMEnhancedForDTM)outerInstance._dtmManager.getDTM(new SAXSource(outerInstance._reader, new InputSource(uri)), false, null, true, false);
 			_dom.DocumentURI = uri;
 
@@ -108,7 +111,7 @@ namespace org.apache.xalan.xsltc.dom
 			// priority algorithm (currently round robin).
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final long thisTime = System.currentTimeMillis() - stamp;
-			long thisTime = DateTimeHelperClass.CurrentUnixTimeMillis() - stamp;
+			long thisTime = DateTimeHelper.CurrentUnixTimeMillis() - stamp;
 			if (_buildTime > 0)
 			{
 				_buildTime = (long)((ulong)(_buildTime + thisTime) >> 1);
@@ -215,13 +218,13 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// DocumentCache constructor
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public DocumentCache(int size) throws org.xml.sax.SAXException
 		public DocumentCache(int size) : this(size, null)
 		{
 			try
 			{
-				_dtmManager = (XSLTCDTMManager)XSLTCDTMManager.DTMManagerClass.newInstance();
+				_dtmManager = (XSLTCDTMManager)System.Activator.CreateInstance(XSLTCDTMManager.DTMManagerClass);
 			}
 			catch (Exception e)
 			{
@@ -232,7 +235,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// DocumentCache constructor
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public DocumentCache(int size, XSLTCDTMManager dtmManager) throws org.xml.sax.SAXException
 		public DocumentCache(int size, XSLTCDTMManager dtmManager)
 		{
@@ -251,14 +254,14 @@ namespace org.apache.xalan.xsltc.dom
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			try
 			{
-			factory.setFeature(org.apache.xalan.xsltc.runtime.Constants_Fields.NAMESPACE_FEATURE,true);
+			factory.setFeature(Constants.NAMESPACE_FEATURE,true);
 			}
 			catch (Exception)
 			{
-			factory.NamespaceAware = true;
+			factory.setNamespaceAware(true);
 			}
 			_parser = factory.newSAXParser();
-			_reader = _parser.XMLReader;
+			_reader = _parser.getXMLReader();
 		}
 		catch (ParserConfigurationException)
 		{
@@ -275,13 +278,13 @@ namespace org.apache.xalan.xsltc.dom
 		{
 			URL url = new URL(uri);
 			URLConnection connection = url.openConnection();
-			long timestamp = connection.LastModified;
+			long timestamp = connection.getLastModified();
 			// Check for a "file:" URI (courtesy of Brian Ewins)
 			if (timestamp == 0)
 			{ // get 0 for local URI
-				if ("file".Equals(url.Protocol))
+				if ("file".Equals(url.getProtocol()))
 				{
-					File localfile = new File(URLDecoder.decode(url.File));
+					File localfile = new File(URLDecoder.decode(url.getFile()));
 					timestamp = localfile.lastModified();
 				}
 			}
@@ -290,7 +293,7 @@ namespace org.apache.xalan.xsltc.dom
 		// Brutal handling of all exceptions
 		catch (Exception)
 		{
-			return (DateTimeHelperClass.CurrentUnixTimeMillis());
+			return (DateTimeHelper.CurrentUnixTimeMillis());
 		}
 		}
 
@@ -378,7 +381,7 @@ namespace org.apache.xalan.xsltc.dom
 		// If the document is in the cache we must check if it is still valid
 		else
 		{
-			long now = DateTimeHelperClass.CurrentUnixTimeMillis();
+			long now = DateTimeHelper.CurrentUnixTimeMillis();
 			long chk = doc.LastChecked;
 			doc.LastChecked = now;
 			// Has the modification time for this file been checked lately?

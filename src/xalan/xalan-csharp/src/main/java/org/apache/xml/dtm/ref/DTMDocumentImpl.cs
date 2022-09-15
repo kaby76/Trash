@@ -23,6 +23,11 @@
 namespace org.apache.xml.dtm.@ref
 {
 
+	using DTM = org.apache.xml.dtm.DTM;
+	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
+	using DTMAxisTraverser = org.apache.xml.dtm.DTMAxisTraverser;
+	using DTMManager = org.apache.xml.dtm.DTMManager;
+	using DTMWSFilter = org.apache.xml.dtm.DTMWSFilter;
 	using FastStringBuffer = org.apache.xml.utils.FastStringBuffer;
 	using XMLString = org.apache.xml.utils.XMLString;
 	using XMLStringFactory = org.apache.xml.utils.XMLStringFactory;
@@ -68,8 +73,8 @@ namespace org.apache.xml.dtm.@ref
 			// Same as {@link DTMConstructor.IDENT_DOC_DEFAULT}
 			protected internal static readonly int DOCHANDLE_MASK = -1 - NODEHANDLE_MASK;
 
-			internal int m_docHandle = org.apache.xml.dtm.DTM_Fields.NULL; // masked document handle for this dtm document
-			internal int m_docElement = org.apache.xml.dtm.DTM_Fields.NULL; // nodeHandle to the root of the actual dtm doc content
+			internal int m_docHandle = NULL; // masked document handle for this dtm document
+			internal int m_docElement = NULL; // nodeHandle to the root of the actual dtm doc content
 
 			// Context for parse-and-append operations
 			internal int currentParent = 0; // current parent - default is document root
@@ -104,7 +109,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// fallback, but that has all the known problems with multithreading
 	  /// on multiprocessors and we Don't Want to Go There.
 	  /// </summary>
-	  /// <seealso cref= setIncrementalSAXSource </seealso>
+	  /// <seealso cref="setIncrementalSAXSource"/>
 	  private IncrementalSAXSource m_incrSAXSource = null;
 
 
@@ -197,7 +202,7 @@ namespace org.apache.xml.dtm.@ref
 			/// <param name="w2"> int As in ChunkedIntArray.append </param>
 			/// <param name="w3"> int As in ChunkedIntArray.append </param>
 			/// <returns> int As in ChunkedIntArray.append </returns>
-			/// <seealso cref= ChunkedIntArray.append </seealso>
+			/// <seealso cref="ChunkedIntArray.append"/>
 			private int appendNode(int w0, int w1, int w2, int w3)
 			{
 					// A decent compiler may inline this.
@@ -231,7 +236,7 @@ namespace org.apache.xml.dtm.@ref
 			/// <param name="state"> true if this feature should be on, false otherwise. </param>
 			public virtual void setFeature(string featureId, bool state)
 			{
-			};
+			}
 
 			/// <summary>
 			/// Set a reference pointer to the element name symbol table.
@@ -425,7 +430,7 @@ namespace org.apache.xml.dtm.@ref
 	  // Accept SAX events, use them to build/extend the DTM tree.
 	  // Replaces the deprecated DocumentHandler interface.
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(char[] ch, int start, int length) throws org.xml.sax.SAXException
 	  public virtual void characters(char[] ch, int start, int length)
 	  {
@@ -446,7 +451,7 @@ namespace org.apache.xml.dtm.@ref
 			m_char_current_start = len;
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 	  public virtual void endDocument()
 	  {
@@ -454,7 +459,7 @@ namespace org.apache.xml.dtm.@ref
 		// There _should't_ be any significant pending text at this point.
 		appendEndDocument();
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName) throws org.xml.sax.SAXException
 	  public virtual void endElement(string namespaceURI, string localName, string qName)
 	  {
@@ -463,19 +468,19 @@ namespace org.apache.xml.dtm.@ref
 		// pop up a level.
 		appendEndElement();
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endPrefixMapping(java.lang.String prefix) throws org.xml.sax.SAXException
 	  public virtual void endPrefixMapping(string prefix)
 	  {
 		// No-op
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void ignorableWhitespace(char[] ch, int start, int length) throws org.xml.sax.SAXException
 	  public virtual void ignorableWhitespace(char[] ch, int start, int length)
 	  {
 		// %TBD% I believe ignorable text isn't part of the DTM model...?
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(java.lang.String target, java.lang.String data) throws org.xml.sax.SAXException
 	  public virtual void processingInstruction(string target, string data)
 	  {
@@ -489,20 +494,20 @@ namespace org.apache.xml.dtm.@ref
 			// No-op for DTM
 		  }
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void skippedEntity(java.lang.String name) throws org.xml.sax.SAXException
 	  public virtual void skippedEntity(string name)
 	  {
 		processAccumulatedText();
 		//%TBD%
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocument() throws org.xml.sax.SAXException
 	  public virtual void startDocument()
 	  {
 		appendStartDocument();
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName, org.xml.sax.Attributes atts) throws org.xml.sax.SAXException
 	  public virtual void startElement(string namespaceURI, string localName, string qName, Attributes atts)
 	  {
@@ -513,17 +518,17 @@ namespace org.apache.xml.dtm.@ref
 		int colon = qName.IndexOf(':');
 		if (colon > 0)
 		{
-		  prefix = qName.Substring(0,colon);
+		  prefix = qName.Substring(0, colon);
 		}
 
 		// %TBD% Where do we pool expandedName, or is it just the union, or...
-		/**/	Console.WriteLine("Prefix=" + prefix + " index=" + m_prefixNames.stringToIndex(prefix));
+		Console.WriteLine("Prefix=" + prefix + " index=" + m_prefixNames.stringToIndex(prefix));
 		appendStartElement(m_nsNames.stringToIndex(namespaceURI), m_localNames.stringToIndex(localName), m_prefixNames.stringToIndex(prefix)); /////// %TBD%
 
 		// %TBD% I'm assuming that DTM will require resequencing of
 		// NS decls before other attrs, hence two passes are taken.
 		// %TBD% Is there an easier way to test for NSDecl?
-		int nAtts = (atts == null) ? 0 : atts.Length;
+		int nAtts = (atts == null) ? 0 : atts.getLength();
 		// %TBD% Countdown is more efficient if nobody cares about sequence.
 		for (int i = nAtts - 1;i >= 0;--i)
 		{
@@ -534,7 +539,7 @@ namespace org.apache.xml.dtm.@ref
 				colon = qName.IndexOf(':');
 				if (colon > 0)
 				{
-					prefix = qName.Substring(0,colon);
+					prefix = qName.Substring(0, colon);
 				}
 				else
 				{
@@ -559,7 +564,7 @@ namespace org.apache.xml.dtm.@ref
 				colon = qName.IndexOf(':');
 				if (colon > 0)
 				{
-					prefix = qName.Substring(0,colon);
+					prefix = qName.Substring(0, colon);
 					localName = qName.Substring(colon + 1);
 				}
 				else
@@ -580,7 +585,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startPrefixMapping(java.lang.String prefix, java.lang.String uri) throws org.xml.sax.SAXException
 	  public virtual void startPrefixMapping(string prefix, string uri)
 	  {
@@ -591,7 +596,7 @@ namespace org.apache.xml.dtm.@ref
 	  // LexicalHandler support. Not all SAX2 parsers support these events
 	  // but we may want to pass them through when they exist...
 	  //
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char[] ch, int start, int length) throws org.xml.sax.SAXException
 	  public virtual void comment(char[] ch, int start, int length)
 	  {
@@ -601,37 +606,37 @@ namespace org.apache.xml.dtm.@ref
 		appendComment(m_char_current_start,length);
 		m_char_current_start += length;
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCDATA() throws org.xml.sax.SAXException
 	  public virtual void endCDATA()
 	  {
 		// No-op in DTM
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDTD() throws org.xml.sax.SAXException
 	  public virtual void endDTD()
 	  {
 		// No-op in DTM
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endEntity(java.lang.String name) throws org.xml.sax.SAXException
 	  public virtual void endEntity(string name)
 	  {
 		// No-op in DTM
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startCDATA() throws org.xml.sax.SAXException
 	  public virtual void startCDATA()
 	  {
 		// No-op in DTM
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId) throws org.xml.sax.SAXException
 	  public virtual void startDTD(string name, string publicId, string systemId)
 	  {
 		// No-op in DTM
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startEntity(java.lang.String name) throws org.xml.sax.SAXException
 	  public virtual void startEntity(string name)
 	  {
@@ -657,7 +662,7 @@ namespace org.apache.xml.dtm.@ref
 					m_docHandle = documentNumber << DOCHANDLE_SHIFT;
 
 					// Initialize the doc -- no parent, no next-sib
-					nodes.writeSlot(0,org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE,-1,-1,0);
+					nodes.writeSlot(0,DOCUMENT_NODE,-1,-1,0);
 					// wait for the first startElement to create the doc root node
 					done = false;
 			}
@@ -1029,7 +1034,7 @@ namespace org.apache.xml.dtm.@ref
 			/// <returns> int true if the given node has child nodes. </returns>
 			public virtual bool hasChildNodes(int nodeHandle)
 			{
-					return (getFirstChild(nodeHandle) != org.apache.xml.dtm.DTM_Fields.NULL);
+					return (getFirstChild(nodeHandle) != NULL);
 			}
 
 			/// <summary>
@@ -1051,7 +1056,7 @@ namespace org.apache.xml.dtm.@ref
 					short type = unchecked((short)(gotslot[0] & 0xFFFF));
 
 					// Check to see if Element or Document node
-					if ((type == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE) || (type == org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE) || (type == org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE))
+					if ((type == ELEMENT_NODE) || (type == DOCUMENT_NODE) || (type == ENTITY_REFERENCE_NODE))
 					{
 
 							// In case when Document root is given
@@ -1063,14 +1068,14 @@ namespace org.apache.xml.dtm.@ref
 
 							int kid = nodeHandle + 1;
 							nodes.readSlot(kid, gotslot);
-							while (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == (gotslot[0] & 0xFFFF))
+							while (ATTRIBUTE_NODE == (gotslot[0] & 0xFFFF))
 							{
 									// points to next sibling
 									kid = gotslot[2];
 									// Return NULL if node has only attributes
-									if (kid == org.apache.xml.dtm.DTM_Fields.NULL)
+									if (kid == NULL)
 									{
-										return org.apache.xml.dtm.DTM_Fields.NULL;
+										return NULL;
 									}
 									nodes.readSlot(kid, gotslot);
 							}
@@ -1084,7 +1089,7 @@ namespace org.apache.xml.dtm.@ref
 					}
 					// No child found
 
-					return org.apache.xml.dtm.DTM_Fields.NULL;
+					return NULL;
 			}
 
 			/// <summary>
@@ -1100,8 +1105,8 @@ namespace org.apache.xml.dtm.@ref
 					// ###shs put trace/debug later
 					nodeHandle &= NODEHANDLE_MASK;
 					// do not need to test node type since getFirstChild does that
-					int lastChild = org.apache.xml.dtm.DTM_Fields.NULL;
-					for (int nextkid = getFirstChild(nodeHandle); nextkid != org.apache.xml.dtm.DTM_Fields.NULL; nextkid = getNextSibling(nextkid))
+					int lastChild = NULL;
+					for (int nextkid = getFirstChild(nodeHandle); nextkid != NULL; nextkid = getNextSibling(nextkid))
 					{
 							lastChild = nextkid;
 					}
@@ -1126,12 +1131,12 @@ namespace org.apache.xml.dtm.@ref
 					nodes.readSlot(nodeHandle, gotslot);
 					short type = unchecked((short)(gotslot[0] & 0xFFFF));
 					// If nodeHandle points to element next slot would be first attribute
-					if (type == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE)
+					if (type == ELEMENT_NODE)
 					{
 							nodeHandle++;
 					}
 					// Iterate through Attribute Nodes
-					while (type == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE)
+					while (type == ATTRIBUTE_NODE)
 					{
 							if ((nsIndex == (gotslot[0] << 16)) && (gotslot[3] == nameIndex))
 							{
@@ -1141,7 +1146,7 @@ namespace org.apache.xml.dtm.@ref
 							nodeHandle = gotslot[2];
 							nodes.readSlot(nodeHandle, gotslot);
 					}
-					return org.apache.xml.dtm.DTM_Fields.NULL;
+					return NULL;
 			}
 
 			/// <summary>
@@ -1159,13 +1164,13 @@ namespace org.apache.xml.dtm.@ref
 					// reducing the addressing and call-and-return overhead.
 
 					// Should we check if handle is element (do we want sanity checks?)
-					if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE != (nodes.readEntry(nodeHandle, 0) & 0xFFFF))
+					if (ELEMENT_NODE != (nodes.readEntry(nodeHandle, 0) & 0xFFFF))
 					{
-							return org.apache.xml.dtm.DTM_Fields.NULL;
+							return NULL;
 					}
 					// First Attribute (if any) should be at next position in table
 					nodeHandle++;
-					return (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == (nodes.readEntry(nodeHandle, 0) & 0xFFFF)) ? nodeHandle | m_docHandle : org.apache.xml.dtm.DTM_Fields.NULL;
+					return (ATTRIBUTE_NODE == (nodes.readEntry(nodeHandle, 0) & 0xFFFF)) ? nodeHandle | m_docHandle : NULL;
 			}
 
 			/// <summary>
@@ -1183,7 +1188,7 @@ namespace org.apache.xml.dtm.@ref
 			public virtual int getFirstNamespaceNode(int nodeHandle, bool inScope)
 			{
 
-					return org.apache.xml.dtm.DTM_Fields.NULL;
+					return NULL;
 			}
 
 			/// <summary>
@@ -1209,16 +1214,16 @@ namespace org.apache.xml.dtm.@ref
 					// Document root has no next sibling
 					if (nodeHandle == 0)
 					{
-							return org.apache.xml.dtm.DTM_Fields.NULL;
+							return NULL;
 					}
 
 					short type = unchecked((short)(nodes.readEntry(nodeHandle, 0) & 0xFFFF));
-					if ((type == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE) || (type == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE) || (type == org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE))
+					if ((type == ELEMENT_NODE) || (type == ATTRIBUTE_NODE) || (type == ENTITY_REFERENCE_NODE))
 					{
 							int nextSib = nodes.readEntry(nodeHandle, 2);
-							if (nextSib == org.apache.xml.dtm.DTM_Fields.NULL)
+							if (nextSib == NULL)
 							{
-									return org.apache.xml.dtm.DTM_Fields.NULL;
+									return NULL;
 							}
 							if (nextSib != 0)
 							{
@@ -1234,7 +1239,7 @@ namespace org.apache.xml.dtm.@ref
 							return (m_docHandle | nodeHandle);
 					}
 
-					return org.apache.xml.dtm.DTM_Fields.NULL;
+					return NULL;
 			}
 
 			/// <summary>
@@ -1251,11 +1256,11 @@ namespace org.apache.xml.dtm.@ref
 					// Document root has no previous sibling
 					if (nodeHandle == 0)
 					{
-							return org.apache.xml.dtm.DTM_Fields.NULL;
+							return NULL;
 					}
 
 					int parent = nodes.readEntry(nodeHandle, 1);
-					int kid = org.apache.xml.dtm.DTM_Fields.NULL;
+					int kid = NULL;
 					for (int nextkid = getFirstChild(parent); nextkid != nodeHandle; nextkid = getNextSibling(nextkid))
 					{
 							kid = nextkid;
@@ -1282,18 +1287,18 @@ namespace org.apache.xml.dtm.@ref
 					//than an int would.
 					short type = unchecked((short)(gotslot[0] & 0xFFFF));
 
-					if (type == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE)
+					if (type == ELEMENT_NODE)
 					{
 							return getFirstAttribute(nodeHandle);
 					}
-					else if (type == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE)
+					else if (type == ATTRIBUTE_NODE)
 					{
-							if (gotslot[2] != org.apache.xml.dtm.DTM_Fields.NULL)
+							if (gotslot[2] != NULL)
 							{
 									return (m_docHandle | gotslot[2]);
 							}
 					}
-					return org.apache.xml.dtm.DTM_Fields.NULL;
+					return NULL;
 			}
 
 			/// <summary>
@@ -1308,7 +1313,7 @@ namespace org.apache.xml.dtm.@ref
 			public virtual int getNextNamespaceNode(int baseHandle, int namespaceHandle, bool inScope)
 			{
 					// ###shs need to work on namespace
-					return org.apache.xml.dtm.DTM_Fields.NULL;
+					return NULL;
 			}
 
 			/// <summary>
@@ -1327,7 +1332,7 @@ namespace org.apache.xml.dtm.@ref
 					// Document root [Document Node? -- jjk] - no next-sib
 					if (nodeHandle == 0)
 					{
-							return org.apache.xml.dtm.DTM_Fields.NULL;
+							return NULL;
 					}
 					while (!m_isError)
 					{
@@ -1342,7 +1347,7 @@ namespace org.apache.xml.dtm.@ref
 									if (gotslot[2] != 0)
 									{
 											short type = unchecked((short)(gotslot[0] & 0xFFFF));
-											if (type == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE)
+											if (type == ATTRIBUTE_NODE)
 											{
 													nodeHandle += 2;
 											}
@@ -1374,7 +1379,7 @@ namespace org.apache.xml.dtm.@ref
 							}
 					}
 					// Probably should throw error here like original instead of returning
-					return org.apache.xml.dtm.DTM_Fields.NULL;
+					return NULL;
 			}
 
 			/// <summary>
@@ -1387,7 +1392,7 @@ namespace org.apache.xml.dtm.@ref
 			public virtual int getNextFollowing(int axisContextHandle, int nodeHandle)
 			{
 					//###shs still working on
-					return org.apache.xml.dtm.DTM_Fields.NULL;
+					return NULL;
 			}
 
 			/// <summary>
@@ -1404,7 +1409,7 @@ namespace org.apache.xml.dtm.@ref
 					while (nodeHandle > 1)
 					{
 							nodeHandle--;
-							if (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == (nodes.readEntry(nodeHandle, 0) & 0xFFFF))
+							if (ATTRIBUTE_NODE == (nodes.readEntry(nodeHandle, 0) & 0xFFFF))
 							{
 									continue;
 							}
@@ -1419,7 +1424,7 @@ namespace org.apache.xml.dtm.@ref
 
 							return (m_docHandle | nodes.specialFind(axisContextHandle, nodeHandle));
 					}
-					return org.apache.xml.dtm.DTM_Fields.NULL;
+					return NULL;
 			}
 
 			/// <summary>
@@ -1476,7 +1481,7 @@ namespace org.apache.xml.dtm.@ref
 					// Assumption that Document Node is always in 0 slot
 					if ((nodeHandle & NODEHANDLE_MASK) == 0)
 					{
-							return org.apache.xml.dtm.DTM_Fields.NULL;
+							return NULL;
 					}
 					return (nodeHandle & DOCHANDLE_MASK);
 			}
@@ -1497,7 +1502,7 @@ namespace org.apache.xml.dtm.@ref
 					// Assumption that Document Node is always in 0 slot
 					if ((nodeHandle & NODEHANDLE_MASK) == 0)
 					{
-							return org.apache.xml.dtm.DTM_Fields.NULL;
+							return NULL;
 					}
 					return (nodeHandle & DOCHANDLE_MASK);
 			}
@@ -1519,15 +1524,15 @@ namespace org.apache.xml.dtm.@ref
 
 			switch (nodetype)
 			{
-			case org.apache.xml.dtm.DTM_Fields.TEXT_NODE:
-			case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE:
-			case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE:
+			case TEXT_NODE:
+			case COMMENT_NODE:
+			case CDATA_SECTION_NODE:
 					value = m_char.getString(gotslot[2], gotslot[3]);
 					break;
-			case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE:
-			case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE:
-			case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE:
-			case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE:
+			case PROCESSING_INSTRUCTION_NODE:
+			case ATTRIBUTE_NODE:
+			case ELEMENT_NODE:
+			case ENTITY_REFERENCE_NODE:
 			default:
 					break;
 			}
@@ -1678,7 +1683,7 @@ namespace org.apache.xml.dtm.@ref
 			/// <summary>
 			/// fixednames
 			/// </summary>
-			private static readonly string[] fixednames = new string[] {null,null, null,"#text", "#cdata_section",null, null,null, "#comment","#document", null,"#document-fragment", null};
+			private static readonly string[] fixednames = new string[] {null, null, null, "#text", "#cdata_section", null, null, null, "#comment", "#document", null, "#document-fragment", null};
 
 			/// <summary>
 			/// Given a node handle, return its DOM-style node name. This will
@@ -1695,7 +1700,7 @@ namespace org.apache.xml.dtm.@ref
 					if (null == name)
 					{
 					  int i = gotslot[3];
-					  /**/	Console.WriteLine("got i=" + i + " " + (i >> 16) + "/" + (i & 0xffff));
+					  Console.WriteLine("got i=" + i + " " + (i >> 16) + "/" + (i & 0xffff));
 
 					  name = m_localNames.indexToString(i & 0xFFFF);
 					  string prefix = m_prefixNames.indexToString(i >> 16);
@@ -1734,7 +1739,7 @@ namespace org.apache.xml.dtm.@ref
 					nodes.readSlot(nodeHandle, gotslot);
 					short type = unchecked((short)(gotslot[0] & 0xFFFF));
 					string name = "";
-					if ((type == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE) || (type == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE))
+					if ((type == ELEMENT_NODE) || (type == ATTRIBUTE_NODE))
 					{
 					  int i = gotslot[3];
 					  name = m_localNames.indexToString(i & 0xFFFF);
@@ -1764,7 +1769,7 @@ namespace org.apache.xml.dtm.@ref
 					nodes.readSlot(nodeHandle, gotslot);
 					short type = unchecked((short)(gotslot[0] & 0xFFFF));
 					string name = "";
-					if ((type == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE) || (type == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE))
+					if ((type == ELEMENT_NODE) || (type == ATTRIBUTE_NODE))
 					{
 					  int i = gotslot[3];
 					  name = m_prefixNames.indexToString(i >> 16);
@@ -1807,18 +1812,17 @@ namespace org.apache.xml.dtm.@ref
 
 					switch (nodetype)
 					{ // ###zaj todo - document nodetypes
-						goto case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE;
-					case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE:
+					case ATTRIBUTE_NODE:
 							nodes.readSlot(nodeHandle+1, gotslot);
-						goto case org.apache.xml.dtm.DTM_Fields.TEXT_NODE;
-					case org.apache.xml.dtm.DTM_Fields.TEXT_NODE:
-					case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE:
-					case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE:
+						goto case TEXT_NODE;
+					case TEXT_NODE:
+					case COMMENT_NODE:
+					case CDATA_SECTION_NODE:
 							value = m_char.getString(gotslot[2], gotslot[3]); //###zaj
 							break;
-					case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE:
-					case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE:
-					case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE:
+					case PROCESSING_INSTRUCTION_NODE:
+					case ELEMENT_NODE:
+					case ENTITY_REFERENCE_NODE:
 					default:
 							break;
 					}
@@ -2158,7 +2162,7 @@ namespace org.apache.xml.dtm.@ref
 			/// <param name="ch"> A non-null reference to a ContentHandler.
 			/// </param>
 			/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(int nodeHandle, org.xml.sax.ContentHandler ch, boolean normalize) throws org.xml.sax.SAXException
 			public virtual void dispatchCharactersEvents(int nodeHandle, ContentHandler ch, bool normalize)
 			{
@@ -2172,7 +2176,7 @@ namespace org.apache.xml.dtm.@ref
 			/// </param>
 			/// <exception cref="org.xml.sax.SAXException"> </exception>
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException
 			public virtual void dispatchToEvents(int nodeHandle, ContentHandler ch)
 			{
@@ -2250,7 +2254,7 @@ namespace org.apache.xml.dtm.@ref
 	  {
 		// create a Text Node
 		// %TBD% may be possible to combine with appendNode()to replace the next chunk of code
-		int w0 = org.apache.xml.dtm.DTM_Fields.TEXT_NODE;
+		int w0 = TEXT_NODE;
 		// W1: Parent
 		int w1 = currentParent;
 		// W2: Start position within m_char
@@ -2274,7 +2278,7 @@ namespace org.apache.xml.dtm.@ref
 	  {
 		// create a Comment Node
 		// %TBD% may be possible to combine with appendNode()to replace the next chunk of code
-		int w0 = org.apache.xml.dtm.DTM_Fields.COMMENT_NODE;
+		int w0 = COMMENT_NODE;
 		// W1: Parent
 		int w1 = currentParent;
 		// W2: Start position within m_char
@@ -2311,14 +2315,14 @@ namespace org.apache.xml.dtm.@ref
 					// element used
 
 					// W0  High:  Namespace  Low:  Node Type
-					int w0 = (namespaceIndex << 16) | org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE;
+					int w0 = (namespaceIndex << 16) | ELEMENT_NODE;
 					// W1: Parent
 					int w1 = currentParent;
 					// W2: Next  (initialized as 0)
 					int w2 = 0;
 					// W3: Tagname high: prefix Low: local name
 					int w3 = localNameIndex | prefixIndex << 16;
-					/**/	Console.WriteLine("set w3=" + w3 + " " + (w3 >> 16) + "/" + (w3 & 0xffff));
+					Console.WriteLine("set w3=" + w3 + " " + (w3 >> 16) + "/" + (w3 & 0xffff));
 
 					//int ourslot = nodes.appendSlot(w0, w1, w2, w3);
 					int ourslot = appendNode(w0, w1, w2, w3);
@@ -2326,7 +2330,7 @@ namespace org.apache.xml.dtm.@ref
 					previousSibling = 0;
 
 					// set the root element pointer when creating the first element node
-					if (m_docElement == org.apache.xml.dtm.DTM_Fields.NULL)
+					if (m_docElement == NULL)
 					{
 							m_docElement = ourslot;
 					}
@@ -2361,7 +2365,7 @@ namespace org.apache.xml.dtm.@ref
 		int namespaceForNamespaces = m_nsNames.stringToIndex("http://www.w3.org/2000/xmlns/");
 
 		// W0  High:  Namespace  Low:  Node Type
-		int w0 = org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE | (m_nsNames.stringToIndex("http://www.w3.org/2000/xmlns/") << 16);
+		int w0 = NAMESPACE_NODE | (m_nsNames.stringToIndex("http://www.w3.org/2000/xmlns/") << 16);
 
 		// W1:  Parent
 		int w1 = currentParent;
@@ -2397,7 +2401,7 @@ namespace org.apache.xml.dtm.@ref
 		// %TBD% isID is not currently honored.
 
 		// W0  High:  Namespace  Low:  Node Type
-		int w0 = org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE | namespaceIndex << 16;
+		int w0 = ATTRIBUTE_NODE | namespaceIndex << 16;
 
 		// W1:  Parent
 		int w1 = currentParent;
@@ -2405,7 +2409,7 @@ namespace org.apache.xml.dtm.@ref
 		int w2 = 0;
 		// W3:  Tagname high: prefix Low: local name
 		int w3 = localNameIndex | prefixIndex << 16;
-		/**/	Console.WriteLine("set w3=" + w3 + " " + (w3 >> 16) + "/" + (w3 & 0xffff));
+		Console.WriteLine("set w3=" + w3 + " " + (w3 >> 16) + "/" + (w3 & 0xffff));
 		// Add node
 		int ourslot = appendNode(w0, w1, w2, w3);
 		previousSibling = ourslot; // Should attributes be previous siblings
@@ -2413,7 +2417,7 @@ namespace org.apache.xml.dtm.@ref
 		// Attribute's content is currently appended as a Text Node
 
 		// W0: Node Type
-		w0 = org.apache.xml.dtm.DTM_Fields.TEXT_NODE;
+		w0 = TEXT_NODE;
 		// W1: Parent
 		w1 = ourslot;
 		// W2: Start Position within buffer
@@ -2434,9 +2438,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="axis"> One of Axes.ANCESTORORSELF, etc.
 	  /// </param>
 	  /// <returns> A DTMAxisIterator, or null if the given axis isn't supported. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisTraverser getAxisTraverser(final int axis)
-	  public virtual DTMAxisTraverser getAxisTraverser(int axis)
+	  public virtual DTMAxisTraverser getAxisTraverser(in int axis)
 	  {
 		return null;
 	  }
@@ -2450,9 +2452,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="axis"> One of Axes.ANCESTORORSELF, etc.
 	  /// </param>
 	  /// <returns> A DTMAxisIterator, or null if the given axis isn't supported. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getAxisIterator(final int axis)
-	  public virtual DTMAxisIterator getAxisIterator(int axis)
+	  public virtual DTMAxisIterator getAxisIterator(in int axis)
 	  {
 		// %TBD%
 		return null;
@@ -2467,9 +2467,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="type"> An extended type ID.
 	  /// </param>
 	  /// <returns> A DTMAxisIterator, or null if the given axis isn't supported. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getTypedAxisIterator(final int axis, final int type)
-	  public virtual DTMAxisIterator getTypedAxisIterator(int axis, int type)
+	  public virtual DTMAxisIterator getTypedAxisIterator(in int axis, in int type)
 	  {
 		// %TBD%
 		return null;
@@ -2487,7 +2485,7 @@ namespace org.apache.xml.dtm.@ref
 
 		if (previousSiblingWasParent)
 		{
-		  nodes.writeEntry(previousSibling, 2, org.apache.xml.dtm.DTM_Fields.NULL);
+		  nodes.writeEntry(previousSibling, 2, NULL);
 		}
 
 		// Pop parentage
@@ -2513,7 +2511,7 @@ namespace org.apache.xml.dtm.@ref
 
 		// %TBD% reset slot 0 to indicate ChunkedIntArray reuse or wait for
 		//       the next initDocument().
-		m_docElement = org.apache.xml.dtm.DTM_Fields.NULL; // reset nodeHandle to the root of the actual dtm doc content
+		m_docElement = NULL; // reset nodeHandle to the root of the actual dtm doc content
 		initDocument(0);
 	  }
 

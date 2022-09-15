@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.templates
 {
-
 	/// <summary>
 	/// Implement Script extension element
 	/// @xsl.usage internal
@@ -92,8 +91,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for this element  </returns>
 	  public override int XSLToken
 	  {

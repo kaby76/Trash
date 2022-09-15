@@ -25,7 +25,6 @@ using System.Text;
 namespace org.apache.xalan.processor
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using AVT = org.apache.xalan.templates.AVT;
@@ -226,34 +225,6 @@ namespace org.apache.xalan.processor
 	  /// <summary>
 	  /// Type values that represent XSLT attribute types. </summary>
 	  internal const int T_CDATA = 1, T_URL = 2, T_AVT = 3, T_PATTERN = 4, T_EXPR = 5, T_CHAR = 6, T_NUMBER = 7, T_YESNO = 8, T_QNAME = 9, T_QNAMES = 10, T_ENUM = 11, T_SIMPLEPATTERNLIST = 12, T_NMTOKEN = 13, T_STRINGLIST = 14, T_PREFIX_URLLIST = 15, T_ENUM_OR_PQNAME = 16, T_NCNAME = 17, T_AVT_QNAME = 18, T_QNAMES_RESOLVE_NULL = 19, T_PREFIXLIST = 20;
-	  // <!-- Used for the type of an attribute value that is a URI reference.-->
-	  // <!-- Used for the type of an attribute value that is an
-	  // attribute value template.-->
-	  // <!-- Used for the type of an attribute value that is a pattern.-->
-	  // <!-- Used for the type of an attribute value that is an expression.-->
-	  // <!-- Used for the type of an attribute value that consists
-	  // of a single character.-->
-	  // <!-- Used for the type of an attribute value that is a number. -->
-	  // Used for boolean values
-	  // <!-- Used for the type of an attribute value that is a QName; the prefix
-	  // gets expanded by the XSLT processor. -->
-	  // <!--Used for a whitespace-separated list of QNames where the non-prefixed
-	  // entries are not to be placed in the default namespace. -->
-	  // <!-- Used for enumerated values -->
-	  // Used for simple match patterns, i.e. xsl:strip-space spec.
-	  // Used for a known token.
-	  // Used for a list of white-space delimited strings.
-	  // Used for a list of white-space delimited strings.
-	  // Prefixes are checked to make sure they refer to 
-	  // valid namespaces, and are resolved when processed
-	  // Used for enumerated values, one of which could be a qname-but-not-ncname
-	  // Used for the type of an attribute value that is a NCName
-	  // Used for QName attributes that are always AVT.  Prefix isn't resolved.
-	  // Used for a list of QNames where non-prefixed items are to be resolved
-	  // using the default namespace (This is only true for cdata-section-elements)
-	  // Used for a list of white-space delimited strings.
-	  // strings are checked to make sure they are valid 
-	  // prefixes, and are not expanded when processed. 
 
 	  /// <summary>
 	  /// Representation for an attribute in a foreign namespace. </summary>
@@ -505,7 +476,7 @@ namespace org.apache.xalan.processor
 	  /// <exception cref="org.xml.sax.SAXException"> which will wrap a
 	  /// <seealso cref="javax.xml.transform.TransformerException"/>, if there is a syntax error
 	  /// in the attribute value template string. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: org.apache.xalan.templates.AVT processAVT(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual AVT processAVT(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -535,7 +506,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> The value argument.
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException."> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processCDATA(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processCDATA(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -570,7 +541,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> Character object.
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> if the string is not a length of 1. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processCHAR(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processCHAR(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -618,7 +589,7 @@ namespace org.apache.xalan.processor
 	  /// </param>
 	  /// <returns> An Integer representation of the enumerated value if this attribute does not support
 	  ///         AVT.  Otherwise, and AVT is returned. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processENUM(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processENUM(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -677,7 +648,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> AVT if attribute supports AVT. An Integer representation of the enumerated value if
 	  ///         attribute does not support AVT and an enumerated value was used.  Otherwise a qname
 	  ///         is returned. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processENUM_OR_PQNAME(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processENUM_OR_PQNAME(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -773,7 +744,7 @@ namespace org.apache.xalan.processor
 	  /// <exception cref="org.xml.sax.SAXException"> that wraps a
 	  /// <seealso cref="javax.xml.transform.TransformerException"/> if the expression
 	  /// string contains a syntax error. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processEXPR(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processEXPR(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -803,7 +774,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> the value argument or an AVT if this attribute supports AVTs.
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> if the value is not a valid nmtoken </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processNMTOKEN(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processNMTOKEN(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -817,7 +788,7 @@ namespace org.apache.xalan.processor
 			  // If an AVT wasn't used, validate the value
 			  if ((avt.Simple) && (!XML11Char.isXML11ValidNmtoken(value)))
 			  {
-				handleError(handler,XSLTErrorResources.INVALID_NMTOKEN, new object[] {name,value},null);
+				handleError(handler,XSLTErrorResources.INVALID_NMTOKEN, new object[] {name, value},null);
 				return null;
 			  }
 			  return avt;
@@ -831,7 +802,7 @@ namespace org.apache.xalan.processor
 		  {
 			  if (!XML11Char.isXML11ValidNmtoken(value))
 			  {
-				handleError(handler,XSLTErrorResources.INVALID_NMTOKEN, new object[] {name,value},null);
+				handleError(handler,XSLTErrorResources.INVALID_NMTOKEN, new object[] {name, value},null);
 				return null;
 			  }
 		  }
@@ -853,7 +824,7 @@ namespace org.apache.xalan.processor
 	  /// <exception cref="org.xml.sax.SAXException"> that wraps a
 	  /// <seealso cref="javax.xml.transform.TransformerException"/> if the match pattern
 	  /// string contains a syntax error. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processPATTERN(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processPATTERN(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -886,7 +857,7 @@ namespace org.apache.xalan.processor
 	  /// <exception cref="org.xml.sax.SAXException"> that wraps a
 	  /// <seealso cref="javax.xml.transform.TransformerException"/>
 	  /// if the string does not contain a parsable number. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processNUMBER(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processNUMBER(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -947,7 +918,7 @@ namespace org.apache.xalan.processor
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> if the string contains a prefix that can not be
 	  /// resolved, or the string contains syntax that is invalid for a qualified name. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processQNAME(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processQNAME(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -986,7 +957,7 @@ namespace org.apache.xalan.processor
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> if the string contains a prefix that can not be
 	  /// resolved, or the string contains syntax that is invalid for a qualified name. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processAVT_QNAME(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processAVT_QNAME(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -1006,7 +977,7 @@ namespace org.apache.xalan.processor
 					  string prefix = value.Substring(0, indexOfNSSep);
 					  if (!XML11Char.isXML11ValidNCName(prefix))
 					  {
-						 handleError(handler,XSLTErrorResources.INVALID_QNAME,new object[]{name,value},null);
+						 handleError(handler,XSLTErrorResources.INVALID_QNAME,new object[]{name, value},null);
 						 return null;
 					  }
 				 }
@@ -1015,7 +986,7 @@ namespace org.apache.xalan.processor
 
 				 if ((string.ReferenceEquals(localName, null)) || (localName.Length == 0) || (!XML11Char.isXML11ValidNCName(localName)))
 				 {
-						 handleError(handler,XSLTErrorResources.INVALID_QNAME,new object[]{name,value},null);
+						 handleError(handler,XSLTErrorResources.INVALID_QNAME,new object[]{name, value},null);
 						 return null;
 				 }
 			  }
@@ -1044,7 +1015,7 @@ namespace org.apache.xalan.processor
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> if the string contains a prefix that can not be
 	  /// resolved, or the string contains syntax that is invalid for a NCName. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processNCNAME(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processNCNAME(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -1059,7 +1030,7 @@ namespace org.apache.xalan.processor
 			  // If an AVT wasn't used, validate the value
 			  if ((avt.Simple) && (!XML11Char.isXML11ValidNCName(value)))
 			  {
-				 handleError(handler,XSLTErrorResources.INVALID_NCNAME,new object[] {name,value},null);
+				 handleError(handler,XSLTErrorResources.INVALID_NCNAME,new object[] {name, value},null);
 				 return null;
 			  }
 			  return avt;
@@ -1075,7 +1046,7 @@ namespace org.apache.xalan.processor
 		{
 			if (!XML11Char.isXML11ValidNCName(value))
 			{
-				handleError(handler,XSLTErrorResources.INVALID_NCNAME,new object[] {name,value},null);
+				handleError(handler,XSLTErrorResources.INVALID_NCNAME,new object[] {name, value},null);
 				return null;
 			}
 			return value;
@@ -1098,7 +1069,7 @@ namespace org.apache.xalan.processor
 	  /// <exception cref="org.xml.sax.SAXException"> if the one of the qualified name strings
 	  /// contains a prefix that can not be
 	  /// resolved, or a qualified name contains syntax that is invalid for a qualified name. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: java.util.Vector processQNAMES(StylesheetHandler handler, String uri, String name, String rawName, String value) throws org.xml.sax.SAXException
 	  internal virtual ArrayList processQNAMES(StylesheetHandler handler, string uri, string name, string rawName, string value)
 	  {
@@ -1134,7 +1105,7 @@ namespace org.apache.xalan.processor
 	 /// <exception cref="org.xml.sax.SAXException"> if the one of the qualified name strings
 	 /// contains a prefix that can not be resolved, or a qualified name contains
 	 /// syntax that is invalid for a qualified name. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: final java.util.Vector processQNAMESRNU(StylesheetHandler handler, String uri, String name, String rawName, String value) throws org.xml.sax.SAXException
 	  internal ArrayList processQNAMESRNU(StylesheetHandler handler, string uri, string name, string rawName, string value)
 	  {
@@ -1174,7 +1145,7 @@ namespace org.apache.xalan.processor
 	  /// <exception cref="org.xml.sax.SAXException"> that wraps a
 	  /// <seealso cref="javax.xml.transform.TransformerException"/> if one of the match pattern
 	  /// strings contains a syntax error. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: java.util.Vector processSIMPLEPATTERNLIST(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual ArrayList processSIMPLEPATTERNLIST(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -1239,7 +1210,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> A vector of strings that may be resolved to URLs.
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> if one of the prefixes can not be resolved. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: org.apache.xml.utils.StringVector processPREFIX_URLLIST(StylesheetHandler handler, String uri, String name, String rawName, String value) throws org.xml.sax.SAXException
 	  internal virtual StringVector processPREFIX_URLLIST(StylesheetHandler handler, string uri, string name, string rawName, string value)
 	  {
@@ -1280,7 +1251,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> A vector of strings that may be resolved to URLs.
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> if one of the prefixes can not be resolved. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: org.apache.xml.utils.StringVector processPREFIX_LIST(StylesheetHandler handler, String uri, String name, String rawName, String value) throws org.xml.sax.SAXException
 	   internal virtual StringVector processPREFIX_LIST(StylesheetHandler handler, string uri, string name, string rawName, string value)
 	   {
@@ -1322,7 +1293,7 @@ namespace org.apache.xalan.processor
 	  ///         attribute supports AVT, an AVT is returned.
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> if the URL does not conform to the URL syntax. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processURL(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processURL(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -1369,15 +1340,15 @@ namespace org.apache.xalan.processor
 	  /// <returns> Boolean object representation of the value.
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: private Nullable<bool> processYESNO(StylesheetHandler handler, String uri, String name, String rawName, String value) throws org.xml.sax.SAXException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: private System.Nullable<bool> processYESNO(StylesheetHandler handler, String uri, String name, String rawName, String value) throws org.xml.sax.SAXException
 	  private bool? processYESNO(StylesheetHandler handler, string uri, string name, string rawName, string value)
 	  {
 
 		// Is this already checked somewhere else?  -sb
 		if (!(value.Equals("yes") || value.Equals("no")))
 		{
-		  handleError(handler, XSLTErrorResources.INVALID_BOOLEAN, new object[] {name,value}, null);
+		  handleError(handler, XSLTErrorResources.INVALID_BOOLEAN, new object[] {name, value}, null);
 		  return null;
 		}
 
@@ -1396,7 +1367,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> The processed Object representation of the attribute.
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> if the attribute value can not be processed. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Object processValue(StylesheetHandler handler, String uri, String name, String rawName, String value, org.apache.xalan.templates.ElemTemplateElement owner) throws org.xml.sax.SAXException
 	  internal virtual object processValue(StylesheetHandler handler, string uri, string name, string rawName, string value, ElemTemplateElement owner)
 	  {
@@ -1468,7 +1439,6 @@ namespace org.apache.xalan.processor
 		  break;
 
 		default :
-	break;
 		}
 
 		return processedValue;
@@ -1482,7 +1452,7 @@ namespace org.apache.xalan.processor
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> wraps an invocation exception if the
 	  /// setter method can not be invoked on the object. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void setDefAttrValue(StylesheetHandler handler, org.apache.xalan.templates.ElemTemplateElement elem) throws org.xml.sax.SAXException
 	  internal virtual void setDefAttrValue(StylesheetHandler handler, ElemTemplateElement elem)
 	  {
@@ -1580,7 +1550,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="elem"> The object that should contain a property that represents the attribute.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: boolean setAttrValue(StylesheetHandler handler, String attrUri, String attrLocalName, String attrRawName, String attrValue, org.apache.xalan.templates.ElemTemplateElement elem) throws org.xml.sax.SAXException
 	  internal virtual bool setAttrValue(StylesheetHandler handler, string attrUri, string attrLocalName, string attrRawName, string attrValue, ElemTemplateElement elem)
 	  {
@@ -1597,7 +1567,7 @@ namespace org.apache.xalan.processor
 		{
 		  try
 		  {
-			Method meth;
+			System.Reflection.MethodInfo meth;
 			object[] args;
 
 			if (setterString.Equals(S_FOREIGNATTR_SETTER))
@@ -1669,7 +1639,7 @@ namespace org.apache.xalan.processor
 		return true;
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void handleError(StylesheetHandler handler, String msg, Object [] args, Exception exc) throws org.xml.sax.SAXException
 	  private void handleError(StylesheetHandler handler, string msg, object[] args, Exception exc)
 	  {

@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKEVIRTUAL = org.apache.bcel.generic.INVOKEVIRTUAL;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
@@ -72,11 +71,11 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("with-param " + _name);
 		if (_select != null)
 		{
-			indent(indent + IndentIncrement);
+			this.indent(indent + IndentIncrement);
 			Util.println("select " + _select.ToString());
 		}
 		displayContents(indent + IndentIncrement);
@@ -135,7 +134,7 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!XML11Char.isXML11ValidQName(name))
 				{
 					ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, name, this);
-					parser.reportError(Constants_Fields.ERROR, err);
+					parser.reportError(Constants.ERROR, err);
 				}
 			Name = parser.getQNameIgnoreDefaultNs(name);
 		}
@@ -159,7 +158,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Type-check either the select attribute or the element body, depending
 		/// on which is in use.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -202,11 +201,11 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-			ConstantPoolGen cpg = classGen.ConstantPool;
+			ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
-			il.append(new PUSH(cpg, Constants_Fields.EMPTYSTRING));
+			InstructionList il = methodGen.getInstructionList();
+			il.append(new PUSH(cpg, Constants.EMPTYSTRING));
 		}
 		}
 
@@ -219,10 +218,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Translate the value and put it on the stack
 		if (_doParameterOptimization)
@@ -244,7 +243,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Mark this parameter value is not being the default value
 		il.append(new PUSH(cpg, false));
 		// Pass the parameter to the template
-		il.append(new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.ADD_PARAMETER, Constants_Fields.ADD_PARAMETER_SIG)));
+		il.append(new INVOKEVIRTUAL(cpg.addMethodref(TRANSLET_CLASS, ADD_PARAMETER, ADD_PARAMETER_SIG)));
 		il.append(POP); // cleanup stack
 		}
 	}

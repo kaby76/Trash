@@ -55,7 +55,7 @@ namespace org.apache.xalan.xsltc.compiler
 		_name = argumentCount() == 3 ? argument(2) : null;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -102,25 +102,25 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		_value.translate(classGen, methodGen);
 		_format.translate(classGen, methodGen);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int fn3arg = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "formatNumber", "(DLjava/lang/String;"+ "Ljava/text/DecimalFormat;)"+ "Ljava/lang/String;");
-		int fn3arg = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "formatNumber", "(DLjava/lang/String;" + "Ljava/text/DecimalFormat;)" + "Ljava/lang/String;");
+//ORIGINAL LINE: final int fn3arg = cpg.addMethodref(BASIS_LIBRARY_CLASS, "formatNumber", "(DLjava/lang/String;"+ "Ljava/text/DecimalFormat;)"+ "Ljava/lang/String;");
+		int fn3arg = cpg.addMethodref(BASIS_LIBRARY_CLASS, "formatNumber", "(DLjava/lang/String;" + "Ljava/text/DecimalFormat;)" + "Ljava/lang/String;");
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int get = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "getDecimalFormat", "(Ljava/lang/String;)"+ "Ljava/text/DecimalFormat;");
-		int get = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "getDecimalFormat", "(Ljava/lang/String;)" + "Ljava/text/DecimalFormat;");
+//ORIGINAL LINE: final int get = cpg.addMethodref(TRANSLET_CLASS, "getDecimalFormat", "(Ljava/lang/String;)"+ "Ljava/text/DecimalFormat;");
+		int get = cpg.addMethodref(TRANSLET_CLASS, "getDecimalFormat", "(Ljava/lang/String;)" + "Ljava/text/DecimalFormat;");
 
 		il.append(classGen.loadTranslet());
 		if (_name == null)
 		{
-			il.append(new PUSH(cpg, Constants_Fields.EMPTYSTRING));
+			il.append(new PUSH(cpg, EMPTYSTRING));
 		}
 		else if (_resolvedQName != null)
 		{

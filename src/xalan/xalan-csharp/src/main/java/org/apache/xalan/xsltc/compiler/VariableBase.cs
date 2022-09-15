@@ -111,7 +111,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 		if (_local != null)
 		{
-			_local.End = methodGen.InstructionList.End;
+			_local.setEnd(methodGen.getInstructionList().getEnd());
 			methodGen.removeLocalVariable(_local);
 			_refs = null;
 			_local = null;
@@ -129,7 +129,7 @@ namespace org.apache.xalan.xsltc.compiler
 		Instruction instr = _loadInstruction;
 		if (_loadInstruction == null)
 		{
-			_loadInstruction = _type.LOAD(_local.Index);
+			_loadInstruction = _type.LOAD(_local.getIndex());
 		}
 		return _loadInstruction;
 		}
@@ -145,7 +145,7 @@ namespace org.apache.xalan.xsltc.compiler
 		Instruction instr = _storeInstruction;
 		if (_storeInstruction == null)
 		{
-			_storeInstruction = _type.STORE(_local.Index);
+			_storeInstruction = _type.STORE(_local.getIndex());
 		}
 		return _storeInstruction;
 		}
@@ -174,11 +174,11 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Console.WriteLine("Variable " + _name);
 		if (_select != null)
 		{
-			indent(indent + IndentIncrement);
+			this.indent(indent + IndentIncrement);
 			Console.WriteLine("select " + _select.ToString());
 		}
 		displayContents(indent + IndentIncrement);
@@ -248,7 +248,7 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!XML11Char.isXML11ValidQName(name))
 				{
 					ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, name, this);
-					parser.reportError(Constants_Fields.ERROR, err);
+					parser.reportError(Constants.ERROR, err);
 				}
 			Name = parser.getQNameIgnoreDefaultNs(name);
 			}
@@ -295,15 +295,15 @@ namespace org.apache.xalan.xsltc.compiler
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-				ConstantPoolGen cpg = classGen.ConstantPool;
+				ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-				InstructionList il = methodGen.InstructionList;
+				InstructionList il = methodGen.getInstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int initCNI = cpg.addMethodref(Constants_Fields.CACHED_NODE_LIST_ITERATOR_CLASS, "<init>", "(" +Constants_Fields.NODE_ITERATOR_SIG +")V");
-				int initCNI = cpg.addMethodref(Constants_Fields.CACHED_NODE_LIST_ITERATOR_CLASS, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + ")V");
-				il.append(new NEW(cpg.addClass(Constants_Fields.CACHED_NODE_LIST_ITERATOR_CLASS)));
+//ORIGINAL LINE: final int initCNI = cpg.addMethodref(CACHED_NODE_LIST_ITERATOR_CLASS, "<init>", "(" +NODE_ITERATOR_SIG +")V");
+				int initCNI = cpg.addMethodref(CACHED_NODE_LIST_ITERATOR_CLASS, "<init>", "(" + NODE_ITERATOR_SIG + ")V");
+				il.append(new NEW(cpg.addClass(CACHED_NODE_LIST_ITERATOR_CLASS)));
 				il.append(DUP_X1);
 				il.append(SWAP);
 
@@ -321,11 +321,11 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-			ConstantPoolGen cpg = classGen.ConstantPool;
+			ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
-			il.append(new PUSH(cpg, Constants_Fields.EMPTYSTRING));
+			InstructionList il = methodGen.getInstructionList();
+			il.append(new PUSH(cpg, Constants.EMPTYSTRING));
 		}
 		}
 

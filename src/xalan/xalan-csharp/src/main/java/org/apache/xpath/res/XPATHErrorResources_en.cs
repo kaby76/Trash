@@ -21,7 +21,6 @@
 namespace org.apache.xpath.res
 {
 
-
 	/// <summary>
 	/// Default implementation of XPATHErrorResources.  This is just
 	/// an empty class.

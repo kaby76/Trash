@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using PUSH = org.apache.bcel.generic.PUSH;
@@ -59,11 +58,11 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("LiteralAttribute name=" + _name + " value=" + _value);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -81,10 +80,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// push handler
 		il.append(methodGen.loadHandler());
@@ -152,7 +151,7 @@ namespace org.apache.xalan.xsltc.compiler
 			for (int i = 0; i < size; i++)
 			{
 				char ch = chars[i];
-				if (ch < 32 || 126 < ch || ch == '<' || ch == '>' || ch == '&' || ch == '\"')
+				if (ch < (char)32 || (char)126 < ch || ch == '<' || ch == '>' || ch == '&' || ch == '\"')
 				{
 					return true;
 				}

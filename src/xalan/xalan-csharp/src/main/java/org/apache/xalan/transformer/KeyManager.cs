@@ -39,7 +39,7 @@ namespace org.apache.xalan.transformer
 
 	  /// <summary>
 	  /// Table of tables of element keys. </summary>
-	  /// <seealso cref= org.apache.xalan.transformer.KeyTable </seealso>
+	  /// <seealso cref="org.apache.xalan.transformer.KeyTable"/>
 	  [NonSerialized]
 	  private ArrayList m_key_tables = null;
 
@@ -55,7 +55,7 @@ namespace org.apache.xalan.transformer
 	  /// <returns> A nodelist of nodes mathing the given key
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XNodeSet getNodeSetDTMByKey(org.apache.xpath.XPathContext xctxt, int doc, org.apache.xml.utils.QName name, org.apache.xml.utils.XMLString ref, org.apache.xml.utils.PrefixResolver nscontext) throws javax.xml.transform.TransformerException
 	  public virtual XNodeSet getNodeSetDTMByKey(XPathContext xctxt, int doc, QName name, XMLString @ref, PrefixResolver nscontext)
 	  {

@@ -20,7 +20,7 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
-
+	using DTM = org.apache.xml.dtm.DTM;
 	using NodeConsumer = org.apache.xml.utils.NodeConsumer;
 	using XMLString = org.apache.xml.utils.XMLString;
 
@@ -105,7 +105,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// in other words, the root of the subtree to traverse over.
 	  /// </param>
 	  /// <exception cref="TransformerException">  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void traverse(int pos) throws org.xml.sax.SAXException
 	  public virtual void traverse(int pos)
 	  {
@@ -113,11 +113,11 @@ namespace org.apache.xml.dtm.@ref
 
 		int top = pos; // Remember the root of this subtree
 
-		while (org.apache.xml.dtm.DTM_Fields.NULL != pos)
+		while (DTM.NULL != pos)
 		{
 		  startNode(pos);
 		  int nextNode = m_dtm.getFirstChild(pos);
-		  while (org.apache.xml.dtm.DTM_Fields.NULL == nextNode)
+		  while (DTM.NULL == nextNode)
 		  {
 			endNode(pos);
 
@@ -128,20 +128,20 @@ namespace org.apache.xml.dtm.@ref
 
 			nextNode = m_dtm.getNextSibling(pos);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == nextNode)
+			if (DTM.NULL == nextNode)
 			{
 			  pos = m_dtm.getParent(pos);
 
-			  if ((org.apache.xml.dtm.DTM_Fields.NULL == pos) || (top == pos))
+			  if ((DTM.NULL == pos) || (top == pos))
 			  {
 				// %REVIEW% This condition isn't tested in traverse(pos,top)
 				// -- bug?
-				if (org.apache.xml.dtm.DTM_Fields.NULL != pos)
+				if (DTM.NULL != pos)
 				{
 				  endNode(pos);
 				}
 
-				nextNode = org.apache.xml.dtm.DTM_Fields.NULL;
+				nextNode = DTM.NULL;
 
 				break;
 			  }
@@ -163,7 +163,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// If top==DTM.NULL, run through end of document.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void traverse(int pos, int top) throws org.xml.sax.SAXException
 	  public virtual void traverse(int pos, int top)
 	  {
@@ -172,28 +172,28 @@ namespace org.apache.xml.dtm.@ref
 		// -- or by simply ignoring this case and relying on the fact that
 		// pos will never equal DTM.NULL until we're ready to exit?
 
-		while (org.apache.xml.dtm.DTM_Fields.NULL != pos)
+		while (DTM.NULL != pos)
 		{
 		  startNode(pos);
 		  int nextNode = m_dtm.getFirstChild(pos);
-		  while (org.apache.xml.dtm.DTM_Fields.NULL == nextNode)
+		  while (DTM.NULL == nextNode)
 		  {
 			endNode(pos);
 
-			if ((org.apache.xml.dtm.DTM_Fields.NULL != top) && top == pos)
+			if ((DTM.NULL != top) && top == pos)
 			{
 			  break;
 			}
 
 			nextNode = m_dtm.getNextSibling(pos);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == nextNode)
+			if (DTM.NULL == nextNode)
 			{
 			  pos = m_dtm.getParent(pos);
 
-			  if ((org.apache.xml.dtm.DTM_Fields.NULL == pos) || ((org.apache.xml.dtm.DTM_Fields.NULL != top) && (top == pos)))
+			  if ((DTM.NULL == pos) || ((DTM.NULL != top) && (top == pos)))
 			  {
-				nextNode = org.apache.xml.dtm.DTM_Fields.NULL;
+				nextNode = DTM.NULL;
 
 				break;
 			  }
@@ -211,7 +211,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <summary>
 	  /// Optimized dispatch of characters.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private final void dispatachChars(int node) throws org.xml.sax.SAXException
 	  private void dispatachChars(int node)
 	  {
@@ -225,7 +225,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="node"> Node to process
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void startNode(int node) throws org.xml.sax.SAXException
 	  protected internal virtual void startNode(int node)
 	  {
@@ -238,7 +238,7 @@ namespace org.apache.xml.dtm.@ref
 
 		switch (m_dtm.getNodeType(node))
 		{
-		case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE :
+		case DTM.COMMENT_NODE :
 		{
 		  XMLString data = m_dtm.getStringValue(node);
 
@@ -249,17 +249,17 @@ namespace org.apache.xml.dtm.@ref
 		  }
 		}
 		break;
-		case org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE :
+		case DTM.DOCUMENT_FRAGMENT_NODE :
 
 		  // ??;
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE :
+		case DTM.DOCUMENT_NODE :
 		  this.m_contentHandler.startDocument();
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
+		case DTM.ELEMENT_NODE :
 		  DTM dtm = m_dtm;
 
-		  for (int nsn = dtm.getFirstNamespaceNode(node, true); org.apache.xml.dtm.DTM_Fields.NULL != nsn; nsn = dtm.getNextNamespaceNode(node, nsn, true))
+		  for (int nsn = dtm.getFirstNamespaceNode(node, true); DTM.NULL != nsn; nsn = dtm.getNextNamespaceNode(node, nsn, true))
 		  {
 			// String prefix = dtm.getPrefix(nsn);
 			string prefix = dtm.getNodeNameX(nsn);
@@ -279,7 +279,7 @@ namespace org.apache.xml.dtm.@ref
 		  // %OPT% !!
 		  org.xml.sax.helpers.AttributesImpl attrs = new org.xml.sax.helpers.AttributesImpl();
 
-		  for (int i = dtm.getFirstAttribute(node); i != org.apache.xml.dtm.DTM_Fields.NULL; i = dtm.getNextAttribute(i))
+		  for (int i = dtm.getFirstAttribute(node); i != DTM.NULL; i = dtm.getNextAttribute(i))
 		  {
 			attrs.addAttribute(dtm.getNamespaceURI(i), dtm.getLocalName(i), dtm.getNodeName(i), "CDATA", dtm.getNodeValue(i));
 		  }
@@ -287,7 +287,7 @@ namespace org.apache.xml.dtm.@ref
 
 		  this.m_contentHandler.startElement(ns, m_dtm.getLocalName(node), m_dtm.getNodeName(node), attrs);
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+		case DTM.PROCESSING_INSTRUCTION_NODE :
 		{
 		  string name = m_dtm.getNodeName(node);
 
@@ -302,7 +302,7 @@ namespace org.apache.xml.dtm.@ref
 		  }
 		}
 		break;
-		case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE :
+		case DTM.CDATA_SECTION_NODE :
 		{
 		  bool isLexH = (m_contentHandler is LexicalHandler);
 		  LexicalHandler lh = isLexH ? ((LexicalHandler) this.m_contentHandler) : null;
@@ -322,7 +322,7 @@ namespace org.apache.xml.dtm.@ref
 		  }
 		}
 		break;
-		case org.apache.xml.dtm.DTM_Fields.TEXT_NODE :
+		case DTM.TEXT_NODE :
 		{
 		  if (nextIsRaw)
 		  {
@@ -338,7 +338,7 @@ namespace org.apache.xml.dtm.@ref
 		  }
 		}
 		break;
-		case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE :
+		case DTM.ENTITY_REFERENCE_NODE :
 		{
 		  if (m_contentHandler is LexicalHandler)
 		  {
@@ -352,7 +352,6 @@ namespace org.apache.xml.dtm.@ref
 		}
 		break;
 		default :
-	break;
 		}
 	  }
 
@@ -363,17 +362,17 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="node"> Node we just finished processing
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void endNode(int node) throws org.xml.sax.SAXException
 	  protected internal virtual void endNode(int node)
 	  {
 
 		switch (m_dtm.getNodeType(node))
 		{
-		case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE :
+		case DTM.DOCUMENT_NODE :
 		  this.m_contentHandler.endDocument();
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
+		case DTM.ELEMENT_NODE :
 		  string ns = m_dtm.getNamespaceURI(node);
 		  if (null == ns)
 		  {
@@ -381,7 +380,7 @@ namespace org.apache.xml.dtm.@ref
 		  }
 		  this.m_contentHandler.endElement(ns, m_dtm.getLocalName(node), m_dtm.getNodeName(node));
 
-		  for (int nsn = m_dtm.getFirstNamespaceNode(node, true); org.apache.xml.dtm.DTM_Fields.NULL != nsn; nsn = m_dtm.getNextNamespaceNode(node, nsn, true))
+		  for (int nsn = m_dtm.getFirstNamespaceNode(node, true); DTM.NULL != nsn; nsn = m_dtm.getNextNamespaceNode(node, nsn, true))
 		  {
 			// String prefix = m_dtm.getPrefix(nsn);
 			string prefix = m_dtm.getNodeNameX(nsn);
@@ -389,9 +388,9 @@ namespace org.apache.xml.dtm.@ref
 			this.m_contentHandler.endPrefixMapping(prefix);
 		  }
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE :
+		case DTM.CDATA_SECTION_NODE :
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE :
+		case DTM.ENTITY_REFERENCE_NODE :
 		{
 		  if (m_contentHandler is LexicalHandler)
 		  {
@@ -402,7 +401,6 @@ namespace org.apache.xml.dtm.@ref
 		}
 		break;
 		default :
-	break;
 		}
 	  }
 	} //TreeWalker

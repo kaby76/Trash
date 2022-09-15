@@ -25,6 +25,8 @@ using System.Text;
 namespace org.apache.xalan.xsltc.dom
 {
 
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using Translet = org.apache.xalan.xsltc.Translet;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using Axis = org.apache.xml.dtm.Axis;
@@ -36,10 +38,10 @@ namespace org.apache.xalan.xsltc.dom
 	/// </summary>
 	public abstract class NodeCounter
 	{
-		public const int END = org.apache.xml.dtm.DTM_Fields.NULL;
+		public static readonly int END = DTM.NULL;
 
 		protected internal int _node = END;
-		protected internal int _nodeType = org.apache.xalan.xsltc.DOM_Fields.FIRST_TYPE - 1;
+		protected internal int _nodeType = DOM.FIRST_TYPE - 1;
 		protected internal double _value = int.MinValue;
 
 		public readonly DOM _document;
@@ -111,9 +113,7 @@ namespace org.apache.xalan.xsltc.dom
 		}
 
 	  // format == null assumed here 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private final void setTokens(final String format)
-	 private string Tokens
+	 private in string Tokens
 	 {
 		 set
 		 {
@@ -392,7 +392,7 @@ namespace org.apache.xalan.xsltc.dom
 			int max = (int) c;
 
 			// Special case for Greek alphabet 
-			if (c >= 0x3b1 && c <= 0x3c9)
+			if (c >= (char)0x3b1 && c <= (char)0x3c9)
 			{
 			max = 0x3c9; // omega
 			}

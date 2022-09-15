@@ -22,11 +22,11 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisTraverser = org.apache.xml.dtm.DTMAxisTraverser;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using OpMap = org.apache.xpath.compiler.OpMap;
 	using XObject = org.apache.xpath.objects.XObject;
@@ -77,7 +77,7 @@ namespace org.apache.xpath.axes
 	  /// LocationPath.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: MatchPatternIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis) throws javax.xml.transform.TransformerException
 	  internal MatchPatternIterator(Compiler compiler, int opPos, int analysis) : base(compiler, opPos, analysis, false)
 	  {
@@ -114,7 +114,7 @@ namespace org.apache.xpath.axes
 
 		if (false || DEBUG)
 		{
-		  Console.Write("analysis: " + Integer.toBinaryString(analysis));
+		  Console.Write("analysis: " + Convert.ToString(analysis, 2));
 		  Console.WriteLine(", " + WalkerFactory.getAnalysisString(analysis));
 		}
 
@@ -189,7 +189,7 @@ namespace org.apache.xpath.axes
 	  {
 		  get
 		  {
-			m_lastFetched = (org.apache.xml.dtm.DTM_Fields.NULL == m_lastFetched) ? m_traverser.first(m_context) : m_traverser.next(m_context, m_lastFetched);
+			m_lastFetched = (DTM.NULL == m_lastFetched) ? m_traverser.first(m_context) : m_traverser.next(m_context, m_lastFetched);
 			return m_lastFetched;
 		  }
 	  }
@@ -204,7 +204,7 @@ namespace org.apache.xpath.axes
 	  {
 		  if (m_foundLast)
 		  {
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return DTM.NULL;
 		  }
 
 		int next;
@@ -238,9 +238,9 @@ namespace org.apache.xpath.axes
 		  {
 			next = NextNode;
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL != next)
+			if (DTM.NULL != next)
 			{
-			  if (org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT == acceptNode(next, m_execContext))
+			  if (DTMIterator.FILTER_ACCEPT == acceptNode(next, m_execContext))
 			  {
 				break;
 			  }
@@ -253,9 +253,9 @@ namespace org.apache.xpath.axes
 			{
 			  break;
 			}
-		  } while (next != org.apache.xml.dtm.DTM_Fields.NULL);
+		  } while (next != DTM.NULL);
 
-		  if (org.apache.xml.dtm.DTM_Fields.NULL != next)
+		  if (DTM.NULL != next)
 		  {
 			if (DEBUG)
 			{
@@ -270,7 +270,7 @@ namespace org.apache.xpath.axes
 		  {
 			m_foundLast = true;
 
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 		}
 		finally
@@ -306,7 +306,7 @@ namespace org.apache.xpath.axes
 			Console.WriteLine(", " + m_cdtm.getNodeName(n));
 			// if(m_cdtm.getNodeName(n).equals("near-east"))
 			Console.WriteLine("pattern: " + m_pattern.ToString());
-			StepPattern.debugWhatToShow(m_pattern.WhatToShow);
+			m_pattern.debugWhatToShow(m_pattern.WhatToShow);
 		  }
 
 		  XObject score = m_pattern.execute(xctxt);
@@ -319,7 +319,7 @@ namespace org.apache.xpath.axes
 		  }
 
 		  // System.out.println("\n::acceptNode - score: "+score.num()+"::");
-		  return (score == NodeTest.SCORE_NONE) ? org.apache.xml.dtm.DTMIterator_Fields.FILTER_SKIP : org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT;
+		  return (score == NodeTest.SCORE_NONE) ? DTMIterator.FILTER_SKIP : DTMIterator.FILTER_ACCEPT;
 		}
 		catch (javax.xml.transform.TransformerException se)
 		{

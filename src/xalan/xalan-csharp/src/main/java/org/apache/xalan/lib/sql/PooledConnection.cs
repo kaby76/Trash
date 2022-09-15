@@ -23,7 +23,6 @@
 namespace org.apache.xalan.lib.sql
 {
 
-
 	public class PooledConnection
 	{
 

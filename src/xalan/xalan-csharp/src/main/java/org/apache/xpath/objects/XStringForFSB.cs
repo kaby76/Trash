@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath.objects
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using FastStringBuffer = org.apache.xml.utils.FastStringBuffer;
 	using XMLCharacterRecognizer = org.apache.xml.utils.XMLCharacterRecognizer;
@@ -176,7 +175,7 @@ namespace org.apache.xpath.objects
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException
 	  public override void dispatchCharactersEvents(org.xml.sax.ContentHandler ch)
 	  {
@@ -191,7 +190,7 @@ namespace org.apache.xpath.objects
 	  /// <param name="lh"> A non-null reference to a LexicalHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchAsComment(org.xml.sax.ext.LexicalHandler lh) throws org.xml.sax.SAXException
 	  public override void dispatchAsComment(org.xml.sax.ext.LexicalHandler lh)
 	  {
@@ -264,7 +263,7 @@ namespace org.apache.xpath.objects
 
 		int end = srcBegin + m_start + n;
 		int d = dstBegin;
-		FastStringBuffer fsb = fsb();
+		FastStringBuffer fsb = this.fsb();
 
 		for (int i = srcBegin + m_start; i < end; i++)
 		{
@@ -283,8 +282,8 @@ namespace org.apache.xpath.objects
 	  /// </param>
 	  /// <returns>  <code>true</code> if the <code>String </code>are equal;
 	  ///          <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     java.lang.String#compareTo(java.lang.String) </seealso>
-	  /// <seealso cref=     java.lang.String#equalsIgnoreCase(java.lang.String) </seealso>
+	  /// <seealso cref="java.lang.String.compareTo(java.lang.String)"/>
+	  /// <seealso cref="java.lang.String.equalsIgnoreCase(java.lang.String)"/>
 	  public override bool Equals(XMLString obj2)
 	  {
 
@@ -297,7 +296,7 @@ namespace org.apache.xpath.objects
 
 		if (n == obj2.length())
 		{
-		  FastStringBuffer fsb = fsb();
+		  FastStringBuffer fsb = this.fsb();
 		  int i = m_start;
 		  int j = 0;
 
@@ -343,7 +342,7 @@ namespace org.apache.xpath.objects
 
 		if (n == str.Length)
 		{
-		  FastStringBuffer fsb = fsb();
+		  FastStringBuffer fsb = this.fsb();
 		  int i = m_start;
 		  int j = 0;
 
@@ -379,7 +378,7 @@ namespace org.apache.xpath.objects
 
 		if (n == anotherString.Length)
 		{
-		  FastStringBuffer fsb = fsb();
+		  FastStringBuffer fsb = this.fsb();
 		  int i = m_start;
 		  int j = 0;
 
@@ -411,8 +410,8 @@ namespace org.apache.xpath.objects
 	  /// </param>
 	  /// <returns>  <code>true</code> if the <code>String </code>are equal;
 	  ///          <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     java.lang.String#compareTo(java.lang.String) </seealso>
-	  /// <seealso cref=     java.lang.String#equalsIgnoreCase(java.lang.String) </seealso>
+	  /// <seealso cref="java.lang.String.compareTo(java.lang.String)"/>
+	  /// <seealso cref="java.lang.String.equalsIgnoreCase(java.lang.String)"/>
 	  public override bool Equals(object obj2)
 	  {
 
@@ -454,12 +453,12 @@ namespace org.apache.xpath.objects
 	  /// <returns>  <code>true</code> if the argument is not <code>null</code>
 	  ///          and the <code>String</code>s are equal,
 	  ///          ignoring case; <code>false</code> otherwise. </returns>
-	  /// <seealso cref=     #equals(Object) </seealso>
-	  /// <seealso cref=     java.lang.Character#toLowerCase(char) </seealso>
-	  /// <seealso cref= java.lang.Character#toUpperCase(char) </seealso>
+	  /// <seealso cref=".equals(Object)"/>
+	  /// <seealso cref="java.lang.Character.toLowerCase(char)"/>
+	  /// <seealso cref="java.lang.Character.toUpperCase(char)"/>
 	  public override bool equalsIgnoreCase(string anotherString)
 	  {
-		return (m_length == anotherString.Length) ? str().Equals(anotherString, StringComparison.CurrentCultureIgnoreCase) : false;
+		return (m_length == anotherString.Length) ? str().Equals(anotherString, StringComparison.OrdinalIgnoreCase) : false;
 	  }
 
 	  /// <summary>
@@ -480,7 +479,7 @@ namespace org.apache.xpath.objects
 		int len1 = m_length;
 		int len2 = xstr.length();
 		int n = Math.Min(len1, len2);
-		FastStringBuffer fsb = fsb();
+		FastStringBuffer fsb = this.fsb();
 		int i = m_start;
 		int j = 0;
 
@@ -519,15 +518,15 @@ namespace org.apache.xpath.objects
 	  /// <returns>  a negative integer, zero, or a positive integer as the
 	  ///          the specified String is greater than, equal to, or less
 	  ///          than this String, ignoring case considerations. </returns>
-	  /// <seealso cref=     java.text.Collator#compare(String, String)
-	  /// @since   1.2 </seealso>
+	  /// <seealso cref="java.text.Collator.compare(String, String)"
+	  /// @since   1.2/>
 	  public override int compareToIgnoreCase(XMLString xstr)
 	  {
 
 		int len1 = m_length;
 		int len2 = xstr.length();
 		int n = Math.Min(len1, len2);
-		FastStringBuffer fsb = fsb();
+		FastStringBuffer fsb = this.fsb();
 		int i = m_start;
 		int j = 0;
 
@@ -612,7 +611,7 @@ namespace org.apache.xpath.objects
 	  public override bool startsWith(XMLString prefix, int toffset)
 	  {
 
-		FastStringBuffer fsb = fsb();
+		FastStringBuffer fsb = this.fsb();
 		int to = m_start + toffset;
 		int tlim = m_start + m_length;
 		int po = 0;
@@ -648,7 +647,7 @@ namespace org.apache.xpath.objects
 	  ///          Note also that <code>true</code> will be returned if the
 	  ///          argument is an empty string or is equal to this
 	  ///          <code>String</code> object as determined by the
-	  ///          <seealso cref="#equals(Object)"/> method. </returns>
+	  ///          <seealso cref="equals(Object)"/> method. </returns>
 	  /// <exception cref="java.lang.NullPointerException"> if <code>prefix</code> is
 	  ///          <code>null</code>.
 	  /// @since   JDK1. 0 </exception>
@@ -712,7 +711,7 @@ namespace org.apache.xpath.objects
 	  {
 
 		int max = m_start + m_length;
-		FastStringBuffer fsb = fsb();
+		FastStringBuffer fsb = this.fsb();
 
 		if (fromIndex < 0)
 		{
@@ -727,7 +726,7 @@ namespace org.apache.xpath.objects
 
 		for (int i = m_start + fromIndex; i < max; i++)
 		{
-		  if (fsb.charAt(i) == ch)
+		  if (fsb.charAt(i) == (char)ch)
 		  {
 			return i - m_start;
 		  }
@@ -821,7 +820,7 @@ namespace org.apache.xpath.objects
 	  {
 
 		// %OPT% Make an FSB here?
-		return new XString(str() + str);
+		return new XString(this.str() + str);
 	  }
 
 	  /// <summary>
@@ -862,7 +861,7 @@ namespace org.apache.xpath.objects
 
 		int end = m_length + m_start;
 		char[] buf = new char[m_length];
-		FastStringBuffer fsb = fsb();
+		FastStringBuffer fsb = this.fsb();
 		bool edit = false;
 
 		/* replace S to ' '. and ' '+ -> single ' '. */

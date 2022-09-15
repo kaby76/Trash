@@ -96,7 +96,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type check all the children of this node.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -109,7 +109,7 @@ namespace org.apache.xalan.xsltc.compiler
 		public override void translate(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 		ErrorMsg msg = new ErrorMsg(ErrorMsg.NOT_IMPLEMENTED_ERR, this.GetType(), this);
-		Parser.reportError(Constants_Fields.FATAL, msg);
+		Parser.reportError(FATAL, msg);
 		}
 
 		/// <summary>
@@ -120,10 +120,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList result, save = methodGen.getInstructionList();
-		InstructionList result , save = methodGen.InstructionList;
-		methodGen.InstructionList = result = new InstructionList();
+		InstructionList result, save = methodGen.getInstructionList();
+		methodGen.setInstructionList(result = new InstructionList());
 		translate(classGen, methodGen);
-		methodGen.InstructionList = save;
+		methodGen.setInstructionList(save);
 		return result;
 		}
 
@@ -161,7 +161,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
+			InstructionList il = methodGen.getInstructionList();
 			il.append(methodGen.loadContextNode());
 			il.append(methodGen.setStartNode());
 		}
@@ -176,23 +176,23 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		_trueList.backPatch(il.append(ICONST_1));
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.BranchHandle truec = il.append(new org.apache.bcel.generic.GOTO_W(null));
 		BranchHandle truec = il.append(new GOTO_W(null));
 		_falseList.backPatch(il.append(ICONST_0));
-		truec.Target = il.append(NOP);
+		truec.setTarget(il.append(NOP));
 		}
 
 		public virtual void desynthesize(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		_falseList.add(il.append(new IFEQ(null)));
 		}
 

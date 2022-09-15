@@ -52,12 +52,12 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Execute a variable declaration and push it onto the variable stack. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#variables">variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.variables">variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -66,7 +66,7 @@ namespace org.apache.xalan.templates
 		//  transformer.getTraceManager().fireTraceEvent(this);
 
 		// transformer.getXPathContext().getVarStack().pushVariable(m_qname, var);
-		transformer.XPathContext.VarStack.setLocalVariable(m_index, m_lazyVar);
+		transformer.XPathContext.getVarStack().setLocalVariable(m_index, m_lazyVar);
 	  }
 
 	}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +24,6 @@
 
 namespace org.apache.xalan.xsltc.trax
 {
-
 
 
 
@@ -66,13 +66,13 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Creates a SAX2 InputSource object from a TrAX Source object
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.xml.sax.InputSource getInputSource(org.apache.xalan.xsltc.compiler.XSLTC xsltc, javax.xml.transform.Source source) throws javax.xml.transform.TransformerConfigurationException
 		public static InputSource getInputSource(XSLTC xsltc, Source source)
 		{
 		InputSource input = null;
 
-		string systemId = source.SystemId;
+		string systemId = source.getSystemId();
 
 		try
 		{
@@ -82,11 +82,11 @@ namespace org.apache.xalan.xsltc.trax
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final javax.xml.transform.sax.SAXSource sax = (javax.xml.transform.sax.SAXSource)source;
 			SAXSource sax = (SAXSource)source;
-			input = sax.InputSource;
+			input = sax.getInputSource();
 			// Pass the SAX parser to the compiler
 					try
 					{
-						XMLReader reader = sax.XMLReader;
+						XMLReader reader = sax.getXMLReader();
 
 						 /*
 						  * Fix for bug 24695
@@ -110,7 +110,7 @@ namespace org.apache.xalan.xsltc.trax
 								   //Incase there is an exception thrown 
 								   // resort to JAXP 
 								   SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-								   parserFactory.NamespaceAware = true;
+								   parserFactory.setNamespaceAware(true);
 
 								   if (xsltc.SecureProcessing)
 								   {
@@ -123,7 +123,7 @@ namespace org.apache.xalan.xsltc.trax
 									  }
 								   }
 
-								   reader = parserFactory.newSAXParser().XMLReader;
+								   reader = parserFactory.newSAXParser().getXMLReader();
 
 
 							   }
@@ -160,7 +160,7 @@ namespace org.apache.xalan.xsltc.trax
 			DOMSource domsrc = (DOMSource)source;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.w3c.dom.Document dom = (org.w3c.dom.Document)domsrc.getNode();
-			Document dom = (Document)domsrc.Node;
+			Document dom = (Document)domsrc.getNode();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final DOM2SAX dom2sax = new DOM2SAX(dom);
 			DOM2SAX dom2sax = new DOM2SAX(dom);
@@ -170,7 +170,7 @@ namespace org.apache.xalan.xsltc.trax
 			input = SAXSource.sourceToInputSource(source);
 			if (input == null)
 			{
-				input = new InputSource(domsrc.SystemId);
+				input = new InputSource(domsrc.getSystemId());
 			}
 			}
 			// Try to get InputStream or Reader from StreamSource
@@ -181,10 +181,10 @@ namespace org.apache.xalan.xsltc.trax
 			StreamSource stream = (StreamSource)source;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.InputStream istream = stream.getInputStream();
-			System.IO.Stream istream = stream.InputStream;
+			Stream istream = stream.getInputStream();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.Reader reader = stream.getReader();
-			Reader reader = stream.Reader;
+			Reader reader = stream.getReader();
 					xsltc.XMLReader = null; // Clear old XML reader
 
 			// Create InputSource from Reader or InputStream in Source
@@ -206,7 +206,7 @@ namespace org.apache.xalan.xsltc.trax
 			ErrorMsg err = new ErrorMsg(ErrorMsg.JAXP_UNKNOWN_SOURCE_ERR);
 			throw new TransformerConfigurationException(err.ToString());
 			}
-			input.SystemId = systemId;
+			input.setSystemId(systemId);
 		}
 		catch (System.NullReferenceException)
 		{

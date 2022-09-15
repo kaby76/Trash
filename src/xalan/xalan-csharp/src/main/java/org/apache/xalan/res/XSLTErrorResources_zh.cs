@@ -21,7 +21,6 @@
 namespace org.apache.xalan.res
 {
 
-
 	/// <summary>
 	/// Set up error messages.
 	/// We build a two dimensional array of message keys and
@@ -617,7 +616,7 @@ namespace org.apache.xalan.res
 				new object[] {"version2", "<<<<<<<"},
 				new object[] {"yes", "\u662f"},
 				new object[] {"line", "\u884c\u53f7"},
-				new object[] {"column","\u5217\u53f7"},
+				new object[] {"column", "\u5217\u53f7"},
 				new object[] {"xsldone", "XSLProcessor\uff1a\u5b8c\u6210"},
 				new object[] {"xslProc_option", "Xalan-J \u547d\u4ee4\u884c Process \u7c7b\u9009\u9879\uff1a"},
 				new object[] {"xslProc_option", "Xalan-J \u547d\u4ee4\u884c Process \u7c7b\u9009\u9879\uff1a"},
@@ -677,8 +676,8 @@ namespace org.apache.xalan.res
 				new object[] {"optionXN", "[-XN \uff08\u542f\u7528\u6a21\u677f\u4ee3\u7801\u5d4c\u5165\uff09]"},
 				new object[] {"optionXX", "[-XX \uff08\u6253\u5f00\u9644\u52a0\u8c03\u8bd5\u6d88\u606f\u8f93\u51fa\uff09]"},
 				new object[] {"optionXT", "[-XT \uff08\u53ef\u80fd\u7684\u8bdd\u4f7f\u7528 translet \u8fdb\u884c\u8f6c\u6362\uff09]"},
-				new object[] {"diagTiming","--------- {0} \u901a\u8fc7 {1} \u7684\u8f6c\u6362\u8017\u65f6 {2} \u6beb\u79d2"},
-				new object[] {"recursionTooDeep","\u6a21\u677f\u5d4c\u5957\u592a\u6df1\u3002\u5d4c\u5957 = {0}\uff0c\u6a21\u677f {1} {2}"},
+				new object[] {"diagTiming", "--------- {0} \u901a\u8fc7 {1} \u7684\u8f6c\u6362\u8017\u65f6 {2} \u6beb\u79d2"},
+				new object[] {"recursionTooDeep", "\u6a21\u677f\u5d4c\u5957\u592a\u6df1\u3002\u5d4c\u5957 = {0}\uff0c\u6a21\u677f {1} {2}"},
 				new object[] {"nameIs", "\u540d\u79f0\u4e3a"},
 				new object[] {"matchPatternIs", "\u5339\u914d\u6a21\u5f0f\u4e3a"}
 			};
@@ -727,12 +726,12 @@ namespace org.apache.xalan.res
 	  ///   <param name="className"> the name of the class that implements the resource bundle. </param>
 	  ///   <returns> the ResourceBundle </returns>
 	  ///   <exception cref="MissingResourceException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static final XSLTErrorResources loadResourceBundle(String className) throws java.util.MissingResourceException
 	  public static XSLTErrorResources loadResourceBundle(string className)
 	  {
 
-		Locale locale = Locale.Default;
+		Locale locale = Locale.getDefault();
 		string suffix = getResourceSuffix(locale);
 
 		try
@@ -770,8 +769,8 @@ namespace org.apache.xalan.res
 	  private static string getResourceSuffix(Locale locale)
 	  {
 
-		string suffix = "_" + locale.Language;
-		string country = locale.Country;
+		string suffix = "_" + locale.getLanguage();
+		string country = locale.getCountry();
 
 		if (country.Equals("TW"))
 		{

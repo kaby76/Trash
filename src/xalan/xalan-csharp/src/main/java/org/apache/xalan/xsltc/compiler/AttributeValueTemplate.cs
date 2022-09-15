@@ -25,7 +25,6 @@ using System.Text;
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKESPECIAL = org.apache.bcel.generic.INVOKESPECIAL;
 	using INVOKEVIRTUAL = org.apache.bcel.generic.INVOKEVIRTUAL;
@@ -219,7 +218,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -274,27 +273,27 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-			ConstantPoolGen cpg = classGen.ConstantPool;
+			ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
+			InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int initBuffer = cpg.addMethodref(Constants_Fields.STRING_BUFFER_CLASS, "<init>", "()V");
-			int initBuffer = cpg.addMethodref(Constants_Fields.STRING_BUFFER_CLASS, "<init>", "()V");
+//ORIGINAL LINE: final int initBuffer = cpg.addMethodref(STRING_BUFFER_CLASS, "<init>", "()V");
+			int initBuffer = cpg.addMethodref(STRING_BUFFER_CLASS, "<init>", "()V");
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.bcel.generic.Instruction append = new org.apache.bcel.generic.INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.STRING_BUFFER_CLASS, "append", "(" + Constants_Fields.STRING_SIG + ")" + Constants_Fields.STRING_BUFFER_SIG));
-			Instruction append = new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.STRING_BUFFER_CLASS, "append", "(" + Constants_Fields.STRING_SIG + ")" + Constants_Fields.STRING_BUFFER_SIG));
+//ORIGINAL LINE: final org.apache.bcel.generic.Instruction append = new org.apache.bcel.generic.INVOKEVIRTUAL(cpg.addMethodref(STRING_BUFFER_CLASS, "append", "(" + STRING_SIG + ")" + STRING_BUFFER_SIG));
+			Instruction append = new INVOKEVIRTUAL(cpg.addMethodref(STRING_BUFFER_CLASS, "append", "(" + STRING_SIG + ")" + STRING_BUFFER_SIG));
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int toString = cpg.addMethodref(Constants_Fields.STRING_BUFFER_CLASS, "toString", "()"+Constants_Fields.STRING_SIG);
-			int toString = cpg.addMethodref(Constants_Fields.STRING_BUFFER_CLASS, "toString", "()" + Constants_Fields.STRING_SIG);
-			il.append(new NEW(cpg.addClass(Constants_Fields.STRING_BUFFER_CLASS)));
+//ORIGINAL LINE: final int toString = cpg.addMethodref(STRING_BUFFER_CLASS, "toString", "()"+STRING_SIG);
+			int toString = cpg.addMethodref(STRING_BUFFER_CLASS, "toString", "()" + STRING_SIG);
+			il.append(new NEW(cpg.addClass(STRING_BUFFER_CLASS)));
 			il.append(DUP);
 			il.append(new INVOKESPECIAL(initBuffer));
 			// StringBuffer is on the stack
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Enumeration elements = elements();
-			System.Collections.IEnumerator elements = elements();
+			System.Collections.IEnumerator elements = this.elements();
 			while (elements.MoveNext())
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':

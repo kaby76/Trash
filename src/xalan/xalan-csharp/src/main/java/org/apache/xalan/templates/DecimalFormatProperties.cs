@@ -43,8 +43,8 @@ namespace org.apache.xalan.templates
 	///   pattern-separator %char; ";"
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#format-number">format-number in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.format-number">format-number in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class DecimalFormatProperties : ElemTemplateElement
 	{
@@ -66,8 +66,8 @@ namespace org.apache.xalan.templates
 		m_dfs = new DecimalFormatSymbols();
 
 		// Set default values, they can be overiden if necessary.  
-		m_dfs.Infinity = Constants.ATTRVAL_INFINITY;
-		m_dfs.NaN = Constants.ATTRVAL_NAN;
+		m_dfs.setInfinity(Constants.ATTRVAL_INFINITY);
+		m_dfs.setNaN(Constants.ATTRVAL_NAN);
 
 		m_docOrderNumber = docOrderNumber;
 	  }
@@ -142,11 +142,11 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_dfs.DecimalSeparator = value;
+			m_dfs.setDecimalSeparator(value);
 		  }
 		  get
 		  {
-			return m_dfs.DecimalSeparator;
+			return m_dfs.getDecimalSeparator();
 		  }
 	  }
 
@@ -161,11 +161,11 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_dfs.GroupingSeparator = value;
+			m_dfs.setGroupingSeparator(value);
 		  }
 		  get
 		  {
-			return m_dfs.GroupingSeparator;
+			return m_dfs.getGroupingSeparator();
 		  }
 	  }
 
@@ -180,11 +180,11 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_dfs.Infinity = value;
+			m_dfs.setInfinity(value);
 		  }
 		  get
 		  {
-			return m_dfs.Infinity;
+			return m_dfs.getInfinity();
 		  }
 	  }
 
@@ -199,11 +199,11 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_dfs.MinusSign = value;
+			m_dfs.setMinusSign(value);
 		  }
 		  get
 		  {
-			return m_dfs.MinusSign;
+			return m_dfs.getMinusSign();
 		  }
 	  }
 
@@ -218,11 +218,11 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_dfs.NaN = value;
+			m_dfs.setNaN(value);
 		  }
 		  get
 		  {
-			return m_dfs.NaN;
+			return m_dfs.getNaN();
 		  }
 	  }
 
@@ -249,11 +249,11 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_dfs.Percent = value;
+			m_dfs.setPercent(value);
 		  }
 		  get
 		  {
-			return m_dfs.Percent;
+			return m_dfs.getPercent();
 		  }
 	  }
 
@@ -268,19 +268,19 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_dfs.PerMill = value;
+			m_dfs.setPerMill(value);
 		  }
 		  get
 		  {
-			return m_dfs.PerMill;
+			return m_dfs.getPerMill();
 		  }
 	  }
 
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for this element </returns>
 	  public override int XSLToken
 	  {
@@ -300,11 +300,11 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_dfs.ZeroDigit = value;
+			m_dfs.setZeroDigit(value);
 		  }
 		  get
 		  {
-			return m_dfs.ZeroDigit;
+			return m_dfs.getZeroDigit();
 		  }
 	  }
 
@@ -319,11 +319,11 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_dfs.Digit = value;
+			m_dfs.setDigit(value);
 		  }
 		  get
 		  {
-			return m_dfs.Digit;
+			return m_dfs.getDigit();
 		  }
 	  }
 
@@ -339,11 +339,11 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_dfs.PatternSeparator = value;
+			m_dfs.setPatternSeparator(value);
 		  }
 		  get
 		  {
-			return m_dfs.PatternSeparator;
+			return m_dfs.getPatternSeparator();
 		  }
 	  }
 

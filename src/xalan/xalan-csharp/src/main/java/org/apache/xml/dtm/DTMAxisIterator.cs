@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.dtm
 {
-
 	/// <summary>
 	/// This class iterates over a single XPath Axis, and returns node handles.
 	/// </summary>
@@ -31,6 +30,7 @@ namespace org.apache.xml.dtm
 
 	  /// <summary>
 	  /// Specifies the end of the iteration, and is the same as DTM.NULL. </summary>
+	  public static int END = DTM.NULL;
 
 	  /// <summary>
 	  /// Get the next node in the iteration.
@@ -97,11 +97,6 @@ namespace org.apache.xml.dtm
 	  /// <param name="position"> The position </param>
 	  /// <returns> The node at the given position. </returns>
 	  int getNodeByPosition(int position);
-	}
-
-	public static class DTMAxisIterator_Fields
-	{
-	  public const int END = DTM_Fields.NULL;
 	}
 
 }

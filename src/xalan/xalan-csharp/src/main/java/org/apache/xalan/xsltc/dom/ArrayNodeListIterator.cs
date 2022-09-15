@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 
 	public class ArrayNodeListIterator : DTMAxisIterator
@@ -33,7 +32,7 @@ namespace org.apache.xalan.xsltc.dom
 
 		private int[] _nodes;
 
-		private static readonly int[] EMPTY = new int[] { };
+		private static readonly int[] EMPTY = new int[] {};
 
 		public ArrayNodeListIterator(int[] nodes)
 		{
@@ -42,7 +41,7 @@ namespace org.apache.xalan.xsltc.dom
 
 		public virtual int next()
 		{
-		return _pos < _nodes.Length ? _nodes[_pos++] : org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		return _pos < _nodes.Length ? _nodes[_pos++] : END;
 		}
 
 		public virtual DTMAxisIterator reset()
@@ -79,7 +78,7 @@ namespace org.apache.xalan.xsltc.dom
 
 		public virtual DTMAxisIterator setStartNode(int node)
 		{
-		if (node == org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+		if (node == END)
 		{
 			_nodes = EMPTY;
 		}
@@ -90,7 +89,7 @@ namespace org.apache.xalan.xsltc.dom
 		{
 			get
 			{
-			return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			return END;
 			}
 		}
 

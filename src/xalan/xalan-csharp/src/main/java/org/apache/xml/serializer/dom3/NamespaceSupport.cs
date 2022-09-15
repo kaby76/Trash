@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Text;
 
 /*
@@ -25,7 +24,6 @@ using System.Text;
 
 namespace org.apache.xml.serializer.dom3
 {
-
 
 	/// <summary>
 	/// Namespace support for XML document handlers. This class doesn't 
@@ -69,8 +67,8 @@ namespace org.apache.xml.serializer.dom3
 		/// &lt;prefix, uri&gt;. The default size can be set to anything
 		/// as long as it is a power of 2 greater than 1.
 		/// </summary>
-		/// <seealso cref= #fNamespaceSize </seealso>
-		/// <seealso cref= #fContext </seealso>
+		/// <seealso cref=".fNamespaceSize"/>
+		/// <seealso cref=".fContext"/>
 		protected internal string[] fNamespace = new string[16 * 2];
 
 		/// <summary>
@@ -86,7 +84,7 @@ namespace org.apache.xml.serializer.dom3
 		/// index of declared namespace bindings and runs to the size of the
 		/// namespace information array.
 		/// </summary>
-		/// <seealso cref= #fNamespaceSize </seealso>
+		/// <seealso cref=".fNamespaceSize"/>
 		protected internal int[] fContext = new int[8];
 
 		/// <summary>
@@ -109,7 +107,7 @@ namespace org.apache.xml.serializer.dom3
 		// Public methods
 		//
 
-		/// <seealso cref= org.apache.xerces.xni.NamespaceContext#reset() </seealso>
+		/// <seealso cref="org.apache.xerces.xni.NamespaceContext.reset()"/>
 		public virtual void reset()
 		{
 
@@ -129,7 +127,7 @@ namespace org.apache.xml.serializer.dom3
 		} // reset(SymbolTable)
 
 
-		/// <seealso cref= org.apache.xerces.xni.NamespaceContext#pushContext() </seealso>
+		/// <seealso cref="org.apache.xerces.xni.NamespaceContext.pushContext()"/>
 		public virtual void pushContext()
 		{
 
@@ -147,13 +145,13 @@ namespace org.apache.xml.serializer.dom3
 		} // pushContext()
 
 
-		/// <seealso cref= org.apache.xerces.xni.NamespaceContext#popContext() </seealso>
+		/// <seealso cref="org.apache.xerces.xni.NamespaceContext.popContext()"/>
 		public virtual void popContext()
 		{
 			fNamespaceSize = fContext[fCurrentContext--];
 		} // popContext()
 
-		/// <seealso cref= org.apache.xerces.xni.NamespaceContext#declarePrefix(String, String) </seealso>
+		/// <seealso cref="org.apache.xerces.xni.NamespaceContext.declarePrefix(String, String)"/>
 		public virtual bool declarePrefix(string prefix, string uri)
 		{
 			// ignore "xml" and "xmlns" prefixes
@@ -195,7 +193,7 @@ namespace org.apache.xml.serializer.dom3
 
 		} // declarePrefix(String,String):boolean
 
-		/// <seealso cref= org.apache.xerces.xni.NamespaceContext#getURI(String) </seealso>
+		/// <seealso cref="org.apache.xerces.xni.NamespaceContext.getURI(String)"/>
 		public virtual string getURI(string prefix)
 		{
 
@@ -215,7 +213,7 @@ namespace org.apache.xml.serializer.dom3
 		} // getURI(String):String
 
 
-		/// <seealso cref= org.apache.xerces.xni.NamespaceContext#getPrefix(String) </seealso>
+		/// <seealso cref="org.apache.xerces.xni.NamespaceContext.getPrefix(String)"/>
 		public virtual string getPrefix(string uri)
 		{
 
@@ -239,7 +237,7 @@ namespace org.apache.xml.serializer.dom3
 		} // getPrefix(String):String
 
 
-		/// <seealso cref= org.apache.xerces.xni.NamespaceContext#getDeclaredPrefixCount() </seealso>
+		/// <seealso cref="org.apache.xerces.xni.NamespaceContext.getDeclaredPrefixCount()"/>
 		public virtual int DeclaredPrefixCount
 		{
 			get
@@ -248,13 +246,13 @@ namespace org.apache.xml.serializer.dom3
 			}
 		} // getDeclaredPrefixCount():int
 
-		/// <seealso cref= org.apache.xerces.xni.NamespaceContext#getDeclaredPrefixAt(int) </seealso>
+		/// <seealso cref="org.apache.xerces.xni.NamespaceContext.getDeclaredPrefixAt(int)"/>
 		public virtual string getDeclaredPrefixAt(int index)
 		{
 			return fNamespace[fContext[fCurrentContext] + index * 2];
 		} // getDeclaredPrefixAt(int):String
 
-		/// <seealso cref= org.apache.xerces.xni.NamespaceContext#getAllPrefixes() </seealso>
+		/// <seealso cref="org.apache.xerces.xni.NamespaceContext.getAllPrefixes()"/>
 		public virtual System.Collections.IEnumerator AllPrefixes
 		{
 			get
@@ -307,13 +305,13 @@ namespace org.apache.xml.serializer.dom3
 				this.size = size;
 			}
 
-		   /// <seealso cref= java.util.Enumeration#hasMoreElements() </seealso>
+		   /// <seealso cref="java.util.Enumeration.hasMoreElements()"/>
 			public bool hasMoreElements()
 			{
 				return (counter < size);
 			}
 
-			/// <seealso cref= java.util.Enumeration#nextElement() </seealso>
+			/// <seealso cref="java.util.Enumeration.nextElement()"/>
 			public object nextElement()
 			{
 				if (counter < size)

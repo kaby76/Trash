@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Text;
 
 /*
@@ -24,7 +25,6 @@ using System.Text;
  */
 namespace org.apache.xml.dtm.@ref
 {
-
 	using org.apache.xml.dtm;
 	using SuballocatedIntVector = org.apache.xml.utils.SuballocatedIntVector;
 	using BoolStack = org.apache.xml.utils.BoolStack;
@@ -51,14 +51,8 @@ namespace org.apache.xml.dtm.@ref
 		public abstract org.xml.sax.ext.LexicalHandler LexicalHandler {get;}
 		public abstract org.xml.sax.ContentHandler ContentHandler {get;}
 		public abstract bool needsTwoThreads();
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public abstract DTMAxisIterator getTypedAxisIterator(final int axis, final int type);
 		public abstract DTMAxisIterator getTypedAxisIterator(int axis, int type);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public abstract DTMAxisIterator getAxisIterator(final int axis);
 		public abstract DTMAxisIterator getAxisIterator(int axis);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public abstract DTMAxisTraverser getAxisTraverser(final int axis);
 		public abstract DTMAxisTraverser getAxisTraverser(int axis);
 		public abstract void setProperty(string property, object value);
 		internal const bool JJK_DEBUG = false;
@@ -133,7 +127,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <summary>
 	  /// The value to use when the information has not been built yet.
 	  /// </summary>
-	  protected internal static readonly int NOTPROCESSED = DTM_Fields.NULL - 1;
+	  protected internal static readonly int NOTPROCESSED = DTM.NULL - 1;
 
 	  /// <summary>
 	  /// The DTM manager who "owns" this DTM.
@@ -256,7 +250,7 @@ namespace org.apache.xml.dtm.@ref
 		  m_mgrDefault = (DTMManagerDefault)mgr;
 		}
 
-		m_documentBaseURI = (null != source) ? source.SystemId : null;
+		m_documentBaseURI = (null != source) ? source.getSystemId() : null;
 		m_dtmIdent.setElementAt(dtmIdentity,0);
 		m_wsfilter = whiteSpaceFilter;
 		m_xstrf = xstringfactory;
@@ -352,7 +346,7 @@ namespace org.apache.xml.dtm.@ref
 		ExpandedNameTable ent = m_expandedNameTable;
 		short type = ent.getType(expandedTypeID);
 
-		if (DTM_Fields.ELEMENT_NODE == type)
+		if (DTM.ELEMENT_NODE == type)
 		{
 		  int namespaceID = ent.getNamespaceID(expandedTypeID);
 		  int localNameID = ent.getLocalNameID(expandedTypeID);
@@ -494,13 +488,13 @@ namespace org.apache.xml.dtm.@ref
 
 		int info = _exptype(identity);
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != info)
+		if (NULL != info)
 		{
 		  return m_expandedNameTable.getType(info);
 		}
 		else
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -512,9 +506,9 @@ namespace org.apache.xml.dtm.@ref
 	  /// <returns> The expanded type ID, or DTM.NULL. </returns>
 	  protected internal virtual int _exptype(int identity)
 	  {
-		  if (identity == DTM_Fields.NULL)
+		  if (identity == DTM.NULL)
 		  {
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		  }
 		// Reorganized test and loop into single flow
 		// Tiny performance improvement, saves a few bytes of code, clearer.
@@ -523,7 +517,7 @@ namespace org.apache.xml.dtm.@ref
 		{
 		  if (!nextNode() && identity >= m_size)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		}
 		return m_exptype.elementAt(identity);
@@ -543,12 +537,12 @@ namespace org.apache.xml.dtm.@ref
 		  bool isMore = nextNode();
 		  if (!isMore && identity >= m_size)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		}
 
 		int i = 0;
-		while (org.apache.xml.dtm.DTM_Fields.NULL != (identity = _parent(identity)))
+		while (NULL != (identity = _parent(identity)))
 		{
 		  ++i;
 		}
@@ -576,14 +570,14 @@ namespace org.apache.xml.dtm.@ref
 
 		  if (identity >= m_size && !isMore)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		  else
 		  {
 			info = m_firstch.elementAt(identity);
 			if (info == NOTPROCESSED && !isMore)
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return NULL;
 			}
 		  }
 		}
@@ -611,14 +605,14 @@ namespace org.apache.xml.dtm.@ref
 
 		  if (identity >= m_size && !isMore)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		  else
 		  {
 			info = m_nextsib.elementAt(identity);
 			if (info == NOTPROCESSED && !isMore)
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return NULL;
 			}
 		  }
 		}
@@ -649,7 +643,7 @@ namespace org.apache.xml.dtm.@ref
 
 		  if (identity >= m_size && !isMore)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		  else if (identity < m_size)
 		  {
@@ -681,7 +675,7 @@ namespace org.apache.xml.dtm.@ref
 
 		  if (identity >= m_size && !isMore)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		  else if (identity < m_size)
 		  {
@@ -693,15 +687,15 @@ namespace org.apache.xml.dtm.@ref
 	  /// <summary>
 	  /// Diagnostics function to dump the DTM.
 	  /// </summary>
-	  public virtual void dumpDTM(System.IO.Stream os)
+	  public virtual void dumpDTM(Stream os)
 	  {
 		try
 		{
 		  if (os == null)
 		  {
 			  File f = new File("DTMDump" + ((object)this).GetHashCode() + ".txt");
-			   Console.Error.WriteLine("Dumping... " + f.AbsolutePath);
-			   os = new System.IO.FileStream(f, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+			   Console.Error.WriteLine("Dumping... " + f.getAbsolutePath());
+			   os = new FileStream(f, FileMode.Create, FileAccess.Write);
 		  }
 		  PrintStream ps = new PrintStream(os);
 
@@ -725,53 +719,53 @@ namespace org.apache.xml.dtm.@ref
 
 			int exTypeID = _exptype(index);
 
-			ps.println("Expanded Type ID: " + exTypeID.ToString("x"));
+			ps.println("Expanded Type ID: " + Convert.ToString(exTypeID, 16));
 
 			int type = _type(index);
 			string typestring;
 
 			switch (type)
 			{
-			case DTM_Fields.ATTRIBUTE_NODE :
+			case DTM.ATTRIBUTE_NODE :
 			  typestring = "ATTRIBUTE_NODE";
 			  break;
-			case DTM_Fields.CDATA_SECTION_NODE :
+			case DTM.CDATA_SECTION_NODE :
 			  typestring = "CDATA_SECTION_NODE";
 			  break;
-			case DTM_Fields.COMMENT_NODE :
+			case DTM.COMMENT_NODE :
 			  typestring = "COMMENT_NODE";
 			  break;
-			case DTM_Fields.DOCUMENT_FRAGMENT_NODE :
+			case DTM.DOCUMENT_FRAGMENT_NODE :
 			  typestring = "DOCUMENT_FRAGMENT_NODE";
 			  break;
-			case DTM_Fields.DOCUMENT_NODE :
+			case DTM.DOCUMENT_NODE :
 			  typestring = "DOCUMENT_NODE";
 			  break;
-			case DTM_Fields.DOCUMENT_TYPE_NODE :
+			case DTM.DOCUMENT_TYPE_NODE :
 			  typestring = "DOCUMENT_NODE";
 			  break;
-			case DTM_Fields.ELEMENT_NODE :
+			case DTM.ELEMENT_NODE :
 			  typestring = "ELEMENT_NODE";
 			  break;
-			case DTM_Fields.ENTITY_NODE :
+			case DTM.ENTITY_NODE :
 			  typestring = "ENTITY_NODE";
 			  break;
-			case DTM_Fields.ENTITY_REFERENCE_NODE :
+			case DTM.ENTITY_REFERENCE_NODE :
 			  typestring = "ENTITY_REFERENCE_NODE";
 			  break;
-			case DTM_Fields.NAMESPACE_NODE :
+			case DTM.NAMESPACE_NODE :
 			  typestring = "NAMESPACE_NODE";
 			  break;
-			case DTM_Fields.NOTATION_NODE :
+			case DTM.NOTATION_NODE :
 			  typestring = "NOTATION_NODE";
 			  break;
-			case DTM_Fields.NULL :
+			case DTM.NULL :
 			  typestring = "NULL";
 			  break;
-			case DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+			case DTM.PROCESSING_INSTRUCTION_NODE :
 			  typestring = "PROCESSING_INSTRUCTION_NODE";
 			  break;
-			case DTM_Fields.TEXT_NODE :
+			case DTM.TEXT_NODE :
 			  typestring = "TEXT_NODE";
 			  break;
 			default :
@@ -783,7 +777,7 @@ namespace org.apache.xml.dtm.@ref
 
 			int firstChild = _firstch(index);
 
-			if (DTM_Fields.NULL == firstChild)
+			if (DTM.NULL == firstChild)
 			{
 			  ps.println("First child: DTM.NULL");
 			}
@@ -800,7 +794,7 @@ namespace org.apache.xml.dtm.@ref
 			{
 			  int prevSibling = _prevsib(index);
 
-			  if (DTM_Fields.NULL == prevSibling)
+			  if (DTM.NULL == prevSibling)
 			  {
 				ps.println("Prev sibling: DTM.NULL");
 			  }
@@ -816,7 +810,7 @@ namespace org.apache.xml.dtm.@ref
 
 			int nextSibling = _nextsib(index);
 
-			if (DTM_Fields.NULL == nextSibling)
+			if (DTM.NULL == nextSibling)
 			{
 			  ps.println("Next sibling: DTM.NULL");
 			}
@@ -831,7 +825,7 @@ namespace org.apache.xml.dtm.@ref
 
 			int parent = _parent(index);
 
-			if (DTM_Fields.NULL == parent)
+			if (DTM.NULL == parent)
 			{
 			  ps.println("Parent: DTM.NULL");
 			}
@@ -873,7 +867,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// </summary>
 	  public virtual string dumpNode(int nodeHandle)
 	  {
-		  if (nodeHandle == DTM_Fields.NULL)
+		  if (nodeHandle == DTM.NULL)
 		  {
 			  return "[null]";
 		  }
@@ -881,46 +875,46 @@ namespace org.apache.xml.dtm.@ref
 			string typestring;
 			switch (getNodeType(nodeHandle))
 			{
-			case DTM_Fields.ATTRIBUTE_NODE :
+			case DTM.ATTRIBUTE_NODE :
 			  typestring = "ATTR";
 			  break;
-			case DTM_Fields.CDATA_SECTION_NODE :
+			case DTM.CDATA_SECTION_NODE :
 			  typestring = "CDATA";
 			  break;
-			case DTM_Fields.COMMENT_NODE :
+			case DTM.COMMENT_NODE :
 			  typestring = "COMMENT";
 			  break;
-			case DTM_Fields.DOCUMENT_FRAGMENT_NODE :
+			case DTM.DOCUMENT_FRAGMENT_NODE :
 			  typestring = "DOC_FRAG";
 			  break;
-			case DTM_Fields.DOCUMENT_NODE :
+			case DTM.DOCUMENT_NODE :
 			  typestring = "DOC";
 			  break;
-			case DTM_Fields.DOCUMENT_TYPE_NODE :
+			case DTM.DOCUMENT_TYPE_NODE :
 			  typestring = "DOC_TYPE";
 			  break;
-			case DTM_Fields.ELEMENT_NODE :
+			case DTM.ELEMENT_NODE :
 			  typestring = "ELEMENT";
 			  break;
-			case DTM_Fields.ENTITY_NODE :
+			case DTM.ENTITY_NODE :
 			  typestring = "ENTITY";
 			  break;
-			case DTM_Fields.ENTITY_REFERENCE_NODE :
+			case DTM.ENTITY_REFERENCE_NODE :
 			  typestring = "ENT_REF";
 			  break;
-			case DTM_Fields.NAMESPACE_NODE :
+			case DTM.NAMESPACE_NODE :
 			  typestring = "NAMESPACE";
 			  break;
-			case DTM_Fields.NOTATION_NODE :
+			case DTM.NOTATION_NODE :
 			  typestring = "NOTATION";
 			  break;
-			case DTM_Fields.NULL :
+			case DTM.NULL :
 			  typestring = "null";
 			  break;
-			case DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+			case DTM.PROCESSING_INSTRUCTION_NODE :
 			  typestring = "PI";
 			  break;
-			case DTM_Fields.TEXT_NODE :
+			case DTM.TEXT_NODE :
 			  typestring = "TEXT";
 			  break;
 			default :
@@ -929,7 +923,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 
 		  StringBuilder sb = new StringBuilder();
-		  sb.Append("[" + nodeHandle + ": " + typestring + "(0x" + getExpandedTypeID(nodeHandle).ToString("x") + ") " + getNodeNameX(nodeHandle) + " {" + getNamespaceURI(nodeHandle) + "}" + "=\"" + getNodeValue(nodeHandle) + "\"]");
+		  sb.Append("[" + nodeHandle + ": " + typestring + "(0x" + Convert.ToString(getExpandedTypeID(nodeHandle), 16) + ") " + getNodeNameX(nodeHandle) + " {" + getNamespaceURI(nodeHandle) + "}" + "=\"" + getNodeValue(nodeHandle) + "\"]");
 		  return sb.ToString();
 	  }
 
@@ -967,7 +961,7 @@ namespace org.apache.xml.dtm.@ref
 		int identity = makeNodeIdentity(nodeHandle);
 		int firstChild = _firstch(identity);
 
-		return firstChild != DTM_Fields.NULL;
+		return firstChild != DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -987,9 +981,9 @@ namespace org.apache.xml.dtm.@ref
 	  ///  </returns>
 	  public int makeNodeHandle(int nodeIdentity)
 	  {
-		if (org.apache.xml.dtm.DTM_Fields.NULL == nodeIdentity)
+		if (NULL == nodeIdentity)
 		{
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		}
 
 		if (JJK_DEBUG && nodeIdentity > DTMManager.IDENT_NODE_DEFAULT)
@@ -1019,9 +1013,9 @@ namespace org.apache.xml.dtm.@ref
 	  ///  </returns>
 	  public int makeNodeIdentity(int nodeHandle)
 	  {
-		if (org.apache.xml.dtm.DTM_Fields.NULL == nodeHandle)
+		if (NULL == nodeHandle)
 		{
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		}
 
 		if (m_mgrDefault != null)
@@ -1038,7 +1032,7 @@ namespace org.apache.xml.dtm.@ref
 		  // which should be fixed, but until it is:
 		  if (m_mgrDefault.m_dtms[whichDTMindex] != this)
 		  {
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return NULL;
 		  }
 		  else
 		  {
@@ -1047,7 +1041,7 @@ namespace org.apache.xml.dtm.@ref
 		}
 
 		int whichDTMid = m_dtmIdent.indexOf(nodeHandle & DTMManager.IDENT_DTM_DEFAULT);
-		return (whichDTMid == org.apache.xml.dtm.DTM_Fields.NULL) ? org.apache.xml.dtm.DTM_Fields.NULL : (whichDTMid << DTMManager.IDENT_DTM_NODE_BITS) + (nodeHandle & DTMManager.IDENT_NODE_DEFAULT);
+		return (whichDTMid == NULL) ? NULL : (whichDTMid << DTMManager.IDENT_DTM_NODE_BITS) + (nodeHandle & DTMManager.IDENT_NODE_DEFAULT);
 	  }
 
 
@@ -1078,12 +1072,12 @@ namespace org.apache.xml.dtm.@ref
 	  {
 
 		int firstChild, eType;
-		if (nodeType < DTM_Fields.NTYPES)
+		if (nodeType < DTM.NTYPES)
 		{
-		  for (firstChild = _firstch(makeNodeIdentity(nodeHandle)); firstChild != DTM_Fields.NULL; firstChild = _nextsib(firstChild))
+		  for (firstChild = _firstch(makeNodeIdentity(nodeHandle)); firstChild != DTM.NULL; firstChild = _nextsib(firstChild))
 		  {
 			eType = _exptype(firstChild);
-			if (eType == nodeType || (eType >= DTM_Fields.NTYPES && m_expandedNameTable.getType(eType) == nodeType))
+			if (eType == nodeType || (eType >= DTM.NTYPES && m_expandedNameTable.getType(eType) == nodeType))
 			{
 			  return makeNodeHandle(firstChild);
 			}
@@ -1091,7 +1085,7 @@ namespace org.apache.xml.dtm.@ref
 		}
 		else
 		{
-		  for (firstChild = _firstch(makeNodeIdentity(nodeHandle)); firstChild != DTM_Fields.NULL; firstChild = _nextsib(firstChild))
+		  for (firstChild = _firstch(makeNodeIdentity(nodeHandle)); firstChild != DTM.NULL; firstChild = _nextsib(firstChild))
 		  {
 			if (_exptype(firstChild) == nodeType)
 			{
@@ -1099,7 +1093,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 		}
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -1115,9 +1109,9 @@ namespace org.apache.xml.dtm.@ref
 
 		int identity = makeNodeIdentity(nodeHandle);
 		int child = _firstch(identity);
-		int lastChild = DTM_Fields.NULL;
+		int lastChild = DTM.NULL;
 
-		while (child != DTM_Fields.NULL)
+		while (child != DTM.NULL)
 		{
 		  lastChild = child;
 		  child = _nextsib(child);
@@ -1160,27 +1154,27 @@ namespace org.apache.xml.dtm.@ref
 	  {
 		int type = _type(identity);
 
-		if (DTM_Fields.ELEMENT_NODE == type)
+		if (DTM.ELEMENT_NODE == type)
 		{
 		  // Assume that attributes and namespaces immediately follow the element.
-		  while (DTM_Fields.NULL != (identity = getNextNodeIdentity(identity)))
+		  while (DTM.NULL != (identity = getNextNodeIdentity(identity)))
 		  {
 
 			// Assume this can not be null.
 			type = _type(identity);
 
-			if (type == DTM_Fields.ATTRIBUTE_NODE)
+			if (type == DTM.ATTRIBUTE_NODE)
 			{
 			  return identity;
 			}
-			else if (DTM_Fields.NAMESPACE_NODE != type)
+			else if (DTM.NAMESPACE_NODE != type)
 			{
 			  break;
 			}
 		  }
 		}
 
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -1194,29 +1188,29 @@ namespace org.apache.xml.dtm.@ref
 	  protected internal virtual int getTypedAttribute(int nodeHandle, int attType)
 	  {
 		int type = getNodeType(nodeHandle);
-		if (DTM_Fields.ELEMENT_NODE == type)
+		if (DTM.ELEMENT_NODE == type)
 		{
 		  int identity = makeNodeIdentity(nodeHandle);
 
-		  while (DTM_Fields.NULL != (identity = getNextNodeIdentity(identity)))
+		  while (DTM.NULL != (identity = getNextNodeIdentity(identity)))
 		  {
 			type = _type(identity);
 
-			if (type == DTM_Fields.ATTRIBUTE_NODE)
+			if (type == DTM.ATTRIBUTE_NODE)
 			{
 			  if (_exptype(identity) == attType)
 			  {
 				  return makeNodeHandle(identity);
 			  }
 			}
-			else if (DTM_Fields.NAMESPACE_NODE != type)
+			else if (DTM.NAMESPACE_NODE != type)
 			{
 			  break;
 			}
 		  }
 		}
 
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -1228,9 +1222,9 @@ namespace org.apache.xml.dtm.@ref
 	  /// or DTM.NULL to indicate none exists. </returns>
 	  public virtual int getNextSibling(int nodeHandle)
 	  {
-		  if (nodeHandle == DTM_Fields.NULL)
+		  if (nodeHandle == DTM.NULL)
 		  {
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		  }
 		return makeNodeHandle(_nextsib(makeNodeIdentity(nodeHandle)));
 	  }
@@ -1244,19 +1238,19 @@ namespace org.apache.xml.dtm.@ref
 	  /// or DTM.NULL to indicate none exists. </returns>
 	  public virtual int getTypedNextSibling(int nodeHandle, int nodeType)
 	  {
-		  if (nodeHandle == DTM_Fields.NULL)
+		  if (nodeHandle == DTM.NULL)
 		  {
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		  }
 		  int node = makeNodeIdentity(nodeHandle);
 		  int eType;
-		  while ((node = _nextsib(node)) != DTM_Fields.NULL && ((eType = _exptype(node)) != nodeType && m_expandedNameTable.getType(eType) != nodeType))
+		  while ((node = _nextsib(node)) != DTM.NULL && ((eType = _exptype(node)) != nodeType && m_expandedNameTable.getType(eType) != nodeType))
 		  {
 				  ;
 		  }
 		  //_type(node) != nodeType));
 
-		return (node == DTM_Fields.NULL ? DTM_Fields.NULL : makeNodeHandle(node));
+		return (node == DTM.NULL ? DTM.NULL : makeNodeHandle(node));
 	  }
 
 	  /// <summary>
@@ -1269,9 +1263,9 @@ namespace org.apache.xml.dtm.@ref
 	  /// or DTM.NULL to indicate none exists. </returns>
 	  public virtual int getPreviousSibling(int nodeHandle)
 	  {
-		if (nodeHandle == DTM_Fields.NULL)
+		if (nodeHandle == DTM.NULL)
 		{
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 
 		if (m_prevsib != null)
@@ -1286,7 +1280,7 @@ namespace org.apache.xml.dtm.@ref
 		  int nodeID = makeNodeIdentity(nodeHandle);
 		  int parent = _parent(nodeID);
 		  int node = _firstch(parent);
-		  int result = DTM_Fields.NULL;
+		  int result = DTM.NULL;
 		  while (node != nodeID)
 		  {
 			result = node;
@@ -1308,12 +1302,12 @@ namespace org.apache.xml.dtm.@ref
 	  {
 		int nodeID = makeNodeIdentity(nodeHandle);
 
-		if (_type(nodeID) == DTM_Fields.ATTRIBUTE_NODE)
+		if (_type(nodeID) == DTM.ATTRIBUTE_NODE)
 		{
 		  return makeNodeHandle(getNextAttributeIdentity(nodeID));
 		}
 
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -1328,21 +1322,21 @@ namespace org.apache.xml.dtm.@ref
 	  protected internal virtual int getNextAttributeIdentity(int identity)
 	  {
 		// Assume that attributes and namespace nodes immediately follow the element
-		while (DTM_Fields.NULL != (identity = getNextNodeIdentity(identity)))
+		while (DTM.NULL != (identity = getNextNodeIdentity(identity)))
 		{
 		  int type = _type(identity);
 
-		  if (type == DTM_Fields.ATTRIBUTE_NODE)
+		  if (type == DTM.ATTRIBUTE_NODE)
 		  {
 			return identity;
 		  }
-		  else if (type != DTM_Fields.NAMESPACE_NODE)
+		  else if (type != DTM.NAMESPACE_NODE)
 		  {
 			break;
 		  }
 		}
 
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -1478,10 +1472,10 @@ namespace org.apache.xml.dtm.@ref
 			  int rootID = makeNodeIdentity(rootHandle);
 			  int uppermostNSCandidateID;
 
-			  if (getNodeType(rootHandle) == DTM_Fields.DOCUMENT_NODE)
+			  if (getNodeType(rootHandle) == DTM.DOCUMENT_NODE)
 			  {
 				int ch = _firstch(rootID);
-				uppermostNSCandidateID = (ch != DTM_Fields.NULL) ? ch : rootID;
+				uppermostNSCandidateID = (ch != DTM.NULL) ? ch : rootID;
 			  }
 			  else
 			  {
@@ -1590,19 +1584,19 @@ namespace org.apache.xml.dtm.@ref
 			if (inScope)
 			{
 				int identity = makeNodeIdentity(nodeHandle);
-				if (_type(identity) == DTM_Fields.ELEMENT_NODE)
+				if (_type(identity) == DTM.ELEMENT_NODE)
 				{
 				  SuballocatedIntVector nsContext = findNamespaceContext(identity);
 				  if (nsContext == null || nsContext.size() < 1)
 				  {
-					return org.apache.xml.dtm.DTM_Fields.NULL;
+					return NULL;
 				  }
 
 				  return nsContext.elementAt(0);
 				}
 				else
 				{
-				  return org.apache.xml.dtm.DTM_Fields.NULL;
+				  return NULL;
 				}
 			}
 			else
@@ -1614,25 +1608,25 @@ namespace org.apache.xml.dtm.@ref
 				// before all Attr nodes? Some costs at build time for 2nd
 				// pass...
 				int identity = makeNodeIdentity(nodeHandle);
-				if (_type(identity) == DTM_Fields.ELEMENT_NODE)
+				if (_type(identity) == DTM.ELEMENT_NODE)
 				{
-				  while (DTM_Fields.NULL != (identity = getNextNodeIdentity(identity)))
+				  while (DTM.NULL != (identity = getNextNodeIdentity(identity)))
 				  {
 					int type = _type(identity);
-					if (type == DTM_Fields.NAMESPACE_NODE)
+					if (type == DTM.NAMESPACE_NODE)
 					{
 						return makeNodeHandle(identity);
 					}
-					else if (DTM_Fields.ATTRIBUTE_NODE != type)
+					else if (DTM.ATTRIBUTE_NODE != type)
 					{
 						break;
 					}
 				  }
-				  return org.apache.xml.dtm.DTM_Fields.NULL;
+				  return NULL;
 				}
 				else
 				{
-				  return org.apache.xml.dtm.DTM_Fields.NULL;
+				  return NULL;
 				}
 			}
 	  }
@@ -1659,12 +1653,12 @@ namespace org.apache.xml.dtm.@ref
 
 				if (nsContext == null)
 				{
-				  return org.apache.xml.dtm.DTM_Fields.NULL;
+				  return NULL;
 				}
 				int i = 1 + nsContext.indexOf(nodeHandle);
 				if (i <= 0 || i == nsContext.size())
 				{
-				  return org.apache.xml.dtm.DTM_Fields.NULL;
+				  return NULL;
 				}
 
 				return nsContext.elementAt(i);
@@ -1673,20 +1667,20 @@ namespace org.apache.xml.dtm.@ref
 			{
 				// Assume that attributes and namespace nodes immediately follow the element.
 				int identity = makeNodeIdentity(nodeHandle);
-				while (DTM_Fields.NULL != (identity = getNextNodeIdentity(identity)))
+				while (DTM.NULL != (identity = getNextNodeIdentity(identity)))
 				{
 					int type = _type(identity);
-					if (type == DTM_Fields.NAMESPACE_NODE)
+					if (type == DTM.NAMESPACE_NODE)
 					{
 						return makeNodeHandle(identity);
 					}
-					else if (type != DTM_Fields.ATTRIBUTE_NODE)
+					else if (type != DTM.ATTRIBUTE_NODE)
 					{
 						break;
 					}
 				}
 			}
-		 return DTM_Fields.NULL;
+		 return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -1706,7 +1700,7 @@ namespace org.apache.xml.dtm.@ref
 		}
 		else
 		{
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 	  }
 
@@ -1739,9 +1733,9 @@ namespace org.apache.xml.dtm.@ref
 	  public virtual int getOwnerDocument(int nodeHandle)
 	  {
 
-		if (DTM_Fields.DOCUMENT_NODE == getNodeType(nodeHandle))
+		if (DTM.DOCUMENT_NODE == getNodeType(nodeHandle))
 		{
-			  return DTM_Fields.NULL;
+			  return DTM.NULL;
 		}
 
 		return getDocumentRoot(nodeHandle);
@@ -1821,9 +1815,9 @@ namespace org.apache.xml.dtm.@ref
 		// %REVIEW% This _should_ only be null if someone asked the wrong DTM about the node...
 		// which one would hope would never happen...
 		int id = makeNodeIdentity(nodeHandle);
-		if (id == org.apache.xml.dtm.DTM_Fields.NULL)
+		if (id == NULL)
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 		return _exptype(id);
 	  }
@@ -1876,9 +1870,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// Returns the namespace type of a specific node </summary>
 	  /// <param name="nodeHandle"> the id of the node. </param>
 	  /// <returns> the ID of the namespace. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getNamespaceType(final int nodeHandle)
-	  public virtual int getNamespaceType(int nodeHandle)
+	  public virtual int getNamespaceType(in int nodeHandle)
 	  {
 
 		int identity = makeNodeIdentity(nodeHandle);
@@ -1972,9 +1964,9 @@ namespace org.apache.xml.dtm.@ref
 	  /// <returns> int Node type, as per the DOM's Node._NODE constants. </returns>
 	  public virtual short getNodeType(int nodeHandle)
 	  {
-		  if (nodeHandle == DTM_Fields.NULL)
+		  if (nodeHandle == DTM.NULL)
 		  {
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		  }
 		return m_expandedNameTable.getType(_exptype(makeNodeIdentity(nodeHandle)));
 	  }
@@ -2248,7 +2240,7 @@ namespace org.apache.xml.dtm.@ref
 		int index1 = makeNodeIdentity(nodeHandle1);
 		int index2 = makeNodeIdentity(nodeHandle2);
 
-		return index1 != org.apache.xml.dtm.DTM_Fields.NULL && index2 != org.apache.xml.dtm.DTM_Fields.NULL && index1 <= index2;
+		return index1 != NULL && index2 != NULL && index1 <= index2;
 	  }
 
 	  /// <summary>
@@ -2318,7 +2310,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// function.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public abstract void dispatchCharactersEvents(int nodeHandle, org.xml.sax.ContentHandler ch, boolean normalize) throws org.xml.sax.SAXException;
 	  public abstract void dispatchCharactersEvents(int nodeHandle, org.xml.sax.ContentHandler ch, bool normalize);
 
@@ -2329,7 +2321,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public abstract void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException;
 	  public abstract void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch);
 

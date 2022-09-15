@@ -31,22 +31,22 @@ namespace org.apache.xpath
 	{
 	  /// <summary>
 	  /// Get information about whether or not an element should strip whitespace. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <param name="support"> The XPath runtime state. </param>
 	  /// <param name="targetElement"> Element to check
 	  /// </param>
 	  /// <returns> true if the whitespace should be stripped.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean shouldStripWhiteSpace(XPathContext support, org.w3c.dom.Element targetElement) throws javax.xml.transform.TransformerException;
 	  bool shouldStripWhiteSpace(XPathContext support, Element targetElement);
 
 	  /// <summary>
 	  /// Get information about whether or not whitespace can be stripped. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <returns> true if the whitespace can be stripped. </returns>
 	  bool canStripWhiteSpace();
 	}

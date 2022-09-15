@@ -33,8 +33,8 @@ namespace org.apache.xalan.processor
 
 	/// <summary>
 	/// This class processes character events for a XSLT template element. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Creating-the-Result-Tree">section-Creating-the-Result-Tree in XSLT Specification</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Creating-the-Result-Tree">section-Creating-the-Result-Tree in XSLT Specification</a>"/>
 	[Serializable]
 	public class ProcessorCharacters : XSLTElementProcessor
 	{
@@ -45,7 +45,7 @@ namespace org.apache.xalan.processor
 	  /// is sent to the current processor when any non-text event occurs.
 	  /// </summary>
 	  /// <param name="handler"> non-null reference to current StylesheetHandler that is constructing the Templates. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startNonText(StylesheetHandler handler) throws org.xml.sax.SAXException
 	  public override void startNonText(StylesheetHandler handler)
 	  {
@@ -103,8 +103,8 @@ namespace org.apache.xalan.processor
 	  ///               character array. </param>
 	  /// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#characters </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.characters"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(StylesheetHandler handler, char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public override void characters(StylesheetHandler handler, char[] ch, int start, int length)
 	  {
@@ -135,12 +135,12 @@ namespace org.apache.xalan.processor
 	  ///        performed. </param>
 	  /// <param name="rawName"> The raw XML 1.0 name (with prefix), or the
 	  ///        empty string if raw names are not available. </param>
-	  /// <seealso cref= org.apache.xalan.processor.StylesheetHandler#startElement </seealso>
-	  /// <seealso cref= org.apache.xalan.processor.StylesheetHandler#endElement </seealso>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startElement </seealso>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endElement </seealso>
-	  /// <seealso cref= org.xml.sax.Attributes </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.apache.xalan.processor.StylesheetHandler.startElement"/>
+	  /// <seealso cref="org.apache.xalan.processor.StylesheetHandler.endElement"/>
+	  /// <seealso cref="org.xml.sax.ContentHandler.startElement"/>
+	  /// <seealso cref="org.xml.sax.ContentHandler.endElement"/>
+	  /// <seealso cref="org.xml.sax.Attributes"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(StylesheetHandler handler, String uri, String localName, String rawName) throws org.xml.sax.SAXException
 	  public override void endElement(StylesheetHandler handler, string uri, string localName, string rawName)
 	  {

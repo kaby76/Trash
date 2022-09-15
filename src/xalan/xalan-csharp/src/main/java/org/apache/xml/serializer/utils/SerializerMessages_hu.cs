@@ -22,7 +22,6 @@
 namespace org.apache.xml.serializer.utils
 {
 
-
 	/// <summary>
 	/// An instance of this class is a ListResourceBundle that
 	/// has the required getContents() method that returns

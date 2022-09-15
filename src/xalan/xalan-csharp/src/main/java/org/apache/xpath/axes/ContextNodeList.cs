@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using Node = org.w3c.dom.Node;
 	using NodeIterator = org.w3c.dom.traversal.NodeIterator;
 
@@ -94,7 +93,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A clone of this iteration that has been reset.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.traversal.NodeIterator cloneWithReset() throws CloneNotSupportedException;
 	  NodeIterator cloneWithReset();
 
@@ -106,7 +105,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A clone of this object.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException;
 	  object clone();
 

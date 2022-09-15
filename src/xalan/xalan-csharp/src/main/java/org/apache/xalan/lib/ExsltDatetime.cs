@@ -26,7 +26,6 @@ namespace org.apache.xalan.lib
 {
 
 
-
 	using XBoolean = org.apache.xpath.objects.XBoolean;
 	using XNumber = org.apache.xpath.objects.XNumber;
 	using XObject = org.apache.xpath.objects.XObject;
@@ -41,8 +40,8 @@ namespace org.apache.xalan.lib
 	/// The documentation for each function has been copied from the relevant
 	/// EXSLT Implementer page.
 	/// </summary>
-	/// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a>
-	/// @xsl.usage general </seealso>
+	/// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"
+	/// @xsl.usage general/>
 
 	public class ExsltDatetime
 	{
@@ -80,7 +79,7 @@ namespace org.apache.xalan.lib
 		  StringBuilder buff = new StringBuilder(dateFormat.format(datetime));
 		  // Must also include offset from UTF.
 		  // Get the offset (in milliseconds).
-		  int offset = cal.get(DateTime.ZONE_OFFSET) + cal.get(DateTime.DST_OFFSET);
+		  int offset = cal.get(Calendar.ZONE_OFFSET) + cal.get(Calendar.DST_OFFSET);
 		  // If there is no offset, we have "Coordinated
 		  // Universal Time."
 		  if (offset == 0)
@@ -130,7 +129,7 @@ namespace org.apache.xalan.lib
 		/// is specified and it does not specify a time zone, then the date string format must not include 
 		/// a time zone. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static String date(String datetimeIn) throws java.text.ParseException
 		public static string date(string datetimeIn)
 		{
@@ -152,7 +151,7 @@ namespace org.apache.xalan.lib
 		  }
 
 		  SimpleDateFormat dateFormat = new SimpleDateFormat(formatOut);
-		  dateFormat.Lenient = false;
+		  dateFormat.setLenient(false);
 		  string dateOut = dateFormat.format(date);
 		  if (dateOut.Length == 0)
 		  {
@@ -198,7 +197,7 @@ namespace org.apache.xalan.lib
 		/// is specified and it does not specify a time zone, then the time string format must not include 
 		/// a time zone. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static String time(String timeIn) throws java.text.ParseException
 		public static string time(string timeIn)
 		{
@@ -254,7 +253,7 @@ namespace org.apache.xalan.lib
 		///   xs:gYear (CCYY) 
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double year(String datetimeIn) throws java.text.ParseException
 		public static double year(string datetimeIn)
 		{
@@ -267,7 +266,7 @@ namespace org.apache.xalan.lib
 		  }
 
 		  string[] formats = new string[] {dt, d, gym, gy};
-		  double yr = getNumber(datetime, formats, DateTime.YEAR);
+		  double yr = getNumber(datetime, formats, Calendar.YEAR);
 		  if (ad || yr == Double.NaN)
 		  {
 			return yr;
@@ -303,7 +302,7 @@ namespace org.apache.xalan.lib
 		///    xs:gMonthDay (--MM-DD)
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double monthInYear(String datetimeIn) throws java.text.ParseException
 		public static double monthInYear(string datetimeIn)
 		{
@@ -315,7 +314,7 @@ namespace org.apache.xalan.lib
 		  }
 
 		  string[] formats = new string[] {dt, d, gym, gm, gmd};
-		  return getNumber(datetime, formats, DateTime.MONTH) + 1;
+		  return getNumber(datetime, formats, Calendar.MONTH) + 1;
 		}
 
 		/// <summary>
@@ -340,7 +339,7 @@ namespace org.apache.xalan.lib
 		///    xs:date (CCYY-MM-DD) 
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double weekInYear(String datetimeIn) throws java.text.ParseException
 		public static double weekInYear(string datetimeIn)
 		{
@@ -352,7 +351,7 @@ namespace org.apache.xalan.lib
 		  }
 
 		  string[] formats = new string[] {dt, d};
-		  return getNumber(datetime, formats, DateTime.WEEK_OF_YEAR);
+		  return getNumber(datetime, formats, Calendar.WEEK_OF_YEAR);
 		}
 
 		/// <summary>
@@ -361,7 +360,7 @@ namespace org.apache.xalan.lib
 		public static double weekInYear()
 		{
 		   DateTime cal = new DateTime();
-		  return cal.get(DateTime.WEEK_OF_YEAR);
+		  return cal.get(Calendar.WEEK_OF_YEAR);
 		}
 
 		/// <summary>
@@ -377,7 +376,7 @@ namespace org.apache.xalan.lib
 		///     xs:date (CCYY-MM-DD) 
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double dayInYear(String datetimeIn) throws java.text.ParseException
 		public static double dayInYear(string datetimeIn)
 		{
@@ -389,7 +388,7 @@ namespace org.apache.xalan.lib
 		  }
 
 		  string[] formats = new string[] {dt, d};
-		  return getNumber(datetime, formats, DateTime.DAY_OF_YEAR);
+		  return getNumber(datetime, formats, Calendar.DAY_OF_YEAR);
 		}
 
 		/// <summary>
@@ -417,14 +416,14 @@ namespace org.apache.xalan.lib
 		///      xs:gDay (---DD) 
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double dayInMonth(String datetimeIn) throws java.text.ParseException
 		public static double dayInMonth(string datetimeIn)
 		{
 		  string[] edz = getEraDatetimeZone(datetimeIn);
 		  string datetime = edz[1];
 		  string[] formats = new string[] {dt, d, gmd, gd};
-		  double day = getNumber(datetime, formats, DateTime.DAY_OF_MONTH);
+		  double day = getNumber(datetime, formats, Calendar.DAY_OF_MONTH);
 		  return day;
 		}
 
@@ -451,7 +450,7 @@ namespace org.apache.xalan.lib
 		///      xs:date (CCYY-MM-DD) 
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double dayOfWeekInMonth(String datetimeIn) throws java.text.ParseException
 		public static double dayOfWeekInMonth(string datetimeIn)
 		{
@@ -463,7 +462,7 @@ namespace org.apache.xalan.lib
 		  }
 
 		  string[] formats = new string[] {dt, d};
-		  return getNumber(datetime, formats, DateTime.DAY_OF_WEEK_IN_MONTH);
+		  return getNumber(datetime, formats, Calendar.DAY_OF_WEEK_IN_MONTH);
 		}
 
 		/// <summary>
@@ -472,7 +471,7 @@ namespace org.apache.xalan.lib
 		public static double dayOfWeekInMonth()
 		{
 		   DateTime cal = new DateTime();
-		  return cal.get(DateTime.DAY_OF_WEEK_IN_MONTH);
+		  return cal.get(Calendar.DAY_OF_WEEK_IN_MONTH);
 		}
 
 
@@ -490,7 +489,7 @@ namespace org.apache.xalan.lib
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		///                        The numbering of days of the week starts at 1 for Sunday, 2 for Monday and so on up to 7 for Saturday.  
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double dayInWeek(String datetimeIn) throws java.text.ParseException
 		public static double dayInWeek(string datetimeIn)
 		{
@@ -502,7 +501,7 @@ namespace org.apache.xalan.lib
 		  }
 
 		  string[] formats = new string[] {dt, d};
-		  return getNumber(datetime, formats, DateTime.DAY_OF_WEEK);
+		  return getNumber(datetime, formats, Calendar.DAY_OF_WEEK);
 		}
 
 		/// <summary>
@@ -527,7 +526,7 @@ namespace org.apache.xalan.lib
 		///     xs:time (hh:mm:ss) 
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double hourInDay(String datetimeIn) throws java.text.ParseException
 		public static double hourInDay(string datetimeIn)
 		{
@@ -539,7 +538,7 @@ namespace org.apache.xalan.lib
 		  }
 
 		  string[] formats = new string[] {dt, t};
-		  return getNumber(datetime, formats, DateTime.HOUR_OF_DAY);
+		  return getNumber(datetime, formats, Calendar.HOUR_OF_DAY);
 		}
 
 		/// <summary>
@@ -564,7 +563,7 @@ namespace org.apache.xalan.lib
 		///      xs:time (hh:mm:ss) 
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double minuteInHour(String datetimeIn) throws java.text.ParseException
 		public static double minuteInHour(string datetimeIn)
 		{
@@ -575,8 +574,8 @@ namespace org.apache.xalan.lib
 			return Double.NaN;
 		  }
 
-		  string[] formats = new string[] {dt,t};
-		  return getNumber(datetime, formats, DateTime.MINUTE);
+		  string[] formats = new string[] {dt, t};
+		  return getNumber(datetime, formats, Calendar.MINUTE);
 		}
 
 		/// <summary>
@@ -601,7 +600,7 @@ namespace org.apache.xalan.lib
 		///      xs:time (hh:mm:ss) 
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double secondInMinute(String datetimeIn) throws java.text.ParseException
 		public static double secondInMinute(string datetimeIn)
 		{
@@ -613,7 +612,7 @@ namespace org.apache.xalan.lib
 		  }
 
 		  string[] formats = new string[] {dt, t};
-		  return getNumber(datetime, formats, DateTime.SECOND);
+		  return getNumber(datetime, formats, Calendar.SECOND);
 		}
 
 		/// <summary>
@@ -640,7 +639,7 @@ namespace org.apache.xalan.lib
 		///    xs:gYear (CCYY) 
 		/// If the date/time string is not in one of these formats, then NaN is returned. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xpath.objects.XObject leapYear(String datetimeIn) throws java.text.ParseException
 		public static XObject leapYear(string datetimeIn)
 		{
@@ -652,7 +651,7 @@ namespace org.apache.xalan.lib
 		  }
 
 		  string[] formats = new string[] {dt, d, gym, gy};
-		  double dbl = getNumber(datetime, formats, DateTime.YEAR);
+		  double dbl = getNumber(datetime, formats, Calendar.YEAR);
 		  if (dbl == Double.NaN)
 		  {
 			return new XNumber(Double.NaN);
@@ -690,7 +689,7 @@ namespace org.apache.xalan.lib
 		/// 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November' 
 		/// or 'December'. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static String monthName(String datetimeIn) throws java.text.ParseException
 		public static string monthName(string datetimeIn)
 		{
@@ -735,7 +734,7 @@ namespace org.apache.xalan.lib
 		/// An implementation of this extension function in the EXSLT date namespace must conform 
 		/// to the behaviour described in this document. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static String monthAbbreviation(String datetimeIn) throws java.text.ParseException
 		public static string monthAbbreviation(string datetimeIn)
 		{
@@ -778,7 +777,7 @@ namespace org.apache.xalan.lib
 		/// An implementation of this extension function in the EXSLT date namespace must conform 
 		/// to the behaviour described in this document. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static String dayName(String datetimeIn) throws java.text.ParseException
 		public static string dayName(string datetimeIn)
 		{
@@ -821,7 +820,7 @@ namespace org.apache.xalan.lib
 		/// An implementation of this extension function in the EXSLT date namespace must conform 
 		/// to the behaviour described in this document. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static String dayAbbreviation(String datetimeIn) throws java.text.ParseException
 		public static string dayAbbreviation(string datetimeIn)
 		{
@@ -892,13 +891,13 @@ namespace org.apache.xalan.lib
 			try
 			{
 			  SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-			  dateFormat.Lenient = false;
+			  dateFormat.setLenient(false);
 			  DateTime d = dateFormat.parse(datetime.Substring(datetime.Length - 5));
 			  return datetime.Length - 6;
 			}
 			catch (ParseException pe)
 			{
-			  Console.WriteLine("ParseException " + pe.ErrorOffset);
+			  Console.WriteLine("ParseException " + pe.getErrorOffset());
 			  return -2; // Invalid.
 			}
 
@@ -910,7 +909,7 @@ namespace org.apache.xalan.lib
 		/// Attempt to parse an input string with the allowed formats, returning
 		/// null if none of the formats work.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static java.util.Date testFormats(String in, String[] formats) throws java.text.ParseException
 		private static DateTime testFormats(string @in, string[] formats)
 		{
@@ -919,7 +918,7 @@ namespace org.apache.xalan.lib
 			try
 			{
 			  SimpleDateFormat dateFormat = new SimpleDateFormat(formats[i]);
-			  dateFormat.Lenient = false;
+			  dateFormat.setLenient(false);
 			  return dateFormat.parse(@in);
 			}
 			catch (ParseException)
@@ -934,12 +933,12 @@ namespace org.apache.xalan.lib
 		/// Parse the input string and return the corresponding calendar field
 		/// number.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static double getNumber(String in, String[] formats, int calField) throws java.text.ParseException
 		private static double getNumber(string @in, string[] formats, int calField)
 		{
 		  DateTime cal = new DateTime();
-		  cal.Lenient = false;
+		  cal.setLenient(false);
 		  // Try the allowed formats, from longest to shortest.
 		  DateTime date = testFormats(@in, formats);
 		  if (date == null)
@@ -953,7 +952,7 @@ namespace org.apache.xalan.lib
 		/// <summary>
 		///  Get the full name or abbreviation of the month or day.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static String getNameOrAbbrev(String in, String[] formatsIn, String formatOut) throws java.text.ParseException
 		private static string getNameOrAbbrev(string @in, string[] formatsIn, string formatOut)
 		{
@@ -962,7 +961,7 @@ namespace org.apache.xalan.lib
 			try
 			{
 			  SimpleDateFormat dateFormat = new SimpleDateFormat(formatsIn[i], Locale.ENGLISH);
-			  dateFormat.Lenient = false;
+			  dateFormat.setLenient(false);
 			  DateTime dt = dateFormat.parse(@in);
 			  dateFormat.applyPattern(formatOut);
 			  return dateFormat.format(dt);
@@ -1059,7 +1058,7 @@ namespace org.apache.xalan.lib
 			else
 			{
 				// Assume local time.
-				timeZone = TimeZone.Default;
+				timeZone = TimeZone.getDefault();
 				zone = "";
 				// Leave off the timezone since SimpleDateFormat will assume local
 				// time if time zone is not included.
@@ -1072,10 +1071,10 @@ namespace org.apache.xalan.lib
 			try
 			{
 				SimpleDateFormat inFormat = new SimpleDateFormat(t + zone);
-				inFormat.Lenient = false;
+				inFormat.setLenient(false);
 				DateTime d = inFormat.parse(dateTime);
 				SimpleDateFormat outFormat = new SimpleDateFormat(strip(yearSymbols + monthSymbols + daySymbols, pattern));
-				outFormat.TimeZone = timeZone;
+				outFormat.setTimeZone(timeZone);
 				return outFormat.format(d);
 			}
 			catch (ParseException)
@@ -1088,10 +1087,10 @@ namespace org.apache.xalan.lib
 				try
 				{
 					SimpleDateFormat inFormat = new SimpleDateFormat(formats[i]);
-					inFormat.Lenient = false;
+					inFormat.setLenient(false);
 					DateTime d = inFormat.parse(dateTime);
 					SimpleDateFormat outFormat = new SimpleDateFormat(pattern);
-					outFormat.TimeZone = timeZone;
+					outFormat.setTimeZone(timeZone);
 					return outFormat.format(d);
 				}
 				catch (ParseException)
@@ -1106,10 +1105,10 @@ namespace org.apache.xalan.lib
 			try
 			{
 				SimpleDateFormat inFormat = new SimpleDateFormat(gmd);
-				inFormat.Lenient = false;
+				inFormat.setLenient(false);
 				DateTime d = inFormat.parse(dateTime);
 				SimpleDateFormat outFormat = new SimpleDateFormat(strip(yearSymbols, pattern));
-				outFormat.TimeZone = timeZone;
+				outFormat.setTimeZone(timeZone);
 				return outFormat.format(d);
 			}
 			catch (ParseException)
@@ -1118,10 +1117,10 @@ namespace org.apache.xalan.lib
 			try
 			{
 				SimpleDateFormat inFormat = new SimpleDateFormat(gm);
-				inFormat.Lenient = false;
+				inFormat.setLenient(false);
 				DateTime d = inFormat.parse(dateTime);
 				SimpleDateFormat outFormat = new SimpleDateFormat(strip(yearSymbols, pattern));
-				outFormat.TimeZone = timeZone;
+				outFormat.setTimeZone(timeZone);
 				return outFormat.format(d);
 			}
 			catch (ParseException)
@@ -1130,10 +1129,10 @@ namespace org.apache.xalan.lib
 			try
 			{
 				SimpleDateFormat inFormat = new SimpleDateFormat(gd);
-				inFormat.Lenient = false;
+				inFormat.setLenient(false);
 				DateTime d = inFormat.parse(dateTime);
 				SimpleDateFormat outFormat = new SimpleDateFormat(strip(yearSymbols + monthSymbols, pattern));
-				outFormat.TimeZone = timeZone;
+				outFormat.setTimeZone(timeZone);
 				return outFormat.format(d);
 			}
 			catch (ParseException)

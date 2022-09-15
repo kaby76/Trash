@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xml.serializer
 {
 
-
 	using MsgKey = org.apache.xml.serializer.utils.MsgKey;
 	using Utils = org.apache.xml.serializer.utils.Utils;
 	using ContentHandler = org.xml.sax.ContentHandler;
@@ -58,9 +57,9 @@ namespace org.apache.xml.serializer
 	///   
 	/// </para>
 	/// </summary>
-	/// <seealso cref= OutputPropertiesFactory </seealso>
-	/// <seealso cref= Method </seealso>
-	/// <seealso cref= Serializer </seealso>
+	/// <seealso cref="OutputPropertiesFactory"/>
+	/// <seealso cref="Method"/>
+	/// <seealso cref="Serializer"/>
 	public sealed class SerializerFactory
 	{
 	  /// <summary>
@@ -81,7 +80,7 @@ namespace org.apache.xml.serializer
 	  /// is specified by the value of the property associated with the "method" key.
 	  /// If no implementation exists that supports the specified output method
 	  /// an exception of some type will be thrown.
-	  /// For a list of the output "method" key values see <seealso cref="Method"/>.
+	  /// For a list of the output "method" key values see <seealso cref="System.Reflection.MethodInfo"/>.
 	  /// </summary>
 	  /// <param name="format"> The output format, minimally the "method" property must be set. </param>
 	  /// <returns> A suitable serializer. </returns>
@@ -128,12 +127,12 @@ namespace org.apache.xml.serializer
 
 			// _serializers.put(method, cls);
 
-			object obj = cls.newInstance();
+			object obj = System.Activator.CreateInstance(cls);
 
 			if (obj is SerializationHandler)
 			{
 				  // this is one of the supplied serializers
-				ser = (Serializer) cls.newInstance();
+				ser = (Serializer) System.Activator.CreateInstance(cls);
 				ser.OutputFormat = format;
 			}
 			else
@@ -151,9 +150,9 @@ namespace org.apache.xml.serializer
 					   * will collect SAX-like events and emit true
 					   * SAX ContentHandler events to the users handler.
 					   */
-					  className = SerializerConstants_Fields.DEFAULT_SAX_SERIALIZER;
+					  className = SerializerConstants.DEFAULT_SAX_SERIALIZER;
 					  cls = ObjectFactory.findProviderClass(className, loader, true);
-					  SerializationHandler sh = (SerializationHandler) cls.newInstance();
+					  SerializationHandler sh = (SerializationHandler) System.Activator.CreateInstance(cls);
 					  sh.ContentHandler = (ContentHandler) obj;
 					  sh.OutputFormat = format;
 

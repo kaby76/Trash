@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath.objects
 {
-
 	/// <summary>
 	/// This class represents an XPath boolean object, and is capable of
 	/// converting the boolean to other types, such as a string.

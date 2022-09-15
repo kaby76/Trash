@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 /*
@@ -23,7 +24,6 @@ using System.Text;
  */
 namespace org.apache.xml.serializer.utils
 {
-
 
 	using MalformedURIException = org.apache.xml.serializer.utils.URI.MalformedURIException;
 
@@ -109,7 +109,7 @@ namespace org.apache.xml.serializer.utils
 	  /// <returns> The absolute path </returns>
 	  private static string getAbsolutePathFromRelativePath(string relativePath)
 	  {
-		return System.IO.Path.GetFullPath(relativePath);
+		return Path.GetFullPath(relativePath);
 	  }
 
 	  /// <summary>
@@ -184,7 +184,7 @@ namespace org.apache.xml.serializer.utils
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.File file = new java.io.File(systemId);
 		File file = new File(systemId);
-		return file.Absolute;
+		return file.isAbsolute();
 
 	  }
 
@@ -311,7 +311,7 @@ namespace org.apache.xml.serializer.utils
 	  /// </param>
 	  /// <returns> The resolved absolute URI </returns>
 	  /// <exception cref="TransformerException"> thrown if the string can't be turned into a URI. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static String getAbsoluteURI(String urlString, String super) throws javax.xml.transform.TransformerException
 	  public static string getAbsoluteURI(string urlString, string @base)
 	  {

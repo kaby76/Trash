@@ -25,7 +25,6 @@ using System.Collections;
 namespace org.apache.xalan.extensions
 {
 
-
 	using ElemTemplateElement = org.apache.xalan.templates.ElemTemplateElement;
 	using Stylesheet = org.apache.xalan.templates.Stylesheet;
 	using ExtensionEvent = org.apache.xalan.trace.ExtensionEvent;
@@ -93,11 +92,11 @@ namespace org.apache.xalan.extensions
 
 	  public override bool isFunctionAvailable(string function)
 	  {
-		Method[] methods = m_classObj.GetMethods();
+		System.Reflection.MethodInfo[] methods = m_classObj.GetMethods();
 		int nMethods = methods.Length;
 		for (int i = 0; i < nMethods; i++)
 		{
-		  if (methods[i].Name.Equals(function))
+		  if (methods[i].getName().Equals(function))
 		  {
 			return true;
 		  }
@@ -115,13 +114,13 @@ namespace org.apache.xalan.extensions
 
 	  public override bool isElementAvailable(string element)
 	  {
-		Method[] methods = m_classObj.GetMethods();
+		System.Reflection.MethodInfo[] methods = m_classObj.GetMethods();
 		int nMethods = methods.Length;
 		for (int i = 0; i < nMethods; i++)
 		{
-		  if (methods[i].Name.Equals(element))
+		  if (methods[i].getName().Equals(element))
 		  {
-			Type[] paramTypes = methods[i].ParameterTypes;
+			Type[] paramTypes = methods[i].getParameterTypes();
 			if ((paramTypes.Length == 2) && paramTypes[0].IsAssignableFrom(typeof(org.apache.xalan.extensions.XSLProcessorContext)) && paramTypes[1].IsAssignableFrom(typeof(org.apache.xalan.templates.ElemExtensionCall)))
 			{
 			  return true;
@@ -167,7 +166,7 @@ namespace org.apache.xalan.extensions
 	  /// <returns> the return value of the function evaluation. </returns>
 	  /// <exception cref="TransformerException"> </exception>
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object callFunction(String funcName, java.util.Vector args, Object methodKey, ExpressionContext exprContext) throws javax.xml.transform.TransformerException
 	  public override object callFunction(string funcName, ArrayList args, object methodKey, ExpressionContext exprContext)
 	  {
@@ -188,19 +187,19 @@ namespace org.apache.xalan.extensions
 			{
 			  methodArgs[i] = args[i];
 			}
-			Constructor c = null;
+			System.Reflection.ConstructorInfo c = null;
 			if (methodKey != null)
 			{
-			  c = (Constructor) getFromCache(methodKey, null, methodArgs);
+			  c = (System.Reflection.ConstructorInfo) getFromCache(methodKey, null, methodArgs);
 			}
 
 			if (c != null && !trans.Debug)
 			{
 			  try
 			  {
-				paramTypes = c.ParameterTypes;
+				paramTypes = c.getParameterTypes();
 				MethodResolver.convertParams(methodArgs, convertedArgs, paramTypes, exprContext);
-				return c.newInstance(convertedArgs[0]);
+				return c.Invoke(convertedArgs[0]);
 			  }
 			  catch (InvocationTargetException ite)
 			  {
@@ -223,7 +222,7 @@ namespace org.apache.xalan.extensions
 				object result;
 				try
 				{
-					result = c.newInstance(convertedArgs[0]);
+					result = c.Invoke(convertedArgs[0]);
 				}
 				catch (Exception e)
 				{
@@ -237,7 +236,7 @@ namespace org.apache.xalan.extensions
 			}
 			else
 			{
-				return c.newInstance(convertedArgs[0]);
+				return c.Invoke(convertedArgs[0]);
 			}
 		  }
 
@@ -252,19 +251,19 @@ namespace org.apache.xalan.extensions
 			{
 			  methodArgs[i] = args[i];
 			}
-			Method m = null;
+			System.Reflection.MethodInfo m = null;
 			if (methodKey != null)
 			{
-			  m = (Method) getFromCache(methodKey, null, methodArgs);
+			  m = (System.Reflection.MethodInfo) getFromCache(methodKey, null, methodArgs);
 			}
 
 			if (m != null && !trans.Debug)
 			{
 			  try
 			  {
-				paramTypes = m.ParameterTypes;
+				paramTypes = m.getParameterTypes();
 				MethodResolver.convertParams(methodArgs, convertedArgs, paramTypes, exprContext);
-				if (Modifier.isStatic(m.Modifiers))
+				if (Modifier.isStatic(m.getModifiers()))
 				{
 				  return m.invoke(null, convertedArgs[0]);
 				}
@@ -273,7 +272,7 @@ namespace org.apache.xalan.extensions
 				  // This is tricky.  We get the actual number of target arguments (excluding any
 				  //   ExpressionContext).  If we passed in the same number, we need the implied object.
 				  int nTargetArgs = convertedArgs[0].Length;
-				  if (paramTypes[0].IsSubclassOf(typeof(ExpressionContext)))
+				  if (paramTypes[0].IsAssignableFrom(typeof(ExpressionContext)))
 				  {
 					nTargetArgs--;
 				  }
@@ -361,7 +360,7 @@ namespace org.apache.xalan.extensions
 			}
 			else // First arg was not object.  See if we need the implied object.
 			{
-			  if (Modifier.isStatic(m.Modifiers))
+			  if (Modifier.isStatic(m.getModifiers()))
 			  {
 				if (trans != null && trans.Debug)
 				{
@@ -395,7 +394,7 @@ namespace org.apache.xalan.extensions
 					trans.TraceManager.fireExtensionEvent(new ExtensionEvent(trans, m_classObj));
 					try
 					{
-						m_defaultInstance = m_classObj.newInstance();
+						m_defaultInstance = System.Activator.CreateInstance(m_classObj);
 					}
 					catch (Exception e)
 					{
@@ -408,7 +407,7 @@ namespace org.apache.xalan.extensions
 				  }
 				  else
 				  {
-					  m_defaultInstance = m_classObj.newInstance();
+					  m_defaultInstance = System.Activator.CreateInstance(m_classObj);
 				  }
 				}
 				if (trans != null && trans.Debug)
@@ -441,7 +440,7 @@ namespace org.apache.xalan.extensions
 		catch (InvocationTargetException ite)
 		{
 		  Exception resultException = ite;
-		  Exception targetException = ite.TargetException;
+		  Exception targetException = ite.getTargetException();
 
 		  if (targetException is TransformerException)
 		  {
@@ -469,7 +468,7 @@ namespace org.apache.xalan.extensions
 	  /// <param name="exprContext"> The context in which this expression is being executed. </param>
 	  /// <returns> the return value of the function evaluation. </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object callFunction(org.apache.xpath.functions.FuncExtFunction extFunction, java.util.Vector args, ExpressionContext exprContext) throws javax.xml.transform.TransformerException
 	  public override object callFunction(FuncExtFunction extFunction, ArrayList args, ExpressionContext exprContext)
 	  {
@@ -491,26 +490,26 @@ namespace org.apache.xalan.extensions
 	  /// <exception cref="IOException">           if loading trouble </exception>
 	  /// <exception cref="TransformerException">          if parsing trouble </exception>
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void processElement(String localPart, org.apache.xalan.templates.ElemTemplateElement element, org.apache.xalan.transformer.TransformerImpl transformer, org.apache.xalan.templates.Stylesheet stylesheetTree, Object methodKey) throws javax.xml.transform.TransformerException, java.io.IOException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void processElement(String localPart, org.apache.xalan.templates.ElemTemplateElement element, org.apache.xalan.transformer.TransformerImpl transformer, org.apache.xalan.templates.Stylesheet stylesheetTree, Object methodKey) throws TransformerException, java.io.IOException
 	  public override void processElement(string localPart, ElemTemplateElement element, TransformerImpl transformer, Stylesheet stylesheetTree, object methodKey)
 	  {
 		object result = null;
 
-		Method m = (Method) getFromCache(methodKey, null, null);
+		System.Reflection.MethodInfo m = (System.Reflection.MethodInfo) getFromCache(methodKey, null, null);
 		if (null == m)
 		{
 		  try
 		  {
 			m = MethodResolver.getElementMethod(m_classObj, localPart);
-			if ((null == m_defaultInstance) && !Modifier.isStatic(m.Modifiers))
+			if ((null == m_defaultInstance) && !Modifier.isStatic(m.getModifiers()))
 			{
 			  if (transformer.Debug)
 			  {
 				transformer.TraceManager.fireExtensionEvent(new ExtensionEvent(transformer, m_classObj));
 				try
 				{
-				  m_defaultInstance = m_classObj.newInstance();
+				  m_defaultInstance = System.Activator.CreateInstance(m_classObj);
 				}
 				catch (Exception e)
 				{
@@ -523,7 +522,7 @@ namespace org.apache.xalan.extensions
 			  }
 			  else
 			  {
-				m_defaultInstance = m_classObj.newInstance();
+				m_defaultInstance = System.Activator.CreateInstance(m_classObj);
 			  }
 			}
 		  }
@@ -562,7 +561,7 @@ namespace org.apache.xalan.extensions
 		}
 		catch (InvocationTargetException e)
 		{
-		  Exception targetException = e.TargetException;
+		  Exception targetException = e.getTargetException();
 
 		  if (targetException is TransformerException)
 		  {

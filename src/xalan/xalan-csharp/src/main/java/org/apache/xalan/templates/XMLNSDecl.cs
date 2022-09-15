@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.templates
 {
-
 	/// <summary>
 	/// Represents an xmlns declaration
 	/// </summary>

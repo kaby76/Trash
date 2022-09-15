@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.extensions
 {
-
 	using StylesheetRoot = org.apache.xalan.templates.StylesheetRoot;
 	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
 	using XPathVisitor = org.apache.xpath.XPathVisitor;
@@ -72,7 +71,7 @@ namespace org.apache.xalan.extensions
 		  string arg = ((FuncExtFunctionAvailable)func).Arg0.ToString();
 		  if (arg.IndexOf(":", StringComparison.Ordinal) > 0)
 		  {
-			  string prefix = arg.Substring(0,arg.IndexOf(":", StringComparison.Ordinal));
+			  string prefix = arg.Substring(0, arg.IndexOf(":", StringComparison.Ordinal));
 			  string @namespace = this.m_sroot.getNamespaceForPrefix(prefix);
 			  m_sroot.ExtensionNamespacesManager.registerExtension(@namespace);
 		  }

@@ -24,7 +24,6 @@
 namespace org.apache.xalan.lib.sql
 {
 
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMManager = org.apache.xml.dtm.DTMManager;
 
@@ -58,19 +57,19 @@ namespace org.apache.xalan.lib.sql
 
 	  private const string S_SQL_WARNING = "sql-warning";
 
-	  private int m_ErrorExt_TypeID = org.apache.xml.dtm.DTM_Fields.NULL;
-	  private int m_Message_TypeID = org.apache.xml.dtm.DTM_Fields.NULL;
-	  private int m_Code_TypeID = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_ErrorExt_TypeID = DTM.NULL;
+	  private int m_Message_TypeID = DTM.NULL;
+	  private int m_Code_TypeID = DTM.NULL;
 
-	  private int m_State_TypeID = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_State_TypeID = DTM.NULL;
 
-	  private int m_SQLWarning_TypeID = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_SQLWarning_TypeID = DTM.NULL;
 
-	  private int m_SQLError_TypeID = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_SQLError_TypeID = DTM.NULL;
 
-	  private int m_rootID = org.apache.xml.dtm.DTM_Fields.NULL;
-	  private int m_extErrorID = org.apache.xml.dtm.DTM_Fields.NULL;
-	  private int m_MainMessageID = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_rootID = DTM.NULL;
+	  private int m_extErrorID = DTM.NULL;
+	  private int m_MainMessageID = DTM.NULL;
 
 	  /// <summary>
 	  /// Build up an SQLErrorDocument that includes the basic error information
@@ -85,11 +84,11 @@ namespace org.apache.xalan.lib.sql
 		buildBasicStructure(error);
 
 		int sqlError = addElement(2, m_SQLError_TypeID, m_extErrorID, m_MainMessageID);
-		int element = org.apache.xml.dtm.DTM_Fields.NULL;
+		int element = DTM.NULL;
 
-		element = addElementWithData(new int?(error.ErrorCode), 3, m_Code_TypeID, sqlError, element);
+		element = addElementWithData(new int?(error.getErrorCode()), 3, m_Code_TypeID, sqlError, element);
 
-		element = addElementWithData(error.LocalizedMessage, 3, m_Message_TypeID, sqlError, element);
+		element = addElementWithData(error.getLocalizedMessage(), 3, m_Message_TypeID, sqlError, element);
 
 	//    this.dumpDTM();
 	  }
@@ -134,15 +133,15 @@ namespace org.apache.xalan.lib.sql
 		{
 			int sqlError = addElement(2, inWarnings ? m_SQLWarning_TypeID : m_SQLError_TypeID, m_extErrorID, prev);
 			prev = sqlError;
-			int element = org.apache.xml.dtm.DTM_Fields.NULL;
+			int element = DTM.NULL;
 
-			element = addElementWithData(new int?(se.ErrorCode), 3, m_Code_TypeID, sqlError, element);
+			element = addElementWithData(new int?(se.getErrorCode()), 3, m_Code_TypeID, sqlError, element);
 
-			element = addElementWithData(se.LocalizedMessage, 3, m_Message_TypeID, sqlError, element);
+			element = addElementWithData(se.getLocalizedMessage(), 3, m_Message_TypeID, sqlError, element);
 
 			if (full)
 			{
-				string state = se.SQLState;
+				string state = se.getSQLState();
 				if (!string.ReferenceEquals(state, null) && state.Length > 0)
 				{
 					element = addElementWithData(state, 3, m_State_TypeID, sqlError, element);
@@ -150,11 +149,11 @@ namespace org.apache.xalan.lib.sql
 
 				if (inWarnings)
 				{
-					se = ((SQLWarning)se).NextWarning;
+					se = ((SQLWarning)se).getNextWarning();
 				}
 				else
 				{
-					se = se.NextException;
+					se = se.getNextException();
 				}
 			}
 			else
@@ -170,9 +169,9 @@ namespace org.apache.xalan.lib.sql
 	  /// @return </param>
 	  private void buildBasicStructure(Exception e)
 	  {
-		m_rootID = addElement(0, m_Document_TypeID, org.apache.xml.dtm.DTM_Fields.NULL, org.apache.xml.dtm.DTM_Fields.NULL);
-		m_extErrorID = addElement(1, m_ErrorExt_TypeID, m_rootID, org.apache.xml.dtm.DTM_Fields.NULL);
-		m_MainMessageID = addElementWithData(e != null ? e.LocalizedMessage : "SQLWarning", 2, m_Message_TypeID, m_extErrorID, org.apache.xml.dtm.DTM_Fields.NULL);
+		m_rootID = addElement(0, m_Document_TypeID, DTM.NULL, DTM.NULL);
+		m_extErrorID = addElement(1, m_ErrorExt_TypeID, m_rootID, DTM.NULL);
+		m_MainMessageID = addElementWithData(e != null ? e.getLocalizedMessage() : "SQLWarning", 2, m_Message_TypeID, m_extErrorID, DTM.NULL);
 	  }
 
 	  /// <summary>
@@ -185,17 +184,17 @@ namespace org.apache.xalan.lib.sql
 
 		base.createExpandedNameTable();
 
-		m_ErrorExt_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_EXT_ERROR, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
+		m_ErrorExt_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_EXT_ERROR, DTM.ELEMENT_NODE);
 
-		m_SQLError_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_SQL_ERROR, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
+		m_SQLError_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_SQL_ERROR, DTM.ELEMENT_NODE);
 
-		m_Message_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_MESSAGE, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
+		m_Message_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_MESSAGE, DTM.ELEMENT_NODE);
 
-		m_Code_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_CODE, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
+		m_Code_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_CODE, DTM.ELEMENT_NODE);
 
-		m_State_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_STATE, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
+		m_State_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_STATE, DTM.ELEMENT_NODE);
 
-		m_SQLWarning_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_SQL_WARNING, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
+		m_SQLWarning_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_SQL_WARNING, DTM.ELEMENT_NODE);
 	  }
 
 	}

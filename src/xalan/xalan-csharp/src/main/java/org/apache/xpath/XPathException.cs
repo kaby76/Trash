@@ -73,7 +73,7 @@ namespace org.apache.xpath
 	  /// <param name="message"> The error message. </param>
 	  public XPathException(string message, ExpressionNode ex) : base(message)
 	  {
-		this.Locator = ex;
+		this.setLocator(ex);
 		StylesheetNode = getStylesheetNode(ex);
 	  }
 
@@ -193,7 +193,7 @@ namespace org.apache.xpath
 			TransformerException se = (TransformerException) exception;
 			Exception prev = exception;
 
-			exception = se.Exception;
+			exception = se.getException();
 
 			if (prev == exception)
 			{
@@ -233,7 +233,7 @@ namespace org.apache.xpath
 				TransformerException se = (TransformerException) exception;
 				Exception prev = exception;
     
-				exception = se.Exception;
+				exception = se.getException();
     
 				if (prev == exception)
 				{
@@ -309,7 +309,7 @@ namespace org.apache.xpath
 			  TransformerException se = (TransformerException) exception;
 			  Exception prev = exception;
 
-			  exception = se.Exception;
+			  exception = se.getException();
 
 			  if (prev == exception)
 			  {

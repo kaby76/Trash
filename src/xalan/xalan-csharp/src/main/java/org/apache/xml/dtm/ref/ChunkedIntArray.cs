@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
-
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
 	using XMLMessages = org.apache.xml.res.XMLMessages;
 
@@ -116,7 +115,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// purposes). </summary>
 	  /// <param name="position"> int Record number </param>
 	  /// <param name="slotpos"> int Column number </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: int readEntry(int position, int offset) throws ArrayIndexOutOfBoundsException
 	  internal int readEntry(int position, int offset)
 	  {
@@ -202,7 +201,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="position"> int Record number </param>
 	  /// <param name="offset"> int Column number </param>
 	  /// <param name="value"> int New contents </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void writeEntry(int position, int offset, int value) throws ArrayIndexOutOfBoundsException
 	  internal void writeEntry(int position, int offset, int value)
 	  {

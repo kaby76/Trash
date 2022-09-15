@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.trace
 {
-
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
 	using Attributes = org.xml.sax.Attributes;
 
@@ -29,19 +28,19 @@ namespace org.apache.xalan.trace
 	/// This event responds to and is modeled on the SAX events that are sent to the
 	/// formatter listener FormatterToXXX)classes.
 	/// </summary>
-	/// <seealso cref= org.apache.xml.utils.DOMBuilder </seealso>
-	/// <seealso cref= org.apache.xml.serializer.ToHTMLStream </seealso>
-	/// <seealso cref= org.apache.xml.serializer.ToTextStream </seealso>
-	/// <seealso cref= org.apache.xml.serializer.ToXMLStream
+	/// <seealso cref="org.apache.xml.utils.DOMBuilder"/>
+	/// <seealso cref="org.apache.xml.serializer.ToHTMLStream"/>
+	/// <seealso cref="org.apache.xml.serializer.ToTextStream"/>
+	/// <seealso cref="org.apache.xml.serializer.ToXMLStream"
 	/// 
-	/// @xsl.usage advanced </seealso>
+	/// @xsl.usage advanced/>
 	public class GenerateEvent : java.util.EventListener
 	{
 
 	  /// <summary>
 	  /// The XSLT Transformer, which either directly or indirectly contains most needed information.
 	  /// </summary>
-	  /// <seealso cref= org.apache.xalan.transformer.TransformerImpl </seealso>
+	  /// <seealso cref="org.apache.xalan.transformer.TransformerImpl"/>
 	  public TransformerImpl m_processor;
 
 	  /// <summary>

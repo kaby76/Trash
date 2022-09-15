@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Threading;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +25,6 @@
 namespace org.apache.xml.dtm.@ref
 {
 
-
 	/// <summary>
 	/// This class is duplicated for each Xalan-Java subpackage so keep it in sync.
 	/// It is package private and therefore is not exposed as part of the Xalan-Java
@@ -45,16 +45,12 @@ namespace org.apache.xml.dtm.@ref
 
 		private class PrivilegedActionAnonymousInnerClass : PrivilegedAction
 		{
-			public PrivilegedActionAnonymousInnerClass()
-			{
-			}
-
-			public virtual object run()
+			public object run()
 			{
 				ClassLoader cl = null;
 				try
 				{
-					cl = Thread.CurrentThread.ContextClassLoader;
+					cl = Thread.CurrentThread.getContextClassLoader();
 				}
 				catch (SecurityException)
 				{
@@ -73,16 +69,12 @@ namespace org.apache.xml.dtm.@ref
 
 		private class PrivilegedActionAnonymousInnerClass2 : PrivilegedAction
 		{
-			public PrivilegedActionAnonymousInnerClass2()
-			{
-			}
-
-			public virtual object run()
+			public object run()
 			{
 				ClassLoader cl = null;
 				try
 				{
-					cl = ClassLoader.SystemClassLoader;
+					cl = ClassLoader.getSystemClassLoader();
 				}
 				catch (SecurityException)
 				{
@@ -91,9 +83,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: static ClassLoader getParentClassLoader(final ClassLoader cl)
-		internal static ClassLoader getParentClassLoader(ClassLoader cl)
+		internal static ClassLoader getParentClassLoader(in ClassLoader cl)
 		{
 			return (ClassLoader) AccessController.doPrivileged(new PrivilegedActionAnonymousInnerClass3(cl));
 		}
@@ -107,12 +97,12 @@ namespace org.apache.xml.dtm.@ref
 				this.cl = cl;
 			}
 
-			public virtual object run()
+			public object run()
 			{
 				ClassLoader parent = null;
 				try
 				{
-					parent = cl.Parent;
+					parent = cl.getParent();
 				}
 				catch (SecurityException)
 				{
@@ -124,9 +114,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: static String getSystemProperty(final String propName)
-		internal static string getSystemProperty(string propName)
+		internal static string getSystemProperty(in string propName)
 		{
 			return (string) AccessController.doPrivileged(new PrivilegedActionAnonymousInnerClass4(propName));
 		}
@@ -140,24 +128,23 @@ namespace org.apache.xml.dtm.@ref
 				this.propName = propName;
 			}
 
-			public virtual object run()
+			public object run()
 			{
 				return System.getProperty(propName);
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static java.io.FileInputStream getFileInputStream(final java.io.File file) throws java.io.FileNotFoundException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		internal static System.IO.FileStream getFileInputStream(File file)
+		internal static FileStream getFileInputStream(in File file)
 		{
 			try
 			{
-				return (System.IO.FileStream) AccessController.doPrivileged(new PrivilegedExceptionActionAnonymousInnerClass(file));
+				return (FileStream) AccessController.doPrivileged(new PrivilegedExceptionActionAnonymousInnerClass(file));
 			}
 			catch (PrivilegedActionException e)
 			{
-				throw (FileNotFoundException)e.Exception;
+				throw (FileNotFoundException)e.getException();
 			}
 		}
 
@@ -170,19 +157,17 @@ namespace org.apache.xml.dtm.@ref
 				this.file = file;
 			}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object run() throws java.io.FileNotFoundException
-			public virtual object run()
+			public object run()
 			{
-				return new System.IO.FileStream(file, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+				return new FileStream(file, FileMode.Open, FileAccess.Read);
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: static java.io.InputStream getResourceAsStream(final ClassLoader cl, final String name)
-		internal static System.IO.Stream getResourceAsStream(ClassLoader cl, string name)
+		internal static Stream getResourceAsStream(in ClassLoader cl, in string name)
 		{
-			return (System.IO.Stream) AccessController.doPrivileged(new PrivilegedActionAnonymousInnerClass5(cl, name));
+			return (Stream) AccessController.doPrivileged(new PrivilegedActionAnonymousInnerClass5(cl, name));
 		}
 
 		private class PrivilegedActionAnonymousInnerClass5 : PrivilegedAction
@@ -196,9 +181,9 @@ namespace org.apache.xml.dtm.@ref
 				this.name = name;
 			}
 
-			public virtual object run()
+			public object run()
 			{
-				System.IO.Stream ris;
+				Stream ris;
 				if (cl == null)
 				{
 					ris = ClassLoader.getSystemResourceAsStream(name);
@@ -211,12 +196,9 @@ namespace org.apache.xml.dtm.@ref
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: static boolean getFileExists(final java.io.File f)
-		internal static bool getFileExists(File f)
+		internal static bool getFileExists(in File f)
 		{
 		return ((bool?) AccessController.doPrivileged(new PrivilegedActionAnonymousInnerClass6(f))).Value;
-			   .booleanValue();
 		}
 
 		private class PrivilegedActionAnonymousInnerClass6 : PrivilegedAction
@@ -228,18 +210,15 @@ namespace org.apache.xml.dtm.@ref
 				this.f = f;
 			}
 
-			public virtual object run()
+			public object run()
 			{
 				return f.exists() ? true : false;
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: static long getLastModified(final java.io.File f)
-		internal static long getLastModified(File f)
+		internal static long getLastModified(in File f)
 		{
 		return ((long?) AccessController.doPrivileged(new PrivilegedActionAnonymousInnerClass7(f))).Value;
-			   .longValue();
 		}
 
 		private class PrivilegedActionAnonymousInnerClass7 : PrivilegedAction
@@ -251,7 +230,7 @@ namespace org.apache.xml.dtm.@ref
 				this.f = f;
 			}
 
-			public virtual object run()
+			public object run()
 			{
 				return new long?(f.lastModified());
 			}

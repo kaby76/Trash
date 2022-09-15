@@ -21,7 +21,6 @@
 namespace org.apache.xalan.res
 {
 
-
 	/// <summary>
 	/// Set up error messages.
 	/// We build a two dimensional array of message keys and
@@ -617,7 +616,7 @@ namespace org.apache.xalan.res
 				new object[] {"version2", "<<<<<<<"},
 				new object[] {"yes", "s\u00ec"},
 				new object[] {"line", "Riga #"},
-				new object[] {"column","Colonna #"},
+				new object[] {"column", "Colonna #"},
 				new object[] {"xsldone", "XSLProcessor: eseguito"},
 				new object[] {"xslProc_option", "Opzioni classe Process riga comandi Xalan-J:"},
 				new object[] {"xslProc_option", "Opzioni classe Process riga comandi Xalan-J\u003a"},
@@ -677,8 +676,8 @@ namespace org.apache.xalan.res
 				new object[] {"optionXN", "   [-XN (abilita l'allineamento della maschera)]"},
 				new object[] {"optionXX", "   [-XX (attiva ulteriori emissioni di messaggi di debug)]"},
 				new object[] {"optionXT", "   [-XT (utilizza il translet per la trasformazione, se possibile)]"},
-				new object[] {"diagTiming"," --------- La trasformazione di {0} utilizzando {1} ha impiegato {2} ms"},
-				new object[] {"recursionTooDeep","Nidificazione della maschera troppo elevata. nesting = {0}, maschera {1} {2}"},
+				new object[] {"diagTiming", " --------- La trasformazione di {0} utilizzando {1} ha impiegato {2} ms"},
+				new object[] {"recursionTooDeep", "Nidificazione della maschera troppo elevata. nesting = {0}, maschera {1} {2}"},
 				new object[] {"nameIs", "il nome \u00e8"},
 				new object[] {"matchPatternIs", "il modello di corrispondenza \u00e8"}
 			};
@@ -727,12 +726,12 @@ namespace org.apache.xalan.res
 	  ///   <param name="className"> the name of the class that implements the resource bundle. </param>
 	  ///   <returns> the ResourceBundle </returns>
 	  ///   <exception cref="MissingResourceException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static final XSLTErrorResources loadResourceBundle(String className) throws java.util.MissingResourceException
 	  public static XSLTErrorResources loadResourceBundle(string className)
 	  {
 
-		Locale locale = Locale.Default;
+		Locale locale = Locale.getDefault();
 		string suffix = getResourceSuffix(locale);
 
 		try
@@ -770,8 +769,8 @@ namespace org.apache.xalan.res
 	  private static string getResourceSuffix(Locale locale)
 	  {
 
-		string suffix = "_" + locale.Language;
-		string country = locale.Country;
+		string suffix = "_" + locale.getLanguage();
+		string country = locale.getCountry();
 
 		if (country.Equals("TW"))
 		{

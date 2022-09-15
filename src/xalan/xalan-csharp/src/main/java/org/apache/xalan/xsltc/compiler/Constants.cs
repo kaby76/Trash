@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using InstructionConstants = org.apache.bcel.generic.InstructionConstants;
 	using SerializerBase = org.apache.xml.serializer.SerializerBase;
 
@@ -36,247 +35,279 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Unexpected internal errors, such as null-ptr exceptions, etc.
 		// Immediately terminates compilation, no translet produced
+		public static int INTERNAL = 0;
 		// XSLT elements that are not implemented and unsupported ext.
 		// Immediately terminates compilation, no translet produced
+		public static int UNSUPPORTED = 1;
 		// Fatal error in the stylesheet input (parsing or content)
 		// Immediately terminates compilation, no translet produced
+		public static int FATAL = 2;
 		// Other error in the stylesheet input (parsing or content)
 		// Does not terminate compilation, no translet produced
+		public static int ERROR = 3;
 		// Other error in the stylesheet input (content errors only)
 		// Does not terminate compilation, a translet is produced
-		// output interface
-	}
+		public static int WARNING = 4;
 
-	public static class Constants_Fields
-	{
-		public const int INTERNAL = 0;
-		public const int UNSUPPORTED = 1;
-		public const int FATAL = 2;
-		public const int ERROR = 3;
-		public const int WARNING = 4;
-		public const string EMPTYSTRING = "";
-		public const string NAMESPACE_FEATURE = "http://xml.org/sax/features/namespaces";
-		public const string TRANSLET_INTF = "org.apache.xalan.xsltc.Translet";
-		public const string TRANSLET_INTF_SIG = "Lorg/apache/xalan/xsltc/Translet;";
-		public const string ATTRIBUTES_SIG = "Lorg/apache/xalan/xsltc/runtime/Attributes;";
-		public const string NODE_ITERATOR_SIG = "Lorg/apache/xml/dtm/DTMAxisIterator;";
-		public const string DOM_INTF_SIG = "Lorg/apache/xalan/xsltc/DOM;";
-		public const string DOM_IMPL_CLASS = "org/apache/xalan/xsltc/DOM";
-		public const string SAX_IMPL_CLASS = "org/apache/xalan/xsltc/DOM/SAXImpl";
-		public const string DOM_IMPL_SIG = "Lorg/apache/xalan/xsltc/dom/SAXImpl;";
-		public const string SAX_IMPL_SIG = "Lorg/apache/xalan/xsltc/dom/SAXImpl;";
-		public const string DOM_ADAPTER_CLASS = "org/apache/xalan/xsltc/dom/DOMAdapter";
-		public const string DOM_ADAPTER_SIG = "Lorg/apache/xalan/xsltc/dom/DOMAdapter;";
-		public const string MULTI_DOM_CLASS = "org.apache.xalan.xsltc.dom.MultiDOM";
-		public const string MULTI_DOM_SIG = "Lorg/apache/xalan/xsltc/dom/MultiDOM;";
-		public const string STRING = "java.lang.String";
-		public static readonly int ACC_PUBLIC = org.apache.bcel.Constants.ACC_PUBLIC;
-		public static readonly int ACC_SUPER = org.apache.bcel.Constants.ACC_SUPER;
-		public static readonly int ACC_FINAL = org.apache.bcel.Constants.ACC_FINAL;
-		public static readonly int ACC_PRIVATE = org.apache.bcel.Constants.ACC_PRIVATE;
-		public static readonly int ACC_PROTECTED = org.apache.bcel.Constants.ACC_PROTECTED;
-		public static readonly int ACC_STATIC = org.apache.bcel.Constants.ACC_STATIC;
-		public const string STRING_SIG = "Ljava/lang/String;";
-		public const string STRING_BUFFER_SIG = "Ljava/lang/StringBuffer;";
-		public const string OBJECT_SIG = "Ljava/lang/Object;";
-		public const string DOUBLE_SIG = "Ljava/lang/Double;";
-		public const string INTEGER_SIG = "Ljava/lang/Integer;";
-		public const string COLLATOR_CLASS = "java/text/Collator";
-		public const string COLLATOR_SIG = "Ljava/text/Collator;";
-		public const string NODE = "int";
-		public const string NODE_ITERATOR = "org.apache.xml.dtm.DTMAxisIterator";
-		public const string NODE_ITERATOR_BASE = "org.apache.xml.dtm.ref.DTMAxisIteratorBase";
-		public const string SORT_ITERATOR = "org.apache.xalan.xsltc.dom.SortingIterator";
-		public const string SORT_ITERATOR_SIG = "Lorg.apache.xalan.xsltc.dom.SortingIterator;";
-		public const string NODE_SORT_RECORD = "org.apache.xalan.xsltc.dom.NodeSortRecord";
-		public const string NODE_SORT_FACTORY = "org/apache/xalan/xsltc/dom/NodeSortRecordFactory";
-		public const string NODE_SORT_RECORD_SIG = "Lorg/apache/xalan/xsltc/dom/NodeSortRecord;";
-		public const string NODE_SORT_FACTORY_SIG = "Lorg/apache/xalan/xsltc/dom/NodeSortRecordFactory;";
-		public const string LOCALE_CLASS = "java.util.Locale";
-		public const string LOCALE_SIG = "Ljava/util/Locale;";
-		public const string STRING_VALUE_HANDLER = "org.apache.xalan.xsltc.runtime.StringValueHandler";
-		public const string STRING_VALUE_HANDLER_SIG = "Lorg/apache/xalan/xsltc/runtime/StringValueHandler;";
-		public static readonly string OUTPUT_HANDLER = SerializerBase.PKG_PATH + "/SerializationHandler";
-		public static readonly string OUTPUT_HANDLER_SIG = "L" + SerializerBase.PKG_PATH + "/SerializationHandler;";
-		public const string FILTER_INTERFACE = "org.apache.xalan.xsltc.dom.Filter";
-		public const string FILTER_INTERFACE_SIG = "Lorg/apache/xalan/xsltc/dom/Filter;";
-		public const string UNION_ITERATOR_CLASS = "org.apache.xalan.xsltc.dom.UnionIterator";
-		public const string STEP_ITERATOR_CLASS = "org.apache.xalan.xsltc.dom.StepIterator";
-		public const string CACHED_NODE_LIST_ITERATOR_CLASS = "org.apache.xalan.xsltc.dom.CachedNodeListIterator";
-		public const string NTH_ITERATOR_CLASS = "org.apache.xalan.xsltc.dom.NthIterator";
-		public const string ABSOLUTE_ITERATOR = "org.apache.xalan.xsltc.dom.AbsoluteIterator";
-		public const string DUP_FILTERED_ITERATOR = "org.apache.xalan.xsltc.dom.DupFilterIterator";
-		public const string CURRENT_NODE_LIST_ITERATOR = "org.apache.xalan.xsltc.dom.CurrentNodeListIterator";
-		public const string CURRENT_NODE_LIST_FILTER = "org.apache.xalan.xsltc.dom.CurrentNodeListFilter";
-		public const string CURRENT_NODE_LIST_ITERATOR_SIG = "Lorg/apache/xalan/xsltc/dom/CurrentNodeListIterator;";
-		public const string CURRENT_NODE_LIST_FILTER_SIG = "Lorg/apache/xalan/xsltc/dom/CurrentNodeListFilter;";
-		public const string FILTER_STEP_ITERATOR = "org.apache.xalan.xsltc.dom.FilteredStepIterator";
-		public const string FILTER_ITERATOR = "org.apache.xalan.xsltc.dom.FilterIterator";
-		public const string SINGLETON_ITERATOR = "org.apache.xalan.xsltc.dom.SingletonIterator";
-		public const string MATCHING_ITERATOR = "org.apache.xalan.xsltc.dom.MatchingIterator";
-		public const string NODE_SIG = "I";
-		public const string GET_PARENT = "getParent";
-		public static readonly string GET_PARENT_SIG = "(" + NODE_SIG + ")" + NODE_SIG;
-		public static readonly string NEXT_SIG = "()" + NODE_SIG;
-		public const string NEXT = "next";
-		public const string NEXTID = "nextNodeID";
-		public const string MAKE_NODE = "makeNode";
-		public const string MAKE_NODE_LIST = "makeNodeList";
-		public const string GET_UNPARSED_ENTITY_URI = "getUnparsedEntityURI";
-		public const string STRING_TO_REAL = "stringToReal";
-		public static readonly string STRING_TO_REAL_SIG = "(" + STRING_SIG + ")D";
-		public const string STRING_TO_INT = "stringToInt";
-		public static readonly string STRING_TO_INT_SIG = "(" + STRING_SIG + ")I";
-		public const string XSLT_PACKAGE = "org.apache.xalan.xsltc";
-		public static readonly string COMPILER_PACKAGE = XSLT_PACKAGE + ".compiler";
-		public static readonly string RUNTIME_PACKAGE = XSLT_PACKAGE + ".runtime";
-		public static readonly string TRANSLET_CLASS = RUNTIME_PACKAGE + ".AbstractTranslet";
-		public const string TRANSLET_SIG = "Lorg/apache/xalan/xsltc/runtime/AbstractTranslet;";
-		public const string UNION_ITERATOR_SIG = "Lorg/apache/xalan/xsltc/dom/UnionIterator;";
-		public static readonly string TRANSLET_OUTPUT_SIG = "L" + SerializerBase.PKG_PATH + "/SerializationHandler;";
-		public const string MAKE_NODE_SIG = "(I)Lorg/w3c/dom/Node;";
-		public static readonly string MAKE_NODE_SIG2 = "(" + NODE_ITERATOR_SIG + ")Lorg/w3c/dom/Node;";
-		public const string MAKE_NODE_LIST_SIG = "(I)Lorg/w3c/dom/NodeList;";
-		public static readonly string MAKE_NODE_LIST_SIG2 = "(" + NODE_ITERATOR_SIG + ")Lorg/w3c/dom/NodeList;";
-		public static readonly string STREAM_XML_OUTPUT = SerializerBase.PKG_NAME + ".ToXMLStream";
-		public static readonly string OUTPUT_BASE = SerializerBase.PKG_NAME + ".SerializerBase";
-		public const string LOAD_DOCUMENT_CLASS = "org.apache.xalan.xsltc.dom.LoadDocument";
-		public const string KEY_INDEX_CLASS = "org/apache/xalan/xsltc/dom/KeyIndex";
-		public const string KEY_INDEX_SIG = "Lorg/apache/xalan/xsltc/dom/KeyIndex;";
-		public const string KEY_INDEX_ITERATOR_SIG = "Lorg/apache/xalan/xsltc/dom/KeyIndex$KeyIndexIterator;";
-		public const string DOM_INTF = "org.apache.xalan.xsltc.DOM";
-		public const string DOM_IMPL = "org.apache.xalan.xsltc.dom.SAXImpl";
-		public const string SAX_IMPL = "org.apache.xalan.xsltc.dom.SAXImpl";
-		public const string STRING_CLASS = "java.lang.String";
-		public const string OBJECT_CLASS = "java.lang.Object";
-		public const string BOOLEAN_CLASS = "java.lang.Boolean";
-		public const string STRING_BUFFER_CLASS = "java.lang.StringBuffer";
-		public const string STRING_WRITER = "java.io.StringWriter";
-		public const string WRITER_SIG = "Ljava/io/Writer;";
-		public const string TRANSLET_OUTPUT_BASE = "org.apache.xalan.xsltc.TransletOutputBase";
-		public static readonly string TRANSLET_OUTPUT_INTERFACE = SerializerBase.PKG_NAME + ".SerializationHandler";
-		public const string BASIS_LIBRARY_CLASS = "org.apache.xalan.xsltc.runtime.BasisLibrary";
-		public const string ATTRIBUTE_LIST_IMPL_CLASS = "org.apache.xalan.xsltc.runtime.AttributeListImpl";
-		public const string DOUBLE_CLASS = "java.lang.Double";
-		public const string INTEGER_CLASS = "java.lang.Integer";
-		public const string RUNTIME_NODE_CLASS = "org.apache.xalan.xsltc.runtime.Node";
-		public const string MATH_CLASS = "java.lang.Math";
-		public const string BOOLEAN_VALUE = "booleanValue";
-		public const string BOOLEAN_VALUE_SIG = "()Z";
-		public const string INT_VALUE = "intValue";
-		public const string INT_VALUE_SIG = "()I";
-		public const string DOUBLE_VALUE = "doubleValue";
-		public const string DOUBLE_VALUE_SIG = "()D";
-		public const string DOM_PNAME = "dom";
-		public const string NODE_PNAME = "node";
-		public const string TRANSLET_OUTPUT_PNAME = "handler";
-		public const string ITERATOR_PNAME = "iterator";
-		public const string DOCUMENT_PNAME = "document";
-		public const string TRANSLET_PNAME = "translet";
-		public const string INVOKE_METHOD = "invokeMethod";
-		public const string GET_NODE_NAME = "getNodeNameX";
-		public const string CHARACTERSW = "characters";
-		public const string GET_CHILDREN = "getChildren";
-		public const string GET_TYPED_CHILDREN = "getTypedChildren";
-		public const string CHARACTERS = "characters";
-		public const string APPLY_TEMPLATES = "applyTemplates";
-		public const string GET_NODE_TYPE = "getNodeType";
-		public const string GET_NODE_VALUE = "getStringValueX";
-		public const string GET_ELEMENT_VALUE = "getElementValue";
-		public const string GET_ATTRIBUTE_VALUE = "getAttributeValue";
-		public const string HAS_ATTRIBUTE = "hasAttribute";
-		public const string ADD_ITERATOR = "addIterator";
-		public const string SET_START_NODE = "setStartNode";
-		public const string RESET = "reset";
-		public static readonly string ATTR_SET_SIG = "(" + DOM_INTF_SIG + NODE_ITERATOR_SIG + TRANSLET_OUTPUT_SIG + ")V";
-		public static readonly string GET_NODE_NAME_SIG = "(" + NODE_SIG + ")" + STRING_SIG;
-		public static readonly string CHARACTERSW_SIG = "(" + STRING_SIG + TRANSLET_OUTPUT_SIG + ")V";
-		public static readonly string CHARACTERS_SIG = "(" + NODE_SIG + TRANSLET_OUTPUT_SIG + ")V";
-		public static readonly string GET_CHILDREN_SIG = "(" + NODE_SIG + ")" + NODE_ITERATOR_SIG;
-		public static readonly string GET_TYPED_CHILDREN_SIG = "(I)" + NODE_ITERATOR_SIG;
-		public const string GET_NODE_TYPE_SIG = "()S";
-		public static readonly string GET_NODE_VALUE_SIG = "(I)" + STRING_SIG;
-		public static readonly string GET_ELEMENT_VALUE_SIG = "(I)" + STRING_SIG;
-		public static readonly string GET_ATTRIBUTE_VALUE_SIG = "(II)" + STRING_SIG;
-		public const string HAS_ATTRIBUTE_SIG = "(II)Z";
-		public static readonly string GET_ITERATOR_SIG = "()" + NODE_ITERATOR_SIG;
-		public const string NAMES_INDEX = "namesArray";
-		public static readonly string NAMES_INDEX_SIG = "[" + STRING_SIG;
-		public const string URIS_INDEX = "urisArray";
-		public static readonly string URIS_INDEX_SIG = "[" + STRING_SIG;
-		public const string TYPES_INDEX = "typesArray";
-		public const string TYPES_INDEX_SIG = "[I";
-		public const string NAMESPACE_INDEX = "namespaceArray";
-		public static readonly string NAMESPACE_INDEX_SIG = "[" + STRING_SIG;
-		public const string NS_ANCESTORS_INDEX_SIG = "[I";
-		public const string PREFIX_URIS_IDX_SIG = "[I";
-		public static readonly string PREFIX_URIS_ARRAY_SIG = "[" + STRING_SIG;
-		public const string HASIDCALL_INDEX = "_hasIdCall";
-		public const string HASIDCALL_INDEX_SIG = "Z";
-		public const string TRANSLET_VERSION_INDEX = "transletVersion";
-		public const string TRANSLET_VERSION_INDEX_SIG = "I";
-		public const string LOOKUP_STYLESHEET_QNAME_NS_REF = "lookupStylesheetQNameNamespace";
-		public static readonly string LOOKUP_STYLESHEET_QNAME_NS_SIG = "(" + STRING_SIG + "I" + NS_ANCESTORS_INDEX_SIG + PREFIX_URIS_IDX_SIG + PREFIX_URIS_ARRAY_SIG + "Z)" + STRING_SIG;
-		public const string EXPAND_STYLESHEET_QNAME_REF = "expandStylesheetQNameRef";
-		public static readonly string EXPAND_STYLESHEET_QNAME_SIG = "(" + STRING_SIG + "I" + NS_ANCESTORS_INDEX_SIG + PREFIX_URIS_IDX_SIG + PREFIX_URIS_ARRAY_SIG + "Z)" + STRING_SIG;
-		public const string DOM_FIELD = "_dom";
-		public const string STATIC_NAMES_ARRAY_FIELD = "_sNamesArray";
-		public const string STATIC_URIS_ARRAY_FIELD = "_sUrisArray";
-		public const string STATIC_TYPES_ARRAY_FIELD = "_sTypesArray";
-		public const string STATIC_NAMESPACE_ARRAY_FIELD = "_sNamespaceArray";
-		public const string STATIC_NS_ANCESTORS_ARRAY_FIELD = "_sNamespaceAncestorsArray";
-		public const string STATIC_PREFIX_URIS_IDX_ARRAY_FIELD = "_sPrefixURIsIdxArray";
-		public const string STATIC_PREFIX_URIS_ARRAY_FIELD = "_sPrefixURIPairsArray";
-		public const string STATIC_CHAR_DATA_FIELD = "_scharData";
-		public const string STATIC_CHAR_DATA_FIELD_SIG = "[C";
-		public const string FORMAT_SYMBOLS_FIELD = "format_symbols";
-		public const string ITERATOR_FIELD_SIG = NODE_ITERATOR_SIG;
-		public const string NODE_FIELD = "node";
-		public const string NODE_FIELD_SIG = "I";
-		public const string EMPTYATTR_FIELD = "EmptyAttributes";
-		public const string ATTRIBUTE_LIST_FIELD = "attributeList";
-		public const string CLEAR_ATTRIBUTES = "clear";
-		public const string ADD_ATTRIBUTE = "addAttribute";
-		public const string ATTRIBUTE_LIST_IMPL_SIG = "Lorg/apache/xalan/xsltc/runtime/AttributeListImpl;";
-		public static readonly string CLEAR_ATTRIBUTES_SIG = "()" + ATTRIBUTE_LIST_IMPL_SIG;
-		public static readonly string ADD_ATTRIBUTE_SIG = "(" + STRING_SIG + STRING_SIG + ")" + ATTRIBUTE_LIST_IMPL_SIG;
-		public static readonly string ADD_ITERATOR_SIG = "(" + NODE_ITERATOR_SIG + ")" + UNION_ITERATOR_SIG;
-		public const string ORDER_ITERATOR = "orderNodes";
-		public static readonly string ORDER_ITERATOR_SIG = "(" + NODE_ITERATOR_SIG + "I)" + NODE_ITERATOR_SIG;
-		public static readonly string SET_START_NODE_SIG = "(" + NODE_SIG + ")" + NODE_ITERATOR_SIG;
-		public const string NODE_COUNTER = "org.apache.xalan.xsltc.dom.NodeCounter";
-		public const string NODE_COUNTER_SIG = "Lorg/apache/xalan/xsltc/dom/NodeCounter;";
-		public const string DEFAULT_NODE_COUNTER = "org.apache.xalan.xsltc.dom.DefaultNodeCounter";
-		public const string DEFAULT_NODE_COUNTER_SIG = "Lorg/apache/xalan/xsltc/dom/DefaultNodeCounter;";
-		public const string TRANSLET_FIELD = "translet";
-		public const string TRANSLET_FIELD_SIG = TRANSLET_SIG;
-		public static readonly string RESET_SIG = "()" + NODE_ITERATOR_SIG;
-		public const string GET_PARAMETER = "getParameter";
-		public const string ADD_PARAMETER = "addParameter";
-		public const string PUSH_PARAM_FRAME = "pushParamFrame";
-		public const string PUSH_PARAM_FRAME_SIG = "()V";
-		public const string POP_PARAM_FRAME = "popParamFrame";
-		public const string POP_PARAM_FRAME_SIG = "()V";
-		public static readonly string GET_PARAMETER_SIG = "(" + STRING_SIG + ")" + OBJECT_SIG;
-		public static readonly string ADD_PARAMETER_SIG = "(" + STRING_SIG + OBJECT_SIG + "Z)" + OBJECT_SIG;
-		public const string STRIP_SPACE = "stripSpace";
-		public const string STRIP_SPACE_INTF = "org/apache/xalan/xsltc/StripFilter";
-		public const string STRIP_SPACE_SIG = "Lorg/apache/xalan/xsltc/StripFilter;";
-		public const string STRIP_SPACE_PARAMS = "(Lorg/apache/xalan/xsltc/DOM;II)Z";
-		public const string GET_NODE_VALUE_ITERATOR = "getNodeValueIterator";
-		public static readonly string GET_NODE_VALUE_ITERATOR_SIG = "(" + NODE_ITERATOR_SIG + "I" + STRING_SIG + "Z)" + NODE_ITERATOR_SIG;
-		public static readonly string GET_UNPARSED_ENTITY_URI_SIG = "(" + STRING_SIG + ")" + STRING_SIG;
-		public const int POSITION_INDEX = 2;
-		public const int LAST_INDEX = 3;
-		public const string XMLNS_PREFIX = "xmlns";
-		public const string XMLNS_STRING = "xmlns:";
-		public const string XMLNS_URI = "http://www.w3.org/2000/xmlns/";
-		public const string XSLT_URI = "http://www.w3.org/1999/XSL/Transform";
-		public const string XHTML_URI = "http://www.w3.org/1999/xhtml";
-		public const string TRANSLET_URI = "http://xml.apache.org/xalan/xsltc";
-		public const string REDIRECT_URI = "http://xml.apache.org/xalan/redirect";
-		public const string FALLBACK_CLASS = "org.apache.xalan.xsltc.compiler.Fallback";
-		public const int RTF_INITIAL_SIZE = 32;
+		public static string EMPTYSTRING = "";
+
+		public static string NAMESPACE_FEATURE = "http://xml.org/sax/features/namespaces";
+
+		public static string TRANSLET_INTF = "org.apache.xalan.xsltc.Translet";
+		public static string TRANSLET_INTF_SIG = "Lorg/apache/xalan/xsltc/Translet;";
+
+		public static string ATTRIBUTES_SIG = "Lorg/apache/xalan/xsltc/runtime/Attributes;";
+		public static string NODE_ITERATOR_SIG = "Lorg/apache/xml/dtm/DTMAxisIterator;";
+		public static string DOM_INTF_SIG = "Lorg/apache/xalan/xsltc/DOM;";
+		public static string DOM_IMPL_CLASS = "org/apache/xalan/xsltc/DOM"; // xml/dtm/ref/DTMDefaultBaseIterators"; //xalan/xsltc/dom/DOMImpl";
+		public static string SAX_IMPL_CLASS = "org/apache/xalan/xsltc/DOM/SAXImpl";
+		public static string DOM_IMPL_SIG = "Lorg/apache/xalan/xsltc/dom/SAXImpl;"; //xml/dtm/ref/DTMDefaultBaseIterators"; //xalan/xsltc/dom/DOMImpl;";
+		public static string SAX_IMPL_SIG = "Lorg/apache/xalan/xsltc/dom/SAXImpl;";
+		public static string DOM_ADAPTER_CLASS = "org/apache/xalan/xsltc/dom/DOMAdapter";
+		public static string DOM_ADAPTER_SIG = "Lorg/apache/xalan/xsltc/dom/DOMAdapter;";
+		public static string MULTI_DOM_CLASS = "org.apache.xalan.xsltc.dom.MultiDOM";
+		public static string MULTI_DOM_SIG = "Lorg/apache/xalan/xsltc/dom/MultiDOM;";
+
+		public static string STRING = "java.lang.String";
+
+		public static int ACC_PUBLIC = org.apache.bcel.Constants.ACC_PUBLIC;
+		public static int ACC_SUPER = org.apache.bcel.Constants.ACC_SUPER;
+		public static int ACC_FINAL = org.apache.bcel.Constants.ACC_FINAL;
+		public static int ACC_PRIVATE = org.apache.bcel.Constants.ACC_PRIVATE;
+		public static int ACC_PROTECTED = org.apache.bcel.Constants.ACC_PROTECTED;
+		public static int ACC_STATIC = org.apache.bcel.Constants.ACC_STATIC;
+
+		public static string STRING_SIG = "Ljava/lang/String;";
+		public static string STRING_BUFFER_SIG = "Ljava/lang/StringBuffer;";
+		public static string OBJECT_SIG = "Ljava/lang/Object;";
+		public static string DOUBLE_SIG = "Ljava/lang/Double;";
+		public static string INTEGER_SIG = "Ljava/lang/Integer;";
+		public static string COLLATOR_CLASS = "java/text/Collator";
+		public static string COLLATOR_SIG = "Ljava/text/Collator;";
+
+		public static string NODE = "int";
+		public static string NODE_ITERATOR = "org.apache.xml.dtm.DTMAxisIterator";
+		public static string NODE_ITERATOR_BASE = "org.apache.xml.dtm.ref.DTMAxisIteratorBase";
+		public static string SORT_ITERATOR = "org.apache.xalan.xsltc.dom.SortingIterator";
+		public static string SORT_ITERATOR_SIG = "Lorg.apache.xalan.xsltc.dom.SortingIterator;";
+		public static string NODE_SORT_RECORD = "org.apache.xalan.xsltc.dom.NodeSortRecord";
+		public static string NODE_SORT_FACTORY = "org/apache/xalan/xsltc/dom/NodeSortRecordFactory";
+		public static string NODE_SORT_RECORD_SIG = "Lorg/apache/xalan/xsltc/dom/NodeSortRecord;";
+		public static string NODE_SORT_FACTORY_SIG = "Lorg/apache/xalan/xsltc/dom/NodeSortRecordFactory;";
+		public static string LOCALE_CLASS = "java.util.Locale";
+		public static string LOCALE_SIG = "Ljava/util/Locale;";
+		public static string STRING_VALUE_HANDLER = "org.apache.xalan.xsltc.runtime.StringValueHandler";
+		public static string STRING_VALUE_HANDLER_SIG = "Lorg/apache/xalan/xsltc/runtime/StringValueHandler;";
+		public static string OUTPUT_HANDLER = SerializerBase.PKG_PATH + "/SerializationHandler";
+		public static string OUTPUT_HANDLER_SIG = "L" + SerializerBase.PKG_PATH + "/SerializationHandler;";
+		public static string FILTER_INTERFACE = "org.apache.xalan.xsltc.dom.Filter";
+		public static string FILTER_INTERFACE_SIG = "Lorg/apache/xalan/xsltc/dom/Filter;";
+		public static string UNION_ITERATOR_CLASS = "org.apache.xalan.xsltc.dom.UnionIterator";
+		public static string STEP_ITERATOR_CLASS = "org.apache.xalan.xsltc.dom.StepIterator";
+		public static string CACHED_NODE_LIST_ITERATOR_CLASS = "org.apache.xalan.xsltc.dom.CachedNodeListIterator";
+		public static string NTH_ITERATOR_CLASS = "org.apache.xalan.xsltc.dom.NthIterator";
+		public static string ABSOLUTE_ITERATOR = "org.apache.xalan.xsltc.dom.AbsoluteIterator";
+		public static string DUP_FILTERED_ITERATOR = "org.apache.xalan.xsltc.dom.DupFilterIterator";
+		public static string CURRENT_NODE_LIST_ITERATOR = "org.apache.xalan.xsltc.dom.CurrentNodeListIterator";
+		public static string CURRENT_NODE_LIST_FILTER = "org.apache.xalan.xsltc.dom.CurrentNodeListFilter";
+		public static string CURRENT_NODE_LIST_ITERATOR_SIG = "Lorg/apache/xalan/xsltc/dom/CurrentNodeListIterator;";
+		public static string CURRENT_NODE_LIST_FILTER_SIG = "Lorg/apache/xalan/xsltc/dom/CurrentNodeListFilter;";
+		public static string FILTER_STEP_ITERATOR = "org.apache.xalan.xsltc.dom.FilteredStepIterator";
+		public static string FILTER_ITERATOR = "org.apache.xalan.xsltc.dom.FilterIterator";
+		public static string SINGLETON_ITERATOR = "org.apache.xalan.xsltc.dom.SingletonIterator";
+		public static string MATCHING_ITERATOR = "org.apache.xalan.xsltc.dom.MatchingIterator";
+		public static string NODE_SIG = "I";
+		public static string GET_PARENT = "getParent";
+		public static string GET_PARENT_SIG = "(" + NODE_SIG + ")" + NODE_SIG;
+		public static string NEXT_SIG = "()" + NODE_SIG;
+		public static string NEXT = "next";
+		public static string NEXTID = "nextNodeID";
+		public static string MAKE_NODE = "makeNode";
+		public static string MAKE_NODE_LIST = "makeNodeList";
+		public static string GET_UNPARSED_ENTITY_URI = "getUnparsedEntityURI";
+		public static string STRING_TO_REAL = "stringToReal";
+		public static string STRING_TO_REAL_SIG = "(" + STRING_SIG + ")D";
+		public static string STRING_TO_INT = "stringToInt";
+		public static string STRING_TO_INT_SIG = "(" + STRING_SIG + ")I";
+
+		public static string XSLT_PACKAGE = "org.apache.xalan.xsltc";
+		public static string COMPILER_PACKAGE = XSLT_PACKAGE + ".compiler";
+		public static string RUNTIME_PACKAGE = XSLT_PACKAGE + ".runtime";
+		public static string TRANSLET_CLASS = RUNTIME_PACKAGE + ".AbstractTranslet";
+
+		public static string TRANSLET_SIG = "Lorg/apache/xalan/xsltc/runtime/AbstractTranslet;";
+		public static string UNION_ITERATOR_SIG = "Lorg/apache/xalan/xsltc/dom/UnionIterator;";
+		public static string TRANSLET_OUTPUT_SIG = "L" + SerializerBase.PKG_PATH + "/SerializationHandler;";
+		public static string MAKE_NODE_SIG = "(I)Lorg/w3c/dom/Node;";
+		public static string MAKE_NODE_SIG2 = "(" + NODE_ITERATOR_SIG + ")Lorg/w3c/dom/Node;";
+		public static string MAKE_NODE_LIST_SIG = "(I)Lorg/w3c/dom/NodeList;";
+		public static string MAKE_NODE_LIST_SIG2 = "(" + NODE_ITERATOR_SIG + ")Lorg/w3c/dom/NodeList;";
+
+		public static string STREAM_XML_OUTPUT = SerializerBase.PKG_NAME + ".ToXMLStream";
+
+		public static string OUTPUT_BASE = SerializerBase.PKG_NAME + ".SerializerBase";
+
+		public static string LOAD_DOCUMENT_CLASS = "org.apache.xalan.xsltc.dom.LoadDocument";
+
+		public static string KEY_INDEX_CLASS = "org/apache/xalan/xsltc/dom/KeyIndex";
+		public static string KEY_INDEX_SIG = "Lorg/apache/xalan/xsltc/dom/KeyIndex;";
+		public static string KEY_INDEX_ITERATOR_SIG = "Lorg/apache/xalan/xsltc/dom/KeyIndex$KeyIndexIterator;";
+
+		public static string DOM_INTF = "org.apache.xalan.xsltc.DOM";
+		public static string DOM_IMPL = "org.apache.xalan.xsltc.dom.SAXImpl";
+		public static string SAX_IMPL = "org.apache.xalan.xsltc.dom.SAXImpl";
+		public static string STRING_CLASS = "java.lang.String";
+		public static string OBJECT_CLASS = "java.lang.Object";
+		public static string BOOLEAN_CLASS = "java.lang.Boolean";
+		public static string STRING_BUFFER_CLASS = "java.lang.StringBuffer";
+		public static string STRING_WRITER = "java.io.StringWriter";
+		public static string WRITER_SIG = "Ljava/io/Writer;";
+
+		public static string TRANSLET_OUTPUT_BASE = "org.apache.xalan.xsltc.TransletOutputBase";
+		// output interface
+		public static string TRANSLET_OUTPUT_INTERFACE = SerializerBase.PKG_NAME + ".SerializationHandler";
+		public static string BASIS_LIBRARY_CLASS = "org.apache.xalan.xsltc.runtime.BasisLibrary";
+		public static string ATTRIBUTE_LIST_IMPL_CLASS = "org.apache.xalan.xsltc.runtime.AttributeListImpl";
+		public static string DOUBLE_CLASS = "java.lang.Double";
+		public static string INTEGER_CLASS = "java.lang.Integer";
+		public static string RUNTIME_NODE_CLASS = "org.apache.xalan.xsltc.runtime.Node";
+		public static string MATH_CLASS = "java.lang.Math";
+
+		public static string BOOLEAN_VALUE = "booleanValue";
+		public static string BOOLEAN_VALUE_SIG = "()Z";
+		public static string INT_VALUE = "intValue";
+		public static string INT_VALUE_SIG = "()I";
+		public static string DOUBLE_VALUE = "doubleValue";
+		public static string DOUBLE_VALUE_SIG = "()D";
+
+		public static string DOM_PNAME = "dom";
+		public static string NODE_PNAME = "node";
+		public static string TRANSLET_OUTPUT_PNAME = "handler";
+		public static string ITERATOR_PNAME = "iterator";
+		public static string DOCUMENT_PNAME = "document";
+		public static string TRANSLET_PNAME = "translet";
+
+		public static string INVOKE_METHOD = "invokeMethod";
+		public static string GET_NODE_NAME = "getNodeNameX";
+		public static string CHARACTERSW = "characters";
+		public static string GET_CHILDREN = "getChildren";
+		public static string GET_TYPED_CHILDREN = "getTypedChildren";
+		public static string CHARACTERS = "characters";
+		public static string APPLY_TEMPLATES = "applyTemplates";
+		public static string GET_NODE_TYPE = "getNodeType";
+		public static string GET_NODE_VALUE = "getStringValueX";
+		public static string GET_ELEMENT_VALUE = "getElementValue";
+		public static string GET_ATTRIBUTE_VALUE = "getAttributeValue";
+		public static string HAS_ATTRIBUTE = "hasAttribute";
+		public static string ADD_ITERATOR = "addIterator";
+		public static string SET_START_NODE = "setStartNode";
+		public static string RESET = "reset";
+
+		public static string ATTR_SET_SIG = "(" + DOM_INTF_SIG + NODE_ITERATOR_SIG + TRANSLET_OUTPUT_SIG + ")V";
+
+		public static string GET_NODE_NAME_SIG = "(" + NODE_SIG + ")" + STRING_SIG;
+		public static string CHARACTERSW_SIG = "(" + STRING_SIG + TRANSLET_OUTPUT_SIG + ")V";
+		public static string CHARACTERS_SIG = "(" + NODE_SIG + TRANSLET_OUTPUT_SIG + ")V";
+		public static string GET_CHILDREN_SIG = "(" + NODE_SIG + ")" + NODE_ITERATOR_SIG;
+		public static string GET_TYPED_CHILDREN_SIG = "(I)" + NODE_ITERATOR_SIG;
+		public static string GET_NODE_TYPE_SIG = "()S";
+		public static string GET_NODE_VALUE_SIG = "(I)" + STRING_SIG;
+		public static string GET_ELEMENT_VALUE_SIG = "(I)" + STRING_SIG;
+		public static string GET_ATTRIBUTE_VALUE_SIG = "(II)" + STRING_SIG;
+		public static string HAS_ATTRIBUTE_SIG = "(II)Z";
+		public static string GET_ITERATOR_SIG = "()" + NODE_ITERATOR_SIG;
+
+		public static string NAMES_INDEX = "namesArray";
+		public static string NAMES_INDEX_SIG = "[" + STRING_SIG;
+		public static string URIS_INDEX = "urisArray";
+		public static string URIS_INDEX_SIG = "[" + STRING_SIG;
+		public static string TYPES_INDEX = "typesArray";
+		public static string TYPES_INDEX_SIG = "[I";
+		public static string NAMESPACE_INDEX = "namespaceArray";
+		public static string NAMESPACE_INDEX_SIG = "[" + STRING_SIG;
+		public static string NS_ANCESTORS_INDEX_SIG = "[I";
+		public static string PREFIX_URIS_IDX_SIG = "[I";
+		public static string PREFIX_URIS_ARRAY_SIG = "[" + STRING_SIG;
+		public static string HASIDCALL_INDEX = "_hasIdCall";
+		public static string HASIDCALL_INDEX_SIG = "Z";
+		public static string TRANSLET_VERSION_INDEX = "transletVersion";
+		public static string TRANSLET_VERSION_INDEX_SIG = "I";
+		public static string LOOKUP_STYLESHEET_QNAME_NS_REF = "lookupStylesheetQNameNamespace";
+		public static string LOOKUP_STYLESHEET_QNAME_NS_SIG = "(" + STRING_SIG + "I" + NS_ANCESTORS_INDEX_SIG + PREFIX_URIS_IDX_SIG + PREFIX_URIS_ARRAY_SIG + "Z)" + STRING_SIG;
+		public static string EXPAND_STYLESHEET_QNAME_REF = "expandStylesheetQNameRef";
+		public static string EXPAND_STYLESHEET_QNAME_SIG = "(" + STRING_SIG + "I" + NS_ANCESTORS_INDEX_SIG + PREFIX_URIS_IDX_SIG + PREFIX_URIS_ARRAY_SIG + "Z)" + STRING_SIG;
+
+		public static string DOM_FIELD = "_dom";
+		public static string STATIC_NAMES_ARRAY_FIELD = "_sNamesArray";
+		public static string STATIC_URIS_ARRAY_FIELD = "_sUrisArray";
+		public static string STATIC_TYPES_ARRAY_FIELD = "_sTypesArray";
+		public static string STATIC_NAMESPACE_ARRAY_FIELD = "_sNamespaceArray";
+		public static string STATIC_NS_ANCESTORS_ARRAY_FIELD = "_sNamespaceAncestorsArray";
+		public static string STATIC_PREFIX_URIS_IDX_ARRAY_FIELD = "_sPrefixURIsIdxArray";
+		public static string STATIC_PREFIX_URIS_ARRAY_FIELD = "_sPrefixURIPairsArray";
+		public static string STATIC_CHAR_DATA_FIELD = "_scharData";
+		public static string STATIC_CHAR_DATA_FIELD_SIG = "[C";
+		public static string FORMAT_SYMBOLS_FIELD = "format_symbols";
+
+		public static string ITERATOR_FIELD_SIG = NODE_ITERATOR_SIG;
+		public static string NODE_FIELD = "node";
+		public static string NODE_FIELD_SIG = "I";
+
+		public static string EMPTYATTR_FIELD = "EmptyAttributes";
+		public static string ATTRIBUTE_LIST_FIELD = "attributeList";
+		public static string CLEAR_ATTRIBUTES = "clear";
+		public static string ADD_ATTRIBUTE = "addAttribute";
+		public static string ATTRIBUTE_LIST_IMPL_SIG = "Lorg/apache/xalan/xsltc/runtime/AttributeListImpl;";
+		public static string CLEAR_ATTRIBUTES_SIG = "()" + ATTRIBUTE_LIST_IMPL_SIG;
+		public static string ADD_ATTRIBUTE_SIG = "(" + STRING_SIG + STRING_SIG + ")" + ATTRIBUTE_LIST_IMPL_SIG;
+
+		public static string ADD_ITERATOR_SIG = "(" + NODE_ITERATOR_SIG + ")" + UNION_ITERATOR_SIG;
+
+		public static string ORDER_ITERATOR = "orderNodes";
+		public static string ORDER_ITERATOR_SIG = "(" + NODE_ITERATOR_SIG + "I)" + NODE_ITERATOR_SIG;
+
+		public static string SET_START_NODE_SIG = "(" + NODE_SIG + ")" + NODE_ITERATOR_SIG;
+
+		public static string NODE_COUNTER = "org.apache.xalan.xsltc.dom.NodeCounter";
+		public static string NODE_COUNTER_SIG = "Lorg/apache/xalan/xsltc/dom/NodeCounter;";
+		public static string DEFAULT_NODE_COUNTER = "org.apache.xalan.xsltc.dom.DefaultNodeCounter";
+		public static string DEFAULT_NODE_COUNTER_SIG = "Lorg/apache/xalan/xsltc/dom/DefaultNodeCounter;";
+		public static string TRANSLET_FIELD = "translet";
+		public static string TRANSLET_FIELD_SIG = TRANSLET_SIG;
+
+		public static string RESET_SIG = "()" + NODE_ITERATOR_SIG;
+		public static string GET_PARAMETER = "getParameter";
+		public static string ADD_PARAMETER = "addParameter";
+		public static string PUSH_PARAM_FRAME = "pushParamFrame";
+		public static string PUSH_PARAM_FRAME_SIG = "()V";
+		public static string POP_PARAM_FRAME = "popParamFrame";
+		public static string POP_PARAM_FRAME_SIG = "()V";
+		public static string GET_PARAMETER_SIG = "(" + STRING_SIG + ")" + OBJECT_SIG;
+		public static string ADD_PARAMETER_SIG = "(" + STRING_SIG + OBJECT_SIG + "Z)" + OBJECT_SIG;
+
+		public static string STRIP_SPACE = "stripSpace";
+		public static string STRIP_SPACE_INTF = "org/apache/xalan/xsltc/StripFilter";
+		public static string STRIP_SPACE_SIG = "Lorg/apache/xalan/xsltc/StripFilter;";
+		public static string STRIP_SPACE_PARAMS = "(Lorg/apache/xalan/xsltc/DOM;II)Z";
+
+		public static string GET_NODE_VALUE_ITERATOR = "getNodeValueIterator";
+		public static string GET_NODE_VALUE_ITERATOR_SIG = "(" + NODE_ITERATOR_SIG + "I" + STRING_SIG + "Z)" + NODE_ITERATOR_SIG;
+
+		public static string GET_UNPARSED_ENTITY_URI_SIG = "(" + STRING_SIG + ")" + STRING_SIG;
+
+		public static int POSITION_INDEX = 2;
+		public static int LAST_INDEX = 3;
+
+		public static string XMLNS_PREFIX = "xmlns";
+		public static string XMLNS_STRING = "xmlns:";
+		public static string XMLNS_URI = "http://www.w3.org/2000/xmlns/";
+		public static string XSLT_URI = "http://www.w3.org/1999/XSL/Transform";
+		public static string XHTML_URI = "http://www.w3.org/1999/xhtml";
+		public static string TRANSLET_URI = "http://xml.apache.org/xalan/xsltc";
+		public static string REDIRECT_URI = "http://xml.apache.org/xalan/redirect";
+		public static string FALLBACK_CLASS = "org.apache.xalan.xsltc.compiler.Fallback";
+
+		public static int RTF_INITIAL_SIZE = 32;
 	}
 
 }

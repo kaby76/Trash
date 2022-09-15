@@ -23,6 +23,9 @@
 namespace org.apache.xml.dtm.@ref.sax2dtm
 {
 
+	using DTM = org.apache.xml.dtm.DTM;
+	using DTMManager = org.apache.xml.dtm.DTMManager;
+	using DTMWSFilter = org.apache.xml.dtm.DTMWSFilter;
 	using IntStack = org.apache.xml.utils.IntStack;
 	using IntVector = org.apache.xml.utils.IntVector;
 	using StringVector = org.apache.xml.utils.StringVector;
@@ -66,7 +69,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 	  /// <summary>
 	  /// Most recently started Document, or null if the DTM is empty. </summary>
-	  private int m_currentDocumentNode = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_currentDocumentNode = NULL;
 
 	  /// <summary>
 	  /// Tail-pruning mark: Number of nodes in use </summary>
@@ -181,15 +184,15 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <returns> int Node handle of owning document </returns>
 	  public override int getDocumentRoot(int nodeHandle)
 	  {
-		for (int id = makeNodeIdentity(nodeHandle); id != org.apache.xml.dtm.DTM_Fields.NULL; id = _parent(id))
+		for (int id = makeNodeIdentity(nodeHandle); id != NULL; id = _parent(id))
 		{
-		  if (_type(id) == org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE)
+		  if (_type(id) == DTM.DOCUMENT_NODE)
 		  {
 			return makeNodeHandle(id);
 		  }
 		}
 
-		return org.apache.xml.dtm.DTM_Fields.NULL; // Safety net; should never happen
+		return DTM.NULL; // Safety net; should never happen
 	  }
 
 	  /// <summary>
@@ -201,12 +204,12 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <returns> int Node identifier of the root of this DTM tree </returns>
 	  protected internal virtual int _documentRoot(int nodeIdentifier)
 	  {
-		if (nodeIdentifier == org.apache.xml.dtm.DTM_Fields.NULL)
+		if (nodeIdentifier == NULL)
 		{
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		}
 
-		for (int parent = _parent(nodeIdentifier); parent != org.apache.xml.dtm.DTM_Fields.NULL; nodeIdentifier = parent,parent = _parent(nodeIdentifier))
+		for (int parent = _parent(nodeIdentifier); parent != NULL; nodeIdentifier = parent,parent = _parent(nodeIdentifier))
 		{
 		  ;
 		}
@@ -224,9 +227,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// </summary>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startDocument
-	  ///  </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.startDocument"
+	  /// />
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocument() throws org.xml.sax.SAXException
 	  public override void startDocument()
 	  {
@@ -250,31 +253,31 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// </summary>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endDocument
-	  ///  </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.endDocument"
+	  /// />
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 	  public override void endDocument()
 	  {
 		charactersFlush();
 
-		m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,m_currentDocumentNode);
+		m_nextsib.setElementAt(NULL,m_currentDocumentNode);
 
 		if (m_firstch.elementAt(m_currentDocumentNode) == NOTPROCESSED)
 		{
-		  m_firstch.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,m_currentDocumentNode);
+		  m_firstch.setElementAt(NULL,m_currentDocumentNode);
 		}
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != m_previous)
+		if (DTM.NULL != m_previous)
 		{
-		  m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,m_previous);
+		  m_nextsib.setElementAt(DTM.NULL,m_previous);
 		}
 
 		m_parents = null;
 		m_prefixMappings = null;
 		m_contextIndexes = null;
 
-		m_currentDocumentNode = org.apache.xml.dtm.DTM_Fields.NULL; // no longer open
+		m_currentDocumentNode = NULL; // no longer open
 		m_endDocumentOccured = true;
 	  }
 

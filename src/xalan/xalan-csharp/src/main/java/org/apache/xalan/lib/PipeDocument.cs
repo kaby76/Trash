@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +25,6 @@ namespace org.apache.xalan.lib
 {
 
 
-
 	using XSLProcessorContext = org.apache.xalan.extensions.XSLProcessorContext;
 	using AVT = org.apache.xalan.templates.AVT;
 	using ElemExtensionCall = org.apache.xalan.templates.ElemExtensionCall;
@@ -48,7 +48,7 @@ namespace org.apache.xalan.lib
 	/// <summary>
 	/// PipeDocument is a Xalan extension element to set stylesheet params and pipes an XML 
 	/// document through a series of 1 or more stylesheets.
-	/// PipeDocument is invoked from a stylesheet as the <seealso cref="#pipeDocument pipeDocument extension element"/>.
+	/// PipeDocument is invoked from a stylesheet as the <seealso cref="pipeDocument pipeDocument extension element"/>.
 	/// 
 	/// It is accessed by specifying a namespace URI as follows:
 	/// <pre>
@@ -92,8 +92,8 @@ namespace org.apache.xalan.lib
 	///   stylesheet hrefs.<li/>
 	/// </ul>
 	/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void pipeDocument(org.apache.xalan.extensions.XSLProcessorContext context, org.apache.xalan.templates.ElemExtensionCall elem) throws javax.xml.transform.TransformerException, javax.xml.transform.TransformerConfigurationException, org.xml.sax.SAXException, java.io.IOException, java.io.FileNotFoundException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void pipeDocument(org.apache.xalan.extensions.XSLProcessorContext context, org.apache.xalan.templates.ElemExtensionCall elem) throws TransformerException, TransformerConfigurationException, SAXException, IOException, java.io.FileNotFoundException
 	  public virtual void pipeDocument(XSLProcessorContext context, ElemExtensionCall elem)
 	  {
 
@@ -125,32 +125,32 @@ namespace org.apache.xalan.lib
 		  {
 			ssNodes = elem.ChildNodes;
 			// Vector to contain TransformerHandler for each stylesheet.
-			ArrayList vTHandler = new ArrayList(ssNodes.Length);
+			ArrayList vTHandler = new ArrayList(ssNodes.getLength());
 
 			// The child nodes of an extension element node are instances of
 			// ElemLiteralResult, which requires does not fully support the standard
 			// Node interface. Accordingly, some special handling is required (see below)
 			// to get attribute values.
-			for (int i = 0; i < ssNodes.Length; i++)
+			for (int i = 0; i < ssNodes.getLength(); i++)
 			{
 			  ssNode = ssNodes.item(i);
-			  if (ssNode.NodeType == Node.ELEMENT_NODE && ((Element)ssNode).TagName.Equals("stylesheet") && ssNode is ElemLiteralResult)
+			  if (ssNode.getNodeType() == Node.ELEMENT_NODE && ((Element)ssNode).getTagName().Equals("stylesheet") && ssNode is ElemLiteralResult)
 			  {
 				AVT avt = ((ElemLiteralResult)ssNode).getLiteralResultAttribute("href");
 				string href = avt.evaluate(xctxt,xt, elem);
 				string absURI = SystemIDResolver.getAbsoluteURI(href, sysId);
 				Templates tmpl = saxTFactory.newTemplates(new StreamSource(absURI));
 				TransformerHandler tHandler = saxTFactory.newTransformerHandler(tmpl);
-				Transformer trans = tHandler.Transformer;
+				Transformer trans = tHandler.getTransformer();
 
 				// AddTransformerHandler to vector
 				vTHandler.Add(tHandler);
 
-				paramNodes = ssNode.ChildNodes;
-				for (int j = 0; j < paramNodes.Length; j++)
+				paramNodes = ssNode.getChildNodes();
+				for (int j = 0; j < paramNodes.getLength(); j++)
 				{
 				  paramNode = paramNodes.item(j);
-				  if (paramNode.NodeType == Node.ELEMENT_NODE && ((Element)paramNode).TagName.Equals("param") && paramNode is ElemLiteralResult)
+				  if (paramNode.getNodeType() == Node.ELEMENT_NODE && ((Element)paramNode).getTagName().Equals("param") && paramNode is ElemLiteralResult)
 				  {
 					 avt = ((ElemLiteralResult)paramNode).getLiteralResultAttribute("name");
 					 string pName = avt.evaluate(xctxt,xt, elem);
@@ -166,35 +166,35 @@ namespace org.apache.xalan.lib
 	  }
 	  /// <summary>
 	  /// Uses a Vector of TransformerHandlers to pipe XML input document through
-	  /// a series of 1 or more transformations. Called by <seealso cref="#pipeDocument"/>.
+	  /// a series of 1 or more transformations. Called by <seealso cref="pipeDocument"/>.
 	  /// </summary>
 	  /// <param name="vTHandler"> Vector of Transformation Handlers (1 per stylesheet). </param>
 	  /// <param name="source"> absolute URI to XML input </param>
 	  /// <param name="target"> absolute path to transformation output. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void usePipe(java.util.Vector vTHandler, String source, String target) throws javax.xml.transform.TransformerException, javax.xml.transform.TransformerConfigurationException, java.io.FileNotFoundException, java.io.IOException, org.xml.sax.SAXException, org.xml.sax.SAXNotRecognizedException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void usePipe(java.util.Vector vTHandler, String source, String target) throws TransformerException, TransformerConfigurationException, FileNotFoundException, IOException, SAXException, org.xml.sax.SAXNotRecognizedException
 	  public virtual void usePipe(ArrayList vTHandler, string source, string target)
 	  {
 		XMLReader reader = XMLReaderFactory.createXMLReader();
 		TransformerHandler tHFirst = (TransformerHandler)vTHandler[0];
-		reader.ContentHandler = tHFirst;
+		reader.setContentHandler(tHFirst);
 		reader.setProperty("http://xml.org/sax/properties/lexical-handler", tHFirst);
 		for (int i = 1; i < vTHandler.Count; i++)
 		{
 		  TransformerHandler tHFrom = (TransformerHandler)vTHandler[i - 1];
 		  TransformerHandler tHTo = (TransformerHandler)vTHandler[i];
-		  tHFrom.Result = new SAXResult(tHTo);
+		  tHFrom.setResult(new SAXResult(tHTo));
 		}
 		TransformerHandler tHLast = (TransformerHandler)vTHandler[vTHandler.Count - 1];
-		Transformer trans = tHLast.Transformer;
-		Properties outputProps = trans.OutputProperties;
+		Transformer trans = tHLast.getTransformer();
+		Properties outputProps = trans.getOutputProperties();
 		Serializer serializer = SerializerFactory.getSerializer(outputProps);
 
-		System.IO.FileStream @out = new System.IO.FileStream(target, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+		FileStream @out = new FileStream(target, FileMode.Create, FileAccess.Write);
 		try
 		{
 		  serializer.OutputStream = @out;
-		  tHLast.Result = new SAXResult(serializer.asContentHandler());
+		  tHLast.setResult(new SAXResult(serializer.asContentHandler()));
 		  reader.parse(source);
 		}
 		finally

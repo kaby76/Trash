@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Threading;
 
 /*
@@ -24,7 +25,6 @@ using System.Threading;
  */
 namespace org.apache.xalan.transformer
 {
-
 
 
 	using ExtensionsTable = org.apache.xalan.extensions.ExtensionsTable;
@@ -85,7 +85,7 @@ namespace org.apache.xalan.transformer
 	/// representation of the transformation execution.</p>
 	/// @xsl.usage advanced
 	/// </summary>
-	public class TransformerImpl : Transformer, System.Threading.ThreadStart, DTMWSFilter, ExtensionsProvider, org.apache.xml.serializer.SerializerTrace
+	public class TransformerImpl : Transformer, Runnable, DTMWSFilter, ExtensionsProvider, org.apache.xml.serializer.SerializerTrace
 	{
 		private bool InstanceFieldsInitialized = false;
 
@@ -105,7 +105,7 @@ namespace org.apache.xalan.transformer
 	  /// <summary>
 	  /// This is null unless we own the stream.
 	  /// </summary>
-	  private System.IO.FileStream m_outputStream = null;
+	  private FileStream m_outputStream = null;
 
 	  /// <summary>
 	  /// True if the parser events should be on the main thread,
@@ -203,7 +203,7 @@ namespace org.apache.xalan.transformer
 	  /// org.apache.xalan.transformer.TransformState interface,
 	  /// so a tool can discover the matched template
 	  /// </summary>
-	  internal Stack m_currentMatchTemplates = new Stack();
+	  internal System.Collections.Stack m_currentMatchTemplates = new System.Collections.Stack();
 
 	  /// <summary>
 	  /// A node vector used as a stack to track the current
@@ -252,11 +252,11 @@ namespace org.apache.xalan.transformer
 	  /// Stack for the purposes of flagging infinite recursion with
 	  /// attribute sets.
 	  /// </summary>
-	  internal Stack m_attrSetStack = null;
+	  internal System.Collections.Stack m_attrSetStack = null;
 
 	  /// <summary>
 	  /// The table of counters for xsl:number support. </summary>
-	  /// <seealso cref= ElemNumber </seealso>
+	  /// <seealso cref="ElemNumber"/>
 	  internal CountersTable m_countersTable = null;
 
 	  /// <summary>
@@ -369,7 +369,7 @@ namespace org.apache.xalan.transformer
 	  /// <summary>
 	  /// A stack of current template modes.
 	  /// </summary>
-	  private Stack m_modes = new Stack();
+	  private System.Collections.Stack m_modes = new System.Collections.Stack();
 
 	  //==========================================================
 	  // SECTION: Constructor
@@ -403,7 +403,7 @@ namespace org.apache.xalan.transformer
 		}
 
 		XPathContext = xPath;
-		XPathContext.NamespaceContext = stylesheet;
+		XPathContext.setNamespaceContext(stylesheet);
 		m_stackGuard = new StackGuard(this);
 	  }
 
@@ -418,67 +418,62 @@ namespace org.apache.xalan.transformer
 	  /// Get the extensions table object. 
 	  /// </summary>
 	  /// <returns> The extensions table. </returns>
-	  public virtual ExtensionsTable getExtensionsTable()
+	  public virtual ExtensionsTable ExtensionsTable
 	  {
-		return m_extensionsTable;
-	  }
-
-	  /// <summary>
-	  /// If the stylesheet contains extensions, set the extensions table object.
-	  /// 
-	  /// </summary>
-	  /// <param name="sroot"> The stylesheet. </param>
-	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: void setExtensionsTable(org.apache.xalan.templates.StylesheetRoot sroot) throws javax.xml.transform.TransformerException
-	  internal virtual void setExtensionsTable(StylesheetRoot sroot)
-	  {
-		try
-		{
-		  if (sroot.Extensions != null)
+		  get
 		  {
-			//only load extensions if secureProcessing is disabled
-			if (!sroot.SecureProcessing)
+			return m_extensionsTable;
+		  }
+		  set
+		  {
+			try
 			{
-				m_extensionsTable = new ExtensionsTable(sroot);
+			  if (value.Extensions != null)
+			  {
+				//only load extensions if secureProcessing is disabled
+				if (!value.SecureProcessing)
+				{
+					m_extensionsTable = new ExtensionsTable(value);
+				}
+			  }
+			}
+			catch (TransformerException te)
+			{
+				Console.WriteLine(te.ToString());
+				Console.Write(te.StackTrace);
 			}
 		  }
-		}
-		catch (TransformerException te)
-		{
-			Console.WriteLine(te.ToString());
-			Console.Write(te.StackTrace);
-		}
 	  }
+
 
 	  //== Implementation of the XPath ExtensionsProvider interface.
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean functionAvailable(String ns, String funcName) throws javax.xml.transform.TransformerException
 	  public virtual bool functionAvailable(string ns, string funcName)
 	  {
 		return getExtensionsTable().functionAvailable(ns, funcName);
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean elementAvailable(String ns, String elemName) throws javax.xml.transform.TransformerException
 	  public virtual bool elementAvailable(string ns, string elemName)
 	  {
 		return getExtensionsTable().elementAvailable(ns, elemName);
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object extFunction(String ns, String funcName, java.util.Vector argVec, Object methodKey) throws javax.xml.transform.TransformerException
 	  public virtual object extFunction(string ns, string funcName, ArrayList argVec, object methodKey)
 	  { //System.out.println("TransImpl.extFunction() " + ns + " " + funcName +" " + getExtensionsTable());
-		return getExtensionsTable().extFunction(ns, funcName, argVec, methodKey, XPathContext.ExpressionContext);
+		return getExtensionsTable().extFunction(ns, funcName, argVec, methodKey, XPathContext.getExpressionContext());
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object extFunction(org.apache.xpath.functions.FuncExtFunction extFunction, java.util.Vector argVec) throws javax.xml.transform.TransformerException
 	  public virtual object extFunction(FuncExtFunction extFunction, ArrayList argVec)
 	  {
-		return getExtensionsTable().extFunction(extFunction, argVec, XPathContext.ExpressionContext);
+		return getExtensionsTable().extFunction(extFunction, argVec, XPathContext.getExpressionContext());
 	  }
 
 	  //=========================
@@ -528,7 +523,7 @@ namespace org.apache.xalan.transformer
 		  m_countersTable = null;
 		  m_currentTemplateRuleIsNull = new BoolStack();
 		  m_xmlSource = null;
-		  m_doc = org.apache.xml.dtm.DTM_Fields.NULL;
+		  m_doc = DTM.NULL;
 		  m_isTransformDone = false;
 		  m_transformThread = null;
 
@@ -619,7 +614,7 @@ namespace org.apache.xalan.transformer
 			/// <param name="source">  The input for the source tree.
 			/// </param>
 			/// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transform(javax.xml.transform.Source source) throws javax.xml.transform.TransformerException
 	  public virtual void transform(Source source)
 	  {
@@ -632,7 +627,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="shouldRelease">  Flag indicating whether to release DTMManager.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transform(javax.xml.transform.Source source, boolean shouldRelease) throws javax.xml.transform.TransformerException
 	  public virtual void transform(Source source, bool shouldRelease)
 	  {
@@ -644,11 +639,11 @@ namespace org.apache.xalan.transformer
 		  // then we will get a NullPointerException if transformer is reused 
 		  // (for stylesheets that use xsl:key).  Not sure if this should go 
 		  // here or in reset(). -is  
-		  if (XPathContext.NamespaceContext == null)
+		  if (XPathContext.getNamespaceContext() == null)
 		  {
-			 XPathContext.NamespaceContext = Stylesheet;
+			 XPathContext.setNamespaceContext(Stylesheet);
 		  }
-		  string @base = source.SystemId;
+		  string @base = source.getSystemId();
 
 		  // If no systemID of the source, use the base of the stylesheet.
 		  if (null == @base)
@@ -678,7 +673,7 @@ namespace org.apache.xalan.transformer
 			}
 
 //JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
-			@base = @base + System.IO.Path.DirectorySeparatorChar + source.GetType().FullName;
+			@base = @base + Path.DirectorySeparatorChar + source.GetType().FullName;
 		  }
 		  BaseURLOfSource = @base;
 		  DTMManager mgr = m_xcontext.DTMManager;
@@ -690,19 +685,19 @@ namespace org.apache.xalan.transformer
 		   * since there is no clear spec. how to create an empty tree when
 		   * both SAXSource() and StreamSource() are used.
 		   */
-		  if ((source is StreamSource && source.SystemId == null && ((StreamSource)source).InputStream == null && ((StreamSource)source).Reader == null) || (source is SAXSource && ((SAXSource)source).InputSource == null && ((SAXSource)source).XMLReader == null) || (source is DOMSource && ((DOMSource)source).Node == null))
+		  if ((source is StreamSource && source.getSystemId() == null && ((StreamSource)source).getInputStream() == null && ((StreamSource)source).getReader() == null) || (source is SAXSource && ((SAXSource)source).getInputSource() == null && ((SAXSource)source).getXMLReader() == null) || (source is DOMSource && ((DOMSource)source).getNode() == null))
 		  {
 			try
 			{
 			  DocumentBuilderFactory builderF = DocumentBuilderFactory.newInstance();
 			  DocumentBuilder builder = builderF.newDocumentBuilder();
-			  string systemID = source.SystemId;
+			  string systemID = source.getSystemId();
 			  source = new DOMSource(builder.newDocument());
 
 			  // Copy system ID from original, empty Source to new Source
 			  if (!string.ReferenceEquals(systemID, null))
 			  {
-				source.SystemId = systemID;
+				source.setSystemId(systemID);
 			  }
 			}
 			catch (ParserConfigurationException e)
@@ -787,7 +782,7 @@ namespace org.apache.xalan.transformer
 		}
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void fatalError(Throwable throwable) throws javax.xml.transform.TransformerException
 	  private void fatalError(Exception throwable)
 	  {
@@ -849,8 +844,8 @@ namespace org.apache.xalan.transformer
 	  /// </returns>
 	  /// <exception cref="IllegalArgumentException"> If the property is not supported.
 	  /// </exception>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getOutputProperty(String qnameString) throws IllegalArgumentException
 	  public virtual string getOutputProperty(string qnameString)
 	  {
@@ -883,7 +878,7 @@ namespace org.apache.xalan.transformer
 	  /// </returns>
 	  /// <exception cref="IllegalArgumentException"> If the property is not supported,
 	  /// and is not namespaced. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getOutputPropertyNoDefault(String qnameString) throws IllegalArgumentException
 	  public virtual string getOutputPropertyNoDefault(string qnameString)
 	  {
@@ -969,7 +964,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="name"> The property name. </param>
 	  /// <param name="value"> The requested value for the property. </param>
 	  /// <exception cref="IllegalArgumentException"> if the property name is not legal. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setOutputProperty(String name, String value) throws IllegalArgumentException
 	  public virtual void setOutputProperty(string name, string value)
 	  {
@@ -981,7 +976,7 @@ namespace org.apache.xalan.transformer
 		  // output format from the stylesheet.
 		  if (null == m_outputFormat)
 		  {
-			m_outputFormat = (OutputProperties) Stylesheet.OutputComposed.clone();
+			m_outputFormat = (OutputProperties) Stylesheet.getOutputComposed().clone();
 		  }
 
 		  if (!OutputProperties.isLegalPropertyKey(name))
@@ -1006,12 +1001,12 @@ namespace org.apache.xalan.transformer
 	  /// used to override any of the same properties in effect
 	  /// for the transformation.
 	  /// </param>
-	  /// <seealso cref= javax.xml.transform.OutputKeys </seealso>
-	  /// <seealso cref= java.util.Properties
-	  /// </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys"/>
+	  /// <seealso cref="java.util.Properties"
+	  ////>
 	  /// <exception cref="IllegalArgumentException"> if any of the argument keys are not
 	  /// recognized and are not namespace qualified.    </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setOutputProperties(java.util.Properties oformat) throws IllegalArgumentException
 	  public virtual Properties OutputProperties
 	  {
@@ -1051,7 +1046,7 @@ namespace org.apache.xalan.transformer
 		  }
 		  get
 		  {
-			return (Properties) OutputFormat.Properties.clone();
+			return (Properties) OutputFormat.getProperties().clone();
 		  }
 	  }
 
@@ -1067,7 +1062,7 @@ namespace org.apache.xalan.transformer
 		/// result tree when it is fed SAX events.
 		/// </returns>
 		/// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.serializer.SerializationHandler createSerializationHandler(javax.xml.transform.Result outputTarget) throws javax.xml.transform.TransformerException
 		public virtual SerializationHandler createSerializationHandler(Result outputTarget)
 		{
@@ -1087,7 +1082,7 @@ namespace org.apache.xalan.transformer
 		/// result tree when it is fed SAX events.
 		/// </returns>
 		/// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.serializer.SerializationHandler createSerializationHandler(javax.xml.transform.Result outputTarget, org.apache.xalan.templates.OutputProperties format) throws javax.xml.transform.TransformerException
 		public virtual SerializationHandler createSerializationHandler(Result outputTarget, OutputProperties format)
 		{
@@ -1100,25 +1095,25 @@ namespace org.apache.xalan.transformer
 
 		  if (outputTarget is DOMResult)
 		  {
-			outputNode = ((DOMResult) outputTarget).Node;
-			org.w3c.dom.Node nextSibling = ((DOMResult)outputTarget).NextSibling;
+			outputNode = ((DOMResult) outputTarget).getNode();
+			org.w3c.dom.Node nextSibling = ((DOMResult)outputTarget).getNextSibling();
 
 			org.w3c.dom.Document doc;
 			short type;
 
 			if (null != outputNode)
 			{
-			  type = outputNode.NodeType;
-			  doc = (org.w3c.dom.Node.DOCUMENT_NODE == type) ? (org.w3c.dom.Document) outputNode : outputNode.OwnerDocument;
+			  type = outputNode.getNodeType();
+			  doc = (org.w3c.dom.Node.DOCUMENT_NODE == type) ? (org.w3c.dom.Document) outputNode : outputNode.getOwnerDocument();
 			}
 			else
 			{
 			  bool isSecureProcessing = m_stylesheetRoot.SecureProcessing;
 			  doc = org.apache.xml.utils.DOMHelper.createDocument(isSecureProcessing);
 			  outputNode = doc;
-			  type = outputNode.NodeType;
+			  type = outputNode.getNodeType();
 
-			  ((DOMResult) outputTarget).Node = outputNode;
+			  ((DOMResult) outputTarget).setNode(outputNode);
 			}
 
 			DOMBuilder handler = (org.w3c.dom.Node.DOCUMENT_FRAGMENT_NODE == type) ? new DOMBuilder(doc, (org.w3c.dom.DocumentFragment) outputNode) : new DOMBuilder(doc, outputNode);
@@ -1133,7 +1128,7 @@ namespace org.apache.xalan.transformer
 		  }
 		  else if (outputTarget is SAXResult)
 		  {
-			ContentHandler handler = ((SAXResult) outputTarget).Handler;
+			ContentHandler handler = ((SAXResult) outputTarget).getHandler();
 
 			if (null == handler)
 			{
@@ -1189,17 +1184,17 @@ namespace org.apache.xalan.transformer
 			{
 			  SerializationHandler serializer = (SerializationHandler) SerializerFactory.getSerializer(format.Properties);
 
-			  if (null != sresult.Writer)
+			  if (null != sresult.getWriter())
 			  {
-				serializer.Writer = sresult.Writer;
+				serializer.Writer = sresult.getWriter();
 			  }
-			  else if (null != sresult.OutputStream)
+			  else if (null != sresult.getOutputStream())
 			  {
-				serializer.OutputStream = sresult.OutputStream;
+				serializer.OutputStream = sresult.getOutputStream();
 			  }
-			  else if (null != sresult.SystemId)
+			  else if (null != sresult.getSystemId())
 			  {
-				string fileURL = sresult.SystemId;
+				string fileURL = sresult.getSystemId();
 
 				if (fileURL.StartsWith("file:///", StringComparison.Ordinal))
 				{
@@ -1224,7 +1219,7 @@ namespace org.apache.xalan.transformer
 					  }
 				}
 
-				m_outputStream = new System.IO.FileStream(fileURL, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+				m_outputStream = new FileStream(fileURL, FileMode.Create, FileAccess.Write);
 
 				serializer.OutputStream = m_outputStream;
 
@@ -1277,7 +1272,7 @@ namespace org.apache.xalan.transformer
 			/// <param name="outputTarget"> The output source target.
 			/// </param>
 			/// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transform(javax.xml.transform.Source xmlSource, javax.xml.transform.Result outputTarget) throws javax.xml.transform.TransformerException
 	  public virtual void transform(Source xmlSource, Result outputTarget)
 	  {
@@ -1291,7 +1286,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="shouldRelease">  Flag indicating whether to release DTMManager. 
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transform(javax.xml.transform.Source xmlSource, javax.xml.transform.Result outputTarget, boolean shouldRelease) throws javax.xml.transform.TransformerException
 	  public virtual void transform(Source xmlSource, Result outputTarget, bool shouldRelease)
 	  {
@@ -1316,7 +1311,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="outputTarget"> The output source target.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transformNode(int node, javax.xml.transform.Result outputTarget) throws javax.xml.transform.TransformerException
 	  public virtual void transformNode(int node, Result outputTarget)
 	  {
@@ -1338,7 +1333,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="node">  The input source node, which can be any valid DTM node.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transformNode(int node) throws javax.xml.transform.TransformerException
 	  public virtual void transformNode(int node)
 	  {
@@ -1430,7 +1425,7 @@ namespace org.apache.xalan.transformer
 				else if (se is TransformerException)
 				{
 				  TransformerException te = ((TransformerException)se);
-				  SAXSourceLocator sl = new SAXSourceLocator(te.Locator);
+				  SAXSourceLocator sl = new SAXSourceLocator(te.getLocator());
 				  m_serializationHandler.fatalError(new org.xml.sax.SAXParseException(te.Message, sl, te));
 				}
 				else
@@ -1561,7 +1556,7 @@ namespace org.apache.xalan.transformer
     
 			// Get the output format that was set by the user, otherwise get the 
 			// output format from the stylesheet.
-			OutputProperties format = (null == m_outputFormat) ? Stylesheet.OutputComposed : m_outputFormat;
+			OutputProperties format = (null == m_outputFormat) ? Stylesheet.getOutputComposed() : m_outputFormat;
     
 			return format;
 		  }
@@ -1580,7 +1575,7 @@ namespace org.apache.xalan.transformer
 	  public virtual void setParameter(string name, string @namespace, object value)
 	  {
 
-		VariableStack varstack = XPathContext.VarStack;
+		VariableStack varstack = XPathContext.getVarStack();
 		QName qname = new QName(@namespace, name);
 		XObject xobject = XObject.create(value, XPathContext);
 
@@ -1848,7 +1843,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="contextNode"> The root of the source tree, can't be null.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void pushGlobalVars(int contextNode) throws javax.xml.transform.TransformerException
 	  protected internal virtual void pushGlobalVars(int contextNode)
 	  {
@@ -1906,7 +1901,7 @@ namespace org.apache.xalan.transformer
 	  /// NEEDSDOC <param name="handler"> </param>
 	  /// <exception cref="java.lang.NullPointerException"> If the handler
 	  ///            is null. </exception>
-	  /// <seealso cref= org.xml.sax.XMLReader#setContentHandler </seealso>
+	  /// <seealso cref="org.xml.sax.XMLReader.setContentHandler"/>
 	  public virtual ContentHandler ContentHandler
 	  {
 		  set
@@ -1950,7 +1945,7 @@ namespace org.apache.xalan.transformer
 	  /// </returns>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int transformToRTF(org.apache.xalan.templates.ElemTemplateElement templateParent) throws javax.xml.transform.TransformerException
 	  public virtual int transformToRTF(ElemTemplateElement templateParent)
 	  {
@@ -1973,7 +1968,7 @@ namespace org.apache.xalan.transformer
 	  /// </returns>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int transformToGlobalRTF(org.apache.xalan.templates.ElemTemplateElement templateParent) throws javax.xml.transform.TransformerException
 	  public virtual int transformToGlobalRTF(ElemTemplateElement templateParent)
 	  {
@@ -1992,7 +1987,7 @@ namespace org.apache.xalan.transformer
 	  /// </returns>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private int transformToRTF(org.apache.xalan.templates.ElemTemplateElement templateParent,org.apache.xml.dtm.DTM dtmFrag) throws javax.xml.transform.TransformerException
 	  private int transformToRTF(ElemTemplateElement templateParent, DTM dtmFrag)
 	  {
@@ -2090,7 +2085,7 @@ namespace org.apache.xalan.transformer
 	  /// </returns>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String transformToString(org.apache.xalan.templates.ElemTemplateElement elem) throws javax.xml.transform.TransformerException
 	  public virtual string transformToString(ElemTemplateElement elem)
 	  {
@@ -2147,7 +2142,7 @@ namespace org.apache.xalan.transformer
 		}
 		finally
 		{
-		  sw.Buffer.Length = 0;
+		  sw.getBuffer().setLength(0);
 
 		  try
 		  {
@@ -2178,9 +2173,9 @@ namespace org.apache.xalan.transformer
 	  /// <exception cref="TransformerException"> </exception>
 	  /// <returns> true if applied a template, false if not.
 	  /// @xsl.usage advanced </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean applyTemplateToNode(org.apache.xalan.templates.ElemTemplateElement xslInstruction, org.apache.xalan.templates.ElemTemplate template, int child) throws javax.xml.transform.TransformerException
-	  public virtual bool applyTemplateToNode(ElemTemplateElement xslInstruction, ElemTemplate template, int child) // xsl:apply-templates or xsl:for-each
+	  public virtual bool applyTemplateToNode(ElemTemplateElement xslInstruction, ElemTemplate template, int child)
 	  {
 
 		DTM dtm = m_xcontext.getDTM(child);
@@ -2192,7 +2187,7 @@ namespace org.apache.xalan.transformer
 
 		if (null == template || isApplyImports)
 		{
-		  int maxImportLevel , endImportLevel = 0;
+		  int maxImportLevel, endImportLevel = 0;
 
 		  if (isApplyImports)
 		  {
@@ -2249,17 +2244,17 @@ namespace org.apache.xalan.transformer
 		  {
 			switch (nodeType)
 			{
-			case org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE :
-			case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
+			case DTM.DOCUMENT_FRAGMENT_NODE :
+			case DTM.ELEMENT_NODE :
 			  template = m_stylesheetRoot.DefaultRule;
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE :
-			case org.apache.xml.dtm.DTM_Fields.TEXT_NODE :
-			case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
+			case DTM.CDATA_SECTION_NODE :
+			case DTM.TEXT_NODE :
+			case DTM.ATTRIBUTE_NODE :
 			  template = m_stylesheetRoot.DefaultTextRule;
 			  isDefaultTextRule = true;
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE :
+			case DTM.DOCUMENT_NODE :
 			  template = m_stylesheetRoot.DefaultRootRule;
 			  break;
 			default :
@@ -2289,11 +2284,11 @@ namespace org.apache.xalan.transformer
 		  {
 			switch (nodeType)
 			{
-			case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE :
-			case org.apache.xml.dtm.DTM_Fields.TEXT_NODE :
+			case DTM.CDATA_SECTION_NODE :
+			case DTM.TEXT_NODE :
 			  ClonerToResultTree.cloneToResultTree(child, nodeType, dtm, ResultTreeHandler, false);
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
+			case DTM.ATTRIBUTE_NODE :
 			  dtm.dispatchCharactersEvents(child, ResultTreeHandler, false);
 			  break;
 			}
@@ -2364,7 +2359,7 @@ namespace org.apache.xalan.transformer
 	  /// </param>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void executeChildTemplates(org.apache.xalan.templates.ElemTemplateElement elem, org.w3c.dom.Node context, org.apache.xml.utils.QName mode, org.xml.sax.ContentHandler handler) throws javax.xml.transform.TransformerException
 	  public virtual void executeChildTemplates(ElemTemplateElement elem, org.w3c.dom.Node context, QName mode, ContentHandler handler)
 	  {
@@ -2402,7 +2397,7 @@ namespace org.apache.xalan.transformer
 	  /// </param>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void executeChildTemplates(org.apache.xalan.templates.ElemTemplateElement elem, boolean shouldAddAttrs) throws javax.xml.transform.TransformerException
 	  public virtual void executeChildTemplates(ElemTemplateElement elem, bool shouldAddAttrs)
 	  {
@@ -2465,7 +2460,7 @@ namespace org.apache.xalan.transformer
 		catch (Exception re)
 		{
 			TransformerException te = new TransformerException(re);
-			te.Locator = t;
+			te.setLocator(t);
 			throw te;
 		}
 		finally
@@ -2488,7 +2483,7 @@ namespace org.apache.xalan.transformer
 		/// </param>
 		/// <exception cref="TransformerException">
 		/// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void executeChildTemplates(org.apache.xalan.templates.ElemTemplateElement elem, org.xml.sax.ContentHandler handler) throws javax.xml.transform.TransformerException
 		 public virtual void executeChildTemplates(ElemTemplateElement elem, ContentHandler handler)
 		 {
@@ -2540,7 +2535,7 @@ namespace org.apache.xalan.transformer
 	  /// </returns>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public java.util.Vector processSortKeys(org.apache.xalan.templates.ElemForEach foreach, int sourceNodeContext) throws javax.xml.transform.TransformerException
 	  public virtual ArrayList processSortKeys(ElemForEach @foreach, int sourceNodeContext)
 	  {
@@ -2571,7 +2566,7 @@ namespace org.apache.xalan.transformer
 		  {
 			Console.WriteLine("TODO: Need to write the hooks for QNAME sort data type");
 		  }
-		  else if (!(dataTypeString.Equals(Constants.ATTRVAL_DATATYPE_TEXT, StringComparison.CurrentCultureIgnoreCase)) && !(dataTypeString.Equals(Constants.ATTRVAL_DATATYPE_NUMBER, StringComparison.CurrentCultureIgnoreCase)))
+		  else if (!(dataTypeString.Equals(Constants.ATTRVAL_DATATYPE_TEXT, StringComparison.OrdinalIgnoreCase)) && !(dataTypeString.Equals(Constants.ATTRVAL_DATATYPE_NUMBER, StringComparison.OrdinalIgnoreCase)))
 		  {
 			@foreach.error(XSLTErrorResources.ER_ILLEGAL_ATTRIBUTE_VALUE, new object[]{Constants.ATTRNAME_DATATYPE, dataTypeString});
 		  }
@@ -2579,7 +2574,7 @@ namespace org.apache.xalan.transformer
 		  bool treatAsNumbers = ((null != dataTypeString) && dataTypeString.Equals(Constants.ATTRVAL_DATATYPE_NUMBER)) ? true : false;
 		  string orderString = sort.Order.evaluate(xctxt, sourceNodeContext, @foreach);
 
-		  if (!(orderString.Equals(Constants.ATTRVAL_ORDER_ASCENDING, StringComparison.CurrentCultureIgnoreCase)) && !(orderString.Equals(Constants.ATTRVAL_ORDER_DESCENDING, StringComparison.CurrentCultureIgnoreCase)))
+		  if (!(orderString.Equals(Constants.ATTRVAL_ORDER_ASCENDING, StringComparison.OrdinalIgnoreCase)) && !(orderString.Equals(Constants.ATTRVAL_ORDER_DESCENDING, StringComparison.OrdinalIgnoreCase)))
 		  {
 			@foreach.error(XSLTErrorResources.ER_ILLEGAL_ATTRIBUTE_VALUE, new object[]{Constants.ATTRNAME_ORDER, orderString});
 		  }
@@ -2592,7 +2587,7 @@ namespace org.apache.xalan.transformer
 		  {
 			string caseOrderString = caseOrder.evaluate(xctxt, sourceNodeContext, @foreach);
 
-			if (!(caseOrderString.Equals(Constants.ATTRVAL_CASEORDER_UPPER, StringComparison.CurrentCultureIgnoreCase)) && !(caseOrderString.Equals(Constants.ATTRVAL_CASEORDER_LOWER, StringComparison.CurrentCultureIgnoreCase)))
+			if (!(caseOrderString.Equals(Constants.ATTRVAL_CASEORDER_UPPER, StringComparison.OrdinalIgnoreCase)) && !(caseOrderString.Equals(Constants.ATTRVAL_CASEORDER_LOWER, StringComparison.OrdinalIgnoreCase)))
 			{
 			  @foreach.error(XSLTErrorResources.ER_ILLEGAL_ATTRIBUTE_VALUE, new object[]{Constants.ATTRNAME_CASEORDER, caseOrderString});
 			}
@@ -3014,12 +3009,12 @@ namespace org.apache.xalan.transformer
 
 		if (null == m_attrSetStack)
 		{
-		  m_attrSetStack = new Stack();
+		  m_attrSetStack = new System.Collections.Stack();
 		}
 
 		if (m_attrSetStack.Count > 0)
 		{
-//JAVA TO C# CONVERTER TODO TASK: There is no .NET Stack equivalent to the Java 'search' method:
+//JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
 		  int loc = m_attrSetStack.search(attrSet);
 
 		  if (loc > -1)
@@ -3152,7 +3147,7 @@ namespace org.apache.xalan.transformer
 	  /// </summary>
 	  /// <param name="listener"> The new error listener. </param>
 	  /// <exception cref="IllegalArgumentException"> if </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setErrorListener(javax.xml.transform.ErrorListener listener) throws IllegalArgumentException
 	  public virtual ErrorListener ErrorListener
 	  {
@@ -3221,8 +3216,8 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="SAXNotRecognizedException"> </exception>
 	  /// <exception cref="SAXNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public boolean getFeature(String name) throws org.xml.sax.SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public boolean getFeature(String name) throws SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException
 	  public virtual bool getFeature(string name)
 	  {
 
@@ -3316,7 +3311,7 @@ namespace org.apache.xalan.transformer
 	  ///   completes
 	  /// </summary>
 	  /// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void waitTransformThread() throws org.xml.sax.SAXException
 	  public virtual void waitTransformThread()
 	  {
@@ -3581,7 +3576,7 @@ namespace org.apache.xalan.transformer
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
 	  /// @deprecated This is an internal tooling API that nobody seems to be using 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void executeFromSnapshot(TransformSnapshot ts) throws javax.xml.transform.TransformerException
 	  public virtual void executeFromSnapshot(TransformSnapshot ts)
 	  {
@@ -3631,18 +3626,18 @@ namespace org.apache.xalan.transformer
 
 		  if (null == info)
 		  {
-			return org.apache.xml.dtm.DTMWSFilter_Fields.INHERIT;
+			return DTMWSFilter.INHERIT;
 		  }
 		  else
 		  {
 
 			// System.out.println("getShouldStripSpace: "+info.getShouldStripSpace());
-			return info.ShouldStripSpace ? org.apache.xml.dtm.DTMWSFilter_Fields.STRIP : org.apache.xml.dtm.DTMWSFilter_Fields.NOTSTRIP;
+			return info.ShouldStripSpace ? DTMWSFilter.STRIP : DTMWSFilter.NOTSTRIP;
 		  }
 		}
 		catch (TransformerException)
 		{
-		  return org.apache.xml.dtm.DTMWSFilter_Fields.INHERIT;
+		  return DTMWSFilter.INHERIT;
 		}
 	  }
 	  /// <summary>
@@ -3661,7 +3656,7 @@ namespace org.apache.xalan.transformer
 
 		/// <summary>
 		/// Fire off characters, cdate events. </summary>
-		/// <seealso cref= org.apache.xml.serializer.SerializerTrace#fireGenerateEvent(int, char[], int, int) </seealso>
+		/// <seealso cref="org.apache.xml.serializer.SerializerTrace.fireGenerateEvent(int, char[], int, int)"/>
 		public virtual void fireGenerateEvent(int eventType, char[] ch, int start, int length)
 		{
 
@@ -3671,7 +3666,7 @@ namespace org.apache.xalan.transformer
 
 		/// <summary>
 		/// Fire off startElement, endElement events. </summary>
-		/// <seealso cref= org.apache.xml.serializer.SerializerTrace#fireGenerateEvent(int, String, Attributes) </seealso>
+		/// <seealso cref="org.apache.xml.serializer.SerializerTrace.fireGenerateEvent(int, String, Attributes)"/>
 		public virtual void fireGenerateEvent(int eventType, string name, Attributes atts)
 		{
 
@@ -3681,7 +3676,7 @@ namespace org.apache.xalan.transformer
 
 		/// <summary>
 		/// Fire off processingInstruction events. </summary>
-		/// <seealso cref= org.apache.xml.serializer.SerializerTrace#fireGenerateEvent(int, String, String) </seealso>
+		/// <seealso cref="org.apache.xml.serializer.SerializerTrace.fireGenerateEvent(int, String, String)"/>
 		public virtual void fireGenerateEvent(int eventType, string name, string data)
 		{
 			GenerateEvent ge = new GenerateEvent(this, eventType, name,data);
@@ -3690,7 +3685,7 @@ namespace org.apache.xalan.transformer
 
 		/// <summary>
 		/// Fire off comment and entity ref events. </summary>
-		/// <seealso cref= org.apache.xml.serializer.SerializerTrace#fireGenerateEvent(int, String) </seealso>
+		/// <seealso cref="org.apache.xml.serializer.SerializerTrace.fireGenerateEvent(int, String)"/>
 		public virtual void fireGenerateEvent(int eventType, string data)
 		{
 			GenerateEvent ge = new GenerateEvent(this, eventType, data);
@@ -3699,14 +3694,14 @@ namespace org.apache.xalan.transformer
 
 		/// <summary>
 		/// Fire off startDocument, endDocument events. </summary>
-		/// <seealso cref= org.apache.xml.serializer.SerializerTrace#fireGenerateEvent(int) </seealso>
+		/// <seealso cref="org.apache.xml.serializer.SerializerTrace.fireGenerateEvent(int)"/>
 		public virtual void fireGenerateEvent(int eventType)
 		{
 			GenerateEvent ge = new GenerateEvent(this, eventType);
 			m_traceManager.fireGenerateEvent(ge);
 		}
 
-		/// <seealso cref= org.apache.xml.serializer.SerializerTrace#hasTraceListeners() </seealso>
+		/// <seealso cref="org.apache.xml.serializer.SerializerTrace.hasTraceListeners()"/>
 		public virtual bool hasTraceListeners()
 		{
 			return m_traceManager.hasTraceListeners();

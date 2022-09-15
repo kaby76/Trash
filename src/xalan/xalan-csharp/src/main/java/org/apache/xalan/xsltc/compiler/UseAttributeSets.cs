@@ -24,7 +24,6 @@
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKESPECIAL = org.apache.bcel.generic.INVOKESPECIAL;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
@@ -64,7 +63,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public void addAttributeSets(string setNames)
 		{
-		if ((!string.ReferenceEquals(setNames, null)) && (!setNames.Equals(Constants_Fields.EMPTYSTRING)))
+		if ((!string.ReferenceEquals(setNames, null)) && (!setNames.Equals(Constants.EMPTYSTRING)))
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.StringTokenizer tokens = new java.util.StringTokenizer(setNames);
@@ -82,7 +81,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Do nada.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -97,13 +96,13 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final SymbolTable symbolTable = getParser().getSymbolTable();
-		SymbolTable symbolTable = Parser.SymbolTable;
+		SymbolTable symbolTable = Parser.getSymbolTable();
 
 		// Go through each attribute set and generate a method call
 		for (int i = 0; i < _sets.Count; i++)
@@ -127,8 +126,8 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(methodGen.loadIterator());
 			il.append(methodGen.loadHandler());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int method = cpg.addMethodref(classGen.getClassName(), methodName, Constants_Fields.ATTR_SET_SIG);
-			int method = cpg.addMethodref(classGen.ClassName, methodName, Constants_Fields.ATTR_SET_SIG);
+//ORIGINAL LINE: final int method = cpg.addMethodref(classGen.getClassName(), methodName, ATTR_SET_SIG);
+			int method = cpg.addMethodref(classGen.ClassName, methodName, ATTR_SET_SIG);
 			il.append(new INVOKESPECIAL(method));
 			}
 			// Generate an error if the attribute set does not exist

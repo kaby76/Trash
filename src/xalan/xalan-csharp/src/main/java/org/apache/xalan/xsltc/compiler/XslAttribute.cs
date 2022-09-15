@@ -76,7 +76,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("Attribute " + _name);
 		displayContents(indent + IndentIncrement);
 		}
@@ -98,7 +98,7 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final String prefix = qname.getPrefix();
 		string prefix = qname.Prefix;
 
-			if (((!string.ReferenceEquals(prefix, null)) && (prefix.Equals(Constants_Fields.XMLNS_PREFIX))) || (name.Equals(Constants_Fields.XMLNS_PREFIX)))
+			if (((!string.ReferenceEquals(prefix, null)) && (prefix.Equals(XMLNS_PREFIX))) || (name.Equals(XMLNS_PREFIX)))
 			{
 			reportError(this, parser, ErrorMsg.ILLEGAL_ATTR_NAME_ERR, name);
 			return;
@@ -171,13 +171,13 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 
 		// Get namespace from namespace attribute?
-		if (!string.ReferenceEquals(@namespace, null) && !string.ReferenceEquals(@namespace, Constants_Fields.EMPTYSTRING))
+		if (!string.ReferenceEquals(@namespace, null) && !string.ReferenceEquals(@namespace, Constants.EMPTYSTRING))
 		{
 			_prefix = lookupPrefix(@namespace);
 			_namespace = new AttributeValueTemplate(@namespace, parser, this);
 		}
 		// Get namespace from prefix in name attribute?
-		else if (!string.ReferenceEquals(prefix, null) && !string.ReferenceEquals(prefix, Constants_Fields.EMPTYSTRING))
+		else if (!string.ReferenceEquals(prefix, null) && !string.ReferenceEquals(prefix, Constants.EMPTYSTRING))
 		{
 			_prefix = prefix;
 			@namespace = lookupNamespace(prefix);
@@ -191,7 +191,7 @@ namespace org.apache.xalan.xsltc.compiler
 		if (_namespace != null)
 		{
 			// Generate prefix if we have none
-			if (string.ReferenceEquals(_prefix, null) || string.ReferenceEquals(_prefix, Constants_Fields.EMPTYSTRING))
+			if (string.ReferenceEquals(_prefix, null) || string.ReferenceEquals(_prefix, Constants.EMPTYSTRING))
 			{
 			if (!string.ReferenceEquals(prefix, null))
 			{
@@ -230,7 +230,7 @@ namespace org.apache.xalan.xsltc.compiler
 		parseChildren(parser);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -251,10 +251,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (_ignore)
 		{
@@ -275,17 +275,17 @@ namespace org.apache.xalan.xsltc.compiler
 			if (!_isLiteral)
 			{
 				// if the qname is an AVT, then the qname has to be checked at runtime if it is a valid qname
-				LocalVariableGen nameValue = methodGen.addLocalVariable2("nameValue", Util.getJCRefType(Constants_Fields.STRING_SIG), null);
+				LocalVariableGen nameValue = methodGen.addLocalVariable2("nameValue", Util.getJCRefType(STRING_SIG), null);
 
 				// store the name into a variable first so _name.translate only needs to be called once  
 				_name.translate(classGen, methodGen);
-				nameValue.Start = il.append(new ASTORE(nameValue.Index));
-				il.append(new ALOAD(nameValue.Index));
+				nameValue.setStart(il.append(new ASTORE(nameValue.getIndex())));
+				il.append(new ALOAD(nameValue.getIndex()));
 
 				// call checkQName if the name is an AVT
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int check = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "checkAttribQName", "(" +Constants_Fields.STRING_SIG +")V");
-				int check = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "checkAttribQName", "(" + Constants_Fields.STRING_SIG + ")V");
+//ORIGINAL LINE: final int check = cpg.addMethodref(BASIS_LIBRARY_CLASS, "checkAttribQName", "(" +STRING_SIG +")V");
+				int check = cpg.addMethodref(BASIS_LIBRARY_CLASS, "checkAttribQName", "(" + STRING_SIG + ")V");
 				il.append(new INVOKESTATIC(check));
 
 				// Save the current handler base on the stack
@@ -293,7 +293,7 @@ namespace org.apache.xalan.xsltc.compiler
 				il.append(DUP); // first arg to "attributes" call
 
 				// load name value again    
-				nameValue.End = il.append(new ALOAD(nameValue.Index));
+				nameValue.setEnd(il.append(new ALOAD(nameValue.getIndex())));
 			}
 			else
 			{
@@ -309,18 +309,18 @@ namespace org.apache.xalan.xsltc.compiler
 		// Push attribute value - shortcut for literal strings
 		if ((elementCount() == 1) && (elementAt(0) is Text))
 		{
-			il.append(new PUSH(cpg, ((Text)elementAt(0)).getText()));
+			il.append(new PUSH(cpg, ((Text)elementAt(0)).Text));
 		}
 		else
 		{
 			il.append(classGen.loadTranslet());
-			il.append(new GETFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "stringValueHandler", Constants_Fields.STRING_VALUE_HANDLER_SIG)));
+			il.append(new GETFIELD(cpg.addFieldref(TRANSLET_CLASS, "stringValueHandler", STRING_VALUE_HANDLER_SIG)));
 			il.append(DUP);
 			il.append(methodGen.storeHandler());
 			// translate contents with substituted handler
 			translateContents(classGen, methodGen);
 			// get String out of the handler
-			il.append(new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.STRING_VALUE_HANDLER, "getValue", "()" + Constants_Fields.STRING_SIG)));
+			il.append(new INVOKEVIRTUAL(cpg.addMethodref(STRING_VALUE_HANDLER, "getValue", "()" + STRING_SIG)));
 		}
 
 		SyntaxTreeNode parent = Parent;

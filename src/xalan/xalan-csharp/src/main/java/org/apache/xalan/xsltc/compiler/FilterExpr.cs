@@ -116,7 +116,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// All optimizations are turned off before type checking underlying
 		/// predicates.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -176,10 +176,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 			// If not predicates left, translate primary expression
 		if (_predicates.Count == 0)
@@ -197,7 +197,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 				if (predicate.NthPositionFilter)
 				{
-					int nthIteratorIdx = cpg.addMethodref(Constants_Fields.NTH_ITERATOR_CLASS, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + "I)V");
+					int nthIteratorIdx = cpg.addMethodref(NTH_ITERATOR_CLASS, "<init>", "(" + NODE_ITERATOR_SIG + "I)V");
 
 					// Backwards branches are prohibited if an uninitialized object
 					// is on the stack by section 4.9.4 of the JVM Specification,
@@ -210,25 +210,25 @@ namespace org.apache.xalan.xsltc.compiler
 					// constructor first, store them in temporary variables, create
 					// the object and reload the arguments from the temporaries to
 					// avoid the problem.
-					LocalVariableGen iteratorTemp = methodGen.addLocalVariable("filter_expr_tmp1", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-					iteratorTemp.Start = il.append(new ASTORE(iteratorTemp.Index));
+					LocalVariableGen iteratorTemp = methodGen.addLocalVariable("filter_expr_tmp1", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+					iteratorTemp.setStart(il.append(new ASTORE(iteratorTemp.getIndex())));
 
 					predicate.translate(classGen, methodGen);
 					LocalVariableGen predicateValueTemp = methodGen.addLocalVariable("filter_expr_tmp2", Util.getJCRefType("I"), null, null);
-					predicateValueTemp.Start = il.append(new ISTORE(predicateValueTemp.Index));
+					predicateValueTemp.setStart(il.append(new ISTORE(predicateValueTemp.getIndex())));
 
-					il.append(new NEW(cpg.addClass(Constants_Fields.NTH_ITERATOR_CLASS)));
+					il.append(new NEW(cpg.addClass(NTH_ITERATOR_CLASS)));
 					il.append(DUP);
-					iteratorTemp.End = il.append(new ALOAD(iteratorTemp.Index));
-					predicateValueTemp.End = il.append(new ILOAD(predicateValueTemp.Index));
+					iteratorTemp.setEnd(il.append(new ALOAD(iteratorTemp.getIndex())));
+					predicateValueTemp.setEnd(il.append(new ILOAD(predicateValueTemp.getIndex())));
 					il.append(new INVOKESPECIAL(nthIteratorIdx));
 				}
 				else
 				{
 					// Translate predicates from right to left
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int initCNLI = cpg.addMethodref(Constants_Fields.CURRENT_NODE_LIST_ITERATOR, "<init>", "("+Constants_Fields.NODE_ITERATOR_SIG+"Z"+ Constants_Fields.CURRENT_NODE_LIST_FILTER_SIG + Constants_Fields.NODE_SIG+Constants_Fields.TRANSLET_SIG+")V");
-					int initCNLI = cpg.addMethodref(Constants_Fields.CURRENT_NODE_LIST_ITERATOR, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + "Z" + Constants_Fields.CURRENT_NODE_LIST_FILTER_SIG + Constants_Fields.NODE_SIG + Constants_Fields.TRANSLET_SIG + ")V");
+//ORIGINAL LINE: final int initCNLI = cpg.addMethodref(CURRENT_NODE_LIST_ITERATOR, "<init>", "("+NODE_ITERATOR_SIG+"Z"+ CURRENT_NODE_LIST_FILTER_SIG + NODE_SIG+TRANSLET_SIG+")V");
+					int initCNLI = cpg.addMethodref(CURRENT_NODE_LIST_ITERATOR, "<init>", "(" + NODE_ITERATOR_SIG + "Z" + CURRENT_NODE_LIST_FILTER_SIG + NODE_SIG + TRANSLET_SIG + ")V");
 
 					// Backwards branches are prohibited if an uninitialized object
 					// is on the stack by section 4.9.4 of the JVM Specification,
@@ -241,21 +241,21 @@ namespace org.apache.xalan.xsltc.compiler
 					// the temporaries to avoid the problem.
 
 
-					LocalVariableGen nodeIteratorTemp = methodGen.addLocalVariable("filter_expr_tmp1", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-					nodeIteratorTemp.Start = il.append(new ASTORE(nodeIteratorTemp.Index));
+					LocalVariableGen nodeIteratorTemp = methodGen.addLocalVariable("filter_expr_tmp1", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+					nodeIteratorTemp.setStart(il.append(new ASTORE(nodeIteratorTemp.getIndex())));
 
 					predicate.translate(classGen, methodGen);
-					LocalVariableGen filterTemp = methodGen.addLocalVariable("filter_expr_tmp2", Util.getJCRefType(Constants_Fields.CURRENT_NODE_LIST_FILTER_SIG), null, null);
-					filterTemp.Start = il.append(new ASTORE(filterTemp.Index));
+					LocalVariableGen filterTemp = methodGen.addLocalVariable("filter_expr_tmp2", Util.getJCRefType(CURRENT_NODE_LIST_FILTER_SIG), null, null);
+					filterTemp.setStart(il.append(new ASTORE(filterTemp.getIndex())));
 
 					// Create a CurrentNodeListIterator
-					il.append(new NEW(cpg.addClass(Constants_Fields.CURRENT_NODE_LIST_ITERATOR)));
+					il.append(new NEW(cpg.addClass(CURRENT_NODE_LIST_ITERATOR)));
 					il.append(DUP);
 
 					// Initialize CurrentNodeListIterator
-					nodeIteratorTemp.End = il.append(new ALOAD(nodeIteratorTemp.Index));
+					nodeIteratorTemp.setEnd(il.append(new ALOAD(nodeIteratorTemp.getIndex())));
 					il.append(ICONST_1);
-					filterTemp.End = il.append(new ALOAD(filterTemp.Index));
+					filterTemp.setEnd(il.append(new ALOAD(filterTemp.getIndex())));
 					il.append(methodGen.loadCurrentNode());
 					il.append(classGen.loadTranslet());
 					il.append(new INVOKESPECIAL(initCNLI));

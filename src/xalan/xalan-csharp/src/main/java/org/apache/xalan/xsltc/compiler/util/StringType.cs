@@ -1,6 +1,4 @@
-﻿using System;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -23,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ASTORE = org.apache.bcel.generic.ASTORE;
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
@@ -36,6 +33,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 	using Instruction = org.apache.bcel.generic.Instruction;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using PUSH = org.apache.bcel.generic.PUSH;
+	using Constants = org.apache.xalan.xsltc.compiler.Constants;
+	using FlowList = org.apache.xalan.xsltc.compiler.FlowList;
 
 	/// <summary>
 	/// @author Jacek Ambroziak
@@ -47,7 +46,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 		}
 
-		public override String ToString()
+		public override string ToString()
 		{
 		return "string";
 		}
@@ -57,7 +56,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		return this == other;
 		}
 
-		public override String toSignature()
+		public override string toSignature()
 		{
 		return "Ljava/lang/String;";
 		}
@@ -99,7 +98,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		else
 		{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), type.ToString());
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
@@ -112,14 +111,14 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		FlowList falsel = translateToDesynthesized(classGen, methodGen, type);
 		il.append(ICONST_1);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.BranchHandle truec = il.append(new org.apache.bcel.generic.GOTO(null));
 		BranchHandle truec = il.append(new GOTO(null));
 		falsel.backPatch(il.append(ICONST_0));
-		truec.Target = il.append(NOP);
+		truec.setTarget(il.append(NOP));
 		}
 
 		/// <summary>
@@ -132,11 +131,11 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
-		il.append(new INVOKESTATIC(cpg.addMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.BASIS_LIBRARY_CLASS, org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_TO_REAL, org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_TO_REAL_SIG)));
+		InstructionList il = methodGen.getInstructionList();
+		il.append(new INVOKESTATIC(cpg.addMethodref(BASIS_LIBRARY_CLASS, STRING_TO_REAL, STRING_TO_REAL_SIG)));
 		}
 
 		/// <summary>
@@ -150,12 +149,12 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
-		il.append(new INVOKEVIRTUAL(cpg.addMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_CLASS, "length", "()I")));
+		il.append(new INVOKEVIRTUAL(cpg.addMethodref(STRING_CLASS, "length", "()I")));
 		return new FlowList(il.append(new IFEQ(null)));
 		}
 
@@ -167,7 +166,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// </summary>
 		public virtual void translateTo(ClassGenerator classGen, MethodGenerator methodGen, ReferenceType type)
 		{
-		methodGen.InstructionList.append(NOP);
+		methodGen.getInstructionList().append(NOP);
 		}
 
 		/// <summary>
@@ -175,17 +174,18 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// 
 		/// @see	org.apache.xalan.xsltc.compiler.util.Type#translateFrom
 		/// </summary>
-		public override void translateTo(ClassGenerator classGen, MethodGenerator methodGen, Type clazz)
+		public override void translateTo(ClassGenerator classGen, MethodGenerator methodGen, System.Type clazz)
 		{
 			// Is String <: clazz? I.e. clazz in { String, Object }
-			if (typeof(string).IsSubclassOf(clazz))
+			if (clazz.IsAssignableFrom(typeof(string)))
 			{
-			methodGen.InstructionList.append(NOP);
+			methodGen.getInstructionList().append(NOP);
 			}
 		else
 		{
-			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.Name);
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
+			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.FullName);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
@@ -194,16 +194,17 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// 
 		/// @see	org.apache.xalan.xsltc.compiler.util.Type#translateFrom
 		/// </summary>
-		public override void translateFrom(ClassGenerator classGen, MethodGenerator methodGen, Type clazz)
+		public override void translateFrom(ClassGenerator classGen, MethodGenerator methodGen, System.Type clazz)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
-		if (clazz.Name.Equals("java.lang.String"))
+//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
+		if (clazz.FullName.Equals("java.lang.String"))
 		{
 			// same internal representation, convert null to ""
 			il.append(DUP);
@@ -212,12 +213,13 @@ namespace org.apache.xalan.xsltc.compiler.util
 			BranchHandle ifNonNull = il.append(new IFNONNULL(null));
 			il.append(POP);
 			il.append(new PUSH(cpg, ""));
-			ifNonNull.Target = il.append(NOP);
+			ifNonNull.setTarget(il.append(NOP));
 		}
 		else
 		{
-			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.Name);
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
+			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.FullName);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
@@ -234,17 +236,17 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// </summary>
 		public override void translateUnBox(ClassGenerator classGen, MethodGenerator methodGen)
 		{
-		methodGen.InstructionList.append(NOP);
+		methodGen.getInstructionList().append(NOP);
 		}
 
 		/// <summary>
 		/// Returns the class name of an internal type's external representation.
 		/// </summary>
-		public override String ClassName
+		public override string ClassName
 		{
 			get
 			{
-			return (org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_CLASS);
+			return (STRING_CLASS);
 			}
 		}
 

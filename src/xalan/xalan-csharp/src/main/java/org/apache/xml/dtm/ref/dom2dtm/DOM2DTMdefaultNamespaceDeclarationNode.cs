@@ -21,6 +21,7 @@
 
 namespace org.apache.xml.dtm.@ref.dom2dtm
 {
+	using DTMException = org.apache.xml.dtm.DTMException;
 
 	using Attr = org.w3c.dom.Attr;
 	using Document = org.w3c.dom.Document;
@@ -234,7 +235,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 	  {
 		  get
 		  {
-			  return pseudoparent.OwnerDocument;
+			  return pseudoparent.getOwnerDocument();
 		  }
 	  }
 	  public virtual Node cloneNode(bool deep)
@@ -258,7 +259,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 
 		//RAMESH: PENDING=> Add proper implementation for the below DOM L3 additions
 
-		/// <seealso cref= org.w3c.dom.TypeInfo#getTypeName() </seealso>
+		/// <seealso cref="org.w3c.dom.TypeInfo.getTypeName()"/>
 		public virtual string TypeName
 		{
 			get
@@ -267,7 +268,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.TypeInfo#getTypeNamespace() </seealso>
+		/// <seealso cref="org.w3c.dom.TypeInfo.getTypeNamespace()"/>
 		public virtual string TypeNamespace
 		{
 			get
@@ -276,7 +277,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			}
 		}
 
-		/// <seealso cref= or.gw3c.dom.TypeInfo#isDerivedFrom(String,String,int) </seealso>
+		/// <seealso cref="or.gw3c.dom.TypeInfo.isDerivedFrom(String,String,int)"/>
 		public virtual bool isDerivedFrom(string ns, string localName, int derivationMethod)
 		{
 			return false;
@@ -401,7 +402,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			{
 				return true;
 			}
-			if (arg.NodeType != NodeType)
+			if (arg.getNodeType() != NodeType)
 			{
 				return false;
 			}
@@ -409,60 +410,60 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			// who knows what other implementations may be doing?...
 			if (string.ReferenceEquals(NodeName, null))
 			{
-				if (arg.NodeName != null)
+				if (arg.getNodeName() != null)
 				{
 					return false;
 				}
 			}
-			else if (!NodeName.Equals(arg.NodeName))
+			else if (!NodeName.Equals(arg.getNodeName()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(LocalName, null))
 			{
-				if (arg.LocalName != null)
+				if (arg.getLocalName() != null)
 				{
 					return false;
 				}
 			}
-			else if (!LocalName.Equals(arg.LocalName))
+			else if (!LocalName.Equals(arg.getLocalName()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(NamespaceURI, null))
 			{
-				if (arg.NamespaceURI != null)
+				if (arg.getNamespaceURI() != null)
 				{
 					return false;
 				}
 			}
-			else if (!NamespaceURI.Equals(arg.NamespaceURI))
+			else if (!NamespaceURI.Equals(arg.getNamespaceURI()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(Prefix, null))
 			{
-				if (arg.Prefix != null)
+				if (arg.getPrefix() != null)
 				{
 					return false;
 				}
 			}
-			else if (!Prefix.Equals(arg.Prefix))
+			else if (!Prefix.Equals(arg.getPrefix()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(NodeValue, null))
 			{
-				if (arg.NodeValue != null)
+				if (arg.getNodeValue() != null)
 				{
 					return false;
 				}
 			}
-			else if (!NodeValue.Equals(arg.NodeValue))
+			else if (!NodeValue.Equals(arg.getNodeValue()))
 			{
 				return false;
 			}
@@ -515,22 +516,22 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 					if (this.hasAttributes())
 					{
 						NamedNodeMap map = this.Attributes;
-						int length = map.Length;
+						int length = map.getLength();
 						for (int i = 0;i < length;i++)
 						{
 							Node attr = map.item(i);
-							string attrPrefix = attr.Prefix;
-							string value = attr.NodeValue;
-							@namespace = attr.NamespaceURI;
+							string attrPrefix = attr.getPrefix();
+							string value = attr.getNodeValue();
+							@namespace = attr.getNamespaceURI();
 							if (!string.ReferenceEquals(@namespace, null) && @namespace.Equals("http://www.w3.org/2000/xmlns/"))
 							{
 								// at this point we are dealing with DOM Level 2 nodes only
-								if (string.ReferenceEquals(specifiedPrefix, null) && attr.NodeName.Equals("xmlns"))
+								if (string.ReferenceEquals(specifiedPrefix, null) && attr.getNodeName().Equals("xmlns"))
 								{
 									// default namespace
 									return value;
 								}
-								else if (!string.ReferenceEquals(attrPrefix, null) && attrPrefix.Equals("xmlns") && attr.LocalName.Equals(specifiedPrefix))
+								else if (!string.ReferenceEquals(attrPrefix, null) && attrPrefix.Equals("xmlns") && attr.getLocalName().Equals(specifiedPrefix))
 								{
 					 // non default namespace
 									return value;
@@ -562,7 +563,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 				return null;
 			case Node.ATTRIBUTE_NODE:
 			{
-					if (this.OwnerElement.NodeType == Node.ELEMENT_NODE)
+					if (this.OwnerElement.getNodeType() == Node.ELEMENT_NODE)
 					{
 						return OwnerElement.lookupNamespaceURI(specifiedPrefix);
 
@@ -698,7 +699,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 				return null;
 			case Node.ATTRIBUTE_NODE:
 			{
-					if (this.OwnerElement.NodeType == Node.ELEMENT_NODE)
+					if (this.OwnerElement.getNodeType() == Node.ELEMENT_NODE)
 					{
 						return OwnerElement.lookupPrefix(namespaceURI);
 
@@ -781,7 +782,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		///   fit in a <code>DOMString</code> variable on the implementation
 		///   platform.
 		/// @since DOM Level 3 </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setTextContent(String textContent) throws org.w3c.dom.DOMException
 		public virtual string TextContent
 		{
@@ -803,7 +804,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 		/// <returns> Returns how the given node is positioned relatively to this
 		///   node.
 		/// @since DOM Level 3 </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public short compareDocumentPosition(org.w3c.dom.Node other) throws org.w3c.dom.DOMException
 		public virtual short compareDocumentPosition(Node other)
 		{

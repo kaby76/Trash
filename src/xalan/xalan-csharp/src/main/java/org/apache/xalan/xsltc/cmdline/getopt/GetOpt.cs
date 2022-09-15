@@ -25,7 +25,6 @@ using System.Collections;
 namespace org.apache.xalan.xsltc.cmdline.getopt
 {
 
-
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
 
 
@@ -131,7 +130,7 @@ namespace org.apache.xalan.xsltc.cmdline.getopt
 		public virtual void printOptions()
 		{
 //JAVA TO C# CONVERTER WARNING: Unlike Java's ListIterator, enumerators in .NET do not allow altering the collection:
-		for (IEnumerator it = theOptions.GetEnumerator(); it.MoveNext();)
+		for (System.Collections.IEnumerator it = theOptions.GetEnumerator(); it.MoveNext();)
 		{
 			Option opt = (Option)it.Current;
 			Console.Write("OPT =" + opt.ArgLetter);
@@ -156,7 +155,7 @@ namespace org.apache.xalan.xsltc.cmdline.getopt
 		/// is thrown (case 2). </summary>
 		/// <returns> int - the next option found. </returns>
 		/// <exception cref="IllegalArgumentException">, MissingOptArgException.  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int getNextOption() throws IllegalArgumentException, MissingOptArgException
 		public virtual int NextOption
 		{
@@ -221,7 +220,7 @@ namespace org.apache.xalan.xsltc.cmdline.getopt
 			string[] retval = new string[theCmdArgs.Count];
 			int i = 0;
 	//JAVA TO C# CONVERTER WARNING: Unlike Java's ListIterator, enumerators in .NET do not allow altering the collection:
-				for (IEnumerator it = theCmdArgs.GetEnumerator(); it.MoveNext();)
+				for (System.Collections.IEnumerator it = theCmdArgs.GetEnumerator(); it.MoveNext();)
 				{
 					retval[i++] = (string)it.Current;
 				}
@@ -231,9 +230,9 @@ namespace org.apache.xalan.xsltc.cmdline.getopt
 
 
 		private Option theCurrentOption = null;
-		private IEnumerator theOptionsIterator;
-		private IList theOptions = null;
-		private IList theCmdArgs = null;
+		private System.Collections.IEnumerator theOptionsIterator;
+		private System.Collections.IList theOptions = null;
+		private System.Collections.IList theCmdArgs = null;
 		private OptionMatcher theOptionMatcher = null;
 
 		///////////////////////////////////////////////////////////

@@ -22,12 +22,11 @@
  */
 namespace org.apache.xalan.templates
 {
-
 	/// <summary>
 	/// Object to hold an xsl:namespace element.
 	/// A stylesheet can use the xsl:namespace-alias element to declare
 	/// that one namespace URI is an alias for another namespace URI. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"/>
 	[Serializable]
 	public class NamespaceAlias : ElemTemplateElement
 	{

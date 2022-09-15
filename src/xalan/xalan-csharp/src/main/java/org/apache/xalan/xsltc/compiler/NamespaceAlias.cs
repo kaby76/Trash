@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using MethodGenerator = org.apache.xalan.xsltc.compiler.util.MethodGenerator;
 	using Type = org.apache.xalan.xsltc.compiler.util.Type;
@@ -48,7 +47,7 @@ namespace org.apache.xalan.xsltc.compiler
 		parser.SymbolTable.addPrefixAlias(sPrefix,rPrefix);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{

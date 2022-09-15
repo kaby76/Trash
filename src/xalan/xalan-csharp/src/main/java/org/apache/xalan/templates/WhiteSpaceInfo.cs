@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.templates
 {
-
 	using XPath = org.apache.xpath.XPath;
 
 	/// <summary>

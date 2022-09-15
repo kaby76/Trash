@@ -44,7 +44,7 @@ namespace org.apache.xalan.xsltc.trax
 		private TransformerImpl _transformer;
 		private TransformerHandlerImpl _transformerHandler;
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public TrAXFilter(javax.xml.transform.Templates templates) throws javax.xml.transform.TransformerConfigurationException
 		public TrAXFilter(Templates templates)
 		{
@@ -61,7 +61,7 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void createParent() throws org.xml.sax.SAXException
 		private void createParent()
 		{
@@ -69,7 +69,7 @@ namespace org.apache.xalan.xsltc.trax
 			try
 			{
 				SAXParserFactory pfactory = SAXParserFactory.newInstance();
-				pfactory.NamespaceAware = true;
+				pfactory.setNamespaceAware(true);
 
 				if (_transformer.SecureProcessing)
 				{
@@ -83,7 +83,7 @@ namespace org.apache.xalan.xsltc.trax
 				}
 
 				SAXParser saxparser = pfactory.newSAXParser();
-				parent = saxparser.XMLReader;
+				parent = saxparser.getXMLReader();
 			}
 			catch (ParserConfigurationException e)
 			{
@@ -100,23 +100,23 @@ namespace org.apache.xalan.xsltc.trax
 			}
 
 			// make this XMLReader the parent of this filter
-			Parent = parent;
+			setParent(parent);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void parse(org.xml.sax.InputSource input) throws org.xml.sax.SAXException, java.io.IOException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void parse(org.xml.sax.InputSource input) throws SAXException, java.io.IOException
 		public virtual void parse(InputSource input)
 		{
 			XMLReader managedReader = null;
 
 			try
 			{
-				if (Parent == null)
+				if (getParent() == null)
 				{
 					try
 					{
 						managedReader = XMLReaderManager.Instance.XMLReader;
-						Parent = managedReader;
+						setParent(managedReader);
 					}
 					catch (SAXException e)
 					{
@@ -125,7 +125,7 @@ namespace org.apache.xalan.xsltc.trax
 				}
 
 				// call parse on the parent
-				Parent.parse(input);
+				getParent().parse(input);
 			}
 			finally
 			{
@@ -136,8 +136,8 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void parse(String systemId) throws org.xml.sax.SAXException, java.io.IOException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void parse(String systemId) throws SAXException, java.io.IOException
 		public virtual void parse(string systemId)
 		{
 			parse(new InputSource(systemId));
@@ -148,7 +148,7 @@ namespace org.apache.xalan.xsltc.trax
 			set
 			{
 			_transformerHandler.Result = new SAXResult(value);
-			if (Parent == null)
+			if (getParent() == null)
 			{
 						try
 						{
@@ -159,7 +159,7 @@ namespace org.apache.xalan.xsltc.trax
 						   return;
 						}
 			}
-			Parent.ContentHandler = _transformerHandler;
+			getParent().setContentHandler(_transformerHandler);
 			}
 		}
 

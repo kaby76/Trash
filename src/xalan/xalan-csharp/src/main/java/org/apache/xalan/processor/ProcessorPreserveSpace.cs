@@ -57,7 +57,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="attributes"> The attributes attached to the element.  If
 	  ///        there are no attributes, it shall be an empty
 	  ///        Attributes object. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {

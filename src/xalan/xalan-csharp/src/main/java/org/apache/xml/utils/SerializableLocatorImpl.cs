@@ -23,7 +23,6 @@
 namespace org.apache.xml.utils
 {
 
-
 	/// <summary>
 	/// The standard SAX implementation of LocatorImpl is not serializable,
 	/// limiting its utility as "a persistent snapshot of a locator".
@@ -39,11 +38,11 @@ namespace org.apache.xml.utils
 	/// 
 	/// </para>
 	/// </summary>
-	/// <seealso cref= org.xml.sax.helpers.LocatorImpl </seealso>
-	/// <seealso cref= org.xml.sax.Locator Locator
+	/// <seealso cref="org.xml.sax.helpers.LocatorImpl"/>
+	/// <seealso cref="org.xml.sax.Locator Locator"
 	/// @since XalanJ2
 	/// @author Joe Kesselman
-	/// @version 1.0 </seealso>
+	/// @version 1.0/>
 	[Serializable]
 	public class SerializableLocatorImpl : org.xml.sax.Locator
 
@@ -75,10 +74,10 @@ namespace org.apache.xml.utils
 		/// <param name="locator"> The locator to copy. </param>
 		public SerializableLocatorImpl(org.xml.sax.Locator locator)
 		{
-			PublicId = locator.PublicId;
-			SystemId = locator.SystemId;
-			LineNumber = locator.LineNumber;
-			ColumnNumber = locator.ColumnNumber;
+			PublicId = locator.getPublicId();
+			SystemId = locator.getSystemId();
+			LineNumber = locator.getLineNumber();
+			ColumnNumber = locator.getColumnNumber();
 		}
 
 
@@ -92,8 +91,8 @@ namespace org.apache.xml.utils
 		/// </summary>
 		/// <returns> The public identifier as a string, or null if none
 		///         is available. </returns>
-		/// <seealso cref= org.xml.sax.Locator#getPublicId </seealso>
-		/// <seealso cref= #setPublicId </seealso>
+		/// <seealso cref="org.xml.sax.Locator.getPublicId"/>
+		/// <seealso cref=".setPublicId"/>
 		public virtual string PublicId
 		{
 			get
@@ -112,8 +111,8 @@ namespace org.apache.xml.utils
 		/// </summary>
 		/// <returns> The system identifier as a string, or null if none
 		///         is available. </returns>
-		/// <seealso cref= org.xml.sax.Locator#getSystemId </seealso>
-		/// <seealso cref= #setSystemId </seealso>
+		/// <seealso cref="org.xml.sax.Locator.getSystemId"/>
+		/// <seealso cref=".setSystemId"/>
 		public virtual string SystemId
 		{
 			get
@@ -131,8 +130,8 @@ namespace org.apache.xml.utils
 		/// Return the saved line number (1-based).
 		/// </summary>
 		/// <returns> The line number as an integer, or -1 if none is available. </returns>
-		/// <seealso cref= org.xml.sax.Locator#getLineNumber </seealso>
-		/// <seealso cref= #setLineNumber </seealso>
+		/// <seealso cref="org.xml.sax.Locator.getLineNumber"/>
+		/// <seealso cref=".setLineNumber"/>
 		public virtual int LineNumber
 		{
 			get
@@ -150,8 +149,8 @@ namespace org.apache.xml.utils
 		/// Return the saved column number (1-based).
 		/// </summary>
 		/// <returns> The column number as an integer, or -1 if none is available. </returns>
-		/// <seealso cref= org.xml.sax.Locator#getColumnNumber </seealso>
-		/// <seealso cref= #setColumnNumber </seealso>
+		/// <seealso cref="org.xml.sax.Locator.getColumnNumber"/>
+		/// <seealso cref=".setColumnNumber"/>
 		public virtual int ColumnNumber
 		{
 			get

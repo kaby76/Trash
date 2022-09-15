@@ -22,6 +22,7 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
+	using DTM = org.apache.xml.dtm.DTM;
 
 	/// <summary>
 	/// This is a default implementation of a table that manages mappings from
@@ -53,19 +54,19 @@ namespace org.apache.xml.dtm.@ref
 	  private int m_nextType;
 
 	  // These are all the types prerotated, for caller convenience.
-	  public static readonly int ELEMENT = ((int)org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
-	  public static readonly int ATTRIBUTE = ((int)org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-	  public static readonly int TEXT = ((int)org.apache.xml.dtm.DTM_Fields.TEXT_NODE);
-	  public static readonly int CDATA_SECTION = ((int)org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE);
-	  public static readonly int ENTITY_REFERENCE = ((int)org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE);
-	  public static readonly int ENTITY = ((int)org.apache.xml.dtm.DTM_Fields.ENTITY_NODE);
-	  public static readonly int PROCESSING_INSTRUCTION = ((int)org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE);
-	  public static readonly int COMMENT = ((int)org.apache.xml.dtm.DTM_Fields.COMMENT_NODE);
-	  public static readonly int DOCUMENT = ((int)org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE);
-	  public static readonly int DOCUMENT_TYPE = ((int)org.apache.xml.dtm.DTM_Fields.DOCUMENT_TYPE_NODE);
-	  public static readonly int DOCUMENT_FRAGMENT = ((int)org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE);
-	  public static readonly int NOTATION = ((int)org.apache.xml.dtm.DTM_Fields.NOTATION_NODE);
-	  public static readonly int NAMESPACE = ((int)org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE);
+	  public static readonly int ELEMENT = ((int)DTM.ELEMENT_NODE);
+	  public static readonly int ATTRIBUTE = ((int)DTM.ATTRIBUTE_NODE);
+	  public static readonly int TEXT = ((int)DTM.TEXT_NODE);
+	  public static readonly int CDATA_SECTION = ((int)DTM.CDATA_SECTION_NODE);
+	  public static readonly int ENTITY_REFERENCE = ((int)DTM.ENTITY_REFERENCE_NODE);
+	  public static readonly int ENTITY = ((int)DTM.ENTITY_NODE);
+	  public static readonly int PROCESSING_INSTRUCTION = ((int)DTM.PROCESSING_INSTRUCTION_NODE);
+	  public static readonly int COMMENT = ((int)DTM.COMMENT_NODE);
+	  public static readonly int DOCUMENT = ((int)DTM.DOCUMENT_NODE);
+	  public static readonly int DOCUMENT_TYPE = ((int)DTM.DOCUMENT_TYPE_NODE);
+	  public static readonly int DOCUMENT_FRAGMENT = ((int)DTM.DOCUMENT_FRAGMENT_NODE);
+	  public static readonly int NOTATION = ((int)DTM.NOTATION_NODE);
+	  public static readonly int NAMESPACE = ((int)DTM.NAMESPACE_NODE);
 
 	  /// <summary>
 	  /// Workspace for lookup. NOT THREAD SAFE!
@@ -113,9 +114,9 @@ namespace org.apache.xml.dtm.@ref
 	  /// </summary>
 	  static ExpandedNameTable()
 	  {
-		m_defaultExtendedTypes = new ExtendedType[org.apache.xml.dtm.DTM_Fields.NTYPES];
+		m_defaultExtendedTypes = new ExtendedType[DTM.NTYPES];
 
-		for (int i = 0; i < org.apache.xml.dtm.DTM_Fields.NTYPES; i++)
+		for (int i = 0; i < DTM.NTYPES; i++)
 		{
 		  m_defaultExtendedTypes[i] = new ExtendedType(i, "", "");
 		}
@@ -141,13 +142,13 @@ namespace org.apache.xml.dtm.@ref
 	  private void initExtendedTypes()
 	  {
 		m_extendedTypes = new ExtendedType[m_initialSize];
-		for (int i = 0; i < org.apache.xml.dtm.DTM_Fields.NTYPES; i++)
+		for (int i = 0; i < DTM.NTYPES; i++)
 		{
 			m_extendedTypes[i] = m_defaultExtendedTypes[i];
 			m_table[i] = new HashEntry(m_defaultExtendedTypes[i], i, i, null);
 		}
 
-		m_nextType = org.apache.xml.dtm.DTM_Fields.NTYPES;
+		m_nextType = DTM.NTYPES;
 	  }
 
 	  /// <summary>
@@ -221,7 +222,7 @@ namespace org.apache.xml.dtm.@ref
 
 		if (searchOnly)
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 
 		// Expand the internal HashEntry array if necessary.

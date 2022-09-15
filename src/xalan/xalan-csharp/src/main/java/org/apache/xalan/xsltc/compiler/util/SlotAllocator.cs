@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using LocalVariableGen = org.apache.bcel.generic.LocalVariableGen;
 	using Type = org.apache.bcel.generic.Type;
 
@@ -59,12 +58,12 @@ namespace org.apache.xalan.xsltc.compiler.util
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int length = vars.length;
 		int length = vars.Length;
-		int slot = 0, size , index ;
+		int slot = 0, size, index;
 
 		for (int i = 0; i < length; i++)
 		{
-			size = vars[i].Type.Size;
-			index = vars[i].Index;
+			size = vars[i].getType().getSize();
+			index = vars[i].getIndex();
 			slot = Math.Max(slot, index + size);
 		}
 		_firstAvailableSlot = slot;
@@ -74,7 +73,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int size = type.getSize();
-		int size = type.Size;
+		int size = type.getSize();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int limit = _free;
 		int limit = _free;
@@ -122,10 +121,10 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int size = lvg.getType().getSize();
-		int size = lvg.Type.Size;
+		int size = lvg.getType().getSize();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int slot = lvg.getIndex();
-		int slot = lvg.Index;
+		int slot = lvg.getIndex();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int limit = _free;
 		int limit = _free;

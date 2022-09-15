@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using GOTO = org.apache.bcel.generic.GOTO;
@@ -51,7 +50,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Handles calls with no parameter (current node is implicit parameter).
 		/// </summary>
-		public ProcessingInstructionPattern(string name) : base(Axis.CHILD, org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE, null)
+		public ProcessingInstructionPattern(string name) : base(Axis.CHILD, DTM.PROCESSING_INSTRUCTION_NODE, null)
 		{
 		_name = name;
 		//if (_name.equals("*")) _typeChecked = true; no wildcard allowed!
@@ -90,7 +89,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -115,14 +114,14 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// context node is on the stack
-		int gname = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNodeName", "(I)Ljava/lang/String;");
-		int cmp = cpg.addMethodref(Constants_Fields.STRING_CLASS, "equals", "(Ljava/lang/Object;)Z");
+		int gname = cpg.addInterfaceMethodref(DOM_INTF, "getNodeName", "(I)Ljava/lang/String;");
+		int cmp = cpg.addMethodref(STRING_CLASS, "equals", "(Ljava/lang/Object;)Z");
 
 		// Push current node on the stack
 		il.append(methodGen.loadCurrentNode());
@@ -136,12 +135,12 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			il.append(methodGen.loadCurrentNode());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getType = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getExpandedTypeID", "(I)I");
-			int getType = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getExpandedTypeID", "(I)I");
+//ORIGINAL LINE: final int getType = cpg.addInterfaceMethodref(DOM_INTF, "getExpandedTypeID", "(I)I");
+			int getType = cpg.addInterfaceMethodref(DOM_INTF, "getExpandedTypeID", "(I)I");
 			il.append(methodGen.loadDOM());
 			il.append(methodGen.loadCurrentNode());
 			il.append(new INVOKEINTERFACE(getType, 2));
-			il.append(new PUSH(cpg, org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE));
+			il.append(new PUSH(cpg, DTM.PROCESSING_INSTRUCTION_NODE));
 			_falseList.add(il.append(new IF_ICMPEQ(null)));
 		}
 
@@ -183,7 +182,7 @@ namespace org.apache.xalan.xsltc.compiler
 		_falseList.add(il.append(new GOTO(null)));
 
 		// True list falls through
-		skipFalse.Target = il.append(NOP);
+		skipFalse.setTarget(il.append(NOP));
 		}
 	}
 

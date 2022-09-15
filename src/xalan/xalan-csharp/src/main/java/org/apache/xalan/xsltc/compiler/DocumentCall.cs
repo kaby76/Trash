@@ -58,7 +58,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// argument can be any type (we must cast it to a string) and contains the
 		/// URI of the document
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -133,32 +133,32 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-			ConstantPoolGen cpg = classGen.ConstantPool;
+			ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
+			InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int ac = argumentCount();
 			int ac = argumentCount();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int domField = cpg.addFieldref(classGen.getClassName(), Constants_Fields.DOM_FIELD, Constants_Fields.DOM_INTF_SIG);
-			int domField = cpg.addFieldref(classGen.ClassName, Constants_Fields.DOM_FIELD, Constants_Fields.DOM_INTF_SIG);
+//ORIGINAL LINE: final int domField = cpg.addFieldref(classGen.getClassName(), DOM_FIELD, DOM_INTF_SIG);
+			int domField = cpg.addFieldref(classGen.ClassName, DOM_FIELD, DOM_INTF_SIG);
 
 			string docParamList = null;
 			if (ac == 1)
 			{
 			   // documentF(Object,String,AbstractTranslet,DOM)
-			   docParamList = "(" + Constants_Fields.OBJECT_SIG + Constants_Fields.STRING_SIG + Constants_Fields.TRANSLET_SIG + Constants_Fields.DOM_INTF_SIG + ")" + Constants_Fields.NODE_ITERATOR_SIG;
+			   docParamList = "(" + OBJECT_SIG + STRING_SIG + TRANSLET_SIG + DOM_INTF_SIG + ")" + NODE_ITERATOR_SIG;
 			}
 			else
 			{ //ac == 2; ac < 1 or as >2  was tested in typeChec()
 			   // documentF(Object,DTMAxisIterator,String,AbstractTranslet,DOM)
-			   docParamList = "(" + Constants_Fields.OBJECT_SIG + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.STRING_SIG + Constants_Fields.TRANSLET_SIG + Constants_Fields.DOM_INTF_SIG + ")" + Constants_Fields.NODE_ITERATOR_SIG;
+			   docParamList = "(" + OBJECT_SIG + NODE_ITERATOR_SIG + STRING_SIG + TRANSLET_SIG + DOM_INTF_SIG + ")" + NODE_ITERATOR_SIG;
 			}
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int docIdx = cpg.addMethodref(Constants_Fields.LOAD_DOCUMENT_CLASS, "documentF", docParamList);
-			int docIdx = cpg.addMethodref(Constants_Fields.LOAD_DOCUMENT_CLASS, "documentF", docParamList);
+//ORIGINAL LINE: final int docIdx = cpg.addMethodref(LOAD_DOCUMENT_CLASS, "documentF", docParamList);
+			int docIdx = cpg.addMethodref(LOAD_DOCUMENT_CLASS, "documentF", docParamList);
 
 
 			// The URI can be either a node-set or something else cast to a string

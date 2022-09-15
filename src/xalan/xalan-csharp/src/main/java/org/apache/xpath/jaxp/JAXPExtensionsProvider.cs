@@ -24,7 +24,8 @@ using System.Collections;
 namespace org.apache.xpath.jaxp
 {
 
-
+	using ExtensionsProvider = org.apache.xpath.ExtensionsProvider;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XNodeSet = org.apache.xpath.objects.XNodeSet;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
@@ -58,7 +59,7 @@ namespace org.apache.xpath.jaxp
 		/// Is the extension function available?
 		/// </summary>
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean functionAvailable(String ns, String funcName) throws javax.xml.transform.TransformerException
 		public virtual bool functionAvailable(string ns, string funcName)
 		{
@@ -90,7 +91,7 @@ namespace org.apache.xpath.jaxp
 		/// <summary>
 		/// Is the extension element available?
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean elementAvailable(String ns, String elemName) throws javax.xml.transform.TransformerException
 		public virtual bool elementAvailable(string ns, string elemName)
 		{
@@ -100,7 +101,7 @@ namespace org.apache.xpath.jaxp
 		/// <summary>
 		/// Execute the extension function.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object extFunction(String ns, String funcName, java.util.Vector argVec, Object methodKey) throws javax.xml.transform.TransformerException
 		public virtual object extFunction(string ns, string funcName, ArrayList argVec, object methodKey)
 		{
@@ -170,7 +171,7 @@ namespace org.apache.xpath.jaxp
 		/// <summary>
 		/// Execute the extension function.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object extFunction(org.apache.xpath.functions.FuncExtFunction extFunction, java.util.Vector argVec) throws javax.xml.transform.TransformerException
 		public virtual object extFunction(FuncExtFunction extFunction, ArrayList argVec)
 		{

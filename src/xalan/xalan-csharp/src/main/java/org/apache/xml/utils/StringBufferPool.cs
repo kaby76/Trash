@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// This class pools string buffers, since they are reused so often.
 	/// String buffers are good candidates for pooling, because of 

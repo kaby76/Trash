@@ -61,9 +61,7 @@ namespace org.apache.xalan.lib.sql
 	  }
 
 	  /// <param name="minArraySize"> The size of the Arrays stored in the Vector </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public ObjectArray(final int minArraySize)
-	  public ObjectArray(int minArraySize)
+	  public ObjectArray(in int minArraySize)
 	  {
 		init(minArraySize);
 	  }
@@ -78,9 +76,7 @@ namespace org.apache.xalan.lib.sql
 
 	  /// <param name="idx"> Index of the Object in the Array
 	  ///  </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public Object getAt(final int idx)
-	  public virtual object getAt(int idx)
+	  public virtual object getAt(in int idx)
 	  {
 		int arrayIndx = idx / m_minArraySize;
 		int arrayOffset = idx - (arrayIndx * m_minArraySize);
@@ -107,9 +103,7 @@ namespace org.apache.xalan.lib.sql
 	  /// <param name="idx"> Index of the Object in the Array </param>
 	  /// <param name="obj"> , The value to set in the Array
 	  ///  </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void setAt(final int idx, final Object obj)
-	  public virtual void setAt(int idx, object obj)
+	  public virtual void setAt(in int idx, in object obj)
 	  {
 		int arrayIndx = idx / m_minArraySize;
 		int arrayOffset = idx - (arrayIndx * m_minArraySize);
@@ -173,7 +167,7 @@ namespace org.apache.xalan.lib.sql
 	  ///  </param>
 	  public static void Main(string[] args)
 	  {
-		string[] word = new string[] {"Zero","One","Two","Three","Four","Five", "Six","Seven","Eight","Nine","Ten", "Eleven","Twelve","Thirteen","Fourteen","Fifteen", "Sixteen","Seventeen","Eighteen","Nineteen","Twenty", "Twenty-One","Twenty-Two","Twenty-Three","Twenty-Four", "Twenty-Five","Twenty-Six","Twenty-Seven","Twenty-Eight", "Twenty-Nine","Thirty","Thirty-One","Thirty-Two", "Thirty-Three","Thirty-Four","Thirty-Five","Thirty-Six", "Thirty-Seven","Thirty-Eight","Thirty-Nine"};
+		string[] word = new string[] {"Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty", "Twenty-One", "Twenty-Two", "Twenty-Three", "Twenty-Four", "Twenty-Five", "Twenty-Six", "Twenty-Seven", "Twenty-Eight", "Twenty-Nine", "Thirty", "Thirty-One", "Thirty-Two", "Thirty-Three", "Thirty-Four", "Thirty-Five", "Thirty-Six", "Thirty-Seven", "Thirty-Eight", "Thirty-Nine"};
 
 		ObjectArray m_ObjectArray = new ObjectArray();
 		// Add them in, using the default block size

@@ -22,7 +22,6 @@ namespace org.apache.xalan.lib.sql
 
 
 
-
 	/// <summary>
 	/// A Connection Pool that wraps a JDBC datasource to provide connections.
 	/// 
@@ -50,8 +49,8 @@ namespace org.apache.xalan.lib.sql
 	  /// is one of the methods used, and there are two different flavors.
 	  /// 
 	  /// </summary>
-	  private Method getConnectionWithArgs = null;
-	  private Method getConnection = null;
+	  private System.Reflection.MethodInfo getConnectionWithArgs = null;
+	  private System.Reflection.MethodInfo getConnection = null;
 
 
 	  /// <summary>
@@ -210,7 +209,7 @@ namespace org.apache.xalan.lib.sql
 	  /// </summary>
 	  /// <returns> </returns>
 	  /// <exception cref="SQLException">  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public java.sql.Connection getConnection() throws java.sql.SQLException
 	  public virtual Connection Connection
 	  {
@@ -224,7 +223,7 @@ namespace org.apache.xalan.lib.sql
 			  }
 			  catch (NamingException ne)
 			  {
-				throw new SQLException("Could not create jndi context for " + jndiPath + " - " + ne.LocalizedMessage);
+				throw new SQLException("Could not create jndi context for " + jndiPath + " - " + ne.getLocalizedMessage());
 			  }
 			}
     
@@ -243,7 +242,7 @@ namespace org.apache.xalan.lib.sql
 			}
 			catch (Exception e)
 			{
-			  throw new SQLException("Could not create jndi connection for " + jndiPath + " - " + e.LocalizedMessage);
+			  throw new SQLException("Could not create jndi connection for " + jndiPath + " - " + e.getLocalizedMessage());
 			}
     
 		  }
@@ -252,7 +251,7 @@ namespace org.apache.xalan.lib.sql
 	  /// <summary>
 	  /// Internal method used to look up the datasource. </summary>
 	  /// <exception cref="NamingException">  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void findDatasource() throws javax.naming.NamingException
 	  protected internal virtual void findDatasource()
 	  {
@@ -264,7 +263,7 @@ namespace org.apache.xalan.lib.sql
 		  Type[] withArgs = new Type[] {typeof(string), typeof(string)};
 		  getConnectionWithArgs = jdbcSource.GetType().getDeclaredMethod("getConnection", withArgs);
 
-		  Type[] noArgs = new Type[] { };
+		  Type[] noArgs = new Type[] {};
 		  getConnection = jdbcSource.GetType().getDeclaredMethod("getConnection", noArgs);
 
 		}
@@ -280,14 +279,14 @@ namespace org.apache.xalan.lib.sql
 		}
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void releaseConnection(java.sql.Connection con) throws java.sql.SQLException
 	  public virtual void releaseConnection(Connection con)
 	  {
 		con.close();
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void releaseConnectionOnError(java.sql.Connection con) throws java.sql.SQLException
 	  public virtual void releaseConnectionOnError(Connection con)
 	  {

@@ -23,6 +23,8 @@
 namespace org.apache.xml.dtm.@ref
 {
 
+	using DTM = org.apache.xml.dtm.DTM;
+	using DTMDOMException = org.apache.xml.dtm.DTMDOMException;
 	using NodeSet = org.apache.xpath.NodeSet;
 
 	using Attr = org.w3c.dom.Attr;
@@ -59,8 +61,8 @@ namespace org.apache.xml.dtm.@ref
 	/// 
 	/// </para>
 	/// </summary>
-	/// <seealso cref= org.w3c.dom
-	/// @xsl.usage internal </seealso>
+	/// <seealso cref="org.w3c.dom"
+	/// @xsl.usage internal/>
 	public class DTMNodeProxy : Node, Document, Text, Element, Attr, ProcessingInstruction, Comment, DocumentFragment
 	{
 
@@ -182,7 +184,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public string NodeName
 	  {
 		  get
@@ -217,7 +219,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node as of DOM Level 2 </seealso>
+	  /// <seealso cref="org.w3c.dom.Node as of DOM Level 2"/>
 	  public string LocalName
 	  {
 		  get
@@ -227,7 +229,7 @@ namespace org.apache.xml.dtm.@ref
 	  }
 
 	  /// <returns> The prefix for this node. </returns>
-	  /// <seealso cref= org.w3c.dom.Node as of DOM Level 2 </seealso>
+	  /// <seealso cref="org.w3c.dom.Node as of DOM Level 2"/>
 	  public string Prefix
 	  {
 		  get
@@ -243,7 +245,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node as of DOM Level 2 </seealso>
+	  /// <seealso cref="org.w3c.dom.Node as of DOM Level 2"/>
 	  public string NamespaceURI
 	  {
 		  get
@@ -283,7 +285,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="version">
 	  /// </param>
 	  /// <returns> false </returns>
-	  /// <seealso cref= org.w3c.dom.Node as of DOM Level 2 </seealso>
+	  /// <seealso cref="org.w3c.dom.Node as of DOM Level 2"/>
 	  public bool isSupported(string feature, string version)
 	  {
 		return implementation.hasFeature(feature,version);
@@ -294,8 +296,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// 
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Node"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final String getNodeValue() throws org.w3c.dom.DOMException
 	  public string NodeValue
 	  {
@@ -312,7 +314,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <returns> The string value of the node
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final String getStringValue() throws org.w3c.dom.DOMException
 	  public string StringValue
 	  {
@@ -325,7 +327,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public short NodeType
 	  {
 		  get
@@ -336,7 +338,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public Node ParentNode
 	  {
 		  get
@@ -349,13 +351,13 @@ namespace org.apache.xml.dtm.@ref
     
 			int newnode = dtm.getParent(node);
     
-			return (newnode == org.apache.xml.dtm.DTM_Fields.NULL) ? null : dtm.getNode(newnode);
+			return (newnode == DTM.NULL) ? null : dtm.getNode(newnode);
 		  }
 	  }
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public Node OwnerNode
 	  {
 		  get
@@ -363,13 +365,13 @@ namespace org.apache.xml.dtm.@ref
     
 			int newnode = dtm.getParent(node);
     
-			return (newnode == org.apache.xml.dtm.DTM_Fields.NULL) ? null : dtm.getNode(newnode);
+			return (newnode == DTM.NULL) ? null : dtm.getNode(newnode);
 		  }
 	  }
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public NodeList ChildNodes
 	  {
 		  get
@@ -386,7 +388,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public Node FirstChild
 	  {
 		  get
@@ -394,13 +396,13 @@ namespace org.apache.xml.dtm.@ref
     
 			int newnode = dtm.getFirstChild(node);
     
-			return (newnode == org.apache.xml.dtm.DTM_Fields.NULL) ? null : dtm.getNode(newnode);
+			return (newnode == DTM.NULL) ? null : dtm.getNode(newnode);
 		  }
 	  }
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public Node LastChild
 	  {
 		  get
@@ -408,13 +410,13 @@ namespace org.apache.xml.dtm.@ref
     
 			int newnode = dtm.getLastChild(node);
     
-			return (newnode == org.apache.xml.dtm.DTM_Fields.NULL) ? null : dtm.getNode(newnode);
+			return (newnode == DTM.NULL) ? null : dtm.getNode(newnode);
 		  }
 	  }
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public Node PreviousSibling
 	  {
 		  get
@@ -422,13 +424,13 @@ namespace org.apache.xml.dtm.@ref
     
 			int newnode = dtm.getPreviousSibling(node);
     
-			return (newnode == org.apache.xml.dtm.DTM_Fields.NULL) ? null : dtm.getNode(newnode);
+			return (newnode == DTM.NULL) ? null : dtm.getNode(newnode);
 		  }
 	  }
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public Node NextSibling
 	  {
 		  get
@@ -442,7 +444,7 @@ namespace org.apache.xml.dtm.@ref
     
 			int newnode = dtm.getNextSibling(node);
     
-			return (newnode == org.apache.xml.dtm.DTM_Fields.NULL) ? null : dtm.getNode(newnode);
+			return (newnode == DTM.NULL) ? null : dtm.getNode(newnode);
 		  }
 	  }
 
@@ -450,7 +452,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public NamedNodeMap Attributes
 	  {
 		  get
@@ -469,7 +471,7 @@ namespace org.apache.xml.dtm.@ref
 	  ///  </param>
 	  public virtual bool hasAttribute(string name)
 	  {
-		return org.apache.xml.dtm.DTM_Fields.NULL != dtm.getAttributeNode(node,null,name);
+		return DTM.NULL != dtm.getAttributeNode(node,null,name);
 	  }
 
 	  /// <summary>
@@ -482,12 +484,12 @@ namespace org.apache.xml.dtm.@ref
 	  ///  </param>
 	  public virtual bool hasAttributeNS(string namespaceURI, string localName)
 	  {
-		return org.apache.xml.dtm.DTM_Fields.NULL != dtm.getAttributeNode(node,namespaceURI,localName);
+		return DTM.NULL != dtm.getAttributeNode(node,namespaceURI,localName);
 	  }
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public Document OwnerDocument
 	  {
 		  get
@@ -504,8 +506,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Node -- DTMNodeProxy is read-only </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Node -- DTMNodeProxy is read-only"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Node insertBefore(org.w3c.dom.Node newChild, org.w3c.dom.Node refChild) throws org.w3c.dom.DOMException
 	  public Node insertBefore(Node newChild, Node refChild)
 	  {
@@ -519,8 +521,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Node -- DTMNodeProxy is read-only </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Node -- DTMNodeProxy is read-only"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Node replaceChild(org.w3c.dom.Node newChild, org.w3c.dom.Node oldChild) throws org.w3c.dom.DOMException
 	  public Node replaceChild(Node newChild, Node oldChild)
 	  {
@@ -533,8 +535,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Node -- DTMNodeProxy is read-only </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Node -- DTMNodeProxy is read-only"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Node removeChild(org.w3c.dom.Node oldChild) throws org.w3c.dom.DOMException
 	  public Node removeChild(Node oldChild)
 	  {
@@ -547,8 +549,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Node -- DTMNodeProxy is read-only </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Node -- DTMNodeProxy is read-only"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Node appendChild(org.w3c.dom.Node newChild) throws org.w3c.dom.DOMException
 	  public Node appendChild(Node newChild)
 	  {
@@ -557,17 +559,17 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Node </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"/>
 	  public bool hasChildNodes()
 	  {
-		return (org.apache.xml.dtm.DTM_Fields.NULL != dtm.getFirstChild(node));
+		return (DTM.NULL != dtm.getFirstChild(node));
 	  }
 
 	  /// 
 	  /// <param name="deep">
 	  /// 
 	  /// </param>
-	  /// <seealso cref= org.w3c.dom.Node -- DTMNodeProxy is read-only </seealso>
+	  /// <seealso cref="org.w3c.dom.Node -- DTMNodeProxy is read-only"/>
 	  public Node cloneNode(bool deep)
 	  {
 		throw new DTMDOMException(DOMException.NOT_SUPPORTED_ERR);
@@ -575,7 +577,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
+	  /// <seealso cref="org.w3c.dom.Document"/>
 	  public DocumentType Doctype
 	  {
 		  get
@@ -586,7 +588,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
+	  /// <seealso cref="org.w3c.dom.Document"/>
 	  public DOMImplementation Implementation
 	  {
 		  get
@@ -601,21 +603,21 @@ namespace org.apache.xml.dtm.@ref
 	  /// make it work in the well-formed cases but would that be confusing for others?
 	  /// 
 	  /// </summary>
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
+	  /// <seealso cref="org.w3c.dom.Document"/>
 	  public Element DocumentElement
 	  {
 		  get
 		  {
 				int dochandle = dtm.Document;
-				int elementhandle = org.apache.xml.dtm.DTM_Fields.NULL;
-				for (int kidhandle = dtm.getFirstChild(dochandle); kidhandle != org.apache.xml.dtm.DTM_Fields.NULL; kidhandle = dtm.getNextSibling(kidhandle))
+				int elementhandle = DTM.NULL;
+				for (int kidhandle = dtm.getFirstChild(dochandle); kidhandle != DTM.NULL; kidhandle = dtm.getNextSibling(kidhandle))
 				{
 					switch (dtm.getNodeType(kidhandle))
 					{
 					case Node.ELEMENT_NODE:
-						if (elementhandle != org.apache.xml.dtm.DTM_Fields.NULL)
+						if (elementhandle != DTM.NULL)
 						{
-							elementhandle = org.apache.xml.dtm.DTM_Fields.NULL; // More than one; ill-formed.
+							elementhandle = DTM.NULL; // More than one; ill-formed.
 							kidhandle = dtm.getLastChild(dochandle); // End loop
 						}
 						else
@@ -631,12 +633,12 @@ namespace org.apache.xml.dtm.@ref
 						break;
     
 					default:
-						elementhandle = org.apache.xml.dtm.DTM_Fields.NULL; // ill-formed
+						elementhandle = DTM.NULL; // ill-formed
 						kidhandle = dtm.getLastChild(dochandle); // End loop
 						break;
 					}
 				}
-				if (elementhandle == org.apache.xml.dtm.DTM_Fields.NULL)
+				if (elementhandle == DTM.NULL)
 				{
 					throw new DTMDOMException(DOMException.NOT_SUPPORTED_ERR);
 				}
@@ -653,8 +655,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Document"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Element createElement(String tagName) throws org.w3c.dom.DOMException
 	  public Element createElement(string tagName)
 	  {
@@ -663,7 +665,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
+	  /// <seealso cref="org.w3c.dom.Document"/>
 	  public DocumentFragment createDocumentFragment()
 	  {
 		throw new DTMDOMException(DOMException.NOT_SUPPORTED_ERR);
@@ -673,7 +675,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="data">
 	  /// 
 	  /// </param>
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
+	  /// <seealso cref="org.w3c.dom.Document"/>
 	  public Text createTextNode(string data)
 	  {
 		throw new DTMDOMException(DOMException.NOT_SUPPORTED_ERR);
@@ -683,7 +685,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="data">
 	  /// 
 	  /// </param>
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
+	  /// <seealso cref="org.w3c.dom.Document"/>
 	  public Comment createComment(string data)
 	  {
 		throw new DTMDOMException(DOMException.NOT_SUPPORTED_ERR);
@@ -695,8 +697,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Document"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.CDATASection createCDATASection(String data) throws org.w3c.dom.DOMException
 	  public CDATASection createCDATASection(string data)
 	  {
@@ -710,8 +712,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Document"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.ProcessingInstruction createProcessingInstruction(String target, String data) throws org.w3c.dom.DOMException
 	  public ProcessingInstruction createProcessingInstruction(string target, string data)
 	  {
@@ -724,8 +726,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Document"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Attr createAttribute(String name) throws org.w3c.dom.DOMException
 	  public Attr createAttribute(string name)
 	  {
@@ -738,8 +740,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Document"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.EntityReference createEntityReference(String name) throws org.w3c.dom.DOMException
 	  public EntityReference createEntityReference(string name)
 	  {
@@ -750,7 +752,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="tagname">
 	  /// 
 	  /// </param>
-	  /// <seealso cref= org.w3c.dom.Document </seealso>
+	  /// <seealso cref="org.w3c.dom.Document"/>
 	  public NodeList getElementsByTagName(string tagname)
 	  {
 		   ArrayList listVector = new ArrayList();
@@ -758,15 +760,15 @@ namespace org.apache.xml.dtm.@ref
 		   if (retNode != null)
 		   {
 			 bool isTagNameWildCard = "*".Equals(tagname);
-			 if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == retNode.NodeType)
+			 if (DTM.ELEMENT_NODE == retNode.getNodeType())
 			 {
-			   NodeList nodeList = retNode.ChildNodes;
-			   for (int i = 0; i < nodeList.Length; i++)
+			   NodeList nodeList = retNode.getChildNodes();
+			   for (int i = 0; i < nodeList.getLength(); i++)
 			   {
 				 traverseChildren(listVector, nodeList.item(i), tagname, isTagNameWildCard);
 			   }
 			 }
-			 else if (org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE == retNode.NodeType)
+			 else if (DTM.DOCUMENT_NODE == retNode.getNodeType())
 			 {
 			   traverseChildren(listVector, dtm.getNode(node), tagname, isTagNameWildCard);
 			 }
@@ -795,14 +797,14 @@ namespace org.apache.xml.dtm.@ref
 		}
 		else
 		{
-		  if (tempNode.NodeType == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE && (isTagNameWildCard || tempNode.NodeName.Equals(tagname)))
+		  if (tempNode.getNodeType() == DTM.ELEMENT_NODE && (isTagNameWildCard || tempNode.getNodeName().Equals(tagname)))
 		  {
 			listVector.Add(tempNode);
 		  }
 		  if (tempNode.hasChildNodes())
 		  {
-			NodeList nodeList = tempNode.ChildNodes;
-			for (int i = 0; i < nodeList.Length; i++)
+			NodeList nodeList = tempNode.getChildNodes();
+			for (int i = 0; i < nodeList.getLength(); i++)
 			{
 			  traverseChildren(listVector, nodeList.item(i), tagname, isTagNameWildCard);
 			}
@@ -817,8 +819,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Document as of DOM Level 2 -- DTMNodeProxy is read-only </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Document as of DOM Level 2 -- DTMNodeProxy is read-only"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Node importNode(org.w3c.dom.Node importedNode, boolean deep) throws org.w3c.dom.DOMException
 	  public Node importNode(Node importedNode, bool deep)
 	  {
@@ -832,8 +834,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Document as of DOM Level 2 </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Document as of DOM Level 2"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Element createElementNS(String namespaceURI, String qualifiedName) throws org.w3c.dom.DOMException
 	  public Element createElementNS(string namespaceURI, string qualifiedName)
 	  {
@@ -847,8 +849,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Document as of DOM Level 2 </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Document as of DOM Level 2"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Attr createAttributeNS(String namespaceURI, String qualifiedName) throws org.w3c.dom.DOMException
 	  public Attr createAttributeNS(string namespaceURI, string qualifiedName)
 	  {
@@ -860,7 +862,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="localName">
 	  /// 
 	  /// </param>
-	  /// <seealso cref= org.w3c.dom.Document as of DOM Level 2 </seealso>
+	  /// <seealso cref="org.w3c.dom.Document as of DOM Level 2"/>
 	  public NodeList getElementsByTagNameNS(string namespaceURI, string localName)
 	  {
 		ArrayList listVector = new ArrayList();
@@ -869,15 +871,15 @@ namespace org.apache.xml.dtm.@ref
 		{
 		  bool isNamespaceURIWildCard = "*".Equals(namespaceURI);
 		  bool isLocalNameWildCard = "*".Equals(localName);
-		  if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == retNode.NodeType)
+		  if (DTM.ELEMENT_NODE == retNode.getNodeType())
 		  {
-			NodeList nodeList = retNode.ChildNodes;
-			for (int i = 0; i < nodeList.Length; i++)
+			NodeList nodeList = retNode.getChildNodes();
+			for (int i = 0; i < nodeList.getLength(); i++)
 			{
 			  traverseChildren(listVector, nodeList.item(i), namespaceURI, localName, isNamespaceURIWildCard, isLocalNameWildCard);
 			}
 		  }
-		  else if (org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE == retNode.NodeType)
+		  else if (DTM.DOCUMENT_NODE == retNode.getNodeType())
 		  {
 			traverseChildren(listVector, dtm.getNode(node), namespaceURI, localName, isNamespaceURIWildCard, isLocalNameWildCard);
 		  }
@@ -908,9 +910,9 @@ namespace org.apache.xml.dtm.@ref
 		}
 		else
 		{
-		  if (tempNode.NodeType == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE && (isLocalNameWildCard || tempNode.LocalName.Equals(localname)))
+		  if (tempNode.getNodeType() == DTM.ELEMENT_NODE && (isLocalNameWildCard || tempNode.getLocalName().Equals(localname)))
 		  {
-			string nsURI = tempNode.NamespaceURI;
+			string nsURI = tempNode.getNamespaceURI();
 			if ((string.ReferenceEquals(namespaceURI, null) && string.ReferenceEquals(nsURI, null)) || isNamespaceURIWildCard || (!string.ReferenceEquals(namespaceURI, null) && namespaceURI.Equals(nsURI)))
 			{
 			  listVector.Add(tempNode);
@@ -918,8 +920,8 @@ namespace org.apache.xml.dtm.@ref
 		  }
 		  if (tempNode.hasChildNodes())
 		  {
-			NodeList nl = tempNode.ChildNodes;
-			for (int i = 0; i < nl.Length; i++)
+			NodeList nl = tempNode.getChildNodes();
+			for (int i = 0; i < nl.getLength(); i++)
 			{
 			  traverseChildren(listVector, nl.item(i), namespaceURI, localname, isNamespaceURIWildCard, isLocalNameWildCard);
 			}
@@ -930,7 +932,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="elementId">
 	  /// 
 	  /// </param>
-	  /// <seealso cref= org.w3c.dom.Document as of DOM Level 2 </seealso>
+	  /// <seealso cref="org.w3c.dom.Document as of DOM Level 2"/>
 	  public Element getElementById(string elementId)
 	  {
 		   return (Element) dtm.getNode(dtm.getElementById(elementId));
@@ -942,8 +944,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Text </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Text"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Text splitText(int offset) throws org.w3c.dom.DOMException
 	  public Text splitText(int offset)
 	  {
@@ -954,8 +956,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// 
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.CharacterData </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.CharacterData"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final String getData() throws org.w3c.dom.DOMException
 	  public string Data
 	  {
@@ -972,7 +974,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.CharacterData </seealso>
+	  /// <seealso cref="org.w3c.dom.CharacterData"/>
 	  public int Length
 	  {
 		  get
@@ -989,8 +991,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.CharacterData </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.CharacterData"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final String substringData(int offset, int count) throws org.w3c.dom.DOMException
 	  public string substringData(int offset, int count)
 	  {
@@ -1001,8 +1003,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="arg">
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.CharacterData </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.CharacterData"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void appendData(String arg) throws org.w3c.dom.DOMException
 	  public void appendData(string arg)
 	  {
@@ -1014,8 +1016,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="arg">
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.CharacterData </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.CharacterData"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void insertData(int offset, String arg) throws org.w3c.dom.DOMException
 	  public void insertData(int offset, string arg)
 	  {
@@ -1027,8 +1029,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="count">
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.CharacterData </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.CharacterData"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void deleteData(int offset, int count) throws org.w3c.dom.DOMException
 	  public void deleteData(int offset, int count)
 	  {
@@ -1041,8 +1043,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="arg">
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.CharacterData </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.CharacterData"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void replaceData(int offset, int count, String arg) throws org.w3c.dom.DOMException
 	  public void replaceData(int offset, int count, string arg)
 	  {
@@ -1051,7 +1053,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
+	  /// <seealso cref="org.w3c.dom.Element"/>
 	  public string TagName
 	  {
 		  get
@@ -1064,13 +1066,13 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="name">
 	  /// 
 	  /// </param>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
+	  /// <seealso cref="org.w3c.dom.Element"/>
 	  public string getAttribute(string name)
 	  {
 
 		DTMNamedNodeMap map = new DTMNamedNodeMap(dtm, node);
 		Node node = map.getNamedItem(name);
-		return (null == node) ? EMPTYSTRING : node.NodeValue;
+		return (null == node) ? EMPTYSTRING : node.getNodeValue();
 	  }
 
 	  /// 
@@ -1078,8 +1080,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="value">
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Element"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void setAttribute(String name, String value) throws org.w3c.dom.DOMException
 	  public void setAttribute(string name, string value)
 	  {
@@ -1090,8 +1092,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="name">
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Element"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void removeAttribute(String name) throws org.w3c.dom.DOMException
 	  public void removeAttribute(string name)
 	  {
@@ -1102,7 +1104,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="name">
 	  /// 
 	  /// </param>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
+	  /// <seealso cref="org.w3c.dom.Element"/>
 	  public Attr getAttributeNode(string name)
 	  {
 
@@ -1116,8 +1118,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Element"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Attr setAttributeNode(org.w3c.dom.Attr newAttr) throws org.w3c.dom.DOMException
 	  public Attr setAttributeNode(Attr newAttr)
 	  {
@@ -1130,8 +1132,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Element"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Attr removeAttributeNode(org.w3c.dom.Attr oldAttr) throws org.w3c.dom.DOMException
 	  public Attr removeAttributeNode(Attr oldAttr)
 	  {
@@ -1145,10 +1147,10 @@ namespace org.apache.xml.dtm.@ref
 	  /// </summary>
 	  public virtual bool hasAttributes()
 	  {
-		return org.apache.xml.dtm.DTM_Fields.NULL != dtm.getFirstAttribute(node);
+		return DTM.NULL != dtm.getFirstAttribute(node);
 	  }
 
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
+	  /// <seealso cref="org.w3c.dom.Element "/>
 	  public void normalize()
 	  {
 		throw new DTMDOMException(DOMException.NOT_SUPPORTED_ERR);
@@ -1159,16 +1161,16 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="localName">
 	  /// 
 	  /// </param>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
+	  /// <seealso cref="org.w3c.dom.Element"/>
 	  public string getAttributeNS(string namespaceURI, string localName)
 	  {
 		   Node retNode = null;
 		   int n = dtm.getAttributeNode(node,namespaceURI,localName);
-		   if (n != org.apache.xml.dtm.DTM_Fields.NULL)
+		   if (n != DTM.NULL)
 		   {
 				   retNode = dtm.getNode(n);
 		   }
-		   return (null == retNode) ? EMPTYSTRING : retNode.NodeValue;
+		   return (null == retNode) ? EMPTYSTRING : retNode.getNodeValue();
 	  }
 
 	  /// 
@@ -1177,8 +1179,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="value">
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Element"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void setAttributeNS(String namespaceURI, String qualifiedName, String value) throws org.w3c.dom.DOMException
 	  public void setAttributeNS(string namespaceURI, string qualifiedName, string value)
 	  {
@@ -1190,8 +1192,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="localName">
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Element"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void removeAttributeNS(String namespaceURI, String localName) throws org.w3c.dom.DOMException
 	  public void removeAttributeNS(string namespaceURI, string localName)
 	  {
@@ -1203,12 +1205,12 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="localName">
 	  /// 
 	  /// </param>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
+	  /// <seealso cref="org.w3c.dom.Element"/>
 	  public Attr getAttributeNodeNS(string namespaceURI, string localName)
 	  {
 		   Attr retAttr = null;
 		   int n = dtm.getAttributeNode(node,namespaceURI,localName);
-		   if (n != org.apache.xml.dtm.DTM_Fields.NULL)
+		   if (n != DTM.NULL)
 		   {
 				   retAttr = (Attr) dtm.getNode(n);
 		   }
@@ -1221,8 +1223,8 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-	  /// <seealso cref= org.w3c.dom.Element </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.w3c.dom.Element"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.w3c.dom.Attr setAttributeNodeNS(org.w3c.dom.Attr newAttr) throws org.w3c.dom.DOMException
 	  public Attr setAttributeNodeNS(Attr newAttr)
 	  {
@@ -1231,7 +1233,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Attr </seealso>
+	  /// <seealso cref="org.w3c.dom.Attr"/>
 	  public string Name
 	  {
 		  get
@@ -1242,7 +1244,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Attr </seealso>
+	  /// <seealso cref="org.w3c.dom.Attr"/>
 	  public bool Specified
 	  {
 		  get
@@ -1257,7 +1259,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  /// 
 	  /// 
-	  /// <seealso cref= org.w3c.dom.Attr </seealso>
+	  /// <seealso cref="org.w3c.dom.Attr"/>
 	  public string Value
 	  {
 		  get
@@ -1275,7 +1277,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// Get the owner element of an attribute.
 	  /// 
 	  /// </summary>
-	  /// <seealso cref= org.w3c.dom.Attr as of DOM Level 2 </seealso>
+	  /// <seealso cref="org.w3c.dom.Attr as of DOM Level 2"/>
 	  public Element OwnerElement
 	  {
 		  get
@@ -1287,7 +1289,7 @@ namespace org.apache.xml.dtm.@ref
 			// In XPath and DTM data models, unlike DOM, an Attr's parent is its
 			// owner element.
 			int newnode = dtm.getParent(node);
-			return (newnode == org.apache.xml.dtm.DTM_Fields.NULL) ? null : (Element)(dtm.getNode(newnode));
+			return (newnode == DTM.NULL) ? null : (Element)(dtm.getNode(newnode));
 		  }
 	  }
 
@@ -1300,7 +1302,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node adoptNode(org.w3c.dom.Node source) throws org.w3c.dom.DOMException
 	  public virtual Node adoptNode(Node source)
 	  {
@@ -1518,7 +1520,7 @@ namespace org.apache.xml.dtm.@ref
 			{
 				return true;
 			}
-			if (arg.NodeType != NodeType)
+			if (arg.getNodeType() != NodeType)
 			{
 				return false;
 			}
@@ -1526,60 +1528,60 @@ namespace org.apache.xml.dtm.@ref
 			// who knows what other implementations may be doing?...
 			if (string.ReferenceEquals(NodeName, null))
 			{
-				if (arg.NodeName != null)
+				if (arg.getNodeName() != null)
 				{
 					return false;
 				}
 			}
-			else if (!NodeName.Equals(arg.NodeName))
+			else if (!NodeName.Equals(arg.getNodeName()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(LocalName, null))
 			{
-				if (arg.LocalName != null)
+				if (arg.getLocalName() != null)
 				{
 					return false;
 				}
 			}
-			else if (!LocalName.Equals(arg.LocalName))
+			else if (!LocalName.Equals(arg.getLocalName()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(NamespaceURI, null))
 			{
-				if (arg.NamespaceURI != null)
+				if (arg.getNamespaceURI() != null)
 				{
 					return false;
 				}
 			}
-			else if (!NamespaceURI.Equals(arg.NamespaceURI))
+			else if (!NamespaceURI.Equals(arg.getNamespaceURI()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(Prefix, null))
 			{
-				if (arg.Prefix != null)
+				if (arg.getPrefix() != null)
 				{
 					return false;
 				}
 			}
-			else if (!Prefix.Equals(arg.Prefix))
+			else if (!Prefix.Equals(arg.getPrefix()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(NodeValue, null))
 			{
-				if (arg.NodeValue != null)
+				if (arg.getNodeValue() != null)
 				{
 					return false;
 				}
 			}
-			else if (!NodeValue.Equals(arg.NodeValue))
+			else if (!NodeValue.Equals(arg.getNodeValue()))
 			{
 				return false;
 			}
@@ -1631,22 +1633,22 @@ namespace org.apache.xml.dtm.@ref
 					if (this.hasAttributes())
 					{
 						NamedNodeMap map = this.Attributes;
-						int length = map.Length;
+						int length = map.getLength();
 						for (int i = 0;i < length;i++)
 						{
 							Node attr = map.item(i);
-							string attrPrefix = attr.Prefix;
-							string value = attr.NodeValue;
-							@namespace = attr.NamespaceURI;
+							string attrPrefix = attr.getPrefix();
+							string value = attr.getNodeValue();
+							@namespace = attr.getNamespaceURI();
 							if (!string.ReferenceEquals(@namespace, null) && @namespace.Equals("http://www.w3.org/2000/xmlns/"))
 							{
 								// at this point we are dealing with DOM Level 2 nodes only
-								if (string.ReferenceEquals(specifiedPrefix, null) && attr.NodeName.Equals("xmlns"))
+								if (string.ReferenceEquals(specifiedPrefix, null) && attr.getNodeName().Equals("xmlns"))
 								{
 									// default namespace
 									return value;
 								}
-								else if (!string.ReferenceEquals(attrPrefix, null) && attrPrefix.Equals("xmlns") && attr.LocalName.Equals(specifiedPrefix))
+								else if (!string.ReferenceEquals(attrPrefix, null) && attrPrefix.Equals("xmlns") && attr.getLocalName().Equals(specifiedPrefix))
 								{
 					 // non default namespace
 									return value;
@@ -1675,7 +1677,7 @@ namespace org.apache.xml.dtm.@ref
 				return null;
 			case Node.ATTRIBUTE_NODE:
 			{
-					if (this.OwnerElement.NodeType == Node.ELEMENT_NODE)
+					if (this.OwnerElement.getNodeType() == Node.ELEMENT_NODE)
 					{
 						return OwnerElement.lookupNamespaceURI(specifiedPrefix);
 					}
@@ -1807,7 +1809,7 @@ namespace org.apache.xml.dtm.@ref
 				return null;
 			case Node.ATTRIBUTE_NODE:
 			{
-					if (this.OwnerElement.NodeType == Node.ELEMENT_NODE)
+					if (this.OwnerElement.getNodeType() == Node.ELEMENT_NODE)
 					{
 						return OwnerElement.lookupPrefix(namespaceURI);
 
@@ -1890,7 +1892,7 @@ namespace org.apache.xml.dtm.@ref
 		///   fit in a <code>DOMString</code> variable on the implementation
 		///   platform.
 		/// @since DOM Level 3 </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setTextContent(String textContent) throws org.w3c.dom.DOMException
 		public virtual string TextContent
 		{
@@ -1912,7 +1914,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <returns> Returns how the given node is positioned relatively to this
 		///   node.
 		/// @since DOM Level 3 </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public short compareDocumentPosition(org.w3c.dom.Node other) throws org.w3c.dom.DOMException
 		public virtual short compareDocumentPosition(Node other)
 		{
@@ -1955,7 +1957,7 @@ namespace org.apache.xml.dtm.@ref
 		/// DOM Level 3
 		/// Renaming node
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node renameNode(org.w3c.dom.Node n, String namespaceURI, String name) throws org.w3c.dom.DOMException
 		public virtual Node renameNode(Node n, string namespaceURI, string name)
 		{
@@ -2033,7 +2035,7 @@ namespace org.apache.xml.dtm.@ref
 	   /// <summary>
 	   /// DOM Level 3
 	   /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Text replaceWholeText(String content) throws org.w3c.dom.DOMException
 		public virtual Text replaceWholeText(string content)
 		{
@@ -2128,12 +2130,9 @@ namespace org.apache.xml.dtm.@ref
 		/// NON-DOM: set the type of this attribute to be ID type.
 		/// </summary>
 		/// <param name="id"> </param>
-		public virtual bool IdAttribute
+		public virtual void setIdAttribute(bool id)
 		{
-			set
-			{
-				//PENDING
-			}
+			//PENDING
 		}
 
 		/// <summary>

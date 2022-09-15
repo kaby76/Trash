@@ -23,11 +23,11 @@ using System.Text;
  */
 namespace org.apache.xpath.axes
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using Expression = org.apache.xpath.Expression;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using FunctionTable = org.apache.xpath.compiler.FunctionTable;
 	using OpCodes = org.apache.xpath.compiler.OpCodes;
@@ -59,7 +59,7 @@ namespace org.apache.xpath.axes
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static AxesWalker loadOneWalker(WalkingIterator lpi, org.apache.xpath.compiler.Compiler compiler, int stepOpCodePos) throws javax.xml.transform.TransformerException
 	  internal static AxesWalker loadOneWalker(WalkingIterator lpi, Compiler compiler, int stepOpCodePos)
 	  {
@@ -93,14 +93,14 @@ namespace org.apache.xpath.axes
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static AxesWalker loadWalkers(WalkingIterator lpi, org.apache.xpath.compiler.Compiler compiler, int stepOpCodePos, int stepIndex) throws javax.xml.transform.TransformerException
 	  internal static AxesWalker loadWalkers(WalkingIterator lpi, Compiler compiler, int stepOpCodePos, int stepIndex)
 	  {
 
 		int stepType;
 		AxesWalker firstWalker = null;
-		AxesWalker walker , prevWalker = null;
+		AxesWalker walker, prevWalker = null;
 
 		int analysis = analyze(compiler, stepOpCodePos, stepIndex);
 
@@ -141,7 +141,7 @@ namespace org.apache.xpath.axes
 
 	  public static void diagnoseIterator(string name, int analysis, Compiler compiler)
 	  {
-		Console.WriteLine(compiler.ToString() + ", " + name + ", " + Integer.toBinaryString(analysis) + ", " + getAnalysisString(analysis));
+		Console.WriteLine(compiler.ToString() + ", " + name + ", " + Convert.ToString(analysis, 2) + ", " + getAnalysisString(analysis));
 	  }
 
 	  /// <summary>
@@ -155,14 +155,14 @@ namespace org.apache.xpath.axes
 	  /// <returns> non-null reference to a LocPathIterator or derivative.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xml.dtm.DTMIterator newDTMIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, boolean isTopLevel) throws javax.xml.transform.TransformerException
 	  public static DTMIterator newDTMIterator(Compiler compiler, int opPos, bool isTopLevel)
 	  {
 
 		int firstStepPos = OpMap.getFirstChildPos(opPos);
 		int analysis = analyze(compiler, firstStepPos, 0);
-		bool isOneStep = isOneStep(analysis);
+		bool isOneStep = WalkerFactory.isOneStep(analysis);
 		DTMIterator iter;
 
 		// Is the iteration a one-step attribute pattern (i.e. select="@foo")?
@@ -254,9 +254,6 @@ namespace org.apache.xpath.axes
 		// "/descendant-or-self::node()/table[3]" in order for the indexes 
 		// to work right.
 		else if (isOptimizableForDescendantIterator(compiler, firstStepPos, 0))
-				  // && getStepCount(analysis) <= 3 
-				  // && walksDescendants(analysis) 
-				  // && walksSubtreeOnlyFromRootOrContext(analysis)
 		{
 		  if (DEBUG_ITERATOR_CREATION)
 		  {
@@ -310,7 +307,7 @@ namespace org.apache.xpath.axes
 	  /// path as a whole.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static int getAxisFromStep(org.apache.xpath.compiler.Compiler compiler, int stepOpCodePos) throws javax.xml.transform.TransformerException
 	  public static int getAxisFromStep(Compiler compiler, int stepOpCodePos)
 	  {
@@ -458,7 +455,6 @@ namespace org.apache.xpath.axes
 		  case OpCodes.OP_LITERAL:
 		  case OpCodes.OP_LOCATIONPATH:
 			break; // OK
-			  goto case org.apache.xpath.compiler.OpCodes.OP_FUNCTION;
 		  case OpCodes.OP_FUNCTION:
 			bool isProx = functionProximateOrContainsProximate(compiler, opPos);
 			if (isProx)
@@ -493,7 +489,7 @@ namespace org.apache.xpath.axes
 	  /// <summary>
 	  /// Tell if the predicates need to have proximity knowledge.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static boolean mightBeProximate(org.apache.xpath.compiler.Compiler compiler, int opPos, int stepType) throws javax.xml.transform.TransformerException
 	  public static bool mightBeProximate(Compiler compiler, int opPos, int stepType)
 	  {
@@ -582,7 +578,7 @@ namespace org.apache.xpath.axes
 	  /// path as a whole.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static boolean isOptimizableForDescendantIterator(org.apache.xpath.compiler.Compiler compiler, int stepOpCodePos, int stepIndex) throws javax.xml.transform.TransformerException
 	  private static bool isOptimizableForDescendantIterator(Compiler compiler, int stepOpCodePos, int stepIndex)
 	  {
@@ -610,7 +606,7 @@ namespace org.apache.xpath.axes
 			return false;
 		  }
 
-		  bool mightBeProximate = mightBeProximate(compiler, stepOpCodePos, stepType);
+		  bool mightBeProximate = WalkerFactory.mightBeProximate(compiler, stepOpCodePos, stepType);
 		  if (mightBeProximate)
 		  {
 			return false;
@@ -706,7 +702,7 @@ namespace org.apache.xpath.axes
 	  /// path as a whole.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static int analyze(org.apache.xpath.compiler.Compiler compiler, int stepOpCodePos, int stepIndex) throws javax.xml.transform.TransformerException
 	  private static int analyze(Compiler compiler, int stepOpCodePos, int stepIndex)
 	  {
@@ -830,8 +826,6 @@ namespace org.apache.xpath.axes
 	  public static bool isDownwardAxisOfMany(int axis)
 	  {
 		return ((Axis.DESCENDANTORSELF == axis) || (Axis.DESCENDANT == axis) || (Axis.FOLLOWING == axis) || (Axis.PRECEDING == axis));
-	//          || (Axis.FOLLOWINGSIBLING == axis) 
-	//          || (Axis.PRECEDINGSIBLING == axis)
 	  }
 
 	  /// <summary>
@@ -860,7 +854,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A StepPattern object, which may contain relative StepPatterns.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static org.apache.xpath.patterns.StepPattern loadSteps(MatchPatternIterator mpi, org.apache.xpath.compiler.Compiler compiler, int stepOpCodePos, int stepIndex) throws javax.xml.transform.TransformerException
 	  internal static StepPattern loadSteps(MatchPatternIterator mpi, Compiler compiler, int stepOpCodePos, int stepIndex)
 	  {
@@ -931,19 +925,18 @@ namespace org.apache.xpath.axes
 		  // Lovely business, this.
 		  // -sb
 		  int whatToShow = pat.WhatToShow;
-		  if (whatToShow == org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE || whatToShow == org.apache.xml.dtm.DTMFilter_Fields.SHOW_NAMESPACE)
+		  if (whatToShow == DTMFilter.SHOW_ATTRIBUTE || whatToShow == DTMFilter.SHOW_NAMESPACE)
 		  {
-			int newAxis = (whatToShow == org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE) ? Axis.ATTRIBUTE : Axis.NAMESPACE;
+			int newAxis = (whatToShow == DTMFilter.SHOW_ATTRIBUTE) ? Axis.ATTRIBUTE : Axis.NAMESPACE;
 			if (isDownwardAxisOfMany(axis))
 			{
 			  StepPattern attrPat = new StepPattern(whatToShow, pat.Namespace, pat.LocalName, newAxis, 0); // don't care about the predicate axis
-									//newAxis, pat.getPredicateAxis);
 			  XNumber score = pat.StaticScore;
 			  pat.Namespace = null;
 			  pat.LocalName = NodeTest.WILD;
 			  attrPat.Predicates = pat.Predicates;
 			  pat.Predicates = null;
-			  pat.WhatToShow = org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT;
+			  pat.WhatToShow = DTMFilter.SHOW_ELEMENT;
 			  StepPattern rel = pat.RelativePathPattern;
 			  pat.RelativePathPattern = attrPat;
 			  attrPat.RelativePathPattern = rel;
@@ -1016,7 +1009,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> the head of the list.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static org.apache.xpath.patterns.StepPattern createDefaultStepPattern(org.apache.xpath.compiler.Compiler compiler, int opPos, MatchPatternIterator mpi, int analysis, org.apache.xpath.patterns.StepPattern tail, org.apache.xpath.patterns.StepPattern head) throws javax.xml.transform.TransformerException
 	  private static StepPattern createDefaultStepPattern(Compiler compiler, int opPos, MatchPatternIterator mpi, int analysis, StepPattern tail, StepPattern head)
 	  {
@@ -1058,20 +1051,20 @@ namespace org.apache.xpath.axes
 		  simpleInit = true;
 		  break;
 		case OpCodes.FROM_ROOT :
-		  whatToShow = org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT;
+		  whatToShow = DTMFilter.SHOW_DOCUMENT | DTMFilter.SHOW_DOCUMENT_FRAGMENT;
 
 		  axis = Axis.ROOT;
 		  predicateAxis = Axis.ROOT;
-		  ai = new StepPattern(org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT, axis, predicateAxis);
+		  ai = new StepPattern(DTMFilter.SHOW_DOCUMENT | DTMFilter.SHOW_DOCUMENT_FRAGMENT, axis, predicateAxis);
 		  break;
 		case OpCodes.FROM_ATTRIBUTES :
-		  whatToShow = org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE;
+		  whatToShow = DTMFilter.SHOW_ATTRIBUTE;
 		  axis = Axis.PARENT;
 		  predicateAxis = Axis.ATTRIBUTE;
 		  // ai = new StepPattern(whatToShow, Axis.SELF, Axis.SELF);
 		  break;
 		case OpCodes.FROM_NAMESPACE :
-		  whatToShow = org.apache.xml.dtm.DTMFilter_Fields.SHOW_NAMESPACE;
+		  whatToShow = DTMFilter.SHOW_NAMESPACE;
 		  axis = Axis.PARENT;
 		  predicateAxis = Axis.NAMESPACE;
 		  // ai = new StepPattern(whatToShow, axis, predicateAxis);
@@ -1137,7 +1130,7 @@ namespace org.apache.xpath.axes
 		  Console.Write(", predAxis: " + Axis.getNames(ai.Axis));
 		  Console.Write(", what: ");
 		  Console.Write("    ");
-		  StepPattern.debugWhatToShow(ai.WhatToShow);
+		  ai.debugWhatToShow(ai.WhatToShow);
 		}
 
 		int argLen = compiler.getFirstPredicateOpPos(opPos);
@@ -1159,7 +1152,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> true if step has a predicate.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static boolean analyzePredicate(org.apache.xpath.compiler.Compiler compiler, int opPos, int stepType) throws javax.xml.transform.TransformerException
 	  internal static bool analyzePredicate(Compiler compiler, int opPos, int stepType)
 	  {
@@ -1289,7 +1282,7 @@ namespace org.apache.xpath.axes
 
 		if (simpleInit)
 		{
-		  ai.initNodeTest(org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL);
+		  ai.initNodeTest(DTMFilter.SHOW_ALL);
 		}
 		else
 		{
@@ -1302,7 +1295,7 @@ namespace org.apache.xpath.axes
 		                         | DTMFilter.SHOW_ELEMENT
 		                         | DTMFilter.SHOW_PROCESSING_INSTRUCTION)));
 		  */
-		  if ((0 == (whatToShow & (org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE | org.apache.xml.dtm.DTMFilter_Fields.SHOW_NAMESPACE | org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_PROCESSING_INSTRUCTION))) || (whatToShow == org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL))
+		  if ((0 == (whatToShow & (DTMFilter.SHOW_ATTRIBUTE | DTMFilter.SHOW_NAMESPACE | DTMFilter.SHOW_ELEMENT | DTMFilter.SHOW_PROCESSING_INSTRUCTION))) || (whatToShow == DTMFilter.SHOW_ALL))
 		  {
 			ai.initNodeTest(whatToShow);
 		  }
@@ -1612,7 +1605,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> true if the walk can be done in natural order.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static boolean isNaturalDocOrder(org.apache.xpath.compiler.Compiler compiler, int stepOpCodePos, int stepIndex, int analysis) throws javax.xml.transform.TransformerException
 	  private static bool isNaturalDocOrder(Compiler compiler, int stepOpCodePos, int stepIndex, int analysis)
 	  {
@@ -1814,7 +1807,7 @@ namespace org.apache.xpath.axes
 	  /// If any of these bits are on, the expression may likely traverse outside
 	  ///  the given subtree.
 	  /// </summary>
-	  public static readonly int BITMASK_TRAVERSES_OUTSIDE_SUBTREE = (BIT_NAMESPACE | BIT_PRECEDING_SIBLING | BIT_PRECEDING | BIT_FOLLOWING_SIBLING | BIT_FOLLOWING | BIT_PARENT | BIT_ANCESTOR_OR_SELF | BIT_ANCESTOR | BIT_FILTER | BIT_ROOT); // except parent of attrs. -  ??
+	  public static readonly int BITMASK_TRAVERSES_OUTSIDE_SUBTREE = (BIT_NAMESPACE | BIT_PRECEDING_SIBLING | BIT_PRECEDING | BIT_FOLLOWING_SIBLING | BIT_FOLLOWING | BIT_PARENT | BIT_ANCESTOR_OR_SELF | BIT_ANCESTOR | BIT_FILTER | BIT_ROOT);
 
 	  /// <summary>
 	  /// Bit is on if any of the walkers can go backwards in document

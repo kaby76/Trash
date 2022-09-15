@@ -29,8 +29,8 @@
 /// </summary>
 namespace org.apache.xpath.axes
 {
-
 	using DTMManager = org.apache.xml.dtm.DTMManager;
+	using NodeSetDTM = org.apache.xpath.NodeSetDTM;
 
 	[Serializable]
 	public class RTFIterator : NodeSetDTM

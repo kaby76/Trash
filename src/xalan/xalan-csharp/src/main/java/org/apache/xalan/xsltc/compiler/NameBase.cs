@@ -62,7 +62,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Check that we either have no parameters or one parameter that is
 		/// either a node or a node-set.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -105,10 +105,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		il.append(methodGen.loadDOM());
 
@@ -125,7 +125,7 @@ namespace org.apache.xalan.xsltc.compiler
 		else if (_paramType == Type.Reference)
 		{
 			_param.translate(classGen, methodGen);
-			il.append(new INVOKESTATIC(cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "referenceToNodeSet", "(" + Constants_Fields.OBJECT_SIG + ")" + Constants_Fields.NODE_ITERATOR_SIG)));
+			il.append(new INVOKESTATIC(cpg.addMethodref(BASIS_LIBRARY_CLASS, "referenceToNodeSet", "(" + OBJECT_SIG + ")" + NODE_ITERATOR_SIG)));
 			il.append(methodGen.nextNode());
 		}
 		// Function was called with node-set parameter

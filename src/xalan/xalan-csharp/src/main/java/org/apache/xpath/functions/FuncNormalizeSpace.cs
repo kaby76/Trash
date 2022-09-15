@@ -22,9 +22,9 @@
  */
 namespace org.apache.xpath.functions
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using XMLString = org.apache.xml.utils.XMLString;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XString = org.apache.xpath.objects.XString;
 	using ContentHandler = org.xml.sax.ContentHandler;
@@ -45,7 +45,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -65,14 +65,14 @@ namespace org.apache.xpath.functions
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if a runtime exception 
 	  ///         occurs. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void executeCharsToContentHandler(org.apache.xpath.XPathContext xctxt, org.xml.sax.ContentHandler handler) throws javax.xml.transform.TransformerException, org.xml.sax.SAXException
 	  public override void executeCharsToContentHandler(XPathContext xctxt, ContentHandler handler)
 	  {
 		if (Arg0IsNodesetExpr())
 		{
 		  int node = getArg0AsNode(xctxt);
-		  if (org.apache.xml.dtm.DTM_Fields.NULL != node)
+		  if (DTM.NULL != node)
 		  {
 			DTM dtm = xctxt.getDTM(node);
 			dtm.dispatchCharactersEvents(node, handler, true);

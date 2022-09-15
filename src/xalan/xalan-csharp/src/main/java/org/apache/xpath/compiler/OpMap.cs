@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath.compiler
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using ObjectVector = org.apache.xml.utils.ObjectVector;
 	using NodeTest = org.apache.xpath.patterns.NodeTest;
@@ -134,9 +133,12 @@ namespace org.apache.xpath.compiler
 	  /// on the number of objects created.
 	  /// </summary>
 	  /// <returns> An IntVector that is the opcode list that describes the XPath operations. </returns>
-	  public virtual OpMapVector getOpMap()
+	  public virtual OpMapVector OpMap
 	  {
-		return m_opMap;
+		  get
+		  {
+			return m_opMap;
+		  }
 	  }
 
 	  // Position indexes
@@ -266,7 +268,7 @@ namespace org.apache.xpath.compiler
 	  /// </summary>
 	  /// <param name="opPos"> position of FROM_stepType op. </param>
 	  /// <returns> position of predicate in FROM_stepType structure. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int getFirstPredicateOpPos(int opPos) throws javax.xml.transform.TransformerException
 	  public virtual int getFirstPredicateOpPos(int opPos)
 	  {
@@ -304,7 +306,7 @@ namespace org.apache.xpath.compiler
 	  /// </param>
 	  /// <exception cref="TransformerException"> if the current ErrorListoner determines to 
 	  ///                              throw an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  public virtual void error(string msg, object[] args)
 	  {
@@ -436,7 +438,6 @@ namespace org.apache.xpath.compiler
 		default :
 		  index = OpCodes.EMPTY;
 		  break; // Should assert error
-	  break;
 		}
 
 		// int index = (argLenOfStep == 3) ? m_opMap[opPosOfStep+5] 

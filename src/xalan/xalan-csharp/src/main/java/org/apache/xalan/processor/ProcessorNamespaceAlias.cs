@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.processor
 {
-
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using NamespaceAlias = org.apache.xalan.templates.NamespaceAlias;
 	using Attributes = org.xml.sax.Attributes;
@@ -38,8 +37,8 @@ namespace org.apache.xalan.processor
 	///   result-prefix CDATA #REQUIRED
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"/>
 	[Serializable]
 	internal class ProcessorNamespaceAlias : XSLTElementProcessor
 	{
@@ -60,7 +59,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="attributes"> The attributes attached to the element.  If
 	  ///        there are no attributes, it shall be an empty
 	  ///        Attributes object. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {

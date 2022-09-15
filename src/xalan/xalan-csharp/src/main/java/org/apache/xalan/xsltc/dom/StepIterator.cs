@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using DTMAxisIteratorBase = org.apache.xml.dtm.@ref.DTMAxisIteratorBase;
@@ -126,14 +125,14 @@ namespace org.apache.xalan.xsltc.dom
 		for (int node;;)
 		{
 			// Try to get another node from the right-hand iterator
-			if ((node = _iterator.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			if ((node = _iterator.next()) != END)
 			{
 			return returnNode(node);
 			}
 			// If not, get the next starting point from left-hand iterator...
-			else if ((node = _source.next()) == org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			else if ((node = _source.next()) == END)
 			{
-			return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			return END;
 			}
 			// ...and pass it on to the right-hand iterator
 			else

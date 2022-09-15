@@ -22,10 +22,10 @@
  */
 namespace org.apache.xpath.functions
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using DTM = org.apache.xml.dtm.DTM;
 	using XMLString = org.apache.xml.utils.XMLString;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XString = org.apache.xpath.objects.XString;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
 
@@ -50,7 +50,7 @@ namespace org.apache.xpath.functions
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if an error occurs while
 	  ///                                   executing the argument expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected int getArg0AsNode(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  protected internal virtual int getArg0AsNode(XPathContext xctxt)
 	  {
@@ -78,14 +78,14 @@ namespace org.apache.xpath.functions
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if an error occurs while
 	  ///                                   executing the argument expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xml.utils.XMLString getArg0AsString(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  protected internal virtual XMLString getArg0AsString(XPathContext xctxt)
 	  {
 		if (null == m_arg0)
 		{
 		  int currentNode = xctxt.CurrentNode;
-		  if (org.apache.xml.dtm.DTM_Fields.NULL == currentNode)
+		  if (DTM.NULL == currentNode)
 		  {
 			return XString.EMPTYSTRING;
 		  }
@@ -114,7 +114,7 @@ namespace org.apache.xpath.functions
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if an error occurs while
 	  ///                                   executing the argument expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected double getArg0AsNumber(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  protected internal virtual double getArg0AsNumber(XPathContext xctxt)
 	  {
@@ -122,7 +122,7 @@ namespace org.apache.xpath.functions
 		if (null == m_arg0)
 		{
 		  int currentNode = xctxt.CurrentNode;
-		  if (org.apache.xml.dtm.DTM_Fields.NULL == currentNode)
+		  if (DTM.NULL == currentNode)
 		  {
 			return 0;
 		  }
@@ -146,7 +146,7 @@ namespace org.apache.xpath.functions
 	  /// <param name="argNum"> The number of arguments that is being passed to the function.
 	  /// </param>
 	  /// <exception cref="WrongNumberArgsException"> if the number of arguments is not 0 or 1. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void checkNumberArgs(int argNum) throws WrongNumberArgsException
 	  public override void checkNumberArgs(int argNum)
 	  {
@@ -161,7 +161,7 @@ namespace org.apache.xpath.functions
 	  /// message for this function object.
 	  /// </summary>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void reportWrongNumberArgs() throws WrongNumberArgsException
 	  protected internal override void reportWrongNumberArgs()
 	  {

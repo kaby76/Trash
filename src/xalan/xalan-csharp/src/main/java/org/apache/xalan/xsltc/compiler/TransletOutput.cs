@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKESTATIC = org.apache.bcel.generic.INVOKESTATIC;
 	using INVOKEVIRTUAL = org.apache.bcel.generic.INVOKEVIRTUAL;
@@ -49,7 +48,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("TransletOutput: " + _filename);
 		}
 
@@ -67,7 +66,7 @@ namespace org.apache.xalan.xsltc.compiler
 			string append = getAttribute("append");
 
 		// Verify that the filename is in fact set
-		if ((string.ReferenceEquals(filename, null)) || (filename.Equals(Constants_Fields.EMPTYSTRING)))
+		if ((string.ReferenceEquals(filename, null)) || (filename.Equals(EMPTYSTRING)))
 		{
 			reportError(this, parser, ErrorMsg.REQUIRED_ATTR_ERR, "file");
 		}
@@ -90,7 +89,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type checks the 'file' attribute (must be able to convert it to a str).
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -113,17 +112,17 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final boolean isSecureProcessing = classGen.getParser().getXSLTC().isSecureProcessing();
-		bool isSecureProcessing = classGen.Parser.XSLTC.SecureProcessing;
+		bool isSecureProcessing = classGen.Parser.XSLTC.isSecureProcessing();
 
 		if (isSecureProcessing)
 		{
-			int index = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "unallowed_extension_elementF", "(Ljava/lang/String;)V");
+			int index = cpg.addMethodref(BASIS_LIBRARY_CLASS, "unallowed_extension_elementF", "(Ljava/lang/String;)V");
 			il.append(new PUSH(cpg, "redirect"));
 			il.append(new INVOKESTATIC(index));
 			return;
@@ -133,12 +132,12 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(methodGen.loadHandler());
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int open = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "openOutputHandler", "(" + Constants_Fields.STRING_SIG + "Z)" + Constants_Fields.TRANSLET_OUTPUT_SIG);
-		int open = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "openOutputHandler", "(" + Constants_Fields.STRING_SIG + "Z)" + Constants_Fields.TRANSLET_OUTPUT_SIG);
+//ORIGINAL LINE: final int open = cpg.addMethodref(TRANSLET_CLASS, "openOutputHandler", "(" + STRING_SIG + "Z)" + TRANSLET_OUTPUT_SIG);
+		int open = cpg.addMethodref(TRANSLET_CLASS, "openOutputHandler", "(" + STRING_SIG + "Z)" + TRANSLET_OUTPUT_SIG);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int close = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "closeOutputHandler", "("+Constants_Fields.TRANSLET_OUTPUT_SIG+")V");
-		int close = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "closeOutputHandler", "(" + Constants_Fields.TRANSLET_OUTPUT_SIG + ")V");
+//ORIGINAL LINE: final int close = cpg.addMethodref(TRANSLET_CLASS, "closeOutputHandler", "("+TRANSLET_OUTPUT_SIG+")V");
+		int close = cpg.addMethodref(TRANSLET_CLASS, "closeOutputHandler", "(" + TRANSLET_OUTPUT_SIG + ")V");
 
 		// Create the new output handler (leave it on stack)
 		il.append(classGen.loadTranslet());

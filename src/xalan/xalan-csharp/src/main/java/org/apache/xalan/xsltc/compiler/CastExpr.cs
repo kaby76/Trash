@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using IF_ICMPNE = org.apache.bcel.generic.IF_ICMPNE;
 	using INVOKEINTERFACE = org.apache.bcel.generic.INVOKEINTERFACE;
@@ -127,7 +126,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Construct a cast expression and check that the conversion is 
 		/// valid by calling typeCheck().
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public CastExpr(Expression left, org.apache.xalan.xsltc.compiler.util.Type type) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public CastExpr(Expression left, Type type)
 		{
@@ -147,7 +146,7 @@ namespace org.apache.xalan.xsltc.compiler
 		Parser = left.Parser;
 		Parent = left.Parent;
 		left.Parent = this;
-		typeCheck(left.Parser.SymbolTable);
+		typeCheck(left.Parser.getSymbolTable());
 		}
 
 		public Expression Expr
@@ -183,7 +182,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// type checking, but typeCheck() is usually not called on them. 
 		/// As a result, this method is called from the constructor.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -222,15 +221,15 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-			ConstantPoolGen cpg = classGen.ConstantPool;
+			ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
+			InstructionList il = methodGen.getInstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int idx = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getExpandedTypeID", "(I)I");
-			int idx = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getExpandedTypeID", "(I)I");
-			il.append(new SIPUSH((short)((Step)_left).NodeType));
+//ORIGINAL LINE: final int idx = cpg.addInterfaceMethodref(DOM_INTF, "getExpandedTypeID", "(I)I");
+			int idx = cpg.addInterfaceMethodref(DOM_INTF, "getExpandedTypeID", "(I)I");
+			il.append(new SIPUSH((short)((Step)_left).getNodeType()));
 			il.append(methodGen.loadDOM());
 			il.append(methodGen.loadContextNode());
 			il.append(new INVOKEINTERFACE(idx, 2));

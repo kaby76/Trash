@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// The class that implements this interface can resolve prefixes to
 	/// namespaces. Examples would include resolving the meaning of a

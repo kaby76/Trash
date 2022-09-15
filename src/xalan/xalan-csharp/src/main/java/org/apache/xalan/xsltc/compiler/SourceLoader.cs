@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using InputSource = org.xml.sax.InputSource;
 
 	/// <summary>

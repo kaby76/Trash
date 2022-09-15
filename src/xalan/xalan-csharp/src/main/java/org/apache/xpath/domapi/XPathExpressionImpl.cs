@@ -23,6 +23,8 @@
 namespace org.apache.xpath.domapi
 {
 
+	using XPath = org.apache.xpath.XPath;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
 	using XPATHMessages = org.apache.xpath.res.XPATHMessages;
@@ -43,9 +45,9 @@ namespace org.apache.xpath.domapi
 	/// <para>The <code>XPathExpression</code> interface represents a parsed and resolved 
 	/// XPath expression.</para>
 	/// </summary>
-	/// <seealso cref= org.w3c.dom.xpath.XPathExpression
+	/// <seealso cref="org.w3c.dom.xpath.XPathExpression"
 	/// 
-	/// @xsl.usage internal </seealso>
+	/// @xsl.usage internal/>
 	internal class XPathExpressionImpl : XPathExpression
 	{
 
@@ -113,10 +115,10 @@ namespace org.apache.xpath.domapi
 		///   <br>NOT_SUPPORTED_ERR: The Node is not a type permitted as an XPath 
 		///   context node.   
 		/// </exception>
-		/// <seealso cref= org.w3c.dom.xpath.XPathExpression#evaluate(Node, short, XPathResult)
-		/// @xsl.usage internal </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public Object evaluate(org.w3c.dom.Node contextNode, short type, Object result) throws org.w3c.dom.xpath.XPathException, org.w3c.dom.DOMException
+		/// <seealso cref="org.w3c.dom.xpath.XPathExpression.evaluate(Node, short, XPathResult)"
+		/// @xsl.usage internal/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public Object evaluate(org.w3c.dom.Node contextNode, short type, Object result) throws XPathException, org.w3c.dom.DOMException
 		public virtual object evaluate(Node contextNode, short type, object result)
 		{
 
@@ -125,14 +127,14 @@ namespace org.apache.xpath.domapi
 			{
 
 				// Check that the context node is owned by the same document
-				if ((contextNode != m_doc) && (!contextNode.OwnerDocument.Equals(m_doc)))
+				if ((contextNode != m_doc) && (!contextNode.getOwnerDocument().Equals(m_doc)))
 				{
 					string fmsg = XPATHMessages.createXPATHMessage(XPATHErrorResources.ER_WRONG_DOCUMENT, null);
 					throw new DOMException(DOMException.WRONG_DOCUMENT_ERR, fmsg);
 				}
 
 				// Check that the context node is an acceptable node type
-				short nodeType = contextNode.NodeType;
+				short nodeType = contextNode.getNodeType();
 				if ((nodeType != Document.DOCUMENT_NODE) && (nodeType != Document.ELEMENT_NODE) && (nodeType != Document.ATTRIBUTE_NODE) && (nodeType != Document.TEXT_NODE) && (nodeType != Document.CDATA_SECTION_NODE) && (nodeType != Document.COMMENT_NODE) && (nodeType != Document.PROCESSING_INSTRUCTION_NODE) && (nodeType != XPathNamespace.XPATH_NAMESPACE_NODE))
 				{
 						string fmsg = XPATHMessages.createXPATHMessage(XPATHErrorResources.ER_WRONG_NODETYPE, null);
@@ -169,7 +171,7 @@ namespace org.apache.xpath.domapi
 			catch (TransformerException te)
 			{
 				// What should we do here?
-				throw new XPathException(XPathException.INVALID_EXPRESSION_ERR,te.MessageAndLocation);
+				throw new XPathException(XPathException.INVALID_EXPRESSION_ERR,te.getMessageAndLocation());
 			}
 
 			// Create a new XPathResult object

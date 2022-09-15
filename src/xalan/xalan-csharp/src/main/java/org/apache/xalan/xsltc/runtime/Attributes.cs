@@ -21,7 +21,7 @@
 
 namespace org.apache.xalan.xsltc.runtime
 {
-
+	using DOM = org.apache.xalan.xsltc.DOM;
 	using AttributeList = org.xml.sax.AttributeList;
 
 	/// <summary>

@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using MethodGenerator = org.apache.xalan.xsltc.compiler.util.MethodGenerator;
 	using Type = org.apache.xalan.xsltc.compiler.util.Type;
@@ -40,7 +39,7 @@ namespace org.apache.xalan.xsltc.compiler
 		private double _priority = Double.NaN;
 		private int _position = 0;
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -52,9 +51,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// TODO: What does it mean to translate a Pattern ?
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void setTemplate(final Template template)
-		public virtual Template Template
+		public virtual in Template Template
 		{
 			set
 			{

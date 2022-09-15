@@ -21,7 +21,6 @@
 namespace org.apache.xalan.res
 {
 
-
 	/// <summary>
 	/// Set up error messages.
 	/// We build a two dimensional array of message keys and
@@ -617,7 +616,7 @@ namespace org.apache.xalan.res
 				new object[] {"version2", "<<<<<<<"},
 				new object[] {"yes", "oui"},
 				new object[] {"line", "Ligne #"},
-				new object[] {"column","Colonne #"},
+				new object[] {"column", "Colonne #"},
 				new object[] {"xsldone", "XSLProcessor : termin\u00e9"},
 				new object[] {"xslProc_option", "Options de classe Process de ligne de commande Xalan-J :"},
 				new object[] {"xslProc_option", "Options de classe Process de ligne de commande Xalan-J\u003a"},
@@ -677,8 +676,8 @@ namespace org.apache.xalan.res
 				new object[] {"optionXN", "   [-XN (activation de la mise en ligne de mod\u00e8le)]"},
 				new object[] {"optionXX", "   [-XX (activation du d\u00e9bogage suppl\u00e9mentaire de sortie de message)]"},
 				new object[] {"optionXT", "   [-XT (utilisation de translet pour la transformation si possible)]"},
-				new object[] {"diagTiming"," --------- La transformation de {0} via {1} a pris {2} ms"},
-				new object[] {"recursionTooDeep","Trop grande imbrication de mod\u00e8le. imbrication = {0}, mod\u00e8le {1} {2}"},
+				new object[] {"diagTiming", " --------- La transformation de {0} via {1} a pris {2} ms"},
+				new object[] {"recursionTooDeep", "Trop grande imbrication de mod\u00e8le. imbrication = {0}, mod\u00e8le {1} {2}"},
 				new object[] {"nameIs", "le nom est"},
 				new object[] {"matchPatternIs", "le motif de correspondance est"}
 			};
@@ -727,12 +726,12 @@ namespace org.apache.xalan.res
 	  ///   <param name="className"> the name of the class that implements the resource bundle. </param>
 	  ///   <returns> the ResourceBundle </returns>
 	  ///   <exception cref="MissingResourceException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static final XSLTErrorResources loadResourceBundle(String className) throws java.util.MissingResourceException
 	  public static XSLTErrorResources loadResourceBundle(string className)
 	  {
 
-		Locale locale = Locale.Default;
+		Locale locale = Locale.getDefault();
 		string suffix = getResourceSuffix(locale);
 
 		try
@@ -770,8 +769,8 @@ namespace org.apache.xalan.res
 	  private static string getResourceSuffix(Locale locale)
 	  {
 
-		string suffix = "_" + locale.Language;
-		string country = locale.Country;
+		string suffix = "_" + locale.getLanguage();
+		string country = locale.getCountry();
 
 		if (country.Equals("TW"))
 		{

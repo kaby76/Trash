@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKEVIRTUAL = org.apache.bcel.generic.INVOKEVIRTUAL;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
@@ -39,12 +38,12 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("ApplyTemplates");
-		indent(indent + IndentIncrement);
+		this.indent(indent + IndentIncrement);
 		if (_modeName != null)
 		{
-			indent(indent + IndentIncrement);
+			this.indent(indent + IndentIncrement);
 			Util.println("mode " + _modeName);
 		}
 		}
@@ -97,7 +96,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type-check the attributes/contents of an <xsl:apply-imports/> element.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -116,10 +115,10 @@ namespace org.apache.xalan.xsltc.compiler
 		Stylesheet stylesheet = classGen.Stylesheet;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int current = methodGen.getLocalIndex("current");
 		int current = methodGen.getLocalIndex("current");
@@ -137,8 +136,8 @@ namespace org.apache.xalan.xsltc.compiler
 			{
 				il.append(classGen.loadTranslet());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int pushFrame = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.PUSH_PARAM_FRAME, Constants_Fields.PUSH_PARAM_FRAME_SIG);
-				int pushFrame = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.PUSH_PARAM_FRAME, Constants_Fields.PUSH_PARAM_FRAME_SIG);
+//ORIGINAL LINE: final int pushFrame = cpg.addMethodref(TRANSLET_CLASS, PUSH_PARAM_FRAME, PUSH_PARAM_FRAME_SIG);
+				int pushFrame = cpg.addMethodref(TRANSLET_CLASS, PUSH_PARAM_FRAME, PUSH_PARAM_FRAME_SIG);
 				il.append(new INVOKEVIRTUAL(pushFrame));
 			}
 
@@ -175,8 +174,8 @@ namespace org.apache.xalan.xsltc.compiler
 			{
 				il.append(classGen.loadTranslet());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int pushFrame = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.POP_PARAM_FRAME, Constants_Fields.POP_PARAM_FRAME_SIG);
-				int pushFrame = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.POP_PARAM_FRAME, Constants_Fields.POP_PARAM_FRAME_SIG);
+//ORIGINAL LINE: final int pushFrame = cpg.addMethodref(TRANSLET_CLASS, POP_PARAM_FRAME, POP_PARAM_FRAME_SIG);
+				int pushFrame = cpg.addMethodref(TRANSLET_CLASS, POP_PARAM_FRAME, POP_PARAM_FRAME_SIG);
 				il.append(new INVOKEVIRTUAL(pushFrame));
 			}
 		}

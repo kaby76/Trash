@@ -27,7 +27,6 @@ namespace org.apache.xalan.client
 {
 
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 
@@ -35,9 +34,9 @@ namespace org.apache.xalan.client
 	/// Provides applet host for the XSLT processor. To perform transformations on an HTML client:
 	/// <ol>
 	/// <li>Use an &lt;applet&gt; tag to embed this applet in the HTML client.</li>
-	/// <li>Use the DocumentURL and StyleURL PARAM tags or the <seealso cref="#setDocumentURL"/> and
-	/// <seealso cref="#setStyleURL"/> methods to specify the XML source document and XSL stylesheet.</li>
-	/// <li>Call the <seealso cref="#getHtmlText"/> method (or one of the transformToHtml() methods)
+	/// <li>Use the DocumentURL and StyleURL PARAM tags or the <seealso cref="setDocumentURL"/> and
+	/// <seealso cref="setStyleURL"/> methods to specify the XML source document and XSL stylesheet.</li>
+	/// <li>Call the <seealso cref="getHtmlText"/> method (or one of the transformToHtml() methods)
 	/// to perform the transformation and return the result as a String.</li>
 	/// </ol>
 	/// 
@@ -227,8 +226,8 @@ namespace org.apache.xalan.client
 		  DocumentURL = param;
 		}
 
-		m_codeBase = this.CodeBase;
-		m_documentBase = this.DocumentBase;
+		m_codeBase = this.getCodeBase();
+		m_documentBase = this.getDocumentBase();
 
 		// If you use a ResourceWizard-generated "control creator" class to
 		// arrange controls in your applet, you may want to call its
@@ -248,7 +247,7 @@ namespace org.apache.xalan.client
 
 		m_trustedAgent = new TrustedAgent(this);
 		Thread currentThread = Thread.CurrentThread;
-		m_trustedWorker = new Thread(currentThread.ThreadGroup, m_trustedAgent);
+		m_trustedWorker = new Thread(currentThread.getThreadGroup(), m_trustedAgent);
 		m_trustedWorker.Start();
 		try
 		{
@@ -382,7 +381,7 @@ namespace org.apache.xalan.client
 	  /// </summary>
 	  /// <param name="key"> stylesheet parameter key </param>
 	  /// <param name="expr"> the parameter expression to be submitted. </param>
-	  /// <seealso cref= javax.xml.transform.Transformer#setParameter(String,Object) </seealso>
+	  /// <seealso cref="javax.xml.transform.Transformer.setParameter(String,Object)"/>
 	  public virtual void setStylesheetParam(string key, string expr)
 	  {
 		m_parameters[key] = expr;
@@ -416,14 +415,14 @@ namespace org.apache.xalan.client
 		  {
 			sb.Append("&amp;");
 		  }
-		  else if (0xd800 <= ch && ch < 0xdc00)
+		  else if ((char)0xd800 <= ch && ch < (char)0xdc00)
 		  {
 			// UTF-16 surrogate
 			int next;
 
 			if (i + 1 >= length)
 			{
-			  throw new Exception(XSLMessages.createMessage(XSLTErrorResources.ER_INVALID_UTF16_SURROGATE, new object[]{ch.ToString("x")})); //"Invalid UTF-16 surrogate detected: "
+			  throw new Exception(XSLMessages.createMessage(XSLTErrorResources.ER_INVALID_UTF16_SURROGATE, new object[]{Convert.ToString(ch, 16)})); //"Invalid UTF-16 surrogate detected: "
 
 			  //+Integer.toHexString(ch)+ " ?");
 			}
@@ -433,14 +432,14 @@ namespace org.apache.xalan.client
 
 			  if (!(0xdc00 <= next && next < 0xe000))
 			  {
-				throw new Exception(XSLMessages.createMessage(XSLTErrorResources.ER_INVALID_UTF16_SURROGATE, new object[]{ch.ToString("x") + " " + next.ToString("x")})); //"Invalid UTF-16 surrogate detected: "
+				throw new Exception(XSLMessages.createMessage(XSLTErrorResources.ER_INVALID_UTF16_SURROGATE, new object[]{Convert.ToString(ch, 16) + " " + Convert.ToString(next, 16)})); //"Invalid UTF-16 surrogate detected: "
 			  }
 
 			  //+Integer.toHexString(ch)+" "+Integer.toHexString(next));
 			  next = ((ch - 0xd800) << 10) + next - 0xdc00 + 0x00010000;
 			}
 			sb.Append("&#x");
-			sb.Append(next.ToString("x"));
+			sb.Append(Convert.ToString(next, 16));
 			sb.Append(";");
 		  }
 		  else
@@ -486,7 +485,7 @@ namespace org.apache.xalan.client
 	  /// <returns> document
 	  /// </returns>
 	  /// <exception cref="IOException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getTreeAsText(String treeURL) throws java.io.IOException
 	  public virtual string getTreeAsText(string treeURL)
 	  {
@@ -513,7 +512,7 @@ namespace org.apache.xalan.client
 	  /// to a StreamResult.
 	  /// </summary>
 	  /// <returns> the document as a string </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private String getSource() throws javax.xml.transform.TransformerException
 	  private string Source
 	  {
@@ -556,7 +555,7 @@ namespace org.apache.xalan.client
 	  /// </summary>
 	  /// <returns> XML source document as a string. </returns>
 	  /// <exception cref="Exception"> thrown if tree can not be converted. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getSourceTreeAsText() throws Exception
 	  public virtual string SourceTreeAsText
 	  {
@@ -573,7 +572,7 @@ namespace org.apache.xalan.client
 	  /// </summary>
 	  /// <returns> The XSL stylesheet as a string. </returns>
 	  /// <exception cref="Exception"> thrown if tree can not be converted. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getStyleTreeAsText() throws Exception
 	  public virtual string StyleTreeAsText
 	  {
@@ -590,7 +589,7 @@ namespace org.apache.xalan.client
 	  /// </summary>
 	  /// <returns> Transformation result as unmarked text. </returns>
 	  /// <exception cref="Exception"> thrown if tree can not be converted. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getResultTreeAsText() throws Exception
 	  public virtual string ResultTreeAsText
 	  {
@@ -653,7 +652,7 @@ namespace org.apache.xalan.client
 	  /// <returns> The transformation result as a string.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private String processTransformation() throws javax.xml.transform.TransformerException
 	  private string processTransformation()
 	  {
@@ -679,7 +678,7 @@ namespace org.apache.xalan.client
 
 			Transformer transformer = m_tfactory.newTransformer(xslSource);
 
-			IEnumerator m_entries = m_parameters.SetOfKeyValuePairs().GetEnumerator();
+			System.Collections.IEnumerator m_entries = m_parameters.SetOfKeyValuePairs().GetEnumerator();
 			while (m_entries.MoveNext())
 			{
 				DictionaryEntry entry = (DictionaryEntry) m_entries.Current;
@@ -714,7 +713,7 @@ namespace org.apache.xalan.client
 	  /// this because the thread that is called by the browser
 	  /// is not trusted and can't access data from the URLs.
 	  /// </summary>
-	  internal class TrustedAgent : System.Threading.ThreadStart
+	  internal class TrustedAgent : ThreadStart
 	  {
 		  private readonly XSLTProcessorApplet outerInstance;
 
@@ -796,8 +795,8 @@ namespace org.apache.xalan.client
 	  private const long serialVersionUID = 4618876841979251422L;
 
 	  // For compatibility when de-serializing old objects
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: private void readObject(java.io.ObjectInputStream inStream) throws java.io.IOException, ClassNotFoundException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: private void readObject(java.io.ObjectInputStream inStream) throws IOException, ClassNotFoundException
 	  private void readObject(java.io.ObjectInputStream inStream)
 	  {
 		  inStream.defaultReadObject();

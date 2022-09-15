@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.templates
 {
 
-
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using DTM = org.apache.xml.dtm.DTM;
 	using QName = org.apache.xml.utils.QName;
@@ -372,7 +371,7 @@ namespace org.apache.xalan.templates
 
 		if (null != target)
 		{
-		  string pstring = template.Match.PatternString;
+		  string pstring = template.Match.getPatternString();
 		  TemplateSubPatternAssociation association = new TemplateSubPatternAssociation(template, pattern, pstring);
 
 		  // See if there's already one there
@@ -404,11 +403,11 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="matchPat"> The match pattern to template association.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>, 
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>, 
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>, 
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>, or 
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>, 
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>, 
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>, 
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>, or 
 	  ///         the value defined by the priority attribute of the template.
 	  ///  </returns>
 	  private double getPriorityOrScore(TemplateSubPatternAssociation matchPat)
@@ -457,29 +456,29 @@ namespace org.apache.xalan.templates
 
 		switch (targetNodeType)
 		{
-		case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
-		case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
+		case DTM.ELEMENT_NODE :
+		case DTM.ATTRIBUTE_NODE :
 		  head = (TemplateSubPatternAssociation) m_patternTable[dtm.getLocalName(targetNode)];
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.TEXT_NODE :
-		case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE :
+		case DTM.TEXT_NODE :
+		case DTM.CDATA_SECTION_NODE :
 		  head = m_textPatterns;
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE :
-		case org.apache.xml.dtm.DTM_Fields.ENTITY_NODE :
+		case DTM.ENTITY_REFERENCE_NODE :
+		case DTM.ENTITY_NODE :
 		  head = (TemplateSubPatternAssociation) m_patternTable[dtm.getNodeName(targetNode)]; // %REVIEW% I think this is right
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+		case DTM.PROCESSING_INSTRUCTION_NODE :
 		  head = (TemplateSubPatternAssociation) m_patternTable[dtm.getLocalName(targetNode)];
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE :
+		case DTM.COMMENT_NODE :
 		  head = m_commentPatterns;
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE :
-		case org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE :
+		case DTM.DOCUMENT_NODE :
+		case DTM.DOCUMENT_FRAGMENT_NODE :
 		  head = m_docPatterns;
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.NOTATION_NODE :
+		case DTM.NOTATION_NODE :
 		default :
 		  head = (TemplateSubPatternAssociation) m_patternTable[dtm.getNodeName(targetNode)]; // %REVIEW% I think this is right
 	  break;
@@ -507,7 +506,7 @@ namespace org.apache.xalan.templates
 	  /// the error condition is severe enough to halt processing.
 	  /// </exception>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ElemTemplate getTemplateFast(org.apache.xpath.XPathContext xctxt, int targetNode, int expTypeID, org.apache.xml.utils.QName mode, int maxImportLevel, boolean quietConflictWarnings, org.apache.xml.dtm.DTM dtm) throws javax.xml.transform.TransformerException
 	  public virtual ElemTemplate getTemplateFast(XPathContext xctxt, int targetNode, int expTypeID, QName mode, int maxImportLevel, bool quietConflictWarnings, DTM dtm)
 	  {
@@ -516,29 +515,29 @@ namespace org.apache.xalan.templates
 
 		switch (dtm.getNodeType(targetNode))
 		{
-		case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
-		case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
+		case DTM.ELEMENT_NODE :
+		case DTM.ATTRIBUTE_NODE :
 		  head = (TemplateSubPatternAssociation) m_patternTable[dtm.getLocalNameFromExpandedNameID(expTypeID)];
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.TEXT_NODE :
-		case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE :
+		case DTM.TEXT_NODE :
+		case DTM.CDATA_SECTION_NODE :
 		  head = m_textPatterns;
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE :
-		case org.apache.xml.dtm.DTM_Fields.ENTITY_NODE :
+		case DTM.ENTITY_REFERENCE_NODE :
+		case DTM.ENTITY_NODE :
 		  head = (TemplateSubPatternAssociation) m_patternTable[dtm.getNodeName(targetNode)]; // %REVIEW% I think this is right
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+		case DTM.PROCESSING_INSTRUCTION_NODE :
 		  head = (TemplateSubPatternAssociation) m_patternTable[dtm.getLocalName(targetNode)];
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE :
+		case DTM.COMMENT_NODE :
 		  head = m_commentPatterns;
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE :
-		case org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE :
+		case DTM.DOCUMENT_NODE :
+		case DTM.DOCUMENT_FRAGMENT_NODE :
 		  head = m_docPatterns;
 		  break;
-		case org.apache.xml.dtm.DTM_Fields.NOTATION_NODE :
+		case DTM.NOTATION_NODE :
 		default :
 		  head = (TemplateSubPatternAssociation) m_patternTable[dtm.getNodeName(targetNode)]; // %REVIEW% I think this is right
 	  break;
@@ -601,7 +600,7 @@ namespace org.apache.xalan.templates
 	  /// the error condition is severe enough to halt processing.
 	  /// </exception>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ElemTemplate getTemplate(org.apache.xpath.XPathContext xctxt, int targetNode, org.apache.xml.utils.QName mode, boolean quietConflictWarnings, org.apache.xml.dtm.DTM dtm) throws javax.xml.transform.TransformerException
 	  public virtual ElemTemplate getTemplate(XPathContext xctxt, int targetNode, QName mode, bool quietConflictWarnings, DTM dtm)
 	  {
@@ -661,7 +660,7 @@ namespace org.apache.xalan.templates
 	  /// the error condition is severe enough to halt processing.
 	  /// </exception>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ElemTemplate getTemplate(org.apache.xpath.XPathContext xctxt, int targetNode, org.apache.xml.utils.QName mode, int maxImportLevel, int endImportLevel, boolean quietConflictWarnings, org.apache.xml.dtm.DTM dtm) throws javax.xml.transform.TransformerException
 	  public virtual ElemTemplate getTemplate(XPathContext xctxt, int targetNode, QName mode, int maxImportLevel, int endImportLevel, bool quietConflictWarnings, DTM dtm)
 	  {
@@ -810,7 +809,7 @@ namespace org.apache.xalan.templates
 	  /// These are keyed on template names, and holding values
 	  /// that are template elements.
 	  /// </summary>
-	  /// <returns> A Hashtable dictionary that contains <seealso cref="java.lang.String"/>s 
+	  /// <returns> A Hashtable dictionary that contains <seealso cref="string"/>s 
 	  /// as the keys, and <seealso cref="org.apache.xalan.templates.ElemTemplate"/>s as the 
 	  /// values.  </returns>
 	  private Hashtable NamedTemplates

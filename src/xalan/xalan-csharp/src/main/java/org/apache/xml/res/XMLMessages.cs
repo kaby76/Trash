@@ -23,7 +23,6 @@
 namespace org.apache.xml.res
 {
 
-
 	/// <summary>
 	/// A utility class for issuing XML error messages.
 	/// @xsl.usage internal
@@ -33,7 +32,7 @@ namespace org.apache.xml.res
 
 	  /// <summary>
 	  /// The local object to use. </summary>
-	  protected internal Locale fLocale = Locale.Default;
+	  protected internal Locale fLocale = Locale.getDefault();
 
 	  /// <summary>
 	  /// The language specific resource object for XML messages. </summary>
@@ -168,11 +167,11 @@ namespace org.apache.xml.res
 	  /// <param name="className"> The class name of the resource bundle. </param>
 	  /// <returns> the ResourceBundle </returns>
 	  /// <exception cref="MissingResourceException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static java.util.ListResourceBundle loadResourceBundle(String className) throws java.util.MissingResourceException
 	  public static ListResourceBundle loadResourceBundle(string className)
 	  {
-		Locale locale = Locale.Default;
+		Locale locale = Locale.getDefault();
 
 		try
 		{
@@ -207,8 +206,8 @@ namespace org.apache.xml.res
 	  protected internal static string getResourceSuffix(Locale locale)
 	  {
 
-		string suffix = "_" + locale.Language;
-		string country = locale.Country;
+		string suffix = "_" + locale.getLanguage();
+		string country = locale.getCountry();
 
 		if (country.Equals("TW"))
 		{

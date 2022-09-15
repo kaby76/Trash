@@ -30,8 +30,8 @@ namespace org.apache.xalan.processor
 
 	/// <summary>
 	/// This class processes parse events for an XSLT template element. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Creating-the-Result-Tree">section-Creating-the-Result-Tree in XSLT Specification</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Creating-the-Result-Tree">section-Creating-the-Result-Tree in XSLT Specification</a>"/>
 	[Serializable]
 	public class ProcessorTemplateElem : XSLTElementProcessor
 	{
@@ -45,7 +45,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="localName"> The local name (without prefix), or empty string if not namespace processing. </param>
 	  /// <param name="rawName"> The qualified name (with prefix). </param>
 	  /// <param name="attributes"> The specified or defaulted attributes. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {
@@ -60,7 +60,7 @@ namespace org.apache.xalan.processor
 
 		  try
 		  {
-			elem = (ElemTemplateElement) classObject.newInstance();
+			elem = (ElemTemplateElement) System.Activator.CreateInstance(classObject);
 
 			elem.DOMBackPointer = handler.OriginatingNode;
 			elem.LocaterInfo = handler.Locator;
@@ -94,7 +94,7 @@ namespace org.apache.xalan.processor
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void appendAndPush(StylesheetHandler handler, org.apache.xalan.templates.ElemTemplateElement elem) throws org.xml.sax.SAXException
 	  protected internal virtual void appendAndPush(StylesheetHandler handler, ElemTemplateElement elem)
 	  {
@@ -114,7 +114,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="uri"> The Namespace URI, or an empty string. </param>
 	  /// <param name="localName"> The local name (without prefix), or empty string if not namespace processing. </param>
 	  /// <param name="rawName"> The qualified name (with prefix). </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(StylesheetHandler handler, String uri, String localName, String rawName) throws org.xml.sax.SAXException
 	  public override void endElement(StylesheetHandler handler, string uri, string localName, string rawName)
 	  {

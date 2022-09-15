@@ -21,7 +21,7 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
+	using NodeIterator = org.apache.xalan.xsltc.NodeIterator;
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 
 	/// <summary>
@@ -54,7 +54,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Store node in call to setStartNode().
 		/// </summary>
-		protected internal int _startNode = org.apache.xalan.xsltc.NodeIterator_Fields.END;
+		protected internal int _startNode = NodeIterator.END;
 
 		/// <summary>
 		/// Flag indicating if "self" should be returned.
@@ -128,7 +128,7 @@ namespace org.apache.xalan.xsltc.dom
 				do
 				{
 				_last++;
-				} while (next() != org.apache.xalan.xsltc.NodeIterator_Fields.END);
+				} while (next() != END);
 				gotoMark();
 				_position = temp;
 			}
@@ -187,9 +187,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// Utility method that increments position and returns its
 		/// argument.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: protected final int returnNode(final int node)
-		protected internal int returnNode(int node)
+		protected internal int returnNode(in int node)
 		{
 		_position++;
 		return node;

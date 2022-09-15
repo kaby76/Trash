@@ -21,7 +21,6 @@
 namespace org.apache.xml.serializer
 {
 
-
 	using Node = org.w3c.dom.Node;
 	using ContentHandler = org.xml.sax.ContentHandler;
 	using ErrorHandler = org.xml.sax.ErrorHandler;
@@ -44,8 +43,8 @@ namespace org.apache.xml.serializer
 		/// Set the SAX Content handler that the serializer sends its output to. This
 		/// method only applies to a ToSAXHandler, not to a ToStream serializer.
 		/// </summary>
-		/// <seealso cref= Serializer#asContentHandler() </seealso>
-		/// <seealso cref= ToSAXHandler </seealso>
+		/// <seealso cref="Serializer.asContentHandler()"/>
+		/// <seealso cref="ToSAXHandler"/>
 		ContentHandler ContentHandler {set;}
 
 		void close();
@@ -56,7 +55,7 @@ namespace org.apache.xml.serializer
 		/// </summary>
 		/// <param name="node"> the DOM node to be serialized. </param>
 		/// <exception cref="IOException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void serialize(org.w3c.dom.Node node) throws java.io.IOException;
 		void serialize(Node node);
 		/// <summary>
@@ -67,7 +66,7 @@ namespace org.apache.xml.serializer
 		/// CDATA sections in output XML documents.
 		/// </summary>
 		/// <param name="escape"> true if escaping is to be set on. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean setEscaping(boolean escape) throws org.xml.sax.SAXException;
 		bool setEscaping(bool escape);
 
@@ -118,7 +117,7 @@ namespace org.apache.xml.serializer
 		/// very often. 
 		/// </para>
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void flushPending() throws org.xml.sax.SAXException;
 		void flushPending();
 

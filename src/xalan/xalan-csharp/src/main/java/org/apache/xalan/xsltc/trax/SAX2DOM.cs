@@ -27,7 +27,6 @@ namespace org.apache.xalan.xsltc.trax
 
 
 
-
 	using Constants = org.apache.xalan.xsltc.runtime.Constants;
 
 	using Comment = org.w3c.dom.Comment;
@@ -51,11 +50,11 @@ namespace org.apache.xalan.xsltc.trax
 		private Node _root = null;
 		private Document _document = null;
 		private Node _nextSibling = null;
-		private Stack _nodeStk = new Stack();
+		private System.Collections.Stack _nodeStk = new System.Collections.Stack();
 		private ArrayList _namespaceDecls = null;
 		private Node _lastSibling = null;
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public SAX2DOM() throws javax.xml.parsers.ParserConfigurationException
 		public SAX2DOM()
 		{
@@ -66,7 +65,7 @@ namespace org.apache.xalan.xsltc.trax
 		_root = _document;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public SAX2DOM(org.w3c.dom.Node root, org.w3c.dom.Node nextSibling) throws javax.xml.parsers.ParserConfigurationException
 		public SAX2DOM(Node root, Node nextSibling)
 		{
@@ -77,7 +76,7 @@ namespace org.apache.xalan.xsltc.trax
 		}
 		else if (root != null)
 		{
-		  _document = root.OwnerDocument;
+		  _document = root.getOwnerDocument();
 		}
 		else
 		{
@@ -91,7 +90,7 @@ namespace org.apache.xalan.xsltc.trax
 		_nextSibling = nextSibling;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public SAX2DOM(org.w3c.dom.Node root) throws javax.xml.parsers.ParserConfigurationException
 		public SAX2DOM(Node root) : this(root, null)
 		{
@@ -117,7 +116,7 @@ namespace org.apache.xalan.xsltc.trax
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String text = new String(ch, start, length);
 				string text = new string(ch, start, length);
-				if (_lastSibling != null && _lastSibling.NodeType == Node.TEXT_NODE)
+				if (_lastSibling != null && _lastSibling.getNodeType() == Node.TEXT_NODE)
 				{
 					  ((Text)_lastSibling).appendData(text);
 				}
@@ -161,13 +160,13 @@ namespace org.apache.xalan.xsltc.trax
 //ORIGINAL LINE: final String prefix = (String) _namespaceDecls.elementAt(i++);
 			string prefix = (string) _namespaceDecls[i++];
 
-			if (string.ReferenceEquals(prefix, null) || prefix.Equals(org.apache.xalan.xsltc.runtime.Constants_Fields.EMPTYSTRING))
+			if (string.ReferenceEquals(prefix, null) || prefix.Equals(EMPTYSTRING))
 			{
-				tmp.setAttributeNS(org.apache.xalan.xsltc.runtime.Constants_Fields.XMLNS_URI, org.apache.xalan.xsltc.runtime.Constants_Fields.XMLNS_PREFIX, (string) _namespaceDecls[i]);
+				tmp.setAttributeNS(XMLNS_URI, XMLNS_PREFIX, (string) _namespaceDecls[i]);
 			}
 			else
 			{
-				tmp.setAttributeNS(org.apache.xalan.xsltc.runtime.Constants_Fields.XMLNS_URI, org.apache.xalan.xsltc.runtime.Constants_Fields.XMLNS_STRING + prefix, (string) _namespaceDecls[i]);
+				tmp.setAttributeNS(XMLNS_URI, XMLNS_STRING + prefix, (string) _namespaceDecls[i]);
 			}
 			}
 			_namespaceDecls.Clear();
@@ -176,7 +175,7 @@ namespace org.apache.xalan.xsltc.trax
 		// Add attributes to element
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int nattrs = attrs.getLength();
-		int nattrs = attrs.Length;
+		int nattrs = attrs.getLength();
 		for (int i = 0; i < nattrs; i++)
 		{
 			if (attrs.getLocalName(i) == null)
@@ -321,7 +320,7 @@ namespace org.apache.xalan.xsltc.trax
 		public virtual void endEntity(string name)
 		{
 		}
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDTD(String name, String publicId, String systemId) throws org.xml.sax.SAXException
 		public virtual void startDTD(string name, string publicId, string systemId)
 		{

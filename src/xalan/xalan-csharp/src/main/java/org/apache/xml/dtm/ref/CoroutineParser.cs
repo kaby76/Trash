@@ -21,7 +21,6 @@
 
 namespace org.apache.xml.dtm.@ref
 {
-
 	using ContentHandler = org.xml.sax.ContentHandler;
 	using InputSource = org.xml.sax.InputSource;
 	using XMLReader = org.xml.sax.XMLReader;

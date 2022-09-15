@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	using Node = org.w3c.dom.Node;
 
 	/// <summary>

@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath.patterns
 {
-
 	/// <summary>
 	/// This interface should be implemented by Nodes and/or iterators,
 	/// when they need to know what the node test is before they do

@@ -25,7 +25,6 @@ namespace org.apache.xalan.templates
 {
 
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
@@ -52,8 +51,8 @@ namespace org.apache.xalan.templates
 	/// of that interface... it only implements enough for
 	/// basic traversal of the tree.
 	/// </summary>
-	/// <seealso cref= Stylesheet
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="Stylesheet"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemTemplateElement : UnImplNode, PrefixResolver, ExpressionNode, WhitespaceStrippingElementMatcher, XSLTVisitable
 	{
@@ -84,7 +83,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> An integer representation of the element, defined in the
 	  ///     Constants class. </returns>
-	  /// <seealso cref= org.apache.xalan.templates.Constants </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"/>
 	  public virtual int XSLToken
 	  {
 		  get
@@ -127,7 +126,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> The XSLT TransformerFactory.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void runtimeInit(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public virtual void runtimeInit(TransformerImpl transformer)
 	  {
@@ -140,7 +139,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> The XSLT TransformerFactory.
 	  /// </param>
 	  /// <exception cref="TransformerException"> if any checked exception occurs. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public virtual void execute(TransformerImpl transformer)
 	  {
@@ -194,7 +193,7 @@ namespace org.apache.xalan.templates
 	  /// This function is called during recomposition to
 	  /// control how this element is composed.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void recompose(StylesheetRoot root) throws javax.xml.transform.TransformerException
 	  public virtual void recompose(StylesheetRoot root)
 	  {
@@ -206,7 +205,7 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public virtual void compose(StylesheetRoot sroot)
 	  {
@@ -214,18 +213,18 @@ namespace org.apache.xalan.templates
 		ElemTemplateElement t = FirstChildElem;
 		m_hasTextLitOnly = ((t != null) && (t.XSLToken == Constants.ELEMNAME_TEXTLITERALRESULT) && (t.NextSiblingElem == null));
 
-		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		StylesheetRoot.ComposeState cstate = sroot.ComposeState;
 		cstate.pushStackMark();
 	  }
 
 	  /// <summary>
 	  /// This after the template's children have been composed.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCompose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public virtual void endCompose(StylesheetRoot sroot)
 	  {
-		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		StylesheetRoot.ComposeState cstate = sroot.ComposeState;
 		cstate.popStackMark();
 	  }
 
@@ -267,7 +266,7 @@ namespace org.apache.xalan.templates
 	  /// </param>
 	  /// <returns> Child just added to the child list </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node appendChild(org.w3c.dom.Node newChild) throws org.w3c.dom.DOMException
 	  public override Node appendChild(Node newChild)
 	  {
@@ -413,12 +412,12 @@ namespace org.apache.xalan.templates
 	  /// <returns> The new child
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node replaceChild(org.w3c.dom.Node newChild, org.w3c.dom.Node oldChild) throws org.w3c.dom.DOMException
 	  public override Node replaceChild(Node newChild, Node oldChild)
 	  {
 
-		if (oldChild == null || oldChild.ParentNode != this)
+		if (oldChild == null || oldChild.getParentNode() != this)
 		{
 		  return null;
 		}
@@ -459,7 +458,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node insertBefore(org.w3c.dom.Node newChild, org.w3c.dom.Node refChild) throws org.w3c.dom.DOMException
 	  public override Node insertBefore(Node newChild, Node refChild)
 	  {
@@ -486,13 +485,13 @@ namespace org.apache.xalan.templates
 			{
 				if (null != prev)
 				{
-					((ElemTemplateElement)prev).m_nextSibling = (ElemTemplateElement)node.NextSibling;
+					((ElemTemplateElement)prev).m_nextSibling = (ElemTemplateElement)node.getNextSibling();
 				}
 				else
 				{
-					m_firstChild = (ElemTemplateElement)node.NextSibling;
+					m_firstChild = (ElemTemplateElement)node.getNextSibling();
 				}
-				node = node.NextSibling;
+				node = node.getNextSibling();
 				continue; // prev remains the same.
 			}
 			if (refChild == node)
@@ -508,12 +507,12 @@ namespace org.apache.xalan.templates
 				((ElemTemplateElement)newChild).m_nextSibling = (ElemTemplateElement)refChild;
 				((ElemTemplateElement)newChild).ParentElem = this;
 				prev = newChild;
-				node = node.NextSibling;
+				node = node.getNextSibling();
 				foundit = true;
 				continue;
 			}
 			prev = node;
-			node = node.NextSibling;
+			node = node.getNextSibling();
 		}
 
 		if (!foundit)
@@ -699,7 +698,7 @@ namespace org.apache.xalan.templates
 	  /// Note that this is the line position of the first character
 	  /// after the text associated with the document event. </summary>
 	  /// <returns> The line number, or -1 if none is available. </returns>
-	  /// <seealso cref= #getColumnNumber </seealso>
+	  /// <seealso cref=".getColumnNumber"/>
 	  public virtual int EndLineNumber
 	  {
 		  get
@@ -713,7 +712,7 @@ namespace org.apache.xalan.templates
 	  /// Note that this is the line position of the first character
 	  /// after the text associated with the document event. </summary>
 	  /// <returns> The line number, or -1 if none is available. </returns>
-	  /// <seealso cref= #getColumnNumber </seealso>
+	  /// <seealso cref=".getColumnNumber"/>
 	  public virtual int LineNumber
 	  {
 		  get
@@ -740,7 +739,7 @@ namespace org.apache.xalan.templates
 	  /// character after the text associated with the document
 	  /// event.  The first column in a line is position 1. </summary>
 	  /// <returns> The column number, or -1 if none is available. </returns>
-	  /// <seealso cref= #getLineNumber </seealso>
+	  /// <seealso cref=".getLineNumber"/>
 	  public virtual int EndColumnNumber
 	  {
 		  get
@@ -755,7 +754,7 @@ namespace org.apache.xalan.templates
 	  /// character after the text associated with the document
 	  /// event.  The first column in a line is position 1. </summary>
 	  /// <returns> The column number, or -1 if none is available. </returns>
-	  /// <seealso cref= #getLineNumber </seealso>
+	  /// <seealso cref=".getLineNumber"/>
 	  public virtual int ColumnNumber
 	  {
 		  get
@@ -771,7 +770,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> A string containing the public identifier, or
 	  ///         null if none is available. </returns>
-	  /// <seealso cref= #getSystemId </seealso>
+	  /// <seealso cref=".getSystemId"/>
 	  public virtual string PublicId
 	  {
 		  get
@@ -788,7 +787,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> A string containing the system identifier, or null
 	  ///         if none is available. </returns>
-	  /// <seealso cref= #getPublicId </seealso>
+	  /// <seealso cref=".getPublicId"/>
 	  public virtual string SystemId
 	  {
 		  get
@@ -806,8 +805,8 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_lineNumber = value.LineNumber;
-			m_columnNumber = value.ColumnNumber;
+			m_lineNumber = value.getLineNumber();
+			m_columnNumber = value.getColumnNumber();
 		  }
 	  }
 
@@ -819,8 +818,8 @@ namespace org.apache.xalan.templates
 	  {
 		  set
 		  {
-			m_endLineNumber = value.LineNumber;
-			m_endColumnNumber = value.ColumnNumber;
+			m_endLineNumber = value.getLineNumber();
+			m_endColumnNumber = value.getColumnNumber();
 		  }
 	  }
 
@@ -853,14 +852,21 @@ namespace org.apache.xalan.templates
 	  /// A text node is preserved if an ancestor element of the text node
 	  /// has an xml:space attribute with a value of preserve, and
 	  /// no closer ancestor element has xml:space with a value of default. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a> </seealso>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Creating-Text">section-Creating-Text in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"/>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Creating-Text">section-Creating-Text in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v">  Enumerated value, either Constants.ATTRVAL_PRESERVE 
 	  /// or Constants.ATTRVAL_STRIP. </param>
-	  public virtual void setXmlSpace(int v)
+	  public virtual int XmlSpace
 	  {
-		m_defaultSpace = ((Constants.ATTRVAL_STRIP == v) ? true : false);
+		  set
+		  {
+			m_defaultSpace = ((Constants.ATTRVAL_STRIP == value) ? true : false);
+		  }
+		  get
+		  {
+			return m_defaultSpace;
+		  }
 	  }
 
 	  /// <summary>
@@ -868,20 +874,15 @@ namespace org.apache.xalan.templates
 	  /// A text node is preserved if an ancestor element of the text node
 	  /// has an xml:space attribute with a value of preserve, and
 	  /// no closer ancestor element has xml:space with a value of default. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a> </seealso>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Creating-Text">section-Creating-Text in XSLT Specification</a>
-	  /// </seealso>
-	  /// <returns> The value of the xml:space attribute </returns>
-	  public virtual bool getXmlSpace()
-	  {
-		return m_defaultSpace;
-	  }
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"/>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Creating-Text">section-Creating-Text in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// The list of namespace declarations for this element only.
 	  /// @serial
 	  /// </summary>
-	  private IList m_declaredPrefixes;
+	  private System.Collections.IList m_declaredPrefixes;
 
 	  /// <summary>
 	  /// Return a table that contains all prefixes available
@@ -889,7 +890,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> Vector containing the prefixes available within this
 	  /// element context  </returns>
-	  public virtual IList DeclaredPrefixes
+	  public virtual System.Collections.IList DeclaredPrefixes
 	  {
 		  get
 		  {
@@ -906,14 +907,11 @@ namespace org.apache.xalan.templates
 	  /// the ContentHandler.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setPrefixes(org.xml.sax.helpers.NamespaceSupport nsSupport) throws javax.xml.transform.TransformerException
-	  public virtual NamespaceSupport Prefixes
+	  public virtual void setPrefixes(NamespaceSupport nsSupport)
 	  {
-		  set
-		  {
-			setPrefixes(value, false);
-		  }
+		setPrefixes(nsSupport, false);
 	  }
 
 	  /// <summary>
@@ -926,12 +924,12 @@ namespace org.apache.xalan.templates
 	  /// <param name="excludeXSLDecl"> true if XSLT namespaces should be ignored.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setPrefixes(org.xml.sax.helpers.NamespaceSupport nsSupport, boolean excludeXSLDecl) throws javax.xml.transform.TransformerException
 	  public virtual void setPrefixes(NamespaceSupport nsSupport, bool excludeXSLDecl)
 	  {
 
-		System.Collections.IEnumerator decls = nsSupport.DeclaredPrefixes;
+		System.Collections.IEnumerator decls = nsSupport.getDeclaredPrefixes();
 
 		while (decls.MoveNext())
 		{
@@ -992,7 +990,7 @@ namespace org.apache.xalan.templates
 	//      return Constants.S_XMLNAMESPACEURI;
 	//    }
 
-		IList nsDecls = m_declaredPrefixes;
+		System.Collections.IList nsDecls = m_declaredPrefixes;
 
 		if (null != nsDecls)
 		{
@@ -1036,14 +1034,14 @@ namespace org.apache.xalan.templates
 	  /// and all parent elements, screened for excluded prefixes.
 	  /// @serial
 	  /// </summary>
-	  private IList m_prefixTable;
+	  private System.Collections.IList m_prefixTable;
 
 	  /// <summary>
 	  /// Return a table that contains all prefixes available
 	  /// within this element context.
 	  /// </summary>
 	  /// <returns> reference to vector of <seealso cref="XMLNSDecl"/>s, which may be null. </returns>
-	  internal virtual IList PrefixTable
+	  internal virtual System.Collections.IList PrefixTable
 	  {
 		  get
 		  {
@@ -1059,9 +1057,9 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Get whether or not the passed URL is contained flagged by
 	  /// the "extension-element-prefixes" property.  This method is overridden 
-	  /// by <seealso cref="ElemLiteralResult#containsExcludeResultPrefix"/>. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#extension-element">extension-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// by <seealso cref="ElemLiteralResult.containsExcludeResultPrefix"/>. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.extension-element">extension-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="prefix"> non-null reference to prefix that might be excluded.
 	  /// </param>
 	  /// <returns> true if the prefix should normally be excluded. </returns>
@@ -1087,7 +1085,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> true if the given namespace should be excluded.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private boolean excludeResultNSDecl(String prefix, String uri) throws javax.xml.transform.TransformerException
 	  private bool excludeResultNSDecl(string prefix, string uri)
 	  {
@@ -1118,7 +1116,7 @@ namespace org.apache.xalan.templates
 	  /// namespaces, *not* the original namespaces.
 	  /// </summary>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void resolvePrefixTables() throws javax.xml.transform.TransformerException
 	  public virtual void resolvePrefixTables()
 	  {
@@ -1181,7 +1179,7 @@ namespace org.apache.xalan.templates
 		{
 
 		  // The prefix table of the parent should never be null!
-		  IList prefixes = parent.m_prefixTable;
+		  System.Collections.IList prefixes = parent.m_prefixTable;
 
 		  if (null == m_prefixTable && !needToCheckExclude())
 		  {
@@ -1256,7 +1254,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void executeNSDecls(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  internal virtual void executeNSDecls(TransformerImpl transformer)
 	  {
@@ -1271,7 +1269,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="ignorePrefix"> string prefix to not startPrefixMapping
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void executeNSDecls(org.apache.xalan.transformer.TransformerImpl transformer, String ignorePrefix) throws javax.xml.transform.TransformerException
 	  internal virtual void executeNSDecls(TransformerImpl transformer, string ignorePrefix)
 	  {
@@ -1306,7 +1304,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void unexecuteNSDecls(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  internal virtual void unexecuteNSDecls(TransformerImpl transformer)
 	  {
@@ -1321,7 +1319,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="ignorePrefix"> string prefix to not endPrefixMapping
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void unexecuteNSDecls(org.apache.xalan.transformer.TransformerImpl transformer, String ignorePrefix) throws javax.xml.transform.TransformerException
 	  internal virtual void unexecuteNSDecls(TransformerImpl transformer, string ignorePrefix)
 	  {
@@ -1444,7 +1442,7 @@ namespace org.apache.xalan.templates
     
 			if (walker != null)
 			{
-			  for (walker = walker.FirstChild; walker != null; prev = walker, walker = walker.NextSibling)
+			  for (walker = walker.getFirstChild(); walker != null; prev = walker, walker = walker.getNextSibling())
 			  {
 				if (walker == this)
 				{
@@ -1621,7 +1619,7 @@ namespace org.apache.xalan.templates
 	  ///          less than, equal to, or greater than the specified object. </returns>
 	  /// <exception cref="ClassCastException"> if the specified object's
 	  ///         type prevents it from being compared to this Object. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int compareTo(Object o) throws ClassCastException
 	  public virtual int compareTo(object o)
 	  {
@@ -1646,15 +1644,15 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get information about whether or not an element should strip whitespace. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <param name="support"> The XPath runtime state. </param>
 	  /// <param name="targetElement"> Element to check
 	  /// </param>
 	  /// <returns> true if the whitespace should be stripped.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean shouldStripWhiteSpace(org.apache.xpath.XPathContext support, org.w3c.dom.Element targetElement) throws javax.xml.transform.TransformerException
 	  public virtual bool shouldStripWhiteSpace(org.apache.xpath.XPathContext support, org.w3c.dom.Element targetElement)
 	  {
@@ -1664,8 +1662,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get information about whether or not whitespace can be stripped. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <returns> true if the whitespace can be stripped. </returns>
 	  public virtual bool canStripWhiteSpace()
 	  {
@@ -1737,7 +1735,7 @@ namespace org.apache.xalan.templates
 		  return visitor.visitInstruction(this);
 	  }
 
-	  /// <seealso cref= XSLTVisitable#callVisitors(XSLTVisitor) </seealso>
+	  /// <seealso cref="XSLTVisitable.callVisitors(XSLTVisitor)"/>
 	  public virtual void callVisitors(XSLTVisitor visitor)
 	  {
 		  if (accept(visitor))
@@ -1766,7 +1764,7 @@ namespace org.apache.xalan.templates
 	  }
 
 
-		/// <seealso cref= PrefixResolver#handlesNullPrefixes() </seealso>
+		/// <seealso cref="PrefixResolver.handlesNullPrefixes()"/>
 		public virtual bool handlesNullPrefixes()
 		{
 			return false;

@@ -23,15 +23,14 @@
 namespace org.apache.xalan.templates
 {
 
-
 	/// <summary>
 	/// Implement xsl:otherwise.
 	/// <pre>
 	/// <!ELEMENT xsl:otherwise %template;>
 	/// <!ATTLIST xsl:otherwise %space-att;>
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Conditional-Processing-with-xsl:choose">XXX in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Conditional-Processing-with-xsl:choose">XXX in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemOtherwise : ElemTemplateElement
 	{
@@ -39,8 +38,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for this element </returns>
 	  public override int XSLToken
 	  {

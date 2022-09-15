@@ -25,7 +25,6 @@ using System.Text;
 namespace org.apache.xalan.xsltc.trax
 {
 
-
 	using CompilerException = org.apache.xalan.xsltc.compiler.CompilerException;
 	using Parser = org.apache.xalan.xsltc.compiler.Parser;
 	using SourceLoader = org.apache.xalan.xsltc.compiler.SourceLoader;
@@ -194,7 +193,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Just forward SAX2 event to parser object.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 		public virtual void endDocument()
 		{
@@ -328,7 +327,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Just forward SAX2 event to parser object.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localname, String qname, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 		public virtual void startElement(string uri, string localname, string qname, Attributes attributes)
 		{
@@ -382,7 +381,7 @@ namespace org.apache.xalan.xsltc.trax
 		{
 			set
 			{
-				SystemId = value.SystemId;
+				SystemId = value.getSystemId();
 				_parser.DocumentLocator = value;
 			}
 		}

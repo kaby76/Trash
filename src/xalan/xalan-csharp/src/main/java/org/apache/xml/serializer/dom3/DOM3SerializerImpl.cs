@@ -22,6 +22,8 @@
 namespace org.apache.xml.serializer.dom3
 {
 
+	using DOM3Serializer = org.apache.xml.serializer.DOM3Serializer;
+	using SerializationHandler = org.apache.xml.serializer.SerializationHandler;
 	using WrappedRuntimeException = org.apache.xml.serializer.utils.WrappedRuntimeException;
 	using DOMErrorHandler = org.w3c.dom.DOMErrorHandler;
 	using Node = org.w3c.dom.Node;
@@ -122,7 +124,7 @@ namespace org.apache.xml.serializer.dom3
 		/// </summary>
 		/// <param name="node"> the Level 3 DOM node to serialize </param>
 		/// <exception cref="IOException"> if an I/O exception occured while serializing </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void serializeDOM3(org.w3c.dom.Node node) throws java.io.IOException
 		public void serializeDOM3(Node node)
 		{

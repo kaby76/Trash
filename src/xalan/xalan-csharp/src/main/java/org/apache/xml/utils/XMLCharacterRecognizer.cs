@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// Class used to verify whether the specified <var>ch</var> 
 	/// conforms to the XML 1.0 definition of whitespace. 
@@ -39,7 +38,7 @@ namespace org.apache.xml.utils
 	  /// <returns> =true if <var>ch</var> is XML whitespace; otherwise =false. </returns>
 	  public static bool isWhiteSpace(char ch)
 	  {
-		return (ch == 0x20) || (ch == 0x09) || (ch == 0xD) || (ch == 0xA);
+		return (ch == (char)0x20) || (ch == (char)0x09) || (ch == (char)0xD) || (ch == (char)0xA);
 	  }
 
 	  /// <summary>

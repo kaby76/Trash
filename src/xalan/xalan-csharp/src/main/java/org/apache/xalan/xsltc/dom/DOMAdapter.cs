@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -23,7 +21,10 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using DOMEnhancedForDTM = org.apache.xalan.xsltc.DOMEnhancedForDTM;
+	using StripFilter = org.apache.xalan.xsltc.StripFilter;
+	using TransletException = org.apache.xalan.xsltc.TransletException;
 	using Hashtable = org.apache.xalan.xsltc.runtime.Hashtable;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
@@ -200,9 +201,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getChildren(final int node)
-		public DTMAxisIterator getChildren(int node)
+		public DTMAxisIterator getChildren(in int node)
 		{
 			if (_enhancedDOM != null)
 			{
@@ -223,9 +222,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getTypedChildren(final int type)
-		public DTMAxisIterator getTypedChildren(int type)
+		public DTMAxisIterator getTypedChildren(in int type)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int[] reverse = getReverse();
@@ -241,16 +238,12 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getNamespaceAxisIterator(final int axis, final int ns)
-		public DTMAxisIterator getNamespaceAxisIterator(int axis, int ns)
+		public DTMAxisIterator getNamespaceAxisIterator(in int axis, in int ns)
 		{
 			return _dom.getNamespaceAxisIterator(axis, NSReverse[ns]);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getAxisIterator(final int axis)
-		public DTMAxisIterator getAxisIterator(int axis)
+		public DTMAxisIterator getAxisIterator(in int axis)
 		{
 			if (_enhancedDOM != null)
 			{
@@ -262,9 +255,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getTypedAxisIterator(final int axis, final int type)
-		public DTMAxisIterator getTypedAxisIterator(int axis, int type)
+		public DTMAxisIterator getTypedAxisIterator(in int axis, in int type)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int[] reverse = getReverse();
@@ -307,9 +298,7 @@ namespace org.apache.xalan.xsltc.dom
 			return _dom.orderNodes(source, node);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getExpandedTypeID(final int node)
-		public int getExpandedTypeID(int node)
+		public int getExpandedTypeID(in int node)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final short[] mapping = getMapping();
@@ -335,9 +324,7 @@ namespace org.apache.xalan.xsltc.dom
 			return type;
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getNamespaceType(final int node)
-		public int getNamespaceType(int node)
+		public int getNamespaceType(in int node)
 		{
 			return NSMapping[_dom.getNSType(node)];
 		}
@@ -347,56 +334,44 @@ namespace org.apache.xalan.xsltc.dom
 		return _dom.getNSType(node);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getParent(final int node)
-		public int getParent(int node)
+		public int getParent(in int node)
 		{
 			return _dom.getParent(node);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getAttributeNode(final int type, final int element)
-		public int getAttributeNode(int type, int element)
+		public int getAttributeNode(in int type, in int element)
 		{
 		return _dom.getAttributeNode(Reverse[type], element);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNodeName(final int node)
-		public string getNodeName(int node)
+		public string getNodeName(in int node)
 		{
-			if (node == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (node == DTM.NULL)
 			{
 				return "";
 			}
 			return _dom.getNodeName(node);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNodeNameX(final int node)
-		public string getNodeNameX(int node)
+		public string getNodeNameX(in int node)
 		{
-			if (node == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (node == DTM.NULL)
 			{
 				return "";
 			}
 			return _dom.getNodeNameX(node);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNamespaceName(final int node)
-		public string getNamespaceName(int node)
+		public string getNamespaceName(in int node)
 		{
-			if (node == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (node == DTM.NULL)
 			{
 				return "";
 			}
 			return _dom.getNamespaceName(node);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getStringValueX(final int node)
-		public string getStringValueX(int node)
+		public string getStringValueX(in int node)
 		{
 			if (_enhancedDOM != null)
 			{
@@ -404,7 +379,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 			else
 			{
-				if (node == org.apache.xml.dtm.DTM_Fields.NULL)
+				if (node == DTM.NULL)
 				{
 					return "";
 				}
@@ -412,25 +387,23 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void copy(final int node, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public void copy(int node, SerializationHandler handler)
+		public void copy(in int node, SerializationHandler handler)
 		{
 			_dom.copy(node, handler);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void copy(org.apache.xml.dtm.DTMAxisIterator nodes,org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
 		public void copy(DTMAxisIterator nodes, SerializationHandler handler)
 		{
 		_dom.copy(nodes, handler);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String shallowCopy(final int node, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public string shallowCopy(int node, SerializationHandler handler)
+		public string shallowCopy(in int node, SerializationHandler handler)
 		{
 			if (_enhancedDOM != null)
 			{
@@ -442,17 +415,14 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean lessThan(final int node1, final int node2)
-		public bool lessThan(int node1, int node2)
+		public bool lessThan(in int node1, in int node2)
 		{
 			return _dom.lessThan(node1, node2);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(final int textNode, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public void characters(int textNode, SerializationHandler handler)
+		public void characters(in int textNode, SerializationHandler handler)
 		{
 			if (_enhancedDOM != null)
 			{
@@ -533,16 +503,12 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean isElement(final int node)
-		public bool isElement(int node)
+		public bool isElement(in int node)
 		{
 			return (_dom.isElement(node));
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean isAttribute(final int node)
-		public bool isAttribute(int node)
+		public bool isAttribute(in int node)
 		{
 			return (_dom.isAttribute(node));
 		}
@@ -599,7 +565,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String lookupNamespace(int node, String prefix) throws org.apache.xalan.xsltc.TransletException
 		public string lookupNamespace(int node, string prefix)
 		{

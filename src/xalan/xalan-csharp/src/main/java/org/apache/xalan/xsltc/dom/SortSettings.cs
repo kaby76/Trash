@@ -22,7 +22,6 @@
 namespace org.apache.xalan.xsltc.dom
 {
 
-
 	using AbstractTranslet = org.apache.xalan.xsltc.runtime.AbstractTranslet;
 
 	/// <summary>

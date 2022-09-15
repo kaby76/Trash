@@ -22,8 +22,9 @@
  */
 namespace org.apache.xpath.objects
 {
-
 	using DTMManager = org.apache.xml.dtm.DTMManager;
+	using NodeSetDTM = org.apache.xpath.NodeSetDTM;
+	using XPathContext = org.apache.xpath.XPathContext;
 
 	using Node = org.w3c.dom.Node;
 	using NodeList = org.w3c.dom.NodeList;
@@ -104,7 +105,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.traversal.NodeIterator nodeset() throws javax.xml.transform.TransformerException
 	  public override NodeIterator nodeset()
 	  {
@@ -117,7 +118,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.NodeList nodelist() throws javax.xml.transform.TransformerException
 	  public override NodeList nodelist()
 	  {

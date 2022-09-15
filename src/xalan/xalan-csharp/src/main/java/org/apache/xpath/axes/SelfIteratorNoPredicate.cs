@@ -22,15 +22,15 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 
 	/// <summary>
 	/// This class implements an optimized iterator for
 	/// "." patterns, that is, the self axes without any predicates. </summary>
-	/// <seealso cref= org.apache.xpath.axes.LocPathIterator
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="org.apache.xpath.axes.LocPathIterator"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class SelfIteratorNoPredicate : LocPathIterator
 	{
@@ -45,7 +45,7 @@ namespace org.apache.xpath.axes
 	  /// <param name="analysis"> Analysis bits.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: SelfIteratorNoPredicate(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis) throws javax.xml.transform.TransformerException
 	  internal SelfIteratorNoPredicate(Compiler compiler, int opPos, int analysis) : base(compiler, opPos, analysis, false)
 	  {
@@ -55,7 +55,7 @@ namespace org.apache.xpath.axes
 	  /// Create a SelfIteratorNoPredicate object.
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public SelfIteratorNoPredicate() throws javax.xml.transform.TransformerException
 	  public SelfIteratorNoPredicate() : base(null)
 	  {
@@ -73,15 +73,15 @@ namespace org.apache.xpath.axes
 	  {
 		if (m_foundLast)
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 
 		int next;
 
-		m_lastFetched = next = (org.apache.xml.dtm.DTM_Fields.NULL == m_lastFetched) ? m_context : org.apache.xml.dtm.DTM_Fields.NULL;
+		m_lastFetched = next = (DTM.NULL == m_lastFetched) ? m_context : DTM.NULL;
 
 		// m_lastFetched = next;
-		if (org.apache.xml.dtm.DTM_Fields.NULL != next)
+		if (DTM.NULL != next)
 		{
 		  m_pos++;
 
@@ -91,7 +91,7 @@ namespace org.apache.xpath.axes
 		{
 		  m_foundLast = true;
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 	  }
 
@@ -102,7 +102,7 @@ namespace org.apache.xpath.axes
 	  /// value without having to do a clone operation. </summary>
 	  /// <param name="xctxt"> The XPath runtime context. </param>
 	  /// <returns> the first node out of the nodeset, or DTM.NULL. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int asNode(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override int asNode(XPathContext xctxt)
 	  {

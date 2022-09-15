@@ -32,8 +32,8 @@ namespace org.apache.xalan.templates
 	/// <pre>
 	/// <!ELEMENT xsl:apply-imports EMPTY>
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#apply-imports">apply-imports in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.apply-imports">apply-imports in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemApplyImport : ElemTemplateElement
 	{
@@ -41,8 +41,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> Token ID for xsl:apply-imports element types </returns>
 	  public override int XSLToken
 	  {
@@ -70,7 +70,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -85,8 +85,8 @@ namespace org.apache.xalan.templates
 		  transformer.TraceManager.fireTraceEvent(this);
 		}
 
-		int sourceNode = transformer.XPathContext.CurrentNode;
-		if (org.apache.xml.dtm.DTM_Fields.NULL != sourceNode)
+		int sourceNode = transformer.XPathContext.getCurrentNode();
+		if (DTM.NULL != sourceNode)
 		{
 		  // supply the current templated (matched, not named)        
 		  ElemTemplate matchTemplate = transformer.MatchedTemplate;

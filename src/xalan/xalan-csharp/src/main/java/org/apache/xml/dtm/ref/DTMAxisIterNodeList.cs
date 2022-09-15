@@ -20,7 +20,8 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
-
+	using DTM = org.apache.xml.dtm.DTM;
+	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using IntVector = org.apache.xml.utils.IntVector;
 
 	using Node = org.w3c.dom.Node;
@@ -124,12 +125,12 @@ namespace org.apache.xml.dtm.@ref
 				}
 				else if (m_last == -1)
 				{
-					while (((node = m_iter.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END) && count <= index)
+					while (((node = m_iter.next()) != DTMAxisIterator.END) && count <= index)
 					{
 						m_cachedNodes.addElement(node);
 						count++;
 					}
-					if (node == org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+					if (node == DTMAxisIterator.END)
 					{
 						m_last = count;
 					}
@@ -153,7 +154,7 @@ namespace org.apache.xml.dtm.@ref
 				if (m_last == -1)
 				{
 					int node;
-					while ((node = m_iter.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+					while ((node = m_iter.next()) != DTMAxisIterator.END)
 					{
 						m_cachedNodes.addElement(node);
 					}

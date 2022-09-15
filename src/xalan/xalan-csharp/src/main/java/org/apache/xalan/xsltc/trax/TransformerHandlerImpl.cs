@@ -24,7 +24,7 @@
 namespace org.apache.xalan.xsltc.trax
 {
 
-
+	using StripFilter = org.apache.xalan.xsltc.StripFilter;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
 	using DOMWSFilter = org.apache.xalan.xsltc.dom.DOMWSFilter;
 	using SAXImpl = org.apache.xalan.xsltc.dom.SAXImpl;
@@ -126,7 +126,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// for the transformation. </summary>
 		/// <param name="result"> A Result instance, should not be null </param>
 		/// <exception cref="IllegalArgumentException"> if result is invalid for some reason </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setResult(javax.xml.transform.Result result) throws IllegalArgumentException
 		public virtual Result Result
 		{
@@ -177,7 +177,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements org.xml.sax.ContentHandler.characters()
 		/// Receive notification of character data.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(char[] ch, int start, int length) throws org.xml.sax.SAXException
 		public virtual void characters(char[] ch, int start, int length)
 		{
@@ -188,7 +188,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements org.xml.sax.ContentHandler.startDocument()
 		/// Receive notification of the beginning of a document.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocument() throws org.xml.sax.SAXException
 		public virtual void startDocument()
 		{
@@ -207,7 +207,7 @@ namespace org.apache.xalan.xsltc.trax
 				// Create an internal DOM (not W3C) and get SAX2 input handler
 				try
 				{
-					dtmManager = (XSLTCDTMManager)_transformer.TransformerFactory.DTMManagerClass.newInstance();
+					dtmManager = (XSLTCDTMManager)System.Activator.CreateInstance(_transformer.TransformerFactory.DTMManagerClass);
 				}
 				catch (Exception e)
 				{
@@ -238,7 +238,7 @@ namespace org.apache.xalan.xsltc.trax
 
 				if (_locator != null)
 				{
-					_handler.DocumentLocator = _locator;
+					_handler.setDocumentLocator(_locator);
 				}
 			}
 
@@ -250,7 +250,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements org.xml.sax.ContentHandler.endDocument()
 		/// Receive notification of the end of a document.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 		public virtual void endDocument()
 		{
@@ -280,7 +280,7 @@ namespace org.apache.xalan.xsltc.trax
 		}
 		if (_isIdentity && _result is DOMResult)
 		{
-			((DOMResult)_result).Node = _transformer.TransletOutputHandlerFactory.Node;
+			((DOMResult)_result).setNode(_transformer.TransletOutputHandlerFactory.Node);
 		}
 		}
 
@@ -288,7 +288,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements org.xml.sax.ContentHandler.startElement()
 		/// Receive notification of the beginning of an element.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localName, String qname, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 		public virtual void startElement(string uri, string localName, string qname, Attributes attributes)
 		{
@@ -299,7 +299,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements org.xml.sax.ContentHandler.endElement()
 		/// Receive notification of the end of an element.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String namespaceURI, String localName, String qname) throws org.xml.sax.SAXException
 		public virtual void endElement(string namespaceURI, string localName, string qname)
 		{
@@ -310,7 +310,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements org.xml.sax.ContentHandler.processingInstruction()
 		/// Receive notification of a processing instruction.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws org.xml.sax.SAXException
 		public virtual void processingInstruction(string target, string data)
 		{
@@ -320,7 +320,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.ext.LexicalHandler.startCDATA()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startCDATA() throws org.xml.sax.SAXException
 		public virtual void startCDATA()
 		{
@@ -333,7 +333,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.ext.LexicalHandler.endCDATA()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCDATA() throws org.xml.sax.SAXException
 		public virtual void endCDATA()
 		{
@@ -347,7 +347,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements org.xml.sax.ext.LexicalHandler.comment()
 		/// Receieve notification of a comment
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char[] ch, int start, int length) throws org.xml.sax.SAXException
 		public virtual void comment(char[] ch, int start, int length)
 		{
@@ -362,7 +362,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Receive notification of ignorable whitespace in element
 		/// content. Similar to characters(char[], int, int).
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void ignorableWhitespace(char[] ch, int start, int length) throws org.xml.sax.SAXException
 		public virtual void ignorableWhitespace(char[] ch, int start, int length)
 		{
@@ -381,7 +381,7 @@ namespace org.apache.xalan.xsltc.trax
     
 				if (_handler != null)
 				{
-					_handler.DocumentLocator = value;
+					_handler.setDocumentLocator(value);
 				}
 			}
 		}
@@ -390,7 +390,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements org.xml.sax.ContentHandler.skippedEntity()
 		/// Receive notification of a skipped entity.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void skippedEntity(String name) throws org.xml.sax.SAXException
 		public virtual void skippedEntity(string name)
 		{
@@ -401,7 +401,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements org.xml.sax.ContentHandler.startPrefixMapping()
 		/// Begin the scope of a prefix-URI Namespace mapping.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startPrefixMapping(String prefix, String uri) throws org.xml.sax.SAXException
 		public virtual void startPrefixMapping(string prefix, string uri)
 		{
@@ -412,7 +412,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements org.xml.sax.ContentHandler.endPrefixMapping()
 		/// End the scope of a prefix-URI Namespace mapping.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endPrefixMapping(String prefix) throws org.xml.sax.SAXException
 		public virtual void endPrefixMapping(string prefix)
 		{
@@ -422,7 +422,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.ext.LexicalHandler.startDTD()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDTD(String name, String publicId, String systemId) throws org.xml.sax.SAXException
 		public virtual void startDTD(string name, string publicId, string systemId)
 		{
@@ -435,7 +435,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.ext.LexicalHandler.endDTD()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDTD() throws org.xml.sax.SAXException
 		public virtual void endDTD()
 		{
@@ -448,7 +448,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.ext.LexicalHandler.startEntity()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startEntity(String name) throws org.xml.sax.SAXException
 		public virtual void startEntity(string name)
 		{
@@ -461,7 +461,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.ext.LexicalHandler.endEntity()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endEntity(String name) throws org.xml.sax.SAXException
 		public virtual void endEntity(string name)
 		{
@@ -474,7 +474,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.DTDHandler.unparsedEntityDecl()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void unparsedEntityDecl(String name, String publicId, String systemId, String notationName) throws org.xml.sax.SAXException
 		public virtual void unparsedEntityDecl(string name, string publicId, string systemId, string notationName)
 		{
@@ -487,7 +487,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.DTDHandler.notationDecl()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void notationDecl(String name, String publicId, String systemId) throws org.xml.sax.SAXException
 		public virtual void notationDecl(string name, string publicId, string systemId)
 		{
@@ -500,7 +500,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.ext.DeclHandler.attributeDecl()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void attributeDecl(String eName, String aName, String type, String valueDefault, String value) throws org.xml.sax.SAXException
 		public virtual void attributeDecl(string eName, string aName, string type, string valueDefault, string value)
 		{
@@ -513,7 +513,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.ext.DeclHandler.elementDecl()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void elementDecl(String name, String model) throws org.xml.sax.SAXException
 		public virtual void elementDecl(string name, string model)
 		{
@@ -526,7 +526,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.ext.DeclHandler.externalEntityDecl()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void externalEntityDecl(String name, String publicId, String systemId) throws org.xml.sax.SAXException
 		public virtual void externalEntityDecl(string name, string publicId, string systemId)
 		{
@@ -539,7 +539,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Implements org.xml.sax.ext.DeclHandler.externalEntityDecl()
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void internalEntityDecl(String name, String value) throws org.xml.sax.SAXException
 		public virtual void internalEntityDecl(string name, string value)
 		{

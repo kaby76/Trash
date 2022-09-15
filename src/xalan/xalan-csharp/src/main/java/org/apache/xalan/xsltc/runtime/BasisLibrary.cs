@@ -25,7 +25,8 @@ using System.Text;
 namespace org.apache.xalan.xsltc.runtime
 {
 
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using Translet = org.apache.xalan.xsltc.Translet;
 	using AbsoluteIterator = org.apache.xalan.xsltc.dom.AbsoluteIterator;
 	using ArrayNodeListIterator = org.apache.xalan.xsltc.dom.ArrayNodeListIterator;
 	using DOMAdapter = org.apache.xalan.xsltc.dom.DOMAdapter;
@@ -82,7 +83,7 @@ namespace org.apache.xalan.xsltc.runtime
 		{
 			double result = 0.0;
 			int node;
-			while ((node = iterator.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((node = iterator.next()) != DTMAxisIterator.END)
 			{
 			result += double.Parse(dom.getStringValueX(node));
 			}
@@ -145,7 +146,7 @@ namespace org.apache.xalan.xsltc.runtime
 			//return ((DOM)obj).getStringValueX(node);
 			return ((DOM)obj).StringValue;
 		}
-		else if (obj is double?)
+		else if (obj is Double)
 		{
 			double? d = (double?)obj;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -189,15 +190,15 @@ namespace org.apache.xalan.xsltc.runtime
 		/// </summary>
 		public static double numberF(object obj, DOM dom)
 		{
-		if (obj is double?)
+		if (obj is Double)
 		{
 			return ((double?) obj).Value;
 		}
-		else if (obj is int?)
+		else if (obj is Integer)
 		{
 			return ((int?) obj).Value;
 		}
-		else if (obj is bool?)
+		else if (obj is Boolean)
 		{
 			return ((bool?) obj).Value ? 1.0 : 0.0;
 		}
@@ -242,18 +243,18 @@ namespace org.apache.xalan.xsltc.runtime
 		/// </summary>
 		public static bool booleanF(object obj)
 		{
-		if (obj is double?)
+		if (obj is Double)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final double temp = ((Nullable<double>) obj).doubleValue();
+//ORIGINAL LINE: final double temp = ((System.Nullable<double>) obj).doubleValue();
 			double temp = ((double?) obj).Value;
 			return temp != 0.0 && !double.IsNaN(temp);
 		}
-		else if (obj is int?)
+		else if (obj is Integer)
 		{
 			return ((int?) obj).Value != 0;
 		}
-		else if (obj is bool?)
+		else if (obj is Boolean)
 		{
 			return ((bool?) obj).Value;
 		}
@@ -264,7 +265,7 @@ namespace org.apache.xalan.xsltc.runtime
 		else if (obj is DTMAxisIterator)
 		{
 			DTMAxisIterator iter = (DTMAxisIterator) obj;
-			return iter.reset().next() != org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			return iter.reset().next() != DTMAxisIterator.END;
 		}
 		else if (obj is Node)
 		{
@@ -297,7 +298,7 @@ namespace org.apache.xalan.xsltc.runtime
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int strlen = value.length();
 			int strlen = value.Length;
-			int istart = (int)Math.Round(start) - 1;
+			int istart = (int)(long)Math.Round(start, MidpointRounding.AwayFromZero) - 1;
 
 			if (double.IsNaN(start))
 			{
@@ -332,8 +333,8 @@ namespace org.apache.xalan.xsltc.runtime
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int strlen = value.length();
 			int strlen = value.Length;
-			int istart = (int)Math.Round(start) - 1;
-			int isum = istart + (int)Math.Round(length);
+			int istart = (int)(long)Math.Round(start, MidpointRounding.AwayFromZero) - 1;
+			int isum = istart + (int)(long)Math.Round(length, MidpointRounding.AwayFromZero);
 
 			if (double.IsInfinity(length))
 			{
@@ -638,14 +639,14 @@ namespace org.apache.xalan.xsltc.runtime
 		/// <summary>
 		/// Implements the object-type() extension function.
 		/// </summary>
-		/// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+		/// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 		public static string objectTypeF(object obj)
 		{
 		  if (obj is string)
 		  {
 			return "string";
 		  }
-		  else if (obj is bool?)
+		  else if (obj is Boolean)
 		  {
 			return "boolean";
 		  }
@@ -738,7 +739,7 @@ namespace org.apache.xalan.xsltc.runtime
 		int lnode;
 		left.reset();
 
-		while ((lnode = left.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+		while ((lnode = left.next()) != DTMAxisIterator.END)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String lvalue = dom.getStringValueX(lnode);
@@ -746,7 +747,7 @@ namespace org.apache.xalan.xsltc.runtime
 
 			int rnode;
 			right.reset();
-			while ((rnode = right.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((rnode = right.next()) != DTMAxisIterator.END)
 			{
 					// String value must be the same if both nodes are the same
 					if (lnode == rnode)
@@ -780,7 +781,7 @@ namespace org.apache.xalan.xsltc.runtime
 		{
 		case Operators.EQ:
 				rnode = iterator.next();
-				if (rnode != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+				if (rnode != DTMAxisIterator.END)
 				{
 				value = dom.getStringValueX(node);
 					do
@@ -789,12 +790,12 @@ namespace org.apache.xalan.xsltc.runtime
 				{
 						   return true;
 				}
-					} while ((rnode = iterator.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END);
+					} while ((rnode = iterator.next()) != DTMAxisIterator.END);
 				}
 			break;
 		case Operators.NE:
 				rnode = iterator.next();
-				if (rnode != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+				if (rnode != DTMAxisIterator.END)
 				{
 				value = dom.getStringValueX(node);
 					do
@@ -803,12 +804,12 @@ namespace org.apache.xalan.xsltc.runtime
 				{
 							return true;
 				}
-					} while ((rnode = iterator.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END);
+					} while ((rnode = iterator.next()) != DTMAxisIterator.END);
 				}
 			break;
 		case Operators.LT:
 			// Assume we're comparing document order here
-			while ((rnode = iterator.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((rnode = iterator.next()) != DTMAxisIterator.END)
 			{
 			if (rnode > node)
 			{
@@ -818,7 +819,7 @@ namespace org.apache.xalan.xsltc.runtime
 			break;
 		case Operators.GT:
 			// Assume we're comparing document order here
-			while ((rnode = iterator.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((rnode = iterator.next()) != DTMAxisIterator.END)
 			{
 			if (rnode < node)
 			{
@@ -833,9 +834,7 @@ namespace org.apache.xalan.xsltc.runtime
 		/// <summary>
 		/// Utility function: node-set/number compare.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public static boolean compare(org.apache.xml.dtm.DTMAxisIterator left, final double rnumber, final int op, org.apache.xalan.xsltc.DOM dom)
-		public static bool compare(DTMAxisIterator left, double rnumber, int op, DOM dom)
+		public static bool compare(DTMAxisIterator left, in double rnumber, in int op, DOM dom)
 		{
 		int node;
 		//left.reset();
@@ -843,7 +842,7 @@ namespace org.apache.xalan.xsltc.runtime
 		switch (op)
 		{
 		case Operators.EQ:
-			while ((node = left.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((node = left.next()) != DTMAxisIterator.END)
 			{
 			if (numberF(dom.getStringValueX(node), dom) == rnumber)
 			{
@@ -853,7 +852,7 @@ namespace org.apache.xalan.xsltc.runtime
 			break;
 
 		case Operators.NE:
-			while ((node = left.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((node = left.next()) != DTMAxisIterator.END)
 			{
 			if (numberF(dom.getStringValueX(node), dom) != rnumber)
 			{
@@ -863,7 +862,7 @@ namespace org.apache.xalan.xsltc.runtime
 			break;
 
 		case Operators.GT:
-			while ((node = left.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((node = left.next()) != DTMAxisIterator.END)
 			{
 			if (numberF(dom.getStringValueX(node), dom) > rnumber)
 			{
@@ -873,7 +872,7 @@ namespace org.apache.xalan.xsltc.runtime
 			break;
 
 		case Operators.LT:
-			while ((node = left.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((node = left.next()) != DTMAxisIterator.END)
 			{
 			if (numberF(dom.getStringValueX(node), dom) < rnumber)
 			{
@@ -883,7 +882,7 @@ namespace org.apache.xalan.xsltc.runtime
 			break;
 
 		case Operators.GE:
-			while ((node = left.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((node = left.next()) != DTMAxisIterator.END)
 			{
 			if (numberF(dom.getStringValueX(node), dom) >= rnumber)
 			{
@@ -893,7 +892,7 @@ namespace org.apache.xalan.xsltc.runtime
 			break;
 
 		case Operators.LE:
-			while ((node = left.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((node = left.next()) != DTMAxisIterator.END)
 			{
 			if (numberF(dom.getStringValueX(node), dom) <= rnumber)
 			{
@@ -913,13 +912,11 @@ namespace org.apache.xalan.xsltc.runtime
 		/// <summary>
 		/// Utility function: node-set/string comparison. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public static boolean compare(org.apache.xml.dtm.DTMAxisIterator left, final String rstring, int op, org.apache.xalan.xsltc.DOM dom)
-		public static bool compare(DTMAxisIterator left, string rstring, int op, DOM dom)
+		public static bool compare(DTMAxisIterator left, in string rstring, int op, DOM dom)
 		{
 		int node;
 		//left.reset();
-		while ((node = left.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+		while ((node = left.next()) != DTMAxisIterator.END)
 		{
 			if (compareStrings(dom.getStringValueX(node), rstring, op, dom))
 			{
@@ -940,12 +937,12 @@ namespace org.apache.xalan.xsltc.runtime
 			// If node-boolean comparison -> convert node to boolean
 			if (left is Node || right is Node)
 			{
-			if (left is bool?)
+			if (left is Boolean)
 			{
 				right = new bool?(booleanF(right));
 				hasSimpleArgs = true;
 			}
-			if (right is bool?)
+			if (right is Boolean)
 			{
 				left = new bool?(booleanF(left));
 				hasSimpleArgs = true;
@@ -978,11 +975,11 @@ namespace org.apache.xalan.xsltc.runtime
 
 		if (hasSimpleArgs)
 		{
-			if (left is bool? || right is bool?)
+			if (left is bool? || right is Boolean)
 			{
 			result = booleanF(left) == booleanF(right);
 			}
-			else if (left is double? || right is double? || left is int? || right is int?)
+			else if (left is double? || right is double? || left is int? || right is Integer)
 			{
 			result = numberF(left, dom) == numberF(right, dom);
 			}
@@ -1020,7 +1017,7 @@ namespace org.apache.xalan.xsltc.runtime
 
 			if (left is DOM)
 			{
-			if (right is bool?)
+			if (right is Boolean)
 			{
 				result = ((bool?)right).Value;
 				return result == (op == Operators.EQ);
@@ -1032,7 +1029,7 @@ namespace org.apache.xalan.xsltc.runtime
 
 			if (right is Number)
 			{
-				result = ((Number)right).doubleValue() == stringToReal(sleft);
+				result = (double)((Number)right) == stringToReal(sleft);
 			}
 			else if (right is string)
 			{
@@ -1066,13 +1063,13 @@ namespace org.apache.xalan.xsltc.runtime
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final double temp = ((Number)right).doubleValue();
-			double temp = ((Number)right).doubleValue();
+			double temp = (double)((Number)right);
 			result = compare(iter, temp, op, dom);
 			}
-			else if (right is bool?)
+			else if (right is Boolean)
 			{
 			bool temp = ((bool?)right).Value;
-			result = (iter.reset().next() != org.apache.xml.dtm.DTMAxisIterator_Fields.END) == temp;
+			result = (iter.reset().next() != DTMAxisIterator.END) == temp;
 			}
 			else if (right is DOM)
 			{
@@ -1165,14 +1162,14 @@ namespace org.apache.xalan.xsltc.runtime
 
 		static BasisLibrary()
 		{
-		NumberFormat f = NumberFormat.getInstance(Locale.Default);
+		NumberFormat f = NumberFormat.getInstance(Locale.getDefault());
 		defaultFormatter = (f is DecimalFormat) ? (DecimalFormat) f : new DecimalFormat();
 		// Set max fraction digits so that truncation does not occur. Setting 
 			// the max to Integer.MAX_VALUE may cause problems with some JDK's.
-		defaultFormatter.MaximumFractionDigits = DOUBLE_FRACTION_DIGITS;
-			defaultFormatter.MinimumFractionDigits = 0;
-			defaultFormatter.MinimumIntegerDigits = 1;
-			defaultFormatter.GroupingUsed = false;
+		defaultFormatter.setMaximumFractionDigits(DOUBLE_FRACTION_DIGITS);
+			defaultFormatter.setMinimumFractionDigits(0);
+			defaultFormatter.setMinimumIntegerDigits(1);
+			defaultFormatter.setGroupingUsed(false);
 		string resource = "org.apache.xalan.xsltc.runtime.ErrorMessages";
 		m_bundle = ResourceBundle.getBundle(resource);
 		}
@@ -1189,7 +1186,7 @@ namespace org.apache.xalan.xsltc.runtime
 		if ((m >= lowerBounds) && (m < upperBounds))
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String result = Convert.ToString(d);
+//ORIGINAL LINE: final String result = System.Convert.ToString(d);
 			string result = Convert.ToString(d);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int length = result.length();
@@ -1340,7 +1337,7 @@ namespace org.apache.xalan.xsltc.runtime
 		{
 			if (obj is Number)
 			{
-				return ((Number) obj).longValue(); // handles Integer and Double
+				return (long)((Number) obj); // handles Integer and Double
 			}
 			else
 			{
@@ -1360,7 +1357,7 @@ namespace org.apache.xalan.xsltc.runtime
 		{
 			if (obj is Number)
 			{
-				return ((Number) obj).doubleValue(); // handles Integer and Double
+				return (double)((Number) obj); // handles Integer and Double
 			}
 			else
 			{
@@ -1378,7 +1375,7 @@ namespace org.apache.xalan.xsltc.runtime
 		/// </summary>
 		public static bool referenceToBoolean(object obj)
 		{
-			if (obj is bool?)
+			if (obj is Boolean)
 			{
 				return ((bool?) obj).Value;
 			}
@@ -1449,7 +1446,7 @@ namespace org.apache.xalan.xsltc.runtime
 				this.inNode = inNode;
 			}
 
-			public virtual int Length
+			public int Length
 			{
 				get
 				{
@@ -1457,7 +1454,7 @@ namespace org.apache.xalan.xsltc.runtime
 				}
 			}
 
-			public virtual org.w3c.dom.Node item(int index)
+			public org.w3c.dom.Node item(int index)
 			{
 				if (index == 0)
 				{
@@ -1477,12 +1474,12 @@ namespace org.apache.xalan.xsltc.runtime
 		/// not an instance of DOM2DTM. So we use the more lengthy
 		/// implementation below until this issue has been addressed.
 		/// </summary>
-		/// <seealso cref= org.apache.xml.dtm.ref.DTMManagerDefault#getDTMHandleFromNode </seealso>
+		/// <seealso cref="org.apache.xml.dtm.ref.DTMManagerDefault.getDTMHandleFromNode"/>
 		private static DTMAxisIterator nodeList2IteratorUsingHandleFromNode(NodeList nodeList, Translet translet, DOM dom)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int n = nodeList.getLength();
-		int n = nodeList.Length;
+		int n = nodeList.getLength();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int[] dtmHandles = new int[n];
 		int[] dtmHandles = new int[n];
@@ -1528,12 +1525,12 @@ namespace org.apache.xalan.xsltc.runtime
 		int n = 0; // allow for change in list length, just in case.
 		Document doc = null;
 		DTMManager dtmManager = null;
-		int[] proxyNodes = new int[nodeList.Length];
+		int[] proxyNodes = new int[nodeList.getLength()];
 		if (dom is MultiDOM)
 		{
 			dtmManager = ((MultiDOM) dom).DTMManager;
 		}
-		for (int i = 0; i < nodeList.Length; ++i)
+		for (int i = 0; i < nodeList.getLength(); ++i)
 		{
 			org.w3c.dom.Node node = nodeList.item(i);
 			if (node is DTMNodeProxy)
@@ -1560,8 +1557,8 @@ namespace org.apache.xalan.xsltc.runtime
 				continue;
 			}
 			}
-			proxyNodes[i] = org.apache.xml.dtm.DTM_Fields.NULL;
-			int nodeType = node.NodeType;
+			proxyNodes[i] = DTM.NULL;
+			int nodeType = node.getNodeType();
 			if (doc == null)
 			{
 			if (dom is MultiDOM == false)
@@ -1595,7 +1592,7 @@ namespace org.apache.xalan.xsltc.runtime
 			case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
 				mid = doc.createElementNS(null, "__dummy__");
 				mid.appendChild(doc.importNode(node, true));
-				doc.DocumentElement.appendChild(mid);
+				doc.getDocumentElement().appendChild(mid);
 				++n;
 				break;
 			case org.w3c.dom.Node.ATTRIBUTE_NODE:
@@ -1603,8 +1600,8 @@ namespace org.apache.xalan.xsltc.runtime
 				// attributes, avoiding problems with conflicting
 				// attributes or node order.
 				mid = doc.createElementNS(null, "__dummy__");
-				mid.AttributeNodeNS = (Attr)doc.importNode(node, true);
-				doc.DocumentElement.appendChild(mid);
+				mid.setAttributeNodeNS((Attr)doc.importNode(node, true));
+				doc.getDocumentElement().appendChild(mid);
 				++n;
 				break;
 			default:
@@ -1640,16 +1637,16 @@ namespace org.apache.xalan.xsltc.runtime
 		// Second pass: find DTM handles for every node in the list.
 		int[] dtmHandles = new int[n];
 		n = 0;
-		for (int i = 0; i < nodeList.Length; ++i)
+		for (int i = 0; i < nodeList.getLength(); ++i)
 		{
-			if (proxyNodes[i] != org.apache.xml.dtm.DTM_Fields.NULL)
+			if (proxyNodes[i] != DTM.NULL)
 			{
 			dtmHandles[n++] = proxyNodes[i];
 			continue;
 			}
 			org.w3c.dom.Node node = nodeList.item(i);
 			DTMAxisIterator iter3 = null;
-			int nodeType = node.NodeType;
+			int nodeType = node.getNodeType();
 			switch (nodeType)
 			{
 			case org.w3c.dom.Node.ELEMENT_NODE:
@@ -1672,11 +1669,11 @@ namespace org.apache.xalan.xsltc.runtime
 			iter3.StartNode = iter.next();
 			dtmHandles[n] = iter3.next();
 			// For now, play it self and perform extra checks:
-			if (dtmHandles[n] == org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			if (dtmHandles[n] == DTMAxisIterator.END)
 			{
 				throw new InternalRuntimeError("Expected element missing at " + i);
 			}
-			if (iter3.next() != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			if (iter3.next() != DTMAxisIterator.END)
 			{
 				throw new InternalRuntimeError("Too many elements at " + i);
 			}
@@ -1790,7 +1787,7 @@ namespace org.apache.xalan.xsltc.runtime
 				if (firstOccur != lastOccur)
 				{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String oriPrefix = name.substring(firstOccur+1, lastOccur - (firstOccur+1));
+//ORIGINAL LINE: final String oriPrefix = name.substring(firstOccur+1, lastOccur);
 				   string oriPrefix = name.Substring(firstOccur + 1, lastOccur - (firstOccur + 1));
 					if (!XML11Char.isXML11ValidNCName(oriPrefix))
 					{
@@ -1807,7 +1804,7 @@ namespace org.apache.xalan.xsltc.runtime
 			}
 
 			// local name must be a valid NCName and must not be XMLNS
-			if ((!XML11Char.isXML11ValidNCName(localName)) || (localName.Equals(Constants_Fields.XMLNS_PREFIX)))
+			if ((!XML11Char.isXML11ValidNCName(localName)) || (localName.Equals(Constants.XMLNS_PREFIX)))
 			{
 				runTimeError(INVALID_QNAME_ERR,localName);
 			}
@@ -1890,7 +1887,7 @@ namespace org.apache.xalan.xsltc.runtime
 		/// <summary>
 		/// <para>Look up the namespace for a lexical QName using the namespace
 		/// declarations available at a particular location in the stylesheet.</para>
-		/// <para>See <seealso cref="org.apache.xalan.xsltc.compiler.Stylesheet#compileStaticInitializer(org.apache.xalan.xsltc.compiler.util.ClassGenerator)"/>
+		/// <para>See <seealso cref="org.apache.xalan.xsltc.compiler.Stylesheet.compileStaticInitializer(org.apache.xalan.xsltc.compiler.util.ClassGenerator)"/>
 		/// for more information about the <code>ancestorNodeIDs</code>,
 		/// <code>prefixURIsIndex</code> and <code>prefixURIPairs</code arrays.</para>
 		/// </summary>
@@ -1959,7 +1956,7 @@ namespace org.apache.xalan.xsltc.runtime
 		/// <para>Look up the namespace for a lexical QName using the namespace
 		/// declarations available at a particular location in the stylesheet and
 		/// return the expanded QName</para>
-		/// <para>See <seealso cref="org.apache.xalan.xsltc.compiler.Stylesheet#compileStaticInitializer(org.apache.xalan.xsltc.compiler.util.ClassGenerator)"/>
+		/// <para>See <seealso cref="org.apache.xalan.xsltc.compiler.Stylesheet.compileStaticInitializer(org.apache.xalan.xsltc.compiler.util.ClassGenerator)"/>
 		/// for more information about the <code>ancestorNodeIDs</code>,
 		/// <code>prefixURIsIndex</code> and <code>prefixURIPairs</code arrays.</para>
 		/// </summary>
@@ -2140,7 +2137,7 @@ namespace org.apache.xalan.xsltc.runtime
 		/// </summary>
 		public static string mapQNameToJavaName(string @base)
 		{
-		   return replace(@base, ".-:/{}?#%*", new string[] {"$dot$", "$dash$","$colon$", "$slash$", "","$colon$","$ques$","$hash$","$per$", "$aster$"});
+		   return replace(@base, ".-:/{}?#%*", new string[] {"$dot$", "$dash$", "$colon$", "$slash$", "", "$colon$", "$ques$", "$hash$", "$per$", "$aster$"});
 
 		}
 

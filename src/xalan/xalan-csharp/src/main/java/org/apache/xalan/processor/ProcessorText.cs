@@ -22,14 +22,13 @@
  */
 namespace org.apache.xalan.processor
 {
-
 	using ElemTemplateElement = org.apache.xalan.templates.ElemTemplateElement;
 	using ElemText = org.apache.xalan.templates.ElemText;
 
 	/// <summary>
 	/// Process xsl:text. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#element-text">element-text in XSLT Specification</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.element-text">element-text in XSLT Specification</a>"/>
 	[Serializable]
 	public class ProcessorText : ProcessorTemplateElem
 	{
@@ -45,7 +44,7 @@ namespace org.apache.xalan.processor
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void appendAndPush(StylesheetHandler handler, org.apache.xalan.templates.ElemTemplateElement elem) throws org.xml.sax.SAXException
 	  protected internal override void appendAndPush(StylesheetHandler handler, ElemTemplateElement elem)
 	  {
@@ -68,7 +67,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="uri"> The Namespace URI, or an empty string. </param>
 	  /// <param name="localName"> The local name (without prefix), or empty string if not namespace processing. </param>
 	  /// <param name="rawName"> The qualified name (with prefix). </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(StylesheetHandler handler, String uri, String localName, String rawName) throws org.xml.sax.SAXException
 	  public override void endElement(StylesheetHandler handler, string uri, string localName, string rawName)
 	  {

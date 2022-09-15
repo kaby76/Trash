@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +25,6 @@ using System.Collections;
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 
 	using Symbol = java_cup.runtime.Symbol;
 
@@ -111,9 +111,9 @@ namespace org.apache.xalan.xsltc.compiler
 		initExtClasses();
 		initSymbolTable();
 
-		_useAttributeSets = getQName(Constants_Fields.XSLT_URI, XSL, "use-attribute-sets");
-		_excludeResultPrefixes = getQName(Constants_Fields.XSLT_URI, XSL, "exclude-result-prefixes");
-		_extensionElementPrefixes = getQName(Constants_Fields.XSLT_URI, XSL, "extension-element-prefixes");
+		_useAttributeSets = getQName(XSLT_URI, XSL, "use-attribute-sets");
+		_excludeResultPrefixes = getQName(XSLT_URI, XSL, "exclude-result-prefixes");
+		_extensionElementPrefixes = getQName(XSLT_URI, XSL, "extension-element-prefixes");
 		}
 
 		public virtual Output Output
@@ -154,9 +154,9 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-		public virtual void addVariable(Variable @var)
+		public virtual void addVariable(Variable var)
 		{
-		addVariableOrParam(@var);
+		addVariableOrParam(var);
 		}
 
 		public virtual void addParameter(Param param)
@@ -164,36 +164,36 @@ namespace org.apache.xalan.xsltc.compiler
 		addVariableOrParam(param);
 		}
 
-		private void addVariableOrParam(VariableBase @var)
+		private void addVariableOrParam(VariableBase var)
 		{
-		object existing = _variableScope[@var.Name];
+		object existing = _variableScope[var.Name];
 		if (existing != null)
 		{
-			if (existing is Stack)
+			if (existing is System.Collections.Stack)
 			{
-			Stack stack = (Stack)existing;
-			stack.Push(@var);
+			System.Collections.Stack stack = (System.Collections.Stack)existing;
+			stack.Push(var);
 			}
 			else if (existing is VariableBase)
 			{
-			Stack stack = new Stack();
+			System.Collections.Stack stack = new System.Collections.Stack();
 			stack.Push(existing);
-			stack.Push(@var);
-			_variableScope[@var.Name] = stack;
+			stack.Push(var);
+			_variableScope[var.Name] = stack;
 			}
 		}
 		else
 		{
-			_variableScope[@var.Name] = @var;
+			_variableScope[var.Name] = var;
 		}
 		}
 
 		public virtual void removeVariable(QName name)
 		{
 		object existing = _variableScope[name];
-		if (existing is Stack)
+		if (existing is System.Collections.Stack)
 		{
-			Stack stack = (Stack)existing;
+			System.Collections.Stack stack = (System.Collections.Stack)existing;
 			if (stack.Count > 0)
 			{
 				stack.Pop();
@@ -213,9 +213,9 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			return ((VariableBase)existing);
 		}
-		else if (existing is Stack)
+		else if (existing is System.Collections.Stack)
 		{
-			Stack stack = (Stack)existing;
+			System.Collections.Stack stack = (System.Collections.Stack)existing;
 			return ((VariableBase)stack.Peek());
 		}
 		return (null);
@@ -271,9 +271,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public QName getQNameSafe(final String stringRep)
-		public virtual QName getQNameSafe(string stringRep)
+		public virtual QName getQNameSafe(in string stringRep)
 		{
 		// parse and retrieve namespace
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -290,12 +288,12 @@ namespace org.apache.xalan.xsltc.compiler
 			string @namespace = null;
 
 			// Get the namespace uri from the symbol table
-			if (prefix.Equals(Constants_Fields.XMLNS_PREFIX) == false)
+			if (prefix.Equals(XMLNS_PREFIX) == false)
 			{
 			@namespace = _symbolTable.lookupNamespace(prefix);
 			if (string.ReferenceEquals(@namespace, null))
 			{
-				@namespace = Constants_Fields.EMPTYSTRING;
+				@namespace = EMPTYSTRING;
 			}
 			}
 			return getQName(@namespace, prefix, localname);
@@ -303,36 +301,28 @@ namespace org.apache.xalan.xsltc.compiler
 		else
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String uri = stringRep.equals(Constants_Fields.XMLNS_PREFIX) ? null : _symbolTable.lookupNamespace(Constants_Fields.EMPTYSTRING);
-			string uri = stringRep.Equals(Constants_Fields.XMLNS_PREFIX) ? null : _symbolTable.lookupNamespace(Constants_Fields.EMPTYSTRING);
+//ORIGINAL LINE: final String uri = stringRep.equals(XMLNS_PREFIX) ? null : _symbolTable.lookupNamespace(EMPTYSTRING);
+			string uri = stringRep.Equals(XMLNS_PREFIX) ? null : _symbolTable.lookupNamespace(EMPTYSTRING);
 			return getQName(uri, null, stringRep);
 		}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public QName getQName(final String stringRep)
-		public virtual QName getQName(string stringRep)
+		public virtual QName getQName(in string stringRep)
 		{
 		return getQName(stringRep, true, false);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public QName getQNameIgnoreDefaultNs(final String stringRep)
-		public virtual QName getQNameIgnoreDefaultNs(string stringRep)
+		public virtual QName getQNameIgnoreDefaultNs(in string stringRep)
 		{
 		return getQName(stringRep, true, true);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public QName getQName(final String stringRep, boolean reportError)
-		public virtual QName getQName(string stringRep, bool reportError)
+		public virtual QName getQName(in string stringRep, bool reportError)
 		{
 		return getQName(stringRep, reportError, false);
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private QName getQName(final String stringRep, boolean reportError, boolean ignoreDefaultNs)
-		private QName getQName(string stringRep, bool reportError, bool ignoreDefaultNs)
+		private QName getQName(in string stringRep, bool reportError, bool ignoreDefaultNs)
 		{
 		// parse and retrieve namespace
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -349,7 +339,7 @@ namespace org.apache.xalan.xsltc.compiler
 			string @namespace = null;
 
 			// Get the namespace uri from the symbol table
-			if (prefix.Equals(Constants_Fields.XMLNS_PREFIX) == false)
+			if (prefix.Equals(XMLNS_PREFIX) == false)
 			{
 			@namespace = _symbolTable.lookupNamespace(prefix);
 			if (string.ReferenceEquals(@namespace, null) && reportError)
@@ -358,27 +348,27 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final int line = getLineNumber();
 				int line = LineNumber;
 				ErrorMsg err = new ErrorMsg(ErrorMsg.NAMESPACE_UNDEF_ERR, line, prefix);
-				reportError(Constants_Fields.ERROR, err);
+				this.reportError(ERROR, err);
 			}
 			}
 			return getQName(@namespace, prefix, localname);
 		}
 		else
 		{
-			if (stringRep.Equals(Constants_Fields.XMLNS_PREFIX))
+			if (stringRep.Equals(XMLNS_PREFIX))
 			{
 			ignoreDefaultNs = true;
 			}
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String defURI = ignoreDefaultNs ? null : _symbolTable.lookupNamespace(Constants_Fields.EMPTYSTRING);
-			string defURI = ignoreDefaultNs ? null : _symbolTable.lookupNamespace(Constants_Fields.EMPTYSTRING);
+//ORIGINAL LINE: final String defURI = ignoreDefaultNs ? null : _symbolTable.lookupNamespace(EMPTYSTRING);
+			string defURI = ignoreDefaultNs ? null : _symbolTable.lookupNamespace(EMPTYSTRING);
 			return getQName(defURI, null, stringRep);
 		}
 		}
 
 		public virtual QName getQName(string @namespace, string prefix, string localname)
 		{
-		if (string.ReferenceEquals(@namespace, null) || @namespace.Equals(Constants_Fields.EMPTYSTRING))
+		if (string.ReferenceEquals(@namespace, null) || @namespace.Equals(EMPTYSTRING))
 		{
 			QName name = (QName)_qNames[localname];
 			if (name == null)
@@ -455,7 +445,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// and then parse, typecheck and compile the instance.
 		/// Must be called after <code>parse()</code>.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Stylesheet makeStylesheet(SyntaxTreeNode element) throws CompilerException
 		public virtual Stylesheet makeStylesheet(SyntaxTreeNode element)
 		{
@@ -472,12 +462,12 @@ namespace org.apache.xalan.xsltc.compiler
 			stylesheet = new Stylesheet();
 			stylesheet.setSimplified();
 			stylesheet.addElement(element);
-			stylesheet.Attributes = (AttributeList) element.getAttributes();
+			stylesheet.setAttributes((AttributeList) element.getAttributes());
 
 			// Map the default NS if not already defined
-			if (string.ReferenceEquals(element.lookupNamespace(Constants_Fields.EMPTYSTRING), null))
+			if (string.ReferenceEquals(element.lookupNamespace(EMPTYSTRING), null))
 			{
-				element.addPrefixMapping(Constants_Fields.EMPTYSTRING, Constants_Fields.EMPTYSTRING);
+				element.addPrefixMapping(EMPTYSTRING, EMPTYSTRING);
 			}
 			}
 			stylesheet.Parser = this;
@@ -515,7 +505,7 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final int l = getLineNumber();
 				int l = LineNumber;
 				ErrorMsg err = new ErrorMsg(ErrorMsg.ILLEGAL_TEXT_NODE_ERR,l,null);
-				reportError(Constants_Fields.ERROR, err);
+				reportError(ERROR, err);
 				}
 			}
 			if (!errorsFound())
@@ -526,7 +516,7 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 		catch (TypeCheckError e)
 		{
-			reportError(Constants_Fields.ERROR, new ErrorMsg(e));
+			reportError(ERROR, new ErrorMsg(e));
 		}
 		}
 
@@ -540,7 +530,7 @@ namespace org.apache.xalan.xsltc.compiler
 		try
 		{
 			// Parse the input document and build the abstract syntax tree
-			reader.ContentHandler = this;
+			reader.setContentHandler(this);
 			reader.parse(input);
 			// Find the start of the stylesheet within the tree
 			return (SyntaxTreeNode)getStylesheet(_root);
@@ -552,11 +542,11 @@ namespace org.apache.xalan.xsltc.compiler
 				Console.WriteLine(e.ToString());
 				Console.Write(e.StackTrace);
 			}
-			reportError(Constants_Fields.ERROR,new ErrorMsg(e));
+			reportError(ERROR,new ErrorMsg(e));
 		}
 		catch (SAXException e)
 		{
-			Exception ex = e.Exception;
+			Exception ex = e.getException();
 			if (_xsltc.debug())
 			{
 			Console.WriteLine(e.ToString());
@@ -567,7 +557,7 @@ namespace org.apache.xalan.xsltc.compiler
 				Console.Write(ex.StackTrace);
 			}
 			}
-			reportError(Constants_Fields.ERROR, new ErrorMsg(e));
+			reportError(ERROR, new ErrorMsg(e));
 		}
 		catch (CompilerException e)
 		{
@@ -576,7 +566,7 @@ namespace org.apache.xalan.xsltc.compiler
 				Console.WriteLine(e.ToString());
 				Console.Write(e.StackTrace);
 			}
-			reportError(Constants_Fields.ERROR, new ErrorMsg(e));
+			reportError(ERROR, new ErrorMsg(e));
 		}
 		catch (Exception e)
 		{
@@ -585,7 +575,7 @@ namespace org.apache.xalan.xsltc.compiler
 				Console.WriteLine(e.ToString());
 				Console.Write(e.StackTrace);
 			}
-			reportError(Constants_Fields.ERROR, new ErrorMsg(e));
+			reportError(ERROR, new ErrorMsg(e));
 		}
 		return null;
 		}
@@ -616,32 +606,32 @@ namespace org.apache.xalan.xsltc.compiler
 
 			try
 			{
-			factory.setFeature(Constants_Fields.NAMESPACE_FEATURE,true);
+			factory.setFeature(Constants.NAMESPACE_FEATURE,true);
 			}
 			catch (Exception)
 			{
-			factory.NamespaceAware = true;
+			factory.setNamespaceAware(true);
 			}
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final javax.xml.parsers.SAXParser parser = factory.newSAXParser();
 			SAXParser parser = factory.newSAXParser();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.xml.sax.XMLReader reader = parser.getXMLReader();
-			XMLReader reader = parser.XMLReader;
+			XMLReader reader = parser.getXMLReader();
 			return (parse(reader, input));
 		}
 		catch (ParserConfigurationException)
 		{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.SAX_PARSER_CONFIG_ERR);
-			reportError(Constants_Fields.ERROR, err);
+			reportError(ERROR, err);
 		}
 		catch (SAXParseException e)
 		{
-			reportError(Constants_Fields.ERROR, new ErrorMsg(e.Message,e.LineNumber));
+			reportError(ERROR, new ErrorMsg(e.Message,e.getLineNumber()));
 		}
 		catch (SAXException e)
 		{
-			reportError(Constants_Fields.ERROR, new ErrorMsg(e.Message));
+			reportError(ERROR, new ErrorMsg(e.Message));
 		}
 		return null;
 		}
@@ -682,7 +672,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// as the 'href' data of the P.I. The extracted DOM representing the
 		/// stylesheet is returned as an Element object.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private SyntaxTreeNode getStylesheet(SyntaxTreeNode root) throws CompilerException
 		private SyntaxTreeNode getStylesheet(SyntaxTreeNode root)
 		{
@@ -759,7 +749,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// For embedded stylesheets: Load an external file with stylesheet
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private SyntaxTreeNode loadExternalStylesheet(String location) throws CompilerException
 		private SyntaxTreeNode loadExternalStylesheet(string location)
 		{
@@ -767,7 +757,7 @@ namespace org.apache.xalan.xsltc.compiler
 		InputSource source;
 
 		// Check if the location is URL or a local file
-		if (System.IO.Directory.Exists(location) || System.IO.File.Exists(location))
+		if (Directory.Exists(location) || File.Exists(location))
 		{
 			source = new InputSource("file:" + location);
 		}
@@ -782,7 +772,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		private void initAttrTable(string elementName, string[] attrs)
 		{
-		_instructionAttrs[getQName(Constants_Fields.XSLT_URI, XSL, elementName)] = attrs;
+		_instructionAttrs[getQName(XSLT_URI, XSL, elementName)] = attrs;
 		}
 
 		private void initInstructionAttrs()
@@ -871,7 +861,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		private void initStdClass(string elementName, string className)
 		{
-		_instructionClasses[getQName(Constants_Fields.XSLT_URI, XSL, elementName)] = Constants_Fields.COMPILER_PACKAGE + '.' + className;
+		_instructionClasses[getQName(XSLT_URI, XSL, elementName)] = COMPILER_PACKAGE + '.' + className;
 		}
 
 		public virtual bool elementSupported(string @namespace, string localName)
@@ -887,17 +877,17 @@ namespace org.apache.xalan.xsltc.compiler
 		private void initExtClasses()
 		{
 		initExtClass("output", "TransletOutput");
-			initExtClass(Constants_Fields.REDIRECT_URI, "write", "TransletOutput");
+			initExtClass(REDIRECT_URI, "write", "TransletOutput");
 		}
 
 		private void initExtClass(string elementName, string className)
 		{
-		_instructionClasses[getQName(Constants_Fields.TRANSLET_URI, TRANSLET, elementName)] = Constants_Fields.COMPILER_PACKAGE + '.' + className;
+		_instructionClasses[getQName(TRANSLET_URI, TRANSLET, elementName)] = COMPILER_PACKAGE + '.' + className;
 		}
 
 		private void initExtClass(string @namespace, string elementName, string className)
 		{
-			_instructionClasses[getQName(@namespace, TRANSLET, elementName)] = Constants_Fields.COMPILER_PACKAGE + '.' + className;
+			_instructionClasses[getQName(@namespace, TRANSLET, elementName)] = COMPILER_PACKAGE + '.' + className;
 		}
 
 		/// <summary>
@@ -1110,7 +1100,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final Class clazz = ObjectFactory.findProviderClass(className, ObjectFactory.findClassLoader(), true);
 			Type clazz = ObjectFactory.findProviderClass(className, ObjectFactory.findClassLoader(), true);
-			node = (SyntaxTreeNode)clazz.newInstance();
+			node = (SyntaxTreeNode)System.Activator.CreateInstance(clazz);
 			node.QName = qname;
 			node.Parser = this;
 			if (_locator != null)
@@ -1126,12 +1116,12 @@ namespace org.apache.xalan.xsltc.compiler
 			catch (ClassNotFoundException)
 			{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.CLASS_NOT_FOUND_ERR, node);
-			reportError(Constants_Fields.ERROR, err);
+			reportError(ERROR, err);
 			}
 			catch (Exception e)
 			{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.INTERNAL_ERR, e.Message, node);
-			reportError(Constants_Fields.FATAL, err);
+			reportError(FATAL, err);
 			}
 		}
 		else
@@ -1139,7 +1129,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (!string.ReferenceEquals(uri, null))
 			{
 			// Check if the element belongs in our namespace
-			if (uri.Equals(Constants_Fields.XSLT_URI))
+			if (uri.Equals(XSLT_URI))
 			{
 				node = new UnsupportedElement(uri, prefix, local, false);
 				UnsupportedElement element = (UnsupportedElement)node;
@@ -1147,11 +1137,11 @@ namespace org.apache.xalan.xsltc.compiler
 				element.ErrorMessage = msg;
 				if (versionIsOne)
 				{
-					reportError(Constants_Fields.UNSUPPORTED,msg);
+					reportError(UNSUPPORTED,msg);
 				}
 			}
 			// Check if this is an XSLTC extension element
-			else if (uri.Equals(Constants_Fields.TRANSLET_URI))
+			else if (uri.Equals(TRANSLET_URI))
 			{
 				node = new UnsupportedElement(uri, prefix, local, true);
 				UnsupportedElement element = (UnsupportedElement)node;
@@ -1202,7 +1192,7 @@ namespace org.apache.xalan.xsltc.compiler
 			int j;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int n = attrs.getLength();
-			int n = attrs.Length;
+			int n = attrs.getLength();
 
 			for (int i = 0; i < n; i++)
 			{
@@ -1223,7 +1213,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 				for (j = 0; j < legal.Length; j++)
 				{
-					if (attrQName.Equals(legal[j], StringComparison.CurrentCultureIgnoreCase))
+					if (attrQName.Equals(legal[j], StringComparison.OrdinalIgnoreCase))
 					{
 					break;
 					}
@@ -1235,7 +1225,7 @@ namespace org.apache.xalan.xsltc.compiler
 					ErrorMsg err = new ErrorMsg(ErrorMsg.ILLEGAL_ATTRIBUTE_ERR, attrQName, node);
 				// Workaround for the TCK failure ErrorListener.errorTests.error001..
 					err.WarningError = true;
-				reportError(Constants_Fields.WARNING, err);
+				reportError(WARNING, err);
 				}
 			}
 		}
@@ -1306,7 +1296,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		try
 		{
-			_xpathParser.Scanner = new XPathLexer(new StringReader(text));
+			_xpathParser.setScanner(new XPathLexer(new StringReader(text)));
 			Symbol result = _xpathParser.parse(expression, line);
 			if (result != null)
 			{
@@ -1322,7 +1312,7 @@ namespace org.apache.xalan.xsltc.compiler
 				return node;
 			}
 			}
-			reportError(Constants_Fields.ERROR, new ErrorMsg(ErrorMsg.XPATH_PARSER_ERR, expression, parent));
+			reportError(ERROR, new ErrorMsg(ErrorMsg.XPATH_PARSER_ERR, expression, parent));
 		}
 		catch (Exception e)
 		{
@@ -1331,12 +1321,12 @@ namespace org.apache.xalan.xsltc.compiler
 				Console.WriteLine(e.ToString());
 				Console.Write(e.StackTrace);
 			}
-			reportError(Constants_Fields.ERROR, new ErrorMsg(ErrorMsg.XPATH_PARSER_ERR, expression, parent));
+			reportError(ERROR, new ErrorMsg(ErrorMsg.XPATH_PARSER_ERR, expression, parent));
 		}
 
 		// Return a dummy pattern (which is an expression)
-		SyntaxTreeNode.Dummy_Renamed.Parser = this;
-			return SyntaxTreeNode.Dummy_Renamed;
+		SyntaxTreeNode.Dummy.Parser = this;
+			return SyntaxTreeNode.Dummy;
 		}
 
 		/// <summary>
@@ -1389,33 +1379,31 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Common error/warning message handler
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void reportError(final int category, final org.apache.xalan.xsltc.compiler.util.ErrorMsg error)
-		public virtual void reportError(int category, ErrorMsg error)
+		public virtual void reportError(in int category, in ErrorMsg error)
 		{
 		switch (category)
 		{
-		case Constants_Fields.INTERNAL:
+		case Constants.INTERNAL:
 			// Unexpected internal errors, such as null-ptr exceptions, etc.
 			// Immediately terminates compilation, no translet produced
 			_errors.Add(error);
 			break;
-		case Constants_Fields.UNSUPPORTED:
+		case Constants.UNSUPPORTED:
 			// XSLT elements that are not implemented and unsupported ext.
 			// Immediately terminates compilation, no translet produced
 			_errors.Add(error);
 			break;
-		case Constants_Fields.FATAL:
+		case Constants.FATAL:
 			// Fatal error in the stylesheet input (parsing or content)
 			// Immediately terminates compilation, no translet produced
 			_errors.Add(error);
 			break;
-		case Constants_Fields.ERROR:
+		case Constants.ERROR:
 			// Other error in the stylesheet input (parsing or content)
 			// Does not terminate compilation, no translet produced
 			_errors.Add(error);
 			break;
-		case Constants_Fields.WARNING:
+		case Constants.WARNING:
 			// Other error in the stylesheet input (content errors only)
 			// Does not terminate compilation, a translet is produced
 			_warnings.Add(error);
@@ -1442,7 +1430,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		///********************** SAX2 ContentHandler INTERFACE **************** </summary>
 
-		private Stack _parentStack = null;
+		private System.Collections.Stack _parentStack = null;
 		private Hashtable _prefixMapping = null;
 
 		/// <summary>
@@ -1453,7 +1441,7 @@ namespace org.apache.xalan.xsltc.compiler
 		_root = null;
 		_target = null;
 		_prefixMapping = null;
-		_parentStack = new Stack();
+		_parentStack = new System.Collections.Stack();
 		}
 
 		/// <summary>
@@ -1490,7 +1478,7 @@ namespace org.apache.xalan.xsltc.compiler
 		///       The parser may re-use the attribute list that we're passed so
 		///       we clone the attributes in our own Attributes implementation
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localname, String qname, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 		public virtual void startElement(string uri, string localname, string qname, Attributes attributes)
 		{
@@ -1512,7 +1500,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// that it contains a definition of the XSL namespace URI
 		if (_root == null)
 		{
-			if ((_prefixMapping == null) || (_prefixMapping.ContainsValue(Constants_Fields.XSLT_URI) == false))
+			if ((_prefixMapping == null) || (_prefixMapping.ContainsValue(Constants.XSLT_URI) == false))
 			{
 			_rootNamespaceDef = false;
 			}
@@ -1569,7 +1557,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// as-is to the existing text element
 		if (parent is Text)
 		{
-			((Text)parent).setText(@string);
+			((Text)parent).Text = @string;
 			return;
 		}
 
@@ -1587,7 +1575,7 @@ namespace org.apache.xalan.xsltc.compiler
 			{
 			if ((length > 1) || (((int)ch[0]) < 0x100))
 			{
-				text.setText(@string);
+				text.Text = @string;
 				return;
 			}
 			}
@@ -1692,7 +1680,7 @@ namespace org.apache.xalan.xsltc.compiler
 				int line = 0;
 				if (_locator != null)
 				{
-					line = _locator.LineNumber;
+					line = _locator.getLineNumber();
 				}
 				return line;
 			}

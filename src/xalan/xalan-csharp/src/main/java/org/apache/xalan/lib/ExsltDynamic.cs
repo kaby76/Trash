@@ -23,7 +23,6 @@
 namespace org.apache.xalan.lib
 {
 
-
 	using ExpressionContext = org.apache.xalan.extensions.ExpressionContext;
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
@@ -54,9 +53,9 @@ namespace org.apache.xalan.lib
 	/// The documentation for each function has been copied from the relevant
 	/// EXSLT Implementer page.
 	/// </summary>
-	/// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a>
+	/// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"
 	/// 
-	/// @xsl.usage general </seealso>
+	/// @xsl.usage general/>
 	public class ExsltDynamic : ExsltBase
 	{
 
@@ -100,7 +99,7 @@ namespace org.apache.xalan.lib
 	  /// <param name="expr"> The expression string
 	  /// </param>
 	  /// <returns> The maximum evaluation value </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double max(org.apache.xalan.extensions.ExpressionContext myContext, org.w3c.dom.NodeList nl, String expr) throws org.xml.sax.SAXNotSupportedException
 	  public static double max(ExpressionContext myContext, NodeList nl, string expr)
 	  {
@@ -193,7 +192,7 @@ namespace org.apache.xalan.lib
 	  /// <param name="expr"> The expression string
 	  /// </param>
 	  /// <returns> The minimum evaluation value </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double min(org.apache.xalan.extensions.ExpressionContext myContext, org.w3c.dom.NodeList nl, String expr) throws org.xml.sax.SAXNotSupportedException
 	  public static double min(ExpressionContext myContext, NodeList nl, string expr)
 	  {
@@ -217,7 +216,7 @@ namespace org.apache.xalan.lib
 		xctxt.pushContextNodeList(contextNodes);
 
 		double minValue = double.MaxValue;
-		for (int i = 0; i < nl.Length; i++)
+		for (int i = 0; i < nl.getLength(); i++)
 		{
 		  int contextNode = contextNodes.item(i);
 		  xctxt.pushCurrentNode(contextNode);
@@ -286,7 +285,7 @@ namespace org.apache.xalan.lib
 	  /// <param name="expr"> The expression string
 	  /// </param>
 	  /// <returns> The sum of the evaluation value on each node </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static double sum(org.apache.xalan.extensions.ExpressionContext myContext, org.w3c.dom.NodeList nl, String expr) throws org.xml.sax.SAXNotSupportedException
 	  public static double sum(ExpressionContext myContext, NodeList nl, string expr)
 	  {
@@ -309,7 +308,7 @@ namespace org.apache.xalan.lib
 		xctxt.pushContextNodeList(contextNodes);
 
 		double sum = 0;
-		for (int i = 0; i < nl.Length; i++)
+		for (int i = 0; i < nl.getLength(); i++)
 		{
 		  int contextNode = contextNodes.item(i);
 		  xctxt.pushCurrentNode(contextNode);
@@ -400,7 +399,7 @@ namespace org.apache.xalan.lib
 	  /// <param name="expr"> The expression string
 	  /// </param>
 	  /// <returns> The node set after evaluation </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.w3c.dom.NodeList map(org.apache.xalan.extensions.ExpressionContext myContext, org.w3c.dom.NodeList nl, String expr) throws org.xml.sax.SAXNotSupportedException
 	  public static NodeList map(ExpressionContext myContext, NodeList nl, string expr)
 	  {
@@ -427,7 +426,7 @@ namespace org.apache.xalan.lib
 		NodeSet resultSet = new NodeSet();
 		resultSet.ShouldCacheNodes = true;
 
-		for (int i = 0; i < nl.Length; i++)
+		for (int i = 0; i < nl.getLength(); i++)
 		{
 		  int contextNode = contextNodes.item(i);
 		  xctxt.pushCurrentNode(contextNode);
@@ -443,7 +442,7 @@ namespace org.apache.xalan.lib
 			  NodeList nodelist = null;
 			  nodelist = ((XNodeSet)@object).nodelist();
 
-			  for (int k = 0; k < nodelist.Length; k++)
+			  for (int k = 0; k < nodelist.getLength(); k++)
 			  {
 				Node n = nodelist.item(k);
 				if (!resultSet.contains(n))
@@ -457,7 +456,7 @@ namespace org.apache.xalan.lib
 		  if (lDoc == null)
 		  {
 				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-				dbf.NamespaceAware = true;
+				dbf.setNamespaceAware(true);
 				DocumentBuilder db = dbf.newDocumentBuilder();
 				lDoc = db.newDocument();
 		  }
@@ -514,7 +513,7 @@ namespace org.apache.xalan.lib
 	  /// <param name="xpathExpr"> The XPath expression string
 	  /// </param>
 	  /// <returns> The evaluation result  </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xpath.objects.XObject evaluate(org.apache.xalan.extensions.ExpressionContext myContext, String xpathExpr) throws org.xml.sax.SAXNotSupportedException
 	  public static XObject evaluate(ExpressionContext myContext, string xpathExpr)
 	  {
@@ -586,7 +585,7 @@ namespace org.apache.xalan.lib
 	  /// <param name="expr"> The expression string
 	  /// </param>
 	  /// <returns> The node set after evaluation </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.w3c.dom.NodeList closure(org.apache.xalan.extensions.ExpressionContext myContext, org.w3c.dom.NodeList nl, String expr) throws org.xml.sax.SAXNotSupportedException
 	  public static NodeList closure(ExpressionContext myContext, NodeList nl, string expr)
 	  {
@@ -617,7 +616,7 @@ namespace org.apache.xalan.lib
 		  NodeSetDTM contextNodes = new NodeSetDTM(iterationList, xctxt);
 		  xctxt.pushContextNodeList(contextNodes);
 
-		  for (int i = 0; i < iterationList.Length; i++)
+		  for (int i = 0; i < iterationList.getLength(); i++)
 		  {
 			int contextNode = contextNodes.item(i);
 			xctxt.pushCurrentNode(contextNode);
@@ -633,7 +632,7 @@ namespace org.apache.xalan.lib
 				NodeList nodelist = null;
 				nodelist = ((XNodeSet)@object).nodelist();
 
-				for (int k = 0; k < nodelist.Length; k++)
+				for (int k = 0; k < nodelist.getLength(); k++)
 				{
 				  Node n = nodelist.item(k);
 				  if (!iterationSet.contains(n))
@@ -664,7 +663,7 @@ namespace org.apache.xalan.lib
 
 		  iterationList = iterationSet;
 
-		  for (int i = 0; i < iterationList.Length; i++)
+		  for (int i = 0; i < iterationList.getLength(); i++)
 		  {
 			Node n = iterationList.item(i);
 			if (!closureSet.contains(n))
@@ -673,7 +672,7 @@ namespace org.apache.xalan.lib
 			}
 		  }
 
-		} while (iterationList.Length > 0);
+		} while (iterationList.getLength() > 0);
 
 		return closureSet;
 

@@ -19,7 +19,6 @@
 
 namespace org.apache.xpath.jaxp
 {
-
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 
@@ -128,7 +127,7 @@ namespace org.apache.xpath.jaxp
 		///   it creates cannot support this feature. </exception>
 		/// <exception cref="NullPointerException"> if <code>name</code> is 
 		/// <code>null</code>. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setFeature(String name, boolean value) throws javax.xml.xpath.XPathFactoryConfigurationException
 		public virtual void setFeature(string name, bool value)
 		{
@@ -177,7 +176,7 @@ namespace org.apache.xpath.jaxp
 		///   it creates cannot support this feature. </exception>
 		/// <exception cref="NullPointerException"> if <code>name</code> is 
 		/// <code>null</code>. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean getFeature(String name) throws javax.xml.xpath.XPathFactoryConfigurationException
 		public virtual bool getFeature(string name)
 		{

@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.transformer
 {
-
 	/// <summary>
 	/// A content handler can get a reference
 	/// to a TransformState by implementing

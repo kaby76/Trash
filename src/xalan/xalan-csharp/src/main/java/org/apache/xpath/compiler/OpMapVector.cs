@@ -23,7 +23,6 @@
 
 namespace org.apache.xpath.compiler
 {
-
 	/// 
 	/// <summary>
 	/// Like IntVector, but used only for the OpMap array.  Length of array

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +25,6 @@ using System.Collections;
 
 namespace org.apache.xalan.xsltc.trax
 {
-
 
 
 	using SourceLoader = org.apache.xalan.xsltc.compiler.SourceLoader;
@@ -170,7 +170,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// The provider of the XSLTC DTM Manager service.  This is fixed for any
 		/// instance of this class.  In order to change service providers, a new
 		/// XSLTC <code>TransformerFactory</code> must be instantiated. </summary>
-		/// <seealso cref= XSLTCDTMManager#getDTMManagerClass() </seealso>
+		/// <seealso cref="XSLTCDTMManager.getDTMManagerClass()"/>
 		private Type m_DTMManagerClass;
 
 		/// <summary>
@@ -199,7 +199,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// </summary>
 		/// <param name="listener"> The error listener to use with the TransformerFactory </param>
 		/// <exception cref="IllegalArgumentException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setErrorListener(javax.xml.transform.ErrorListener listener) throws IllegalArgumentException
 		public virtual ErrorListener ErrorListener
 		{
@@ -226,7 +226,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="name"> The attribute name </param>
 		/// <returns> An object representing the attribute value </returns>
 		/// <exception cref="IllegalArgumentException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object getAttribute(String name) throws IllegalArgumentException
 		public virtual object getAttribute(string name)
 		{
@@ -267,7 +267,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="name"> The attribute name </param>
 		/// <param name="value"> An object representing the attribute value </param>
 		/// <exception cref="IllegalArgumentException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setAttribute(String name, Object value) throws IllegalArgumentException
 		public virtual void setAttribute(string name, object value)
 		{
@@ -295,66 +295,66 @@ namespace org.apache.xalan.xsltc.trax
 		}
 		else if (name.Equals(GENERATE_TRANSLET))
 		{
-			if (value is bool?)
+			if (value is Boolean)
 			{
 			_generateTranslet = ((bool?) value).Value;
 			return;
 			}
 			else if (value is string)
 			{
-			_generateTranslet = ((string) value).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+			_generateTranslet = ((string) value).Equals("true", StringComparison.OrdinalIgnoreCase);
 			return;
 			}
 		}
 		else if (name.Equals(AUTO_TRANSLET))
 		{
-			if (value is bool?)
+			if (value is Boolean)
 			{
 			_autoTranslet = ((bool?) value).Value;
 			return;
 			}
 			else if (value is string)
 			{
-			_autoTranslet = ((string) value).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+			_autoTranslet = ((string) value).Equals("true", StringComparison.OrdinalIgnoreCase);
 			return;
 			}
 		}
 		else if (name.Equals(USE_CLASSPATH))
 		{
-			if (value is bool?)
+			if (value is Boolean)
 			{
 			_useClasspath = ((bool?) value).Value;
 			return;
 			}
 			else if (value is string)
 			{
-			_useClasspath = ((string) value).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+			_useClasspath = ((string) value).Equals("true", StringComparison.OrdinalIgnoreCase);
 			return;
 			}
 		}
 		else if (name.Equals(DEBUG))
 		{
-			if (value is bool?)
+			if (value is Boolean)
 			{
 			_debug = ((bool?) value).Value;
 			return;
 			}
 			else if (value is string)
 			{
-			_debug = ((string) value).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+			_debug = ((string) value).Equals("true", StringComparison.OrdinalIgnoreCase);
 			return;
 			}
 		}
 		else if (name.Equals(ENABLE_INLINING))
 		{
-			if (value is bool?)
+			if (value is Boolean)
 			{
 			_enableInlining = ((bool?) value).Value;
 			return;
 			}
 			else if (value is string)
 			{
-			_enableInlining = ((string) value).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+			_enableInlining = ((string) value).Equals("true", StringComparison.OrdinalIgnoreCase);
 			return;
 			}
 		}
@@ -372,7 +372,7 @@ namespace org.apache.xalan.xsltc.trax
 				// Falls through
 			}
 			}
-			else if (value is int?)
+			else if (value is Integer)
 			{
 			_indentNumber = ((int?) value).Value;
 			return;
@@ -406,7 +406,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <exception cref="TransformerConfigurationException"> if this <code>TransformerFactory</code>
 		///   or the <code>Transformer</code>s or <code>Template</code>s it creates cannot support this feature. </exception>
 		/// <exception cref="NullPointerException"> If the <code>name</code> parameter is null. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setFeature(String name, boolean value) throws javax.xml.transform.TransformerConfigurationException
 		public virtual void setFeature(string name, bool value)
 		{
@@ -504,7 +504,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="charset"> The value of the charset attribute to match. May be null. </param>
 		/// <returns> A Source object suitable for passing to the TransformerFactory. </returns>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Source getAssociatedStylesheet(javax.xml.transform.Source source, String media, String title, String charset) throws javax.xml.transform.TransformerConfigurationException
 		public virtual Source getAssociatedStylesheet(Source source, string media, string title, string charset)
 		{
@@ -527,10 +527,10 @@ namespace org.apache.xalan.xsltc.trax
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final javax.xml.transform.dom.DOMSource domsrc = (javax.xml.transform.dom.DOMSource) source;
 					DOMSource domsrc = (DOMSource) source;
-					baseId = domsrc.SystemId;
+					baseId = domsrc.getSystemId();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.w3c.dom.Node node = domsrc.getNode();
-					org.w3c.dom.Node node = domsrc.Node;
+					org.w3c.dom.Node node = domsrc.getNode();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final DOM2SAX dom2sax = new DOM2SAX(node);
 					DOM2SAX dom2sax = new DOM2SAX(node);
@@ -543,10 +543,10 @@ namespace org.apache.xalan.xsltc.trax
 				else
 				{
 					isource = SAXSource.sourceToInputSource(source);
-					baseId = isource.SystemId;
+					baseId = isource.getSystemId();
 
 					SAXParserFactory factory = SAXParserFactory.newInstance();
-					factory.NamespaceAware = true;
+					factory.setNamespaceAware(true);
 
 					if (_isSecureProcessing)
 					{
@@ -561,14 +561,14 @@ namespace org.apache.xalan.xsltc.trax
 
 					SAXParser jaxpParser = factory.newSAXParser();
 
-					reader = jaxpParser.XMLReader;
+					reader = jaxpParser.getXMLReader();
 					if (reader == null)
 					{
 						reader = XMLReaderFactory.createXMLReader();
 					}
 
 					_stylesheetPIHandler.BaseId = baseId;
-					reader.ContentHandler = _stylesheetPIHandler;
+					reader.setContentHandler(_stylesheetPIHandler);
 					reader.parse(isource);
 
 				}
@@ -613,7 +613,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// </summary>
 		/// <returns> A Transformer object that simply copies the source to the result. </returns>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Transformer newTransformer() throws javax.xml.transform.TransformerConfigurationException
 		public virtual Transformer newTransformer()
 		{
@@ -639,7 +639,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// </summary>
 		/// <returns> A Templates object that can be used to create Transformers. </returns>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Transformer newTransformer(javax.xml.transform.Source source) throws javax.xml.transform.TransformerConfigurationException
 		public virtual Transformer newTransformer(Source source)
 		{
@@ -651,7 +651,7 @@ namespace org.apache.xalan.xsltc.trax
 		Transformer transformer = templates.newTransformer();
 		if (_uriResolver != null)
 		{
-			transformer.URIResolver = _uriResolver;
+			transformer.setURIResolver(_uriResolver);
 		}
 		return (transformer);
 		}
@@ -659,7 +659,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Pass warning messages from the compiler to the error listener
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void passWarningsToListener(java.util.Vector messages) throws javax.xml.transform.TransformerException
 		private void passWarningsToListener(ArrayList messages)
 		{
@@ -721,7 +721,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="source"> The input stylesheet - DOMSource not supported!!! </param>
 		/// <returns> A Templates object that can be used to create Transformers. </returns>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Templates newTemplates(javax.xml.transform.Source source) throws javax.xml.transform.TransformerConfigurationException
 		public virtual Templates newTemplates(Source source)
 		{
@@ -753,8 +753,7 @@ namespace org.apache.xalan.xsltc.trax
 			}
 			catch (Exception e)
 			{
-				ErrorMsg err = new ErrorMsg(new ErrorMsg(ErrorMsg.RUNTIME_ERROR_KEY)
-										 + e.Message);
+				ErrorMsg err = new ErrorMsg(new ErrorMsg(ErrorMsg.RUNTIME_ERROR_KEY) + e.Message);
 				throw new TransformerConfigurationException(err.ToString());
 			}
 		}
@@ -860,7 +859,7 @@ namespace org.apache.xalan.xsltc.trax
 				if (!string.ReferenceEquals(xslName, null))
 				{
 					  File xslFile = new File(xslName);
-					string xslDir = xslFile.Parent;
+					string xslDir = xslFile.getParent();
 
 					  if (!string.ReferenceEquals(xslDir, null))
 					  {
@@ -968,7 +967,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// </summary>
 		/// <returns> A TemplatesHandler object that can handle SAX events </returns>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TemplatesHandler newTemplatesHandler() throws javax.xml.transform.TransformerConfigurationException
 		public virtual TemplatesHandler newTemplatesHandler()
 		{
@@ -989,7 +988,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// </summary>
 		/// <returns> A TransformerHandler object that can handle SAX events </returns>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TransformerHandler newTransformerHandler() throws javax.xml.transform.TransformerConfigurationException
 		public virtual TransformerHandler newTransformerHandler()
 		{
@@ -998,7 +997,7 @@ namespace org.apache.xalan.xsltc.trax
 		Transformer transformer = newTransformer();
 		if (_uriResolver != null)
 		{
-			transformer.URIResolver = _uriResolver;
+			transformer.setURIResolver(_uriResolver);
 		}
 		return new TransformerHandlerImpl((TransformerImpl) transformer);
 		}
@@ -1012,7 +1011,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="src"> The source of the transformation instructions. </param>
 		/// <returns> A TransformerHandler object that can handle SAX events </returns>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TransformerHandler newTransformerHandler(javax.xml.transform.Source src) throws javax.xml.transform.TransformerConfigurationException
 		public virtual TransformerHandler newTransformerHandler(Source src)
 		{
@@ -1021,7 +1020,7 @@ namespace org.apache.xalan.xsltc.trax
 		Transformer transformer = newTransformer(src);
 		if (_uriResolver != null)
 		{
-			transformer.URIResolver = _uriResolver;
+			transformer.setURIResolver(_uriResolver);
 		}
 		return new TransformerHandlerImpl((TransformerImpl) transformer);
 		}
@@ -1035,7 +1034,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="templates"> Represents a pre-processed stylesheet </param>
 		/// <returns> A TransformerHandler object that can handle SAX events </returns>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TransformerHandler newTransformerHandler(javax.xml.transform.Templates templates) throws javax.xml.transform.TransformerConfigurationException
 		public virtual TransformerHandler newTransformerHandler(Templates templates)
 		{
@@ -1056,7 +1055,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="src"> The source of the transformation instructions. </param>
 		/// <returns> An XMLFilter object, or null if this feature is not supported. </returns>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.xml.sax.XMLFilter newXMLFilter(javax.xml.transform.Source src) throws javax.xml.transform.TransformerConfigurationException
 		public virtual XMLFilter newXMLFilter(Source src)
 		{
@@ -1076,7 +1075,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="templates"> The source of the transformation instructions. </param>
 		/// <returns> An XMLFilter object, or null if this feature is not supported. </returns>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.xml.sax.XMLFilter newXMLFilter(javax.xml.transform.Templates templates) throws javax.xml.transform.TransformerConfigurationException
 		public virtual XMLFilter newXMLFilter(Templates templates)
 		{
@@ -1112,18 +1111,18 @@ namespace org.apache.xalan.xsltc.trax
 		/// exception. </param>
 		/// <exception cref="TransformerException"> if the application chooses to discontinue
 		/// the transformation (always does in our case). </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(javax.xml.transform.TransformerException e) throws javax.xml.transform.TransformerException
 		public virtual void error(TransformerException e)
 		{
-		Exception wrapped = e.Exception;
+		Exception wrapped = e.getException();
 			if (wrapped != null)
 			{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.ERROR_PLUS_WRAPPED_MSG, e.MessageAndLocation, wrapped.Message));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.ERROR_PLUS_WRAPPED_MSG, e.getMessageAndLocation(), wrapped.Message));
 			}
 			else
 			{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.ERROR_MSG, e.MessageAndLocation));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.ERROR_MSG, e.getMessageAndLocation()));
 			}
 		throw e;
 		}
@@ -1140,18 +1139,18 @@ namespace org.apache.xalan.xsltc.trax
 		/// exception. </param>
 		/// <exception cref="TransformerException"> if the application chooses to discontinue
 		/// the transformation (always does in our case). </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fatalError(javax.xml.transform.TransformerException e) throws javax.xml.transform.TransformerException
 		public virtual void fatalError(TransformerException e)
 		{
-		Exception wrapped = e.Exception;
+		Exception wrapped = e.getException();
 			if (wrapped != null)
 			{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.FATAL_ERR_PLUS_WRAPPED_MSG, e.MessageAndLocation, wrapped.Message));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.FATAL_ERR_PLUS_WRAPPED_MSG, e.getMessageAndLocation(), wrapped.Message));
 			}
 			else
 			{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.FATAL_ERR_MSG, e.MessageAndLocation));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.FATAL_ERR_MSG, e.getMessageAndLocation()));
 			}
 		throw e;
 		}
@@ -1168,18 +1167,18 @@ namespace org.apache.xalan.xsltc.trax
 		/// exception. </param>
 		/// <exception cref="TransformerException"> if the application chooses to discontinue
 		/// the transformation (never does in our case). </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warning(javax.xml.transform.TransformerException e) throws javax.xml.transform.TransformerException
 		public virtual void warning(TransformerException e)
 		{
-		Exception wrapped = e.Exception;
+		Exception wrapped = e.getException();
 		if (wrapped != null)
 		{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.WARNING_PLUS_WRAPPED_MSG, e.MessageAndLocation, wrapped.Message));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.WARNING_PLUS_WRAPPED_MSG, e.getMessageAndLocation(), wrapped.Message));
 		}
 		else
 		{
-				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.WARNING_MSG, e.MessageAndLocation));
+				Console.Error.WriteLine(new ErrorMsg(ErrorMsg.WARNING_MSG, e.getMessageAndLocation()));
 		}
 		}
 
@@ -1267,9 +1266,9 @@ namespace org.apache.xalan.xsltc.trax
 			}
 			else
 			{
-				if (xslFile != null && xslFile.Parent != null)
+				if (xslFile != null && xslFile.getParent() != null)
 				{
-					transletPath = xslFile.Parent + "/" + transletPath + ".class";
+					transletPath = xslFile.getParent() + "/" + transletPath + ".class";
 				}
 				else
 				{
@@ -1299,14 +1298,14 @@ namespace org.apache.xalan.xsltc.trax
 			}
 
 			// Load the translet into a bytecode array.
-			IList bytecodes = new ArrayList();
+			System.Collections.IList bytecodes = new ArrayList();
 			int fileLength = (int)transletFile.length();
 			if (fileLength > 0)
 			{
-				System.IO.FileStream input = null;
+				FileStream input = null;
 				try
 				{
-					input = new System.IO.FileStream(transletFile, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+					input = new FileStream(transletFile, FileMode.Open, FileAccess.Read);
 				}
 				catch (FileNotFoundException)
 				{
@@ -1332,7 +1331,7 @@ namespace org.apache.xalan.xsltc.trax
 			}
 
 			// Find the parent directory of the translet.
-			string transletParentDir = transletFile.Parent;
+			string transletParentDir = transletFile.getParent();
 			if (string.ReferenceEquals(transletParentDir, null))
 			{
 				transletParentDir = System.getProperty("user.dir");
@@ -1353,10 +1352,10 @@ namespace org.apache.xalan.xsltc.trax
 				int auxlength = (int)auxfile.length();
 				if (auxlength > 0)
 				{
-					System.IO.FileStream auxinput = null;
+					FileStream auxinput = null;
 					try
 					{
-						  auxinput = new System.IO.FileStream(auxfile, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+						  auxinput = new FileStream(auxfile, FileMode.Open, FileAccess.Read);
 					}
 					catch (FileNotFoundException)
 					{
@@ -1389,7 +1388,7 @@ namespace org.apache.xalan.xsltc.trax
 //ORIGINAL LINE: final byte[][] result = new byte[count][1];
 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
 //ORIGINAL LINE: sbyte[][] result = new sbyte[count][1];
-				sbyte[][] result = RectangularArrays.ReturnRectangularSbyteArray(count, 1);
+				sbyte[][] result = RectangularArrays.RectangularSbyteArray(count, 1);
 				for (int i = 0; i < count; i++)
 				{
 					result[i] = (sbyte[])bytecodes[i];
@@ -1415,7 +1414,7 @@ namespace org.apache.xalan.xsltc.trax
 				this.transletAuxPrefix = transletAuxPrefix;
 			}
 
-			public virtual bool accept(File dir, string name)
+			public bool accept(File dir, string name)
 			{
 				return (name.EndsWith(".class", StringComparison.Ordinal) && name.StartsWith(transletAuxPrefix, StringComparison.Ordinal));
 			}
@@ -1444,9 +1443,9 @@ namespace org.apache.xalan.xsltc.trax
 			  }
 			  else
 			  {
-				  if (xslFile != null && xslFile.Parent != null)
+				  if (xslFile != null && xslFile.getParent() != null)
 				  {
-					jarPath = xslFile.Parent + "/" + _jarFileName;
+					jarPath = xslFile.getParent() + "/" + _jarFileName;
 				  }
 				else
 				{
@@ -1488,7 +1487,7 @@ namespace org.apache.xalan.xsltc.trax
 			  string transletAuxPrefix = transletPath + "$";
 			  string transletFullName = transletPath + ".class";
 
-			  IList bytecodes = new ArrayList();
+			  System.Collections.IList bytecodes = new ArrayList();
 
 			  // Iterate through all entries in the jar file to find the 
 			  // translet and auxiliary classes.
@@ -1496,13 +1495,13 @@ namespace org.apache.xalan.xsltc.trax
 			  while (entries.MoveNext())
 			  {
 				ZipEntry entry = (ZipEntry)entries.Current;
-				string entryName = entry.Name;
-				if (entry.Size > 0 && (entryName.Equals(transletFullName) || (entryName.EndsWith(".class", StringComparison.Ordinal) && entryName.StartsWith(transletAuxPrefix, StringComparison.Ordinal))))
+				string entryName = entry.getName();
+				if (entry.getSize() > 0 && (entryName.Equals(transletFullName) || (entryName.EndsWith(".class", StringComparison.Ordinal) && entryName.StartsWith(transletAuxPrefix, StringComparison.Ordinal))))
 				{
 					try
 					{
-						  System.IO.Stream input = jarFile.getInputStream(entry);
-						  int size = (int)entry.Size;
+						  Stream input = jarFile.getInputStream(entry);
+						  int size = (int)entry.getSize();
 						  sbyte[] bytes = new sbyte[size];
 						  readFromInputStream(bytes, input, size);
 						  input.Close();
@@ -1525,7 +1524,7 @@ namespace org.apache.xalan.xsltc.trax
 //ORIGINAL LINE: final byte[][] result = new byte[count][1];
 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
 //ORIGINAL LINE: sbyte[][] result = new sbyte[count][1];
-				sbyte[][] result = RectangularArrays.ReturnRectangularSbyteArray(count, 1);
+				sbyte[][] result = RectangularArrays.RectangularSbyteArray(count, 1);
 				for (int i = 0; i < count; i++)
 				{
 					result[i] = (sbyte[])bytecodes[i];
@@ -1545,9 +1544,9 @@ namespace org.apache.xalan.xsltc.trax
 		/// <param name="bytes"> The byte array to store the input content. </param>
 		/// <param name="input"> The input stream. </param>
 		/// <param name="size"> The number of bytes to read. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void readFromInputStream(byte[] bytes, java.io.InputStream input, int size) throws java.io.IOException
-		private void readFromInputStream(sbyte[] bytes, System.IO.Stream input, int size)
+		private void readFromInputStream(sbyte[] bytes, Stream input, int size)
 		{
 		  int n = 0;
 		  int offset = 0;
@@ -1578,7 +1577,7 @@ namespace org.apache.xalan.xsltc.trax
 			}
 			  else
 			  {
-				string systemId = source.SystemId;
+				string systemId = source.getSystemId();
 				if (!string.ReferenceEquals(systemId, null))
 				{
 				  string baseName = Util.baseName(systemId);
@@ -1601,7 +1600,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// systemId does not represent a local file. </returns>
 		private string getStylesheetFileName(Source source)
 		{
-			string systemId = source.SystemId;
+			string systemId = source.getSystemId();
 			  if (!string.ReferenceEquals(systemId, null))
 			  {
 				File file = new File(systemId);
@@ -1621,9 +1620,9 @@ namespace org.apache.xalan.xsltc.trax
 						return null;
 				  }
 
-				  if ("file".Equals(url.Protocol))
+				  if ("file".Equals(url.getProtocol()))
 				  {
-						return url.File;
+						return url.getFile();
 				  }
 				  else
 				  {

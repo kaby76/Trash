@@ -22,10 +22,11 @@
  */
 namespace org.apache.xpath.functions
 {
-
 	using Constants = org.apache.xalan.templates.Constants;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
 	using QName = org.apache.xml.utils.QName;
+	using ExtensionsProvider = org.apache.xpath.ExtensionsProvider;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XBoolean = org.apache.xpath.objects.XBoolean;
 	using XObject = org.apache.xpath.objects.XObject;
 
@@ -45,7 +46,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -79,7 +80,7 @@ namespace org.apache.xpath.functions
 		  try
 		  {
 			TransformerImpl transformer = (TransformerImpl) xctxt.OwnerObject;
-			return transformer.Stylesheet.AvailableElements.ContainsKey(new QName(@namespace, methName)) ? XBoolean.S_TRUE : XBoolean.S_FALSE;
+			return transformer.Stylesheet.getAvailableElements().containsKey(new QName(@namespace, methName)) ? XBoolean.S_TRUE : XBoolean.S_FALSE;
 		  }
 		  catch (Exception)
 		  {

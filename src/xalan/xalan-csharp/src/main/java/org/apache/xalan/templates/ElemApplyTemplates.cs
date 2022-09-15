@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.templates
 {
 
-
 	using StackGuard = org.apache.xalan.transformer.StackGuard;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
 	using DTM = org.apache.xml.dtm.DTM;
@@ -47,8 +46,8 @@ namespace org.apache.xalan.templates
 	///   mode %qname; #IMPLIED
 	/// &amp;
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Applying-Template-Rules">section-Applying-Template-Rules in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Applying-Template-Rules">section-Applying-Template-Rules in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemApplyTemplates : ElemCallTemplate
 	{
@@ -81,8 +80,8 @@ namespace org.apache.xalan.templates
 	  /// Tells if this belongs to a default template,
 	  /// in which case it will act different with
 	  /// regard to processing modes. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#built-in-rule">built-in-rule in XSLT Specification</a>
-	  /// @serial </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.built-in-rule">built-in-rule in XSLT Specification</a>"
+	  /// @serial/>
 	  private bool m_isDefaultTemplate = false;
 
 	//  /**
@@ -95,8 +94,8 @@ namespace org.apache.xalan.templates
 	  /// Set if this belongs to a default template,
 	  /// in which case it will act different with
 	  /// regard to processing modes. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#built-in-rule">built-in-rule in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.built-in-rule">built-in-rule in XSLT Specification</a>"
+	  ////>
 	  /// <param name="b"> boolean value to set. </param>
 	  public virtual bool IsDefaultTemplate
 	  {
@@ -108,8 +107,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> Token ID for this element types </returns>
 	  public override int XSLToken
 	  {
@@ -125,7 +124,7 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
@@ -146,12 +145,12 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Apply the context node to the matching templates. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Applying-Template-Rules">section-Applying-Template-Rules in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Applying-Template-Rules">section-Applying-Template-Rules in XSLT Specification</a>"
+	  ////>
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -208,7 +207,7 @@ namespace org.apache.xalan.templates
 	  /// </param>
 	  /// <exception cref="TransformerException"> Thrown in a variety of circumstances.
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transformSelectedNodes(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void transformSelectedNodes(TransformerImpl transformer)
 	  {
@@ -231,8 +230,8 @@ namespace org.apache.xalan.templates
 		try
 		{
 
-				xctxt.pushCurrentNode(org.apache.xml.dtm.DTM_Fields.NULL);
-				xctxt.pushCurrentExpressionNode(org.apache.xml.dtm.DTM_Fields.NULL);
+				xctxt.pushCurrentNode(DTM.NULL);
+				xctxt.pushCurrentExpressionNode(DTM.NULL);
 				xctxt.pushSAXLocatorNull();
 				transformer.pushElemTemplateElement(null);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -304,7 +303,7 @@ namespace org.apache.xalan.templates
 		  // pushParams(transformer, xctxt);
 
 		  int child;
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (child = sourceNodes.nextNode()))
+		  while (DTM.NULL != (child = sourceNodes.nextNode()))
 		  {
 			currentNodes.Top = child;
 			currentExpressionNodes.Top = child;
@@ -334,14 +333,14 @@ namespace org.apache.xalan.templates
 			{
 			  switch (nodeType)
 			  {
-			  case org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE :
-			  case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
+			  case DTM.DOCUMENT_FRAGMENT_NODE :
+			  case DTM.ELEMENT_NODE :
 				template = sroot.DefaultRule;
 				// %OPT% direct faster?
 				break;
-			  case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
-			  case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE :
-			  case org.apache.xml.dtm.DTM_Fields.TEXT_NODE :
+			  case DTM.ATTRIBUTE_NODE :
+			  case DTM.CDATA_SECTION_NODE :
+			  case DTM.TEXT_NODE :
 				// if(rth.m_elemIsPending || rth.m_docPending)
 				//  rth.flushPending(true);
 				transformer.pushPairCurrentMatched(sroot.DefaultTextRule, child);
@@ -350,7 +349,7 @@ namespace org.apache.xalan.templates
 				dtm.dispatchCharactersEvents(child, rth, false);
 				transformer.popCurrentMatched();
 				continue;
-			  case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE :
+			  case DTM.DOCUMENT_NODE :
 				template = sroot.DefaultRootRule;
 				break;
 			  default :

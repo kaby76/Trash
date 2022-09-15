@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// A concrete class that implements this interface creates XMLString objects.
 	/// </summary>

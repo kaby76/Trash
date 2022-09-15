@@ -23,7 +23,6 @@
 namespace org.apache.xml.serializer
 {
 
-
 	using MsgKey = org.apache.xml.serializer.utils.MsgKey;
 	using Utils = org.apache.xml.serializer.utils.Utils;
 	using Attributes = org.xml.sax.Attributes;
@@ -57,7 +56,6 @@ namespace org.apache.xml.serializer
 		///  provides character to entity name lookup.
 		/// </summary>
 		private readonly CharInfo m_htmlcharInfo = CharInfo.getCharInfo(CharInfo.HTML_ENTITIES_RESOURCE, Method.HTML);
-	//        new CharInfo(CharInfo.HTML_ENTITIES_RESOURCE);
 
 		/// <summary>
 		/// A digital search trie for fast, case insensitive lookup of ElemDesc objects. </summary>
@@ -521,7 +519,7 @@ namespace org.apache.xml.serializer
 		///            wrapping another exception.
 		/// </exception>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void startDocumentInternal() throws org.xml.sax.SAXException
 		protected internal override void startDocumentInternal()
 		{
@@ -539,7 +537,7 @@ namespace org.apache.xml.serializer
 		/// be written out. If it doesn't need to be written out, then
 		/// the call to this method has no effect.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void outputDocTypeDecl(String name) throws org.xml.sax.SAXException
 		private void outputDocTypeDecl(string name)
 		{
@@ -599,7 +597,7 @@ namespace org.apache.xml.serializer
 		///            wrapping another exception.
 		/// </exception>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void endDocument() throws org.xml.sax.SAXException
 		public void endDocument()
 		{
@@ -634,9 +632,9 @@ namespace org.apache.xml.serializer
 		///  <param name="atts"> The attributes attached to the element, if any. </param>
 		///  <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 		///             wrapping another exception. </exception>
-		///  <seealso cref= #endElement </seealso>
-		///  <seealso cref= org.xml.sax.AttributeList </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		///  <seealso cref=".endElement"/>
+		///  <seealso cref="org.xml.sax.AttributeList"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String namespaceURI, String localName, String name, org.xml.sax.Attributes atts) throws org.xml.sax.SAXException
 		public override void startElement(string namespaceURI, string localName, string name, Attributes atts)
 		{
@@ -696,7 +694,7 @@ namespace org.apache.xml.serializer
 					{
 						m_ispreserve = false;
 					}
-					else if ((null != elemContext.m_elementName) && (!m_inBlockElem || isBlockElement)) // && !isWhiteSpaceSensitive
+					else if ((null != elemContext.m_elementName) && (!m_inBlockElem || isBlockElement))
 					{
 						m_startNewLine = true;
 
@@ -781,10 +779,9 @@ namespace org.apache.xml.serializer
 		///  <param name="name"> The element type name </param>
 		///  <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 		///             wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void endElement(final String namespaceURI, final String localName, final String name) throws org.xml.sax.SAXException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public sealed override void endElement(string namespaceURI, string localName, string name)
+		public sealed override void endElement(in string namespaceURI, in string localName, in string name)
 		{
 			// deal with any pending issues
 			if (m_cdataTagOpen)
@@ -859,7 +856,7 @@ namespace org.apache.xml.serializer
 
 					// the starting tag was still open when we received this endElement() call
 					// so we need to process any gathered attributes NOW, before they go away.
-					int nAttrs = m_attributes.Length;
+					int nAttrs = m_attributes.getLength();
 					if (nAttrs > 0)
 					{
 						processAttributes(m_writer, nAttrs);
@@ -932,13 +929,13 @@ namespace org.apache.xml.serializer
 		///           that has this attribute.
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void processAttribute(java.io.Writer writer, String name, String value, ElemDesc elemDesc) throws java.io.IOException
 		protected internal virtual void processAttribute(java.io.Writer writer, string name, string value, ElemDesc elemDesc)
 		{
 			writer.write(' ');
 
-			if (((value.Length == 0) || value.Equals(name, StringComparison.CurrentCultureIgnoreCase)) && elemDesc != null && elemDesc.isAttrFlagSet(name, ElemDesc.ATTREMPTY))
+			if (((value.Length == 0) || value.Equals(name, StringComparison.OrdinalIgnoreCase)) && elemDesc != null && elemDesc.isAttrFlagSet(name, ElemDesc.ATTREMPTY))
 			{
 				writer.write(name);
 			}
@@ -980,7 +977,7 @@ namespace org.apache.xml.serializer
 		/// <returns> should be a two character string. </returns>
 		private static string makeHHString(int i)
 		{
-			string s = i.ToString("x").ToUpper();
+			string s = Convert.ToString(i, 16).ToUpper();
 			if (s.Length == 1)
 			{
 				s = "0" + s;
@@ -998,7 +995,7 @@ namespace org.apache.xml.serializer
 			bool sign = true;
 			try
 			{
-				char r = (char)((char) Convert.ToInt32(str, 16));
+				char r = (char) Convert.ToInt32(str, 16);
 			}
 			catch (System.FormatException)
 			{
@@ -1016,10 +1013,9 @@ namespace org.apache.xml.serializer
 		///                      per http://www.ietf.org/rfc/rfc2396.txt.
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> if a bad surrogate pair is detected. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void writeAttrURI(final java.io.Writer writer, String string, boolean doURLEscaping) throws java.io.IOException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public virtual void writeAttrURI(java.io.Writer writer, string @string, bool doURLEscaping)
+		public virtual void writeAttrURI(in java.io.Writer writer, string @string, bool doURLEscaping)
 		{
 			// http://www.ietf.org/rfc/rfc2396.txt says:
 			// A URI is always in an "escaped" form, since escaping or unescaping a
@@ -1057,7 +1053,7 @@ namespace org.apache.xml.serializer
 			{
 				ch = chars[i];
 
-				if ((ch < 32) || (ch > 126))
+				if ((ch < (char)32) || (ch > (char)126))
 				{
 					if (cleanLength > 0)
 					{
@@ -1076,12 +1072,12 @@ namespace org.apache.xml.serializer
 						//    writer.write(ch);
 						//  }
 						//  else 
-						if (ch <= 0x7F)
+						if (ch <= (char)0x7F)
 						{
 							writer.write('%');
 							writer.write(makeHHString(ch));
 						}
-						else if (ch <= 0x7FF)
+						else if (ch <= (char)0x7FF)
 						{
 							// Clear low 6 bits before rotate, put high 4 bits in low byte, 
 							// and set two high bits.
@@ -1265,10 +1261,9 @@ namespace org.apache.xml.serializer
 		/// <param name="encoding">    CURRENTLY NOT IMPLEMENTED.
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void writeAttrString(final java.io.Writer writer, String string, String encoding) throws java.io.IOException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public override void writeAttrString(java.io.Writer writer, string @string, string encoding)
+		public override void writeAttrString(in java.io.Writer writer, string @string, string encoding)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int end = string.length();
@@ -1411,11 +1406,11 @@ namespace org.apache.xml.serializer
 		/// <param name="length"> The number of characters to read from the array. </param>
 		/// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 		///            wrapping another exception. </exception>
-		/// <seealso cref= #ignorableWhitespace </seealso>
-		/// <seealso cref= org.xml.sax.Locator
-		/// </seealso>
+		/// <seealso cref=".ignorableWhitespace"/>
+		/// <seealso cref="org.xml.sax.Locator"
+		////>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void characters(char chars[], int start, int length) throws org.xml.sax.SAXException
 		public sealed override void characters(char[] chars, int start, int length)
 		{
@@ -1476,16 +1471,16 @@ namespace org.apache.xml.serializer
 		///  <param name="length"> The number of characters to read from the array. </param>
 		///  <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 		///             wrapping another exception. </exception>
-		///  <seealso cref= #ignorableWhitespace </seealso>
-		///  <seealso cref= org.xml.sax.Locator
-		/// </seealso>
+		///  <seealso cref=".ignorableWhitespace"/>
+		///  <seealso cref="org.xml.sax.Locator"
+		////>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void cdata(char ch[], int start, int length) throws org.xml.sax.SAXException
 		public sealed override void cdata(char[] ch, int start, int length)
 		{
 
-			if ((null != m_elemContext.m_elementName) && (m_elemContext.m_elementName.Equals("SCRIPT", StringComparison.CurrentCultureIgnoreCase) || m_elemContext.m_elementName.Equals("STYLE", StringComparison.CurrentCultureIgnoreCase)))
+			if ((null != m_elemContext.m_elementName) && (m_elemContext.m_elementName.Equals("SCRIPT", StringComparison.OrdinalIgnoreCase) || m_elemContext.m_elementName.Equals("STYLE", StringComparison.OrdinalIgnoreCase)))
 			{
 				try
 				{
@@ -1527,7 +1522,7 @@ namespace org.apache.xml.serializer
 		///             wrapping another exception.
 		/// </exception>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws org.xml.sax.SAXException
 		public virtual void processingInstruction(string target, string data)
 		{
@@ -1627,7 +1622,7 @@ namespace org.apache.xml.serializer
 		/// <param name="name"> non-null reference to entity name string.
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void entityReference(String name) throws org.xml.sax.SAXException
 		public sealed override void entityReference(string name)
 		{
@@ -1647,8 +1642,8 @@ namespace org.apache.xml.serializer
 				throw new SAXException(e);
 			}
 		}
-		/// <seealso cref= ExtendedContentHandler#endElement(String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="ExtendedContentHandler.endElement(String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void endElement(String elemName) throws org.xml.sax.SAXException
 		public sealed override void endElement(string elemName)
 		{
@@ -1665,8 +1660,8 @@ namespace org.apache.xml.serializer
 		/// to be processed
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void processAttributes(java.io.Writer writer, int nAttrs) throws java.io.IOException,org.xml.sax.SAXException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void processAttributes(java.io.Writer writer, int nAttrs) throws IOException,org.xml.sax.SAXException
 		public override void processAttributes(java.io.Writer writer, int nAttrs)
 		{
 				/* 
@@ -1684,7 +1679,7 @@ namespace org.apache.xml.serializer
 		/// a cdata-section-element.
 		/// </summary>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void closeStartTag() throws org.xml.sax.SAXException
 		protected internal override void closeStartTag()
 		{
@@ -1697,7 +1692,7 @@ namespace org.apache.xml.serializer
 					base.fireStartElem(m_elemContext.m_elementName);
 				}
 
-				int nAttrs = m_attributes.Length;
+				int nAttrs = m_attributes.getLength();
 				if (nAttrs > 0)
 				{
 					processAttributes(m_writer, nAttrs);
@@ -1739,8 +1734,8 @@ namespace org.apache.xml.serializer
 			/// <param name="uri"> the URI of the namespace </param>
 			/// <param name="prefix"> the prefix associated with the given URI.
 			/// </param>
-			/// <seealso cref= ExtendedContentHandler#namespaceAfterStartElement(String, String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+			/// <seealso cref="ExtendedContentHandler.namespaceAfterStartElement(String, String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void namespaceAfterStartElement(String prefix, String uri) throws org.xml.sax.SAXException
 			public override void namespaceAfterStartElement(string prefix, string uri)
 			{
@@ -1748,7 +1743,7 @@ namespace org.apache.xml.serializer
 				if (string.ReferenceEquals(m_elemContext.m_elementURI, null))
 				{
 					string prefix1 = getPrefixPart(m_elemContext.m_elementName);
-					if (string.ReferenceEquals(prefix1, null) && SerializerConstants_Fields.EMPTYSTRING.Equals(prefix))
+					if (string.ReferenceEquals(prefix1, null) && EMPTYSTRING.Equals(prefix))
 					{
 						// the elements URI is not known yet, and it
 						// doesn't have a prefix, and we are currently
@@ -1760,7 +1755,7 @@ namespace org.apache.xml.serializer
 				startPrefixMapping(prefix,uri,false);
 			}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDTD(String name, String publicId, String systemId) throws org.xml.sax.SAXException
 		public override void startDTD(string name, string publicId, string systemId)
 		{
@@ -1771,8 +1766,8 @@ namespace org.apache.xml.serializer
 		/// <summary>
 		/// Report the end of DTD declarations. </summary>
 		/// <exception cref="org.xml.sax.SAXException"> The application may raise an exception. </exception>
-		/// <seealso cref= #startDTD </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref=".startDTD"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDTD() throws org.xml.sax.SAXException
 		public override void endDTD()
 		{
@@ -1784,7 +1779,7 @@ namespace org.apache.xml.serializer
 		/// <summary>
 		/// This method does nothing.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void attributeDecl(String eName, String aName, String type, String valueDefault, String value) throws org.xml.sax.SAXException
 		public override void attributeDecl(string eName, string aName, string type, string valueDefault, string value)
 		{
@@ -1794,7 +1789,7 @@ namespace org.apache.xml.serializer
 		/// <summary>
 		/// This method does nothing.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void elementDecl(String name, String model) throws org.xml.sax.SAXException
 		public override void elementDecl(string name, string model)
 		{
@@ -1803,7 +1798,7 @@ namespace org.apache.xml.serializer
 		/// <summary>
 		/// This method does nothing.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void internalEntityDecl(String name, String value) throws org.xml.sax.SAXException
 		public override void internalEntityDecl(string name, string value)
 		{
@@ -1812,7 +1807,7 @@ namespace org.apache.xml.serializer
 		/// <summary>
 		/// This method does nothing.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void externalEntityDecl(String name, String publicId, String systemId) throws org.xml.sax.SAXException
 		public override void externalEntityDecl(string name, string publicId, string systemId)
 		{
@@ -1828,7 +1823,7 @@ namespace org.apache.xml.serializer
 		/// <param name="value"> the value of the attribute which can contain only
 		/// ASCII printable characters characters in the range 32 to 127 inclusive. </param>
 		/// <param name="flags"> the bit values of this integer give optimization information. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void addUniqueAttribute(String name, String value, int flags) throws org.xml.sax.SAXException
 		public override void addUniqueAttribute(string name, string value, int flags)
 		{
@@ -1837,7 +1832,7 @@ namespace org.apache.xml.serializer
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.Writer writer = m_writer;
 				java.io.Writer writer = m_writer;
-				if ((flags & ExtendedContentHandler_Fields.NO_BAD_CHARS) > 0 && m_htmlcharInfo.onlyQuotAmpLtGt)
+				if ((flags & NO_BAD_CHARS) > 0 && m_htmlcharInfo.onlyQuotAmpLtGt)
 				{
 					// "flags" has indicated that the characters
 					// '>'  '<'   '&'  and '"' are not in the value and
@@ -1850,7 +1845,7 @@ namespace org.apache.xml.serializer
 					writer.write(value);
 					writer.write('"');
 				}
-				else if ((flags & ExtendedContentHandler_Fields.HTML_ATTREMPTY) > 0 && (value.Length == 0 || value.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
+				else if ((flags & HTML_ATTREMPTY) > 0 && (value.Length == 0 || value.Equals(name, StringComparison.OrdinalIgnoreCase)))
 				{
 					writer.write(' ');
 					writer.write(name);
@@ -1860,7 +1855,7 @@ namespace org.apache.xml.serializer
 					writer.write(' ');
 					writer.write(name);
 					writer.write("=\"");
-					if ((flags & ExtendedContentHandler_Fields.HTML_ATTRURL) > 0)
+					if ((flags & HTML_ATTRURL) > 0)
 					{
 						writeAttrURI(writer, value, m_specialEscapeURLs);
 					}
@@ -1877,7 +1872,7 @@ namespace org.apache.xml.serializer
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char ch[], int start, int length) throws org.xml.sax.SAXException
 		public override void comment(char[] ch, int start, int length)
 		{
@@ -2057,9 +2052,7 @@ namespace org.apache.xml.serializer
 			/// <param name="key"> must be a 7-bit ASCII string
 			/// </param>
 			/// <returns> The object that matches the key, or null. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public Object get(final String key)
-			public virtual object get(string key)
+			public virtual object get(in string key)
 			{
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -2090,7 +2083,7 @@ namespace org.apache.xml.serializer
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final char ch = key.charAt(0);
 							char ch = key[0];
-							if (ch < ALPHA_SIZE)
+							if (ch < (char)ALPHA_SIZE)
 							{
 								node = node.m_nextChar[ch];
 								if (node != null)
@@ -2129,7 +2122,7 @@ namespace org.apache.xml.serializer
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final char ch = key.charAt(i);
 								char ch = key[i];
-								if (ALPHA_SIZE <= ch)
+								if ((char)ALPHA_SIZE <= ch)
 								{
 									// the key is not 7-bit ASCII so we won't find it here
 									return null;
@@ -2196,9 +2189,7 @@ namespace org.apache.xml.serializer
 			/// <param name="key"> must be a 7-bit ASCII string
 			/// </param>
 			/// <returns> The object that matches the key, or null. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public Object get2(final String key)
-			public virtual object get2(string key)
+			public virtual object get2(in string key)
 			{
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -2229,7 +2220,7 @@ namespace org.apache.xml.serializer
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final char ch = key.charAt(0);
 							char ch = key[0];
-							if (ch < ALPHA_SIZE)
+							if (ch < (char)ALPHA_SIZE)
 							{
 								node = node.m_nextChar[ch];
 								if (node != null)
@@ -2256,7 +2247,7 @@ namespace org.apache.xml.serializer
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final char ch = m_charBuffer[i];
 								char ch = m_charBuffer[i];
-								if (ALPHA_SIZE <= ch)
+								if ((char)ALPHA_SIZE <= ch)
 								{
 									// the key is not 7-bit ASCII so we won't find it here
 									return null;

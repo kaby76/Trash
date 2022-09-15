@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.transformer
 {
 
-
 	using ElemNumber = org.apache.xalan.templates.ElemNumber;
 	using DTM = org.apache.xml.dtm.DTM;
 	using NodeSetDTM = org.apache.xpath.NodeSetDTM;
@@ -124,7 +123,7 @@ namespace org.apache.xalan.transformer
 	  /// <returns> The node count, or 0 if not found.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int countNode(org.apache.xpath.XPathContext support, org.apache.xalan.templates.ElemNumber numberElem, int node) throws javax.xml.transform.TransformerException
 	  public virtual int countNode(XPathContext support, ElemNumber numberElem, int node)
 	  {
@@ -137,7 +136,7 @@ namespace org.apache.xalan.transformer
 		// XPath fromMatchPattern = numberElem.m_fromMatchPattern;
 		int target = numberElem.getTargetNode(support, node);
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != target)
+		if (DTM.NULL != target)
 		{
 		  for (int i = 0; i < nCounters; i++)
 		  {
@@ -163,7 +162,7 @@ namespace org.apache.xalan.transformer
 			m_newFound = new NodeSetDTM(support.DTMManager);
 		  }
 
-		  for (; org.apache.xml.dtm.DTM_Fields.NULL != target; target = numberElem.getPreviousNode(support, target))
+		  for (; DTM.NULL != target; target = numberElem.getPreviousNode(support, target))
 		  {
 
 			// First time in, we should not have to check for previous counts, 

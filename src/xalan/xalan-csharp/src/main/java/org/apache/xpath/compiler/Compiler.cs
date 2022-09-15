@@ -23,7 +23,6 @@
 namespace org.apache.xpath.compiler
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
@@ -31,6 +30,7 @@ namespace org.apache.xpath.compiler
 	using PrefixResolver = org.apache.xml.utils.PrefixResolver;
 	using QName = org.apache.xml.utils.QName;
 	using SAXSourceLocator = org.apache.xml.utils.SAXSourceLocator;
+	using Expression = org.apache.xpath.Expression;
 	using UnionPathIterator = org.apache.xpath.axes.UnionPathIterator;
 	using WalkerFactory = org.apache.xpath.axes.WalkerFactory;
 	using FuncExtFunction = org.apache.xpath.functions.FuncExtFunction;
@@ -107,7 +107,7 @@ namespace org.apache.xpath.compiler
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if there is a syntax or other error.
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.Expression compile(int opPos) throws javax.xml.transform.TransformerException
 	  public virtual Expression compile(int opPos)
 	  {
@@ -204,7 +204,6 @@ namespace org.apache.xpath.compiler
 		case OpCodes.OP_PREDICATE :
 		  expr = null;
 		  break; // should never hit this here.
-			goto case OpCodes.OP_MATCHPATTERN;
 		case OpCodes.OP_MATCHPATTERN :
 		  expr = matchPattern(opPos + 2);
 		  break;
@@ -233,7 +232,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Operation"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if there is a syntax or other error. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private org.apache.xpath.Expression compileOperation(org.apache.xpath.operations.Operation operation, int opPos) throws javax.xml.transform.TransformerException
 	  private Expression compileOperation(Operation operation, int opPos)
 	  {
@@ -255,7 +254,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> The unary argument.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if syntax or other error occurs. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private org.apache.xpath.Expression compileUnary(org.apache.xpath.operations.UnaryOperation unary, int opPos) throws javax.xml.transform.TransformerException
 	  private Expression compileUnary(UnaryOperation unary, int opPos)
 	  {
@@ -275,7 +274,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Or"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression or(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression or(int opPos)
 	  {
@@ -290,7 +289,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.And"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression and(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression and(int opPos)
 	  {
@@ -305,7 +304,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.NotEquals"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression notequals(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression notequals(int opPos)
 	  {
@@ -320,7 +319,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Equals"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression equals(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression Equals(int opPos)
 	  {
@@ -335,7 +334,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Lte"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression lte(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression lte(int opPos)
 	  {
@@ -350,7 +349,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Lt"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression lt(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression lt(int opPos)
 	  {
@@ -365,7 +364,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Gte"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression gte(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression gte(int opPos)
 	  {
@@ -380,7 +379,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Gt"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression gt(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression gt(int opPos)
 	  {
@@ -395,7 +394,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Plus"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression plus(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression plus(int opPos)
 	  {
@@ -410,7 +409,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Minus"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression minus(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression minus(int opPos)
 	  {
@@ -425,7 +424,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Mult"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression mult(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression mult(int opPos)
 	  {
@@ -440,7 +439,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Div"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression div(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression div(int opPos)
 	  {
@@ -455,7 +454,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Mod"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression mod(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression mod(int opPos)
 	  {
@@ -484,7 +483,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Neg"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression neg(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression neg(int opPos)
 	  {
@@ -499,7 +498,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.String"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression string(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression @string(int opPos)
 	  {
@@ -514,7 +513,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Bool"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression bool(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression @bool(int opPos)
 	  {
@@ -529,7 +528,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Number"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression number(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression number(int opPos)
 	  {
@@ -576,12 +575,12 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.operations.Variable"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression variable(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression variable(int opPos)
 	  {
 
-		Variable @var = new Variable();
+		Variable var = new Variable();
 
 		opPos = getFirstChildPos(opPos);
 
@@ -590,9 +589,9 @@ namespace org.apache.xpath.compiler
 		string localname = (string) TokenQueue.elementAt(getOp(opPos + 1));
 		QName qname = new QName(@namespace, localname);
 
-		@var.QName = qname;
+		var.QName = qname;
 
-		return @var;
+		return var;
 	  }
 
 	  /// <summary>
@@ -603,7 +602,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to the contained expression.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression group(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression group(int opPos)
 	  {
@@ -620,7 +619,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to the argument expression.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression arg(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression arg(int opPos)
 	  {
@@ -638,7 +637,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.axes.LocPathIterator"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression union(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression union(int opPos)
 	  {
@@ -686,7 +685,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.axes.LocPathIterator"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.Expression locationPath(int opPos) throws javax.xml.transform.TransformerException
 	  public virtual Expression locationPath(int opPos)
 	  {
@@ -710,7 +709,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> the contained predicate expression.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.Expression predicate(int opPos) throws javax.xml.transform.TransformerException
 	  public virtual Expression predicate(int opPos)
 	  {
@@ -725,7 +724,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.patterns.UnionPattern"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.Expression matchPattern(int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual Expression matchPattern(int opPos)
 	  {
@@ -774,7 +773,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.patterns.StepPattern"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.Expression locationPathPattern(int opPos) throws javax.xml.transform.TransformerException
 	  public virtual Expression locationPathPattern(int opPos)
 	  {
@@ -802,61 +801,61 @@ namespace org.apache.xpath.compiler
 		switch (testType)
 		{
 		case OpCodes.NODETYPE_COMMENT :
-		  return org.apache.xml.dtm.DTMFilter_Fields.SHOW_COMMENT;
+		  return DTMFilter.SHOW_COMMENT;
 		case OpCodes.NODETYPE_TEXT :
 	//      return DTMFilter.SHOW_TEXT | DTMFilter.SHOW_COMMENT;
-		  return org.apache.xml.dtm.DTMFilter_Fields.SHOW_TEXT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_CDATA_SECTION;
+		  return DTMFilter.SHOW_TEXT | DTMFilter.SHOW_CDATA_SECTION;
 		case OpCodes.NODETYPE_PI :
-		  return org.apache.xml.dtm.DTMFilter_Fields.SHOW_PROCESSING_INSTRUCTION;
+		  return DTMFilter.SHOW_PROCESSING_INSTRUCTION;
 		case OpCodes.NODETYPE_NODE :
 	//      return DTMFilter.SHOW_ALL;
 		  switch (axesType)
 		  {
 		  case OpCodes.FROM_NAMESPACE:
-			return org.apache.xml.dtm.DTMFilter_Fields.SHOW_NAMESPACE;
+			return DTMFilter.SHOW_NAMESPACE;
 		  case OpCodes.FROM_ATTRIBUTES :
 		  case OpCodes.MATCH_ATTRIBUTE :
-			return org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE;
+			return DTMFilter.SHOW_ATTRIBUTE;
 		  case OpCodes.FROM_SELF:
 		  case OpCodes.FROM_ANCESTORS_OR_SELF:
 		  case OpCodes.FROM_DESCENDANTS_OR_SELF:
-			return org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL;
+			return DTMFilter.SHOW_ALL;
 		  default:
 			if (getOp(0) == OpCodes.OP_MATCHPATTERN)
 			{
-			  return ~org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE & ~org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT & ~org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT;
+			  return ~DTMFilter.SHOW_ATTRIBUTE & ~DTMFilter.SHOW_DOCUMENT & ~DTMFilter.SHOW_DOCUMENT_FRAGMENT;
 			}
 			else
 			{
-			  return ~org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE;
+			  return ~DTMFilter.SHOW_ATTRIBUTE;
 			}
 		  }
 			goto case OpCodes.NODETYPE_ROOT;
 		case OpCodes.NODETYPE_ROOT :
-		  return org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT;
+		  return DTMFilter.SHOW_DOCUMENT | DTMFilter.SHOW_DOCUMENT_FRAGMENT;
 		case OpCodes.NODETYPE_FUNCTEST :
 		  return NodeTest.SHOW_BYFUNCTION;
 		case OpCodes.NODENAME :
 		  switch (axesType)
 		  {
 		  case OpCodes.FROM_NAMESPACE :
-			return org.apache.xml.dtm.DTMFilter_Fields.SHOW_NAMESPACE;
+			return DTMFilter.SHOW_NAMESPACE;
 		  case OpCodes.FROM_ATTRIBUTES :
 		  case OpCodes.MATCH_ATTRIBUTE :
-			return org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE;
+			return DTMFilter.SHOW_ATTRIBUTE;
 
 		  // break;
 		  case OpCodes.MATCH_ANY_ANCESTOR :
 		  case OpCodes.MATCH_IMMEDIATE_ANCESTOR :
-			return org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT;
+			return DTMFilter.SHOW_ELEMENT;
 
 		  // break;
 		  default :
-			return org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT;
+			return DTMFilter.SHOW_ELEMENT;
 		  }
 		default :
 		  // System.err.println("We should never reach here.");
-		  return org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL;
+		  return DTMFilter.SHOW_ALL;
 		}
 	  }
 
@@ -873,7 +872,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.patterns.StepPattern"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xpath.patterns.StepPattern stepPattern(int opPos, int stepCount, org.apache.xpath.patterns.StepPattern ancestorPattern) throws javax.xml.transform.TransformerException
 	  protected internal virtual StepPattern stepPattern(int opPos, int stepCount, StepPattern ancestorPattern)
 	  {
@@ -915,7 +914,7 @@ namespace org.apache.xpath.compiler
 		  addMagicSelf = false;
 		  argLen = getArgLengthOfStep(opPos);
 		  opPos = getFirstChildPosOfStep(opPos);
-		  pattern = new StepPattern(org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT, Axis.PARENT, Axis.CHILD);
+		  pattern = new StepPattern(DTMFilter.SHOW_DOCUMENT | DTMFilter.SHOW_DOCUMENT_FRAGMENT, Axis.PARENT, Axis.CHILD);
 		  break;
 		case OpCodes.MATCH_ATTRIBUTE :
 		 if (DEBUG)
@@ -924,7 +923,7 @@ namespace org.apache.xpath.compiler
 		 }
 		  argLen = getArgLengthOfStep(opPos);
 		  opPos = getFirstChildPosOfStep(opPos);
-		  pattern = new StepPattern(org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE, getStepNS(startOpPos), getStepLocalName(startOpPos), Axis.PARENT, Axis.ATTRIBUTE);
+		  pattern = new StepPattern(DTMFilter.SHOW_ATTRIBUTE, getStepNS(startOpPos), getStepLocalName(startOpPos), Axis.PARENT, Axis.ATTRIBUTE);
 		  break;
 		case OpCodes.MATCH_ANY_ANCESTOR :
 		  if (DEBUG)
@@ -998,7 +997,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to array of <seealso cref="org.apache.xpath.Expression"/> instances.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.Expression[] getCompiledPredicates(int opPos) throws javax.xml.transform.TransformerException
 	  public virtual Expression[] getCompiledPredicates(int opPos)
 	  {
@@ -1025,7 +1024,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> The number of predicates for this step.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int countPredicates(int opPos) throws javax.xml.transform.TransformerException
 	  public virtual int countPredicates(int opPos)
 	  {
@@ -1050,7 +1049,7 @@ namespace org.apache.xpath.compiler
 	  ///            <seealso cref="org.apache.xpath.Expression"/>s, that will be filled in.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void compilePredicates(int opPos, org.apache.xpath.Expression[] predicates) throws javax.xml.transform.TransformerException
 	  private void compilePredicates(int opPos, Expression[] predicates)
 	  {
@@ -1070,7 +1069,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.functions.Function"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: org.apache.xpath.Expression compileFunction(int opPos) throws javax.xml.transform.TransformerException
 	  internal virtual Expression compileFunction(int opPos)
 	  {
@@ -1161,7 +1160,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> reference to <seealso cref="org.apache.xpath.functions.FuncExtFunction"/> instance.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if a error occurs creating the Expression. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private org.apache.xpath.Expression compileExtension(int opPos) throws javax.xml.transform.TransformerException
 	  private Expression compileExtension(int opPos)
 	  {
@@ -1218,7 +1217,7 @@ namespace org.apache.xpath.compiler
 	  /// </param>
 	  /// <exception cref="TransformerException"> if the current ErrorListoner determines to 
 	  ///                              throw an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warn(String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  public virtual void warn(string msg, object[] args)
 	  {
@@ -1231,7 +1230,7 @@ namespace org.apache.xpath.compiler
 		}
 		else
 		{
-		  Console.WriteLine(fmsg + "; file " + m_locator.SystemId + "; line " + m_locator.LineNumber + "; column " + m_locator.ColumnNumber);
+		  Console.WriteLine(fmsg + "; file " + m_locator.getSystemId() + "; line " + m_locator.getLineNumber() + "; column " + m_locator.getColumnNumber());
 		}
 	  }
 
@@ -1266,7 +1265,7 @@ namespace org.apache.xpath.compiler
 	  /// </param>
 	  /// <exception cref="TransformerException"> if the current ErrorListoner determines to 
 	  ///                              throw an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  public override void error(string msg, object[] args)
 	  {

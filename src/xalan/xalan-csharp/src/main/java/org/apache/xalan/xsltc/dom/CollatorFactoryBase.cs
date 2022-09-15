@@ -22,6 +22,7 @@
 namespace org.apache.xalan.xsltc.dom
 {
 
+	using CollatorFactory = org.apache.xalan.xsltc.CollatorFactory;
 
 	/// <summary>
 	/// @author W. Eliot Kimber (eliot@isogen.com)
@@ -29,8 +30,8 @@ namespace org.apache.xalan.xsltc.dom
 	public class CollatorFactoryBase : CollatorFactory
 	{
 
-		public static readonly Locale DEFAULT_LOCALE = Locale.Default;
-		public static readonly Collator DEFAULT_COLLATOR = Collator.Instance;
+		public static readonly Locale DEFAULT_LOCALE = Locale.getDefault();
+		public static readonly Collator DEFAULT_COLLATOR = Collator.getInstance();
 
 		public CollatorFactoryBase()
 		{

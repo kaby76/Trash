@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -68,7 +69,7 @@ namespace org.apache.xml.dtm.@ref
 	/// 
 	/// </para>
 	/// </summary>
-	public class IncrementalSAXSource_Filter : IncrementalSAXSource, ContentHandler, DTDHandler, LexicalHandler, ErrorHandler, System.Threading.ThreadStart
+	public class IncrementalSAXSource_Filter : IncrementalSAXSource, ContentHandler, DTDHandler, LexicalHandler, ErrorHandler, ThreadStart
 	{
 	  internal bool DEBUG = false; //Internal status report
 
@@ -156,9 +157,9 @@ namespace org.apache.xml.dtm.@ref
 		  set
 		  {
 			fXMLReader = value;
-			value.ContentHandler = this;
-			value.DTDHandler = this;
-			value.ErrorHandler = this; // to report fatal errors in filtering mode
+			value.setContentHandler(this);
+			value.setDTDHandler(this);
+			value.setErrorHandler(this); // to report fatal errors in filtering mode
     
 			// Not supported by all SAX2 filters:
 			try
@@ -249,7 +250,7 @@ namespace org.apache.xml.dtm.@ref
 	  // text causing greater than usual readahead. (Unlikely? Consider the
 	  // possibility of a large base-64 block in a SOAP stream.)
 	  //
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(char[] ch, int start, int length) throws org.xml.sax.SAXException
 	  public virtual void characters(char[] ch, int start, int length)
 	  {
@@ -263,7 +264,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientContentHandler.characters(ch,start,length);
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 	  public virtual void endDocument()
 	  {
@@ -276,7 +277,7 @@ namespace org.apache.xml.dtm.@ref
 		eventcounter = 0;
 		co_yield(false);
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName) throws org.xml.sax.SAXException
 	  public virtual void endElement(string namespaceURI, string localName, string qName)
 	  {
@@ -290,7 +291,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientContentHandler.endElement(namespaceURI,localName,qName);
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endPrefixMapping(java.lang.String prefix) throws org.xml.sax.SAXException
 	  public virtual void endPrefixMapping(string prefix)
 	  {
@@ -304,7 +305,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientContentHandler.endPrefixMapping(prefix);
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void ignorableWhitespace(char[] ch, int start, int length) throws org.xml.sax.SAXException
 	  public virtual void ignorableWhitespace(char[] ch, int start, int length)
 	  {
@@ -318,7 +319,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientContentHandler.ignorableWhitespace(ch,start,length);
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(java.lang.String target, java.lang.String data) throws org.xml.sax.SAXException
 	  public virtual void processingInstruction(string target, string data)
 	  {
@@ -344,11 +345,11 @@ namespace org.apache.xml.dtm.@ref
 			}
 			if (clientContentHandler != null)
 			{
-			  clientContentHandler.DocumentLocator = value;
+			  clientContentHandler.setDocumentLocator(value);
 			}
 		  }
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void skippedEntity(java.lang.String name) throws org.xml.sax.SAXException
 	  public virtual void skippedEntity(string name)
 	  {
@@ -362,7 +363,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientContentHandler.skippedEntity(name);
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocument() throws org.xml.sax.SAXException
 	  public virtual void startDocument()
 	  {
@@ -379,7 +380,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientContentHandler.startDocument();
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(java.lang.String namespaceURI, java.lang.String localName, java.lang.String qName, org.xml.sax.Attributes atts) throws org.xml.sax.SAXException
 	  public virtual void startElement(string namespaceURI, string localName, string qName, Attributes atts)
 	  {
@@ -393,7 +394,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientContentHandler.startElement(namespaceURI, localName, qName, atts);
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startPrefixMapping(java.lang.String prefix, java.lang.String uri) throws org.xml.sax.SAXException
 	  public virtual void startPrefixMapping(string prefix, string uri)
 	  {
@@ -418,7 +419,7 @@ namespace org.apache.xml.dtm.@ref
 	  // actually want to use them to register directly with the filter.
 	  // But I want 'em here for now, to remind us to recheck this assertion!
 	  //
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char[] ch, int start, int length) throws org.xml.sax.SAXException
 	  public virtual void comment(char[] ch, int start, int length)
 	  {
@@ -427,7 +428,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientLexicalHandler.comment(ch,start,length);
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCDATA() throws org.xml.sax.SAXException
 	  public virtual void endCDATA()
 	  {
@@ -436,7 +437,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientLexicalHandler.endCDATA();
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDTD() throws org.xml.sax.SAXException
 	  public virtual void endDTD()
 	  {
@@ -445,7 +446,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientLexicalHandler.endDTD();
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endEntity(java.lang.String name) throws org.xml.sax.SAXException
 	  public virtual void endEntity(string name)
 	  {
@@ -454,7 +455,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientLexicalHandler.endEntity(name);
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startCDATA() throws org.xml.sax.SAXException
 	  public virtual void startCDATA()
 	  {
@@ -463,7 +464,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientLexicalHandler.startCDATA();
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId) throws org.xml.sax.SAXException
 	  public virtual void startDTD(string name, string publicId, string systemId)
 	  {
@@ -472,7 +473,7 @@ namespace org.apache.xml.dtm.@ref
 		  clientLexicalHandler.startDTD(name, publicId, systemId);
 		}
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startEntity(java.lang.String name) throws org.xml.sax.SAXException
 	  public virtual void startEntity(string name)
 	  {
@@ -485,7 +486,7 @@ namespace org.apache.xml.dtm.@ref
 	  //
 	  // DTDHandler support.
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void notationDecl(String a, String b, String c) throws org.xml.sax.SAXException
 	  public virtual void notationDecl(string a, string b, string c)
 	  {
@@ -494,7 +495,7 @@ namespace org.apache.xml.dtm.@ref
 			  clientDTDHandler.notationDecl(a,b,c);
 		  }
 	  }
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void unparsedEntityDecl(String a, String b, String c, String d) throws org.xml.sax.SAXException
 	  public virtual void unparsedEntityDecl(string a, string b, string c, string d)
 	  {
@@ -519,7 +520,7 @@ namespace org.apache.xml.dtm.@ref
 	  // us in the exception handling code because it won't be delivered as part
 	  // of the normal SAX ErrorHandler stream, that's fine; Not Our Problem.
 	  //
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException
 	  public virtual void error(SAXParseException exception)
 	  {
@@ -529,7 +530,7 @@ namespace org.apache.xml.dtm.@ref
 		}
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fatalError(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException
 	  public virtual void fatalError(SAXParseException exception)
 	  {
@@ -545,7 +546,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warning(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException
 	  public virtual void warning(SAXParseException exception)
 	  {
@@ -600,7 +601,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="moreExepected"> Should always be true unless this is being called
 	  /// at the end of endDocument() handling.
 	  ///  </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void count_and_yield(boolean moreExpected) throws org.xml.sax.SAXException
 	  protected internal virtual void count_and_yield(bool moreExpected)
 	  {
@@ -623,7 +624,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// the very first thing the controller tells us may be "I don't
 	  /// need events after all"!
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void co_entry_pause() throws org.xml.sax.SAXException
 	  private void co_entry_pause()
 	  {
@@ -676,7 +677,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// not be prepared for this "normal abnormal exit", and instead we put
 	  /// ourselves in a "spin" mode where events are discarded.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void co_yield(boolean moreRemains) throws org.xml.sax.SAXException
 	  private void co_yield(bool moreRemains)
 	  {
@@ -734,7 +735,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <exception cref="SAXException"> is parse thread is already in progress
 	  /// or parsing can not be started.
 	  ///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startParse(org.xml.sax.InputSource source) throws org.xml.sax.SAXException
 	  public virtual void startParse(InputSource source)
 	  {
@@ -794,7 +795,7 @@ namespace org.apache.xml.dtm.@ref
 		}
 		catch (SAXException ex)
 		{
-		  Exception inner = ex.Exception;
+		  Exception inner = ex.getException();
 		  if (inner is StopException)
 		  {
 			// Expected and harmless

@@ -22,7 +22,9 @@
  */
 namespace org.apache.xpath.objects
 {
-
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 
 	/// <summary>
 	/// This class represents an XPath number, and is capable of
@@ -58,7 +60,7 @@ namespace org.apache.xpath.objects
 	  {
 
 
-		m_val = num.doubleValue();
+		m_val = (double)num;
 		Object = num;
 	  }
 
@@ -102,7 +104,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> 0.0
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public double num(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override double num(XPathContext xctxt)
 	  {
@@ -449,7 +451,7 @@ namespace org.apache.xpath.objects
 		  }
 	  }
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
 	  {
 		  visitor.visitNumberLiteral(owner, this);

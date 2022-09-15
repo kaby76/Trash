@@ -104,17 +104,17 @@ namespace org.apache.xml.serializer
 		  }
 
 		  // Set the system ID, if it is given
-		  m_contentHandler.DocumentLocator = m_locator;
+		  m_contentHandler.setDocumentLocator(m_locator);
 		  if (!string.ReferenceEquals(systemId, null))
 		  {
-			  m_locator.SystemId = systemId;
+			  m_locator.setSystemId(systemId);
 		  }
 		  else
 		  {
 			  try
 			  {
 				// Bug see Bugzilla  26741
-				m_locator.SystemId = System.getProperty("user.dir") + File.separator + "dummy.xsl";
+				m_locator.setSystemId(System.getProperty("user.dir") + File.separator + "dummy.xsl");
 			  }
 			   catch (SecurityException)
 			   { // user.dir not accessible from applet
@@ -124,12 +124,12 @@ namespace org.apache.xml.serializer
 		  // Set the document locator  
 					if (m_contentHandler != null)
 					{
-							m_contentHandler.DocumentLocator = m_locator;
+							m_contentHandler.setDocumentLocator(m_locator);
 					}
 					try
 					{
 					   // Bug see Bugzilla  26741
-					  m_locator.SystemId = System.getProperty("user.dir") + File.separator + "dummy.xsl";
+					  m_locator.setSystemId(System.getProperty("user.dir") + File.separator + "dummy.xsl");
 					}
 					catch (SecurityException)
 					{ // user.dir not accessible from applet
@@ -149,7 +149,7 @@ namespace org.apache.xml.serializer
 	  /// <param name="pos"> Node in the tree where to start traversal
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void traverse(org.w3c.dom.Node pos) throws org.xml.sax.SAXException
 	  public void traverse(Node pos)
 	  {
@@ -162,7 +162,7 @@ namespace org.apache.xml.serializer
 		{
 		  startNode(pos);
 
-		  Node nextNode = pos.FirstChild;
+		  Node nextNode = pos.getFirstChild();
 
 		  while (null == nextNode)
 		  {
@@ -173,11 +173,11 @@ namespace org.apache.xml.serializer
 			  break;
 			}
 
-			nextNode = pos.NextSibling;
+			nextNode = pos.getNextSibling();
 
 			if (null == nextNode)
 			{
-			  pos = pos.ParentNode;
+			  pos = pos.getParentNode();
 
 			  if ((null == pos) || (top.Equals(pos)))
 			  {
@@ -210,7 +210,7 @@ namespace org.apache.xml.serializer
 	  /// <param name="top"> Node in the tree where to end traversal
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void traverse(org.w3c.dom.Node pos, org.w3c.dom.Node top) throws org.xml.sax.SAXException
 	  public void traverse(Node pos, Node top)
 	  {
@@ -221,7 +221,7 @@ namespace org.apache.xml.serializer
 		{
 		  startNode(pos);
 
-		  Node nextNode = pos.FirstChild;
+		  Node nextNode = pos.getFirstChild();
 
 		  while (null == nextNode)
 		  {
@@ -232,11 +232,11 @@ namespace org.apache.xml.serializer
 			  break;
 			}
 
-			nextNode = pos.NextSibling;
+			nextNode = pos.getNextSibling();
 
 			if (null == nextNode)
 			{
-			  pos = pos.ParentNode;
+			  pos = pos.getParentNode();
 
 			  if ((null == pos) || ((null != top) && top.Equals(pos)))
 			  {
@@ -259,7 +259,7 @@ namespace org.apache.xml.serializer
 	  /// <summary>
 	  /// Optimized dispatch of characters.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private final void dispatachChars(org.w3c.dom.Node node) throws org.xml.sax.SAXException
 	  private void dispatachChars(Node node)
 	  {
@@ -269,7 +269,7 @@ namespace org.apache.xml.serializer
 		}
 		else
 		{
-		  string data = ((Text) node).Data;
+		  string data = ((Text) node).getData();
 		  this.m_contentHandler.characters(data.ToCharArray(), 0, data.Length);
 		}
 	  }
@@ -281,7 +281,7 @@ namespace org.apache.xml.serializer
 	  /// <param name="node"> Node to process
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void startNode(org.w3c.dom.Node node) throws org.xml.sax.SAXException
 	  protected internal void startNode(Node node)
 	  {
@@ -299,22 +299,22 @@ namespace org.apache.xml.serializer
 					if (node is Locator)
 					{
 							Locator loc = (Locator)node;
-							m_locator.ColumnNumber = loc.ColumnNumber;
-							m_locator.LineNumber = loc.LineNumber;
-							m_locator.PublicId = loc.PublicId;
-							m_locator.SystemId = loc.SystemId;
+							m_locator.setColumnNumber(loc.getColumnNumber());
+							m_locator.setLineNumber(loc.getLineNumber());
+							m_locator.setPublicId(loc.getPublicId());
+							m_locator.setSystemId(loc.getSystemId());
 					}
 					else
 					{
-							m_locator.ColumnNumber = 0;
-		  m_locator.LineNumber = 0;
+							m_locator.setColumnNumber(0);
+		  m_locator.setLineNumber(0);
 					}
 
-		switch (node.NodeType)
+		switch (node.getNodeType())
 		{
 		case Node.COMMENT_NODE :
 		{
-		  string data = ((Comment) node).Data;
+		  string data = ((Comment) node).getData();
 
 		  if (m_contentHandler is LexicalHandler)
 		  {
@@ -337,10 +337,10 @@ namespace org.apache.xml.serializer
 			  // Make sure the namespace node
 			  // for the element itself is declared
 			  // to the ContentHandler
-			  string uri = elem_node.NamespaceURI;
+			  string uri = elem_node.getNamespaceURI();
 			  if (!string.ReferenceEquals(uri, null))
 			  {
-				  string prefix = elem_node.Prefix;
+				  string prefix = elem_node.getPrefix();
 				  if (string.ReferenceEquals(prefix, null))
 				  {
 					prefix = "";
@@ -348,8 +348,8 @@ namespace org.apache.xml.serializer
 				  this.m_contentHandler.startPrefixMapping(prefix,uri);
 			  }
 		  }
-		  NamedNodeMap atts = elem_node.Attributes;
-		  int nAttrs = atts.Length;
+		  NamedNodeMap atts = elem_node.getAttributes();
+		  int nAttrs = atts.getLength();
 		  // System.out.println("TreeWalker#startNode: "+node.getNodeName());
 
 
@@ -362,7 +362,7 @@ namespace org.apache.xml.serializer
 			Node attr = atts.item(i);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String attrName = attr.getNodeName();
-			string attrName = attr.NodeName;
+			string attrName = attr.getNodeName();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int colon = attrName.indexOf(':');
 			int colon = attrName.IndexOf(':');
@@ -385,12 +385,12 @@ namespace org.apache.xml.serializer
 				prefix = attrName.Substring(colon + 1);
 			  }
 
-			  this.m_contentHandler.startPrefixMapping(prefix, attr.NodeValue);
+			  this.m_contentHandler.startPrefixMapping(prefix, attr.getNodeValue());
 			}
 			else if (colon > 0)
 			{
-				prefix = attrName.Substring(0,colon);
-				string uri = attr.NamespaceURI;
+				prefix = attrName.Substring(0, colon);
+				string uri = attr.getNamespaceURI();
 				if (!string.ReferenceEquals(uri, null))
 				{
 					this.m_contentHandler.startPrefixMapping(prefix,uri);
@@ -403,12 +403,12 @@ namespace org.apache.xml.serializer
 		  {
 			ns = "";
 		  }
-		  this.m_contentHandler.startElement(ns, m_dh.getLocalNameOfNode(node), node.NodeName, new AttList(atts, m_dh));
+		  this.m_contentHandler.startElement(ns, m_dh.getLocalNameOfNode(node), node.getNodeName(), new AttList(atts, m_dh));
 		  break;
 		case Node.PROCESSING_INSTRUCTION_NODE :
 		{
 		  ProcessingInstruction pi = (ProcessingInstruction) node;
-		  string name = pi.NodeName;
+		  string name = pi.getNodeName();
 
 		  // String data = pi.getData();
 		  if (name.Equals("xslt-next-is-raw"))
@@ -417,7 +417,7 @@ namespace org.apache.xml.serializer
 		  }
 		  else
 		  {
-			this.m_contentHandler.processingInstruction(pi.NodeName, pi.Data);
+			this.m_contentHandler.processingInstruction(pi.getNodeName(), pi.getData());
 		  }
 		}
 		break;
@@ -465,7 +465,7 @@ namespace org.apache.xml.serializer
 
 		  if (m_contentHandler is LexicalHandler)
 		  {
-			((LexicalHandler) this.m_contentHandler).startEntity(eref.NodeName);
+			((LexicalHandler) this.m_contentHandler).startEntity(eref.getNodeName());
 		  }
 		  else
 		  {
@@ -475,7 +475,6 @@ namespace org.apache.xml.serializer
 		}
 		break;
 		default :
-	break;
 		}
 	  }
 
@@ -486,12 +485,12 @@ namespace org.apache.xml.serializer
 	  /// <param name="node"> Node we just finished processing
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void endNode(org.w3c.dom.Node node) throws org.xml.sax.SAXException
 	  protected internal void endNode(Node node)
 	  {
 
-		switch (node.NodeType)
+		switch (node.getNodeType())
 		{
 		case Node.DOCUMENT_NODE :
 		  break;
@@ -502,7 +501,7 @@ namespace org.apache.xml.serializer
 		  {
 			ns = "";
 		  }
-		  this.m_contentHandler.endElement(ns, m_dh.getLocalNameOfNode(node), node.NodeName);
+		  this.m_contentHandler.endElement(ns, m_dh.getLocalNameOfNode(node), node.getNodeName());
 
 		  if (m_Serializer == null)
 		  {
@@ -510,8 +509,8 @@ namespace org.apache.xml.serializer
 		  // SerializationHandler because SerializationHandler's ignore the
 		  // endPrefixMapping() calls anyways. . . .  This is an optimization.    
 		  Element elem_node = (Element) node;
-		  NamedNodeMap atts = elem_node.Attributes;
-		  int nAttrs = atts.Length;
+		  NamedNodeMap atts = elem_node.getAttributes();
+		  int nAttrs = atts.getLength();
 
 		  // do the endPrefixMapping calls in reverse order 
 		  // of the startPrefixMapping calls
@@ -522,7 +521,7 @@ namespace org.apache.xml.serializer
 			Node attr = atts.item(i);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String attrName = attr.getNodeName();
-			string attrName = attr.NodeName;
+			string attrName = attr.getNodeName();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int colon = attrName.indexOf(':');
 			int colon = attrName.IndexOf(':');
@@ -553,10 +552,10 @@ namespace org.apache.xml.serializer
 			}
 		  }
 		  {
-			  string uri = elem_node.NamespaceURI;
+			  string uri = elem_node.getNamespaceURI();
 			  if (!string.ReferenceEquals(uri, null))
 			  {
-				  string prefix = elem_node.Prefix;
+				  string prefix = elem_node.getPrefix();
 				  if (string.ReferenceEquals(prefix, null))
 				  {
 					prefix = "";
@@ -576,12 +575,11 @@ namespace org.apache.xml.serializer
 		  {
 			LexicalHandler lh = ((LexicalHandler) this.m_contentHandler);
 
-			lh.endEntity(eref.NodeName);
+			lh.endEntity(eref.getNodeName());
 		  }
 		}
 		break;
 		default :
-	break;
 		}
 	  }
 	} //TreeWalker

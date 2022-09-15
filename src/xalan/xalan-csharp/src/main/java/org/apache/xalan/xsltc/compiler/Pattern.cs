@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using MethodGenerator = org.apache.xalan.xsltc.compiler.util.MethodGenerator;
 	using Type = org.apache.xalan.xsltc.compiler.util.Type;
@@ -38,7 +37,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// A <code>NodeType</code> has a number of subtypes defined by 
 		/// <code>NodeType._type</code> corresponding to each type of node.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public abstract org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError;
 		public override abstract Type typeCheck(SymbolTable stable);
 
@@ -50,7 +49,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// make sure to backpatch both true and false lists. True lists are the 
 		/// default, in the sense that they always <em>"fall through"</em>. If this
 		/// is not the intended semantics (e.g., see 
-		/// <seealso cref="org.apache.xalan.xsltc.compiler.AlternativePattern#translate"/>)
+		/// <seealso cref="org.apache.xalan.xsltc.compiler.AlternativePattern.translate"/>)
 		/// then a GOTO must be appended to the instruction list after calling
 		/// <code>translate</code>. 
 		/// </summary>

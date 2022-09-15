@@ -23,7 +23,6 @@
 namespace org.apache.xalan.templates
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using QName = org.apache.xml.utils.QName;
@@ -51,7 +50,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -95,7 +94,7 @@ namespace org.apache.xalan.templates
 			  //formatter = new java.text.DecimalFormat(patternStr, dfs);
 			  formatter = new java.text.DecimalFormat();
 
-			  formatter.DecimalFormatSymbols = dfs;
+			  formatter.setDecimalFormatSymbols(dfs);
 			  formatter.applyLocalizedPattern(patternStr);
 			}
 		  }
@@ -111,19 +110,19 @@ namespace org.apache.xalan.templates
 			{
 			  formatter = new java.text.DecimalFormat();
 
-			  formatter.DecimalFormatSymbols = dfs;
+			  formatter.setDecimalFormatSymbols(dfs);
 			  formatter.applyLocalizedPattern(patternStr);
 			}
 			else
 			{
 			  dfs = new java.text.DecimalFormatSymbols(java.util.Locale.US);
 
-			  dfs.Infinity = Constants.ATTRVAL_INFINITY;
-			  dfs.NaN = Constants.ATTRVAL_NAN;
+			  dfs.setInfinity(Constants.ATTRVAL_INFINITY);
+			  dfs.setNaN(Constants.ATTRVAL_NAN);
 
 			  formatter = new java.text.DecimalFormat();
 
-			  formatter.DecimalFormatSymbols = dfs;
+			  formatter.setDecimalFormatSymbols(dfs);
 
 			  if (null != patternStr)
 			  {
@@ -154,7 +153,7 @@ namespace org.apache.xalan.templates
 	  /// the error condition is severe enough to halt processing.
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warn(org.apache.xpath.XPathContext xctxt, String msg, Object args[]) throws javax.xml.transform.TransformerException
 	  public override void warn(XPathContext xctxt, string msg, object[] args)
 	  {
@@ -172,7 +171,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="argNum"> Number of arguments passed in
 	  /// </param>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void checkNumberArgs(int argNum) throws org.apache.xpath.functions.WrongNumberArgsException
 	  public override void checkNumberArgs(int argNum)
 	  {
@@ -187,7 +186,7 @@ namespace org.apache.xalan.templates
 	  /// message for this function object.
 	  /// </summary>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void reportWrongNumberArgs() throws org.apache.xpath.functions.WrongNumberArgsException
 	  protected internal override void reportWrongNumberArgs()
 	  {

@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// A utility class that wraps the ThreadController, which is used
 	/// by IncrementalSAXSource for the incremental building of DTM.
@@ -39,7 +38,7 @@ namespace org.apache.xml.utils
 		return m_tpool.run(runnable, priority);
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static void waitThread(Thread worker, Runnable task) throws InterruptedException
 	  public static void waitThread(Thread worker, ThreadStart task)
 	  {
@@ -87,7 +86,7 @@ namespace org.apache.xml.utils
 		/// NEEDSDOC <param name="task">
 		/// </param>
 		/// <exception cref="InterruptedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void waitThread(Thread worker, Runnable task) throws InterruptedException
 		public virtual void waitThread(Thread worker, ThreadStart task)
 		{

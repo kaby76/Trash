@@ -92,7 +92,7 @@ namespace org.apache.xpath.compiler
 	  /// <param name="pat"> XSLT Expression.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void tokenize(String pat) throws javax.xml.transform.TransformerException
 	  internal virtual void tokenize(string pat)
 	  {
@@ -106,7 +106,7 @@ namespace org.apache.xpath.compiler
 	  /// <param name="targetStrings"> Vector to hold Strings, may be null.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void tokenize(String pat, java.util.Vector targetStrings) throws javax.xml.transform.TransformerException
 	  internal virtual void tokenize(string pat, ArrayList targetStrings)
 	  {
@@ -571,7 +571,7 @@ namespace org.apache.xpath.compiler
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// </exception>
 	  /// <returns> -1 always. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private int mapNSTokens(String pat, int startSubstring, int posOfNSSep, int posOfScan) throws javax.xml.transform.TransformerException
 	  private int mapNSTokens(string pat, int startSubstring, int posOfNSSep, int posOfScan)
 	  {

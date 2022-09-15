@@ -26,7 +26,6 @@
 namespace org.apache.xalan.lib.sql
 {
 
-
 	public class QueryParameter
 	{
 	  private int m_type;

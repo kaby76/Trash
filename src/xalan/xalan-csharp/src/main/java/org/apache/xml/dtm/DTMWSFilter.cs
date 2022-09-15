@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.dtm
 {
-
 	/// <summary>
 	/// This interface is meant to be implemented by a client of the DTM, and allows
 	/// stripping of whitespace nodes.
@@ -30,14 +29,17 @@ namespace org.apache.xml.dtm
 	  /// <summary>
 	  /// Do not strip whitespace child nodes of this element.
 	  /// </summary>
+	  public static short NOTSTRIP = 1;
 
 	  /// <summary>
 	  /// Strip whitespace child nodes of this element.
 	  /// </summary>
+	  public static short STRIP = 2;
 
 	  /// <summary>
 	  /// Inherit whitespace stripping behavior of the parent node.
 	  /// </summary>
+	  public static short INHERIT = 3;
 
 	  /// <summary>
 	  /// Test whether whitespace-only text nodes are visible in the logical 
@@ -50,13 +52,6 @@ namespace org.apache.xml.dtm
 	  /// <returns> one of NOTSTRIP, STRIP, or INHERIT. </returns>
 	  short getShouldStripSpace(int elementHandle, DTM dtm);
 
-	}
-
-	public static class DTMWSFilter_Fields
-	{
-	  public const short NOTSTRIP = 1;
-	  public const short STRIP = 2;
-	  public const short INHERIT = 3;
 	}
 
 }

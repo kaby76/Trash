@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
@@ -70,7 +69,7 @@ namespace org.apache.xpath.axes
 	  /// opcode list from the compiler.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected BasicTestIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis) throws javax.xml.transform.TransformerException
 	  protected internal BasicTestIterator(Compiler compiler, int opPos, int analysis) : base(compiler, opPos, analysis, false)
 	  {
@@ -78,7 +77,7 @@ namespace org.apache.xpath.axes
 		int firstStepPos = OpMap.getFirstChildPos(opPos);
 		int whatToShow = compiler.getWhatToShow(firstStepPos);
 
-		if ((0 == (whatToShow & (org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE | org.apache.xml.dtm.DTMFilter_Fields.SHOW_NAMESPACE | org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_PROCESSING_INSTRUCTION))) || (whatToShow == org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL))
+		if ((0 == (whatToShow & (DTMFilter.SHOW_ATTRIBUTE | DTMFilter.SHOW_NAMESPACE | DTMFilter.SHOW_ELEMENT | DTMFilter.SHOW_PROCESSING_INSTRUCTION))) || (whatToShow == DTMFilter.SHOW_ALL))
 		{
 		  initNodeTest(whatToShow);
 		}
@@ -103,7 +102,7 @@ namespace org.apache.xpath.axes
 	  /// it doesn't wish to load child walkers.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected BasicTestIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis, boolean shouldLoadWalkers) throws javax.xml.transform.TransformerException
 	  protected internal BasicTestIterator(Compiler compiler, int opPos, int analysis, bool shouldLoadWalkers) : base(compiler, opPos, analysis, shouldLoadWalkers)
 	  {
@@ -126,11 +125,11 @@ namespace org.apache.xpath.axes
 	  {
 		  if (m_foundLast)
 		  {
-			  m_lastFetched = org.apache.xml.dtm.DTM_Fields.NULL;
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  m_lastFetched = DTM.NULL;
+			  return DTM.NULL;
 		  }
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL == m_lastFetched)
+		if (DTM.NULL == m_lastFetched)
 		{
 		  resetProximityPositions();
 		}
@@ -161,9 +160,9 @@ namespace org.apache.xpath.axes
 		  {
 			next = NextNode;
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL != next)
+			if (DTM.NULL != next)
 			{
-			  if (org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT == acceptNode(next))
+			  if (DTMIterator.FILTER_ACCEPT == acceptNode(next))
 			  {
 				break;
 			  }
@@ -176,9 +175,9 @@ namespace org.apache.xpath.axes
 			{
 			  break;
 			}
-		  } while (next != org.apache.xml.dtm.DTM_Fields.NULL);
+		  } while (next != DTM.NULL);
 
-		  if (org.apache.xml.dtm.DTM_Fields.NULL != next)
+		  if (DTM.NULL != next)
 		  {
 			  m_pos++;
 			return next;
@@ -187,7 +186,7 @@ namespace org.apache.xpath.axes
 		  {
 			m_foundLast = true;
 
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 		}
 		finally
@@ -207,7 +206,7 @@ namespace org.apache.xpath.axes
 	  ///  <returns> A cloned NodeIterator set of the start of the query.
 	  /// </returns>
 	  ///  <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator cloneWithReset() throws CloneNotSupportedException
 	  public override DTMIterator cloneWithReset()
 	  {

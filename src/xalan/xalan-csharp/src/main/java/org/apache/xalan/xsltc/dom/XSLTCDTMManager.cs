@@ -23,7 +23,6 @@
 namespace org.apache.xalan.xsltc.dom
 {
 
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMDefaultBase = org.apache.xml.dtm.@ref.DTMDefaultBase;
 	using DTMException = org.apache.xml.dtm.DTMException;
@@ -246,7 +245,7 @@ namespace org.apache.xalan.xsltc.dom
 	  {
 			if (DEBUG && null != source)
 			{
-				Console.WriteLine("Starting " + (unique ? "UNIQUE" : "shared") + " source: " + source.SystemId);
+				Console.WriteLine("Starting " + (unique ? "UNIQUE" : "shared") + " source: " + source.getSystemId());
 			}
 
 			int dtmPos = FirstFreeDTMID;
@@ -259,7 +258,7 @@ namespace org.apache.xalan.xsltc.dom
 				DOMSource domsrc = (DOMSource) source;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.w3c.dom.Node node = domsrc.getNode();
-				org.w3c.dom.Node node = domsrc.Node;
+				org.w3c.dom.Node node = domsrc.getNode();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.trax.DOM2SAX dom2sax = new org.apache.xalan.xsltc.trax.DOM2SAX(node);
 				DOM2SAX dom2sax = new DOM2SAX(node);
@@ -275,7 +274,7 @@ namespace org.apache.xalan.xsltc.dom
 					dtm = new SAXImpl(this, source, documentID, whiteSpaceFilter, null, doIndexing, size, buildIdIndex, newNameTable);
 				}
 
-				dtm.DocumentURI = source.SystemId;
+				dtm.DocumentURI = source.getSystemId();
 
 				addDTM(dtm, dtmPos, 0);
 
@@ -317,7 +316,7 @@ namespace org.apache.xalan.xsltc.dom
 						reader = getXMLReader(source);
 						xmlSource = SAXSource.sourceToInputSource(source);
 
-						string urlOfSource = xmlSource.SystemId;
+						string urlOfSource = xmlSource.getSystemId();
 
 						if (null != urlOfSource)
 						{
@@ -331,7 +330,7 @@ namespace org.apache.xalan.xsltc.dom
 								Console.Error.WriteLine("Can not absolutize URL: " + urlOfSource);
 							}
 
-							xmlSource.SystemId = urlOfSource;
+							xmlSource.setSystemId(urlOfSource);
 						}
 					}
 
@@ -357,16 +356,16 @@ namespace org.apache.xalan.xsltc.dom
 						return dtm;
 					}
 
-					reader.ContentHandler = dtm.Builder;
+					reader.setContentHandler(dtm.Builder);
 
-					if (!hasUserReader || null == reader.DTDHandler)
+					if (!hasUserReader || null == reader.getDTDHandler())
 					{
-						reader.DTDHandler = dtm;
+						reader.setDTDHandler(dtm);
 					}
 
-					if (!hasUserReader || null == reader.ErrorHandler)
+					if (!hasUserReader || null == reader.getErrorHandler())
 					{
-						reader.ErrorHandler = dtm;
+						reader.setErrorHandler(dtm);
 					}
 
 					try

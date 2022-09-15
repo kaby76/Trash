@@ -22,7 +22,6 @@
 namespace org.apache.xalan.xsltc
 {
 
-
 	/// <summary>
 	/// @author W. Eliot Kimber (eliot@isogen.com)
 	/// @author Santiago Pericas-Geertsen

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -24,6 +22,8 @@
 namespace org.apache.xalan.xsltc.dom
 {
 
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using DOMEnhancedForDTM = org.apache.xalan.xsltc.DOMEnhancedForDTM;
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using Hashtable = org.apache.xalan.xsltc.runtime.Hashtable;
 	using IntegerArray = org.apache.xalan.xsltc.util.IntegerArray;
@@ -53,7 +53,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// The document node currently being processed.  Used only while building
 		/// keys.
 		/// </summary>
-		private int _currentDocumentNode = org.apache.xml.dtm.DTM_Fields.NULL;
+		private int _currentDocumentNode = DTM.NULL;
 
 		/// <summary>
 		/// A mapping from a document node to the mapping between values and nodesets
@@ -202,15 +202,15 @@ namespace org.apache.xalan.xsltc.dom
 			{
 				int ident = _enhancedDOM.getElementById(id);
 
-				if (ident != org.apache.xml.dtm.DTM_Fields.NULL)
+				if (ident != DTM.NULL)
 				{
 					int? root = new int?(_enhancedDOM.Document);
-					Hashtable index = (Hashtable) _rootToIndexMap.get(root);
+					Hashtable index = (Hashtable) _rootToIndexMap.get(root.Value);
 
 					if (index == null)
 					{
 						index = new Hashtable();
-						_rootToIndexMap.put(root, index);
+						_rootToIndexMap.put(root.Value, index);
 					}
 					else
 					{
@@ -254,10 +254,10 @@ namespace org.apache.xalan.xsltc.dom
 		{
 		if (_nodes == null)
 		{
-			return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			return DTMAxisIterator.END;
 		}
 
-		return (_position < _nodes.cardinality()) ? _dom.getNodeHandle(_nodes.at(_position++)) : org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		return (_position < _nodes.cardinality()) ? _dom.getNodeHandle(_nodes.at(_position++)) : DTMAxisIterator.END;
 		}
 
 		/// <summary>
@@ -422,7 +422,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// </summary>
 		public override DTMAxisIterator setStartNode(int start)
 		{
-		if (start == org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+		if (start == DTMAxisIterator.END)
 		{
 			_nodes = null;
 		}
@@ -579,7 +579,7 @@ namespace org.apache.xalan.xsltc.dom
 			/// argument to the <code>key</code> function or a node set argument
 			/// to the <code>id</code> function.</para>
 			/// 
-			/// <para>Exactly one of this field and <seealso cref="#_keyValue"/> must be
+			/// <para>Exactly one of this field and <seealso cref="_keyValue"/> must be
 			/// <code>null</code>.</para>
 			/// </summary>
 			internal DTMAxisIterator _keyValueIterator;
@@ -589,7 +589,7 @@ namespace org.apache.xalan.xsltc.dom
 			/// value argument to the <code>key</code> function or a non-node-set
 			/// argument to the <code>id</code> function.</para>
 			/// 
-			/// <para>Exactly one of this field and <seealso cref="#_keyValueIterator"/> must be
+			/// <para>Exactly one of this field and <seealso cref="_keyValueIterator"/> must be
 			/// <code>null</code>.</para>
 			/// </summary>
 			internal string _keyValue;
@@ -617,14 +617,14 @@ namespace org.apache.xalan.xsltc.dom
 				internal IntegerArray _nodes;
 
 				/// <summary>
-				/// Position in <seealso cref="#_nodes"/> array of next node to return from
+				/// Position in <seealso cref="_nodes"/> array of next node to return from
 				/// this heap node.
 				/// </summary>
 				internal int _position = 0;
 
 				/// <summary>
-				/// Marked position.  Used by <seealso cref="#setMark()"/> and
-				/// <seealso cref="#gotoMark()"/>
+				/// Marked position.  Used by <seealso cref="setMark()"/> and
+				/// <seealso cref="gotoMark()"/>
 				/// </summary>
 				internal int _markPosition = -1;
 
@@ -652,7 +652,7 @@ namespace org.apache.xalan.xsltc.dom
 					}
 					else
 					{
-						_node = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+						_node = DTMAxisIterator.END;
 					}
 
 					return _node;
@@ -676,7 +676,7 @@ namespace org.apache.xalan.xsltc.dom
 
 				/// <summary>
 				/// Remembers the current node for the next call to
-				/// <seealso cref="#gotoMark()"/>.
+				/// <seealso cref="gotoMark()"/>.
 				/// </summary>
 				public override void setMark()
 				{
@@ -684,7 +684,7 @@ namespace org.apache.xalan.xsltc.dom
 				}
 
 				/// <summary>
-				/// Restores the current node remembered by <seealso cref="#setMark()"/>.
+				/// Restores the current node remembered by <seealso cref="setMark()"/>.
 				/// </summary>
 				public override void gotoMark()
 				{
@@ -707,7 +707,7 @@ namespace org.apache.xalan.xsltc.dom
 				/// <para>Sets context with respect to which this heap node is
 				/// evaluated.</para>
 				/// <para>This has no real effect on this kind of heap node.  Instead,
-				/// the <seealso cref="KeyIndexIterator#setStartNode(int)"/> method should
+				/// the <seealso cref="KeyIndexIterator.setStartNode(int)"/> method should
 				/// create new instances of this class to represent the effect of
 				/// changing the context.</para>
 				/// </summary>
@@ -867,7 +867,7 @@ namespace org.apache.xalan.xsltc.dom
 					}
 					else
 					{
-						nodeHandle = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+						nodeHandle = DTMAxisIterator.END;
 					}
 				}
 				else
@@ -899,7 +899,7 @@ namespace org.apache.xalan.xsltc.dom
 
 			/// <summary>
 			/// Evaluate the reference to the <code>key</code> or <code>id</code>
-			/// function with the context specified by <seealso cref="#setStartNode(int)"/>
+			/// function with the context specified by <seealso cref="setStartNode(int)"/>
 			/// and set up this iterator to iterate over the DTM nodes that are
 			/// to be returned.
 			/// </summary>
@@ -935,7 +935,7 @@ namespace org.apache.xalan.xsltc.dom
 					// value.  If at most one string value has nodes associated,
 					// the nodes will be stored in _nodes; otherwise, the nodes
 					// will be placed in a heap.
-					for (int keyValueNode = keyValues.next(); keyValueNode != org.apache.xml.dtm.DTMAxisIterator_Fields.END; keyValueNode = keyValues.next())
+					for (int keyValueNode = keyValues.next(); keyValueNode != DTMAxisIterator.END; keyValueNode = keyValues.next())
 					{
 
 						string keyValue = BasisLibrary.stringF(keyValueNode, outerInstance._dom);
@@ -990,7 +990,7 @@ namespace org.apache.xalan.xsltc.dom
 			/// <returns> The node at the given position. </returns>
 			public override int getNodeByPosition(int position)
 			{
-				int node = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+				int node = DTMAxisIterator.END;
 
 				// If nodes are stored in _nodes, take advantage of the fact that
 				// there are no duplicates and they are stored in document order.

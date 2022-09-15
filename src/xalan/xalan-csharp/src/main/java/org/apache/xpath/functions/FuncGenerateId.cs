@@ -22,8 +22,8 @@
  */
 namespace org.apache.xpath.functions
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XString = org.apache.xpath.objects.XString;
 
@@ -43,14 +43,14 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
 
 		int which = getArg0AsNode(xctxt);
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != which)
+		if (DTM.NULL != which)
 		{
 		  // Note that this is a different value than in previous releases
 		  // of Xalan. It's sensitive to the exact encoding of the node
@@ -58,7 +58,7 @@ namespace org.apache.xpath.functions
 		  // really didn't make sense; it may change again as we continue
 		  // to experiment with balancing document and node numbers within
 		  // that value.
-		  return new XString("N" + which.ToString("x").ToUpper());
+		  return new XString("N" + Convert.ToString(which, 16).ToUpper());
 		}
 		else
 		{

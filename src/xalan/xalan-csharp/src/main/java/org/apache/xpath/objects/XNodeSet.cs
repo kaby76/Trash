@@ -23,11 +23,11 @@ using System.Collections;
  */
 namespace org.apache.xpath.objects
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using DTMManager = org.apache.xml.dtm.DTMManager;
 	using XMLString = org.apache.xml.utils.XMLString;
+	using NodeSetDTM = org.apache.xpath.NodeSetDTM;
 	using NodeSequence = org.apache.xpath.axes.NodeSequence;
 
 	using NodeList = org.w3c.dom.NodeList;
@@ -100,7 +100,7 @@ namespace org.apache.xpath.objects
 	  /// Construct an empty XNodeSet object.  This is used to create a mutable 
 	  /// nodeset to which random nodes may be added.
 	  /// </summary>
-	  public XNodeSet(DTMManager dtmMgr) : this(org.apache.xml.dtm.DTM_Fields.NULL,dtmMgr)
+	  public XNodeSet(DTMManager dtmMgr) : this(DTM.NULL,dtmMgr)
 	  {
 	  }
 
@@ -113,7 +113,7 @@ namespace org.apache.xpath.objects
 
 		m_dtmMgr = dtmMgr;
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != n)
+		if (DTM.NULL != n)
 		{
 		  ((NodeSetDTM) m_obj).addNode(n);
 		  m_last = 1;
@@ -170,7 +170,7 @@ namespace org.apache.xpath.objects
 	  {
 
 		int node = item(0);
-		return (node != org.apache.xml.dtm.DTM_Fields.NULL) ? getNumberFromNode(node) : Double.NaN;
+		return (node != DTM.NULL) ? getNumberFromNode(node) : Double.NaN;
 	  }
 
 	  /// <summary>
@@ -183,7 +183,7 @@ namespace org.apache.xpath.objects
 	  {
 		int node = nextNode();
 
-		return (node != org.apache.xml.dtm.DTM_Fields.NULL) ? getNumberFromNode(node) : Double.NaN;
+		return (node != DTM.NULL) ? getNumberFromNode(node) : Double.NaN;
 	  }
 
 
@@ -193,7 +193,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> True if there is a next node in the nodeset </returns>
 	  public override bool @bool()
 	  {
-		return (item(0) != org.apache.xml.dtm.DTM_Fields.NULL);
+		return (item(0) != DTM.NULL);
 	  }
 
 	  /// <summary>
@@ -203,7 +203,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> True if there is a next node in the nodeset </returns>
 	  public override bool boolWithSideEffects()
 	  {
-		return (nextNode() != org.apache.xml.dtm.DTM_Fields.NULL);
+		return (nextNode() != DTM.NULL);
 	  }
 
 
@@ -217,7 +217,7 @@ namespace org.apache.xpath.objects
 	  {
 		// %OPT%
 		// I guess we'll have to get a static instance of the DTM manager...
-		if (org.apache.xml.dtm.DTM_Fields.NULL != n)
+		if (DTM.NULL != n)
 		{
 		  return m_dtmMgr.getDTM(n).getStringValue(n);
 		}
@@ -237,13 +237,13 @@ namespace org.apache.xpath.objects
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException
 	  public override void dispatchCharactersEvents(org.xml.sax.ContentHandler ch)
 	  {
 		int node = item(0);
 
-		if (node != org.apache.xml.dtm.DTM_Fields.NULL)
+		if (node != DTM.NULL)
 		{
 		  m_dtmMgr.getDTM(node).dispatchCharactersEvents(node, ch, false);
 		}
@@ -257,7 +257,7 @@ namespace org.apache.xpath.objects
 	  public override XMLString xstr()
 	  {
 		int node = item(0);
-		return (node != org.apache.xml.dtm.DTM_Fields.NULL) ? getStringFromNode(node) : XString.EMPTYSTRING;
+		return (node != DTM.NULL) ? getStringFromNode(node) : XString.EMPTYSTRING;
 	  }
 
 	  /// <summary>
@@ -279,7 +279,7 @@ namespace org.apache.xpath.objects
 	  public override string str()
 	  {
 		int node = item(0);
-		return (node != org.apache.xml.dtm.DTM_Fields.NULL) ? getStringFromNode(node).ToString() : "";
+		return (node != DTM.NULL) ? getStringFromNode(node).ToString() : "";
 	  }
 
 	  /// <summary>
@@ -333,7 +333,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> a NodeIterator.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.traversal.NodeIterator nodeset() throws javax.xml.transform.TransformerException
 	  public override NodeIterator nodeset()
 	  {
@@ -346,7 +346,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> a NodeList.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.NodeList nodelist() throws javax.xml.transform.TransformerException
 	  public override NodeList nodelist()
 	  {
@@ -488,7 +488,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> See the comments below for each object type comparison 
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean compare(XObject obj2, Comparator comparator) throws javax.xml.transform.TransformerException
 	  public virtual bool compare(XObject obj2, Comparator comparator)
 	  {
@@ -516,7 +516,7 @@ namespace org.apache.xpath.objects
 		  int node1;
 		  ArrayList node2Strings = null;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (node1 = list1.nextNode()))
+		  while (DTM.NULL != (node1 = list1.nextNode()))
 		  {
 			XMLString s1 = getStringFromNode(node1);
 
@@ -524,7 +524,7 @@ namespace org.apache.xpath.objects
 			{
 			  int node2;
 
-			  while (org.apache.xml.dtm.DTM_Fields.NULL != (node2 = list2.nextNode()))
+			  while (DTM.NULL != (node2 = list2.nextNode()))
 			  {
 				XMLString s2 = getStringFromNode(node2);
 
@@ -589,7 +589,7 @@ namespace org.apache.xpath.objects
 		  double num2 = obj2.num();
 		  int node;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (node = list1.nextNode()))
+		  while (DTM.NULL != (node = list1.nextNode()))
 		  {
 			double num1 = getNumberFromNode(node);
 
@@ -608,7 +608,7 @@ namespace org.apache.xpath.objects
 		  DTMIterator list1 = iterRaw();
 		  int node;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (node = list1.nextNode()))
+		  while (DTM.NULL != (node = list1.nextNode()))
 		  {
 			XMLString s1 = getStringFromNode(node);
 
@@ -634,7 +634,7 @@ namespace org.apache.xpath.objects
 		  DTMIterator list1 = iterRaw();
 		  int node;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (node = list1.nextNode()))
+		  while (DTM.NULL != (node = list1.nextNode()))
 		  {
 			XMLString s1 = getStringFromNode(node);
 			if (comparator.compareStrings(s1, s2))
@@ -662,7 +662,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> see this.compare(...) 
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean lessThan(XObject obj2) throws javax.xml.transform.TransformerException
 	  public override bool lessThan(XObject obj2)
 	  {
@@ -677,7 +677,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> see this.compare(...) 
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean lessThanOrEqual(XObject obj2) throws javax.xml.transform.TransformerException
 	  public override bool lessThanOrEqual(XObject obj2)
 	  {
@@ -692,7 +692,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> see this.compare(...) 
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean greaterThan(XObject obj2) throws javax.xml.transform.TransformerException
 	  public override bool greaterThan(XObject obj2)
 	  {
@@ -707,7 +707,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> see this.compare(...) 
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean greaterThanOrEqual(XObject obj2) throws javax.xml.transform.TransformerException
 	  public override bool greaterThanOrEqual(XObject obj2)
 	  {
@@ -742,7 +742,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> see this.compare(...) 
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean notEquals(XObject obj2) throws javax.xml.transform.TransformerException
 	  public override bool notEquals(XObject obj2)
 	  {

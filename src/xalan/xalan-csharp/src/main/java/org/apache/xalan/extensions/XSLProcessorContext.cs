@@ -164,8 +164,8 @@ namespace org.apache.xalan.extensions
 	  /// <exception cref="java.io.FileNotFoundException"> </exception>
 	  /// <exception cref="java.io.IOException"> </exception>
 	  /// <exception cref="java.net.MalformedURLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void outputToResultTree(org.apache.xalan.templates.Stylesheet stylesheetTree, Object obj) throws javax.xml.transform.TransformerException, java.net.MalformedURLException, java.io.FileNotFoundException, java.io.IOException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void outputToResultTree(org.apache.xalan.templates.Stylesheet stylesheetTree, Object obj) throws TransformerException, java.net.MalformedURLException, java.io.FileNotFoundException, java.io.IOException
 	  public virtual void outputToResultTree(Stylesheet stylesheetTree, object obj)
 	  {
 
@@ -187,11 +187,11 @@ namespace org.apache.xalan.extensions
 		  {
 			value = new XString((string) obj);
 		  }
-		  else if (obj is bool?)
+		  else if (obj is Boolean)
 		  {
 			value = new XBoolean(((bool?) obj).Value);
 		  }
-		  else if (obj is double?)
+		  else if (obj is Double)
 		  {
 			value = new XNumber(((double?) obj).Value);
 		  }
@@ -254,21 +254,21 @@ namespace org.apache.xalan.extensions
 
 			int pos;
 
-			while (org.apache.xml.dtm.DTM_Fields.NULL != (pos = nl.nextNode()))
+			while (DTM.NULL != (pos = nl.nextNode()))
 			{
 			  DTM dtm = nl.getDTM(pos);
 			  int top = pos;
 
-			  while (org.apache.xml.dtm.DTM_Fields.NULL != pos)
+			  while (DTM.NULL != pos)
 			  {
 				rtreeHandler.flushPending();
 				ClonerToResultTree.cloneToResultTree(pos, dtm.getNodeType(pos), dtm, rtreeHandler, true);
 
 				int nextNode = dtm.getFirstChild(pos);
 
-				while (org.apache.xml.dtm.DTM_Fields.NULL == nextNode)
+				while (DTM.NULL == nextNode)
 				{
-				  if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == dtm.getNodeType(pos))
+				  if (DTM.ELEMENT_NODE == dtm.getNodeType(pos))
 				  {
 					rtreeHandler.endElement("", "", dtm.getNodeName(pos));
 				  }
@@ -280,18 +280,18 @@ namespace org.apache.xalan.extensions
 
 				  nextNode = dtm.getNextSibling(pos);
 
-				  if (org.apache.xml.dtm.DTM_Fields.NULL == nextNode)
+				  if (DTM.NULL == nextNode)
 				  {
 					pos = dtm.getParent(pos);
 
 					if (top == pos)
 					{
-					  if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == dtm.getNodeType(pos))
+					  if (DTM.ELEMENT_NODE == dtm.getNodeType(pos))
 					  {
 						rtreeHandler.endElement("", "", dtm.getNodeName(pos));
 					  }
 
-					  nextNode = org.apache.xml.dtm.DTM_Fields.NULL;
+					  nextNode = DTM.NULL;
 
 					  break;
 					}

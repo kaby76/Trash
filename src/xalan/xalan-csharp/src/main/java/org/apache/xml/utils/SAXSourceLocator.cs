@@ -23,7 +23,6 @@
 namespace org.apache.xml.utils
 {
 
-
 	using Locator = org.xml.sax.Locator;
 	using SAXParseException = org.xml.sax.SAXParseException;
 	using LocatorImpl = org.xml.sax.helpers.LocatorImpl;
@@ -59,10 +58,10 @@ namespace org.apache.xml.utils
 	  public SAXSourceLocator(Locator locator)
 	  {
 		m_locator = locator;
-		this.ColumnNumber = locator.ColumnNumber;
-		this.LineNumber = locator.LineNumber;
-		this.PublicId = locator.PublicId;
-		this.SystemId = locator.SystemId;
+		this.setColumnNumber(locator.getColumnNumber());
+		this.setLineNumber(locator.getLineNumber());
+		this.setPublicId(locator.getPublicId());
+		this.setSystemId(locator.getSystemId());
 	  }
 
 	  /// <summary>
@@ -73,10 +72,10 @@ namespace org.apache.xml.utils
 	  public SAXSourceLocator(SourceLocator locator)
 	  {
 		m_locator = null;
-		this.ColumnNumber = locator.ColumnNumber;
-		this.LineNumber = locator.LineNumber;
-		this.PublicId = locator.PublicId;
-		this.SystemId = locator.SystemId;
+		this.setColumnNumber(locator.getColumnNumber());
+		this.setLineNumber(locator.getLineNumber());
+		this.setPublicId(locator.getPublicId());
+		this.setSystemId(locator.getSystemId());
 	  }
 
 
@@ -87,10 +86,10 @@ namespace org.apache.xml.utils
 	  /// <param name="spe"> SAXParseException exception. </param>
 	  public SAXSourceLocator(SAXParseException spe)
 	  {
-		this.LineNumber = spe.LineNumber;
-		this.ColumnNumber = spe.ColumnNumber;
-		this.PublicId = spe.PublicId;
-		this.SystemId = spe.SystemId;
+		this.setLineNumber(spe.getLineNumber());
+		this.setColumnNumber(spe.getColumnNumber());
+		this.setPublicId(spe.getPublicId());
+		this.setSystemId(spe.getSystemId());
 	  }
 
 	  /// <summary>
@@ -102,12 +101,12 @@ namespace org.apache.xml.utils
 	  /// </summary>
 	  /// <returns> A string containing the public identifier, or
 	  ///         null if none is available. </returns>
-	  /// <seealso cref= #getSystemId </seealso>
+	  /// <seealso cref=".getSystemId"/>
 	  public virtual string PublicId
 	  {
 		  get
 		  {
-			return (null == m_locator) ? base.PublicId : m_locator.PublicId;
+			return (null == m_locator) ? base.getPublicId() : m_locator.getPublicId();
 		  }
 	  }
 
@@ -123,12 +122,12 @@ namespace org.apache.xml.utils
 	  /// </summary>
 	  /// <returns> A string containing the system identifier, or null
 	  ///         if none is available. </returns>
-	  /// <seealso cref= #getPublicId </seealso>
+	  /// <seealso cref=".getPublicId"/>
 	  public virtual string SystemId
 	  {
 		  get
 		  {
-			return (null == m_locator) ? base.SystemId : m_locator.SystemId;
+			return (null == m_locator) ? base.getSystemId() : m_locator.getSystemId();
 		  }
 	  }
 
@@ -145,12 +144,12 @@ namespace org.apache.xml.utils
 	  /// markup triggering the event appears.</para>
 	  /// </summary>
 	  /// <returns> The line number, or -1 if none is available. </returns>
-	  /// <seealso cref= #getColumnNumber </seealso>
+	  /// <seealso cref=".getColumnNumber"/>
 	  public virtual int LineNumber
 	  {
 		  get
 		  {
-			return (null == m_locator) ? base.LineNumber : m_locator.LineNumber;
+			return (null == m_locator) ? base.getLineNumber() : m_locator.getLineNumber();
 		  }
 	  }
 
@@ -167,12 +166,12 @@ namespace org.apache.xml.utils
 	  /// markup triggering the event appears.</para>
 	  /// </summary>
 	  /// <returns> The column number, or -1 if none is available. </returns>
-	  /// <seealso cref= #getLineNumber </seealso>
+	  /// <seealso cref=".getLineNumber"/>
 	  public virtual int ColumnNumber
 	  {
 		  get
 		  {
-			return (null == m_locator) ? base.ColumnNumber : m_locator.ColumnNumber;
+			return (null == m_locator) ? base.getColumnNumber() : m_locator.getColumnNumber();
 		  }
 	  }
 	}

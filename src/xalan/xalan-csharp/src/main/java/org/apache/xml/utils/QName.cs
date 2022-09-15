@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +22,6 @@ using System.Collections;
  */
 namespace org.apache.xml.utils
 {
-
 
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
 	using XMLMessages = org.apache.xml.res.XMLMessages;
@@ -222,7 +220,7 @@ namespace org.apache.xml.utils
 	  /// </summary>
 	  /// <param name="qname"> Qualified name to resolve </param>
 	  /// <param name="namespaces"> Namespace stack to use to resolve namespace </param>
-	  public QName(string qname, Stack namespaces) : this(qname, namespaces, false)
+	  public QName(string qname, System.Collections.Stack namespaces) : this(qname, namespaces, false)
 	  {
 	  }
 
@@ -235,7 +233,7 @@ namespace org.apache.xml.utils
 	  /// <param name="namespaces"> Namespace stack to use to resolve namespace </param>
 	  /// <param name="validate"> If true the new QName will be validated and an IllegalArgumentException will
 	  ///                 be thrown if it is invalid. </param>
-	  public QName(string qname, Stack namespaces, bool validate)
+	  public QName(string qname, System.Collections.Stack namespaces, bool validate)
 	  {
 
 		string @namespace = null;
@@ -261,6 +259,7 @@ namespace org.apache.xml.utils
 
 			for (int i = depth - 1; i >= 0; i--)
 			{
+//JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
 			  NameSpace ns = (NameSpace) namespaces.elementAt(i);
 
 			  while (null != ns)
@@ -550,7 +549,7 @@ namespace org.apache.xml.utils
 	  /// <param name="localPart"> Local part of qualified name to compare to 
 	  /// </param>
 	  /// <returns> True if the local name and uri match  </returns>
-	  public virtual bool Equals(string ns, string localPart)
+	  public virtual bool equals(string ns, string localPart)
 	  {
 
 		string thisnamespace = NamespaceURI;

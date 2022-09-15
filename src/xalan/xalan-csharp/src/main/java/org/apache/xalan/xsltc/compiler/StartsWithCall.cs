@@ -54,7 +54,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type check the two parameters for this function
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -92,13 +92,13 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		_base.translate(classGen, methodGen);
 		_token.translate(classGen, methodGen);
-		il.append(new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.STRING_CLASS, "startsWith", "(" + Constants_Fields.STRING_SIG + ")Z")));
+		il.append(new INVOKEVIRTUAL(cpg.addMethodref(STRING_CLASS, "startsWith", "(" + STRING_SIG + ")Z")));
 		}
 	}
 

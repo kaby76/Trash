@@ -87,7 +87,7 @@ namespace org.apache.xalan.xsltc.compiler
 	//ORIGINAL LINE: final int type = step.getNodeType();
 				int type = step.NodeType;
 				// Put attribute iterators first
-				if ((axis == Axis.ATTRIBUTE) || (type == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE))
+				if ((axis == Axis.ATTRIBUTE) || (type == DTM.ATTRIBUTE_NODE))
 				{
 					_components[i] = _components[0];
 					_components[0] = step;
@@ -107,7 +107,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -149,20 +149,20 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int init = cpg.addMethodref(Constants_Fields.UNION_ITERATOR_CLASS, "<init>", "("+Constants_Fields.DOM_INTF_SIG+")V");
-		int init = cpg.addMethodref(Constants_Fields.UNION_ITERATOR_CLASS, "<init>", "(" + Constants_Fields.DOM_INTF_SIG + ")V");
+//ORIGINAL LINE: final int init = cpg.addMethodref(UNION_ITERATOR_CLASS, "<init>", "("+DOM_INTF_SIG+")V");
+		int init = cpg.addMethodref(UNION_ITERATOR_CLASS, "<init>", "(" + DOM_INTF_SIG + ")V");
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int iter = cpg.addMethodref(Constants_Fields.UNION_ITERATOR_CLASS, Constants_Fields.ADD_ITERATOR, Constants_Fields.ADD_ITERATOR_SIG);
-		int iter = cpg.addMethodref(Constants_Fields.UNION_ITERATOR_CLASS, Constants_Fields.ADD_ITERATOR, Constants_Fields.ADD_ITERATOR_SIG);
+//ORIGINAL LINE: final int iter = cpg.addMethodref(UNION_ITERATOR_CLASS, ADD_ITERATOR, ADD_ITERATOR_SIG);
+		int iter = cpg.addMethodref(UNION_ITERATOR_CLASS, ADD_ITERATOR, ADD_ITERATOR_SIG);
 
 		// Create the UnionIterator and leave it on the stack
-		il.append(new NEW(cpg.addClass(Constants_Fields.UNION_ITERATOR_CLASS)));
+		il.append(new NEW(cpg.addClass(UNION_ITERATOR_CLASS)));
 		il.append(DUP);
 		il.append(methodGen.loadDOM());
 		il.append(new INVOKESPECIAL(init));
@@ -181,8 +181,8 @@ namespace org.apache.xalan.xsltc.compiler
 		if (_reverse)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int order = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.ORDER_ITERATOR, Constants_Fields.ORDER_ITERATOR_SIG);
-			int order = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.ORDER_ITERATOR, Constants_Fields.ORDER_ITERATOR_SIG);
+//ORIGINAL LINE: final int order = cpg.addInterfaceMethodref(DOM_INTF, ORDER_ITERATOR, ORDER_ITERATOR_SIG);
+			int order = cpg.addInterfaceMethodref(DOM_INTF, ORDER_ITERATOR, ORDER_ITERATOR_SIG);
 			il.append(methodGen.loadDOM());
 			il.append(SWAP);
 			il.append(methodGen.loadContextNode());

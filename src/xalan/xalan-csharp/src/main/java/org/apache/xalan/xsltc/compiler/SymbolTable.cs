@@ -24,7 +24,6 @@
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using MethodType = org.apache.xalan.xsltc.compiler.util.MethodType;
 
 	/// <summary>
@@ -45,7 +44,7 @@ namespace org.apache.xalan.xsltc.compiler
 		private Hashtable _attributeSets = null;
 		private Hashtable _aliases = null;
 		private Hashtable _excludedURI = null;
-		private Stack _excludedURIStack = null;
+		private System.Collections.Stack _excludedURIStack = null;
 		private Hashtable _decimalFormats = null;
 		private Hashtable _keys = null;
 
@@ -252,7 +251,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 		if (_current == null)
 		{
-			return (Constants_Fields.EMPTYSTRING);
+			return (Constants.EMPTYSTRING);
 		}
 		return (_current.lookupNamespace(prefix));
 		}
@@ -331,7 +330,7 @@ namespace org.apache.xalan.xsltc.compiler
 			string uri;
 			if (prefix.Equals("#default"))
 			{
-				uri = lookupNamespace(Constants_Fields.EMPTYSTRING);
+				uri = lookupNamespace(Constants.EMPTYSTRING);
 			}
 			else
 			{
@@ -353,7 +352,7 @@ namespace org.apache.xalan.xsltc.compiler
 		if (!string.ReferenceEquals(uri, null) && _excludedURI != null)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final Nullable<int> refcnt = (Nullable<int>)_excludedURI.get(uri);
+//ORIGINAL LINE: final System.Nullable<int> refcnt = (System.Nullable<int>)_excludedURI.get(uri);
 			int? refcnt = (int?)_excludedURI[uri];
 			return (refcnt != null && refcnt.Value > 0);
 		}
@@ -382,7 +381,7 @@ namespace org.apache.xalan.xsltc.compiler
 			string uri;
 			if (prefix.Equals("#default"))
 			{
-				uri = lookupNamespace(Constants_Fields.EMPTYSTRING);
+				uri = lookupNamespace(Constants.EMPTYSTRING);
 			}
 			else
 			{
@@ -402,13 +401,13 @@ namespace org.apache.xalan.xsltc.compiler
 		/// imported or included by the stylesheet.  Upon entering the context of a
 		/// new stylesheet, a call to this method is needed to clear the current set
 		/// of excluded namespaces temporarily.  Every call to this method requires
-		/// a corresponding call to <seealso cref="#popExcludedNamespacesContext()"/>.
+		/// a corresponding call to <seealso cref="popExcludedNamespacesContext()"/>.
 		/// </summary>
 		public void pushExcludedNamespacesContext()
 		{
 			if (_excludedURIStack == null)
 			{
-				_excludedURIStack = new Stack();
+				_excludedURIStack = new System.Collections.Stack();
 			}
 			_excludedURIStack.Push(_excludedURI);
 			_excludedURI = null;

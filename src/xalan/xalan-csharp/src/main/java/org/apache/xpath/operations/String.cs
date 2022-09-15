@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath.operations
 {
-
 	using XObject = org.apache.xpath.objects.XObject;
 	using XString = org.apache.xpath.objects.XString;
 
@@ -43,7 +42,7 @@ namespace org.apache.xpath.operations
 	  /// <returns> non-null reference to the XObject that represents the result of the operation.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject operate(org.apache.xpath.objects.XObject right) throws javax.xml.transform.TransformerException
 	  public override XObject operate(XObject right)
 	  {

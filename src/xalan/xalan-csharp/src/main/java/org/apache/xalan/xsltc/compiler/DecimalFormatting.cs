@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using GETSTATIC = org.apache.bcel.generic.GETSTATIC;
 	using INVOKESPECIAL = org.apache.bcel.generic.INVOKESPECIAL;
@@ -52,7 +51,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// No type check needed for the <xsl:decimal-formatting/> element
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -73,13 +72,13 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!XML11Char.isXML11ValidQName(name))
 				{
 					ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, name, this);
-					parser.reportError(Constants_Fields.ERROR, err);
+					parser.reportError(Constants.ERROR, err);
 				}
 			}
 			_name = parser.getQNameIgnoreDefaultNs(name);
 			if (_name == null)
 			{
-				_name = parser.getQNameIgnoreDefaultNs(Constants_Fields.EMPTYSTRING);
+				_name = parser.getQNameIgnoreDefaultNs(EMPTYSTRING);
 			}
 
 		// Check if a set of symbols has already been registered under this name
@@ -101,14 +100,14 @@ namespace org.apache.xalan.xsltc.compiler
 		public override void translate(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 
-		ConstantPoolGen cpg = classGen.ConstantPool;
-		InstructionList il = methodGen.InstructionList;
+		ConstantPoolGen cpg = classGen.getConstantPool();
+		InstructionList il = methodGen.getInstructionList();
 
 		// DecimalFormatSymbols.<init>(Locale);
 			// xsl:decimal-format - except for the NaN and infinity attributes.
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int init = cpg.addMethodref(DFS_CLASS, "<init>", "("+Constants_Fields.LOCALE_SIG+")V");
-		int init = cpg.addMethodref(DFS_CLASS, "<init>", "(" + Constants_Fields.LOCALE_SIG + ")V");
+//ORIGINAL LINE: final int init = cpg.addMethodref(DFS_CLASS, "<init>", "("+LOCALE_SIG+")V");
+		int init = cpg.addMethodref(DFS_CLASS, "<init>", "(" + LOCALE_SIG + ")V");
 
 		// Push the format name on the stack for call to addDecimalFormat()
 		il.append(classGen.loadTranslet());
@@ -120,11 +119,11 @@ namespace org.apache.xalan.xsltc.compiler
 			// are equivalent to the default settings required of
 		il.append(new NEW(cpg.addClass(DFS_CLASS)));
 		il.append(DUP);
-			il.append(new GETSTATIC(cpg.addFieldref(Constants_Fields.LOCALE_CLASS, "US", Constants_Fields.LOCALE_SIG)));
+			il.append(new GETSTATIC(cpg.addFieldref(LOCALE_CLASS, "US", LOCALE_SIG)));
 		il.append(new INVOKESPECIAL(init));
 
 		string tmp = getAttribute("NaN");
-		if ((string.ReferenceEquals(tmp, null)) || (tmp.Equals(Constants_Fields.EMPTYSTRING)))
+		if ((string.ReferenceEquals(tmp, null)) || (tmp.Equals(EMPTYSTRING)))
 		{
 			int nan = cpg.addMethodref(DFS_CLASS, "setNaN", "(Ljava/lang/String;)V");
 			il.append(DUP);
@@ -133,7 +132,7 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 
 		tmp = getAttribute("infinity");
-		if ((string.ReferenceEquals(tmp, null)) || (tmp.Equals(Constants_Fields.EMPTYSTRING)))
+		if ((string.ReferenceEquals(tmp, null)) || (tmp.Equals(EMPTYSTRING)))
 		{
 			int inf = cpg.addMethodref(DFS_CLASS, "setInfinity", "(Ljava/lang/String;)V");
 			il.append(DUP);
@@ -220,8 +219,8 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int put = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "addDecimalFormat", "("+Constants_Fields.STRING_SIG+DFS_SIG+")V");
-		int put = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "addDecimalFormat", "(" + Constants_Fields.STRING_SIG + DFS_SIG + ")V");
+//ORIGINAL LINE: final int put = cpg.addMethodref(TRANSLET_CLASS, "addDecimalFormat", "("+STRING_SIG+DFS_SIG+")V");
+		int put = cpg.addMethodref(TRANSLET_CLASS, "addDecimalFormat", "(" + STRING_SIG + DFS_SIG + ")V");
 		il.append(new INVOKEVIRTUAL(put));
 		}
 
@@ -234,16 +233,16 @@ namespace org.apache.xalan.xsltc.compiler
 		public static void translateDefaultDFS(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 
-		ConstantPoolGen cpg = classGen.ConstantPool;
-		InstructionList il = methodGen.InstructionList;
+		ConstantPoolGen cpg = classGen.getConstantPool();
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int init = cpg.addMethodref(DFS_CLASS, "<init>", "("+Constants_Fields.LOCALE_SIG+")V");
-		int init = cpg.addMethodref(DFS_CLASS, "<init>", "(" + Constants_Fields.LOCALE_SIG + ")V");
+//ORIGINAL LINE: final int init = cpg.addMethodref(DFS_CLASS, "<init>", "("+LOCALE_SIG+")V");
+		int init = cpg.addMethodref(DFS_CLASS, "<init>", "(" + LOCALE_SIG + ")V");
 
 		// Push the format name, which is empty, on the stack
 		// for call to addDecimalFormat()
 		il.append(classGen.loadTranslet());
-		il.append(new PUSH(cpg, Constants_Fields.EMPTYSTRING));
+		il.append(new PUSH(cpg, EMPTYSTRING));
 
 		// Manufacture a DecimalFormatSymbols on the stack for
 		// call to addDecimalFormat().  Use the US Locale as the
@@ -252,7 +251,7 @@ namespace org.apache.xalan.xsltc.compiler
 			// except for the NaN and infinity attributes.
 		il.append(new NEW(cpg.addClass(DFS_CLASS)));
 		il.append(DUP);
-			il.append(new GETSTATIC(cpg.addFieldref(Constants_Fields.LOCALE_CLASS, "US", Constants_Fields.LOCALE_SIG)));
+			il.append(new GETSTATIC(cpg.addFieldref(LOCALE_CLASS, "US", LOCALE_SIG)));
 		il.append(new INVOKESPECIAL(init));
 
 		int nan = cpg.addMethodref(DFS_CLASS, "setNaN", "(Ljava/lang/String;)V");
@@ -266,8 +265,8 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(new INVOKEVIRTUAL(inf));
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int put = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "addDecimalFormat", "("+Constants_Fields.STRING_SIG+DFS_SIG+")V");
-		int put = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "addDecimalFormat", "(" + Constants_Fields.STRING_SIG + DFS_SIG + ")V");
+//ORIGINAL LINE: final int put = cpg.addMethodref(TRANSLET_CLASS, "addDecimalFormat", "("+STRING_SIG+DFS_SIG+")V");
+		int put = cpg.addMethodref(TRANSLET_CLASS, "addDecimalFormat", "(" + STRING_SIG + DFS_SIG + ")V");
 		il.append(new INVOKEVIRTUAL(put));
 		}
 	}

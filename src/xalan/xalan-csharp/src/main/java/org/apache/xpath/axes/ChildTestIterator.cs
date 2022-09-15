@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisTraverser = org.apache.xml.dtm.DTMAxisTraverser;
@@ -32,8 +31,8 @@ namespace org.apache.xpath.axes
 	/// <summary>
 	/// This class implements an optimized iterator for
 	/// children patterns that have a node test, and possibly a predicate. </summary>
-	/// <seealso cref= org.apache.xpath.axes.BasicTestIterator
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="org.apache.xpath.axes.BasicTestIterator"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ChildTestIterator : BasicTestIterator
 	{
@@ -56,7 +55,7 @@ namespace org.apache.xpath.axes
 	  /// location path expression for this itterator.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: ChildTestIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis) throws javax.xml.transform.TransformerException
 	  internal ChildTestIterator(Compiler compiler, int opPos, int analysis) : base(compiler, opPos, analysis)
 	  {
@@ -84,7 +83,7 @@ namespace org.apache.xpath.axes
 		  {
 			if (true)
 			{
-			  m_lastFetched = (org.apache.xml.dtm.DTM_Fields.NULL == m_lastFetched) ? m_traverser.first(m_context) : m_traverser.next(m_context, m_lastFetched);
+			  m_lastFetched = (DTM.NULL == m_lastFetched) ? m_traverser.first(m_context) : m_traverser.next(m_context, m_lastFetched);
 			}
 		//    else
 		//    {
@@ -106,7 +105,7 @@ namespace org.apache.xpath.axes
 	  ///  <returns> A cloned NodeIterator set of the start of the query.
 	  /// </returns>
 	  ///  <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator cloneWithReset() throws CloneNotSupportedException
 	  public override DTMIterator cloneWithReset()
 	  {

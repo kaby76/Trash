@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.processor
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using ElemTemplateElement = org.apache.xalan.templates.ElemTemplateElement;
@@ -36,7 +35,7 @@ namespace org.apache.xalan.processor
 	/// <summary>
 	/// This class acts as the superclass for all stylesheet element
 	/// processors, and deals with things that are common to all elements. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
 	[Serializable]
 	public class XSLTElementProcessor : ElemTemplateElement
 	{
@@ -44,7 +43,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Construct a processor for top-level elements. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
 	  internal XSLTElementProcessor()
 	  {
 	  }
@@ -84,7 +83,7 @@ namespace org.apache.xalan.processor
 	  ///                 document. </param>
 	  /// <returns> The new input source, or null to require the
 	  ///         default behaviour. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.xml.sax.InputSource resolveEntity(StylesheetHandler handler, String publicId, String systemId) throws org.xml.sax.SAXException
 	  public virtual InputSource resolveEntity(StylesheetHandler handler, string publicId, string systemId)
 	  {
@@ -100,7 +99,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="publicId"> The notation public identifier, or null if not
 	  ///                 available. </param>
 	  /// <param name="systemId"> The notation system identifier. </param>
-	  /// <seealso cref= org.xml.sax.DTDHandler#notationDecl </seealso>
+	  /// <seealso cref="org.xml.sax.DTDHandler.notationDecl"/>
 	  public virtual void notationDecl(StylesheetHandler handler, string name, string publicId, string systemId)
 	  {
 
@@ -117,7 +116,7 @@ namespace org.apache.xalan.processor
 	  ///                 available. </param>
 	  /// <param name="systemId"> The entity system identifier. </param>
 	  /// <param name="notationName"> The name of the associated notation. </param>
-	  /// <seealso cref= org.xml.sax.DTDHandler#unparsedEntityDecl </seealso>
+	  /// <seealso cref="org.xml.sax.DTDHandler.unparsedEntityDecl"/>
 	  public virtual void unparsedEntityDecl(StylesheetHandler handler, string name, string publicId, string systemId, string notationName)
 	  {
 
@@ -129,7 +128,7 @@ namespace org.apache.xalan.processor
 	  /// is sent to the current processor when any non-text event occurs.
 	  /// </summary>
 	  /// <param name="handler"> non-null reference to current StylesheetHandler that is constructing the Templates. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startNonText(StylesheetHandler handler) throws org.xml.sax.SAXException
 	  public virtual void startNonText(StylesheetHandler handler)
 	  {
@@ -145,7 +144,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="localName"> The local name (without prefix), or empty string if not namespace processing. </param>
 	  /// <param name="rawName"> The qualified name (with prefix). </param>
 	  /// <param name="attributes"> The specified or defaulted attributes. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public virtual void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {
@@ -165,7 +164,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="uri"> The Namespace URI, or an empty string. </param>
 	  /// <param name="localName"> The local name (without prefix), or empty string if not namespace processing. </param>
 	  /// <param name="rawName"> The qualified name (with prefix). </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(StylesheetHandler handler, String uri, String localName, String rawName) throws org.xml.sax.SAXException
 	  public virtual void endElement(StylesheetHandler handler, string uri, string localName, string rawName)
 	  {
@@ -189,7 +188,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="start"> The start position in the character array. </param>
 	  /// <param name="length"> The number of characters to use from the
 	  ///               character array. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(StylesheetHandler handler, char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public virtual void characters(StylesheetHandler handler, char[] ch, int start, int length)
 	  {
@@ -206,7 +205,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="start"> The start position in the character array. </param>
 	  /// <param name="length"> The number of characters to use from the
 	  ///               character array. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void ignorableWhitespace(StylesheetHandler handler, char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public virtual void ignorableWhitespace(StylesheetHandler handler, char[] ch, int start, int length)
 	  {
@@ -222,7 +221,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="target"> The processing instruction target. </param>
 	  /// <param name="data"> The processing instruction data, or null if
 	  ///             none is supplied. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(StylesheetHandler handler, String target, String data) throws org.xml.sax.SAXException
 	  public virtual void processingInstruction(StylesheetHandler handler, string target, string data)
 	  {
@@ -236,7 +235,7 @@ namespace org.apache.xalan.processor
 	  /// </summary>
 	  /// <param name="handler"> non-null reference to current StylesheetHandler that is constructing the Templates. </param>
 	  /// <param name="name"> The name of the skipped entity. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void skippedEntity(StylesheetHandler handler, String name) throws org.xml.sax.SAXException
 	  public virtual void skippedEntity(StylesheetHandler handler, string name)
 	  {
@@ -252,7 +251,7 @@ namespace org.apache.xalan.processor
 	  ///                error reporting. </param>
 	  /// <param name="attributes"> The list of attributes. </param>
 	  /// <param name="target"> The target element where the properties will be set. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void setPropertiesFromAttributes(StylesheetHandler handler, String rawName, org.xml.sax.Attributes attributes, org.apache.xalan.templates.ElemTemplateElement target) throws org.xml.sax.SAXException
 	  internal virtual void setPropertiesFromAttributes(StylesheetHandler handler, string rawName, Attributes attributes, ElemTemplateElement target)
 	  {
@@ -272,7 +271,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> the attributes not allowed on this element.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: org.xml.sax.Attributes setPropertiesFromAttributes(StylesheetHandler handler, String rawName, org.xml.sax.Attributes attributes, org.apache.xalan.templates.ElemTemplateElement target, boolean throwError) throws org.xml.sax.SAXException
 	  internal virtual Attributes setPropertiesFromAttributes(StylesheetHandler handler, string rawName, Attributes attributes, ElemTemplateElement target, bool throwError)
 	  {
@@ -288,11 +287,11 @@ namespace org.apache.xalan.processor
 
 		// Keep track of which XSLTAttributeDefs have been processed, so 
 		// I can see which default values need to be set.
-		IList processedDefs = new ArrayList();
+		System.Collections.IList processedDefs = new ArrayList();
 
 		// Keep track of XSLTAttributeDefs that were invalid
-		IList errorDefs = new ArrayList();
-		int nAttrs = attributes.Length;
+		System.Collections.IList errorDefs = new ArrayList();
+		int nAttrs = attributes.getLength();
 
 		for (int i = 0; i < nAttrs; i++)
 		{
@@ -327,7 +326,7 @@ namespace org.apache.xalan.processor
 			{
 				Console.WriteLine("stylesheet processor null");
 			}
-			if (attrDef.Name.CompareTo("*") == 0 && handler.StylesheetProcessor.SecureProcessing)
+			if (string.CompareOrdinal(attrDef.Name, "*") == 0 && handler.StylesheetProcessor.SecureProcessing)
 			{
 				//foreign attributes are not allowed in secure processing mode
 				// Then barf, because this element does not allow this attribute.

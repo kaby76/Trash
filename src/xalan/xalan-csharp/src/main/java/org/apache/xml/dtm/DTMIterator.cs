@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.dtm
 {
-
 	/// 
 	/// <summary>
 	/// <code>DTMIterators</code> are used to step through a (possibly
@@ -58,16 +57,19 @@ namespace org.apache.xml.dtm
 	  /// <summary>
 	  /// Accept the node.
 	  /// </summary>
+	  public static short FILTER_ACCEPT = 1;
 
 	  /// <summary>
 	  /// Reject the node. Same behavior as FILTER_SKIP. (In the DOM these
 	  /// differ when applied to a TreeWalker but have the same result when
 	  /// applied to a NodeIterator).
 	  /// </summary>
+	  public static short FILTER_REJECT = 2;
 
 	  /// <summary>
 	  /// Skip this single node. 
 	  /// </summary>
+	  public static short FILTER_SKIP = 3;
 
 	  /// <summary>
 	  /// Get an instance of a DTM that "owns" a node handle.  Since a node 
@@ -288,7 +290,7 @@ namespace org.apache.xml.dtm
 	  /// <returns> A clone of this iteration that has been reset.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public DTMIterator cloneWithReset() throws CloneNotSupportedException;
 	  DTMIterator cloneWithReset();
 
@@ -299,7 +301,7 @@ namespace org.apache.xml.dtm
 	  /// <returns> A clone of this object.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException;
 	  object clone();
 
@@ -318,13 +320,6 @@ namespace org.apache.xml.dtm
 	  /// types. </returns>
 	  int Axis {get;}
 
-	}
-
-	public static class DTMIterator_Fields
-	{
-	  public const short FILTER_ACCEPT = 1;
-	  public const short FILTER_REJECT = 2;
-	  public const short FILTER_SKIP = 3;
 	}
 
 }

@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using CHECKCAST = org.apache.bcel.generic.CHECKCAST;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using GETFIELD = org.apache.bcel.generic.GETFIELD;
@@ -48,10 +47,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Fall-through for variables that are implemented as methods
 		if (_type.implementedAsMethod())
@@ -112,8 +111,8 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			// The method cloneIterator() also does resetting
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int clone = cpg.addInterfaceMethodref(Constants_Fields.NODE_ITERATOR, "cloneIterator", "()" + Constants_Fields.NODE_ITERATOR_SIG);
-			int clone = cpg.addInterfaceMethodref(Constants_Fields.NODE_ITERATOR, "cloneIterator", "()" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int clone = cpg.addInterfaceMethodref(NODE_ITERATOR, "cloneIterator", "()" + NODE_ITERATOR_SIG);
+			int clone = cpg.addInterfaceMethodref(NODE_ITERATOR, "cloneIterator", "()" + NODE_ITERATOR_SIG);
 			il.append(new INVOKEINTERFACE(clone, 1));
 		}
 		}

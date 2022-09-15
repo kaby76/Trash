@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKEINTERFACE = org.apache.bcel.generic.INVOKEINTERFACE;
 	using INVOKESTATIC = org.apache.bcel.generic.INVOKESTATIC;
@@ -48,9 +47,9 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("CopyOf");
-		indent(indent + IndentIncrement);
+		this.indent(indent + IndentIncrement);
 		Util.println("select " + _select.ToString());
 		}
 
@@ -65,7 +64,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -87,34 +86,34 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.Type tselect = _select.getType();
 		Type tselect = _select.Type;
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String CPY1_SIG = "("+Constants_Fields.NODE_ITERATOR_SIG+Constants_Fields.TRANSLET_OUTPUT_SIG+")V";
-		string CPY1_SIG = "(" + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.TRANSLET_OUTPUT_SIG + ")V";
+//ORIGINAL LINE: final String CPY1_SIG = "("+NODE_ITERATOR_SIG+TRANSLET_OUTPUT_SIG+")V";
+		string CPY1_SIG = "(" + NODE_ITERATOR_SIG + TRANSLET_OUTPUT_SIG + ")V";
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int cpy1 = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "copy", CPY1_SIG);
-		int cpy1 = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "copy", CPY1_SIG);
+//ORIGINAL LINE: final int cpy1 = cpg.addInterfaceMethodref(DOM_INTF, "copy", CPY1_SIG);
+		int cpy1 = cpg.addInterfaceMethodref(DOM_INTF, "copy", CPY1_SIG);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String CPY2_SIG = "("+Constants_Fields.NODE_SIG+Constants_Fields.TRANSLET_OUTPUT_SIG+")V";
-		string CPY2_SIG = "(" + Constants_Fields.NODE_SIG + Constants_Fields.TRANSLET_OUTPUT_SIG + ")V";
+//ORIGINAL LINE: final String CPY2_SIG = "("+NODE_SIG+TRANSLET_OUTPUT_SIG+")V";
+		string CPY2_SIG = "(" + NODE_SIG + TRANSLET_OUTPUT_SIG + ")V";
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int cpy2 = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "copy", CPY2_SIG);
-		int cpy2 = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "copy", CPY2_SIG);
+//ORIGINAL LINE: final int cpy2 = cpg.addInterfaceMethodref(DOM_INTF, "copy", CPY2_SIG);
+		int cpy2 = cpg.addInterfaceMethodref(DOM_INTF, "copy", CPY2_SIG);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String getDoc_SIG = "()"+Constants_Fields.NODE_SIG;
-		string getDoc_SIG = "()" + Constants_Fields.NODE_SIG;
+//ORIGINAL LINE: final String getDoc_SIG = "()"+NODE_SIG;
+		string getDoc_SIG = "()" + NODE_SIG;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getDoc = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getDocument", getDoc_SIG);
-		int getDoc = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getDocument", getDoc_SIG);
+//ORIGINAL LINE: final int getDoc = cpg.addInterfaceMethodref(DOM_INTF, "getDocument", getDoc_SIG);
+		int getDoc = cpg.addInterfaceMethodref(DOM_INTF, "getDocument", getDoc_SIG);
 
 
 		if (tselect is NodeSetType)
@@ -152,8 +151,8 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(methodGen.loadCurrentNode());
 			il.append(methodGen.loadDOM());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int copy = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "copy", "(" + Constants_Fields.OBJECT_SIG + Constants_Fields.TRANSLET_OUTPUT_SIG + Constants_Fields.NODE_SIG + Constants_Fields.DOM_INTF_SIG + ")V");
-			int copy = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "copy", "(" + Constants_Fields.OBJECT_SIG + Constants_Fields.TRANSLET_OUTPUT_SIG + Constants_Fields.NODE_SIG + Constants_Fields.DOM_INTF_SIG + ")V");
+//ORIGINAL LINE: final int copy = cpg.addMethodref(BASIS_LIBRARY_CLASS, "copy", "(" + OBJECT_SIG + TRANSLET_OUTPUT_SIG + NODE_SIG + DOM_INTF_SIG + ")V");
+			int copy = cpg.addMethodref(BASIS_LIBRARY_CLASS, "copy", "(" + OBJECT_SIG + TRANSLET_OUTPUT_SIG + NODE_SIG + DOM_INTF_SIG + ")V");
 			il.append(new INVOKESTATIC(copy));
 		}
 		else
@@ -161,7 +160,7 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(classGen.loadTranslet());
 			_select.translate(classGen, methodGen);
 			il.append(methodGen.loadHandler());
-			il.append(new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.CHARACTERSW, Constants_Fields.CHARACTERSW_SIG)));
+			il.append(new INVOKEVIRTUAL(cpg.addMethodref(TRANSLET_CLASS, CHARACTERSW, CHARACTERSW_SIG)));
 		}
 
 		}

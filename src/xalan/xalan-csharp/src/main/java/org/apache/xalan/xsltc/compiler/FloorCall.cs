@@ -41,7 +41,7 @@ namespace org.apache.xalan.xsltc.compiler
 		public override void translate(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 		argument().translate(classGen, methodGen);
-		methodGen.InstructionList.append(new INVOKESTATIC(classGen.ConstantPool.addMethodref(Constants_Fields.MATH_CLASS, "floor", "(D)D")));
+		methodGen.getInstructionList().append(new INVOKESTATIC(classGen.getConstantPool().addMethodref(MATH_CLASS, "floor", "(D)D")));
 		}
 	}
 

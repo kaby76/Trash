@@ -23,7 +23,6 @@
 namespace org.apache.xalan.templates
 {
 
-
 	/// <summary>
 	/// Simple empty elem to push on the stack when nothing
 	/// else got pushed, so that pop() works correctly.

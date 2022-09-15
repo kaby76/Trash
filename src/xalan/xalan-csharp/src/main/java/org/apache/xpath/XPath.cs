@@ -164,11 +164,11 @@ namespace org.apache.xpath
 	  /// <param name="locator"> The location of the expression, may be null. </param>
 	  /// <param name="prefixResolver"> A prefix resolver to use to resolve prefixes to 
 	  ///                       namespace URIs. </param>
-	  /// <param name="type"> one of <seealso cref="#SELECT"/> or <seealso cref="#MATCH"/>. </param>
+	  /// <param name="type"> one of <seealso cref="SELECT"/> or <seealso cref="MATCH"/>. </param>
 	  /// <param name="errorListener"> The error listener, or null if default should be used.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if syntax or other error. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public XPath(String exprString, javax.xml.transform.SourceLocator locator, org.apache.xml.utils.PrefixResolver prefixResolver, int type, javax.xml.transform.ErrorListener errorListener) throws javax.xml.transform.TransformerException
 	  public XPath(string exprString, SourceLocator locator, PrefixResolver prefixResolver, int type, ErrorListener errorListener)
 	  {
@@ -218,11 +218,11 @@ namespace org.apache.xpath
 	  /// <param name="locator"> The location of the expression, may be null. </param>
 	  /// <param name="prefixResolver"> A prefix resolver to use to resolve prefixes to 
 	  ///                       namespace URIs. </param>
-	  /// <param name="type"> one of <seealso cref="#SELECT"/> or <seealso cref="#MATCH"/>. </param>
+	  /// <param name="type"> one of <seealso cref="SELECT"/> or <seealso cref="MATCH"/>. </param>
 	  /// <param name="errorListener"> The error listener, or null if default should be used.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if syntax or other error. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public XPath(String exprString, javax.xml.transform.SourceLocator locator, org.apache.xml.utils.PrefixResolver prefixResolver, int type, javax.xml.transform.ErrorListener errorListener, org.apache.xpath.compiler.FunctionTable aTable) throws javax.xml.transform.TransformerException
 	  public XPath(string exprString, SourceLocator locator, PrefixResolver prefixResolver, int type, ErrorListener errorListener, FunctionTable aTable)
 	  {
@@ -273,10 +273,10 @@ namespace org.apache.xpath
 	  /// <param name="locator"> The location of the expression, may be null. </param>
 	  /// <param name="prefixResolver"> A prefix resolver to use to resolve prefixes to 
 	  ///                       namespace URIs. </param>
-	  /// <param name="type"> one of <seealso cref="#SELECT"/> or <seealso cref="#MATCH"/>.
+	  /// <param name="type"> one of <seealso cref="SELECT"/> or <seealso cref="MATCH"/>.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if syntax or other error. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public XPath(String exprString, javax.xml.transform.SourceLocator locator, org.apache.xml.utils.PrefixResolver prefixResolver, int type) throws javax.xml.transform.TransformerException
 	  public XPath(string exprString, SourceLocator locator, PrefixResolver prefixResolver, int type) : this(exprString, locator, prefixResolver, type, null)
 	  {
@@ -309,7 +309,7 @@ namespace org.apache.xpath
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// @xsl.usage experimental </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(XPathContext xctxt, org.w3c.dom.Node contextNode, org.apache.xml.utils.PrefixResolver namespaceContext) throws javax.xml.transform.TransformerException
 	  public virtual XObject execute(XPathContext xctxt, org.w3c.dom.Node contextNode, PrefixResolver namespaceContext)
 	  {
@@ -331,7 +331,7 @@ namespace org.apache.xpath
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// @xsl.usage experimental </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(XPathContext xctxt, int contextNode, org.apache.xml.utils.PrefixResolver namespaceContext) throws javax.xml.transform.TransformerException
 	  public virtual XObject execute(XPathContext xctxt, int contextNode, PrefixResolver namespaceContext)
 	  {
@@ -348,7 +348,7 @@ namespace org.apache.xpath
 		}
 		catch (TransformerException te)
 		{
-		  te.Locator = this.Locator;
+		  te.setLocator(this.Locator);
 		  ErrorListener el = xctxt.ErrorListener;
 		  if (null != el) // defensive, should never happen.
 		  {
@@ -410,7 +410,7 @@ namespace org.apache.xpath
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// @xsl.usage experimental </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean bool(XPathContext xctxt, int contextNode, org.apache.xml.utils.PrefixResolver namespaceContext) throws javax.xml.transform.TransformerException
 	  public virtual bool @bool(XPathContext xctxt, int contextNode, PrefixResolver namespaceContext)
 	  {
@@ -425,7 +425,7 @@ namespace org.apache.xpath
 		}
 		catch (TransformerException te)
 		{
-		  te.Locator = this.Locator;
+		  te.setLocator(this.Locator);
 		  ErrorListener el = xctxt.ErrorListener;
 		  if (null != el) // defensive, should never happen.
 		  {
@@ -486,12 +486,12 @@ namespace org.apache.xpath
 	  /// <param name="xctxt"> XPath runtime context. </param>
 	  /// <param name="context"> The current source tree context node.
 	  /// </param>
-	  /// <returns> score, one of <seealso cref="#MATCH_SCORE_NODETEST"/>,
-	  /// <seealso cref="#MATCH_SCORE_NONE"/>, <seealso cref="#MATCH_SCORE_OTHER"/>, 
-	  /// or <seealso cref="#MATCH_SCORE_QNAME"/>.
+	  /// <returns> score, one of <seealso cref="MATCH_SCORE_NODETEST"/>,
+	  /// <seealso cref="MATCH_SCORE_NONE"/>, <seealso cref="MATCH_SCORE_OTHER"/>, 
+	  /// or <seealso cref="MATCH_SCORE_QNAME"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public double getMatchScore(XPathContext xctxt, int context) throws javax.xml.transform.TransformerException
 	  public virtual double getMatchScore(XPathContext xctxt, int context)
 	  {
@@ -534,7 +534,7 @@ namespace org.apache.xpath
 	  /// </param>
 	  /// <exception cref="TransformerException"> if the current ErrorListoner determines to 
 	  ///                              throw an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warn(XPathContext xctxt, int sourceNode, String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  public virtual void warn(XPathContext xctxt, int sourceNode, string msg, object[] args)
 	  {
@@ -583,7 +583,7 @@ namespace org.apache.xpath
 	  /// </param>
 	  /// <exception cref="TransformerException"> if the current ErrorListoner determines to 
 	  ///                              throw an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(XPathContext xctxt, int sourceNode, String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  public virtual void error(XPathContext xctxt, int sourceNode, string msg, object[] args)
 	  {
@@ -598,7 +598,7 @@ namespace org.apache.xpath
 		else
 		{
 		  SourceLocator slocator = xctxt.SAXLocator;
-		  Console.WriteLine(fmsg + "; file " + slocator.SystemId + "; line " + slocator.LineNumber + "; column " + slocator.ColumnNumber);
+		  Console.WriteLine(fmsg + "; file " + slocator.getSystemId() + "; line " + slocator.getLineNumber() + "; column " + slocator.getColumnNumber());
 		}
 	  }
 

@@ -23,9 +23,9 @@ using System.Collections;
  */
 namespace org.apache.xpath.functions
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using SubContextList = org.apache.xpath.axes.SubContextList;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using XNumber = org.apache.xpath.objects.XNumber;
@@ -77,7 +77,7 @@ namespace org.apache.xpath.functions
 		if (null != cnl)
 		{
 		  int n = cnl.CurrentNode;
-		  if (n == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (n == DTM.NULL)
 		  {
 			if (cnl.CurrentPos == 0)
 			{
@@ -99,7 +99,7 @@ namespace org.apache.xpath.functions
 			}
 			int currentNode = xctxt.ContextNode;
 			// System.out.println("currentNode: "+currentNode);
-			while (org.apache.xml.dtm.DTM_Fields.NULL != (n = cnl.nextNode()))
+			while (DTM.NULL != (n = cnl.nextNode()))
 			{
 			  if (n == currentNode)
 			  {
@@ -123,7 +123,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {

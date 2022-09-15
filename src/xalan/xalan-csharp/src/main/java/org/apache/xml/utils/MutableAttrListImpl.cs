@@ -102,7 +102,7 @@ namespace org.apache.xml.utils
 	  public virtual void addAttributes(Attributes atts)
 	  {
 
-		int nAtts = atts.Length;
+		int nAtts = atts.getLength();
 
 		for (int i = 0; i < nAtts; i++)
 		{

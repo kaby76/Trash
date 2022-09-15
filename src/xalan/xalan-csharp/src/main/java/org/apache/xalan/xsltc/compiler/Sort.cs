@@ -24,7 +24,6 @@
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using Field = org.apache.bcel.classfile.Field;
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ANEWARRAY = org.apache.bcel.generic.ANEWARRAY;
@@ -199,7 +198,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Run type checks on the attributes; expression must return a string
 		/// which we will use as a sort key
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -272,15 +271,15 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// SortingIterator.SortingIterator(NodeIterator,NodeSortRecordFactory);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int init = cpg.addMethodref(Constants_Fields.SORT_ITERATOR, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.NODE_SORT_FACTORY_SIG + ")V");
-		int init = cpg.addMethodref(Constants_Fields.SORT_ITERATOR, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.NODE_SORT_FACTORY_SIG + ")V");
+//ORIGINAL LINE: final int init = cpg.addMethodref(SORT_ITERATOR, "<init>", "(" + NODE_ITERATOR_SIG + NODE_SORT_FACTORY_SIG + ")V");
+		int init = cpg.addMethodref(SORT_ITERATOR, "<init>", "(" + NODE_ITERATOR_SIG + NODE_SORT_FACTORY_SIG + ")V");
 
 			// Backwards branches are prohibited if an uninitialized object is
 			// on the stack by section 4.9.4 of the JVM Specification, 2nd Ed.
@@ -291,16 +290,16 @@ namespace org.apache.xalan.xsltc.compiler
 			// in temporary variables, create the object and reload the
 			// arguments from the temporaries to avoid the problem.
 
-			LocalVariableGen nodesTemp = methodGen.addLocalVariable("sort_tmp1", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
+			LocalVariableGen nodesTemp = methodGen.addLocalVariable("sort_tmp1", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
 
-			LocalVariableGen sortRecordFactoryTemp = methodGen.addLocalVariable("sort_tmp2", Util.getJCRefType(Constants_Fields.NODE_SORT_FACTORY_SIG), null, null);
+			LocalVariableGen sortRecordFactoryTemp = methodGen.addLocalVariable("sort_tmp2", Util.getJCRefType(NODE_SORT_FACTORY_SIG), null, null);
 
 		// Get the current node iterator
 		if (nodeSet == null)
 		{ // apply-templates default
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int children = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getAxisIterator", "(I)"+ Constants_Fields.NODE_ITERATOR_SIG);
-			int children = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getAxisIterator", "(I)" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int children = cpg.addInterfaceMethodref(DOM_INTF, "getAxisIterator", "(I)"+ NODE_ITERATOR_SIG);
+			int children = cpg.addInterfaceMethodref(DOM_INTF, "getAxisIterator", "(I)" + NODE_ITERATOR_SIG);
 			il.append(methodGen.loadDOM());
 			il.append(new PUSH(cpg, Axis.CHILD));
 			il.append(new INVOKEINTERFACE(children, 2));
@@ -310,17 +309,17 @@ namespace org.apache.xalan.xsltc.compiler
 			nodeSet.translate(classGen, methodGen);
 		}
 
-			nodesTemp.Start = il.append(new ASTORE(nodesTemp.Index));
+			nodesTemp.setStart(il.append(new ASTORE(nodesTemp.getIndex())));
 
 		// Compile the code for the NodeSortRecord producing class and pass
 		// that as the last argument to the SortingIterator constructor.
 		compileSortRecordFactory(sortObjects, classGen, methodGen);
-			sortRecordFactoryTemp.Start = il.append(new ASTORE(sortRecordFactoryTemp.Index));
+			sortRecordFactoryTemp.setStart(il.append(new ASTORE(sortRecordFactoryTemp.getIndex())));
 
-		il.append(new NEW(cpg.addClass(Constants_Fields.SORT_ITERATOR)));
+		il.append(new NEW(cpg.addClass(SORT_ITERATOR)));
 		il.append(DUP);
-			nodesTemp.End = il.append(new ALOAD(nodesTemp.Index));
-			sortRecordFactoryTemp.End = il.append(new ALOAD(sortRecordFactoryTemp.Index));
+			nodesTemp.setEnd(il.append(new ALOAD(nodesTemp.getIndex())));
+			sortRecordFactoryTemp.setEnd(il.append(new ALOAD(sortRecordFactoryTemp.getIndex())));
 		il.append(new INVOKESPECIAL(init));
 		}
 
@@ -345,7 +344,7 @@ namespace org.apache.xalan.xsltc.compiler
 			needsSortRecordFactory |= sort._needsSortRecordFactory;
 		}
 
-		string sortRecordFactoryClass = Constants_Fields.NODE_SORT_FACTORY;
+		string sortRecordFactoryClass = NODE_SORT_FACTORY;
 		if (needsSortRecordFactory)
 		{
 			sortRecordFactoryClass = compileSortRecordFactory(sortObjects, classGen, methodGen, sortRecordClass);
@@ -353,10 +352,10 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 			// Backwards branches are prohibited if an uninitialized object is
 			// on the stack by section 4.9.4 of the JVM Specification, 2nd Ed.
@@ -368,9 +367,9 @@ namespace org.apache.xalan.xsltc.compiler
 			// arguments from the temporaries to avoid the problem.
 
 		// Compile code that initializes the static _sortOrder
-			LocalVariableGen sortOrderTemp = methodGen.addLocalVariable("sort_order_tmp", Util.getJCRefType("[" + Constants_Fields.STRING_SIG), null, null);
+			LocalVariableGen sortOrderTemp = methodGen.addLocalVariable("sort_order_tmp", Util.getJCRefType("[" + STRING_SIG), null, null);
 		il.append(new PUSH(cpg, nsorts));
-		il.append(new ANEWARRAY(cpg.addClass(Constants_Fields.STRING)));
+		il.append(new ANEWARRAY(cpg.addClass(STRING)));
 		for (int level = 0; level < nsorts; level++)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -381,11 +380,11 @@ namespace org.apache.xalan.xsltc.compiler
 			sort.translateSortOrder(classGen, methodGen);
 			il.append(AASTORE);
 		}
-			sortOrderTemp.Start = il.append(new ASTORE(sortOrderTemp.Index));
+			sortOrderTemp.setStart(il.append(new ASTORE(sortOrderTemp.getIndex())));
 
-			LocalVariableGen sortTypeTemp = methodGen.addLocalVariable("sort_type_tmp", Util.getJCRefType("[" + Constants_Fields.STRING_SIG), null, null);
+			LocalVariableGen sortTypeTemp = methodGen.addLocalVariable("sort_type_tmp", Util.getJCRefType("[" + STRING_SIG), null, null);
 		il.append(new PUSH(cpg, nsorts));
-		il.append(new ANEWARRAY(cpg.addClass(Constants_Fields.STRING)));
+		il.append(new ANEWARRAY(cpg.addClass(STRING)));
 		for (int level = 0; level < nsorts; level++)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -396,11 +395,11 @@ namespace org.apache.xalan.xsltc.compiler
 			sort.translateSortType(classGen, methodGen);
 			il.append(AASTORE);
 		}
-			sortTypeTemp.Start = il.append(new ASTORE(sortTypeTemp.Index));
+			sortTypeTemp.setStart(il.append(new ASTORE(sortTypeTemp.getIndex())));
 
-			LocalVariableGen sortLangTemp = methodGen.addLocalVariable("sort_lang_tmp", Util.getJCRefType("[" + Constants_Fields.STRING_SIG), null, null);
+			LocalVariableGen sortLangTemp = methodGen.addLocalVariable("sort_lang_tmp", Util.getJCRefType("[" + STRING_SIG), null, null);
 			il.append(new PUSH(cpg, nsorts));
-			il.append(new ANEWARRAY(cpg.addClass(Constants_Fields.STRING)));
+			il.append(new ANEWARRAY(cpg.addClass(STRING)));
 			for (int level = 0; level < nsorts; level++)
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -411,11 +410,11 @@ namespace org.apache.xalan.xsltc.compiler
 				  sort.translateLang(classGen, methodGen);
 				  il.append(AASTORE);
 			}
-			sortLangTemp.Start = il.append(new ASTORE(sortLangTemp.Index));
+			sortLangTemp.setStart(il.append(new ASTORE(sortLangTemp.getIndex())));
 
-			LocalVariableGen sortCaseOrderTemp = methodGen.addLocalVariable("sort_case_order_tmp", Util.getJCRefType("[" + Constants_Fields.STRING_SIG), null, null);
+			LocalVariableGen sortCaseOrderTemp = methodGen.addLocalVariable("sort_case_order_tmp", Util.getJCRefType("[" + STRING_SIG), null, null);
 			il.append(new PUSH(cpg, nsorts));
-			il.append(new ANEWARRAY(cpg.addClass(Constants_Fields.STRING)));
+			il.append(new ANEWARRAY(cpg.addClass(STRING)));
 			for (int level = 0; level < nsorts; level++)
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -426,7 +425,7 @@ namespace org.apache.xalan.xsltc.compiler
 				sort.translateCaseOrder(classGen, methodGen);
 				il.append(AASTORE);
 			}
-			sortCaseOrderTemp.Start = il.append(new ASTORE(sortCaseOrderTemp.Index));
+			sortCaseOrderTemp.setStart(il.append(new ASTORE(sortCaseOrderTemp.getIndex())));
 
 		il.append(new NEW(cpg.addClass(sortRecordFactoryClass)));
 		il.append(DUP);
@@ -434,12 +433,12 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(new PUSH(cpg, sortRecordClass));
 		il.append(classGen.loadTranslet());
 
-			sortOrderTemp.End = il.append(new ALOAD(sortOrderTemp.Index));
-			sortTypeTemp.End = il.append(new ALOAD(sortTypeTemp.Index));
-			sortLangTemp.End = il.append(new ALOAD(sortLangTemp.Index));
-			sortCaseOrderTemp.End = il.append(new ALOAD(sortCaseOrderTemp.Index));
+			sortOrderTemp.setEnd(il.append(new ALOAD(sortOrderTemp.getIndex())));
+			sortTypeTemp.setEnd(il.append(new ALOAD(sortTypeTemp.getIndex())));
+			sortLangTemp.setEnd(il.append(new ALOAD(sortLangTemp.getIndex())));
+			sortCaseOrderTemp.setEnd(il.append(new ALOAD(sortCaseOrderTemp.getIndex())));
 
-		il.append(new INVOKESPECIAL(cpg.addMethodref(sortRecordFactoryClass, "<init>", "(" + Constants_Fields.DOM_INTF_SIG + Constants_Fields.STRING_SIG + Constants_Fields.TRANSLET_INTF_SIG + "[" + Constants_Fields.STRING_SIG + "[" + Constants_Fields.STRING_SIG + "[" + Constants_Fields.STRING_SIG + "[" + Constants_Fields.STRING_SIG + ")V")));
+		il.append(new INVOKESPECIAL(cpg.addMethodref(sortRecordFactoryClass, "<init>", "(" + DOM_INTF_SIG + STRING_SIG + TRANSLET_INTF_SIG + "[" + STRING_SIG + "[" + STRING_SIG + "[" + STRING_SIG + "[" + STRING_SIG + ")V")));
 
 		// Initialize closure variables in sortRecordFactory
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -467,12 +466,12 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final VariableBase var = varRef.getVariable();
-			VariableBase @var = varRef.Variable;
+			VariableBase var = varRef.Variable;
 
 			// Store variable in new closure
 			il.append(DUP);
-			il.append(@var.loadInstruction());
-			il.append(new PUTFIELD(cpg.addFieldref(sortRecordFactoryClass, @var.EscapedName, @var.Type.toSignature())));
+			il.append(var.loadInstruction());
+			il.append(new PUTFIELD(cpg.addFieldref(sortRecordFactoryClass, var.EscapedName, var.Type.toSignature())));
 			dups.Add(varRef);
 			}
 		}
@@ -488,10 +487,10 @@ namespace org.apache.xalan.xsltc.compiler
 		string className = xsltc.HelperClassName;
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.NodeSortRecordFactGenerator sortRecordFactory = new org.apache.xalan.xsltc.compiler.util.NodeSortRecordFactGenerator(className, Constants_Fields.NODE_SORT_FACTORY, className + ".java", Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_SUPER | Constants_Fields.ACC_FINAL, new String[] {}, classGen.getStylesheet());
-		NodeSortRecordFactGenerator sortRecordFactory = new NodeSortRecordFactGenerator(className, Constants_Fields.NODE_SORT_FACTORY, className + ".java", Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_SUPER | Constants_Fields.ACC_FINAL, new string[] {}, classGen.Stylesheet);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.NodeSortRecordFactGenerator sortRecordFactory = new org.apache.xalan.xsltc.compiler.util.NodeSortRecordFactGenerator(className, NODE_SORT_FACTORY, className + ".java", ACC_PUBLIC | ACC_SUPER | ACC_FINAL, new String[] {}, classGen.getStylesheet());
+		NodeSortRecordFactGenerator sortRecordFactory = new NodeSortRecordFactGenerator(className, NODE_SORT_FACTORY, className + ".java", ACC_PUBLIC | ACC_SUPER | ACC_FINAL, new string[] {}, classGen.Stylesheet);
 
-		ConstantPoolGen cpg = sortRecordFactory.ConstantPool;
+		ConstantPoolGen cpg = sortRecordFactory.getConstantPool();
 
 		// Add a new instance variable for each var in closure
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -524,8 +523,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final VariableBase var = varRef.getVariable();
-			VariableBase @var = varRef.Variable;
-			sortRecordFactory.addField(new Field(Constants_Fields.ACC_PUBLIC, cpg.addUtf8(@var.EscapedName), cpg.addUtf8(@var.Type.toSignature()), null, cpg.ConstantPool));
+			VariableBase var = varRef.Variable;
+			sortRecordFactory.addField(new Field(ACC_PUBLIC, cpg.addUtf8(var.EscapedName), cpg.addUtf8(var.Type.toSignature()), null, cpg.getConstantPool()));
 			dups.Add(varRef);
 			}
 		}
@@ -534,20 +533,20 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[7];
 		org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[7];
-		argTypes[0] = Util.getJCRefType(Constants_Fields.DOM_INTF_SIG);
-		argTypes[1] = Util.getJCRefType(Constants_Fields.STRING_SIG);
-		argTypes[2] = Util.getJCRefType(Constants_Fields.TRANSLET_INTF_SIG);
-		argTypes[3] = Util.getJCRefType("[" + Constants_Fields.STRING_SIG);
-		argTypes[4] = Util.getJCRefType("[" + Constants_Fields.STRING_SIG);
-	  argTypes[5] = Util.getJCRefType("[" + Constants_Fields.STRING_SIG);
-	  argTypes[6] = Util.getJCRefType("[" + Constants_Fields.STRING_SIG);
+		argTypes[0] = Util.getJCRefType(DOM_INTF_SIG);
+		argTypes[1] = Util.getJCRefType(STRING_SIG);
+		argTypes[2] = Util.getJCRefType(TRANSLET_INTF_SIG);
+		argTypes[3] = Util.getJCRefType("[" + STRING_SIG);
+		argTypes[4] = Util.getJCRefType("[" + STRING_SIG);
+	  argTypes[5] = Util.getJCRefType("[" + STRING_SIG);
+	  argTypes[6] = Util.getJCRefType("[" + STRING_SIG);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String[] argNames = new String[7];
 		string[] argNames = new string[7];
-		argNames[0] = Constants_Fields.DOCUMENT_PNAME;
+		argNames[0] = DOCUMENT_PNAME;
 		argNames[1] = "className";
-		argNames[2] = Constants_Fields.TRANSLET_PNAME;
+		argNames[2] = TRANSLET_PNAME;
 		argNames[3] = "order";
 		argNames[4] = "type";
 	  argNames[5] = "lang";
@@ -556,8 +555,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		InstructionList il = new InstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator constructor = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "<init>", className, il, cpg);
-		MethodGenerator constructor = new MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "<init>", className, il, cpg);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator constructor = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "<init>", className, il, cpg);
+		MethodGenerator constructor = new MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, argTypes, argNames, "<init>", className, il, cpg);
 
 		// Push all parameters onto the stack and called super.<init>()
 		il.append(ALOAD_0);
@@ -568,19 +567,19 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(new ALOAD(5));
 	  il.append(new ALOAD(6));
 	  il.append(new ALOAD(7));
-		il.append(new INVOKESPECIAL(cpg.addMethodref(Constants_Fields.NODE_SORT_FACTORY, "<init>", "(" + Constants_Fields.DOM_INTF_SIG + Constants_Fields.STRING_SIG + Constants_Fields.TRANSLET_INTF_SIG + "[" + Constants_Fields.STRING_SIG + "[" + Constants_Fields.STRING_SIG + "[" + Constants_Fields.STRING_SIG + "[" + Constants_Fields.STRING_SIG + ")V")));
+		il.append(new INVOKESPECIAL(cpg.addMethodref(NODE_SORT_FACTORY, "<init>", "(" + DOM_INTF_SIG + STRING_SIG + TRANSLET_INTF_SIG + "[" + STRING_SIG + "[" + STRING_SIG + "[" + STRING_SIG + "[" + STRING_SIG + ")V")));
 		il.append(RETURN);
 
 		// Override the definition of makeNodeSortRecord()
 		il = new InstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator makeNodeSortRecord = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.NODE_SORT_RECORD_SIG), new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT }, new String[] { "node", "last" }, "makeNodeSortRecord", className, il, cpg);
-		MethodGenerator makeNodeSortRecord = new MethodGenerator(Constants_Fields.ACC_PUBLIC, Util.getJCRefType(Constants_Fields.NODE_SORT_RECORD_SIG), new org.apache.bcel.generic.Type[] {org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT}, new string[] {"node", "last"}, "makeNodeSortRecord", className, il, cpg);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator makeNodeSortRecord = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC, org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(NODE_SORT_RECORD_SIG), new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT }, new String[] { "node", "last" }, "makeNodeSortRecord", className, il, cpg);
+		MethodGenerator makeNodeSortRecord = new MethodGenerator(ACC_PUBLIC, Util.getJCRefType(NODE_SORT_RECORD_SIG), new org.apache.bcel.generic.Type[] {org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT}, new string[] {"node", "last"}, "makeNodeSortRecord", className, il, cpg);
 
 		il.append(ALOAD_0);
 		il.append(ILOAD_1);
 		il.append(ILOAD_2);
-		il.append(new INVOKESPECIAL(cpg.addMethodref(Constants_Fields.NODE_SORT_FACTORY, "makeNodeSortRecord", "(II)" + Constants_Fields.NODE_SORT_RECORD_SIG)));
+		il.append(new INVOKESPECIAL(cpg.addMethodref(NODE_SORT_FACTORY, "makeNodeSortRecord", "(II)" + NODE_SORT_RECORD_SIG)));
 		il.append(DUP);
 		il.append(new CHECKCAST(cpg.addClass(sortRecordClass)));
 
@@ -595,19 +594,19 @@ namespace org.apache.xalan.xsltc.compiler
 			VariableRefBase varRef = (VariableRefBase) dups[i];
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final VariableBase var = varRef.getVariable();
-			VariableBase @var = varRef.Variable;
+			VariableBase var = varRef.Variable;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.Type varType = var.getType();
-			Type varType = @var.Type;
+			Type varType = var.Type;
 
 			il.append(DUP);
 
 			// Get field from factory class
 			il.append(ALOAD_0);
-			il.append(new GETFIELD(cpg.addFieldref(className, @var.EscapedName, varType.toSignature())));
+			il.append(new GETFIELD(cpg.addFieldref(className, var.EscapedName, varType.toSignature())));
 
 			// Put field in record class
-			il.append(new PUTFIELD(cpg.addFieldref(sortRecordClass, @var.EscapedName, varType.toSignature())));
+			il.append(new PUTFIELD(cpg.addFieldref(sortRecordClass, var.EscapedName, varType.toSignature())));
 		}
 		il.append(POP);
 		il.append(ARETURN);
@@ -618,7 +617,7 @@ namespace org.apache.xalan.xsltc.compiler
 		makeNodeSortRecord.setMaxLocals();
 		makeNodeSortRecord.setMaxStack();
 		sortRecordFactory.addMethod(makeNodeSortRecord);
-		xsltc.dumpClass(sortRecordFactory.JavaClass);
+		xsltc.dumpClass(sortRecordFactory.getJavaClass());
 
 		return className;
 		}
@@ -637,12 +636,12 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// This generates a new class for handling this specific sort
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.NodeSortRecordGenerator sortRecord = new org.apache.xalan.xsltc.compiler.util.NodeSortRecordGenerator(className, Constants_Fields.NODE_SORT_RECORD, "sort$0.java", Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_SUPER | Constants_Fields.ACC_FINAL, new String[] {}, classGen.getStylesheet());
-		NodeSortRecordGenerator sortRecord = new NodeSortRecordGenerator(className, Constants_Fields.NODE_SORT_RECORD, "sort$0.java", Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_SUPER | Constants_Fields.ACC_FINAL, new string[] {}, classGen.Stylesheet);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.NodeSortRecordGenerator sortRecord = new org.apache.xalan.xsltc.compiler.util.NodeSortRecordGenerator(className, NODE_SORT_RECORD, "sort$0.java", ACC_PUBLIC | ACC_SUPER | ACC_FINAL, new String[] {}, classGen.getStylesheet());
+		NodeSortRecordGenerator sortRecord = new NodeSortRecordGenerator(className, NODE_SORT_RECORD, "sort$0.java", ACC_PUBLIC | ACC_SUPER | ACC_FINAL, new string[] {}, classGen.Stylesheet);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = sortRecord.getConstantPool();
-		ConstantPoolGen cpg = sortRecord.ConstantPool;
+		ConstantPoolGen cpg = sortRecord.getConstantPool();
 
 		// Add a new instance variable for each var in closure
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -678,8 +677,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final VariableBase var = varRef.getVariable();
-			VariableBase @var = varRef.Variable;
-			sortRecord.addField(new Field(Constants_Fields.ACC_PUBLIC, cpg.addUtf8(@var.EscapedName), cpg.addUtf8(@var.Type.toSignature()), null, cpg.ConstantPool));
+			VariableBase var = varRef.Variable;
+			sortRecord.addField(new Field(ACC_PUBLIC, cpg.addUtf8(var.EscapedName), cpg.addUtf8(var.Type.toSignature()), null, cpg.getConstantPool()));
 			dups.Add(varRef);
 			}
 		}
@@ -689,7 +688,7 @@ namespace org.apache.xalan.xsltc.compiler
 		sortRecord.addMethod(init);
 		sortRecord.addMethod(extract);
 
-		xsltc.dumpClass(sortRecord.JavaClass);
+		xsltc.dumpClass(sortRecord.getJavaClass());
 		return className;
 		}
 
@@ -704,12 +703,12 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator init = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, null, null, "<init>", className, il, cpg);
-		MethodGenerator init = new MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, null, null, "<init>", className, il, cpg);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator init = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, null, null, "<init>", className, il, cpg);
+		MethodGenerator init = new MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, null, null, "<init>", className, il, cpg);
 
 		// Call the constructor in the NodeSortRecord superclass
 		il.append(ALOAD_0);
-		il.append(new INVOKESPECIAL(cpg.addMethodref(Constants_Fields.NODE_SORT_RECORD, "<init>", "()V")));
+		il.append(new INVOKESPECIAL(cpg.addMethodref(NODE_SORT_RECORD, "<init>", "()V")));
 
 
 
@@ -730,8 +729,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// String NodeSortRecord.extractValueFromDOM(dom,node,level);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.CompareGenerator extractMethod = new org.apache.xalan.xsltc.compiler.util.CompareGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.STRING, new org.apache.bcel.generic.Type[] { org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT, org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.TRANSLET_SIG), org.apache.bcel.generic.Type.INT }, new String[] { "dom", "current", "level", "translet", "last" }, "extractValueFromDOM", className, il, cpg);
-		CompareGenerator extractMethod = new CompareGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.STRING, new org.apache.bcel.generic.Type[] {Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT, Util.getJCRefType(Constants_Fields.TRANSLET_SIG), org.apache.bcel.generic.Type.INT}, new string[] {"dom", "current", "level", "translet", "last"}, "extractValueFromDOM", className, il, cpg);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.CompareGenerator extractMethod = new org.apache.xalan.xsltc.compiler.util.CompareGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.STRING, new org.apache.bcel.generic.Type[] { org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT, org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(TRANSLET_SIG), org.apache.bcel.generic.Type.INT }, new String[] { "dom", "current", "level", "translet", "last" }, "extractValueFromDOM", className, il, cpg);
+		CompareGenerator extractMethod = new CompareGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.STRING, new org.apache.bcel.generic.Type[] {Util.getJCRefType(DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT, Util.getJCRefType(TRANSLET_SIG), org.apache.bcel.generic.Type.INT}, new string[] {"dom", "current", "level", "translet", "last"}, "extractValueFromDOM", className, il, cpg);
 
 		// Values needed for the switch statement
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -770,7 +769,7 @@ namespace org.apache.xalan.xsltc.compiler
 		if (levels > 1)
 		{
 			// Append the default target - it will _NEVER_ be reached
-			InstructionHandle defaultTarget = il.append(new PUSH(cpg, Constants_Fields.EMPTYSTRING));
+			InstructionHandle defaultTarget = il.append(new PUSH(cpg, EMPTYSTRING));
 			il.insert(tblswitch,new TABLESWITCH(match, target, defaultTarget));
 			il.append(ARETURN);
 		}

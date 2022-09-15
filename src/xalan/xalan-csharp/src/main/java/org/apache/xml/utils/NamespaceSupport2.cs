@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xml.utils
 {
 
-
 	/// <summary>
 	/// Encapsulate Namespace tracking logic for use by SAX drivers.
 	/// 
@@ -39,8 +38,8 @@ namespace org.apache.xml.utils
 	/// we seem to have written that SAX class into our APIs... and I don't
 	/// want to argue with it right now. </para>
 	/// </summary>
-	/// <seealso cref= org.xml.sax.helpers.NamespaceSupport
-	///  </seealso>
+	/// <seealso cref="org.xml.sax.helpers.NamespaceSupport"
+	/// />
 	public class NamespaceSupport2 : org.xml.sax.helpers.NamespaceSupport
 	{
 		////////////////////////////////////////////////////////////////////
@@ -111,7 +110,7 @@ namespace org.apache.xml.utils
 		/// already in force: in this context, only the "xml" prefix is
 		/// declared.</para>
 		/// </summary>
-		/// <seealso cref= #popContext </seealso>
+		/// <seealso cref=".popContext"/>
 		public virtual void pushContext()
 		{
 			// JJK: Context has a parent pointer.
@@ -145,7 +144,7 @@ namespace org.apache.xml.utils
 		/// prefixes after popping a context, unless you push another
 		/// context first.</para>
 		/// </summary>
-		/// <seealso cref= #pushContext </seealso>
+		/// <seealso cref=".pushContext"/>
 		public virtual void popContext()
 		{
 			Context2 parentContext = currentContext.Parent;
@@ -182,7 +181,7 @@ namespace org.apache.xml.utils
 		/// <para>Note that there is an asymmetry in this library: while {@link
 		/// #getPrefix getPrefix} will not return the default "" prefix,
 		/// even if you have declared one; to check for a default prefix,
-		/// you have to look it up explicitly using <seealso cref="#getURI getURI"/>.
+		/// you have to look it up explicitly using <seealso cref="getURI getURI"/>.
 		/// This asymmetry exists to make it easier to look up prefixes
 		/// for attribute names, where the default prefix is not allowed.</para>
 		/// </summary>
@@ -190,9 +189,9 @@ namespace org.apache.xml.utils
 		///        string. </param>
 		/// <param name="uri"> The Namespace URI to associate with the prefix. </param>
 		/// <returns> true if the prefix was legal, false otherwise </returns>
-		/// <seealso cref= #processName </seealso>
-		/// <seealso cref= #getURI </seealso>
-		/// <seealso cref= #getPrefix </seealso>
+		/// <seealso cref=".processName"/>
+		/// <seealso cref=".getURI"/>
+		/// <seealso cref=".getPrefix"/>
 		public virtual bool declarePrefix(string prefix, string uri)
 		{
 			if (prefix.Equals("xml") || prefix.Equals("xmlns"))
@@ -243,8 +242,8 @@ namespace org.apache.xml.utils
 		///        representing the Namespace URI (or empty string), the
 		///        local name, and the raw XML 1.0 name; or null if there
 		///        is an undeclared prefix. </returns>
-		/// <seealso cref= #declarePrefix </seealso>
-		/// <seealso cref= java.lang.String#intern  </seealso>
+		/// <seealso cref=".declarePrefix"/>
+		/// <seealso cref="java.lang.String.intern "/>
 		public virtual string [] processName(string qName, string[] parts, bool isAttribute)
 		{
 			string[] name = currentContext.processName(qName, isAttribute);
@@ -269,8 +268,8 @@ namespace org.apache.xml.utils
 		/// <param name="prefix"> The prefix to look up. </param>
 		/// <returns> The associated Namespace URI, or null if the prefix
 		///         is undeclared in this context. </returns>
-		/// <seealso cref= #getPrefix </seealso>
-		/// <seealso cref= #getPrefixes </seealso>
+		/// <seealso cref=".getPrefix"/>
+		/// <seealso cref=".getPrefixes"/>
 		public virtual string getURI(string prefix)
 		{
 			return currentContext.getURI(prefix);
@@ -282,13 +281,13 @@ namespace org.apache.xml.utils
 		/// 
 		/// <para><strong>Note:</strong> if there is a default prefix, it will not be
 		/// returned in this enumeration; check for the default prefix
-		/// using the <seealso cref="#getURI getURI"/> with an argument of "".</para>
+		/// using the <seealso cref="getURI getURI"/> with an argument of "".</para>
 		/// </summary>
 		/// <returns> An enumeration of all prefixes declared in the
 		///         current context except for the empty (default)
 		///         prefix. </returns>
-		/// <seealso cref= #getDeclaredPrefixes </seealso>
-		/// <seealso cref= #getURI </seealso>
+		/// <seealso cref=".getDeclaredPrefixes"/>
+		/// <seealso cref=".getURI"/>
 		public virtual System.Collections.IEnumerator Prefixes
 		{
 			get
@@ -303,7 +302,7 @@ namespace org.apache.xml.utils
 		/// 
 		/// <para>If more than one prefix is currently mapped to the same
 		/// URI, this method will make an arbitrary selection; if you
-		/// want all of the prefixes, use the <seealso cref="#getPrefixes"/>
+		/// want all of the prefixes, use the <seealso cref="getPrefixes"/>
 		/// method instead.</para>
 		/// 
 		/// <para><strong>Note:</strong> this will never return the empty
@@ -314,8 +313,8 @@ namespace org.apache.xml.utils
 		/// <returns> One of the prefixes currently mapped to the URI supplied,
 		///         or null if none is mapped or if the URI is assigned to
 		///         the default Namespace. </returns>
-		/// <seealso cref= #getPrefixes(java.lang.String) </seealso>
-		/// <seealso cref= #getURI  </seealso>
+		/// <seealso cref=".getPrefixes(java.lang.String)"/>
+		/// <seealso cref=".getURI "/>
 		public virtual string getPrefix(string uri)
 		{
 			return currentContext.getPrefix(uri);
@@ -328,20 +327,20 @@ namespace org.apache.xml.utils
 		/// <para>This method returns prefixes mapped to a specific Namespace
 		/// URI.  The xml: prefix will be included.  If you want only one
 		/// prefix that's mapped to the Namespace URI, and you don't care 
-		/// which one you get, use the <seealso cref="#getPrefix getPrefix"/>
+		/// which one you get, use the <seealso cref="getPrefix getPrefix"/>
 		///  method instead.</para>
 		/// 
 		/// <para><strong>Note:</strong> the empty (default) prefix is
 		/// <em>never</em> included in this enumeration; to check for the
-		/// presence of a default Namespace, use the <seealso cref="#getURI getURI"/>
+		/// presence of a default Namespace, use the <seealso cref="getURI getURI"/>
 		/// method with an argument of "".</para>
 		/// </summary>
 		/// <param name="uri"> The Namespace URI. </param>
 		/// <returns> An enumeration of all prefixes declared in the
 		///         current context. </returns>
-		/// <seealso cref= #getPrefix </seealso>
-		/// <seealso cref= #getDeclaredPrefixes </seealso>
-		/// <seealso cref= #getURI  </seealso>
+		/// <seealso cref=".getPrefix"/>
+		/// <seealso cref=".getDeclaredPrefixes"/>
+		/// <seealso cref=".getURI "/>
 		public virtual System.Collections.IEnumerator getPrefixes(string uri)
 		{
 			// JJK: The old code involved creating a vector, filling it
@@ -363,12 +362,12 @@ namespace org.apache.xml.utils
 		/// 
 		/// <para>The empty (default) prefix will be included in this 
 		/// enumeration; note that this behaviour differs from that of
-		/// <seealso cref="#getPrefix"/> and <seealso cref="#getPrefixes"/>.</para>
+		/// <seealso cref="getPrefix"/> and <seealso cref="getPrefixes"/>.</para>
 		/// </summary>
 		/// <returns> An enumeration of all prefixes declared in this
 		///         context. </returns>
-		/// <seealso cref= #getPrefixes </seealso>
-		/// <seealso cref= #getURI </seealso>
+		/// <seealso cref=".getPrefixes"/>
+		/// <seealso cref=".getURI"/>
 		public virtual System.Collections.IEnumerator DeclaredPrefixes
 		{
 			get
@@ -430,6 +429,7 @@ namespace org.apache.xml.utils
 
 		public virtual object nextElement()
 		{
+//JAVA TO C# CONVERTER TODO TASK: Java iterators are only converted within the context of 'while' and 'for' loops:
 			if (hasMoreElements())
 			{
 					string tmp = lookahead;
@@ -543,7 +543,7 @@ namespace org.apache.xml.utils
 		/// </summary>
 		/// <param name="prefix"> The prefix to declare. </param>
 		/// <param name="uri"> The associated Namespace URI. </param>
-		/// <seealso cref= org.xml.sax.helpers.NamespaceSupport2#declarePrefix </seealso>
+		/// <seealso cref="org.xml.sax.helpers.NamespaceSupport2.declarePrefix"/>
 		internal void declarePrefix(string prefix, string uri)
 		{
 									// Lazy processing...
@@ -587,7 +587,7 @@ namespace org.apache.xml.utils
 		///         URI part (or empty string), the local part,
 		///         and the raw name, all internalized, or null
 		///         if there is an undeclared prefix. </returns>
-		/// <seealso cref= org.xml.sax.helpers.NamespaceSupport2#processName </seealso>
+		/// <seealso cref="org.xml.sax.helpers.NamespaceSupport2.processName"/>
 		internal string [] processName(string qName, bool isAttribute)
 		{
 			string[] name;
@@ -677,7 +677,7 @@ namespace org.apache.xml.utils
 		/// <param name="prefix"> The prefix to look up. </param>
 		/// <returns> The associated Namespace URI, or null if none is
 		///         declared. </returns>
-		/// <seealso cref= org.xml.sax.helpers.NamespaceSupport2#getURI </seealso>
+		/// <seealso cref="org.xml.sax.helpers.NamespaceSupport2.getURI"/>
 		internal string getURI(string prefix)
 		{
 			if ("".Equals(prefix))
@@ -703,7 +703,7 @@ namespace org.apache.xml.utils
 		/// </summary>
 		/// <param name="uri"> The URI to look up. </param>
 		/// <returns> The associated prefix, or null if none is declared. </returns>
-		/// <seealso cref= org.xml.sax.helpers.NamespaceSupport2#getPrefix </seealso>
+		/// <seealso cref="org.xml.sax.helpers.NamespaceSupport2.getPrefix"/>
 		internal string getPrefix(string uri)
 		{
 			if (uriTable == null)
@@ -721,7 +721,7 @@ namespace org.apache.xml.utils
 		/// Return an enumeration of prefixes declared in this context.
 		/// </summary>
 		/// <returns> An enumeration of prefixes (possibly empty). </returns>
-		/// <seealso cref= org.xml.sax.helpers.NamespaceSupport2#getDeclaredPrefixes </seealso>
+		/// <seealso cref="org.xml.sax.helpers.NamespaceSupport2.getDeclaredPrefixes"/>
 		internal System.Collections.IEnumerator DeclaredPrefixes
 		{
 			get
@@ -732,7 +732,7 @@ namespace org.apache.xml.utils
 				}
 				else
 				{
-					return declarations.elements();
+					return declarations.GetEnumerator();
 				}
 			}
 		}
@@ -745,7 +745,7 @@ namespace org.apache.xml.utils
 		/// returned, and will have to be checked for separately.</para>
 		/// </summary>
 		/// <returns> An enumeration of prefixes (never empty). </returns>
-		/// <seealso cref= org.xml.sax.helpers.NamespaceSupport2#getPrefixes </seealso>
+		/// <seealso cref="org.xml.sax.helpers.NamespaceSupport2.getPrefixes"/>
 		internal System.Collections.IEnumerator Prefixes
 		{
 			get

@@ -23,7 +23,9 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using Translet = org.apache.xalan.xsltc.Translet;
+	using TransletException = org.apache.xalan.xsltc.TransletException;
 	using AbstractTranslet = org.apache.xalan.xsltc.runtime.AbstractTranslet;
 	using LocaleUtility = org.apache.xml.utils.LocaleUtility;
 
@@ -50,7 +52,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// </summary>
 		/// @deprecated This constructor is no longer used in generated code.  It
 		///             exists only for backwards compatibility. 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public NodeSortRecordFactory(org.apache.xalan.xsltc.DOM dom, String className, org.apache.xalan.xsltc.Translet translet, String order[], String type[]) throws org.apache.xalan.xsltc.TransletException
 		 public NodeSortRecordFactory(DOM dom, string className, Translet translet, string[] order, string[] type) : this(dom, className, translet, order, type, null, null)
 		 {
@@ -63,7 +65,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// class), and the translet parameter is needed for methods called by
 		/// this object.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public NodeSortRecordFactory(org.apache.xalan.xsltc.DOM dom, String className, org.apache.xalan.xsltc.Translet translet, String order[], String type[], String lang[], String caseOrder[]) throws org.apache.xalan.xsltc.TransletException
 		 public NodeSortRecordFactory(DOM dom, string className, Translet translet, string[] order, string[] type, string[] lang, string[] caseOrder)
 		 {
@@ -145,14 +147,14 @@ namespace org.apache.xalan.xsltc.dom
 		/// Create an instance of a sub-class of NodeSortRecord. The name of this
 		/// sub-class is passed to us in the constructor.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public NodeSortRecord makeNodeSortRecord(int node, int last) throws ExceptionInInitializerError, LinkageError, IllegalAccessException, InstantiationException, SecurityException, org.apache.xalan.xsltc.TransletException
 		public virtual NodeSortRecord makeNodeSortRecord(int node, int last)
 		{
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final NodeSortRecord sortRecord = (NodeSortRecord)_class.newInstance();
-		NodeSortRecord sortRecord = (NodeSortRecord)_class.newInstance();
+		NodeSortRecord sortRecord = (NodeSortRecord)System.Activator.CreateInstance(_class);
 		sortRecord.initialize(node, last, _dom, _sortSettings);
 		return sortRecord;
 		}
@@ -165,9 +167,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private final void setLang(final String lang[])
-	   private string[] Lang
+	   private in string[] Lang
 	   {
 		   set
 		   {

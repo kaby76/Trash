@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
-
 	using org.apache.xml.dtm;
 
 	using XMLStringFactory = org.apache.xml.utils.XMLStringFactory;
@@ -158,9 +157,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="axis"> One of Axes.ANCESTORORSELF, etc.
 	  /// </param>
 	  /// <returns> A DTMAxisIterator, or null if the given axis isn't supported. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public DTMAxisIterator getAxisIterator(final int axis)
-	  public override DTMAxisIterator getAxisIterator(int axis)
+	  public override DTMAxisIterator getAxisIterator(in int axis)
 	  {
 
 		DTMAxisIterator iterator = null;
@@ -303,7 +300,7 @@ namespace org.apache.xml.dtm.@ref
 		  if (_isRestartable)
 		  {
 			_startNode = node;
-			_currentNode = (node == DTM_Fields.NULL) ? DTM_Fields.NULL : outerInstance._firstch(outerInstance.makeNodeIdentity(node));
+			_currentNode = (node == DTM.NULL) ? DTM.NULL : outerInstance._firstch(outerInstance.makeNodeIdentity(node));
 
 			return resetPosition();
 		  }
@@ -318,14 +315,14 @@ namespace org.apache.xml.dtm.@ref
 		/// are available. </returns>
 		public override int next()
 		{
-		  if (_currentNode != org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (_currentNode != NULL)
 		  {
 			int node = _currentNode;
 			_currentNode = outerInstance._nextsib(node);
 			return returnNode(outerInstance.makeNodeHandle(node));
 		  }
 
-		  return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  return END;
 		}
 	  } // end of ChildrenIterator
 
@@ -382,9 +379,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <param name="type"> extended type ID.
 		/// </param>
 		/// <returns> ParentIterator configured with the type filter set. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public DTMAxisIterator setNodeType(final int type)
-		public DTMAxisIterator setNodeType(int type)
+		public DTMAxisIterator setNodeType(in int type)
 		{
 
 		  _nodeType = type;
@@ -401,22 +396,22 @@ namespace org.apache.xml.dtm.@ref
 		{
 		  int result = _currentNode;
 
-		  if (_nodeType >= DTM_Fields.NTYPES)
+		  if (_nodeType >= DTM.NTYPES)
 		  {
 			if (_nodeType != outerInstance.getExpandedTypeID(_currentNode))
 			{
-			  result = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			  result = END;
 			}
 		  }
-		  else if (_nodeType != org.apache.xml.dtm.DTM_Fields.NULL)
+		  else if (_nodeType != NULL)
 		  {
 			if (_nodeType != outerInstance.getNodeType(_currentNode))
 			{
-			  result = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			  result = END;
 			}
 		  }
 
-		  _currentNode = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  _currentNode = END;
 
 		  return returnNode(result);
 		}
@@ -465,7 +460,7 @@ namespace org.apache.xml.dtm.@ref
 		  if (_isRestartable)
 		  {
 			_startNode = node;
-			_currentNode = (node == DTM_Fields.NULL) ? DTM_Fields.NULL : outerInstance._firstch(outerInstance.makeNodeIdentity(_startNode));
+			_currentNode = (node == DTM.NULL) ? DTM.NULL : outerInstance._firstch(outerInstance.makeNodeIdentity(_startNode));
 
 			return resetPosition();
 		  }
@@ -484,19 +479,19 @@ namespace org.apache.xml.dtm.@ref
 
 		  int nodeType = _nodeType;
 
-		  if (nodeType >= DTM_Fields.NTYPES)
+		  if (nodeType >= DTM.NTYPES)
 		  {
-			while (node != DTM_Fields.NULL && outerInstance._exptype(node) != nodeType)
+			while (node != DTM.NULL && outerInstance._exptype(node) != nodeType)
 			{
 			  node = outerInstance._nextsib(node);
 			}
 		  }
 		  else
 		  {
-			while (node != DTM_Fields.NULL)
+			while (node != DTM.NULL)
 			{
 			  eType = outerInstance._exptype(node);
-			  if (eType < DTM_Fields.NTYPES)
+			  if (eType < DTM.NTYPES)
 			  {
 				if (eType == nodeType)
 				{
@@ -511,10 +506,10 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  if (node == DTM_Fields.NULL)
+		  if (node == DTM.NULL)
 		  {
-			_currentNode = DTM_Fields.NULL;
-			return DTM_Fields.NULL;
+			_currentNode = DTM.NULL;
+			return DTM.NULL;
 		  }
 		  else
 		  {
@@ -545,9 +540,7 @@ namespace org.apache.xml.dtm.@ref
 		/// 
 		/// </summary>
 		/// <param name="type"> The extended type ID being requested. </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public NamespaceChildrenIterator(final int type)
-		public NamespaceChildrenIterator(DTMDefaultBaseIterators outerInstance, int type) : base(outerInstance)
+		public NamespaceChildrenIterator(DTMDefaultBaseIterators outerInstance, in int type) : base(outerInstance)
 		{
 			this.outerInstance = outerInstance;
 		  _nsType = type;
@@ -570,7 +563,7 @@ namespace org.apache.xml.dtm.@ref
 		  if (_isRestartable)
 		  {
 			_startNode = node;
-			_currentNode = (node == DTM_Fields.NULL) ? DTM_Fields.NULL : NOTPROCESSED;
+			_currentNode = (node == DTM.NULL) ? DTM.NULL : NOTPROCESSED;
 
 			return resetPosition();
 		  }
@@ -584,9 +577,9 @@ namespace org.apache.xml.dtm.@ref
 		/// <returns> The next node handle in the iteration, or END. </returns>
 		public override int next()
 		{
-		  if (_currentNode != DTM_Fields.NULL)
+		  if (_currentNode != DTM.NULL)
 		  {
-			for (int node = (NOTPROCESSED == _currentNode) ? outerInstance._firstch(outerInstance.makeNodeIdentity(_startNode)) : outerInstance._nextsib(_currentNode); node != org.apache.xml.dtm.DTMAxisIterator_Fields.END; node = outerInstance._nextsib(node))
+			for (int node = (NOTPROCESSED == _currentNode) ? outerInstance._firstch(outerInstance.makeNodeIdentity(_startNode)) : outerInstance._nextsib(_currentNode); node != END; node = outerInstance._nextsib(node))
 			{
 			  if (outerInstance.m_expandedNameTable.getNamespaceID(outerInstance._exptype(node)) == _nsType)
 			  {
@@ -597,7 +590,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  return END;
 		}
 	  } // end of NamespaceChildrenIterator
 
@@ -653,7 +646,7 @@ namespace org.apache.xml.dtm.@ref
 
 		  int node = _currentNode;
 
-		  if (DTM_Fields.NULL != node)
+		  if (DTM.NULL != node)
 		  {
 			_currentNode = outerInstance.getNextNamespaceNode(_startNode, node, true);
 		  }
@@ -694,7 +687,7 @@ namespace org.apache.xml.dtm.@ref
 		{
 			int node;
 
-		  for (node = _currentNode; node != org.apache.xml.dtm.DTMAxisIterator_Fields.END; node = outerInstance.getNextNamespaceNode(_startNode, node, true))
+		  for (node = _currentNode; node != END; node = outerInstance.getNextNamespaceNode(_startNode, node, true))
 		  {
 			if (outerInstance.getExpandedTypeID(node) == _nodeType || outerInstance.getNodeType(node) == _nodeType || outerInstance.getNamespaceType(node) == _nodeType)
 			{
@@ -704,7 +697,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return (_currentNode = org.apache.xml.dtm.DTMAxisIterator_Fields.END);
+		  return (_currentNode = END);
 		}
 	  } // end of TypedNamespaceIterator
 
@@ -739,7 +732,7 @@ namespace org.apache.xml.dtm.@ref
 		  if (_isRestartable)
 		  {
 			_startNode = outerInstance.getDocumentRoot(node);
-			_currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
+			_currentNode = NULL;
 
 			return resetPosition();
 		  }
@@ -755,7 +748,7 @@ namespace org.apache.xml.dtm.@ref
 		{
 		  if (_startNode == _currentNode)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 
 		  _currentNode = _startNode;
@@ -795,7 +788,7 @@ namespace org.apache.xml.dtm.@ref
 		{
 			if (_startNode == _currentNode)
 			{
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 			}
 
 		  int nodeType = _nodeType;
@@ -804,7 +797,7 @@ namespace org.apache.xml.dtm.@ref
 
 		  _currentNode = node;
 
-		  if (nodeType >= DTM_Fields.NTYPES)
+		  if (nodeType >= DTM.NTYPES)
 		  {
 			if (nodeType == expType)
 			{
@@ -813,7 +806,7 @@ namespace org.apache.xml.dtm.@ref
 		  }
 		  else
 		  {
-			if (expType < DTM_Fields.NTYPES)
+			if (expType < DTM.NTYPES)
 			{
 			  if (expType == nodeType)
 			  {
@@ -829,7 +822,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  return END;
 		}
 	  } // end of TypedRootIterator
 
@@ -892,7 +885,7 @@ namespace org.apache.xml.dtm.@ref
 
 		  int node = _currentNode;
 
-		  if (DTM_Fields.NULL != node)
+		  if (DTM.NULL != node)
 		  {
 			_currentNode = outerInstance.getNextNamespaceNode(_startNode, node, false);
 		  }
@@ -945,7 +938,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <returns> The next node handle in the iteration, or END. </returns>
 		public override int next()
 		{
-		  _currentNode = (_currentNode == DTM_Fields.NULL) ? DTM_Fields.NULL : outerInstance._nextsib(_currentNode);
+		  _currentNode = (_currentNode == DTM.NULL) ? DTM.NULL : outerInstance._nextsib(_currentNode);
 		  return returnNode(outerInstance.makeNodeHandle(_currentNode));
 		}
 	  } // end of FollowingSiblingIterator
@@ -979,28 +972,28 @@ namespace org.apache.xml.dtm.@ref
 		/// <returns> The next node handle in the iteration, or END. </returns>
 		public override int next()
 		{
-		  if (_currentNode == DTM_Fields.NULL)
+		  if (_currentNode == DTM.NULL)
 		  {
-			return DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 
 		  int node = _currentNode;
 		  int eType;
 		  int nodeType = _nodeType;
 
-		  if (nodeType >= DTM_Fields.NTYPES)
+		  if (nodeType >= DTM.NTYPES)
 		  {
 			do
 			{
 			  node = outerInstance._nextsib(node);
-			} while (node != DTM_Fields.NULL && outerInstance._exptype(node) != nodeType);
+			} while (node != DTM.NULL && outerInstance._exptype(node) != nodeType);
 		  }
 		  else
 		  {
-			while ((node = outerInstance._nextsib(node)) != DTM_Fields.NULL)
+			while ((node = outerInstance._nextsib(node)) != DTM.NULL)
 			{
 			  eType = outerInstance._exptype(node);
-			  if (eType < DTM_Fields.NTYPES)
+			  if (eType < DTM.NTYPES)
 			  {
 				if (eType == nodeType)
 				{
@@ -1016,7 +1009,7 @@ namespace org.apache.xml.dtm.@ref
 
 		  _currentNode = node;
 
-		  return (_currentNode == DTM_Fields.NULL) ? DTM_Fields.NULL : returnNode(outerInstance.makeNodeHandle(_currentNode));
+		  return (_currentNode == DTM.NULL) ? DTM.NULL : returnNode(outerInstance.makeNodeHandle(_currentNode));
 		}
 	  } // end of TypedFollowingSiblingIterator
 
@@ -1071,13 +1064,13 @@ namespace org.apache.xml.dtm.@ref
 //ORIGINAL LINE: final int node = _currentNode;
 		  int node = _currentNode;
 
-		  if (node != org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (node != NULL)
 		  {
 			_currentNode = outerInstance.getNextAttributeIdentity(node);
 			return returnNode(outerInstance.makeNodeHandle(node));
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  } // end of AttributeIterator
 
@@ -1140,7 +1133,7 @@ namespace org.apache.xml.dtm.@ref
 
 		  // singleton iterator, since there can only be one attribute of 
 		  // a given type.
-		  _currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
+		  _currentNode = NULL;
 
 		  return returnNode(node);
 		}
@@ -1195,7 +1188,7 @@ namespace org.apache.xml.dtm.@ref
 			_startNode = node;
 			node = _startNodeID = outerInstance.makeNodeIdentity(node);
 
-			if (node == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (node == NULL)
 			{
 			  _currentNode = node;
 			  return resetPosition();
@@ -1210,7 +1203,7 @@ namespace org.apache.xml.dtm.@ref
 			{
 			  // Be careful to handle the Document node properly
 			  _currentNode = outerInstance._parent(node);
-			  if (org.apache.xml.dtm.DTM_Fields.NULL != _currentNode)
+			  if (NULL != _currentNode)
 			  {
 				_currentNode = outerInstance._firstch(_currentNode);
 			  }
@@ -1233,9 +1226,9 @@ namespace org.apache.xml.dtm.@ref
 		public override int next()
 		{
 
-		  if (_currentNode == _startNodeID || _currentNode == DTM_Fields.NULL)
+		  if (_currentNode == _startNodeID || _currentNode == DTM.NULL)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		  else
 		  {
@@ -1285,19 +1278,19 @@ namespace org.apache.xml.dtm.@ref
 		  int nodeType = _nodeType;
 		  int startID = _startNodeID;
 
-		  if (nodeType >= DTM_Fields.NTYPES)
+		  if (nodeType >= DTM.NTYPES)
 		  {
-			while (node != org.apache.xml.dtm.DTM_Fields.NULL && node != startID && outerInstance._exptype(node) != nodeType)
+			while (node != NULL && node != startID && outerInstance._exptype(node) != nodeType)
 			{
 			  node = outerInstance._nextsib(node);
 			}
 		  }
 		  else
 		  {
-			while (node != org.apache.xml.dtm.DTM_Fields.NULL && node != startID)
+			while (node != NULL && node != startID)
 			{
 			  expType = outerInstance._exptype(node);
-			  if (expType < DTM_Fields.NTYPES)
+			  if (expType < DTM.NTYPES)
 			  {
 				if (expType == nodeType)
 				{
@@ -1315,10 +1308,10 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  if (node == DTM_Fields.NULL || node == _startNodeID)
+		  if (node == DTM.NULL || node == _startNodeID)
 		  {
-			_currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			_currentNode = NULL;
+			return NULL;
 		  }
 		  else
 		  {
@@ -1436,7 +1429,7 @@ namespace org.apache.xml.dtm.@ref
 			// iterator is not a clone
 			int parent, index;
 
-		   if (outerInstance._type(node) == DTM_Fields.ATTRIBUTE_NODE)
+		   if (outerInstance._type(node) == DTM.ATTRIBUTE_NODE)
 		   {
 			node = outerInstance._parent(node);
 		   }
@@ -1447,7 +1440,7 @@ namespace org.apache.xml.dtm.@ref
 
 
 			parent = node;
-			while ((parent = outerInstance._parent(parent)) != org.apache.xml.dtm.DTM_Fields.NULL)
+			while ((parent = outerInstance._parent(parent)) != NULL)
 			{
 				if (++index == _stack.Length)
 				{
@@ -1487,7 +1480,7 @@ namespace org.apache.xml.dtm.@ref
 			   {
 				   if (_currentNode < _stack[_sp])
 				   {
-					   if (outerInstance._type(_currentNode) != org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE && outerInstance._type(_currentNode) != org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE)
+					   if (outerInstance._type(_currentNode) != ATTRIBUTE_NODE && outerInstance._type(_currentNode) != NAMESPACE_NODE)
 					   {
 						   return returnNode(outerInstance.makeNodeHandle(_currentNode));
 					   }
@@ -1497,7 +1490,7 @@ namespace org.apache.xml.dtm.@ref
 					   --_sp;
 				   }
 			   }
-			   return org.apache.xml.dtm.DTM_Fields.NULL;
+			   return NULL;
 		}
 
 		// redefine DTMAxisIteratorBase's reset
@@ -1563,7 +1556,7 @@ namespace org.apache.xml.dtm.@ref
 		  int node = _currentNode;
 		  int nodeType = _nodeType;
 
-		  if (nodeType >= DTM_Fields.NTYPES)
+		  if (nodeType >= DTM.NTYPES)
 		  {
 			while (true)
 			{
@@ -1571,14 +1564,14 @@ namespace org.apache.xml.dtm.@ref
 
 			  if (_sp < 0)
 			  {
-				node = org.apache.xml.dtm.DTM_Fields.NULL;
+				node = NULL;
 				break;
 			  }
 			  else if (node >= _stack[_sp])
 			  {
 				if (--_sp < 0)
 				{
-				  node = org.apache.xml.dtm.DTM_Fields.NULL;
+				  node = NULL;
 				  break;
 				}
 			  }
@@ -1598,21 +1591,21 @@ namespace org.apache.xml.dtm.@ref
 
 			  if (_sp < 0)
 			  {
-				node = org.apache.xml.dtm.DTM_Fields.NULL;
+				node = NULL;
 				break;
 			  }
 			  else if (node >= _stack[_sp])
 			  {
 				if (--_sp < 0)
 				{
-				  node = org.apache.xml.dtm.DTM_Fields.NULL;
+				  node = NULL;
 				  break;
 				}
 			  }
 			  else
 			  {
 				expType = outerInstance._exptype(node);
-				if (expType < DTM_Fields.NTYPES)
+				if (expType < DTM.NTYPES)
 				{
 				  if (expType == nodeType)
 				  {
@@ -1632,7 +1625,7 @@ namespace org.apache.xml.dtm.@ref
 
 		  _currentNode = node;
 
-		  return (node == org.apache.xml.dtm.DTM_Fields.NULL) ? org.apache.xml.dtm.DTM_Fields.NULL : returnNode(outerInstance.makeNodeHandle(node));
+		  return (node == NULL) ? NULL : returnNode(outerInstance.makeNodeHandle(node));
 		}
 	  } // end of TypedPrecedingIterator
 
@@ -1736,9 +1729,9 @@ namespace org.apache.xml.dtm.@ref
 
 		  _currentNode = m_traverser.next(_startNode, _currentNode);
 
-		  } while (node != DTM_Fields.NULL && (outerInstance.getExpandedTypeID(node) != _nodeType && outerInstance.getNodeType(node) != _nodeType));
+		  } while (node != DTM.NULL && (outerInstance.getExpandedTypeID(node) != _nodeType && outerInstance.getNodeType(node) != _nodeType));
 
-		  return (node == DTM_Fields.NULL ? DTM_Fields.NULL :returnNode(node));
+		  return (node == DTM.NULL ? DTM.NULL :returnNode(node));
 		}
 	  } // end of TypedFollowingIterator
 
@@ -1835,7 +1828,7 @@ namespace org.apache.xml.dtm.@ref
 		  {
 			int nodeID = outerInstance.makeNodeIdentity(node);
 
-			if (!_includeSelf && node != DTM_Fields.NULL)
+			if (!_includeSelf && node != DTM.NULL)
 			{
 			  nodeID = outerInstance._parent(nodeID);
 			  node = outerInstance.makeNodeHandle(nodeID);
@@ -1843,7 +1836,7 @@ namespace org.apache.xml.dtm.@ref
 
 			_startNode = node;
 
-			while (nodeID != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while (nodeID != END)
 			{
 			  m_ancestors.addElement(node);
 			  nodeID = outerInstance._parent(nodeID);
@@ -1851,7 +1844,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 			m_ancestorsPos = m_ancestors.size() - 1;
 
-			_currentNode = (m_ancestorsPos >= 0) ? m_ancestors.elementAt(m_ancestorsPos) : DTM_Fields.NULL;
+			_currentNode = (m_ancestorsPos >= 0) ? m_ancestors.elementAt(m_ancestorsPos) : DTM.NULL;
 
 			return resetPosition();
 		  }
@@ -1869,7 +1862,7 @@ namespace org.apache.xml.dtm.@ref
 
 		  m_ancestorsPos = m_ancestors.size() - 1;
 
-		  _currentNode = (m_ancestorsPos >= 0) ? m_ancestors.elementAt(m_ancestorsPos) : DTM_Fields.NULL;
+		  _currentNode = (m_ancestorsPos >= 0) ? m_ancestors.elementAt(m_ancestorsPos) : DTM.NULL;
 
 		  return resetPosition();
 		}
@@ -1883,10 +1876,9 @@ namespace org.apache.xml.dtm.@ref
 
 		  int next = _currentNode;
 
-//JAVA TO C# CONVERTER TODO TASK: The following line could not be converted:
 		  int pos = --m_ancestorsPos;
 
-		  _currentNode = (pos >= 0) ? m_ancestors.elementAt(m_ancestorsPos) : DTM_Fields.NULL;
+		  _currentNode = (pos >= 0) ? m_ancestors.elementAt(m_ancestorsPos) : DTM.NULL;
 
 		  return returnNode(next);
 		}
@@ -1899,7 +1891,7 @@ namespace org.apache.xml.dtm.@ref
 		public override void gotoMark()
 		{
 			m_ancestorsPos = m_markedPos;
-			_currentNode = m_ancestorsPos >= 0 ? m_ancestors.elementAt(m_ancestorsPos) : DTM_Fields.NULL;
+			_currentNode = m_ancestorsPos >= 0 ? m_ancestors.elementAt(m_ancestorsPos) : DTM.NULL;
 		}
 	  } // end of AncestorIterator
 
@@ -1947,16 +1939,16 @@ namespace org.apache.xml.dtm.@ref
 			int nodeID = outerInstance.makeNodeIdentity(node);
 			int nodeType = _nodeType;
 
-			if (!_includeSelf && node != DTM_Fields.NULL)
+			if (!_includeSelf && node != DTM.NULL)
 			{
 			  nodeID = outerInstance._parent(nodeID);
 			}
 
 			_startNode = node;
 
-			if (nodeType >= DTM_Fields.NTYPES)
+			if (nodeType >= DTM.NTYPES)
 			{
-			  while (nodeID != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			  while (nodeID != END)
 			  {
 				int eType = outerInstance._exptype(nodeID);
 
@@ -1969,11 +1961,11 @@ namespace org.apache.xml.dtm.@ref
 			}
 			else
 			{
-			  while (nodeID != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			  while (nodeID != END)
 			  {
 				int eType = outerInstance._exptype(nodeID);
 
-				if ((eType >= DTM_Fields.NTYPES && outerInstance.m_expandedNameTable.getType(eType) == nodeType) || (eType < DTM_Fields.NTYPES && eType == nodeType))
+				if ((eType >= DTM.NTYPES && outerInstance.m_expandedNameTable.getType(eType) == nodeType) || (eType < DTM.NTYPES && eType == nodeType))
 				{
 				  m_ancestors.addElement(outerInstance.makeNodeHandle(nodeID));
 				}
@@ -1982,7 +1974,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 			m_ancestorsPos = m_ancestors.size() - 1;
 
-			_currentNode = (m_ancestorsPos >= 0) ? m_ancestors.elementAt(m_ancestorsPos) : DTM_Fields.NULL;
+			_currentNode = (m_ancestorsPos >= 0) ? m_ancestors.elementAt(m_ancestorsPos) : DTM.NULL;
 
 			return resetPosition();
 		  }
@@ -2060,9 +2052,9 @@ namespace org.apache.xml.dtm.@ref
 		/// <returns> The next node handle in the iteration, or END. </returns>
 		public override int next()
 		{
-		  if (_startNode == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (_startNode == NULL)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 
 		  if (_includeSelf && (_currentNode + 1) == _startNode)
@@ -2078,12 +2070,12 @@ namespace org.apache.xml.dtm.@ref
 			node++;
 			type = outerInstance._type(node);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == type || !isDescendant(node))
+			if (NULL == type || !isDescendant(node))
 			{
-			  _currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
-			  return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			  _currentNode = NULL;
+			  return END;
 			}
-		  } while (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == type || org.apache.xml.dtm.DTM_Fields.TEXT_NODE == type || org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE == type);
+		  } while (ATTRIBUTE_NODE == type || TEXT_NODE == type || NAMESPACE_NODE == type);
 
 		  _currentNode = node;
 		  return returnNode(outerInstance.makeNodeHandle(node)); // make handle.
@@ -2143,9 +2135,9 @@ namespace org.apache.xml.dtm.@ref
 		  int node;
 		  int type;
 
-		  if (_startNode == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (_startNode == NULL)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 
 		  node = _currentNode;
@@ -2155,10 +2147,10 @@ namespace org.apache.xml.dtm.@ref
 			node++;
 			type = outerInstance._type(node);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == type || !isDescendant(node))
+			if (NULL == type || !isDescendant(node))
 			{
-			  _currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
-			  return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			  _currentNode = NULL;
+			  return END;
 			}
 		  } while (type != _nodeType && outerInstance._exptype(node) != _nodeType);
 
@@ -2201,7 +2193,7 @@ namespace org.apache.xml.dtm.@ref
 		  // I'm not exactly clear yet what this is doing... -sb
 		  int node;
 
-		  while ((node = base.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+		  while ((node = base.next()) != END)
 		  {
 			node = outerInstance.makeNodeIdentity(node);
 
@@ -2213,11 +2205,11 @@ namespace org.apache.xml.dtm.@ref
 			{
 			  int type = outerInstance._type(child);
 
-			  if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == type)
+			  if (ELEMENT_NODE == type)
 			  {
 				pos++;
 			  }
-			} while ((pos < _pos) && (child = outerInstance._nextsib(child)) != org.apache.xml.dtm.DTMAxisIterator_Fields.END);
+			} while ((pos < _pos) && (child = outerInstance._nextsib(child)) != END);
 
 			if (node == child)
 			{
@@ -2225,7 +2217,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return (org.apache.xml.dtm.DTMAxisIterator_Fields.END);
+		  return (END);
 		}
 	  } // end of NthDescendantIterator
 
@@ -2344,7 +2336,7 @@ namespace org.apache.xml.dtm.@ref
 //ORIGINAL LINE: final int result = _currentNode;
 		  int result = _currentNode;
 
-		  _currentNode = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  _currentNode = END;
 
 		  return returnNode(result);
 		}
@@ -2386,9 +2378,9 @@ namespace org.apache.xml.dtm.@ref
 		  int result = _currentNode;
 		  int nodeType = _nodeType;
 
-		  _currentNode = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  _currentNode = END;
 
-		  if (nodeType >= DTM_Fields.NTYPES)
+		  if (nodeType >= DTM.NTYPES)
 		  {
 			if (outerInstance.getExpandedTypeID(result) == nodeType)
 			{
@@ -2403,7 +2395,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  } // end of TypedSingletonIterator
 	}

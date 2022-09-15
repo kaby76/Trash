@@ -81,6 +81,7 @@ namespace org.apache.xml.dtm
 	  /// <summary>
 	  /// Null node handles are represented by this value.
 	  /// </summary>
+	  public static int NULL = -1;
 
 	  // These nodeType mnemonics and values are deliberately the same as those
 	  // used by the DOM, for convenient mapping
@@ -91,63 +92,78 @@ namespace org.apache.xml.dtm
 	  /// <summary>
 	  /// The node is a <code>Root</code>.
 	  /// </summary>
+	  public static short ROOT_NODE = 0;
 
 	  /// <summary>
 	  /// The node is an <code>Element</code>.
 	  /// </summary>
+	  public static short ELEMENT_NODE = 1;
 
 	  /// <summary>
 	  /// The node is an <code>Attr</code>.
 	  /// </summary>
+	  public static short ATTRIBUTE_NODE = 2;
 
 	  /// <summary>
 	  /// The node is a <code>Text</code> node.
 	  /// </summary>
+	  public static short TEXT_NODE = 3;
 
 	  /// <summary>
 	  /// The node is a <code>CDATASection</code>.
 	  /// </summary>
+	  public static short CDATA_SECTION_NODE = 4;
 
 	  /// <summary>
 	  /// The node is an <code>EntityReference</code>.
 	  /// </summary>
+	  public static short ENTITY_REFERENCE_NODE = 5;
 
 	  /// <summary>
 	  /// The node is an <code>Entity</code>.
 	  /// </summary>
+	  public static short ENTITY_NODE = 6;
 
 	  /// <summary>
 	  /// The node is a <code>ProcessingInstruction</code>.
 	  /// </summary>
+	  public static short PROCESSING_INSTRUCTION_NODE = 7;
 
 	  /// <summary>
 	  /// The node is a <code>Comment</code>.
 	  /// </summary>
+	  public static short COMMENT_NODE = 8;
 
 	  /// <summary>
 	  /// The node is a <code>Document</code>.
 	  /// </summary>
+	  public static short DOCUMENT_NODE = 9;
 
 	  /// <summary>
 	  /// The node is a <code>DocumentType</code>.
 	  /// </summary>
+	  public static short DOCUMENT_TYPE_NODE = 10;
 
 	  /// <summary>
 	  /// The node is a <code>DocumentFragment</code>.
 	  /// </summary>
+	  public static short DOCUMENT_FRAGMENT_NODE = 11;
 
 	  /// <summary>
 	  /// The node is a <code>Notation</code>.
 	  /// </summary>
+	  public static short NOTATION_NODE = 12;
 
 	  /// <summary>
 	  /// The node is a <code>namespace node</code>. Note that this is not
 	  /// currently a node type defined by the DOM API.
 	  /// </summary>
+	  public static short NAMESPACE_NODE = 13;
 
 	  /// <summary>
 	  /// The number of valid nodetypes.
 	  /// </summary>
+	  public static short NTYPES = 14;
 
 	  // ========= DTM Implementation Control Functions. ==============
 	  // %TBD% RETIRED -- do via setFeature if needed. Remove from impls.
@@ -180,9 +196,7 @@ namespace org.apache.xml.dtm
 	  /// <param name="axis"> One of Axes.ANCESTORORSELF, etc.
 	  /// </param>
 	  /// <returns> A DTMAxisIterator, or null if the givin axis isn't supported. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public DTMAxisTraverser getAxisTraverser(final int axis);
-	  DTMAxisTraverser getAxisTraverser(int axis);
+	  DTMAxisTraverser getAxisTraverser(in int axis);
 
 	  /// <summary>
 	  /// This is a shortcut to the iterators that implement
@@ -193,9 +207,7 @@ namespace org.apache.xml.dtm
 	  /// <param name="axis"> One of Axes.ANCESTORORSELF, etc.
 	  /// </param>
 	  /// <returns> A DTMAxisIterator, or null if the givin axis isn't supported. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public DTMAxisIterator getAxisIterator(final int axis);
-	  DTMAxisIterator getAxisIterator(int axis);
+	  DTMAxisIterator getAxisIterator(in int axis);
 
 	  /// <summary>
 	  /// Get an iterator that can navigate over an XPath Axis, predicated by
@@ -205,9 +217,7 @@ namespace org.apache.xml.dtm
 	  /// <param name="type"> An extended type ID.
 	  /// </param>
 	  /// <returns> A DTMAxisIterator, or null if the givin axis isn't supported. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public DTMAxisIterator getTypedAxisIterator(final int axis, final int type);
-	  DTMAxisIterator getTypedAxisIterator(int axis, int type);
+	  DTMAxisIterator getTypedAxisIterator(in int axis, in int type);
 
 	  /// <summary>
 	  /// Given a node handle, test if it has child nodes.
@@ -342,7 +352,7 @@ namespace org.apache.xml.dtm
 	  /// <param name="nodeHandle"> the id of the node. </param>
 	  /// <returns> int Node handle of owning document, or DTM.NULL if the node was
 	  /// a Document. </returns>
-	  /// <seealso cref= #getDocumentRoot(int nodeHandle) </seealso>
+	  /// <seealso cref=".getDocumentRoot(int nodeHandle)"/>
 	  int getOwnerDocument(int nodeHandle);
 
 	  /// <summary>
@@ -352,7 +362,7 @@ namespace org.apache.xml.dtm
 	  /// <returns> int Node handle of owning document, or the node itself if it was
 	  /// a Document. (Note difference from DOM, where getOwnerDocument returns
 	  /// null for the Document node.) </returns>
-	  /// <seealso cref= #getOwnerDocument(int nodeHandle) </seealso>
+	  /// <seealso cref=".getOwnerDocument(int nodeHandle)"/>
 	  int getDocumentRoot(int nodeHandle);
 
 	  /// <summary>
@@ -763,7 +773,7 @@ namespace org.apache.xml.dtm
 	  /// function.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(int nodeHandle, org.xml.sax.ContentHandler ch, boolean normalize) throws org.xml.sax.SAXException;
 	  void dispatchCharactersEvents(int nodeHandle, org.xml.sax.ContentHandler ch, bool normalize);
 
@@ -775,7 +785,7 @@ namespace org.apache.xml.dtm
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException;
 	  void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch);
 
@@ -898,26 +908,6 @@ namespace org.apache.xml.dtm
 	   /// This is used to support DTM sharing between multiple transformations. </summary>
 	   /// <param name="manager"> the DTMManager </param>
 	   void migrateTo(DTMManager manager);
-	}
-
-	public static class DTM_Fields
-	{
-	  public const int NULL = -1;
-	  public const short ROOT_NODE = 0;
-	  public const short ELEMENT_NODE = 1;
-	  public const short ATTRIBUTE_NODE = 2;
-	  public const short TEXT_NODE = 3;
-	  public const short CDATA_SECTION_NODE = 4;
-	  public const short ENTITY_REFERENCE_NODE = 5;
-	  public const short ENTITY_NODE = 6;
-	  public const short PROCESSING_INSTRUCTION_NODE = 7;
-	  public const short COMMENT_NODE = 8;
-	  public const short DOCUMENT_NODE = 9;
-	  public const short DOCUMENT_TYPE_NODE = 10;
-	  public const short DOCUMENT_FRAGMENT_NODE = 11;
-	  public const short NOTATION_NODE = 12;
-	  public const short NAMESPACE_NODE = 13;
-	  public const short NTYPES = 14;
 	}
 
 }

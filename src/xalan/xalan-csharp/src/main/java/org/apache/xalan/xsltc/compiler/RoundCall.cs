@@ -45,14 +45,14 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Get two copies of the argument on the stack
 			argument().translate(classGen, methodGen);
-					il.append(new INVOKESTATIC(cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "roundF", "(D)D")));
+					il.append(new INVOKESTATIC(cpg.addMethodref(BASIS_LIBRARY_CLASS, "roundF", "(D)D")));
 		}
 	}
 

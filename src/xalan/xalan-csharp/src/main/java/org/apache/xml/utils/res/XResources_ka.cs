@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils.res
 {
-
 	//
 	//  LangResources_en.properties
 	//
@@ -45,15 +44,15 @@ namespace org.apache.xml.utils.res
 				new object[] {"ui_language", "ka"},
 				new object[] {"help_language", "ka"},
 				new object[] {"language", "ka"},
-				new object[] {"alphabet", new CharArrayWrapper(new char[]{0x10D0, 0x10D1, 0x10D2, 0x10D3, 0x10D4, 0x10D5, 0x10D6, 0x10f1, 0x10D7, 0x10D8, 0x10D9, 0x10DA, 0x10DB, 0x10DC, 0x10f2, 0x10DD, 0x10DE, 0x10DF, 0x10E0, 0x10E1, 0x10E2, 0x10E3, 0x10E4, 0x10E5, 0x10E6, 0x10E7, 0x10E8, 0x10E9, 0x10EA, 0x10EB, 0x10EC, 0x10ED, 0x10EE, 0x10F4, 0x10EF, 0x10F0})},
+				new object[] {"alphabet", new CharArrayWrapper(new char[]{(char)0x10D0, (char)0x10D1, (char)0x10D2, (char)0x10D3, (char)0x10D4, (char)0x10D5, (char)0x10D6, (char)0x10f1, (char)0x10D7, (char)0x10D8, (char)0x10D9, (char)0x10DA, (char)0x10DB, (char)0x10DC, (char)0x10f2, (char)0x10DD, (char)0x10DE, (char)0x10DF, (char)0x10E0, (char)0x10E1, (char)0x10E2, (char)0x10E3, (char)0x10E4, (char)0x10E5, (char)0x10E6, (char)0x10E7, (char)0x10E8, (char)0x10E9, (char)0x10EA, (char)0x10EB, (char)0x10EC, (char)0x10ED, (char)0x10EE, (char)0x10F4, (char)0x10EF, (char)0x10F0})},
 				new object[] {"tradAlphabet", new CharArrayWrapper(new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'})},
 				new object[] {"orientation", "LeftToRight"},
 				new object[] {"numbering", "additive"},
 				new object[] {"numberGroups", new IntArrayWrapper(new int[]{1000, 100, 10, 1})},
-				new object[] {"digits", new CharArrayWrapper(new char[]{0x10D0, 0x10D1, 0x10D2, 0x10D3, 0x10D4, 0x10D5, 0x10D6, 0x10f1, 0x10D7})},
-				new object[] {"tens", new CharArrayWrapper(new char[]{0x10D8, 0x10D9, 0x10DA, 0x10DB, 0x10DC, 0x10f2, 0x10DD, 0x10DE, 0x10DF})},
-				new object[] {"hundreds", new CharArrayWrapper(new char[]{0x10E0, 0x10E1, 0x10E2, 0x10E3, 0x10E4, 0x10E5, 0x10E6, 0x10E7, 0x10E8})},
-				new object[] {"thousands", new CharArrayWrapper(new char[]{0x10E9, 0x10EA, 0x10EB, 0x10EC, 0x10ED, 0x10EE, 0x10F4, 0x10EF, 0x10F0})},
+				new object[] {"digits", new CharArrayWrapper(new char[]{(char)0x10D0, (char)0x10D1, (char)0x10D2, (char)0x10D3, (char)0x10D4, (char)0x10D5, (char)0x10D6, (char)0x10f1, (char)0x10D7})},
+				new object[] {"tens", new CharArrayWrapper(new char[]{(char)0x10D8, (char)0x10D9, (char)0x10DA, (char)0x10DB, (char)0x10DC, (char)0x10f2, (char)0x10DD, (char)0x10DE, (char)0x10DF})},
+				new object[] {"hundreds", new CharArrayWrapper(new char[]{(char)0x10E0, (char)0x10E1, (char)0x10E2, (char)0x10E3, (char)0x10E4, (char)0x10E5, (char)0x10E6, (char)0x10E7, (char)0x10E8})},
+				new object[] {"thousands", new CharArrayWrapper(new char[]{(char)0x10E9, (char)0x10EA, (char)0x10EB, (char)0x10EC, (char)0x10ED, (char)0x10EE, (char)0x10F4, (char)0x10EF, (char)0x10F0})},
 				new object[] {"tables", new StringArrayWrapper(new string[]{"thousands", "hundreds", "tens", "digits"})}
 			};
 		  }

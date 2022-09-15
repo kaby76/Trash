@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -22,7 +20,9 @@
  */
 namespace org.apache.xalan.xsltc.dom
 {
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using DOMEnhancedForDTM = org.apache.xalan.xsltc.DOMEnhancedForDTM;
+	using StripFilter = org.apache.xalan.xsltc.StripFilter;
 	using AbstractTranslet = org.apache.xalan.xsltc.runtime.AbstractTranslet;
 	using Hashtable = org.apache.xalan.xsltc.runtime.Hashtable;
 	using DTM = org.apache.xml.dtm.DTM;
@@ -53,8 +53,8 @@ namespace org.apache.xalan.xsltc.dom
 		/// <param name="translet"> A translet that also implements the StripFilter
 		/// interface.
 		/// </param>
-		/// <seealso cref= org.apache.xml.dtm.DTMWSFilter </seealso>
-		/// <seealso cref= org.apache.xalan.xsltc.StripFilter </seealso>
+		/// <seealso cref="org.apache.xml.dtm.DTMWSFilter"/>
+		/// <seealso cref="org.apache.xalan.xsltc.StripFilter"/>
 		public DOMWSFilter(AbstractTranslet translet)
 		{
 			m_translet = translet;
@@ -124,21 +124,21 @@ namespace org.apache.xalan.xsltc.dom
 				}
 				else
 				{
-					return org.apache.xml.dtm.DTMWSFilter_Fields.INHERIT;
+					return INHERIT;
 				}
 
 				if (m_filter.stripSpace(dom, node, type))
 				{
-					return org.apache.xml.dtm.DTMWSFilter_Fields.STRIP;
+					return STRIP;
 				}
 				else
 				{
-					return org.apache.xml.dtm.DTMWSFilter_Fields.NOTSTRIP;
+					return NOTSTRIP;
 				}
 			}
 			else
 			{
-				return org.apache.xml.dtm.DTMWSFilter_Fields.NOTSTRIP;
+				return NOTSTRIP;
 			}
 		}
 	}

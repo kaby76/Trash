@@ -34,9 +34,9 @@ namespace org.apache.xml.serializer
 	/// faster lookup of an index by qName, which is commonly done in the stream
 	/// serializer.
 	/// </summary>
-	/// <seealso cref= org.xml.sax.Attributes
+	/// <seealso cref="org.xml.sax.Attributes"
 	/// 
-	/// @xsl.usage internal </seealso>
+	/// @xsl.usage internal/>
 	public sealed class AttributesImplSerializer : AttributesImpl
 	{
 		/// <summary>
@@ -67,12 +67,12 @@ namespace org.apache.xml.serializer
 		/// This method gets the index of an attribute given its qName. </summary>
 		/// <param name="qname"> the qualified name of the attribute, e.g. "prefix1:locName1" </param>
 		/// <returns> the integer index of the attribute. </returns>
-		/// <seealso cref= org.xml.sax.Attributes#getIndex(String) </seealso>
+		/// <seealso cref="org.xml.sax.Attributes.getIndex(String)"/>
 		public int getIndex(string qname)
 		{
 			int index;
 
-			if (base.Length < MAX)
+			if (base.getLength() < MAX)
 			{
 				// if we haven't got too many attributes let the
 				// super class look it up
@@ -101,11 +101,11 @@ namespace org.apache.xml.serializer
 		/// <param name="type"> the type of the attribute </param>
 		/// <param name="val"> the value of the attribute
 		/// </param>
-		/// <seealso cref= org.xml.sax.helpers.AttributesImpl#addAttribute(String, String, String, String, String) </seealso>
-		/// <seealso cref= #getIndex(String) </seealso>
+		/// <seealso cref="org.xml.sax.helpers.AttributesImpl.addAttribute(String, String, String, String, String)"/>
+		/// <seealso cref=".getIndex(String)"/>
 		public void addAttribute(string uri, string local, string qname, string type, string val)
 		{
-			int index = base.Length;
+			int index = base.getLength();
 			base.addAttribute(uri, local, qname, type, val);
 			// (index + 1) is now the number of attributes
 			// so either compare (index+1) to MAX, or compare index to (MAX-1)
@@ -162,11 +162,11 @@ namespace org.apache.xml.serializer
 		/// <summary>
 		/// This method clears the accumulated attributes.
 		/// </summary>
-		/// <seealso cref= org.xml.sax.helpers.AttributesImpl#clear() </seealso>
+		/// <seealso cref="org.xml.sax.helpers.AttributesImpl.clear()"/>
 		public void clear()
 		{
 
-			int len = base.Length;
+			int len = base.getLength();
 			base.clear();
 			if (MAX <= len)
 			{
@@ -182,19 +182,19 @@ namespace org.apache.xml.serializer
 		/// it also keeps the hashtable up to date for quick lookup via
 		/// getIndex(qName). </summary>
 		/// <param name="atts"> the attributes to copy into these attributes. </param>
-		/// <seealso cref= org.xml.sax.helpers.AttributesImpl#setAttributes(Attributes) </seealso>
-		/// <seealso cref= #getIndex(String) </seealso>
+		/// <seealso cref="org.xml.sax.helpers.AttributesImpl.setAttributes(Attributes)"/>
+		/// <seealso cref=".getIndex(String)"/>
 		public Attributes Attributes
 		{
 			set
 			{
     
-				base.Attributes = value;
+				base.setAttributes(value);
     
 				// we've let the super class add the attributes, but
 				// we need to keep the hash table up to date ourselves for the
 				// potentially new qName/index pairs for quick lookup. 
-				int numAtts = value.Length;
+				int numAtts = value.getLength();
 				if (MAX <= numAtts)
 				{
 					switchOverToHash(numAtts);
@@ -208,12 +208,12 @@ namespace org.apache.xml.serializer
 		/// <param name="uri"> the URI of the attribute name. </param>
 		/// <param name="localName"> the local namer (after the ':' ) of the attribute name. </param>
 		/// <returns> the integer index of the attribute. </returns>
-		/// <seealso cref= org.xml.sax.Attributes#getIndex(String) </seealso>
+		/// <seealso cref="org.xml.sax.Attributes.getIndex(String)"/>
 		public int getIndex(string uri, string localName)
 		{
 			int index;
 
-			if (base.Length < MAX)
+			if (base.getLength() < MAX)
 			{
 				// if we haven't got too many attributes let the
 				// super class look it up

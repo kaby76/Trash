@@ -25,7 +25,6 @@ namespace org.apache.xpath
 {
 
 
-
 	using ExpressionContext = org.apache.xalan.extensions.ExpressionContext;
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using Axis = org.apache.xml.dtm.Axis;
@@ -293,7 +292,7 @@ namespace org.apache.xpath
 
 	  /// <summary>
 	  /// Create an XPathContext instance.  This is equivalent to calling
-	  /// the <seealso cref="#XPathContext(boolean)"/> constructor with the value
+	  /// the <seealso cref="XPathContext(bool)"/> constructor with the value
 	  /// <code>true</code>.
 	  /// </summary>
 	  public XPathContext() : this(true)
@@ -318,18 +317,18 @@ namespace org.apache.xpath
 			  InstanceFieldsInitialized = true;
 		  }
 		m_prefixResolvers.push(null);
-		m_currentNodes.push(org.apache.xml.dtm.DTM_Fields.NULL);
-		m_currentExpressionNodes.push(org.apache.xml.dtm.DTM_Fields.NULL);
+		m_currentNodes.push(DTM.NULL);
+		m_currentExpressionNodes.push(DTM.NULL);
 		m_saxLocations.push(null);
 		m_variableStacks = recursiveVarContext ? new VariableStack() : new VariableStack(1);
 	  }
 
 	  /// <summary>
 	  /// Create an XPathContext instance.  This is equivalent to calling the
-	  /// constructor <seealso cref="#XPathContext(java.lang.Object,boolean)"/> with the
+	  /// constructor <seealso cref="XPathContext(object,bool)"/> with the
 	  /// value of the second parameter set to <code>true</code>. </summary>
 	  /// <param name="owner"> Value that can be retrieved via the getOwnerObject() method. </param>
-	  /// <seealso cref= #getOwnerObject </seealso>
+	  /// <seealso cref=".getOwnerObject"/>
 	  public XPathContext(object owner) : this(owner, true)
 	  {
 		  if (!InstanceFieldsInitialized)
@@ -342,7 +341,7 @@ namespace org.apache.xpath
 	  /// <summary>
 	  /// Create an XPathContext instance. </summary>
 	  /// <param name="owner"> Value that can be retrieved via the getOwnerObject() method. </param>
-	  /// <seealso cref= #getOwnerObject </seealso>
+	  /// <seealso cref=".getOwnerObject"/>
 	  /// <param name="recursiveVarContext"> A <code>boolean</code> value indicating whether
 	  ///             the XPath context needs to support pushing of scopes for
 	  ///             variable resolution </param>
@@ -372,7 +371,7 @@ namespace org.apache.xpath
 		  // These couldn't be disposed of earlier (see comments in release()); zap them now.
 		  if (m_rtfdtm_stack != null)
 		  {
-			   for (System.Collections.IEnumerator e = m_rtfdtm_stack.elements(); e.MoveNext();)
+			   for (System.Collections.IEnumerator e = m_rtfdtm_stack.GetEnumerator(); e.MoveNext();)
 			   {
 				   m_dtmManager.release((DTM)e.Current, true);
 			   }
@@ -401,8 +400,8 @@ namespace org.apache.xpath
 		m_prefixResolvers.removeAllElements();
 
 		m_prefixResolvers.push(null);
-		m_currentNodes.push(org.apache.xml.dtm.DTM_Fields.NULL);
-		m_currentExpressionNodes.push(org.apache.xml.dtm.DTM_Fields.NULL);
+		m_currentNodes.push(DTM.NULL);
+		m_currentExpressionNodes.push(DTM.NULL);
 		m_saxLocations.push(null);
 	  }
 
@@ -465,7 +464,7 @@ namespace org.apache.xpath
 	  /// The owner context of this XPathContext.  In the case of XSLT, this will be a
 	  ///  Transformer object.
 	  /// </summary>
-	  private Method m_ownerGetErrorListener;
+	  private System.Reflection.MethodInfo m_ownerGetErrorListener;
 
 	  /// <summary>
 	  /// Get the "owner" context of this context, which should be,
@@ -656,7 +655,7 @@ namespace org.apache.xpath
 	  /// <param name="msg"> The assertion message, which should be informative.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if b is false. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void assertion(boolean b, String msg) throws javax.xml.transform.TransformerException
 	  private void assertion(bool b, string msg)
 	  {
@@ -678,9 +677,9 @@ namespace org.apache.xpath
 	  /// <summary>
 	  /// The current context node list.
 	  /// </summary>
-	  private Stack m_contextNodeLists = new Stack();
+	  private System.Collections.Stack m_contextNodeLists = new System.Collections.Stack();
 
-	  public virtual Stack ContextNodeListsStack
+	  public virtual System.Collections.Stack ContextNodeListsStack
 	  {
 		  get
 		  {
@@ -1025,9 +1024,9 @@ namespace org.apache.xpath
 	  /// <summary>
 	  /// Stack of AxesIterators.
 	  /// </summary>
-	  private Stack m_axesIteratorStack = new Stack();
+	  private System.Collections.Stack m_axesIteratorStack = new System.Collections.Stack();
 
-	  public virtual Stack AxesIteratorStackStacks
+	  public virtual System.Collections.Stack AxesIteratorStackStacks
 	  {
 		  get
 		  {
@@ -1082,6 +1081,7 @@ namespace org.apache.xpath
 	  {
 		  get
 		  {
+	//JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
 			return m_axesIteratorStack.Count == 0 ? null : (SubContextList) m_axesIteratorStack.elementAt(0);
 		  }
 	  }
@@ -1233,7 +1233,7 @@ namespace org.apache.xpath
 		/// Get the value of a node as a string. </summary>
 		/// <param name="n"> Node to be converted to a string.  May be null. </param>
 		/// <returns> value of n as a string, or an empty string if n is null. </returns>
-		public virtual string ToString(org.w3c.dom.Node n)
+		public virtual string toString(org.w3c.dom.Node n)
 		{
 		  // %REVIEW% You can't get much uglier than this...
 		  int nodeHandle = outerInstance.getDTMHandleFromNode(n);
@@ -1248,7 +1248,7 @@ namespace org.apache.xpath
 		/// <returns> The evaluated value of the variable. </returns>
 		/// <exception cref="javax.xml.transform.TransformerException"> </exception>
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.apache.xpath.objects.XObject getVariableOrParam(org.apache.xml.utils.QName qname) throws javax.xml.transform.TransformerException
 		public XObject getVariableOrParam(org.apache.xml.utils.QName qname)
 		{
@@ -1461,7 +1461,7 @@ namespace org.apache.xpath
 		}
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Iterator iter = (m_DTMXRTreeFrags.values()).iterator();
-		IEnumerator iter = (m_DTMXRTreeFrags.Values).GetEnumerator();
+		System.Collections.IEnumerator iter = (m_DTMXRTreeFrags.Values).GetEnumerator();
 		while (iter.MoveNext())
 		{
 		  DTMXRTreeFrag frag = (DTMXRTreeFrag)iter.Current;

@@ -21,7 +21,6 @@
 namespace org.apache.xalan.xsltc.dom
 {
 
-
 	/// <summary>
 	/// @author Morten Jorgensen
 	/// </summary>

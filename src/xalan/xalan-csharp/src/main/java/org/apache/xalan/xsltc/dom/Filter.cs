@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	/// <summary>
 	/// @author Jacek Ambroziak
 	/// @author Santiago Pericas-Geertsen

@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.dtm
 {
-
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
 	using XMLMessages = org.apache.xml.res.XMLMessages;
 	using PrefixResolver = org.apache.xml.utils.PrefixResolver;
@@ -126,7 +125,7 @@ namespace org.apache.xml.dtm
 	  /// </returns>
 	  /// <exception cref="DTMConfigurationException">
 	  /// if the implementation is not available or cannot be instantiated. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static DTMManager newInstance(org.apache.xml.utils.XMLStringFactory xsf) throws DTMConfigurationException
 	  public static DTMManager newInstance(XMLStringFactory xsf)
 	  {

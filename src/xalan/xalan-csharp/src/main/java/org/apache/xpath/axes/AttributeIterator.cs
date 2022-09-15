@@ -22,15 +22,14 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 
 	/// <summary>
 	/// This class implements an optimized iterator for
 	/// attribute axes patterns. </summary>
-	/// <seealso cref= org.apache.xpath.axes#ChildTestIterator
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="org.apache.xpath.axes.ChildTestIterator"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class AttributeIterator : ChildTestIterator
 	{
@@ -44,7 +43,7 @@ namespace org.apache.xpath.axes
 	  /// location path expression for this itterator.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: AttributeIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis) throws javax.xml.transform.TransformerException
 	  internal AttributeIterator(Compiler compiler, int opPos, int analysis) : base(compiler, opPos, analysis)
 	  {
@@ -57,7 +56,7 @@ namespace org.apache.xpath.axes
 	  {
 		  get
 		  {
-			m_lastFetched = (org.apache.xml.dtm.DTM_Fields.NULL == m_lastFetched) ? m_cdtm.getFirstAttribute(m_context) : m_cdtm.getNextAttribute(m_lastFetched);
+			m_lastFetched = (DTM.NULL == m_lastFetched) ? m_cdtm.getFirstAttribute(m_context) : m_cdtm.getNextAttribute(m_lastFetched);
 			return m_lastFetched;
 		  }
 	  }

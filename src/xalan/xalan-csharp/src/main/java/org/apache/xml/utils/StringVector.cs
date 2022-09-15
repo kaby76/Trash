@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// A very simple table that stores a list of strings, optimized
 	/// for small lists.
@@ -169,7 +168,7 @@ namespace org.apache.xml.utils
 
 		for (int i = 0; i < m_firstFree; i++)
 		{
-		  if (m_map[i].Equals(s, StringComparison.CurrentCultureIgnoreCase))
+		  if (m_map[i].Equals(s, StringComparison.OrdinalIgnoreCase))
 		  {
 			return true;
 		  }

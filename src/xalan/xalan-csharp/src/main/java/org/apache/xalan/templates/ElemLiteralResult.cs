@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.templates
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
@@ -44,8 +43,8 @@ namespace org.apache.xalan.templates
 
 	/// <summary>
 	/// Implement a Literal Result Element. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemLiteralResult : ElemUse
 	{
@@ -89,12 +88,12 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
 		base.compose(sroot);
-		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		StylesheetRoot.ComposeState cstate = sroot.ComposeState;
 		ArrayList vnames = cstate.VariableNames;
 		if (null != m_avts)
 		{
@@ -114,13 +113,13 @@ namespace org.apache.xalan.templates
 	  /// other than attributes with names in the XSLT namespace.
 	  /// @serial
 	  /// </summary>
-	  private IList m_avts = null;
+	  private System.Collections.IList m_avts = null;
 
 	  /// <summary>
 	  /// List of attributes with the XSLT namespace.
 	  ///  @serial 
 	  /// </summary>
-	  private IList m_xslAttr = null;
+	  private System.Collections.IList m_xslAttr = null;
 
 	  /// <summary>
 	  /// Set a literal result attribute (AVTs only).
@@ -157,28 +156,25 @@ namespace org.apache.xalan.templates
 	  /// A text node is preserved if an ancestor element of the text node
 	  /// has an xml:space attribute with a value of preserve, and
 	  /// no closer ancestor element has xml:space with a value of default. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a> </seealso>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Creating-Text">section-Creating-Text in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"/>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Creating-Text">section-Creating-Text in XSLT Specification</a>"
+	  ////>
 	  /// <param name="avt">  Enumerated value, either Constants.ATTRVAL_PRESERVE 
 	  /// or Constants.ATTRVAL_STRIP. </param>
-	  public virtual AVT XmlSpace
+	  public virtual void setXmlSpace(AVT avt)
 	  {
-		  set
-		  {
-			// This function is a bit-o-hack, I guess...
-			addLiteralResultAttribute(value);
-			string val = value.SimpleString;
-			if (val.Equals("default"))
-			{
-			  base.XmlSpace = Constants.ATTRVAL_STRIP;
-			}
-			else if (val.Equals("preserve"))
-			{
-			  base.XmlSpace = Constants.ATTRVAL_PRESERVE;
-			}
-			// else maybe it's a real AVT, so we can't resolve it at this time.
-		  }
+		// This function is a bit-o-hack, I guess...
+		addLiteralResultAttribute(avt);
+		string val = avt.SimpleString;
+		if (val.Equals("default"))
+		{
+		  base.setXmlSpace(Constants.ATTRVAL_STRIP);
+		}
+		else if (val.Equals("preserve"))
+		{
+		  base.setXmlSpace(Constants.ATTRVAL_PRESERVE);
+		}
+		// else maybe it's a real AVT, so we can't resolve it at this time.
 	  }
 
 	  /// <summary>
@@ -284,8 +280,8 @@ namespace org.apache.xalan.templates
 	  /// Get whether or not the passed URL is flagged by
 	  /// the "extension-element-prefixes" or "exclude-result-prefixes"
 	  /// properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#extension-element">extension-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.extension-element">extension-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="prefix"> non-null reference to prefix that might be excluded.(not currently used) </param>
 	  /// <param name="uri"> reference to namespace that prefix maps to
 	  /// </param>
@@ -329,7 +325,7 @@ namespace org.apache.xalan.templates
 	  /// the superclass has resolved the tables.
 	  /// </summary>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void resolvePrefixTables() throws javax.xml.transform.TransformerException
 	  public override void resolvePrefixTables()
 	  {
@@ -406,7 +402,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  internal override bool needToCheckExclude()
 	  {
-		if (null == m_excludeResultPrefixes && null == PrefixTable && m_ExtensionElementURIs == null) // JJK Bugzilla 1133
+		if (null == m_excludeResultPrefixes && null == PrefixTable && m_ExtensionElementURIs == null)
 		{
 		  return false;
 		}
@@ -511,7 +507,7 @@ namespace org.apache.xalan.templates
 		  get
 		  {
 				int len = m_rawName.Length - m_localName.Length - 1;
-			return (len > 0) ? m_rawName.Substring(0,len) : "";
+			return (len > 0) ? m_rawName.Substring(0, len) : "";
 		  }
 		  set
 		  {
@@ -528,8 +524,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "extension-element-prefixes" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#extension-element">extension-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.extension-element">extension-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Vector of URIs (not prefixes) to set as the "extension-element-prefixes" property </param>
 	  public virtual StringVector ExtensionElementPrefixes
 	  {
@@ -539,8 +535,8 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
-	  /// <seealso cref= org.w3c.dom.Node
-	  /// </seealso>
+	  /// <seealso cref="org.w3c.dom.Node"
+	  ////>
 	  /// <returns> NamedNodeMap </returns>
 	  public override NamedNodeMap Attributes
 	  {
@@ -610,7 +606,7 @@ namespace org.apache.xalan.templates
 							 localName = name.Substring(index + 1);
 					}
 					Node retNode = null;
-					IEnumerator eum = outerInstance.m_avts.GetEnumerator();
+					System.Collections.IEnumerator eum = outerInstance.m_avts.GetEnumerator();
 					while (eum.MoveNext())
 					{
 							AVT avt = (AVT) eum.Current;
@@ -642,7 +638,7 @@ namespace org.apache.xalan.templates
 						  return null;
 					  }
 					  Node retNode = null;
-					  IEnumerator eum = outerInstance.m_avts.GetEnumerator();
+					  System.Collections.IEnumerator eum = outerInstance.m_avts.GetEnumerator();
 					  while (eum.MoveNext())
 					  {
 						AVT avt = (AVT) eum.Current;
@@ -678,15 +674,15 @@ namespace org.apache.xalan.templates
 					}
 			  }
 
-			  /// <seealso cref= org.w3c.dom.NamedNodeMap
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.NamedNodeMap"
+			  ////>
 			  /// <param name="name"> of the node to remove
 			  /// </param>
 			  /// <returns> The node removed from this map if a node with such 
 			  /// a name exists. 
 			  /// </returns>
 			  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node removeNamedItem(String name) throws org.w3c.dom.DOMException
 			  public virtual Node removeNamedItem(string name)
 			  {
@@ -694,8 +690,8 @@ namespace org.apache.xalan.templates
 					  return null;
 			  }
 
-			  /// <seealso cref= org.w3c.dom.NamedNodeMap
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.NamedNodeMap"
+			  ////>
 			  /// <param name="namespaceURI"> Namespace URI of the node to remove </param>
 			  /// <param name="localName"> Local part of qualified name of the node to remove
 			  /// </param>
@@ -703,7 +699,7 @@ namespace org.apache.xalan.templates
 			  ///  name and namespace URI exists
 			  /// </returns>
 			  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node removeNamedItemNS(String namespaceURI, String localName) throws org.w3c.dom.DOMException
 			  public virtual Node removeNamedItemNS(string namespaceURI, string localName)
 			  {
@@ -720,7 +716,7 @@ namespace org.apache.xalan.templates
 			  /// Node is returned, otherwise null is returned
 			  /// </returns>
 			  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node setNamedItem(org.w3c.dom.Node arg) throws org.w3c.dom.DOMException
 			  public virtual Node setNamedItem(Node arg)
 			  {
@@ -737,7 +733,7 @@ namespace org.apache.xalan.templates
 			  /// Node is returned, otherwise null is returned
 			  /// </returns>
 			  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node setNamedItemNS(org.w3c.dom.Node arg) throws org.w3c.dom.DOMException
 			  public virtual Node setNamedItemNS(Node arg)
 			  {
@@ -763,14 +759,14 @@ namespace org.apache.xalan.templates
 					m_owner = elem;
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <param name="newChild"> New node to append to the list of this node's 
 			  /// children
 			  /// 
 			  /// </param>
 			  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node appendChild(org.w3c.dom.Node newChild) throws org.w3c.dom.DOMException
 			  public virtual Node appendChild(Node newChild)
 			  {
@@ -778,8 +774,8 @@ namespace org.apache.xalan.templates
 					  return null;
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <param name="deep"> Flag indicating whether to clone deep 
 			  /// (clone member variables)
 			  /// </param>
@@ -789,8 +785,8 @@ namespace org.apache.xalan.templates
 					  return new Attribute(outerInstance, m_attribute, m_owner);
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> null </returns>
 			  public virtual NamedNodeMap Attributes
 			  {
@@ -800,8 +796,8 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> a NodeList containing no nodes.  </returns>
 			  public virtual NodeList ChildNodes
 			  {
@@ -820,21 +816,21 @@ namespace org.apache.xalan.templates
 					  this.outerInstance = outerInstance;
 				  }
 
-				  public virtual int Length
+				  public int Length
 				  {
 					  get
 					  {
 							  return 0;
 					  }
 				  }
-				  public virtual Node item(int index)
+				  public Node item(int index)
 				  {
 						  return null;
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> null </returns>
 			  public virtual Node FirstChild
 			  {
@@ -844,8 +840,8 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> null </returns>
 			  public virtual Node LastChild
 			  {
@@ -855,8 +851,8 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> the local part of the qualified name of this node </returns>
 			  public virtual string LocalName
 			  {
@@ -866,8 +862,8 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> The namespace URI of this node, or null if it is 
 			  /// unspecified </returns>
 			  public virtual string NamespaceURI
@@ -879,8 +875,8 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> null </returns>
 			  public virtual Node NextSibling
 			  {
@@ -890,8 +886,8 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> The name of the attribute </returns>
 			  public virtual string NodeName
 			  {
@@ -903,8 +899,8 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> The node is an Attr </returns>
 			  public virtual short NodeType
 			  {
@@ -914,12 +910,12 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> The value of the attribute
 			  /// </returns>
 			  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getNodeValue() throws org.w3c.dom.DOMException
 			  public virtual string NodeValue
 			  {
@@ -933,19 +929,19 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> null </returns>
 			  public virtual Document OwnerDocument
 			  {
 				  get
 				  {
-					return m_owner.OwnerDocument;
+					return m_owner.getOwnerDocument();
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> the containing element node </returns>
 			  public virtual Node ParentNode
 			  {
@@ -955,8 +951,8 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> The namespace prefix of this node, or null if it is 
 			  /// unspecified </returns>
 			  public virtual string Prefix
@@ -969,8 +965,8 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> null </returns>
 			  public virtual Node PreviousSibling
 			  {
@@ -980,31 +976,31 @@ namespace org.apache.xalan.templates
 				  }
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> false </returns>
 			  public virtual bool hasAttributes()
 			  {
 					  return false;
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> false </returns>
 			  public virtual bool hasChildNodes()
 			  {
 					  return false;
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <param name="newChild"> New child node to insert </param>
 			  /// <param name="refChild"> Insert in front of this child
 			  /// </param>
 			  /// <returns> null
 			  /// </returns>
 			  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node insertBefore(org.w3c.dom.Node newChild, org.w3c.dom.Node refChild) throws org.w3c.dom.DOMException
 			  public virtual Node insertBefore(Node newChild, Node refChild)
 			  {
@@ -1012,8 +1008,8 @@ namespace org.apache.xalan.templates
 					  return null;
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <returns> Returns <code>false</code>
 			  /// @since DOM Level 2 </returns>
 			  public virtual bool isSupported(string feature, string version)
@@ -1021,19 +1017,19 @@ namespace org.apache.xalan.templates
 				return false;
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node </seealso>
+			  /// <seealso cref="org.w3c.dom.Node "/>
 			  public virtual void normalize()
 			  {
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <param name="oldChild"> Child to be removed
 			  /// </param>
 			  /// <returns> null
 			  /// </returns>
 			  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node removeChild(org.w3c.dom.Node oldChild) throws org.w3c.dom.DOMException
 			  public virtual Node removeChild(Node oldChild)
 			  {
@@ -1041,15 +1037,15 @@ namespace org.apache.xalan.templates
 					  return null;
 			  }
 
-			  /// <seealso cref= org.w3c.dom.Node
-			  /// </seealso>
+			  /// <seealso cref="org.w3c.dom.Node"
+			  ////>
 			  /// <param name="newChild"> Replace existing child with this one </param>
 			  /// <param name="oldChild"> Existing child to be replaced
 			  /// </param>
 			  /// <returns> null
 			  /// </returns>
 			  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node replaceChild(org.w3c.dom.Node newChild, org.w3c.dom.Node oldChild) throws org.w3c.dom.DOMException
 			  public virtual Node replaceChild(Node newChild, Node oldChild)
 			  {
@@ -1162,7 +1158,7 @@ namespace org.apache.xalan.templates
 				return this == other;
 			}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setTextContent(String textContent) throws org.w3c.dom.DOMException
 			public virtual string TextContent
 			{
@@ -1177,7 +1173,7 @@ namespace org.apache.xalan.templates
 			}
 
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public short compareDocumentPosition(org.w3c.dom.Node other) throws org.w3c.dom.DOMException
 			  public virtual short compareDocumentPosition(Node other)
 			  {
@@ -1195,14 +1191,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "extension-element-prefix" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#extension-element">extension-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.extension-element">extension-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of URI ("extension-element-prefix" property) to get
 	  /// </param>
 	  /// <returns> URI at given index ("extension-element-prefix" property)
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getExtensionElementPrefix(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual string getExtensionElementPrefix(int i)
 	  {
@@ -1217,8 +1213,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "extension-element-prefixes" Strings. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#extension-element">extension-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.extension-element">extension-element in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of "extension-element-prefixes" Strings </returns>
 	  public virtual int ExtensionElementPrefixCount
 	  {
@@ -1230,8 +1226,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Find out if the given "extension-element-prefix" property is defined. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#extension-element">extension-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.extension-element">extension-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="uri"> The URI to find
 	  /// </param>
 	  /// <returns> True if the given URI is found </returns>
@@ -1248,8 +1244,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for this element </returns>
 	  public override int XSLToken
 	  {
@@ -1281,8 +1277,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "version" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#forwards">forwards in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.forwards">forwards in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Version property value to set </param>
 	  public virtual string Version
 	  {
@@ -1296,6 +1292,10 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "version" property. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.forwards">forwards in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// The "exclude-result-prefixes" property.
@@ -1311,8 +1311,8 @@ namespace org.apache.xalan.templates
 	  /// xsl:exclude-result-prefixes attribute; a subtree rooted
 	  /// at an xsl:stylesheet element does not include any stylesheets
 	  /// imported or included by children of that xsl:stylesheet element. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> vector of prefixes that are resolvable to strings. </param>
 	  public virtual StringVector ExcludeResultPrefixes
 	  {
@@ -1332,7 +1332,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> True if the given namespace should be excluded
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private boolean excludeResultNSDecl(String prefix, String uri) throws javax.xml.transform.TransformerException
 	  private bool excludeResultNSDecl(string prefix, string uri)
 	  {
@@ -1349,12 +1349,12 @@ namespace org.apache.xalan.templates
 	  /// Copy a Literal Result Element into the Result tree, copy the
 	  /// non-excluded namespace attributes, copy the attributes not
 	  /// of the XSLT namespace, and execute the children of the LRE. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 		public override void execute(TransformerImpl transformer)
 		{
@@ -1497,7 +1497,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> an Enumeration of the literal result attributes associated
 	  /// with this element. </returns>
-	  public virtual IEnumerator enumerateLiteralResultAttributes()
+	  public virtual System.Collections.IEnumerator enumerateLiteralResultAttributes()
 	  {
 		return (null == m_avts) ? null : m_avts.GetEnumerator();
 	  }

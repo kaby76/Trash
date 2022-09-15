@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Text;
 
 /*
@@ -25,7 +26,6 @@ using System.Text;
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 
 	using JavaClass = org.apache.bcel.classfile.JavaClass;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
@@ -196,7 +196,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		private void reset()
 		{
-		_nextGType = org.apache.xml.dtm.DTM_Fields.NTYPES;
+		_nextGType = DTM.NTYPES;
 		_elements = new Hashtable();
 		_attributes = new Hashtable();
 		_namespaces = new Hashtable();
@@ -274,16 +274,16 @@ namespace org.apache.xalan.xsltc.compiler
 			// Open input stream from URL and wrap inside InputSource
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.InputStream stream = url.openStream();
-			System.IO.Stream stream = url.openStream();
+			Stream stream = url.openStream();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.xml.sax.InputSource input = new org.xml.sax.InputSource(stream);
 			InputSource input = new InputSource(stream);
-			input.SystemId = url.ToString();
+			input.setSystemId(url.ToString());
 			return compile(input, _className);
 		}
 		catch (IOException e)
 		{
-			_parser.reportError(Constants_Fields.FATAL, new ErrorMsg(e));
+			_parser.reportError(Constants.FATAL, new ErrorMsg(e));
 			return false;
 		}
 		}
@@ -299,16 +299,16 @@ namespace org.apache.xalan.xsltc.compiler
 			// Open input stream from URL and wrap inside InputSource
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.InputStream stream = url.openStream();
-			System.IO.Stream stream = url.openStream();
+			Stream stream = url.openStream();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.xml.sax.InputSource input = new org.xml.sax.InputSource(stream);
 			InputSource input = new InputSource(stream);
-			input.SystemId = url.ToString();
+			input.setSystemId(url.ToString());
 			return compile(input, name);
 		}
 		catch (IOException e)
 		{
-			_parser.reportError(Constants_Fields.FATAL, new ErrorMsg(e));
+			_parser.reportError(Constants.FATAL, new ErrorMsg(e));
 			return false;
 		}
 		}
@@ -318,12 +318,12 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <param name="stream"> An InputStream that will pass in the stylesheet contents </param>
 		/// <param name="name"> The name of the translet class to generate </param>
 		/// <returns> 'true' if the compilation was successful </returns>
-		public bool compile(System.IO.Stream stream, string name)
+		public bool compile(Stream stream, string name)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.xml.sax.InputSource input = new org.xml.sax.InputSource(stream);
 		InputSource input = new InputSource(stream);
-		input.SystemId = name; // We have nothing else!!!
+		input.setSystemId(name); // We have nothing else!!!
 		return compile(input, name);
 		}
 
@@ -343,7 +343,7 @@ namespace org.apache.xalan.xsltc.compiler
 			string systemId = null;
 			if (input != null)
 			{
-				systemId = input.SystemId;
+				systemId = input.getSystemId();
 			}
 
 			// Set the translet class name if not already set
@@ -406,9 +406,10 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 		catch (Exception e)
 		{
-			/*if (_debug)*/	 Console.WriteLine(e.ToString());
-	 Console.Write(e.StackTrace);
-			_parser.reportError(Constants_Fields.FATAL, new ErrorMsg(e));
+			/*if (_debug)*/
+			Console.WriteLine(e.ToString());
+			Console.Write(e.StackTrace);
+			_parser.reportError(Constants.FATAL, new ErrorMsg(e));
 		}
 		catch (Exception e)
 		{
@@ -417,7 +418,7 @@ namespace org.apache.xalan.xsltc.compiler
 				Console.WriteLine(e.ToString());
 				Console.Write(e.StackTrace);
 			}
-			_parser.reportError(Constants_Fields.FATAL, new ErrorMsg(e));
+			_parser.reportError(Constants.FATAL, new ErrorMsg(e));
 		}
 		finally
 		{
@@ -464,7 +465,7 @@ namespace org.apache.xalan.xsltc.compiler
 			// Traverse all elements in the vector and compile
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Enumeration urls = stylesheets.elements();
-			System.Collections.IEnumerator urls = stylesheets.elements();
+			System.Collections.IEnumerator urls = stylesheets.GetEnumerator();
 			while (urls.MoveNext())
 			{
 			_className = null; // reset, so that new name will be computed
@@ -497,7 +498,7 @@ namespace org.apache.xalan.xsltc.compiler
 	//ORIGINAL LINE: final byte[][] result = new byte[count][1];
 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
 //ORIGINAL LINE: sbyte[][] result = new sbyte[count][1];
-			sbyte[][] result = RectangularArrays.ReturnRectangularSbyteArray(count, 1);
+			sbyte[][] result = RectangularArrays.RectangularSbyteArray(count, 1);
 			for (int i = 0; i < count; i++)
 			{
 				result[i] = (sbyte[])_classes[i];
@@ -679,11 +680,9 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Convert for Java class name of local system file name.
 		/// (Replace '.' with '/' on UNIX and replace '.' by '\' on Windows/DOS.)
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private String classFileName(final String className)
-		private string classFileName(string className)
+		private string classFileName(in string className)
 		{
-		return className.Replace('.', System.IO.Path.DirectorySeparatorChar) + ".class";
+		return className.Replace('.', Path.DirectorySeparatorChar) + ".class";
 		}
 
 		/// <summary>
@@ -930,7 +929,7 @@ namespace org.apache.xalan.xsltc.compiler
 			int currentNodeID = _stylesheetNSAncestorPointers.Count;
 			_stylesheetNSAncestorPointers.Add(new int?(ancestorID));
 
-			IEnumerator prefixMapIterator = prefixMap.SetOfKeyValuePairs().GetEnumerator();
+			System.Collections.IEnumerator prefixMapIterator = prefixMap.SetOfKeyValuePairs().GetEnumerator();
 			int prefixNSPairStartIdx = _prefixURIPairs.Count;
 			_prefixURIPairsIdx.Add(new int?(prefixNSPairStartIdx));
 
@@ -1036,8 +1035,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		if (_outputType == FILE_OUTPUT || _outputType == BYTEARRAY_AND_FILE_OUTPUT)
 		{
-			File outFile = getOutputFile(clazz.ClassName);
-			string parentDir = outFile.Parent;
+			File outFile = getOutputFile(clazz.getClassName());
+			string parentDir = outFile.getParent();
 			if (!string.ReferenceEquals(parentDir, null))
 			{
 				  File parentFile = new File(parentDir);
@@ -1053,7 +1052,7 @@ namespace org.apache.xalan.xsltc.compiler
 			switch (_outputType)
 			{
 			case FILE_OUTPUT:
-			clazz.dump(new BufferedOutputStream(new System.IO.FileStream(getOutputFile(clazz.ClassName), System.IO.FileMode.Create, System.IO.FileAccess.Write)));
+			clazz.dump(new BufferedOutputStream(new FileStream(getOutputFile(clazz.getClassName()), FileMode.Create, FileAccess.Write)));
 			break;
 			case JAR_OUTPUT:
 			_bcelClasses.Add(clazz);
@@ -1062,13 +1061,13 @@ namespace org.apache.xalan.xsltc.compiler
 			case BYTEARRAY_AND_FILE_OUTPUT:
 			case BYTEARRAY_AND_JAR_OUTPUT:
 			case CLASSLOADER_OUTPUT:
-			System.IO.MemoryStream @out = new System.IO.MemoryStream(2048);
+			MemoryStream @out = new MemoryStream(2048);
 			clazz.dump(@out);
 			_classes.Add(@out.toByteArray());
 
 			if (_outputType == BYTEARRAY_AND_FILE_OUTPUT)
 			{
-			  clazz.dump(new BufferedOutputStream(new System.IO.FileStream(getOutputFile(clazz.ClassName), System.IO.FileMode.Create, System.IO.FileAccess.Write)));
+			  clazz.dump(new BufferedOutputStream(new FileStream(getOutputFile(clazz.getClassName()), FileMode.Create, FileAccess.Write)));
 			}
 			else if (_outputType == BYTEARRAY_AND_JAR_OUTPUT)
 			{
@@ -1088,17 +1087,17 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// File separators are converted to forward slashes for ZIP files.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private String entryName(java.io.File f) throws java.io.IOException
 		private string entryName(File f)
 		{
-		return f.Name.replace(System.IO.Path.DirectorySeparatorChar, '/');
+		return f.getName().replace(Path.DirectorySeparatorChar, '/');
 		}
 
 		/// <summary>
 		/// Generate output JAR-file and packages
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void outputToJar() throws java.io.IOException
 		public void outputToJar()
 		{
@@ -1108,14 +1107,14 @@ namespace org.apache.xalan.xsltc.compiler
 		Manifest manifest = new Manifest();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.jar.Attributes atrs = manifest.getMainAttributes();
-		java.util.jar.Attributes atrs = manifest.MainAttributes;
+		java.util.jar.Attributes atrs = manifest.getMainAttributes();
 		atrs.put(java.util.jar.Attributes.Name.MANIFEST_VERSION,"1.2");
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Map map = manifest.getEntries();
-		IDictionary map = manifest.Entries;
+		System.Collections.IDictionary map = manifest.getEntries();
 		// create manifest
-		System.Collections.IEnumerator classes = _bcelClasses.elements();
+		System.Collections.IEnumerator classes = _bcelClasses.GetEnumerator();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String now = (new java.util.Date()).toString();
 		string now = (DateTime.Now).ToString();
@@ -1129,7 +1128,7 @@ namespace org.apache.xalan.xsltc.compiler
 			JavaClass clazz = (JavaClass)classes.Current;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String className = clazz.getClassName().replace('.','/');
-			string className = clazz.ClassName.replace('.','/');
+			string className = clazz.getClassName().replace('.','/');
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.jar.Attributes attr = new java.util.jar.Attributes();
 			java.util.jar.Attributes attr = new java.util.jar.Attributes();
@@ -1142,8 +1141,8 @@ namespace org.apache.xalan.xsltc.compiler
 		File jarFile = new File(_destDir, _jarFileName);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.jar.JarOutputStream jos = new java.util.jar.JarOutputStream(new java.io.FileOutputStream(jarFile), manifest);
-		JarOutputStream jos = new JarOutputStream(new System.IO.FileStream(jarFile, System.IO.FileMode.Create, System.IO.FileAccess.Write), manifest);
-		classes = _bcelClasses.elements();
+		JarOutputStream jos = new JarOutputStream(new FileStream(jarFile, FileMode.Create, FileAccess.Write), manifest);
+		classes = _bcelClasses.GetEnumerator();
 		while (classes.MoveNext())
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -1151,11 +1150,11 @@ namespace org.apache.xalan.xsltc.compiler
 			JavaClass clazz = (JavaClass)classes.Current;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String className = clazz.getClassName().replace('.','/');
-			string className = clazz.ClassName.replace('.','/');
+			string className = clazz.getClassName().replace('.','/');
 			jos.putNextEntry(new JarEntry(className + ".class"));
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream(2048);
-			System.IO.MemoryStream @out = new System.IO.MemoryStream(2048);
+			MemoryStream @out = new MemoryStream(2048);
 			clazz.dump(@out); // dump() closes it's output stream
 			@out.writeTo(jos);
 		}

@@ -98,7 +98,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <exception cref="java.lang.ArrayIndexOutOfBoundsException">
 	  ///  if index doesn't map to a string.
 	  ///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String indexToString(int i) throws java.lang.ArrayIndexOutOfBoundsException
 	  public virtual string indexToString(int i)
 	  {
@@ -161,7 +161,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// </summary>
 	  public static void Main(string[] args)
 	  {
-		string[] word = new string[] {"Zero","One","Two","Three","Four","Five", "Six","Seven","Eight","Nine","Ten", "Eleven","Twelve","Thirteen","Fourteen","Fifteen", "Sixteen","Seventeen","Eighteen","Nineteen","Twenty", "Twenty-One","Twenty-Two","Twenty-Three","Twenty-Four", "Twenty-Five","Twenty-Six","Twenty-Seven","Twenty-Eight", "Twenty-Nine","Thirty","Thirty-One","Thirty-Two", "Thirty-Three","Thirty-Four","Thirty-Five","Thirty-Six", "Thirty-Seven","Thirty-Eight","Thirty-Nine"};
+		string[] word = new string[] {"Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty", "Twenty-One", "Twenty-Two", "Twenty-Three", "Twenty-Four", "Twenty-Five", "Twenty-Six", "Twenty-Seven", "Twenty-Eight", "Twenty-Nine", "Thirty", "Thirty-One", "Thirty-Two", "Thirty-Three", "Thirty-Four", "Thirty-Five", "Thirty-Six", "Thirty-Seven", "Thirty-Eight", "Thirty-Nine"};
 
 		DTMStringPool pool = new DTMStringPool();
 

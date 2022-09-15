@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.serializer
 {
-
 	/// <summary>
 	/// This class is a stack frame that consists of 
 	/// information about the element currently being processed 
@@ -141,9 +140,7 @@ namespace org.apache.xml.serializer
 		/// </summary>
 		/// <param name="previous"> The "stack frame" corresponding to the new
 		/// elements parent element. </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private ElemContext(final ElemContext previous)
-		private ElemContext(ElemContext previous)
+		private ElemContext(in ElemContext previous)
 		{
 			m_prev = previous;
 			m_currentElemDepth = previous.m_currentElemDepth + 1;
@@ -198,9 +195,7 @@ namespace org.apache.xml.serializer
 		/// can be null. </param>
 		/// <param name="qName"> The qualified name (with prefix, if any) 
 		/// of the element, this parameter is required. </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: final ElemContext push(final String uri, final String localName, final String qName)
-		internal ElemContext push(string uri, string localName, string qName)
+		internal ElemContext push(in string uri, in string localName, in string qName)
 		{
 			ElemContext frame = this.m_next;
 			if (frame == null)

@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using MethodGenerator = org.apache.xalan.xsltc.compiler.util.MethodGenerator;
@@ -39,7 +38,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public UnaryOpExpr(Expression left)
 		{
-		(_left = left).Parent = this;
+		(_left = left).setParent(this);
 		}
 
 		/// <summary>
@@ -68,7 +67,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -101,7 +100,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void translate(ClassGenerator classGen, MethodGenerator methodGen)
 		{
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		_left.translate(classGen, methodGen);
 		il.append(_type.NEG());
 		}

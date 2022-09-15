@@ -60,7 +60,7 @@ namespace org.apache.xpath.axes
 	  /// Get an instance of the given object in this pool 
 	  /// </summary>
 	  /// <returns> An instance of the given object </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized org.apache.xml.dtm.DTMIterator getInstanceOrThrow() throws CloneNotSupportedException
 	  public DTMIterator InstanceOrThrow
 	  {
@@ -78,7 +78,7 @@ namespace org.apache.xpath.axes
 				else
 				{
 				  // Remove object from end of free pool.
-				  DTMIterator result = (DTMIterator)m_freeStack.Remove(m_freeStack.Count - 1);
+				  DTMIterator result = (DTMIterator)m_freeStack.RemoveAndReturn(m_freeStack.Count - 1);
 				  return result;
 				}
 			  }
@@ -112,7 +112,7 @@ namespace org.apache.xpath.axes
 				else
 				{
 				  // Remove object from end of free pool.
-				  DTMIterator result = (DTMIterator)m_freeStack.Remove(m_freeStack.Count - 1);
+				  DTMIterator result = (DTMIterator)m_freeStack.RemoveAndReturn(m_freeStack.Count - 1);
 				  return result;
 				}
 			  }

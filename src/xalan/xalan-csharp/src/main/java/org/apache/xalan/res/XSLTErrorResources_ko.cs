@@ -21,7 +21,6 @@
 namespace org.apache.xalan.res
 {
 
-
 	/// <summary>
 	/// Set up error messages.
 	/// We build a two dimensional array of message keys and
@@ -617,7 +616,7 @@ namespace org.apache.xalan.res
 				new object[] {"version2", "<<<<<<<"},
 				new object[] {"yes", "\uc608"},
 				new object[] {"line", "\ud589 #"},
-				new object[] {"column","\uc5f4 #"},
+				new object[] {"column", "\uc5f4 #"},
 				new object[] {"xsldone", "XSLProcessor: \uc644\ub8cc"},
 				new object[] {"xslProc_option", "Xalan-J \uba85\ub839\ud589 \ud504\ub85c\uc138\uc2a4 \ud074\ub798\uc2a4 \uc635\uc158:"},
 				new object[] {"xslProc_option", "Xalan-J \uba85\ub839\ud589 \ud504\ub85c\uc138\uc2a4 \ud074\ub798\uc2a4 \uc635\uc158\u003a"},
@@ -677,8 +676,8 @@ namespace org.apache.xalan.res
 				new object[] {"optionXN", "[-XN(\ud15c\ud50c\ub9ac\ud2b8 \uc778\ub77c\uc774\ub2dd \uc0ac\uc6a9 \uac00\ub2a5)]"},
 				new object[] {"optionXX", "[-XX(\ucd94\uac00 \ub514\ubc84\uae45 \uba54\uc2dc\uc9c0 \ucd9c\ub825 \ucf1c\uae30)]"},
 				new object[] {"optionXT", "[-XT(\uac00\ub2a5\ud55c \uacbd\uc6b0, translet\uc744 \uc0ac\uc6a9\ud558\uc5ec \ubcc0\ud658)]"},
-				new object[] {"diagTiming","--------- {1}\uc744(\ub97c) \ud1b5\ud55c {0} \ubcc0\ud658\uc5d0 {2}ms\uac00 \uc18c\uc694\ub418\uc5c8\uc2b5\ub2c8\ub2e4."},
-				new object[] {"recursionTooDeep","\ud15c\ud50c\ub9ac\ud2b8 \uc911\ucca9\uc774 \ub108\ubb34 \ub9ce\uc2b5\ub2c8\ub2e4. \uc911\ucca9 = {0}, \ud15c\ud50c\ub9ac\ud2b8 {1} {2}"},
+				new object[] {"diagTiming", "--------- {1}\uc744(\ub97c) \ud1b5\ud55c {0} \ubcc0\ud658\uc5d0 {2}ms\uac00 \uc18c\uc694\ub418\uc5c8\uc2b5\ub2c8\ub2e4."},
+				new object[] {"recursionTooDeep", "\ud15c\ud50c\ub9ac\ud2b8 \uc911\ucca9\uc774 \ub108\ubb34 \ub9ce\uc2b5\ub2c8\ub2e4. \uc911\ucca9 = {0}, \ud15c\ud50c\ub9ac\ud2b8 {1} {2}"},
 				new object[] {"nameIs", "\uc774\ub984"},
 				new object[] {"matchPatternIs", "\uc77c\uce58 \ud328\ud134"}
 			};
@@ -727,12 +726,12 @@ namespace org.apache.xalan.res
 	  ///   <param name="className"> the name of the class that implements the resource bundle. </param>
 	  ///   <returns> the ResourceBundle </returns>
 	  ///   <exception cref="MissingResourceException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static final XSLTErrorResources loadResourceBundle(String className) throws java.util.MissingResourceException
 	  public static XSLTErrorResources loadResourceBundle(string className)
 	  {
 
-		Locale locale = Locale.Default;
+		Locale locale = Locale.getDefault();
 		string suffix = getResourceSuffix(locale);
 
 		try
@@ -770,8 +769,8 @@ namespace org.apache.xalan.res
 	  private static string getResourceSuffix(Locale locale)
 	  {
 
-		string suffix = "_" + locale.Language;
-		string country = locale.Country;
+		string suffix = "_" + locale.getLanguage();
+		string country = locale.getCountry();
 
 		if (country.Equals("TW"))
 		{

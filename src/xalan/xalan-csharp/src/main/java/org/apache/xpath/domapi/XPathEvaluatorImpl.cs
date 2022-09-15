@@ -23,6 +23,7 @@ namespace org.apache.xpath.domapi
 {
 
 	using PrefixResolver = org.apache.xml.utils.PrefixResolver;
+	using XPath = org.apache.xpath.XPath;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
 	using XPATHMessages = org.apache.xpath.res.XPATHMessages;
 	using DOMException = org.w3c.dom.DOMException;
@@ -50,9 +51,9 @@ namespace org.apache.xpath.domapi
 	/// sources that may provide support for special extension functions or 
 	/// variables which are not defined in this specification.</p>
 	/// </summary>
-	/// <seealso cref= org.w3c.dom.xpath.XPathEvaluator
+	/// <seealso cref="org.w3c.dom.xpath.XPathEvaluator"
 	/// 
-	/// @xsl.usage internal </seealso>
+	/// @xsl.usage internal/>
 	public sealed class XPathEvaluatorImpl : XPathEvaluator
 	{
 
@@ -75,7 +76,7 @@ namespace org.apache.xpath.domapi
 			/// <exception cref="DOMException">
 			///   NAMESPACE_ERR: Always throws this exceptionn
 			/// </exception>
-			/// <seealso cref= org.apache.xml.utils.PrefixResolver#getNamespaceForPrefix(String, Node) </seealso>
+			/// <seealso cref="org.apache.xml.utils.PrefixResolver.getNamespaceForPrefix(String, Node)"/>
 			public virtual string getNamespaceForPrefix(string prefix, Node context)
 			{
 				string fmsg = XPATHMessages.createXPATHMessage(XPATHErrorResources.ER_NULL_RESOLVER, null);
@@ -85,19 +86,19 @@ namespace org.apache.xpath.domapi
 			/// <exception cref="DOMException">
 			///   NAMESPACE_ERR: Always throws this exceptionn
 			/// </exception>
-			/// <seealso cref= org.apache.xml.utils.PrefixResolver#getNamespaceForPrefix(String) </seealso>
+			/// <seealso cref="org.apache.xml.utils.PrefixResolver.getNamespaceForPrefix(String)"/>
 			public virtual string getNamespaceForPrefix(string prefix)
 			{
 				return getNamespaceForPrefix(prefix,null);
 			}
 
-			/// <seealso cref= org.apache.xml.utils.PrefixResolver#handlesNullPrefixes() </seealso>
+			/// <seealso cref="org.apache.xml.utils.PrefixResolver.handlesNullPrefixes()"/>
 			public virtual bool handlesNullPrefixes()
 			{
 				return false;
 			}
 
-			/// <seealso cref= org.apache.xml.utils.PrefixResolver#getBaseIdentifier() </seealso>
+			/// <seealso cref="org.apache.xml.utils.PrefixResolver.getBaseIdentifier()"/>
 			public virtual string BaseIdentifier
 			{
 				get
@@ -156,9 +157,9 @@ namespace org.apache.xpath.domapi
 		///   which cannot be resolved by the specified 
 		///   <code>XPathNSResolver</code>.	
 		/// </exception>
-		/// <seealso cref= org.w3c.dom.xpath.XPathEvaluator#createExpression(String, XPathNSResolver) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public org.w3c.dom.xpath.XPathExpression createExpression(String expression, org.w3c.dom.xpath.XPathNSResolver resolver) throws org.w3c.dom.xpath.XPathException, org.w3c.dom.DOMException
+		/// <seealso cref="org.w3c.dom.xpath.XPathEvaluator.createExpression(String, XPathNSResolver)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public org.w3c.dom.xpath.XPathExpression createExpression(String expression, org.w3c.dom.xpath.XPathNSResolver resolver) throws XPathException, org.w3c.dom.DOMException
 		public XPathExpression createExpression(string expression, XPathNSResolver resolver)
 		{
 
@@ -177,11 +178,11 @@ namespace org.apache.xpath.domapi
 				// Error found in DOM Level 3 XPath Test Suite.
 				if (e is XPathStylesheetDOM3Exception)
 				{
-					throw new DOMException(DOMException.NAMESPACE_ERR,e.MessageAndLocation);
+					throw new DOMException(DOMException.NAMESPACE_ERR,e.getMessageAndLocation());
 				}
 				else
 				{
-					throw new XPathException(XPathException.INVALID_EXPRESSION_ERR,e.MessageAndLocation);
+					throw new XPathException(XPathException.INVALID_EXPRESSION_ERR,e.getMessageAndLocation());
 				}
 
 			}
@@ -201,11 +202,11 @@ namespace org.apache.xpath.domapi
 		/// <returns> <code>XPathNSResolver</code> which resolves namespaces with 
 		///   respect to the definitions in scope for a specified node.
 		/// </returns>
-		/// <seealso cref= org.w3c.dom.xpath.XPathEvaluator#createNSResolver(Node) </seealso>
+		/// <seealso cref="org.w3c.dom.xpath.XPathEvaluator.createNSResolver(Node)"/>
 		public XPathNSResolver createNSResolver(Node nodeResolver)
 		{
 
-			return new XPathNSResolverImpl((nodeResolver.NodeType == Node.DOCUMENT_NODE) ? ((Document) nodeResolver).DocumentElement : nodeResolver);
+			return new XPathNSResolverImpl((nodeResolver.getNodeType() == Node.DOCUMENT_NODE) ? ((Document) nodeResolver).getDocumentElement() : nodeResolver);
 		}
 
 		/// <summary>
@@ -257,9 +258,9 @@ namespace org.apache.xpath.domapi
 		///   <br>NOT_SUPPORTED_ERR: The Node is not a type permitted as an XPath 
 		///   context node.
 		/// </exception>
-		/// <seealso cref= org.w3c.dom.xpath.XPathEvaluator#evaluate(String, Node, XPathNSResolver, short, XPathResult) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public Object evaluate(String expression, org.w3c.dom.Node contextNode, org.w3c.dom.xpath.XPathNSResolver resolver, short type, Object result) throws org.w3c.dom.xpath.XPathException, org.w3c.dom.DOMException
+		/// <seealso cref="org.w3c.dom.xpath.XPathEvaluator.evaluate(String, Node, XPathNSResolver, short, XPathResult)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public Object evaluate(String expression, org.w3c.dom.Node contextNode, org.w3c.dom.xpath.XPathNSResolver resolver, short type, Object result) throws XPathException, org.w3c.dom.DOMException
 		public object evaluate(string expression, Node contextNode, XPathNSResolver resolver, short type, object result)
 		{
 

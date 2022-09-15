@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.trace
 {
-
 	/// <summary>
 	/// Extends TraceListener but adds a SelectEnd event.
 	/// @xsl.usage advanced
@@ -35,7 +34,7 @@ namespace org.apache.xalan.trace
 	  /// <param name="ev"> the generate event.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void selectEnd(EndSelectionEvent ev) throws javax.xml.transform.TransformerException;
 	  void selectEnd(EndSelectionEvent ev);
 

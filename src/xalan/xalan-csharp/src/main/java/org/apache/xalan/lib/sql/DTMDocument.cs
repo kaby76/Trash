@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +24,6 @@
 
 namespace org.apache.xalan.lib.sql
 {
-
 
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
@@ -55,7 +55,7 @@ namespace org.apache.xalan.lib.sql
 		/// <param name="node">
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(org.w3c.dom.Node node)throws org.xml.sax.SAXException;
 		void characters(Node node);
 	  }
@@ -136,10 +136,10 @@ namespace org.apache.xalan.lib.sql
 		// m_level.setElementAt((byte)(level), data);
 		m_parent.setElementAt(elementIdx, data);
 
-		m_prevsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, data);
-		m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, data);
-		m_attribute.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, data);
-		m_firstch.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, data);
+		m_prevsib.setElementAt(DTM.NULL, data);
+		m_nextsib.setElementAt(DTM.NULL, data);
+		m_attribute.setElementAt(DTM.NULL, data);
+		m_firstch.setElementAt(DTM.NULL, data);
 
 		return elementIdx;
 	  }
@@ -151,7 +151,7 @@ namespace org.apache.xalan.lib.sql
 	  ///  </param>
 	  protected internal virtual int addElement(int level, int extendedType, int parent, int prevsib)
 	  {
-		int node = org.apache.xml.dtm.DTM_Fields.NULL;
+		int node = DTM.NULL;
 
 		try
 		{
@@ -159,19 +159,19 @@ namespace org.apache.xalan.lib.sql
 		  node = allocateNodeObject(S_ELEMENT_NODE);
 
 		  m_exptype.setElementAt(extendedType, node);
-		  m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, node);
+		  m_nextsib.setElementAt(DTM.NULL, node);
 		  m_prevsib.setElementAt(prevsib, node);
 
 		  m_parent.setElementAt(parent, node);
-		  m_firstch.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, node);
+		  m_firstch.setElementAt(DTM.NULL, node);
 		  // m_level.setElementAt((byte)level, node);
-		  m_attribute.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, node);
+		  m_attribute.setElementAt(DTM.NULL, node);
 
-		  if (prevsib != org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (prevsib != DTM.NULL)
 		  {
 			// If the previous sibling is already assigned, then we are
 			// inserting a value into the chain.
-			if (m_nextsib.elementAt(prevsib) != org.apache.xml.dtm.DTM_Fields.NULL)
+			if (m_nextsib.elementAt(prevsib) != DTM.NULL)
 			{
 			  m_nextsib.setElementAt(m_nextsib.elementAt(prevsib), node);
 			}
@@ -185,7 +185,7 @@ namespace org.apache.xalan.lib.sql
 		  // first child of the parent. Since we chained the node in the list,
 		  // there should be no reason to worry about the current first child
 		  // of the parent node.
-		  if ((parent != org.apache.xml.dtm.DTM_Fields.NULL) && (m_prevsib.elementAt(node) == org.apache.xml.dtm.DTM_Fields.NULL))
+		  if ((parent != DTM.NULL) && (m_prevsib.elementAt(node) == DTM.NULL))
 		  {
 			m_firstch.setElementAt(node, parent);
 		  }
@@ -210,9 +210,9 @@ namespace org.apache.xalan.lib.sql
 	  ///  </param>
 	  protected internal virtual int addAttributeToNode(object o, int extendedType, int pnode)
 	  {
-		int attrib = org.apache.xml.dtm.DTM_Fields.NULL;
+		int attrib = DTM.NULL;
 		//int prevsib = DTM.NULL;
-		int lastattrib = org.apache.xml.dtm.DTM_Fields.NULL;
+		int lastattrib = DTM.NULL;
 		// int value = DTM.NULL;
 
 		try
@@ -220,20 +220,20 @@ namespace org.apache.xalan.lib.sql
 		  // Add the Node and adjust its Extended Type
 		  attrib = allocateNodeObject(o);
 
-		  m_attribute.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, attrib);
+		  m_attribute.setElementAt(DTM.NULL, attrib);
 		  m_exptype.setElementAt(extendedType, attrib);
 		  // m_level.setElementAt((byte)0, attrib);
 
 		  // Clear the sibling references
-		  m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, attrib);
-		  m_prevsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,attrib);
+		  m_nextsib.setElementAt(DTM.NULL, attrib);
+		  m_prevsib.setElementAt(DTM.NULL,attrib);
 		  // Set the parent, although the was we are using attributes
 		  // in the SQL extension this reference will more than likly
 		  // be wrong
 		  m_parent.setElementAt(pnode, attrib);
-		  m_firstch.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, attrib);
+		  m_firstch.setElementAt(DTM.NULL, attrib);
 
-		  if (m_attribute.elementAt(pnode) != org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (m_attribute.elementAt(pnode) != DTM.NULL)
 		  {
 			// OK, we already have an attribute assigned to this
 			// Node, Insert us into the head of the list.
@@ -265,7 +265,7 @@ namespace org.apache.xalan.lib.sql
 	  {
 	   try
 	   {
-		  if (m_attribute.elementAt(toNode) != org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (m_attribute.elementAt(toNode) != DTM.NULL)
 		  {
 			error("Cloneing Attributes, where from Node already had addtibures assigned");
 		  }
@@ -288,14 +288,14 @@ namespace org.apache.xalan.lib.sql
 			Console.WriteLine("getFirstAttribute(" + parm1 + ")");
 		}
 		int nodeIdx = makeNodeIdentity(parm1);
-		if (nodeIdx != org.apache.xml.dtm.DTM_Fields.NULL)
+		if (nodeIdx != DTM.NULL)
 		{
 		  int attribIdx = m_attribute.elementAt(nodeIdx);
 		  return makeNodeHandle(attribIdx);
 		}
 		else
 		{
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return DTM.NULL;
 		}
 	  }
 
@@ -398,7 +398,7 @@ namespace org.apache.xalan.lib.sql
 	  /// nodes are to be concatenated. </param>
 	  protected internal virtual void getNodeData(int nodeIdx, FastStringBuffer buf)
 	  {
-		for (int child = _firstch(nodeIdx) ; child != org.apache.xml.dtm.DTM_Fields.NULL ; child = _nextsib(child))
+		for (int child = _firstch(nodeIdx) ; child != DTM.NULL ; child = _nextsib(child))
 		{
 		  object o = m_ObjectArray.getAt(child);
 		  if (o == S_ELEMENT_NODE)
@@ -424,13 +424,13 @@ namespace org.apache.xalan.lib.sql
 		{
 			Console.WriteLine("getNextAttribute(" + nodeIdx + ")");
 		}
-		if (nodeIdx != org.apache.xml.dtm.DTM_Fields.NULL)
+		if (nodeIdx != DTM.NULL)
 		{
 			return makeNodeHandle(m_nextsib.elementAt(nodeIdx));
 		}
 		else
 		{
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return DTM.NULL;
 		}
 	  }
 
@@ -467,9 +467,9 @@ namespace org.apache.xalan.lib.sql
 	  /// </summary>
 	  protected internal virtual void createExpandedNameTable()
 	  {
-		m_Document_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_DOCUMENT, org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE);
+		m_Document_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_DOCUMENT, DTM.DOCUMENT_NODE);
 
-		m_TextNode_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_TEXT_NODE, org.apache.xml.dtm.DTM_Fields.TEXT_NODE);
+		m_TextNode_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_TEXT_NODE, DTM.TEXT_NODE);
 	  }
 
 
@@ -480,8 +480,8 @@ namespace org.apache.xalan.lib.sql
 		{
 	//      File f = new File("DTMDump"+((Object)this).hashCode()+".txt");
 		  File f = new File("DTMDump.txt");
-		  Console.Error.WriteLine("Dumping... " + f.AbsolutePath);
-		  PrintStream ps = new PrintStream(new System.IO.FileStream(f, System.IO.FileMode.Create, System.IO.FileAccess.Write));
+		  Console.Error.WriteLine("Dumping... " + f.getAbsolutePath());
+		  PrintStream ps = new PrintStream(new FileStream(f, FileMode.Create, FileAccess.Write));
 
 		  while (nextNode())
 		  {
@@ -502,53 +502,53 @@ namespace org.apache.xalan.lib.sql
 
 			int exTypeID = getExpandedTypeID(makeNodeHandle(i));
 
-			ps.println("Expanded Type ID: " + exTypeID.ToString("x"));
+			ps.println("Expanded Type ID: " + Convert.ToString(exTypeID, 16));
 
 			int type = getNodeType(makeNodeHandle(i));
 			string typestring;
 
 			switch (type)
 			{
-			case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
+			case DTM.ATTRIBUTE_NODE :
 			  typestring = "ATTRIBUTE_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE :
+			case DTM.CDATA_SECTION_NODE :
 			  typestring = "CDATA_SECTION_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE :
+			case DTM.COMMENT_NODE :
 			  typestring = "COMMENT_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE :
+			case DTM.DOCUMENT_FRAGMENT_NODE :
 			  typestring = "DOCUMENT_FRAGMENT_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE :
+			case DTM.DOCUMENT_NODE :
 			  typestring = "DOCUMENT_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.DOCUMENT_TYPE_NODE :
+			case DTM.DOCUMENT_TYPE_NODE :
 			  typestring = "DOCUMENT_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
+			case DTM.ELEMENT_NODE :
 			  typestring = "ELEMENT_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.ENTITY_NODE :
+			case DTM.ENTITY_NODE :
 			  typestring = "ENTITY_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE :
+			case DTM.ENTITY_REFERENCE_NODE :
 			  typestring = "ENTITY_REFERENCE_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE :
+			case DTM.NAMESPACE_NODE :
 			  typestring = "NAMESPACE_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.NOTATION_NODE :
+			case DTM.NOTATION_NODE :
 			  typestring = "NOTATION_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.NULL :
+			case DTM.NULL :
 			  typestring = "NULL";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+			case DTM.PROCESSING_INSTRUCTION_NODE :
 			  typestring = "PROCESSING_INSTRUCTION_NODE";
 			  break;
-			case org.apache.xml.dtm.DTM_Fields.TEXT_NODE :
+			case DTM.TEXT_NODE :
 			  typestring = "TEXT_NODE";
 			  break;
 			default :
@@ -560,7 +560,7 @@ namespace org.apache.xalan.lib.sql
 
 			int firstChild = _firstch(i);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == firstChild)
+			if (DTM.NULL == firstChild)
 			{
 			  ps.println("First child: DTM.NULL");
 			}
@@ -575,7 +575,7 @@ namespace org.apache.xalan.lib.sql
 
 			int prevSibling = _prevsib(i);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == prevSibling)
+			if (DTM.NULL == prevSibling)
 			{
 			  ps.println("Prev sibling: DTM.NULL");
 			}
@@ -590,7 +590,7 @@ namespace org.apache.xalan.lib.sql
 
 			int nextSibling = _nextsib(i);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == nextSibling)
+			if (DTM.NULL == nextSibling)
 			{
 			  ps.println("Next sibling: DTM.NULL");
 			}
@@ -605,7 +605,7 @@ namespace org.apache.xalan.lib.sql
 
 			int parent = _parent(i);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == parent)
+			if (DTM.NULL == parent)
 			{
 			  ps.println("Parent: DTM.NULL");
 			}
@@ -661,18 +661,18 @@ namespace org.apache.xalan.lib.sql
 	  /// <param name="depth">
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected static void dispatchNodeData(org.w3c.dom.Node node, org.xml.sax.ContentHandler ch, int depth)throws org.xml.sax.SAXException
 	  protected internal static void dispatchNodeData(Node node, ContentHandler ch, int depth)
 	  {
 
-		switch (node.NodeType)
+		switch (node.getNodeType())
 		{
 		case Node.DOCUMENT_FRAGMENT_NODE :
 		case Node.DOCUMENT_NODE :
 		case Node.ELEMENT_NODE :
 		{
-		  for (Node child = node.FirstChild; null != child; child = child.NextSibling)
+		  for (Node child = node.getFirstChild(); null != child; child = child.getNextSibling())
 		  {
 			dispatchNodeData(child, ch, depth + 1);
 		  }
@@ -689,7 +689,7 @@ namespace org.apache.xalan.lib.sql
 		case Node.TEXT_NODE :
 		case Node.CDATA_SECTION_NODE :
 		case Node.ATTRIBUTE_NODE :
-		  string str = node.NodeValue;
+		  string str = node.getNodeValue();
 		  if (ch is CharacterNodeHandler)
 		  {
 			((CharacterNodeHandler)ch).characters(node);
@@ -748,7 +748,7 @@ namespace org.apache.xalan.lib.sql
 		{
 			Console.WriteLine("getNextNodeIdenty(" + parm1 + ")");
 		}
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <param name="parm1"> </param>
@@ -761,7 +761,7 @@ namespace org.apache.xalan.lib.sql
 		{
 		  Console.WriteLine("getAttributeNode(" + parm1 + "," + parm2 + "," + parm3 + ")");
 		}
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <param name="parm1">
@@ -909,7 +909,7 @@ namespace org.apache.xalan.lib.sql
 	  /// <param name="parm2">
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchToEvents(int parm1, org.xml.sax.ContentHandler parm2)throws org.xml.sax.SAXException
 	  public override void dispatchToEvents(int parm1, ContentHandler parm2)
 	  {
@@ -936,7 +936,7 @@ namespace org.apache.xalan.lib.sql
 	  /// <param name="normalize">
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(int nodeHandle, org.xml.sax.ContentHandler ch, boolean normalize)throws org.xml.sax.SAXException
 	  public override void dispatchCharactersEvents(int nodeHandle, ContentHandler ch, bool normalize)
 	  {
@@ -1653,7 +1653,7 @@ namespace org.apache.xalan.lib.sql
 		{
 			Console.WriteLine("getElementByID(" + parm1 + ")");
 		}
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// 

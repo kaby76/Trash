@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.templates
 {
 
-
 	/// <summary>
 	/// Represents a stylesheet that has methods that resolve includes and
 	/// imports.  It has methods on it that
@@ -75,7 +74,7 @@ namespace org.apache.xalan.templates
 	  /// recomposableElements vector should extend ElemTemplateElement. </summary>
 	  /// <param name="recomposableElements"> a Vector of ElemTemplateElement objects that we will add all of
 	  ///        our recomposable objects to. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void recompose(java.util.Vector recomposableElements) throws javax.xml.transform.TransformerException
 	  public virtual void recompose(ArrayList recomposableElements)
 	  {
@@ -223,14 +222,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get a stylesheet from the "import" list. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#import">import in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.import">import in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of stylesheet in import list 
 	  /// </param>
 	  /// <returns> The stylesheet at the given index
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public StylesheetComposed getImportComposed(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual StylesheetComposed getImportComposed(int i)
 	  {
@@ -247,8 +246,8 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Get the precedence of this stylesheet in the global import list.
 	  /// The lowest precedence is 0.  A higher number has a higher precedence. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#import">import in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.import">import in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the precedence of this stylesheet in the global import list. </returns>
 	  public virtual int ImportCountComposed
 	  {
@@ -306,14 +305,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:include" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#include">include in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.include">include in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of stylesheet in "include" list 
 	  /// </param>
 	  /// <returns> The stylesheet at the given index in the "include" list 
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Stylesheet getIncludeComposed(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual Stylesheet getIncludeComposed(int i)
 	  {
@@ -333,8 +332,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of included stylesheets. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#import">import in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.import">import in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of included stylesheets. </returns>
 	  public virtual int IncludeCountComposed
 	  {
@@ -353,12 +352,12 @@ namespace org.apache.xalan.templates
 	  /// NOTE: GLP 29-Nov-00 I've left this method in so that CompilingStylesheetHandler will compile.  However,
 	  ///                     I'm not sure why it's needed or what it does and I've commented out the body.
 	  /// </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a> </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>"/>
 	  /// <param name="flushFirst"> Flag indicating the option of overwriting
 	  /// (rather than appending to) previous composition.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void recomposeTemplates(boolean flushFirst) throws javax.xml.transform.TransformerException
 	  public virtual void recomposeTemplates(bool flushFirst)
 	  {

@@ -20,7 +20,6 @@
 
 namespace org.apache.xalan.extensions
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 
@@ -45,7 +44,7 @@ namespace org.apache.xalan.extensions
 				throw new System.ArgumentException(XSLMessages.createMessage(XSLTErrorResources.ER_XPATH_RESOLVER_NEGATIVE_ARITY, null));
 			}
 
-			string uri = qname.NamespaceURI;
+			string uri = qname.getNamespaceURI();
 			if (string.ReferenceEquals(uri, null) || uri.Length == 0)
 			{
 				return null;
@@ -56,7 +55,7 @@ namespace org.apache.xalan.extensions
 			if (uri.StartsWith("http://exslt.org", StringComparison.Ordinal))
 			{
 				className = getEXSLTClassName(uri);
-				methodName = qname.LocalPart;
+				methodName = qname.getLocalPart();
 			}
 			else if (!uri.Equals(ExtensionNamespaceContext.JAVA_EXT_URI))
 			{
@@ -67,7 +66,7 @@ namespace org.apache.xalan.extensions
 				}
 			}
 
-			string localPart = qname.LocalPart;
+			string localPart = qname.getLocalPart();
 			int lastDotIndex = localPart.LastIndexOf('.');
 			if (lastDotIndex > 0)
 			{

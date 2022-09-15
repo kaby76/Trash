@@ -17,7 +17,6 @@
  */
 namespace org.apache.xalan.res
 {
-
 	public class XSLTErrorResources_zh_CN : XSLTErrorResources_zh
 	{
 	}

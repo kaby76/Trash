@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.processor
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using KeyDeclaration = org.apache.xalan.templates.KeyDeclaration;
@@ -40,8 +39,8 @@ namespace org.apache.xalan.processor
 	///   use %expr; #REQUIRED
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#key">key in XSLT Specification</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.key">key in XSLT Specification</a>"/>
 	[Serializable]
 	internal class ProcessorKey : XSLTElementProcessor
 	{
@@ -62,7 +61,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="attributes"> The attributes attached to the element.  If
 	  ///        there are no attributes, it shall be an empty
 	  ///        Attributes object. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {
@@ -83,7 +82,7 @@ namespace org.apache.xalan.processor
 	  ///                error reporting. </param>
 	  /// <param name="attributes"> The list of attributes. </param>
 	  /// <param name="target"> The target element where the properties will be set. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void setPropertiesFromAttributes(StylesheetHandler handler, String rawName, org.xml.sax.Attributes attributes, org.apache.xalan.templates.ElemTemplateElement target) throws org.xml.sax.SAXException
 	  internal override void setPropertiesFromAttributes(StylesheetHandler handler, string rawName, Attributes attributes, org.apache.xalan.templates.ElemTemplateElement target)
 	  {
@@ -92,8 +91,8 @@ namespace org.apache.xalan.processor
 
 		// Keep track of which XSLTAttributeDefs have been processed, so 
 		// I can see which default values need to be set.
-		IList processedDefs = new ArrayList();
-		int nAttrs = attributes.Length;
+		System.Collections.IList processedDefs = new ArrayList();
+		int nAttrs = attributes.getLength();
 
 		for (int i = 0; i < nAttrs; i++)
 		{

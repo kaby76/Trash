@@ -79,7 +79,7 @@ namespace org.apache.xml.dtm.@ref
 			/// <exception cref="java.lang.ArrayIndexOutOfBoundsException">
 			///  if index doesn't map to a string.
 			///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String indexToString(int i) throws java.lang.ArrayIndexOutOfBoundsException
 			public override string indexToString(int i)
 			{

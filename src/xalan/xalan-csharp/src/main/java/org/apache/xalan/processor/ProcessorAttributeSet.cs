@@ -30,8 +30,8 @@ namespace org.apache.xalan.processor
 
 	/// <summary>
 	/// This class processes parse events for an xsl:attribute-set. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#attribute-sets">attribute-sets in XSLT Specification</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.attribute-sets">attribute-sets in XSLT Specification</a>"/>
 	[Serializable]
 	internal class ProcessorAttributeSet : XSLTElementProcessor
 	{
@@ -53,11 +53,11 @@ namespace org.apache.xalan.processor
 	  ///        there are no attributes, it shall be an empty
 	  ///        Attributes object.
 	  /// </param>
-	  /// <seealso cref= org.apache.xalan.processor.StylesheetHandler#startElement </seealso>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startElement </seealso>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endElement </seealso>
-	  /// <seealso cref= org.xml.sax.Attributes </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.apache.xalan.processor.StylesheetHandler.startElement"/>
+	  /// <seealso cref="org.xml.sax.ContentHandler.startElement"/>
+	  /// <seealso cref="org.xml.sax.ContentHandler.endElement"/>
+	  /// <seealso cref="org.xml.sax.Attributes"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {
@@ -95,7 +95,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="uri"> The Namespace URI, or an empty string. </param>
 	  /// <param name="localName"> The local name (without prefix), or empty string if not namespace processing. </param>
 	  /// <param name="rawName"> The qualified name (with prefix). </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(StylesheetHandler handler, String uri, String localName, String rawName) throws org.xml.sax.SAXException
 	  public override void endElement(StylesheetHandler handler, string uri, string localName, string rawName)
 	  {

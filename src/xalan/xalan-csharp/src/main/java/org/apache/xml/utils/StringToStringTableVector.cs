@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// A very simple table that stores a list of StringToStringTables, optimized
 	/// for small lists.

@@ -107,13 +107,13 @@ namespace org.apache.xml.serializer
 	/// 
 	/// </para>
 	/// </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#DOMConfiguration">DOMConfiguration</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/load-save.html#LS-LSSerializer-config">LSSerializer</a> </seealso>
-	/// <seealso cref= org.apache.xml.serializer.Serializer </seealso>
-	/// <seealso cref= org.apache.xml.serializer.DOMSerializer
+	/// <seealso cref="<a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html.DOMConfiguration">DOMConfiguration</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/load-save.html.LS-LSSerializer-config">LSSerializer</a>"/>
+	/// <seealso cref="org.apache.xml.serializer.Serializer"/>
+	/// <seealso cref="org.apache.xml.serializer.DOMSerializer"
 	/// 
 	/// @xsl.usage advanced
-	///  </seealso>
+	/// />
 	public interface DOM3Serializer
 	{
 		/// <summary>
@@ -124,7 +124,7 @@ namespace org.apache.xml.serializer
 		/// </summary>
 		/// <param name="node"> the Level 3 DOM node to serialize </param>
 		/// <exception cref="IOException"> if an I/O exception occured while serializing </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void serializeDOM3(org.w3c.dom.Node node) throws java.io.IOException;
 		void serializeDOM3(Node node);
 

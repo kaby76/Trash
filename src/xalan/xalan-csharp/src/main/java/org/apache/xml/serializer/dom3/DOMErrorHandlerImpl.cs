@@ -23,7 +23,6 @@
 
 namespace org.apache.xml.serializer.dom3
 {
-
 	using DOMError = org.w3c.dom.DOMError;
 	using DOMErrorHandler = org.w3c.dom.DOMErrorHandler;
 
@@ -53,22 +52,22 @@ namespace org.apache.xml.serializer.dom3
 		{
 			bool fail = true;
 			string severity = null;
-			if (error.Severity == DOMError.SEVERITY_WARNING)
+			if (error.getSeverity() == DOMError.SEVERITY_WARNING)
 			{
 				fail = false;
 				severity = "[Warning]";
 			}
-			else if (error.Severity == DOMError.SEVERITY_ERROR)
+			else if (error.getSeverity() == DOMError.SEVERITY_ERROR)
 			{
 				severity = "[Error]";
 			}
-			else if (error.Severity == DOMError.SEVERITY_FATAL_ERROR)
+			else if (error.getSeverity() == DOMError.SEVERITY_FATAL_ERROR)
 			{
 				severity = "[Fatal Error]";
 			}
 
-			Console.Error.WriteLine(severity + ": " + error.Message + "\t");
-			Console.Error.WriteLine("Type : " + error.Type + "\t" + "Related Data: " + error.RelatedData + "\t" + "Related Exception: " + error.RelatedException);
+			Console.Error.WriteLine(severity + ": " + error.getMessage() + "\t");
+			Console.Error.WriteLine("Type : " + error.getType() + "\t" + "Related Data: " + error.getRelatedData() + "\t" + "Related Exception: " + error.getRelatedException());
 
 			return fail;
 		}

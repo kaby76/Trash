@@ -24,7 +24,6 @@
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using PUSH = org.apache.bcel.generic.PUSH;
@@ -56,7 +55,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// names are not known at compile time.
 		private bool _allAttributesUnique = false;
 
-		private const string Constants_Fields;
+		private const string XMLNS_STRING = "xmlns";
 
 		/// <summary>
 		/// Returns the QName for this literal element
@@ -74,7 +73,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("LiteralElement name = " + _name);
 		displayContents(indent + IndentIncrement);
 		}
@@ -162,11 +161,11 @@ namespace org.apache.xalan.xsltc.compiler
 		// Treat default namespace as "" and not null
 		if (string.ReferenceEquals(prefix, null))
 		{
-			prefix = Constants_Fields.EMPTYSTRING;
+			prefix = Constants.EMPTYSTRING;
 		}
-		else if (prefix.Equals(Constants_Fields.XMLNS_STRING))
+		else if (prefix.Equals(XMLNS_STRING))
 		{
-			return (Constants_Fields.XMLNS_STRING);
+			return (XMLNS_STRING);
 		}
 
 		// Check if we must translate the prefix
@@ -190,7 +189,7 @@ namespace org.apache.xalan.xsltc.compiler
 		registerNamespace(prefix, uri, stable, false);
 
 		// Construct the new name for the element (may be unchanged)
-		if (!string.ReferenceEquals(prefix, Constants_Fields.EMPTYSTRING))
+		if (!string.ReferenceEquals(prefix, Constants.EMPTYSTRING))
 		{
 			return (prefix + ":" + localname);
 		}
@@ -231,7 +230,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Type-check the contents of this element. The element itself does not
 		/// need any type checking as it leaves nothign on the JVM's stack.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -324,7 +323,7 @@ namespace org.apache.xalan.xsltc.compiler
 					if (!Util.isValidQNames(val))
 					{
 						ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, val, this);
-						parser.reportError(Constants_Fields.ERROR, err);
+						parser.reportError(Constants.ERROR, err);
 					}
 			FirstAttribute = new UseAttributeSets(val, parser);
 			}
@@ -344,7 +343,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String prefix = qname.getPrefix();
 			string prefix = qname.Prefix;
-			if (!string.ReferenceEquals(prefix, null) && prefix.Equals(Constants_Fields.XMLNS_PREFIX) || string.ReferenceEquals(prefix, null) && qname.LocalPart.Equals("xmlns") || !string.ReferenceEquals(uri, null) && uri.Equals(Constants_Fields.XSLT_URI))
+			if (!string.ReferenceEquals(prefix, null) && prefix.Equals(XMLNS_PREFIX) || string.ReferenceEquals(prefix, null) && qname.LocalPart.Equals("xmlns") || !string.ReferenceEquals(uri, null) && uri.Equals(XSLT_URI))
 			{
 				continue;
 			}
@@ -424,10 +423,10 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 			// Check whether all attributes are unique.
 			_allAttributesUnique = checkAttributesUnique();
@@ -468,9 +467,9 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final String uri = (String)_accessedPrefixes.get(prefix);
 			string uri = (string)_accessedPrefixes[prefix];
 
-			if (!string.ReferenceEquals(uri, Constants_Fields.EMPTYSTRING) || !string.ReferenceEquals(prefix, Constants_Fields.EMPTYSTRING))
+			if (!string.ReferenceEquals(uri, Constants.EMPTYSTRING) || !string.ReferenceEquals(prefix, Constants.EMPTYSTRING))
 			{
-				if (string.ReferenceEquals(prefix, Constants_Fields.EMPTYSTRING))
+				if (string.ReferenceEquals(prefix, Constants.EMPTYSTRING))
 				{
 				declaresDefaultNS = true;
 				}
@@ -488,8 +487,8 @@ namespace org.apache.xalan.xsltc.compiler
 			if (!declaresDefaultNS && (_parent is XslElement) && ((XslElement) _parent).declaresDefaultNS())
 			{
 			il.append(methodGen.loadHandler());
-			il.append(new PUSH(cpg, Constants_Fields.EMPTYSTRING));
-			il.append(new PUSH(cpg, Constants_Fields.EMPTYSTRING));
+			il.append(new PUSH(cpg, Constants.EMPTYSTRING));
+			il.append(new PUSH(cpg, Constants.EMPTYSTRING));
 			il.append(methodGen.@namespace());
 			}
 		}

@@ -51,7 +51,7 @@ namespace org.apache.xalan.serialize
 		/// <param name="attr"> Attribute node to add to SerializationHandler.
 		/// </param>
 		/// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static void addAttribute(org.apache.xml.serializer.SerializationHandler handler, int attr) throws javax.xml.transform.TransformerException
 		public static void addAttribute(SerializationHandler handler, int attr)
 		{
@@ -88,7 +88,7 @@ namespace org.apache.xalan.serialize
 		/// <param name="src"> Source node with the attributes
 		/// </param>
 		/// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static void addAttributes(org.apache.xml.serializer.SerializationHandler handler, int src) throws javax.xml.transform.TransformerException
 		public static void addAttributes(SerializationHandler handler, int src)
 		{
@@ -96,7 +96,7 @@ namespace org.apache.xalan.serialize
 			TransformerImpl transformer = (TransformerImpl) handler.Transformer;
 			DTM dtm = transformer.XPathContext.getDTM(src);
 
-			for (int node = dtm.getFirstAttribute(src); org.apache.xml.dtm.DTM_Fields.NULL != node; node = dtm.getNextAttribute(node))
+			for (int node = dtm.getFirstAttribute(src); DTM.NULL != node; node = dtm.getNextAttribute(node))
 			{
 				addAttribute(handler, node);
 			}
@@ -110,7 +110,7 @@ namespace org.apache.xalan.serialize
 		/// <param name="support"> XPath context for the result tree fragment
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static void outputResultTreeFragment(org.apache.xml.serializer.SerializationHandler handler, org.apache.xpath.objects.XObject obj, org.apache.xpath.XPathContext support) throws org.xml.sax.SAXException
 		public static void outputResultTreeFragment(SerializationHandler handler, XObject obj, XPathContext support)
 		{
@@ -120,13 +120,13 @@ namespace org.apache.xalan.serialize
 
 			if (null != dtm)
 			{
-				for (int n = dtm.getFirstChild(doc); org.apache.xml.dtm.DTM_Fields.NULL != n; n = dtm.getNextSibling(n))
+				for (int n = dtm.getFirstChild(doc); DTM.NULL != n; n = dtm.getNextSibling(n))
 				{
 					handler.flushPending();
 
 					// I think. . . . This used to have a (true) arg
 					// to flush prefixes, will that cause problems ???
-					if (dtm.getNodeType(n) == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE && string.ReferenceEquals(dtm.getNamespaceURI(n), null))
+					if (dtm.getNodeType(n) == DTM.ELEMENT_NODE && string.ReferenceEquals(dtm.getNamespaceURI(n), null))
 					{
 						handler.startPrefixMapping("", "");
 					}
@@ -146,16 +146,16 @@ namespace org.apache.xalan.serialize
 		/// NEEDSDOC <param name="dtm">
 		/// </param>
 		/// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static void processNSDecls(org.apache.xml.serializer.SerializationHandler handler, int src, int type, org.apache.xml.dtm.DTM dtm) throws javax.xml.transform.TransformerException
 		public static void processNSDecls(SerializationHandler handler, int src, int type, DTM dtm)
 		{
 
 			try
 			{
-				if (type == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE)
+				if (type == DTM.ELEMENT_NODE)
 				{
-					for (int @namespace = dtm.getFirstNamespaceNode(src, true); org.apache.xml.dtm.DTM_Fields.NULL != @namespace; @namespace = dtm.getNextNamespaceNode(src, @namespace, true))
+					for (int @namespace = dtm.getFirstNamespaceNode(src, true); DTM.NULL != @namespace; @namespace = dtm.getNextNamespaceNode(src, @namespace, true))
 					{
 
 						// String prefix = dtm.getPrefix(namespace);
@@ -164,20 +164,20 @@ namespace org.apache.xalan.serialize
 						//            String desturi = getURI(prefix);
 						string srcURI = dtm.getNodeValue(@namespace);
 
-						if (!srcURI.Equals(desturi, StringComparison.CurrentCultureIgnoreCase))
+						if (!srcURI.Equals(desturi, StringComparison.OrdinalIgnoreCase))
 						{
 							handler.startPrefixMapping(prefix, srcURI, false);
 						}
 					}
 				}
-				else if (type == org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE)
+				else if (type == DTM.NAMESPACE_NODE)
 				{
 					string prefix = dtm.getNodeNameX(src);
 					// Brian M. - some changes here to get desturi
 					string desturi = handler.getNamespaceURIFromPrefix(prefix);
 					string srcURI = dtm.getNodeValue(src);
 
-					if (!srcURI.Equals(desturi, StringComparison.CurrentCultureIgnoreCase))
+					if (!srcURI.Equals(desturi, StringComparison.OrdinalIgnoreCase))
 					{
 						handler.startPrefixMapping(prefix, srcURI, false);
 					}
@@ -201,7 +201,7 @@ namespace org.apache.xalan.serialize
 		public static bool isDefinedNSDecl(SerializationHandler serializer, int attr, DTM dtm)
 		{
 
-			if (org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE == dtm.getNodeType(attr))
+			if (DTM.NAMESPACE_NODE == dtm.getNodeType(attr))
 			{
 
 				// String prefix = dtm.getPrefix(attr);
@@ -228,7 +228,7 @@ namespace org.apache.xalan.serialize
 		/// NEEDSDOC <param name="namespace">
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static void ensureNamespaceDeclDeclared(org.apache.xml.serializer.SerializationHandler handler, org.apache.xml.dtm.DTM dtm, int namespace) throws org.xml.sax.SAXException
 		public static void ensureNamespaceDeclDeclared(SerializationHandler handler, DTM dtm, int @namespace)
 		{

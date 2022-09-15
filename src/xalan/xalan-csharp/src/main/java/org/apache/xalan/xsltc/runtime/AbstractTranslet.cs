@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,12 +25,16 @@ using System.Collections;
 
 namespace org.apache.xalan.xsltc.runtime
 {
-
 	using Document = org.w3c.dom.Document;
 	using DOMImplementation = org.w3c.dom.DOMImplementation;
 
 	using DTM = org.apache.xml.dtm.DTM;
 
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using DOMCache = org.apache.xalan.xsltc.DOMCache;
+	using DOMEnhancedForDTM = org.apache.xalan.xsltc.DOMEnhancedForDTM;
+	using Translet = org.apache.xalan.xsltc.Translet;
+	using TransletException = org.apache.xalan.xsltc.TransletException;
 	using DOMAdapter = org.apache.xalan.xsltc.dom.DOMAdapter;
 	using KeyIndex = org.apache.xalan.xsltc.dom.KeyIndex;
 	using TransletOutputHandlerFactory = org.apache.xalan.xsltc.runtime.output.TransletOutputHandlerFactory;
@@ -45,6 +50,7 @@ namespace org.apache.xalan.xsltc.runtime
 	/// </summary>
 	public abstract class AbstractTranslet : Translet
 	{
+		public abstract void transform(DOM document, SerializationHandler[] handlers);
 
 		// These attributes are extracted from the xsl:output element. They also
 		// appear as fields (with the same type, only public) in Output.java
@@ -108,7 +114,7 @@ namespace org.apache.xalan.xsltc.runtime
 		Console.WriteLine("namesArray.size = " + namesArray.Length);
 		Console.WriteLine("namespaceArray.size = " + namespaceArray.Length);
 		Console.WriteLine("");
-		Console.WriteLine("Total memory = " + Runtime.Runtime.totalMemory());
+		Console.WriteLine("Total memory = " + Runtime.getRuntime().totalMemory());
 		}
 
 		/// <summary>
@@ -116,7 +122,7 @@ namespace org.apache.xalan.xsltc.runtime
 		/// a DOM multiplexer if the document() function is used (handled by compiled
 		/// code in the translet - see compiler/Stylesheet.compileTransform()).
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final org.apache.xalan.xsltc.dom.DOMAdapter makeDOMAdapter(org.apache.xalan.xsltc.DOM dom) throws org.apache.xalan.xsltc.TransletException
 		public DOMAdapter makeDOMAdapter(DOM dom)
 		{
@@ -152,7 +158,7 @@ namespace org.apache.xalan.xsltc.runtime
 		if (pbase > 0)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int oldpbase = ((Nullable<int>)paramsStack.get(--pbase)).intValue();
+//ORIGINAL LINE: final int oldpbase = ((System.Nullable<int>)paramsStack.get(--pbase)).intValue();
 			int oldpbase = ((int?)paramsStack[--pbase]).Value;
 			for (int i = pframe - 1; i >= pbase; i--)
 			{
@@ -312,7 +318,7 @@ namespace org.apache.xalan.xsltc.runtime
 		DecimalFormat df = new DecimalFormat();
 		if (symbols != null)
 		{
-			df.DecimalFormatSymbols = symbols;
+			df.setDecimalFormatSymbols(symbols);
 		}
 		_formatSymbols.put(name, df);
 		}
@@ -399,7 +405,7 @@ namespace org.apache.xalan.xsltc.runtime
 //ORIGINAL LINE: final Object idValue = idValues.Current;
 						object idValue = idValues.Current;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int element = document.getNodeHandle(((Nullable<int>)elementsByID.get(idValue)).intValue());
+//ORIGINAL LINE: final int element = document.getNodeHandle(((System.Nullable<int>)elementsByID.get(idValue)).intValue());
 						int element = document.getNodeHandle(((int?)elementsByID.get(idValue)).Value);
 
 						buildKeyIndex(ID_INDEX_NAME, element, idValue);
@@ -445,16 +451,16 @@ namespace org.apache.xalan.xsltc.runtime
 				   if (name[lNameStartIdx] == '@')
 				   {
 					   lNameStartIdx++;
-					   newTypesArray[i] = org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE;
+					   newTypesArray[i] = DTM.ATTRIBUTE_NODE;
 				   }
 				   else if (name[lNameStartIdx] == '?')
 				   {
 					   lNameStartIdx++;
-					   newTypesArray[i] = org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE;
+					   newTypesArray[i] = DTM.NAMESPACE_NODE;
 				   }
 				   else
 				   {
-					   newTypesArray[i] = org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE;
+					   newTypesArray[i] = DTM.ELEMENT_NODE;
 				   }
 				   newNamesArray[i] = (lNameStartIdx == 0) ? name : name.Substring(lNameStartIdx);
 				}
@@ -586,7 +592,7 @@ namespace org.apache.xalan.xsltc.runtime
 		/// This method builds key indexes - it is overridden in the compiled
 		/// translet in cases where the <xsl:key> element is used
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void buildKeys(org.apache.xalan.xsltc.DOM document, org.apache.xml.dtm.DTMAxisIterator iterator, org.apache.xml.serializer.SerializationHandler handler, int root) throws org.apache.xalan.xsltc.TransletException
 		public virtual void buildKeys(DOM document, DTMAxisIterator iterator, SerializationHandler handler, int root)
 		{
@@ -636,7 +642,7 @@ namespace org.apache.xalan.xsltc.runtime
 		/// ***********************************************************************
 		/// </summary>
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.serializer.SerializationHandler openOutputHandler(String filename, boolean append) throws org.apache.xalan.xsltc.TransletException
 		public virtual SerializationHandler openOutputHandler(string filename, bool append)
 		{
@@ -646,7 +652,7 @@ namespace org.apache.xalan.xsltc.runtime
 //ORIGINAL LINE: final org.apache.xalan.xsltc.runtime.output.TransletOutputHandlerFactory factory = org.apache.xalan.xsltc.runtime.output.TransletOutputHandlerFactory.newInstance();
 			TransletOutputHandlerFactory factory = TransletOutputHandlerFactory.newInstance();
 
-				string dirStr = System.IO.Path.GetDirectoryName(filename);
+				string dirStr = Path.GetDirectoryName(filename);
 				if ((null != dirStr) && (dirStr.Length > 0))
 				{
 				   File dir = new File(dirStr);
@@ -655,7 +661,7 @@ namespace org.apache.xalan.xsltc.runtime
 
 			factory.Encoding = _encoding;
 			factory.OutputMethod = _method;
-			factory.Writer = new System.IO.StreamWriter(filename, append);
+			factory.Writer = new StreamWriter(filename, append);
 			factory.OutputType = TransletOutputHandlerFactory.STREAM;
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -672,7 +678,7 @@ namespace org.apache.xalan.xsltc.runtime
 		}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.serializer.SerializationHandler openOutputHandler(String filename) throws org.apache.xalan.xsltc.TransletException
 		public virtual SerializationHandler openOutputHandler(string filename)
 		{
@@ -701,14 +707,14 @@ namespace org.apache.xalan.xsltc.runtime
 		/// <summary>
 		/// Main transform() method - this is overridden by the compiled translet
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public abstract void transform(org.apache.xalan.xsltc.DOM document, org.apache.xml.dtm.DTMAxisIterator iterator, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException;
 		public abstract void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler);
 
 		/// <summary>
 		/// Calls transform() with a given output handler
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void transform(org.apache.xalan.xsltc.DOM document, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
 		public void transform(DOM document, SerializationHandler handler)
 		{
@@ -726,10 +732,9 @@ namespace org.apache.xalan.xsltc.runtime
 		/// Used by some compiled code as a shortcut for passing strings to the
 		/// output handler
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void characters(final String string, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public void characters(string @string, SerializationHandler handler)
+		public void characters(in string @string, SerializationHandler handler)
 		{
 			if (!string.ReferenceEquals(@string, null))
 			{
@@ -917,13 +922,13 @@ namespace org.apache.xalan.xsltc.runtime
 		/// </summary>
 		protected internal DOMImplementation _domImplementation = null;
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Document newDocument(String uri, String qname) throws javax.xml.parsers.ParserConfigurationException
 		public virtual Document newDocument(string uri, string qname)
 		{
 			if (_domImplementation == null)
 			{
-				_domImplementation = DocumentBuilderFactory.newInstance().newDocumentBuilder().DOMImplementation;
+				_domImplementation = DocumentBuilderFactory.newInstance().newDocumentBuilder().getDOMImplementation();
 			}
 			return _domImplementation.createDocument(uri, qname, null);
 		}

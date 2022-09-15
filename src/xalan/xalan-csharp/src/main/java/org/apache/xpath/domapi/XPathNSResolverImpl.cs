@@ -21,7 +21,6 @@
 
 namespace org.apache.xpath.domapi
 {
-
 	using PrefixResolverDefault = org.apache.xml.utils.PrefixResolverDefault;
 	using Node = org.w3c.dom.Node;
 	using XPathNSResolver = org.w3c.dom.xpath.XPathNSResolver;
@@ -39,8 +38,8 @@ namespace org.apache.xpath.domapi
 	/// construct an implementation of <code>XPathNSResolver</code> from a node, 
 	/// or the interface may be implemented by any application.</para>
 	/// </summary>
-	/// <seealso cref= org.w3c.dom.xpath.XPathNSResolver
-	/// @xsl.usage internal </seealso>
+	/// <seealso cref="org.w3c.dom.xpath.XPathNSResolver"
+	/// @xsl.usage internal/>
 	internal class XPathNSResolverImpl : PrefixResolverDefault, XPathNSResolver
 	{
 
@@ -51,7 +50,7 @@ namespace org.apache.xpath.domapi
 		{
 		}
 
-		/// <seealso cref= org.w3c.dom.xpath.XPathNSResolver#lookupNamespaceURI(String) </seealso>
+		/// <seealso cref="org.w3c.dom.xpath.XPathNSResolver.lookupNamespaceURI(String)"/>
 		public virtual string lookupNamespaceURI(string prefix)
 		{
 			return base.getNamespaceForPrefix(prefix);

@@ -21,7 +21,6 @@
 namespace org.apache.xalan.res
 {
 
-
 	/// <summary>
 	/// Set up error messages.
 	/// We build a two dimensional array of message keys and
@@ -617,7 +616,7 @@ namespace org.apache.xalan.res
 				new object[] {"version2", "<<<<<<<"},
 				new object[] {"yes", "tak"},
 				new object[] {"line", "Nr wiersza: "},
-				new object[] {"column","Nr kolumny: "},
+				new object[] {"column", "Nr kolumny: "},
 				new object[] {"xsldone", "XSLProcessor: gotowe"},
 				new object[] {"xslProc_option", "Opcje wiersza komend klasy Process Xalan-J:"},
 				new object[] {"xslProc_option", "Opcje wiersza komend klasy Process Xalan-J\u003a"},
@@ -677,8 +676,8 @@ namespace org.apache.xalan.res
 				new object[] {"optionXN", "[-XN (w\u0142\u0105czenie wstawiania szablon\u00f3w)]"},
 				new object[] {"optionXX", "[-XX (w\u0142\u0105czenie dodatkowych diagnostycznych komunikat\u00f3w wyj\u015bciowych)]"},
 				new object[] {"optionXT", "[-XT (u\u017cycie transletu do transformacji, je\u015bli to mo\u017cliwe)]"},
-				new object[] {"diagTiming","--------- Transformacja {0} przez {1} zaj\u0119\u0142a {2} ms"},
-				new object[] {"recursionTooDeep","Zbyt g\u0142\u0119bokie zagnie\u017cd\u017cenie szablon\u00f3w. zagnie\u017cd\u017cenie= {0}, szablon {1} {2}"},
+				new object[] {"diagTiming", "--------- Transformacja {0} przez {1} zaj\u0119\u0142a {2} ms"},
+				new object[] {"recursionTooDeep", "Zbyt g\u0142\u0119bokie zagnie\u017cd\u017cenie szablon\u00f3w. zagnie\u017cd\u017cenie= {0}, szablon {1} {2}"},
 				new object[] {"nameIs", "nazw\u0105 jest"},
 				new object[] {"matchPatternIs", "wzorcem uzgadniania jest"}
 			};
@@ -727,12 +726,12 @@ namespace org.apache.xalan.res
 	  ///   <param name="className"> the name of the class that implements the resource bundle. </param>
 	  ///   <returns> the ResourceBundle </returns>
 	  ///   <exception cref="MissingResourceException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static final XSLTErrorResources loadResourceBundle(String className) throws java.util.MissingResourceException
 	  public static XSLTErrorResources loadResourceBundle(string className)
 	  {
 
-		Locale locale = Locale.Default;
+		Locale locale = Locale.getDefault();
 		string suffix = getResourceSuffix(locale);
 
 		try
@@ -770,8 +769,8 @@ namespace org.apache.xalan.res
 	  private static string getResourceSuffix(Locale locale)
 	  {
 
-		string suffix = "_" + locale.Language;
-		string country = locale.Country;
+		string suffix = "_" + locale.getLanguage();
+		string country = locale.getCountry();
 
 		if (country.Equals("TW"))
 		{

@@ -21,6 +21,7 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
+	using Stylesheet = org.apache.xalan.xsltc.compiler.Stylesheet;
 
 	/// <summary>
 	/// Generator for subclasses of NodeSortRecordFactory.

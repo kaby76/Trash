@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.templates
 {
-
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
 	using VariableStack = org.apache.xpath.VariableStack;
@@ -114,13 +113,13 @@ namespace org.apache.xalan.templates
 	  /// <returns> This object.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
 		if (!m_doneEval)
 		{
-		  this.m_transformer.MsgMgr.error(xctxt.SAXLocator, XSLTErrorResources.ER_REFERENCING_ITSELF, new object[]{((ElemVariable)this.@object()).Name.LocalName});
+		  this.m_transformer.MsgMgr.error(xctxt.SAXLocator, XSLTErrorResources.ER_REFERENCING_ITSELF, new object[]{((ElemVariable)this.@object()).Name.getLocalName()});
 		}
 		VariableStack vars = xctxt.VarStack;
 
@@ -137,9 +136,9 @@ namespace org.apache.xalan.templates
 		  {
 			  vars.link(velem.m_frameSize);
 		  }
-		  XObject @var = velem.getValue(m_transformer, m_context);
+		  XObject var = velem.getValue(m_transformer, m_context);
 		  m_doneEval = true;
-		  return @var;
+		  return var;
 		}
 		finally
 		{

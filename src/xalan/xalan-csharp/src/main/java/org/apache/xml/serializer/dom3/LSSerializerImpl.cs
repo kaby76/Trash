@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 /*
@@ -25,7 +26,11 @@ using System.Text;
 namespace org.apache.xml.serializer.dom3
 {
 
-
+	using DOM3Serializer = org.apache.xml.serializer.DOM3Serializer;
+	using Encodings = org.apache.xml.serializer.Encodings;
+	using OutputPropertiesFactory = org.apache.xml.serializer.OutputPropertiesFactory;
+	using Serializer = org.apache.xml.serializer.Serializer;
+	using SerializerFactory = org.apache.xml.serializer.SerializerFactory;
 	using MsgKey = org.apache.xml.serializer.utils.MsgKey;
 	using SystemIDResolver = org.apache.xml.serializer.utils.SystemIDResolver;
 	using Utils = org.apache.xml.serializer.utils.Utils;
@@ -47,12 +52,12 @@ namespace org.apache.xml.serializer.dom3
 	/// serialization calls to <CODE>org.apache.xml.serializer.ToStream</CODE> or 
 	/// one of its derived classes depending on the serialization method, while walking
 	/// the DOM in DOM3TreeWalker. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/load-save.html#LS-LSSerializer">org.w3c.dom.ls.LSSerializer</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html#DOMConfiguration">org.w3c.dom.DOMConfiguration</a>
+	/// <seealso cref="<a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/load-save.html.LS-LSSerializer">org.w3c.dom.ls.LSSerializer</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407/core.html.DOMConfiguration">org.w3c.dom.DOMConfiguration</a>"
 	/// 
 	/// @version $Id:  
 	/// 
-	/// @xsl.usage internal  </seealso>
+	/// @xsl.usage internal />
 	public sealed class LSSerializerImpl : DOMConfiguration, LSSerializer
 	{
 
@@ -81,11 +86,7 @@ namespace org.apache.xml.serializer.dom3
 
 		private class PrivilegedActionAnonymousInnerClass : PrivilegedAction
 		{
-			public PrivilegedActionAnonymousInnerClass()
-			{
-			}
-
-			public virtual object run()
+			public object run()
 			{
 				try
 				{
@@ -336,32 +337,31 @@ namespace org.apache.xml.serializer.dom3
 		/// <summary>
 		/// Checks if setting a parameter to a specific value is supported.    
 		/// </summary>
-		/// <seealso cref= org.w3c.dom.DOMConfiguration#canSetParameter(java.lang.String, java.lang.Object)
-		/// @since DOM Level 3 </seealso>
+		/// <seealso cref="org.w3c.dom.DOMConfiguration.canSetParameter(java.lang.String, java.lang.Object)"
+		/// @since DOM Level 3/>
 		/// <param name="name"> A String containing the DOMConfiguration parameter name. </param>
 		/// <param name="value"> An Object specifying the value of the corresponding parameter.  </param>
 		public bool canSetParameter(string name, object value)
 		{
-			if (value is bool?)
+			if (value is Boolean)
 			{
-				if (name.Equals(DOMConstants.DOM_CDATA_SECTIONS, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_COMMENTS, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_ENTITIES, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_INFOSET, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_ELEMENT_CONTENT_WHITESPACE, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_NAMESPACES, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_NAMESPACE_DECLARATIONS, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_SPLIT_CDATA, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_WELLFORMED, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_DISCARD_DEFAULT_CONTENT, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_FORMAT_PRETTY_PRINT, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_XMLDECL, StringComparison.CurrentCultureIgnoreCase))
+				if (name.Equals(DOMConstants.DOM_CDATA_SECTIONS, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_COMMENTS, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_ENTITIES, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_INFOSET, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_ELEMENT_CONTENT_WHITESPACE, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_NAMESPACES, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_NAMESPACE_DECLARATIONS, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_SPLIT_CDATA, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_WELLFORMED, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_DISCARD_DEFAULT_CONTENT, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_FORMAT_PRETTY_PRINT, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_XMLDECL, StringComparison.OrdinalIgnoreCase))
 				{
 					// both values supported
 					return true;
 				}
-				else if (name.Equals(DOMConstants.DOM_CANONICAL_FORM, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_CHECK_CHAR_NORMALIZATION, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_DATATYPE_NORMALIZATION, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_CANONICAL_FORM, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_CHECK_CHAR_NORMALIZATION, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_DATATYPE_NORMALIZATION, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE, StringComparison.OrdinalIgnoreCase))
 				{
-						// || name.equalsIgnoreCase(DOMConstants.DOM_NORMALIZE_CHARACTERS)
 					// true is not supported
 					return !((bool?)value).Value;
 				}
-				else if (name.Equals(DOMConstants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS, StringComparison.OrdinalIgnoreCase))
 				{
 					// false is not supported
 					return ((bool?)value).Value;
 				}
 			}
-			else if (name.Equals(DOMConstants.DOM_ERROR_HANDLER, StringComparison.CurrentCultureIgnoreCase) && value == null || value is DOMErrorHandler)
+			else if (name.Equals(DOMConstants.DOM_ERROR_HANDLER, StringComparison.OrdinalIgnoreCase) && value == null || value is DOMErrorHandler)
 			{
 				return true;
 			}
@@ -370,73 +370,72 @@ namespace org.apache.xml.serializer.dom3
 		/// <summary>
 		/// This method returns the value of a parameter if known.
 		/// </summary>
-		/// <seealso cref= org.w3c.dom.DOMConfiguration#getParameter(java.lang.String)
-		/// </seealso>
+		/// <seealso cref="org.w3c.dom.DOMConfiguration.getParameter(java.lang.String)"
+		////>
 		/// <param name="name"> A String containing the DOMConfiguration parameter name 
 		///             whose value is to be returned. </param>
 		/// <returns> Object The value of the parameter if known.  </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object getParameter(String name) throws org.w3c.dom.DOMException
 		public object getParameter(string name)
 		{
-			if (name.Equals(DOMConstants.DOM_COMMENTS, StringComparison.CurrentCultureIgnoreCase))
+			if (name.Equals(DOMConstants.DOM_COMMENTS, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & COMMENTS) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_CDATA_SECTIONS, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_CDATA_SECTIONS, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & CDATA) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_ENTITIES, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_ENTITIES, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & ENTITIES) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_NAMESPACES, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_NAMESPACES, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & NAMESPACES) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_NAMESPACE_DECLARATIONS, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_NAMESPACE_DECLARATIONS, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & NAMESPACEDECLS) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_SPLIT_CDATA, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_SPLIT_CDATA, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & SPLITCDATA) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_WELLFORMED, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_WELLFORMED, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & WELLFORMED) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_DISCARD_DEFAULT_CONTENT, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_DISCARD_DEFAULT_CONTENT, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & DISCARDDEFAULT) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_FORMAT_PRETTY_PRINT, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_FORMAT_PRETTY_PRINT, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & PRETTY_PRINT) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_XMLDECL, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_XMLDECL, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & XMLDECL) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_ELEMENT_CONTENT_WHITESPACE, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_ELEMENT_CONTENT_WHITESPACE, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & ELEM_CONTENT_WHITESPACE) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_FORMAT_PRETTY_PRINT, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_FORMAT_PRETTY_PRINT, StringComparison.OrdinalIgnoreCase))
 			{
 				return ((fFeatures & PRETTY_PRINT) != 0) ? true : false;
 			}
-			else if (name.Equals(DOMConstants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS, StringComparison.OrdinalIgnoreCase))
 			{
 				return true;
 			}
-			else if (name.Equals(DOMConstants.DOM_CANONICAL_FORM, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_CHECK_CHAR_NORMALIZATION, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_DATATYPE_NORMALIZATION, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_CANONICAL_FORM, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_CHECK_CHAR_NORMALIZATION, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_DATATYPE_NORMALIZATION, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.OrdinalIgnoreCase))
 			{
-					// || name.equalsIgnoreCase(DOMConstants.DOM_NORMALIZE_CHARACTERS)                
 				return false;
 			}
-			else if (name.Equals(DOMConstants.DOM_INFOSET, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_INFOSET, StringComparison.OrdinalIgnoreCase))
 			{
 				if ((fFeatures & ENTITIES) == 0 && (fFeatures & CDATA) == 0 && (fFeatures & ELEM_CONTENT_WHITESPACE) != 0 && (fFeatures & NAMESPACES) != 0 && (fFeatures & NAMESPACEDECLS) != 0 && (fFeatures & WELLFORMED) != 0 && (fFeatures & COMMENTS) != 0)
 				{
@@ -444,11 +443,11 @@ namespace org.apache.xml.serializer.dom3
 				}
 				return false;
 			}
-			else if (name.Equals(DOMConstants.DOM_ERROR_HANDLER, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_ERROR_HANDLER, StringComparison.OrdinalIgnoreCase))
 			{
 				return fDOMErrorHandler;
 			}
-			else if (name.Equals(DOMConstants.DOM_SCHEMA_LOCATION, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_SCHEMA_TYPE, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_SCHEMA_LOCATION, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_SCHEMA_TYPE, StringComparison.OrdinalIgnoreCase))
 			{
 				return null;
 			}
@@ -464,8 +463,8 @@ namespace org.apache.xml.serializer.dom3
 		/// This method returns a of the parameters supported by this DOMConfiguration object 
 		/// and for which at least one value can be set by the application
 		/// </summary>
-		/// <seealso cref= org.w3c.dom.DOMConfiguration#getParameterNames()
-		/// </seealso>
+		/// <seealso cref="org.w3c.dom.DOMConfiguration.getParameterNames()"
+		////>
 		/// <returns> DOMStringList A list of DOMConfiguration parameters recognized
 		///                       by the serializer </returns>
 		public DOMStringList ParameterNames
@@ -479,20 +478,20 @@ namespace org.apache.xml.serializer.dom3
 		/// <summary>
 		/// This method sets the value of the named parameter.
 		/// </summary>
-		/// <seealso cref= org.w3c.dom.DOMConfiguration#setParameter(java.lang.String, java.lang.Object)
-		/// </seealso>
+		/// <seealso cref="org.w3c.dom.DOMConfiguration.setParameter(java.lang.String, java.lang.Object)"
+		////>
 		/// <param name="name"> A String containing the DOMConfiguration parameter name. </param>
 		/// <param name="value"> An Object contaiing the parameters value to set. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setParameter(String name, Object value) throws org.w3c.dom.DOMException
 		public void setParameter(string name, object value)
 		{
 			// If the value is a boolean
-			if (value is bool?)
+			if (value is Boolean)
 			{
 				bool state = ((bool?) value).Value;
 
-				if (name.Equals(DOMConstants.DOM_COMMENTS, StringComparison.CurrentCultureIgnoreCase))
+				if (name.Equals(DOMConstants.DOM_COMMENTS, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | COMMENTS : fFeatures & ~COMMENTS;
 					// comments
@@ -505,7 +504,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_COMMENTS, DOMConstants.DOM3_EXPLICIT_FALSE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_CDATA_SECTIONS, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_CDATA_SECTIONS, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | CDATA : fFeatures & ~CDATA;
 					// cdata-sections
@@ -518,7 +517,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_CDATA_SECTIONS, DOMConstants.DOM3_EXPLICIT_FALSE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_ENTITIES, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_ENTITIES, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | ENTITIES : fFeatures & ~ENTITIES;
 					// entities
@@ -533,7 +532,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_XERCES_PROPERTIES_NS + DOMConstants.DOM_ENTITIES, DOMConstants.DOM3_EXPLICIT_FALSE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_NAMESPACES, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_NAMESPACES, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | NAMESPACES : fFeatures & ~NAMESPACES;
 					// namespaces
@@ -546,7 +545,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_NAMESPACES, DOMConstants.DOM3_EXPLICIT_FALSE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_NAMESPACE_DECLARATIONS, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_NAMESPACE_DECLARATIONS, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | NAMESPACEDECLS : fFeatures & ~NAMESPACEDECLS;
 					// namespace-declarations
@@ -559,7 +558,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_NAMESPACE_DECLARATIONS, DOMConstants.DOM3_EXPLICIT_FALSE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_SPLIT_CDATA, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_SPLIT_CDATA, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | SPLITCDATA : fFeatures & ~SPLITCDATA;
 					// split-cdata-sections
@@ -572,7 +571,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_SPLIT_CDATA, DOMConstants.DOM3_EXPLICIT_FALSE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_WELLFORMED, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_WELLFORMED, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | WELLFORMED : fFeatures & ~WELLFORMED;
 					// well-formed
@@ -585,7 +584,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_WELLFORMED, DOMConstants.DOM3_EXPLICIT_FALSE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_DISCARD_DEFAULT_CONTENT, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_DISCARD_DEFAULT_CONTENT, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | DISCARDDEFAULT : fFeatures & ~DISCARDDEFAULT;
 					// discard-default-content
@@ -598,7 +597,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_DISCARD_DEFAULT_CONTENT, DOMConstants.DOM3_EXPLICIT_FALSE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_FORMAT_PRETTY_PRINT, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_FORMAT_PRETTY_PRINT, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | PRETTY_PRINT : fFeatures & ~PRETTY_PRINT;
 					// format-pretty-print
@@ -611,7 +610,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_FORMAT_PRETTY_PRINT, DOMConstants.DOM3_EXPLICIT_FALSE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_XMLDECL, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_XMLDECL, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | XMLDECL : fFeatures & ~XMLDECL;
 					if (state)
@@ -623,7 +622,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_XSL_OUTPUT_OMIT_XML_DECL, "yes");
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_ELEMENT_CONTENT_WHITESPACE, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_ELEMENT_CONTENT_WHITESPACE, StringComparison.OrdinalIgnoreCase))
 				{
 					fFeatures = state ? fFeatures | ELEM_CONTENT_WHITESPACE : fFeatures & ~ELEM_CONTENT_WHITESPACE;
 					// element-content-whitespace
@@ -636,7 +635,7 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_ELEMENT_CONTENT_WHITESPACE, DOMConstants.DOM3_EXPLICIT_FALSE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS, StringComparison.OrdinalIgnoreCase))
 				{
 					// false is not supported
 					if (!state)
@@ -650,9 +649,8 @@ namespace org.apache.xml.serializer.dom3
 						fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS, DOMConstants.DOM3_EXPLICIT_TRUE);
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_CANONICAL_FORM, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_CHECK_CHAR_NORMALIZATION, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_DATATYPE_NORMALIZATION, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_CANONICAL_FORM, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_CHECK_CHAR_NORMALIZATION, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_DATATYPE_NORMALIZATION, StringComparison.OrdinalIgnoreCase))
 				{
-						// || name.equalsIgnoreCase(DOMConstants.DOM_NORMALIZE_CHARACTERS)
 					// true is not supported
 					if (state)
 					{
@@ -661,23 +659,23 @@ namespace org.apache.xml.serializer.dom3
 					}
 					else
 					{
-						if (name.Equals(DOMConstants.DOM_CANONICAL_FORM, StringComparison.CurrentCultureIgnoreCase))
+						if (name.Equals(DOMConstants.DOM_CANONICAL_FORM, StringComparison.OrdinalIgnoreCase))
 						{
 							fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_CANONICAL_FORM, DOMConstants.DOM3_EXPLICIT_FALSE);
 						}
-						else if (name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.CurrentCultureIgnoreCase))
+						else if (name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.OrdinalIgnoreCase))
 						{
 							fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_VALIDATE_IF_SCHEMA, DOMConstants.DOM3_EXPLICIT_FALSE);
 						}
-						else if (name.Equals(DOMConstants.DOM_VALIDATE, StringComparison.CurrentCultureIgnoreCase))
+						else if (name.Equals(DOMConstants.DOM_VALIDATE, StringComparison.OrdinalIgnoreCase))
 						{
 							fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_VALIDATE, DOMConstants.DOM3_EXPLICIT_FALSE);
 						}
-						else if (name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.CurrentCultureIgnoreCase))
+						else if (name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.OrdinalIgnoreCase))
 						{
 							fDOMConfigProperties.setProperty(DOMConstants.DOM_CHECK_CHAR_NORMALIZATION + DOMConstants.DOM_CHECK_CHAR_NORMALIZATION, DOMConstants.DOM3_EXPLICIT_FALSE);
 						}
-						else if (name.Equals(DOMConstants.DOM_DATATYPE_NORMALIZATION, StringComparison.CurrentCultureIgnoreCase))
+						else if (name.Equals(DOMConstants.DOM_DATATYPE_NORMALIZATION, StringComparison.OrdinalIgnoreCase))
 						{
 							fDOMConfigProperties.setProperty(DOMConstants.S_DOM3_PROPERTIES_NS + DOMConstants.DOM_DATATYPE_NORMALIZATION, DOMConstants.DOM3_EXPLICIT_FALSE);
 						} /* else if (name.equalsIgnoreCase(DOMConstants.DOM_NORMALIZE_CHARACTERS)) {
@@ -686,7 +684,7 @@ namespace org.apache.xml.serializer.dom3
 	                    } */
 					}
 				}
-				else if (name.Equals(DOMConstants.DOM_INFOSET, StringComparison.CurrentCultureIgnoreCase))
+				else if (name.Equals(DOMConstants.DOM_INFOSET, StringComparison.OrdinalIgnoreCase))
 				{
 					// infoset
 					if (state)
@@ -718,7 +716,7 @@ namespace org.apache.xml.serializer.dom3
 				else
 				{
 					// If this is a non-boolean parameter a type mismatch should be thrown.
-					if (name.Equals(DOMConstants.DOM_ERROR_HANDLER, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_SCHEMA_LOCATION, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_SCHEMA_TYPE, StringComparison.CurrentCultureIgnoreCase))
+					if (name.Equals(DOMConstants.DOM_ERROR_HANDLER, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_SCHEMA_LOCATION, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_SCHEMA_TYPE, StringComparison.OrdinalIgnoreCase))
 					{
 						string msg = Utils.messages.createMessage(MsgKey.ER_TYPE_MISMATCH_ERR, new object[] {name});
 						throw new DOMException(DOMException.TYPE_MISMATCH_ERR, msg);
@@ -729,7 +727,7 @@ namespace org.apache.xml.serializer.dom3
 					throw new DOMException(DOMException.NOT_FOUND_ERR, msg);
 				}
 			} // If the parameter value is not a boolean
-			else if (name.Equals(DOMConstants.DOM_ERROR_HANDLER, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_ERROR_HANDLER, StringComparison.OrdinalIgnoreCase))
 			{
 				if (value == null || value is DOMErrorHandler)
 				{
@@ -741,7 +739,7 @@ namespace org.apache.xml.serializer.dom3
 					throw new DOMException(DOMException.TYPE_MISMATCH_ERR, msg);
 				}
 			}
-			else if (name.Equals(DOMConstants.DOM_SCHEMA_LOCATION, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_SCHEMA_TYPE, StringComparison.CurrentCultureIgnoreCase))
+			else if (name.Equals(DOMConstants.DOM_SCHEMA_LOCATION, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_SCHEMA_TYPE, StringComparison.OrdinalIgnoreCase))
 			{
 				if (value != null)
 				{
@@ -757,7 +755,7 @@ namespace org.apache.xml.serializer.dom3
 			else
 			{
 				// If this is a boolean parameter a type mismatch should be thrown.
-				if (name.Equals(DOMConstants.DOM_COMMENTS, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_CDATA_SECTIONS, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_ENTITIES, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_NAMESPACES, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_NAMESPACE_DECLARATIONS, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_SPLIT_CDATA, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_WELLFORMED, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_DISCARD_DEFAULT_CONTENT, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_FORMAT_PRETTY_PRINT, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_XMLDECL, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_ELEMENT_CONTENT_WHITESPACE, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_CANONICAL_FORM, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_CHECK_CHAR_NORMALIZATION, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_DATATYPE_NORMALIZATION, StringComparison.CurrentCultureIgnoreCase) || name.Equals(DOMConstants.DOM_INFOSET, StringComparison.CurrentCultureIgnoreCase))
+				if (name.Equals(DOMConstants.DOM_COMMENTS, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_CDATA_SECTIONS, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_ENTITIES, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_NAMESPACES, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_NAMESPACE_DECLARATIONS, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_SPLIT_CDATA, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_WELLFORMED, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_DISCARD_DEFAULT_CONTENT, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_FORMAT_PRETTY_PRINT, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_XMLDECL, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_ELEMENT_CONTENT_WHITESPACE, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_IGNORE_UNKNOWN_CHARACTER_DENORMALIZATIONS, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_CANONICAL_FORM, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE_IF_SCHEMA, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_VALIDATE, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_CHECK_CHAR_NORMALIZATION, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_DATATYPE_NORMALIZATION, StringComparison.OrdinalIgnoreCase) || name.Equals(DOMConstants.DOM_INFOSET, StringComparison.OrdinalIgnoreCase))
 				{
 					string msg = Utils.messages.createMessage(MsgKey.ER_TYPE_MISMATCH_ERR, new object[] {name});
 					throw new DOMException(DOMException.TYPE_MISMATCH_ERR, msg);
@@ -778,8 +776,8 @@ namespace org.apache.xml.serializer.dom3
 		/// <summary>
 		/// Returns the DOMConfiguration of the LSSerializer.
 		/// </summary>
-		/// <seealso cref= org.w3c.dom.ls.LSSerializer#getDomConfig()
-		/// @since DOM Level 3 </seealso>
+		/// <seealso cref="org.w3c.dom.ls.LSSerializer.getDomConfig()"
+		/// @since DOM Level 3/>
 		/// <returns> A DOMConfiguration object. </returns>
 		public DOMConfiguration DomConfig
 		{
@@ -792,8 +790,8 @@ namespace org.apache.xml.serializer.dom3
 		/// <summary>
 		/// Returns the DOMConfiguration of the LSSerializer.
 		/// </summary>
-		/// <seealso cref= org.w3c.dom.ls.LSSerializer#getFilter()
-		/// @since DOM Level 3 </seealso>
+		/// <seealso cref="org.w3c.dom.ls.LSSerializer.getFilter()"
+		/// @since DOM Level 3/>
 		/// <returns> A LSSerializerFilter object. </returns>
 		public LSSerializerFilter Filter
 		{
@@ -811,8 +809,8 @@ namespace org.apache.xml.serializer.dom3
 		/// Returns the End-Of-Line sequence of characters to be used in the XML 
 		/// being serialized.  If none is set a default "\n" is returned.
 		/// </summary>
-		/// <seealso cref= org.w3c.dom.ls.LSSerializer#getNewLine()
-		/// @since DOM Level 3 </seealso>
+		/// <seealso cref="org.w3c.dom.ls.LSSerializer.getNewLine()"
+		/// @since DOM Level 3/>
 		/// <returns> A String containing the end-of-line character sequence  used in 
 		/// serialization. </returns>
 		public string NewLine
@@ -833,13 +831,13 @@ namespace org.apache.xml.serializer.dom3
 		/// Serializes the specified node to the specified LSOutput and returns true if the Node 
 		/// was successfully serialized. 
 		/// </summary>
-		/// <seealso cref= org.w3c.dom.ls.LSSerializer#write(org.w3c.dom.Node, org.w3c.dom.ls.LSOutput)
-		/// @since DOM Level 3 </seealso>
+		/// <seealso cref="org.w3c.dom.ls.LSSerializer.write(org.w3c.dom.Node, org.w3c.dom.ls.LSOutput)"
+		/// @since DOM Level 3/>
 		/// <param name="nodeArg"> The Node to serialize. </param>
 		/// <exception cref="org.w3c.dom.ls.LSException"> SERIALIZE_ERR: Raised if the 
 		/// LSSerializer was unable to serialize the node.
 		///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean write(org.w3c.dom.Node nodeArg, org.w3c.dom.ls.LSOutput destination) throws org.w3c.dom.ls.LSException
 		public bool write(Node nodeArg, LSOutput destination)
 		{
@@ -872,7 +870,7 @@ namespace org.apache.xml.serializer.dom3
 				string xmlVersion = getXMLVersion(nodeArg);
 
 				// Determine the encoding: 1.LSOutput.encoding, 2.Document.inputEncoding, 3.Document.xmlEncoding. 
-				fEncoding = destination.Encoding;
+				fEncoding = destination.getEncoding();
 				if (string.ReferenceEquals(fEncoding, null))
 				{
 					fEncoding = getInputEncoding(nodeArg);
@@ -901,7 +899,7 @@ namespace org.apache.xml.serializer.dom3
 				// node
 				// then the XML declaration, or text declaration, should be never be
 				// serialized.
-				if ((nodeArg.NodeType != Node.DOCUMENT_NODE || nodeArg.NodeType != Node.ELEMENT_NODE || nodeArg.NodeType != Node.ENTITY_NODE) && ((fFeatures & XMLDECL) != 0))
+				if ((nodeArg.getNodeType() != Node.DOCUMENT_NODE || nodeArg.getNodeType() != Node.ELEMENT_NODE || nodeArg.getNodeType() != Node.ENTITY_NODE) && ((fFeatures & XMLDECL) != 0))
 				{
 					fDOMConfigProperties.setProperty(DOMConstants.S_XSL_OUTPUT_OMIT_XML_DECL, DOMConstants.DOM3_DEFAULT_FALSE);
 				}
@@ -922,17 +920,17 @@ namespace org.apache.xml.serializer.dom3
 				// used: 1.LSOutput.characterStream, 2.LSOutput.byteStream,   
 				// 3. LSOutput.systemId 
 				// 1.LSOutput.characterStream
-				Writer writer = destination.CharacterStream;
+				Writer writer = destination.getCharacterStream();
 				if (writer == null)
 				{
 
 					// 2.LSOutput.byteStream
-					System.IO.Stream outputStream = destination.ByteStream;
+					Stream outputStream = destination.getByteStream();
 					if (outputStream == null)
 					{
 
 						// 3. LSOutput.systemId
-						string uri = destination.SystemId;
+						string uri = destination.getSystemId();
 						if (string.ReferenceEquals(uri, null))
 						{
 							string msg = Utils.messages.createMessage(MsgKey.ER_NO_OUTPUT_SPECIFIED, null);
@@ -949,9 +947,9 @@ namespace org.apache.xml.serializer.dom3
 							string absoluteURI = SystemIDResolver.getAbsoluteURI(uri);
 
 							URL url = new URL(absoluteURI);
-							System.IO.Stream urlOutStream = null;
-							string protocol = url.Protocol;
-							string host = url.Host;
+							Stream urlOutStream = null;
+							string protocol = url.getProtocol();
+							string host = url.getHost();
 
 							// For file protocols, there is no need to use a URL to get its
 							// corresponding OutputStream
@@ -961,10 +959,10 @@ namespace org.apache.xml.serializer.dom3
 							// ("."), and hyphen ("-") are allowed. For resiliency, programs
 							// interpreting URLs should treat upper case letters as equivalent to
 							// lower case in scheme names (e.g., allow "HTTP" as well as "http").
-							if (protocol.Equals("file", StringComparison.CurrentCultureIgnoreCase) && (string.ReferenceEquals(host, null) || host.Length == 0 || host.Equals("localhost")))
+							if (protocol.Equals("file", StringComparison.OrdinalIgnoreCase) && (string.ReferenceEquals(host, null) || host.Length == 0 || host.Equals("localhost")))
 							{
 								// do we also need to check for host.equals(hostname)
-								urlOutStream = new System.IO.FileStream(getPathWithoutEscapes(url.Path), System.IO.FileMode.Create, System.IO.FileAccess.Write);
+								urlOutStream = new FileStream(getPathWithoutEscapes(url.getPath()), FileMode.Create, FileAccess.Write);
 
 							}
 							else
@@ -973,18 +971,18 @@ namespace org.apache.xml.serializer.dom3
 								// RFC1738 other than file
 
 								URLConnection urlCon = url.openConnection();
-								urlCon.DoInput = false;
-								urlCon.DoOutput = true;
-								urlCon.UseCaches = false;
-								urlCon.AllowUserInteraction = false;
+								urlCon.setDoInput(false);
+								urlCon.setDoOutput(true);
+								urlCon.setUseCaches(false);
+								urlCon.setAllowUserInteraction(false);
 
 								// When writing to a HTTP URI, a HTTP PUT is performed.
 								if (urlCon is HttpURLConnection)
 								{
 									HttpURLConnection httpCon = (HttpURLConnection) urlCon;
-									httpCon.RequestMethod = "PUT";
+									httpCon.setRequestMethod("PUT");
 								}
-								urlOutStream = urlCon.OutputStream;
+								urlOutStream = urlCon.getOutputStream();
 							}
 							// set the OutputStream to that obtained from the systemId
 							serializer.OutputStream = urlOutStream;
@@ -1066,14 +1064,14 @@ namespace org.apache.xml.serializer.dom3
 		/// Serializes the specified node and returns a String with the serialized
 		/// data to the caller.  
 		/// </summary>
-		/// <seealso cref= org.w3c.dom.ls.LSSerializer#writeToString(org.w3c.dom.Node)
-		/// @since DOM Level 3 </seealso>
+		/// <seealso cref="org.w3c.dom.ls.LSSerializer.writeToString(org.w3c.dom.Node)"
+		/// @since DOM Level 3/>
 		/// <param name="nodeArg"> The Node to serialize. </param>
 		/// <exception cref="org.w3c.dom.ls.LSException"> SERIALIZE_ERR: Raised if the 
 		/// LSSerializer was unable to serialize the node.
 		///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public String writeToString(org.w3c.dom.Node nodeArg) throws org.w3c.dom.DOMException, org.w3c.dom.ls.LSException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public String writeToString(org.w3c.dom.Node nodeArg) throws DOMException, org.w3c.dom.ls.LSException
 		public string writeToString(Node nodeArg)
 		{
 			// return null is nodeArg is null.  Should an Exception be thrown instead?
@@ -1102,7 +1100,7 @@ namespace org.apache.xml.serializer.dom3
 				// node
 				// then the XML declaration, or text declaration, should be never be
 				// serialized.
-				if ((nodeArg.NodeType != Node.DOCUMENT_NODE || nodeArg.NodeType != Node.ELEMENT_NODE || nodeArg.NodeType != Node.ENTITY_NODE) && ((fFeatures & XMLDECL) != 0))
+				if ((nodeArg.getNodeType() != Node.DOCUMENT_NODE || nodeArg.getNodeType() != Node.ELEMENT_NODE || nodeArg.getNodeType() != Node.ENTITY_NODE) && ((fFeatures & XMLDECL) != 0))
 				{
 					fDOMConfigProperties.setProperty(DOMConstants.S_XSL_OUTPUT_OMIT_XML_DECL, DOMConstants.DOM3_DEFAULT_FALSE);
 				}
@@ -1173,13 +1171,13 @@ namespace org.apache.xml.serializer.dom3
 		/// Serializes the specified node to the specified URI and returns true if the Node 
 		/// was successfully serialized. 
 		/// </summary>
-		/// <seealso cref= org.w3c.dom.ls.LSSerializer#writeToURI(org.w3c.dom.Node, String)
-		/// @since DOM Level 3 </seealso>
+		/// <seealso cref="org.w3c.dom.ls.LSSerializer.writeToURI(org.w3c.dom.Node, String)"
+		/// @since DOM Level 3/>
 		/// <param name="nodeArg"> The Node to serialize. </param>
 		/// <exception cref="org.w3c.dom.ls.LSException"> SERIALIZE_ERR: Raised if the 
 		/// LSSerializer was unable to serialize the node.
 		///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean writeToURI(org.w3c.dom.Node nodeArg, String uri) throws org.w3c.dom.ls.LSException
 		public bool writeToURI(Node nodeArg, string uri)
 		{
@@ -1216,7 +1214,7 @@ namespace org.apache.xml.serializer.dom3
 				// node
 				// then the XML declaration, or text declaration, should be never be
 				// serialized.
-				if ((nodeArg.NodeType != Node.DOCUMENT_NODE || nodeArg.NodeType != Node.ELEMENT_NODE || nodeArg.NodeType != Node.ENTITY_NODE) && ((fFeatures & XMLDECL) != 0))
+				if ((nodeArg.getNodeType() != Node.DOCUMENT_NODE || nodeArg.getNodeType() != Node.ELEMENT_NODE || nodeArg.getNodeType() != Node.ENTITY_NODE) && ((fFeatures & XMLDECL) != 0))
 				{
 					fDOMConfigProperties.setProperty(DOMConstants.S_XSL_OUTPUT_OMIT_XML_DECL, DOMConstants.DOM3_DEFAULT_FALSE);
 				}
@@ -1248,9 +1246,9 @@ namespace org.apache.xml.serializer.dom3
 					string absoluteURI = SystemIDResolver.getAbsoluteURI(uri);
 
 					URL url = new URL(absoluteURI);
-					System.IO.Stream urlOutStream = null;
-					string protocol = url.Protocol;
-					string host = url.Host;
+					Stream urlOutStream = null;
+					string protocol = url.getProtocol();
+					string host = url.getHost();
 
 					// For file protocols, there is no need to use a URL to get its
 					// corresponding OutputStream
@@ -1261,10 +1259,10 @@ namespace org.apache.xml.serializer.dom3
 					// programs interpreting URLs should treat upper case letters as
 					// equivalent to lower case in scheme names 
 					// (e.g., allow "HTTP" as well as "http").
-					if (protocol.Equals("file", StringComparison.CurrentCultureIgnoreCase) && (string.ReferenceEquals(host, null) || host.Length == 0 || host.Equals("localhost")))
+					if (protocol.Equals("file", StringComparison.OrdinalIgnoreCase) && (string.ReferenceEquals(host, null) || host.Length == 0 || host.Equals("localhost")))
 					{
 						// do we also need to check for host.equals(hostname)
-						urlOutStream = new System.IO.FileStream(getPathWithoutEscapes(url.Path), System.IO.FileMode.Create, System.IO.FileAccess.Write);
+						urlOutStream = new FileStream(getPathWithoutEscapes(url.getPath()), FileMode.Create, FileAccess.Write);
 
 					}
 					else
@@ -1273,18 +1271,18 @@ namespace org.apache.xml.serializer.dom3
 						// RFC1738 other than file
 
 						URLConnection urlCon = url.openConnection();
-						urlCon.DoInput = false;
-						urlCon.DoOutput = true;
-						urlCon.UseCaches = false;
-						urlCon.AllowUserInteraction = false;
+						urlCon.setDoInput(false);
+						urlCon.setDoOutput(true);
+						urlCon.setUseCaches(false);
+						urlCon.setAllowUserInteraction(false);
 
 						// When writing to a HTTP URI, a HTTP PUT is performed.
 						if (urlCon is HttpURLConnection)
 						{
 							HttpURLConnection httpCon = (HttpURLConnection) urlCon;
-							httpCon.RequestMethod = "PUT";
+							httpCon.setRequestMethod("PUT");
 						}
-						urlOutStream = urlCon.OutputStream;
+						urlOutStream = urlCon.getOutputStream();
 					}
 					// set the OutputStream to that obtained from the systemId
 					serializer.OutputStream = urlOutStream;
@@ -1360,7 +1358,7 @@ namespace org.apache.xml.serializer.dom3
 			// Determine the XML Version of the document
 			if (nodeArg != null)
 			{
-				if (nodeArg.NodeType == Node.DOCUMENT_NODE)
+				if (nodeArg.getNodeType() == Node.DOCUMENT_NODE)
 				{
 					// The Document node is the Node argument
 					doc = (Document)nodeArg;
@@ -1368,13 +1366,13 @@ namespace org.apache.xml.serializer.dom3
 				else
 				{
 					// The Document node is the Node argument's ownerDocument
-					doc = nodeArg.OwnerDocument;
+					doc = nodeArg.getOwnerDocument();
 				}
 
 				// Determine the DOM Version.
-				if (doc != null && doc.Implementation.hasFeature("Core","3.0"))
+				if (doc != null && doc.getImplementation().hasFeature("Core","3.0"))
 				{
-					return doc.XmlVersion;
+					return doc.getXmlVersion();
 				}
 			}
 			// The version will be treated as "1.0" which may result in
@@ -1397,7 +1395,7 @@ namespace org.apache.xml.serializer.dom3
 			// Determine the XML Encoding of the document
 			if (nodeArg != null)
 			{
-				if (nodeArg.NodeType == Node.DOCUMENT_NODE)
+				if (nodeArg.getNodeType() == Node.DOCUMENT_NODE)
 				{
 					// The Document node is the Node argument
 					doc = (Document)nodeArg;
@@ -1405,13 +1403,13 @@ namespace org.apache.xml.serializer.dom3
 				else
 				{
 					// The Document node is the Node argument's ownerDocument
-					doc = nodeArg.OwnerDocument;
+					doc = nodeArg.getOwnerDocument();
 				}
 
 				// Determine the XML Version. 
-				if (doc != null && doc.Implementation.hasFeature("Core","3.0"))
+				if (doc != null && doc.getImplementation().hasFeature("Core","3.0"))
 				{
-					return doc.XmlEncoding;
+					return doc.getXmlEncoding();
 				}
 			}
 			// The default encoding is UTF-8 except for the writeToString method
@@ -1431,7 +1429,7 @@ namespace org.apache.xml.serializer.dom3
 			// Determine the Input Encoding of the document
 			if (nodeArg != null)
 			{
-				if (nodeArg.NodeType == Node.DOCUMENT_NODE)
+				if (nodeArg.getNodeType() == Node.DOCUMENT_NODE)
 				{
 					// The Document node is the Node argument
 					doc = (Document)nodeArg;
@@ -1439,13 +1437,13 @@ namespace org.apache.xml.serializer.dom3
 				else
 				{
 					// The Document node is the Node argument's ownerDocument
-					doc = nodeArg.OwnerDocument;
+					doc = nodeArg.getOwnerDocument();
 				}
 
 				// Determine the DOM Version.
-				if (doc != null && doc.Implementation.hasFeature("Core","3.0"))
+				if (doc != null && doc.getImplementation().hasFeature("Core","3.0"))
 				{
-					return doc.InputEncoding;
+					return doc.getInputEncoding();
 				}
 			}
 			// The default encoding returned is null

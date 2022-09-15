@@ -1,0 +1,311 @@
+﻿/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the  "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * $Id: DOM2Helper.java 468655 2006-10-28 07:12:06Z minchau $
+ */
+namespace org.apache.xml.utils
+{
+
+
+	using Attr = org.w3c.dom.Attr;
+	using Document = org.w3c.dom.Document;
+	using Element = org.w3c.dom.Element;
+	using Node = org.w3c.dom.Node;
+
+	using InputSource = org.xml.sax.InputSource;
+
+	/// @deprecated Since the introduction of the DTM, this class will be removed.
+	/// This class provides a DOM level 2 "helper", which provides services currently 
+	/// not provided be the DOM standard. 
+	public class DOM2Helper : DOMHelper
+	{
+
+	  /// <summary>
+	  /// Construct an instance.
+	  /// </summary>
+	  public DOM2Helper()
+	  {
+	  }
+
+	  /// <summary>
+	  /// Check node to see if it was created by a DOM implementation
+	  /// that this helper is intended to support. This is currently
+	  /// disabled, and assumes all nodes are acceptable rather than checking
+	  /// that they implement org.apache.xerces.dom.NodeImpl.
+	  /// </summary>
+	  /// <param name="node"> The node to be tested.
+	  /// </param>
+	  /// <exception cref="TransformerException"> if the node is not one which this
+	  /// DOM2Helper can support. If we return without throwing the exception,
+	  /// the node is compatable.
+	  /// @xsl.usage internal </exception>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//ORIGINAL LINE: public void checkNode(org.w3c.dom.Node node) throws javax.xml.transform.TransformerException
+	  public virtual void checkNode(Node node)
+	  {
+
+		// if(!(node instanceof org.apache.xerces.dom.NodeImpl))
+		//  throw new TransformerException(XSLMessages.createXPATHMessage(XPATHErrorResources.ER_XERCES_CANNOT_HANDLE_NODES, new Object[]{((Object)node).getClass()})); //"DOM2Helper can not handle nodes of type"
+		//+((Object)node).getClass());
+	  }
+
+	  /// <summary>
+	  /// Returns true if the DOM implementation handled by this helper
+	  /// supports the SAX ContentHandler interface.
+	  /// </summary>
+	  /// <returns> true (since Xerces does). </returns>
+	  public virtual bool supportsSAX()
+	  {
+		return true;
+	  }
+
+	  /// <summary>
+	  /// Field m_doc: Document Node for the document this helper is currently
+	  /// accessing or building </summary>
+	  /// <seealso cref= #setDocument </seealso>
+	  /// <seealso cref= #getDocument
+	  ///  </seealso>
+	  private Document m_doc;
+
+	  /// <summary>
+	  /// Specify which document this helper is currently operating on.
+	  /// </summary>
+	  /// <param name="doc"> The DOM Document node for this document. </param>
+	  /// <seealso cref= #getDocument </seealso>
+	  public virtual Document Document
+	  {
+		  set
+		  {
+			m_doc = value;
+		  }
+		  get
+		  {
+			return m_doc;
+		  }
+	  }
+
+
+	  /// <summary>
+	  /// Parse an XML document.
+	  /// 
+	  /// <para>Right now the Xerces DOMParser class is used.  This needs
+	  /// fixing, either via jaxp, or via some other, standard method.</para>
+	  /// 
+	  /// <para>The application can use this method to instruct the SAX parser
+	  /// to begin parsing an XML document from any valid input
+	  /// source (a character stream, a byte stream, or a URI).</para>
+	  /// 
+	  /// <para>Applications may not invoke this method while a parse is in
+	  /// progress (they should create a new Parser instead for each
+	  /// additional XML document).  Once a parse is complete, an
+	  /// application may reuse the same Parser object, possibly with a
+	  /// different input source.</para>
+	  /// </summary>
+	  /// <param name="source"> The input source for the top-level of the
+	  ///        XML document.
+	  /// </param>
+	  /// <exception cref="TransformerException"> if any checked exception is thrown.
+	  /// @xsl.usage internal </exception>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//ORIGINAL LINE: public void parse(org.xml.sax.InputSource source) throws javax.xml.transform.TransformerException
+	  public virtual void parse(InputSource source)
+	  {
+
+		try
+		{
+
+		  // I guess I should use JAXP factory here... when it's legal.
+		  // org.apache.xerces.parsers.DOMParser parser 
+		  //  = new org.apache.xerces.parsers.DOMParser();
+		  DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+
+		  builderFactory.NamespaceAware = true;
+		  builderFactory.Validating = true;
+
+		  DocumentBuilder parser = builderFactory.newDocumentBuilder();
+
+		  /*
+		  // domParser.setFeature("http://apache.org/xml/features/dom/create-entity-ref-nodes", getShouldExpandEntityRefs()? false : true);
+		  if(m_useDOM2getNamespaceURI)
+		  {
+		  parser.setFeature("http://apache.org/xml/features/dom/defer-node-expansion", true);
+		  parser.setFeature("http://xml.org/sax/features/namespaces", true);
+		  }
+		  else
+		  {
+		  parser.setFeature("http://apache.org/xml/features/dom/defer-node-expansion", false);
+		  }
+	
+		  parser.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
+		  */
+
+		  parser.ErrorHandler = new org.apache.xml.utils.DefaultErrorHandler();
+
+		  // if(null != m_entityResolver)
+		  // {
+		  // System.out.println("Setting the entity resolver.");
+		  //  parser.setEntityResolver(m_entityResolver);
+		  // }
+		  Document = parser.parse(source);
+		}
+		catch (org.xml.sax.SAXException se)
+		{
+		  throw new TransformerException(se);
+		}
+		catch (ParserConfigurationException pce)
+		{
+		  throw new TransformerException(pce);
+		}
+		catch (IOException ioe)
+		{
+		  throw new TransformerException(ioe);
+		}
+
+		// setDocument(((org.apache.xerces.parsers.DOMParser)parser).getDocument());
+	  }
+
+	  /// <summary>
+	  /// Given an XML ID, return the element. This requires assistance from the
+	  /// DOM and parser, and is meaningful only in the context of a DTD 
+	  /// or schema which declares attributes as being of type ID. This
+	  /// information may or may not be available in all parsers, may or
+	  /// may not be available for specific documents, and may or may not
+	  /// be available when validation is not turned on.
+	  /// </summary>
+	  /// <param name="id"> The ID to search for, as a String. </param>
+	  /// <param name="doc"> The document to search within, as a DOM Document node. </param>
+	  /// <returns> DOM Element node with an attribute of type ID whose value
+	  /// uniquely matches the requested id string, or null if there isn't
+	  /// such an element or if the DOM can't answer the question for other
+	  /// reasons. </returns>
+	  public override Element getElementByID(string id, Document doc)
+	  {
+		return doc.getElementById(id);
+	  }
+
+	  /// <summary>
+	  /// Figure out whether node2 should be considered as being later
+	  /// in the document than node1, in Document Order as defined
+	  /// by the XPath model. This may not agree with the ordering defined
+	  /// by other XML applications.
+	  /// <para>
+	  /// There are some cases where ordering isn't defined, and neither are
+	  /// the results of this function -- though we'll generally return true.
+	  /// </para>
+	  /// <para>
+	  /// TODO: Make sure this does the right thing with attribute nodes!!!
+	  /// 
+	  /// </para>
+	  /// </summary>
+	  /// <param name="node1"> DOM Node to perform position comparison on. </param>
+	  /// <param name="node2"> DOM Node to perform position comparison on .
+	  /// </param>
+	  /// <returns> false if node2 comes before node1, otherwise return true.
+	  /// You can think of this as 
+	  /// <code>(node1.documentOrderPosition &lt;= node2.documentOrderPosition)</code>. </returns>
+	  public static bool isNodeAfter(Node node1, Node node2)
+	  {
+
+		// Assume first that the nodes are DTM nodes, since discovering node 
+		// order is massivly faster for the DTM.
+		if (node1 is DOMOrder && node2 is DOMOrder)
+		{
+		  int index1 = ((DOMOrder) node1).Uid;
+		  int index2 = ((DOMOrder) node2).Uid;
+
+		  return index1 <= index2;
+		}
+		else
+		{
+
+		  // isNodeAfter will return true if node is after countedNode 
+		  // in document order. The base isNodeAfter is sloooow (relatively).
+		  return DOMHelper.isNodeAfter(node1, node2);
+		}
+	  }
+
+	  /// <summary>
+	  /// Get the XPath-model parent of a node.  This version takes advantage
+	  /// of the DOM Level 2 Attr.ownerElement() method; the base version we
+	  /// would otherwise inherit is prepared to fall back on exhaustively
+	  /// walking the document to find an Attr's parent.
+	  /// </summary>
+	  /// <param name="node"> Node to be examined
+	  /// </param>
+	  /// <returns> the DOM parent of the input node, if there is one, or the
+	  /// ownerElement if the input node is an Attr, or null if the node is
+	  /// a Document, a DocumentFragment, or an orphan. </returns>
+	  public static Node getParentOfNode(Node node)
+	  {
+			  Node parent = node.ParentNode;
+			  if (parent == null && (Node.ATTRIBUTE_NODE == node.NodeType))
+			  {
+			   parent = ((Attr) node).OwnerElement;
+			  }
+			  return parent;
+	  }
+
+	  /// <summary>
+	  /// Returns the local name of the given node, as defined by the
+	  /// XML Namespaces specification. This is prepared to handle documents
+	  /// built using DOM Level 1 methods by falling back upon explicitly
+	  /// parsing the node name.
+	  /// </summary>
+	  /// <param name="n"> Node to be examined
+	  /// </param>
+	  /// <returns> String containing the local name, or null if the node
+	  /// was not assigned a Namespace. </returns>
+	  public override string getLocalNameOfNode(Node n)
+	  {
+
+		string name = n.LocalName;
+
+		return (null == name) ? base.getLocalNameOfNode(n) : name;
+	  }
+
+	  /// <summary>
+	  /// Returns the Namespace Name (Namespace URI) for the given node.
+	  /// In a Level 2 DOM, you can ask the node itself. Note, however, that
+	  /// doing so conflicts with our decision in getLocalNameOfNode not
+	  /// to trust the that the DOM was indeed created using the Level 2
+	  /// methods. If Level 1 methods were used, these two functions will
+	  /// disagree with each other.
+	  /// <para>
+	  /// TODO: Reconcile with getLocalNameOfNode.
+	  /// 
+	  /// </para>
+	  /// </summary>
+	  /// <param name="n"> Node to be examined
+	  /// </param>
+	  /// <returns> String containing the Namespace URI bound to this DOM node
+	  /// at the time the Node was created. </returns>
+	  public override string getNamespaceOfNode(Node n)
+	  {
+		return n.NamespaceURI;
+	  }
+
+	  /// <summary>
+	  /// Field m_useDOM2getNamespaceURI is a compile-time flag which
+	  ///  gates some of the parser options used to build a DOM -- but 
+	  /// that code is commented out at this time and nobody else
+	  /// references it, so I've commented this out as well. 
+	  /// </summary>
+	  //private boolean m_useDOM2getNamespaceURI = false;
+	}
+
+}

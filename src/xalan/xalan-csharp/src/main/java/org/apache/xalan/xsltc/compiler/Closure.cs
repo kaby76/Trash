@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	/// <summary>
 	/// @author Santiago Pericas-Geertsen
 	/// </summary>

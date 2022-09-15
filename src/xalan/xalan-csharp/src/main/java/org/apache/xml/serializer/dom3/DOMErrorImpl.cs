@@ -23,7 +23,6 @@
 
 namespace org.apache.xml.serializer.dom3
 {
-
 	using DOMError = org.w3c.dom.DOMError;
 	using DOMLocator = org.w3c.dom.DOMLocator;
 

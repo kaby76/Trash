@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils.res
 {
-
 	//
 	//  LangResources_en.properties
 	//
@@ -45,13 +44,13 @@ namespace org.apache.xml.utils.res
 				new object[] {"ui_language", "he"},
 				new object[] {"help_language", "he"},
 				new object[] {"language", "he"},
-				new object[] {"alphabet", new CharArrayWrapper(new char[]{0x05D0, 0x05D1, 0x05D2, 0x05D3, 0x05D4, 0x05D5, 0x05D6, 0x05D7, 0x05D8, 0x05D9, 0x05DA, 0x05DB, 0x05DC, 0x05DD, 0x05DE, 0x05DF, 0x05E0, 0x05E1})},
+				new object[] {"alphabet", new CharArrayWrapper(new char[]{(char)0x05D0, (char)0x05D1, (char)0x05D2, (char)0x05D3, (char)0x05D4, (char)0x05D5, (char)0x05D6, (char)0x05D7, (char)0x05D8, (char)0x05D9, (char)0x05DA, (char)0x05DB, (char)0x05DC, (char)0x05DD, (char)0x05DE, (char)0x05DF, (char)0x05E0, (char)0x05E1})},
 				new object[] {"tradAlphabet", new CharArrayWrapper(new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'})},
 				new object[] {"orientation", "RightToLeft"},
 				new object[] {"numbering", "additive"},
 				new object[] {"numberGroups", new IntArrayWrapper(new int[]{10, 1})},
-				new object[] {"digits", new CharArrayWrapper(new char[]{0x05D0, 0x05D1, 0x05D2, 0x05D3, 0x05D4, 0x05D5, 0x05D6, 0x05D7, 0x05D8})},
-				new object[] {"tens", new CharArrayWrapper(new char[]{0x05D9, 0x05DA, 0x05DB, 0x05DC, 0x05DD, 0x05DE, 0x05DF, 0x05E0, 0x05E1})},
+				new object[] {"digits", new CharArrayWrapper(new char[]{(char)0x05D0, (char)0x05D1, (char)0x05D2, (char)0x05D3, (char)0x05D4, (char)0x05D5, (char)0x05D6, (char)0x05D7, (char)0x05D8})},
+				new object[] {"tens", new CharArrayWrapper(new char[]{(char)0x05D9, (char)0x05DA, (char)0x05DB, (char)0x05DC, (char)0x05DD, (char)0x05DE, (char)0x05DF, (char)0x05E0, (char)0x05E1})},
 				new object[] {"tables", new StringArrayWrapper(new string[]{"tens", "digits"})}
 			};
 		  }

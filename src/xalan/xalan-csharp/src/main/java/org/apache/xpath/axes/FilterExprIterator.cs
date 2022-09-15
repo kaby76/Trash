@@ -23,8 +23,10 @@ using System.Collections;
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using XNodeSet = org.apache.xpath.objects.XNodeSet;
 
 	[Serializable]
@@ -89,7 +91,7 @@ namespace org.apache.xpath.axes
 			}
 			else
 			{
-			  m_lastFetched = org.apache.xml.dtm.DTM_Fields.NULL;
+			  m_lastFetched = DTM.NULL;
 			}
     
 			return m_lastFetched;
@@ -178,7 +180,7 @@ namespace org.apache.xpath.axes
 			  this.outerInstance = outerInstance;
 		  }
 
-		/// <seealso cref= ExpressionOwner#getExpression() </seealso>
+		/// <seealso cref="ExpressionOwner.getExpression()"/>
 		public virtual Expression Expression
 		{
 			get
@@ -208,7 +210,7 @@ namespace org.apache.xpath.axes
 		base.callPredicateVisitors(visitor);
 	  }
 
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		if (!base.deepEquals(expr))

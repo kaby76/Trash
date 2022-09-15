@@ -24,7 +24,6 @@ namespace org.apache.xml.utils
 {
 
 
-
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
 	using XMLMessages = org.apache.xml.res.XMLMessages;
 
@@ -114,7 +113,7 @@ namespace org.apache.xml.utils
 	  ///                  SAX parse exception. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warning(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException
 	  public virtual void warning(SAXParseException exception)
 	  {
@@ -144,7 +143,7 @@ namespace org.apache.xml.utils
 	  ///                  SAX parse exception. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException
 	  public virtual void error(SAXParseException exception)
 	  {
@@ -172,7 +171,7 @@ namespace org.apache.xml.utils
 	  ///                  SAX parse exception. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fatalError(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException
 	  public virtual void fatalError(SAXParseException exception)
 	  {
@@ -197,8 +196,8 @@ namespace org.apache.xml.utils
 	  ///                  SAX parse exception. </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= javax.xml.transform.TransformerException </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="javax.xml.transform.TransformerException"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warning(javax.xml.transform.TransformerException exception) throws javax.xml.transform.TransformerException
 	  public virtual void warning(TransformerException exception)
 	  {
@@ -228,8 +227,8 @@ namespace org.apache.xml.utils
 	  ///                  SAX parse exception. </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= javax.xml.transform.TransformerException </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="javax.xml.transform.TransformerException"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(javax.xml.transform.TransformerException exception) throws javax.xml.transform.TransformerException
 	  public virtual void error(TransformerException exception)
 	  {
@@ -266,8 +265,8 @@ namespace org.apache.xml.utils
 	  ///                  SAX parse exception. </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= javax.xml.transform.TransformerException </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="javax.xml.transform.TransformerException"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fatalError(javax.xml.transform.TransformerException exception) throws javax.xml.transform.TransformerException
 	  public virtual void fatalError(TransformerException exception)
 	  {
@@ -301,7 +300,7 @@ namespace org.apache.xml.utils
 		  }
 		  else if (cause is TransformerException)
 		  {
-			SourceLocator causeLocator = ((TransformerException)cause).Locator;
+			SourceLocator causeLocator = ((TransformerException)cause).getLocator();
 			if (null != causeLocator)
 			{
 			  locator = causeLocator;
@@ -314,7 +313,7 @@ namespace org.apache.xml.utils
 		  }
 		  else if (cause is SAXException)
 		  {
-			cause = ((SAXException)cause).Exception;
+			cause = ((SAXException)cause).getException();
 		  }
 		  else
 		  {
@@ -322,7 +321,7 @@ namespace org.apache.xml.utils
 		  }
 		} while (null != cause);
 
-		exception.Locator = locator;
+		exception.setLocator(locator);
 	  }
 
 	  public static void printLocation(PrintStream pw, TransformerException exception)
@@ -349,7 +348,7 @@ namespace org.apache.xml.utils
 		  }
 		  else if (cause is TransformerException)
 		  {
-			SourceLocator causeLocator = ((TransformerException)cause).Locator;
+			SourceLocator causeLocator = ((TransformerException)cause).getLocator();
 			if (null != causeLocator)
 			{
 			  locator = causeLocator;
@@ -365,7 +364,7 @@ namespace org.apache.xml.utils
 		  }
 		  else if (cause is SAXException)
 		  {
-			cause = ((SAXException)cause).Exception;
+			cause = ((SAXException)cause).getException();
 		  }
 		  else
 		  {
@@ -376,9 +375,9 @@ namespace org.apache.xml.utils
 		if (null != locator)
 		{
 		  // getErrorWriter().println("Parser fatal error: "+exception.getMessage());
-		  string id = (null != locator.PublicId) ? locator.PublicId : (null != locator.SystemId) ? locator.SystemId : XMLMessages.createXMLMessage(XMLErrorResources.ER_SYSTEMID_UNKNOWN, null); //"SystemId Unknown";
+		  string id = (null != locator.getPublicId()) ? locator.getPublicId() : (null != locator.getSystemId()) ? locator.getSystemId() : XMLMessages.createXMLMessage(XMLErrorResources.ER_SYSTEMID_UNKNOWN, null); //"SystemId Unknown";
 
-		  pw.print(id + "; " + XMLMessages.createXMLMessage("line", null) + locator.LineNumber + "; " + XMLMessages.createXMLMessage("column", null) + locator.ColumnNumber + "; ");
+		  pw.print(id + "; " + XMLMessages.createXMLMessage("line", null) + locator.getLineNumber() + "; " + XMLMessages.createXMLMessage("column", null) + locator.getColumnNumber() + "; ");
 		}
 		else
 		{

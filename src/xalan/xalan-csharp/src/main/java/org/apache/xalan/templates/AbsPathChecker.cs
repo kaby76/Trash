@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.templates
 {
-
 	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
 	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using LocPathIterator = org.apache.xpath.axes.LocPathIterator;
@@ -71,7 +70,7 @@ namespace org.apache.xalan.templates
 		///              be reset if rewriting takes place. </param>
 		/// <param name="var"> The variable reference object. </param>
 		/// <returns> true if the sub expressions should be traversed. </returns>
-		public override bool visitVariableRef(ExpressionOwner owner, Variable @var)
+		public override bool visitVariableRef(ExpressionOwner owner, Variable var)
 		{
 			m_isAbs = false;
 			return true;

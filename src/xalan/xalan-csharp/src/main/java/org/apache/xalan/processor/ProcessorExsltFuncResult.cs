@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.processor
 {
-
 	using ElemExsltFuncResult = org.apache.xalan.templates.ElemExsltFuncResult;
 	using ElemExsltFunction = org.apache.xalan.templates.ElemExsltFunction;
 	using ElemParam = org.apache.xalan.templates.ElemParam;
@@ -46,7 +45,7 @@ namespace org.apache.xalan.processor
 	  /// parameter, or another func:result, and that it belongs to a func:function 
 	  /// element.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {

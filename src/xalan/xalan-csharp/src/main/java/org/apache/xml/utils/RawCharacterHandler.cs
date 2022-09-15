@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// An interface that a Serializer/ContentHandler/ContentHandler must
 	/// implement in order for disable-output-escaping to work.
@@ -37,7 +36,7 @@ namespace org.apache.xml.utils
 	  /// <param name="length"> Number of characters in the array
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void charactersRaw(char ch[], int start, int length) throws javax.xml.transform.TransformerException;
 	  void charactersRaw(char[] ch, int start, int length);
 	}

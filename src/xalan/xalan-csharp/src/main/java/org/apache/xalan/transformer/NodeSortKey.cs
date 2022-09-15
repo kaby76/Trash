@@ -21,7 +21,6 @@
 namespace org.apache.xalan.transformer
 {
 
-
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using XPath = org.apache.xpath.XPath;
 
@@ -77,7 +76,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="namespaceContext"> Prefix resolver
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: NodeSortKey(TransformerImpl transformer, org.apache.xpath.XPath selectPat, boolean treatAsNumbers, boolean descending, String langValue, boolean caseOrderUpper, org.apache.xml.utils.PrefixResolver namespaceContext) throws javax.xml.transform.TransformerException
 	  internal NodeSortKey(TransformerImpl transformer, XPath selectPat, bool treatAsNumbers, bool descending, string langValue, bool caseOrderUpper, org.apache.xml.utils.PrefixResolver namespaceContext)
 	  {
@@ -101,7 +100,7 @@ namespace org.apache.xalan.transformer
 		  //    instead of an upper-case code
 		  // b) country must be provided as an ISO-code 
 		  //    instead of a full localized country name (e.g. "France")
-		  m_locale = new Locale(langValue.ToLower(), Locale.Default.Country);
+		  m_locale = new Locale(langValue.ToLower(), Locale.getDefault().getCountry());
 
 		  // (old, before bug report 2851).
 		  //  m_locale = new Locale(langValue.toUpperCase(),
@@ -111,12 +110,12 @@ namespace org.apache.xalan.transformer
 		  {
 
 			// m_processor.warn("Could not find locale for <sort xml:lang="+langValue);
-			m_locale = Locale.Default;
+			m_locale = Locale.getDefault();
 		  }
 		}
 		else
 		{
-		  m_locale = Locale.Default;
+		  m_locale = Locale.getDefault();
 		}
 
 		m_col = Collator.getInstance(m_locale);
@@ -125,7 +124,7 @@ namespace org.apache.xalan.transformer
 		{
 		  m_processor.MsgMgr.warn(null, XSLTErrorResources.WG_CANNOT_FIND_COLLATOR, new object[]{langValue}); //"Could not find Collator for <sort xml:lang="+langValue);
 
-		  m_col = Collator.Instance;
+		  m_col = Collator.getInstance();
 		}
 	  }
 	}

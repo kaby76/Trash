@@ -25,7 +25,6 @@ namespace org.apache.xml.utils
 {
 
 
-
 	/// <summary>
 	/// International friendly string comparison with case-order
 	/// @author Igor Hersht, igorh@ca.ibm.com
@@ -43,20 +42,16 @@ namespace org.apache.xml.utils
 		 private string m_caseOrder;
 		 private int m_mask = unchecked((int)0xFFFFFFFF);
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public StringComparable(final String text, final java.util.Locale locale, final java.text.Collator collator, final String caseOrder)
-		public StringComparable(string text, Locale locale, Collator collator, string caseOrder)
+		public StringComparable(in string text, in Locale locale, in Collator collator, in string caseOrder)
 		{
 			 m_text = text;
 			 m_locale = locale;
 			 m_collator = (RuleBasedCollator)collator;
 			 m_caseOrder = caseOrder;
-			 m_mask = getMask(m_collator.Strength);
+			 m_mask = getMask(m_collator.getStrength());
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public final static Comparable getComparator(final String text, final java.util.Locale locale, final java.text.Collator collator, final String caseOrder)
-	   public static IComparable getComparator(string text, Locale locale, Collator collator, string caseOrder)
+	   public static IComparable getComparator(in string text, in Locale locale, in Collator collator, in string caseOrder)
 	   {
 		   if ((string.ReferenceEquals(caseOrder, null)) || (caseOrder.Length == 0))
 		   { // no case-order specified
@@ -84,7 +79,7 @@ namespace org.apache.xml.utils
 	   }
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int savedStrength = m_collator.getStrength();
-	   int savedStrength = m_collator.Strength;
+	   int savedStrength = m_collator.getStrength();
 	   int comp = 0;
 		  // Is there difference more significant than case-order?     
 		 if (((savedStrength == Collator.PRIMARY) || (savedStrength == Collator.SECONDARY)))
@@ -93,9 +88,9 @@ namespace org.apache.xml.utils
 		 }
 		 else
 		 { // more than SECONDARY
-			 m_collator.Strength = Collator.SECONDARY;
+			 m_collator.setStrength(Collator.SECONDARY);
 			 comp = m_collator.compare(m_text, pattern);
-			 m_collator.Strength = savedStrength;
+			 m_collator.setStrength(savedStrength);
 		 }
 		 if (comp != 0)
 		 { //Difference more significant than case-order
@@ -116,24 +111,22 @@ namespace org.apache.xml.utils
 	   }
 
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private final int getCaseDiff(final String text, final String pattern)
-	  private int getCaseDiff(string text, string pattern)
+	  private int getCaseDiff(in string text, in string pattern)
 	  {
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int savedStrength = m_collator.getStrength();
-		 int savedStrength = m_collator.Strength;
+		 int savedStrength = m_collator.getStrength();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int savedDecomposition = m_collator.getDecomposition();
-		 int savedDecomposition = m_collator.Decomposition;
-		 m_collator.Strength = Collator.TERTIARY; // not to ignore case
-		 m_collator.Decomposition = Collator.CANONICAL_DECOMPOSITION; // corresponds NDF
+		 int savedDecomposition = m_collator.getDecomposition();
+		 m_collator.setStrength(Collator.TERTIARY); // not to ignore case
+		 m_collator.setDecomposition(Collator.CANONICAL_DECOMPOSITION); // corresponds NDF
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int diff[] =getFirstCaseDiff(text, pattern, m_locale);
 		int[] diff = getFirstCaseDiff(text, pattern, m_locale);
-		m_collator.Strength = savedStrength; // restore
-		m_collator.Decomposition = savedDecomposition; //restore
+		m_collator.setStrength(savedStrength); // restore
+		m_collator.setDecomposition(savedDecomposition); //restore
 		if (diff != null)
 		{
 		   if ((m_caseOrder).Equals("upper-first"))
@@ -168,9 +161,7 @@ namespace org.apache.xml.utils
 
 
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private final int[] getFirstCaseDiff(final String text, final String pattern, final java.util.Locale locale)
-	  private int[] getFirstCaseDiff(string text, string pattern, Locale locale)
+	  private int[] getFirstCaseDiff(in string text, in string pattern, in Locale locale)
 	  {
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -193,15 +184,15 @@ namespace org.apache.xml.utils
 			{
 				if (getPattern)
 				{
-					 startPatt = patIter.Offset;
+					 startPatt = patIter.getOffset();
 					 patternElement = getElement(patIter.next());
-					 endPatt = patIter.Offset;
+					 endPatt = patIter.getOffset();
 				}
 				if ((getTarget))
 				{
-					 startTarg = targIter.Offset;
+					 startTarg = targIter.getOffset();
 					 targetElement = getElement(targIter.next());
-					 endTarg = targIter.Offset;
+					 endTarg = targIter.getOffset();
 				}
 				getTarget = getPattern = true;
 				if ((patternElement == done) || (targetElement == done))
@@ -221,10 +212,10 @@ namespace org.apache.xml.utils
 					if ((startPatt < endPatt) && (startTarg < endTarg))
 					{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String subText = text.substring(startTarg, endTarg - startTarg);
+//ORIGINAL LINE: final String subText = text.substring(startTarg, endTarg);
 						string subText = text.Substring(startTarg, endTarg - startTarg);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String subPatt = pattern.substring(startPatt, endPatt - startPatt);
+//ORIGINAL LINE: final String subPatt = pattern.substring(startPatt, endPatt);
 						string subPatt = pattern.Substring(startPatt, endPatt - startPatt);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String subTextUp = subText.toUpperCase(locale);
@@ -276,9 +267,7 @@ namespace org.apache.xml.utils
 
 
 	 // Return a mask for the part of the order we're interested in
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private static final int getMask(final int strength)
-		private static int getMask(int strength)
+		private static int getMask(in int strength)
 		{
 			switch (strength)
 			{

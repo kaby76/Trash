@@ -22,8 +22,9 @@
  */
 namespace org.apache.xpath.operations
 {
-
 	using DTMManager = org.apache.xml.dtm.DTMManager;
+	using Expression = org.apache.xpath.Expression;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XNodeSet = org.apache.xpath.objects.XNodeSet;
 	using XObject = org.apache.xpath.objects.XObject;
 
@@ -56,7 +57,7 @@ namespace org.apache.xpath.operations
 	  /// <returns> The evaluated variable, or an empty nodeset if not found.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt, boolean destructiveOK) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt, bool destructiveOK)
 	  {

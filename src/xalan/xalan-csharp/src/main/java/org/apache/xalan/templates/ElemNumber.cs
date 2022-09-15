@@ -25,7 +25,6 @@ using System.Text;
 namespace org.apache.xalan.templates
 {
 
-
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using CountersTable = org.apache.xalan.transformer.CountersTable;
 	using DecimalToRoman = org.apache.xalan.transformer.DecimalToRoman;
@@ -67,8 +66,8 @@ namespace org.apache.xalan.templates
 	///    grouping-size %avt; #IMPLIED
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#number">number in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.number">number in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemNumber : ElemTemplateElement
 	{
@@ -76,7 +75,7 @@ namespace org.apache.xalan.templates
 
 		/// <summary>
 		/// Chars for converting integers into alpha counts. </summary>
-		/// <seealso cref= TransformerImpl#int2alphaCount </seealso>
+		/// <seealso cref="TransformerImpl.int2alphaCount"/>
 		private CharArrayWrapper m_alphaCountTable = null;
 
 		private class MyPrefixResolver : PrefixResolver
@@ -99,20 +98,20 @@ namespace org.apache.xalan.templates
 				this.handleNullPrefix = handleNullPrefix;
 			}
 
-			/// <seealso cref= PrefixResolver#getNamespaceForPrefix(String, Node) </seealso>
+			/// <seealso cref="PrefixResolver.getNamespaceForPrefix(String, Node)"/>
 			public virtual string getNamespaceForPrefix(string prefix)
 			{
 				return dtm.getNamespaceURI(handle);
 			}
 
-			/// <seealso cref= PrefixResolver#getNamespaceForPrefix(String, Node)
-			/// this shouldn't get called. </seealso>
+			/// <seealso cref="PrefixResolver.getNamespaceForPrefix(String, Node)"
+			/// this shouldn't get called./>
 			public virtual string getNamespaceForPrefix(string prefix, Node context)
 			{
 				return getNamespaceForPrefix(prefix);
 			}
 
-			/// <seealso cref= PrefixResolver#getBaseIdentifier() </seealso>
+			/// <seealso cref="PrefixResolver.getBaseIdentifier()"/>
 			public virtual string BaseIdentifier
 			{
 				get
@@ -121,7 +120,7 @@ namespace org.apache.xalan.templates
 				}
 			}
 
-			/// <seealso cref= PrefixResolver#handlesNullPrefixes() </seealso>
+			/// <seealso cref="PrefixResolver.handlesNullPrefixes()"/>
 			public virtual bool handlesNullPrefixes()
 			{
 				return handleNullPrefix;
@@ -258,32 +257,39 @@ namespace org.apache.xalan.templates
 	  /// number function.
 	  /// </summary>
 	  /// <param name="v"> Value to set for "value" attribute. </param>
+	  public virtual void setValue(XPath v)
+	  {
+		m_valueExpr = v;
+	  }
+
+	  /// <summary>
+	  /// Get the "value" attribute.
+	  /// The value attribute contains an expression. The expression is evaluated
+	  /// and the resulting object is converted to a number as if by a call to the
+	  /// number function.
+	  /// </summary>
+	  /// <returns> Value of "value" attribute. </returns>
 	  public virtual XPath Value
 	  {
-		  set
-		  {
-			m_valueExpr = value;
-		  }
 		  get
 		  {
 			return m_valueExpr;
 		  }
 	  }
 
-
 	  /// <summary>
 	  /// The "format" attribute is used to control conversion of a list of
 	  /// numbers into a string. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#convert">convert in XSLT Specification</a>
-	  /// @serial </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  /// @serial/>
 	  private AVT m_format_avt = null;
 
 	  /// <summary>
 	  /// Set the "format" attribute.
 	  /// The "format" attribute is used to control conversion of a list of
 	  /// numbers into a string. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#convert">convert in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value to set for "format" attribute. </param>
 	  public virtual AVT Format
 	  {
@@ -297,6 +303,12 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "format" attribute.
+	  /// The "format" attribute is used to control conversion of a list of
+	  /// numbers into a string. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// When numbering with an alphabetic sequence, the lang attribute
@@ -312,8 +324,8 @@ namespace org.apache.xalan.templates
 	  /// range of values as xml:lang [XML]; if no lang value is specified,
 	  /// the language should be determined from the system environment.
 	  /// Implementers should document for which languages they support numbering. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#convert">convert in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value to set for "lang" attribute. </param>
 	  public virtual AVT Lang
 	  {
@@ -327,6 +339,15 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "lang" attribute.
+	  /// When numbering with an alphabetic sequence, the lang attribute
+	  /// specifies which language's alphabet is to be used; it has the same
+	  /// range of values as xml:lang [XML]; if no lang value is specified,
+	  /// the language should be determined from the system environment.
+	  /// Implementers should document for which languages they support numbering. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// The letter-value attribute disambiguates between numbering
@@ -339,8 +360,8 @@ namespace org.apache.xalan.templates
 	  /// Set the "letter-value" attribute.
 	  /// The letter-value attribute disambiguates between numbering sequences
 	  /// that use letters. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#convert">convert in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value to set for "letter-value" attribute. </param>
 	  public virtual AVT LetterValue
 	  {
@@ -354,6 +375,12 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "letter-value" attribute.
+	  /// The letter-value attribute disambiguates between numbering sequences
+	  /// that use letters. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// The grouping-separator attribute gives the separator
@@ -368,8 +395,8 @@ namespace org.apache.xalan.templates
 	  /// The grouping-separator attribute gives the separator
 	  /// used as a grouping (e.g. thousands) separator in decimal
 	  /// numbering sequences. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#convert">convert in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value to set for "grouping-separator" attribute. </param>
 	  public virtual AVT GroupingSeparator
 	  {
@@ -383,6 +410,13 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "grouping-separator" attribute.
+	  /// The grouping-separator attribute gives the separator
+	  /// used as a grouping (e.g. thousands) separator in decimal
+	  /// numbering sequences. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// The optional grouping-size specifies the size (normally 3) of the grouping.
@@ -393,8 +427,8 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Set the "grouping-size" attribute.
 	  /// The optional grouping-size specifies the size (normally 3) of the grouping. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#convert">convert in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value to set for "grouping-size" attribute. </param>
 	  public virtual AVT GroupingSize
 	  {
@@ -408,6 +442,11 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "grouping-size" attribute.
+	  /// The optional grouping-size specifies the size (normally 3) of the grouping. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.convert">convert in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// Shouldn't this be in the transformer?  Big worries about threads...
@@ -417,7 +456,7 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Table to help in converting decimals to roman numerals. </summary>
-	  /// <seealso cref= org.apache.xalan.transformer.DecimalToRoman </seealso>
+	  /// <seealso cref="org.apache.xalan.transformer.DecimalToRoman"/>
 	  private static readonly DecimalToRoman[] m_romanConvertTable = new DecimalToRoman[]
 	  {
 		  new DecimalToRoman(1000, "M", 900, "CM"),
@@ -435,12 +474,12 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
 		base.compose(sroot);
-		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		StylesheetRoot.ComposeState cstate = sroot.ComposeState;
 		ArrayList vnames = cstate.VariableNames;
 		if (null != m_countMatchPattern)
 		{
@@ -479,8 +518,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for this element </returns>
 	  public override int XSLToken
 	  {
@@ -509,7 +548,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -519,7 +558,7 @@ namespace org.apache.xalan.templates
 		  transformer.TraceManager.fireTraceEvent(this);
 		 }
 
-		int sourceNode = transformer.XPathContext.CurrentNode;
+		int sourceNode = transformer.XPathContext.getCurrentNode();
 		string countString = getCountString(transformer, sourceNode);
 
 		try
@@ -571,12 +610,12 @@ namespace org.apache.xalan.templates
 	  /// <returns> the first ancestor that matches the given pattern
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: int findAncestor(org.apache.xpath.XPathContext xctxt, org.apache.xpath.XPath fromMatchPattern, org.apache.xpath.XPath countMatchPattern, int context, ElemNumber namespaceContext) throws javax.xml.transform.TransformerException
 	  internal virtual int findAncestor(XPathContext xctxt, XPath fromMatchPattern, XPath countMatchPattern, int context, ElemNumber namespaceContext)
 	  {
 		DTM dtm = xctxt.getDTM(context);
-		while (org.apache.xml.dtm.DTM_Fields.NULL != context)
+		while (DTM.NULL != context)
 		{
 		  if (null != fromMatchPattern)
 		  {
@@ -617,18 +656,18 @@ namespace org.apache.xalan.templates
 	  /// matches the given pattern
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private int findPrecedingOrAncestorOrSelf(org.apache.xpath.XPathContext xctxt, org.apache.xpath.XPath fromMatchPattern, org.apache.xpath.XPath countMatchPattern, int context, ElemNumber namespaceContext) throws javax.xml.transform.TransformerException
 	  private int findPrecedingOrAncestorOrSelf(XPathContext xctxt, XPath fromMatchPattern, XPath countMatchPattern, int context, ElemNumber namespaceContext)
 	  {
 		DTM dtm = xctxt.getDTM(context);
-		while (org.apache.xml.dtm.DTM_Fields.NULL != context)
+		while (DTM.NULL != context)
 		{
 		  if (null != fromMatchPattern)
 		  {
 			if (fromMatchPattern.getMatchScore(xctxt, context) != XPath.MATCH_SCORE_NONE)
 			{
-			  context = org.apache.xml.dtm.DTM_Fields.NULL;
+			  context = DTM.NULL;
 
 			  break;
 			}
@@ -644,7 +683,7 @@ namespace org.apache.xalan.templates
 
 		  int prevSibling = dtm.getPreviousSibling(context);
 
-		  if (org.apache.xml.dtm.DTM_Fields.NULL == prevSibling)
+		  if (DTM.NULL == prevSibling)
 		  {
 			context = dtm.getParent(context);
 		  }
@@ -654,7 +693,7 @@ namespace org.apache.xalan.templates
 			// Now go down the chain of children of this sibling 
 			context = dtm.getLastChild(prevSibling);
 
-			if (context == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (context == DTM.NULL)
 			{
 			  context = prevSibling;
 			}
@@ -673,7 +712,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> the count match pattern, or a default value. 
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: org.apache.xpath.XPath getCountMatchPattern(org.apache.xpath.XPathContext support, int contextNode) throws javax.xml.transform.TransformerException
 	  internal virtual XPath getCountMatchPattern(XPathContext support, int contextNode)
 	  {
@@ -684,7 +723,7 @@ namespace org.apache.xalan.templates
 		{
 		  switch (dtm.getNodeType(contextNode))
 		  {
-		  case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
+		  case DTM.ELEMENT_NODE :
 			MyPrefixResolver resolver;
 
 			if (string.ReferenceEquals(dtm.getNamespaceURI(contextNode), null))
@@ -699,28 +738,28 @@ namespace org.apache.xalan.templates
 			countMatchPattern = new XPath(dtm.getNodeName(contextNode), this, resolver, XPath.MATCH, support.ErrorListener);
 			break;
 
-		  case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
+		  case DTM.ATTRIBUTE_NODE :
 
 			// countMatchPattern = m_stylesheet.createMatchPattern("@"+contextNode.getNodeName(), this);
 			countMatchPattern = new XPath("@" + dtm.getNodeName(contextNode), this, this, XPath.MATCH, support.ErrorListener);
 			break;
-		  case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE :
-		  case org.apache.xml.dtm.DTM_Fields.TEXT_NODE :
+		  case DTM.CDATA_SECTION_NODE :
+		  case DTM.TEXT_NODE :
 
 			// countMatchPattern = m_stylesheet.createMatchPattern("text()", this);
 			countMatchPattern = new XPath("text()", this, this, XPath.MATCH, support.ErrorListener);
 			break;
-		  case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE :
+		  case DTM.COMMENT_NODE :
 
 			// countMatchPattern = m_stylesheet.createMatchPattern("comment()", this);
 			countMatchPattern = new XPath("comment()", this, this, XPath.MATCH, support.ErrorListener);
 			break;
-		  case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE :
+		  case DTM.DOCUMENT_NODE :
 
 			// countMatchPattern = m_stylesheet.createMatchPattern("/", this);
 			countMatchPattern = new XPath("/", this, this, XPath.MATCH, support.ErrorListener);
 			break;
-		  case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+		  case DTM.PROCESSING_INSTRUCTION_NODE :
 
 			// countMatchPattern = m_stylesheet.createMatchPattern("pi("+contextNode.getNodeName()+")", this);
 			countMatchPattern = new XPath("pi(" + dtm.getNodeName(contextNode) + ")", this, this, XPath.MATCH, support.ErrorListener);
@@ -743,7 +782,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> The count of nodes
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: String getCountString(org.apache.xalan.transformer.TransformerImpl transformer, int sourceNode) throws javax.xml.transform.TransformerException
 	  internal virtual string getCountString(TransformerImpl transformer, int sourceNode)
 	  {
@@ -818,7 +857,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> the previous node to be counted.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int getPreviousNode(org.apache.xpath.XPathContext xctxt, int pos) throws javax.xml.transform.TransformerException
 	  public virtual int getPreviousNode(XPathContext xctxt, int pos)
 	  {
@@ -833,7 +872,7 @@ namespace org.apache.xalan.templates
 		  // Do a backwards document-order walk 'till a node is found that matches 
 		  // the 'from' pattern, or a node is found that matches the 'count' pattern, 
 		  // or the top of the tree is found.
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != pos)
+		  while (DTM.NULL != pos)
 		  {
 
 			// Get the previous sibling, if there is no previous sibling, 
@@ -841,13 +880,13 @@ namespace org.apache.xalan.templates
 			// dive down to the lowest right-hand (last) child of that sibling.
 			int next = dtm.getPreviousSibling(pos);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == next)
+			if (DTM.NULL == next)
 			{
 			  next = dtm.getParent(pos);
 
-			  if ((org.apache.xml.dtm.DTM_Fields.NULL != next) && ((((null != fromMatchPattern) && (fromMatchPattern.getMatchScore(xctxt, next) != XPath.MATCH_SCORE_NONE))) || (dtm.getNodeType(next) == org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE)))
+			  if ((DTM.NULL != next) && ((((null != fromMatchPattern) && (fromMatchPattern.getMatchScore(xctxt, next) != XPath.MATCH_SCORE_NONE))) || (dtm.getNodeType(next) == DTM.DOCUMENT_NODE)))
 			  {
-				pos = org.apache.xml.dtm.DTM_Fields.NULL; // return null from function.
+				pos = DTM.NULL; // return null from function.
 
 				break; // from while loop
 			  }
@@ -858,11 +897,11 @@ namespace org.apache.xalan.templates
 			  // dive down to the lowest right child.
 			  int child = next;
 
-			  while (org.apache.xml.dtm.DTM_Fields.NULL != child)
+			  while (DTM.NULL != child)
 			  {
 				child = dtm.getLastChild(next);
 
-				if (org.apache.xml.dtm.DTM_Fields.NULL != child)
+				if (DTM.NULL != child)
 				{
 				  next = child;
 				}
@@ -871,7 +910,7 @@ namespace org.apache.xalan.templates
 
 			pos = next;
 
-			if ((org.apache.xml.dtm.DTM_Fields.NULL != pos) && ((null == countMatchPattern) || (countMatchPattern.getMatchScore(xctxt, pos) != XPath.MATCH_SCORE_NONE)))
+			if ((DTM.NULL != pos) && ((null == countMatchPattern) || (countMatchPattern.getMatchScore(xctxt, pos) != XPath.MATCH_SCORE_NONE)))
 			{
 			  break;
 			}
@@ -879,11 +918,11 @@ namespace org.apache.xalan.templates
 		}
 		else // NUMBERLEVEL_MULTI or NUMBERLEVEL_SINGLE
 		{
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != pos)
+		  while (DTM.NULL != pos)
 		  {
 			pos = dtm.getPreviousSibling(pos);
 
-			if ((org.apache.xml.dtm.DTM_Fields.NULL != pos) && ((null == countMatchPattern) || (countMatchPattern.getMatchScore(xctxt, pos) != XPath.MATCH_SCORE_NONE)))
+			if ((DTM.NULL != pos) && ((null == countMatchPattern) || (countMatchPattern.getMatchScore(xctxt, pos) != XPath.MATCH_SCORE_NONE)))
 			{
 			  break;
 			}
@@ -902,12 +941,12 @@ namespace org.apache.xalan.templates
 	  /// <returns> the target node that will be counted
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int getTargetNode(org.apache.xpath.XPathContext xctxt, int sourceNode) throws javax.xml.transform.TransformerException
 	  public virtual int getTargetNode(XPathContext xctxt, int sourceNode)
 	  {
 
-		int target = org.apache.xml.dtm.DTM_Fields.NULL;
+		int target = DTM.NULL;
 		XPath countMatchPattern = getCountMatchPattern(xctxt, sourceNode);
 
 		if (Constants.NUMBERLEVEL_ANY == m_level)
@@ -934,7 +973,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> The number of ancestors that match the pattern.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: org.apache.xml.utils.NodeVector getMatchingAncestors(org.apache.xpath.XPathContext xctxt, int node, boolean stopAtFirstFound) throws javax.xml.transform.TransformerException
 	  internal virtual NodeVector getMatchingAncestors(XPathContext xctxt, int node, bool stopAtFirstFound)
 	  {
@@ -943,7 +982,7 @@ namespace org.apache.xalan.templates
 		XPath countMatchPattern = getCountMatchPattern(xctxt, node);
 		DTM dtm = xctxt.getDTM(node);
 
-		while (org.apache.xml.dtm.DTM_Fields.NULL != node)
+		while (DTM.NULL != node)
 		{
 		  if ((null != m_fromMatchPattern) && (m_fromMatchPattern.getMatchScore(xctxt, node) != XPath.MATCH_SCORE_NONE))
 		  {
@@ -991,7 +1030,7 @@ namespace org.apache.xalan.templates
 	  /// but if not, use default locale on the system. 
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: java.util.Locale getLocale(org.apache.xalan.transformer.TransformerImpl transformer, int contextNode) throws javax.xml.transform.TransformerException
 	  internal virtual Locale getLocale(TransformerImpl transformer, int contextNode)
 	  {
@@ -1016,13 +1055,13 @@ namespace org.apache.xalan.templates
 			{
 			  transformer.MsgMgr.warn(this, null, xctxt.getDTM(contextNode).getNode(contextNode), XSLTErrorResources.WG_LOCALE_NOT_FOUND, new object[]{langValue}); //"Warning: Could not find locale for xml:lang="+langValue);
 
-			  locale = Locale.Default;
+			  locale = Locale.getDefault();
 			}
 		  }
 		}
 		else
 		{
-		  locale = Locale.Default;
+		  locale = Locale.getDefault();
 		}
 
 		return locale;
@@ -1037,7 +1076,7 @@ namespace org.apache.xalan.templates
 	  /// ($objectName$) <returns> The number formatter to be used
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private java.text.DecimalFormat getNumberFormatter(org.apache.xalan.transformer.TransformerImpl transformer, int contextNode) throws javax.xml.transform.TransformerException
 	  private DecimalFormat getNumberFormatter(TransformerImpl transformer, int contextNode)
 	  {
@@ -1070,20 +1109,19 @@ namespace org.apache.xalan.templates
 		// TODO: Handle digit-group attributes
 		if ((null != digitGroupSepValue) && (null != nDigitsPerGroupValue) && (digitGroupSepValue.Length > 0))
 		{
-			// Ignore if separation value is empty string
 		  try
 		  {
 			formatter = (DecimalFormat) NumberFormat.getNumberInstance(locale);
-			formatter.GroupingSize = Convert.ToInt32(nDigitsPerGroupValue);
+			formatter.setGroupingSize(Convert.ToInt32(nDigitsPerGroupValue));
 
-			DecimalFormatSymbols symbols = formatter.DecimalFormatSymbols;
-			symbols.GroupingSeparator = digitGroupSepValue[0];
-			formatter.DecimalFormatSymbols = symbols;
-			formatter.GroupingUsed = true;
+			DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
+			symbols.setGroupingSeparator(digitGroupSepValue[0]);
+			formatter.setDecimalFormatSymbols(symbols);
+			formatter.setGroupingUsed(true);
 		  }
 		  catch (System.FormatException)
 		  {
-			formatter.GroupingUsed = false;
+			formatter.setGroupingUsed(false);
 		  }
 		}
 
@@ -1102,7 +1140,7 @@ namespace org.apache.xalan.templates
 	  /// reuses that info for the next count.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: String formatNumberList(org.apache.xalan.transformer.TransformerImpl transformer, long[] list, int contextNode) throws javax.xml.transform.TransformerException
 	  internal virtual string formatNumberList(TransformerImpl transformer, long[] list, int contextNode)
 	  {
@@ -1114,7 +1152,7 @@ namespace org.apache.xalan.templates
 		{
 		  int nNumbers = list.Length, numberWidth = 1;
 		  char numberType = '1';
-		  string formatToken , lastSepString = null, formatTokenString = null;
+		  string formatToken, lastSepString = null, formatTokenString = null;
 
 		  // If a seperator hasn't been specified, then use "."  
 		  // as a default separator. 
@@ -1263,7 +1301,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="formattedNumber"> Buffer to store formatted number
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void getFormattedNumber(org.apache.xalan.transformer.TransformerImpl transformer, int contextNode, char numberType, int numberWidth, long listElement, org.apache.xml.utils.FastStringBuffer formattedNumber) throws javax.xml.transform.TransformerException
 	  private void getFormattedNumber(TransformerImpl transformer, int contextNode, char numberType, int numberWidth, long listElement, FastStringBuffer formattedNumber)
 	  {
@@ -1523,10 +1561,10 @@ namespace org.apache.xalan.templates
 	  /// <param name="val"> Value to convert -- must be greater than zero. </param>
 	  /// <param name="table"> a table containing one character for each digit in the radix </param>
 	  /// <returns> String representing alpha count of number. </returns>
-	  /// <seealso cref= TransformerImpl#DecimalToRoman
+	  /// <seealso cref="TransformerImpl.DecimalToRoman"
 	  /// 
 	  /// Note that the radix of the conversion is inferred from the size
-	  /// of the table. </seealso>
+	  /// of the table./>
 	  protected internal virtual string int2singlealphaCount(long val, CharArrayWrapper table)
 	  {
 
@@ -1552,10 +1590,10 @@ namespace org.apache.xalan.templates
 	  /// <param name="aTable"> Array of alpha characters representing numbers </param>
 	  /// <param name="stringBuf"> Buffer where to save the string representing alpha count of number.
 	  /// </param>
-	  /// <seealso cref= TransformerImpl#DecimalToRoman
+	  /// <seealso cref="TransformerImpl.DecimalToRoman"
 	  /// 
 	  /// Note that the radix of the conversion is inferred from the size
-	  /// of the table. </seealso>
+	  /// of the table./>
 	  protected internal virtual void int2alphaCount(long val, CharArrayWrapper aTable, FastStringBuffer stringBuf)
 	  {
 
@@ -1650,10 +1688,10 @@ namespace org.apache.xalan.templates
 	  /// <param name="thisBundle"> Resource bundle to use
 	  /// </param>
 	  /// <returns> String representing alpha count of number. </returns>
-	  /// <seealso cref= XSLProcessor#DecimalToRoman
+	  /// <seealso cref="XSLProcessor.DecimalToRoman"
 	  /// 
 	  /// Note that the radix of the conversion is inferred from the size
-	  /// of the table. </seealso>
+	  /// of the table./>
 	  protected internal virtual string tradAlphaCount(long val, XResourceBundle thisBundle)
 	  {
 
@@ -1876,8 +1914,8 @@ namespace org.apache.xalan.templates
 	  /// <param name="prefixesAreOK"> true_ to enable prefix notation (e.g. 4 = "IV"),
 	  /// false_ to disable prefix notation (e.g. 4 = "IIII"). </param>
 	  /// <returns> Roman numeral string. </returns>
-	  /// <seealso cref= DecimalToRoman </seealso>
-	  /// <seealso cref= m_romanConvertTable </seealso>
+	  /// <seealso cref="DecimalToRoman"/>
+	  /// <seealso cref="m_romanConvertTable"/>
 	  protected internal virtual string long2roman(long val, bool prefixesAreOK)
 	  {
 
@@ -2098,7 +2136,7 @@ namespace org.apache.xalan.templates
 		/// </summary>
 		/// <returns>  the number of tokens remaining in the string using the current
 		///          delimiter set. </returns>
-		/// <seealso cref=     java.util.StringTokenizer#nextToken() </seealso>
+		/// <seealso cref="java.util.StringTokenizer.nextToken()"/>
 		public virtual int countTokens()
 		{
 

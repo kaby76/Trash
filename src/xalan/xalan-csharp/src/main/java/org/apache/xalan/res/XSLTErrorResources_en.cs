@@ -21,7 +21,6 @@
 namespace org.apache.xalan.res
 {
 
-
 	/// <summary>
 	/// Default implementation of XSLTErrorResources.  This is just
 	/// an empty class.

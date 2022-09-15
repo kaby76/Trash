@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using Util = org.apache.xalan.xsltc.compiler.util.Util;
 
 	/// <summary>
@@ -34,7 +33,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("Attribute " + _name);
 		displayContents(indent + IndentIncrement);
 		}

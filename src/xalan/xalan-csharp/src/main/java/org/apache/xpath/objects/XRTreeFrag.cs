@@ -22,10 +22,12 @@
  */
 namespace org.apache.xpath.objects
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using XMLString = org.apache.xml.utils.XMLString;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionNode = org.apache.xpath.ExpressionNode;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using RTFIterator = org.apache.xpath.axes.RTFIterator;
 
 	using NodeList = org.w3c.dom.NodeList;
@@ -40,7 +42,7 @@ namespace org.apache.xpath.objects
 	{
 		internal new const long serialVersionUID = -3201553822254911567L;
 	  private DTMXRTreeFrag m_DTMXRTreeFrag;
-	  private int m_dtmRoot = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_dtmRoot = DTM.NULL;
 	  protected internal bool m_allowRelease = false;
 
 
@@ -157,7 +159,7 @@ namespace org.apache.xpath.objects
 	  /// Cast result object to a number.
 	  /// </summary>
 	  /// <returns> The result tree fragment as a number or NaN </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public double num() throws javax.xml.transform.TransformerException
 	  public override double num()
 	  {

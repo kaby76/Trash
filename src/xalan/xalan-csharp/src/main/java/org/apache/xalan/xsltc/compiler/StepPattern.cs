@@ -174,7 +174,7 @@ namespace org.apache.xalan.xsltc.compiler
 				case 0:
 				return 0.0;
 				default:
-				return (_nodeType >= NodeTest_Fields.GTYPE) ? 0.0 : -0.5;
+				return (_nodeType >= NodeTest.GTYPE) ? 0.0 : -0.5;
 				}
 			}
 			}
@@ -241,7 +241,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -305,16 +305,16 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
-		if (_nodeType == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE)
+		if (_nodeType == DTM.ELEMENT_NODE)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int check = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "isElement", "(I)Z");
-			int check = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "isElement", "(I)Z");
+//ORIGINAL LINE: final int check = cpg.addInterfaceMethodref(DOM_INTF, "isElement", "(I)Z");
+			int check = cpg.addInterfaceMethodref(DOM_INTF, "isElement", "(I)Z");
 			il.append(methodGen.loadDOM());
 			il.append(SWAP);
 			il.append(new INVOKEINTERFACE(check, 2));
@@ -324,13 +324,13 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final org.apache.bcel.generic.BranchHandle icmp = il.append(new org.apache.bcel.generic.IFNE(null));
 			BranchHandle icmp = il.append(new IFNE(null));
 			_falseList.add(il.append(new GOTO_W(null)));
-			icmp.Target = il.append(NOP);
+			icmp.setTarget(il.append(NOP));
 		}
-		else if (_nodeType == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE)
+		else if (_nodeType == DTM.ATTRIBUTE_NODE)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int check = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "isAttribute", "(I)Z");
-			int check = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "isAttribute", "(I)Z");
+//ORIGINAL LINE: final int check = cpg.addInterfaceMethodref(DOM_INTF, "isAttribute", "(I)Z");
+			int check = cpg.addInterfaceMethodref(DOM_INTF, "isAttribute", "(I)Z");
 			il.append(methodGen.loadDOM());
 			il.append(SWAP);
 			il.append(new INVOKEINTERFACE(check, 2));
@@ -340,14 +340,14 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final org.apache.bcel.generic.BranchHandle icmp = il.append(new org.apache.bcel.generic.IFNE(null));
 			BranchHandle icmp = il.append(new IFNE(null));
 			_falseList.add(il.append(new GOTO_W(null)));
-			icmp.Target = il.append(NOP);
+			icmp.setTarget(il.append(NOP));
 		}
 		else
 		{
 			// context node is on the stack
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getEType = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getExpandedTypeID", "(I)I");
-			int getEType = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getExpandedTypeID", "(I)I");
+//ORIGINAL LINE: final int getEType = cpg.addInterfaceMethodref(DOM_INTF, "getExpandedTypeID", "(I)I");
+			int getEType = cpg.addInterfaceMethodref(DOM_INTF, "getExpandedTypeID", "(I)I");
 			il.append(methodGen.loadDOM());
 			il.append(SWAP);
 			il.append(new INVOKEINTERFACE(getEType, 2));
@@ -358,7 +358,7 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final org.apache.bcel.generic.BranchHandle icmp = il.append(new org.apache.bcel.generic.IF_ICMPEQ(null));
 			BranchHandle icmp = il.append(new IF_ICMPEQ(null));
 			_falseList.add(il.append(new GOTO_W(null)));
-			icmp.Target = il.append(NOP);
+			icmp.setTarget(il.append(NOP));
 		}
 		}
 
@@ -366,10 +366,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Push current node on the stack
 		il.append(methodGen.loadCurrentNode());
@@ -410,7 +410,7 @@ namespace org.apache.xalan.xsltc.compiler
 		_falseList.add(il.append(new GOTO(null)));
 
 		// True list falls through
-		skipFalse.Target = il.append(NOP);
+		skipFalse.setTarget(il.append(NOP));
 		}
 
 		private void translateSimpleContext(ClassGenerator classGen, MethodGenerator methodGen)
@@ -418,20 +418,20 @@ namespace org.apache.xalan.xsltc.compiler
 		int index;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Store matching node into a local variable
 		LocalVariableGen match;
-		match = methodGen.addLocalVariable("step_pattern_tmp1", Util.getJCRefType(Constants_Fields.NODE_SIG), null, null);
-		match.Start = il.append(new ISTORE(match.Index));
+		match = methodGen.addLocalVariable("step_pattern_tmp1", Util.getJCRefType(NODE_SIG), null, null);
+		match.setStart(il.append(new ISTORE(match.getIndex())));
 
 		// If pattern not reduced then check kernel
 		if (!_isEpsilon)
 		{
-			il.append(new ILOAD(match.Index));
+			il.append(new ILOAD(match.getIndex()));
 			 translateKernel(classGen, methodGen);
 		}
 
@@ -440,7 +440,7 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(methodGen.loadIterator());
 
 		// Create a new matching iterator using the matching node
-		index = cpg.addMethodref(Constants_Fields.MATCHING_ITERATOR, "<init>", "(I" + Constants_Fields.NODE_ITERATOR_SIG + ")V");
+		index = cpg.addMethodref(MATCHING_ITERATOR, "<init>", "(I" + NODE_ITERATOR_SIG + ")V");
 
 			// Backwards branches are prohibited if an uninitialized object is
 			// on the stack by section 4.9.4 of the JVM Specification, 2nd Ed.
@@ -452,19 +452,19 @@ namespace org.apache.xalan.xsltc.compiler
 			// arguments from the temporaries to avoid the problem.
 
 		_step.translate(classGen, methodGen);
-			LocalVariableGen stepIteratorTemp = methodGen.addLocalVariable("step_pattern_tmp2", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-			stepIteratorTemp.Start = il.append(new ASTORE(stepIteratorTemp.Index));
+			LocalVariableGen stepIteratorTemp = methodGen.addLocalVariable("step_pattern_tmp2", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+			stepIteratorTemp.setStart(il.append(new ASTORE(stepIteratorTemp.getIndex())));
 
-		il.append(new NEW(cpg.addClass(Constants_Fields.MATCHING_ITERATOR)));
+		il.append(new NEW(cpg.addClass(MATCHING_ITERATOR)));
 		il.append(DUP);
-		il.append(new ILOAD(match.Index));
-			stepIteratorTemp.End = il.append(new ALOAD(stepIteratorTemp.Index));
+		il.append(new ILOAD(match.getIndex()));
+			stepIteratorTemp.setEnd(il.append(new ALOAD(stepIteratorTemp.getIndex())));
 		il.append(new INVOKESPECIAL(index));
 
 		// Get the parent of the matching node
 		il.append(methodGen.loadDOM());
-		il.append(new ILOAD(match.Index));
-		index = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_PARENT, Constants_Fields.GET_PARENT_SIG);
+		il.append(new ILOAD(match.getIndex()));
+		index = cpg.addInterfaceMethodref(DOM_INTF, GET_PARENT, GET_PARENT_SIG);
 		il.append(new INVOKEINTERFACE(index, 2));
 
 		// Start the iterator with the parent 
@@ -472,7 +472,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Overwrite current iterator and current node
 		il.append(methodGen.storeIterator());
-		match.End = il.append(new ILOAD(match.Index));
+		match.setEnd(il.append(new ILOAD(match.getIndex())));
 		il.append(methodGen.storeCurrentNode());
 
 		// Translate the expression of the predicate 
@@ -493,17 +493,17 @@ namespace org.apache.xalan.xsltc.compiler
 		_falseList.add(il.append(new GOTO(null)));
 
 		// True list falls through
-		skipFalse.Target = il.append(NOP);
+		skipFalse.setTarget(il.append(NOP));
 		}
 
 		private void translateGeneralContext(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		int iteratorIndex = 0;
 		BranchHandle ifBlock = null;
@@ -513,55 +513,55 @@ namespace org.apache.xalan.xsltc.compiler
 		string iteratorName = NextFieldName;
 
 		// Store node on the stack into a local variable
-		node = methodGen.addLocalVariable("step_pattern_tmp1", Util.getJCRefType(Constants_Fields.NODE_SIG), null, null);
-		node.Start = il.append(new ISTORE(node.Index));
+		node = methodGen.addLocalVariable("step_pattern_tmp1", Util.getJCRefType(NODE_SIG), null, null);
+		node.setStart(il.append(new ISTORE(node.getIndex())));
 
 		// Create a new local to store the iterator
-		iter = methodGen.addLocalVariable("step_pattern_tmp2", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
+		iter = methodGen.addLocalVariable("step_pattern_tmp2", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
 
 		// Add a new private field if this is the main class
 		if (!classGen.External)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.bcel.classfile.Field iterator = new org.apache.bcel.classfile.Field(Constants_Fields.ACC_PRIVATE, cpg.addUtf8(iteratorName), cpg.addUtf8(Constants_Fields.NODE_ITERATOR_SIG), null, cpg.getConstantPool());
-			Field iterator = new Field(Constants_Fields.ACC_PRIVATE, cpg.addUtf8(iteratorName), cpg.addUtf8(Constants_Fields.NODE_ITERATOR_SIG), null, cpg.ConstantPool);
+//ORIGINAL LINE: final org.apache.bcel.classfile.Field iterator = new org.apache.bcel.classfile.Field(ACC_PRIVATE, cpg.addUtf8(iteratorName), cpg.addUtf8(NODE_ITERATOR_SIG), null, cpg.getConstantPool());
+			Field iterator = new Field(ACC_PRIVATE, cpg.addUtf8(iteratorName), cpg.addUtf8(NODE_ITERATOR_SIG), null, cpg.getConstantPool());
 			classGen.addField(iterator);
-			iteratorIndex = cpg.addFieldref(classGen.ClassName, iteratorName, Constants_Fields.NODE_ITERATOR_SIG);
+			iteratorIndex = cpg.addFieldref(classGen.ClassName, iteratorName, NODE_ITERATOR_SIG);
 
 			il.append(classGen.loadTranslet());
 			il.append(new GETFIELD(iteratorIndex));
 			il.append(DUP);
-			iter.Start = il.append(new ASTORE(iter.Index));
+			iter.setStart(il.append(new ASTORE(iter.getIndex())));
 			ifBlock = il.append(new IFNONNULL(null));
 			il.append(classGen.loadTranslet());
 		}
 
 		// Compile the step created at type checking time
 		_step.translate(classGen, methodGen);
-		InstructionHandle iterStore = il.append(new ASTORE(iter.Index));
+		InstructionHandle iterStore = il.append(new ASTORE(iter.getIndex()));
 
 		// If in the main class update the field too
 		if (!classGen.External)
 		{
-			il.append(new ALOAD(iter.Index));
+			il.append(new ALOAD(iter.getIndex()));
 			il.append(new PUTFIELD(iteratorIndex));
-			ifBlock.Target = il.append(NOP);
+			ifBlock.setTarget(il.append(NOP));
 		}
 		else
 		{
 				// If class is not external, start of range for iter variable was
 				// set above
-				iter.Start = iterStore;
+				iter.setStart(iterStore);
 		}
 
 		// Get the parent of the node on the stack
 		il.append(methodGen.loadDOM());
-		il.append(new ILOAD(node.Index));
-		int index = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_PARENT, Constants_Fields.GET_PARENT_SIG);
+		il.append(new ILOAD(node.getIndex()));
+		int index = cpg.addInterfaceMethodref(DOM_INTF, GET_PARENT, GET_PARENT_SIG);
 		il.append(new INVOKEINTERFACE(index, 2));
 
 		// Initialize the iterator with the parent
-		il.append(new ALOAD(iter.Index));
+		il.append(new ALOAD(iter.getIndex()));
 		il.append(SWAP);
 		il.append(methodGen.setStartNode());
 
@@ -575,35 +575,35 @@ namespace org.apache.xalan.xsltc.compiler
 		 */
 		BranchHandle skipNext;
 		InstructionHandle begin, next;
-		node2 = methodGen.addLocalVariable("step_pattern_tmp3", Util.getJCRefType(Constants_Fields.NODE_SIG), null, null);
+		node2 = methodGen.addLocalVariable("step_pattern_tmp3", Util.getJCRefType(NODE_SIG), null, null);
 
 		skipNext = il.append(new GOTO(null));
-		next = il.append(new ALOAD(iter.Index));
-			node2.Start = next;
+		next = il.append(new ALOAD(iter.getIndex()));
+			node2.setStart(next);
 		begin = il.append(methodGen.nextNode());
 		il.append(DUP);
-		il.append(new ISTORE(node2.Index));
+		il.append(new ISTORE(node2.getIndex()));
 		_falseList.add(il.append(new IFLT(null))); // NodeIterator.END
 
-		il.append(new ILOAD(node2.Index));
-		il.append(new ILOAD(node.Index));
-		iter.End = il.append(new IF_ICMPLT(next));
+		il.append(new ILOAD(node2.getIndex()));
+		il.append(new ILOAD(node.getIndex()));
+		iter.setEnd(il.append(new IF_ICMPLT(next)));
 
-		node2.End = il.append(new ILOAD(node2.Index));
-		node.End = il.append(new ILOAD(node.Index));
+		node2.setEnd(il.append(new ILOAD(node2.getIndex())));
+		node.setEnd(il.append(new ILOAD(node.getIndex())));
 		_falseList.add(il.append(new IF_ICMPNE(null)));
 
-		skipNext.Target = begin;
+		skipNext.setTarget(begin);
 		}
 
 		public override void translate(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (hasPredicates())
 		{

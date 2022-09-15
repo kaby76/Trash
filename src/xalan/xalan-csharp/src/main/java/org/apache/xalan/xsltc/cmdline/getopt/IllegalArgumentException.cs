@@ -22,7 +22,6 @@
 namespace org.apache.xalan.xsltc.cmdline.getopt
 {
 
-
 	internal class IllegalArgumentException : GetOptsException
 	{
 		internal new const long serialVersionUID = 8642122427294793651L;

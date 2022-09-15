@@ -24,11 +24,14 @@ using System.Text;
  */
 namespace org.apache.xpath.patterns
 {
-
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisTraverser = org.apache.xml.dtm.DTMAxisTraverser;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using SubContextList = org.apache.xpath.axes.SubContextList;
 	using PsuedoNames = org.apache.xpath.compiler.PsuedoNames;
 	using XObject = org.apache.xpath.objects.XObject;
@@ -86,7 +89,7 @@ namespace org.apache.xpath.patterns
 	  /// Calculate the local name or psuedo name of the node that this pattern will test,
 	  /// for hash table lookup optimization.
 	  /// </summary>
-	  /// <seealso cref= org.apache.xpath.compiler.PsuedoNames </seealso>
+	  /// <seealso cref="org.apache.xpath.compiler.PsuedoNames"/>
 	  public virtual void calcTargetString()
 	  {
 
@@ -94,22 +97,22 @@ namespace org.apache.xpath.patterns
 
 		switch (whatToShow)
 		{
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_COMMENT :
+		case DTMFilter.SHOW_COMMENT :
 		  m_targetString = PsuedoNames.PSEUDONAME_COMMENT;
 		  break;
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_TEXT :
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_CDATA_SECTION :
-		case (org.apache.xml.dtm.DTMFilter_Fields.SHOW_TEXT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_CDATA_SECTION) :
+		case DTMFilter.SHOW_TEXT :
+		case DTMFilter.SHOW_CDATA_SECTION :
+		case (DTMFilter.SHOW_TEXT | DTMFilter.SHOW_CDATA_SECTION) :
 		  m_targetString = PsuedoNames.PSEUDONAME_TEXT;
 		  break;
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL :
+		case DTMFilter.SHOW_ALL :
 		  m_targetString = PsuedoNames.PSEUDONAME_ANY;
 		  break;
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT :
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT :
+		case DTMFilter.SHOW_DOCUMENT :
+		case DTMFilter.SHOW_DOCUMENT | DTMFilter.SHOW_DOCUMENT_FRAGMENT :
 		  m_targetString = PsuedoNames.PSEUDONAME_ROOT;
 		  break;
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT :
+		case DTMFilter.SHOW_ELEMENT :
 		  if (string.ReferenceEquals(WILD, m_name))
 		  {
 			m_targetString = PsuedoNames.PSEUDONAME_ANY;
@@ -131,7 +134,7 @@ namespace org.apache.xpath.patterns
 	  /// 
 	  /// </summary>
 	  /// <returns> local name or psuedo name of the node. </returns>
-	  /// <seealso cref= org.apache.xpath.compiler.PsuedoNames </seealso>
+	  /// <seealso cref="org.apache.xpath.compiler.PsuedoNames"/>
 	  public virtual string TargetString
 	  {
 		  get
@@ -317,14 +320,14 @@ namespace org.apache.xpath.patterns
 	  /// <param name="xctxt"> XPath runtime context. </param>
 	  /// <param name="currentNode"> The current node context.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt, int currentNode) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt, int currentNode)
 	  {
@@ -347,14 +350,14 @@ namespace org.apache.xpath.patterns
 	  /// </summary>
 	  /// <param name="xctxt"> XPath runtime context.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -375,7 +378,7 @@ namespace org.apache.xpath.patterns
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if a runtime exception
 	  ///         occurs. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt, int currentNode, org.apache.xml.dtm.DTM dtm, int expType) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt, int currentNode, DTM dtm, int expType)
 	  {
@@ -435,7 +438,7 @@ namespace org.apache.xpath.patterns
 		{
 		  DTMAxisTraverser traverser = dtm.getAxisTraverser(Axis.PRECEDINGSIBLING);
 
-		  for (int child = traverser.first(context); org.apache.xml.dtm.DTM_Fields.NULL != child; child = traverser.next(context, child))
+		  for (int child = traverser.first(context); DTM.NULL != child; child = traverser.next(context, child))
 		  {
 			try
 			{
@@ -535,7 +538,7 @@ namespace org.apache.xpath.patterns
 		{
 		  DTMAxisTraverser traverser = dtm.getAxisTraverser(Axis.CHILD);
 
-		  for (int child = traverser.first(parent); org.apache.xml.dtm.DTM_Fields.NULL != child; child = traverser.next(parent, child))
+		  for (int child = traverser.first(parent); DTM.NULL != child; child = traverser.next(parent, child))
 		  {
 			try
 			{
@@ -654,14 +657,14 @@ namespace org.apache.xpath.patterns
 	  /// <param name="dtm"> The DTM of the current node. </param>
 	  /// <param name="currentNode"> The current node context.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected final org.apache.xpath.objects.XObject executeRelativePathPattern(org.apache.xpath.XPathContext xctxt, org.apache.xml.dtm.DTM dtm, int currentNode) throws javax.xml.transform.TransformerException
 	  protected internal XObject executeRelativePathPattern(XPathContext xctxt, DTM dtm, int currentNode)
 	  {
@@ -672,7 +675,7 @@ namespace org.apache.xpath.patterns
 
 		traverser = dtm.getAxisTraverser(m_axis);
 
-		for (int relative = traverser.first(context); org.apache.xml.dtm.DTM_Fields.NULL != relative; relative = traverser.next(context, relative))
+		for (int relative = traverser.first(context); DTM.NULL != relative; relative = traverser.next(context, relative))
 		{
 		  try
 		  {
@@ -705,7 +708,7 @@ namespace org.apache.xpath.patterns
 	  /// <returns> true if the node should be accepted, false otherwise.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected final boolean executePredicates(org.apache.xpath.XPathContext xctxt, org.apache.xml.dtm.DTM dtm, int currentNode) throws javax.xml.transform.TransformerException
 	  protected internal bool executePredicates(XPathContext xctxt, DTM dtm, int currentNode)
 	  {
@@ -802,19 +805,19 @@ namespace org.apache.xpath.patterns
 		  {
 			buf.Append("doc()");
 		  }
-		  else if (org.apache.xml.dtm.DTMFilter_Fields.SHOW_BYFUNCTION == pat.m_whatToShow)
+		  else if (DTMFilter.SHOW_BYFUNCTION == pat.m_whatToShow)
 		  {
 			buf.Append("function()");
 		  }
-		  else if (org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL == pat.m_whatToShow)
+		  else if (DTMFilter.SHOW_ALL == pat.m_whatToShow)
 		  {
 			buf.Append("node()");
 		  }
-		  else if (org.apache.xml.dtm.DTMFilter_Fields.SHOW_TEXT == pat.m_whatToShow)
+		  else if (DTMFilter.SHOW_TEXT == pat.m_whatToShow)
 		  {
 			buf.Append("text()");
 		  }
-		  else if (org.apache.xml.dtm.DTMFilter_Fields.SHOW_PROCESSING_INSTRUCTION == pat.m_whatToShow)
+		  else if (DTMFilter.SHOW_PROCESSING_INSTRUCTION == pat.m_whatToShow)
 		  {
 			buf.Append("processing-instruction(");
 
@@ -825,13 +828,13 @@ namespace org.apache.xpath.patterns
 
 			buf.Append(")");
 		  }
-		  else if (org.apache.xml.dtm.DTMFilter_Fields.SHOW_COMMENT == pat.m_whatToShow)
+		  else if (DTMFilter.SHOW_COMMENT == pat.m_whatToShow)
 		  {
 			buf.Append("comment()");
 		  }
 		  else if (null != pat.m_name)
 		  {
-			if (org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE == pat.m_whatToShow)
+			if (DTMFilter.SHOW_ATTRIBUTE == pat.m_whatToShow)
 			{
 			  buf.Append("@");
 			}
@@ -845,22 +848,22 @@ namespace org.apache.xpath.patterns
 
 			buf.Append(pat.m_name);
 		  }
-		  else if (org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE == pat.m_whatToShow)
+		  else if (DTMFilter.SHOW_ATTRIBUTE == pat.m_whatToShow)
 		  {
 			buf.Append("@");
 		  }
-		  else if ((org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT) == pat.m_whatToShow)
+		  else if ((DTMFilter.SHOW_DOCUMENT | DTMFilter.SHOW_DOCUMENT_FRAGMENT) == pat.m_whatToShow)
 		  {
 			buf.Append("doc-root()");
 		  }
 		  else
 		  {
-			buf.Append("?" + pat.m_whatToShow.ToString("x"));
+			buf.Append("?" + Convert.ToString(pat.m_whatToShow, 16));
 		  }
 
 		  if (null != pat.m_predicates)
 		  {
-			for (int i = 0; i < pat.m_predicates.length; i++)
+			for (int i = 0; i < pat.m_predicates.Length; i++)
 			{
 			  buf.Append("[");
 			  buf.Append(pat.m_predicates[i]);
@@ -882,14 +885,14 @@ namespace org.apache.xpath.patterns
 	  /// <param name="xctxt"> The XPath runtime context. </param>
 	  /// <param name="context"> The node to be tested.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public double getMatchScore(org.apache.xpath.XPathContext xctxt, int context) throws javax.xml.transform.TransformerException
 	  public virtual double getMatchScore(XPathContext xctxt, int context)
 	  {
@@ -942,7 +945,7 @@ namespace org.apache.xpath.patterns
 			  m_index = index;
 		  }
 
-		/// <seealso cref= ExpressionOwner#getExpression() </seealso>
+		/// <seealso cref="ExpressionOwner.getExpression()"/>
 		public virtual Expression Expression
 		{
 			get
@@ -959,7 +962,7 @@ namespace org.apache.xpath.patterns
 
 	  }
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
 	  {
 			   if (visitor.visitMatchPattern(owner, this))
@@ -993,7 +996,7 @@ namespace org.apache.xpath.patterns
 	  }
 
 
-	  /// <seealso cref= ExpressionOwner#getExpression() </seealso>
+	  /// <seealso cref="ExpressionOwner.getExpression()"/>
 	  public virtual Expression Expression
 	  {
 		  get
@@ -1008,7 +1011,7 @@ namespace org.apache.xpath.patterns
 	  }
 
 
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		  if (!base.deepEquals(expr))

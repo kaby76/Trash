@@ -22,17 +22,17 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 
 	/// <summary>
 	/// This class implements an optimized iterator for
 	/// "node()" patterns, that is, any children of the
 	/// context node. </summary>
-	/// <seealso cref= org.apache.xpath.axes.LocPathIterator
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="org.apache.xpath.axes.LocPathIterator"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ChildIterator : LocPathIterator
 	{
@@ -47,13 +47,13 @@ namespace org.apache.xpath.axes
 	  /// <param name="analysis"> Analysis bits of the entire pattern.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: ChildIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis) throws javax.xml.transform.TransformerException
 	  internal ChildIterator(Compiler compiler, int opPos, int analysis) : base(compiler, opPos, analysis, false)
 	  {
 
 		// This iterator matches all kinds of nodes
-		initNodeTest(org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL);
+		initNodeTest(DTMFilter.SHOW_ALL);
 	  }
 
 	  /// <summary>
@@ -63,7 +63,7 @@ namespace org.apache.xpath.axes
 	  /// <para>WARNING: Do not mutate this class from this function!</para> </summary>
 	  /// <param name="xctxt"> The XPath runtime context. </param>
 	  /// <returns> the first node out of the nodeset, or DTM.NULL. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int asNode(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override int asNode(XPathContext xctxt)
 	  {
@@ -85,15 +85,15 @@ namespace org.apache.xpath.axes
 	  {
 		  if (m_foundLast)
 		  {
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return DTM.NULL;
 		  }
 
 		int next;
 
-		m_lastFetched = next = (org.apache.xml.dtm.DTM_Fields.NULL == m_lastFetched) ? m_cdtm.getFirstChild(m_context) : m_cdtm.getNextSibling(m_lastFetched);
+		m_lastFetched = next = (DTM.NULL == m_lastFetched) ? m_cdtm.getFirstChild(m_context) : m_cdtm.getNextSibling(m_lastFetched);
 
 		// m_lastFetched = next;
-		if (org.apache.xml.dtm.DTM_Fields.NULL != next)
+		if (DTM.NULL != next)
 		{
 		  m_pos++;
 		  return next;
@@ -102,7 +102,7 @@ namespace org.apache.xpath.axes
 		{
 		  m_foundLast = true;
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 	  }
 

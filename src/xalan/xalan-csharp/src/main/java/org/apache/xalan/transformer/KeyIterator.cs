@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.transformer
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using KeyDeclaration = org.apache.xalan.templates.KeyDeclaration;
@@ -137,12 +136,12 @@ namespace org.apache.xalan.transformer
 			XPath matchExpr = kd.Match;
 			double score = matchExpr.getMatchScore(xctxt, testNode);
 
-			if (score == XPath.MATCH_SCORE_NONE)
+			if (score == kd.Match.MATCH_SCORE_NONE)
 			{
 			  continue;
 			}
 
-			return org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT;
+			return DTMIterator.FILTER_ACCEPT;
 
 		  } // end for(int i = 0; i < nDeclarations; i++)
 		}
@@ -157,7 +156,7 @@ namespace org.apache.xalan.transformer
 		  throw new Exception(XSLMessages.createMessage(XSLTErrorResources.ER_NO_XSLKEY_DECLARATION, new object[] {name.LocalName}));
 		}
 
-		return org.apache.xml.dtm.DTMIterator_Fields.FILTER_REJECT;
+		return DTMIterator.FILTER_REJECT;
 	  }
 
 	}

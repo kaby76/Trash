@@ -61,7 +61,7 @@ namespace org.apache.xalan.processor
 	/// <summary>
 	/// This class defines the allowed structure for a stylesheet, and the
 	/// mapping between Xalan classes and the markup elements in the stylesheet. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
 	public class XSLTSchema : XSLTElementDef
 	{
 
@@ -225,11 +225,11 @@ namespace org.apache.xalan.processor
 		XSLTAttributeDef xslUseAttributeSetsAttr = new XSLTAttributeDef(Constants.S_XSLNAMESPACEURL, "use-attribute-sets", XSLTAttributeDef.T_QNAMES, false, false,XSLTAttributeDef.ERROR);
 		XSLTAttributeDef xslVersionAttr = new XSLTAttributeDef(Constants.S_XSLNAMESPACEURL, "version", XSLTAttributeDef.T_NMTOKEN, false, false,XSLTAttributeDef.ERROR);
 
-		XSLTElementDef charData = new XSLTElementDef(this, null, "text()", null, null, null, new ProcessorCharacters(), typeof(ElemTextLiteral)); // attributes
+		XSLTElementDef charData = new XSLTElementDef(this, null, "text()", null, null, null, new ProcessorCharacters(), typeof(ElemTextLiteral));
 
 		charData.Type = XSLTElementDef.T_PCDATA;
 
-		XSLTElementDef whiteSpaceOnly = new XSLTElementDef(this, null, "text()", null, null, null, null, typeof(ElemTextLiteral)); // attributes
+		XSLTElementDef whiteSpaceOnly = new XSLTElementDef(this, null, "text()", null, null, null, null, typeof(ElemTextLiteral));
 
 		charData.Type = XSLTElementDef.T_PCDATA;
 
@@ -243,7 +243,7 @@ namespace org.apache.xalan.processor
 		XSLTElementDef[] exsltFunctionElements = new XSLTElementDef[24];
 
 		XSLTElementDef[] charTemplateElements = new XSLTElementDef[15];
-		XSLTElementDef resultElement = new XSLTElementDef(this, null, "*", null, templateElements, new XSLTAttributeDef[]{spaceAttrLiteral, xslExcludeResultPrefixesAttr, xslExtensionElementPrefixesAttr, xslUseAttributeSetsAttr, xslVersionAttr, xslResultAttr, resultAttr}, new ProcessorLRE(), typeof(ElemLiteralResult), 20, true); // special
+		XSLTElementDef resultElement = new XSLTElementDef(this, null, "*", null, templateElements, new XSLTAttributeDef[]{spaceAttrLiteral, xslExcludeResultPrefixesAttr, xslExtensionElementPrefixesAttr, xslUseAttributeSetsAttr, xslVersionAttr, xslResultAttr, resultAttr}, new ProcessorLRE(), typeof(ElemLiteralResult), 20, true);
 		XSLTElementDef unknownElement = new XSLTElementDef(this, "*", "unknown", null, templateElementsAndParams, new XSLTAttributeDef[]{xslExcludeResultPrefixesAttr, xslExtensionElementPrefixesAttr, xslUseAttributeSetsAttr, xslVersionAttr, xslResultAttr, resultAttr}, new ProcessorUnknown(), typeof(ElemUnknown), 20, true);
 		XSLTElementDef xslValueOf = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "value-of", null, null, new XSLTAttributeDef[]{selectAttrRequired, disableOutputEscapingAttr}, new ProcessorTemplateElem(), typeof(ElemValueOf), 20, true);
 		XSLTElementDef xslCopyOf = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "copy-of", null, null, new XSLTAttributeDef[]{selectAttrRequired}, new ProcessorTemplateElem(), typeof(ElemCopyOf), 20, true);
@@ -252,25 +252,25 @@ namespace org.apache.xalan.processor
 		// <!-- xsl:sort cannot occur after any other elements or
 		// any non-whitespace character -->
 		XSLTElementDef xslSort = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "sort", null, null, new XSLTAttributeDef[]{selectAttrDefDot, langAttr, dataTypeAttr, orderAttr, caseOrderAttr}, new ProcessorTemplateElem(), typeof(ElemSort), 19, true);
-		XSLTElementDef xslWithParam = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "with-param", null, templateElements, new XSLTAttributeDef[]{nameAttrRequired, selectAttrOpt}, new ProcessorTemplateElem(), typeof(ElemWithParam), 19, true); // %template;>
+		XSLTElementDef xslWithParam = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "with-param", null, templateElements, new XSLTAttributeDef[]{nameAttrRequired, selectAttrOpt}, new ProcessorTemplateElem(), typeof(ElemWithParam), 19, true);
 		XSLTElementDef xslApplyTemplates = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "apply-templates", null, new XSLTElementDef[]{xslSort, xslWithParam}, new XSLTAttributeDef[]{selectAttrDefNode, modeAttr}, new ProcessorTemplateElem(), typeof(ElemApplyTemplates), 20, true);
 		XSLTElementDef xslApplyImports = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "apply-imports", null, null, new XSLTAttributeDef[]{}, new ProcessorTemplateElem(), typeof(ElemApplyImport));
-		XSLTElementDef xslForEach = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "for-each", null, templateElementsAndSort, new XSLTAttributeDef[]{selectAttrRequired, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemForEach), true, false, true, 20, true); // (#PCDATA %instructions; %result-elements; | xsl:sort)*
-		XSLTElementDef xslIf = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "if", null, templateElements, new XSLTAttributeDef[]{testAttrRequired, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemIf), 20, true); // %template;
-		XSLTElementDef xslWhen = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "when", null, templateElements, new XSLTAttributeDef[]{testAttrRequired, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemWhen), false, true, 1, true); // %template;>
-		XSLTElementDef xslOtherwise = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "otherwise", null, templateElements, new XSLTAttributeDef[]{spaceAttr}, new ProcessorTemplateElem(), typeof(ElemOtherwise), false, false, 2, false); // %template;>
+		XSLTElementDef xslForEach = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "for-each", null, templateElementsAndSort, new XSLTAttributeDef[]{selectAttrRequired, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemForEach), true, false, true, 20, true);
+		XSLTElementDef xslIf = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "if", null, templateElements, new XSLTAttributeDef[]{testAttrRequired, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemIf), 20, true);
+		XSLTElementDef xslWhen = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "when", null, templateElements, new XSLTAttributeDef[]{testAttrRequired, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemWhen), false, true, 1, true);
+		XSLTElementDef xslOtherwise = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "otherwise", null, templateElements, new XSLTAttributeDef[]{spaceAttr}, new ProcessorTemplateElem(), typeof(ElemOtherwise), false, false, 2, false);
 		XSLTElementDef xslChoose = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "choose", null, new XSLTElementDef[]{xslWhen, xslOtherwise}, new XSLTAttributeDef[]{spaceAttr}, new ProcessorTemplateElem(), typeof(ElemChoose), true, false, true, 20, true);
-		XSLTElementDef xslAttribute = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "attribute", null, charTemplateElements, new XSLTAttributeDef[]{nameAVTRequired, namespaceAVTOpt, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemAttribute), 20, true); // %char-template;>
+		XSLTElementDef xslAttribute = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "attribute", null, charTemplateElements, new XSLTAttributeDef[]{nameAVTRequired, namespaceAVTOpt, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemAttribute), 20, true);
 		XSLTElementDef xslCallTemplate = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "call-template", null, new XSLTElementDef[]{xslWithParam}, new XSLTAttributeDef[]{nameAttrRequired}, new ProcessorTemplateElem(), typeof(ElemCallTemplate), 20, true);
-		XSLTElementDef xslVariable = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "variable", null, templateElements, new XSLTAttributeDef[]{nameAttrRequired, selectAttrOpt}, new ProcessorTemplateElem(), typeof(ElemVariable), 20, true); // %template;>
-		XSLTElementDef xslParam = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "param", null, templateElements, new XSLTAttributeDef[]{nameAttrRequired, selectAttrOpt}, new ProcessorTemplateElem(), typeof(ElemParam), 19, true); // %template;>
+		XSLTElementDef xslVariable = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "variable", null, templateElements, new XSLTAttributeDef[]{nameAttrRequired, selectAttrOpt}, new ProcessorTemplateElem(), typeof(ElemVariable), 20, true);
+		XSLTElementDef xslParam = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "param", null, templateElements, new XSLTAttributeDef[]{nameAttrRequired, selectAttrOpt}, new ProcessorTemplateElem(), typeof(ElemParam), 19, true);
 		XSLTElementDef xslText = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "text", null, new XSLTElementDef[]{charData}, new XSLTAttributeDef[]{disableOutputEscapingAttr}, new ProcessorText(), typeof(ElemText), 20, true);
-		XSLTElementDef xslProcessingInstruction = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "processing-instruction", null, charTemplateElements, new XSLTAttributeDef[]{nameAVT_NCNAMERequired, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemPI), 20, true); // %char-template;>
-		XSLTElementDef xslElement = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "element", null, templateElements, new XSLTAttributeDef[]{nameAVTRequired, namespaceAVTOpt, useAttributeSetsAttr, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemElement), 20, true); // %template;
-		XSLTElementDef xslComment = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "comment", null, charTemplateElements, new XSLTAttributeDef[]{spaceAttr}, new ProcessorTemplateElem(), typeof(ElemComment), 20, true); // %char-template;>
-		XSLTElementDef xslCopy = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "copy", null, templateElements, new XSLTAttributeDef[]{spaceAttr, useAttributeSetsAttr}, new ProcessorTemplateElem(), typeof(ElemCopy), 20, true); // %template;>
-		XSLTElementDef xslMessage = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "message", null, templateElements, new XSLTAttributeDef[]{terminateAttr}, new ProcessorTemplateElem(), typeof(ElemMessage), 20, true); // %template;>
-		XSLTElementDef xslFallback = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "fallback", null, templateElements, new XSLTAttributeDef[]{spaceAttr}, new ProcessorTemplateElem(), typeof(ElemFallback), 20, true); // %template;>
+		XSLTElementDef xslProcessingInstruction = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "processing-instruction", null, charTemplateElements, new XSLTAttributeDef[]{nameAVT_NCNAMERequired, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemPI), 20, true);
+		XSLTElementDef xslElement = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "element", null, templateElements, new XSLTAttributeDef[]{nameAVTRequired, namespaceAVTOpt, useAttributeSetsAttr, spaceAttr}, new ProcessorTemplateElem(), typeof(ElemElement), 20, true);
+		XSLTElementDef xslComment = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "comment", null, charTemplateElements, new XSLTAttributeDef[]{spaceAttr}, new ProcessorTemplateElem(), typeof(ElemComment), 20, true);
+		XSLTElementDef xslCopy = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "copy", null, templateElements, new XSLTAttributeDef[]{spaceAttr, useAttributeSetsAttr}, new ProcessorTemplateElem(), typeof(ElemCopy), 20, true);
+		XSLTElementDef xslMessage = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "message", null, templateElements, new XSLTAttributeDef[]{terminateAttr}, new ProcessorTemplateElem(), typeof(ElemMessage), 20, true);
+		XSLTElementDef xslFallback = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "fallback", null, templateElements, new XSLTAttributeDef[]{spaceAttr}, new ProcessorTemplateElem(), typeof(ElemFallback), 20, true);
 		//exslt
 		XSLTElementDef exsltFunction = new XSLTElementDef(this, Constants.S_EXSLT_FUNCTIONS_URL, "function", null, exsltFunctionElements, new XSLTAttributeDef[]{nameAttrRequired}, new ProcessorExsltFunction(), typeof(ElemExsltFunction));
 		XSLTElementDef exsltResult = new XSLTElementDef(this, Constants.S_EXSLT_FUNCTIONS_URL, "result", null, templateElements, new XSLTAttributeDef[]{selectAttrOpt}, new ProcessorExsltFuncResult(), typeof(ElemExsltFuncResult));
@@ -333,8 +333,8 @@ namespace org.apache.xalan.processor
 		charTemplateElements[i++] = xslMessage;
 		charTemplateElements[i++] = xslFallback;
 
-		XSLTElementDef importDef = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "import", null, null, new XSLTAttributeDef[]{hrefAttr}, new ProcessorImport(), null, 1, true); // EMPTY
-		XSLTElementDef includeDef = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "include", null, null, new XSLTAttributeDef[]{hrefAttr}, new ProcessorInclude(), null, 20, true); // EMPTY
+		XSLTElementDef importDef = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "import", null, null, new XSLTAttributeDef[]{hrefAttr}, new ProcessorImport(), null, 1, true);
+		XSLTElementDef includeDef = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "include", null, null, new XSLTAttributeDef[]{hrefAttr}, new ProcessorInclude(), null, 20, true);
 
 		XSLTAttributeDef[] scriptAttrs = new XSLTAttributeDef[]
 		{
@@ -355,11 +355,11 @@ namespace org.apache.xalan.processor
 		XSLTAttributeDef extensionElementPrefixesAttr = new XSLTAttributeDef(null, "extension-element-prefixes", XSLTAttributeDef.T_PREFIX_URLLIST, false,false,XSLTAttributeDef.WARNING);
 		XSLTAttributeDef idAttr = new XSLTAttributeDef(null, "id", XSLTAttributeDef.T_CDATA, false,false,XSLTAttributeDef.WARNING);
 		XSLTAttributeDef versionAttrRequired = new XSLTAttributeDef(null, "version", XSLTAttributeDef.T_NMTOKEN, true,false,XSLTAttributeDef.WARNING);
-		XSLTElementDef stylesheetElemDef = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "stylesheet", "transform", topLevelElements, new XSLTAttributeDef[]{extensionElementPrefixesAttr, excludeResultPrefixesAttr, idAttr, versionAttrRequired, spaceAttr}, new ProcessorStylesheetElement(), null, true, -1, false); // ContentHandler
+		XSLTElementDef stylesheetElemDef = new XSLTElementDef(this, Constants.S_XSLNAMESPACEURL, "stylesheet", "transform", topLevelElements, new XSLTAttributeDef[]{extensionElementPrefixesAttr, excludeResultPrefixesAttr, idAttr, versionAttrRequired, spaceAttr}, new ProcessorStylesheetElement(), null, true, -1, false);
 
 		importDef.Elements = new XSLTElementDef[]{stylesheetElemDef, resultElement, unknownElement};
 		includeDef.Elements = new XSLTElementDef[]{stylesheetElemDef, resultElement, unknownElement};
-		build(null, null, null, new XSLTElementDef[]{stylesheetElemDef, whiteSpaceOnly, resultElement, unknownElement}, null, new ProcessorStylesheetDoc(), null); // class object -  ContentHandler
+		build(null, null, null, new XSLTElementDef[]{stylesheetElemDef, whiteSpaceOnly, resultElement, unknownElement}, null, new ProcessorStylesheetDoc(), null);
 	  }
 
 	  /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +24,6 @@
 
 namespace org.apache.xml.dtm.@ref
 {
-
 
 	using SAXParser = org.apache.xerces.parsers.SAXParser;
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
@@ -52,17 +52,17 @@ namespace org.apache.xml.dtm.@ref
 	  // references to those APIs. So until Xerces2 is pervasive and we're willing 
 	  // to make it a prerequisite, we will rely upon relection.
 	  //
-	  internal Method fParseSomeSetup = null; // Xerces1 method
-	  internal Method fParseSome = null; // Xerces1 method
+	  internal System.Reflection.MethodInfo fParseSomeSetup = null; // Xerces1 method
+	  internal System.Reflection.MethodInfo fParseSome = null; // Xerces1 method
 	  internal object fPullParserConfig = null; // Xerces2 pull control object
-	  internal Method fConfigSetInput = null; // Xerces2 method
-	  internal Method fConfigParse = null; // Xerces2 method
-	  internal Method fSetInputSource = null; // Xerces2 pull control method
-	  internal Constructor fConfigInputSourceCtor = null; // Xerces2 initialization method
-	  internal Method fConfigSetByteStream = null; // Xerces2 initialization method
-	  internal Method fConfigSetCharStream = null; // Xerces2 initialization method
-	  internal Method fConfigSetEncoding = null; // Xerces2 initialization method
-	  internal Method fReset = null; // Both Xerces1 and Xerces2, but diff. signatures
+	  internal System.Reflection.MethodInfo fConfigSetInput = null; // Xerces2 method
+	  internal System.Reflection.MethodInfo fConfigParse = null; // Xerces2 method
+	  internal System.Reflection.MethodInfo fSetInputSource = null; // Xerces2 pull control method
+	  internal System.Reflection.ConstructorInfo fConfigInputSourceCtor = null; // Xerces2 initialization method
+	  internal System.Reflection.MethodInfo fConfigSetByteStream = null; // Xerces2 initialization method
+	  internal System.Reflection.MethodInfo fConfigSetCharStream = null; // Xerces2 initialization method
+	  internal System.Reflection.MethodInfo fConfigSetEncoding = null; // Xerces2 initialization method
+	  internal System.Reflection.MethodInfo fReset = null; // Both Xerces1 and Xerces2, but diff. signatures
 
 	  //
 	  // Data
@@ -82,7 +82,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// there should be a simpler way to request incremental SAX parsing.
 	  /// 
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public IncrementalSAXSource_Xerces() throws NoSuchMethodException
 	  public IncrementalSAXSource_Xerces()
 	  {
@@ -103,15 +103,15 @@ namespace org.apache.xml.dtm.@ref
 				// If we can't get the magic constructor, no need to look further.
 				Type xniConfigClass = ObjectFactory.findProviderClass("org.apache.xerces.xni.parser.XMLParserConfiguration", ObjectFactory.findClassLoader(), true);
 				Type[] args1 = new Type[] {xniConfigClass};
-				Constructor ctor = typeof(SAXParser).GetConstructor(args1);
+				System.Reflection.ConstructorInfo ctor = typeof(SAXParser).GetConstructor(args1);
 
 				// Build the parser configuration object. StandardParserConfiguration
 				// happens to implement XMLPullParserConfiguration, which is the API
 				// we're going to want to use.
 				Type xniStdConfigClass = ObjectFactory.findProviderClass("org.apache.xerces.parsers.StandardParserConfiguration", ObjectFactory.findClassLoader(), true);
-				fPullParserConfig = xniStdConfigClass.newInstance();
+				fPullParserConfig = System.Activator.CreateInstance(xniStdConfigClass);
 				object[] args2 = new object[] {fPullParserConfig};
-				fIncrementalParser = (SAXParser)ctor.newInstance(args2);
+				fIncrementalParser = (SAXParser)ctor.Invoke(args2);
 
 				// Preload all the needed the configuration methods... I want to know they're
 				// all here before we commit to trying to use them, just in case the
@@ -120,9 +120,9 @@ namespace org.apache.xml.dtm.@ref
 				Type[] args3 = new Type[] {fXniInputSourceClass};
 				fConfigSetInput = xniStdConfigClass.GetMethod("setInputSource",args3);
 
-				Type[] args4 = new Type[] {typeof(string),typeof(string),typeof(string)};
+				Type[] args4 = new Type[] {typeof(string), typeof(string), typeof(string)};
 				fConfigInputSourceCtor = fXniInputSourceClass.GetConstructor(args4);
-				Type[] args5 = new Type[] {typeof(System.IO.Stream)};
+				Type[] args5 = new Type[] {typeof(Stream)};
 				fConfigSetByteStream = fXniInputSourceClass.GetMethod("setByteStream",args5);
 				Type[] args6 = new Type[] {typeof(java.io.Reader)};
 				fConfigSetCharStream = fXniInputSourceClass.GetMethod("setCharacterStream",args6);
@@ -159,7 +159,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// incremental parse operations. In that case, caller should
 	  /// fall back upon the IncrementalSAXSource_Filter approach.
 	  ///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public IncrementalSAXSource_Xerces(org.apache.xerces.parsers.SAXParser parser) throws NoSuchMethodException
 	  public IncrementalSAXSource_Xerces(SAXParser parser)
 	  {
@@ -224,7 +224,7 @@ namespace org.apache.xml.dtm.@ref
 		  {
 			// Typecast required in Xerces2; SAXParser doesn't inheret XMLReader
 			// %OPT% Cast at asignment?
-			((XMLReader)fIncrementalParser).ContentHandler = value;
+			((XMLReader)fIncrementalParser).setContentHandler(value);
 		  }
 	  }
 
@@ -258,7 +258,7 @@ namespace org.apache.xml.dtm.@ref
 		  {
 			// Typecast required in Xerces2; SAXParser doesn't inheret XMLReader
 			// %OPT% Cast at asignment?
-			((XMLReader)fIncrementalParser).DTDHandler = value;
+			((XMLReader)fIncrementalParser).setDTDHandler(value);
 		  }
 	  }
 
@@ -270,7 +270,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <exception cref="SAXException"> is parse thread is already in progress
 	  /// or parsing can not be started.
 	  ///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startParse(org.xml.sax.InputSource source) throws org.xml.sax.SAXException
 	  public virtual void startParse(InputSource source)
 	  {
@@ -344,21 +344,21 @@ namespace org.apache.xml.dtm.@ref
 	  }
 
 		// Private methods -- conveniences to hide the reflection details
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: private boolean parseSomeSetup(org.xml.sax.InputSource source) throws org.xml.sax.SAXException, java.io.IOException, IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.InstantiationException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: private boolean parseSomeSetup(org.xml.sax.InputSource source) throws SAXException, IOException, IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.InstantiationException
 		private bool parseSomeSetup(InputSource source)
 		{
 			if (fConfigSetInput != null)
 			{
 				// Obtain input from SAX inputSource object, construct XNI version of
 				// that object. Logic adapted from Xerces2.
-				object[] parms1 = new object[] {source.PublicId,source.SystemId,null};
-				object xmlsource = fConfigInputSourceCtor.newInstance(parms1);
-				object[] parmsa = new object[] {source.ByteStream};
+				object[] parms1 = new object[] {source.getPublicId(), source.getSystemId(), null};
+				object xmlsource = fConfigInputSourceCtor.Invoke(parms1);
+				object[] parmsa = new object[] {source.getByteStream()};
 				fConfigSetByteStream.invoke(xmlsource,parmsa);
-				parmsa[0] = source.CharacterStream;
+				parmsa[0] = source.getCharacterStream();
 				fConfigSetCharStream.invoke(xmlsource,parmsa);
-				parmsa[0] = source.Encoding;
+				parmsa[0] = source.getEncoding();
 				fConfigSetEncoding.invoke(xmlsource,parmsa);
 
 				// Bugzilla5272 patch suggested by Sandy Gao.
@@ -384,8 +384,8 @@ namespace org.apache.xml.dtm.@ref
 	//  Would null work???
 		private static readonly object[] noparms = new object[0];
 		private static readonly object[] parmsfalse = new object[] {false};
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: private boolean parseSome() throws org.xml.sax.SAXException, java.io.IOException, IllegalAccessException, java.lang.reflect.InvocationTargetException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: private boolean parseSome() throws SAXException, IOException, IllegalAccessException, java.lang.reflect.InvocationTargetException
 		private bool parseSome()
 		{
 			// Take next parsing step, return false iff parsing complete:

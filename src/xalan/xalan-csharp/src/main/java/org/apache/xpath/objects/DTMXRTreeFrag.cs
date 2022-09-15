@@ -18,8 +18,8 @@
 
 namespace org.apache.xpath.objects
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
+	using XPathContext = org.apache.xpath.XPathContext;
 	/*
 	 * 
 	 * @author igorh
@@ -30,7 +30,7 @@ namespace org.apache.xpath.objects
 	 public sealed class DTMXRTreeFrag
 	 {
 	  private DTM m_dtm;
-	  private int m_dtmIdentity = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_dtmIdentity = DTM.NULL;
 	  private XPathContext m_xctxt;
 
 	  public DTMXRTreeFrag(int dtmIdentity, XPathContext xctxt)

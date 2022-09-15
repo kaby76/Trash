@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.processor
 {
-
 	using DecimalFormatProperties = org.apache.xalan.templates.DecimalFormatProperties;
 	using Attributes = org.xml.sax.Attributes;
 
@@ -30,10 +29,10 @@ namespace org.apache.xalan.processor
 	/// Process xsl:decimal-format by creating a DecimalFormatProperties 
 	/// object and passing it to the stylesheet.
 	/// </summary>
-	/// <seealso cref= org.apache.xalan.templates.Stylesheet#setDecimalFormat </seealso>
-	/// <seealso cref= org.apache.xalan.templates.DecimalFormatProperties </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#format-number">format-number in XSLT Specification</a>
-	/// @xsl.usage internal </seealso>
+	/// <seealso cref="org.apache.xalan.templates.Stylesheet.setDecimalFormat"/>
+	/// <seealso cref="org.apache.xalan.templates.DecimalFormatProperties"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.format-number">format-number in XSLT Specification</a>"
+	/// @xsl.usage internal/>
 	[Serializable]
 	internal class ProcessorDecimalFormat : XSLTElementProcessor
 	{
@@ -54,12 +53,12 @@ namespace org.apache.xalan.processor
 	  /// <param name="attributes"> The attributes attached to the element.  If
 	  ///        there are no attributes, it shall be an empty
 	  ///        Attributes object. </param>
-	  /// <seealso cref= org.apache.xalan.processor.StylesheetHandler#startElement </seealso>
-	  /// <seealso cref= org.apache.xalan.processor.StylesheetHandler#endElement </seealso>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startElement </seealso>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endElement </seealso>
-	  /// <seealso cref= org.xml.sax.Attributes </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.apache.xalan.processor.StylesheetHandler.startElement"/>
+	  /// <seealso cref="org.apache.xalan.processor.StylesheetHandler.endElement"/>
+	  /// <seealso cref="org.xml.sax.ContentHandler.startElement"/>
+	  /// <seealso cref="org.xml.sax.ContentHandler.endElement"/>
+	  /// <seealso cref="org.xml.sax.Attributes"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {

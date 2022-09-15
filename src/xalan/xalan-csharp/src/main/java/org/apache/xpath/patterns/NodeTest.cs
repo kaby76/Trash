@@ -23,9 +23,13 @@ using System.Collections;
  */
 namespace org.apache.xpath.patterns
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPath = org.apache.xpath.XPath;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using XNumber = org.apache.xpath.objects.XNumber;
 	using XObject = org.apache.xpath.objects.XObject;
 
@@ -41,7 +45,7 @@ namespace org.apache.xpath.patterns
 
 	  /// <summary>
 	  /// The namespace or local name for node tests with a wildcard. </summary>
-	  ///  <seealso cref= <a href="http://www.w3.org/TR/xpath#NT-NameTest">the XPath NameTest production.</a>  </seealso>
+	  ///  <seealso cref="<a href="http://www.w3.org/TR/xpath.NT-NameTest">the XPath NameTest production.</a> "/>
 	  public const string WILD = "*";
 
 	  /// <summary>
@@ -90,7 +94,7 @@ namespace org.apache.xpath.patterns
 	  /// <summary>
 	  /// Return the namespace to be tested.
 	  /// </summary>
-	  /// <returns> The namespace to be tested for, or <seealso cref="#WILD"/>, or null. </returns>
+	  /// <returns> The namespace to be tested for, or <seealso cref="WILD"/>, or null. </returns>
 	  public virtual string Namespace
 	  {
 		  get
@@ -113,7 +117,7 @@ namespace org.apache.xpath.patterns
 	  /// <summary>
 	  /// Return the local name to be tested.
 	  /// </summary>
-	  /// <returns> the local name to be tested, or <seealso cref="#WILD"/>, or an empty string. </returns>
+	  /// <returns> the local name to be tested, or <seealso cref="WILD"/>, or an empty string. </returns>
 	  public virtual string LocalName
 	  {
 		  get
@@ -129,40 +133,40 @@ namespace org.apache.xpath.patterns
 
 	  /// <summary>
 	  /// Statically calculated score for this test.  One of
-	  ///  <seealso cref="#SCORE_NODETEST"/>,
-	  ///  <seealso cref="#SCORE_NONE"/>,
-	  ///  <seealso cref="#SCORE_NSWILD"/>,
-	  ///  <seealso cref="#SCORE_QNAME"/>, or
-	  ///  <seealso cref="#SCORE_OTHER"/>.
+	  ///  <seealso cref="SCORE_NODETEST"/>,
+	  ///  <seealso cref="SCORE_NONE"/>,
+	  ///  <seealso cref="SCORE_NSWILD"/>,
+	  ///  <seealso cref="SCORE_QNAME"/>, or
+	  ///  <seealso cref="SCORE_OTHER"/>.
 	  ///  @serial
 	  /// </summary>
 	  internal XNumber m_score;
 
 	  /// <summary>
 	  /// The match score if the pattern consists of just a NodeTest. </summary>
-	  ///  <seealso cref= <a href="http://www.w3.org/TR/xslt#conflict">XSLT Specification - 5.5 Conflict Resolution for Template Rules</a>  </seealso>
+	  ///  <seealso cref="<a href="http://www.w3.org/TR/xslt.conflict">XSLT Specification - 5.5 Conflict Resolution for Template Rules</a> "/>
 	  public static readonly XNumber SCORE_NODETEST = new XNumber(XPath.MATCH_SCORE_NODETEST);
 
 	  /// <summary>
 	  /// The match score if the pattern pattern has the form NCName:*. </summary>
-	  ///  <seealso cref= <a href="http://www.w3.org/TR/xslt#conflict">XSLT Specification - 5.5 Conflict Resolution for Template Rules</a>  </seealso>
+	  ///  <seealso cref="<a href="http://www.w3.org/TR/xslt.conflict">XSLT Specification - 5.5 Conflict Resolution for Template Rules</a> "/>
 	  public static readonly XNumber SCORE_NSWILD = new XNumber(XPath.MATCH_SCORE_NSWILD);
 
 	  /// <summary>
 	  /// The match score if the pattern has the form
 	  /// of a QName optionally preceded by an @ character. </summary>
-	  ///  <seealso cref= <a href="http://www.w3.org/TR/xslt#conflict">XSLT Specification - 5.5 Conflict Resolution for Template Rules</a>  </seealso>
+	  ///  <seealso cref="<a href="http://www.w3.org/TR/xslt.conflict">XSLT Specification - 5.5 Conflict Resolution for Template Rules</a> "/>
 	  public static readonly XNumber SCORE_QNAME = new XNumber(XPath.MATCH_SCORE_QNAME);
 
 	  /// <summary>
 	  /// The match score if the pattern consists of something
 	  /// other than just a NodeTest or just a qname. </summary>
-	  ///  <seealso cref= <a href="http://www.w3.org/TR/xslt#conflict">XSLT Specification - 5.5 Conflict Resolution for Template Rules</a>  </seealso>
+	  ///  <seealso cref="<a href="http://www.w3.org/TR/xslt.conflict">XSLT Specification - 5.5 Conflict Resolution for Template Rules</a> "/>
 	  public static readonly XNumber SCORE_OTHER = new XNumber(XPath.MATCH_SCORE_OTHER);
 
 	  /// <summary>
 	  /// The match score if no match is made. </summary>
-	  ///  <seealso cref= <a href="http://www.w3.org/TR/xslt#conflict">XSLT Specification - 5.5 Conflict Resolution for Template Rules</a>  </seealso>
+	  ///  <seealso cref="<a href="http://www.w3.org/TR/xslt.conflict">XSLT Specification - 5.5 Conflict Resolution for Template Rules</a> "/>
 	  public static readonly XNumber SCORE_NONE = new XNumber(XPath.MATCH_SCORE_NONE);
 
 	  /// <summary>
@@ -187,7 +191,7 @@ namespace org.apache.xpath.patterns
 		initNodeTest(whatToShow);
 	  }
 
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		  if (!isSameClass(expr))
@@ -283,7 +287,7 @@ namespace org.apache.xpath.patterns
 	  }
 
 	  /// <summary>
-	  /// True if this test has a null namespace and a local name of <seealso cref="#WILD"/>.
+	  /// True if this test has a null namespace and a local name of <seealso cref="WILD"/>.
 	  ///  @serial 
 	  /// </summary>
 	  private bool m_isTotallyWild;
@@ -356,69 +360,69 @@ namespace org.apache.xpath.patterns
 	  public static int getNodeTypeTest(int whatToShow)
 	  {
 		// %REVIEW% Is there a better way?
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT))
+		if (0 != (whatToShow & DTMFilter.SHOW_ELEMENT))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE;
+		  return DTM.ELEMENT_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE))
+		if (0 != (whatToShow & DTMFilter.SHOW_ATTRIBUTE))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE;
+		  return DTM.ATTRIBUTE_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_TEXT))
+		if (0 != (whatToShow & DTMFilter.SHOW_TEXT))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.TEXT_NODE;
+		  return DTM.TEXT_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT))
+		if (0 != (whatToShow & DTMFilter.SHOW_DOCUMENT))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE;
+		  return DTM.DOCUMENT_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT))
+		if (0 != (whatToShow & DTMFilter.SHOW_DOCUMENT_FRAGMENT))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE;
+		  return DTM.DOCUMENT_FRAGMENT_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_NAMESPACE))
+		if (0 != (whatToShow & DTMFilter.SHOW_NAMESPACE))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE;
+		  return DTM.NAMESPACE_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_COMMENT))
+		if (0 != (whatToShow & DTMFilter.SHOW_COMMENT))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.COMMENT_NODE;
+		  return DTM.COMMENT_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_PROCESSING_INSTRUCTION))
+		if (0 != (whatToShow & DTMFilter.SHOW_PROCESSING_INSTRUCTION))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE;
+		  return DTM.PROCESSING_INSTRUCTION_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_TYPE))
+		if (0 != (whatToShow & DTMFilter.SHOW_DOCUMENT_TYPE))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.DOCUMENT_TYPE_NODE;
+		  return DTM.DOCUMENT_TYPE_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_ENTITY))
+		if (0 != (whatToShow & DTMFilter.SHOW_ENTITY))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.ENTITY_NODE;
+		  return DTM.ENTITY_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_ENTITY_REFERENCE))
+		if (0 != (whatToShow & DTMFilter.SHOW_ENTITY_REFERENCE))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE;
+		  return DTM.ENTITY_REFERENCE_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_NOTATION))
+		if (0 != (whatToShow & DTMFilter.SHOW_NOTATION))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NOTATION_NODE;
+		  return DTM.NOTATION_NODE;
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_CDATA_SECTION))
+		if (0 != (whatToShow & DTMFilter.SHOW_CDATA_SECTION))
 		{
-		  return org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE;
+		  return DTM.CDATA_SECTION_NODE;
 		}
 
 
@@ -437,67 +441,67 @@ namespace org.apache.xpath.patterns
 
 		ArrayList v = new ArrayList();
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE))
+		if (0 != (whatToShow & DTMFilter.SHOW_ATTRIBUTE))
 		{
 		  v.Add("SHOW_ATTRIBUTE");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_NAMESPACE))
+		if (0 != (whatToShow & DTMFilter.SHOW_NAMESPACE))
 		{
 		  v.Add("SHOW_NAMESPACE");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_CDATA_SECTION))
+		if (0 != (whatToShow & DTMFilter.SHOW_CDATA_SECTION))
 		{
 		  v.Add("SHOW_CDATA_SECTION");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_COMMENT))
+		if (0 != (whatToShow & DTMFilter.SHOW_COMMENT))
 		{
 		  v.Add("SHOW_COMMENT");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT))
+		if (0 != (whatToShow & DTMFilter.SHOW_DOCUMENT))
 		{
 		  v.Add("SHOW_DOCUMENT");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT))
+		if (0 != (whatToShow & DTMFilter.SHOW_DOCUMENT_FRAGMENT))
 		{
 		  v.Add("SHOW_DOCUMENT_FRAGMENT");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_TYPE))
+		if (0 != (whatToShow & DTMFilter.SHOW_DOCUMENT_TYPE))
 		{
 		  v.Add("SHOW_DOCUMENT_TYPE");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT))
+		if (0 != (whatToShow & DTMFilter.SHOW_ELEMENT))
 		{
 		  v.Add("SHOW_ELEMENT");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_ENTITY))
+		if (0 != (whatToShow & DTMFilter.SHOW_ENTITY))
 		{
 		  v.Add("SHOW_ENTITY");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_ENTITY_REFERENCE))
+		if (0 != (whatToShow & DTMFilter.SHOW_ENTITY_REFERENCE))
 		{
 		  v.Add("SHOW_ENTITY_REFERENCE");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_NOTATION))
+		if (0 != (whatToShow & DTMFilter.SHOW_NOTATION))
 		{
 		  v.Add("SHOW_NOTATION");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_PROCESSING_INSTRUCTION))
+		if (0 != (whatToShow & DTMFilter.SHOW_PROCESSING_INSTRUCTION))
 		{
 		  v.Add("SHOW_PROCESSING_INSTRUCTION");
 		}
 
-		if (0 != (whatToShow & org.apache.xml.dtm.DTMFilter_Fields.SHOW_TEXT))
+		if (0 != (whatToShow & DTMFilter.SHOW_TEXT))
 		{
 		  v.Add("SHOW_TEXT");
 		}
@@ -528,7 +532,7 @@ namespace org.apache.xpath.patterns
 	  /// strings are equal.
 	  /// </summary>
 	  /// <param name="p"> part string from the node. </param>
-	  /// <param name="t"> target string, which may be <seealso cref="#WILD"/>.
+	  /// <param name="t"> target string, which may be <seealso cref="WILD"/>.
 	  /// </param>
 	  /// <returns> true if the strings match according to the rules of this method. </returns>
 	  private static bool subPartMatch(string p, string t)
@@ -545,7 +549,7 @@ namespace org.apache.xpath.patterns
 	  /// </summary>
 	  /// <param name="p"> part string from the node, which may represent the null namespace
 	  ///        as null or as "". </param>
-	  /// <param name="t"> target string, which may be <seealso cref="#WILD"/>.
+	  /// <param name="t"> target string, which may be <seealso cref="WILD"/>.
 	  /// </param>
 	  /// <returns> true if the strings match according to the rules of this method. </returns>
 	  private static bool subPartMatchNS(string p, string t)
@@ -561,14 +565,14 @@ namespace org.apache.xpath.patterns
 	  /// <param name="xctxt"> XPath runtime context. </param>
 	  /// <param name="context"> The node being tested.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt, int context) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt, int context)
 	  {
@@ -576,7 +580,7 @@ namespace org.apache.xpath.patterns
 		DTM dtm = xctxt.getDTM(context);
 		short nodeType = dtm.getNodeType(context);
 
-		if (m_whatToShow == org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL)
+		if (m_whatToShow == DTMFilter.SHOW_ALL)
 		{
 		  return m_score;
 		}
@@ -585,19 +589,19 @@ namespace org.apache.xpath.patterns
 
 		switch (nodeBit)
 		{
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT :
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT :
+		case DTMFilter.SHOW_DOCUMENT_FRAGMENT :
+		case DTMFilter.SHOW_DOCUMENT :
 		  return SCORE_OTHER;
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_COMMENT :
+		case DTMFilter.SHOW_COMMENT :
 		  return m_score;
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_CDATA_SECTION :
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_TEXT :
+		case DTMFilter.SHOW_CDATA_SECTION :
+		case DTMFilter.SHOW_TEXT :
 
 		  // was: 
 		  // return (!xctxt.getDOMHelper().shouldStripSourceNode(context))
 		  //       ? m_score : SCORE_NONE;
 		  return m_score;
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_PROCESSING_INSTRUCTION :
+		case DTMFilter.SHOW_PROCESSING_INSTRUCTION :
 		  return subPartMatch(dtm.getNodeName(context), m_name) ? m_score : SCORE_NONE;
 
 		// From the draft: "Two expanded names are equal if they 
@@ -612,14 +616,14 @@ namespace org.apache.xpath.patterns
 		// namespace declarations. The node test will be true for any node 
 		// of the principal type whose expanded name has the URI to which 
 		// the prefix expands, regardless of the local part of the name."
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_NAMESPACE :
+		case DTMFilter.SHOW_NAMESPACE :
 		{
 		  string ns = dtm.getLocalName(context);
 
 		  return (subPartMatch(ns, m_name)) ? m_score : SCORE_NONE;
 		}
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE :
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT :
+		case DTMFilter.SHOW_ATTRIBUTE :
+		case DTMFilter.SHOW_ELEMENT :
 		{
 		  return (m_isTotallyWild || (subPartMatchNS(dtm.getNamespaceURI(context), m_namespace) && subPartMatch(dtm.getLocalName(context), m_name))) ? m_score : SCORE_NONE;
 		}
@@ -635,19 +639,19 @@ namespace org.apache.xpath.patterns
 	  /// <param name="xctxt"> XPath runtime context. </param>
 	  /// <param name="context"> The node being tested.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt, int context, org.apache.xml.dtm.DTM dtm, int expType) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt, int context, DTM dtm, int expType)
 	  {
 
-		if (m_whatToShow == org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL)
+		if (m_whatToShow == DTMFilter.SHOW_ALL)
 		{
 		  return m_score;
 		}
@@ -656,19 +660,19 @@ namespace org.apache.xpath.patterns
 
 		switch (nodeBit)
 		{
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT_FRAGMENT :
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_DOCUMENT :
+		case DTMFilter.SHOW_DOCUMENT_FRAGMENT :
+		case DTMFilter.SHOW_DOCUMENT :
 		  return SCORE_OTHER;
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_COMMENT :
+		case DTMFilter.SHOW_COMMENT :
 		  return m_score;
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_CDATA_SECTION :
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_TEXT :
+		case DTMFilter.SHOW_CDATA_SECTION :
+		case DTMFilter.SHOW_TEXT :
 
 		  // was: 
 		  // return (!xctxt.getDOMHelper().shouldStripSourceNode(context))
 		  //       ? m_score : SCORE_NONE;
 		  return m_score;
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_PROCESSING_INSTRUCTION :
+		case DTMFilter.SHOW_PROCESSING_INSTRUCTION :
 		  return subPartMatch(dtm.getNodeName(context), m_name) ? m_score : SCORE_NONE;
 
 		// From the draft: "Two expanded names are equal if they 
@@ -683,14 +687,14 @@ namespace org.apache.xpath.patterns
 		// namespace declarations. The node test will be true for any node 
 		// of the principal type whose expanded name has the URI to which 
 		// the prefix expands, regardless of the local part of the name."
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_NAMESPACE :
+		case DTMFilter.SHOW_NAMESPACE :
 		{
 		  string ns = dtm.getLocalName(context);
 
 		  return (subPartMatch(ns, m_name)) ? m_score : SCORE_NONE;
 		}
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE :
-		case org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT :
+		case DTMFilter.SHOW_ATTRIBUTE :
+		case DTMFilter.SHOW_ELEMENT :
 		{
 		  return (m_isTotallyWild || (subPartMatchNS(dtm.getNamespaceURI(context), m_namespace) && subPartMatch(dtm.getLocalName(context), m_name))) ? m_score : SCORE_NONE;
 		}
@@ -704,14 +708,14 @@ namespace org.apache.xpath.patterns
 	  /// </summary>
 	  /// <param name="xctxt"> XPath runtime context.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -726,7 +730,7 @@ namespace org.apache.xpath.patterns
 		// no-op
 	  }
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
 	  {
 		  assertion(false, "callVisitors should not be called for this object!!!");

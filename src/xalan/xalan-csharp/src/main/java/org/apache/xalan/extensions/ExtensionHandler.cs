@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.extensions
 {
 
-
 	using ElemTemplateElement = org.apache.xalan.templates.ElemTemplateElement;
 	using Stylesheet = org.apache.xalan.templates.Stylesheet;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
@@ -55,7 +54,7 @@ namespace org.apache.xalan.extensions
 	  /// running under Java2 or higher.
 	  /// </summary>
 	  /// <param name="className"> Name of the class to load </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Class getClassForName(String className) throws ClassNotFoundException
 	  internal static Type getClassForName(string className)
 	  {
@@ -103,7 +102,7 @@ namespace org.apache.xalan.extensions
 	  /// <returns> the return value of the function evaluation.
 	  /// </returns>
 	  /// <exception cref="TransformerException">          if parsing trouble </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public abstract Object callFunction(String funcName, java.util.Vector args, Object methodKey, ExpressionContext exprContext) throws javax.xml.transform.TransformerException;
 	  public abstract object callFunction(string funcName, ArrayList args, object methodKey, ExpressionContext exprContext);
 
@@ -117,7 +116,7 @@ namespace org.apache.xalan.extensions
 	  /// <returns> the return value of the function evaluation.
 	  /// </returns>
 	  /// <exception cref="TransformerException">          if parsing trouble </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public abstract Object callFunction(org.apache.xpath.functions.FuncExtFunction extFunction, java.util.Vector args, ExpressionContext exprContext) throws javax.xml.transform.TransformerException;
 	  public abstract object callFunction(FuncExtFunction extFunction, ArrayList args, ExpressionContext exprContext);
 
@@ -137,8 +136,8 @@ namespace org.apache.xalan.extensions
 	  /// <exception cref="FileNotFoundException"> if loading trouble </exception>
 	  /// <exception cref="IOException">           if loading trouble </exception>
 	  /// <exception cref="TransformerException">  if parsing trouble </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public abstract void processElement(String localPart, org.apache.xalan.templates.ElemTemplateElement element, org.apache.xalan.transformer.TransformerImpl transformer, org.apache.xalan.templates.Stylesheet stylesheetTree, Object methodKey) throws javax.xml.transform.TransformerException, java.io.IOException;
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public abstract void processElement(String localPart, org.apache.xalan.templates.ElemTemplateElement element, org.apache.xalan.transformer.TransformerImpl transformer, org.apache.xalan.templates.Stylesheet stylesheetTree, Object methodKey) throws TransformerException, java.io.IOException;
 	  public abstract void processElement(string localPart, ElemTemplateElement element, TransformerImpl transformer, Stylesheet stylesheetTree, object methodKey);
 	}
 

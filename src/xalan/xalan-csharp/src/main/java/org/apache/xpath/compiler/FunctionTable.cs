@@ -23,7 +23,7 @@ using System.Collections;
  */
 namespace org.apache.xpath.compiler
 {
-
+	using Expression = org.apache.xpath.Expression;
 	using Function = org.apache.xpath.functions.Function;
 
 	/// <summary>
@@ -318,7 +318,7 @@ namespace org.apache.xpath.compiler
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if ClassNotFoundException, 
 	  ///    IllegalAccessException, or InstantiationException is thrown. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: org.apache.xpath.functions.Function getFunction(int which) throws javax.xml.transform.TransformerException
 	  internal virtual Function getFunction(int which)
 	  {
@@ -326,11 +326,11 @@ namespace org.apache.xpath.compiler
 			  {
 				  if (which < NUM_BUILT_IN_FUNCS)
 				  {
-					  return (Function) m_functions[which].newInstance();
+					  return (Function) System.Activator.CreateInstance(m_functions[which]);
 				  }
 				  else
 				  {
-					  return (Function) m_functions_customer[which - NUM_BUILT_IN_FUNCS].newInstance();
+					  return (Function) System.Activator.CreateInstance(m_functions_customer[which - NUM_BUILT_IN_FUNCS]);
 				  }
 			  }
 			  catch (IllegalAccessException ex)

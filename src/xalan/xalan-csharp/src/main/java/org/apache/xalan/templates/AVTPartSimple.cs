@@ -23,7 +23,6 @@ using System.Collections;
  */
 namespace org.apache.xalan.templates
 {
-
 	using FastStringBuffer = org.apache.xml.utils.FastStringBuffer;
 	using XPathContext = org.apache.xpath.XPathContext;
 
@@ -91,7 +90,7 @@ namespace org.apache.xalan.templates
 	  {
 		buf.append(m_val);
 	  }
-	  /// <seealso cref= XSLTVisitable#callVisitors(XSLTVisitor) </seealso>
+	  /// <seealso cref="XSLTVisitable.callVisitors(XSLTVisitor)"/>
 	  public override void callVisitors(XSLTVisitor visitor)
 	  {
 		  // Don't do anything for the subpart for right now.

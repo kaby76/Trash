@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using ContentHandler = org.xml.sax.ContentHandler;
 	using DTDHandler = org.xml.sax.DTDHandler;
 	using DeclHandler = org.xml.sax.ext.DeclHandler;

@@ -21,11 +21,13 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using Method = org.apache.bcel.classfile.Method;
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ClassGen = org.apache.bcel.generic.ClassGen;
 	using Instruction = org.apache.bcel.generic.Instruction;
+	using Constants = org.apache.xalan.xsltc.compiler.Constants;
+	using Parser = org.apache.xalan.xsltc.compiler.Parser;
+	using Stylesheet = org.apache.xalan.xsltc.compiler.Stylesheet;
 
 	/// <summary>
 	/// The class that implements any class that inherits from 
@@ -72,9 +74,9 @@ namespace org.apache.xalan.xsltc.compiler.util
 			_domClass = "org.apache.xalan.xsltc.dom.DOMAdapter";
 			_domClassSig = "Lorg/apache/xalan/xsltc/dom/DOMAdapter;";
 		}
-		_applyTemplatesSig = "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.DOM_INTF_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_ITERATOR_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_SIG + ")V";
+		_applyTemplatesSig = "(" + Constants.DOM_INTF_SIG + Constants.NODE_ITERATOR_SIG + Constants.TRANSLET_OUTPUT_SIG + ")V";
 
-		_applyTemplatesSigForImport = "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.DOM_INTF_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_ITERATOR_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_FIELD_SIG + ")V";
+		_applyTemplatesSigForImport = "(" + Constants.DOM_INTF_SIG + Constants.NODE_ITERATOR_SIG + Constants.TRANSLET_OUTPUT_SIG + Constants.NODE_FIELD_SIG + ")V";
 		}
 
 		public Parser Parser

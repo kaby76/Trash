@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using AbstractTranslet = org.apache.xalan.xsltc.runtime.AbstractTranslet;
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using IntegerArray = org.apache.xalan.xsltc.util.IntegerArray;
@@ -167,7 +166,7 @@ namespace org.apache.xalan.xsltc.dom
 			return returnNode(node);
 			}
 		}
-		return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		return END;
 		}
 
 		public override DTMAxisIterator setStartNode(int node)
@@ -177,7 +176,7 @@ namespace org.apache.xalan.xsltc.dom
 			_source.StartNode = _startNode = node;
 
 			_nodes.clear();
-			while ((node = _source.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((node = _source.next()) != END)
 			{
 			_nodes.add(node);
 			}

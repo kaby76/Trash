@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.templates
 {
 
-
 	using NodeSorter = org.apache.xalan.transformer.NodeSorter;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
 	using DTM = org.apache.xml.dtm.DTM;
@@ -52,8 +51,8 @@ namespace org.apache.xalan.templates
 	///   %space-att;
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#for-each">for-each in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.for-each">for-each in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemForEach : ElemTemplateElement, ExpressionOwner
 	{
@@ -98,23 +97,22 @@ namespace org.apache.xalan.templates
 	  /// Set the "select" attribute.
 	  /// </summary>
 	  /// <param name="xpath"> The XPath expression for the "select" attribute. </param>
-	  public virtual void setSelect(XPath xpath)
+	  public virtual XPath Select
 	  {
-		m_selectExpression = xpath.Expression;
-
-		// The following line is part of the codes added to fix bug#16889
-		// Store xpath which will be needed when firing Selected Event
-		m_xpath = xpath;
+		  set
+		  {
+			m_selectExpression = value.Expression;
+    
+			// The following line is part of the codes added to fix bug#16889
+			// Store value which will be needed when firing Selected Event
+			m_xpath = value;
+		  }
+		  get
+		  {
+			return m_selectExpression;
+		  }
 	  }
 
-	  /// <summary>
-	  /// Get the "select" attribute.
-	  /// </summary>
-	  /// <returns> The XPath expression for the "select" attribute. </returns>
-	  public virtual Expression getSelect()
-	  {
-		return m_selectExpression;
-	  }
 
 	  /// <summary>
 	  /// This function is called after everything else has been
@@ -125,7 +123,7 @@ namespace org.apache.xalan.templates
 	  /// NEEDSDOC <param name="sroot">
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
@@ -139,11 +137,11 @@ namespace org.apache.xalan.templates
 		  getSortElem(i).compose(sroot);
 		}
 
-		ArrayList vnames = sroot.getComposeState().VariableNames;
+		ArrayList vnames = sroot.ComposeState.VariableNames;
 
 		if (null != m_selectExpression)
 		{
-		  m_selectExpression.fixupVariables(vnames, sroot.getComposeState().GlobalsSize);
+		  m_selectExpression.fixupVariables(vnames, sroot.ComposeState.GlobalsSize);
 		}
 		else
 		{
@@ -154,7 +152,7 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// This after the template's children have been composed.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCompose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void endCompose(StylesheetRoot sroot)
 	  {
@@ -235,8 +233,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for this element </returns>
 	  public override int XSLToken
 	  {
@@ -264,7 +262,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -313,7 +311,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> iterator of sorted nodes
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator sortNodes(org.apache.xpath.XPathContext xctxt, java.util.Vector keys, org.apache.xml.dtm.DTMIterator sourceNodes) throws javax.xml.transform.TransformerException
 	  public virtual DTMIterator sortNodes(XPathContext xctxt, ArrayList keys, DTMIterator sourceNodes)
 	  {
@@ -343,7 +341,7 @@ namespace org.apache.xalan.templates
 	  /// </param>
 	  /// <exception cref="TransformerException"> Thrown in a variety of circumstances.
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transformSelectedNodes(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public virtual void transformSelectedNodes(TransformerImpl transformer)
 	  {
@@ -394,11 +392,11 @@ namespace org.apache.xalan.templates
 
 
 
-		  xctxt.pushCurrentNode(org.apache.xml.dtm.DTM_Fields.NULL);
+		  xctxt.pushCurrentNode(DTM.NULL);
 
 		  IntStack currentNodes = xctxt.CurrentNodeStack;
 
-		  xctxt.pushCurrentExpressionNode(org.apache.xml.dtm.DTM_Fields.NULL);
+		  xctxt.pushCurrentExpressionNode(DTM.NULL);
 
 		  IntStack currentExpressionNodes = xctxt.CurrentExpressionNodeStack;
 
@@ -412,7 +410,7 @@ namespace org.apache.xalan.templates
 		  int docID = sourceNode & DTMManager.IDENT_DTM_DEFAULT;
 		  int child;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (child = sourceNodes.nextNode()))
+		  while (DTM.NULL != (child = sourceNodes.nextNode()))
 		  {
 			currentNodes.Top = child;
 			currentExpressionNodes.Top = child;
@@ -541,7 +539,7 @@ namespace org.apache.xalan.templates
 		base.callChildVisitors(visitor, callAttributes);
 	  }
 
-	  /// <seealso cref= ExpressionOwner#getExpression() </seealso>
+	  /// <seealso cref="ExpressionOwner.getExpression()"/>
 	  public virtual Expression Expression
 	  {
 		  get
@@ -561,8 +559,8 @@ namespace org.apache.xalan.templates
 	   * globel varialbe m_xpath during deserialization of an object which was 
 	   * serialized using an older version
 	   */
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: private void readObject(java.io.ObjectInputStream os) throws java.io.IOException, ClassNotFoundException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: private void readObject(java.io.ObjectInputStream os) throws IOException, ClassNotFoundException
 	   private void readObject(ObjectInputStream os)
 	   {
 			   os.defaultReadObject();

@@ -77,20 +77,20 @@ namespace org.apache.xalan.xsltc.trax
 		}
 
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void parse(org.xml.sax.InputSource unused) throws java.io.IOException, org.xml.sax.SAXException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void parse(org.xml.sax.InputSource unused) throws IOException, org.xml.sax.SAXException
 		public virtual void parse(InputSource unused)
 		{
 			parse(_dom);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void parse() throws java.io.IOException, org.xml.sax.SAXException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void parse() throws IOException, org.xml.sax.SAXException
 		public virtual void parse()
 		{
 		if (_dom != null)
 		{
-			bool isIncomplete = (_dom.NodeType != Node.DOCUMENT_NODE);
+			bool isIncomplete = (_dom.getNodeType() != Node.DOCUMENT_NODE);
 
 			if (isIncomplete)
 			{
@@ -109,8 +109,8 @@ namespace org.apache.xalan.xsltc.trax
 		/// Traverse the DOM and generate TO events for a handler. Notice that 
 		/// we need to handle implicit namespace declarations too.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: private void parse(org.w3c.dom.Node node) throws java.io.IOException, org.xml.sax.SAXException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: private void parse(org.w3c.dom.Node node) throws IOException, org.xml.sax.SAXException
 		private void parse(Node node)
 		{
 		 if (node == null)
@@ -118,7 +118,7 @@ namespace org.apache.xalan.xsltc.trax
 			 return;
 		 }
 
-			switch (node.NodeType)
+			switch (node.getNodeType())
 			{
 		case Node.ATTRIBUTE_NODE: // handled by ELEMENT_NODE
 		case Node.DOCUMENT_TYPE_NODE :
@@ -129,31 +129,31 @@ namespace org.apache.xalan.xsltc.trax
 			break;
 		case Node.CDATA_SECTION_NODE:
 			_handler.startCDATA();
-			_handler.characters(node.NodeValue);
+			_handler.characters(node.getNodeValue());
 			_handler.endCDATA();
 			break;
 
 		case Node.COMMENT_NODE: // should be handled!!!
-			_handler.comment(node.NodeValue);
+			_handler.comment(node.getNodeValue());
 			break;
 
 		case Node.DOCUMENT_NODE:
 			_handler.startDocument();
-			Node next = node.FirstChild;
+			Node next = node.getFirstChild();
 			while (next != null)
 			{
 			parse(next);
-			next = next.NextSibling;
+			next = next.getNextSibling();
 			}
 			_handler.endDocument();
 			break;
 
 		case Node.DOCUMENT_FRAGMENT_NODE:
-			next = node.FirstChild;
+			next = node.getFirstChild();
 			while (next != null)
 			{
 			parse(next);
-			next = next.NextSibling;
+			next = next.getNextSibling();
 			}
 			break;
 
@@ -161,17 +161,17 @@ namespace org.apache.xalan.xsltc.trax
 			// Generate SAX event to start element
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String qname = node.getNodeName();
-			string qname = node.NodeName;
+			string qname = node.getNodeName();
 			_handler.startElement(null, null, qname);
 
 				int colon;
 			string prefix;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.w3c.dom.NamedNodeMap map = node.getAttributes();
-			NamedNodeMap map = node.Attributes;
+			NamedNodeMap map = node.getAttributes();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int length = map.getLength();
-			int length = map.Length;
+			int length = map.getLength();
 
 			// Process all namespace attributes first
 			for (int i = 0; i < length; i++)
@@ -181,14 +181,14 @@ namespace org.apache.xalan.xsltc.trax
 			Node attr = map.item(i);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String qnameAttr = attr.getNodeName();
-			string qnameAttr = attr.NodeName;
+			string qnameAttr = attr.getNodeName();
 
 					// Is this a namespace declaration?
 			if (qnameAttr.StartsWith(XMLNS_PREFIX, StringComparison.Ordinal))
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String uriAttr = attr.getNodeValue();
-				string uriAttr = attr.NodeValue;
+				string uriAttr = attr.getNodeValue();
 				colon = qnameAttr.LastIndexOf(':');
 				prefix = (colon > 0) ? qnameAttr.Substring(colon + 1) : EMPTYSTRING;
 				_handler.namespaceAfterStartElement(prefix, uriAttr);
@@ -204,14 +204,14 @@ namespace org.apache.xalan.xsltc.trax
 			Node attr = map.item(i);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String qnameAttr = attr.getNodeName();
-			string qnameAttr = attr.NodeName;
+			string qnameAttr = attr.getNodeName();
 
 					// Is this a regular attribute?
 			if (!qnameAttr.StartsWith(XMLNS_PREFIX, StringComparison.Ordinal))
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String uriAttr = attr.getNamespaceURI();
-				string uriAttr = attr.NamespaceURI;
+				string uriAttr = attr.getNamespaceURI();
 				// Uri may be implicitly declared
 				if (!string.ReferenceEquals(uriAttr, null) && !uriAttr.Equals(EMPTYSTRING))
 				{
@@ -228,11 +228,11 @@ namespace org.apache.xalan.xsltc.trax
 							}
 				prefix = (colon > 0) ? qnameAttr.Substring(0, colon) : newPrefix;
 				_handler.namespaceAfterStartElement(prefix, uriAttr);
-					_handler.addAttribute((prefix + ":" + qnameAttr), attr.NodeValue);
+					_handler.addAttribute((prefix + ":" + qnameAttr), attr.getNodeValue());
 				}
 				else
 				{
-							 _handler.addAttribute(qnameAttr, attr.NodeValue);
+							 _handler.addAttribute(qnameAttr, attr.getNodeValue());
 				}
 			}
 			}
@@ -240,10 +240,10 @@ namespace org.apache.xalan.xsltc.trax
 			// Now element namespace and children
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String uri = node.getNamespaceURI();
-			string uri = node.NamespaceURI;
+			string uri = node.getNamespaceURI();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String localName = node.getLocalName();
-				string localName = node.LocalName;
+				string localName = node.getLocalName();
 
 			// Uri may be implicitly declared
 			if (!string.ReferenceEquals(uri, null))
@@ -267,11 +267,11 @@ namespace org.apache.xalan.xsltc.trax
 			}
 
 			// Traverse all child nodes of the element (if any)
-			next = node.FirstChild;
+			next = node.getFirstChild();
 			while (next != null)
 			{
 			parse(next);
-			next = next.NextSibling;
+			next = next.getNextSibling();
 			}
 
 			// Generate SAX event to close element
@@ -279,11 +279,11 @@ namespace org.apache.xalan.xsltc.trax
 			break;
 
 		case Node.PROCESSING_INSTRUCTION_NODE:
-			_handler.processingInstruction(node.NodeName, node.NodeValue);
+			_handler.processingInstruction(node.getNodeName(), node.getNodeValue());
 			break;
 
 		case Node.TEXT_NODE:
-			_handler.characters(node.NodeValue);
+			_handler.characters(node.getNodeValue());
 			break;
 			}
 		}
@@ -322,8 +322,8 @@ namespace org.apache.xalan.xsltc.trax
 		/// This class is only used internally so this method should never 
 		/// be called.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public boolean getFeature(String name) throws org.xml.sax.SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public boolean getFeature(String name) throws SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException
 		public virtual bool getFeature(string name)
 		{
 		return false;
@@ -333,8 +333,8 @@ namespace org.apache.xalan.xsltc.trax
 		/// This class is only used internally so this method should never 
 		/// be called.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void setFeature(String name, boolean value) throws org.xml.sax.SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void setFeature(String name, boolean value) throws SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException
 		public virtual void setFeature(string name, bool value)
 		{
 		}
@@ -343,8 +343,8 @@ namespace org.apache.xalan.xsltc.trax
 		/// This class is only used internally so this method should never 
 		/// be called.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void parse(String sysId) throws java.io.IOException, org.xml.sax.SAXException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void parse(String sysId) throws IOException, org.xml.sax.SAXException
 		public virtual void parse(string sysId)
 		{
 		throw new IOException("This method is not yet implemented.");
@@ -355,7 +355,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// This class is only used internally so this method should never 
 		/// be called.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setEntityResolver(org.xml.sax.EntityResolver resolver) throws NullPointerException
 		public virtual EntityResolver EntityResolver
 		{
@@ -374,8 +374,8 @@ namespace org.apache.xalan.xsltc.trax
 		/// This class is only used internally so this method should never 
 		/// be called.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void setProperty(String name, Object value) throws org.xml.sax.SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void setProperty(String name, Object value) throws SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException
 		public virtual void setProperty(string name, object value)
 		{
 		}
@@ -384,8 +384,8 @@ namespace org.apache.xalan.xsltc.trax
 		/// This class is only used internally so this method should never 
 		/// be called.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public Object getProperty(String name) throws org.xml.sax.SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public Object getProperty(String name) throws SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException
 		public virtual object getProperty(string name)
 		{
 		return null;

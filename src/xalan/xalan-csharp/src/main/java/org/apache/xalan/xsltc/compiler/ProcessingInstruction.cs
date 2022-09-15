@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ASTORE = org.apache.bcel.generic.ASTORE;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -63,7 +62,7 @@ namespace org.apache.xalan.xsltc.compiler
 					if (!XML11Char.isXML11ValidNCName(name))
 					{
 						ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_NCNAME_ERR, name, this);
-						parser.reportError(Constants_Fields.ERROR, err);
+						parser.reportError(Constants.ERROR, err);
 					}
 				}
 				_name = AttributeValue.create(this, name, parser);
@@ -80,7 +79,7 @@ namespace org.apache.xalan.xsltc.compiler
 		parseChildren(parser);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -93,25 +92,25 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 			if (!_isLiteral)
 			{
 				// if the ncname is an AVT, then the ncname has to be checked at runtime if it is a valid ncname
-				LocalVariableGen nameValue = methodGen.addLocalVariable2("nameValue", Util.getJCRefType(Constants_Fields.STRING_SIG), null);
+				LocalVariableGen nameValue = methodGen.addLocalVariable2("nameValue", Util.getJCRefType(STRING_SIG), null);
 
 				// store the name into a variable first so _name.translate only needs to be called once  
 				_name.translate(classGen, methodGen);
-				nameValue.Start = il.append(new ASTORE(nameValue.Index));
-				il.append(new ALOAD(nameValue.Index));
+				nameValue.setStart(il.append(new ASTORE(nameValue.getIndex())));
+				il.append(new ALOAD(nameValue.getIndex()));
 
 				// call checkNCName if the name is an AVT
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int check = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "checkNCName", "(" +Constants_Fields.STRING_SIG +")V");
-				int check = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "checkNCName", "(" + Constants_Fields.STRING_SIG + ")V");
+//ORIGINAL LINE: final int check = cpg.addMethodref(BASIS_LIBRARY_CLASS, "checkNCName", "(" +STRING_SIG +")V");
+				int check = cpg.addMethodref(BASIS_LIBRARY_CLASS, "checkNCName", "(" + STRING_SIG + ")V");
 									il.append(new INVOKESTATIC(check));
 
 				// Save the current handler base on the stack
@@ -119,7 +118,7 @@ namespace org.apache.xalan.xsltc.compiler
 				il.append(DUP); // first arg to "attributes" call
 
 				// load name value again    
-				nameValue.End = il.append(new ALOAD(nameValue.Index));
+				nameValue.setEnd(il.append(new ALOAD(nameValue.getIndex())));
 			}
 			else
 			{
@@ -133,7 +132,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 
 		il.append(classGen.loadTranslet());
-		il.append(new GETFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "stringValueHandler", Constants_Fields.STRING_VALUE_HANDLER_SIG)));
+		il.append(new GETFIELD(cpg.addFieldref(TRANSLET_CLASS, "stringValueHandler", STRING_VALUE_HANDLER_SIG)));
 		il.append(DUP);
 		il.append(methodGen.storeHandler());
 
@@ -141,11 +140,11 @@ namespace org.apache.xalan.xsltc.compiler
 		translateContents(classGen, methodGen);
 
 		// get String out of the handler
-		il.append(new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.STRING_VALUE_HANDLER, "getValueOfPI", "()" + Constants_Fields.STRING_SIG)));
+		il.append(new INVOKEVIRTUAL(cpg.addMethodref(STRING_VALUE_HANDLER, "getValueOfPI", "()" + STRING_SIG)));
 		// call "processingInstruction"
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int processingInstruction = cpg.addInterfaceMethodref(Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "processingInstruction", "(" + Constants_Fields.STRING_SIG + Constants_Fields.STRING_SIG + ")V");
-		int processingInstruction = cpg.addInterfaceMethodref(Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "processingInstruction", "(" + Constants_Fields.STRING_SIG + Constants_Fields.STRING_SIG + ")V");
+//ORIGINAL LINE: final int processingInstruction = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "processingInstruction", "(" + STRING_SIG + STRING_SIG + ")V");
+		int processingInstruction = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "processingInstruction", "(" + STRING_SIG + STRING_SIG + ")V");
 		il.append(new INVOKEINTERFACE(processingInstruction, 3));
 		// Restore old handler base from stack
 		il.append(methodGen.storeHandler());

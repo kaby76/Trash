@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.transformer
 {
-
 	/// <summary>
 	/// <code>XalanProperties</code> defines the features understood by
 	/// Xalan.

@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xml.dtm.@ref.sax2dtm
 {
 
-
 	using org.apache.xml.dtm;
 	using org.apache.xml.dtm.@ref;
 	using StringVector = org.apache.xml.utils.StringVector;
@@ -61,7 +60,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// fallback, but that has all the known problems with multithreading
 	  /// on multiprocessors and we Don't Want to Go There.
 	  /// </summary>
-	  /// <seealso cref= setIncrementalSAXSource </seealso>
+	  /// <seealso cref="setIncrementalSAXSource"/>
 	  private IncrementalSAXSource m_incrementalSAXSource = null;
 
 	  /// <summary>
@@ -116,14 +115,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <summary>
 	  /// Type of next characters() event within text block in prgress. </summary>
 	  [NonSerialized]
-	  protected internal int m_textType = DTM_Fields.TEXT_NODE;
+	  protected internal int m_textType = DTM.TEXT_NODE;
 
 	  /// <summary>
 	  /// Type of coalesced text block. See logic in the characters()
 	  /// method.
 	  /// </summary>
 	  [NonSerialized]
-	  protected internal int m_coalescedTextType = DTM_Fields.TEXT_NODE;
+	  protected internal int m_coalescedTextType = DTM.TEXT_NODE;
 
 	  /// <summary>
 	  /// The SAX Document locator </summary>
@@ -330,7 +329,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  if (!isMore)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		  else if (identity < m_size)
 		  {
@@ -529,14 +528,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// function.
 	  /// </param>
 	  /// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(int nodeHandle, ContentHandler ch, boolean normalize) throws SAXException
-	  public virtual void dispatchCharactersEvents(int nodeHandle, ContentHandler ch, bool normalize)
+	  public override void dispatchCharactersEvents(int nodeHandle, ContentHandler ch, bool normalize)
 	  {
 
 		int identity = makeNodeIdentity(nodeHandle);
 
-		if (identity == DTM_Fields.NULL)
+		if (identity == DTM.NULL)
 		{
 		  return;
 		}
@@ -562,7 +561,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		{
 		  int firstChild = _firstch(identity);
 
-		  if (DTM_Fields.NULL != firstChild)
+		  if (DTM.NULL != firstChild)
 		  {
 			int offset = -1;
 			int length = 0;
@@ -587,7 +586,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  }
 
 			  identity = getNextNodeIdentity(identity);
-			} while (DTM_Fields.NULL != identity && (_parent(identity) >= startNode));
+			} while (DTM.NULL != identity && (_parent(identity) >= startNode));
 
 			if (length > 0)
 			{
@@ -601,7 +600,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  }
 			}
 		  }
-		  else if (type != DTM_Fields.ELEMENT_NODE)
+		  else if (type != DTM.ELEMENT_NODE)
 		  {
 			int dataIndex = _dataOrQName(identity);
 
@@ -647,7 +646,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  // String name = m_expandedNameTable.getLocalName(expandedTypeID);
 		  int type = getNodeType(nodeHandle);
 
-		  if (type == DTM_Fields.NAMESPACE_NODE)
+		  if (type == DTM.NAMESPACE_NODE)
 		  {
 			if (null == m_expandedNameTable.getLocalName(expandedTypeID))
 			{
@@ -771,7 +770,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		{
 		  if (null == m_incrementalSAXSource)
 		  {
-			return DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 
 		  nextNode();
@@ -787,7 +786,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException
 	  public override void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch)
 	  {
@@ -854,11 +853,11 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		// %REVIEW% Currently the ErrorHandlers sketched herein are
 		// no-ops, so I'm going to initially leave this also as a
 		// no-op.
-		if (!(gotMore is bool?))
+		if (!(gotMore is Boolean))
 		{
 		  if (gotMore is Exception)
 		  {
-			throw (Exception)gotMore;
+			throw (RuntimeException)gotMore;
 		  }
 		  else if (gotMore is Exception)
 		  {
@@ -892,7 +891,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <returns> true if this is a text or cdata section. </returns>
 	  private bool isTextType(int type)
 	  {
-		return (DTM_Fields.TEXT_NODE == type || DTM_Fields.CDATA_SECTION_NODE == type);
+		return (DTM.TEXT_NODE == type || DTM.CDATA_SECTION_NODE == type);
 	  }
 
 	//    /**
@@ -934,7 +933,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  addNewDTMID(nodeIndex);
 		}
 
-		m_firstch.addElement(canHaveFirstChild ? NOTPROCESSED : DTM_Fields.NULL);
+		m_firstch.addElement(canHaveFirstChild ? NOTPROCESSED : DTM.NULL);
 		m_nextsib.addElement(NOTPROCESSED);
 		m_parent.addElement(parentIndex);
 		m_exptype.addElement(expandedTypeID);
@@ -945,7 +944,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  m_prevsib.addElement(previousSibling);
 		}
 
-		if (DTM_Fields.NULL != previousSibling)
+		if (DTM.NULL != previousSibling)
 		{
 		  m_nextsib.setElementAt(nodeIndex,previousSibling);
 		}
@@ -961,13 +960,13 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		// Special handling by type: Declare namespaces, attach first child
 		switch (type)
 		{
-		case DTM_Fields.NAMESPACE_NODE:
+		case DTM.NAMESPACE_NODE:
 		  declareNamespaceInContext(parentIndex,nodeIndex);
 		  break;
-		case DTM_Fields.ATTRIBUTE_NODE:
+		case DTM.ATTRIBUTE_NODE:
 		  break;
 		default:
-		  if (DTM_Fields.NULL == previousSibling && DTM_Fields.NULL != parentIndex)
+		  if (DTM.NULL == previousSibling && DTM.NULL != parentIndex)
 		  {
 			m_firstch.setElementAt(nodeIndex,parentIndex);
 		  }
@@ -1035,9 +1034,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// </summary>
 	  protected internal virtual void setSourceLocation()
 	  {
-		m_sourceSystemId.addElement(m_locator.SystemId);
-		m_sourceLine.addElement(m_locator.LineNumber);
-		m_sourceColumn.addElement(m_locator.ColumnNumber);
+		m_sourceSystemId.addElement(m_locator.getSystemId());
+		m_sourceLine.addElement(m_locator.getLineNumber());
+		m_sourceColumn.addElement(m_locator.getColumnNumber());
 
 		//%REVIEW% %BUG% Prevent this from arising in the first place
 		// by not allowing the enabling conditions to change after we start
@@ -1075,7 +1074,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  // %OPT% We should cache this, I guess.
 		  return m_chars.getString(offset, length);
 		}
-		else if (DTM_Fields.ELEMENT_NODE == type || DTM_Fields.DOCUMENT_FRAGMENT_NODE == type || DTM_Fields.DOCUMENT_NODE == type)
+		else if (DTM.ELEMENT_NODE == type || DTM.DOCUMENT_FRAGMENT_NODE == type || DTM.DOCUMENT_NODE == type)
 		{
 		  return null;
 		}
@@ -1206,7 +1205,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		int identity = makeNodeIdentity(nodeHandle);
 		int type = _type(identity);
 
-		if (DTM_Fields.ELEMENT_NODE == type)
+		if (DTM.ELEMENT_NODE == type)
 		{
 		  int prefixIndex = _dataOrQName(identity);
 
@@ -1221,7 +1220,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			return getPrefix(qname, null);
 		  }
 		}
-		else if (DTM_Fields.ATTRIBUTE_NODE == type)
+		else if (DTM.ATTRIBUTE_NODE == type)
 		{
 		  int prefixIndex = _dataOrQName(identity);
 
@@ -1252,7 +1251,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  public override int getAttributeNode(int nodeHandle, string namespaceURI, string name)
 	  {
 
-		for (int attrH = getFirstAttribute(nodeHandle); DTM_Fields.NULL != attrH; attrH = getNextAttribute(attrH))
+		for (int attrH = getFirstAttribute(nodeHandle); DTM.NULL != attrH; attrH = getNextAttribute(attrH))
 		{
 		  string attrNS = getNamespaceURI(attrH);
 		  string attrName = getLocalName(attrH);
@@ -1264,7 +1263,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  }
 		}
 
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -1315,9 +1314,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  {
 		int identity = makeNodeIdentity(nodeHandle);
 		int type;
-		if (identity == DTM_Fields.NULL) // Separate lines because I wanted to breakpoint it
+		if (identity == DTM.NULL) // Separate lines because I wanted to breakpoint it
 		{
-		  type = DTM_Fields.NULL;
+		  type = DTM.NULL;
 		}
 		else
 		{
@@ -1336,7 +1335,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		{
 		  int firstChild = _firstch(identity);
 
-		  if (DTM_Fields.NULL != firstChild)
+		  if (DTM.NULL != firstChild)
 		  {
 			int offset = -1;
 			int length = 0;
@@ -1361,14 +1360,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  }
 
 			  identity = getNextNodeIdentity(identity);
-			} while (DTM_Fields.NULL != identity && (_parent(identity) >= startNode));
+			} while (DTM.NULL != identity && (_parent(identity) >= startNode));
 
 			if (length > 0)
 			{
 			  return m_xstrf.newstr(m_chars, offset, length);
 			}
 		  }
-		  else if (type != DTM_Fields.ELEMENT_NODE)
+		  else if (type != DTM.ELEMENT_NODE)
 		  {
 			int dataIndex = _dataOrQName(identity);
 
@@ -1394,9 +1393,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  {
 		int identity = makeNodeIdentity(nodeHandle);
 		int type;
-		if (identity == DTM_Fields.NULL) // Separate lines because I wanted to breakpoint it
+		if (identity == DTM.NULL) // Separate lines because I wanted to breakpoint it
 		{
-		  type = DTM_Fields.NULL;
+		  type = DTM.NULL;
 		}
 		else
 		{
@@ -1453,7 +1452,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  isMore = nextNode();
 		} while (null == intObj);
 
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -1475,7 +1474,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  do
 		  {
-			uriIndex = m_prefixMappings.IndexOf(uri, ++uriIndex);
+			uriIndex = m_prefixMappings.indexOf(uri, ++uriIndex);
 		  } while ((uriIndex & 0x01) == 0);
 
 		  if (uriIndex >= 0)
@@ -1571,7 +1570,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  do
 		  {
-			prefixIndex = m_prefixMappings.IndexOf(prefix, ++prefixIndex);
+			prefixIndex = m_prefixMappings.indexOf(prefix, ++prefixIndex);
 		  } while ((prefixIndex >= 0) && (prefixIndex & 0x01) == 0x01);
 
 		  if (prefixIndex > -1)
@@ -1620,7 +1619,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			// contained no characters.  They should not result in a node.
 			if (length > 0)
 			{
-			  int exName = m_expandedNameTable.getExpandedTypeID(DTM_Fields.TEXT_NODE);
+			  int exName = m_expandedNameTable.getExpandedTypeID(DTM.TEXT_NODE);
 			  int dataIndex = m_data.size();
 
 			  m_previous = addNode(m_coalescedTextType, exName, m_parents.peek(), m_previous, dataIndex, false);
@@ -1632,7 +1631,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  // Reset for next text block
 		  m_textPendingStart = -1;
-		  m_textType = m_coalescedTextType = DTM_Fields.TEXT_NODE;
+		  m_textType = m_coalescedTextType = DTM.TEXT_NODE;
 		}
 	  }
 
@@ -1657,10 +1656,10 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  ///         default behaviour. </returns>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.EntityResolver#resolveEntity
-	  /// </seealso>
+	  /// <seealso cref="org.xml.sax.EntityResolver.resolveEntity"
+	  ////>
 	  /// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public InputSource resolveEntity(String publicId, String systemId) throws SAXException
 	  public virtual InputSource resolveEntity(string publicId, string systemId)
 	  {
@@ -1684,10 +1683,10 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="systemId"> The notation system identifier. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.DTDHandler#notationDecl
-	  /// </seealso>
+	  /// <seealso cref="org.xml.sax.DTDHandler.notationDecl"
+	  ////>
 	  /// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void notationDecl(String name, String publicId, String systemId) throws SAXException
 	  public virtual void notationDecl(string name, string publicId, string systemId)
 	  {
@@ -1709,10 +1708,10 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="notationName"> The name of the associated notation. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.DTDHandler#unparsedEntityDecl
-	  /// </seealso>
+	  /// <seealso cref="org.xml.sax.DTDHandler.unparsedEntityDecl"
+	  ////>
 	  /// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void unparsedEntityDecl(String name, String publicId, String systemId, String notationName) throws SAXException
 	  public virtual void unparsedEntityDecl(string name, string publicId, string systemId, string notationName)
 	  {
@@ -1756,14 +1755,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// with other document events.</para>
 	  /// </summary>
 	  /// <param name="locator"> A locator for all SAX document events. </param>
-	  /// <seealso cref= org.xml.sax.ContentHandler#setDocumentLocator </seealso>
-	  /// <seealso cref= org.xml.sax.Locator </seealso>
+	  /// <seealso cref="org.xml.sax.ContentHandler.setDocumentLocator"/>
+	  /// <seealso cref="org.xml.sax.Locator"/>
 	  public virtual Locator DocumentLocator
 	  {
 		  set
 		  {
 			m_locator = value;
-			m_systemId = value.SystemId;
+			m_systemId = value.getSystemId();
 		  }
 	  }
 
@@ -1772,8 +1771,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// </summary>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startDocument </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.startDocument"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocument() throws SAXException
 	  public virtual void startDocument()
 	  {
@@ -1783,10 +1782,10 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		}
 
 
-		int doc = addNode(DTM_Fields.DOCUMENT_NODE, m_expandedNameTable.getExpandedTypeID(DTM_Fields.DOCUMENT_NODE), DTM_Fields.NULL, DTM_Fields.NULL, 0, true);
+		int doc = addNode(DTM.DOCUMENT_NODE, m_expandedNameTable.getExpandedTypeID(DTM.DOCUMENT_NODE), DTM.NULL, DTM.NULL, 0, true);
 
 		m_parents.push(doc);
-		m_previous = DTM_Fields.NULL;
+		m_previous = DTM.NULL;
 
 		m_contextIndexes.push(m_prefixMappings.Count); // for the next element.
 	  }
@@ -1796,8 +1795,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// </summary>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endDocument </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.endDocument"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws SAXException
 	  public virtual void endDocument()
 	  {
@@ -1808,16 +1807,16 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 			charactersFlush();
 
-		m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,0);
+		m_nextsib.setElementAt(NULL,0);
 
 		if (m_firstch.elementAt(0) == NOTPROCESSED)
 		{
-		  m_firstch.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL,0);
+		  m_firstch.setElementAt(NULL,0);
 		}
 
-		if (DTM_Fields.NULL != m_previous)
+		if (DTM.NULL != m_previous)
 		{
-		  m_nextsib.setElementAt(DTM_Fields.NULL,m_previous);
+		  m_nextsib.setElementAt(DTM.NULL,m_previous);
 		}
 
 		m_parents = null;
@@ -1841,8 +1840,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="uri"> The Namespace URI mapped to the prefix. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startPrefixMapping </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.startPrefixMapping"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startPrefixMapping(String prefix, String uri) throws SAXException
 	  public virtual void startPrefixMapping(string prefix, string uri)
 	  {
@@ -1870,8 +1869,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="prefix"> The Namespace prefix being declared. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endPrefixMapping </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.endPrefixMapping"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endPrefixMapping(String prefix) throws SAXException
 	  public virtual void endPrefixMapping(string prefix)
 	  {
@@ -1889,7 +1888,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		do
 		{
-		  index = m_prefixMappings.IndexOf(prefix, ++index);
+		  index = m_prefixMappings.indexOf(prefix, ++index);
 		} while ((index >= 0) && ((index & 0x01) == 0x01));
 
 
@@ -1955,8 +1954,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="attributes"> The specified or defaulted attributes. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startElement </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.startElement"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
 	  public virtual void startElement(string uri, string localName, string qName, Attributes attributes)
 	  {
@@ -1967,7 +1966,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 				bool DEBUG_ATTRS = true;
 				if (DEBUG_ATTRS & attributes != null)
 				{
-					int n = attributes.Length;
+					int n = attributes.getLength();
 					if (n == 0)
 					{
 						Console.WriteLine("\tempty attribute list");
@@ -1984,11 +1983,11 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		charactersFlush();
 
-		int exName = m_expandedNameTable.getExpandedTypeID(uri, localName, DTM_Fields.ELEMENT_NODE);
+		int exName = m_expandedNameTable.getExpandedTypeID(uri, localName, DTM.ELEMENT_NODE);
 		string prefix = getPrefix(qName, uri);
 		int prefixIndex = (null != prefix) ? m_valuesOrPrefixes.stringToIndex(qName) : 0;
 
-		int elemNode = addNode(DTM_Fields.ELEMENT_NODE, exName, m_parents.peek(), m_previous, prefixIndex, true);
+		int elemNode = addNode(DTM.ELEMENT_NODE, exName, m_parents.peek(), m_previous, prefixIndex, true);
 
 		if (m_indexing)
 		{
@@ -2000,16 +1999,16 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		int startDecls = m_contextIndexes.peek();
 		int nDecls = m_prefixMappings.Count;
-		int prev = DTM_Fields.NULL;
+		int prev = DTM.NULL;
 
 		if (!m_pastFirstElement)
 		{
 		  // SPECIAL CASE: Implied declaration at root element
 		  prefix = "xml";
 		  string declURL = "http://www.w3.org/XML/1998/namespace";
-		  exName = m_expandedNameTable.getExpandedTypeID(null, prefix, DTM_Fields.NAMESPACE_NODE);
+		  exName = m_expandedNameTable.getExpandedTypeID(null, prefix, DTM.NAMESPACE_NODE);
 		  int val = m_valuesOrPrefixes.stringToIndex(declURL);
-		  prev = addNode(DTM_Fields.NAMESPACE_NODE, exName, elemNode, prev, val, false);
+		  prev = addNode(DTM.NAMESPACE_NODE, exName, elemNode, prev, val, false);
 		  m_pastFirstElement = true;
 		}
 
@@ -2024,14 +2023,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  string declURL = (string) m_prefixMappings[i + 1];
 
-		  exName = m_expandedNameTable.getExpandedTypeID(null, prefix, DTM_Fields.NAMESPACE_NODE);
+		  exName = m_expandedNameTable.getExpandedTypeID(null, prefix, DTM.NAMESPACE_NODE);
 
 		  int val = m_valuesOrPrefixes.stringToIndex(declURL);
 
-		  prev = addNode(DTM_Fields.NAMESPACE_NODE, exName, elemNode, prev, val, false);
+		  prev = addNode(DTM.NAMESPACE_NODE, exName, elemNode, prev, val, false);
 		}
 
-		int n = attributes.Length;
+		int n = attributes.getLength();
 
 		for (int i = 0; i < n; i++)
 		{
@@ -2052,11 +2051,11 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  continue; // go to the next attribute.
 			}
 
-			nodeType = DTM_Fields.NAMESPACE_NODE;
+			nodeType = DTM.NAMESPACE_NODE;
 		  }
 		  else
 		  {
-			nodeType = DTM_Fields.ATTRIBUTE_NODE;
+			nodeType = DTM.ATTRIBUTE_NODE;
 
 			if (attributes.getType(i).equalsIgnoreCase("ID"))
 			{
@@ -2091,20 +2090,20 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  prev = addNode(nodeType, exName, elemNode, prev, val, false);
 		}
 
-		if (DTM_Fields.NULL != prev)
+		if (DTM.NULL != prev)
 		{
-		  m_nextsib.setElementAt(DTM_Fields.NULL,prev);
+		  m_nextsib.setElementAt(DTM.NULL,prev);
 		}
 
 		if (null != m_wsfilter)
 		{
 		  short wsv = m_wsfilter.getShouldStripSpace(makeNodeHandle(elemNode), this);
-		  bool shouldStrip = (DTMWSFilter_Fields.INHERIT == wsv) ? ShouldStripWhitespace : (DTMWSFilter_Fields.STRIP == wsv);
+		  bool shouldStrip = (DTMWSFilter.INHERIT == wsv) ? ShouldStripWhitespace : (DTMWSFilter.STRIP == wsv);
 
 		  pushShouldStripWhitespace(shouldStrip);
 		}
 
-		m_previous = DTM_Fields.NULL;
+		m_previous = DTM.NULL;
 
 		m_contextIndexes.push(m_prefixMappings.Count); // for the children.
 	  }
@@ -2127,8 +2126,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  ///        empty string if qualified names are not available. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endElement </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.endElement"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String uri, String localName, String qName) throws SAXException
 	  public virtual void endElement(string uri, string localName, string qName)
 	  {
@@ -2155,13 +2154,13 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		m_previous = m_parents.pop();
 
 		// If lastNode is still DTM.NULL, this element had no children
-		if (DTM_Fields.NULL == lastNode)
+		if (DTM.NULL == lastNode)
 		{
-		  m_firstch.setElementAt(DTM_Fields.NULL,m_previous);
+		  m_firstch.setElementAt(DTM.NULL,m_previous);
 		}
 		else
 		{
-		  m_nextsib.setElementAt(DTM_Fields.NULL,lastNode);
+		  m_nextsib.setElementAt(DTM.NULL,lastNode);
 		}
 
 		popShouldStripWhitespace();
@@ -2181,8 +2180,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  ///               character array. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#characters </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.characters"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(char ch[], int start, int length) throws SAXException
 	  public virtual void characters(char[] ch, int start, int length)
 	  {
@@ -2195,9 +2194,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		// concatentated text is treated as a single CDATASection (see
 		// initialization above).  If any were ordinary Text, the whole
 		// thing is treated as Text. This may be worth %REVIEW%ing.
-		else if (m_textType == DTM_Fields.TEXT_NODE)
+		else if (m_textType == DTM.TEXT_NODE)
 		{
-		  m_coalescedTextType = DTM_Fields.TEXT_NODE;
+		  m_coalescedTextType = DTM.TEXT_NODE;
 		}
 
 		m_chars.append(ch, start, length);
@@ -2217,8 +2216,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  ///               character array. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#ignorableWhitespace </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.ignorableWhitespace"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void ignorableWhitespace(char ch[], int start, int length) throws SAXException
 	  public virtual void ignorableWhitespace(char[] ch, int start, int length)
 	  {
@@ -2241,8 +2240,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  ///             none is supplied. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#processingInstruction </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.processingInstruction"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws SAXException
 	  public virtual void processingInstruction(string target, string data)
 	  {
@@ -2253,10 +2252,10 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		charactersFlush();
 
-		int exName = m_expandedNameTable.getExpandedTypeID(null, target, DTM_Fields.PROCESSING_INSTRUCTION_NODE);
+		int exName = m_expandedNameTable.getExpandedTypeID(null, target, DTM.PROCESSING_INSTRUCTION_NODE);
 		int dataIndex = m_valuesOrPrefixes.stringToIndex(data);
 
-		m_previous = addNode(DTM_Fields.PROCESSING_INSTRUCTION_NODE, exName, m_parents.peek(), m_previous, dataIndex, false);
+		m_previous = addNode(DTM.PROCESSING_INSTRUCTION_NODE, exName, m_parents.peek(), m_previous, dataIndex, false);
 	  }
 
 	  /// <summary>
@@ -2270,8 +2269,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="name"> The name of the skipped entity. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#processingInstruction </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.processingInstruction"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void skippedEntity(String name) throws SAXException
 	  public virtual void skippedEntity(string name)
 	  {
@@ -2295,9 +2294,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="e"> The warning information encoded as an exception. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ErrorHandler#warning </seealso>
-	  /// <seealso cref= org.xml.sax.SAXParseException </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ErrorHandler.warning"/>
+	  /// <seealso cref="org.xml.sax.SAXParseException"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warning(SAXParseException e) throws SAXException
 	  public virtual void warning(SAXParseException e)
 	  {
@@ -2317,9 +2316,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="e"> The warning information encoded as an exception. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ErrorHandler#warning </seealso>
-	  /// <seealso cref= org.xml.sax.SAXParseException </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ErrorHandler.warning"/>
+	  /// <seealso cref="org.xml.sax.SAXParseException"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(SAXParseException e) throws SAXException
 	  public virtual void error(SAXParseException e)
 	  {
@@ -2340,9 +2339,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="e"> The error information encoded as an exception. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ErrorHandler#fatalError </seealso>
-	  /// <seealso cref= org.xml.sax.SAXParseException </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ErrorHandler.fatalError"/>
+	  /// <seealso cref="org.xml.sax.SAXParseException"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fatalError(SAXParseException e) throws SAXException
 	  public virtual void fatalError(SAXParseException e)
 	  {
@@ -2365,7 +2364,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="name"> The element type name. </param>
 	  /// <param name="model"> The content model as a normalized string. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void elementDecl(String name, String model) throws SAXException
 	  public virtual void elementDecl(string name, string model)
 	  {
@@ -2391,7 +2390,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="value"> A string representing the attribute's default value,
 	  ///        or null if there is none. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void attributeDecl(String eName, String aName, String type, String valueDefault, String value) throws SAXException
 	  public virtual void attributeDecl(string eName, string aName, string type, string valueDefault, string value)
 	  {
@@ -2409,9 +2408,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  ///        entity, the name will begin with '%'. </param>
 	  /// <param name="value"> The replacement text of the entity. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #externalEntityDecl </seealso>
-	  /// <seealso cref= org.xml.sax.DTDHandler#unparsedEntityDecl </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".externalEntityDecl"/>
+	  /// <seealso cref="org.xml.sax.DTDHandler.unparsedEntityDecl"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void internalEntityDecl(String name, String value) throws SAXException
 	  public virtual void internalEntityDecl(string name, string value)
 	  {
@@ -2431,9 +2430,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  ///        null if none was declared. </param>
 	  /// <param name="systemId"> The declared system identifier of the entity. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #internalEntityDecl </seealso>
-	  /// <seealso cref= org.xml.sax.DTDHandler#unparsedEntityDecl </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".internalEntityDecl"/>
+	  /// <seealso cref="org.xml.sax.DTDHandler.unparsedEntityDecl"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void externalEntityDecl(String name, String publicId, String systemId) throws SAXException
 	  public virtual void externalEntityDecl(string name, string publicId, string systemId)
 	  {
@@ -2449,7 +2448,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// Report the start of DTD declarations, if any.
 	  /// 
 	  /// <para>Any declarations are assumed to be in the internal subset
-	  /// unless otherwise indicated by a <seealso cref="#startEntity startEntity"/>
+	  /// unless otherwise indicated by a <seealso cref="startEntity startEntity"/>
 	  /// event.</para>
 	  /// 
 	  /// <para>Note that the start/endDTD events will appear within
@@ -2463,9 +2462,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  ///        external DTD subset, or null if none was declared. </param>
 	  /// <exception cref="SAXException"> The application may raise an
 	  ///            exception. </exception>
-	  /// <seealso cref= #endDTD </seealso>
-	  /// <seealso cref= #startEntity </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endDTD"/>
+	  /// <seealso cref=".startEntity"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDTD(String name, String publicId, String systemId) throws SAXException
 	  public virtual void startDTD(string name, string publicId, string systemId)
 	  {
@@ -2477,8 +2476,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// Report the end of DTD declarations.
 	  /// </summary>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #startDTD </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".startDTD"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDTD() throws SAXException
 	  public virtual void endDTD()
 	  {
@@ -2498,16 +2497,16 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// properly nested within start/end entity events.</para>
 	  /// 
 	  /// <para>Note that skipped entities will be reported through the
-	  /// <seealso cref="org.xml.sax.ContentHandler#skippedEntity skippedEntity"/>
+	  /// <seealso cref="org.xml.sax.ContentHandler.skippedEntity skippedEntity"/>
 	  /// event, which is part of the ContentHandler interface.</para>
 	  /// </summary>
 	  /// <param name="name"> The name of the entity.  If it is a parameter
 	  ///        entity, the name will begin with '%'. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #endEntity </seealso>
-	  /// <seealso cref= org.xml.sax.ext.DeclHandler#internalEntityDecl </seealso>
-	  /// <seealso cref= org.xml.sax.ext.DeclHandler#externalEntityDecl </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endEntity"/>
+	  /// <seealso cref="org.xml.sax.ext.DeclHandler.internalEntityDecl"/>
+	  /// <seealso cref="org.xml.sax.ext.DeclHandler.externalEntityDecl"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startEntity(String name) throws SAXException
 	  public virtual void startEntity(string name)
 	  {
@@ -2520,8 +2519,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// </summary>
 	  /// <param name="name"> The name of the entity that is ending. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #startEntity </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".startEntity"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endEntity(String name) throws SAXException
 	  public virtual void endEntity(string name)
 	  {
@@ -2537,24 +2536,24 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// characters} event.</para>
 	  /// </summary>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #endCDATA </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endCDATA"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startCDATA() throws SAXException
 	  public virtual void startCDATA()
 	  {
-		m_textType = DTM_Fields.CDATA_SECTION_NODE;
+		m_textType = DTM.CDATA_SECTION_NODE;
 	  }
 
 	  /// <summary>
 	  /// Report the end of a CDATA section.
 	  /// </summary>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #startCDATA </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".startCDATA"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCDATA() throws SAXException
 	  public virtual void endCDATA()
 	  {
-		m_textType = DTM_Fields.TEXT_NODE;
+		m_textType = DTM.TEXT_NODE;
 	  }
 
 	  /// <summary>
@@ -2568,7 +2567,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="start"> The starting position in the array. </param>
 	  /// <param name="length"> The number of characters to use from the array. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char ch[], int start, int length) throws SAXException
 	  public virtual void comment(char[] ch, int start, int length)
 	  {
@@ -2580,14 +2579,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		charactersFlush();
 
-		int exName = m_expandedNameTable.getExpandedTypeID(DTM_Fields.COMMENT_NODE);
+		int exName = m_expandedNameTable.getExpandedTypeID(DTM.COMMENT_NODE);
 
 		// For now, treat comments as strings...  I guess we should do a
 		// seperate FSB buffer instead.
 		int dataIndex = m_valuesOrPrefixes.stringToIndex(new string(ch, start, length));
 
 
-		m_previous = addNode(DTM_Fields.COMMENT_NODE, exName, m_parents.peek(), m_previous, dataIndex, false);
+		m_previous = addNode(DTM.COMMENT_NODE, exName, m_parents.peek(), m_previous, dataIndex, false);
 	  }
 
 	  /// <summary>
@@ -2624,7 +2623,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		}
 		else if (m_locator != null)
 		{
-			return new NodeLocator(null,m_locator.SystemId,-1,-1);
+			return new NodeLocator(null,m_locator.getSystemId(),-1,-1);
 		}
 		else if (!string.ReferenceEquals(m_systemId, null))
 		{

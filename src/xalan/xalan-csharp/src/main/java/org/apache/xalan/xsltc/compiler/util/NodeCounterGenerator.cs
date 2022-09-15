@@ -21,9 +21,9 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using Instruction = org.apache.bcel.generic.Instruction;
+	using Stylesheet = org.apache.xalan.xsltc.compiler.Stylesheet;
 
 	/// <summary>
 	/// This class implements auxiliary classes needed to compile 

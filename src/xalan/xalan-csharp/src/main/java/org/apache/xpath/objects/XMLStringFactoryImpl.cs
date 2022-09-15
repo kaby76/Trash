@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath.objects
 {
-
 	using FastStringBuffer = org.apache.xml.utils.FastStringBuffer;
 	using XMLString = org.apache.xml.utils.XMLString;
 	using XMLStringFactory = org.apache.xml.utils.XMLStringFactory;

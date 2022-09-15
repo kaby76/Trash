@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ASTORE = org.apache.bcel.generic.ASTORE;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -53,8 +52,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public FilterParentPath(Expression filterExpr, Expression path)
 		{
-		(_path = path).Parent = this;
-		(_filterExpr = filterExpr).Parent = this;
+		(_path = path).setParent(this);
+		(_filterExpr = filterExpr).setParent(this);
 		}
 
 		public override Parser Parser
@@ -82,7 +81,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// cast to node-set only if it is of reference type. This type coercion is
 		/// needed for expressions like $x/LINE where $x is a parameter reference.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -126,14 +125,14 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		// Create new StepIterator
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int initSI = cpg.addMethodref(Constants_Fields.STEP_ITERATOR_CLASS, "<init>", "(" +Constants_Fields.NODE_ITERATOR_SIG +Constants_Fields.NODE_ITERATOR_SIG +")V");
-		int initSI = cpg.addMethodref(Constants_Fields.STEP_ITERATOR_CLASS, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.NODE_ITERATOR_SIG + ")V");
+//ORIGINAL LINE: final int initSI = cpg.addMethodref(STEP_ITERATOR_CLASS, "<init>", "(" +NODE_ITERATOR_SIG +NODE_ITERATOR_SIG +")V");
+		int initSI = cpg.addMethodref(STEP_ITERATOR_CLASS, "<init>", "(" + NODE_ITERATOR_SIG + NODE_ITERATOR_SIG + ")V");
 
 			// Backwards branches are prohibited if an uninitialized object is
 			// on the stack by section 4.9.4 of the JVM Specification, 2nd Ed.
@@ -146,17 +145,17 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Recursively compile 2 iterators
 		_filterExpr.translate(classGen, methodGen);
-			LocalVariableGen filterTemp = methodGen.addLocalVariable("filter_parent_path_tmp1", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-			filterTemp.Start = il.append(new ASTORE(filterTemp.Index));
+			LocalVariableGen filterTemp = methodGen.addLocalVariable("filter_parent_path_tmp1", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+			filterTemp.setStart(il.append(new ASTORE(filterTemp.getIndex())));
 
 		_path.translate(classGen, methodGen);
-			LocalVariableGen pathTemp = methodGen.addLocalVariable("filter_parent_path_tmp2", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-			pathTemp.Start = il.append(new ASTORE(pathTemp.Index));
+			LocalVariableGen pathTemp = methodGen.addLocalVariable("filter_parent_path_tmp2", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+			pathTemp.setStart(il.append(new ASTORE(pathTemp.getIndex())));
 
-		il.append(new NEW(cpg.addClass(Constants_Fields.STEP_ITERATOR_CLASS)));
+		il.append(new NEW(cpg.addClass(STEP_ITERATOR_CLASS)));
 		il.append(DUP);
-			filterTemp.End = il.append(new ALOAD(filterTemp.Index));
-			pathTemp.End = il.append(new ALOAD(pathTemp.Index));
+			filterTemp.setEnd(il.append(new ALOAD(filterTemp.getIndex())));
+			pathTemp.setEnd(il.append(new ALOAD(pathTemp.getIndex())));
 
 		// Initialize StepIterator with iterators from the stack
 		il.append(new INVOKESPECIAL(initSI));
@@ -165,8 +164,8 @@ namespace org.apache.xalan.xsltc.compiler
 			if (_hasDescendantAxis)
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int incl = cpg.addMethodref(Constants_Fields.NODE_ITERATOR_BASE, "includeSelf", "()" + Constants_Fields.NODE_ITERATOR_SIG);
-			int incl = cpg.addMethodref(Constants_Fields.NODE_ITERATOR_BASE, "includeSelf", "()" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int incl = cpg.addMethodref(NODE_ITERATOR_BASE, "includeSelf", "()" + NODE_ITERATOR_SIG);
+			int incl = cpg.addMethodref(NODE_ITERATOR_BASE, "includeSelf", "()" + NODE_ITERATOR_SIG);
 			il.append(new INVOKEVIRTUAL(incl));
 			}
 
@@ -177,8 +176,8 @@ namespace org.apache.xalan.xsltc.compiler
 		if (!parentAlreadyOrdered)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int order = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.ORDER_ITERATOR, Constants_Fields.ORDER_ITERATOR_SIG);
-			int order = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.ORDER_ITERATOR, Constants_Fields.ORDER_ITERATOR_SIG);
+//ORIGINAL LINE: final int order = cpg.addInterfaceMethodref(DOM_INTF, ORDER_ITERATOR, ORDER_ITERATOR_SIG);
+			int order = cpg.addInterfaceMethodref(DOM_INTF, ORDER_ITERATOR, ORDER_ITERATOR_SIG);
 			il.append(methodGen.loadDOM());
 			il.append(SWAP);
 			il.append(methodGen.loadContextNode());

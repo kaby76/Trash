@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.trace
 {
-
 	using ElemTemplateElement = org.apache.xalan.templates.ElemTemplateElement;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
 	using QName = org.apache.xml.utils.QName;
@@ -89,9 +88,9 @@ namespace org.apache.xalan.trace
 
 		if (n is Element)
 		{
-		  r += "<" + n.NodeName;
+		  r += "<" + n.getNodeName();
 
-		  Node c = n.FirstChild;
+		  Node c = n.getFirstChild();
 
 		  while (null != c)
 		  {
@@ -100,7 +99,7 @@ namespace org.apache.xalan.trace
 			  r += printNode(c) + " ";
 			}
 
-			c = c.NextSibling;
+			c = c.getNextSibling();
 		  }
 
 		  r += ">";
@@ -109,11 +108,11 @@ namespace org.apache.xalan.trace
 		{
 		  if (n is Attr)
 		  {
-			r += n.NodeName + "=" + n.NodeValue;
+			r += n.getNodeName() + "=" + n.getNodeValue();
 		  }
 		  else
 		  {
-			r += n.NodeName;
+			r += n.getNodeName();
 		  }
 		}
 
@@ -134,7 +133,7 @@ namespace org.apache.xalan.trace
 	  {
 
 		string r = l.GetHashCode() + "[";
-		int len = l.Length - 1;
+		int len = l.getLength() - 1;
 		int i = 0;
 
 		while (i < len)

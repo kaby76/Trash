@@ -25,7 +25,6 @@ using System.Collections;
 namespace org.apache.xml.utils
 {
 
-
 	using Document = org.w3c.dom.Document;
 	using Element = org.w3c.dom.Element;
 	using Node = org.w3c.dom.Node;
@@ -33,11 +32,11 @@ namespace org.apache.xml.utils
 	/// <summary>
 	/// Simple static utility to convert Hashtable to a Node.  
 	/// </summary>
-	/// <seealso cref= org.apache.xalan.xslt.EnvironmentCheck </seealso>
-	/// <seealso cref= org.apache.xalan.lib.Extensions
+	/// <seealso cref="org.apache.xalan.xslt.EnvironmentCheck"/>
+	/// <seealso cref="org.apache.xalan.lib.Extensions"
 	/// @author shane_curcuru@us.ibm.com
 	/// @version $Id: Hashtree2Node.java 475902 2006-11-16 20:03:16Z minchau $
-	/// @xsl.usage general </seealso>
+	/// @xsl.usage general/>
 	public abstract class Hashtree2Node
 	{
 
@@ -84,7 +83,7 @@ namespace org.apache.xml.utils
 				container.appendChild(hashNode);
 
 				System.Collections.IEnumerator keys = hash.Keys.GetEnumerator();
-				IList v = new ArrayList();
+				System.Collections.IList v = new ArrayList();
 
 				while (keys.MoveNext())
 				{
@@ -121,7 +120,7 @@ namespace org.apache.xml.utils
 				}
 
 				// Now go back and do the saved hashes
-				IEnumerator it = v.GetEnumerator();
+				System.Collections.IEnumerator it = v.GetEnumerator();
 				while (it.MoveNext())
 				{
 					// Retrieve name and hash in two steps

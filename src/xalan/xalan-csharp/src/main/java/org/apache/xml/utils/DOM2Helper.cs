@@ -54,7 +54,7 @@ namespace org.apache.xml.utils
 	  /// DOM2Helper can support. If we return without throwing the exception,
 	  /// the node is compatable.
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void checkNode(org.w3c.dom.Node node) throws javax.xml.transform.TransformerException
 	  public virtual void checkNode(Node node)
 	  {
@@ -77,16 +77,16 @@ namespace org.apache.xml.utils
 	  /// <summary>
 	  /// Field m_doc: Document Node for the document this helper is currently
 	  /// accessing or building </summary>
-	  /// <seealso cref= #setDocument </seealso>
-	  /// <seealso cref= #getDocument
-	  ///  </seealso>
+	  /// <seealso cref=".setDocument"/>
+	  /// <seealso cref=".getDocument"
+	  /// />
 	  private Document m_doc;
 
 	  /// <summary>
 	  /// Specify which document this helper is currently operating on.
 	  /// </summary>
 	  /// <param name="doc"> The DOM Document node for this document. </param>
-	  /// <seealso cref= #getDocument </seealso>
+	  /// <seealso cref=".getDocument"/>
 	  public virtual Document Document
 	  {
 		  set
@@ -121,7 +121,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <exception cref="TransformerException"> if any checked exception is thrown.
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void parse(org.xml.sax.InputSource source) throws javax.xml.transform.TransformerException
 	  public virtual void parse(InputSource source)
 	  {
@@ -134,8 +134,8 @@ namespace org.apache.xml.utils
 		  //  = new org.apache.xerces.parsers.DOMParser();
 		  DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 
-		  builderFactory.NamespaceAware = true;
-		  builderFactory.Validating = true;
+		  builderFactory.setNamespaceAware(true);
+		  builderFactory.setValidating(true);
 
 		  DocumentBuilder parser = builderFactory.newDocumentBuilder();
 
@@ -154,7 +154,7 @@ namespace org.apache.xml.utils
 		  parser.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
 		  */
 
-		  parser.ErrorHandler = new org.apache.xml.utils.DefaultErrorHandler();
+		  parser.setErrorHandler(new org.apache.xml.utils.DefaultErrorHandler());
 
 		  // if(null != m_entityResolver)
 		  // {
@@ -252,10 +252,10 @@ namespace org.apache.xml.utils
 	  /// a Document, a DocumentFragment, or an orphan. </returns>
 	  public static Node getParentOfNode(Node node)
 	  {
-			  Node parent = node.ParentNode;
-			  if (parent == null && (Node.ATTRIBUTE_NODE == node.NodeType))
+			  Node parent = node.getParentNode();
+			  if (parent == null && (Node.ATTRIBUTE_NODE == node.getNodeType()))
 			  {
-			   parent = ((Attr) node).OwnerElement;
+			   parent = ((Attr) node).getOwnerElement();
 			  }
 			  return parent;
 	  }
@@ -273,7 +273,7 @@ namespace org.apache.xml.utils
 	  public override string getLocalNameOfNode(Node n)
 	  {
 
-		string name = n.LocalName;
+		string name = n.getLocalName();
 
 		return (null == name) ? base.getLocalNameOfNode(n) : name;
 	  }
@@ -296,7 +296,7 @@ namespace org.apache.xml.utils
 	  /// at the time the Node was created. </returns>
 	  public override string getNamespaceOfNode(Node n)
 	  {
-		return n.NamespaceURI;
+		return n.getNamespaceURI();
 	  }
 
 	  /// <summary>

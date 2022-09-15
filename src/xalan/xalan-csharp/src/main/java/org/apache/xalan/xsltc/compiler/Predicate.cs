@@ -291,10 +291,10 @@ namespace org.apache.xalan.xsltc.compiler
 				VariableRefBase @ref = (VariableRefBase)parent;
 	//JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 	//ORIGINAL LINE: final VariableBase var = ref.getVariable();
-				VariableBase @var = @ref.Variable;
+				VariableBase var = @ref.Variable;
 	//JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 	//ORIGINAL LINE: final Expression exp = var.getExpression();
-				Expression exp = @var.Expression;
+				Expression exp = var.Expression;
 				if (exp is Step)
 				{
 					_ptype = ((Step)exp).NodeType;
@@ -338,7 +338,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <code>dontOptimize()</code>. If so, the second time it should honor
 		/// the new value of <code>_canOptimize</code>.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -427,11 +427,11 @@ namespace org.apache.xalan.xsltc.compiler
 		FilterGenerator filterGen;
 
 		_className = XSLTC.HelperClassName;
-		filterGen = new FilterGenerator(_className, "java.lang.Object", ToString(), Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_SUPER, new string[] {Constants_Fields.CURRENT_NODE_LIST_FILTER}, classGen.Stylesheet);
+		filterGen = new FilterGenerator(_className, "java.lang.Object", ToString(), ACC_PUBLIC | ACC_SUPER, new string[] {CURRENT_NODE_LIST_FILTER}, classGen.Stylesheet);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = filterGen.getConstantPool();
-		ConstantPoolGen cpg = filterGen.ConstantPool;
+		ConstantPoolGen cpg = filterGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int length = (_closureVars == null) ? 0 : _closureVars.size();
 		int length = (_closureVars == null) ? 0 : _closureVars.Count;
@@ -439,36 +439,36 @@ namespace org.apache.xalan.xsltc.compiler
 		// Add a new instance variable for each var in closure
 		for (int i = 0; i < length; i++)
 		{
-			VariableBase @var = ((VariableRefBase) _closureVars[i]).Variable;
+			VariableBase var = ((VariableRefBase) _closureVars[i]).Variable;
 
-			filterGen.addField(new Field(Constants_Fields.ACC_PUBLIC, cpg.addUtf8(@var.EscapedName), cpg.addUtf8(@var.Type.toSignature()), null, cpg.ConstantPool));
+			filterGen.addField(new Field(ACC_PUBLIC, cpg.addUtf8(var.EscapedName), cpg.addUtf8(var.Type.toSignature()), null, cpg.getConstantPool()));
 		}
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
-		testGen = new TestGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] {org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT, Util.getJCRefType(Constants_Fields.TRANSLET_SIG), Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG)}, new string[] {"node", "position", "last", "current", "translet", "iterator"}, "test", _className, il, cpg);
+		testGen = new TestGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] {org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT, Util.getJCRefType(TRANSLET_SIG), Util.getJCRefType(NODE_ITERATOR_SIG)}, new string[] {"node", "position", "last", "current", "translet", "iterator"}, "test", _className, il, cpg);
 
 		// Store the dom in a local variable
-		local = testGen.addLocalVariable("document", Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), null, null);
+		local = testGen.addLocalVariable("document", Util.getJCRefType(DOM_INTF_SIG), null, null);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String className = classGen.getClassName();
 		string className = classGen.ClassName;
 		il.append(filterGen.loadTranslet());
 		il.append(new CHECKCAST(cpg.addClass(className)));
-		il.append(new GETFIELD(cpg.addFieldref(className, Constants_Fields.DOM_FIELD, Constants_Fields.DOM_INTF_SIG)));
-		local.Start = il.append(new ASTORE(local.Index));
+		il.append(new GETFIELD(cpg.addFieldref(className, DOM_FIELD, DOM_INTF_SIG)));
+		local.setStart(il.append(new ASTORE(local.getIndex())));
 
 		// Store the dom index in the test generator
-		testGen.DomIndex = local.Index;
+		testGen.DomIndex = local.getIndex();
 
 		_exp.translate(filterGen, testGen);
 		il.append(IRETURN);
 
-		filterGen.addEmptyConstructor(Constants_Fields.ACC_PUBLIC);
+		filterGen.addEmptyConstructor(ACC_PUBLIC);
 		filterGen.addMethod(testGen);
 
-		XSLTC.dumpClass(filterGen.JavaClass);
+		XSLTC.dumpClass(filterGen.getJavaClass());
 		}
 
 		/// <summary>
@@ -620,10 +620,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Compile auxiliary class for filter
 		compileFilter(classGen, methodGen);
@@ -641,8 +641,8 @@ namespace org.apache.xalan.xsltc.compiler
 		for (int i = 0; i < length; i++)
 		{
 			VariableRefBase varRef = (VariableRefBase) _closureVars[i];
-			VariableBase @var = varRef.Variable;
-			Type varType = @var.Type;
+			VariableBase var = varRef.Variable;
+			Type varType = var.Type;
 
 			il.append(DUP);
 
@@ -661,16 +661,16 @@ namespace org.apache.xalan.xsltc.compiler
 			if (variableClosure != null)
 			{
 			il.append(ALOAD_0);
-			il.append(new GETFIELD(cpg.addFieldref(variableClosure.InnerClassName, @var.EscapedName, varType.toSignature())));
+			il.append(new GETFIELD(cpg.addFieldref(variableClosure.InnerClassName, var.EscapedName, varType.toSignature())));
 			}
 			else
 			{
 			// Use a load of instruction if in translet class
-			il.append(@var.loadInstruction());
+			il.append(var.loadInstruction());
 			}
 
 			// Store variable in new closure
-			il.append(new PUTFIELD(cpg.addFieldref(_className, @var.EscapedName, varType.toSignature())));
+			il.append(new PUTFIELD(cpg.addFieldref(_className, var.EscapedName, varType.toSignature())));
 		}
 		}
 
@@ -685,10 +685,10 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (_nthPositionFilter || _nthDescendant)
 		{
@@ -697,7 +697,7 @@ namespace org.apache.xalan.xsltc.compiler
 		else if (NodeValueTest && (Parent is Step))
 		{
 			_value.translate(classGen, methodGen);
-			il.append(new CHECKCAST(cpg.addClass(Constants_Fields.STRING_CLASS)));
+			il.append(new CHECKCAST(cpg.addClass(STRING_CLASS)));
 			il.append(new PUSH(cpg, ((EqualityExpr)_exp).Op));
 		}
 		else

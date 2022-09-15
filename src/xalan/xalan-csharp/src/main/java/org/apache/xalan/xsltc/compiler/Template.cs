@@ -199,20 +199,20 @@ namespace org.apache.xalan.xsltc.compiler
 		public override void display(int indent)
 		{
 		Util.println('\n');
-		indent(indent);
+		this.indent(indent);
 		if (_name != null)
 		{
-			indent(indent);
+			this.indent(indent);
 			Util.println("name = " + _name);
 		}
 		else if (_pattern != null)
 		{
-			indent(indent);
+			this.indent(indent);
 			Util.println("match = " + _pattern.ToString());
 		}
 		if (_mode != null)
 		{
-			indent(indent);
+			this.indent(indent);
 			Util.println("mode = " + _mode);
 		}
 		displayContents(indent + IndentIncrement);
@@ -285,7 +285,7 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!XML11Char.isXML11ValidQName(name))
 				{
 					ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, name, this);
-					parser.reportError(Constants_Fields.ERROR, err);
+					parser.reportError(Constants.ERROR, err);
 				}
 			_name = parser.getQNameIgnoreDefaultNs(name);
 		}
@@ -295,7 +295,7 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!XML11Char.isXML11ValidQName(mode))
 				{
 					ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, mode, this);
-					parser.reportError(Constants_Fields.ERROR, err);
+					parser.reportError(Constants.ERROR, err);
 				}
 			_mode = parser.getQNameIgnoreDefaultNs(mode);
 		}
@@ -330,7 +330,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (!resolveNamedTemplates(other, parser))
 			{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.TEMPLATE_REDEF_ERR, _name, this);
-			parser.reportError(Constants_Fields.ERROR, err);
+			parser.reportError(Constants.ERROR, err);
 			}
 			// Is this a simple named template?
 			if (_pattern == null && _mode == null)
@@ -390,7 +390,7 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -406,10 +406,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (_disabled)
 		{
@@ -426,7 +426,7 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(methodGen.loadIterator());
 			il.append(methodGen.loadHandler());
 			il.append(methodGen.loadCurrentNode());
-			il.append(new INVOKEVIRTUAL(cpg.addMethodref(className, methodName, "(" + Constants_Fields.DOM_INTF_SIG + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.TRANSLET_OUTPUT_SIG + "I)V")));
+			il.append(new INVOKEVIRTUAL(cpg.addMethodref(className, methodName, "(" + DOM_INTF_SIG + NODE_ITERATOR_SIG + TRANSLET_OUTPUT_SIG + "I)V")));
 			return;
 		}
 
@@ -452,7 +452,7 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 
 			translateContents(classGen, methodGen);
-		il.Positions = true;
+		il.setPositions(true);
 		}
 
 	}

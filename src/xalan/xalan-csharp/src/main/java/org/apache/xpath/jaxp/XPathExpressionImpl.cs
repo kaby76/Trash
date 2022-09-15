@@ -22,7 +22,6 @@
 namespace org.apache.xpath.jaxp
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
@@ -57,7 +56,7 @@ namespace org.apache.xpath.jaxp
 		/// </summary>
 		protected internal XPathExpressionImpl()
 		{
-		};
+		}
 
 		protected internal XPathExpressionImpl(org.apache.xpath.XPath xpath, JAXPPrefixResolver prefixResolver, XPathFunctionResolver functionResolver, XPathVariableResolver variableResolver)
 		{
@@ -66,7 +65,7 @@ namespace org.apache.xpath.jaxp
 			this.functionResolver = functionResolver;
 			this.variableResolver = variableResolver;
 			this.featureSecureProcessing = false;
-		};
+		}
 
 		protected internal XPathExpressionImpl(org.apache.xpath.XPath xpath, JAXPPrefixResolver prefixResolver, XPathFunctionResolver functionResolver, XPathVariableResolver variableResolver, bool featureSecureProcessing)
 		{
@@ -75,7 +74,7 @@ namespace org.apache.xpath.jaxp
 			this.functionResolver = functionResolver;
 			this.variableResolver = variableResolver;
 			this.featureSecureProcessing = featureSecureProcessing;
-		};
+		}
 
 		public virtual org.apache.xpath.XPath XPath
 		{
@@ -85,7 +84,7 @@ namespace org.apache.xpath.jaxp
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object eval(Object item, javax.xml.namespace.QName returnType) throws javax.xml.transform.TransformerException
 		public virtual object eval(object item, QName returnType)
 		{
@@ -93,7 +92,7 @@ namespace org.apache.xpath.jaxp
 			return getResultAsType(resultObject, returnType);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private org.apache.xpath.objects.XObject eval(Object contextItem) throws javax.xml.transform.TransformerException
 		private XObject eval(object contextItem)
 		{
@@ -159,7 +158,7 @@ namespace org.apache.xpath.jaxp
 		/// of the types defined in <seealso cref="XPathConstants"/>. </exception>
 		/// <exception cref="NullPointerException"> If  <code>returnType</code> is
 		/// <code>null</code>. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object evaluate(Object item, javax.xml.namespace.QName returnType) throws javax.xml.xpath.XPathExpressionException
 		public virtual object evaluate(object item, QName returnType)
 		{
@@ -190,7 +189,7 @@ namespace org.apache.xpath.jaxp
 			}
 			catch (javax.xml.transform.TransformerException te)
 			{
-				Exception nestedException = te.Exception;
+				Exception nestedException = te.getException();
 				if (nestedException is javax.xml.xpath.XPathFunctionException)
 				{
 					throw (javax.xml.xpath.XPathFunctionException)nestedException;
@@ -209,9 +208,9 @@ namespace org.apache.xpath.jaxp
 		/// <para>Evaluate the compiled XPath expression in the specified context and
 		/// return the result as a <code>String</code>.</para>
 		/// 
-		/// <para>This method calls <seealso cref="#evaluate(Object item, QName returnType)"/>
+		/// <para>This method calls <seealso cref="evaluate(object item, QName returnType)"/>
 		/// with a <code>returnType</code> of
-		/// <seealso cref="XPathConstants#STRING"/>.</para>
+		/// <seealso cref="XPathConstants.STRING"/>.</para>
 		/// 
 		/// <para>See "Evaluation of XPath Expressions" section of JAXP 1.3 spec
 		///  for context item evaluation,
@@ -230,7 +229,7 @@ namespace org.apache.xpath.jaxp
 		///   <code>String</code>.
 		/// </returns>
 		/// <exception cref="XPathExpressionException"> If the expression cannot be evaluated. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String evaluate(Object item) throws javax.xml.xpath.XPathExpressionException
 		public virtual string evaluate(object item)
 		{
@@ -249,7 +248,7 @@ namespace org.apache.xpath.jaxp
 		///  specified type.</para>
 		/// 
 		/// <para>This method builds a data model for the <seealso cref="InputSource"/> and calls
-		/// <seealso cref="#evaluate(Object item, QName returnType)"/> on the resulting 
+		/// <seealso cref="evaluate(object item, QName returnType)"/> on the resulting 
 		/// document object.</para>
 		/// 
 		/// <para>See "Evaluation of XPath Expressions" section of JAXP 1.3 spec
@@ -276,7 +275,7 @@ namespace org.apache.xpath.jaxp
 		/// of the types defined in <seealso cref="XPathConstants"/>. </exception>
 		/// <exception cref="NullPointerException"> If  <code>source</code> or 
 		/// <code>returnType</code> is <code>null</code>. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object evaluate(org.xml.sax.InputSource source, javax.xml.namespace.QName returnType) throws javax.xml.xpath.XPathExpressionException
 		public virtual object evaluate(InputSource source, QName returnType)
 		{
@@ -297,8 +296,8 @@ namespace org.apache.xpath.jaxp
 				if (dbf == null)
 				{
 					dbf = DocumentBuilderFactory.newInstance();
-					dbf.NamespaceAware = true;
-					dbf.Validating = false;
+					dbf.setNamespaceAware(true);
+					dbf.setValidating(false);
 				}
 				db = dbf.newDocumentBuilder();
 				Document document = db.parse(source);
@@ -314,8 +313,8 @@ namespace org.apache.xpath.jaxp
 		/// <para>Evaluate the compiled XPath expression in the context of the specified <code>InputSource</code> and return the result as a
 		/// <code>String</code>.</para>
 		/// 
-		/// <para>This method calls <seealso cref="#evaluate(InputSource source, QName returnType)"/> with a <code>returnType</code> of
-		/// <seealso cref="XPathConstants#STRING"/>.</para>
+		/// <para>This method calls <seealso cref="evaluate(InputSource source, QName returnType)"/> with a <code>returnType</code> of
+		/// <seealso cref="XPathConstants.STRING"/>.</para>
 		/// 
 		/// <para>See "Evaluation of XPath Expressions" section of JAXP 1.3 spec
 		/// for context item evaluation,
@@ -330,7 +329,7 @@ namespace org.apache.xpath.jaxp
 		/// </returns>
 		/// <exception cref="XPathExpressionException"> If the expression cannot be evaluated. </exception>
 		/// <exception cref="NullPointerException"> If  <code>source</code> is <code>null</code>. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String evaluate(org.xml.sax.InputSource source) throws javax.xml.xpath.XPathExpressionException
 		public virtual string evaluate(InputSource source)
 		{
@@ -348,7 +347,7 @@ namespace org.apache.xpath.jaxp
 			return false;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private Object getResultAsType(org.apache.xpath.objects.XObject resultObject, javax.xml.namespace.QName returnType) throws javax.xml.transform.TransformerException
 		 private object getResultAsType(XObject resultObject, QName returnType)
 		 {
@@ -395,12 +394,12 @@ namespace org.apache.xpath.jaxp
 					if (dbf == null)
 					{
 						dbf = DocumentBuilderFactory.newInstance();
-						dbf.NamespaceAware = true;
-						dbf.Validating = false;
+						dbf.setNamespaceAware(true);
+						dbf.setValidating(false);
 					}
 					db = dbf.newDocumentBuilder();
     
-					DOMImplementation dim = db.DOMImplementation;
+					DOMImplementation dim = db.getDOMImplementation();
 					d = dim.createDocument("http://java.sun.com/jaxp/xpath", "dummyroot", null);
 					return d;
 				}

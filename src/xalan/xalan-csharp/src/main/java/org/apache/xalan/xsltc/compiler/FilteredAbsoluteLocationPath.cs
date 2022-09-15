@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ASTORE = org.apache.bcel.generic.ASTORE;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -83,7 +82,7 @@ namespace org.apache.xalan.xsltc.compiler
 		return "FilteredAbsoluteLocationPath(" + (_path != null ? _path.ToString() : "null") + ')';
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -104,15 +103,15 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		if (_path != null)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int initDFI = cpg.addMethodref(Constants_Fields.DUP_FILTERED_ITERATOR, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + ")V");
-			int initDFI = cpg.addMethodref(Constants_Fields.DUP_FILTERED_ITERATOR, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + ")V");
+//ORIGINAL LINE: final int initDFI = cpg.addMethodref(DUP_FILTERED_ITERATOR, "<init>", "(" + NODE_ITERATOR_SIG + ")V");
+			int initDFI = cpg.addMethodref(DUP_FILTERED_ITERATOR, "<init>", "(" + NODE_ITERATOR_SIG + ")V");
 
 				// Backwards branches are prohibited if an uninitialized object is
 				// on the stack by section 4.9.4 of the JVM Specification, 2nd Ed.
@@ -124,14 +123,14 @@ namespace org.apache.xalan.xsltc.compiler
 				// arguments from the temporaries to avoid the problem.
 
 			// Compile relative path iterator(s)
-				LocalVariableGen pathTemp = methodGen.addLocalVariable("filtered_absolute_location_path_tmp", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
+				LocalVariableGen pathTemp = methodGen.addLocalVariable("filtered_absolute_location_path_tmp", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
 			_path.translate(classGen, methodGen);
-				pathTemp.Start = il.append(new ASTORE(pathTemp.Index));
+				pathTemp.setStart(il.append(new ASTORE(pathTemp.getIndex())));
 
 			// Create new Dup Filter Iterator
-			il.append(new NEW(cpg.addClass(Constants_Fields.DUP_FILTERED_ITERATOR)));
+			il.append(new NEW(cpg.addClass(DUP_FILTERED_ITERATOR)));
 			il.append(DUP);
-				pathTemp.End = il.append(new ALOAD(pathTemp.Index));
+				pathTemp.setEnd(il.append(new ALOAD(pathTemp.getIndex())));
 
 			// Initialize Dup Filter Iterator with iterator from the stack
 			il.append(new INVOKESPECIAL(initDFI));
@@ -139,8 +138,8 @@ namespace org.apache.xalan.xsltc.compiler
 		else
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int git = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getIterator", "()"+Constants_Fields.NODE_ITERATOR_SIG);
-			int git = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getIterator", "()" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int git = cpg.addInterfaceMethodref(DOM_INTF, "getIterator", "()"+NODE_ITERATOR_SIG);
+			int git = cpg.addInterfaceMethodref(DOM_INTF, "getIterator", "()" + NODE_ITERATOR_SIG);
 			il.append(methodGen.loadDOM());
 			il.append(new INVOKEINTERFACE(git, 1));
 		}

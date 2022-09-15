@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// A very simple table that stores a list of int.
 	/// 
@@ -418,7 +417,7 @@ namespace org.apache.xml.utils
 	  /// Returns clone of current IntVector
 	  /// </summary>
 	  /// <returns> clone of current IntVector </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public virtual object clone()
 	  {

@@ -25,7 +25,6 @@ using System.Collections;
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using Instruction = org.apache.bcel.generic.Instruction;
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -42,6 +41,7 @@ namespace org.apache.xalan.xsltc.compiler
 	using SWITCH = org.apache.bcel.generic.SWITCH;
 	using TargetLostException = org.apache.bcel.generic.TargetLostException;
 	using InstructionFinder = org.apache.bcel.util.InstructionFinder;
+	using DOM = org.apache.xalan.xsltc.DOM;
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using MethodGenerator = org.apache.xalan.xsltc.compiler.util.MethodGenerator;
 	using NamedMethodGenerator = org.apache.xalan.xsltc.compiler.util.NamedMethodGenerator;
@@ -175,7 +175,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 		_name = name;
 		_stylesheet = stylesheet;
-		_methodName = Constants_Fields.APPLY_TEMPLATES + suffix;
+		_methodName = APPLY_TEMPLATES + suffix;
 		_templates = new ArrayList();
 		_patternGroups = new ArrayList[32];
 		}
@@ -298,7 +298,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Traverse all templates
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Enumeration templates = _templates.elements();
-		System.Collections.IEnumerator templates = _templates.elements();
+		System.Collections.IEnumerator templates = _templates.GetEnumerator();
 		while (templates.MoveNext())
 		{
 			// Get the next template
@@ -374,9 +374,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Group patterns by NodeTests of their last Step
 		/// Keep them sorted by priority within group
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private void addPatternToGroup(final LocationPathPattern lpp)
-		private void addPatternToGroup(LocationPathPattern lpp)
+		private void addPatternToGroup(in LocationPathPattern lpp)
 		{
 		// id() and key()-type patterns do not have a kernel type
 		if (lpp is IdKeyPattern)
@@ -420,7 +418,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Find the vector to put this pattern into
 		ArrayList patterns;
 
-		if (kernelType == org.apache.xalan.xsltc.DOM_Fields.NO_TYPE)
+		if (kernelType == DOM.NO_TYPE)
 		{
 			if (pattern.Axis == Axis.ATTRIBUTE)
 			{
@@ -496,26 +494,26 @@ namespace org.apache.xalan.xsltc.compiler
 		private void prepareTestSequences()
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final java.util.Vector starGroup = _patternGroups[org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE];
-		ArrayList starGroup = _patternGroups[org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE];
+//ORIGINAL LINE: final java.util.Vector starGroup = _patternGroups[org.apache.xml.dtm.DTM.ELEMENT_NODE];
+		ArrayList starGroup = _patternGroups[DTM.ELEMENT_NODE];
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final java.util.Vector atStarGroup = _patternGroups[org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE];
-		ArrayList atStarGroup = _patternGroups[org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE];
+//ORIGINAL LINE: final java.util.Vector atStarGroup = _patternGroups[org.apache.xml.dtm.DTM.ATTRIBUTE_NODE];
+		ArrayList atStarGroup = _patternGroups[DTM.ATTRIBUTE_NODE];
 
 		// Complete test sequence for "text()" with "child::node()"
-		completeTestSequences(org.apache.xml.dtm.DTM_Fields.TEXT_NODE, _childNodeGroup);
+		completeTestSequences(DTM.TEXT_NODE, _childNodeGroup);
 
 		// Complete test sequence for "*" with "child::node()"
-		completeTestSequences(org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE, _childNodeGroup);
+		completeTestSequences(DTM.ELEMENT_NODE, _childNodeGroup);
 
 		// Complete test sequence for "pi()" with "child::node()"
-		completeTestSequences(org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE, _childNodeGroup);
+		completeTestSequences(DTM.PROCESSING_INSTRUCTION_NODE, _childNodeGroup);
 
 		// Complete test sequence for "comment()" with "child::node()"
-		completeTestSequences(org.apache.xml.dtm.DTM_Fields.COMMENT_NODE, _childNodeGroup);
+		completeTestSequences(DTM.COMMENT_NODE, _childNodeGroup);
 
 		// Complete test sequence for "@*" with "attribute::node()"
-		completeTestSequences(org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE, _attribNodeGroup);
+		completeTestSequences(DTM.ATTRIBUTE_NODE, _attribNodeGroup);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Vector names = _stylesheet.getXSLTC().getNamesIndex();
@@ -527,7 +525,7 @@ namespace org.apache.xalan.xsltc.compiler
 			int n = _patternGroups.Length;
 
 			// Complete test sequence for user-defined types
-			for (int i = org.apache.xml.dtm.DTM_Fields.NTYPES; i < n; i++)
+			for (int i = DTM.NTYPES; i < n; i++)
 			{
 			if (_patternGroups[i] == null)
 			{
@@ -535,8 +533,8 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final String name = (String) names.elementAt(i - org.apache.xml.dtm.DTM_Fields.NTYPES);
-			string name = (string) names[i - org.apache.xml.dtm.DTM_Fields.NTYPES];
+//ORIGINAL LINE: final String name = (String) names.elementAt(i - org.apache.xml.dtm.DTM.NTYPES);
+			string name = (string) names[i - DTM.NTYPES];
 
 			if (isAttributeName(name))
 			{
@@ -557,7 +555,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-		_testSeq = new TestSeq[org.apache.xml.dtm.DTM_Fields.NTYPES + names.Count];
+		_testSeq = new TestSeq[DTM.NTYPES + names.Count];
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int n = _patternGroups.length;
@@ -612,7 +610,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
@@ -628,25 +626,25 @@ namespace org.apache.xalan.xsltc.compiler
 		// Initialize the types and names arrays for the NamedMethodGenerator. 
 		org.apache.bcel.generic.Type[] types = new org.apache.bcel.generic.Type[4 + numParams];
 		string[] names = new string[4 + numParams];
-		types[0] = Util.getJCRefType(Constants_Fields.DOM_INTF_SIG);
-		types[1] = Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG);
-		types[2] = Util.getJCRefType(Constants_Fields.TRANSLET_OUTPUT_SIG);
+		types[0] = Util.getJCRefType(DOM_INTF_SIG);
+		types[1] = Util.getJCRefType(NODE_ITERATOR_SIG);
+		types[2] = Util.getJCRefType(TRANSLET_OUTPUT_SIG);
 		types[3] = org.apache.bcel.generic.Type.INT;
-		names[0] = Constants_Fields.DOCUMENT_PNAME;
-		names[1] = Constants_Fields.ITERATOR_PNAME;
-		names[2] = Constants_Fields.TRANSLET_OUTPUT_PNAME;
-		names[3] = Constants_Fields.NODE_PNAME;
+		names[0] = DOCUMENT_PNAME;
+		names[1] = ITERATOR_PNAME;
+		names[2] = TRANSLET_OUTPUT_PNAME;
+		names[3] = NODE_PNAME;
 
 		// For simple named templates, the signature of the generated method
 		// is not fixed. It depends on the number of parameters declared in the
 		// template.
 		for (int i = 4; i < 4 + numParams; i++)
 		{
-			types[i] = Util.getJCRefType(Constants_Fields.OBJECT_SIG);
+			types[i] = Util.getJCRefType(OBJECT_SIG);
 			names[i] = "param" + (i - 4).ToString();
 		}
 
-		NamedMethodGenerator methodGen = new NamedMethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, types, names, methodName, ClassName, il, cpg);
+		NamedMethodGenerator methodGen = new NamedMethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, types, names, methodName, ClassName, il, cpg);
 
 		il.append(template.compile(classGen, methodGen));
 		il.append(RETURN);
@@ -677,7 +675,7 @@ namespace org.apache.xalan.xsltc.compiler
 			InstructionList til = template.compile(classGen, methodGen);
 			til.append(new GOTO_W(next));
 			_templateILs[template] = til;
-			_templateIHs[template] = til.Start;
+			_templateIHs[template] = til.getStart();
 			}
 			else
 			{
@@ -730,13 +728,13 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int git = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_CHILDREN, Constants_Fields.GET_CHILDREN_SIG);
-		int git = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_CHILDREN, Constants_Fields.GET_CHILDREN_SIG);
+//ORIGINAL LINE: final int git = cpg.addInterfaceMethodref(DOM_INTF, GET_CHILDREN, GET_CHILDREN_SIG);
+		int git = cpg.addInterfaceMethodref(DOM_INTF, GET_CHILDREN, GET_CHILDREN_SIG);
 		il.append(methodGen.loadDOM());
 		il.append(new ILOAD(node));
 		il.append(new INVOKEINTERFACE(git, 2));
@@ -749,7 +747,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
@@ -757,8 +755,8 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final String applyTemplatesSig = classGen.getApplyTemplatesSig();
 		string applyTemplatesSig = classGen.ApplyTemplatesSig;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int git = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_CHILDREN, Constants_Fields.GET_CHILDREN_SIG);
-		int git = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_CHILDREN, Constants_Fields.GET_CHILDREN_SIG);
+//ORIGINAL LINE: final int git = cpg.addInterfaceMethodref(DOM_INTF, GET_CHILDREN, GET_CHILDREN_SIG);
+		int git = cpg.addInterfaceMethodref(DOM_INTF, GET_CHILDREN, GET_CHILDREN_SIG);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int applyTemplates = cpg.addMethodref(getClassName(), functionName(), applyTemplatesSig);
 		int applyTemplates = cpg.addMethodref(ClassName, functionName(), applyTemplatesSig);
@@ -782,14 +780,14 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int chars = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.CHARACTERS, Constants_Fields.CHARACTERS_SIG);
-		int chars = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.CHARACTERS, Constants_Fields.CHARACTERS_SIG);
+//ORIGINAL LINE: final int chars = cpg.addInterfaceMethodref(DOM_INTF, CHARACTERS, CHARACTERS_SIG);
+		int chars = cpg.addInterfaceMethodref(DOM_INTF, CHARACTERS, CHARACTERS_SIG);
 		il.append(methodGen.loadDOM());
 		il.append(new ILOAD(_currentIndex));
 		il.append(methodGen.loadHandler());
@@ -805,7 +803,7 @@ namespace org.apache.xalan.xsltc.compiler
 		XSLTC xsltc = classGen.Parser.XSLTC;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 
 		// Append switch() statement - namespace test dispatch loop
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -843,12 +841,12 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 
 			// Add test sequences for known namespace types
-			for (int i = org.apache.xml.dtm.DTM_Fields.NTYPES; i < (org.apache.xml.dtm.DTM_Fields.NTYPES + namesCount); i++)
+			for (int i = DTM.NTYPES; i < (DTM.NTYPES + namesCount); i++)
 			{
 			if ((isNamespace[i]) && (isAttribute[i] == attrFlag))
 			{
-				string name = (string)names[i - org.apache.xml.dtm.DTM_Fields.NTYPES];
-				string @namespace = name.Substring(0,name.LastIndexOf(':'));
+				string name = (string)names[i - DTM.NTYPES];
+				string @namespace = name.Substring(0, name.LastIndexOf(':'));
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int type = xsltc.registerNamespace(namespace);
 				int type = xsltc.registerNamespace(@namespace);
@@ -869,8 +867,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 			// Append first code in applyTemplates() - get type of current node
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getNS = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNamespaceType", "(I)I");
-			int getNS = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNamespaceType", "(I)I");
+//ORIGINAL LINE: final int getNS = cpg.addInterfaceMethodref(DOM_INTF, "getNamespaceType", "(I)I");
+			int getNS = cpg.addInterfaceMethodref(DOM_INTF, "getNamespaceType", "(I)I");
 			il.append(methodGen.loadDOM());
 			il.append(new ILOAD(_currentIndex));
 			il.append(new INVOKEINTERFACE(getNS, 2));
@@ -894,7 +892,7 @@ namespace org.apache.xalan.xsltc.compiler
 		XSLTC xsltc = classGen.Parser.XSLTC;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Vector names = xsltc.getNamesIndex();
 		ArrayList names = xsltc.NamesIndex;
@@ -903,24 +901,24 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[3];
 		org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[3];
-		argTypes[0] = Util.getJCRefType(Constants_Fields.DOM_INTF_SIG);
-		argTypes[1] = Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG);
-		argTypes[2] = Util.getJCRefType(Constants_Fields.TRANSLET_OUTPUT_SIG);
+		argTypes[0] = Util.getJCRefType(DOM_INTF_SIG);
+		argTypes[1] = Util.getJCRefType(NODE_ITERATOR_SIG);
+		argTypes[2] = Util.getJCRefType(TRANSLET_OUTPUT_SIG);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String[] argNames = new String[3];
 		string[] argNames = new string[3];
-		argNames[0] = Constants_Fields.DOCUMENT_PNAME;
-		argNames[1] = Constants_Fields.ITERATOR_PNAME;
-		argNames[2] = Constants_Fields.TRANSLET_OUTPUT_PNAME;
+		argNames[0] = DOCUMENT_PNAME;
+		argNames[1] = ITERATOR_PNAME;
+		argNames[2] = TRANSLET_OUTPUT_PNAME;
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList mainIL = new org.apache.bcel.generic.InstructionList();
 		InstructionList mainIL = new InstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator methodGen = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.VOID, argTypes, argNames, functionName(), getClassName(), mainIL, classGen.getConstantPool());
-		MethodGenerator methodGen = new MethodGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.VOID, argTypes, argNames, functionName(), ClassName, mainIL, classGen.ConstantPool);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator methodGen = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.VOID, argTypes, argNames, functionName(), getClassName(), mainIL, classGen.getConstantPool());
+		MethodGenerator methodGen = new MethodGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.VOID, argTypes, argNames, functionName(), ClassName, mainIL, classGen.getConstantPool());
 		methodGen.addException("org.apache.xalan.xsltc.TransletException");
 
 			// Insert an extra NOP just to keep "current" from appearing as if it
@@ -932,7 +930,7 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final org.apache.bcel.generic.LocalVariableGen current;
 		LocalVariableGen current;
 		current = methodGen.addLocalVariable2("current", org.apache.bcel.generic.Type.INT, null);
-		_currentIndex = current.Index;
+		_currentIndex = current.getIndex();
 
 		// Create the "body" instruction list that will eventually hold the
 		// code for the entire method (other ILs will be appended).
@@ -959,28 +957,28 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.BranchHandle loop = ilLoop.append(new org.apache.bcel.generic.GOTO_W(null));
 		BranchHandle loop = ilLoop.append(new GOTO_W(null));
-		ifeq.Target = ilLoop.append(RETURN); // applyTemplates() ends here!
+		ifeq.setTarget(ilLoop.append(RETURN)); // applyTemplates() ends here!
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionHandle ihLoop = ilLoop.getStart();
-		InstructionHandle ihLoop = ilLoop.Start;
+		InstructionHandle ihLoop = ilLoop.getStart();
 
-			current.Start = mainIL.append(new GOTO_W(ihLoop));
+			current.setStart(mainIL.append(new GOTO_W(ihLoop)));
 
 			// Live range of "current" ends at end of loop
-			current.End = loop;
+			current.setEnd(loop);
 
 		// Compile default handling of elements (traverse children)
 		InstructionList ilRecurse = compileDefaultRecursion(classGen, methodGen, ihLoop);
-		InstructionHandle ihRecurse = ilRecurse.Start;
+		InstructionHandle ihRecurse = ilRecurse.getStart();
 
 		// Compile default handling of text/attribute nodes (output text)
 		InstructionList ilText = compileDefaultText(classGen, methodGen, ihLoop);
-		InstructionHandle ihText = ilText.Start;
+		InstructionHandle ihText = ilText.getStart();
 
 		// Distinguish attribute/element/namespace tests for further processing
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int[] types = new int[org.apache.xml.dtm.DTM_Fields.NTYPES + names.size()];
-		int[] types = new int[org.apache.xml.dtm.DTM_Fields.NTYPES + names.Count];
+//ORIGINAL LINE: final int[] types = new int[org.apache.xml.dtm.DTM.NTYPES + names.size()];
+		int[] types = new int[DTM.NTYPES + names.Count];
 		for (int i = 0; i < types.Length; i++)
 		{
 			types[i] = i;
@@ -998,8 +996,8 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String name = (String)names.elementAt(i);
 			string name = (string)names[i];
-			isAttribute[i + org.apache.xml.dtm.DTM_Fields.NTYPES] = isAttributeName(name);
-			isNamespace[i + org.apache.xml.dtm.DTM_Fields.NTYPES] = isNamespaceName(name);
+			isAttribute[i + DTM.NTYPES] = isAttributeName(name);
+			isNamespace[i + DTM.NTYPES] = isNamespaceName(name);
 		}
 
 		// Compile all templates - regardless of pattern type
@@ -1007,8 +1005,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Handle template with explicit "*" pattern
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final TestSeq elemTest = _testSeq[org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE];
-		TestSeq elemTest = _testSeq[org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE];
+//ORIGINAL LINE: final TestSeq elemTest = _testSeq[org.apache.xml.dtm.DTM.ELEMENT_NODE];
+		TestSeq elemTest = _testSeq[DTM.ELEMENT_NODE];
 		InstructionHandle ihElem = ihRecurse;
 		if (elemTest != null)
 		{
@@ -1017,8 +1015,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Handle template with explicit "@*" pattern
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final TestSeq attrTest = _testSeq[org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE];
-		TestSeq attrTest = _testSeq[org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE];
+//ORIGINAL LINE: final TestSeq attrTest = _testSeq[org.apache.xml.dtm.DTM.ATTRIBUTE_NODE];
+		TestSeq attrTest = _testSeq[DTM.ATTRIBUTE_NODE];
 		InstructionHandle ihAttr = ihText;
 		if (attrTest != null)
 		{
@@ -1029,12 +1027,12 @@ namespace org.apache.xalan.xsltc.compiler
 		InstructionList ilKey = null;
 		if (_idxTestSeq != null)
 		{
-			loop.Target = _idxTestSeq.compile(classGen, methodGen, body.Start);
+			loop.setTarget(_idxTestSeq.compile(classGen, methodGen, body.getStart()));
 			ilKey = _idxTestSeq.InstructionList;
 		}
 		else
 		{
-			loop.Target = body.Start;
+			loop.setTarget(body.getStart());
 		}
 
 		// If there is a match on node() we need to replace ihElem
@@ -1059,8 +1057,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 			// Compare priorities of node() and text()
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final TestSeq textTest = _testSeq[org.apache.xml.dtm.DTM_Fields.TEXT_NODE];
-			TestSeq textTest = _testSeq[org.apache.xml.dtm.DTM_Fields.TEXT_NODE];
+//ORIGINAL LINE: final TestSeq textTest = _testSeq[org.apache.xml.dtm.DTM.TEXT_NODE];
+			TestSeq textTest = _testSeq[DTM.TEXT_NODE];
 			double textPrio = (0 - double.MaxValue);
 			int textPos = int.MinValue;
 
@@ -1072,7 +1070,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (double.IsNaN(textPrio) || textPrio < nodePrio || (textPrio == nodePrio && textPos < nodePos))
 			{
 			ihText = _childNodeTestSeq.compile(classGen, methodGen, ihLoop);
-			_testSeq[org.apache.xml.dtm.DTM_Fields.TEXT_NODE] = _childNodeTestSeq;
+			_testSeq[DTM.TEXT_NODE] = _childNodeTestSeq;
 			}
 		}
 
@@ -1081,7 +1079,7 @@ namespace org.apache.xalan.xsltc.compiler
 		InstructionList nsElem = compileNamespaces(classGen, methodGen, isNamespace, isAttribute, false, ihElem);
 		if (nsElem != null)
 		{
-			elemNamespaceHandle = nsElem.Start;
+			elemNamespaceHandle = nsElem.getStart();
 		}
 
 		// Handle templates with "ns:@*" pattern
@@ -1089,14 +1087,14 @@ namespace org.apache.xalan.xsltc.compiler
 		InstructionList nsAttr = compileNamespaces(classGen, methodGen, isNamespace, isAttribute, true, ihAttr);
 		if (nsAttr != null)
 		{
-			attrNamespaceHandle = nsAttr.Start;
+			attrNamespaceHandle = nsAttr.getStart();
 		}
 
 		// Handle templates with "ns:elem" or "ns:@attr" pattern
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionHandle[] targets = new org.apache.bcel.generic.InstructionHandle[types.length];
 		InstructionHandle[] targets = new InstructionHandle[types.Length];
-		for (int i = org.apache.xml.dtm.DTM_Fields.NTYPES; i < targets.Length; i++)
+		for (int i = DTM.NTYPES; i < targets.Length; i++)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final TestSeq testSeq = _testSeq[i];
@@ -1133,22 +1131,22 @@ namespace org.apache.xalan.xsltc.compiler
 
 
 		// Handle pattern with match on root node - default: traverse children
-		targets[org.apache.xml.dtm.DTM_Fields.ROOT_NODE] = _rootPattern != null ? getTemplateInstructionHandle(_rootPattern.Template) : ihRecurse;
+		targets[DTM.ROOT_NODE] = _rootPattern != null ? getTemplateInstructionHandle(_rootPattern.Template) : ihRecurse;
 
 			// Handle pattern with match on root node - default: traverse children
-		targets[org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE] = _rootPattern != null ? getTemplateInstructionHandle(_rootPattern.Template) : ihRecurse;
+		targets[DTM.DOCUMENT_NODE] = _rootPattern != null ? getTemplateInstructionHandle(_rootPattern.Template) : ihRecurse;
 
 		// Handle any pattern with match on text nodes - default: output text
-		targets[org.apache.xml.dtm.DTM_Fields.TEXT_NODE] = _testSeq[org.apache.xml.dtm.DTM_Fields.TEXT_NODE] != null ? _testSeq[org.apache.xml.dtm.DTM_Fields.TEXT_NODE].compile(classGen, methodGen, ihText) : ihText;
+		targets[DTM.TEXT_NODE] = _testSeq[DTM.TEXT_NODE] != null ? _testSeq[DTM.TEXT_NODE].compile(classGen, methodGen, ihText) : ihText;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE] = ihLoop;
+		targets[DTM.NAMESPACE_NODE] = ihLoop;
 
 		// Match unknown element in DOM - default: check for namespace match
-		targets[org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE] = elemNamespaceHandle;
+		targets[DTM.ELEMENT_NODE] = elemNamespaceHandle;
 
 		// Match unknown attribute in DOM - default: check for namespace match
-		targets[org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE] = attrNamespaceHandle;
+		targets[DTM.ATTRIBUTE_NODE] = attrNamespaceHandle;
 
 		// Match on processing instruction - default: process next node
 		InstructionHandle ihPI = ihLoop;
@@ -1156,13 +1154,13 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			ihPI = ihElem;
 		}
-		if (_testSeq[org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE] != null)
+		if (_testSeq[DTM.PROCESSING_INSTRUCTION_NODE] != null)
 		{
-			targets[org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE] = _testSeq[org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE].compile(classGen, methodGen, ihPI);
+			targets[DTM.PROCESSING_INSTRUCTION_NODE] = _testSeq[DTM.PROCESSING_INSTRUCTION_NODE].compile(classGen, methodGen, ihPI);
 		}
 		else
 		{
-			targets[org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE] = ihPI;
+			targets[DTM.PROCESSING_INSTRUCTION_NODE] = ihPI;
 		}
 
 		// Match on comments - default: process next node
@@ -1171,29 +1169,29 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			ihComment = ihElem;
 		}
-		targets[org.apache.xml.dtm.DTM_Fields.COMMENT_NODE] = _testSeq[org.apache.xml.dtm.DTM_Fields.COMMENT_NODE] != null ? _testSeq[org.apache.xml.dtm.DTM_Fields.COMMENT_NODE].compile(classGen, methodGen, ihComment) : ihComment;
+		targets[DTM.COMMENT_NODE] = _testSeq[DTM.COMMENT_NODE] != null ? _testSeq[DTM.COMMENT_NODE].compile(classGen, methodGen, ihComment) : ihComment;
 
 			// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE] = ihLoop;
+		targets[DTM.CDATA_SECTION_NODE] = ihLoop;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE] = ihLoop;
+		targets[DTM.DOCUMENT_FRAGMENT_NODE] = ihLoop;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.DOCUMENT_TYPE_NODE] = ihLoop;
+		targets[DTM.DOCUMENT_TYPE_NODE] = ihLoop;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.ENTITY_NODE] = ihLoop;
+		targets[DTM.ENTITY_NODE] = ihLoop;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE] = ihLoop;
+		targets[DTM.ENTITY_REFERENCE_NODE] = ihLoop;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.NOTATION_NODE] = ihLoop;
+		targets[DTM.NOTATION_NODE] = ihLoop;
 
 
 		// Now compile test sequences for various match patterns:
-		for (int i = org.apache.xml.dtm.DTM_Fields.NTYPES; i < targets.Length; i++)
+		for (int i = DTM.NTYPES; i < targets.Length; i++)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final TestSeq testSeq = _testSeq[i];
@@ -1231,8 +1229,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Append first code in applyTemplates() - get type of current node
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getType = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getExpandedTypeID", "(I)I");
-		int getType = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getExpandedTypeID", "(I)I");
+//ORIGINAL LINE: final int getType = cpg.addInterfaceMethodref(DOM_INTF, "getExpandedTypeID", "(I)I");
+		int getType = cpg.addInterfaceMethodref(DOM_INTF, "getExpandedTypeID", "(I)I");
 		body.append(methodGen.loadDOM());
 		body.append(new ILOAD(_currentIndex));
 		body.append(new INVOKEINTERFACE(getType, 2));
@@ -1301,7 +1299,7 @@ namespace org.apache.xalan.xsltc.compiler
 				InstructionList til = template.compile(classGen, methodGen);
 				til.append(new GOTO_W(next));
 				_templateILs[template] = til;
-				_templateIHs[template] = til.Start;
+				_templateIHs[template] = til.getStart();
 			}
 			else
 			{
@@ -1320,7 +1318,7 @@ namespace org.apache.xalan.xsltc.compiler
 		XSLTC xsltc = classGen.Parser.XSLTC;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Vector names = xsltc.getNamesIndex();
 		ArrayList names = xsltc.NamesIndex;
@@ -1340,7 +1338,7 @@ namespace org.apache.xalan.xsltc.compiler
 		_templates = new ArrayList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Enumeration templates = oldTemplates.elements();
-		System.Collections.IEnumerator templates = oldTemplates.elements();
+		System.Collections.IEnumerator templates = oldTemplates.GetEnumerator();
 		while (templates.MoveNext())
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -1362,25 +1360,25 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[4];
 		org.apache.bcel.generic.Type[] argTypes = new org.apache.bcel.generic.Type[4];
-		argTypes[0] = Util.getJCRefType(Constants_Fields.DOM_INTF_SIG);
-		argTypes[1] = Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG);
-		argTypes[2] = Util.getJCRefType(Constants_Fields.TRANSLET_OUTPUT_SIG);
+		argTypes[0] = Util.getJCRefType(DOM_INTF_SIG);
+		argTypes[1] = Util.getJCRefType(NODE_ITERATOR_SIG);
+		argTypes[2] = Util.getJCRefType(TRANSLET_OUTPUT_SIG);
 		argTypes[3] = org.apache.bcel.generic.Type.INT;
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String[] argNames = new String[4];
 		string[] argNames = new string[4];
-		argNames[0] = Constants_Fields.DOCUMENT_PNAME;
-		argNames[1] = Constants_Fields.ITERATOR_PNAME;
-		argNames[2] = Constants_Fields.TRANSLET_OUTPUT_PNAME;
-		argNames[3] = Constants_Fields.NODE_PNAME;
+		argNames[0] = DOCUMENT_PNAME;
+		argNames[1] = ITERATOR_PNAME;
+		argNames[2] = TRANSLET_OUTPUT_PNAME;
+		argNames[3] = NODE_PNAME;
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList mainIL = new org.apache.bcel.generic.InstructionList();
 		InstructionList mainIL = new InstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator methodGen = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.VOID, argTypes, argNames, functionName()+'_'+max, getClassName(), mainIL, classGen.getConstantPool());
-		MethodGenerator methodGen = new MethodGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.VOID, argTypes, argNames, functionName() + '_' + max, ClassName, mainIL, classGen.ConstantPool);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator methodGen = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.VOID, argTypes, argNames, functionName()+'_'+max, getClassName(), mainIL, classGen.getConstantPool());
+		MethodGenerator methodGen = new MethodGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.VOID, argTypes, argNames, functionName() + '_' + max, ClassName, mainIL, classGen.getConstantPool());
 		methodGen.addException("org.apache.xalan.xsltc.TransletException");
 
 		// Create the local variable to hold the current node
@@ -1388,10 +1386,10 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final org.apache.bcel.generic.LocalVariableGen current;
 		LocalVariableGen current;
 		current = methodGen.addLocalVariable2("current", org.apache.bcel.generic.Type.INT, null);
-		_currentIndex = current.Index;
+		_currentIndex = current.getIndex();
 
-		mainIL.append(new ILOAD(methodGen.getLocalIndex(Constants_Fields.NODE_PNAME)));
-		current.Start = mainIL.append(new ISTORE(_currentIndex));
+		mainIL.append(new ILOAD(methodGen.getLocalIndex(NODE_PNAME)));
+		current.setStart(mainIL.append(new ISTORE(_currentIndex)));
 
 		// Create the "body" instruction list that will eventually hold the
 		// code for the entire method (other ILs will be appended).
@@ -1408,20 +1406,20 @@ namespace org.apache.xalan.xsltc.compiler
 		ilLoop.append(RETURN);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionHandle ihLoop = ilLoop.getStart();
-		InstructionHandle ihLoop = ilLoop.Start;
+		InstructionHandle ihLoop = ilLoop.getStart();
 
 		// Compile default handling of elements (traverse children)
 		InstructionList ilRecurse = compileDefaultRecursion(classGen, methodGen, ihLoop);
-		InstructionHandle ihRecurse = ilRecurse.Start;
+		InstructionHandle ihRecurse = ilRecurse.getStart();
 
 		// Compile default handling of text/attribute nodes (output text)
 		InstructionList ilText = compileDefaultText(classGen, methodGen, ihLoop);
-		InstructionHandle ihText = ilText.Start;
+		InstructionHandle ihText = ilText.getStart();
 
 		// Distinguish attribute/element/namespace tests for further processing
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int[] types = new int[org.apache.xml.dtm.DTM_Fields.NTYPES + names.size()];
-		int[] types = new int[org.apache.xml.dtm.DTM_Fields.NTYPES + names.Count];
+//ORIGINAL LINE: final int[] types = new int[org.apache.xml.dtm.DTM.NTYPES + names.size()];
+		int[] types = new int[DTM.NTYPES + names.Count];
 		for (int i = 0; i < types.Length; i++)
 		{
 			types[i] = i;
@@ -1438,8 +1436,8 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String name = (String)names.elementAt(i);
 			string name = (string)names[i];
-			isAttribute[i + org.apache.xml.dtm.DTM_Fields.NTYPES] = isAttributeName(name);
-			isNamespace[i + org.apache.xml.dtm.DTM_Fields.NTYPES] = isNamespaceName(name);
+			isAttribute[i + DTM.NTYPES] = isAttributeName(name);
+			isNamespace[i + DTM.NTYPES] = isNamespaceName(name);
 		}
 
 		// Compile all templates - regardless of pattern type
@@ -1447,8 +1445,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Handle template with explicit "*" pattern
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final TestSeq elemTest = _testSeq[org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE];
-		TestSeq elemTest = _testSeq[org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE];
+//ORIGINAL LINE: final TestSeq elemTest = _testSeq[org.apache.xml.dtm.DTM.ELEMENT_NODE];
+		TestSeq elemTest = _testSeq[DTM.ELEMENT_NODE];
 		InstructionHandle ihElem = ihRecurse;
 		if (elemTest != null)
 		{
@@ -1457,8 +1455,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Handle template with explicit "@*" pattern
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final TestSeq attrTest = _testSeq[org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE];
-		TestSeq attrTest = _testSeq[org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE];
+//ORIGINAL LINE: final TestSeq attrTest = _testSeq[org.apache.xml.dtm.DTM.ATTRIBUTE_NODE];
+		TestSeq attrTest = _testSeq[DTM.ATTRIBUTE_NODE];
 		InstructionHandle ihAttr = ihLoop;
 		if (attrTest != null)
 		{
@@ -1495,8 +1493,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 			// Compare priorities of node() and text()
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final TestSeq textTest = _testSeq[org.apache.xml.dtm.DTM_Fields.TEXT_NODE];
-			TestSeq textTest = _testSeq[org.apache.xml.dtm.DTM_Fields.TEXT_NODE];
+//ORIGINAL LINE: final TestSeq textTest = _testSeq[org.apache.xml.dtm.DTM.TEXT_NODE];
+			TestSeq textTest = _testSeq[DTM.TEXT_NODE];
 			double textPrio = (0 - double.MaxValue);
 			int textPos = int.MinValue;
 
@@ -1509,7 +1507,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (double.IsNaN(textPrio) || textPrio < nodePrio || (textPrio == nodePrio && textPos < nodePos))
 			{
 			ihText = _childNodeTestSeq.compile(classGen, methodGen, ihLoop);
-			_testSeq[org.apache.xml.dtm.DTM_Fields.TEXT_NODE] = _childNodeTestSeq;
+			_testSeq[DTM.TEXT_NODE] = _childNodeTestSeq;
 			}
 		}
 
@@ -1518,7 +1516,7 @@ namespace org.apache.xalan.xsltc.compiler
 		InstructionList nsElem = compileNamespaces(classGen, methodGen, isNamespace, isAttribute, false, ihElem);
 		if (nsElem != null)
 		{
-			elemNamespaceHandle = nsElem.Start;
+			elemNamespaceHandle = nsElem.getStart();
 		}
 
 		// Handle templates with "ns:@*" pattern
@@ -1526,14 +1524,14 @@ namespace org.apache.xalan.xsltc.compiler
 		InstructionHandle attrNamespaceHandle = ihAttr;
 		if (nsAttr != null)
 		{
-			attrNamespaceHandle = nsAttr.Start;
+			attrNamespaceHandle = nsAttr.getStart();
 		}
 
 		// Handle templates with "ns:elem" or "ns:@attr" pattern
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionHandle[] targets = new org.apache.bcel.generic.InstructionHandle[types.length];
 		InstructionHandle[] targets = new InstructionHandle[types.Length];
-		for (int i = org.apache.xml.dtm.DTM_Fields.NTYPES; i < targets.Length; i++)
+		for (int i = DTM.NTYPES; i < targets.Length; i++)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final TestSeq testSeq = _testSeq[i];
@@ -1569,21 +1567,21 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 
 		// Handle pattern with match on root node - default: traverse children
-		targets[org.apache.xml.dtm.DTM_Fields.ROOT_NODE] = _rootPattern != null ? getTemplateInstructionHandle(_rootPattern.Template) : ihRecurse;
+		targets[DTM.ROOT_NODE] = _rootPattern != null ? getTemplateInstructionHandle(_rootPattern.Template) : ihRecurse;
 		// Handle pattern with match on root node - default: traverse children
-		targets[org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE] = _rootPattern != null ? getTemplateInstructionHandle(_rootPattern.Template) : ihRecurse; // %HZ%:  Was ihLoop in XSLTC_DTM branch
+		targets[DTM.DOCUMENT_NODE] = _rootPattern != null ? getTemplateInstructionHandle(_rootPattern.Template) : ihRecurse; // %HZ%:  Was ihLoop in XSLTC_DTM branch
 
 		// Handle any pattern with match on text nodes - default: loop
-		targets[org.apache.xml.dtm.DTM_Fields.TEXT_NODE] = _testSeq[org.apache.xml.dtm.DTM_Fields.TEXT_NODE] != null ? _testSeq[org.apache.xml.dtm.DTM_Fields.TEXT_NODE].compile(classGen, methodGen, ihText) : ihText;
+		targets[DTM.TEXT_NODE] = _testSeq[DTM.TEXT_NODE] != null ? _testSeq[DTM.TEXT_NODE].compile(classGen, methodGen, ihText) : ihText;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE] = ihLoop;
+		targets[DTM.NAMESPACE_NODE] = ihLoop;
 
 		// Match unknown element in DOM - default: check for namespace match
-		targets[org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE] = elemNamespaceHandle;
+		targets[DTM.ELEMENT_NODE] = elemNamespaceHandle;
 
 		// Match unknown attribute in DOM - default: check for namespace match
-		targets[org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE] = attrNamespaceHandle;
+		targets[DTM.ATTRIBUTE_NODE] = attrNamespaceHandle;
 
 		// Match on processing instruction - default: loop
 		InstructionHandle ihPI = ihLoop;
@@ -1591,13 +1589,13 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			ihPI = ihElem;
 		}
-		if (_testSeq[org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE] != null)
+		if (_testSeq[DTM.PROCESSING_INSTRUCTION_NODE] != null)
 		{
-			targets[org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE] = _testSeq[org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE].compile(classGen, methodGen, ihPI);
+			targets[DTM.PROCESSING_INSTRUCTION_NODE] = _testSeq[DTM.PROCESSING_INSTRUCTION_NODE].compile(classGen, methodGen, ihPI);
 		}
 		else
 		{
-			targets[org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE] = ihPI;
+			targets[DTM.PROCESSING_INSTRUCTION_NODE] = ihPI;
 		}
 
 		// Match on comments - default: process next node
@@ -1606,30 +1604,30 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			ihComment = ihElem;
 		}
-		targets[org.apache.xml.dtm.DTM_Fields.COMMENT_NODE] = _testSeq[org.apache.xml.dtm.DTM_Fields.COMMENT_NODE] != null ? _testSeq[org.apache.xml.dtm.DTM_Fields.COMMENT_NODE].compile(classGen, methodGen, ihComment) : ihComment;
+		targets[DTM.COMMENT_NODE] = _testSeq[DTM.COMMENT_NODE] != null ? _testSeq[DTM.COMMENT_NODE].compile(classGen, methodGen, ihComment) : ihComment;
 
 				// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE] = ihLoop;
+		targets[DTM.CDATA_SECTION_NODE] = ihLoop;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE] = ihLoop;
+		targets[DTM.DOCUMENT_FRAGMENT_NODE] = ihLoop;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.DOCUMENT_TYPE_NODE] = ihLoop;
+		targets[DTM.DOCUMENT_TYPE_NODE] = ihLoop;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.ENTITY_NODE] = ihLoop;
+		targets[DTM.ENTITY_NODE] = ihLoop;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE] = ihLoop;
+		targets[DTM.ENTITY_REFERENCE_NODE] = ihLoop;
 
 		// This DOM-type is not in use - default: process next node
-		targets[org.apache.xml.dtm.DTM_Fields.NOTATION_NODE] = ihLoop;
+		targets[DTM.NOTATION_NODE] = ihLoop;
 
 
 
 		// Now compile test sequences for various match patterns:
-		for (int i = org.apache.xml.dtm.DTM_Fields.NTYPES; i < targets.Length; i++)
+		for (int i = DTM.NTYPES; i < targets.Length; i++)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final TestSeq testSeq = _testSeq[i];
@@ -1667,8 +1665,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Append first code in applyTemplates() - get type of current node
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getType = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getExpandedTypeID", "(I)I");
-		int getType = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getExpandedTypeID", "(I)I");
+//ORIGINAL LINE: final int getType = cpg.addInterfaceMethodref(DOM_INTF, "getExpandedTypeID", "(I)I");
+		int getType = cpg.addInterfaceMethodref(DOM_INTF, "getExpandedTypeID", "(I)I");
 		body.append(methodGen.loadDOM());
 		body.append(new ILOAD(_currentIndex));
 		body.append(new INVOKEINTERFACE(getType, 2));
@@ -1701,7 +1699,7 @@ namespace org.apache.xalan.xsltc.compiler
 		mainIL.append(body);
 
 			// Mark the end of the live range for the "current" variable 
-			current.End = body.End;
+			current.setEnd(body.getEnd());
 
 			// fall through to ilLoop
 		mainIL.append(ilLoop);
@@ -1719,14 +1717,14 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		private void peepHoleOptimization(MethodGenerator methodGen)
 		{
-			InstructionList il = methodGen.InstructionList;
+			InstructionList il = methodGen.getInstructionList();
 			InstructionFinder find = new InstructionFinder(il);
 		InstructionHandle ih;
 		string pattern;
 
 		// LoadInstruction, POP => (removed)
 		pattern = "LoadInstruction POP";
-		for (IEnumerator iter = find.search(pattern); iter.MoveNext();)
+		for (System.Collections.IEnumerator iter = find.search(pattern); iter.MoveNext();)
 		{
 			InstructionHandle[] match = (InstructionHandle[]) iter.Current;
 			try
@@ -1744,16 +1742,16 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// ILOAD_N, ILOAD_N, SWAP, ISTORE_N => ILOAD_N
 		pattern = "ILOAD ILOAD SWAP ISTORE";
-		for (IEnumerator iter = find.search(pattern); iter.MoveNext();)
+		for (System.Collections.IEnumerator iter = find.search(pattern); iter.MoveNext();)
 		{
 				InstructionHandle[] match = (InstructionHandle[]) iter.Current;
 				try
 				{
-					ILOAD iload1 = (ILOAD) match[0].Instruction;
-					ILOAD iload2 = (ILOAD) match[1].Instruction;
-					ISTORE istore = (ISTORE) match[3].Instruction;
+					ILOAD iload1 = (ILOAD) match[0].getInstruction();
+					ILOAD iload2 = (ILOAD) match[1].getInstruction();
+					ISTORE istore = (ISTORE) match[3].getInstruction();
 
-					if (!match[1].hasTargeters() && !match[2].hasTargeters() && !match[3].hasTargeters() && iload1.Index == iload2.Index && iload2.Index == istore.Index)
+					if (!match[1].hasTargeters() && !match[2].hasTargeters() && !match[3].hasTargeters() && iload1.getIndex() == iload2.getIndex() && iload2.getIndex() == istore.getIndex())
 					{
 						il.delete(match[1], match[3]);
 					}
@@ -1766,14 +1764,14 @@ namespace org.apache.xalan.xsltc.compiler
 
 			// LoadInstruction_N, LoadInstruction_M, SWAP => LoadInstruction_M, LoadInstruction_N
 		pattern = "LoadInstruction LoadInstruction SWAP";
-		for (IEnumerator iter = find.search(pattern); iter.MoveNext();)
+		for (System.Collections.IEnumerator iter = find.search(pattern); iter.MoveNext();)
 		{
 				InstructionHandle[] match = (InstructionHandle[])iter.Current;
 				try
 				{
 					if (!match[0].hasTargeters() && !match[1].hasTargeters() && !match[2].hasTargeters())
 					{
-						Instruction load_m = match[1].Instruction;
+						Instruction load_m = match[1].getInstruction();
 						il.insert(match[0], load_m);
 						il.delete(match[1], match[2]);
 					}
@@ -1786,17 +1784,17 @@ namespace org.apache.xalan.xsltc.compiler
 
 			// ALOAD_N ALOAD_N => ALOAD_N DUP
 		pattern = "ALOAD ALOAD";
-			for (IEnumerator iter = find.search(pattern); iter.MoveNext();)
+			for (System.Collections.IEnumerator iter = find.search(pattern); iter.MoveNext();)
 			{
 				InstructionHandle[] match = (InstructionHandle[])iter.Current;
 				try
 				{
 					if (!match[1].hasTargeters())
 					{
-						org.apache.bcel.generic.ALOAD aload1 = (org.apache.bcel.generic.ALOAD) match[0].Instruction;
-						org.apache.bcel.generic.ALOAD aload2 = (org.apache.bcel.generic.ALOAD) match[1].Instruction;
+						org.apache.bcel.generic.ALOAD aload1 = (org.apache.bcel.generic.ALOAD) match[0].getInstruction();
+						org.apache.bcel.generic.ALOAD aload2 = (org.apache.bcel.generic.ALOAD) match[1].getInstruction();
 
-						if (aload1.Index == aload2.Index)
+						if (aload1.getIndex() == aload2.getIndex())
 						{
 							il.insert(match[1], new DUP());
 							il.delete(match[1]);

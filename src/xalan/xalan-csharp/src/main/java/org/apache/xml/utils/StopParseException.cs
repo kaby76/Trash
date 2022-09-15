@@ -20,13 +20,12 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// This is a special exception that is used to stop parsing when 
 	/// search for an element.  For instance, when searching for xml:stylesheet 
 	/// PIs, it is used to stop the parse once the document element is found. </summary>
-	/// <seealso cref= StylesheetPIHandler
-	/// @xsl.usage internal </seealso>
+	/// <seealso cref="StylesheetPIHandler"
+	/// @xsl.usage internal/>
 	public class StopParseException : org.xml.sax.SAXException
 	{
 			internal const long serialVersionUID = 210102479218258961L;

@@ -53,7 +53,7 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 
 		/// 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -82,14 +82,14 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int tst = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "testLanguage", "("+Constants_Fields.STRING_SIG+Constants_Fields.DOM_INTF_SIG+"I)Z");
-		int tst = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "testLanguage", "(" + Constants_Fields.STRING_SIG + Constants_Fields.DOM_INTF_SIG + "I)Z");
+//ORIGINAL LINE: final int tst = cpg.addMethodref(BASIS_LIBRARY_CLASS, "testLanguage", "("+STRING_SIG+DOM_INTF_SIG+"I)Z");
+		int tst = cpg.addMethodref(BASIS_LIBRARY_CLASS, "testLanguage", "(" + STRING_SIG + DOM_INTF_SIG + "I)Z");
 		_lang.translate(classGen,methodGen);
 		il.append(methodGen.loadDOM());
 		if (classGen is FilterGenerator)

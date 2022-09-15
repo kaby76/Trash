@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.trace
 {
-
 	/// <summary>
 	/// Extends TraceListenerEx but adds a EndTrace event.
 	/// @xsl.usage advanced

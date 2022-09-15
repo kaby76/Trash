@@ -64,7 +64,7 @@ namespace org.apache.xalan.xsltc.runtime
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int count = attributes.getLength();
-			int count = attributes.Length;
+			int count = attributes.getLength();
 			for (int i = 0; i < count; i++)
 			{
 			add(attributes.getQName(i),attributes.getValue(i));
@@ -206,7 +206,7 @@ namespace org.apache.xalan.xsltc.runtime
 		if (_attributes != null)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final Nullable<int> obj = (Nullable<int>)_attributes.get(qname);
+//ORIGINAL LINE: final System.Nullable<int> obj = (System.Nullable<int>)_attributes.get(qname);
 			int? obj = (int?)_attributes.get(qname);
 			if (obj == null)
 			{
@@ -249,7 +249,7 @@ namespace org.apache.xalan.xsltc.runtime
 			int col = qname.LastIndexOf(':');
 			if (col > -1)
 			{
-			_uris.Add(qname.Substring(0,col));
+			_uris.Add(qname.Substring(0, col));
 			_names.Add(qname.Substring(col + 1));
 			}
 			else

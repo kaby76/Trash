@@ -144,28 +144,28 @@ namespace org.apache.xalan.lib.sql
 	  /// The Index of the MetaData Node. Currently the MetaData Node contains the
 	  /// 
 	  /// </summary>
-	  private int m_MetaDataIdx = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_MetaDataIdx = DTM.NULL;
 
 	  /// <summary>
 	  /// The index of the Row Set node. This is the sibling directly after
 	  /// the last Column Header.
 	  /// </summary>
-	  private int m_RowSetIdx = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_RowSetIdx = DTM.NULL;
 
-	  private int m_SQLIdx = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_SQLIdx = DTM.NULL;
 
 	  /// <summary>
 	  /// Demark the first row element where we started adding rows into the
 	  /// Document.
 	  /// </summary>
-	  private int m_FirstRowIdx = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_FirstRowIdx = DTM.NULL;
 
 	  /// <summary>
 	  /// Keep track of the Last row inserted into the DTM from the ResultSet.
 	  /// This will be used as the index of the parent Row Element when adding
 	  /// a row.
 	  /// </summary>
-	  private int m_LastRowIdx = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_LastRowIdx = DTM.NULL;
 
 	  /// <summary>
 	  /// Streaming Mode Control, In Streaming mode we reduce the memory
@@ -249,7 +249,7 @@ namespace org.apache.xalan.lib.sql
 
 
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(XConnection xconn, SQLQueryParser query) throws java.sql.SQLException
 	  public virtual void execute(XConnection xconn, SQLQueryParser query)
 	  {
@@ -266,13 +266,13 @@ namespace org.apache.xalan.lib.sql
 		  createExpandedNameTable();
 
 		  // Start the document here
-		  m_DocumentIdx = addElement(0, m_Document_TypeID, org.apache.xml.dtm.DTM_Fields.NULL, org.apache.xml.dtm.DTM_Fields.NULL);
-		  m_SQLIdx = addElement(1, m_SQL_TypeID, m_DocumentIdx, org.apache.xml.dtm.DTM_Fields.NULL);
+		  m_DocumentIdx = addElement(0, m_Document_TypeID, DTM.NULL, DTM.NULL);
+		  m_SQLIdx = addElement(1, m_SQL_TypeID, m_DocumentIdx, DTM.NULL);
 
 
 		  if (!m_MultipleResults)
 		  {
-			extractSQLMetaData(m_ResultSet.MetaData);
+			extractSQLMetaData(m_ResultSet.getMetaData());
 		  }
 
 		  // Only grab the first row, subsequent rows will be
@@ -292,7 +292,7 @@ namespace org.apache.xalan.lib.sql
 		}
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void executeSQLStatement() throws java.sql.SQLException
 	  private void executeSQLStatement()
 	  {
@@ -319,7 +319,7 @@ namespace org.apache.xalan.lib.sql
 			  throw new SQLException("Error in Callable Statement");
 		  }
 
-		  m_ResultSet = m_Statement.ResultSet;
+		  m_ResultSet = m_Statement.getResultSet();
 		}
 		else
 		{
@@ -382,11 +382,11 @@ namespace org.apache.xalan.lib.sql
 		// Add in the row-set Element
 
 		// Add in the MetaData Element
-		m_MetaDataIdx = addElement(1, m_MetaData_TypeID, m_MultipleResults ? m_RowSetIdx : m_SQLIdx, org.apache.xml.dtm.DTM_Fields.NULL);
+		m_MetaDataIdx = addElement(1, m_MetaData_TypeID, m_MultipleResults ? m_RowSetIdx : m_SQLIdx, DTM.NULL);
 
 		try
 		{
-		  m_ColCount = meta.ColumnCount;
+		  m_ColCount = meta.getColumnCount();
 		  m_ColHeadersIdx = new int[m_ColCount];
 		}
 		catch (Exception e)
@@ -397,7 +397,7 @@ namespace org.apache.xalan.lib.sql
 
 		// The ColHeaderIdx will be used to keep track of the
 		// Element entries for the individual Column Header.
-		int lastColHeaderIdx = org.apache.xml.dtm.DTM_Fields.NULL;
+		int lastColHeaderIdx = DTM.NULL;
 
 		// JDBC Columms Start at 1
 		int i = 1;
@@ -561,32 +561,32 @@ namespace org.apache.xalan.lib.sql
 	  {
 		base.createExpandedNameTable();
 
-		m_SQL_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_SQL, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
+		m_SQL_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_SQL, DTM.ELEMENT_NODE);
 
-		m_MetaData_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_METADATA, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
+		m_MetaData_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_METADATA, DTM.ELEMENT_NODE);
 
-		m_ColumnHeader_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COLUMN_HEADER, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
-		m_RowSet_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ROW_SET, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
-		m_Row_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ROW, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
-		m_Col_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COL, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
-		m_OutParameter_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_OUT_PARAMETERS, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
+		m_ColumnHeader_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COLUMN_HEADER, DTM.ELEMENT_NODE);
+		m_RowSet_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ROW_SET, DTM.ELEMENT_NODE);
+		m_Row_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ROW, DTM.ELEMENT_NODE);
+		m_Col_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COL, DTM.ELEMENT_NODE);
+		m_OutParameter_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_OUT_PARAMETERS, DTM.ELEMENT_NODE);
 
-		m_ColAttrib_CATALOGUE_NAME_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_CATALOGUE_NAME, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_DISPLAY_SIZE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_DISPLAY_SIZE, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_COLUMN_LABEL_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COLUMN_LABEL, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_COLUMN_NAME_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COLUMN_NAME, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_COLUMN_TYPE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COLUMN_TYPE, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_COLUMN_TYPENAME_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COLUMN_TYPENAME, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_PRECISION_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_PRECISION, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_SCALE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_SCALE, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_SCHEMA_NAME_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_SCHEMA_NAME, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_TABLE_NAME_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_TABLE_NAME, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_CASESENSITIVE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_CASESENSITIVE, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_DEFINITELYWRITEABLE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_DEFINITELYWRITABLE, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_ISNULLABLE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ISNULLABLE, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_ISSIGNED_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ISSIGNED, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_ISWRITEABLE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ISWRITEABLE, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
-		m_ColAttrib_ISSEARCHABLE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ISSEARCHABLE, org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
+		m_ColAttrib_CATALOGUE_NAME_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_CATALOGUE_NAME, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_DISPLAY_SIZE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_DISPLAY_SIZE, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_COLUMN_LABEL_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COLUMN_LABEL, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_COLUMN_NAME_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COLUMN_NAME, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_COLUMN_TYPE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COLUMN_TYPE, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_COLUMN_TYPENAME_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_COLUMN_TYPENAME, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_PRECISION_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_PRECISION, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_SCALE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_SCALE, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_SCHEMA_NAME_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_SCHEMA_NAME, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_TABLE_NAME_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_TABLE_NAME, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_CASESENSITIVE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_CASESENSITIVE, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_DEFINITELYWRITEABLE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_DEFINITELYWRITABLE, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_ISNULLABLE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ISNULLABLE, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_ISSIGNED_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ISSIGNED, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_ISWRITEABLE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ISWRITEABLE, DTM.ATTRIBUTE_NODE);
+		m_ColAttrib_ISSEARCHABLE_TypeID = m_expandedNameTable.getExpandedTypeID(S_NAMESPACE, S_ISSEARCHABLE, DTM.ATTRIBUTE_NODE);
 	  }
 
 
@@ -604,12 +604,12 @@ namespace org.apache.xalan.lib.sql
 		{
 		  // If we have not started the RowSet yet, then add it to the
 		  // tree.
-		  if (m_FirstRowIdx == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (m_FirstRowIdx == DTM.NULL)
 		  {
 			m_RowSetIdx = addElement(1, m_RowSet_TypeID, m_SQLIdx, m_MultipleResults ? m_RowSetIdx : m_MetaDataIdx);
 			if (m_MultipleResults)
 			{
-				extractSQLMetaData(m_ResultSet.MetaData);
+				extractSQLMetaData(m_ResultSet.getMetaData());
 			}
 		  }
 
@@ -623,20 +623,20 @@ namespace org.apache.xalan.lib.sql
 			// empty then point the next row to DTM.NULL so that the stream
 			// ends. Only do this if we have statted the loop to begin with.
 
-			if (m_StreamingMode && (m_LastRowIdx != org.apache.xml.dtm.DTM_Fields.NULL))
+			if (m_StreamingMode && (m_LastRowIdx != DTM.NULL))
 			{
 			  // We are at the end, so let's untie the mark
-			  m_nextsib.setElementAt(org.apache.xml.dtm.DTM_Fields.NULL, m_LastRowIdx);
+			  m_nextsib.setElementAt(DTM.NULL, m_LastRowIdx);
 			}
 
 			m_ResultSet.close();
 			if (m_MultipleResults)
 			{
-			  while (!m_Statement.MoreResults && m_Statement.UpdateCount >= 0)
+			  while (!m_Statement.getMoreResults() && m_Statement.getUpdateCount() >= 0)
 			  {
 					  ;
 			  }
-			  m_ResultSet = m_Statement.ResultSet;
+			  m_ResultSet = m_Statement.getResultSet();
 			}
 			else
 			{
@@ -645,7 +645,7 @@ namespace org.apache.xalan.lib.sql
 
 			if (m_ResultSet != null)
 			{
-			  m_FirstRowIdx = org.apache.xml.dtm.DTM_Fields.NULL;
+			  m_FirstRowIdx = DTM.NULL;
 			  addRowToDTMFromResultSet();
 			}
 			else
@@ -655,7 +655,7 @@ namespace org.apache.xalan.lib.sql
 			  if (parameters != null)
 			  {
 				int outParamIdx = addElement(1, m_OutParameter_TypeID, m_SQLIdx, m_RowSetIdx);
-				int lastColID = org.apache.xml.dtm.DTM_Fields.NULL;
+				int lastColID = DTM.NULL;
 				for (int indx = 0 ; indx < parameters.Count ; indx++)
 				{
 				  QueryParameter parm = (QueryParameter)parameters[indx];
@@ -682,9 +682,9 @@ namespace org.apache.xalan.lib.sql
 		  }
 
 		  // If this is the first time here, start the new level
-		  if (m_FirstRowIdx == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (m_FirstRowIdx == DTM.NULL)
 		  {
-			m_FirstRowIdx = addElement(2, m_Row_TypeID, m_RowSetIdx, m_MultipleResults ? m_MetaDataIdx : org.apache.xml.dtm.DTM_Fields.NULL);
+			m_FirstRowIdx = addElement(2, m_Row_TypeID, m_RowSetIdx, m_MultipleResults ? m_MetaDataIdx : DTM.NULL);
 
 			m_LastRowIdx = m_FirstRowIdx;
 
@@ -710,7 +710,7 @@ namespace org.apache.xalan.lib.sql
 		  int colID = _firstch(m_LastRowIdx);
 
 		  // Keep Track of who our parent was when adding new col objects.
-		  int pcolID = org.apache.xml.dtm.DTM_Fields.NULL;
+		  int pcolID = DTM.NULL;
 
 		  // Columns in JDBC Start at 1 and go to the Extent
 		  for (int i = 1; i <= m_ColCount; i++)
@@ -722,7 +722,7 @@ namespace org.apache.xalan.lib.sql
 			// Create a new column object if one does not exist.
 			// In Streaming mode, this mechinism will reuse the column
 			// data the second and subsequent row accesses.
-			if (colID == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (colID == DTM.NULL)
 			{
 			  pcolID = addElementWithData(o,3,m_Col_TypeID, m_LastRowIdx, pcolID);
 			  cloneAttributeFromNode(pcolID, m_ColHeadersIdx[i - 1]);
@@ -732,7 +732,7 @@ namespace org.apache.xalan.lib.sql
 			  // We must be in streaming mode, so let's just replace the data
 			  // If the firstch was not set then we have a major error
 			  int dataIdent = _firstch(colID);
-			  if (dataIdent == org.apache.xml.dtm.DTM_Fields.NULL)
+			  if (dataIdent == DTM.NULL)
 			  {
 				error("Streaming Mode, Data Error");
 			  }
@@ -745,7 +745,7 @@ namespace org.apache.xalan.lib.sql
 			// In streaming mode, this will be !DTM.NULL
 			// So if the elements were already established then we
 			// should be able to walk them in order.
-			if (colID != org.apache.xml.dtm.DTM_Fields.NULL)
+			if (colID != DTM.NULL)
 			{
 			  colID = _nextsib(colID);
 			}
@@ -756,7 +756,7 @@ namespace org.apache.xalan.lib.sql
 		{
 		  if (DEBUG)
 		  {
-			Console.WriteLine("SQL Error Fetching next row [" + e.LocalizedMessage + "]");
+			Console.WriteLine("SQL Error Fetching next row [" + e.getLocalizedMessage() + "]");
 		  }
 
 		  m_XConnection.setError(e, this, checkWarnings());
@@ -818,7 +818,7 @@ namespace org.apache.xalan.lib.sql
 		{
 		  if (null != m_Statement)
 		  {
-			conn = m_Statement.Connection;
+			conn = m_Statement.getConnection();
 			m_Statement.close();
 			m_Statement = null;
 		  }
@@ -883,7 +883,7 @@ namespace org.apache.xalan.lib.sql
 		  int id = _exptype(identity);
 
 		  // We need to prime the pump since we don't do it in execute any more.
-		  if (m_FirstRowIdx == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (m_FirstRowIdx == DTM.NULL)
 		  {
 			addRowToDTMFromResultSet();
 		  }
@@ -936,7 +936,7 @@ namespace org.apache.xalan.lib.sql
 		{
 		  try
 		  {
-			warn = m_Statement.Warnings;
+			warn = m_Statement.getWarnings();
 			m_Statement.clearWarnings();
 		  }
 		  catch (SQLException)

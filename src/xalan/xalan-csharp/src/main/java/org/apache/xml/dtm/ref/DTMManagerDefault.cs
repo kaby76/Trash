@@ -23,7 +23,12 @@
 namespace org.apache.xml.dtm.@ref
 {
 
-
+	using DTM = org.apache.xml.dtm.DTM;
+	using DTMException = org.apache.xml.dtm.DTMException;
+	using DTMFilter = org.apache.xml.dtm.DTMFilter;
+	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using DTMManager = org.apache.xml.dtm.DTMManager;
+	using DTMWSFilter = org.apache.xml.dtm.DTMWSFilter;
 	using DOM2DTM = org.apache.xml.dtm.@ref.dom2dtm.DOM2DTM;
 	using SAX2DTM = org.apache.xml.dtm.@ref.sax2dtm.SAX2DTM;
 	using SAX2RTFDTM = org.apache.xml.dtm.@ref.sax2dtm.SAX2RTFDTM;
@@ -248,7 +253,7 @@ namespace org.apache.xml.dtm.@ref
         
 			if (DEBUG && null != source)
 			{
-			  Console.WriteLine("Starting " + (unique ? "UNIQUE" : "shared") + " source: " + source.SystemId);
+			  Console.WriteLine("Starting " + (unique ? "UNIQUE" : "shared") + " source: " + source.getSystemId());
 			}
         
 			XMLStringFactory xstringFactory = m_xsf;
@@ -291,7 +296,7 @@ namespace org.apache.xml.dtm.@ref
 					reader = getXMLReader(source);
 					xmlSource = SAXSource.sourceToInputSource(source);
         
-					string urlOfSource = xmlSource.SystemId;
+					string urlOfSource = xmlSource.getSystemId();
         
 					if (null != urlOfSource)
 					{
@@ -305,7 +310,7 @@ namespace org.apache.xml.dtm.@ref
 						Console.Error.WriteLine("Can not absolutize URL: " + urlOfSource);
 					  }
         
-					  xmlSource.SystemId = urlOfSource;
+					  xmlSource.setSystemId(urlOfSource);
 					}
 				  }
         
@@ -352,7 +357,6 @@ namespace org.apache.xml.dtm.@ref
 				  // If the reader is null, but they still requested an incremental
 				  // build, then we still want to set up the IncrementalSAXSource stuff.
 				  if (m_incremental && incremental)
-					   /* || ((null == reader) && incremental) */
 				  {
 					IncrementalSAXSource coParser = null;
         
@@ -361,7 +365,7 @@ namespace org.apache.xml.dtm.@ref
 					  // IncrementalSAXSource_Xerces to avoid threading.
 					  try
 					  {
-						coParser = (IncrementalSAXSource) Type.GetType("org.apache.xml.dtm.ref.IncrementalSAXSource_Xerces").newInstance();
+						coParser = (IncrementalSAXSource)System.Activator.CreateInstance(Type.GetType("org.apache.xml.dtm.ref.IncrementalSAXSource_Xerces"));
 					  }
 					  catch (Exception ex)
 					  {
@@ -417,11 +421,11 @@ namespace org.apache.xml.dtm.@ref
 					  return dtm;
 					}
         
-					if (null == reader.ErrorHandler)
+					if (null == reader.getErrorHandler())
 					{
-					  reader.ErrorHandler = dtm;
+					  reader.setErrorHandler(dtm);
 					}
-					reader.DTDHandler = dtm;
+					reader.setDTDHandler(dtm);
         
 					try
 					{
@@ -455,11 +459,11 @@ namespace org.apache.xml.dtm.@ref
 					}
         
 					// not incremental
-					reader.ContentHandler = dtm;
-					reader.DTDHandler = dtm;
-					if (null == reader.ErrorHandler)
+					reader.setContentHandler(dtm);
+					reader.setDTDHandler(dtm);
+					if (null == reader.getErrorHandler())
 					{
-					  reader.ErrorHandler = dtm;
+					  reader.setErrorHandler(dtm);
 					}
         
 					try
@@ -505,9 +509,9 @@ namespace org.apache.xml.dtm.@ref
 				  // after creating the DTM.
 				  if (reader != null && !(m_incremental && incremental))
 				  {
-					reader.ContentHandler = m_defaultHandler;
-					reader.DTDHandler = m_defaultHandler;
-					reader.ErrorHandler = m_defaultHandler;
+					reader.setContentHandler(m_defaultHandler);
+					reader.setDTDHandler(m_defaultHandler);
+					reader.setErrorHandler(m_defaultHandler);
         
 					// Reset the LexicalHandler to null after creating the DTM.
 					try
@@ -584,7 +588,7 @@ namespace org.apache.xml.dtm.@ref
 				  if ((null != thisDTM) && thisDTM is DOM2DTM)
 				  {
 					int handle = ((DOM2DTM)thisDTM).getHandleOfNode(node);
-					if (handle != org.apache.xml.dtm.DTM_Fields.NULL)
+					if (handle != DTM.NULL)
 					{
 						return handle;
 					}
@@ -611,8 +615,8 @@ namespace org.apache.xml.dtm.@ref
 			  // use getParent to find the root, instead of getOwnerDocument.  Otherwise
 			  // DOM2DTM#getHandleOfNode will be very unhappy.
 			  Node root = node;
-			  Node p = (root.NodeType == Node.ATTRIBUTE_NODE) ? ((org.w3c.dom.Attr)root).OwnerElement : root.ParentNode;
-			  for (; p != null; p = p.ParentNode)
+			  Node p = (root.getNodeType() == Node.ATTRIBUTE_NODE) ? ((org.w3c.dom.Attr)root).getOwnerElement() : root.getParentNode();
+			  for (; p != null; p = p.getParentNode())
 			  {
 				root = p;
 			  }
@@ -626,15 +630,15 @@ namespace org.apache.xml.dtm.@ref
 						// Can't return the same node since it's unique to a specific DTM, 
 						// but can return the equivalent node -- find the corresponding 
 						// Document Element, then ask it for the xml: namespace decl.
-						handle = dtm.getHandleOfNode(((org.w3c.dom.Attr)node).OwnerElement);
-						handle = dtm.getAttributeNode(handle,node.NamespaceURI,node.LocalName);
+						handle = dtm.getHandleOfNode(((org.w3c.dom.Attr)node).getOwnerElement());
+						handle = dtm.getAttributeNode(handle,node.getNamespaceURI(),node.getLocalName());
 			  }
 			  else
 			  {
 						handle = ((DOM2DTM)dtm).getHandleOfNode(node);
 			  }
         
-			  if (org.apache.xml.dtm.DTM_Fields.NULL == handle)
+			  if (DTM.NULL == handle)
 			  {
 				throw new Exception(XMLMessages.createXMLMessage(XMLErrorResources.ER_COULD_NOT_RESOLVE_NODE, null)); //"Could not resolve the node to a handle!");
 			  }
@@ -664,7 +668,7 @@ namespace org.apache.xml.dtm.@ref
         
 			try
 			{
-			  XMLReader reader = (inputSource is SAXSource) ? ((SAXSource) inputSource).XMLReader : null;
+			  XMLReader reader = (inputSource is SAXSource) ? ((SAXSource) inputSource).getXMLReader() : null;
         
 			  // If user did not supply a reader, ask for one from the reader manager
 			  if (null == reader)
@@ -724,7 +728,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 			catch (System.IndexOutOfRangeException e)
 			{
-			  if (nodeHandle == org.apache.xml.dtm.DTM_Fields.NULL)
+			  if (nodeHandle == DTM.NULL)
 			  {
 						return null; // Accept as a special case.
 			  }
@@ -801,8 +805,6 @@ namespace org.apache.xml.dtm.@ref
 			if (DEBUG)
 			{
 			  Console.WriteLine("Releasing " + (shouldHardDelete ? "HARD" : "soft") + " dtm=" + dtm.DocumentBaseURI);
-					 // Following shouldn't need a nodeHandle, but does...
-					 // and doesn't seem to report the intended value
 			}
         
 			if (dtm is SAX2DTM)
@@ -855,7 +857,7 @@ namespace org.apache.xml.dtm.@ref
 			{
 			  DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         
-			  dbf.NamespaceAware = true;
+			  dbf.setNamespaceAware(true);
         
 			  DocumentBuilder db = dbf.newDocumentBuilder();
 			  Document doc = db.newDocument();

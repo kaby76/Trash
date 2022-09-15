@@ -24,7 +24,6 @@ namespace org.apache.xalan.templates
 {
 
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using DTM = org.apache.xml.dtm.DTM;
@@ -66,7 +65,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -92,7 +91,7 @@ namespace org.apache.xalan.templates
 		  {
 			int baseNode = arg2.iter().nextNode();
 
-			if (baseNode == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (baseNode == DTM.NULL)
 			{
 				// See http://www.w3.org/1999/11/REC-xslt-19991116-errata#E14.
 				// If the second argument is an empty nodeset, this is an error.
@@ -144,9 +143,9 @@ namespace org.apache.xalan.templates
 		XNodeSet nodes = new XNodeSet(xctxt.DTMManager);
 		NodeSetDTM mnl = nodes.mutableNodeset();
 		DTMIterator iterator = (XObject.CLASS_NODESET == arg.Type) ? arg.iter() : null;
-		int pos = org.apache.xml.dtm.DTM_Fields.NULL;
+		int pos = DTM.NULL;
 
-		while ((null == iterator) || (org.apache.xml.dtm.DTM_Fields.NULL != (pos = iterator.nextNode())))
+		while ((null == iterator) || (DTM.NULL != (pos = iterator.nextNode())))
 		{
 		  XMLString @ref = (null != iterator) ? xctxt.getDTM(pos).getStringValue(pos) : arg.xstr();
 
@@ -158,7 +157,7 @@ namespace org.apache.xalan.templates
 		  // function with the first argument being the string-value of the node,
 		  // and the second argument being a node-set with the node as its only 
 		  // member.
-		  if (null == arg1Expr && org.apache.xml.dtm.DTM_Fields.NULL != pos)
+		  if (null == arg1Expr && DTM.NULL != pos)
 		  {
 			DTM baseDTM = xctxt.getDTM(pos);
 			@base = baseDTM.DocumentBaseURI;
@@ -169,7 +168,7 @@ namespace org.apache.xalan.templates
 			continue;
 		  }
 
-		  if (org.apache.xml.dtm.DTM_Fields.NULL == docContext)
+		  if (DTM.NULL == docContext)
 		  {
 			error(xctxt, XSLTErrorResources.ER_NO_CONTEXT_OWNERDOC, null); //"context does not have an owner document!");
 		  }
@@ -193,7 +192,7 @@ namespace org.apache.xalan.templates
 		  int newDoc = getDoc(xctxt, context, @ref.ToString(), @base);
 
 		  // nodes.mutableNodeset().addNode(newDoc);  
-		  if (org.apache.xml.dtm.DTM_Fields.NULL != newDoc)
+		  if (DTM.NULL != newDoc)
 		  {
 			// TODO: mnl.addNodeInDocOrder(newDoc, true, xctxt); ??
 			if (!mnl.contains(newDoc))
@@ -202,7 +201,7 @@ namespace org.apache.xalan.templates
 			}
 		  }
 
-		  if (null == iterator || newDoc == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (null == iterator || newDoc == DTM.NULL)
 		  {
 			break;
 		  }
@@ -223,7 +222,7 @@ namespace org.apache.xalan.templates
 	  /// or null
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: int getDoc(org.apache.xpath.XPathContext xctxt, int context, String uri, String super) throws javax.xml.transform.TransformerException
 	  internal virtual int getDoc(XPathContext xctxt, int context, string uri, string @base)
 	  {
@@ -247,7 +246,7 @@ namespace org.apache.xalan.templates
 		  throw new TransformerException(te);
 		}
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != newDoc)
+		if (DTM.NULL != newDoc)
 		{
 		  return newDoc;
 		}
@@ -286,7 +285,7 @@ namespace org.apache.xalan.templates
 		{
 
 		  // throwable.printStackTrace();
-		  newDoc = org.apache.xml.dtm.DTM_Fields.NULL;
+		  newDoc = DTM.NULL;
 
 		  // path.warn(XSLTErrorResources.WG_ENCODING_NOT_SUPPORTED_USING_JAVA, new Object[]{((base == null) ? "" : base )+uri}); //"Can not load requested doc: "+((base == null) ? "" : base )+uri);
 		  while (throwable is org.apache.xml.utils.WrappedRuntimeException)
@@ -321,13 +320,13 @@ namespace org.apache.xalan.templates
 				{
 				  TransformerException spe2 = (TransformerException) e;
 
-				  SourceLocator locator = spe2.Locator;
-				  if ((null != locator) && (null != locator.SystemId))
+				  SourceLocator locator = spe2.getLocator();
+				  if ((null != locator) && (null != locator.getSystemId()))
 				  {
-					diagnosticsWriter.println("   ID: " + locator.SystemId + " Line #" + locator.LineNumber + " Column #" + locator.ColumnNumber);
+					diagnosticsWriter.println("   ID: " + locator.getSystemId() + " Line #" + locator.getLineNumber() + " Column #" + locator.getColumnNumber());
 				  }
 
-				  e = spe2.Exception;
+				  e = spe2.getException();
 
 				  if (e is org.apache.xml.utils.WrappedRuntimeException)
 				  {
@@ -350,7 +349,7 @@ namespace org.apache.xalan.templates
 		  diagnosticsString = throwable.Message; //sw.toString();
 		}
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL == newDoc)
+		if (DTM.NULL == newDoc)
 		{
 
 		  // System.out.println("what?: "+base+", uri: "+uri);
@@ -384,7 +383,7 @@ namespace org.apache.xalan.templates
 	  /// the error condition is severe enough to halt processing.
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(org.apache.xpath.XPathContext xctxt, String msg, Object args[]) throws javax.xml.transform.TransformerException
 	  public override void error(XPathContext xctxt, string msg, object[] args)
 	  {
@@ -413,7 +412,7 @@ namespace org.apache.xalan.templates
 	  /// the error condition is severe enough to halt processing.
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warn(org.apache.xpath.XPathContext xctxt, String msg, Object args[]) throws javax.xml.transform.TransformerException
 	  public override void warn(XPathContext xctxt, string msg, object[] args)
 	  {
@@ -439,7 +438,7 @@ namespace org.apache.xalan.templates
 	 /// <param name="argNum"> Number of arguments passed in to this function
 	 /// </param>
 	 /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void checkNumberArgs(int argNum) throws org.apache.xpath.functions.WrongNumberArgsException
 	  public override void checkNumberArgs(int argNum)
 	  {
@@ -454,7 +453,7 @@ namespace org.apache.xalan.templates
 	  /// message for this function object.
 	  /// </summary>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void reportWrongNumberArgs() throws org.apache.xpath.functions.WrongNumberArgsException
 	  protected internal override void reportWrongNumberArgs()
 	  {

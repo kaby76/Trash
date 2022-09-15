@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc
 {
-
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using SerializationHandler = org.apache.xml.serializer.SerializationHandler;
 
@@ -34,19 +33,19 @@ namespace org.apache.xalan.xsltc
 	public interface Translet
 	{
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transform(DOM document, org.apache.xml.serializer.SerializationHandler handler) throws TransletException;
 		void transform(DOM document, SerializationHandler handler);
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transform(DOM document, org.apache.xml.serializer.SerializationHandler[] handlers) throws TransletException;
 		void transform(DOM document, SerializationHandler[] handlers);
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void transform(DOM document, org.apache.xml.dtm.DTMAxisIterator iterator, org.apache.xml.serializer.SerializationHandler handler) throws TransletException;
 		void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler);
 
 		object addParameter(string name, object value);
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void buildKeys(DOM document, org.apache.xml.dtm.DTMAxisIterator iterator, org.apache.xml.serializer.SerializationHandler handler, int root) throws TransletException;
 		void buildKeys(DOM document, DTMAxisIterator iterator, SerializationHandler handler, int root);
 		void addAuxiliaryClass(Type auxClass);

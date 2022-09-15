@@ -79,7 +79,7 @@ namespace org.apache.xalan.processor
 	  /// Static string to be used for source_location feature </summary>
 	  public const string FEATURE_SOURCE_LOCATION = XalanProperties.SOURCE_LOCATION;
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Templates processFromNode(org.w3c.dom.Node node) throws javax.xml.transform.TransformerConfigurationException
 	  public virtual Templates processFromNode(Node node)
 	  {
@@ -87,11 +87,11 @@ namespace org.apache.xalan.processor
 		try
 		{
 		  TemplatesHandler builder = newTemplatesHandler();
-		  TreeWalker walker = new TreeWalker(builder, new org.apache.xml.utils.DOM2Helper(), builder.SystemId);
+		  TreeWalker walker = new TreeWalker(builder, new org.apache.xml.utils.DOM2Helper(), builder.getSystemId());
 
 		  walker.traverse(node);
 
-		  return builder.Templates;
+		  return builder.getTemplates();
 		}
 		catch (org.xml.sax.SAXException se)
 		{
@@ -194,7 +194,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> A Templates object capable of being used for transformation purposes.
 	  /// </returns>
 	  /// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: javax.xml.transform.Templates processFromNode(org.w3c.dom.Node node, String systemID) throws javax.xml.transform.TransformerConfigurationException
 	  internal virtual Templates processFromNode(Node node, string systemID)
 	  {
@@ -226,7 +226,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> A Source object capable of being used to create a Templates object.
 	  /// </returns>
 	  /// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Source getAssociatedStylesheet(javax.xml.transform.Source source, String media, String title, String charset) throws javax.xml.transform.TransformerConfigurationException
 	  public virtual Source getAssociatedStylesheet(Source source, string media, string title, string charset)
 	  {
@@ -240,13 +240,13 @@ namespace org.apache.xalan.processor
 		{
 		  DOMSource dsource = (DOMSource) source;
 
-		  node = dsource.Node;
-		  baseID = dsource.SystemId;
+		  node = dsource.getNode();
+		  baseID = dsource.getSystemId();
 		}
 		else
 		{
 		  isource = SAXSource.sourceToInputSource(source);
-		  baseID = isource.SystemId;
+		  baseID = isource.getSystemId();
 		}
 
 		// What I try to do here is parse until the first startElement
@@ -276,7 +276,7 @@ namespace org.apache.xalan.processor
 			{
 			  javax.xml.parsers.SAXParserFactory factory = javax.xml.parsers.SAXParserFactory.newInstance();
 
-			  factory.NamespaceAware = true;
+			  factory.setNamespaceAware(true);
 
 			  if (m_isSecureProcessing)
 			  {
@@ -291,7 +291,7 @@ namespace org.apache.xalan.processor
 
 			  javax.xml.parsers.SAXParser jaxpParser = factory.newSAXParser();
 
-			  reader = jaxpParser.XMLReader;
+			  reader = jaxpParser.getXMLReader();
 			}
 			catch (javax.xml.parsers.ParserConfigurationException ex)
 			{
@@ -318,7 +318,7 @@ namespace org.apache.xalan.processor
 				reader.setFeature("http://xml.org/sax/features/external-general-entities",false);
 			}
 			// Need to set options!
-			reader.ContentHandler = handler;
+			reader.setContentHandler(handler);
 			reader.parse(isource);
 		  }
 		}
@@ -349,7 +349,7 @@ namespace org.apache.xalan.processor
 	  /// <exception cref="TransformerConfigurationException"> May throw this during
 	  ///            the parse when it is constructing the
 	  ///            Templates object and fails. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TemplatesHandler newTemplatesHandler() throws javax.xml.transform.TransformerConfigurationException
 	  public virtual TemplatesHandler newTemplatesHandler()
 	  {
@@ -376,7 +376,7 @@ namespace org.apache.xalan.processor
 	  /// <exception cref="TransformerConfigurationException"> if this <code>TransformerFactory</code>
 	  ///   or the <code>Transformer</code>s or <code>Template</code>s it creates cannot support this feature. </exception>
 	  /// <exception cref="NullPointerException"> If the <code>name</code> parameter is null. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setFeature(String name, boolean value) throws javax.xml.transform.TransformerConfigurationException
 	  public virtual void setFeature(string name, bool value)
 	  {
@@ -479,13 +479,13 @@ namespace org.apache.xalan.processor
 	  /// </param>
 	  /// <exception cref="IllegalArgumentException"> thrown if the underlying
 	  /// implementation doesn't recognize the attribute. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setAttribute(String name, Object value) throws IllegalArgumentException
 	  public virtual void setAttribute(string name, object value)
 	  {
 		if (name.Equals(FEATURE_INCREMENTAL))
 		{
-		  if (value is bool?)
+		  if (value is Boolean)
 		  {
 			// Accept a Boolean object..
 			m_incremental = ((bool?)value).Value;
@@ -503,7 +503,7 @@ namespace org.apache.xalan.processor
 		}
 		else if (name.Equals(FEATURE_OPTIMIZE))
 		{
-		  if (value is bool?)
+		  if (value is Boolean)
 		  {
 			// Accept a Boolean object..
 			m_optimize = ((bool?)value).Value;
@@ -527,7 +527,7 @@ namespace org.apache.xalan.processor
 		// %REVIEW% I hate that it's a global static, but didn't want to change APIs yet.
 		else if (name.Equals(FEATURE_SOURCE_LOCATION))
 		{
-		  if (value is bool?)
+		  if (value is Boolean)
 		  {
 			// Accept a Boolean object..
 			m_source_location = ((bool?)value).Value;
@@ -559,7 +559,7 @@ namespace org.apache.xalan.processor
 	  /// </returns>
 	  /// <exception cref="IllegalArgumentException"> thrown if the underlying
 	  /// implementation doesn't recognize the attribute. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object getAttribute(String name) throws IllegalArgumentException
 	  public virtual object getAttribute(string name)
 	  {
@@ -590,7 +590,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> An XMLFilter object, or null if this feature is not supported.
 	  /// </returns>
 	  /// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.xml.sax.XMLFilter newXMLFilter(javax.xml.transform.Source src) throws javax.xml.transform.TransformerConfigurationException
 	  public virtual XMLFilter newXMLFilter(Source src)
 	  {
@@ -613,7 +613,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> An XMLFilter object, or null if this feature is not supported.
 	  /// </returns>
 	  /// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.xml.sax.XMLFilter newXMLFilter(javax.xml.transform.Templates templates) throws javax.xml.transform.TransformerConfigurationException
 	  public virtual XMLFilter newXMLFilter(Templates templates)
 	  {
@@ -653,7 +653,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> TransformerHandler ready to transform SAX events.
 	  /// </returns>
 	  /// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TransformerHandler newTransformerHandler(javax.xml.transform.Source src) throws javax.xml.transform.TransformerConfigurationException
 	  public virtual TransformerHandler newTransformerHandler(Source src)
 	  {
@@ -675,7 +675,7 @@ namespace org.apache.xalan.processor
 	  /// </param>
 	  /// <returns> TransformerHandler ready to transform SAX events. </returns>
 	  /// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TransformerHandler newTransformerHandler(javax.xml.transform.Templates templates) throws javax.xml.transform.TransformerConfigurationException
 	  public virtual TransformerHandler newTransformerHandler(Templates templates)
 	  {
@@ -729,7 +729,7 @@ namespace org.apache.xalan.processor
 	  /// <returns> TransformerHandler ready to transform SAX events.
 	  /// </returns>
 	  /// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TransformerHandler newTransformerHandler() throws javax.xml.transform.TransformerConfigurationException
 	  public virtual TransformerHandler newTransformerHandler()
 	  {
@@ -748,7 +748,7 @@ namespace org.apache.xalan.processor
 	  /// </returns>
 	  /// <exception cref="TransformerConfigurationException"> May throw this during the parse when it
 	  ///            is constructing the Templates object and fails. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Transformer newTransformer(javax.xml.transform.Source source) throws javax.xml.transform.TransformerConfigurationException
 	  public virtual Transformer newTransformer(Source source)
 	  {
@@ -766,7 +766,7 @@ namespace org.apache.xalan.processor
 			  return null;
 		  }
 		  Transformer transformer = tmpl.newTransformer();
-		  transformer.URIResolver = m_uriResolver;
+		  transformer.setURIResolver(m_uriResolver);
 		  return transformer;
 		}
 		catch (TransformerConfigurationException ex)
@@ -801,7 +801,7 @@ namespace org.apache.xalan.processor
 	  /// <exception cref="TransformerConfigurationException"> May throw this during
 	  ///            the parse when it is constructing the
 	  ///            Templates object and it fails. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Transformer newTransformer() throws javax.xml.transform.TransformerConfigurationException
 	  public virtual Transformer newTransformer()
 	  {
@@ -821,12 +821,12 @@ namespace org.apache.xalan.processor
 	  /// </returns>
 	  /// <exception cref="TransformerConfigurationException"> May throw this during the parse when it
 	  ///            is constructing the Templates object and fails. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Templates newTemplates(javax.xml.transform.Source source) throws javax.xml.transform.TransformerConfigurationException
 	  public virtual Templates newTemplates(Source source)
 	  {
 
-		string baseID = source.SystemId;
+		string baseID = source.getSystemId();
 
 		if (null != baseID)
 		{
@@ -837,7 +837,7 @@ namespace org.apache.xalan.processor
 		if (source is DOMSource)
 		{
 		  DOMSource dsource = (DOMSource) source;
-		  Node node = dsource.Node;
+		  Node node = dsource.getNode();
 
 		  if (null != node)
 		  {
@@ -852,17 +852,17 @@ namespace org.apache.xalan.processor
 		}
 
 		TemplatesHandler builder = newTemplatesHandler();
-		builder.SystemId = baseID;
+		builder.setSystemId(baseID);
 
 		try
 		{
 		  InputSource isource = SAXSource.sourceToInputSource(source);
-		  isource.SystemId = baseID;
+		  isource.setSystemId(baseID);
 		  XMLReader reader = null;
 
 		  if (source is SAXSource)
 		  {
-			reader = ((SAXSource) source).XMLReader;
+			reader = ((SAXSource) source).getXMLReader();
 		  }
 
 		  if (null == reader)
@@ -873,7 +873,7 @@ namespace org.apache.xalan.processor
 			{
 			  javax.xml.parsers.SAXParserFactory factory = javax.xml.parsers.SAXParserFactory.newInstance();
 
-			  factory.NamespaceAware = true;
+			  factory.setNamespaceAware(true);
 
 			  if (m_isSecureProcessing)
 			  {
@@ -888,7 +888,7 @@ namespace org.apache.xalan.processor
 
 			  javax.xml.parsers.SAXParser jaxpParser = factory.newSAXParser();
 
-			  reader = jaxpParser.XMLReader;
+			  reader = jaxpParser.getXMLReader();
 			}
 			catch (javax.xml.parsers.ParserConfigurationException ex)
 			{
@@ -914,7 +914,7 @@ namespace org.apache.xalan.processor
 		  // If you set the namespaces to true, we'll end up getting double 
 		  // xmlns attributes.  Needs to be fixed.  -sb
 		  // reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
-		  reader.ContentHandler = builder;
+		  reader.setContentHandler(builder);
 		  reader.parse(isource);
 		}
 		catch (org.xml.sax.SAXException se)
@@ -963,7 +963,7 @@ namespace org.apache.xalan.processor
 		  }
 		}
 
-		return builder.Templates;
+		return builder.getTemplates();
 	  }
 
 	  /// <summary>

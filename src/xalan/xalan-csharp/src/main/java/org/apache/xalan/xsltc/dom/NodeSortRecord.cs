@@ -24,7 +24,9 @@
 namespace org.apache.xalan.xsltc.dom
 {
 
-
+	using CollatorFactory = org.apache.xalan.xsltc.CollatorFactory;
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using TransletException = org.apache.xalan.xsltc.TransletException;
 	using AbstractTranslet = org.apache.xalan.xsltc.runtime.AbstractTranslet;
 	using StringComparable = org.apache.xml.utils.StringComparable;
 
@@ -44,7 +46,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// specifies a different language (will be updated iff _locale is updated). </summary>
 		/// @deprecated This field continues to exist for binary compatibility.
 		///             New code should not refer to it. 
-		private static readonly Collator DEFAULT_COLLATOR = Collator.Instance;
+		private static readonly Collator DEFAULT_COLLATOR = Collator.getInstance();
 
 		/// <summary>
 		/// A reference to the first Collator </summary>
@@ -89,7 +91,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// This method allows the caller to set the values that could not be passed
 		/// to the default constructor.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void initialize(int node, int last, org.apache.xalan.xsltc.DOM dom, SortSettings settings) throws org.apache.xalan.xsltc.TransletException
 		public void initialize(int node, int last, DOM dom, SortSettings settings)
 		{
@@ -221,12 +223,12 @@ namespace org.apache.xalan.xsltc.dom
 			if (compareTypes[level] == COMPARE_NUMERIC)
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final Nullable<double> our = numericValue(level);
+//ORIGINAL LINE: final System.Nullable<double> our = numericValue(level);
 			double? our = numericValue(level);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final Nullable<double> their = other.numericValue(level);
+//ORIGINAL LINE: final System.Nullable<double> their = other.numericValue(level);
 			double? their = other.numericValue(level);
-			cmp = our.Value.CompareTo(their);
+			cmp = our.compareTo(their);
 			}
 			else
 			{

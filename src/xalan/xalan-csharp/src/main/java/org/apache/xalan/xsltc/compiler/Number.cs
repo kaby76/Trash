@@ -203,7 +203,7 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 	   }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -269,20 +269,20 @@ namespace org.apache.xalan.xsltc.compiler
 		private void compileDefault(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 		int index;
-		ConstantPoolGen cpg = classGen.ConstantPool;
-		InstructionList il = methodGen.InstructionList;
+		ConstantPoolGen cpg = classGen.getConstantPool();
+		InstructionList il = methodGen.getInstructionList();
 
 		int[] fieldIndexes = XSLTC.NumberFieldIndexes;
 
 		if (fieldIndexes[_level] == -1)
 		{
-			Field defaultNode = new Field(Constants_Fields.ACC_PRIVATE, cpg.addUtf8(FieldNames[_level]), cpg.addUtf8(Constants_Fields.NODE_COUNTER_SIG), null, cpg.ConstantPool);
+			Field defaultNode = new Field(ACC_PRIVATE, cpg.addUtf8(FieldNames[_level]), cpg.addUtf8(NODE_COUNTER_SIG), null, cpg.getConstantPool());
 
 			// Add a new private field to this class
 			classGen.addField(defaultNode);
 
 			// Get a reference to the newly added field
-			fieldIndexes[_level] = cpg.addFieldref(classGen.ClassName, FieldNames[_level], Constants_Fields.NODE_COUNTER_SIG);
+			fieldIndexes[_level] = cpg.addFieldref(classGen.ClassName, FieldNames[_level], NODE_COUNTER_SIG);
 		}
 
 		// Check if field is initialized (runtime)
@@ -293,7 +293,7 @@ namespace org.apache.xalan.xsltc.compiler
 		BranchHandle ifBlock1 = il.append(new IFNONNULL(null));
 
 		// Create an instance of DefaultNodeCounter
-		index = cpg.addMethodref(ClassNames[_level], "getDefaultNodeCounter", "(" + Constants_Fields.TRANSLET_INTF_SIG + Constants_Fields.DOM_INTF_SIG + Constants_Fields.NODE_ITERATOR_SIG + ")" + Constants_Fields.NODE_COUNTER_SIG);
+		index = cpg.addMethodref(ClassNames[_level], "getDefaultNodeCounter", "(" + TRANSLET_INTF_SIG + DOM_INTF_SIG + NODE_ITERATOR_SIG + ")" + NODE_COUNTER_SIG);
 		il.append(classGen.loadTranslet());
 		il.append(methodGen.loadDOM());
 		il.append(methodGen.loadIterator());
@@ -309,10 +309,10 @@ namespace org.apache.xalan.xsltc.compiler
 		BranchHandle ifBlock2 = il.append(new GOTO(null));
 
 		// Backpatch conditionals
-		ifBlock1.Target = il.append(classGen.loadTranslet());
+		ifBlock1.setTarget(il.append(classGen.loadTranslet()));
 		il.append(new GETFIELD(fieldIndexes[_level]));
 
-		ifBlock2.Target = il.append(NOP);
+		ifBlock2.setTarget(il.append(NOP));
 		}
 
 		/// <summary>
@@ -328,16 +328,16 @@ namespace org.apache.xalan.xsltc.compiler
 		InstructionList il = new InstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 
-		cons = new MethodGenerator(Constants_Fields.ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, new org.apache.bcel.generic.Type[] {Util.getJCRefType(Constants_Fields.TRANSLET_INTF_SIG), Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG)}, new string[] {"dom", "translet", "iterator"}, "<init>", _className, il, cpg);
+		cons = new MethodGenerator(ACC_PUBLIC, org.apache.bcel.generic.Type.VOID, new org.apache.bcel.generic.Type[] {Util.getJCRefType(TRANSLET_INTF_SIG), Util.getJCRefType(DOM_INTF_SIG), Util.getJCRefType(NODE_ITERATOR_SIG)}, new string[] {"dom", "translet", "iterator"}, "<init>", _className, il, cpg);
 
 		il.append(ALOAD_0); // this
 		il.append(ALOAD_1); // translet
 		il.append(ALOAD_2); // DOM
 		il.append(new ALOAD(3)); // iterator
 
-		int index = cpg.addMethodref(ClassNames[_level], "<init>", "(" + Constants_Fields.TRANSLET_INTF_SIG + Constants_Fields.DOM_INTF_SIG + Constants_Fields.NODE_ITERATOR_SIG + ")V");
+		int index = cpg.addMethodref(ClassNames[_level], "<init>", "(" + TRANSLET_INTF_SIG + DOM_INTF_SIG + NODE_ITERATOR_SIG + ")V");
 		il.append(new INVOKESPECIAL(index));
 		il.append(RETURN);
 
@@ -352,33 +352,33 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 		int field;
 		LocalVariableGen local;
-		ConstantPoolGen cpg = nodeCounterGen.ConstantPool;
+		ConstantPoolGen cpg = nodeCounterGen.getConstantPool();
 
 		// Get NodeCounter._iterator and store locally
-		local = matchGen.addLocalVariable("iterator", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-		field = cpg.addFieldref(Constants_Fields.NODE_COUNTER, "_iterator", Constants_Fields.ITERATOR_FIELD_SIG);
+		local = matchGen.addLocalVariable("iterator", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+		field = cpg.addFieldref(NODE_COUNTER, "_iterator", ITERATOR_FIELD_SIG);
 		il.append(ALOAD_0); // 'this' pointer on stack
 		il.append(new GETFIELD(field));
-		local.Start = il.append(new ASTORE(local.Index));
-		matchGen.IteratorIndex = local.Index;
+		local.setStart(il.append(new ASTORE(local.getIndex())));
+		matchGen.IteratorIndex = local.getIndex();
 
 		// Get NodeCounter._translet and store locally
-		local = matchGen.addLocalVariable("translet", Util.getJCRefType(Constants_Fields.TRANSLET_SIG), null, null);
-		field = cpg.addFieldref(Constants_Fields.NODE_COUNTER, "_translet", "Lorg/apache/xalan/xsltc/Translet;");
+		local = matchGen.addLocalVariable("translet", Util.getJCRefType(TRANSLET_SIG), null, null);
+		field = cpg.addFieldref(NODE_COUNTER, "_translet", "Lorg/apache/xalan/xsltc/Translet;");
 		il.append(ALOAD_0); // 'this' pointer on stack
 		il.append(new GETFIELD(field));
-		il.append(new CHECKCAST(cpg.addClass(Constants_Fields.TRANSLET_CLASS)));
-		local.Start = il.append(new ASTORE(local.Index));
-		nodeCounterGen.TransletIndex = local.Index;
+		il.append(new CHECKCAST(cpg.addClass(TRANSLET_CLASS)));
+		local.setStart(il.append(new ASTORE(local.getIndex())));
+		nodeCounterGen.TransletIndex = local.getIndex();
 
 		// Get NodeCounter._document and store locally
-		local = matchGen.addLocalVariable("document", Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), null, null);
-		field = cpg.addFieldref(_className, "_document", Constants_Fields.DOM_INTF_SIG);
+		local = matchGen.addLocalVariable("document", Util.getJCRefType(DOM_INTF_SIG), null, null);
+		field = cpg.addFieldref(_className, "_document", DOM_INTF_SIG);
 		il.append(ALOAD_0); // 'this' pointer on stack
 		il.append(new GETFIELD(field));
 		// Make sure we have the correct DOM type on the stack!!!
-		local.Start = il.append(new ASTORE(local.Index));
-		matchGen.DomIndex = local.Index;
+		local.setStart(il.append(new ASTORE(local.getIndex())));
+		matchGen.DomIndex = local.getIndex();
 		}
 
 		private void compilePatterns(ClassGenerator classGen, MethodGenerator methodGen)
@@ -390,9 +390,9 @@ namespace org.apache.xalan.xsltc.compiler
 		NodeCounterGenerator nodeCounterGen;
 
 		_className = XSLTC.HelperClassName;
-		nodeCounterGen = new NodeCounterGenerator(_className, ClassNames[_level], ToString(), Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_SUPER, null, classGen.Stylesheet);
+		nodeCounterGen = new NodeCounterGenerator(_className, ClassNames[_level], ToString(), ACC_PUBLIC | ACC_SUPER, null, classGen.Stylesheet);
 		InstructionList il = null;
-		ConstantPoolGen cpg = nodeCounterGen.ConstantPool;
+		ConstantPoolGen cpg = nodeCounterGen.getConstantPool();
 
 		// Add a new instance variable for each var in closure
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -401,9 +401,9 @@ namespace org.apache.xalan.xsltc.compiler
 
 		for (int i = 0; i < closureLen; i++)
 		{
-			VariableBase @var = ((VariableRefBase) _closureVars[i]).Variable;
+			VariableBase var = ((VariableRefBase) _closureVars[i]).Variable;
 
-			nodeCounterGen.addField(new Field(Constants_Fields.ACC_PUBLIC, cpg.addUtf8(@var.EscapedName), cpg.addUtf8(@var.Type.toSignature()), null, cpg.ConstantPool));
+			nodeCounterGen.addField(new Field(ACC_PUBLIC, cpg.addUtf8(var.EscapedName), cpg.addUtf8(var.Type.toSignature()), null, cpg.getConstantPool()));
 		}
 
 		// Add a single constructor to the class
@@ -415,7 +415,7 @@ namespace org.apache.xalan.xsltc.compiler
 		if (_from != null)
 		{
 			il = new InstructionList();
-			matchGen = new MatchGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] {org.apache.bcel.generic.Type.INT}, new string[] {"node"}, "matchesFrom", _className, il, cpg);
+			matchGen = new MatchGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] {org.apache.bcel.generic.Type.INT}, new string[] {"node"}, "matchesFrom", _className, il, cpg);
 
 			compileLocals(nodeCounterGen,matchGen,il);
 
@@ -434,7 +434,7 @@ namespace org.apache.xalan.xsltc.compiler
 		if (_count != null)
 		{
 			il = new InstructionList();
-			matchGen = new MatchGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] {org.apache.bcel.generic.Type.INT}, new string[] {"node"}, "matchesCount", _className, il, cpg);
+			matchGen = new MatchGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] {org.apache.bcel.generic.Type.INT}, new string[] {"node"}, "matchesCount", _className, il, cpg);
 
 			compileLocals(nodeCounterGen,matchGen,il);
 
@@ -448,15 +448,15 @@ namespace org.apache.xalan.xsltc.compiler
 			nodeCounterGen.addMethod(matchGen);
 		}
 
-		XSLTC.dumpClass(nodeCounterGen.JavaClass);
+		XSLTC.dumpClass(nodeCounterGen.getJavaClass());
 
 		// Push an instance of the newly created class
-		cpg = classGen.ConstantPool;
-		il = methodGen.InstructionList;
+		cpg = classGen.getConstantPool();
+		il = methodGen.getInstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int index = cpg.addMethodref(_className, "<init>", "(" + Constants_Fields.TRANSLET_INTF_SIG + Constants_Fields.DOM_INTF_SIG + Constants_Fields.NODE_ITERATOR_SIG + ")V");
-		int index = cpg.addMethodref(_className, "<init>", "(" + Constants_Fields.TRANSLET_INTF_SIG + Constants_Fields.DOM_INTF_SIG + Constants_Fields.NODE_ITERATOR_SIG + ")V");
+//ORIGINAL LINE: final int index = cpg.addMethodref(_className, "<init>", "(" + TRANSLET_INTF_SIG + DOM_INTF_SIG + NODE_ITERATOR_SIG + ")V");
+		int index = cpg.addMethodref(_className, "<init>", "(" + TRANSLET_INTF_SIG + DOM_INTF_SIG + NODE_ITERATOR_SIG + ")V");
 		il.append(new NEW(cpg.addClass(_className)));
 		il.append(DUP);
 		il.append(classGen.loadTranslet());
@@ -472,15 +472,15 @@ namespace org.apache.xalan.xsltc.compiler
 			VariableRefBase varRef = (VariableRefBase) _closureVars[i];
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final VariableBase var = varRef.getVariable();
-			VariableBase @var = varRef.Variable;
+			VariableBase var = varRef.Variable;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.Type varType = var.getType();
-			Type varType = @var.Type;
+			Type varType = var.Type;
 
 			// Store variable in new closure
 			il.append(DUP);
-			il.append(@var.loadInstruction());
-			il.append(new PUTFIELD(cpg.addFieldref(_className, @var.EscapedName, varType.toSignature())));
+			il.append(var.loadInstruction());
+			il.append(new PUTFIELD(cpg.addFieldref(_className, var.EscapedName, varType.toSignature())));
 		}
 		}
 
@@ -489,10 +489,10 @@ namespace org.apache.xalan.xsltc.compiler
 		int index;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Push "this" for the call to characters()
 		il.append(classGen.loadTranslet());
@@ -505,11 +505,11 @@ namespace org.apache.xalan.xsltc.compiler
 			// Using java.lang.Math.floor(number + 0.5) to return a double value
 				il.append(new PUSH(cpg, 0.5));
 				il.append(DADD);
-			index = cpg.addMethodref(Constants_Fields.MATH_CLASS, "floor", "(D)D");
+			index = cpg.addMethodref(MATH_CLASS, "floor", "(D)D");
 			il.append(new INVOKESTATIC(index));
 
 			// Call setValue on the node counter
-			index = cpg.addMethodref(Constants_Fields.NODE_COUNTER, "setValue", "(D)" + Constants_Fields.NODE_COUNTER_SIG);
+			index = cpg.addMethodref(NODE_COUNTER, "setValue", "(D)" + NODE_COUNTER_SIG);
 			il.append(new INVOKEVIRTUAL(index));
 		}
 		else if (Default)
@@ -525,7 +525,7 @@ namespace org.apache.xalan.xsltc.compiler
 		if (!hasValue())
 		{
 			il.append(methodGen.loadContextNode());
-			index = cpg.addMethodref(Constants_Fields.NODE_COUNTER, Constants_Fields.SET_START_NODE, "(I)" + Constants_Fields.NODE_COUNTER_SIG);
+			index = cpg.addMethodref(NODE_COUNTER, SET_START_NODE, "(I)" + NODE_COUNTER_SIG);
 			il.append(new INVOKEVIRTUAL(index));
 		}
 
@@ -556,7 +556,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 			else
 			{
-			il.append(new PUSH(cpg, Constants_Fields.EMPTYSTRING));
+			il.append(new PUSH(cpg, Constants.EMPTYSTRING));
 			}
 
 			if (_groupingSeparator != null)
@@ -565,7 +565,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 			else
 			{
-			il.append(new PUSH(cpg, Constants_Fields.EMPTYSTRING));
+			il.append(new PUSH(cpg, Constants.EMPTYSTRING));
 			}
 
 			if (_groupingSize != null)
@@ -577,21 +577,21 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(new PUSH(cpg, "0"));
 			}
 
-			index = cpg.addMethodref(Constants_Fields.NODE_COUNTER, "getCounter", "(" + Constants_Fields.STRING_SIG + Constants_Fields.STRING_SIG + Constants_Fields.STRING_SIG + Constants_Fields.STRING_SIG + Constants_Fields.STRING_SIG + ")" + Constants_Fields.STRING_SIG);
+			index = cpg.addMethodref(NODE_COUNTER, "getCounter", "(" + STRING_SIG + STRING_SIG + STRING_SIG + STRING_SIG + STRING_SIG + ")" + STRING_SIG);
 			il.append(new INVOKEVIRTUAL(index));
 		}
 		else
 		{
-			index = cpg.addMethodref(Constants_Fields.NODE_COUNTER, "setDefaultFormatting", "()" + Constants_Fields.NODE_COUNTER_SIG);
+			index = cpg.addMethodref(NODE_COUNTER, "setDefaultFormatting", "()" + NODE_COUNTER_SIG);
 			il.append(new INVOKEVIRTUAL(index));
 
-			index = cpg.addMethodref(Constants_Fields.NODE_COUNTER, "getCounter", "()" + Constants_Fields.STRING_SIG);
+			index = cpg.addMethodref(NODE_COUNTER, "getCounter", "()" + STRING_SIG);
 			il.append(new INVOKEVIRTUAL(index));
 		}
 
 		// Output the resulting string to the handler
 		il.append(methodGen.loadHandler());
-		index = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.CHARACTERSW, Constants_Fields.CHARACTERSW_SIG);
+		index = cpg.addMethodref(TRANSLET_CLASS, CHARACTERSW, CHARACTERSW_SIG);
 		il.append(new INVOKEVIRTUAL(index));
 		}
 	}

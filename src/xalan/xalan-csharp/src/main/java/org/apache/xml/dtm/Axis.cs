@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.dtm
 {
-
 	/// <summary>
 	/// Specifies values related to XPath Axes.
 	/// <para>The ancestor, descendant, following, preceding and self axes partition a
@@ -165,8 +164,8 @@ namespace org.apache.xml.dtm
 	  /// <summary>
 	  /// A table to identify whether an axis is a reverse axis;
 	  /// </summary>
-//JAVA TO C# CONVERTER NOTE: Fields cannot have the same name as methods:
-	  private static readonly bool[] isReverse_Renamed = new bool[] {true, true, false, false, false, false, false, false, false, false, false, true, true, false};
+//JAVA TO C# CONVERTER NOTE: Field name conflicts with a method name of the current type:
+	  private static readonly bool[] isReverse_Conflict = new bool[] {true, true, false, false, false, false, false, false, false, false, false, true, true, false};
 
 		/// <summary>
 		/// The names of the axes for diagnostic purposes. </summary>
@@ -174,7 +173,7 @@ namespace org.apache.xml.dtm
 
 	  public static bool isReverse(int axis)
 	  {
-		  return isReverse_Renamed[axis];
+		  return isReverse_Conflict[axis];
 	  }
 
 		public static string getNames(int index)

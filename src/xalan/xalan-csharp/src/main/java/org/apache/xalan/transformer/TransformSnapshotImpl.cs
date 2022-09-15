@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -22,7 +20,6 @@
  */
 namespace org.apache.xalan.transformer
 {
-
 
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using BoolStack = org.apache.xml.utils.BoolStack;
@@ -67,7 +64,7 @@ namespace org.apache.xalan.transformer
 	  /// <summary>
 	  /// The current context node lists stack.
 	  /// </summary>
-	  private Stack m_contextNodeLists;
+	  private System.Collections.Stack m_contextNodeLists;
 
 	  /// <summary>
 	  /// The current context node list.
@@ -77,7 +74,7 @@ namespace org.apache.xalan.transformer
 	  /// <summary>
 	  /// Stack of AxesIterators.
 	  /// </summary>
-	  private Stack m_axesIteratorStack;
+	  private System.Collections.Stack m_axesIteratorStack;
 
 	  /// <summary>
 	  /// Is > 0 when we're processing a for-each.
@@ -100,7 +97,7 @@ namespace org.apache.xalan.transformer
 	  /// so a tool can discover the matched template, and matched
 	  /// node. 
 	  /// </summary>
-	  private Stack m_currentMatchTemplates;
+	  private System.Collections.Stack m_currentMatchTemplates;
 
 	  /// <summary>
 	  /// A node vector used as a stack to track the current
@@ -114,14 +111,14 @@ namespace org.apache.xalan.transformer
 
 	  /// <summary>
 	  /// The table of counters for xsl:number support. </summary>
-	  /// <seealso cref= ElemNumber </seealso>
+	  /// <seealso cref="ElemNumber"/>
 	  private CountersTable m_countersTable;
 
 	  /// <summary>
 	  /// Stack for the purposes of flagging infinite recursion with
 	  /// attribute sets.
 	  /// </summary>
-	  private Stack m_attrSetStack;
+	  private System.Collections.Stack m_attrSetStack;
 
 	  /// <summary>
 	  /// Indicate whether a namespace context was pushed </summary>
@@ -164,23 +161,23 @@ namespace org.apache.xalan.transformer
 		  m_variableStacks = (VariableStack) xpc.VarStack.clone();
 		  m_currentNodes = (IntStack) xpc.CurrentNodeStack.clone();
 		  m_currentExpressionNodes = (IntStack) xpc.CurrentExpressionNodeStack.clone();
-		  m_contextNodeLists = (Stack) xpc.ContextNodeListsStack.clone();
+		  m_contextNodeLists = (System.Collections.Stack) xpc.ContextNodeListsStack.clone();
 
 		  if (m_contextNodeLists.Count > 0)
 		  {
 			m_contextNodeList = (DTMIterator) xpc.ContextNodeList.clone();
 		  }
 
-		  m_axesIteratorStack = (Stack) xpc.AxesIteratorStackStacks.clone();
+		  m_axesIteratorStack = (System.Collections.Stack) xpc.AxesIteratorStackStacks.clone();
 		  m_currentTemplateRuleIsNull = (BoolStack) transformer.m_currentTemplateRuleIsNull.clone();
 		  m_currentTemplateElements = (ObjectStack) transformer.m_currentTemplateElements.clone();
-		  m_currentMatchTemplates = (Stack) transformer.m_currentMatchTemplates.clone();
+		  m_currentMatchTemplates = (System.Collections.Stack) transformer.m_currentMatchTemplates.clone();
 		  m_currentMatchNodes = (NodeVector) transformer.m_currentMatchedNodes.clone();
 		  m_countersTable = (CountersTable) transformer.CountersTable.clone();
 
 		  if (transformer.m_attrSetStack != null)
 		  {
-			m_attrSetStack = (Stack) transformer.m_attrSetStack.clone();
+			m_attrSetStack = (System.Collections.Stack) transformer.m_attrSetStack.clone();
 		  }
 		}
 		catch (CloneNotSupportedException cnse)
@@ -217,24 +214,24 @@ namespace org.apache.xalan.transformer
 		  xpc.VarStack = (VariableStack) m_variableStacks.clone();
 		  xpc.CurrentNodeStack = (IntStack) m_currentNodes.clone();
 		  xpc.CurrentExpressionNodeStack = (IntStack) m_currentExpressionNodes.clone();
-		  xpc.ContextNodeListsStack = (Stack) m_contextNodeLists.clone();
+		  xpc.ContextNodeListsStack = (System.Collections.Stack) m_contextNodeLists.clone();
 
 		  if (m_contextNodeList != null)
 		  {
 			xpc.pushContextNodeList((DTMIterator) m_contextNodeList.clone());
 		  }
 
-		  xpc.AxesIteratorStackStacks = (Stack) m_axesIteratorStack.clone();
+		  xpc.AxesIteratorStackStacks = (System.Collections.Stack) m_axesIteratorStack.clone();
 
 		  transformer.m_currentTemplateRuleIsNull = (BoolStack) m_currentTemplateRuleIsNull.clone();
 		  transformer.m_currentTemplateElements = (ObjectStack) m_currentTemplateElements.clone();
-		  transformer.m_currentMatchTemplates = (Stack) m_currentMatchTemplates.clone();
+		  transformer.m_currentMatchTemplates = (System.Collections.Stack) m_currentMatchTemplates.clone();
 		  transformer.m_currentMatchedNodes = (NodeVector) m_currentMatchNodes.clone();
 		  transformer.m_countersTable = (CountersTable) m_countersTable.clone();
 
 		  if (m_attrSetStack != null)
 		  {
-			transformer.m_attrSetStack = (Stack) m_attrSetStack.clone();
+			transformer.m_attrSetStack = (System.Collections.Stack) m_attrSetStack.clone();
 		  }
 		}
 		catch (CloneNotSupportedException cnse)

@@ -23,9 +23,12 @@ using System.Collections;
  */
 namespace org.apache.xpath.patterns
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using XNumber = org.apache.xpath.objects.XNumber;
 	using XObject = org.apache.xpath.objects.XObject;
 
@@ -91,14 +94,14 @@ namespace org.apache.xpath.patterns
 	  /// </summary>
 	  /// <param name="xctxt"> XPath runtime context.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt, int context) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt, int context)
 	  {
@@ -110,7 +113,7 @@ namespace org.apache.xpath.patterns
 		{
 		  int n;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (n = nl.nextNode()))
+		  while (DTM.NULL != (n = nl.nextNode()))
 		  {
 			score = (n == context) ? SCORE_OTHER : SCORE_NONE;
 
@@ -134,14 +137,14 @@ namespace org.apache.xpath.patterns
 	  /// </summary>
 	  /// <param name="xctxt"> XPath runtime context.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt, int context, org.apache.xml.dtm.DTM dtm, int expType) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt, int context, DTM dtm, int expType)
 	  {
@@ -153,7 +156,7 @@ namespace org.apache.xpath.patterns
 		{
 		  int n;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (n = nl.nextNode()))
+		  while (DTM.NULL != (n = nl.nextNode()))
 		  {
 			score = (n == context) ? SCORE_OTHER : SCORE_NONE;
 
@@ -176,14 +179,14 @@ namespace org.apache.xpath.patterns
 	  /// </summary>
 	  /// <param name="xctxt"> XPath runtime context.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -196,7 +199,7 @@ namespace org.apache.xpath.patterns
 		{
 		  int n;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (n = nl.nextNode()))
+		  while (DTM.NULL != (n = nl.nextNode()))
 		  {
 			score = (n == context) ? SCORE_OTHER : SCORE_NONE;
 
@@ -223,7 +226,7 @@ namespace org.apache.xpath.patterns
 			  this.outerInstance = outerInstance;
 		  }
 
-		/// <seealso cref= ExpressionOwner#getExpression() </seealso>
+		/// <seealso cref="ExpressionOwner.getExpression()"/>
 		public virtual Expression Expression
 		{
 			get

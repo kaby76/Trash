@@ -23,10 +23,14 @@ using System.Collections;
  */
 namespace org.apache.xpath.axes
 {
-
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTM = org.apache.xml.dtm.DTM;
 	using PrefixResolver = org.apache.xml.utils.PrefixResolver;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using VariableStack = org.apache.xpath.VariableStack;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using XNodeSet = org.apache.xpath.objects.XNodeSet;
 
 	/// <summary>
@@ -84,7 +88,7 @@ namespace org.apache.xpath.axes
 	  /// Execute the expression.  Meant for reuse by other FilterExpr iterators 
 	  /// that are not derived from this object.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xpath.objects.XNodeSet executeFilterExpr(int context, org.apache.xpath.XPathContext xctxt, org.apache.xml.utils.PrefixResolver prefixResolver, boolean isTopLevel, int stackFrame, org.apache.xpath.Expression expr) throws org.apache.xml.utils.WrappedRuntimeException
 	  public static XNodeSet executeFilterExpr(int context, XPathContext xctxt, PrefixResolver prefixResolver, bool isTopLevel, int stackFrame, Expression expr)
 	  {
@@ -147,7 +151,7 @@ namespace org.apache.xpath.axes
 	  {
 		  if (m_foundLast)
 		  {
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return DTM.NULL;
 		  }
 
 		int next;
@@ -158,11 +162,11 @@ namespace org.apache.xpath.axes
 		}
 		else
 		{
-		  m_lastFetched = next = org.apache.xml.dtm.DTM_Fields.NULL;
+		  m_lastFetched = next = DTM.NULL;
 		}
 
 		// m_lastFetched = next;
-		if (org.apache.xml.dtm.DTM_Fields.NULL != next)
+		if (DTM.NULL != next)
 		{
 		  m_pos++;
 		  return next;
@@ -171,7 +175,7 @@ namespace org.apache.xpath.axes
 		{
 		  m_foundLast = true;
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 	  }
 
@@ -260,7 +264,7 @@ namespace org.apache.xpath.axes
 			  this.outerInstance = outerInstance;
 		  }
 
-		/// <seealso cref= ExpressionOwner#getExpression() </seealso>
+		/// <seealso cref="ExpressionOwner.getExpression()"/>
 		public virtual Expression Expression
 		{
 			get
@@ -290,7 +294,7 @@ namespace org.apache.xpath.axes
 		base.callPredicateVisitors(visitor);
 	  }
 
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		if (!base.deepEquals(expr))

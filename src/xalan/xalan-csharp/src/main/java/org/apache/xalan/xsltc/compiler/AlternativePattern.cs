@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using GOTO = org.apache.bcel.generic.GOTO;
 	using InstructionHandle = org.apache.bcel.generic.InstructionHandle;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
@@ -78,7 +77,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// The type of an '|' is not really defined, hence null is returned.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -114,7 +113,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		_left.translate(classGen, methodGen);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -124,7 +123,7 @@ namespace org.apache.xalan.xsltc.compiler
 		_right.translate(classGen, methodGen);
 
 		_left._trueList.backPatch(gotot);
-		_left._falseList.backPatch(gotot.Next);
+		_left._falseList.backPatch(gotot.getNext());
 
 		_trueList.append(_right._trueList.add(gotot));
 		_falseList.append(_right._falseList);

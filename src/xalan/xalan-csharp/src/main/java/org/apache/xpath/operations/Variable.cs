@@ -26,6 +26,11 @@ namespace org.apache.xpath.operations
 
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using QName = org.apache.xml.utils.QName;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPath = org.apache.xpath.XPath;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using PathComponent = org.apache.xpath.axes.PathComponent;
 	using WalkerFactory = org.apache.xpath.axes.WalkerFactory;
 	using XNodeSet = org.apache.xpath.objects.XNodeSet;
@@ -179,7 +184,7 @@ namespace org.apache.xpath.operations
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if a runtime exception
 	  ///         occurs. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -198,7 +203,7 @@ namespace org.apache.xpath.operations
 	  /// <returns> The evaluated variable, or an empty nodeset if not found.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt, boolean destructiveOK) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt, bool destructiveOK)
 	  {
@@ -350,12 +355,12 @@ namespace org.apache.xpath.operations
 	  }
 
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
 	  {
 		  visitor.visitVariableRef(owner, this);
 	  }
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		  if (!isSameClass(expr))

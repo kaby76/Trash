@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// The default implementation of XMLStringFactory.
 	/// This implementation creates XMLStringDefault objects.

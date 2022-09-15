@@ -25,7 +25,6 @@ namespace org.apache.xalan.lib
 {
 
 
-
 	using ExpressionContext = org.apache.xalan.extensions.ExpressionContext;
 	using EnvironmentCheck = org.apache.xalan.xslt.EnvironmentCheck;
 	using NodeSet = org.apache.xpath.NodeSet;
@@ -96,11 +95,11 @@ namespace org.apache.xalan.lib
 		  {
 			textNodeValue = (string) rtf;
 		  }
-		  else if (rtf is bool?)
+		  else if (rtf is Boolean)
 		  {
 			textNodeValue = (new XBoolean(((bool?) rtf).Value)).str();
 		  }
-		  else if (rtf is double?)
+		  else if (rtf is Double)
 		  {
 			textNodeValue = (new XNumber(((double?) rtf).Value)).str();
 		  }
@@ -223,7 +222,7 @@ namespace org.apache.xalan.lib
 	  /// Note: The usage of this extension function in the xalan namespace 
 	  /// is deprecated. Please use the same function in the EXSLT dynamic extension
 	  /// (http://exslt.org/dynamic). </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xpath.objects.XObject evaluate(org.apache.xalan.extensions.ExpressionContext myContext, String xpathExpr) throws org.xml.sax.SAXNotSupportedException
 	  public static XObject evaluate(ExpressionContext myContext, string xpathExpr)
 	  {

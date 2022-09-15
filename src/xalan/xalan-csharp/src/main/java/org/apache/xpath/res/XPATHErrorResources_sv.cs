@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath.res
 {
-
 	/// <summary>
 	/// Set up error messages.
 	/// We build a two dimensional array of message keys and

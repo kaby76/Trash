@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +18,6 @@
 
 namespace org.apache.xalan.extensions
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 
@@ -153,7 +150,7 @@ namespace org.apache.xalan.extensions
 			}
 		}
 
-		public virtual IEnumerator getPrefixes(string @namespace)
+		public virtual System.Collections.IEnumerator getPrefixes(string @namespace)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String result = getPrefix(namespace);
@@ -162,7 +159,7 @@ namespace org.apache.xalan.extensions
 			return new IteratorAnonymousInnerClass(this, result);
 		}
 
-		private class IteratorAnonymousInnerClass : IEnumerator
+		private class IteratorAnonymousInnerClass : System.Collections.IEnumerator
 		{
 			private readonly ExtensionNamespaceContext outerInstance;
 
@@ -178,12 +175,12 @@ namespace org.apache.xalan.extensions
 
 			private bool isFirstIteration;
 
-			public virtual bool hasNext()
+			public bool hasNext()
 			{
 				return isFirstIteration;
 			}
 
-			public virtual object next()
+			public object next()
 			{
 				if (isFirstIteration)
 				{
@@ -196,7 +193,7 @@ namespace org.apache.xalan.extensions
 				}
 			}
 
-			public virtual void remove()
+			public void remove()
 			{
 				throw new System.NotSupportedException();
 			}

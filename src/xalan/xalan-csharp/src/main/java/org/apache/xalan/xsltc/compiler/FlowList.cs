@@ -24,7 +24,6 @@
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using InstructionHandle = org.apache.bcel.generic.InstructionHandle;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
@@ -101,7 +100,7 @@ namespace org.apache.xalan.xsltc.compiler
 			for (int i = 0; i < n; i++)
 			{
 			BranchHandle bh = (BranchHandle)_elements[i];
-			bh.Target = target;
+			bh.setTarget(target);
 			}
 			_elements.Clear(); // avoid backpatching more than once
 		}
@@ -126,10 +125,10 @@ namespace org.apache.xalan.xsltc.compiler
 		int n = _elements.Count;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Iterator oldIter = oldList.iterator();
-		IEnumerator oldIter = oldList.GetEnumerator();
+		System.Collections.IEnumerator oldIter = oldList.GetEnumerator();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Iterator newIter = newList.iterator();
-		IEnumerator newIter = newList.GetEnumerator();
+		System.Collections.IEnumerator newIter = newList.GetEnumerator();
 
 		while (oldIter.MoveNext())
 		{

@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath
 {
-
 	using QName = org.apache.xml.utils.QName;
 	using XObject = org.apache.xpath.objects.XObject;
 
@@ -36,9 +35,9 @@ namespace org.apache.xpath
 	  /// <summary>
 	  /// Field m_qname: The name of this argument, expressed as a QName
 	  /// (Qualified Name) object. </summary>
-	  /// <seealso cref= getQName </seealso>
-	  /// <seealso cref= setQName
-	  ///  </seealso>
+	  /// <seealso cref="getQName"/>
+	  /// <seealso cref="setQName"
+	  /// />
 	  private QName m_qname;
 
 	  /// <summary>
@@ -60,15 +59,15 @@ namespace org.apache.xpath
 
 	  /// <summary>
 	  /// Field m_val: Stored XObject value of this argument </summary>
-	  /// <seealso cref= #getVal() </seealso>
-	  /// <seealso cref= #setVal() </seealso>
+	  /// <seealso cref=".getVal()"/>
+	  /// <seealso cref=".setVal()"/>
 	  private XObject m_val;
 
 	  /// <summary>
 	  /// Get the value for this argument.
 	  /// </summary>
 	  /// <returns> the argument's stored XObject value. </returns>
-	  /// <seealso cref= #setVal(XObject) </seealso>
+	  /// <seealso cref=".setVal(XObject)"/>
 	  public XObject Val
 	  {
 		  get
@@ -98,9 +97,9 @@ namespace org.apache.xpath
 
 	  /// <summary>
 	  /// Field m_expression: Stored expression value of this argument. </summary>
-	  /// <seealso cref= #setExpression </seealso>
-	  /// <seealso cref= #getExpression
-	  ///  </seealso>
+	  /// <seealso cref=".setExpression"/>
+	  /// <seealso cref=".getExpression"
+	  /// />
 	  private string m_expression;
 
 	  /// <summary>
@@ -108,7 +107,7 @@ namespace org.apache.xpath
 	  /// </summary>
 	  /// <returns> String containing the expression previously stored into this
 	  /// argument </returns>
-	  /// <seealso cref= #setExpression </seealso>
+	  /// <seealso cref=".setExpression"/>
 	  public virtual string Expression
 	  {
 		  get

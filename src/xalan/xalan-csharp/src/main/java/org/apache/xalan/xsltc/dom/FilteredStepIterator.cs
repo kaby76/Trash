@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 
 	/// <summary>
@@ -44,7 +43,7 @@ namespace org.apache.xalan.xsltc.dom
 		public override int next()
 		{
 		int node;
-		while ((node = base.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+		while ((node = base.next()) != END)
 		{
 			if (_filter.test(node))
 			{

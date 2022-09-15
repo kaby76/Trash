@@ -25,7 +25,6 @@ using System.Collections;
 namespace org.apache.xalan.xsltc.compiler.util
 {
 
-
 	using Constants = org.apache.bcel.Constants;
 	using Field = org.apache.bcel.classfile.Field;
 	using Method = org.apache.bcel.classfile.Method;
@@ -66,6 +65,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 	using TargetLostException = org.apache.bcel.generic.TargetLostException;
 	using Type = org.apache.bcel.generic.Type;
 
+	using Pattern = org.apache.xalan.xsltc.compiler.Pattern;
+	using XSLTC = org.apache.xalan.xsltc.compiler.XSLTC;
 
 	/// <summary>
 	/// @author Jacek Ambroziak
@@ -75,7 +76,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 	{
 		protected internal const int INVALID_INDEX = -1;
 
-		private static readonly string START_ELEMENT_SIG = "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + ")V";
+		private static readonly string START_ELEMENT_SIG = "(" + STRING_SIG + ")V";
 		private static readonly string END_ELEMENT_SIG = START_ELEMENT_SIG;
 
 		private InstructionList _mapTypeSub;
@@ -135,48 +136,48 @@ namespace org.apache.xalan.xsltc.compiler.util
 		_astoreDom = new ASTORE(DOM_INDEX);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int startElement = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "startElement", START_ELEMENT_SIG);
-		int startElement = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "startElement", START_ELEMENT_SIG);
+//ORIGINAL LINE: final int startElement = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "startElement", START_ELEMENT_SIG);
+		int startElement = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "startElement", START_ELEMENT_SIG);
 		_startElement = new INVOKEINTERFACE(startElement, 2);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int endElement = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "endElement", END_ELEMENT_SIG);
-		int endElement = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "endElement", END_ELEMENT_SIG);
+//ORIGINAL LINE: final int endElement = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "endElement", END_ELEMENT_SIG);
+		int endElement = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "endElement", END_ELEMENT_SIG);
 		_endElement = new INVOKEINTERFACE(endElement, 2);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int attribute = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "addAttribute", "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + ")V");
-		int attribute = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "addAttribute", "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + ")V");
+//ORIGINAL LINE: final int attribute = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "addAttribute", "(" + STRING_SIG + STRING_SIG + ")V");
+		int attribute = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "addAttribute", "(" + STRING_SIG + STRING_SIG + ")V");
 		_attribute = new INVOKEINTERFACE(attribute, 3);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int uniqueAttribute = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "addUniqueAttribute", "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + "I)V");
-		int uniqueAttribute = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "addUniqueAttribute", "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + "I)V");
+//ORIGINAL LINE: final int uniqueAttribute = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "addUniqueAttribute", "(" + STRING_SIG + STRING_SIG + "I)V");
+		int uniqueAttribute = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "addUniqueAttribute", "(" + STRING_SIG + STRING_SIG + "I)V");
 		_uniqueAttribute = new INVOKEINTERFACE(uniqueAttribute, 4);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int namespace = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "namespaceAfterStartElement", "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + ")V");
-		int @namespace = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "namespaceAfterStartElement", "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG + ")V");
+//ORIGINAL LINE: final int namespace = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "namespaceAfterStartElement", "(" + STRING_SIG + STRING_SIG + ")V");
+		int @namespace = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "namespaceAfterStartElement", "(" + STRING_SIG + STRING_SIG + ")V");
 		_namespace = new INVOKEINTERFACE(@namespace, 3);
 
-		int index = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "startDocument", "()V");
+		int index = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "startDocument", "()V");
 		_startDocument = new INVOKEINTERFACE(index, 1);
 
-		index = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "endDocument", "()V");
+		index = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "endDocument", "()V");
 		_endDocument = new INVOKEINTERFACE(index, 1);
 
 
-		index = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_ITERATOR, org.apache.xalan.xsltc.compiler.Constants_Fields.SET_START_NODE, org.apache.xalan.xsltc.compiler.Constants_Fields.SET_START_NODE_SIG);
+		index = cpg.addInterfaceMethodref(NODE_ITERATOR, SET_START_NODE, SET_START_NODE_SIG);
 		_setStartNode = new INVOKEINTERFACE(index, 2);
 
-		index = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_ITERATOR, "reset", "()" + org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_ITERATOR_SIG);
+		index = cpg.addInterfaceMethodref(NODE_ITERATOR, "reset", "()" + NODE_ITERATOR_SIG);
 		_reset = new INVOKEINTERFACE(index, 1);
 
-		index = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_ITERATOR, org.apache.xalan.xsltc.compiler.Constants_Fields.NEXT, org.apache.xalan.xsltc.compiler.Constants_Fields.NEXT_SIG);
+		index = cpg.addInterfaceMethodref(NODE_ITERATOR, NEXT, NEXT_SIG);
 		_nextNode = new INVOKEINTERFACE(index, 1);
 
 		_slotAllocator = new SlotAllocator();
-		_slotAllocator.initialize(getLocalVariableRegistry().getLocals(false));
+		_slotAllocator.initialize(LocalVariableRegistry.getLocals(false));
 		_allocatorInit = true;
 		}
 
@@ -197,7 +198,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			else
 			{
 			lvg = base.addLocalVariable(name, type, start, end);
-				getLocalVariableRegistry().registerLocalVariable(lvg);
+				LocalVariableRegistry.registerLocalVariable(lvg);
 			}
 
 			return lvg;
@@ -206,32 +207,35 @@ namespace org.apache.xalan.xsltc.compiler.util
 		public virtual LocalVariableGen addLocalVariable2(string name, Type type, InstructionHandle start)
 		{
 		LocalVariableGen lvg = base.addLocalVariable(name, type, _slotAllocator.allocateSlot(type), start, null);
-			getLocalVariableRegistry().registerLocalVariable(lvg);
+			LocalVariableRegistry.registerLocalVariable(lvg);
 			return lvg;
 		}
 
-		private LocalVariableRegistry getLocalVariableRegistry()
+		private LocalVariableRegistry LocalVariableRegistry
 		{
-			if (_localVariableRegistry == null)
+			get
 			{
-				_localVariableRegistry = new LocalVariableRegistry(this);
+				if (_localVariableRegistry == null)
+				{
+					_localVariableRegistry = new LocalVariableRegistry(this);
+				}
+    
+				return _localVariableRegistry;
 			}
-
-			return _localVariableRegistry;
 		}
 
 		/// <summary>
 		/// Keeps track of all local variables used in the method.
 		/// <para>The
-		/// <seealso cref="MethodGen#addLocalVariable(String,Type,InstructionHandle,InstructionHandle)"/></code>
+		/// <seealso cref="MethodGen.addLocalVariable(String,Type,InstructionHandle,InstructionHandle)"/></code>
 		/// and
-		/// <seealso cref="MethodGen#addLocalVariable(String,Type,int,InstructionHandle,InstructionHandle)"/></code>
+		/// <seealso cref="MethodGen.addLocalVariable(String,Type,int,InstructionHandle,InstructionHandle)"/></code>
 		/// methods of <seealso cref="MethodGen"/> will only keep track of
 		/// <seealso cref="LocalVariableGen"/> object until it'ss removed by a call to
-		/// <seealso cref="MethodGen#removeLocalVariable(LocalVariableGen)"/>.</para>
+		/// <seealso cref="MethodGen.removeLocalVariable(LocalVariableGen)"/>.</para>
 		/// <para>In order to support efficient copying of local variables to outlined
 		/// methods by
-		/// <seealso cref="#outline(InstructionHandle,InstructionHandle,String,ClassGenerator)"/>,
+		/// <seealso cref="outline(InstructionHandle,InstructionHandle,String,ClassGenerator)"/>,
 		/// this class keeps track of all local variables defined by the method.</para>
 		/// </summary>
 		protected internal class LocalVariableRegistry
@@ -278,7 +282,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			/// <param name="lvg"> The variable to be registered </param>
 			protected internal virtual void registerLocalVariable(LocalVariableGen lvg)
 			{
-				int slot = lvg.Index;
+				int slot = lvg.getIndex();
 
 				int registrySize = _variables.Count;
 
@@ -330,7 +334,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			/// byte code for the method.</para>
 			/// <para><b>Preconditions:</b>
 			/// <ul>
-			/// <li>The <seealso cref="InstructionList#setPositions()"/> has been called for
+			/// <li>The <seealso cref="InstructionList.setPositions()"/> has been called for
 			/// the <seealso cref="InstructionList"/> associated with this
 			/// <seealso cref="MethodGenerator"/>.</li>
 			/// </ul></para> </summary>
@@ -386,24 +390,24 @@ namespace org.apache.xalan.xsltc.compiler.util
 			/// <para>This is a bit of a hack.  XSLTC is relying on the fact that the
 			/// name that is being looked up won't be duplicated, which isn't
 			/// guaranteed.  It replaces code which used to call
-			/// <seealso cref="MethodGen#getLocalVariables()"/> and looped through the
+			/// <seealso cref="MethodGen.getLocalVariables()"/> and looped through the
 			/// <code>LocalVariableGen</code> objects it contained to find the one
 			/// with the specified name.  However, <code>getLocalVariables()</code>
 			/// has the side effect of setting the start and end for any
 			/// <code>LocalVariableGen</code> which did not already have them
 			/// set, which causes problems for outlining..</para>
-			/// <para>See also <seealso cref="#lookUpByName(String)"/> and
-			/// <seealso cref="#removeByNameTracking(LocalVariableGen)"/></P
+			/// <para>See also <seealso cref="lookUpByName(String)"/> and
+			/// <seealso cref="removeByNameTracking(LocalVariableGen)"/></P
 			/// </para>
 			/// </summary>
 			/// <param name="lvg"> a <code>LocalVariableGen</code> </param>
 			protected internal virtual void registerByName(LocalVariableGen lvg)
 			{
-				object duplicateNameEntry = _nameToLVGMap[lvg.Name];
+				object duplicateNameEntry = _nameToLVGMap[lvg.getName()];
 
 				if (duplicateNameEntry == null)
 				{
-					_nameToLVGMap[lvg.Name] = lvg;
+					_nameToLVGMap[lvg.getName()] = lvg;
 				}
 				else
 				{
@@ -421,19 +425,19 @@ namespace org.apache.xalan.xsltc.compiler.util
 						sameNameList.Add(lvg);
 					}
 
-					_nameToLVGMap[lvg.Name] = sameNameList;
+					_nameToLVGMap[lvg.getName()] = sameNameList;
 				}
 			}
 
 			/// <summary>
 			/// Remove the mapping from the name of the specified
 			/// <seealso cref="LocalVariableGen"/> to itself. 
-			/// See also <seealso cref="#registerByName(LocalVariableGen)"/> and
-			/// <seealso cref="#lookUpByName(String)"/> </summary>
+			/// See also <seealso cref="registerByName(LocalVariableGen)"/> and
+			/// <seealso cref="lookUpByName(String)"/> </summary>
 			/// <param name="lvg"> a <code>LocalVariableGen</code> </param>
 			protected internal virtual void removeByNameTracking(LocalVariableGen lvg)
 			{
-				object duplicateNameEntry = _nameToLVGMap[lvg.Name];
+				object duplicateNameEntry = _nameToLVGMap[lvg.getName()];
 
 				if (duplicateNameEntry is ArrayList)
 				{
@@ -456,8 +460,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 			/// <summary>
 			/// <para>Given the name of a variable, finds a <seealso cref="LocalVariableGen"/>
 			/// corresponding to it.</para>
-			/// <para>See also <seealso cref="#registerByName(LocalVariableGen)"/> and
-			/// <seealso cref="#removeByNameTracking(LocalVariableGen)"/></para> </summary>
+			/// <para>See also <seealso cref="registerByName(LocalVariableGen)"/> and
+			/// <seealso cref="removeByNameTracking(LocalVariableGen)"/></para> </summary>
 			/// <param name="name">
 			/// @return </param>
 			protected internal virtual LocalVariableGen lookUpByName(string name)
@@ -472,7 +476,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 					for (int i = 0; i < sameNameList.Count; i++)
 					{
 						lvg = (LocalVariableGen)sameNameList[i];
-						if (lvg.Name == name)
+						if (lvg.getName() == name)
 						{
 							break;
 						}
@@ -490,7 +494,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			/// <para>Gets all <seealso cref="LocalVariableGen"/> objects for this method.</para>
 			/// <para>When the <code>includeRemoved</code> argument has the value
 			/// <code>false</code>, this method replaces uses of
-			/// <seealso cref="MethodGen#getLocalVariables()"/> which has
+			/// <seealso cref="MethodGen.getLocalVariables()"/> which has
 			/// a side-effect of setting the start and end range for any
 			/// <code>LocalVariableGen</code> if either was <code>null</code>.  That
 			/// side-effect causes problems for outlining of code in XSLTC. 
@@ -533,7 +537,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 				}
 				else
 				{
-					IEnumerator nameVarsPairsIter = _nameToLVGMap.SetOfKeyValuePairs().GetEnumerator();
+					System.Collections.IEnumerator nameVarsPairsIter = _nameToLVGMap.SetOfKeyValuePairs().GetEnumerator();
 
 					while (nameVarsPairsIter.MoveNext())
 					{
@@ -569,7 +573,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// in the byte code for this method.
 		/// <para><b>Preconditions:</b>
 		/// <ul>
-		/// <li>The <seealso cref="InstructionList#setPositions()"/> has been called for the
+		/// <li>The <seealso cref="InstructionList.setPositions()"/> has been called for the
 		/// <seealso cref="InstructionList"/> associated with this <seealso cref="MethodGenerator"/>.
 		/// </li></ul></para> </summary>
 		/// <param name="lvg"> the <seealso cref="LocalVariableGen"/> for the variable </param>
@@ -578,21 +582,21 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// use at the particular byte code offset. </returns>
 		internal virtual bool offsetInLocalVariableGenRange(LocalVariableGen lvg, int offset)
 		{
-			InstructionHandle lvgStart = lvg.Start;
-			InstructionHandle lvgEnd = lvg.End;
+			InstructionHandle lvgStart = lvg.getStart();
+			InstructionHandle lvgEnd = lvg.getEnd();
 
 			// If no start handle is recorded for the LocalVariableGen, it is
 			// assumed to be in use from the beginning of the method.
 			if (lvgStart == null)
 			{
-				lvgStart = InstructionList.Start;
+				lvgStart = getInstructionList().getStart();
 			}
 
 			// If no end handle is recorded for the LocalVariableGen, it is assumed
 			// to be in use to the end of the method.
 			if (lvgEnd == null)
 			{
-				lvgEnd = InstructionList.End;
+				lvgEnd = getInstructionList().getEnd();
 			}
 
 			// Does the range of the instruction include the specified offset?
@@ -601,13 +605,13 @@ namespace org.apache.xalan.xsltc.compiler.util
 			// range includes the end instruction itself, so that instruction's
 			// length must be taken into consideration in computing whether the
 			// varible is in range at a particular offset.
-			return ((lvgStart.Position <= offset) && (lvgEnd.Position + lvgEnd.Instruction.Length >= offset));
+			return ((lvgStart.getPosition() <= offset) && (lvgEnd.getPosition() + lvgEnd.getInstruction().getLength() >= offset));
 		}
 
 		public virtual void removeLocalVariable(LocalVariableGen lvg)
 		{
 		_slotAllocator.releaseSlot(lvg);
-			getLocalVariableRegistry().removeByNameTracking(lvg);
+			LocalVariableRegistry.removeByNameTracking(lvg);
 		base.removeLocalVariable(lvg);
 		}
 
@@ -727,24 +731,24 @@ namespace org.apache.xalan.xsltc.compiler.util
 
 		public virtual int getLocalIndex(string name)
 		{
-		return getLocalVariable(name).Index;
+		return getLocalVariable(name).getIndex();
 		}
 
 		public virtual LocalVariableGen getLocalVariable(string name)
 		{
-			return getLocalVariableRegistry().lookUpByName(name);
+			return LocalVariableRegistry.lookUpByName(name);
 		}
 
 		public virtual void setMaxLocals()
 		{
 
 		// Get the current number of local variable slots
-		int maxLocals = base.MaxLocals;
+		int maxLocals = base.getMaxLocals();
 
 		// Get numer of actual variables
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.LocalVariableGen[] localVars = super.getLocalVariables();
-		LocalVariableGen[] localVars = base.LocalVariables;
+		LocalVariableGen[] localVars = base.getLocalVariables();
 		if (localVars != null)
 		{
 			if (localVars.Length > maxLocals)
@@ -759,7 +763,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			maxLocals = 5;
 		}
 
-		base.MaxLocals = maxLocals;
+		base.setMaxLocals(maxLocals);
 		}
 
 		/// <summary>
@@ -808,7 +812,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			/// <para>Constructor for an outlineable <seealso cref="MethodGenerator.Chunk"/>.</para>
 			/// <para><b>Preconditions:</b>
 			/// <ul>
-			/// <li>The <seealso cref="InstructionList#setPositions()"/> has been called for
+			/// <li>The <seealso cref="InstructionList.setPositions()"/> has been called for
 			/// the <seealso cref="InstructionList"/> associated with this
 			/// <seealso cref="MethodGenerator"/>.</li>
 			/// </ul></para> </summary>
@@ -820,7 +824,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			{
 				m_start = start;
 				m_end = end;
-				m_size = end.Position - start.Position;
+				m_size = end.getPosition() - start.getPosition();
 			}
 
 			/// <summary>
@@ -834,7 +838,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			/// immediately follows <code>this</code> chunk </returns>
 			internal virtual bool isAdjacentTo(Chunk neighbour)
 			{
-				return ChunkEnd.Next == neighbour.ChunkStart;
+				return ChunkEnd.getNext() == neighbour.ChunkStart;
 			}
 
 			/// <summary>
@@ -900,10 +904,10 @@ namespace org.apache.xalan.xsltc.compiler.util
 		///  <seealso cref="MethodGenerator.Chunk"/>s that may be outlined from this method </returns>
 		private ArrayList getCandidateChunks(ClassGenerator classGen, int totalMethodSize)
 		{
-			IEnumerator instructions = InstructionList.GetEnumerator();
+			System.Collections.IEnumerator instructions = getInstructionList().GetEnumerator();
 			ArrayList candidateChunks = new ArrayList();
 			ArrayList currLevelChunks = new ArrayList();
-			Stack subChunkStack = new Stack();
+			System.Collections.Stack subChunkStack = new System.Collections.Stack();
 			bool openChunkAtCurrLevel = false;
 			bool firstInstruction = true;
 
@@ -936,7 +940,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 				// currentHandle set to null.
 //JAVA TO C# CONVERTER TODO TASK: Java iterators are only converted within the context of 'while' and 'for' loops:
 				currentHandle = instructions.hasNext() ? (InstructionHandle) instructions.next() : null;
-				Instruction inst = (currentHandle != null) ? currentHandle.Instruction : null;
+				Instruction inst = (currentHandle != null) ? currentHandle.getInstruction() : null;
 
 				// At the first iteration, create a chunk representing all the
 				// code in the method.  This is done just to simplify the logic -
@@ -984,8 +988,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 					// in currLevelChunks)
 					InstructionHandle chunkStart = (InstructionHandle) currLevelChunks[currLevelChunks.Count - 1];
 
-					int chunkEndPosition = (currentHandle != null) ? currentHandle.Position : totalMethodSize;
-					int chunkSize = chunkEndPosition - chunkStart.Position;
+					int chunkEndPosition = (currentHandle != null) ? currentHandle.getPosition() : totalMethodSize;
+					int chunkSize = chunkEndPosition - chunkStart.getPosition();
 
 					// Two ranges of chunk size to consider:
 					//
@@ -1040,7 +1044,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 						}
 
 						// Drop the chunk which was too big
-						currLevelChunks.Remove(currLevelChunks.Count - 1);
+						currLevelChunks.RemoveAt(currLevelChunks.Count - 1);
 					}
 
 					// currLevelChunks contains pairs of InstructionHandles.  If
@@ -1218,7 +1222,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 
 			int outlinedCount = 0;
 			bool moreMethodsOutlined;
-			string originalMethodName = Name;
+			string originalMethodName = getName();
 
 			// Special handling for initialization methods.  No other methods can
 			// include the less than and greater than characters in their names,
@@ -1255,12 +1259,12 @@ namespace org.apache.xalan.xsltc.compiler.util
 					outlinedCount++;
 					moreMethodsOutlined = true;
 
-					InstructionList il = InstructionList;
-					InstructionHandle lastInst = il.End;
+					InstructionList il = getInstructionList();
+					InstructionHandle lastInst = il.getEnd();
 					il.setPositions();
 
 					// Check the size of the method now
-					currentMethodSize = lastInst.Position + lastInst.Instruction.Length;
+					currentMethodSize = lastInst.getPosition() + lastInst.getInstruction().getLength();
 				}
 			} while (moreMethodsOutlined && currentMethodSize > TARGET_METHOD_SIZE);
 
@@ -1293,20 +1297,20 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// <param name="outlinedMethodName"> The name of the new method </param>
 		/// <param name="classGen"> The <seealso cref="ClassGenerator"/> of which the original
 		///              and new methods will be members </param>
-		/// <returns> The new <seealso cref="Method"/> containing the outlined code. </returns>
+		/// <returns> The new <seealso cref="System.Reflection.MethodInfo"/> containing the outlined code. </returns>
 		private Method outline(InstructionHandle first, InstructionHandle last, string outlinedMethodName, ClassGenerator classGen)
 		{
 			// We're not equipped to deal with exception handlers yet.  Bail out!
-			if (ExceptionHandlers.length != 0)
+			if (getExceptionHandlers().length != 0)
 			{
 				string msg = (new ErrorMsg(ErrorMsg.OUTLINE_ERR_TRY_CATCH)).ToString();
 				throw new InternalError(msg);
 			}
 
-			int outlineChunkStartOffset = first.Position;
-			int outlineChunkEndOffset = last.Position + last.Instruction.Length;
+			int outlineChunkStartOffset = first.getPosition();
+			int outlineChunkEndOffset = last.getPosition() + last.getInstruction().getLength();
 
-			ConstantPoolGen cpg = ConstantPool;
+			ConstantPoolGen cpg = getConstantPool();
 
 			// Create new outlined method with signature:
 			//
@@ -1339,26 +1343,26 @@ namespace org.apache.xalan.xsltc.compiler.util
 //ORIGINAL LINE: final String[] argNames = new String[] {argName};
 			string[] argNames = new string[] {argName};
 
-			int methodAttributes = org.apache.xalan.xsltc.compiler.Constants_Fields.ACC_PRIVATE | org.apache.xalan.xsltc.compiler.Constants_Fields.ACC_FINAL;
+			int methodAttributes = ACC_PRIVATE | ACC_FINAL;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final boolean isStaticMethod = (getAccessFlags() & org.apache.xalan.xsltc.compiler.Constants_Fields.ACC_STATIC) != 0;
-			bool isStaticMethod = (AccessFlags & org.apache.xalan.xsltc.compiler.Constants_Fields.ACC_STATIC) != 0;
+//ORIGINAL LINE: final boolean isStaticMethod = (getAccessFlags() & ACC_STATIC) != 0;
+			bool isStaticMethod = (getAccessFlags() & ACC_STATIC) != 0;
 
 			if (isStaticMethod)
 			{
-				methodAttributes = methodAttributes | org.apache.xalan.xsltc.compiler.Constants_Fields.ACC_STATIC;
+				methodAttributes = methodAttributes | ACC_STATIC;
 			}
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final MethodGenerator outlinedMethodGen = new MethodGenerator(methodAttributes, org.apache.bcel.generic.Type.VOID, argTypes, argNames, outlinedMethodName, getClassName(), newIL, cpg);
-			MethodGenerator outlinedMethodGen = new MethodGenerator(methodAttributes, Type.VOID, argTypes, argNames, outlinedMethodName, ClassName, newIL, cpg);
+			MethodGenerator outlinedMethodGen = new MethodGenerator(methodAttributes, Type.VOID, argTypes, argNames, outlinedMethodName, getClassName(), newIL, cpg);
 
 			// Create class for copying local variables to the outlined method.
 			// The fields the class will need to contain will be determined as the
 			// code in the outlineable chunk is examined.
-			ClassGenerator copyAreaCG = new ClassGeneratorAnonymousInnerClass(this, argTypeName, argTypeName + ".java", org.apache.xalan.xsltc.compiler.Constants_Fields.ACC_FINAL | org.apache.xalan.xsltc.compiler.Constants_Fields.ACC_PUBLIC | org.apache.xalan.xsltc.compiler.Constants_Fields.ACC_SUPER, classGen.Stylesheet);
-			ConstantPoolGen copyAreaCPG = copyAreaCG.ConstantPool;
-			copyAreaCG.addEmptyConstructor(org.apache.xalan.xsltc.compiler.Constants_Fields.ACC_PUBLIC);
+			ClassGenerator copyAreaCG = new ClassGeneratorAnonymousInnerClass(this, argTypeName, OBJECT_CLASS, classGen.Stylesheet);
+			ConstantPoolGen copyAreaCPG = copyAreaCG.getConstantPool();
+			copyAreaCG.addEmptyConstructor(ACC_PUBLIC);
 
 			// Number of fields in the copy class
 			int copyAreaFieldCount = 0;
@@ -1368,7 +1372,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			// won't contain a RETURN instruction or other branch out of the chunk,
 			// and the JVM specification prohibits code in a method from just
 			// "falling off the end" so this should always point to a valid handle.
-			InstructionHandle limit = last.Next;
+			InstructionHandle limit = last.getNext();
 
 			// InstructionLists for copying values into and out of an instance of
 			// CopyLocals:
@@ -1399,13 +1403,13 @@ namespace org.apache.xalan.xsltc.compiler.util
 
 			if (isStaticMethod)
 			{
-				outlinedMethodRef = oldMethCopyOutIL.append(new INVOKESTATIC(cpg.addMethodref(classGen.ClassName, outlinedMethodName, outlinedMethodGen.Signature)));
+				outlinedMethodRef = oldMethCopyOutIL.append(new INVOKESTATIC(cpg.addMethodref(classGen.ClassName, outlinedMethodName, outlinedMethodGen.getSignature())));
 			}
 			else
 			{
 				oldMethCopyOutIL.append(InstructionConstants.THIS);
 				oldMethCopyOutIL.append(InstructionConstants.SWAP);
-				outlinedMethodRef = oldMethCopyOutIL.append(new INVOKEVIRTUAL(cpg.addMethodref(classGen.ClassName, outlinedMethodName, outlinedMethodGen.Signature)));
+				outlinedMethodRef = oldMethCopyOutIL.append(new INVOKEVIRTUAL(cpg.addMethodref(classGen.ClassName, outlinedMethodName, outlinedMethodGen.getSignature())));
 			}
 
 			// Used to keep track of the first in a sequence of
@@ -1439,9 +1443,9 @@ namespace org.apache.xalan.xsltc.compiler.util
 			// frame for the outlined method assigned them ahead of all those
 			// variables that don't need to exist for the entirety of the outlined
 			// method invocation.
-			for (InstructionHandle ih = first; ih != limit; ih = ih.Next)
+			for (InstructionHandle ih = first; ih != limit; ih = ih.getNext())
 			{
-				Instruction inst = ih.Instruction;
+				Instruction inst = ih.getInstruction();
 
 				// MarkerInstructions are not copied, so if something else targets
 				// one, the targetMap will point to the nearest copied sibling
@@ -1490,8 +1494,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 						// use localVarMap to map the variable in the original
 						// method to the variable in the new method.
 						IndexedInstruction lvi = (IndexedInstruction)c;
-						int oldLocalVarIndex = lvi.Index;
-						LocalVariableGen oldLVG = getLocalVariableRegistry().lookupRegisteredLocalVariable(oldLocalVarIndex, ih.Position);
+						int oldLocalVarIndex = lvi.getIndex();
+						LocalVariableGen oldLVG = LocalVariableRegistry.lookupRegisteredLocalVariable(oldLocalVarIndex, ih.getPosition());
 						LocalVariableGen newLVG = (LocalVariableGen)localVarMap[oldLVG];
 
 						// Has the code already mapped this local variable to a
@@ -1518,18 +1522,18 @@ namespace org.apache.xalan.xsltc.compiler.util
 							// copying the value.
 							if (copyInLocalValue || copyOutLocalValue)
 							{
-								string varName = oldLVG.Name;
-								Type varType = oldLVG.Type;
+								string varName = oldLVG.getName();
+								Type varType = oldLVG.getType();
 								newLVG = outlinedMethodGen.addLocalVariable(varName, varType, null, null);
-								int newLocalVarIndex = newLVG.Index;
-								string varSignature = varType.Signature;
+								int newLocalVarIndex = newLVG.getIndex();
+								string varSignature = varType.getSignature();
 
 								// Record the mapping from the old local to the new
 								localVarMap[oldLVG] = newLVG;
 
 								copyAreaFieldCount++;
 								string copyAreaFieldName = "field" + copyAreaFieldCount;
-								copyAreaCG.addField(new Field(org.apache.xalan.xsltc.compiler.Constants_Fields.ACC_PUBLIC, copyAreaCPG.addUtf8(copyAreaFieldName), copyAreaCPG.addUtf8(varSignature), null, copyAreaCPG.ConstantPool));
+								copyAreaCG.addField(new Field(ACC_PUBLIC, copyAreaCPG.addUtf8(copyAreaFieldName), copyAreaCPG.addUtf8(varSignature), null, copyAreaCPG.getConstantPool()));
 
 								int fieldRef = cpg.addFieldref(argTypeName, copyAreaFieldName, varSignature);
 
@@ -1606,7 +1610,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 						do
 						{
 							 targetMap[pendingTargetMappingHandle] = lastCopyHandle;
-							 pendingTargetMappingHandle = pendingTargetMappingHandle.Next;
+							 pendingTargetMappingHandle = pendingTargetMappingHandle.getNext();
 						} while (pendingTargetMappingHandle != ih);
 
 						chunkStartTargetMappingsPending = false;
@@ -1617,31 +1621,31 @@ namespace org.apache.xalan.xsltc.compiler.util
 			// Pass 2: Walk old and new instruction lists, updating branch targets
 			// and local variable references in the new list
 			InstructionHandle ih = first;
-			InstructionHandle ch = newIL.Start;
+			InstructionHandle ch = newIL.getStart();
 
 			while (ch != null)
 			{
 				// i == old instruction; c == copied instruction
-				Instruction i = ih.Instruction;
-				Instruction c = ch.Instruction;
+				Instruction i = ih.getInstruction();
+				Instruction c = ch.getInstruction();
 
 				if (i is BranchInstruction)
 				{
 					BranchInstruction bc = (BranchInstruction)c;
 					BranchInstruction bi = (BranchInstruction)i;
-					InstructionHandle itarget = bi.Target; // old target
+					InstructionHandle itarget = bi.getTarget(); // old target
 
 					// New target must be in targetMap
 					InstructionHandle newTarget = (InstructionHandle)targetMap[itarget];
 
-					bc.Target = newTarget;
+					bc.setTarget(newTarget);
 
 					// Handle LOOKUPSWITCH or TABLESWITCH which may have many
 					// target instructions
 					if (bi is Select)
 					{
-						InstructionHandle[] itargets = ((Select)bi).Targets;
-						InstructionHandle[] ctargets = ((Select)bc).Targets;
+						InstructionHandle[] itargets = ((Select)bi).getTargets();
+						InstructionHandle[] ctargets = ((Select)bc).getTargets();
 
 						// Update all targets
 						for (int j = 0; j < itargets.Length; j++)
@@ -1656,8 +1660,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 					// map the location of the variable in the original
 					// method to its location in the new method.
 					IndexedInstruction lvi = (IndexedInstruction)c;
-					int oldLocalVarIndex = lvi.Index;
-					LocalVariableGen oldLVG = getLocalVariableRegistry().lookupRegisteredLocalVariable(oldLocalVarIndex, ih.Position);
+					int oldLocalVarIndex = lvi.getIndex();
+					LocalVariableGen oldLVG = LocalVariableRegistry.lookupRegisteredLocalVariable(oldLocalVarIndex, ih.getPosition());
 					LocalVariableGen newLVG = (LocalVariableGen)localVarMap[oldLVG];
 					int newLocalVarIndex;
 
@@ -1667,10 +1671,10 @@ namespace org.apache.xalan.xsltc.compiler.util
 						// name and type, but we will let the variable be active
 						// for the entire outlined method.
 						// LocalVariableGen oldLocal = oldLocals[oldLocalVarIndex];
-						string varName = oldLVG.Name;
-						Type varType = oldLVG.Type;
+						string varName = oldLVG.getName();
+						Type varType = oldLVG.getType();
 						newLVG = outlinedMethodGen.addLocalVariable(varName, varType, null, null);
-						newLocalVarIndex = newLVG.Index;
+						newLocalVarIndex = newLVG.getIndex();
 						localVarMap[oldLVG] = newLVG;
 
 						// The old variable's live range was wholly contained in
@@ -1683,9 +1687,9 @@ namespace org.apache.xalan.xsltc.compiler.util
 					}
 					else
 					{
-						newLocalVarIndex = newLVG.Index;
+						newLocalVarIndex = newLVG.getIndex();
 					}
-					lvi.Index = newLocalVarIndex;
+					lvi.setIndex(newLocalVarIndex);
 				}
 
 				// If the old instruction marks the end of the range of a local
@@ -1694,13 +1698,13 @@ namespace org.apache.xalan.xsltc.compiler.util
 				// MethodGenerator.removeLocalVariable
 				if (ih.hasTargeters())
 				{
-					InstructionTargeter[] targeters = ih.Targeters;
+					InstructionTargeter[] targeters = ih.getTargeters();
 
 					for (int idx = 0; idx < targeters.Length; idx++)
 					{
 						InstructionTargeter targeter = targeters[idx];
 
-						if (targeter is LocalVariableGen && ((LocalVariableGen)targeter).End == ih)
+						if (targeter is LocalVariableGen && ((LocalVariableGen)targeter).getEnd() == ih)
 						{
 							object newLVG = localVarMap[targeter];
 							if (newLVG != null)
@@ -1716,9 +1720,9 @@ namespace org.apache.xalan.xsltc.compiler.util
 				// instructions yet.
 				if (!(i is MarkerInstruction))
 				{
-					ch = ch.Next;
+					ch = ch.getNext();
 				}
-				ih = ih.Next;
+				ih = ih.getNext();
 
 			}
 
@@ -1727,32 +1731,32 @@ namespace org.apache.xalan.xsltc.compiler.util
 
 			// Now that the generation of the outlined code is complete, update
 			// the old local variables with new start and end ranges, as required.
-			IEnumerator revisedLocalVarStartPairIter = revisedLocalVarStart.SetOfKeyValuePairs().GetEnumerator();
+			System.Collections.IEnumerator revisedLocalVarStartPairIter = revisedLocalVarStart.SetOfKeyValuePairs().GetEnumerator();
 			while (revisedLocalVarStartPairIter.MoveNext())
 			{
 				DictionaryEntry lvgRangeStartPair = (DictionaryEntry)revisedLocalVarStartPairIter.Current;
 				LocalVariableGen lvg = (LocalVariableGen)lvgRangeStartPair.Key;
 				InstructionHandle startInst = (InstructionHandle)lvgRangeStartPair.Value;
 
-				lvg.Start = startInst;
+				lvg.setStart(startInst);
 
 			}
 
-			IEnumerator revisedLocalVarEndPairIter = revisedLocalVarEnd.SetOfKeyValuePairs().GetEnumerator();
+			System.Collections.IEnumerator revisedLocalVarEndPairIter = revisedLocalVarEnd.SetOfKeyValuePairs().GetEnumerator();
 			while (revisedLocalVarEndPairIter.MoveNext())
 			{
 				DictionaryEntry lvgRangeEndPair = (DictionaryEntry)revisedLocalVarEndPairIter.Current;
 				LocalVariableGen lvg = (LocalVariableGen)lvgRangeEndPair.Key;
 				InstructionHandle endInst = (InstructionHandle)lvgRangeEndPair.Value;
 
-				lvg.End = endInst;
+				lvg.setEnd(endInst);
 			}
 
-			xsltc.dumpClass(copyAreaCG.JavaClass);
+			xsltc.dumpClass(copyAreaCG.getJavaClass());
 
 			// Assemble the instruction lists so that the old method invokes the
 			// new outlined method
-			InstructionList oldMethodIL = InstructionList;
+			InstructionList oldMethodIL = getInstructionList();
 
 			oldMethodIL.insert(first, oldMethCopyInIL);
 			oldMethodIL.insert(first, oldMethCopyOutIL);
@@ -1769,7 +1773,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			}
 			catch (TargetLostException e)
 			{
-				InstructionHandle[] targets = e.Targets;
+				InstructionHandle[] targets = e.getTargets();
 				// If there were still references to old instructions lingering,
 				// clean those up.  The only instructions targetting the deleted
 				// instructions should have been part of the chunk that was just
@@ -1780,7 +1784,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 				for (int i = 0; i < targets.Length; i++)
 				{
 					InstructionHandle lostTarget = targets[i];
-					InstructionTargeter[] targeters = lostTarget.Targeters;
+					InstructionTargeter[] targeters = lostTarget.getTargeters();
 					for (int j = 0; j < targeters.Length; j++)
 					{
 						if (targeters[j] is LocalVariableGen)
@@ -1790,13 +1794,13 @@ namespace org.apache.xalan.xsltc.compiler.util
 							// just make the live range point to the outlined
 							// function reference.  Such variables should be unused
 							// anyway.
-							if (lvgTargeter.Start == lostTarget)
+							if (lvgTargeter.getStart() == lostTarget)
 							{
-								lvgTargeter.Start = outlinedMethodRef;
+								lvgTargeter.setStart(outlinedMethodRef);
 							}
-							if (lvgTargeter.End == lostTarget)
+							if (lvgTargeter.getEnd() == lostTarget)
 							{
-								lvgTargeter.End = outlinedMethodRef;
+								lvgTargeter.setEnd(outlinedMethodRef);
 							}
 						}
 						else
@@ -1808,7 +1812,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			}
 
 			// Make a copy for the new method of all exceptions that might be thrown
-			string[] exceptions = Exceptions;
+			string[] exceptions = getExceptions();
 			for (int i = 0; i < exceptions.Length; i++)
 			{
 				outlinedMethodGen.addException(exceptions[i]);
@@ -1821,9 +1825,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 			private readonly MethodGenerator outerInstance;
 
-			public ClassGeneratorAnonymousInnerClass(MethodGenerator outerInstance, string argTypeName, string java", int ACC_SUPER, org.apache.xalan.xsltc.compiler.Stylesheet getStylesheet) //Tangible note: chained constructor call
+			public ClassGeneratorAnonymousInnerClass(MethodGenerator outerInstance, string argTypeName, UnknownType OBJECT_CLASS, org.apache.xalan.xsltc.compiler.Stylesheet getStylesheet) : base(argTypeName, OBJECT_CLASS, argTypeName + ".java", ACC_FINAL | ACC_PUBLIC | ACC_SUPER, null, getStylesheet)
 			{
-				base(argTypeName, org.apache.xalan.xsltc.compiler.Constants_Fields.OBJECT_CLASS, java", ACC_SUPER, null, getStylesheet);
 				this.outerInstance = outerInstance;
 			}
 
@@ -1954,7 +1957,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		public virtual void markChunkStart()
 		{
 			// m_chunkTree.markChunkStart();
-			InstructionList.append(OutlineableChunkStart.OUTLINEABLECHUNKSTART);
+			getInstructionList().append(OutlineableChunkStart.OUTLINEABLECHUNKSTART);
 			m_totalChunks++;
 			m_openChunks++;
 		}
@@ -1966,7 +1969,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		public virtual void markChunkEnd()
 		{
 			// m_chunkTree.markChunkEnd();
-			InstructionList.append(OutlineableChunkEnd.OUTLINEABLECHUNKEND);
+			getInstructionList().append(OutlineableChunkEnd.OUTLINEABLECHUNKEND);
 			m_openChunks--;
 			if (m_openChunks < 0)
 			{
@@ -1976,8 +1979,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 		}
 
 		/// <summary>
-		/// <para>Get all <seealso cref="Method"/>s generated by this <seealso cref="MethodGenerator"/>.
-		/// The <seealso cref="MethodGen#getMethod()"/> only returns a single
+		/// <para>Get all <seealso cref="System.Reflection.MethodInfo"/>s generated by this <seealso cref="MethodGenerator"/>.
+		/// The <seealso cref="MethodGen.getMethod()"/> only returns a single
 		/// <code>Method</code> object.  This method takes into account the Java
 		/// Virtual Machine Specification limit of 64KB on the size of a method, and
 		/// may return more than one <code>Method</code>.</para>
@@ -1991,12 +1994,12 @@ namespace org.apache.xalan.xsltc.compiler.util
 		internal virtual Method[] getGeneratedMethods(ClassGenerator classGen)
 		{
 			Method[] generatedMethods;
-			InstructionList il = InstructionList;
-			InstructionHandle last = il.End;
+			InstructionList il = getInstructionList();
+			InstructionHandle last = il.getEnd();
 
 			il.setPositions();
 
-			int instructionListSize = last.Position + last.Instruction.Length;
+			int instructionListSize = last.getPosition() + last.getInstruction().getLength();
 
 			// Need to look for any branch target offsets that exceed the range
 			// [-32768,32767]
@@ -2009,8 +2012,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 				if (ilChanged)
 				{
 					il.setPositions();
-					last = il.End;
-					instructionListSize = last.Position + last.Instruction.Length;
+					last = il.getEnd();
+					instructionListSize = last.getPosition() + last.getInstruction().getLength();
 				}
 			}
 
@@ -2034,7 +2037,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 				setMaxStack();
 				removeNOPs();
     
-				return Method;
+				return getMethod();
 			}
 		}
 		/// <summary>
@@ -2084,7 +2087,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// 55285:  NOP
 		/// </code></para>
 		/// <para><b>Preconditions:</b>
-		/// <ul><li>The <seealso cref="InstructionList#setPositions()"/> has been called for
+		/// <ul><li>The <seealso cref="InstructionList.setPositions()"/> has been called for
 		/// the <code>InstructionList</code> associated with this
 		/// <code>MethodGenerator</code>.
 		/// </li></ul></para>
@@ -2095,12 +2098,12 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// </para> </summary>
 		/// <returns> <code>true</code> if the <code>InstructionList</code> was
 		/// modified; <code>false</code> otherwise </returns>
-		/// <seealso cref= The Java Virtual Machine Specification, Second Edition </seealso>
+		/// <seealso cref="The Java Virtual Machine Specification, Second Edition"/>
 		internal virtual bool widenConditionalBranchTargetOffsets()
 		{
 			bool ilChanged = false;
 			int maxOffsetChange = 0;
-			InstructionList il = InstructionList;
+			InstructionList il = getInstructionList();
 
 			// Loop through all the instructions, finding those that would be
 			// affected by inserting new instructions in the InstructionList, and
@@ -2112,11 +2115,11 @@ namespace org.apache.xalan.xsltc.compiler.util
 			// and JSR instructions.  Ideally, that method would do the same for
 			// conditional branch instructions, but it doesn't, so we duplicate the
 			// processing here.
-			for (InstructionHandle ih = il.Start; ih != null; ih = ih.Next)
+			for (InstructionHandle ih = il.getStart(); ih != null; ih = ih.getNext())
 			{
-				Instruction inst = ih.Instruction;
+				Instruction inst = ih.getInstruction();
 
-				switch (inst.Opcode)
+				switch (inst.getOpcode())
 				{
 					// Instructions that may have 16-bit or 32-bit branch targets.
 					// The size of the branch offset might increase by two bytes.
@@ -2160,16 +2163,16 @@ namespace org.apache.xalan.xsltc.compiler.util
 			// Now that the maximum number of bytes by which the method might grow
 			// has been determined, look for conditional branches to see which
 			// might possibly exceed the 16-bit relative offset.
-			for (InstructionHandle ih = il.Start; ih != null; ih = ih.Next)
+			for (InstructionHandle ih = il.getStart(); ih != null; ih = ih.getNext())
 			{
-				Instruction inst = ih.Instruction;
+				Instruction inst = ih.getInstruction();
 
 				if (inst is IfInstruction)
 				{
 					IfInstruction oldIfInst = (IfInstruction)inst;
 					BranchHandle oldIfHandle = (BranchHandle)ih;
-					InstructionHandle target = oldIfInst.Target;
-					int relativeTargetOffset = target.Position - oldIfHandle.Position;
+					InstructionHandle target = oldIfInst.getTarget();
+					int relativeTargetOffset = target.getPosition() - oldIfHandle.getPosition();
 
 					// Consider the worst case scenario in which the conditional
 					// branch and its target are separated by all the instructions
@@ -2181,7 +2184,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 						// Invert the logic of the IF instruction, and append
 						// that to the InstructionList following the original IF
 						// instruction
-						InstructionHandle nextHandle = oldIfHandle.Next;
+						InstructionHandle nextHandle = oldIfHandle.getNext();
 						IfInstruction invertedIfInst = oldIfInst.negate();
 						BranchHandle invertedIfHandle = il.append(oldIfHandle, invertedIfInst);
 
@@ -2205,7 +2208,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 						// instruction
 						if (oldIfHandle.hasTargeters())
 						{
-							InstructionTargeter[] targeters = oldIfHandle.Targeters;
+							InstructionTargeter[] targeters = oldIfHandle.getTargeters();
 
 							for (int i = 0; i < targeters.Length; i++)
 							{
@@ -2226,13 +2229,13 @@ namespace org.apache.xalan.xsltc.compiler.util
 								if (targeter is LocalVariableGen)
 								{
 									LocalVariableGen lvg = (LocalVariableGen) targeter;
-									if (lvg.Start == oldIfHandle)
+									if (lvg.getStart() == oldIfHandle)
 									{
-										lvg.Start = invertedIfHandle;
+										lvg.setStart(invertedIfHandle);
 									}
-									else if (lvg.End == oldIfHandle)
+									else if (lvg.getEnd() == oldIfHandle)
 									{
-										lvg.End = gotoHandle;
+										lvg.setEnd(gotoHandle);
 									}
 								}
 								else

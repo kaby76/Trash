@@ -25,7 +25,6 @@ namespace org.apache.xml.utils
 {
 
 
-
 	using DTMNodeProxy = org.apache.xml.dtm.@ref.DTMNodeProxy;
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
 	using XMLMessages = org.apache.xml.res.XMLMessages;
@@ -81,8 +80,8 @@ namespace org.apache.xml.utils
 		  // create a DOM Document node to contain the result.
 		  DocumentBuilderFactory dfactory = DocumentBuilderFactory.newInstance();
 
-		  dfactory.NamespaceAware = true;
-		  dfactory.Validating = true;
+		  dfactory.setNamespaceAware(true);
+		  dfactory.setValidating(true);
 
 		  if (isSecureProcessing)
 		  {
@@ -133,7 +132,7 @@ namespace org.apache.xml.utils
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// @xsl.usage advanced </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean shouldStripSourceNode(org.w3c.dom.Node textNode) throws javax.xml.transform.TransformerException
 	  public virtual bool shouldStripSourceNode(Node textNode)
 	  {
@@ -172,7 +171,7 @@ namespace org.apache.xml.utils
 	  /// <returns> a string which should be different for every Node object. </returns>
 	  public virtual string getUniqueID(Node node)
 	  {
-		return "N" + node.GetHashCode().ToString("x").ToUpper();
+		return "N" + Convert.ToString(node.GetHashCode(), 16).ToUpper();
 	  }
 
 	  /// <summary>
@@ -362,8 +361,8 @@ namespace org.apache.xml.utils
 	  {
 
 		bool isNodeAfterSibling = false;
-		short child1type = child1.NodeType;
-		short child2type = child2.NodeType;
+		short child1type = child1.getNodeType();
+		short child2type = child2.getNodeType();
 
 		if ((Node.ATTRIBUTE_NODE != child1type) && (Node.ATTRIBUTE_NODE == child2type))
 		{
@@ -379,8 +378,8 @@ namespace org.apache.xml.utils
 		}
 		else if (Node.ATTRIBUTE_NODE == child1type)
 		{
-		  NamedNodeMap children = parent.Attributes;
-		  int nNodes = children.Length;
+		  NamedNodeMap children = parent.getAttributes();
+		  int nNodes = children.getLength();
 		  bool found1 = false, found2 = false;
 
 			  // Count from the start until we find one or the other.
@@ -425,7 +424,7 @@ namespace org.apache.xml.utils
 					// but it isn't clear that scanning from the middle doesn't
 					// yield more iterations on average. 
 					// We should run some testcases.
-		  Node child = parent.FirstChild;
+		  Node child = parent.getFirstChild();
 		  bool found1 = false, found2 = false;
 
 		  while (null != child)
@@ -455,7 +454,7 @@ namespace org.apache.xml.utils
 			  found2 = true;
 			}
 
-			child = child.NextSibling;
+			child = child.getNextSibling();
 		  }
 		}
 
@@ -530,7 +529,7 @@ namespace org.apache.xml.utils
 			  string declname = (string.ReferenceEquals(prefix, "")) ? "xmlns" : "xmlns:" + prefix;
 
 			  // Scan until we run out of Elements or have resolved the namespace
-		  while ((null != parent) && (null == @namespace) && (((type = parent.NodeType) == Node.ELEMENT_NODE) || (type == Node.ENTITY_REFERENCE_NODE)))
+		  while ((null != parent) && (null == @namespace) && (((type = parent.getNodeType()) == Node.ELEMENT_NODE) || (type == Node.ENTITY_REFERENCE_NODE)))
 		  {
 			if (type == Node.ELEMENT_NODE)
 			{
@@ -546,7 +545,7 @@ namespace org.apache.xml.utils
 							Attr attr = ((Element)parent).getAttributeNode(declname);
 							if (attr != null)
 							{
-					@namespace = attr.NodeValue;
+					@namespace = attr.getNodeValue();
 					break;
 							}
 			}
@@ -622,7 +621,7 @@ namespace org.apache.xml.utils
 		string namespaceOfPrefix;
 		bool hasProcessedNS;
 		NSInfo nsInfo;
-		short ntype = n.NodeType;
+		short ntype = n.getNodeType();
 
 		if (Node.ATTRIBUTE_NODE != ntype)
 		{
@@ -645,7 +644,7 @@ namespace org.apache.xml.utils
 		{
 		  namespaceOfPrefix = null;
 
-		  string nodeName = n.NodeName;
+		  string nodeName = n.getNodeName();
 		  int indexOfNSSep = nodeName.IndexOf(':');
 		  string prefix;
 
@@ -687,7 +686,7 @@ namespace org.apache.xml.utils
 				break;
 			  }
 
-			  parentType = parent.NodeType;
+			  parentType = parent.getNodeType();
 
 			  if ((null == nsInfo) || nsInfo.m_hasXMLNSAttrs)
 			  {
@@ -695,12 +694,12 @@ namespace org.apache.xml.utils
 
 				if (parentType == Node.ELEMENT_NODE)
 				{
-				  NamedNodeMap nnm = parent.Attributes;
+				  NamedNodeMap nnm = parent.getAttributes();
 
-				  for (int i = 0; i < nnm.Length; i++)
+				  for (int i = 0; i < nnm.getLength(); i++)
 				  {
 					Node attr = nnm.item(i);
-					string aname = attr.NodeName;
+					string aname = attr.getNodeName();
 
 					if (aname[0] == 'x')
 					{
@@ -720,7 +719,7 @@ namespace org.apache.xml.utils
 
 						if (p.Equals(prefix))
 						{
-						  namespaceOfPrefix = attr.NodeValue;
+						  namespaceOfPrefix = attr.getNodeValue();
 
 						  break;
 						}
@@ -746,7 +745,7 @@ namespace org.apache.xml.utils
 				m_candidateNoAncestorXMLNS.Add(parent);
 				m_candidateNoAncestorXMLNS.Add(nsInfo);
 
-				parent = parent.ParentNode;
+				parent = parent.getParentNode();
 			  }
 
 			  if (null != parent)
@@ -823,7 +822,7 @@ namespace org.apache.xml.utils
 	  public virtual string getLocalNameOfNode(Node n)
 	  {
 
-		string qname = n.NodeName;
+		string qname = n.getNodeName();
 		int index = qname.IndexOf(':');
 
 		return (index < 0) ? qname : qname.Substring(index + 1);
@@ -839,7 +838,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <returns> String in the form "namespaceURI:localname" if the node
 	  /// belongs to a namespace, or simply "localname" if it doesn't. </returns>
-	  /// <seealso cref= #getExpandedAttributeName </seealso>
+	  /// <seealso cref=".getExpandedAttributeName"/>
 	  public virtual string getExpandedElementName(Element elem)
 	  {
 
@@ -858,7 +857,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <returns> String in the form "namespaceURI:localname" if the node
 	  /// belongs to a namespace, or simply "localname" if it doesn't. </returns>
-	  /// <seealso cref= #getExpandedElementName </seealso>
+	  /// <seealso cref=".getExpandedElementName"/>
 	  public virtual string getExpandedAttributeName(Attr attr)
 	  {
 
@@ -941,8 +940,8 @@ namespace org.apache.xml.utils
 	  /// by a parser. </returns>
 	  public virtual Node getRootNode(Node n)
 	  {
-		int nt = n.NodeType;
-		return ((Node.DOCUMENT_NODE == nt) || (Node.DOCUMENT_FRAGMENT_NODE == nt)) ? n : n.OwnerDocument;
+		int nt = n.getNodeType();
+		return ((Node.DOCUMENT_NODE == nt) || (Node.DOCUMENT_FRAGMENT_NODE == nt)) ? n : n.getOwnerDocument();
 	  }
 
 	  /// <summary>
@@ -957,9 +956,9 @@ namespace org.apache.xml.utils
 	  public virtual bool isNamespaceNode(Node n)
 	  {
 
-		if (Node.ATTRIBUTE_NODE == n.NodeType)
+		if (Node.ATTRIBUTE_NODE == n.getNodeType())
 		{
-		  string attrName = n.NodeName;
+		  string attrName = n.getNodeName();
 
 		  return (attrName.StartsWith("xmlns:", StringComparison.Ordinal) || attrName.Equals("xmlns"));
 		}
@@ -996,16 +995,16 @@ namespace org.apache.xml.utils
 	  /// This can't arise if the Document was created
 	  /// via the DOM Level 2 factory methods, but is possible if other
 	  /// mechanisms were used to obtain it </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.w3c.dom.Node getParentOfNode(org.w3c.dom.Node node) throws RuntimeException
 	  public static Node getParentOfNode(Node node)
 	  {
 		Node parent;
-		short nodeType = node.NodeType;
+		short nodeType = node.getNodeType();
 
 		if (Node.ATTRIBUTE_NODE == nodeType)
 		{
-		  Document doc = node.OwnerDocument;
+		  Document doc = node.getOwnerDocument();
 			  /*
 		  TBD:
 		  if(null == doc)
@@ -1023,16 +1022,16 @@ namespace org.apache.xml.utils
 			  //
 			  // (Shouldn't have to check whether impl is null in a compliant DOM,
 			  // but let's be paranoid for a moment...)
-			  DOMImplementation impl = doc.Implementation;
+			  DOMImplementation impl = doc.getImplementation();
 			  if (impl != null && impl.hasFeature("Core","2.0"))
 			  {
-					  parent = ((Attr)node).OwnerElement;
+					  parent = ((Attr)node).getOwnerElement();
 					  return parent;
 			  }
 
 			  // DOM Level 1 solution, as fallback. Hugely expensive. 
 
-		  Element rootElem = doc.DocumentElement;
+		  Element rootElem = doc.getDocumentElement();
 
 		  if (null == rootElem)
 		  {
@@ -1044,7 +1043,7 @@ namespace org.apache.xml.utils
 		}
 		else
 		{
-		  parent = node.ParentNode;
+		  parent = node.getParentNode();
 
 		  // if((Node.DOCUMENT_NODE != nodeType) && (null == parent))
 		  // {
@@ -1122,11 +1121,11 @@ namespace org.apache.xml.utils
 	  {
 
 		string url = "";
-		DocumentType doctype = doc.Doctype;
+		DocumentType doctype = doc.getDoctype();
 
 		if (null != doctype)
 		{
-		  NamedNodeMap entities = doctype.Entities;
+		  NamedNodeMap entities = doctype.getEntities();
 		  if (null == entities)
 		  {
 			return url;
@@ -1137,7 +1136,7 @@ namespace org.apache.xml.utils
 			return url;
 		  }
 
-		  string notationName = entity.NotationName;
+		  string notationName = entity.getNotationName();
 
 		  if (null != notationName) // then it's unparsed
 		  {
@@ -1150,11 +1149,11 @@ namespace org.apache.xml.utils
 			// the resource containing the entity declaration as the base 
 			// URI [RFC2396]."
 			// So I'm falling a bit short here.
-			url = entity.SystemId;
+			url = entity.getSystemId();
 
 			if (null == url)
 			{
-			  url = entity.PublicId;
+			  url = entity.getPublicId();
 			}
 			else
 			{
@@ -1199,7 +1198,7 @@ namespace org.apache.xml.utils
 			// for a DOM to have two Attrs with the same NodeName but
 			// different namespaces, and we'd need to get getAttributeNodeNS...
 			// but later levels also have Attr.getOwnerElement.
-			Attr check = elem.getAttributeNode(attr.NodeName);
+			Attr check = elem.getAttributeNode(attr.getNodeName());
 			if (check == attr)
 			{
 					parent = elem;
@@ -1207,9 +1206,9 @@ namespace org.apache.xml.utils
 
 		if (null == parent)
 		{
-		  for (Node node = elem.FirstChild; null != node; node = node.NextSibling)
+		  for (Node node = elem.getFirstChild(); null != node; node = node.getNextSibling())
 		  {
-			if (Node.ELEMENT_NODE == node.NodeType)
+			if (Node.ELEMENT_NODE == node.getNodeType())
 			{
 			  parent = locateAttrParent((Element) node, attr);
 
@@ -1264,8 +1263,8 @@ namespace org.apache.xml.utils
 	  /// <param name="node"> DOM Node to be examined </param>
 	  /// <returns> String containing a concatenation of all the 
 	  /// textual content within that node. </returns>
-	  /// <seealso cref= #getNodeData(Node,FastStringBuffer)
-	  ///  </seealso>
+	  /// <seealso cref=".getNodeData(Node,FastStringBuffer)"
+	  /// />
 	  public static string getNodeData(Node node)
 	  {
 
@@ -1307,13 +1306,13 @@ namespace org.apache.xml.utils
 	  public static void getNodeData(Node node, FastStringBuffer buf)
 	  {
 
-		switch (node.NodeType)
+		switch (node.getNodeType())
 		{
 		case Node.DOCUMENT_FRAGMENT_NODE :
 		case Node.DOCUMENT_NODE :
 		case Node.ELEMENT_NODE :
 		{
-		  for (Node child = node.FirstChild; null != child; child = child.NextSibling)
+		  for (Node child = node.getFirstChild(); null != child; child = child.getNextSibling())
 		  {
 			getNodeData(child, buf);
 		  }
@@ -1321,10 +1320,10 @@ namespace org.apache.xml.utils
 		break;
 		case Node.TEXT_NODE :
 		case Node.CDATA_SECTION_NODE :
-		  buf.append(node.NodeValue);
+		  buf.append(node.getNodeValue());
 		  break;
 		case Node.ATTRIBUTE_NODE :
-		  buf.append(node.NodeValue);
+		  buf.append(node.getNodeValue());
 		  break;
 		case Node.PROCESSING_INSTRUCTION_NODE :
 		  // warning(XPATHErrorResources.WG_PARSING_AND_PREPARING);        

@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.transformer
 {
-
 	/// <summary>
 	/// A representation of a result namespace.  One of these will
 	/// be pushed on the result tree namespace stack for each

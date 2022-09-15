@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +25,6 @@ namespace org.apache.xalan.transformer
 {
 
 
-
 	using Serializer = org.apache.xml.serializer.Serializer;
 	using SerializerFactory = org.apache.xml.serializer.SerializerFactory;
 	using Method = org.apache.xml.serializer.Method;
@@ -48,7 +48,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="localName"> Local part of name of element
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static void switchSerializerIfHTML(TransformerImpl transformer, String ns, String localName) throws javax.xml.transform.TransformerException
 	  public static void switchSerializerIfHTML(TransformerImpl transformer, string ns, string localName)
 	  {
@@ -58,7 +58,7 @@ namespace org.apache.xalan.transformer
 		  return;
 		}
 
-		if (((null == ns) || (ns.Length == 0)) && localName.Equals("html", StringComparison.CurrentCultureIgnoreCase))
+		if (((null == ns) || (ns.Length == 0)) && localName.Equals("html", StringComparison.OrdinalIgnoreCase))
 		{
 		  // System.out.println("transformer.getOutputPropertyNoDefault(OutputKeys.METHOD): "+
 		  //              transformer.getOutputPropertyNoDefault(OutputKeys.METHOD));     
@@ -70,7 +70,7 @@ namespace org.apache.xalan.transformer
 
 		  // Getting the output properties this way won't cause a clone of 
 		  // the properties.
-		  Properties prevProperties = transformer.OutputFormat.Properties;
+		  Properties prevProperties = transformer.OutputFormat.getProperties();
 
 		  // We have to make sure we get an output properties with the proper 
 		  // defaults for the HTML method.  The easiest way to do this is to 
@@ -97,7 +97,7 @@ namespace org.apache.xalan.transformer
 			  }
 			  else
 			  {
-				System.IO.Stream os = oldSerializer.OutputStream;
+				Stream os = oldSerializer.OutputStream;
 
 				if (null != os)
 				{
@@ -130,7 +130,7 @@ namespace org.apache.xalan.transformer
 	  /// </returns>
 	  /// <exception cref="IllegalArgumentException"> If the property is not supported, 
 	  /// and is not namespaced. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static String getOutputPropertyNoDefault(String qnameString, java.util.Properties props) throws IllegalArgumentException
 	  private static string getOutputPropertyNoDefault(string qnameString, Properties props)
 	  {
@@ -148,13 +148,13 @@ namespace org.apache.xalan.transformer
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
 	  /// <returns> new contentHandler. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xml.serializer.Serializer switchSerializerIfHTML(String ns, String localName, java.util.Properties props, org.apache.xml.serializer.Serializer oldSerializer) throws javax.xml.transform.TransformerException
 	  public static Serializer switchSerializerIfHTML(string ns, string localName, Properties props, Serializer oldSerializer)
 	  {
 		Serializer newSerializer = oldSerializer;
 
-		if (((null == ns) || (ns.Length == 0)) && localName.Equals("html", StringComparison.CurrentCultureIgnoreCase))
+		if (((null == ns) || (ns.Length == 0)) && localName.Equals("html", StringComparison.OrdinalIgnoreCase))
 		{
 		  // System.out.println("transformer.getOutputPropertyNoDefault(OutputKeys.METHOD): "+
 		  //              transformer.getOutputPropertyNoDefault(OutputKeys.METHOD));     
@@ -190,7 +190,7 @@ namespace org.apache.xalan.transformer
 			  }
 			  else
 			  {
-				System.IO.Stream os = serializer.OutputStream;
+				Stream os = serializer.OutputStream;
 
 				if (null != os)
 				{

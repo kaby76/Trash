@@ -169,7 +169,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="result"> A Result instance, should not be null.
 	  /// </param>
 	  /// <exception cref="IllegalArgumentException"> if result is invalid for some reason. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setResult(javax.xml.transform.Result result) throws IllegalArgumentException
 	  public virtual Result Result
 	  {
@@ -246,9 +246,9 @@ namespace org.apache.xalan.transformer
 	  /// <exception cref="java.io.IOException"> The client may throw an
 	  ///            I/O-related exception while obtaining the
 	  ///            new InputSource. </exception>
-	  /// <seealso cref= org.xml.sax.EntityResolver#resolveEntity </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public org.xml.sax.InputSource resolveEntity(String publicId, String systemId) throws org.xml.sax.SAXException, java.io.IOException
+	  /// <seealso cref="org.xml.sax.EntityResolver.resolveEntity"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public org.xml.sax.InputSource resolveEntity(String publicId, String systemId) throws SAXException, java.io.IOException
 	  public virtual InputSource resolveEntity(string publicId, string systemId)
 	  {
 
@@ -274,8 +274,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="systemId"> The notation's system identifier, or null. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.DTDHandler#notationDecl </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.DTDHandler.notationDecl"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void notationDecl(String name, String publicId, String systemId) throws org.xml.sax.SAXException
 	  public virtual void notationDecl(string name, string publicId, string systemId)
 	  {
@@ -295,8 +295,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="notationName"> The name of the associated notation. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.DTDHandler#unparsedEntityDecl </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.DTDHandler.unparsedEntityDecl"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void unparsedEntityDecl(String name, String publicId, String systemId, String notationName) throws org.xml.sax.SAXException
 	  public virtual void unparsedEntityDecl(string name, string publicId, string systemId, string notationName)
 	  {
@@ -315,7 +315,7 @@ namespace org.apache.xalan.transformer
 	  /// Filter a new document locator event.
 	  /// </summary>
 	  /// <param name="locator"> The document locator. </param>
-	  /// <seealso cref= org.xml.sax.ContentHandler#setDocumentLocator </seealso>
+	  /// <seealso cref="org.xml.sax.ContentHandler.setDocumentLocator"/>
 	  public virtual Locator DocumentLocator
 	  {
 		  set
@@ -323,19 +323,19 @@ namespace org.apache.xalan.transformer
     
 			if (DEBUG)
 			{
-			  Console.WriteLine("TransformerHandlerImpl#setDocumentLocator: " + value.SystemId);
+			  Console.WriteLine("TransformerHandlerImpl#setDocumentLocator: " + value.getSystemId());
 			}
     
 			this.m_locator = value;
     
 			if (null == m_baseSystemID)
 			{
-			  SystemId = value.SystemId;
+			  SystemId = value.getSystemId();
 			}
     
 			if (m_contentHandler != null)
 			{
-			  m_contentHandler.DocumentLocator = value;
+			  m_contentHandler.setDocumentLocator(value);
 			}
 		  }
 	  }
@@ -345,8 +345,8 @@ namespace org.apache.xalan.transformer
 	  /// </summary>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startDocument </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.startDocument"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocument() throws org.xml.sax.SAXException
 	  public virtual void startDocument()
 	  {
@@ -367,11 +367,11 @@ namespace org.apache.xalan.transformer
 		  {
 			m_transformer.SourceTreeDocForThread = m_dtm.Document;
 
-			int cpriority = Thread.CurrentThread.Priority;
+			int cpriority = Thread.CurrentThread.getPriority();
 
 			// runTransformThread is equivalent with the 2.0.1 code,
 			// except that the Thread may come from a pool.
-			org.apache.xalan.transformer.TransformerImpl.runTransformThread(cpriority);
+			m_transformer.runTransformThread(cpriority);
 		  }
 
 		  // This is now done _last_, because IncrementalSAXSource_Filter
@@ -391,8 +391,8 @@ namespace org.apache.xalan.transformer
 	  /// </summary>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endDocument </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.endDocument"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 	  public virtual void endDocument()
 	  {
@@ -449,8 +449,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="uri"> The Namespace URI. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startPrefixMapping </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.startPrefixMapping"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startPrefixMapping(String prefix, String uri) throws org.xml.sax.SAXException
 	  public virtual void startPrefixMapping(string prefix, string uri)
 	  {
@@ -472,8 +472,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="prefix"> The Namespace prefix. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endPrefixMapping </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.endPrefixMapping"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endPrefixMapping(String prefix) throws org.xml.sax.SAXException
 	  public virtual void endPrefixMapping(string prefix)
 	  {
@@ -499,8 +499,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="atts"> The element's attributes. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startElement </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.startElement"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes atts) throws org.xml.sax.SAXException
 	  public virtual void startElement(string uri, string localName, string qName, Attributes atts)
 	  {
@@ -525,8 +525,8 @@ namespace org.apache.xalan.transformer
 	  ///        string. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endElement </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.endElement"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String uri, String localName, String qName) throws org.xml.sax.SAXException
 	  public virtual void endElement(string uri, string localName, string qName)
 	  {
@@ -550,8 +550,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="length"> The number of characters to use from the array. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#characters </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.characters"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public virtual void characters(char[] ch, int start, int length)
 	  {
@@ -575,8 +575,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="length"> The number of characters to use from the array. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#ignorableWhitespace </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.ignorableWhitespace"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void ignorableWhitespace(char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public virtual void ignorableWhitespace(char[] ch, int start, int length)
 	  {
@@ -599,8 +599,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="data"> The text following the target. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#processingInstruction </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.processingInstruction"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws org.xml.sax.SAXException
 	  public virtual void processingInstruction(string target, string data)
 	  {
@@ -622,8 +622,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="name"> The name of the skipped entity. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#skippedEntity </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.skippedEntity"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void skippedEntity(String name) throws org.xml.sax.SAXException
 	  public virtual void skippedEntity(string name)
 	  {
@@ -649,8 +649,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="e"> The nwarning as an exception. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ErrorHandler#warning </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ErrorHandler.warning"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warning(org.xml.sax.SAXParseException e) throws org.xml.sax.SAXException
 	  public virtual void warning(SAXParseException e)
 	  {
@@ -682,8 +682,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="e"> The error as an exception. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ErrorHandler#error </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ErrorHandler.error"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(org.xml.sax.SAXParseException e) throws org.xml.sax.SAXException
 	  public virtual void error(SAXParseException e)
 	  {
@@ -726,8 +726,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="e"> The error as an exception. </param>
 	  /// <exception cref="SAXException"> The client may throw
 	  ///            an exception during processing. </exception>
-	  /// <seealso cref= org.xml.sax.ErrorHandler#fatalError </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ErrorHandler.fatalError"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fatalError(org.xml.sax.SAXParseException e) throws org.xml.sax.SAXException
 	  public virtual void fatalError(SAXParseException e)
 	  {
@@ -783,7 +783,7 @@ namespace org.apache.xalan.transformer
 	  /// Report the start of DTD declarations, if any.
 	  /// 
 	  /// <para>Any declarations are assumed to be in the internal subset
-	  /// unless otherwise indicated by a <seealso cref="#startEntity startEntity"/>
+	  /// unless otherwise indicated by a <seealso cref="startEntity startEntity"/>
 	  /// event.</para>
 	  /// 
 	  /// <para>Note that the start/endDTD events will appear within
@@ -797,9 +797,9 @@ namespace org.apache.xalan.transformer
 	  ///        external DTD subset, or null if none was declared. </param>
 	  /// <exception cref="SAXException"> The application may raise an
 	  ///            exception. </exception>
-	  /// <seealso cref= #endDTD </seealso>
-	  /// <seealso cref= #startEntity </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endDTD"/>
+	  /// <seealso cref=".startEntity"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDTD(String name, String publicId, String systemId) throws org.xml.sax.SAXException
 	  public virtual void startDTD(string name, string publicId, string systemId)
 	  {
@@ -819,8 +819,8 @@ namespace org.apache.xalan.transformer
 	  /// Report the end of DTD declarations.
 	  /// </summary>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #startDTD </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".startDTD"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDTD() throws org.xml.sax.SAXException
 	  public virtual void endDTD()
 	  {
@@ -848,16 +848,16 @@ namespace org.apache.xalan.transformer
 	  /// properly nested within start/end entity events.</para>
 	  /// 
 	  /// <para>Note that skipped entities will be reported through the
-	  /// <seealso cref="org.xml.sax.ContentHandler#skippedEntity skippedEntity"/>
+	  /// <seealso cref="org.xml.sax.ContentHandler.skippedEntity skippedEntity"/>
 	  /// event, which is part of the ContentHandler interface.</para>
 	  /// </summary>
 	  /// <param name="name"> The name of the entity.  If it is a parameter
 	  ///        entity, the name will begin with '%'. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #endEntity </seealso>
-	  /// <seealso cref= org.xml.sax.ext.DeclHandler#internalEntityDecl </seealso>
-	  /// <seealso cref= org.xml.sax.ext.DeclHandler#externalEntityDecl </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endEntity"/>
+	  /// <seealso cref="org.xml.sax.ext.DeclHandler.internalEntityDecl"/>
+	  /// <seealso cref="org.xml.sax.ext.DeclHandler.externalEntityDecl"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startEntity(String name) throws org.xml.sax.SAXException
 	  public virtual void startEntity(string name)
 	  {
@@ -878,8 +878,8 @@ namespace org.apache.xalan.transformer
 	  /// </summary>
 	  /// <param name="name"> The name of the entity that is ending. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #startEntity </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".startEntity"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endEntity(String name) throws org.xml.sax.SAXException
 	  public virtual void endEntity(string name)
 	  {
@@ -903,8 +903,8 @@ namespace org.apache.xalan.transformer
 	  /// characters} event.</para>
 	  /// </summary>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #endCDATA </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endCDATA"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startCDATA() throws org.xml.sax.SAXException
 	  public virtual void startCDATA()
 	  {
@@ -924,8 +924,8 @@ namespace org.apache.xalan.transformer
 	  /// Report the end of a CDATA section.
 	  /// </summary>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #startCDATA </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".startCDATA"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCDATA() throws org.xml.sax.SAXException
 	  public virtual void endCDATA()
 	  {
@@ -952,7 +952,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="start"> The starting position in the array. </param>
 	  /// <param name="length"> The number of characters to use from the array. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public virtual void comment(char[] ch, int start, int length)
 	  {
@@ -984,7 +984,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="name"> The element type name. </param>
 	  /// <param name="model"> The content model as a normalized string. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void elementDecl(String name, String model) throws org.xml.sax.SAXException
 	  public virtual void elementDecl(string name, string model)
 	  {
@@ -1018,7 +1018,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="value"> A string representing the attribute's default value,
 	  ///        or null if there is none. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void attributeDecl(String eName, String aName, String type, String valueDefault, String value) throws org.xml.sax.SAXException
 	  public virtual void attributeDecl(string eName, string aName, string type, string valueDefault, string value)
 	  {
@@ -1044,9 +1044,9 @@ namespace org.apache.xalan.transformer
 	  ///        entity, the name will begin with '%'. </param>
 	  /// <param name="value"> The replacement text of the entity. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #externalEntityDecl </seealso>
-	  /// <seealso cref= org.xml.sax.DTDHandler#unparsedEntityDecl </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".externalEntityDecl"/>
+	  /// <seealso cref="org.xml.sax.DTDHandler.unparsedEntityDecl"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void internalEntityDecl(String name, String value) throws org.xml.sax.SAXException
 	  public virtual void internalEntityDecl(string name, string value)
 	  {
@@ -1074,9 +1074,9 @@ namespace org.apache.xalan.transformer
 	  ///        null if none was declared. </param>
 	  /// <param name="systemId"> The declared system identifier of the entity. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-	  /// <seealso cref= #internalEntityDecl </seealso>
-	  /// <seealso cref= org.xml.sax.DTDHandler#unparsedEntityDecl </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".internalEntityDecl"/>
+	  /// <seealso cref="org.xml.sax.DTDHandler.unparsedEntityDecl"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void externalEntityDecl(String name, String publicId, String systemId) throws org.xml.sax.SAXException
 	  public virtual void externalEntityDecl(string name, string publicId, string systemId)
 	  {

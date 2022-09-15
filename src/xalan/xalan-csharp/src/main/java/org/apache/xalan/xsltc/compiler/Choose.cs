@@ -24,7 +24,6 @@
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using GOTO = org.apache.bcel.generic.GOTO;
 	using IFEQ = org.apache.bcel.generic.IFEQ;
@@ -50,9 +49,9 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("Choose");
-		indent(indent + IndentIncrement);
+		this.indent(indent + IndentIncrement);
 		displayContents(indent + IndentIncrement);
 		}
 
@@ -64,9 +63,9 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.List whenElements = new java.util.ArrayList();
-		IList whenElements = new ArrayList();
+		System.Collections.IList whenElements = new ArrayList();
 		Otherwise otherwise = null;
-		System.Collections.IEnumerator elements = elements();
+		System.Collections.IEnumerator elements = this.elements();
 
 		// These two are for reporting errors only
 		ErrorMsg error = null;
@@ -93,7 +92,7 @@ namespace org.apache.xalan.xsltc.compiler
 			else
 			{
 				error = new ErrorMsg(ErrorMsg.MULTIPLE_OTHERWISE_ERR, this);
-				Parser.reportError(Constants_Fields.ERROR, error);
+				Parser.reportError(Constants.ERROR, error);
 			}
 			}
 			else if (element is Text)
@@ -104,7 +103,7 @@ namespace org.apache.xalan.xsltc.compiler
 			else
 			{
 			error = new ErrorMsg(ErrorMsg.WHEN_ELEMENT_ERR, this);
-			Parser.reportError(Constants_Fields.ERROR, error);
+			Parser.reportError(Constants.ERROR, error);
 			}
 		}
 
@@ -112,19 +111,19 @@ namespace org.apache.xalan.xsltc.compiler
 		if (whenElements.Count == 0)
 		{
 			error = new ErrorMsg(ErrorMsg.MISSING_WHEN_ERR, this);
-			Parser.reportError(Constants_Fields.ERROR, error);
+			Parser.reportError(Constants.ERROR, error);
 			return;
 		}
 
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// next element will hold a handle to the beginning of next
 		// When/Otherwise if test on current When fails
 		BranchHandle nextElement = null;
-		IList exitHandles = new ArrayList();
+		System.Collections.IList exitHandles = new ArrayList();
 		InstructionHandle exit = null;
 
-		IEnumerator whens = whenElements.GetEnumerator();
+		System.Collections.IEnumerator whens = whenElements.GetEnumerator();
 		while (whens.MoveNext())
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -134,11 +133,11 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final Expression test = when.getTest();
 			Expression test = when.Test;
 
-			InstructionHandle truec = il.End;
+			InstructionHandle truec = il.getEnd();
 
 			if (nextElement != null)
 			{
-			nextElement.Target = il.append(NOP);
+			nextElement.setTarget(il.append(NOP));
 			}
 			test.translateDesynthesized(classGen, methodGen);
 
@@ -147,7 +146,7 @@ namespace org.apache.xalan.xsltc.compiler
 			FunctionCall call = (FunctionCall)test;
 			try
 			{
-				Type type = call.typeCheck(Parser.SymbolTable);
+				Type type = call.typeCheck(Parser.getSymbolTable());
 				if (type != Type.Boolean)
 				{
 				test._falseList.add(il.append(new IFEQ(null)));
@@ -159,7 +158,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 			}
 			// remember end of condition
-			truec = il.End;
+			truec = il.getEnd();
 
 			// The When object should be ignored completely in case it tests
 			// for the support of a non-available element
@@ -180,23 +179,23 @@ namespace org.apache.xalan.xsltc.compiler
 			{
 			test.backPatchFalseList(exit = il.append(NOP));
 			}
-			test.backPatchTrueList(truec.Next);
+			test.backPatchTrueList(truec.getNext());
 		}
 
 		// Translate any <xsl:otherwise> element
 		if (otherwise != null)
 		{
-			nextElement.Target = il.append(NOP);
+			nextElement.setTarget(il.append(NOP));
 			otherwise.translateContents(classGen, methodGen);
 			exit = il.append(NOP);
 		}
 
 		// now that end is known set targets of exit gotos
-		IEnumerator exitGotos = exitHandles.GetEnumerator();
+		System.Collections.IEnumerator exitGotos = exitHandles.GetEnumerator();
 		while (exitGotos.MoveNext())
 		{
 			BranchHandle gotoExit = (BranchHandle)exitGotos.Current;
-			gotoExit.Target = exit;
+			gotoExit.setTarget(exit);
 		}
 		}
 	}

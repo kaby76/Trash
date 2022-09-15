@@ -25,7 +25,6 @@
 namespace org.apache.xalan.xsltc.trax
 {
 
-
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
 	using XMLFilter = org.xml.sax.XMLFilter;
 
@@ -78,7 +77,7 @@ namespace org.apache.xalan.xsltc.trax
 		try
 		{
 				Type xalanFactClass = ObjectFactory.findProviderClass("org.apache.xalan.processor.TransformerFactoryImpl", ObjectFactory.findClassLoader(), true);
-			_xalanFactory = (SAXTransformerFactory) xalanFactClass.newInstance();
+			_xalanFactory = (SAXTransformerFactory) System.Activator.CreateInstance(xalanFactClass);
 		}
 		catch (ClassNotFoundException)
 		{
@@ -95,7 +94,7 @@ namespace org.apache.xalan.xsltc.trax
 		_currFactory = _xalanFactory;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setErrorListener(javax.xml.transform.ErrorListener listener) throws IllegalArgumentException
 		public virtual ErrorListener ErrorListener
 		{
@@ -110,7 +109,7 @@ namespace org.apache.xalan.xsltc.trax
 		}
 
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object getAttribute(String name) throws IllegalArgumentException
 		public virtual object getAttribute(string name)
 		{
@@ -133,7 +132,7 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setAttribute(String name, Object value) throws IllegalArgumentException
 		public virtual void setAttribute(string name, object value)
 		{
@@ -176,7 +175,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <exception cref="TransformerConfigurationException"> if this <code>TransformerFactory</code>
 		///   or the <code>Transformer</code>s or <code>Template</code>s it creates cannot support this feature. </exception>
 		/// <exception cref="NullPointerException"> If the <code>name</code> parameter is null. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setFeature(String name, boolean value) throws javax.xml.transform.TransformerConfigurationException
 		public virtual void setFeature(string name, bool value)
 		{
@@ -254,7 +253,7 @@ namespace org.apache.xalan.xsltc.trax
 		}
 
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Source getAssociatedStylesheet(javax.xml.transform.Source source, String media, String title, String charset) throws javax.xml.transform.TransformerConfigurationException
 		public virtual Source getAssociatedStylesheet(Source source, string media, string title, string charset)
 		{
@@ -269,7 +268,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Create a Transformer object that copies the input document to the
 		/// result. Uses the org.apache.xalan.processor.TransformerFactory. </summary>
 		/// <returns> A Transformer object. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Transformer newTransformer() throws javax.xml.transform.TransformerConfigurationException
 		public virtual Transformer newTransformer()
 		{
@@ -279,11 +278,11 @@ namespace org.apache.xalan.xsltc.trax
 		}
 		if (_errorlistener != null)
 		{
-			_xalanFactory.ErrorListener = _errorlistener;
+			_xalanFactory.setErrorListener(_errorlistener);
 		}
 		if (_uriresolver != null)
 		{
-			_xalanFactory.URIResolver = _uriresolver;
+			_xalanFactory.setURIResolver(_uriresolver);
 		}
 		 _currFactory = _xalanFactory;
 		return _currFactory.newTransformer();
@@ -294,7 +293,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Uses the org.apache.xalan.processor.TransformerFactory. </summary>
 		/// <param name="source"> the stylesheet. </param>
 		/// <returns> A Transformer object. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Transformer newTransformer(javax.xml.transform.Source source) throws javax.xml.transform.TransformerConfigurationException
 		public virtual Transformer newTransformer(Source source)
 		{
@@ -304,11 +303,11 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		if (_errorlistener != null)
 		{
-			_xalanFactory.ErrorListener = _errorlistener;
+			_xalanFactory.setErrorListener(_errorlistener);
 		}
 		if (_uriresolver != null)
 		{
-			_xalanFactory.URIResolver = _uriresolver;
+			_xalanFactory.setURIResolver(_uriresolver);
 		}
 		 _currFactory = _xalanFactory;
 		return _currFactory.newTransformer(source);
@@ -319,7 +318,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Uses the org.apache.xalan.xsltc.trax.TransformerFactory. </summary>
 		/// <param name="source"> the stylesheet. </param>
 		/// <returns> A Templates object. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.Templates newTemplates(javax.xml.transform.Source source) throws javax.xml.transform.TransformerConfigurationException
 		public virtual Templates newTemplates(Source source)
 		{
@@ -329,11 +328,11 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		if (_errorlistener != null)
 		{
-			_xsltcFactory.ErrorListener = _errorlistener;
+			_xsltcFactory.setErrorListener(_errorlistener);
 		}
 		if (_uriresolver != null)
 		{
-			_xsltcFactory.URIResolver = _uriresolver;
+			_xsltcFactory.setURIResolver(_uriresolver);
 		}
 		 _currFactory = _xsltcFactory;
 		return _currFactory.newTemplates(source);
@@ -344,7 +343,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// events into a Templates object. Uses the
 		/// org.apache.xalan.xsltc.trax.TransformerFactory.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TemplatesHandler newTemplatesHandler() throws javax.xml.transform.TransformerConfigurationException
 		public virtual TemplatesHandler newTemplatesHandler()
 		{
@@ -354,11 +353,11 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		if (_errorlistener != null)
 		{
-			_xsltcFactory.ErrorListener = _errorlistener;
+			_xsltcFactory.setErrorListener(_errorlistener);
 		}
 		if (_uriresolver != null)
 		{
-			_xsltcFactory.URIResolver = _uriresolver;
+			_xsltcFactory.setURIResolver(_uriresolver);
 		}
 		return _xsltcFactory.newTemplatesHandler();
 		}
@@ -368,7 +367,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// events based on a copy transformer. 
 		/// Uses org.apache.xalan.processor.TransformerFactory. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TransformerHandler newTransformerHandler() throws javax.xml.transform.TransformerConfigurationException
 		public virtual TransformerHandler newTransformerHandler()
 		{
@@ -378,11 +377,11 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		if (_errorlistener != null)
 		{
-			_xalanFactory.ErrorListener = _errorlistener;
+			_xalanFactory.setErrorListener(_errorlistener);
 		}
 		if (_uriresolver != null)
 		{
-			_xalanFactory.URIResolver = _uriresolver;
+			_xalanFactory.setURIResolver(_uriresolver);
 		}
 		return _xalanFactory.newTransformerHandler();
 		}
@@ -392,7 +391,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// events based on a transformer specified by the stylesheet Source. 
 		/// Uses org.apache.xalan.processor.TransformerFactory. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TransformerHandler newTransformerHandler(javax.xml.transform.Source src) throws javax.xml.transform.TransformerConfigurationException
 		public virtual TransformerHandler newTransformerHandler(Source src)
 		{
@@ -402,11 +401,11 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		if (_errorlistener != null)
 		{
-			_xalanFactory.ErrorListener = _errorlistener;
+			_xalanFactory.setErrorListener(_errorlistener);
 		}
 		if (_uriresolver != null)
 		{
-			_xalanFactory.URIResolver = _uriresolver;
+			_xalanFactory.setURIResolver(_uriresolver);
 		}
 		return _xalanFactory.newTransformerHandler(src);
 		}
@@ -417,7 +416,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// events based on a transformer specified by the stylesheet Source. 
 		/// Uses org.apache.xalan.xsltc.trax.TransformerFactory. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public javax.xml.transform.sax.TransformerHandler newTransformerHandler(javax.xml.transform.Templates templates) throws javax.xml.transform.TransformerConfigurationException
 		public virtual TransformerHandler newTransformerHandler(Templates templates)
 		{
@@ -427,11 +426,11 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		if (_errorlistener != null)
 		{
-			_xsltcFactory.ErrorListener = _errorlistener;
+			_xsltcFactory.setErrorListener(_errorlistener);
 		}
 		if (_uriresolver != null)
 		{
-			_xsltcFactory.URIResolver = _uriresolver;
+			_xsltcFactory.setURIResolver(_uriresolver);
 		}
 			return _xsltcFactory.newTransformerHandler(templates);
 		}
@@ -442,7 +441,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// transformation instructions. Uses
 		/// org.apache.xalan.xsltc.trax.TransformerFactory.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.xml.sax.XMLFilter newXMLFilter(javax.xml.transform.Source src) throws javax.xml.transform.TransformerConfigurationException
 		public virtual XMLFilter newXMLFilter(Source src)
 		{
@@ -452,11 +451,11 @@ namespace org.apache.xalan.xsltc.trax
 			}
 		if (_errorlistener != null)
 		{
-			_xsltcFactory.ErrorListener = _errorlistener;
+			_xsltcFactory.setErrorListener(_errorlistener);
 		}
 		if (_uriresolver != null)
 		{
-			_xsltcFactory.URIResolver = _uriresolver;
+			_xsltcFactory.setURIResolver(_uriresolver);
 		}
 		Templates templates = _xsltcFactory.newTemplates(src);
 		if (templates == null)
@@ -471,7 +470,7 @@ namespace org.apache.xalan.xsltc.trax
 		 * transformation instructions. Uses
 		 * org.apache.xalan.xsltc.trax.TransformerFactory.
 		 */
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.xml.sax.XMLFilter newXMLFilter(javax.xml.transform.Templates templates) throws javax.xml.transform.TransformerConfigurationException
 		public virtual XMLFilter newXMLFilter(Templates templates)
 		{
@@ -485,7 +484,7 @@ namespace org.apache.xalan.xsltc.trax
 				{
 					createXSLTCTransformerFactory();
 				}
-			ErrorListener errorListener = _xsltcFactory.ErrorListener;
+			ErrorListener errorListener = _xsltcFactory.getErrorListener();
 				if (errorListener != null)
 				{
 					try

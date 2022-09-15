@@ -23,9 +23,9 @@
 namespace org.apache.xpath.compiler
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using PrefixResolver = org.apache.xml.utils.PrefixResolver;
+	using XPathProcessorException = org.apache.xpath.XPathProcessorException;
 	using XPathStylesheetDOM3Exception = org.apache.xpath.domapi.XPathStylesheetDOM3Exception;
 	using XNumber = org.apache.xpath.objects.XNumber;
 	using XString = org.apache.xpath.objects.XString;
@@ -99,7 +99,7 @@ namespace org.apache.xpath.compiler
 	  /// the XPath to namespaces.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void initXPath(Compiler compiler, String expression, org.apache.xml.utils.PrefixResolver namespaceContext) throws javax.xml.transform.TransformerException
 	  public virtual void initXPath(Compiler compiler, string expression, PrefixResolver namespaceContext)
 	  {
@@ -178,7 +178,7 @@ namespace org.apache.xpath.compiler
 	  /// the XPath to namespaces.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void initMatchPattern(Compiler compiler, String expression, org.apache.xml.utils.PrefixResolver namespaceContext) throws javax.xml.transform.TransformerException
 	  public virtual void initMatchPattern(Compiler compiler, string expression, PrefixResolver namespaceContext)
 	  {
@@ -490,7 +490,7 @@ namespace org.apache.xpath.compiler
 	  /// <param name="expected"> The string to be expected.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private final void consumeExpected(String expected) throws javax.xml.transform.TransformerException
 	  private void consumeExpected(string expected)
 	  {
@@ -517,7 +517,7 @@ namespace org.apache.xpath.compiler
 	  /// <param name="expected"> the character to be expected.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private final void consumeExpected(char expected) throws javax.xml.transform.TransformerException
 	  private void consumeExpected(char expected)
 	  {
@@ -548,7 +548,7 @@ namespace org.apache.xpath.compiler
 	  /// </param>
 	  /// <exception cref="TransformerException"> if the current ErrorListoner determines to 
 	  ///                              throw an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void warn(String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  internal virtual void warn(string msg, object[] args)
 	  {
@@ -599,7 +599,7 @@ namespace org.apache.xpath.compiler
 	  /// </param>
 	  /// <exception cref="TransformerException"> if the current ErrorListoner determines to 
 	  ///                              throw an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void error(String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  internal virtual void error(string msg, object[] args)
 	  {
@@ -649,7 +649,7 @@ namespace org.apache.xpath.compiler
 	  /// </param>
 	  /// <exception cref="TransformerException"> if the current ErrorListoner determines to 
 	  ///                              throw an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void errorForDOM3(String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  internal virtual void errorForDOM3(string msg, object[] args)
 	  {
@@ -788,7 +788,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void Expr() throws javax.xml.transform.TransformerException
 	  protected internal virtual void Expr()
 	  {
@@ -803,7 +803,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void OrExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual void OrExpr()
 	  {
@@ -830,7 +830,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void AndExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual void AndExpr()
 	  {
@@ -863,7 +863,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> the position at the end of the equality expression.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected int EqualityExpr(int addPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual int EqualityExpr(int addPos)
 	  {
@@ -924,7 +924,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> the position at the end of the relational expression.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected int RelationalExpr(int addPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual int RelationalExpr(int addPos)
 	  {
@@ -1000,7 +1000,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> the position at the end of the equality expression.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected int AdditiveExpr(int addPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual int AdditiveExpr(int addPos)
 	  {
@@ -1059,7 +1059,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> the position at the end of the equality expression.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected int MultiplicativeExpr(int addPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual int MultiplicativeExpr(int addPos)
 	  {
@@ -1131,7 +1131,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void UnaryExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual void UnaryExpr()
 	  {
@@ -1161,7 +1161,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void StringExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual void StringExpr()
 	  {
@@ -1181,7 +1181,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void BooleanExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual void BooleanExpr()
 	  {
@@ -1208,7 +1208,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void NumberExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual void NumberExpr()
 	  {
@@ -1233,7 +1233,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void UnionExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual void UnionExpr()
 	  {
@@ -1278,7 +1278,7 @@ namespace org.apache.xpath.compiler
 	  /// the error condition is severe enough to halt processing.
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void PathExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual void PathExpr()
 	  {
@@ -1343,7 +1343,7 @@ namespace org.apache.xpath.compiler
 	  ///          FILTER_MATCH_FAILED, if this method did not match a FilterExpr
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected int FilterExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual int FilterExpr()
 	  {
@@ -1400,7 +1400,7 @@ namespace org.apache.xpath.compiler
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  ///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected boolean PrimaryExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual bool PrimaryExpr()
 	  {
@@ -1465,7 +1465,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void Argument() throws javax.xml.transform.TransformerException
 	  protected internal virtual void Argument()
 	  {
@@ -1485,7 +1485,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> true if, and only if, a FunctionCall was matched
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected boolean FunctionCall() throws javax.xml.transform.TransformerException
 	  protected internal virtual bool FunctionCall()
 	  {
@@ -1573,7 +1573,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void LocationPath() throws javax.xml.transform.TransformerException
 	  protected internal virtual void LocationPath()
 	  {
@@ -1625,7 +1625,7 @@ namespace org.apache.xpath.compiler
 	  /// @returns true if, and only if, a RelativeLocationPath was matched
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected boolean RelativeLocationPath() throws javax.xml.transform.TransformerException
 	  protected internal virtual bool RelativeLocationPath()
 	  {
@@ -1657,7 +1657,7 @@ namespace org.apache.xpath.compiler
 	  /// @returns false if step was empty (or only a '/'); true, otherwise
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected boolean Step() throws javax.xml.transform.TransformerException
 	  protected internal virtual bool Step()
 	  {
@@ -1754,7 +1754,7 @@ namespace org.apache.xpath.compiler
 	  /// | AbbreviatedBasis
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void Basis() throws javax.xml.transform.TransformerException
 	  protected internal virtual void Basis()
 	  {
@@ -1801,7 +1801,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> FROM_XXX axes type, found in <seealso cref="org.apache.xpath.compiler.Keywords"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected int AxisName() throws javax.xml.transform.TransformerException
 	  protected internal virtual int AxisName()
 	  {
@@ -1829,7 +1829,7 @@ namespace org.apache.xpath.compiler
 	  /// <param name="axesType"> FROM_XXX axes type, found in <seealso cref="org.apache.xpath.compiler.Keywords"/>.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void NodeTest(int axesType) throws javax.xml.transform.TransformerException
 	  protected internal virtual void NodeTest(int axesType)
 	  {
@@ -1929,7 +1929,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void Predicate() throws javax.xml.transform.TransformerException
 	  protected internal virtual void Predicate()
 	  {
@@ -1948,7 +1948,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void PredicateExpr() throws javax.xml.transform.TransformerException
 	  protected internal virtual void PredicateExpr()
 	  {
@@ -1970,7 +1970,7 @@ namespace org.apache.xpath.compiler
 	  /// LocalPart ::=  NCName
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void QName() throws javax.xml.transform.TransformerException
 	  protected internal virtual void QName()
 	  {
@@ -2018,7 +2018,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void Literal() throws javax.xml.transform.TransformerException
 	  protected internal virtual void Literal()
 	  {
@@ -2058,7 +2058,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void Number() throws javax.xml.transform.TransformerException
 	  protected internal virtual void Number()
 	  {
@@ -2103,7 +2103,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void Pattern() throws javax.xml.transform.TransformerException
 	  protected internal virtual void Pattern()
 	  {
@@ -2132,7 +2132,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void LocationPathPattern() throws javax.xml.transform.TransformerException
 	  protected internal virtual void LocationPathPattern()
 	  {
@@ -2233,7 +2233,7 @@ namespace org.apache.xpath.compiler
 	  /// 
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void IdKeyPattern() throws javax.xml.transform.TransformerException
 	  protected internal virtual void IdKeyPattern()
 	  {
@@ -2247,7 +2247,7 @@ namespace org.apache.xpath.compiler
 	  /// | RelativePathPattern '//' StepPattern
 	  /// </summary>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void RelativePathPattern() throws javax.xml.transform.TransformerException
 	  protected internal virtual void RelativePathPattern()
 	  {
@@ -2277,7 +2277,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> boolean indicating whether a slash following the step was consumed
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected boolean StepPattern(boolean isLeadingSlashPermitted) throws javax.xml.transform.TransformerException
 	  protected internal virtual bool StepPattern(bool isLeadingSlashPermitted)
 	  {
@@ -2294,7 +2294,7 @@ namespace org.apache.xpath.compiler
 	  /// <returns> boolean indicating whether a slash following the step was consumed
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected boolean AbbreviatedNodeTestStep(boolean isLeadingSlashPermitted) throws javax.xml.transform.TransformerException
 	  protected internal virtual bool AbbreviatedNodeTestStep(bool isLeadingSlashPermitted)
 	  {

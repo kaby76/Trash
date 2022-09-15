@@ -44,7 +44,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type check all the children of this node.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -57,7 +57,7 @@ namespace org.apache.xalan.xsltc.compiler
 		public override void translate(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 		ErrorMsg msg = new ErrorMsg(ErrorMsg.NOT_IMPLEMENTED_ERR, this.GetType(), this);
-		Parser.reportError(Constants_Fields.FATAL, msg);
+		Parser.reportError(FATAL, msg);
 		}
 
 		/// <summary>
@@ -68,16 +68,16 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList result, save = methodGen.getInstructionList();
-		InstructionList result , save = methodGen.InstructionList;
-		methodGen.InstructionList = result = new InstructionList();
+		InstructionList result, save = methodGen.getInstructionList();
+		methodGen.setInstructionList(result = new InstructionList());
 		translate(classGen, methodGen);
-		methodGen.InstructionList = save;
+		methodGen.setInstructionList(save);
 		return result;
 		}
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("TopLevelElement");
 		displayContents(indent + IndentIncrement);
 		}

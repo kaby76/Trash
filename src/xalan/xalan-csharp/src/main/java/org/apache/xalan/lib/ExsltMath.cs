@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.lib
 {
-
 	using NodeSet = org.apache.xpath.NodeSet;
 
 	using Node = org.w3c.dom.Node;
@@ -38,9 +37,9 @@ namespace org.apache.xalan.lib
 	/// The documentation for each function has been copied from the relevant
 	/// EXSLT Implementer page.
 	/// </summary>
-	/// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a>
+	/// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"
 	/// 
-	/// @xsl.usage general </seealso>
+	/// @xsl.usage general/>
 	public class ExsltMath : ExsltBase
 	{
 	  // Constants
@@ -68,16 +67,16 @@ namespace org.apache.xalan.lib
 	  /// </param>
 	  /// <returns> the maximum value found, NaN if any node cannot be converted to a number.
 	  /// </returns>
-	  /// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+	  /// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 	  public static double max(NodeList nl)
 	  {
-		if (nl == null || nl.Length == 0)
+		if (nl == null || nl.getLength() == 0)
 		{
 		  return Double.NaN;
 		}
 
 		double m = - double.MaxValue;
-		for (int i = 0; i < nl.Length; i++)
+		for (int i = 0; i < nl.getLength(); i++)
 		{
 		  Node n = nl.item(i);
 		  double d = toNumber(n);
@@ -110,16 +109,16 @@ namespace org.apache.xalan.lib
 	  /// </param>
 	  /// <returns> the minimum value found, NaN if any node cannot be converted to a number.
 	  /// </returns>
-	  /// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+	  /// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 	  public static double min(NodeList nl)
 	  {
-		if (nl == null || nl.Length == 0)
+		if (nl == null || nl.getLength() == 0)
 		{
 		  return Double.NaN;
 		}
 
 		double m = double.MaxValue;
-		for (int i = 0; i < nl.Length; i++)
+		for (int i = 0; i < nl.getLength(); i++)
 		{
 		  Node n = nl.item(i);
 		  double d = toNumber(n);
@@ -166,7 +165,7 @@ namespace org.apache.xalan.lib
 		  return highNodes; // empty Nodeset
 		}
 
-		for (int i = 0; i < nl.Length; i++)
+		for (int i = 0; i < nl.getLength(); i++)
 		{
 		  Node n = nl.item(i);
 		  double d = toNumber(n);
@@ -208,7 +207,7 @@ namespace org.apache.xalan.lib
 		  return lowNodes; // empty Nodeset
 		}
 
-		for (int i = 0; i < nl.Length; i++)
+		for (int i = 0; i < nl.getLength(); i++)
 		{
 		  Node n = nl.item(i);
 		  double d = toNumber(n);
@@ -318,7 +317,7 @@ namespace org.apache.xalan.lib
 	  /// <returns> A random double from 0 to 1 </returns>
 	   public static double random()
 	   {
-		 return GlobalRandom.NextDouble;
+		 return MathHelper.NextDouble;
 	   }
 
 	  /// <summary>
@@ -400,7 +399,7 @@ namespace org.apache.xalan.lib
 
 		 if (!string.ReferenceEquals(value, null))
 		 {
-		   int bits = (new double?(precision)).intValue();
+		   int bits = (int)(new double?(precision));
 
 		   if (bits <= value.Length)
 		   {

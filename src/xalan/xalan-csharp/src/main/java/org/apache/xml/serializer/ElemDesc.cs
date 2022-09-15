@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.serializer
 {
-
 	using StringToIntTable = org.apache.xml.serializer.utils.StringToIntTable;
 
 	/// <summary>

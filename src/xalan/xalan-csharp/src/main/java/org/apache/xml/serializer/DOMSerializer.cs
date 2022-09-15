@@ -54,12 +54,12 @@ namespace org.apache.xml.serializer
 	/// 
 	/// </para>
 	/// </summary>
-	/// <seealso cref= OutputPropertiesFactory </seealso>
-	/// <seealso cref= SerializerFactory </seealso>
-	/// <seealso cref= Serializer
+	/// <seealso cref="OutputPropertiesFactory"/>
+	/// <seealso cref="SerializerFactory"/>
+	/// <seealso cref="Serializer"
 	/// 
 	/// @xsl.usage general
-	///  </seealso>
+	/// />
 	public interface DOMSerializer
 	{
 		/// <summary>
@@ -70,7 +70,7 @@ namespace org.apache.xml.serializer
 		/// </summary>
 		/// <param name="node"> the DOM node to serialize </param>
 		/// <exception cref="IOException"> if an I/O exception occured while serializing </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void serialize(org.w3c.dom.Node node) throws java.io.IOException;
 		void serialize(Node node);
 	}

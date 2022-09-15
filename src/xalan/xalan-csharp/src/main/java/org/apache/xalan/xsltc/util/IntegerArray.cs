@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc.util
 {
-
 	/// <summary>
 	/// @author Jacek Ambroziak
 	/// </summary>
@@ -136,9 +135,7 @@ namespace org.apache.xalan.xsltc.util
 		/// Merge two sorted arrays and eliminate duplicates.
 		/// Elements of the other IntegerArray must not be changed. 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void merge(final IntegerArray other)
-		public void merge(IntegerArray other)
+		public void merge(in IntegerArray other)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int newSize = _free + other._free;
@@ -147,7 +144,7 @@ namespace org.apache.xalan.xsltc.util
 		int[] newArray = new int[newSize];
 
 		// Merge the two arrays
-		int i = 0, j = 0, k ;
+		int i = 0, j = 0, k;
 		for (k = 0; i < _free && j < other._free; k++)
 		{
 			int x = _array[i];

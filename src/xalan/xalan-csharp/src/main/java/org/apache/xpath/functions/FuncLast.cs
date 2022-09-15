@@ -23,8 +23,8 @@ using System.Collections;
  */
 namespace org.apache.xpath.functions
 {
-
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using SubContextList = org.apache.xpath.axes.SubContextList;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using XNumber = org.apache.xpath.objects.XNumber;
@@ -59,7 +59,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> The number of nodes in the list.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int getCountOfContextNodeList(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public virtual int getCountOfContextNodeList(XPathContext xctxt)
 	  {
@@ -95,7 +95,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {

@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
-
 	using org.apache.xml.dtm;
 
 	using XMLStringFactory = org.apache.xml.utils.XMLStringFactory;
@@ -83,9 +82,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <param name="axis"> One of Axes.ANCESTORORSELF, etc.
 	  /// </param>
 	  /// <returns> A DTMAxisTraverser, or null if the given axis isn't supported. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public DTMAxisTraverser getAxisTraverser(final int axis)
-	  public override DTMAxisTraverser getAxisTraverser(int axis)
+	  public override DTMAxisTraverser getAxisTraverser(in int axis)
 	  {
 
 		DTMAxisTraverser traverser;
@@ -224,7 +221,7 @@ namespace org.apache.xml.dtm.@ref
 				// Process using identities
 		  current = outerInstance.makeNodeIdentity(current);
 
-		  while (DTM_Fields.NULL != (current = outerInstance.m_parent.elementAt(current)))
+		  while (DTM.NULL != (current = outerInstance.m_parent.elementAt(current)))
 		  {
 			if (outerInstance.m_exptype.elementAt(current) == expandedTypeID)
 			{
@@ -232,7 +229,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -324,9 +321,9 @@ namespace org.apache.xml.dtm.@ref
 			{
 			  return current;
 			}
-		  } while (DTM_Fields.NULL != (current = outerInstance.getNextAttribute(current)));
+		  } while (DTM.NULL != (current = outerInstance.getNextAttribute(current)));
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -346,7 +343,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <summary>
 		/// Get the next indexed node that matches the expanded type ID.  Before 
 		/// calling this function, one should first call 
-		/// <seealso cref="#isIndexed(int) isIndexed"/> to make sure that the index can 
+		/// <seealso cref="isIndexed(int) isIndexed"/> to make sure that the index can 
 		/// contain nodes that match the given expanded type ID.
 		/// </summary>
 		/// <param name="axisRoot"> The root identity of the axis. </param>
@@ -378,7 +375,7 @@ namespace org.apache.xml.dtm.@ref
 			  // we know it is past the child axis.
 			  if (parentID < axisRoot)
 			  {
-				  return org.apache.xml.dtm.DTM_Fields.NULL;
+				  return NULL;
 			  }
 
 			  // Otherwise, it could be a descendant below the subtree root 
@@ -391,7 +388,7 @@ namespace org.apache.xml.dtm.@ref
 				parentID = outerInstance.m_parent.elementAt(parentID);
 				if (parentID < axisRoot)
 				{
-				  return org.apache.xml.dtm.DTM_Fields.NULL;
+				  return NULL;
 				}
 			  } while (parentID > axisRoot);
 
@@ -408,7 +405,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 
 		/// <summary>
@@ -457,14 +454,14 @@ namespace org.apache.xml.dtm.@ref
 		  else
 		  {
 					// %REVIEW% Dead code. Eliminate?
-			for (int current = outerInstance._firstch(outerInstance.makeNodeIdentity(context)); DTM_Fields.NULL != current; current = outerInstance._nextsib(current))
+			for (int current = outerInstance._firstch(outerInstance.makeNodeIdentity(context)); DTM.NULL != current; current = outerInstance._nextsib(current))
 			{
 			  if (outerInstance.m_exptype.elementAt(current) == expandedTypeID)
 			  {
 				  return outerInstance.makeNodeHandle(current);
 			  }
 			}
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		}
 
@@ -492,7 +489,7 @@ namespace org.apache.xml.dtm.@ref
 		public override int next(int context, int current, int expandedTypeID)
 		{
 				// Process in Identifier space
-		  for (current = outerInstance._nextsib(outerInstance.makeNodeIdentity(current)); DTM_Fields.NULL != current; current = outerInstance._nextsib(current))
+		  for (current = outerInstance._nextsib(outerInstance.makeNodeIdentity(current)); DTM.NULL != current; current = outerInstance._nextsib(current))
 		  {
 			if (outerInstance.m_exptype.elementAt(current) == expandedTypeID)
 			{
@@ -500,7 +497,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -521,12 +518,12 @@ namespace org.apache.xml.dtm.@ref
 		/// <summary>
 		/// Tell if the indexing is on and the given expanded type ID matches 
 		/// what is in the indexes.  Derived classes should call this before 
-		/// calling <seealso cref="#getNextIndexed(int, int, int) getNextIndexed"/> method.
+		/// calling <seealso cref="getNextIndexed(int, int, int) getNextIndexed"/> method.
 		/// </summary>
 		/// <param name="expandedTypeID"> The expanded type ID being requested.
 		/// </param>
 		/// <returns> true if it is OK to call the 
-		///         <seealso cref="#getNextIndexed(int, int, int) getNextIndexed"/> method. </returns>
+		///         <seealso cref="getNextIndexed(int, int, int) getNextIndexed"/> method. </returns>
 		protected internal bool isIndexed(int expandedTypeID)
 		{
 		  return (outerInstance.m_indexing && ExpandedNameTable.ELEMENT == outerInstance.m_expandedNameTable.getType(expandedTypeID));
@@ -556,7 +553,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <summary>
 		/// Get the next indexed node that matches the expanded type ID.  Before 
 		/// calling this function, one should first call 
-		/// <seealso cref="#isIndexed(int) isIndexed"/> to make sure that the index can 
+		/// <seealso cref="isIndexed(int) isIndexed"/> to make sure that the index can 
 		/// contain nodes that match the given expanded type ID.
 		/// </summary>
 		/// <param name="axisRoot"> The root identity of the axis. </param>
@@ -578,7 +575,7 @@ namespace org.apache.xml.dtm.@ref
 			{
 			  if (isAfterAxis(axisRoot, next))
 			  {
-				return org.apache.xml.dtm.DTM_Fields.NULL;
+				return NULL;
 			  }
 
 			  // System.out.println("Found node via index: "+first);
@@ -592,7 +589,7 @@ namespace org.apache.xml.dtm.@ref
 			outerInstance.nextNode();
 		  }
 
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 	  }
 
@@ -733,10 +730,10 @@ namespace org.apache.xml.dtm.@ref
 
 			if (!isDescendant(subtreeRootIdent, current))
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return NULL;
 			}
 
-			if (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == type || org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE == type)
+			if (ATTRIBUTE_NODE == type || NAMESPACE_NODE == type)
 			{
 			  continue;
 			}
@@ -772,7 +769,7 @@ namespace org.apache.xml.dtm.@ref
 
 			if (!isDescendant(subtreeRootIdent, current))
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return NULL;
 			}
 
 			if (exptype != expandedTypeID)
@@ -860,7 +857,7 @@ namespace org.apache.xml.dtm.@ref
 
 			if (!isDescendant(subtreeRootIdent, current))
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return NULL;
 			}
 
 			return outerInstance.makeNodeHandle(current); // make handle.
@@ -895,12 +892,12 @@ namespace org.apache.xml.dtm.@ref
 		  int first;
 		  int type = outerInstance._type(context);
 
-		  if ((DTM_Fields.ATTRIBUTE_NODE == type) || (DTM_Fields.NAMESPACE_NODE == type))
+		  if ((DTM.ATTRIBUTE_NODE == type) || (DTM.NAMESPACE_NODE == type))
 		  {
 			context = outerInstance._parent(context);
 			first = outerInstance._firstch(context);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL != first)
+			if (NULL != first)
 			{
 			  return outerInstance.makeNodeHandle(first);
 			}
@@ -910,11 +907,11 @@ namespace org.apache.xml.dtm.@ref
 		  {
 			first = outerInstance._nextsib(context);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == first)
+			if (NULL == first)
 			{
 			  context = outerInstance._parent(context);
 			}
-		  } while (org.apache.xml.dtm.DTM_Fields.NULL == first && org.apache.xml.dtm.DTM_Fields.NULL != context);
+		  } while (NULL == first && NULL != context);
 
 		  return outerInstance.makeNodeHandle(first);
 		}
@@ -934,12 +931,12 @@ namespace org.apache.xml.dtm.@ref
 		  int first;
 		  int type = outerInstance.getNodeType(context);
 
-		  if ((DTM_Fields.ATTRIBUTE_NODE == type) || (DTM_Fields.NAMESPACE_NODE == type))
+		  if ((DTM.ATTRIBUTE_NODE == type) || (DTM.NAMESPACE_NODE == type))
 		  {
 			context = outerInstance.getParent(context);
 			first = outerInstance.getFirstChild(context);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL != first)
+			if (NULL != first)
 			{
 			  if (outerInstance.getExpandedTypeID(first) == expandedTypeID)
 			  {
@@ -956,7 +953,7 @@ namespace org.apache.xml.dtm.@ref
 		  {
 			first = outerInstance.getNextSibling(context);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == first)
+			if (NULL == first)
 			{
 			  context = outerInstance.getParent(context);
 			}
@@ -971,7 +968,7 @@ namespace org.apache.xml.dtm.@ref
 				return next(context, first, expandedTypeID);
 			  }
 			}
-		  } while (org.apache.xml.dtm.DTM_Fields.NULL == first && org.apache.xml.dtm.DTM_Fields.NULL != context);
+		  } while (NULL == first && NULL != context);
 
 		  return first;
 		}
@@ -995,12 +992,12 @@ namespace org.apache.xml.dtm.@ref
 					// %REVIEW% Are we using handles or indexes?
 			int type = outerInstance._type(current); // may call nextNode()
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == type)
+			if (NULL == type)
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return NULL;
 			}
 
-			if (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == type || org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE == type)
+			if (ATTRIBUTE_NODE == type || NAMESPACE_NODE == type)
 			{
 			  continue;
 			}
@@ -1029,9 +1026,9 @@ namespace org.apache.xml.dtm.@ref
 
 			int etype = outerInstance._exptype(current); // may call nextNode()
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL == etype)
+			if (NULL == etype)
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return NULL;
 			}
 
 			if (etype != expandedTypeID)
@@ -1081,7 +1078,7 @@ namespace org.apache.xml.dtm.@ref
 		public override int next(int context, int current, int expandedTypeID)
 		{
 
-		  while (DTM_Fields.NULL != (current = outerInstance.getNextSibling(current)))
+		  while (DTM.NULL != (current = outerInstance.getNextSibling(current)))
 		  {
 			if (outerInstance.getExpandedTypeID(current) == expandedTypeID)
 			{
@@ -1089,7 +1086,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -1139,9 +1136,9 @@ namespace org.apache.xml.dtm.@ref
 			{
 			  return current;
 			}
-		  } while (DTM_Fields.NULL != (current = outerInstance.getNextNamespaceNode(context, current, false)));
+		  } while (DTM.NULL != (current = outerInstance.getNextNamespaceNode(context, current, false)));
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -1191,9 +1188,9 @@ namespace org.apache.xml.dtm.@ref
 			{
 			  return current;
 			}
-		  } while (DTM_Fields.NULL != (current = outerInstance.getNextNamespaceNode(context, current, true)));
+		  } while (DTM.NULL != (current = outerInstance.getNextNamespaceNode(context, current, true)));
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -1247,7 +1244,7 @@ namespace org.apache.xml.dtm.@ref
 				// Compute in ID space
 		  current = outerInstance.makeNodeIdentity(current);
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (current = outerInstance.m_parent.elementAt(current)))
+		  while (NULL != (current = outerInstance.m_parent.elementAt(current)))
 		  {
 			if (outerInstance.m_exptype.elementAt(current) == expandedTypeID)
 			{
@@ -1255,7 +1252,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 
 
@@ -1269,7 +1266,7 @@ namespace org.apache.xml.dtm.@ref
 		public override int next(int context, int current)
 		{
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 
 
@@ -1286,7 +1283,7 @@ namespace org.apache.xml.dtm.@ref
 		public override int next(int context, int current, int expandedTypeID)
 		{
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -1315,7 +1312,7 @@ namespace org.apache.xml.dtm.@ref
 		{
 				// %REVIEW% See comments in IsAfterAxis; using the "successor" of
 				// contextIdent is probably more efficient.
-		  for (contextIdent = outerInstance.m_parent.elementAt(contextIdent); DTM_Fields.NULL != contextIdent; contextIdent = outerInstance.m_parent.elementAt(contextIdent))
+		  for (contextIdent = outerInstance.m_parent.elementAt(contextIdent); DTM.NULL != contextIdent; contextIdent = outerInstance.m_parent.elementAt(contextIdent))
 		  {
 			if (contextIdent == currentIdent)
 			{
@@ -1342,7 +1339,7 @@ namespace org.apache.xml.dtm.@ref
 		  {
 			short type = outerInstance._type(current);
 
-			if (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == type || org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE == type || isAncestor(subtreeRootIdent, current))
+			if (ATTRIBUTE_NODE == type || NAMESPACE_NODE == type || isAncestor(subtreeRootIdent, current))
 			{
 			  continue;
 			}
@@ -1350,7 +1347,7 @@ namespace org.apache.xml.dtm.@ref
 			return outerInstance.makeNodeHandle(current); // make handle.
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 
 		/// <summary>
@@ -1379,7 +1376,7 @@ namespace org.apache.xml.dtm.@ref
 			return outerInstance.makeNodeHandle(current); // make handle.
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -1413,7 +1410,7 @@ namespace org.apache.xml.dtm.@ref
 		  {
 			short type = outerInstance._type(current);
 
-			if (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == type || org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE == type)
+			if (ATTRIBUTE_NODE == type || NAMESPACE_NODE == type)
 			{
 			  continue;
 			}
@@ -1421,7 +1418,7 @@ namespace org.apache.xml.dtm.@ref
 			return outerInstance.makeNodeHandle(current); // make handle.
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 
 		/// <summary>
@@ -1450,7 +1447,7 @@ namespace org.apache.xml.dtm.@ref
 			return outerInstance.makeNodeHandle(current); // make handle.
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -1491,7 +1488,7 @@ namespace org.apache.xml.dtm.@ref
 		public override int next(int context, int current, int expandedTypeID)
 		{
 
-		  while (DTM_Fields.NULL != (current = outerInstance.getPreviousSibling(current)))
+		  while (DTM.NULL != (current = outerInstance.getPreviousSibling(current)))
 		  {
 			if (outerInstance.getExpandedTypeID(current) == expandedTypeID)
 			{
@@ -1499,7 +1496,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -1542,7 +1539,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <returns> the first node in the traversal. </returns>
 		public override int first(int context, int expandedTypeID)
 		{
-		  return (outerInstance.getExpandedTypeID(context) == expandedTypeID) ? context : org.apache.xml.dtm.DTM_Fields.NULL;
+		  return (outerInstance.getExpandedTypeID(context) == expandedTypeID) ? context : NULL;
 		}
 
 		/// <summary>
@@ -1554,7 +1551,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <returns> Always return NULL for this axis. </returns>
 		public override int next(int context, int current)
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 
 		/// <summary>
@@ -1568,7 +1565,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <returns> the next node in the iteration, or DTM.NULL. </returns>
 		public override int next(int context, int current, int expandedTypeID)
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -1624,9 +1621,9 @@ namespace org.apache.xml.dtm.@ref
 		  {
 					// Kluge test: Just make sure +1 yielded a real node
 			int type = outerInstance._type(current); // may call nextNode()
-			if (type == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (type == NULL)
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return NULL;
 			}
 
 			return outerInstance.makeNodeHandle(current); // make handle.
@@ -1651,9 +1648,9 @@ namespace org.apache.xml.dtm.@ref
 		  {
 			int exptype = outerInstance._exptype(current); // may call nextNode()
 
-			if (exptype == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (exptype == NULL)
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return NULL;
 			}
 
 			if (exptype != expandedTypeID)
@@ -1689,7 +1686,7 @@ namespace org.apache.xml.dtm.@ref
 		public override int first(int context, int expandedTypeID)
 		{
 		  int root = outerInstance.getDocumentRoot(context);
-		  return (outerInstance.getExpandedTypeID(root) == expandedTypeID) ? root : org.apache.xml.dtm.DTM_Fields.NULL;
+		  return (outerInstance.getExpandedTypeID(root) == expandedTypeID) ? root : NULL;
 		}
 
 		/// <summary>
@@ -1701,7 +1698,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <returns> Always return NULL for this axis. </returns>
 		public override int next(int context, int current)
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 
 		/// <summary>
@@ -1715,7 +1712,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <returns> the next node in the iteration, or DTM.NULL. </returns>
 		public override int next(int context, int current, int expandedTypeID)
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 

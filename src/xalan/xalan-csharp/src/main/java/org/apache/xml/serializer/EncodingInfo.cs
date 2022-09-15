@@ -23,7 +23,6 @@
 namespace org.apache.xml.serializer
 {
 
-
 	/// <summary>
 	/// Holds information about a given encoding, which is the Java name for the
 	/// encoding, the equivalent ISO name.
@@ -555,7 +554,7 @@ namespace org.apache.xml.serializer
 				{
 					isInEncoding = false;
 				}
-				else if (data[0] == '?' && ch != '?')
+				else if (data[0] == (sbyte)'?' && ch != '?')
 				{
 					isInEncoding = false;
 				}
@@ -608,7 +607,7 @@ namespace org.apache.xml.serializer
 		/// </para>
 		/// <para>
 		/// If the value returned is '\u0000' it means that every character must be tested
-		/// with an isInEncoding method <seealso cref="#isInEncoding(char)"/> or <seealso cref="#isInEncoding(char, char)"/> 
+		/// with an isInEncoding method <seealso cref="isInEncoding(char)"/> or <seealso cref="isInEncoding(char, char)"/> 
 		/// for surrogate pairs.
 		/// </para>
 		/// <para>

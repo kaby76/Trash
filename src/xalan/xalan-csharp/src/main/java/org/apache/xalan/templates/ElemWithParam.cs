@@ -43,8 +43,8 @@ namespace org.apache.xalan.templates
 	///   select %expr; #IMPLIED
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#element-with-param">element-with-param in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.element-with-param">element-with-param in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemWithParam : ElemTemplateElement
 	{
@@ -115,7 +115,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> An integer representation of the element, defined in the
 	  ///     Constants class. </returns>
-	  /// <seealso cref= org.apache.xalan.templates.Constants </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"/>
 	  public override int XSLToken
 	  {
 		  get
@@ -143,7 +143,7 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
@@ -156,13 +156,13 @@ namespace org.apache.xalan.templates
 			m_selectPattern = newSelect;
 		  }
 		}
-		m_qnameID = sroot.getComposeState().getQNameID(m_qname);
+		m_qnameID = sroot.ComposeState.getQNameID(m_qname);
 		base.compose(sroot);
 
-		ArrayList vnames = sroot.getComposeState().VariableNames;
+		ArrayList vnames = sroot.ComposeState.VariableNames;
 		if (null != m_selectPattern)
 		{
-		  m_selectPattern.fixupVariables(vnames, sroot.getComposeState().GlobalsSize);
+		  m_selectPattern.fixupVariables(vnames, sroot.ComposeState.GlobalsSize);
 		}
 
 		// m_index must be resolved by ElemApplyTemplates and ElemCallTemplate!
@@ -190,12 +190,12 @@ namespace org.apache.xalan.templates
 	  /// <returns> the XObject representation of the variable.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject getValue(org.apache.xalan.transformer.TransformerImpl transformer, int sourceNode) throws javax.xml.transform.TransformerException
 	  public virtual XObject getValue(TransformerImpl transformer, int sourceNode)
 	  {
 
-		XObject @var;
+		XObject var;
 		XPathContext xctxt = transformer.XPathContext;
 
 		xctxt.pushCurrentNode(sourceNode);
@@ -204,18 +204,18 @@ namespace org.apache.xalan.templates
 		{
 		  if (null != m_selectPattern)
 		  {
-			@var = m_selectPattern.execute(xctxt, sourceNode, this);
+			var = m_selectPattern.execute(xctxt, sourceNode, this);
 
-			@var.allowDetachToRelease(false);
+			var.allowDetachToRelease(false);
 
 			if (transformer.Debug)
 			{
-			  transformer.TraceManager.fireSelectedEvent(sourceNode, this, "select", m_selectPattern, @var);
+			  transformer.TraceManager.fireSelectedEvent(sourceNode, this, "select", m_selectPattern, var);
 			}
 		  }
 		  else if (null == FirstChildElem)
 		  {
-			@var = XString.EMPTYSTRING;
+			var = XString.EMPTYSTRING;
 		  }
 		  else
 		  {
@@ -223,7 +223,7 @@ namespace org.apache.xalan.templates
 			// Use result tree fragment
 			int df = transformer.transformToRTF(this);
 
-			@var = new XRTreeFrag(df, xctxt, this);
+			var = new XRTreeFrag(df, xctxt, this);
 		  }
 		}
 		finally
@@ -231,7 +231,7 @@ namespace org.apache.xalan.templates
 		  xctxt.popCurrentNode();
 		}
 
-		return @var;
+		return var;
 	  }
 
 	  /// <summary>

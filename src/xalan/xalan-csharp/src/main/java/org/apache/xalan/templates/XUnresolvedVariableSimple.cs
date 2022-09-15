@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.templates
 {
-
 	using Expression = org.apache.xpath.Expression;
 	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
@@ -52,11 +51,11 @@ namespace org.apache.xalan.templates
 	  /// <returns> This object.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
-		  Expression expr = ((ElemVariable)m_obj).Select.Expression;
+		  Expression expr = ((ElemVariable)m_obj).Select.getExpression();
 		XObject xobj = expr.execute(xctxt);
 		xobj.allowDetachToRelease(false);
 		return xobj;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,7 +26,7 @@ namespace org.apache.xalan.xslt
 {
 
 
-
+	using Version = org.apache.xalan.Version;
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using PrintTraceListener = org.apache.xalan.trace.PrintTraceListener;
@@ -150,7 +151,7 @@ namespace org.apache.xalan.xslt
 		  bool useXSLTC = false;
 		  for (int i = 0; i < argv.Length; i++)
 		  {
-			if ("-XSLTC".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			if ("-XSLTC".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  useXSLTC = true;
 			}
@@ -161,15 +162,15 @@ namespace org.apache.xalan.xslt
 		  {
 		 string key = "javax.xml.transform.TransformerFactory";
 		 string value = "org.apache.xalan.xsltc.trax.TransformerFactoryImpl";
-		 Properties props = System.Properties;
+		 Properties props = System.getProperties();
 		 props.put(key, value);
-		 System.Properties = props;
+		 System.setProperties(props);
 		  }
 
 		  try
 		  {
 			tfactory = TransformerFactory.newInstance();
-			tfactory.ErrorListener = new DefaultErrorHandler(false);
+			tfactory.setErrorListener(new DefaultErrorHandler(false));
 		  }
 		  catch (TransformerFactoryConfigurationError pfe)
 		  {
@@ -202,11 +203,11 @@ namespace org.apache.xalan.xslt
 
 		  for (int i = 0; i < argv.Length; i++)
 		  {
-			if ("-XSLTC".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			if ("-XSLTC".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  // The -XSLTC option has been processed.
 			}
-			else if ("-TT".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-TT".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (!useXSLTC)
 			  {
@@ -224,7 +225,7 @@ namespace org.apache.xalan.xslt
 
 			  // tfactory.setTraceTemplates(true);
 			}
-			else if ("-TG".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-TG".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (!useXSLTC)
 			  {
@@ -242,7 +243,7 @@ namespace org.apache.xalan.xslt
 
 			  // tfactory.setTraceSelect(true);
 			}
-			else if ("-TS".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-TS".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (!useXSLTC)
 			  {
@@ -260,7 +261,7 @@ namespace org.apache.xalan.xslt
 
 			  // tfactory.setTraceTemplates(true);
 			}
-			else if ("-TTC".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-TTC".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (!useXSLTC)
 			  {
@@ -278,7 +279,7 @@ namespace org.apache.xalan.xslt
 
 			  // tfactory.setTraceTemplateChildren(true);
 			}
-			else if ("-INDENT".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-INDENT".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  int indentAmount;
 
@@ -294,7 +295,7 @@ namespace org.apache.xalan.xslt
 			  // TBD:
 			  // xmlProcessorLiaison.setIndent(indentAmount);
 			}
-			else if ("-IN".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-IN".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (i + 1 < argv.Length && argv[i + 1][0] != '-')
 			  {
@@ -305,7 +306,7 @@ namespace org.apache.xalan.xslt
 				Console.Error.WriteLine(XSLMessages.createMessage(XSLTErrorResources.ER_MISSING_ARG_FOR_OPTION, new object[]{"-IN"})); //"Missing argument for);
 			  }
 			}
-			else if ("-MEDIA".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-MEDIA".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (i + 1 < argv.Length)
 			  {
@@ -316,7 +317,7 @@ namespace org.apache.xalan.xslt
 				Console.Error.WriteLine(XSLMessages.createMessage(XSLTErrorResources.ER_MISSING_ARG_FOR_OPTION, new object[]{"-MEDIA"})); //"Missing argument for);
 			  }
 			}
-			else if ("-OUT".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-OUT".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (i + 1 < argv.Length && argv[i + 1][0] != '-')
 			  {
@@ -327,7 +328,7 @@ namespace org.apache.xalan.xslt
 				Console.Error.WriteLine(XSLMessages.createMessage(XSLTErrorResources.ER_MISSING_ARG_FOR_OPTION, new object[]{"-OUT"})); //"Missing argument for);
 			  }
 			}
-			else if ("-XSL".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-XSL".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (i + 1 < argv.Length && argv[i + 1][0] != '-')
 			  {
@@ -338,7 +339,7 @@ namespace org.apache.xalan.xslt
 				Console.Error.WriteLine(XSLMessages.createMessage(XSLTErrorResources.ER_MISSING_ARG_FOR_OPTION, new object[]{"-XSL"})); //"Missing argument for);
 			  }
 			}
-			else if ("-FLAVOR".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-FLAVOR".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (i + 1 < argv.Length)
 			  {
@@ -349,7 +350,7 @@ namespace org.apache.xalan.xslt
 				Console.Error.WriteLine(XSLMessages.createMessage(XSLTErrorResources.ER_MISSING_ARG_FOR_OPTION, new object[]{"-FLAVOR"})); //"Missing argument for);
 			  }
 			}
-			else if ("-PARAM".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-PARAM".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (i + 2 < argv.Length)
 			  {
@@ -366,18 +367,17 @@ namespace org.apache.xalan.xslt
 				Console.Error.WriteLine(XSLMessages.createMessage(XSLTErrorResources.ER_MISSING_ARG_FOR_OPTION, new object[]{"-PARAM"})); //"Missing argument for);
 			  }
 			}
-			else if ("-E".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-E".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 
 			  // TBD:
 			  // xmlProcessorLiaison.setShouldExpandEntityRefs(false);
 			}
-			else if ("-V".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-V".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  diagnosticsWriter.println(resbundle.getString("version") + Version.Version + ", " + resbundle.getString("version2")); // "<<<<<<<");
-			  /* xmlProcessorLiaison.getParserDescription()+ */
 			}
-			else if ("-QC".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-QC".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (!useXSLTC)
 			  {
@@ -388,27 +388,27 @@ namespace org.apache.xalan.xslt
 				printInvalidXSLTCOption("-QC");
 			  }
 			}
-			else if ("-Q".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-Q".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  setQuietMode = true;
 			}
-			else if ("-DIAG".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-DIAG".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  doDiag = true;
 			}
-			else if ("-XML".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-XML".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  outputType = "xml";
 			}
-			else if ("-TEXT".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-TEXT".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  outputType = "text";
 			}
-			else if ("-HTML".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-HTML".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  outputType = "html";
 			}
-			else if ("-EDUMP".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-EDUMP".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  doStackDumpOnError = true;
 
@@ -417,7 +417,7 @@ namespace org.apache.xalan.xslt
 				dumpFileName = argv[++i];
 			  }
 			}
-			else if ("-URIRESOLVER".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-URIRESOLVER".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (i + 1 < argv.Length)
 			  {
@@ -425,7 +425,7 @@ namespace org.apache.xalan.xslt
 				{
 				  uriResolver = (URIResolver) ObjectFactory.newInstance(argv[++i], ObjectFactory.findClassLoader(), true);
 
-				  tfactory.URIResolver = uriResolver;
+				  tfactory.setURIResolver(uriResolver);
 				}
 				catch (ObjectFactory.ConfigurationError)
 				{
@@ -441,7 +441,7 @@ namespace org.apache.xalan.xslt
 				doExit(msg);
 			  }
 			}
-			else if ("-ENTITYRESOLVER".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-ENTITYRESOLVER".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (i + 1 < argv.Length)
 			  {
@@ -464,7 +464,7 @@ namespace org.apache.xalan.xslt
 				doExit(msg);
 			  }
 			}
-			else if ("-CONTENTHANDLER".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-CONTENTHANDLER".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (i + 1 < argv.Length)
 			  {
@@ -487,7 +487,7 @@ namespace org.apache.xalan.xslt
 				doExit(msg);
 			  }
 			}
-			else if ("-L".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-L".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (!useXSLTC)
 			  {
@@ -498,7 +498,7 @@ namespace org.apache.xalan.xslt
 				printInvalidXSLTCOption("-L");
 			  }
 			}
-			else if ("-INCREMENTAL".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-INCREMENTAL".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (!useXSLTC)
 			  {
@@ -509,7 +509,7 @@ namespace org.apache.xalan.xslt
 				printInvalidXSLTCOption("-INCREMENTAL");
 			  }
 			}
-			else if ("-NOOPTIMIZE".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-NOOPTIMIZE".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  // Default is true.
 			  //
@@ -525,7 +525,7 @@ namespace org.apache.xalan.xslt
 				printInvalidXSLTCOption("-NOOPTIMIZE");
 			  }
 			}
-			else if ("-RL".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-RL".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (!useXSLTC)
 			  {
@@ -550,7 +550,7 @@ namespace org.apache.xalan.xslt
 			}
 			// Generate the translet class and optionally specify the name
 			// of the translet class.
-			else if ("-XO".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-XO".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (useXSLTC)
 			  {
@@ -574,7 +574,7 @@ namespace org.apache.xalan.xslt
 			  }
 			}
 			// Specify the destination directory for the translet classes.
-			else if ("-XD".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-XD".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (useXSLTC)
 			  {
@@ -599,7 +599,7 @@ namespace org.apache.xalan.xslt
 			  }
 			}
 			// Specify the jar file name which the translet classes are packaged into.
-			else if ("-XJ".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-XJ".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (useXSLTC)
 			  {
@@ -625,7 +625,7 @@ namespace org.apache.xalan.xslt
 
 			}
 			// Specify the package name prefix for the generated translet classes.
-			else if ("-XP".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-XP".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (useXSLTC)
 			  {
@@ -650,7 +650,7 @@ namespace org.apache.xalan.xslt
 
 			}
 			// Enable template inlining.
-			else if ("-XN".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-XN".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (useXSLTC)
 			  {
@@ -662,7 +662,7 @@ namespace org.apache.xalan.xslt
 			  }
 			}
 			// Turns on additional debugging message output
-			else if ("-XX".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-XX".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (useXSLTC)
 			  {
@@ -675,7 +675,7 @@ namespace org.apache.xalan.xslt
 			}
 			// Create the Transformer from the translet if the translet class is newer
 			// than the stylesheet.
-			else if ("-XT".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-XT".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  if (useXSLTC)
 			  {
@@ -686,7 +686,7 @@ namespace org.apache.xalan.xslt
 				printInvalidXalanOption("-XT");
 			  }
 			}
-			else if ("-SECURE".Equals(argv[i], StringComparison.CurrentCultureIgnoreCase))
+			else if ("-SECURE".Equals(argv[i], StringComparison.OrdinalIgnoreCase))
 			{
 			  isSecureProcessing = true;
 			  try
@@ -715,11 +715,11 @@ namespace org.apache.xalan.xslt
 		  // The main XSL transformation occurs here!
 		  try
 		  {
-			long start = DateTimeHelperClass.CurrentUnixTimeMillis();
+			long start = DateTimeHelper.CurrentUnixTimeMillis();
 
 			if (null != dumpFileName)
 			{
-			  dumpWriter = new PrintWriter(new System.IO.StreamWriter(dumpFileName));
+			  dumpWriter = new PrintWriter(new StreamWriter(dumpFileName));
 			}
 
 			Templates stylesheet = null;
@@ -732,7 +732,7 @@ namespace org.apache.xalan.xslt
 				// Parse in the xml data into a DOM
 				DocumentBuilderFactory dfactory = DocumentBuilderFactory.newInstance();
 
-				dfactory.NamespaceAware = true;
+				dfactory.setNamespaceAware(true);
 
 				if (isSecureProcessing)
 				{
@@ -763,12 +763,12 @@ namespace org.apache.xalan.xslt
 
 			if (null != outFileName)
 			{
-			  strResult = new StreamResult(new System.IO.FileStream(outFileName, System.IO.FileMode.Create, System.IO.FileAccess.Write));
+			  strResult = new StreamResult(new FileStream(outFileName, FileMode.Create, FileAccess.Write));
 			  // One possible improvement might be to ensure this is 
 			  //  a valid URI before setting the systemId, but that 
 			  //  might have subtle changes that pre-existing users 
 			  //  might notice; we can think about that later -sc r1.46
-			  strResult.SystemId = outFileName;
+			  strResult.setSystemId(outFileName);
 			}
 			else
 			{
@@ -816,7 +816,7 @@ namespace org.apache.xalan.xslt
 			if (null != stylesheet)
 			{
 			  Transformer transformer = flavor.Equals("th") ? null : stylesheet.newTransformer();
-			  transformer.ErrorListener = new DefaultErrorHandler(false);
+			  transformer.setErrorListener(new DefaultErrorHandler(false));
 
 			  // Override the output format?
 			  if (null != outputType)
@@ -860,7 +860,7 @@ namespace org.apache.xalan.xslt
 
 			  if (uriResolver != null)
 			  {
-				transformer.URIResolver = uriResolver;
+				transformer.setURIResolver(uriResolver);
 			  }
 
 			  if (null != inFileName)
@@ -871,8 +871,8 @@ namespace org.apache.xalan.xslt
 				  // Parse in the xml data into a DOM
 				  DocumentBuilderFactory dfactory = DocumentBuilderFactory.newInstance();
 
-				  dfactory.Coalescing = true;
-				  dfactory.NamespaceAware = true;
+				  dfactory.setCoalescing(true);
+				  dfactory.setNamespaceAware(true);
 
 				  if (isSecureProcessing)
 				  {
@@ -889,7 +889,7 @@ namespace org.apache.xalan.xslt
 
 				  if (entityResolver != null)
 				  {
-					docBuilder.EntityResolver = entityResolver;
+					docBuilder.setEntityResolver(entityResolver);
 				  }
 
 				  Node xmlDoc = docBuilder.parse(new InputSource(inFileName));
@@ -900,11 +900,11 @@ namespace org.apache.xalan.xslt
 
 				  // Now serialize output to disk with identity transformer
 				  Transformer serializer = stf.newTransformer();
-				  serializer.ErrorListener = new DefaultErrorHandler(false);
+				  serializer.setErrorListener(new DefaultErrorHandler(false));
 
-				  Properties serializationProps = stylesheet.OutputProperties;
+				  Properties serializationProps = stylesheet.getOutputProperties();
 
-				  serializer.OutputProperties = serializationProps;
+				  serializer.setOutputProperties(serializationProps);
 
 				  if (contentHandler != null)
 				  {
@@ -931,7 +931,7 @@ namespace org.apache.xalan.xslt
 				  {
 					javax.xml.parsers.SAXParserFactory factory = javax.xml.parsers.SAXParserFactory.newInstance();
 
-					factory.NamespaceAware = true;
+					factory.setNamespaceAware(true);
 
 					if (isSecureProcessing)
 					{
@@ -946,7 +946,7 @@ namespace org.apache.xalan.xslt
 
 					javax.xml.parsers.SAXParser jaxpParser = factory.newSAXParser();
 
-					reader = jaxpParser.XMLReader;
+					reader = jaxpParser.getXMLReader();
 				  }
 				  catch (ParserConfigurationException ex)
 				  {
@@ -975,12 +975,12 @@ namespace org.apache.xalan.xslt
 
 				  TransformerHandler th = stf.newTransformerHandler(stylesheet);
 
-				  reader.ContentHandler = th;
-				  reader.DTDHandler = th;
+				  reader.setContentHandler(th);
+				  reader.setDTDHandler(th);
 
 				  if (th is org.xml.sax.ErrorHandler)
 				  {
-					reader.ErrorHandler = (org.xml.sax.ErrorHandler)th;
+					reader.setErrorHandler((org.xml.sax.ErrorHandler)th);
 				  }
 
 				  try
@@ -1001,7 +1001,7 @@ namespace org.apache.xalan.xslt
 				  {
 				  }
 
-				  th.Result = strResult;
+				  th.setResult(strResult);
 
 				  reader.parse(new InputSource(inFileName));
 				  }
@@ -1017,7 +1017,7 @@ namespace org.apache.xalan.xslt
 					{
 					  javax.xml.parsers.SAXParserFactory factory = javax.xml.parsers.SAXParserFactory.newInstance();
 
-					  factory.NamespaceAware = true;
+					  factory.setNamespaceAware(true);
 
 					  if (isSecureProcessing)
 					  {
@@ -1032,7 +1032,7 @@ namespace org.apache.xalan.xslt
 
 					  javax.xml.parsers.SAXParser jaxpParser = factory.newSAXParser();
 
-					  reader = jaxpParser.XMLReader;
+					  reader = jaxpParser.getXMLReader();
 					}
 					catch (ParserConfigurationException ex)
 					{
@@ -1054,7 +1054,7 @@ namespace org.apache.xalan.xslt
 					  reader = XMLReaderFactory.createXMLReader();
 					}
 
-					reader.EntityResolver = entityResolver;
+					reader.setEntityResolver(entityResolver);
 
 					if (contentHandler != null)
 					{
@@ -1099,8 +1099,8 @@ namespace org.apache.xalan.xslt
 		// close output streams
 		if (null != outFileName && strResult != null)
 		{
-			 System.IO.Stream @out = strResult.OutputStream;
-			 java.io.Writer writer = strResult.Writer;
+			 Stream @out = strResult.getOutputStream();
+			 java.io.Writer writer = strResult.getWriter();
 			 try
 			 {
 				  if (@out != null)
@@ -1117,7 +1117,7 @@ namespace org.apache.xalan.xslt
 			 }
 		}
 
-			long stop = DateTimeHelperClass.CurrentUnixTimeMillis();
+			long stop = DateTimeHelper.CurrentUnixTimeMillis();
 			long millisecondsDuration = stop - start;
 
 			if (doDiag)

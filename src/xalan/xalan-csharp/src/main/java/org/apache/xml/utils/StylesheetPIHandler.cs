@@ -24,14 +24,13 @@ namespace org.apache.xml.utils
 {
 
 
-
 	using Attributes = org.xml.sax.Attributes;
 	using InputSource = org.xml.sax.InputSource;
 	using DefaultHandler = org.xml.sax.helpers.DefaultHandler;
 
 	/// <summary>
 	/// Search for the xml-stylesheet processing instructions in an XML document. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xml-stylesheet/">Associating Style Sheets with XML documents, Version 1.0</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xml-stylesheet/">Associating Style Sheets with XML documents, Version 1.0</a>"/>
 	public class StylesheetPIHandler : DefaultHandler
 	{
 	  /// <summary>
@@ -131,9 +130,9 @@ namespace org.apache.xml.utils
 	  ///             none is supplied. </param>
 	  /// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#processingInstruction </seealso>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xml-stylesheet/">Associating Style Sheets with XML documents, Version 1.0</a> </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.processingInstruction"/>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xml-stylesheet/">Associating Style Sheets with XML documents, Version 1.0</a>"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws org.xml.sax.SAXException
 	  public virtual void processingInstruction(string target, string data)
 	  {
@@ -333,7 +332,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <exception cref="StopParseException"> since there can be no valid xml-stylesheet processing 
 	  ///                            instructions past the first element. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String namespaceURI, String localName, String qName, org.xml.sax.Attributes atts) throws org.xml.sax.SAXException
 	  public virtual void startElement(string namespaceURI, string localName, string qName, Attributes atts)
 	  {

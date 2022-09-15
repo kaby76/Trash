@@ -28,8 +28,8 @@ namespace org.apache.xml.serializer
 	/// This class is not a public API. 
 	/// It is only public because it is used outside of this package.
 	/// </summary>
-	/// <seealso cref= java.util.Properties
-	/// @xsl.usage internal </seealso>
+	/// <seealso cref="java.util.Properties"
+	/// @xsl.usage internal/>
 	public sealed class OutputPropertyUtils
 	{
 		/// <summary>

@@ -24,7 +24,6 @@
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKEINTERFACE = org.apache.bcel.generic.INVOKEINTERFACE;
 	using INVOKEVIRTUAL = org.apache.bcel.generic.INVOKEVIRTUAL;
@@ -54,13 +53,13 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("ApplyTemplates");
-		indent(indent + IndentIncrement);
+		this.indent(indent + IndentIncrement);
 		Util.println("select " + _select.ToString());
 		if (_modeName != null)
 		{
-			indent(indent + IndentIncrement);
+			this.indent(indent + IndentIncrement);
 			Util.println("mode " + _modeName);
 		}
 		}
@@ -90,7 +89,7 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!XML11Char.isXML11ValidQName(mode))
 				{
 					ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, mode, this);
-					parser.reportError(Constants_Fields.ERROR, err);
+					parser.reportError(Constants.ERROR, err);
 				}
 			_modeName = parser.getQNameIgnoreDefaultNs(mode);
 		}
@@ -100,7 +99,7 @@ namespace org.apache.xalan.xsltc.compiler
 		parseChildren(parser); // with-params
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -138,10 +137,10 @@ namespace org.apache.xalan.xsltc.compiler
 		Stylesheet stylesheet = classGen.Stylesheet;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int current = methodGen.getLocalIndex("current");
 		int current = methodGen.getLocalIndex("current");
@@ -169,8 +168,8 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			il.append(classGen.loadTranslet());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int pushFrame = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.PUSH_PARAM_FRAME, Constants_Fields.PUSH_PARAM_FRAME_SIG);
-			int pushFrame = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.PUSH_PARAM_FRAME, Constants_Fields.PUSH_PARAM_FRAME_SIG);
+//ORIGINAL LINE: final int pushFrame = cpg.addMethodref(TRANSLET_CLASS, PUSH_PARAM_FRAME, PUSH_PARAM_FRAME_SIG);
+			int pushFrame = cpg.addMethodref(TRANSLET_CLASS, PUSH_PARAM_FRAME, PUSH_PARAM_FRAME_SIG);
 			il.append(new INVOKEVIRTUAL(pushFrame));
 			// translate with-params
 			translateContents(classGen, methodGen);
@@ -186,7 +185,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (sortObjects.Count > 0)
 			{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.RESULT_TREE_SORT_ERR,this);
-			Parser.reportError(Constants_Fields.WARNING, err);
+			Parser.reportError(WARNING, err);
 			}
 			// Put the result tree (a DOM adapter) on the stack
 			_select.translate(classGen, methodGen);
@@ -201,7 +200,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (sortObjects.Count > 0)
 			{
 			Sort.translateSortIterator(classGen, methodGen, _select, sortObjects);
-			int setStartNode = cpg.addInterfaceMethodref(Constants_Fields.NODE_ITERATOR, Constants_Fields.SET_START_NODE, "(I)" + Constants_Fields.NODE_ITERATOR_SIG);
+			int setStartNode = cpg.addInterfaceMethodref(NODE_ITERATOR, SET_START_NODE, "(I)" + NODE_ITERATOR_SIG);
 			il.append(methodGen.loadCurrentNode());
 			il.append(new INVOKEINTERFACE(setStartNode,2));
 			setStartNodeCalled = true;
@@ -242,8 +241,8 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			il.append(classGen.loadTranslet());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int popFrame = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.POP_PARAM_FRAME, Constants_Fields.POP_PARAM_FRAME_SIG);
-			int popFrame = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.POP_PARAM_FRAME, Constants_Fields.POP_PARAM_FRAME_SIG);
+//ORIGINAL LINE: final int popFrame = cpg.addMethodref(TRANSLET_CLASS, POP_PARAM_FRAME, POP_PARAM_FRAME_SIG);
+			int popFrame = cpg.addMethodref(TRANSLET_CLASS, POP_PARAM_FRAME, POP_PARAM_FRAME_SIG);
 			il.append(new INVOKEVIRTUAL(popFrame));
 		}
 		}

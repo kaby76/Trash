@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	/// <summary>
 	/// Classes who implement this information provide information needed for 
 	/// static analysis of a path component.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +24,6 @@ using System.Collections;
  */
 namespace org.apache.xml.serializer
 {
-
 
 
 	/// <summary>
@@ -57,19 +57,19 @@ namespace org.apache.xml.serializer
 		/// <exception cref="UnsupportedEncodingException"> There is no convertor
 		///  to support this encoding
 		/// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static java.io.Writer getWriter(java.io.OutputStream output, String encoding) throws java.io.UnsupportedEncodingException
-		internal static Writer getWriter(System.IO.Stream output, string encoding)
+		internal static Writer getWriter(Stream output, string encoding)
 		{
 
 			for (int i = 0; i < _encodings.Length; ++i)
 			{
-				if (_encodings[i].name.Equals(encoding, StringComparison.CurrentCultureIgnoreCase))
+				if (_encodings[i].name.Equals(encoding, StringComparison.OrdinalIgnoreCase))
 				{
 					try
 					{
 						string javaName = _encodings[i].javaName;
-						System.IO.StreamWriter osw = new System.IO.StreamWriter(output, javaName);
+						StreamWriter osw = new StreamWriter(output, javaName);
 						return osw;
 					}
 					catch (System.ArgumentException) // java 1.1.8
@@ -86,7 +86,7 @@ namespace org.apache.xml.serializer
 
 			try
 			{
-				return new System.IO.StreamWriter(output, encoding);
+				return new StreamWriter(output, encoding);
 			}
 			catch (System.ArgumentException) // java 1.1.8
 			{
@@ -161,9 +161,7 @@ namespace org.apache.xml.serializer
 		/// <returns> an uppercased version of the input String,
 		/// possibly the same String.
 		/// @xsl.usage internal </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private static String toUpperCaseFast(final String s)
-		private static string toUpperCaseFast(string s)
+		private static string toUpperCaseFast(in string s)
 		{
 
 			bool different = false;
@@ -248,7 +246,7 @@ namespace org.apache.xml.serializer
 						* I think, and I don't think I want to alter the tables
 						* to convert everything to UTF-8.
 						*/
-						string jencoding = (encoding.Equals("Cp1252", StringComparison.CurrentCultureIgnoreCase) || encoding.Equals("ISO8859_1", StringComparison.CurrentCultureIgnoreCase) || encoding.Equals("8859_1", StringComparison.CurrentCultureIgnoreCase) || encoding.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase)) ? DEFAULT_MIME_ENCODING : convertJava2MimeEncoding(encoding);
+						string jencoding = (encoding.Equals("Cp1252", StringComparison.OrdinalIgnoreCase) || encoding.Equals("ISO8859_1", StringComparison.OrdinalIgnoreCase) || encoding.Equals("8859_1", StringComparison.OrdinalIgnoreCase) || encoding.Equals("UTF8", StringComparison.OrdinalIgnoreCase)) ? DEFAULT_MIME_ENCODING : convertJava2MimeEncoding(encoding);
 
 						encoding = (null != jencoding) ? jencoding : DEFAULT_MIME_ENCODING;
 					}
@@ -308,7 +306,7 @@ namespace org.apache.xml.serializer
 
 			for (int i = 0; i < _encodings.Length; ++i)
 			{
-				if (_encodings[i].name.Equals(encoding, StringComparison.CurrentCultureIgnoreCase))
+				if (_encodings[i].name.Equals(encoding, StringComparison.OrdinalIgnoreCase))
 				{
 					return _encodings[i].javaName;
 				}
@@ -331,7 +329,7 @@ namespace org.apache.xml.serializer
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.io.InputStream is;
-				System.IO.Stream @is;
+				Stream @is;
 				@is = SecuritySupport.getResourceAsStream(ObjectFactory.findClassLoader(), ENCODINGS_FILE);
 
 				Properties props = new Properties();
@@ -352,7 +350,7 @@ namespace org.apache.xml.serializer
 
 				int totalEntries = props.size();
 
-				IList encodingInfo_list = new ArrayList();
+				System.Collections.IList encodingInfo_list = new ArrayList();
 				System.Collections.IEnumerator keys = props.keys();
 				for (int i = 0; i < totalEntries; ++i)
 				{

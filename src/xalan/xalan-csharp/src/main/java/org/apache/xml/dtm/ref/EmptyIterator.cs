@@ -20,7 +20,8 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
-
+	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
+	using DTM = org.apache.xml.dtm.DTM;
 
 
 	/// <summary>
@@ -44,7 +45,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  public int next()
 	  {
-		  return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  return END;
 	  }
 
 	  public DTMAxisIterator reset()
@@ -85,7 +86,7 @@ namespace org.apache.xml.dtm.@ref
 	  {
 		  get
 		  {
-			  return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			  return END;
 		  }
 	  }
 
@@ -111,7 +112,7 @@ namespace org.apache.xml.dtm.@ref
 
 	  public int getNodeByPosition(int position)
 	  {
-		  return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  return END;
 	  }
 	}
 

@@ -246,7 +246,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// a registered member of this group. %REVIEW% whether this is the
 	  /// best choice.
 	  ///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized Object co_entry_pause(int thisCoroutine) throws java.lang.NoSuchMethodException
 	  public virtual object co_entry_pause(int thisCoroutine)
 	  {
@@ -289,7 +289,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <exception cref="java.lang.NoSuchMethodException"> if toCoroutine isn't a
 	  /// registered member of this group. %REVIEW% whether this is the best choice.
 	  ///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized Object co_resume(Object arg_object,int thisCoroutine,int toCoroutine) throws java.lang.NoSuchMethodException
 	  public virtual object co_resume(object arg_object, int thisCoroutine, int toCoroutine)
 	  {
@@ -370,7 +370,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <exception cref="java.lang.NoSuchMethodException"> if toCoroutine isn't a
 	  /// registered member of this group. %REVIEW% whether this is the best choice.
 	  ///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized void co_exit_to(Object arg_object,int thisCoroutine,int toCoroutine) throws java.lang.NoSuchMethodException
 	  public virtual void co_exit_to(object arg_object, int thisCoroutine, int toCoroutine)
 	  {

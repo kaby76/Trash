@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.processor
 {
 
-
 	using ElemTemplateElement = org.apache.xalan.templates.ElemTemplateElement;
 	using OutputProperties = org.apache.xalan.templates.OutputProperties;
 	using OutputPropertiesFactory = org.apache.xml.serializer.OutputPropertiesFactory;
@@ -34,8 +33,8 @@ namespace org.apache.xalan.processor
 
 	/// <summary>
 	/// TransformerFactory for xsl:output markup. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#output">output in XSLT Specification</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.output">output in XSLT Specification</a>"/>
 	[Serializable]
 	internal class ProcessorOutputElem : XSLTElementProcessor
 	{
@@ -50,7 +49,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Set the cdata-section-elements property from the attribute value. </summary>
-	  /// <seealso cref= javax.xml.transform.OutputKeys#CDATA_SECTION_ELEMENTS </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys.CDATA_SECTION_ELEMENTS"/>
 	  /// <param name="newValue"> non-null reference to processed attribute value. </param>
 	  public virtual ArrayList CdataSectionElements
 	  {
@@ -62,7 +61,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Set the doctype-public property from the attribute value. </summary>
-	  /// <seealso cref= javax.xml.transform.OutputKeys#DOCTYPE_PUBLIC </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys.DOCTYPE_PUBLIC"/>
 	  /// <param name="newValue"> non-null reference to processed attribute value. </param>
 	  public virtual string DoctypePublic
 	  {
@@ -74,7 +73,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Set the doctype-system property from the attribute value. </summary>
-	  /// <seealso cref= javax.xml.transform.OutputKeys#DOCTYPE_SYSTEM </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys.DOCTYPE_SYSTEM"/>
 	  /// <param name="newValue"> non-null reference to processed attribute value. </param>
 	  public virtual string DoctypeSystem
 	  {
@@ -86,7 +85,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Set the encoding property from the attribute value. </summary>
-	  /// <seealso cref= javax.xml.transform.OutputKeys#ENCODING </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys.ENCODING"/>
 	  /// <param name="newValue"> non-null reference to processed attribute value. </param>
 	  public virtual string Encoding
 	  {
@@ -98,7 +97,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Set the indent property from the attribute value. </summary>
-	  /// <seealso cref= javax.xml.transform.OutputKeys#INDENT </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys.INDENT"/>
 	  /// <param name="newValue"> non-null reference to processed attribute value. </param>
 	  public virtual bool Indent
 	  {
@@ -110,7 +109,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Set the media type property from the attribute value. </summary>
-	  /// <seealso cref= javax.xml.transform.OutputKeys#MEDIA_TYPE </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys.MEDIA_TYPE"/>
 	  /// <param name="newValue"> non-null reference to processed attribute value. </param>
 	  public virtual string MediaType
 	  {
@@ -122,7 +121,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Set the method property from the attribute value. </summary>
-	  /// <seealso cref= javax.xml.transform.OutputKeys#METHOD </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys.METHOD"/>
 	  /// <param name="newValue"> non-null reference to processed attribute value. </param>
 	  public virtual QName Method
 	  {
@@ -134,7 +133,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Set the omit-xml-declaration property from the attribute value. </summary>
-	  /// <seealso cref= javax.xml.transform.OutputKeys#OMIT_XML_DECLARATION </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION"/>
 	  /// <param name="newValue"> processed attribute value. </param>
 	  public virtual bool OmitXmlDeclaration
 	  {
@@ -146,7 +145,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Set the standalone property from the attribute value. </summary>
-	  /// <seealso cref= javax.xml.transform.OutputKeys#STANDALONE </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys.STANDALONE"/>
 	  /// <param name="newValue"> processed attribute value. </param>
 	  public virtual bool Standalone
 	  {
@@ -158,7 +157,7 @@ namespace org.apache.xalan.processor
 
 	  /// <summary>
 	  /// Set the version property from the attribute value. </summary>
-	  /// <seealso cref= javax.xml.transform.OutputKeys#VERSION </seealso>
+	  /// <seealso cref="javax.xml.transform.OutputKeys.VERSION"/>
 	  /// <param name="newValue"> non-null reference to processed attribute value. </param>
 	  public virtual string Version
 	  {
@@ -203,7 +202,7 @@ namespace org.apache.xalan.processor
 	  ///        Attributes object.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {

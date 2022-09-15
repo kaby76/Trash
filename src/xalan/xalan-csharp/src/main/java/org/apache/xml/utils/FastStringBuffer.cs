@@ -23,7 +23,6 @@ using System.Text;
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// Bare-bones, unsafe, fast string buffer. No thread-safety, no
 	/// parameter range checking, exposed fields. Note that in typical
@@ -63,7 +62,7 @@ namespace org.apache.xml.utils
 	public class FastStringBuffer
 	{
 	  // If nonzero, forces the inial chunk size.
-	  /**/	internal const int DEBUG_FORCE_INIT_BITS = 0;
+	  internal const int DEBUG_FORCE_INIT_BITS = 0;
 
 		  // %BUG% %REVIEW% *****PROBLEM SUSPECTED: If data from an FSB is being copied
 		  // back into the same FSB (variable set from previous variable, for example) 
@@ -78,7 +77,7 @@ namespace org.apache.xml.utils
 		/// This should be used when normalize-to-SAX is called for the first chunk of a
 		/// multi-chunk output, or one following unsuppressed whitespace in a previous
 		/// chunk. </summary>
-		/// <seealso cref= #sendNormalizedSAXcharacters(org.xml.sax.ContentHandler,int,int) </seealso>
+		/// <seealso cref=".sendNormalizedSAXcharacters(org.xml.sax.ContentHandler,int,int)"/>
 		public const int SUPPRESS_LEADING_WS = 0x01;
 
 		/// <summary>
@@ -92,8 +91,8 @@ namespace org.apache.xml.utils
 		/// Manifest constant: Suppress both leading and trailing whitespace.
 		/// This should be used when normalize-to-SAX is called for a complete string.
 		/// (I'm not wild about the name of this one. Ideas welcome.) </summary>
-		/// <seealso cref= #sendNormalizedSAXcharacters(org.xml.sax.ContentHandler,int,int) </seealso>
-		public static readonly int SUPPRESS_BOTH = SUPPRESS_LEADING_WS | SUPPRESS_TRAILING_WS;
+		/// <seealso cref=".sendNormalizedSAXcharacters(org.xml.sax.ContentHandler,int,int)"/>
+		public const int SUPPRESS_BOTH = SUPPRESS_LEADING_WS | SUPPRESS_TRAILING_WS;
 
 		/// <summary>
 		/// Manifest constant: Carry trailing whitespace of one chunk as leading 
@@ -322,7 +321,7 @@ namespace org.apache.xml.utils
 		m_innerFSB = null;
 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
 //ORIGINAL LINE: m_array = new char[16][0];
-		m_array = RectangularArrays.ReturnRectangularCharArray(16, 0);
+		m_array = RectangularArrays.RectangularCharArray(16, 0);
 		m_array[0] = new char[m_chunkSize];
 	  }
 
@@ -337,33 +336,30 @@ namespace org.apache.xml.utils
 	  /// </summary>
 	  /// <param name="l"> New length. If l<0 or l>=getLength(), this operation will
 	  /// not report an error but future operations will almost certainly fail. </param>
-	  public int Length
+	  public void setLength(int l)
 	  {
-		  set
+		m_lastChunk = (int)((uint)l >> m_chunkBits);
+
+		if (m_lastChunk == 0 && m_innerFSB != null)
+		{
+		  // Replace this FSB with the appropriate inner FSB, truncated
+		  m_innerFSB.setLength(l, this);
+		}
+		else
+		{
+		  m_firstFree = l & m_chunkMask;
+
+		  // There's an edge case if l is an exact multiple of m_chunkBits, which risks leaving
+		  // us pointing at the start of a chunk which has not yet been allocated. Rather than 
+		  // pay the cost of dealing with that in the append loops (more scattered and more
+		  // inner-loop), we correct it here by moving to the safe side of that
+		  // line -- as we would have left the indexes had we appended up to that point.
+		  if (m_firstFree == 0 && m_lastChunk > 0)
 		  {
-			m_lastChunk = (int)((uint)value >> m_chunkBits);
-    
-			if (m_lastChunk == 0 && m_innerFSB != null)
-			{
-			  // Replace this FSB with the appropriate inner FSB, truncated
-			  m_innerFSB.setLength(value, this);
-			}
-			else
-			{
-			  m_firstFree = value & m_chunkMask;
-    
-			  // There's an edge case if value is an exact multiple of m_chunkBits, which risks leaving
-			  // us pointing at the start of a chunk which has not yet been allocated. Rather than 
-			  // pay the cost of dealing with that in the append loops (more scattered and more
-			  // inner-loop), we correct it here by moving to the safe side of that
-			  // line -- as we would have left the indexes had we appended up to that point.
-			  if (m_firstFree == 0 && m_lastChunk > 0)
-			  {
-				  --m_lastChunk;
-				  m_firstFree = m_chunkSize;
-			  }
-			}
+			  --m_lastChunk;
+			  m_firstFree = m_chunkSize;
 		  }
+		}
 	  }
 
 	  /// <summary>
@@ -1028,7 +1024,7 @@ namespace org.apache.xml.utils
 	  /// <param name="length"> Number of characters to send. </param>
 	  /// <exception cref="org.xml.sax.SAXException"> may be thrown by handler's
 	  /// characters() method. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void sendSAXcharacters(org.xml.sax.ContentHandler ch, int start, int length) throws org.xml.sax.SAXException
 	  public virtual void sendSAXcharacters(org.xml.sax.ContentHandler ch, int start, int length)
 	  {
@@ -1092,7 +1088,7 @@ namespace org.apache.xml.utils
 	  /// </dl> </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> may be thrown by handler's
 	  /// characters() method. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int sendNormalizedSAXcharacters(org.xml.sax.ContentHandler ch, int start, int length) throws org.xml.sax.SAXException
 	  public virtual int sendNormalizedSAXcharacters(org.xml.sax.ContentHandler ch, int start, int length)
 	  {
@@ -1125,11 +1121,11 @@ namespace org.apache.xml.utils
 		// Last, or only, chunk
 		if (stopChunk == 0 && m_innerFSB != null)
 		{
-				stateForNextChunk = m_innerFSB.sendNormalizedSAXcharacters(ch, startColumn, stopColumn - startColumn); // %REVIEW% Is this update really needed?
+				stateForNextChunk = m_innerFSB.sendNormalizedSAXcharacters(ch, startColumn, stopColumn - startColumn);
 		}
 		else if (stopColumn > startColumn)
 		{
-				stateForNextChunk = sendNormalizedSAXcharacters(m_array[stopChunk], startColumn, stopColumn - startColumn, ch, stateForNextChunk | SUPPRESS_TRAILING_WS); // %REVIEW% Is this update really needed?
+				stateForNextChunk = sendNormalizedSAXcharacters(m_array[stopChunk], startColumn, stopColumn - startColumn, ch, stateForNextChunk | SUPPRESS_TRAILING_WS);
 		}
 			return stateForNextChunk;
 	  }
@@ -1178,7 +1174,7 @@ namespace org.apache.xml.utils
 	  /// </returns>
 	  /// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static int sendNormalizedSAXcharacters(char ch[], int start, int length, org.xml.sax.ContentHandler handler, int edgeTreatmentFlags) throws org.xml.sax.SAXException
 	  internal static int sendNormalizedSAXcharacters(char[] ch, int start, int length, org.xml.sax.ContentHandler handler, int edgeTreatmentFlags)
 	  {
@@ -1249,7 +1245,7 @@ namespace org.apache.xml.utils
 	  /// <param name="handler"> SAX ContentHandler object to receive the event. </param>
 	  /// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static void sendNormalizedSAXcharacters(char ch[], int start, int length, org.xml.sax.ContentHandler handler) throws org.xml.sax.SAXException
 	  public static void sendNormalizedSAXcharacters(char[] ch, int start, int length, org.xml.sax.ContentHandler handler)
 	  {
@@ -1269,7 +1265,7 @@ namespace org.apache.xml.utils
 		/// <param name="length"> Number of characters to send. </param>
 		/// <exception cref="org.xml.sax.SAXException"> may be thrown by handler's
 		/// characters() method. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void sendSAXComment(org.xml.sax.ext.LexicalHandler ch, int start, int length) throws org.xml.sax.SAXException
 	  public virtual void sendSAXComment(org.xml.sax.ext.LexicalHandler ch, int start, int length)
 	  {

@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	using Attr = org.w3c.dom.Attr;
 	using NamedNodeMap = org.w3c.dom.NamedNodeMap;
 	using Node = org.w3c.dom.Node;
@@ -73,7 +72,7 @@ namespace org.apache.xml.utils
 	  {
 
 		m_attrs = attrs;
-		m_lastIndex = m_attrs.Length - 1;
+		m_lastIndex = m_attrs.getLength() - 1;
 		m_dh = dh;
 	  }
 
@@ -86,7 +85,7 @@ namespace org.apache.xml.utils
 	  {
 		  get
 		  {
-			return m_attrs.Length;
+			return m_attrs.getLength();
 		  }
 	  }
 
@@ -128,7 +127,7 @@ namespace org.apache.xml.utils
 	  /// <returns> The attribute's qualified name </returns>
 	  public virtual string getQName(int i)
 	  {
-		return ((Attr) m_attrs.item(i)).Name;
+		return ((Attr) m_attrs.item(i)).getName();
 	  }
 
 	  /// <summary>
@@ -152,7 +151,7 @@ namespace org.apache.xml.utils
 	  /// <returns> the attribute's node value </returns>
 	  public virtual string getValue(int i)
 	  {
-		return ((Attr) m_attrs.item(i)).Value;
+		return ((Attr) m_attrs.item(i)).getValue();
 	  }
 
 	  /// <summary>
@@ -191,7 +190,7 @@ namespace org.apache.xml.utils
 	  public virtual string getValue(string name)
 	  {
 		Attr attr = ((Attr) m_attrs.getNamedItem(name));
-		return (null != attr) ? attr.Value : null;
+		return (null != attr) ? attr.getValue() : null;
 	  }
 
 	  /// <summary>
@@ -205,7 +204,7 @@ namespace org.apache.xml.utils
 	  public virtual string getValue(string uri, string localName)
 	  {
 			Node a = m_attrs.getNamedItemNS(uri,localName);
-			return (a == null) ? null : a.NodeValue;
+			return (a == null) ? null : a.getNodeValue();
 	  }
 
 	  /// <summary>
@@ -218,11 +217,11 @@ namespace org.apache.xml.utils
 	  ///         appear in the list. </returns>
 	  public virtual int getIndex(string uri, string localPart)
 	  {
-		for (int i = m_attrs.Length - 1;i >= 0;--i)
+		for (int i = m_attrs.getLength() - 1;i >= 0;--i)
 		{
 		  Node a = m_attrs.item(i);
-		  string u = a.NamespaceURI;
-		  if ((string.ReferenceEquals(u, null) ? string.ReferenceEquals(uri, null) : u.Equals(uri)) && a.LocalName.Equals(localPart))
+		  string u = a.getNamespaceURI();
+		  if ((string.ReferenceEquals(u, null) ? string.ReferenceEquals(uri, null) : u.Equals(uri)) && a.getLocalName().Equals(localPart))
 		  {
 		return i;
 		  }
@@ -238,10 +237,10 @@ namespace org.apache.xml.utils
 	  ///         appear in the list. </returns>
 	  public virtual int getIndex(string qName)
 	  {
-		for (int i = m_attrs.Length - 1;i >= 0;--i)
+		for (int i = m_attrs.getLength() - 1;i >= 0;--i)
 		{
 		  Node a = m_attrs.item(i);
-		  if (a.NodeName.Equals(qName))
+		  if (a.getNodeName().Equals(qName))
 		  {
 		return i;
 		  }

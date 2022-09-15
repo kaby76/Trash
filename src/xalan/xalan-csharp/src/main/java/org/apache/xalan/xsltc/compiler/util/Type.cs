@@ -1,6 +1,4 @@
-﻿using System;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -23,9 +21,11 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using BranchInstruction = org.apache.bcel.generic.BranchInstruction;
 	using Instruction = org.apache.bcel.generic.Instruction;
+	using Constants = org.apache.xalan.xsltc.compiler.Constants;
+	using FlowList = org.apache.xalan.xsltc.compiler.FlowList;
+	using NodeTest = org.apache.xalan.xsltc.compiler.NodeTest;
 
 	/// <summary>
 	/// @author Jacek Ambroziak
@@ -44,13 +44,13 @@ namespace org.apache.xalan.xsltc.compiler.util
 		public static readonly Type Void = new VoidType();
 		public static readonly Type Object = new ObjectType(typeof(object));
 
-		public static readonly Type Node = new NodeType(org.apache.xalan.xsltc.compiler.NodeTest_Fields.ANODE);
-		public static readonly Type Root = new NodeType(org.apache.xalan.xsltc.compiler.NodeTest_Fields.ROOT);
-		public static readonly Type Element = new NodeType(org.apache.xalan.xsltc.compiler.NodeTest_Fields.ELEMENT);
-		public static readonly Type Attribute = new NodeType(org.apache.xalan.xsltc.compiler.NodeTest_Fields.ATTRIBUTE);
-		public static readonly Type Text = new NodeType(org.apache.xalan.xsltc.compiler.NodeTest_Fields.TEXT);
-		public static readonly Type Comment = new NodeType(org.apache.xalan.xsltc.compiler.NodeTest_Fields.COMMENT);
-		public static readonly Type Processing_Instruction = new NodeType(org.apache.xalan.xsltc.compiler.NodeTest_Fields.PI);
+		public static readonly Type Node = new NodeType(NodeTest.ANODE);
+		public static readonly Type Root = new NodeType(NodeTest.ROOT);
+		public static readonly Type Element = new NodeType(NodeTest.ELEMENT);
+		public static readonly Type Attribute = new NodeType(NodeTest.ATTRIBUTE);
+		public static readonly Type Text = new NodeType(NodeTest.TEXT);
+		public static readonly Type Comment = new NodeType(NodeTest.COMMENT);
+		public static readonly Type Processing_Instruction = new NodeType(NodeTest.PI);
 
 		/// <summary>
 		/// Factory method to instantiate object types. Returns a pre-defined
@@ -76,7 +76,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 	   /// Factory method to instantiate object types. Returns a pre-defined
 	   /// instance for java.lang.Object.class and java.lang.String.class.
 	   /// </summary>
-		public static Type newObjectType(Type clazz)
+		public static Type newObjectType(System.Type clazz)
 		{
 			if (clazz == typeof(object))
 			{
@@ -95,7 +95,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// <summary>
 		/// Returns a string representation of this type.	
 		/// </summary>
-		public override abstract String ToString();
+		public override abstract string ToString();
 
 		/// <summary>
 		/// Returns true if this and other are identical types.
@@ -149,7 +149,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// <summary>
 		/// Returns the signature of an internal type's external representation.
 		/// </summary>
-		public abstract String toSignature();
+		public abstract string toSignature();
 
 		/// <summary>
 		/// Translates an object of this type to an object of type
@@ -159,7 +159,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		public virtual void translateTo(ClassGenerator classGen, MethodGenerator methodGen, Type type)
 		{
 		ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), type.ToString());
-		classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+		classGen.Parser.reportError(Constants.FATAL, err);
 		}
 
 		/// <summary>
@@ -190,7 +190,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		public virtual FlowList translateToDesynthesized(ClassGenerator classGen, MethodGenerator methodGen, BooleanType type)
 		{
 		ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), type.ToString());
-		classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+		classGen.Parser.reportError(Constants.FATAL, err);
 		return null;
 		}
 
@@ -199,10 +199,10 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// by <code>clazz</code>. This method is used to translate parameters 
 		/// when external functions are called.
 		/// </summary>
-		public virtual void translateTo(ClassGenerator classGen, MethodGenerator methodGen, Type clazz)
+		public virtual void translateTo(ClassGenerator classGen, MethodGenerator methodGen, System.Type clazz)
 		{
 		ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.GetType().ToString());
-		classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+		classGen.Parser.reportError(Constants.FATAL, err);
 		}
 
 		/// <summary>
@@ -210,10 +210,10 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// an object of this type. This method is used to translate return values 
 		/// when external functions are called.
 		/// </summary>
-		public virtual void translateFrom(ClassGenerator classGen, MethodGenerator methodGen, Type clazz)
+		public virtual void translateFrom(ClassGenerator classGen, MethodGenerator methodGen, System.Type clazz)
 		{
 		ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, clazz.GetType().ToString(), ToString());
-		classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+		classGen.Parser.reportError(Constants.FATAL, err);
 		}
 
 		/// <summary>
@@ -222,7 +222,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		public virtual void translateBox(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 		ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), "[" + ToString() + "]");
-		classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+		classGen.Parser.reportError(Constants.FATAL, err);
 		}
 
 		/// <summary>
@@ -231,17 +231,17 @@ namespace org.apache.xalan.xsltc.compiler.util
 		public virtual void translateUnBox(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 		ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, "[" + ToString() + "]", ToString());
-		classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+		classGen.Parser.reportError(Constants.FATAL, err);
 		}
 
 		/// <summary>
 		/// Returns the class name of an internal type's external representation.
 		/// </summary>
-		public virtual String ClassName
+		public virtual string ClassName
 		{
 			get
 			{
-			return (org.apache.xalan.xsltc.compiler.Constants_Fields.EMPTYSTRING);
+			return (EMPTYSTRING);
 			}
 		}
 

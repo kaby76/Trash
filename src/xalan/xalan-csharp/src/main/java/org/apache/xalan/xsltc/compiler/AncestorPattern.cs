@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using GOTO = org.apache.bcel.generic.GOTO;
@@ -57,7 +56,7 @@ namespace org.apache.xalan.xsltc.compiler
 		public AncestorPattern(Pattern left, RelativePathPattern right)
 		{
 		_left = left;
-		(_right = right).Parent = this;
+		(_right = right).setParent(this);
 		if (left != null)
 		{
 			left.Parent = this;
@@ -107,7 +106,7 @@ namespace org.apache.xalan.xsltc.compiler
 		_right.reduceKernelPattern();
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -123,25 +122,25 @@ namespace org.apache.xalan.xsltc.compiler
 		InstructionHandle parent;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		/* 
 		 * The scope of this local var must be the entire method since
 		 * a another pattern may decide to jump back into the loop
 		 */
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.bcel.generic.LocalVariableGen local = methodGen.addLocalVariable2("app", org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.NODE_SIG), il.getEnd());
-		LocalVariableGen local = methodGen.addLocalVariable2("app", Util.getJCRefType(Constants_Fields.NODE_SIG), il.End);
+//ORIGINAL LINE: final org.apache.bcel.generic.LocalVariableGen local = methodGen.addLocalVariable2("app", org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(NODE_SIG), il.getEnd());
+		LocalVariableGen local = methodGen.addLocalVariable2("app", Util.getJCRefType(NODE_SIG), il.getEnd());
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.Instruction loadLocal = new org.apache.bcel.generic.ILOAD(local.getIndex());
-		org.apache.bcel.generic.Instruction loadLocal = new ILOAD(local.Index);
+		org.apache.bcel.generic.Instruction loadLocal = new ILOAD(local.getIndex());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.Instruction storeLocal = new org.apache.bcel.generic.ISTORE(local.getIndex());
-		org.apache.bcel.generic.Instruction storeLocal = new ISTORE(local.Index);
+		org.apache.bcel.generic.Instruction storeLocal = new ISTORE(local.getIndex());
 
 		if (_right is StepPattern)
 		{
@@ -165,8 +164,8 @@ namespace org.apache.xalan.xsltc.compiler
 		if (_left != null)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getParent = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_PARENT, Constants_Fields.GET_PARENT_SIG);
-			int getParent = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_PARENT, Constants_Fields.GET_PARENT_SIG);
+//ORIGINAL LINE: final int getParent = cpg.addInterfaceMethodref(DOM_INTF, GET_PARENT, GET_PARENT_SIG);
+			int getParent = cpg.addInterfaceMethodref(DOM_INTF, GET_PARENT, GET_PARENT_SIG);
 			parent = il.append(new INVOKEINTERFACE(getParent, 2));
 
 			il.append(DUP);
@@ -178,7 +177,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final SyntaxTreeNode p = getParent();
-			SyntaxTreeNode p = Parent;
+			SyntaxTreeNode p = this.Parent;
 			if (p == null || p is Instruction || p is TopLevelElement)
 			{
 			// do nothing
@@ -193,9 +192,9 @@ namespace org.apache.xalan.xsltc.compiler
 			BranchHandle exit = il.append(new GOTO(null));
 			_loop = il.append(methodGen.loadDOM());
 			il.append(loadLocal);
-			local.End = _loop;
+			local.setEnd(_loop);
 			il.append(new GOTO(parent));
-			exit.Target = il.append(NOP);
+			exit.setTarget(il.append(NOP));
 			_left.backPatchFalseList(_loop);
 
 			_trueList.append(_left._trueList);

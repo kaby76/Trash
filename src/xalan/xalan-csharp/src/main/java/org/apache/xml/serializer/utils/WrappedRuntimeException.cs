@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.serializer.utils
 {
-
 	/// <summary>
 	/// This class is for throwing important checked exceptions
 	/// over non-checked methods.  It should be used with care,

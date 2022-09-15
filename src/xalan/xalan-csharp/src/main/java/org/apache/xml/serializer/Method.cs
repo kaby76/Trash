@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.serializer
 {
-
 	/// <summary>
 	/// This class defines the constants which are the names of the four default
 	/// output methods.
@@ -39,10 +38,10 @@ namespace org.apache.xml.serializer
 	/// 
 	/// </para>
 	/// </summary>
-	/// <seealso cref= OutputPropertiesFactory </seealso>
-	/// <seealso cref= Serializer
+	/// <seealso cref="OutputPropertiesFactory"/>
+	/// <seealso cref="Serializer"
 	/// 
-	/// @xsl.usage general </seealso>
+	/// @xsl.usage general/>
 	public sealed class Method
 	{
 		/// <summary>

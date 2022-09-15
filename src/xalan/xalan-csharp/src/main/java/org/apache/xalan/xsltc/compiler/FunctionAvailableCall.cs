@@ -25,7 +25,6 @@ using System.Collections;
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using PUSH = org.apache.bcel.generic.PUSH;
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
@@ -75,7 +74,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Argument of function-available call must be literal, typecheck
 		/// returns the type of function-available to be boolean.  
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -163,16 +162,16 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final Method[] methods = clazz.getMethods();
-			Method[] methods = clazz.GetMethods();
+//ORIGINAL LINE: final java.lang.reflect.Method[] methods = clazz.getMethods();
+			System.Reflection.MethodInfo[] methods = clazz.GetMethods();
 
 			for (int i = 0; i < methods.Length; i++)
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int mods = methods[i].getModifiers();
-			int mods = methods[i].Modifiers;
+			int mods = methods[i].getModifiers();
 
-			if (Modifier.isPublic(mods) && Modifier.isStatic(mods) && methods[i].Name.Equals(methodName))
+			if (Modifier.isPublic(mods) && Modifier.isStatic(mods) && methods[i].getName().Equals(methodName))
 			{
 				return true;
 			}
@@ -216,7 +215,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			get
 			{
-				return (string.ReferenceEquals(_namespaceOfFunct, null) || _namespaceOfFunct.Equals(Constants_Fields.EMPTYSTRING) || _namespaceOfFunct.Equals(Constants_Fields.TRANSLET_URI));
+				return (string.ReferenceEquals(_namespaceOfFunct, null) || _namespaceOfFunct.Equals(EMPTYSTRING) || _namespaceOfFunct.Equals(TRANSLET_URI));
 			}
 		}
 
@@ -229,8 +228,8 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
-		methodGen.InstructionList.append(new PUSH(cpg, Result));
+		ConstantPoolGen cpg = classGen.getConstantPool();
+		methodGen.getInstructionList().append(new PUSH(cpg, Result));
 		}
 
 	}

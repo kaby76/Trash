@@ -1,6 +1,4 @@
-﻿using System;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -23,10 +21,10 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using Instruction = org.apache.bcel.generic.Instruction;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using PUSH = org.apache.bcel.generic.PUSH;
+	using Constants = org.apache.xalan.xsltc.compiler.Constants;
 
 	/// <summary>
 	/// @author Jacek Ambroziak
@@ -38,7 +36,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 		}
 
-		public override String ToString()
+		public override string ToString()
 		{
 		return "void";
 		}
@@ -48,7 +46,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		return this == other;
 		}
 
-		public override String toSignature()
+		public override string toSignature()
 		{
 		return "V";
 		}
@@ -79,7 +77,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		else
 		{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), type.ToString());
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
@@ -92,20 +90,22 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
-		il.append(new PUSH(classGen.ConstantPool, ""));
+		InstructionList il = methodGen.getInstructionList();
+		il.append(new PUSH(classGen.getConstantPool(), ""));
 		}
 
 		/// <summary>
 		/// Translates an external (primitive) Java type into a void.
 		/// Only an external "void" can be converted to this class.
 		/// </summary>
-		public override void translateFrom(ClassGenerator classGen, MethodGenerator methodGen, Type clazz)
+		public override void translateFrom(ClassGenerator classGen, MethodGenerator methodGen, System.Type clazz)
 		{
-		if (!clazz.Name.Equals("void"))
+//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
+		if (!clazz.FullName.Equals("void"))
 		{
-			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.Name);
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
+			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.FullName);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 	}

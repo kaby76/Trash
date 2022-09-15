@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// A very simple lookup table that stores a list of strings, the even
 	/// number strings being keys, and the odd number strings being values.
@@ -174,7 +173,7 @@ namespace org.apache.xml.utils
 
 		for (int i = 0; i < m_firstFree; i += 2)
 		{
-		  if (m_map[i].Equals(key, StringComparison.CurrentCultureIgnoreCase))
+		  if (m_map[i].Equals(key, StringComparison.OrdinalIgnoreCase))
 		  {
 			return m_map[i + 1];
 		  }

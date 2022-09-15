@@ -22,9 +22,9 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
+	using Expression = org.apache.xpath.Expression;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using OpMap = org.apache.xpath.compiler.OpMap;
 
@@ -33,8 +33,8 @@ namespace org.apache.xpath.axes
 	/// those LocationSteps with only one step, and perhaps a predicate, 
 	/// that only go forward (i.e. it can not be used with ancestors, 
 	/// preceding, etc.) </summary>
-	/// <seealso cref= org.apache.xpath.axes#ChildTestIterator
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="org.apache.xpath.axes.ChildTestIterator"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class OneStepIteratorForward : ChildTestIterator
 	{
@@ -51,7 +51,7 @@ namespace org.apache.xpath.axes
 	  /// location path expression for this itterator.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: OneStepIteratorForward(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis) throws javax.xml.transform.TransformerException
 	  internal OneStepIteratorForward(Compiler compiler, int opPos, int analysis) : base(compiler, opPos, analysis)
 	  {
@@ -71,7 +71,7 @@ namespace org.apache.xpath.axes
 	  {
 
 		m_axis = axis;
-		int whatToShow = org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL;
+		int whatToShow = DTMFilter.SHOW_ALL;
 		initNodeTest(whatToShow);
 	  }
 
@@ -138,7 +138,7 @@ namespace org.apache.xpath.axes
 	  {
 		  get
 		  {
-			m_lastFetched = (org.apache.xml.dtm.DTM_Fields.NULL == m_lastFetched) ? m_traverser.first(m_context) : m_traverser.next(m_context, m_lastFetched);
+			m_lastFetched = (DTM.NULL == m_lastFetched) ? m_traverser.first(m_context) : m_traverser.next(m_context, m_lastFetched);
 			return m_lastFetched;
 		  }
 	  }
@@ -156,7 +156,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		  if (!base.deepEquals(expr))

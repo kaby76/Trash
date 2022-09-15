@@ -38,8 +38,8 @@ namespace org.apache.xalan.templates
 	///   %space-att;
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Creating-Processing-Instructions">section-Creating-Processing-Instructions in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Creating-Processing-Instructions">section-Creating-Processing-Instructions in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemPI : ElemTemplateElement
 	{
@@ -78,15 +78,15 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
 		base.compose(sroot);
-		ArrayList vnames = sroot.getComposeState().VariableNames;
+		ArrayList vnames = sroot.ComposeState.VariableNames;
 		if (null != m_name_atv)
 		{
-		  m_name_atv.fixupVariables(vnames, sroot.getComposeState().GlobalsSize);
+		  m_name_atv.fixupVariables(vnames, sroot.ComposeState.GlobalsSize);
 		}
 	  }
 
@@ -94,8 +94,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for the element </returns>
 	  public override int XSLToken
 	  {
@@ -121,12 +121,12 @@ namespace org.apache.xalan.templates
 	  /// Create a processing instruction in the result tree.
 	  /// The content of the xsl:processing-instruction element is a
 	  /// template for the string-value of the processing instruction node. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Creating-Processing-Instructions">section-Creating-Processing-Instructions in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Creating-Processing-Instructions">section-Creating-Processing-Instructions in XSLT Specification</a>"
+	  ////>
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -147,7 +147,7 @@ namespace org.apache.xalan.templates
 			return;
 		}
 
-		if (piName.Equals("xml", StringComparison.CurrentCultureIgnoreCase))
+		if (piName.Equals("xml", StringComparison.OrdinalIgnoreCase))
 		{
 			 transformer.MsgMgr.warn(this, XSLTErrorResources.WG_PROCESSINGINSTRUCTION_NAME_CANT_BE_XML, new object[]{Constants.ATTRNAME_NAME, piName});
 			return;

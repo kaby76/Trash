@@ -21,7 +21,6 @@
 namespace org.apache.xpath.compiler
 {
 
-
 	/// <summary>
 	/// Class for XPath diagnostic functions.
 	/// </summary>

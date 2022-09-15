@@ -23,7 +23,6 @@
 namespace org.apache.xalan.extensions
 {
 
-
 	/// <summary>
 	/// During styleseet composition, an ExtensionNamespaceSupport object is created for each extension 
 	/// namespace the stylesheet uses. At the beginning of a transformation, TransformerImpl generates
@@ -70,7 +69,7 @@ namespace org.apache.xalan.extensions
 	  /// <summary>
 	  /// Launch the ExtensionHandler that this ExtensionNamespaceSupport object defines.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ExtensionHandler launch() throws javax.xml.transform.TransformerException
 	  public virtual ExtensionHandler launch()
 	  {
@@ -78,7 +77,7 @@ namespace org.apache.xalan.extensions
 		try
 		{
 		  Type cl = ExtensionHandler.getClassForName(m_handlerClass);
-		  Constructor con = null;
+		  System.Reflection.ConstructorInfo con = null;
 		  //System.out.println("class " + cl + " " + m_args + " " + m_args.length + " " + m_sig);
 		  if (m_sig != null)
 		  {
@@ -86,10 +85,10 @@ namespace org.apache.xalan.extensions
 		  }
 		  else // Pick the constructor based on number of args.
 		  {
-			Constructor[] cons = cl.GetConstructors();
+			System.Reflection.ConstructorInfo[] cons = cl.GetConstructors();
 			for (int i = 0; i < cons.Length; i++)
 			{
-			  if (cons[i].ParameterTypes.length == m_args.Length)
+			  if (cons[i].getParameterTypes().length == m_args.Length)
 			  {
 				con = cons[i];
 				break;
@@ -99,7 +98,7 @@ namespace org.apache.xalan.extensions
 		  // System.out.println("constructor " + con);
 		  if (con != null)
 		  {
-			handler = (ExtensionHandler)con.newInstance(m_args);
+			handler = (ExtensionHandler)con.Invoke(m_args);
 		  }
 		  else
 		  {

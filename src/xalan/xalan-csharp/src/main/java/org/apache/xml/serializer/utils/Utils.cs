@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.serializer.utils
 {
-
 	/// <summary>
 	/// This class contains utilities used by the serializer.
 	/// 

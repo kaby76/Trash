@@ -51,7 +51,7 @@ namespace org.apache.xalan.lib
 
 		if (locator != null)
 		{
-		  return locator.SystemId;
+		  return locator.getSystemId();
 		}
 		else
 		{
@@ -68,7 +68,7 @@ namespace org.apache.xalan.lib
 	  /// <returns> a <code>String</code> value </returns>
 	  public static string systemId(NodeList nodeList)
 	  {
-		if (nodeList == null || nodeList.Length == 0)
+		if (nodeList == null || nodeList.getLength() == 0)
 		{
 		  return null;
 		}
@@ -79,7 +79,7 @@ namespace org.apache.xalan.lib
 
 		if (locator != null)
 		{
-		  return locator.SystemId;
+		  return locator.getSystemId();
 		}
 		else
 		{
@@ -103,7 +103,7 @@ namespace org.apache.xalan.lib
 
 		if (locator != null)
 		{
-		  return locator.PublicId;
+		  return locator.getPublicId();
 		}
 		else
 		{
@@ -122,7 +122,7 @@ namespace org.apache.xalan.lib
 	  /// <returns> a <code>String</code> value </returns>
 	  public static string publicId(NodeList nodeList)
 	  {
-		if (nodeList == null || nodeList.Length == 0)
+		if (nodeList == null || nodeList.getLength() == 0)
 		{
 		  return null;
 		}
@@ -133,7 +133,7 @@ namespace org.apache.xalan.lib
 
 		if (locator != null)
 		{
-		  return locator.PublicId;
+		  return locator.getPublicId();
 		}
 		else
 		{
@@ -162,7 +162,7 @@ namespace org.apache.xalan.lib
 
 		if (locator != null)
 		{
-		  return locator.LineNumber;
+		  return locator.getLineNumber();
 		}
 		else
 		{
@@ -186,7 +186,7 @@ namespace org.apache.xalan.lib
 	  /// line number is not known. </returns>
 	  public static int lineNumber(NodeList nodeList)
 	  {
-		if (nodeList == null || nodeList.Length == 0)
+		if (nodeList == null || nodeList.getLength() == 0)
 		{
 		  return -1;
 		}
@@ -197,7 +197,7 @@ namespace org.apache.xalan.lib
 
 		if (locator != null)
 		{
-		  return locator.LineNumber;
+		  return locator.getLineNumber();
 		}
 		else
 		{
@@ -226,7 +226,7 @@ namespace org.apache.xalan.lib
 
 		if (locator != null)
 		{
-		  return locator.ColumnNumber;
+		  return locator.getColumnNumber();
 		}
 		else
 		{
@@ -250,7 +250,7 @@ namespace org.apache.xalan.lib
 	  /// column number is not known. </returns>
 	  public static int columnNumber(NodeList nodeList)
 	  {
-		if (nodeList == null || nodeList.Length == 0)
+		if (nodeList == null || nodeList.getLength() == 0)
 		{
 		  return -1;
 		}
@@ -261,7 +261,7 @@ namespace org.apache.xalan.lib
 
 		if (locator != null)
 		{
-		  return locator.ColumnNumber;
+		  return locator.getColumnNumber();
 		}
 		else
 		{

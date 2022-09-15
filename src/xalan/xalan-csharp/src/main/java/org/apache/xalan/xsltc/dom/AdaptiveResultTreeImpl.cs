@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +22,9 @@ using System.Collections;
  */
 namespace org.apache.xalan.xsltc.dom
 {
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using TransletException = org.apache.xalan.xsltc.TransletException;
+	using StripFilter = org.apache.xalan.xsltc.StripFilter;
 	using Hashtable = org.apache.xalan.xsltc.runtime.Hashtable;
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using AttributeList = org.apache.xalan.xsltc.runtime.AttributeList;
@@ -168,9 +169,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getChildren(final int node)
-		public override DTMAxisIterator getChildren(int node)
+		public override DTMAxisIterator getChildren(in int node)
 		{
 			if (_dom != null)
 			{
@@ -182,9 +181,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getTypedChildren(final int type)
-		public override DTMAxisIterator getTypedChildren(int type)
+		public override DTMAxisIterator getTypedChildren(in int type)
 		{
 			if (_dom != null)
 			{
@@ -196,9 +193,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getAxisIterator(final int axis)
-		public override DTMAxisIterator getAxisIterator(int axis)
+		public override DTMAxisIterator getAxisIterator(in int axis)
 		{
 			if (_dom != null)
 			{
@@ -210,9 +205,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getTypedAxisIterator(final int axis, final int type)
-		public override DTMAxisIterator getTypedAxisIterator(int axis, int type)
+		public override DTMAxisIterator getTypedAxisIterator(in int axis, in int type)
 		{
 			if (_dom != null)
 			{
@@ -236,9 +229,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getNamespaceAxisIterator(final int axis, final int ns)
-		public override DTMAxisIterator getNamespaceAxisIterator(int axis, int ns)
+		public override DTMAxisIterator getNamespaceAxisIterator(in int axis, in int ns)
 		{
 			if (_dom != null)
 			{
@@ -274,9 +265,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNodeName(final int node)
-		public override string getNodeName(int node)
+		public override string getNodeName(in int node)
 		{
 			if (_dom != null)
 			{
@@ -288,9 +277,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNodeNameX(final int node)
-		public override string getNodeNameX(int node)
+		public override string getNodeNameX(in int node)
 		{
 			if (_dom != null)
 			{
@@ -302,9 +289,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNamespaceName(final int node)
-		public override string getNamespaceName(int node)
+		public override string getNamespaceName(in int node)
 		{
 			if (_dom != null)
 			{
@@ -317,9 +302,7 @@ namespace org.apache.xalan.xsltc.dom
 		}
 
 		// Return the expanded type id of a given node
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getExpandedTypeID(final int nodeHandle)
-		public override int getExpandedTypeID(int nodeHandle)
+		public override int getExpandedTypeID(in int nodeHandle)
 		{
 			if (_dom != null)
 			{
@@ -331,9 +314,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getNamespaceType(final int node)
-		public override int getNamespaceType(int node)
+		public override int getNamespaceType(in int node)
 		{
 			if (_dom != null)
 			{
@@ -345,9 +326,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getParent(final int nodeHandle)
-		public override int getParent(int nodeHandle)
+		public override int getParent(in int nodeHandle)
 		{
 			if (_dom != null)
 			{
@@ -359,9 +338,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getAttributeNode(final int gType, final int element)
-		public override int getAttributeNode(int gType, int element)
+		public override int getAttributeNode(in int gType, in int element)
 		{
 			if (_dom != null)
 			{
@@ -373,9 +350,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getStringValueX(final int nodeHandle)
-		public override string getStringValueX(int nodeHandle)
+		public override string getStringValueX(in int nodeHandle)
 		{
 			if (_dom != null)
 			{
@@ -387,10 +362,9 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void copy(final int node, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public override void copy(int node, SerializationHandler handler)
+		public override void copy(in int node, SerializationHandler handler)
 		{
 			if (_dom != null)
 			{
@@ -402,7 +376,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void copy(org.apache.xml.dtm.DTMAxisIterator nodes, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
 		public override void copy(DTMAxisIterator nodes, SerializationHandler handler)
 		{
@@ -416,10 +390,9 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String shallowCopy(final int node, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public override string shallowCopy(int node, SerializationHandler handler)
+		public override string shallowCopy(in int node, SerializationHandler handler)
 		{
 			if (_dom != null)
 			{
@@ -431,9 +404,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean lessThan(final int node1, final int node2)
-		public override bool lessThan(int node1, int node2)
+		public override bool lessThan(in int node1, in int node2)
 		{
 			if (_dom != null)
 			{
@@ -451,10 +422,9 @@ namespace org.apache.xalan.xsltc.dom
 		/// The escape setting should be taken care of when outputting to
 		/// a handler.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(final int node, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public override void characters(int node, SerializationHandler handler)
+		public override void characters(in int node, SerializationHandler handler)
 		{
 			if (_dom != null)
 			{
@@ -580,9 +550,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean isElement(final int node)
-		public override bool isElement(int node)
+		public override bool isElement(in int node)
 		{
 			if (_dom != null)
 			{
@@ -594,9 +562,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean isAttribute(final int node)
-		public override bool isAttribute(int node)
+		public override bool isAttribute(in int node)
 		{
 			if (_dom != null)
 			{
@@ -608,7 +574,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String lookupNamespace(int node, String prefix) throws org.apache.xalan.xsltc.TransletException
 		public override string lookupNamespace(int node, string prefix)
 		{
@@ -625,9 +591,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Return the node identity from a node handle.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public final int getNodeIdent(final int nodehandle)
-		public sealed override int getNodeIdent(int nodehandle)
+		public sealed override int getNodeIdent(in int nodehandle)
 		{
 			if (_dom != null)
 			{
@@ -642,9 +606,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Return the node handle from a node identity.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public final int getNodeHandle(final int nodeId)
-		public sealed override int getNodeHandle(int nodeId)
+		public sealed override int getNodeHandle(in int nodeId)
 		{
 			if (_dom != null)
 			{
@@ -721,7 +683,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// The code in some of the following interfaces are copied from SAXAdapter. * </summary>
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void maybeEmitStartElement() throws org.xml.sax.SAXException
 		private void maybeEmitStartElement()
 		{
@@ -744,7 +706,7 @@ namespace org.apache.xalan.xsltc.dom
 		}
 
 		// Create and initialize the wrapped SAXImpl object
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void prepareNewDOM() throws org.xml.sax.SAXException
 		private void prepareNewDOM()
 		{
@@ -759,13 +721,13 @@ namespace org.apache.xalan.xsltc.dom
 			_size = 0;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocument() throws org.xml.sax.SAXException
 		public override void startDocument()
 		{
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 		public override void endDocument()
 		{
@@ -779,7 +741,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(String str) throws org.xml.sax.SAXException
 		public override void characters(string str)
 		{
@@ -793,7 +755,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(char[] ch, int offset, int length) throws org.xml.sax.SAXException
 		public override void characters(char[] ch, int offset, int length)
 		{
@@ -808,7 +770,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean setEscaping(boolean escape) throws org.xml.sax.SAXException
 		public override bool setEscaping(bool escape)
 		{
@@ -822,7 +784,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String elementName) throws org.xml.sax.SAXException
 		public override void startElement(string elementName)
 		{
@@ -836,21 +798,21 @@ namespace org.apache.xalan.xsltc.dom
 		_attributes.clear();
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localName, String qName) throws org.xml.sax.SAXException
 		public override void startElement(string uri, string localName, string qName)
 		{
 			startElement(qName);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 		public override void startElement(string uri, string localName, string qName, Attributes attributes)
 		{
 			startElement(qName);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String elementName) throws org.xml.sax.SAXException
 		public override void endElement(string elementName)
 		{
@@ -858,14 +820,14 @@ namespace org.apache.xalan.xsltc.dom
 		_dom.endElement(null, null, elementName);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String uri, String localName, String qName) throws org.xml.sax.SAXException
 		public override void endElement(string uri, string localName, string qName)
 		{
 			endElement(qName);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void addUniqueAttribute(String qName, String value, int flags) throws org.xml.sax.SAXException
 	 public override void addUniqueAttribute(string qName, string value, int flags)
 	 {
@@ -884,7 +846,7 @@ namespace org.apache.xalan.xsltc.dom
 		}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void namespaceAfterStartElement(String prefix, String uri) throws org.xml.sax.SAXException
 		public override void namespaceAfterStartElement(string prefix, string uri)
 		{
@@ -896,7 +858,7 @@ namespace org.apache.xalan.xsltc.dom
 		_dom.startPrefixMapping(prefix, uri);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(String comment) throws org.xml.sax.SAXException
 		public override void comment(string comment)
 		{
@@ -910,7 +872,7 @@ namespace org.apache.xalan.xsltc.dom
 			_dom.comment(chars, 0, chars.Length);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char[] chars, int offset, int length) throws org.xml.sax.SAXException
 		public override void comment(char[] chars, int offset, int length)
 		{
@@ -923,7 +885,7 @@ namespace org.apache.xalan.xsltc.dom
 			_dom.comment(chars, offset, length);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws org.xml.sax.SAXException
 		public override void processingInstruction(string target, string data)
 		{
@@ -955,9 +917,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisTraverser getAxisTraverser(final int axis)
-		public override DTMAxisTraverser getAxisTraverser(int axis)
+		public override DTMAxisTraverser getAxisTraverser(in int axis)
 		{
 			if (_dom != null)
 			{
@@ -1461,7 +1421,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(int nodeHandle, org.xml.sax.ContentHandler ch, boolean normalize) throws org.xml.sax.SAXException
 		public override void dispatchCharactersEvents(int nodeHandle, org.xml.sax.ContentHandler ch, bool normalize)
 		{
@@ -1475,7 +1435,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException
 		public override void dispatchToEvents(int nodeHandle, org.xml.sax.ContentHandler ch)
 		{

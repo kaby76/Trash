@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan
 {
-
 	/// <summary>
 	/// Administrative class to keep track of the version number of
 	/// the Xalan release.
@@ -45,9 +44,12 @@ namespace org.apache.xalan
 	  /// Futurework: have this read version info from jar manifest.
 	  /// </summary>
 	  /// <returns> String denoting our current version </returns>
-	  public static string getVersion()
+	  public static string Version
 	  {
-		 return Product + " " + ImplementationLanguage + " " + MajorVersionNum + "." + ReleaseVersionNum + "." + ((DevelopmentVersionNum > 0) ? ("D" + DevelopmentVersionNum) : ("" + MaintenanceVersionNum));
+		  get
+		  {
+			 return Product + " " + ImplementationLanguage + " " + MajorVersionNum + "." + ReleaseVersionNum + "." + ((DevelopmentVersionNum > 0) ? ("D" + DevelopmentVersionNum) : ("" + MaintenanceVersionNum));
+		  }
 	  }
 
 	  /// <summary>
@@ -56,7 +58,7 @@ namespace org.apache.xalan
 	  /// <param name="argv"> command line arguments, unused. </param>
 	  public static void Main(string[] argv)
 	  {
-		Console.WriteLine(getVersion());
+		Console.WriteLine(Version);
 	  }
 
 	  /// <summary>

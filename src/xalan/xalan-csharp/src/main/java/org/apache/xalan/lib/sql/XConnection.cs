@@ -25,7 +25,6 @@ namespace org.apache.xalan.lib.sql
 {
 
 
-
 	using ExpressionContext = org.apache.xalan.extensions.ExpressionContext;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
@@ -405,11 +404,11 @@ namespace org.apache.xalan.lib.sql
 		{
 		  Properties prop = new Properties();
 
-		  NamedNodeMap atts = protocolElem.Attributes;
+		  NamedNodeMap atts = protocolElem.getAttributes();
 
-		  for (int i = 0; i < atts.Length; i++)
+		  for (int i = 0; i < atts.getLength(); i++)
 		  {
-			prop.put(atts.item(i).NodeName, atts.item(i).NodeValue);
+			prop.put(atts.item(i).getNodeName(), atts.item(i).getNodeValue());
 		  }
 
 		  init(driver, dbURL, prop);
@@ -455,7 +454,7 @@ namespace org.apache.xalan.lib.sql
 	  /// <param name="e">
 	  /// </param>
 	  /// <exception cref="SQLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void initFromElement(org.w3c.dom.Element e)throws java.sql.SQLException
 	  private void initFromElement(Element e)
 	  {
@@ -463,7 +462,7 @@ namespace org.apache.xalan.lib.sql
 		Properties prop = new Properties();
 		string driver = "";
 		string dbURL = "";
-		Node n = e.FirstChild;
+		Node n = e.getFirstChild();
 
 		if (null == n)
 		{
@@ -472,72 +471,72 @@ namespace org.apache.xalan.lib.sql
 
 		do
 		{
-		  string nName = n.NodeName;
+		  string nName = n.getNodeName();
 
-		  if (nName.Equals("dbdriver", StringComparison.CurrentCultureIgnoreCase))
+		  if (nName.Equals("dbdriver", StringComparison.OrdinalIgnoreCase))
 		  {
 			driver = "";
-			Node n1 = n.FirstChild;
+			Node n1 = n.getFirstChild();
 			if (null != n1)
 			{
-			  driver = n1.NodeValue;
+			  driver = n1.getNodeValue();
 			}
 		  }
 
-		  if (nName.Equals("dburl", StringComparison.CurrentCultureIgnoreCase))
+		  if (nName.Equals("dburl", StringComparison.OrdinalIgnoreCase))
 		  {
 			dbURL = "";
-			Node n1 = n.FirstChild;
+			Node n1 = n.getFirstChild();
 			if (null != n1)
 			{
-			  dbURL = n1.NodeValue;
+			  dbURL = n1.getNodeValue();
 			}
 		  }
 
-		  if (nName.Equals("password", StringComparison.CurrentCultureIgnoreCase))
+		  if (nName.Equals("password", StringComparison.OrdinalIgnoreCase))
 		  {
 			string s = "";
-			Node n1 = n.FirstChild;
+			Node n1 = n.getFirstChild();
 			if (null != n1)
 			{
-			  s = n1.NodeValue;
+			  s = n1.getNodeValue();
 			}
 			prop.put("password", s);
 		  }
 
-		  if (nName.Equals("user", StringComparison.CurrentCultureIgnoreCase))
+		  if (nName.Equals("user", StringComparison.OrdinalIgnoreCase))
 		  {
 			string s = "";
-			Node n1 = n.FirstChild;
+			Node n1 = n.getFirstChild();
 			if (null != n1)
 			{
-			  s = n1.NodeValue;
+			  s = n1.getNodeValue();
 			}
 			prop.put("user", s);
 		  }
 
-		  if (nName.Equals("protocol", StringComparison.CurrentCultureIgnoreCase))
+		  if (nName.Equals("protocol", StringComparison.OrdinalIgnoreCase))
 		  {
 			string Name = "";
 
-			NamedNodeMap attrs = n.Attributes;
+			NamedNodeMap attrs = n.getAttributes();
 			Node n1 = attrs.getNamedItem("name");
 			if (null != n1)
 			{
 			  string s = "";
-			  Name = n1.NodeValue;
+			  Name = n1.getNodeValue();
 
-			  Node n2 = n.FirstChild;
+			  Node n2 = n.getFirstChild();
 			  if (null != n2)
 			  {
-				  s = n2.NodeValue;
+				  s = n2.getNodeValue();
 			  }
 
 			  prop.put(Name, s);
 			}
 		  }
 
-		} while ((n = n.NextSibling) != null);
+		} while ((n = n.getNextSibling()) != null);
 
 		init(driver, dbURL, prop);
 	  }
@@ -553,7 +552,7 @@ namespace org.apache.xalan.lib.sql
 	  /// <param name="prop">
 	  /// </param>
 	  /// <exception cref="SQLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void init(String driver, String dbURL, java.util.Properties prop)throws java.sql.SQLException
 	  private void init(string driver, string dbURL, Properties prop)
 	  {
@@ -908,17 +907,17 @@ namespace org.apache.xalan.lib.sql
 	  ///  </param>
 	  public virtual void addParameterFromElement(Element e)
 	  {
-		NamedNodeMap attrs = e.Attributes;
+		NamedNodeMap attrs = e.getAttributes();
 		Node Type = attrs.getNamedItem("type");
-		Node n1 = e.FirstChild;
+		Node n1 = e.getFirstChild();
 		if (null != n1)
 		{
-		  string value = n1.NodeValue;
+		  string value = n1.getNodeValue();
 		  if (string.ReferenceEquals(value, null))
 		  {
 			  value = "";
 		  }
-		  m_ParameterList.Add(new QueryParameter(value, Type.NodeValue));
+		  m_ParameterList.Add(new QueryParameter(value, Type.getNodeValue()));
 		}
 	  }
 
@@ -946,7 +945,7 @@ namespace org.apache.xalan.lib.sql
 		// <xsl:param name="plist" select="//START-TAG" />
 		// <sql:addParameter( $plist );
 		//
-		int count = nl.Length;
+		int count = nl.getLength();
 		for (int x = 0; x < count; x++)
 		{
 		  addParameters((Element) nl.item(x));
@@ -968,7 +967,7 @@ namespace org.apache.xalan.lib.sql
 		// The name of the Node is not important just is value
 		// and if it contains a type attribute
 
-		Node n = elem.FirstChild;
+		Node n = elem.getFirstChild();
 
 		if (null == n)
 		{
@@ -977,9 +976,9 @@ namespace org.apache.xalan.lib.sql
 
 		do
 		{
-		  if (n.NodeType == Node.ELEMENT_NODE)
+		  if (n.getNodeType() == Node.ELEMENT_NODE)
 		  {
-			NamedNodeMap attrs = n.Attributes;
+			NamedNodeMap attrs = n.getAttributes();
 			Node Type = attrs.getNamedItem("type");
 			string TypeStr;
 
@@ -989,13 +988,13 @@ namespace org.apache.xalan.lib.sql
 			}
 			else
 			{
-				TypeStr = Type.NodeValue;
+				TypeStr = Type.getNodeValue();
 			}
 
-			Node n1 = n.FirstChild;
+			Node n1 = n.getFirstChild();
 			if (null != n1)
 			{
-			  string value = n1.NodeValue;
+			  string value = n1.getNodeValue();
 			  if (string.ReferenceEquals(value, null))
 			  {
 				  value = "";
@@ -1005,7 +1004,7 @@ namespace org.apache.xalan.lib.sql
 			  m_ParameterList.Add(new QueryParameter(value, TypeStr));
 			}
 		  }
-		} while ((n = n.NextSibling) != null);
+		} while ((n = n.getNextSibling()) != null);
 	  }
 
 	  /// 
@@ -1140,7 +1139,7 @@ namespace org.apache.xalan.lib.sql
 	  /// Close the connection to the data source.
 	  /// </summary>
 	  /// <exception cref="SQLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void close()throws java.sql.SQLException
 	  public virtual void close()
 	  {
@@ -1188,7 +1187,7 @@ namespace org.apache.xalan.lib.sql
 	  /// </summary>
 	  /// <exception cref="SQLException"> </exception>
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void close(org.apache.xalan.extensions.ExpressionContext exprContext, Object doc) throws java.sql.SQLException
 	  public virtual void close(ExpressionContext exprContext, object doc)
 	  {
@@ -1350,16 +1349,16 @@ namespace org.apache.xalan.lib.sql
 		  {
 			// Because the log may not have processed the previous warning yet
 			// we need to make a new one.
-			SQLWarning tw = new SQLWarning(warn.Message, warn.SQLState, warn.ErrorCode);
-			SQLWarning nw = warn.NextWarning;
+			SQLWarning tw = new SQLWarning(warn.getMessage(), warn.getSQLState(), warn.getErrorCode());
+			SQLWarning nw = warn.getNextWarning();
 			while (nw != null)
 			{
-			  tw.NextWarning = new SQLWarning(nw.Message, nw.SQLState, nw.ErrorCode);
+			  tw.setNextWarning(new SQLWarning(nw.getMessage(), nw.getSQLState(), nw.getErrorCode()));
 
-			  nw = nw.NextWarning;
+			  nw = nw.getNextWarning();
 			}
 
-			tw.NextWarning = new SQLWarning(warn.Message, warn.SQLState, warn.ErrorCode);
+			tw.setNextWarning(new SQLWarning(warn.getMessage(), warn.getSQLState(), warn.getErrorCode()));
 
 	//        m_Warning = tw;
 
@@ -1380,28 +1379,28 @@ namespace org.apache.xalan.lib.sql
 	  {
 		bool value = false;
 
-		if ("true".Equals(setting, StringComparison.CurrentCultureIgnoreCase))
+		if ("true".Equals(setting, StringComparison.OrdinalIgnoreCase))
 		{
 			value = true;
 		}
 
-		if ("streaming".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		if ("streaming".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  m_IsStreamingEnabled = value;
 		}
-		else if ("inline-variables".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		else if ("inline-variables".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  m_InlineVariables = value;
 		}
-		else if ("multiple-results".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		else if ("multiple-results".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  m_IsMultipleResultsEnabled = value;
 		}
-		else if ("cache-statements".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		else if ("cache-statements".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  m_IsStatementCachingEnabled = value;
 		}
-		else if ("default-pool-enabled".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		else if ("default-pool-enabled".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  m_DefaultPoolingEnabled = value;
 
@@ -1416,7 +1415,7 @@ namespace org.apache.xalan.lib.sql
 
 		  m_ConnectionPool.PoolEnabled = value;
 		}
-		else if ("full-errors".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		else if ("full-errors".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  m_FullErrors = value;
 		}
@@ -1430,27 +1429,27 @@ namespace org.apache.xalan.lib.sql
 	  {
 		string value = null;
 
-		if ("streaming".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		if ("streaming".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  value = m_IsStreamingEnabled ? "true" : "false";
 		}
-		else if ("inline-variables".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		else if ("inline-variables".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  value = m_InlineVariables ? "true" : "false";
 		}
-		else if ("multiple-results".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		else if ("multiple-results".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  value = m_IsMultipleResultsEnabled ? "true" : "false";
 		}
-		else if ("cache-statements".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		else if ("cache-statements".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  value = m_IsStatementCachingEnabled ? "true" : "false";
 		}
-		else if ("default-pool-enabled".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		else if ("default-pool-enabled".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  value = m_DefaultPoolingEnabled ? "true" : "false";
 		}
-		else if ("full-errors".Equals(feature, StringComparison.CurrentCultureIgnoreCase))
+		else if ("full-errors".Equals(feature, StringComparison.OrdinalIgnoreCase))
 		{
 		  value = m_FullErrors ? "true" : "false";
 		}

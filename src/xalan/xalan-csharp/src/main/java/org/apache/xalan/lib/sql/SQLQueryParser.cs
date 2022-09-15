@@ -32,7 +32,6 @@ using System.Text;
 
 namespace org.apache.xalan.lib.sql
 {
-
 	using org.apache.xpath.objects;
 	using ExpressionContext = org.apache.xalan.extensions.ExpressionContext;
 	using QName = org.apache.xml.utils.QName;
@@ -278,7 +277,7 @@ namespace org.apache.xalan.lib.sql
 
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void registerOutputParameters(CallableStatement cstmt) throws SQLException
 	  public virtual void registerOutputParameters(CallableStatement cstmt)
 	  {
@@ -362,7 +361,7 @@ namespace org.apache.xalan.lib.sql
 			  }
 			  else
 			  {
-				if (tok.ToString().Equals("call", StringComparison.CurrentCultureIgnoreCase))
+				if (tok.ToString().Equals("call", StringComparison.OrdinalIgnoreCase))
 				{
 				  m_IsCallable = true;
 				  if (curParm != null)
@@ -461,7 +460,7 @@ namespace org.apache.xalan.lib.sql
 			  else if (tok.Length > 0)
 			  {
 				tok.Length = 3;
-				if (tok.ToString().Equals("OUT", StringComparison.CurrentCultureIgnoreCase))
+				if (tok.ToString().Equals("OUT", StringComparison.OrdinalIgnoreCase))
 				{
 				  curParm.IsOutput = true;
 				  m_hasOutput = true;

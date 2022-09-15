@@ -76,7 +76,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("Unsupported element = " + _qname.Namespace + ":" + _qname.LocalPart);
 		displayContents(indent + IndentIncrement);
 		}
@@ -123,7 +123,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Run type check on the fallback element (if any).
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -160,13 +160,13 @@ namespace org.apache.xalan.xsltc.compiler
 			// If the unsupported element does not have any fallback child, then
 			// at runtime, a runtime error should be raised when the unsupported
 			// element is instantiated. Otherwise, no error is thrown.
-			ConstantPoolGen cpg = classGen.ConstantPool;
-			InstructionList il = methodGen.InstructionList;
+			ConstantPoolGen cpg = classGen.getConstantPool();
+			InstructionList il = methodGen.getInstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int unsupportedElem = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "unsupported_ElementF", "(" + Constants_Fields.STRING_SIG + "Z)V");
-			int unsupportedElem = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "unsupported_ElementF", "(" + Constants_Fields.STRING_SIG + "Z)V");
-			il.append(new PUSH(cpg, QName.ToString()));
+//ORIGINAL LINE: final int unsupportedElem = cpg.addMethodref(BASIS_LIBRARY_CLASS, "unsupported_ElementF", "(" + STRING_SIG + "Z)V");
+			int unsupportedElem = cpg.addMethodref(BASIS_LIBRARY_CLASS, "unsupported_ElementF", "(" + STRING_SIG + "Z)V");
+			il.append(new PUSH(cpg, QName.toString()));
 			il.append(new PUSH(cpg, _isExtension));
 			il.append(new INVOKESTATIC(unsupportedElem));
 		}

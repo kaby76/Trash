@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.transformer
 {
-
 	/// <summary>
 	/// Structure to help in converting integers to roman numerals
 	/// @xsl.usage internal

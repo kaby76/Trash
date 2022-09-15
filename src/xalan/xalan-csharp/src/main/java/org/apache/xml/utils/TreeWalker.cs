@@ -85,17 +85,17 @@ namespace org.apache.xml.utils
 	  public TreeWalker(ContentHandler contentHandler, DOMHelper dh, string systemId)
 	  {
 		this.m_contentHandler = contentHandler;
-		m_contentHandler.DocumentLocator = m_locator;
+		m_contentHandler.setDocumentLocator(m_locator);
 		if (!string.ReferenceEquals(systemId, null))
 		{
-			m_locator.SystemId = systemId;
+			m_locator.setSystemId(systemId);
 		}
 		else
 		{
 			try
 			{
 			  // Bug see Bugzilla  26741
-			  m_locator.SystemId = System.getProperty("user.dir") + File.separator + "dummy.xsl";
+			  m_locator.setSystemId(System.getProperty("user.dir") + File.separator + "dummy.xsl");
 			}
 			 catch (SecurityException)
 			 { // user.dir not accessible from applet
@@ -111,11 +111,11 @@ namespace org.apache.xml.utils
 	  public TreeWalker(ContentHandler contentHandler, DOMHelper dh)
 	  {
 		this.m_contentHandler = contentHandler;
-		m_contentHandler.DocumentLocator = m_locator;
+		m_contentHandler.setDocumentLocator(m_locator);
 		try
 		{
 		   // Bug see Bugzilla  26741
-		  m_locator.SystemId = System.getProperty("user.dir") + File.separator + "dummy.xsl";
+		  m_locator.setSystemId(System.getProperty("user.dir") + File.separator + "dummy.xsl");
 		}
 		catch (SecurityException)
 		{ // user.dir not accessible from applet
@@ -132,12 +132,12 @@ namespace org.apache.xml.utils
 		this.m_contentHandler = contentHandler;
 					if (m_contentHandler != null)
 					{
-							m_contentHandler.DocumentLocator = m_locator;
+							m_contentHandler.setDocumentLocator(m_locator);
 					}
 					try
 					{
 					   // Bug see Bugzilla  26741
-					  m_locator.SystemId = System.getProperty("user.dir") + File.separator + "dummy.xsl";
+					  m_locator.setSystemId(System.getProperty("user.dir") + File.separator + "dummy.xsl");
 					}
 					catch (SecurityException)
 					{ // user.dir not accessible from applet
@@ -157,7 +157,7 @@ namespace org.apache.xml.utils
 	  /// <param name="pos"> Node in the tree where to start traversal
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void traverse(org.w3c.dom.Node pos) throws org.xml.sax.SAXException
 	  public virtual void traverse(Node pos)
 	  {
@@ -177,7 +177,7 @@ namespace org.apache.xml.utils
 	  /// <param name="pos"> Node in the tree where to start traversal
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void traverseFragment(org.w3c.dom.Node pos) throws org.xml.sax.SAXException
 	  public virtual void traverseFragment(Node pos)
 	  {
@@ -187,7 +187,7 @@ namespace org.apache.xml.utils
 		{
 		  startNode(pos);
 
-		  Node nextNode = pos.FirstChild;
+		  Node nextNode = pos.getFirstChild();
 
 		  while (null == nextNode)
 		  {
@@ -198,11 +198,11 @@ namespace org.apache.xml.utils
 			  break;
 			}
 
-			nextNode = pos.NextSibling;
+			nextNode = pos.getNextSibling();
 
 			if (null == nextNode)
 			{
-			  pos = pos.ParentNode;
+			  pos = pos.getParentNode();
 
 			  if ((null == pos) || (top.Equals(pos)))
 			  {
@@ -234,7 +234,7 @@ namespace org.apache.xml.utils
 	  /// <param name="top"> Node in the tree where to end traversal
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void traverse(org.w3c.dom.Node pos, org.w3c.dom.Node top) throws org.xml.sax.SAXException
 	  public virtual void traverse(Node pos, Node top)
 	  {
@@ -245,7 +245,7 @@ namespace org.apache.xml.utils
 		{
 		  startNode(pos);
 
-		  Node nextNode = pos.FirstChild;
+		  Node nextNode = pos.getFirstChild();
 
 		  while (null == nextNode)
 		  {
@@ -256,11 +256,11 @@ namespace org.apache.xml.utils
 			  break;
 			}
 
-			nextNode = pos.NextSibling;
+			nextNode = pos.getNextSibling();
 
 			if (null == nextNode)
 			{
-			  pos = pos.ParentNode;
+			  pos = pos.getParentNode();
 
 			  if ((null == pos) || ((null != top) && top.Equals(pos)))
 			  {
@@ -283,7 +283,7 @@ namespace org.apache.xml.utils
 	  /// <summary>
 	  /// Optimized dispatch of characters.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private final void dispatachChars(org.w3c.dom.Node node) throws org.xml.sax.SAXException
 	  private void dispatachChars(Node node)
 	  {
@@ -293,7 +293,7 @@ namespace org.apache.xml.utils
 		}
 		else
 		{
-		  string data = ((Text) node).Data;
+		  string data = ((Text) node).getData();
 		  this.m_contentHandler.characters(data.ToCharArray(), 0, data.Length);
 		}
 	  }
@@ -305,7 +305,7 @@ namespace org.apache.xml.utils
 	  /// <param name="node"> Node to process
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void startNode(org.w3c.dom.Node node) throws org.xml.sax.SAXException
 	  protected internal virtual void startNode(Node node)
 	  {
@@ -318,22 +318,22 @@ namespace org.apache.xml.utils
 					if (node is Locator)
 					{
 							Locator loc = (Locator)node;
-							m_locator.ColumnNumber = loc.ColumnNumber;
-							m_locator.LineNumber = loc.LineNumber;
-							m_locator.PublicId = loc.PublicId;
-							m_locator.SystemId = loc.SystemId;
+							m_locator.setColumnNumber(loc.getColumnNumber());
+							m_locator.setLineNumber(loc.getLineNumber());
+							m_locator.setPublicId(loc.getPublicId());
+							m_locator.setSystemId(loc.getSystemId());
 					}
 					else
 					{
-							m_locator.ColumnNumber = 0;
-		  m_locator.LineNumber = 0;
+							m_locator.setColumnNumber(0);
+		  m_locator.setLineNumber(0);
 					}
 
-		switch (node.NodeType)
+		switch (node.getNodeType())
 		{
 		case Node.COMMENT_NODE :
 		{
-		  string data = ((Comment) node).Data;
+		  string data = ((Comment) node).getData();
 
 		  if (m_contentHandler is LexicalHandler)
 		  {
@@ -351,14 +351,14 @@ namespace org.apache.xml.utils
 
 		  break;
 		case Node.ELEMENT_NODE :
-		  NamedNodeMap atts = ((Element) node).Attributes;
-		  int nAttrs = atts.Length;
+		  NamedNodeMap atts = ((Element) node).getAttributes();
+		  int nAttrs = atts.getLength();
 		  // System.out.println("TreeWalker#startNode: "+node.getNodeName());
 
 		  for (int i = 0; i < nAttrs; i++)
 		  {
 			Node attr = atts.item(i);
-			string attrName = attr.NodeName;
+			string attrName = attr.getNodeName();
 
 			// System.out.println("TreeWalker#startNode: attr["+i+"] = "+attrName+", "+attr.getNodeValue());
 			if (attrName.Equals("xmlns") || attrName.StartsWith("xmlns:", StringComparison.Ordinal))
@@ -370,7 +370,7 @@ namespace org.apache.xml.utils
 			  // to "Steven Murray" <smurray@ebt.com>.
 			  string prefix = (index = attrName.IndexOf(":", StringComparison.Ordinal)) < 0 ? "" : attrName.Substring(index + 1);
 
-			  this.m_contentHandler.startPrefixMapping(prefix, attr.NodeValue);
+			  this.m_contentHandler.startPrefixMapping(prefix, attr.getNodeValue());
 			}
 
 		  }
@@ -382,12 +382,12 @@ namespace org.apache.xml.utils
 		  {
 			ns = "";
 		  }
-		  this.m_contentHandler.startElement(ns, m_dh.getLocalNameOfNode(node), node.NodeName, new AttList(atts, m_dh));
+		  this.m_contentHandler.startElement(ns, m_dh.getLocalNameOfNode(node), node.getNodeName(), new AttList(atts, m_dh));
 		  break;
 		case Node.PROCESSING_INSTRUCTION_NODE :
 		{
 		  ProcessingInstruction pi = (ProcessingInstruction) node;
-		  string name = pi.NodeName;
+		  string name = pi.getNodeName();
 
 		  // String data = pi.getData();
 		  if (name.Equals("xslt-next-is-raw"))
@@ -396,7 +396,7 @@ namespace org.apache.xml.utils
 		  }
 		  else
 		  {
-			this.m_contentHandler.processingInstruction(pi.NodeName, pi.Data);
+			this.m_contentHandler.processingInstruction(pi.getNodeName(), pi.getData());
 		  }
 		}
 		break;
@@ -444,7 +444,7 @@ namespace org.apache.xml.utils
 
 		  if (m_contentHandler is LexicalHandler)
 		  {
-			((LexicalHandler) this.m_contentHandler).startEntity(eref.NodeName);
+			((LexicalHandler) this.m_contentHandler).startEntity(eref.getNodeName());
 		  }
 		  else
 		  {
@@ -454,7 +454,6 @@ namespace org.apache.xml.utils
 		}
 		break;
 		default :
-	break;
 		}
 	  }
 
@@ -465,12 +464,12 @@ namespace org.apache.xml.utils
 	  /// <param name="node"> Node we just finished processing
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void endNode(org.w3c.dom.Node node) throws org.xml.sax.SAXException
 	  protected internal virtual void endNode(Node node)
 	  {
 
-		switch (node.NodeType)
+		switch (node.getNodeType())
 		{
 		case Node.DOCUMENT_NODE :
 		  break;
@@ -481,15 +480,15 @@ namespace org.apache.xml.utils
 		  {
 			ns = "";
 		  }
-		  this.m_contentHandler.endElement(ns, m_dh.getLocalNameOfNode(node), node.NodeName);
+		  this.m_contentHandler.endElement(ns, m_dh.getLocalNameOfNode(node), node.getNodeName());
 
-		  NamedNodeMap atts = ((Element) node).Attributes;
-		  int nAttrs = atts.Length;
+		  NamedNodeMap atts = ((Element) node).getAttributes();
+		  int nAttrs = atts.getLength();
 
 		  for (int i = 0; i < nAttrs; i++)
 		  {
 			Node attr = atts.item(i);
-			string attrName = attr.NodeName;
+			string attrName = attr.getNodeName();
 
 			if (attrName.Equals("xmlns") || attrName.StartsWith("xmlns:", StringComparison.Ordinal))
 			{
@@ -513,12 +512,11 @@ namespace org.apache.xml.utils
 		  {
 			LexicalHandler lh = ((LexicalHandler) this.m_contentHandler);
 
-			lh.endEntity(eref.NodeName);
+			lh.endEntity(eref.getNodeName());
 		  }
 		}
 		break;
 		default :
-	break;
 		}
 	  }
 	} //TreeWalker

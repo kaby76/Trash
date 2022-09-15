@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xpath
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
@@ -90,7 +89,7 @@ namespace org.apache.xpath
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if a runtime exception
 	  ///         occurs. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(XPathContext xctxt, int currentNode) throws javax.xml.transform.TransformerException
 	  public virtual XObject execute(XPathContext xctxt, int currentNode)
 	  {
@@ -113,7 +112,7 @@ namespace org.apache.xpath
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if a runtime exception
 	  ///         occurs. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(XPathContext xctxt, int currentNode, org.apache.xml.dtm.DTM dtm, int expType) throws javax.xml.transform.TransformerException
 	  public virtual XObject execute(XPathContext xctxt, int currentNode, DTM dtm, int expType)
 	  {
@@ -133,7 +132,7 @@ namespace org.apache.xpath
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if a runtime exception
 	  ///         occurs. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public abstract org.apache.xpath.objects.XObject execute(XPathContext xctxt) throws javax.xml.transform.TransformerException;
 	  public abstract XObject execute(XPathContext xctxt);
 
@@ -150,7 +149,7 @@ namespace org.apache.xpath
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> if a runtime exception
 	  ///         occurs. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(XPathContext xctxt, boolean destructiveOK) throws javax.xml.transform.TransformerException
 	  public virtual XObject execute(XPathContext xctxt, bool destructiveOK)
 	  {
@@ -166,7 +165,7 @@ namespace org.apache.xpath
 	  /// <returns> The expression evaluated as a double.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public double num(XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public virtual double num(XPathContext xctxt)
 	  {
@@ -181,7 +180,7 @@ namespace org.apache.xpath
 	  /// <returns> false
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean bool(XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public virtual bool @bool(XPathContext xctxt)
 	  {
@@ -196,7 +195,7 @@ namespace org.apache.xpath
 	  /// <returns> The string this wraps or the empty string if null
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.utils.XMLString xstr(XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public virtual XMLString xstr(XPathContext xctxt)
 	  {
@@ -205,7 +204,7 @@ namespace org.apache.xpath
 
 	  /// <summary>
 	  /// Tell if the expression is a nodeset expression.  In other words, tell
-	  /// if you can execute <seealso cref="#asNode(XPathContext) asNode"/> without an exception. </summary>
+	  /// if you can execute <seealso cref="asNode(XPathContext) asNode"/> without an exception. </summary>
 	  /// <returns> true if the expression can be represented as a nodeset. </returns>
 	  public virtual bool NodesetExpr
 	  {
@@ -222,7 +221,7 @@ namespace org.apache.xpath
 	  /// <returns> the first node out of the nodeset, or DTM.NULL.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int asNode(XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public virtual int asNode(XPathContext xctxt)
 	  {
@@ -244,7 +243,7 @@ namespace org.apache.xpath
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// @xsl.usage experimental </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator asIterator(XPathContext xctxt, int contextNode) throws javax.xml.transform.TransformerException
 	  public virtual DTMIterator asIterator(XPathContext xctxt, int contextNode)
 	  {
@@ -275,7 +274,7 @@ namespace org.apache.xpath
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// @xsl.usage experimental </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator asIteratorRaw(XPathContext xctxt, int contextNode) throws javax.xml.transform.TransformerException
 	  public virtual DTMIterator asIteratorRaw(XPathContext xctxt, int contextNode)
 	  {
@@ -307,7 +306,7 @@ namespace org.apache.xpath
 	  /// <exception cref="javax.xml.transform.TransformerException"> if a runtime exception
 	  ///         occurs. </exception>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void executeCharsToContentHandler(XPathContext xctxt, org.xml.sax.ContentHandler handler) throws javax.xml.transform.TransformerException, org.xml.sax.SAXException
 	  public virtual void executeCharsToContentHandler(XPathContext xctxt, ContentHandler handler)
 	  {
@@ -387,7 +386,7 @@ namespace org.apache.xpath
 	  ///                              throw an exception.
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warn(XPathContext xctxt, String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  public virtual void warn(XPathContext xctxt, string msg, object[] args)
 	  {
@@ -439,7 +438,7 @@ namespace org.apache.xpath
 	  ///                              throw an exception.
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(XPathContext xctxt, String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  public virtual void error(XPathContext xctxt, string msg, object[] args)
 	  {
@@ -524,7 +523,7 @@ namespace org.apache.xpath
 	  /// </summary>
 	  /// <returns> A string containing the public identifier, or
 	  ///         null if none is available. </returns>
-	  /// <seealso cref= #getSystemId </seealso>
+	  /// <seealso cref=".getSystemId"/>
 	  public virtual string PublicId
 	  {
 		  get
@@ -533,7 +532,7 @@ namespace org.apache.xpath
 			  {
 				return null;
 			  }
-			  return m_parent.PublicId;
+			  return m_parent.getPublicId();
 		  }
 	  }
 
@@ -549,7 +548,7 @@ namespace org.apache.xpath
 	  /// </summary>
 	  /// <returns> A string containing the system identifier, or null
 	  ///         if none is available. </returns>
-	  /// <seealso cref= #getPublicId </seealso>
+	  /// <seealso cref=".getPublicId"/>
 	  public virtual string SystemId
 	  {
 		  get
@@ -558,7 +557,7 @@ namespace org.apache.xpath
 			  {
 				return null;
 			  }
-			  return m_parent.SystemId;
+			  return m_parent.getSystemId();
 		  }
 	  }
 
@@ -575,7 +574,7 @@ namespace org.apache.xpath
 	  /// markup that triggered the event appears.</para>
 	  /// </summary>
 	  /// <returns> The line number, or -1 if none is available. </returns>
-	  /// <seealso cref= #getColumnNumber </seealso>
+	  /// <seealso cref=".getColumnNumber"/>
 	  public virtual int LineNumber
 	  {
 		  get
@@ -584,7 +583,7 @@ namespace org.apache.xpath
 			  {
 				return 0;
 			  }
-			  return m_parent.LineNumber;
+			  return m_parent.getLineNumber();
 		  }
 	  }
 
@@ -601,7 +600,7 @@ namespace org.apache.xpath
 	  /// markup that triggered the event appears.</para>
 	  /// </summary>
 	  /// <returns> The column number, or -1 if none is available. </returns>
-	  /// <seealso cref= #getLineNumber </seealso>
+	  /// <seealso cref=".getLineNumber"/>
 	  public virtual int ColumnNumber
 	  {
 		  get
@@ -610,7 +609,7 @@ namespace org.apache.xpath
 			  {
 				return 0;
 			  }
-			  return m_parent.ColumnNumber;
+			  return m_parent.getColumnNumber();
 		  }
 	  }
 	}

@@ -20,7 +20,9 @@
  */
 namespace org.apache.xpath.axes
 {
-
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using FuncLast = org.apache.xpath.functions.FuncLast;
 	using FuncPosition = org.apache.xpath.functions.FuncPosition;
 	using Function = org.apache.xpath.functions.Function;

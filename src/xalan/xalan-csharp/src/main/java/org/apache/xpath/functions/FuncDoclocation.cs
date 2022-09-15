@@ -22,8 +22,8 @@
  */
 namespace org.apache.xpath.functions
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XString = org.apache.xpath.objects.XString;
 
@@ -44,7 +44,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -52,17 +52,17 @@ namespace org.apache.xpath.functions
 		int whereNode = getArg0AsNode(xctxt);
 		string fileLocation = null;
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != whereNode)
+		if (DTM.NULL != whereNode)
 		{
 		  DTM dtm = xctxt.getDTM(whereNode);
 
 		  // %REVIEW%
-		  if (org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE == dtm.getNodeType(whereNode))
+		  if (DTM.DOCUMENT_FRAGMENT_NODE == dtm.getNodeType(whereNode))
 		  {
 			whereNode = dtm.getFirstChild(whereNode);
 		  }
 
-		  if (org.apache.xml.dtm.DTM_Fields.NULL != whereNode)
+		  if (DTM.NULL != whereNode)
 		  {
 			fileLocation = dtm.DocumentBaseURI;
 	//        int owner = dtm.getDocument();

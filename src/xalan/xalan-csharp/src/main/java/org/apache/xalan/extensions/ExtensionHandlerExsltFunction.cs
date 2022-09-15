@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.extensions
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using Constants = org.apache.xalan.templates.Constants;
@@ -63,8 +62,8 @@ namespace org.apache.xalan.extensions
 	  /// <summary>
 	  /// Required by ExtensionHandler (an abstract method). No-op.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public void processElement(String localPart, org.apache.xalan.templates.ElemTemplateElement element, org.apache.xalan.transformer.TransformerImpl transformer, org.apache.xalan.templates.Stylesheet stylesheetTree, Object methodKey) throws javax.xml.transform.TransformerException, java.io.IOException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public void processElement(String localPart, org.apache.xalan.templates.ElemTemplateElement element, org.apache.xalan.transformer.TransformerImpl transformer, org.apache.xalan.templates.Stylesheet stylesheetTree, Object methodKey) throws TransformerException, java.io.IOException
 	  public override void processElement(string localPart, ElemTemplateElement element, TransformerImpl transformer, Stylesheet stylesheetTree, object methodKey)
 	  {
 	  }
@@ -166,7 +165,7 @@ namespace org.apache.xalan.extensions
 	  /// <param name="exprContext"> Used to get the XPathContext. </param>
 	  /// <returns> the return value of the function evaluation. </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object callFunction(String funcName, java.util.Vector args, Object methodKey, ExpressionContext exprContext) throws javax.xml.transform.TransformerException
 	  public override object callFunction(string funcName, ArrayList args, object methodKey, ExpressionContext exprContext)
 	  {
@@ -181,7 +180,7 @@ namespace org.apache.xalan.extensions
 	  /// <param name="exprContext"> The context in which this expression is being executed. </param>
 	  /// <returns> the return value of the function evaluation. </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object callFunction(org.apache.xpath.functions.FuncExtFunction extFunction, java.util.Vector args, ExpressionContext exprContext) throws javax.xml.transform.TransformerException
 	  public override object callFunction(FuncExtFunction extFunction, ArrayList args, ExpressionContext exprContext)
 	  {
@@ -214,7 +213,7 @@ namespace org.apache.xalan.extensions
 			elemFunc.execute(transformer, methodArgs);
 
 			XObject val = (XObject)transformer.popCurrentFuncResult();
-			return (val == null) ? new XString("") : val; // value if no result element.
+			return (val == null) ? new XString("") : val;
 		  }
 		  else
 		  {

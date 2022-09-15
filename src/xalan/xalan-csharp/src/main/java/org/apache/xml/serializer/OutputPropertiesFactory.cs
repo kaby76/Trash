@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xml.serializer
 {
 
-
 	using MsgKey = org.apache.xml.serializer.utils.MsgKey;
 	using Utils = org.apache.xml.serializer.utils.Utils;
 	using WrappedRuntimeException = org.apache.xml.serializer.utils.WrappedRuntimeException;
@@ -39,7 +38,7 @@ namespace org.apache.xml.serializer
 	/// <para>
 	/// The given output types supported are "xml", "text", and "html". 
 	/// These type strings can be obtained from the 
-	/// <seealso cref="Method Method"/> class in this package.
+	/// <seealso cref="System.Reflection.MethodInfo Method"/> class in this package.
 	/// </para>
 	/// <para>
 	/// Other constants defined in this class are the non-standard property keys
@@ -75,9 +74,9 @@ namespace org.apache.xml.serializer
 	/// 
 	/// </para>
 	/// </summary>
-	/// <seealso cref= SerializerFactory </seealso>
-	/// <seealso cref= Method </seealso>
-	/// <seealso cref= Serializer </seealso>
+	/// <seealso cref="SerializerFactory"/>
+	/// <seealso cref="Method"/>
+	/// <seealso cref="Serializer"/>
 	public sealed class OutputPropertiesFactory
 	{
 		/// <summary>
@@ -329,10 +328,9 @@ namespace org.apache.xml.serializer
 		/// </summary>
 		/// <param name="resourceName"> non-null reference to resource name. </param>
 		/// <param name="defaults"> Default properties, which may be null. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static java.util.Properties loadPropertiesFile(final String resourceName, java.util.Properties defaults) throws java.io.IOException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		private static Properties loadPropertiesFile(string resourceName, Properties defaults)
+		private static Properties loadPropertiesFile(in string resourceName, Properties defaults)
 		{
 
 			// This static method should eventually be moved to a thread-specific class
@@ -341,14 +339,14 @@ namespace org.apache.xml.serializer
 
 			Properties props = new Properties(defaults);
 
-			System.IO.Stream @is = null;
+			Stream @is = null;
 			BufferedInputStream bis = null;
 
 			try
 			{
 				if (ACCESS_CONTROLLER_CLASS != null)
 				{
-					@is = (System.IO.Stream) AccessController.doPrivileged(new PrivilegedActionAnonymousInnerClass(resourceName));
+					@is = (Stream) AccessController.doPrivileged(new PrivilegedActionAnonymousInnerClass(resourceName));
 				}
 				else
 				{
@@ -470,7 +468,7 @@ namespace org.apache.xml.serializer
 				this.resourceName = resourceName;
 			}
 
-			public virtual object run()
+			public object run()
 			{
 				return typeof(OutputPropertiesFactory).getResourceAsStream(resourceName);
 			}
@@ -478,7 +476,7 @@ namespace org.apache.xml.serializer
 
 		/// <summary>
 		/// Fix up a string in an output properties file according to
-		/// the rules of <seealso cref="#loadPropertiesFile"/>.
+		/// the rules of <seealso cref="loadPropertiesFile"/>.
 		/// </summary>
 		/// <param name="s"> non-null reference to string that may need to be fixed up. </param>
 		/// <returns> A new string if fixup occured, otherwise the s argument. </returns>

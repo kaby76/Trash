@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using DTMAxisIteratorBase = org.apache.xml.dtm.@ref.DTMAxisIteratorBase;
@@ -52,7 +51,7 @@ namespace org.apache.xalan.xsltc.dom
 
 		public override int next()
 		{
-		return _current < _free ? _data[_current++].Node : org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		return _current < _free ? _data[_current++].Node : END;
 		}
 
 		public override DTMAxisIterator setStartNode(int node)
@@ -64,7 +63,7 @@ namespace org.apache.xalan.xsltc.dom
 			_free = 0;
 
 			// gather all nodes from the source iterator
-			while ((node = _source.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((node = _source.next()) != END)
 			{
 			addRecord(_factory.makeNodeSortRecord(node,_free));
 			}

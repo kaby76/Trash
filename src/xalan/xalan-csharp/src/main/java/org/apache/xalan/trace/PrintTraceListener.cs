@@ -23,7 +23,6 @@
 namespace org.apache.xalan.trace
 {
 
-
 	using Constants = org.apache.xalan.templates.Constants;
 	using ElemTemplate = org.apache.xalan.templates.ElemTemplate;
 	using ElemTemplateElement = org.apache.xalan.templates.ElemTemplateElement;
@@ -38,8 +37,8 @@ namespace org.apache.xalan.trace
 	/// Implementation of the TraceListener interface that
 	/// prints each event to standard out as it occurs.
 	/// </summary>
-	/// <seealso cref= org.apache.xalan.trace.TracerEvent
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="org.apache.xalan.trace.TracerEvent"
+	/// @xsl.usage advanced/>
 	public class PrintTraceListener : TraceListenerEx3
 	{
 
@@ -111,7 +110,7 @@ namespace org.apache.xalan.trace
 
 			if (null != et.Match)
 			{
-			  m_pw.print("match='" + et.Match.PatternString + "' ");
+			  m_pw.print("match='" + et.Match.getPatternString() + "' ");
 			}
 
 			if (null != et.Name)
@@ -173,7 +172,7 @@ namespace org.apache.xalan.trace
 	  /// <param name="ev"> the generate event.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void selected(SelectionEvent ev) throws javax.xml.transform.TransformerException
 	public virtual void selected(SelectionEvent ev)
 	{
@@ -192,11 +191,11 @@ namespace org.apache.xalan.trace
 
 			if (locator != null)
 			{
-				m_pw.println("Selected source node '" + sourceNode.NodeName + "', at " + locator);
+				m_pw.println("Selected source node '" + sourceNode.getNodeName() + "', at " + locator);
 			}
 			else
 			{
-				m_pw.println("Selected source node '" + sourceNode.NodeName + "'");
+				m_pw.println("Selected source node '" + sourceNode.getNodeName() + "'");
 			}
 
 			if (ev.m_styleNode.LineNumber == 0)
@@ -236,7 +235,7 @@ namespace org.apache.xalan.trace
 				// The main cause is that the following loop change the state of iterator, which is shared
 				// with the transformer. The fix is that we record the initial state before looping, then 
 				// restore the state when we finish it, which is done in the following lines added.
-				int currentPos = org.apache.xml.dtm.DTM_Fields.NULL;
+				int currentPos = DTM.NULL;
 				currentPos = nl.CurrentPos;
 				nl.ShouldCacheNodes = true; // This MUST be done before we clone the iterator!
 				org.apache.xml.dtm.DTMIterator clone = null;
@@ -253,18 +252,18 @@ namespace org.apache.xalan.trace
 				}
 				int pos = clone.nextNode();
 
-				if (org.apache.xml.dtm.DTM_Fields.NULL == pos)
+				if (DTM.NULL == pos)
 				{
 					m_pw.println("     [empty node list]");
 				}
 				else
 				{
-					while (org.apache.xml.dtm.DTM_Fields.NULL != pos)
+					while (DTM.NULL != pos)
 					{
 						// m_pw.println("     " + ev.m_processor.getXPathContext().getDTM(pos).getNode(pos));
 						DTM dtm = ev.m_processor.XPathContext.getDTM(pos);
 						m_pw.print("     ");
-						m_pw.print(pos.ToString("x"));
+						m_pw.print(Convert.ToString(pos, 16));
 						m_pw.print(": ");
 						m_pw.println(dtm.getNodeName(pos));
 						pos = clone.nextNode();
@@ -290,7 +289,7 @@ namespace org.apache.xalan.trace
 	  /// <param name="ev"> the generate event.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void selectEnd(EndSelectionEvent ev) throws javax.xml.transform.TransformerException
 	  public virtual void selectEnd(EndSelectionEvent ev)
 	  {
@@ -309,42 +308,42 @@ namespace org.apache.xalan.trace
 		{
 		  switch (ev.m_eventtype)
 		  {
-		  case org.apache.xml.serializer.SerializerTrace_Fields.EVENTTYPE_STARTDOCUMENT :
+		  case SerializerTrace.EVENTTYPE_STARTDOCUMENT :
 			m_pw.println("STARTDOCUMENT");
 			break;
-		  case org.apache.xml.serializer.SerializerTrace_Fields.EVENTTYPE_ENDDOCUMENT :
+		  case SerializerTrace.EVENTTYPE_ENDDOCUMENT :
 			m_pw.println("ENDDOCUMENT");
 			break;
-		  case org.apache.xml.serializer.SerializerTrace_Fields.EVENTTYPE_STARTELEMENT :
+		  case SerializerTrace.EVENTTYPE_STARTELEMENT :
 			m_pw.println("STARTELEMENT: " + ev.m_name);
 			break;
-		  case org.apache.xml.serializer.SerializerTrace_Fields.EVENTTYPE_ENDELEMENT :
+		  case SerializerTrace.EVENTTYPE_ENDELEMENT :
 			m_pw.println("ENDELEMENT: " + ev.m_name);
 			break;
-		  case org.apache.xml.serializer.SerializerTrace_Fields.EVENTTYPE_CHARACTERS :
+		  case SerializerTrace.EVENTTYPE_CHARACTERS :
 		  {
 			string chars = new string(ev.m_characters, ev.m_start, ev.m_length);
 
 			m_pw.println("CHARACTERS: " + chars);
 		  }
 		  break;
-		  case org.apache.xml.serializer.SerializerTrace_Fields.EVENTTYPE_CDATA :
+		  case SerializerTrace.EVENTTYPE_CDATA :
 		  {
 			string chars = new string(ev.m_characters, ev.m_start, ev.m_length);
 
 			m_pw.println("CDATA: " + chars);
 		  }
 		  break;
-		  case org.apache.xml.serializer.SerializerTrace_Fields.EVENTTYPE_COMMENT :
+		  case SerializerTrace.EVENTTYPE_COMMENT :
 			m_pw.println("COMMENT: " + ev.m_data);
 			break;
-		  case org.apache.xml.serializer.SerializerTrace_Fields.EVENTTYPE_PI :
+		  case SerializerTrace.EVENTTYPE_PI :
 			m_pw.println("PI: " + ev.m_name + ", " + ev.m_data);
 			break;
-		  case org.apache.xml.serializer.SerializerTrace_Fields.EVENTTYPE_ENTITYREF :
+		  case SerializerTrace.EVENTTYPE_ENTITYREF :
 			m_pw.println("ENTITYREF: " + ev.m_name);
 			break;
-		  case org.apache.xml.serializer.SerializerTrace_Fields.EVENTTYPE_IGNORABLEWHITESPACE :
+		  case SerializerTrace.EVENTTYPE_IGNORABLEWHITESPACE :
 			m_pw.println("IGNORABLEWHITESPACE");
 			break;
 		  }
@@ -366,10 +365,10 @@ namespace org.apache.xalan.trace
 			  m_pw.println("EXTENSION: " + ((Type)ev.m_method).FullName + "#<init>");
 			  break;
 			case ExtensionEvent.METHOD:
-			  m_pw.println("EXTENSION: " + ((Method)ev.m_method).DeclaringClass.Name + "#" + ((Method)ev.m_method).Name);
+			  m_pw.println("EXTENSION: " + ((System.Reflection.MethodInfo)ev.m_method).getDeclaringClass().getName() + "#" + ((System.Reflection.MethodInfo)ev.m_method).getName());
 			  break;
 			case ExtensionEvent.CONSTRUCTOR:
-			  m_pw.println("EXTENSION: " + ((Constructor)ev.m_method).DeclaringClass.Name + "#<init>");
+			  m_pw.println("EXTENSION: " + ((System.Reflection.ConstructorInfo)ev.m_method).getDeclaringClass().getName() + "#<init>");
 			  break;
 		  }
 		}

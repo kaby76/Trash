@@ -36,8 +36,8 @@ namespace org.apache.xalan.templates
 	///   select %expr; #IMPLIED
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#variables">variables in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.variables">variables in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemParam : ElemVariable
 	{
@@ -54,8 +54,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID of the element </returns>
 	  public override int XSLToken
 	  {
@@ -83,7 +83,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="param"> Element from an xsl:param
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ElemParam(ElemParam param) throws javax.xml.transform.TransformerException
 	  public ElemParam(ElemParam param) : base(param)
 	  {
@@ -95,12 +95,12 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
 		base.compose(sroot);
-		m_qnameID = sroot.getComposeState().getQNameID(m_qname);
+		m_qnameID = sroot.ComposeState.getQNameID(m_qname);
 		int parentToken = m_parentNode.XSLToken;
 		if (parentToken == Constants.ELEMNAME_TEMPLATE || parentToken == Constants.EXSLT_ELEMNAME_FUNCTION)
 		{
@@ -110,12 +110,12 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Execute a variable declaration and push it onto the variable stack. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#variables">variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.variables">variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -124,16 +124,16 @@ namespace org.apache.xalan.templates
 		  transformer.TraceManager.fireTraceEvent(this);
 		}
 
-		VariableStack vars = transformer.XPathContext.VarStack;
+		VariableStack vars = transformer.XPathContext.getVarStack();
 
 		if (!vars.isLocalSet(m_index))
 		{
 
-		  int sourceNode = transformer.XPathContext.CurrentNode;
-		  XObject @var = getValue(transformer, sourceNode);
+		  int sourceNode = transformer.XPathContext.getCurrentNode();
+		  XObject var = getValue(transformer, sourceNode);
 
 		  // transformer.getXPathContext().getVarStack().pushVariable(m_qname, var);
-		  transformer.XPathContext.VarStack.setLocalVariable(m_index, @var);
+		  transformer.XPathContext.getVarStack().setLocalVariable(m_index, var);
 		}
 
 		if (transformer.Debug)

@@ -23,8 +23,8 @@ using System.Collections;
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 	using NodeTest = org.apache.xpath.patterns.NodeTest;
 
@@ -129,12 +129,12 @@ namespace org.apache.xpath.axes
 			  {
 				if (pnt.executePredicates(n, xctxt))
 				{
-				  return org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT;
+				  return DTMIterator.FILTER_ACCEPT;
 				}
 			  }
 			  else
 			  {
-				return org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT;
+				return DTMIterator.FILTER_ACCEPT;
 			  }
 
 			}
@@ -150,7 +150,7 @@ namespace org.apache.xpath.axes
 		{
 		  xctxt.popCurrentNode();
 		}
-		return org.apache.xml.dtm.DTMIterator_Fields.FILTER_SKIP;
+		return DTMIterator.FILTER_SKIP;
 	  }
 
 	}

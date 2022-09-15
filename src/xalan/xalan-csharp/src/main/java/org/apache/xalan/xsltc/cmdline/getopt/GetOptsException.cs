@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc.cmdline.getopt
 {
-
 	/// <summary>
 	/// @author G Todd Miller 
 	/// </summary>

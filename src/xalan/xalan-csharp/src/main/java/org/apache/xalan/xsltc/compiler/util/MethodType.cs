@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Text;
 
 /*
@@ -78,7 +77,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		_argsType = argsType.Count > 0 ? argsType : null;
 		}
 
-		public override String ToString()
+		public override string ToString()
 		{
 		StringBuilder result = new StringBuilder("method{");
 		if (_argsType != null)
@@ -103,7 +102,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		return result.ToString();
 		}
 
-		public override String toSignature()
+		public override string toSignature()
 		{
 		return toSignature("");
 		}
@@ -112,7 +111,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// Returns the signature of this method that results by adding
 		/// <code>lastArgSig</code> to the end of the argument list.
 		/// </summary>
-		public String toSignature(string lastArgSig)
+		public string toSignature(string lastArgSig)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final StringBuffer buffer = new StringBuffer();

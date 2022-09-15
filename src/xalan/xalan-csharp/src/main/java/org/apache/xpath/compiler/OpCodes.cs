@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath.compiler
 {
-
 	/// <summary>
 	/// Operations codes for XPath.
 	/// 

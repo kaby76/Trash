@@ -25,7 +25,6 @@ using System.Text;
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using GOTO_W = org.apache.bcel.generic.GOTO_W;
 	using InstructionHandle = org.apache.bcel.generic.InstructionHandle;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
@@ -327,7 +326,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 
 			// Next pattern's 'fail' target is this pattern's first instruction
-			fail = il.Start;
+			fail = il.getStart();
 
 			// Append existing instruction list to the end of this one
 			if (_instructionList != null)

@@ -55,7 +55,7 @@ namespace org.apache.xalan.transformer
 		m_ref = @ref;
 		m_keyDeclarations = keyDecls;
 		m_keysNodes = ki;
-		WhatToShow = org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL;
+		WhatToShow = org.apache.xml.dtm.DTMFilter.SHOW_ALL;
 	  }
 
 	  internal DTMIterator m_keysNodes;
@@ -68,9 +68,9 @@ namespace org.apache.xalan.transformer
 		  get
 		  {
 			  int next;
-			while (org.apache.xml.dtm.DTM_Fields.NULL != (next = m_keysNodes.nextNode()))
+			while (DTM.NULL != (next = m_keysNodes.nextNode()))
 			{
-				if (org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT == filterNode(next))
+				if (DTMIterator.FILTER_ACCEPT == filterNode(next))
 				{
 					break;
 				}
@@ -138,7 +138,7 @@ namespace org.apache.xalan.transformer
 
 			  if (lookupKey.Equals(exprResult))
 			  {
-				return org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT;
+				return DTMIterator.FILTER_ACCEPT;
 			  }
 			}
 			else
@@ -146,13 +146,13 @@ namespace org.apache.xalan.transformer
 			  DTMIterator nl = ((XNodeSet)xuse).iterRaw();
 			  int useNode;
 
-			  while (org.apache.xml.dtm.DTM_Fields.NULL != (useNode = nl.nextNode()))
+			  while (DTM.NULL != (useNode = nl.nextNode()))
 			  {
 				DTM dtm = getDTM(useNode);
 				XMLString exprResult = dtm.getStringValue(useNode);
 				if ((null != exprResult) && lookupKey.Equals(exprResult))
 				{
-				  return org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT;
+				  return DTMIterator.FILTER_ACCEPT;
 				}
 			  }
 			}
@@ -168,7 +168,7 @@ namespace org.apache.xalan.transformer
 		{
 		  throw new Exception(XSLMessages.createMessage(XSLTErrorResources.ER_NO_XSLKEY_DECLARATION, new object[] {name.LocalName}));
 		}
-		return org.apache.xml.dtm.DTMIterator_Fields.FILTER_REJECT;
+		return DTMIterator.FILTER_REJECT;
 	  }
 
 	  protected internal XMLString m_ref;

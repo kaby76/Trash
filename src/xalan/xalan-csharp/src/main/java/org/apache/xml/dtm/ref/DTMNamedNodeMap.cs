@@ -20,6 +20,7 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
+	using DTM = org.apache.xml.dtm.DTM;
 
 	using DOMException = org.w3c.dom.DOMException;
 	using NamedNodeMap = org.w3c.dom.NamedNodeMap;
@@ -102,7 +103,7 @@ namespace org.apache.xml.dtm.@ref
 	  public virtual Node getNamedItem(string name)
 	  {
 
-		for (int n = dtm.getFirstAttribute(element); n != org.apache.xml.dtm.DTM_Fields.NULL; n = dtm.getNextAttribute(n))
+		for (int n = dtm.getFirstAttribute(element); n != DTM.NULL; n = dtm.getNextAttribute(n))
 		{
 		  if (dtm.getNodeName(n).Equals(name))
 		  {
@@ -200,7 +201,7 @@ namespace org.apache.xml.dtm.@ref
 	  public virtual Node getNamedItemNS(string namespaceURI, string localName)
 	  {
 		   Node retNode = null;
-		   for (int n = dtm.getFirstAttribute(element); n != org.apache.xml.dtm.DTM_Fields.NULL; n = dtm.getNextAttribute(n))
+		   for (int n = dtm.getFirstAttribute(element); n != DTM.NULL; n = dtm.getNextAttribute(n))
 		   {
 			 if (localName.Equals(dtm.getLocalName(n)))
 			 {
@@ -237,7 +238,7 @@ namespace org.apache.xml.dtm.@ref
 	  ///   <code>Element</code> object. The DOM user must explicitly clone
 	  ///   <code>Attr</code> nodes to re-use them in other elements.
 	  /// @since DOM Level 2 </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node setNamedItemNS(org.w3c.dom.Node arg) throws org.w3c.dom.DOMException
 	  public virtual Node setNamedItemNS(Node arg)
 	  {
@@ -263,7 +264,7 @@ namespace org.apache.xml.dtm.@ref
 	  ///   <code>namespaceURI</code> and <code>localName</code> in this map.
 	  ///   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this map is readonly.
 	  /// @since DOM Level 2 </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node removeNamedItemNS(String namespaceURI, String localName) throws org.w3c.dom.DOMException
 	  public virtual Node removeNamedItemNS(string namespaceURI, string localName)
 	  {

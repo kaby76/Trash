@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.trace
 {
-
 	/// <summary>
 	/// Extends TraceListenerEx2 but adds extensions trace events.
 	/// @xsl.usage advanced

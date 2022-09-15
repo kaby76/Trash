@@ -20,8 +20,9 @@
 namespace org.apache.xpath.jaxp
 {
 
-
 	using QName = org.apache.xml.utils.QName;
+	using VariableStack = org.apache.xpath.VariableStack;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
@@ -44,8 +45,8 @@ namespace org.apache.xpath.jaxp
 			this.resolver = resolver;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public org.apache.xpath.objects.XObject getVariableOrParam(org.apache.xpath.XPathContext xctxt, org.apache.xml.utils.QName qname) throws javax.xml.transform.TransformerException,IllegalArgumentException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public org.apache.xpath.objects.XObject getVariableOrParam(org.apache.xpath.XPathContext xctxt, org.apache.xml.utils.QName qname) throws TransformerException,IllegalArgumentException
 		public override XObject getVariableOrParam(XPathContext xctxt, QName qname)
 		{
 			if (qname == null)

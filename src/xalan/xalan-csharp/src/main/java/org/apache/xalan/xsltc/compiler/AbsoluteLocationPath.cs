@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ASTORE = org.apache.bcel.generic.ASTORE;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -84,7 +83,7 @@ namespace org.apache.xalan.xsltc.compiler
 		return "AbsoluteLocationPath(" + (_path != null ? _path.ToString() : "null") + ')';
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -105,15 +104,15 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		if (_path != null)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int initAI = cpg.addMethodref(Constants_Fields.ABSOLUTE_ITERATOR, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + ")V");
-			int initAI = cpg.addMethodref(Constants_Fields.ABSOLUTE_ITERATOR, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + ")V");
+//ORIGINAL LINE: final int initAI = cpg.addMethodref(ABSOLUTE_ITERATOR, "<init>", "(" + NODE_ITERATOR_SIG + ")V");
+			int initAI = cpg.addMethodref(ABSOLUTE_ITERATOR, "<init>", "(" + NODE_ITERATOR_SIG + ")V");
 
 			// Compile relative path iterator(s)
 				//
@@ -126,13 +125,13 @@ namespace org.apache.xalan.xsltc.compiler
 				// a temporary variable, create the object and reload the argument
 				// from the temporary to avoid the problem.
 			_path.translate(classGen, methodGen);
-				LocalVariableGen relPathIterator = methodGen.addLocalVariable("abs_location_path_tmp", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-				relPathIterator.Start = il.append(new ASTORE(relPathIterator.Index));
+				LocalVariableGen relPathIterator = methodGen.addLocalVariable("abs_location_path_tmp", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+				relPathIterator.setStart(il.append(new ASTORE(relPathIterator.getIndex())));
 
 			// Create new AbsoluteIterator
-			il.append(new NEW(cpg.addClass(Constants_Fields.ABSOLUTE_ITERATOR)));
+			il.append(new NEW(cpg.addClass(ABSOLUTE_ITERATOR)));
 			il.append(DUP);
-				relPathIterator.End = il.append(new ALOAD(relPathIterator.Index));
+				relPathIterator.setEnd(il.append(new ALOAD(relPathIterator.getIndex())));
 
 			// Initialize AbsoluteIterator with iterator from the stack
 			il.append(new INVOKESPECIAL(initAI));
@@ -140,8 +139,8 @@ namespace org.apache.xalan.xsltc.compiler
 		else
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int gitr = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getIterator", "()"+Constants_Fields.NODE_ITERATOR_SIG);
-			int gitr = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getIterator", "()" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int gitr = cpg.addInterfaceMethodref(DOM_INTF, "getIterator", "()"+NODE_ITERATOR_SIG);
+			int gitr = cpg.addInterfaceMethodref(DOM_INTF, "getIterator", "()" + NODE_ITERATOR_SIG);
 			il.append(methodGen.loadDOM());
 			il.append(new INVOKEINTERFACE(gitr, 1));
 		}

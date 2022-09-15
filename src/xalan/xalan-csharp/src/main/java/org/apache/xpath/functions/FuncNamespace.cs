@@ -22,8 +22,8 @@
  */
 namespace org.apache.xpath.functions
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XString = org.apache.xpath.objects.XString;
 
@@ -43,7 +43,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -51,15 +51,15 @@ namespace org.apache.xpath.functions
 		int context = getArg0AsNode(xctxt);
 
 		string s;
-		if (context != org.apache.xml.dtm.DTM_Fields.NULL)
+		if (context != DTM.NULL)
 		{
 		  DTM dtm = xctxt.getDTM(context);
 		  int t = dtm.getNodeType(context);
-		  if (t == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE)
+		  if (t == DTM.ELEMENT_NODE)
 		  {
 			s = dtm.getNamespaceURI(context);
 		  }
-		  else if (t == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE)
+		  else if (t == DTM.ATTRIBUTE_NODE)
 		  {
 
 			// This function always returns an empty string for namespace nodes.

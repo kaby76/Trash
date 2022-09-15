@@ -26,6 +26,8 @@ namespace org.apache.xpath.functions
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using StringVector = org.apache.xml.utils.StringVector;
+	using NodeSetDTM = org.apache.xpath.NodeSetDTM;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XNodeSet = org.apache.xpath.objects.XNodeSet;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
@@ -76,7 +78,7 @@ namespace org.apache.xpath.functions
 
 			int node = dtm.getElementById(@ref);
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL != node)
+			if (DTM.NULL != node)
 			{
 			  nodeSet.addNodeInDocOrder(node, xctxt);
 			}
@@ -103,7 +105,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -112,7 +114,7 @@ namespace org.apache.xpath.functions
 		DTM dtm = xctxt.getDTM(context);
 		int docContext = dtm.Document;
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL == docContext)
+		if (DTM.NULL == docContext)
 		{
 		  error(xctxt, XPATHErrorResources.ER_CONTEXT_HAS_NO_OWNERDOC, null);
 		}
@@ -128,13 +130,13 @@ namespace org.apache.xpath.functions
 		  StringVector usedrefs = null;
 		  int pos = ni.nextNode();
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != pos)
+		  while (DTM.NULL != pos)
 		  {
 			DTM ndtm = ni.getDTM(pos);
 			string refval = ndtm.getStringValue(pos).ToString();
 
 			pos = ni.nextNode();
-			usedrefs = getNodesByID(xctxt, docContext, refval, usedrefs, nodeSet, org.apache.xml.dtm.DTM_Fields.NULL != pos);
+			usedrefs = getNodesByID(xctxt, docContext, refval, usedrefs, nodeSet, DTM.NULL != pos);
 		  }
 		  // ni.detach();
 		}

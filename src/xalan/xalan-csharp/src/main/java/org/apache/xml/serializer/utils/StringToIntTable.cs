@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.serializer.utils
 {
-
 	/// <summary>
 	/// A very simple lookup table that stores a list of strings, the even
 	/// number strings being keys, and the odd number strings being values.
@@ -170,7 +169,7 @@ namespace org.apache.xml.serializer.utils
 
 		for (int i = 0; i < m_firstFree; i++)
 		{
-		  if (m_map[i].Equals(key, StringComparison.CurrentCultureIgnoreCase))
+		  if (m_map[i].Equals(key, StringComparison.OrdinalIgnoreCase))
 		  {
 			return m_values[i];
 		  }

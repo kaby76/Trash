@@ -40,14 +40,14 @@ namespace org.apache.xalan.transformer
 		internal ElemTemplateElement m_currentElement = null;
 		internal ElemTemplate m_currentTemplate = null;
 		internal ElemTemplate m_matchedTemplate = null;
-		internal int m_currentNodeHandle = org.apache.xml.dtm.DTM_Fields.NULL;
+		internal int m_currentNodeHandle = DTM.NULL;
 		internal Node m_currentNode = null;
-		internal int m_matchedNode = org.apache.xml.dtm.DTM_Fields.NULL;
+		internal int m_matchedNode = DTM.NULL;
 		internal DTMIterator m_contextNodeList = null;
 		internal bool m_elemPending = false;
 		internal TransformerImpl m_transformer = null;
 
-		/// <seealso cref= org.apache.xml.serializer.TransformStateSetter#setCurrentNode(Node) </seealso>
+		/// <seealso cref="org.apache.xml.serializer.TransformStateSetter.setCurrentNode(Node)"/>
 		public virtual Node CurrentNode
 		{
 			set
@@ -68,7 +68,7 @@ namespace org.apache.xalan.transformer
 			}
 		}
 
-		/// <seealso cref= org.apache.xml.serializer.TransformStateSetter#resetState(Transformer) </seealso>
+		/// <seealso cref="org.apache.xml.serializer.TransformStateSetter.resetState(Transformer)"/>
 		public virtual void resetState(Transformer transformer)
 		{
 			if ((transformer != null) && (transformer is TransformerImpl))
@@ -85,7 +85,7 @@ namespace org.apache.xalan.transformer
 			}
 		}
 
-		/// <seealso cref= org.apache.xalan.transformer.TransformState#getCurrentElement() </seealso>
+		/// <seealso cref="org.apache.xalan.transformer.TransformState.getCurrentElement()"/>
 		public virtual ElemTemplateElement CurrentElement
 		{
 			get
@@ -102,7 +102,7 @@ namespace org.apache.xalan.transformer
 		}
 
 
-		/// <seealso cref= org.apache.xalan.transformer.TransformState#getCurrentTemplate() </seealso>
+		/// <seealso cref="org.apache.xalan.transformer.TransformState.getCurrentTemplate()"/>
 		public virtual ElemTemplate CurrentTemplate
 		{
 			get
@@ -118,7 +118,7 @@ namespace org.apache.xalan.transformer
 			}
 		}
 
-		/// <seealso cref= org.apache.xalan.transformer.TransformState#getMatchedTemplate() </seealso>
+		/// <seealso cref="org.apache.xalan.transformer.TransformState.getMatchedTemplate()"/>
 		public virtual ElemTemplate MatchedTemplate
 		{
 			get
@@ -134,7 +134,7 @@ namespace org.apache.xalan.transformer
 			}
 		}
 
-		/// <seealso cref= org.apache.xalan.transformer.TransformState#getMatchedNode() </seealso>
+		/// <seealso cref="org.apache.xalan.transformer.TransformState.getMatchedNode()"/>
 		public virtual Node MatchedNode
 		{
 			get
@@ -153,7 +153,7 @@ namespace org.apache.xalan.transformer
 			}
 		}
 
-		/// <seealso cref= org.apache.xalan.transformer.TransformState#getContextNodeList() </seealso>
+		/// <seealso cref="org.apache.xalan.transformer.TransformState.getContextNodeList()"/>
 		public virtual NodeIterator ContextNodeList
 		{
 			get
@@ -168,7 +168,7 @@ namespace org.apache.xalan.transformer
 			  }
 			}
 		}
-		/// <seealso cref= org.apache.xalan.transformer.TransformState#getTransformer() </seealso>
+		/// <seealso cref="org.apache.xalan.transformer.TransformState.getTransformer()"/>
 		public virtual Transformer Transformer
 		{
 			get

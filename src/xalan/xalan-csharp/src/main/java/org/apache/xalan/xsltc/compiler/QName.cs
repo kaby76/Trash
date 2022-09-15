@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	/// <summary>
 	/// @author Jacek Ambroziak
 	/// @author Santiago Pericas-Geertsen
@@ -41,14 +40,14 @@ namespace org.apache.xalan.xsltc.compiler
 		_prefix = prefix;
 		_localname = localname;
 
-		_stringRep = (!string.ReferenceEquals(@namespace, null) && !@namespace.Equals(Constants_Fields.EMPTYSTRING)) ? (@namespace + ':' + localname) : localname;
+		_stringRep = (!string.ReferenceEquals(@namespace, null) && !@namespace.Equals(Constants.EMPTYSTRING)) ? (@namespace + ':' + localname) : localname;
 
 		_hashCode = _stringRep.GetHashCode() + 19; // cached for speed
 		}
 
 		public void clearNamespace()
 		{
-		_namespace = Constants_Fields.EMPTYSTRING;
+		_namespace = Constants.EMPTYSTRING;
 		}
 
 		public override string ToString()

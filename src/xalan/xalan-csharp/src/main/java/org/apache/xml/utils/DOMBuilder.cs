@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xml.utils
 {
 
-
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
 	using XMLMessages = org.apache.xml.res.XMLMessages;
 
@@ -70,7 +69,7 @@ namespace org.apache.xml.utils
 
 	  /// <summary>
 	  /// Vector of element nodes </summary>
-	  protected internal Stack m_elemStack = new Stack();
+	  protected internal System.Collections.Stack m_elemStack = new System.Collections.Stack();
 
 	  /// <summary>
 	  /// Namespace support </summary>
@@ -184,7 +183,7 @@ namespace org.apache.xml.utils
 	  /// Append a node to the current container.
 	  /// </summary>
 	  /// <param name="newNode"> New node to append </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void append(org.w3c.dom.Node newNode) throws org.xml.sax.SAXException
 	  protected internal virtual void append(Node newNode)
 	  {
@@ -218,11 +217,11 @@ namespace org.apache.xml.utils
 		else
 		{
 		  bool ok = true;
-		  short type = newNode.NodeType;
+		  short type = newNode.getNodeType();
 
 		  if (type == Node.TEXT_NODE)
 		  {
-			string data = newNode.NodeValue;
+			string data = newNode.getNodeValue();
 
 			if ((null != data) && (data.Trim().Length > 0))
 			{
@@ -233,7 +232,7 @@ namespace org.apache.xml.utils
 		  }
 		  else if (type == Node.ELEMENT_NODE)
 		  {
-			if (m_doc.DocumentElement != null)
+			if (m_doc.getDocumentElement() != null)
 			{
 			  ok = false;
 
@@ -278,7 +277,7 @@ namespace org.apache.xml.utils
 	  /// </summary>
 	  /// <param name="locator"> An object that can return the location of
 	  ///                any SAX document event. </param>
-	  /// <seealso cref= org.xml.sax.Locator </seealso>
+	  /// <seealso cref="org.xml.sax.Locator"/>
 	  public virtual Locator DocumentLocator
 	  {
 		  set
@@ -295,7 +294,7 @@ namespace org.apache.xml.utils
 	  /// other methods in this interface or in DTDHandler (except for
 	  /// setDocumentLocator).</para>
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocument() throws org.xml.sax.SAXException
 	  public virtual void startDocument()
 	  {
@@ -312,7 +311,7 @@ namespace org.apache.xml.utils
 	  /// (because of an unrecoverable error) or reached the end of
 	  /// input.</para>
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 	  public virtual void endDocument()
 	  {
@@ -340,9 +339,9 @@ namespace org.apache.xml.utils
 	  /// <param name="localName"> The local part of the qualified name </param>
 	  /// <param name="name"> The element name. </param>
 	  /// <param name="atts"> The attributes attached to the element, if any. </param>
-	  /// <seealso cref= #endElement </seealso>
-	  /// <seealso cref= org.xml.sax.Attributes </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endElement"/>
+	  /// <seealso cref="org.xml.sax.Attributes"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String ns, String localName, String name, org.xml.sax.Attributes atts) throws org.xml.sax.SAXException
 	  public virtual void startElement(string ns, string localName, string name, Attributes atts)
 	  {
@@ -364,7 +363,7 @@ namespace org.apache.xml.utils
 
 		try
 		{
-		  int nAtts = atts.Length;
+		  int nAtts = atts.getLength();
 
 		  if (0 != nAtts)
 		  {
@@ -459,7 +458,7 @@ namespace org.apache.xml.utils
 	  /// <param name="ns"> the namespace of the element </param>
 	  /// <param name="localName"> The local part of the qualified name of the element </param>
 	  /// <param name="name"> The element name </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String ns, String localName, String name) throws org.xml.sax.SAXException
 	  public virtual void endElement(string ns, string localName, string name)
 	  {
@@ -498,9 +497,9 @@ namespace org.apache.xml.utils
 	  /// <param name="ch"> The characters from the XML document. </param>
 	  /// <param name="start"> The start position in the array. </param>
 	  /// <param name="length"> The number of characters to read from the array. </param>
-	  /// <seealso cref= #ignorableWhitespace </seealso>
-	  /// <seealso cref= org.xml.sax.Locator </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".ignorableWhitespace"/>
+	  /// <seealso cref="org.xml.sax.Locator"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public virtual void characters(char[] ch, int start, int length)
 	  {
@@ -518,8 +517,8 @@ namespace org.apache.xml.utils
 
 		string s = new string(ch, start, length);
 		Node childNode;
-		childNode = m_currentNode != null ? m_currentNode.LastChild: null;
-		if (childNode != null && childNode.NodeType == Node.TEXT_NODE)
+		childNode = m_currentNode != null ? m_currentNode.getLastChild(): null;
+		if (childNode != null && childNode.getNodeType() == Node.TEXT_NODE)
 		{
 		   ((Text)childNode).appendData(s);
 		}
@@ -539,7 +538,7 @@ namespace org.apache.xml.utils
 	  /// <param name="ch"> Array containing the characters </param>
 	  /// <param name="start"> Index to start of characters in the array </param>
 	  /// <param name="length"> Number of characters in the array </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void charactersRaw(char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public virtual void charactersRaw(char[] ch, int start, int length)
 	  {
@@ -565,10 +564,10 @@ namespace org.apache.xml.utils
 	  /// </summary>
 	  /// <param name="name"> The name of the entity.  If it is a parameter
 	  ///        entity, the name will begin with '%'. </param>
-	  /// <seealso cref= #endEntity </seealso>
-	  /// <seealso cref= org.xml.sax.ext.DeclHandler#internalEntityDecl </seealso>
-	  /// <seealso cref= org.xml.sax.ext.DeclHandler#externalEntityDecl </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endEntity"/>
+	  /// <seealso cref="org.xml.sax.ext.DeclHandler.internalEntityDecl"/>
+	  /// <seealso cref="org.xml.sax.ext.DeclHandler.externalEntityDecl"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startEntity(String name) throws org.xml.sax.SAXException
 	  public virtual void startEntity(string name)
 	  {
@@ -581,8 +580,8 @@ namespace org.apache.xml.utils
 	  /// Report the end of an entity.
 	  /// </summary>
 	  /// <param name="name"> The name of the entity that is ending. </param>
-	  /// <seealso cref= #startEntity </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".startEntity"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endEntity(String name) throws org.xml.sax.SAXException
 	  public virtual void endEntity(string name)
 	  {
@@ -592,7 +591,7 @@ namespace org.apache.xml.utils
 	  /// Receive notivication of a entityReference.
 	  /// </summary>
 	  /// <param name="name"> name of the entity reference </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void entityReference(String name) throws org.xml.sax.SAXException
 	  public virtual void entityReference(string name)
 	  {
@@ -619,8 +618,8 @@ namespace org.apache.xml.utils
 	  /// <param name="ch"> The characters from the XML document. </param>
 	  /// <param name="start"> The start position in the array. </param>
 	  /// <param name="length"> The number of characters to read from the array. </param>
-	  /// <seealso cref= #characters </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".characters"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void ignorableWhitespace(char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public virtual void ignorableWhitespace(char[] ch, int start, int length)
 	  {
@@ -642,7 +641,7 @@ namespace org.apache.xml.utils
 	   {
 		   get
 		   {
-			  return (null == m_docFrag) && m_elemStack.Count == 0 && (null == m_currentNode || m_currentNode.NodeType == Node.DOCUMENT_NODE);
+			  return (null == m_docFrag) && m_elemStack.Count == 0 && (null == m_currentNode || m_currentNode.getNodeType() == Node.DOCUMENT_NODE);
 		   }
 	   }
 
@@ -660,7 +659,7 @@ namespace org.apache.xml.utils
 	  /// <param name="target"> The processing instruction target. </param>
 	  /// <param name="data"> The processing instruction data, or null if
 	  ///        none was supplied. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws org.xml.sax.SAXException
 	  public virtual void processingInstruction(string target, string data)
 	  {
@@ -677,7 +676,7 @@ namespace org.apache.xml.utils
 	  /// <param name="ch"> An array holding the characters in the comment. </param>
 	  /// <param name="start"> The starting position in the array. </param>
 	  /// <param name="length"> The number of characters to use from the array. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public virtual void comment(char[] ch, int start, int length)
 	  {
@@ -691,8 +690,8 @@ namespace org.apache.xml.utils
 	  /// <summary>
 	  /// Report the start of a CDATA section.
 	  /// </summary>
-	  /// <seealso cref= #endCDATA </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endCDATA"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startCDATA() throws org.xml.sax.SAXException
 	  public virtual void startCDATA()
 	  {
@@ -703,8 +702,8 @@ namespace org.apache.xml.utils
 	  /// <summary>
 	  /// Report the end of a CDATA section.
 	  /// </summary>
-	  /// <seealso cref= #startCDATA </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".startCDATA"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCDATA() throws org.xml.sax.SAXException
 	  public virtual void endCDATA()
 	  {
@@ -731,9 +730,9 @@ namespace org.apache.xml.utils
 	  /// <param name="ch"> The characters from the XML document. </param>
 	  /// <param name="start"> The start position in the array. </param>
 	  /// <param name="length"> The number of characters to read from the array. </param>
-	  /// <seealso cref= #ignorableWhitespace </seealso>
-	  /// <seealso cref= org.xml.sax.Locator </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".ignorableWhitespace"/>
+	  /// <seealso cref="org.xml.sax.Locator"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void cdata(char ch[], int start, int length) throws org.xml.sax.SAXException
 	  public virtual void cdata(char[] ch, int start, int length)
 	  {
@@ -744,7 +743,7 @@ namespace org.apache.xml.utils
 
 		string s = new string(ch, start, length);
 
-		CDATASection section = (CDATASection) m_currentNode.LastChild;
+		CDATASection section = (CDATASection) m_currentNode.getLastChild();
 		section.appendData(s);
 	  }
 
@@ -759,9 +758,9 @@ namespace org.apache.xml.utils
 	  ///        external DTD subset, or null if none was declared. </param>
 	  /// <param name="systemId"> The declared system identifier for the
 	  ///        external DTD subset, or null if none was declared. </param>
-	  /// <seealso cref= #endDTD </seealso>
-	  /// <seealso cref= #startEntity </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endDTD"/>
+	  /// <seealso cref=".startEntity"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDTD(String name, String publicId, String systemId) throws org.xml.sax.SAXException
 	  public virtual void startDTD(string name, string publicId, string systemId)
 	  {
@@ -772,8 +771,8 @@ namespace org.apache.xml.utils
 	  /// <summary>
 	  /// Report the end of DTD declarations.
 	  /// </summary>
-	  /// <seealso cref= #startDTD </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".startDTD"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDTD() throws org.xml.sax.SAXException
 	  public virtual void endDTD()
 	  {
@@ -806,9 +805,9 @@ namespace org.apache.xml.utils
 	  /// </summary>
 	  /// <param name="prefix"> The Namespace prefix being declared. </param>
 	  /// <param name="uri"> The Namespace URI the prefix is mapped to. </param>
-	  /// <seealso cref= #endPrefixMapping </seealso>
-	  /// <seealso cref= #startElement </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".endPrefixMapping"/>
+	  /// <seealso cref=".startElement"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startPrefixMapping(String prefix, String uri) throws org.xml.sax.SAXException
 	  public virtual void startPrefixMapping(string prefix, string uri)
 	  {
@@ -833,9 +832,9 @@ namespace org.apache.xml.utils
 	  /// guaranteed.</para>
 	  /// </summary>
 	  /// <param name="prefix"> The prefix that was being mapping. </param>
-	  /// <seealso cref= #startPrefixMapping </seealso>
-	  /// <seealso cref= #endElement </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref=".startPrefixMapping"/>
+	  /// <seealso cref=".endElement"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endPrefixMapping(String prefix) throws org.xml.sax.SAXException
 	  public virtual void endPrefixMapping(string prefix)
 	  {
@@ -855,7 +854,7 @@ namespace org.apache.xml.utils
 	  /// </summary>
 	  /// <param name="name"> The name of the skipped entity.  If it is a
 	  ///        parameter entity, the name will begin with '%'. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void skippedEntity(String name) throws org.xml.sax.SAXException
 	  public virtual void skippedEntity(string name)
 	  {

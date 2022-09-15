@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 /*
@@ -24,7 +25,6 @@ using System.Text;
 
 namespace org.apache.xml.dtm.@ref
 {
-
 
 
 	/// <summary>
@@ -99,7 +99,7 @@ namespace org.apache.xml.dtm.@ref
 		///                              is found.  Use null to mean no fallback.
 		/// </param>
 		/// <exception cref="ObjectFactory.ConfigurationError"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Object createObject(String factoryId, String fallbackClassName) throws ConfigurationError
 		internal static object createObject(string factoryId, string fallbackClassName)
 		{
@@ -127,7 +127,7 @@ namespace org.apache.xml.dtm.@ref
 		///                              is found.  Use null to mean no fallback.
 		/// </param>
 		/// <exception cref="ObjectFactory.ConfigurationError"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Object createObject(String factoryId, String propertiesFilename, String fallbackClassName) throws ConfigurationError
 		internal static object createObject(string factoryId, string propertiesFilename, string fallbackClassName)
 		{
@@ -140,7 +140,7 @@ namespace org.apache.xml.dtm.@ref
 
 			try
 			{
-				object instance = factoryClass.newInstance();
+				object instance = System.Activator.CreateInstance(factoryClass);
 				debugPrintln("created new instance of factory " + factoryId);
 				return instance;
 			}
@@ -171,7 +171,7 @@ namespace org.apache.xml.dtm.@ref
 		///                              is found.  Use null to mean no fallback.
 		/// </param>
 		/// <exception cref="ObjectFactory.ConfigurationError"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Class lookUpFactoryClass(String factoryId) throws ConfigurationError
 		internal static Type lookUpFactoryClass(string factoryId)
 		{
@@ -199,7 +199,7 @@ namespace org.apache.xml.dtm.@ref
 		///                              is found.  Use null to mean no fallback.
 		/// </param>
 		/// <exception cref="ObjectFactory.ConfigurationError"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Class lookUpFactoryClass(String factoryId, String propertiesFilename, String fallbackClassName) throws ConfigurationError
 		internal static Type lookUpFactoryClass(string factoryId, string propertiesFilename, string fallbackClassName)
 		{
@@ -292,7 +292,7 @@ namespace org.apache.xml.dtm.@ref
 				lock (typeof(ObjectFactory))
 				{
 					bool loadProperties = false;
-					System.IO.FileStream fis = null;
+					FileStream fis = null;
 					try
 					{
 						// file existed last time
@@ -361,7 +361,7 @@ namespace org.apache.xml.dtm.@ref
 			}
 			else
 			{
-				System.IO.FileStream fis = null;
+				FileStream fis = null;
 				try
 				{
 					fis = SecuritySupport.getFileInputStream(new File(propertiesFilename));
@@ -419,7 +419,7 @@ namespace org.apache.xml.dtm.@ref
 		/// Figure out which ClassLoader to use.  For JDK 1.2 and later use
 		/// the context ClassLoader.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static ClassLoader findClassLoader() throws ConfigurationError
 		internal static ClassLoader findClassLoader()
 		{
@@ -441,7 +441,7 @@ namespace org.apache.xml.dtm.@ref
 					// ClassLoader otherwise); normal classloaders delegate
 					// back to system ClassLoader first so this widening doesn't
 					// change the fact that context ClassLoader will be consulted
-					ClassLoader current = typeof(ObjectFactory).ClassLoader;
+					ClassLoader current = typeof(ObjectFactory).getClassLoader();
 
 					chain = system;
 					while (true)
@@ -483,7 +483,7 @@ namespace org.apache.xml.dtm.@ref
 		/// <summary>
 		/// Create an instance of a class using the specified ClassLoader
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Object newInstance(String className, ClassLoader cl, boolean doFallback) throws ConfigurationError
 		internal static object newInstance(string className, ClassLoader cl, bool doFallback)
 		{
@@ -491,7 +491,7 @@ namespace org.apache.xml.dtm.@ref
 			try
 			{
 				Type providerClass = findProviderClass(className, cl, doFallback);
-				object instance = providerClass.newInstance();
+				object instance = System.Activator.CreateInstance(providerClass);
 				debugPrintln("created new instance of " + providerClass + " using ClassLoader: " + cl);
 				return instance;
 			}
@@ -508,13 +508,13 @@ namespace org.apache.xml.dtm.@ref
 		/// <summary>
 		/// Find a Class using the specified ClassLoader
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Class findProviderClass(String className, ClassLoader cl, boolean doFallback) throws ClassNotFoundException, ConfigurationError
 		internal static Type findProviderClass(string className, ClassLoader cl, bool doFallback)
 		{
 			//throw security exception if the calling thread is not allowed to access the
 			//class. Restrict the access to the package classes as specified in java.security policy.
-			SecurityManager security = System.SecurityManager;
+			SecurityManager security = System.getSecurityManager();
 			try
 			{
 					if (security != null)
@@ -560,7 +560,7 @@ namespace org.apache.xml.dtm.@ref
 					if (doFallback)
 					{
 						// Fall back to current classloader
-						ClassLoader current = typeof(ObjectFactory).ClassLoader;
+						ClassLoader current = typeof(ObjectFactory).getClassLoader();
 						if (current == null)
 						{
 							providerClass = Type.GetType(className);
@@ -592,7 +592,7 @@ namespace org.apache.xml.dtm.@ref
 		private static string findJarServiceProviderName(string factoryId)
 		{
 			string serviceId = SERVICES_PATH + factoryId;
-			System.IO.Stream @is = null;
+			Stream @is = null;
 
 			// First try the Context ClassLoader
 			ClassLoader cl = findClassLoader();
@@ -602,7 +602,7 @@ namespace org.apache.xml.dtm.@ref
 			// If no provider found then try the current ClassLoader
 			if (@is == null)
 			{
-				ClassLoader current = typeof(ObjectFactory).ClassLoader;
+				ClassLoader current = typeof(ObjectFactory).getClassLoader();
 				if (cl != current)
 				{
 					cl = current;
@@ -634,14 +634,14 @@ namespace org.apache.xml.dtm.@ref
 			// enough to keep us on the air until we're ready to
 			// officially decommit from VJ++. [Edited comment from
 			// jkesselm]
-			System.IO.StreamReader rd;
+			StreamReader rd;
 			try
 			{
-				rd = new System.IO.StreamReader(@is, Encoding.UTF8);
+				rd = new StreamReader(@is, Encoding.UTF8);
 			}
 			catch (java.io.UnsupportedEncodingException)
 			{
-				rd = new System.IO.StreamReader(@is);
+				rd = new StreamReader(@is);
 			}
 
 			string factoryClassName = null;

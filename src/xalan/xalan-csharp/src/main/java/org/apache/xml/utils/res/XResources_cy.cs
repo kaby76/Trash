@@ -21,7 +21,6 @@
 namespace org.apache.xml.utils.res
 {
 
-
 	/// <summary>
 	/// The Cyrillic resource bundle.
 	/// @xsl.usage internal
@@ -42,18 +41,18 @@ namespace org.apache.xml.utils.res
 				new object[] {"ui_language", "cy"},
 				new object[] {"help_language", "cy"},
 				new object[] {"language", "cy"},
-				new object[] {"alphabet", new CharArrayWrapper(new char[]{0x0430, 0x0432, 0x0433, 0x0434, 0x0435, 0x0437, 0x0438, 0x0439, 0x04A9, 0x0457, 0x043A, 0x043B, 0x043C, 0x043D, 0x046F, 0x043E, 0x043F, 0x0447, 0x0440, 0x0441, 0x0442, 0x0443, 0x0444, 0x0445, 0x0470, 0x0460, 0x0446})},
+				new object[] {"alphabet", new CharArrayWrapper(new char[]{(char)0x0430, (char)0x0432, (char)0x0433, (char)0x0434, (char)0x0435, (char)0x0437, (char)0x0438, (char)0x0439, (char)0x04A9, (char)0x0457, (char)0x043A, (char)0x043B, (char)0x043C, (char)0x043D, (char)0x046F, (char)0x043E, (char)0x043F, (char)0x0447, (char)0x0440, (char)0x0441, (char)0x0442, (char)0x0443, (char)0x0444, (char)0x0445, (char)0x0470, (char)0x0460, (char)0x0446})},
 				new object[] {"tradAlphabet", new CharArrayWrapper(new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'})},
 				new object[] {"orientation", "LeftToRight"},
 				new object[] {"numbering", "multiplicative-additive"},
 				new object[] {"multiplierOrder", "precedes"},
 				new object[] {"numberGroups", new IntArrayWrapper(new int[]{100, 10, 1})},
 				new object[] {"multiplier", new LongArrayWrapper(new long[]{1000})},
-				new object[] {"multiplierChar", new CharArrayWrapper(new char[]{0x03D9})},
+				new object[] {"multiplierChar", new CharArrayWrapper(new char[]{(char)0x03D9})},
 				new object[] {"zero", new CharArrayWrapper(new char[0])},
-				new object[] {"digits", new CharArrayWrapper(new char[]{0x0430, 0x0432, 0x0433, 0x0434, 0x0435, 0x0437, 0x0438, 0x0439, 0x04A9})},
-				new object[] {"tens", new CharArrayWrapper(new char[]{0x0457, 0x043A, 0x043B, 0x043C, 0x043D, 0x046F, 0x043E, 0x043F, 0x0447})},
-				new object[] {"hundreds", new CharArrayWrapper(new char[]{0x0440, 0x0441, 0x0442, 0x0443, 0x0444, 0x0445, 0x0470, 0x0460, 0x0446})},
+				new object[] {"digits", new CharArrayWrapper(new char[]{(char)0x0430, (char)0x0432, (char)0x0433, (char)0x0434, (char)0x0435, (char)0x0437, (char)0x0438, (char)0x0439, (char)0x04A9})},
+				new object[] {"tens", new CharArrayWrapper(new char[]{(char)0x0457, (char)0x043A, (char)0x043B, (char)0x043C, (char)0x043D, (char)0x046F, (char)0x043E, (char)0x043F, (char)0x0447})},
+				new object[] {"hundreds", new CharArrayWrapper(new char[]{(char)0x0440, (char)0x0441, (char)0x0442, (char)0x0443, (char)0x0444, (char)0x0445, (char)0x0470, (char)0x0460, (char)0x0446})},
 				new object[] {"tables", new StringArrayWrapper(new string[]{"hundreds", "tens", "digits"})}
 			};
 		  }

@@ -21,7 +21,6 @@
 
 namespace org.apache.xpath.jaxp
 {
-
 	using Node = org.w3c.dom.Node;
 	using NamedNodeMap = org.w3c.dom.NamedNodeMap;
 	using PrefixResolver = org.apache.xml.utils.PrefixResolver;
@@ -62,7 +61,7 @@ namespace org.apache.xpath.jaxp
 			}
 		}
 
-		/// <seealso cref= PrefixResolver#handlesNullPrefixes()  </seealso>
+		/// <seealso cref="PrefixResolver.handlesNullPrefixes() "/>
 		public virtual bool handlesNullPrefixes()
 		{
 			return false;
@@ -99,17 +98,17 @@ namespace org.apache.xpath.jaxp
 			{
 				int type;
 
-				while ((null != parent) && (null == @namespace) && (((type = parent.NodeType) == Node.ELEMENT_NODE) || (type == Node.ENTITY_REFERENCE_NODE)))
+				while ((null != parent) && (null == @namespace) && (((type = parent.getNodeType()) == Node.ELEMENT_NODE) || (type == Node.ENTITY_REFERENCE_NODE)))
 				{
 
 					if (type == Node.ELEMENT_NODE)
 					{
-						NamedNodeMap nnm = parent.Attributes;
+						NamedNodeMap nnm = parent.getAttributes();
 
-						for (int i = 0; i < nnm.Length; i++)
+						for (int i = 0; i < nnm.getLength(); i++)
 						{
 							Node attr = nnm.item(i);
-							string aname = attr.NodeName;
+							string aname = attr.getNodeName();
 							bool isPrefix = aname.StartsWith("xmlns:", StringComparison.Ordinal);
 
 							if (isPrefix || aname.Equals("xmlns"))
@@ -119,14 +118,14 @@ namespace org.apache.xpath.jaxp
 
 								if (p.Equals(prefix))
 								{
-									@namespace = attr.NodeValue;
+									@namespace = attr.getNodeValue();
 									break;
 								}
 							}
 						}
 					}
 
-					parent = parent.ParentNode;
+					parent = parent.getParentNode();
 				}
 			}
 			return @namespace;

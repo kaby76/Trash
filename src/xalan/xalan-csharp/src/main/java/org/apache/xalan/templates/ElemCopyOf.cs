@@ -41,8 +41,8 @@ namespace org.apache.xalan.templates
 	/// <!ELEMENT xsl:copy-of EMPTY>
 	/// <!ATTLIST xsl:copy-of select %expr; #REQUIRED>
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#copy-of">copy-of in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.copy-of">copy-of in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemCopyOf : ElemTemplateElement
 	{
@@ -78,20 +78,20 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
 		base.compose(sroot);
 
-		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		StylesheetRoot.ComposeState cstate = sroot.ComposeState;
 		m_selectExpression.fixupVariables(cstate.VariableNames, cstate.GlobalsSize);
 	  }
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for this element </returns>
 	  public override int XSLToken
 	  {
@@ -122,7 +122,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -167,21 +167,21 @@ namespace org.apache.xalan.templates
 			  DTMTreeWalker tw = new TreeWalker2Result(transformer, handler);
 			  int pos;
 
-			  while (org.apache.xml.dtm.DTM_Fields.NULL != (pos = nl.nextNode()))
+			  while (DTM.NULL != (pos = nl.nextNode()))
 			  {
 				DTM dtm = xctxt.DTMManager.getDTM(pos);
 				short t = dtm.getNodeType(pos);
 
 				// If we just copy the whole document, a startDoc and endDoc get 
 				// generated, so we need to only walk the child nodes.
-				if (t == org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE)
+				if (t == DTM.DOCUMENT_NODE)
 				{
-				  for (int child = dtm.getFirstChild(pos); child != org.apache.xml.dtm.DTM_Fields.NULL; child = dtm.getNextSibling(child))
+				  for (int child = dtm.getFirstChild(pos); child != DTM.NULL; child = dtm.getNextSibling(child))
 				  {
 					tw.traverse(child);
 				  }
 				}
-				else if (t == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE)
+				else if (t == DTM.ATTRIBUTE_NODE)
 				{
 				  SerializerUtils.addAttribute(handler, pos);
 				}

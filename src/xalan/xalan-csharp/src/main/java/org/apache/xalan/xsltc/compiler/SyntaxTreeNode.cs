@@ -25,7 +25,6 @@ using System.Collections;
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using ANEWARRAY = org.apache.bcel.generic.ANEWARRAY;
 	using BasicType = org.apache.bcel.generic.BasicType;
 	using CHECKCAST = org.apache.bcel.generic.CHECKCAST;
@@ -40,6 +39,7 @@ namespace org.apache.xalan.xsltc.compiler
 	using NEW = org.apache.bcel.generic.NEW;
 	using NEWARRAY = org.apache.bcel.generic.NEWARRAY;
 	using PUSH = org.apache.bcel.generic.PUSH;
+	using DOM = org.apache.xalan.xsltc.DOM;
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
 	using MethodGenerator = org.apache.xalan.xsltc.compiler.util.MethodGenerator;
@@ -83,8 +83,7 @@ namespace org.apache.xalan.xsltc.compiler
 		private int _nodeIDForStylesheetNSLookup = UNKNOWN_STYLESHEET_NODE_ID;
 
 		// Sentinel - used to denote unrecognised syntaxt tree nodes.
-//JAVA TO C# CONVERTER NOTE: Fields cannot have the same name as methods:
-		internal static readonly SyntaxTreeNode Dummy_Renamed = new AbsolutePathPattern(null);
+		internal static readonly SyntaxTreeNode Dummy = new AbsolutePathPattern(null);
 
 		// These two are used for indenting nodes in the AST (debug output)
 		protected internal const int IndentIncrement = 4;
@@ -144,16 +143,9 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Set the QName for the syntax tree node. </summary>
 		/// <param name="qname"> The QName for the syntax tree node </param>
-		protected internal virtual QName QName
+		protected internal virtual void setQName(QName qname)
 		{
-			set
-			{
-			_qname = value;
-			}
-			get
-			{
-			return (_qname);
-			}
+		_qname = qname;
 		}
 
 		/// <summary>
@@ -166,14 +158,31 @@ namespace org.apache.xalan.xsltc.compiler
 		_qname = new QName(uri, prefix, localname);
 		}
 
+		/// <summary>
+		/// Set the QName for the SyntaxTreeNode </summary>
+		/// <param name="qname"> The QName for the syntax tree node </param>
+		protected internal virtual QName QName
+		{
+			get
+			{
+			return (_qname);
+			}
+		}
 
 		/// <summary>
 		/// Set the attributes for this SyntaxTreeNode. </summary>
 		/// <param name="attributes"> Attributes for the element. Must be passed in as an
 		///                   implementation of org.xml.sax.Attributes. </param>
-		protected internal virtual void setAttributes(AttributeList attributes)
+		protected internal virtual AttributeList Attributes
 		{
-		_attributes = attributes;
+			set
+			{
+			_attributes = value;
+			}
+			get
+			{
+			return (_attributes);
+			}
 		}
 
 		/// <summary>
@@ -184,12 +193,12 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 		if (_attributes == null)
 		{
-			return Constants_Fields.EMPTYSTRING;
+			return EMPTYSTRING;
 		}
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String value = _attributes.getValue(qname);
 		string value = _attributes.getValue(qname);
-		return (string.ReferenceEquals(value, null) || value.Equals(Constants_Fields.EMPTYSTRING)) ? Constants_Fields.EMPTYSTRING : value;
+		return (string.ReferenceEquals(value, null) || value.Equals(EMPTYSTRING)) ? EMPTYSTRING : value;
 		}
 
 		protected internal virtual string getAttribute(string prefix, string localName)
@@ -207,14 +216,6 @@ namespace org.apache.xalan.xsltc.compiler
 			_attributes.add(qname, value);
 		}
 
-		/// <summary>
-		/// Returns a list of all attributes declared for the element represented by
-		/// this syntax tree node. </summary>
-		/// <returns> Attributes for this syntax tree node </returns>
-		protected internal virtual Attributes getAttributes()
-		{
-		return (_attributes);
-		}
 
 		/// <summary>
 		/// Sets the prefix mapping for the namespaces that were declared in this
@@ -270,9 +271,9 @@ namespace org.apache.xalan.xsltc.compiler
 		if ((string.ReferenceEquals(uri, null)) && (_parent != null))
 		{
 			uri = _parent.lookupNamespace(prefix);
-			if ((string.ReferenceEquals(prefix, Constants_Fields.EMPTYSTRING)) && (string.ReferenceEquals(uri, null)))
+			if ((string.ReferenceEquals(prefix, Constants.EMPTYSTRING)) && (string.ReferenceEquals(uri, null)))
 			{
-			uri = Constants_Fields.EMPTYSTRING;
+			uri = Constants.EMPTYSTRING;
 			}
 		}
 		// ... and then we return whatever URI we've got.
@@ -294,7 +295,7 @@ namespace org.apache.xalan.xsltc.compiler
 		string prefix = null;
 
 		// First look up the prefix/uri mapping in our own hashtable...
-		if ((_prefixMapping != null) && (_prefixMapping.Contains(uri)))
+		if ((_prefixMapping != null) && (_prefixMapping.ContainsValue(uri)))
 		{
 			System.Collections.IEnumerator prefixes = _prefixMapping.Keys.GetEnumerator();
 			while (prefixes.MoveNext())
@@ -311,9 +312,9 @@ namespace org.apache.xalan.xsltc.compiler
 		else if (_parent != null)
 		{
 			prefix = _parent.lookupPrefix(uri);
-			if ((string.ReferenceEquals(uri, Constants_Fields.EMPTYSTRING)) && (string.ReferenceEquals(prefix, null)))
+			if ((string.ReferenceEquals(uri, Constants.EMPTYSTRING)) && (string.ReferenceEquals(prefix, null)))
 			{
-			prefix = Constants_Fields.EMPTYSTRING;
+			prefix = Constants.EMPTYSTRING;
 			}
 		}
 		return (prefix);
@@ -362,7 +363,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			get
 			{
-				return this == Dummy_Renamed;
+				return this == Dummy;
 			}
 		}
 
@@ -519,9 +520,9 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final Variable var = (Variable)node;
-			Variable @var = (Variable)node;
-			parser.addVariable(@var);
-			return @var.Name;
+			Variable var = (Variable)node;
+			parser.addVariable(var);
+			return var.Name;
 		}
 		else if (node is Param)
 		{
@@ -541,14 +542,14 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Type check the children of this node. The type check phase may add
 		/// coercions (CastExpr) to the AST. </summary>
 		/// <param name="stable"> The compiler/parser's symbol table </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public abstract org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError;
 		public abstract Type typeCheck(SymbolTable stable);
 
 		/// <summary>
 		/// Call typeCheck() on all child syntax tree nodes. </summary>
 		/// <param name="stable"> The compiler/parser's symbol table </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xalan.xsltc.compiler.util.Type typeCheckContents(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		protected internal virtual Type typeCheckContents(SymbolTable stable)
 		{
@@ -601,8 +602,8 @@ namespace org.apache.xalan.xsltc.compiler
 				{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final VariableBase var = (VariableBase)_contents.elementAt(i);
-					VariableBase @var = (VariableBase)_contents[i];
-					@var.unmapRegister(methodGen);
+					VariableBase var = (VariableBase)_contents[i];
+					var.unmapRegister(methodGen);
 				}
 			}
 		}
@@ -714,10 +715,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final Stylesheet stylesheet = classGen.getStylesheet();
 		Stylesheet stylesheet = classGen.Stylesheet;
@@ -729,7 +730,7 @@ namespace org.apache.xalan.xsltc.compiler
 			isAdaptive = isAdaptiveRTF(this);
 		}
 
-		int rtfType = isSimple ? org.apache.xalan.xsltc.DOM_Fields.SIMPLE_RTF : (isAdaptive ? org.apache.xalan.xsltc.DOM_Fields.ADAPTIVE_RTF : org.apache.xalan.xsltc.DOM_Fields.TREE_RTF);
+		int rtfType = isSimple ? DOM.SIMPLE_RTF : (isAdaptive ? DOM.ADAPTIVE_RTF : DOM.TREE_RTF);
 
 		// Save the current handler base on the stack
 		il.append(methodGen.loadHandler());
@@ -743,8 +744,8 @@ namespace org.apache.xalan.xsltc.compiler
 		//il.append(new NEW(cpg.addClass(DOM_IMPL)));
 
 		il.append(methodGen.loadDOM());
-		int index = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getResultTreeFrag", "(IIZ)" + Constants_Fields.DOM_INTF_SIG);
-		il.append(new PUSH(cpg, Constants_Fields.RTF_INITIAL_SIZE));
+		int index = cpg.addInterfaceMethodref(DOM_INTF, "getResultTreeFrag", "(IIZ)" + DOM_INTF_SIG);
+		il.append(new PUSH(cpg, RTF_INITIAL_SIZE));
 		il.append(new PUSH(cpg, rtfType));
 		il.append(new PUSH(cpg, stylesheet.callsNodeset()));
 		il.append(new INVOKEINTERFACE(index,4));
@@ -752,7 +753,7 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(DUP);
 
 		// Overwrite old handler with DOM handler
-		index = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getOutputDomBuilder", "()" + Constants_Fields.TRANSLET_OUTPUT_SIG);
+		index = cpg.addInterfaceMethodref(DOM_INTF, "getOutputDomBuilder", "()" + TRANSLET_OUTPUT_SIG);
 
 		il.append(new INVOKEINTERFACE(index,1));
 		il.append(DUP);
@@ -771,11 +772,11 @@ namespace org.apache.xalan.xsltc.compiler
 		// Check if we need to wrap the DOMImpl object in a DOMAdapter object.
 		// DOMAdapter is not needed if the RTF is a simple RTF and the nodeset()
 		// function is not used.
-		if (stylesheet.callsNodeset() && !DOM_CLASS.Equals(Constants_Fields.DOM_IMPL_CLASS))
+		if (stylesheet.callsNodeset() && !DOM_CLASS.Equals(DOM_IMPL_CLASS))
 		{
 			// new org.apache.xalan.xsltc.dom.DOMAdapter(DOMImpl,String[]);
-			index = cpg.addMethodref(Constants_Fields.DOM_ADAPTER_CLASS, "<init>", "(" + Constants_Fields.DOM_INTF_SIG + "[" + Constants_Fields.STRING_SIG + "[" + Constants_Fields.STRING_SIG + "[I" + "[" + Constants_Fields.STRING_SIG + ")V");
-			il.append(new NEW(cpg.addClass(Constants_Fields.DOM_ADAPTER_CLASS)));
+			index = cpg.addMethodref(DOM_ADAPTER_CLASS, "<init>", "(" + DOM_INTF_SIG + "[" + STRING_SIG + "[" + STRING_SIG + "[I" + "[" + STRING_SIG + ")V");
+			il.append(new NEW(cpg.addClass(DOM_ADAPTER_CLASS)));
 			il.append(new DUP_X1());
 			il.append(SWAP);
 
@@ -786,7 +787,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (!stylesheet.callsNodeset())
 			{
 			il.append(new ICONST(0));
-			il.append(new ANEWARRAY(cpg.addClass(Constants_Fields.STRING)));
+			il.append(new ANEWARRAY(cpg.addClass(STRING)));
 			il.append(DUP);
 			il.append(DUP);
 			il.append(new ICONST(0));
@@ -798,13 +799,13 @@ namespace org.apache.xalan.xsltc.compiler
 			{
 			// Push name arrays on the stack
 			il.append(ALOAD_0);
-			il.append(new GETFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.NAMES_INDEX, Constants_Fields.NAMES_INDEX_SIG)));
+			il.append(new GETFIELD(cpg.addFieldref(TRANSLET_CLASS, NAMES_INDEX, NAMES_INDEX_SIG)));
 			il.append(ALOAD_0);
-			il.append(new GETFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.URIS_INDEX, Constants_Fields.URIS_INDEX_SIG)));
+			il.append(new GETFIELD(cpg.addFieldref(TRANSLET_CLASS, URIS_INDEX, URIS_INDEX_SIG)));
 			il.append(ALOAD_0);
-			il.append(new GETFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.TYPES_INDEX, Constants_Fields.TYPES_INDEX_SIG)));
+			il.append(new GETFIELD(cpg.addFieldref(TRANSLET_CLASS, TYPES_INDEX, TYPES_INDEX_SIG)));
 			il.append(ALOAD_0);
-			il.append(new GETFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.NAMESPACE_INDEX, Constants_Fields.NAMESPACE_INDEX_SIG)));
+			il.append(new GETFIELD(cpg.addFieldref(TRANSLET_CLASS, NAMESPACE_INDEX, NAMESPACE_INDEX_SIG)));
 
 			// Initialized DOM adapter
 			il.append(new INVOKESPECIAL(index));
@@ -814,7 +815,7 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(methodGen.loadDOM());
 			il.append(new CHECKCAST(cpg.addClass(classGen.DOMClass)));
 			il.append(SWAP);
-			index = cpg.addMethodref(Constants_Fields.MULTI_DOM_CLASS, "addDOMAdapter", "(" + Constants_Fields.DOM_ADAPTER_SIG + ")I");
+			index = cpg.addMethodref(MULTI_DOM_CLASS, "addDOMAdapter", "(" + DOM_ADAPTER_SIG + ")I");
 			il.append(new INVOKEVIRTUAL(index));
 			il.append(POP); // ignore mask returned by addDOMAdapter
 			}
@@ -953,7 +954,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <returns> An Enumeration of all child nodes of this node. </returns>
 		protected internal System.Collections.IEnumerator elements()
 		{
-		return _contents.elements();
+		return _contents.GetEnumerator();
 		}
 
 		/// <summary>
@@ -1023,7 +1024,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ErrorMsg error = new org.apache.xalan.xsltc.compiler.util.ErrorMsg(errorCode, message, element);
 		ErrorMsg error = new ErrorMsg(errorCode, message, element);
-			parser.reportError(Constants_Fields.ERROR, error);
+			parser.reportError(Constants.ERROR, error);
 		}
 
 		/// <summary>
@@ -1038,7 +1039,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ErrorMsg error = new org.apache.xalan.xsltc.compiler.util.ErrorMsg(errorCode, message, element);
 		ErrorMsg error = new ErrorMsg(errorCode, message, element);
-			parser.reportError(Constants_Fields.WARNING, error);
+			parser.reportError(Constants.WARNING, error);
 		}
 
 	}

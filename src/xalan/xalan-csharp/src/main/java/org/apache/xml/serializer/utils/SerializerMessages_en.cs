@@ -21,7 +21,6 @@
 namespace org.apache.xml.serializer.utils
 {
 
-
 	/// <summary>
 	/// Default implementation.  This is just an empty class.
 	/// @xsl.usage internal

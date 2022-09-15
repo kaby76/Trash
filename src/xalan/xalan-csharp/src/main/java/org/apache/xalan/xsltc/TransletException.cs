@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc
 {
-
 	using SAXException = org.xml.sax.SAXException;
 
 	/// <summary>

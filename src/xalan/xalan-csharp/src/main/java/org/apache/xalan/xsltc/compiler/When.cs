@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using BooleanType = org.apache.xalan.xsltc.compiler.util.BooleanType;
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
@@ -45,9 +44,9 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("When");
-		indent(indent + IndentIncrement);
+		this.indent(indent + IndentIncrement);
 		Console.Write("test ");
 		Util.println(_test.ToString());
 		displayContents(indent + IndentIncrement);
@@ -73,7 +72,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Ignore xsl:if when test is false (function-available() and
 		// element-available())
 		object result = _test.evaluateAtCompileTime();
-		if (result != null && result is bool?)
+		if (result != null && result is Boolean)
 		{
 			_ignore = !((bool?) result).Value;
 		}
@@ -94,7 +93,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// the support of a non-available element, and the <xsl:when> body contains
 		/// this non-available element.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -121,7 +120,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ErrorMsg msg = new org.apache.xalan.xsltc.compiler.util.ErrorMsg(org.apache.xalan.xsltc.compiler.util.ErrorMsg.STRAY_WHEN_ERR, this);
 		ErrorMsg msg = new ErrorMsg(ErrorMsg.STRAY_WHEN_ERR, this);
-		Parser.reportError(Constants_Fields.ERROR, msg);
+		Parser.reportError(Constants.ERROR, msg);
 		}
 	}
 

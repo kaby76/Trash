@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.lib
 {
-
 	using ExpressionContext = org.apache.xalan.extensions.ExpressionContext;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using DTMNodeIterator = org.apache.xml.dtm.@ref.DTMNodeIterator;
@@ -36,8 +35,8 @@ namespace org.apache.xalan.lib
 	/// The documentation for each function has been copied from the relevant
 	/// EXSLT Implementer page.
 	/// </summary>
-	/// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a>
-	/// @xsl.usage general </seealso>
+	/// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"
+	/// @xsl.usage general/>
 	public class ExsltCommon
 	{
 	  /// <summary>
@@ -56,14 +55,14 @@ namespace org.apache.xalan.lib
 	  /// <param name="obj"> The object to be typed. </param>
 	  /// <returns> objectType 'string', 'number', 'boolean', 'node-set', 'RTF', or 'external'.
 	  /// </returns>
-	  /// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+	  /// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 	  public static string objectType(object obj)
 	  {
 		if (obj is string)
 		{
 		  return "string";
 		}
-		else if (obj is bool?)
+		else if (obj is Boolean)
 		{
 		  return "boolean";
 		}
@@ -107,7 +106,7 @@ namespace org.apache.xalan.lib
 	  /// 
 	  /// Note: Already implemented in the xalan namespace as nodeset.
 	  /// </returns>
-	  /// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+	  /// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 	  public static NodeSet nodeSet(ExpressionContext myProcessor, object rtf)
 	  {
 		return Extensions.nodeset(myProcessor, rtf);

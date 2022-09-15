@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xml.serializer
 {
 
-
 	using ContentHandler = org.xml.sax.ContentHandler;
 	using SAXException = org.xml.sax.SAXException;
 
@@ -109,7 +108,7 @@ namespace org.apache.xml.serializer
 
 		/// <summary>
 		/// Default constructor </summary>
-		/// <seealso cref= java.lang.Object#Object() </seealso>
+		/// <seealso cref="java.lang.Object.Object()"/>
 		public NamespaceMappings()
 		{
 			if (!InstanceFieldsInitialized)
@@ -349,7 +348,7 @@ namespace org.apache.xml.serializer
 		/// This method makes a clone of this object.
 		/// 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 		public virtual object clone()
 		{
@@ -412,7 +411,7 @@ namespace org.apache.xml.serializer
 			internal int max = 20;
 			internal object[] m_stack;
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 			public virtual object clone()
 			{

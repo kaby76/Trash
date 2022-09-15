@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ASTORE = org.apache.bcel.generic.ASTORE;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -108,7 +107,7 @@ namespace org.apache.xalan.xsltc.compiler
 		return "ParentLocationPath(" + _path + ", " + _step + ')';
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -181,7 +180,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (_path is Step)
 			{
 			int type = ((Step)_path).NodeType;
-			if (type == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE)
+			if (type == DTM.ATTRIBUTE_NODE)
 			{
 				return true;
 			}
@@ -195,10 +194,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 			// Backwards branches are prohibited if an uninitialized object is
 			// on the stack by section 4.9.4 of the JVM Specification, 2nd Ed.
@@ -211,22 +210,22 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Compile path iterator
 		_path.translate(classGen, methodGen); // iterator on stack....
-			LocalVariableGen pathTemp = methodGen.addLocalVariable("parent_location_path_tmp1", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-			pathTemp.Start = il.append(new ASTORE(pathTemp.Index));
+			LocalVariableGen pathTemp = methodGen.addLocalVariable("parent_location_path_tmp1", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+			pathTemp.setStart(il.append(new ASTORE(pathTemp.getIndex())));
 
 		_step.translate(classGen, methodGen);
-			LocalVariableGen stepTemp = methodGen.addLocalVariable("parent_location_path_tmp2", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-			stepTemp.Start = il.append(new ASTORE(stepTemp.Index));
+			LocalVariableGen stepTemp = methodGen.addLocalVariable("parent_location_path_tmp2", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+			stepTemp.setStart(il.append(new ASTORE(stepTemp.getIndex())));
 
 		// Create new StepIterator
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int initSI = cpg.addMethodref(Constants_Fields.STEP_ITERATOR_CLASS, "<init>", "(" +Constants_Fields.NODE_ITERATOR_SIG +Constants_Fields.NODE_ITERATOR_SIG +")V");
-		int initSI = cpg.addMethodref(Constants_Fields.STEP_ITERATOR_CLASS, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.NODE_ITERATOR_SIG + ")V");
-		il.append(new NEW(cpg.addClass(Constants_Fields.STEP_ITERATOR_CLASS)));
+//ORIGINAL LINE: final int initSI = cpg.addMethodref(STEP_ITERATOR_CLASS, "<init>", "(" +NODE_ITERATOR_SIG +NODE_ITERATOR_SIG +")V");
+		int initSI = cpg.addMethodref(STEP_ITERATOR_CLASS, "<init>", "(" + NODE_ITERATOR_SIG + NODE_ITERATOR_SIG + ")V");
+		il.append(new NEW(cpg.addClass(STEP_ITERATOR_CLASS)));
 		il.append(DUP);
 
-			pathTemp.End = il.append(new ALOAD(pathTemp.Index));
-			stepTemp.End = il.append(new ALOAD(stepTemp.Index));
+			pathTemp.setEnd(il.append(new ALOAD(pathTemp.getIndex())));
+			stepTemp.setEnd(il.append(new ALOAD(stepTemp.getIndex())));
 
 		// Initialize StepIterator with iterators from the stack
 		il.append(new INVOKESPECIAL(initSI));
@@ -249,8 +248,8 @@ namespace org.apache.xalan.xsltc.compiler
 			if ((path == Axis.DESCENDANTORSELF && step == Axis.CHILD) || (path == Axis.PRECEDING && step == Axis.PARENT))
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int incl = cpg.addMethodref(Constants_Fields.NODE_ITERATOR_BASE, "includeSelf", "()" + Constants_Fields.NODE_ITERATOR_SIG);
-			int incl = cpg.addMethodref(Constants_Fields.NODE_ITERATOR_BASE, "includeSelf", "()" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int incl = cpg.addMethodref(NODE_ITERATOR_BASE, "includeSelf", "()" + NODE_ITERATOR_SIG);
+			int incl = cpg.addMethodref(NODE_ITERATOR_BASE, "includeSelf", "()" + NODE_ITERATOR_SIG);
 			il.append(new INVOKEVIRTUAL(incl));
 			}
 		}
@@ -264,8 +263,8 @@ namespace org.apache.xalan.xsltc.compiler
 		if (_orderNodes)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int order = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.ORDER_ITERATOR, Constants_Fields.ORDER_ITERATOR_SIG);
-			int order = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.ORDER_ITERATOR, Constants_Fields.ORDER_ITERATOR_SIG);
+//ORIGINAL LINE: final int order = cpg.addInterfaceMethodref(DOM_INTF, ORDER_ITERATOR, ORDER_ITERATOR_SIG);
+			int order = cpg.addInterfaceMethodref(DOM_INTF, ORDER_ITERATOR, ORDER_ITERATOR_SIG);
 			il.append(methodGen.loadDOM());
 			il.append(SWAP);
 			il.append(methodGen.loadContextNode());

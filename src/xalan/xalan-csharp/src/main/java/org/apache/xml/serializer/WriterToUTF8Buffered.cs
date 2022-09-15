@@ -1,4 +1,6 @@
-﻿/*
+﻿using System.IO;
+
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +22,6 @@
  */
 namespace org.apache.xml.serializer
 {
-
 
 
 	/// <summary>
@@ -52,7 +53,7 @@ namespace org.apache.xml.serializer
 
 	  /// <summary>
 	  /// The byte stream to write to. (sc & sb remove final to compile in JDK 1.1.8) </summary>
-	  private readonly System.IO.Stream m_os;
+	  private readonly Stream m_os;
 
 	  /// <summary>
 	  /// The internal buffer where data is stored.
@@ -77,7 +78,7 @@ namespace org.apache.xml.serializer
 	  /// <param name="out">    the underlying output stream.
 	  /// </param>
 	  /// <exception cref="UnsupportedEncodingException"> </exception>
-	  public WriterToUTF8Buffered(System.IO.Stream @out)
+	  public WriterToUTF8Buffered(Stream @out)
 	  {
 		  m_os = @out;
 		  // get 3 extra bytes to make buffer overflow checking simpler and faster
@@ -128,10 +129,9 @@ namespace org.apache.xml.serializer
 	  /// </summary>
 	  /// <param name="c">  int specifying a character to be written. </param>
 	  /// <exception cref="IOException">  If an I/O error occurs </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(final int c) throws java.io.IOException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-	  public void write(int c)
+	  public void write(in int c)
 	  {
 
 		/* If we are close to the end of the buffer then flush it.
@@ -178,10 +178,9 @@ namespace org.apache.xml.serializer
 	  /// <exception cref="IOException">  If an I/O error occurs
 	  /// </exception>
 	  /// <exception cref="java.io.IOException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(final char chars[], final int start, final int length) throws java.io.IOException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-	  public void write(char[] chars, int start, int length)
+	  public void write(in char[] chars, in int start, in int length)
 	  {
 
 		// We multiply the length by three since this is the maximum length
@@ -229,7 +228,7 @@ namespace org.apache.xml.serializer
 //ORIGINAL LINE: final char c = chars[end_chunk - 1];
 				char c = chars[end_chunk - 1];
 				int ic = chars[end_chunk - 1];
-				if (c >= 0xD800 && c <= 0xDBFF)
+				if (c >= (char)0xD800 && c <= (char)0xDBFF)
 				{
 					// The last Java char that we were going
 					// to process is the first of a
@@ -293,11 +292,11 @@ namespace org.apache.xml.serializer
 //ORIGINAL LINE: final char c = chars[i];
 		  char c = chars[i];
 
-		  if (c < 0x80)
+		  if (c < (char)0x80)
 		  {
 			buf_loc[count_loc++] = (sbyte)(c);
 		  }
-		  else if (c < 0x800)
+		  else if (c < (char)0x800)
 		  {
 			buf_loc[count_loc++] = unchecked((sbyte)(0xc0 + (c >> 6)));
 			buf_loc[count_loc++] = unchecked((sbyte)(0x80 + (c & 0x3f)));
@@ -309,7 +308,7 @@ namespace org.apache.xml.serializer
 		  ///          [1101 11yy] [yyxx xxxx] (low surrogate)
 		  ///          * uuuuu = wwww + 1
 		  /// </summary>
-		  else if (c >= 0xD800 && c <= 0xDBFF)
+		  else if (c >= (char)0xD800 && c <= (char)0xDBFF)
 		  {
 			  char high, low;
 			  high = c;
@@ -339,10 +338,9 @@ namespace org.apache.xml.serializer
 	  /// <param name="s">  String to be written
 	  /// </param>
 	  /// <exception cref="IOException">  If an I/O error occurs </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(final String s) throws java.io.IOException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-	  public void write(string s)
+	  public void write(in string s)
 	  {
 
 		// We multiply the length by three since this is the maximum length
@@ -391,7 +389,7 @@ namespace org.apache.xml.serializer
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final char c = m_inputChars[len_chunk - 1];
 				 char c = m_inputChars[len_chunk - 1];
-				 if (c >= 0xD800 && c <= 0xDBFF)
+				 if (c >= (char)0xD800 && c <= (char)0xDBFF)
 				 {
 					 // Exclude char in this chunk, 
 					 // to avoid spanning a Unicode character 
@@ -447,11 +445,11 @@ namespace org.apache.xml.serializer
 //ORIGINAL LINE: final char c = chars[i];
 		  char c = chars[i];
 
-		  if (c < 0x80)
+		  if (c < (char)0x80)
 		  {
 			buf_loc[count_loc++] = (sbyte)(c);
 		  }
-		  else if (c < 0x800)
+		  else if (c < (char)0x800)
 		  {
 			buf_loc[count_loc++] = unchecked((sbyte)(0xc0 + (c >> 6)));
 			buf_loc[count_loc++] = unchecked((sbyte)(0x80 + (c & 0x3f)));
@@ -463,7 +461,7 @@ namespace org.apache.xml.serializer
 		///          [1101 11yy] [yyxx xxxx] (low surrogate)
 		///          * uuuuu = wwww + 1
 		/// </summary>
-		else if (c >= 0xD800 && c <= 0xDBFF)
+		else if (c >= (char)0xD800 && c <= (char)0xDBFF)
 		{
 			char high, low;
 			high = c;
@@ -491,7 +489,7 @@ namespace org.apache.xml.serializer
 	  /// Flush the internal buffer
 	  /// </summary>
 	  /// <exception cref="IOException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void flushBuffer() throws java.io.IOException
 	  public void flushBuffer()
 	  {
@@ -514,7 +512,7 @@ namespace org.apache.xml.serializer
 	  /// <exception cref="IOException">  If an I/O error occurs
 	  /// </exception>
 	  /// <exception cref="java.io.IOException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void flush() throws java.io.IOException
 	  public void flush()
 	  {
@@ -530,7 +528,7 @@ namespace org.apache.xml.serializer
 	  /// <exception cref="IOException">  If an I/O error occurs
 	  /// </exception>
 	  /// <exception cref="java.io.IOException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void close() throws java.io.IOException
 	  public void close()
 	  {
@@ -543,7 +541,7 @@ namespace org.apache.xml.serializer
 	  /// </summary>
 	  /// <returns> reference to the result stream, or null of only a writer was
 	  /// set. </returns>
-	  public System.IO.Stream OutputStream
+	  public Stream OutputStream
 	  {
 		  get
 		  {

@@ -21,7 +21,6 @@
 namespace org.apache.xml.utils.res
 {
 
-
 	/// <summary>
 	/// The default (english) resource bundle.
 	/// @xsl.usage internal
@@ -39,7 +38,7 @@ namespace org.apache.xml.utils.res
 	  /// </summary>
 	  /// <param name="className"> Name of local-specific subclass. </param>
 	  /// <param name="locale"> the locale to prefer when searching for the bundle </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static final XResourceBundle loadResourceBundle(String className, java.util.Locale locale) throws java.util.MissingResourceException
 	  public static XResourceBundle loadResourceBundle(string className, Locale locale)
 	  {
@@ -83,10 +82,10 @@ namespace org.apache.xml.utils.res
 	  private static string getResourceSuffix(Locale locale)
 	  {
 
-		string lang = locale.Language;
-		string country = locale.Country;
-		string variant = locale.Variant;
-		string suffix = "_" + locale.Language;
+		string lang = locale.getLanguage();
+		string country = locale.getCountry();
+		string variant = locale.getVariant();
+		string suffix = "_" + locale.getLanguage();
 
 		if (lang.Equals("zh"))
 		{

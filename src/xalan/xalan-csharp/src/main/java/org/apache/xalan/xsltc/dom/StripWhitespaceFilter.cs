@@ -21,6 +21,7 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
+	using DOM = org.apache.xalan.xsltc.DOM;
 
 	/// <summary>
 	/// @author Jacek Ambroziak

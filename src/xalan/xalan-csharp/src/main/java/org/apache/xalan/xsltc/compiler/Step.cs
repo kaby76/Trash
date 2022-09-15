@@ -38,6 +38,7 @@ namespace org.apache.xalan.xsltc.compiler
 	using LocalVariableGen = org.apache.bcel.generic.LocalVariableGen;
 	using NEW = org.apache.bcel.generic.NEW;
 	using PUSH = org.apache.bcel.generic.PUSH;
+	using DOM = org.apache.xalan.xsltc.DOM;
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using MethodGenerator = org.apache.xalan.xsltc.compiler.util.MethodGenerator;
 	using Type = org.apache.xalan.xsltc.compiler.util.Type;
@@ -209,7 +210,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			get
 			{
-			return _nodeType == NodeTest_Fields.ANODE && _axis == Axis.SELF;
+			return _nodeType == NodeTest.ANODE && _axis == Axis.SELF;
 			}
 		}
 
@@ -221,7 +222,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			get
 			{
-			return _nodeType == NodeTest_Fields.ANODE && _axis == Axis.PARENT;
+			return _nodeType == NodeTest.ANODE && _axis == Axis.PARENT;
 			}
 		}
 
@@ -230,7 +231,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// assigned type node if they have no predicates. All other steps 
 		/// have type node-set.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -281,10 +282,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (hasPredicates())
 		{
@@ -296,23 +297,23 @@ namespace org.apache.xalan.xsltc.compiler
 				string name = null;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final XSLTC xsltc = getParser().getXSLTC();
-				XSLTC xsltc = Parser.XSLTC;
+				XSLTC xsltc = Parser.getXSLTC();
 
-				if (_nodeType >= org.apache.xml.dtm.DTM_Fields.NTYPES)
+				if (_nodeType >= DTM.NTYPES)
 				{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Vector ni = xsltc.getNamesIndex();
 			ArrayList ni = xsltc.NamesIndex;
 
-					name = (string)ni[_nodeType - org.apache.xml.dtm.DTM_Fields.NTYPES];
+					name = (string)ni[_nodeType - DTM.NTYPES];
 					star = name.LastIndexOf('*');
 				}
 
 			// If it is an attribute, but not '@*', '@pre:*' or '@node()',
 				// and has no parent
-			if (_axis == Axis.ATTRIBUTE && _nodeType != NodeTest_Fields.ATTRIBUTE && _nodeType != NodeTest_Fields.ANODE && !hasParentPattern() && star == 0)
+			if (_axis == Axis.ATTRIBUTE && _nodeType != NodeTest.ATTRIBUTE && _nodeType != NodeTest.ANODE && !hasParentPattern() && star == 0)
 			{
-			int iter = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getTypedAxisIterator", "(II)" + Constants_Fields.NODE_ITERATOR_SIG);
+			int iter = cpg.addInterfaceMethodref(DOM_INTF, "getTypedAxisIterator", "(II)" + NODE_ITERATOR_SIG);
 			il.append(methodGen.loadDOM());
 			il.append(new PUSH(cpg, Axis.ATTRIBUTE));
 			il.append(new PUSH(cpg, _nodeType));
@@ -334,8 +335,8 @@ namespace org.apache.xalan.xsltc.compiler
 				if (parent is ParentLocationPath)
 				{
 				// Wrap the context node in a singleton iterator if not.
-				int init = cpg.addMethodref(Constants_Fields.SINGLETON_ITERATOR, "<init>", "(" + Constants_Fields.NODE_SIG + ")V");
-				il.append(new NEW(cpg.addClass(Constants_Fields.SINGLETON_ITERATOR)));
+				int init = cpg.addMethodref(SINGLETON_ITERATOR, "<init>", "(" + NODE_SIG + ")V");
+				il.append(new NEW(cpg.addClass(SINGLETON_ITERATOR)));
 				il.append(DUP);
 				il.append(methodGen.loadContextNode());
 				il.append(new INVOKESPECIAL(init));
@@ -343,7 +344,7 @@ namespace org.apache.xalan.xsltc.compiler
 				else
 				{
 				// DOM.getAxisIterator(int axis);
-				int git = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getAxisIterator", "(I)" + Constants_Fields.NODE_ITERATOR_SIG);
+				int git = cpg.addInterfaceMethodref(DOM_INTF, "getAxisIterator", "(I)" + NODE_ITERATOR_SIG);
 				il.append(methodGen.loadDOM());
 				il.append(new PUSH(cpg, _axis));
 				il.append(new INVOKEINTERFACE(git, 2));
@@ -355,21 +356,21 @@ namespace org.apache.xalan.xsltc.compiler
 			// Special case for /foo/*/bar
 			if ((parent is ParentLocationPath) && (parent.Parent is ParentLocationPath))
 			{
-			if ((_nodeType == NodeTest_Fields.ELEMENT) && (!_hadPredicates))
+			if ((_nodeType == NodeTest.ELEMENT) && (!_hadPredicates))
 			{
-				_nodeType = NodeTest_Fields.ANODE;
+				_nodeType = NodeTest.ANODE;
 			}
 			}
 
 			// "ELEMENT" or "*" or "@*" or ".." or "@attr" with a parent.
 			switch (_nodeType)
 			{
-			case NodeTest_Fields.ATTRIBUTE:
+			case NodeTest.ATTRIBUTE:
 			_axis = Axis.ATTRIBUTE;
-				goto case NodeTest_Fields.ANODE;
-			case NodeTest_Fields.ANODE:
+				goto case NodeTest.ANODE;
+			case NodeTest.ANODE:
 			// DOM.getAxisIterator(int axis);
-			int git = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getAxisIterator", "(I)" + Constants_Fields.NODE_ITERATOR_SIG);
+			int git = cpg.addInterfaceMethodref(DOM_INTF, "getAxisIterator", "(I)" + NODE_ITERATOR_SIG);
 			il.append(methodGen.loadDOM());
 			il.append(new PUSH(cpg, _axis));
 			il.append(new INVOKEINTERFACE(git, 2));
@@ -382,30 +383,30 @@ namespace org.apache.xalan.xsltc.compiler
 				string @namespace;
 				if (_axis == Axis.ATTRIBUTE)
 				{
-				@namespace = name.Substring(0,star - 2);
+				@namespace = name.Substring(0, star - 2);
 				}
 				else
 				{
-				@namespace = name.Substring(0,star - 1);
+				@namespace = name.Substring(0, star - 1);
 				}
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int nsType = xsltc.registerNamespace(namespace);
 				int nsType = xsltc.registerNamespace(@namespace);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int ns = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNamespaceAxisIterator", "(II)"+Constants_Fields.NODE_ITERATOR_SIG);
-				int ns = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNamespaceAxisIterator", "(II)" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int ns = cpg.addInterfaceMethodref(DOM_INTF, "getNamespaceAxisIterator", "(II)"+NODE_ITERATOR_SIG);
+				int ns = cpg.addInterfaceMethodref(DOM_INTF, "getNamespaceAxisIterator", "(II)" + NODE_ITERATOR_SIG);
 				il.append(methodGen.loadDOM());
 				il.append(new PUSH(cpg, _axis));
 				il.append(new PUSH(cpg, nsType));
 				il.append(new INVOKEINTERFACE(ns, 3));
 				break;
 			}
-			case NodeTest_Fields.ELEMENT:
+			case NodeTest.ELEMENT:
 			// DOM.getTypedAxisIterator(int axis, int type);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int ty = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getTypedAxisIterator", "(II)"+Constants_Fields.NODE_ITERATOR_SIG);
-			int ty = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getTypedAxisIterator", "(II)" + Constants_Fields.NODE_ITERATOR_SIG);
+//ORIGINAL LINE: final int ty = cpg.addInterfaceMethodref(DOM_INTF, "getTypedAxisIterator", "(II)"+NODE_ITERATOR_SIG);
+			int ty = cpg.addInterfaceMethodref(DOM_INTF, "getTypedAxisIterator", "(II)" + NODE_ITERATOR_SIG);
 			// Get the typed iterator we're after
 			il.append(methodGen.loadDOM());
 			il.append(new PUSH(cpg, _axis));
@@ -428,10 +429,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		int idx = 0;
 
@@ -463,7 +464,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (step.AbbreviatedDot)
 			{
 				translate(classGen, methodGen);
-				il.append(new ICONST(org.apache.xalan.xsltc.DOM_Fields.RETURN_CURRENT));
+				il.append(new ICONST(DOM.RETURN_CURRENT));
 			}
 			// Otherwise we create a parent location path with this Step and
 			// the predicates Step, and place the node test on top of that
@@ -472,16 +473,16 @@ namespace org.apache.xalan.xsltc.compiler
 				ParentLocationPath path = new ParentLocationPath(this,step);
 				try
 				{
-				path.typeCheck(Parser.SymbolTable);
+				path.typeCheck(Parser.getSymbolTable());
 				}
 				catch (TypeCheckError)
 				{
 				}
 				path.translate(classGen, methodGen);
-				il.append(new ICONST(org.apache.xalan.xsltc.DOM_Fields.RETURN_PARENT));
+				il.append(new ICONST(DOM.RETURN_PARENT));
 			}
 			predicate.translate(classGen, methodGen);
-			idx = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_NODE_VALUE_ITERATOR, Constants_Fields.GET_NODE_VALUE_ITERATOR_SIG);
+			idx = cpg.addInterfaceMethodref(DOM_INTF, GET_NODE_VALUE_ITERATOR, GET_NODE_VALUE_ITERATOR_SIG);
 			il.append(new INVOKEINTERFACE(idx, 5));
 			}
 			// Handle '//*[n]' expression
@@ -492,13 +493,13 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(new ICONST(predicate.PosType));
 			predicate.translate(classGen, methodGen);
 			il.append(new ICONST(0));
-			idx = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNthDescendant", "(IIZ)" + Constants_Fields.NODE_ITERATOR_SIG);
+			idx = cpg.addInterfaceMethodref(DOM_INTF, "getNthDescendant", "(IIZ)" + NODE_ITERATOR_SIG);
 			il.append(new INVOKEINTERFACE(idx, 4));
 			}
 			// Handle 'elem[n]' expression
 			else if (predicate.NthPositionFilter)
 			{
-			idx = cpg.addMethodref(Constants_Fields.NTH_ITERATOR_CLASS, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + "I)V");
+			idx = cpg.addMethodref(NTH_ITERATOR_CLASS, "<init>", "(" + NODE_ITERATOR_SIG + "I)V");
 
 					// Backwards branches are prohibited if an uninitialized object
 					// is on the stack by section 4.9.4 of the JVM Specification,
@@ -510,22 +511,22 @@ namespace org.apache.xalan.xsltc.compiler
 					// the object and reload the arguments from the temporaries to
 					// avoid the problem.
 			translatePredicates(classGen, methodGen); // recursive call
-					LocalVariableGen iteratorTemp = methodGen.addLocalVariable("step_tmp1", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-					iteratorTemp.Start = il.append(new ASTORE(iteratorTemp.Index));
+					LocalVariableGen iteratorTemp = methodGen.addLocalVariable("step_tmp1", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+					iteratorTemp.setStart(il.append(new ASTORE(iteratorTemp.getIndex())));
 
 			predicate.translate(classGen, methodGen);
 					LocalVariableGen predicateValueTemp = methodGen.addLocalVariable("step_tmp2", Util.getJCRefType("I"), null, null);
-					predicateValueTemp.Start = il.append(new ISTORE(predicateValueTemp.Index));
+					predicateValueTemp.setStart(il.append(new ISTORE(predicateValueTemp.getIndex())));
 
-			il.append(new NEW(cpg.addClass(Constants_Fields.NTH_ITERATOR_CLASS)));
+			il.append(new NEW(cpg.addClass(NTH_ITERATOR_CLASS)));
 			il.append(DUP);
-					iteratorTemp.End = il.append(new ALOAD(iteratorTemp.Index));
-					predicateValueTemp.End = il.append(new ILOAD(predicateValueTemp.Index));
+					iteratorTemp.setEnd(il.append(new ALOAD(iteratorTemp.getIndex())));
+					predicateValueTemp.setEnd(il.append(new ILOAD(predicateValueTemp.getIndex())));
 			il.append(new INVOKESPECIAL(idx));
 			}
 			else
 			{
-			idx = cpg.addMethodref(Constants_Fields.CURRENT_NODE_LIST_ITERATOR, "<init>", "(" + Constants_Fields.NODE_ITERATOR_SIG + Constants_Fields.CURRENT_NODE_LIST_FILTER_SIG + Constants_Fields.NODE_SIG + Constants_Fields.TRANSLET_SIG + ")V");
+			idx = cpg.addMethodref(CURRENT_NODE_LIST_ITERATOR, "<init>", "(" + NODE_ITERATOR_SIG + CURRENT_NODE_LIST_FILTER_SIG + NODE_SIG + TRANSLET_SIG + ")V");
 
 					// Backwards branches are prohibited if an uninitialized object
 					// is on the stack by section 4.9.4 of the JVM Specification,
@@ -537,19 +538,19 @@ namespace org.apache.xalan.xsltc.compiler
 					// the object and reload the arguments from the temporaries to
 					// avoid the problem.
 			translatePredicates(classGen, methodGen); // recursive call
-					LocalVariableGen iteratorTemp = methodGen.addLocalVariable("step_tmp1", Util.getJCRefType(Constants_Fields.NODE_ITERATOR_SIG), null, null);
-					iteratorTemp.Start = il.append(new ASTORE(iteratorTemp.Index));
+					LocalVariableGen iteratorTemp = methodGen.addLocalVariable("step_tmp1", Util.getJCRefType(NODE_ITERATOR_SIG), null, null);
+					iteratorTemp.setStart(il.append(new ASTORE(iteratorTemp.getIndex())));
 
 			predicate.translateFilter(classGen, methodGen);
-					LocalVariableGen filterTemp = methodGen.addLocalVariable("step_tmp2", Util.getJCRefType(Constants_Fields.CURRENT_NODE_LIST_FILTER_SIG), null, null);
-					filterTemp.Start = il.append(new ASTORE(filterTemp.Index));
+					LocalVariableGen filterTemp = methodGen.addLocalVariable("step_tmp2", Util.getJCRefType(CURRENT_NODE_LIST_FILTER_SIG), null, null);
+					filterTemp.setStart(il.append(new ASTORE(filterTemp.getIndex())));
 
 			// create new CurrentNodeListIterator
-			il.append(new NEW(cpg.addClass(Constants_Fields.CURRENT_NODE_LIST_ITERATOR)));
+			il.append(new NEW(cpg.addClass(CURRENT_NODE_LIST_ITERATOR)));
 			il.append(DUP);
 
-					iteratorTemp.End = il.append(new ALOAD(iteratorTemp.Index));
-					filterTemp.End = il.append(new ALOAD(filterTemp.Index));
+					iteratorTemp.setEnd(il.append(new ALOAD(iteratorTemp.getIndex())));
+					filterTemp.setEnd(il.append(new ALOAD(filterTemp.getIndex())));
 
 			il.append(methodGen.loadCurrentNode());
 			il.append(classGen.loadTranslet());

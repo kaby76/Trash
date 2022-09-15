@@ -43,8 +43,8 @@ namespace org.apache.xalan.templates
 	///   select %expr; #IMPLIED
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#variables">variables in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.variables">variables in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemVariable : ElemTemplateElement
 	{
@@ -129,8 +129,8 @@ namespace org.apache.xalan.templates
 	  /// attribute, which specifies the name of the variable. The
 	  /// value of the name attribute is a QName, which is expanded
 	  /// as described in [2.4 Qualified Names]. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#qname">qname in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.qname">qname in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value to set for the "name" attribute. </param>
 	  public virtual QName Name
 	  {
@@ -144,6 +144,14 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "name" attribute.
+	  /// Both xsl:variable and xsl:param have a required name
+	  /// attribute, which specifies the name of the variable. The
+	  /// value of the name attribute is a QName, which is expanded
+	  /// as described in [2.4 Qualified Names]. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.qname">qname in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// Tells if this is a top-level variable or param, or not.
@@ -153,8 +161,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set if this is a top-level variable or param, or not. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Boolean indicating whether this is a top-level variable
 	  /// or param, or not. </param>
 	  public virtual bool IsTopLevel
@@ -169,13 +177,17 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get if this is a top-level variable or param, or not. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// Get an integer representation of the element type.
 	  /// </summary>
 	  /// <returns> An integer representation of the element, defined in the
 	  ///     Constants class. </returns>
-	  /// <seealso cref= org.apache.xalan.templates.Constants </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"/>
 	  public override int XSLToken
 	  {
 		  get
@@ -202,7 +214,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="param"> An element created from an xsl:variable
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ElemVariable(ElemVariable param) throws javax.xml.transform.TransformerException
 	  public ElemVariable(ElemVariable param)
 	  {
@@ -217,12 +229,12 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Execute a variable declaration and push it onto the variable stack. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#variables">variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.variables">variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -232,12 +244,12 @@ namespace org.apache.xalan.templates
 		  transformer.TraceManager.fireTraceEvent(this);
 		}
 
-		int sourceNode = transformer.XPathContext.CurrentNode;
+		int sourceNode = transformer.XPathContext.getCurrentNode();
 
-		XObject @var = getValue(transformer, sourceNode);
+		XObject var = getValue(transformer, sourceNode);
 
 		// transformer.getXPathContext().getVarStack().pushVariable(m_qname, var);
-		transformer.XPathContext.VarStack.setLocalVariable(m_index, @var);
+		transformer.XPathContext.getVarStack().setLocalVariable(m_index, var);
 
 		if (transformer.Debug)
 		{
@@ -254,12 +266,12 @@ namespace org.apache.xalan.templates
 	  /// <returns> the XObject representation of the variable.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject getValue(org.apache.xalan.transformer.TransformerImpl transformer, int sourceNode) throws javax.xml.transform.TransformerException
 	  public virtual XObject getValue(TransformerImpl transformer, int sourceNode)
 	  {
 
-		XObject @var;
+		XObject var;
 		XPathContext xctxt = transformer.XPathContext;
 
 		xctxt.pushCurrentNode(sourceNode);
@@ -268,18 +280,18 @@ namespace org.apache.xalan.templates
 		{
 		  if (null != m_selectPattern)
 		  {
-			@var = m_selectPattern.execute(xctxt, sourceNode, this);
+			var = m_selectPattern.execute(xctxt, sourceNode, this);
 
-			@var.allowDetachToRelease(false);
+			var.allowDetachToRelease(false);
 
 			if (transformer.Debug)
 			{
-			  transformer.TraceManager.fireSelectedEvent(sourceNode, this, "select", m_selectPattern, @var);
+			  transformer.TraceManager.fireSelectedEvent(sourceNode, this, "select", m_selectPattern, var);
 			}
 		  }
 		  else if (null == FirstChildElem)
 		  {
-			@var = XString.EMPTYSTRING;
+			var = XString.EMPTYSTRING;
 		  }
 		  else
 		  {
@@ -312,7 +324,7 @@ namespace org.apache.xalan.templates
 				//////////////xctxt.getVarStack().unlink(); 
 			}
 
-			@var = new XRTreeFrag(df, xctxt, this);
+			var = new XRTreeFrag(df, xctxt, this);
 		  }
 		}
 		finally
@@ -320,7 +332,7 @@ namespace org.apache.xalan.templates
 		  xctxt.popCurrentNode();
 		}
 
-		return @var;
+		return var;
 	  }
 
 
@@ -330,7 +342,7 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
@@ -344,7 +356,7 @@ namespace org.apache.xalan.templates
 		  }
 		}
 
-		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		StylesheetRoot.ComposeState cstate = sroot.ComposeState;
 
 		// This should be done before addVariableName, so we don't have visibility 
 		// to the variable now being defined.
@@ -378,14 +390,14 @@ namespace org.apache.xalan.templates
 	  /// the count of how many variables have been declared, so we can do a link 
 	  /// and unlink.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCompose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void endCompose(StylesheetRoot sroot)
 	  {
 		base.endCompose(sroot);
 		if (m_parentNode is Stylesheet)
 		{
-			StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+			StylesheetRoot.ComposeState cstate = sroot.ComposeState;
 			m_frameSize = cstate.FrameSize;
 			cstate.resetStackFrameSize();
 		}
@@ -412,7 +424,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> An XPath if rewrite is possible, else null.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static org.apache.xpath.XPath rewriteChildToExpression(ElemTemplateElement varElem) throws javax.xml.transform.TransformerException
 	  internal static XPath rewriteChildToExpression(ElemTemplateElement varElem)
 	  {
@@ -434,7 +446,7 @@ namespace org.apache.xalan.templates
 			{
 			  varElem.m_firstChild = null;
 
-			  return new XPath(new XRTreeFragSelectWrapper(valueof.Select.Expression));
+			  return new XPath(new XRTreeFragSelectWrapper(valueof.Select.getExpression()));
 			}
 		  }
 		  else if (Constants.ELEMNAME_TEXTLITERALRESULT == etype)

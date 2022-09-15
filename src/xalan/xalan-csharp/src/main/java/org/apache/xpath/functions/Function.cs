@@ -22,8 +22,11 @@
  */
 namespace org.apache.xpath.functions
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using XObject = org.apache.xpath.objects.XObject;
 
@@ -51,7 +54,7 @@ namespace org.apache.xpath.functions
 	  /// </param>
 	  /// <exception cref="WrongNumberArgsException"> If the argNum parameter is beyond what 
 	  /// is specified for this function. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setArg(org.apache.xpath.Expression arg, int argNum) throws WrongNumberArgsException
 	  public virtual void setArg(Expression arg, int argNum)
 	  {
@@ -68,7 +71,7 @@ namespace org.apache.xpath.functions
 	  /// <param name="argNum"> The number of arguments that is being passed to the function.
 	  /// </param>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void checkNumberArgs(int argNum) throws WrongNumberArgsException
 	  public virtual void checkNumberArgs(int argNum)
 	  {
@@ -84,7 +87,7 @@ namespace org.apache.xpath.functions
 	  /// by derived classes so that the message will be as specific as possible.
 	  /// </summary>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void reportWrongNumberArgs() throws WrongNumberArgsException
 	  protected internal virtual void reportWrongNumberArgs()
 	  {
@@ -98,7 +101,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -117,7 +120,7 @@ namespace org.apache.xpath.functions
 	  }
 
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
 	  {
 		  if (visitor.visitFunction(owner, this))
@@ -126,7 +129,7 @@ namespace org.apache.xpath.functions
 		  }
 	  }
 
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		  if (!isSameClass(expr))

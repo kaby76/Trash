@@ -59,19 +59,19 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Returns the name of a node in the DOM
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getNodeName = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNodeName", "(I)"+Constants_Fields.STRING_SIG);
-		int getNodeName = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNodeName", "(I)" + Constants_Fields.STRING_SIG);
+//ORIGINAL LINE: final int getNodeName = cpg.addInterfaceMethodref(DOM_INTF, "getNodeName", "(I)"+STRING_SIG);
+		int getNodeName = cpg.addInterfaceMethodref(DOM_INTF, "getNodeName", "(I)" + STRING_SIG);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getLocalName = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "getLocalName", "(Ljava/lang/String;)"+ "Ljava/lang/String;");
-		int getLocalName = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "getLocalName", "(Ljava/lang/String;)" + "Ljava/lang/String;");
+//ORIGINAL LINE: final int getLocalName = cpg.addMethodref(BASIS_LIBRARY_CLASS, "getLocalName", "(Ljava/lang/String;)"+ "Ljava/lang/String;");
+		int getLocalName = cpg.addMethodref(BASIS_LIBRARY_CLASS, "getLocalName", "(Ljava/lang/String;)" + "Ljava/lang/String;");
 		base.translate(classGen, methodGen);
 		il.append(new INVOKEINTERFACE(getNodeName, 2));
 		il.append(new INVOKESTATIC(getLocalName));

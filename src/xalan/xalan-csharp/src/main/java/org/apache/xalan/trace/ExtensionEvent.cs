@@ -24,7 +24,6 @@
 namespace org.apache.xalan.trace
 {
 
-
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
 
 	/// <summary>
@@ -44,7 +43,7 @@ namespace org.apache.xalan.trace
 		public readonly object[] m_arguments;
 
 
-		public ExtensionEvent(TransformerImpl transformer, Method method, object instance, object[] arguments)
+		public ExtensionEvent(TransformerImpl transformer, System.Reflection.MethodInfo method, object instance, object[] arguments)
 		{
 			m_transformer = transformer;
 			m_method = method;
@@ -53,7 +52,7 @@ namespace org.apache.xalan.trace
 			m_callType = METHOD;
 		}
 
-		public ExtensionEvent(TransformerImpl transformer, Constructor constructor, object[] arguments)
+		public ExtensionEvent(TransformerImpl transformer, System.Reflection.ConstructorInfo constructor, object[] arguments)
 		{
 			m_transformer = transformer;
 			m_instance = null;

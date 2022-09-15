@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using Type = org.apache.xalan.xsltc.compiler.util.Type;
 	using TypeCheckError = org.apache.xalan.xsltc.compiler.util.TypeCheckError;
 
@@ -88,20 +87,20 @@ namespace org.apache.xalan.xsltc.compiler
 			TopLevelElement parent = (TopLevelElement) node;
 			if (parent != null)
 			{
-				VariableBase @var = _variable;
+				VariableBase var = _variable;
 				if (_variable._ignore)
 				{
 					if (_variable is Variable)
 					{
-						@var = parent.SymbolTable.lookupVariable(_variable._name);
+						var = parent.SymbolTable.lookupVariable(_variable._name);
 					}
 					else if (_variable is Param)
 					{
-						@var = parent.SymbolTable.lookupParam(_variable._name);
+						var = parent.SymbolTable.lookupParam(_variable._name);
 					}
 				}
 
-				parent.addDependency(@var);
+				parent.addDependency(var);
 			}
 		}
 
@@ -130,7 +129,7 @@ namespace org.apache.xalan.xsltc.compiler
 		return "variable-ref(" + _variable.Name + '/' + _variable.Type + ')';
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{

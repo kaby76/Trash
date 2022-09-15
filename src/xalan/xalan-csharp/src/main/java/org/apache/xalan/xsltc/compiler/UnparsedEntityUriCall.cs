@@ -47,7 +47,7 @@ namespace org.apache.xalan.xsltc.compiler
 			_entity = argument();
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -65,16 +65,16 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-			ConstantPoolGen cpg = classGen.ConstantPool;
+			ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
+			InstructionList il = methodGen.getInstructionList();
 			// Push the this pointer on the stack...
 			il.append(methodGen.loadDOM());
 			// ...then the entity name...
 			_entity.translate(classGen, methodGen);
 			// ...to get the URI from the DOM object.
-			il.append(new INVOKEINTERFACE(cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_UNPARSED_ENTITY_URI, Constants_Fields.GET_UNPARSED_ENTITY_URI_SIG), 2));
+			il.append(new INVOKEINTERFACE(cpg.addInterfaceMethodref(DOM_INTF, GET_UNPARSED_ENTITY_URI, GET_UNPARSED_ENTITY_URI_SIG), 2));
 		}
 	}
 

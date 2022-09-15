@@ -22,7 +22,6 @@
 
 namespace org.apache.xpath.domapi
 {
-
 	using Attr = org.w3c.dom.Attr;
 	using DOMException = org.w3c.dom.DOMException;
 	using Document = org.w3c.dom.Document;
@@ -94,16 +93,16 @@ namespace org.apache.xpath.domapi
 			m_attributeNode = node;
 		}
 
-		/// <seealso cref= org.apache.xalan.dom3.xpath.XPathNamespace#getOwnerElement() </seealso>
+		/// <seealso cref="org.apache.xalan.dom3.xpath.XPathNamespace.getOwnerElement()"/>
 		public virtual Element OwnerElement
 		{
 			get
 			{
-				return ((Attr)m_attributeNode).OwnerElement;
+				return ((Attr)m_attributeNode).getOwnerElement();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getNodeName() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getNodeName()"/>
 		public virtual string NodeName
 		{
 			get
@@ -112,14 +111,14 @@ namespace org.apache.xpath.domapi
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getNodeValue() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.Node.getNodeValue()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getNodeValue() throws org.w3c.dom.DOMException
 		public virtual string NodeValue
 		{
 			get
 			{
-				return m_attributeNode.NodeValue;
+				return m_attributeNode.getNodeValue();
 			}
 			set
 			{
@@ -127,7 +126,7 @@ namespace org.apache.xpath.domapi
 		}
 
 
-		/// <seealso cref= org.w3c.dom.Node#getNodeType() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getNodeType()"/>
 		public virtual short NodeType
 		{
 			get
@@ -136,135 +135,135 @@ namespace org.apache.xpath.domapi
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getParentNode() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getParentNode()"/>
 		public virtual Node ParentNode
 		{
 			get
 			{
-				return m_attributeNode.ParentNode;
+				return m_attributeNode.getParentNode();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getChildNodes() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getChildNodes()"/>
 		public virtual NodeList ChildNodes
 		{
 			get
 			{
-				return m_attributeNode.ChildNodes;
+				return m_attributeNode.getChildNodes();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getFirstChild() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getFirstChild()"/>
 		public virtual Node FirstChild
 		{
 			get
 			{
-				return m_attributeNode.FirstChild;
+				return m_attributeNode.getFirstChild();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getLastChild() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getLastChild()"/>
 		public virtual Node LastChild
 		{
 			get
 			{
-				return m_attributeNode.LastChild;
+				return m_attributeNode.getLastChild();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getPreviousSibling() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getPreviousSibling()"/>
 		public virtual Node PreviousSibling
 		{
 			get
 			{
-				return m_attributeNode.PreviousSibling;
+				return m_attributeNode.getPreviousSibling();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getNextSibling() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getNextSibling()"/>
 		public virtual Node NextSibling
 		{
 			get
 			{
-				return m_attributeNode.NextSibling;
+				return m_attributeNode.getNextSibling();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getAttributes() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getAttributes()"/>
 		public virtual NamedNodeMap Attributes
 		{
 			get
 			{
-				return m_attributeNode.Attributes;
+				return m_attributeNode.getAttributes();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getOwnerDocument() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getOwnerDocument()"/>
 		public virtual Document OwnerDocument
 		{
 			get
 			{
-				return m_attributeNode.OwnerDocument;
+				return m_attributeNode.getOwnerDocument();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#insertBefore(Node, Node) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.Node.insertBefore(Node, Node)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node insertBefore(org.w3c.dom.Node arg0, org.w3c.dom.Node arg1) throws org.w3c.dom.DOMException
 		public virtual Node insertBefore(Node arg0, Node arg1)
 		{
 			return null;
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#replaceChild(Node, Node) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.Node.replaceChild(Node, Node)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node replaceChild(org.w3c.dom.Node arg0, org.w3c.dom.Node arg1) throws org.w3c.dom.DOMException
 		public virtual Node replaceChild(Node arg0, Node arg1)
 		{
 			return null;
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#removeChild(Node) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.Node.removeChild(Node)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node removeChild(org.w3c.dom.Node arg0) throws org.w3c.dom.DOMException
 		public virtual Node removeChild(Node arg0)
 		{
 			return null;
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#appendChild(Node) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.Node.appendChild(Node)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node appendChild(org.w3c.dom.Node arg0) throws org.w3c.dom.DOMException
 		public virtual Node appendChild(Node arg0)
 		{
 			return null;
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#hasChildNodes() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.hasChildNodes()"/>
 		public virtual bool hasChildNodes()
 		{
 			return false;
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#cloneNode(boolean) </seealso>
+		/// <seealso cref="org.w3c.dom.Node.cloneNode(boolean)"/>
 		public virtual Node cloneNode(bool arg0)
 		{
 			throw new DOMException(DOMException.NOT_SUPPORTED_ERR,null);
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#normalize() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.normalize()"/>
 		public virtual void normalize()
 		{
 			m_attributeNode.normalize();
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#isSupported(String, String) </seealso>
+		/// <seealso cref="org.w3c.dom.Node.isSupported(String, String)"/>
 		public virtual bool isSupported(string arg0, string arg1)
 		{
 			return m_attributeNode.isSupported(arg0, arg1);
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getNamespaceURI() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getNamespaceURI()"/>
 		public virtual string NamespaceURI
 		{
 			get
@@ -272,16 +271,16 @@ namespace org.apache.xpath.domapi
     
 				// For namespace node, the namespaceURI is the namespace URI
 				// of the namespace represented by the node.
-				return m_attributeNode.NodeValue;
+				return m_attributeNode.getNodeValue();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#getPrefix() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getPrefix()"/>
 		public virtual string Prefix
 		{
 			get
 			{
-				return m_attributeNode.Prefix;
+				return m_attributeNode.getPrefix();
 			}
 			set
 			{
@@ -289,18 +288,18 @@ namespace org.apache.xpath.domapi
 		}
 
 
-		/// <seealso cref= org.w3c.dom.Node#getLocalName() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.getLocalName()"/>
 		public virtual string LocalName
 		{
 			get
 			{
     
 				// For namespace node, the local name is the same as the prefix
-				return m_attributeNode.Prefix;
+				return m_attributeNode.getPrefix();
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.Node#hasAttributes() </seealso>
+		/// <seealso cref="org.w3c.dom.Node.hasAttributes()"/>
 		public virtual bool hasAttributes()
 		{
 			return m_attributeNode.hasAttributes();
@@ -314,7 +313,7 @@ namespace org.apache.xpath.domapi
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public short compareDocumentPosition(org.w3c.dom.Node other) throws org.w3c.dom.DOMException
 		public virtual short compareDocumentPosition(Node other)
 		{
@@ -323,7 +322,7 @@ namespace org.apache.xpath.domapi
 
 		private string textContent;
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getTextContent() throws org.w3c.dom.DOMException
 		public virtual string TextContent
 		{

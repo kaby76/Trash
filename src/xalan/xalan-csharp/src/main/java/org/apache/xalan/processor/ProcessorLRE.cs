@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -49,9 +48,9 @@ namespace org.apache.xalan.processor
 	/// a <seealso cref="org.apache.xalan.templates.StylesheetRoot"/>, or a 
 	/// <seealso cref="org.apache.xalan.templates.ElemExtensionCall"/>.
 	/// </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a> </seealso>
-	/// <seealso cref= org.apache.xalan.templates.ElemLiteralResult
-	/// @xsl.usage internal </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"/>
+	/// <seealso cref="org.apache.xalan.templates.ElemLiteralResult"
+	/// @xsl.usage internal/>
 	[Serializable]
 	public class ProcessorLRE : ProcessorTemplateElem
 	{
@@ -64,7 +63,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="localName"> The local name (without prefix), or empty string if not namespace processing. </param>
 	  /// <param name="rawName"> The qualified name (with prefix). </param>
 	  /// <param name="attributes"> The specified or defaulted attributes. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {
@@ -100,10 +99,10 @@ namespace org.apache.xalan.processor
 			Locator locator = handler.Locator;
 			if (null != locator)
 			{
-			  slocator.LineNumber = locator.LineNumber;
-			  slocator.ColumnNumber = locator.ColumnNumber;
-			  slocator.PublicId = locator.PublicId;
-			  slocator.SystemId = locator.SystemId;
+			  slocator.setLineNumber(locator.getLineNumber());
+			  slocator.setColumnNumber(locator.getColumnNumber());
+			  slocator.setPublicId(locator.getPublicId());
+			  slocator.setSystemId(locator.getSystemId());
 			}
 			stylesheet.LocaterInfo = slocator;
 			stylesheet.Prefixes = handler.NamespaceSupport;
@@ -113,7 +112,7 @@ namespace org.apache.xalan.processor
 
 			AttributesImpl stylesheetAttrs = new AttributesImpl();
 			AttributesImpl lreAttrs = new AttributesImpl();
-			int n = attributes.Length;
+			int n = attributes.getLength();
 
 			for (int i = 0; i < n; i++)
 			{
@@ -236,17 +235,17 @@ namespace org.apache.xalan.processor
 			}
 			else if (isComponentDecl)
 			{
-			  elem = (ElemTemplateElement) classObject.newInstance();
+			  elem = (ElemTemplateElement) System.Activator.CreateInstance(classObject);
 			}
 			else if (isUnknownTopLevel)
 			{
 
 			  // TBD: Investigate, not sure about this.  -sb
-			  elem = (ElemTemplateElement) classObject.newInstance();
+			  elem = (ElemTemplateElement) System.Activator.CreateInstance(classObject);
 			}
 			else
 			{
-			  elem = (ElemTemplateElement) classObject.newInstance();
+			  elem = (ElemTemplateElement) System.Activator.CreateInstance(classObject);
 			}
 
 			elem.DOMBackPointer = handler.OriginatingNode;
@@ -304,7 +303,7 @@ namespace org.apache.xalan.processor
 	  /// This method could be over-ridden by a class that extends this class. </summary>
 	  /// <param name="handler"> non-null reference to current StylesheetHandler that is constructing the Templates. </param>
 	  /// <returns> an object that represents the stylesheet element. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xalan.templates.Stylesheet getStylesheetRoot(StylesheetHandler handler) throws javax.xml.transform.TransformerConfigurationException
 	  protected internal virtual Stylesheet getStylesheetRoot(StylesheetHandler handler)
 	  {
@@ -326,7 +325,7 @@ namespace org.apache.xalan.processor
 	/// <param name="uri"> The Namespace URI, or an empty string. </param>
 	/// <param name="localName"> The local name (without prefix), or empty string if not namespace processing. </param>
 	/// <param name="rawName"> The qualified name (with prefix). </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(StylesheetHandler handler, String uri, String localName, String rawName) throws org.xml.sax.SAXException
 	  public override void endElement(StylesheetHandler handler, string uri, string localName, string rawName)
 	  {
@@ -346,7 +345,7 @@ namespace org.apache.xalan.processor
 
 		private bool declaredXSLNS(Stylesheet stylesheet)
 		{
-			IList declaredPrefixes = stylesheet.DeclaredPrefixes;
+			System.Collections.IList declaredPrefixes = stylesheet.DeclaredPrefixes;
 			int n = declaredPrefixes.Count;
 
 			for (int i = 0; i < n; i++)

@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 
 	/// <summary>
@@ -32,6 +31,7 @@ namespace org.apache.xalan.xsltc
 	/// </summary>
 	public interface NodeIterator : ICloneable
 	{
+		public static int END = DTM.NULL;
 
 		/// <summary>
 		/// Callers should not call next() after it returns END.
@@ -84,11 +84,6 @@ namespace org.apache.xalan.xsltc
 		/// </summary>
 		bool Restartable {set;}
 
-	}
-
-	public static class NodeIterator_Fields
-	{
-		public const int END = org.apache.xml.dtm.DTM_Fields.NULL;
 	}
 
 }

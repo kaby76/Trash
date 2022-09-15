@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	/// <summary>
 	/// @author Morten Jorgensen
 	/// </summary>

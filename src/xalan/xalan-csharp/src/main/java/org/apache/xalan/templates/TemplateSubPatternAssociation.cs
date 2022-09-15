@@ -23,7 +23,6 @@
 namespace org.apache.xalan.templates
 {
 
-
 	using QName = org.apache.xml.utils.QName;
 	using XPath = org.apache.xpath.XPath;
 	using XPathContext = org.apache.xpath.XPathContext;
@@ -83,7 +82,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> The cloned object.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public virtual object clone()
 	  {
@@ -146,7 +145,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> The mode associated with the template.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean matches(org.apache.xpath.XPathContext xctxt, int targetNode, org.apache.xml.utils.QName mode) throws javax.xml.transform.TransformerException
 	  public virtual bool matches(XPathContext xctxt, int targetNode, QName mode)
 	  {

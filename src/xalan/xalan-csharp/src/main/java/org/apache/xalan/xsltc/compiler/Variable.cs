@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using Field = org.apache.bcel.classfile.Field;
 	using ACONST_NULL = org.apache.bcel.generic.ACONST_NULL;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -47,7 +46,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			get
 			{
-			return (_local != null) ? _local.Index : -1;
+			return (_local != null) ? _local.getIndex() : -1;
 			}
 		}
 
@@ -66,16 +65,16 @@ namespace org.apache.xalan.xsltc.compiler
 			// Mark this as a global variable
 			_isLocal = false;
 			// Check if a global variable with this name already exists...
-			Variable @var = parser.SymbolTable.lookupVariable(_name);
+			Variable var = parser.SymbolTable.lookupVariable(_name);
 			// ...and if it does we need to check import precedence
-			if (@var != null)
+			if (var != null)
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int us = this.getImportPrecedence();
 			int us = this.ImportPrecedence;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int them = var.getImportPrecedence();
-			int them = @var.ImportPrecedence;
+			int them = var.ImportPrecedence;
 			// It is an error if the two have the same import precedence
 			if (us == them)
 			{
@@ -92,7 +91,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 			else
 			{
-				@var.disable();
+				var.disable();
 			}
 			// Add this variable if we have higher precedence
 			}
@@ -109,7 +108,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Runs a type check on either the variable element body or the
 		/// expression in the 'select' attribute
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -144,10 +143,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// This is only done for local variables that are actually used
 		if (Local && _refs.Count > 0)
@@ -172,7 +171,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 
 				// Mark the store as the start of the live range of the variable
-				_local.Start = il.append(_type.STORE(_local.Index));
+				_local.setStart(il.append(_type.STORE(_local.getIndex())));
 		}
 		}
 
@@ -180,10 +179,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 			// Don't generate code for unreferenced variables
 			if (_refs.Count == 0)
@@ -213,7 +212,7 @@ namespace org.apache.xalan.xsltc.compiler
 			{
 					mapRegister(methodGen);
 			}
-			InstructionHandle storeInst = il.append(_type.STORE(_local.Index));
+			InstructionHandle storeInst = il.append(_type.STORE(_local.getIndex()));
 
 				// If the local is just being created, mark the store as the start
 				// of its live range.  Note that it might have been created by
@@ -221,7 +220,7 @@ namespace org.apache.xalan.xsltc.compiler
 				// the live range already.
 				if (createLocal)
 				{
-					_local.Start = storeInst;
+					_local.setStart(storeInst);
 				}
 		}
 		else
@@ -231,7 +230,7 @@ namespace org.apache.xalan.xsltc.compiler
 			// Global variables are store in class fields
 			if (classGen.containsField(name) == null)
 			{
-			classGen.addField(new Field(Constants_Fields.ACC_PUBLIC, cpg.addUtf8(name), cpg.addUtf8(signature), null, cpg.ConstantPool));
+			classGen.addField(new Field(ACC_PUBLIC, cpg.addUtf8(name), cpg.addUtf8(signature), null, cpg.getConstantPool()));
 
 			// Push a reference to "this" for putfield
 			il.append(classGen.loadTranslet());

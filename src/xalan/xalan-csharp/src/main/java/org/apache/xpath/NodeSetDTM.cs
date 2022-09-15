@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
@@ -156,7 +155,7 @@ namespace org.apache.xpath
 
 		m_manager = xctxt.DTMManager;
 
-		int n = nodeList.Length;
+		int n = nodeList.getLength();
 		for (int i = 0; i < n; i++)
 		{
 		  Node node = nodeList.item(i);
@@ -206,7 +205,7 @@ namespace org.apache.xpath
 	  {
 		  get
 		  {
-			if (org.apache.xml.dtm.DTM_Fields.NULL == m_root)
+			if (DTM.NULL == m_root)
 			{
 			  if (size() > 0)
 			  {
@@ -214,7 +213,7 @@ namespace org.apache.xpath
 			  }
 			  else
 			  {
-				return org.apache.xml.dtm.DTM_Fields.NULL;
+				return DTM.NULL;
 			  }
 			}
 			else
@@ -246,7 +245,7 @@ namespace org.apache.xpath
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> if this subclass of NodeSetDTM
 	  /// does not support the clone() operation. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public override object clone()
 	  {
@@ -265,12 +264,12 @@ namespace org.apache.xpath
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> if this subclass of NodeSetDTM
 	  /// does not support the clone() operation. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator cloneWithReset() throws CloneNotSupportedException
 	  public virtual DTMIterator cloneWithReset()
 	  {
 
-		NodeSetDTM clone = (NodeSetDTM) clone();
+		NodeSetDTM clone = (NodeSetDTM) this.clone();
 
 		clone.reset();
 
@@ -300,7 +299,7 @@ namespace org.apache.xpath
 	  {
 		  get
 		  {
-			return org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL & ~org.apache.xml.dtm.DTMFilter_Fields.SHOW_ENTITY_REFERENCE;
+			return DTMFilter.SHOW_ALL & ~DTMFilter.SHOW_ENTITY_REFERENCE;
 		  }
 	  }
 
@@ -401,7 +400,7 @@ namespace org.apache.xpath
 		}
 		else
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 	  }
 
@@ -431,7 +430,7 @@ namespace org.apache.xpath
 		}
 		else
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 	  }
 
@@ -675,7 +674,7 @@ namespace org.apache.xpath
 		{
 		  int obj;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (obj = iterator.nextNode()))
+		  while (DTM.NULL != (obj = iterator.nextNode()))
 		  {
 			addElement(obj);
 		  }
@@ -731,7 +730,7 @@ namespace org.apache.xpath
 
 		int node;
 
-		while (org.apache.xml.dtm.DTM_Fields.NULL != (node = iterator.nextNode()))
+		while (DTM.NULL != (node = iterator.nextNode()))
 		{
 		  addNodeInDocOrder(node, support);
 		}
@@ -827,7 +826,7 @@ namespace org.apache.xpath
 		  // This needs to do a binary search, but a binary search 
 		  // is somewhat tough because the sequence test involves 
 		  // two nodes.
-		  int size = size(), i ;
+		  int size = this.size(), i;
 
 		  for (i = size - 1; i >= 0; i--)
 		  {
@@ -1182,7 +1181,7 @@ namespace org.apache.xpath
 			// But watch out for copy29, where the root iterator didn't
 			// have nextNode called on it.
 			int current = (m_next > 0) ? m_next - 1 : m_next;
-			int n = (current < m_firstFree) ? elementAt(current) : org.apache.xml.dtm.DTM_Fields.NULL;
+			int n = (current < m_firstFree) ? elementAt(current) : DTM.NULL;
 			m_next = saved; // HACK: I think this is a bit of a hack.  -sb
 			return n;
 		  }
@@ -1202,7 +1201,7 @@ namespace org.apache.xpath
 
 	  /// <summary>
 	  /// The root of the iteration, if available. </summary>
-	  protected internal int m_root = org.apache.xml.dtm.DTM_Fields.NULL;
+	  protected internal int m_root = DTM.NULL;
 
 	  /// <summary>
 	  /// Get whether or not this is a cached node set.

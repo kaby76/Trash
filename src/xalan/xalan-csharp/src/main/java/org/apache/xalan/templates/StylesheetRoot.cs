@@ -25,7 +25,6 @@ namespace org.apache.xalan.templates
 {
 
 
-
 	using ExtensionNamespacesManager = org.apache.xalan.extensions.ExtensionNamespacesManager;
 	using XSLTSchema = org.apache.xalan.processor.XSLTSchema;
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
@@ -71,7 +70,7 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Uses an XSL stylesheet document. </summary>
 	  /// <exception cref="TransformerConfigurationException"> if the baseIdentifier can not be resolved to a URL. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public StylesheetRoot(javax.xml.transform.ErrorListener errorListener) throws javax.xml.transform.TransformerConfigurationException
 	  public StylesheetRoot(ErrorListener errorListener) : base(null)
 	  {
@@ -103,7 +102,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <param name="schema"> The schema used to create this stylesheet </param>
 	  /// <exception cref="TransformerConfigurationException"> if the baseIdentifier can not be resolved to a URL. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public StylesheetRoot(org.apache.xalan.processor.XSLTSchema schema, javax.xml.transform.ErrorListener listener) throws javax.xml.transform.TransformerConfigurationException
 	  public StylesheetRoot(XSLTSchema schema, ErrorListener listener) : this(listener)
 	  {
@@ -244,7 +243,7 @@ namespace org.apache.xalan.templates
 	  /// methods.
 	  /// </summary>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void recompose() throws javax.xml.transform.TransformerException
 	  public virtual void recompose()
 	  {
@@ -369,7 +368,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="templ"> non-null reference to template element that will have 
 	  /// the composed method called on it, and will have it's children's composed 
 	  /// methods called. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void composeTemplates(ElemTemplateElement templ) throws javax.xml.transform.TransformerException
 	  internal virtual void composeTemplates(ElemTemplateElement templ)
 	  {
@@ -512,7 +511,7 @@ namespace org.apache.xalan.templates
 	  /// Recompose the output format object from the included elements.
 	  /// </summary>
 	  /// <param name="oprops"> non-null reference to xsl:output properties representation. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void recomposeOutput(OutputProperties oprops) throws javax.xml.transform.TransformerException
 	  internal virtual void recomposeOutput(OutputProperties oprops)
 	  {
@@ -527,8 +526,8 @@ namespace org.apache.xalan.templates
 	  /// look in the imports.
 	  /// Please note that this returns a reference to the OutputProperties
 	  /// object, not a cloned object, like getOutputProperties does. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#output">output in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.output">output in XSLT Specification</a>"
+	  ////>
 	  /// <returns> non-null reference to composed output properties object. </returns>
 	  public virtual OutputProperties OutputComposed
 	  {
@@ -587,14 +586,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get a list "xsl:attribute-set" properties that match the qname. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#attribute-sets">attribute-sets in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.attribute-sets">attribute-sets in XSLT Specification</a>"
+	  ////>
 	  /// <param name="name"> Qualified name of attribute set properties to get
 	  /// </param>
 	  /// <returns> A vector of attribute sets matching the given name
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public java.util.ArrayList getAttributeSetComposed(org.apache.xml.utils.QName name) throws ArrayIndexOutOfBoundsException
 	  public virtual ArrayList getAttributeSetComposed(QName name)
 	  {
@@ -674,8 +673,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the composed "xsl:key" properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#key">key in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.key">key in XSLT Specification</a>"
+	  ////>
 	  /// <returns> A vector of the composed "xsl:key" properties. </returns>
 	  public virtual ArrayList KeysComposed
 	  {
@@ -703,8 +702,8 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Get the "xsl:namespace-alias" property.
 	  /// Return the NamespaceAlias for a given namespace uri. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="uri"> non-null reference to namespace that is to be aliased.
 	  /// </param>
 	  /// <returns> NamespaceAlias that matches uri, or null if no match. </returns>
@@ -749,8 +748,8 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Get an "xsl:template" property by node match. This looks in the imports as
 	  /// well as this stylesheet. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>"
+	  ////>
 	  /// <param name="xctxt"> non-null reference to XPath runtime execution context. </param>
 	  /// <param name="targetNode"> non-null reference of node that the template must match. </param>
 	  /// <param name="mode"> qualified name of the node, or null. </param>
@@ -760,7 +759,7 @@ namespace org.apache.xalan.templates
 	  ///         null if no match could be made.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ElemTemplate getTemplateComposed(org.apache.xpath.XPathContext xctxt, int targetNode, org.apache.xml.utils.QName mode, boolean quietConflictWarnings, org.apache.xml.dtm.DTM dtm) throws javax.xml.transform.TransformerException
 	  public virtual ElemTemplate getTemplateComposed(XPathContext xctxt, int targetNode, QName mode, bool quietConflictWarnings, DTM dtm)
 	  {
@@ -770,8 +769,8 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Get an "xsl:template" property by node match. This looks in the imports as
 	  /// well as this stylesheet. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>"
+	  ////>
 	  /// <param name="xctxt"> non-null reference to XPath runtime execution context. </param>
 	  /// <param name="targetNode"> non-null reference of node that the template must match. </param>
 	  /// <param name="mode"> qualified name of the node, or null. </param>
@@ -785,7 +784,7 @@ namespace org.apache.xalan.templates
 	  ///         null if no match could be made.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ElemTemplate getTemplateComposed(org.apache.xpath.XPathContext xctxt, int targetNode, org.apache.xml.utils.QName mode, int maxImportLevel, int endImportLevel, boolean quietConflictWarnings, org.apache.xml.dtm.DTM dtm) throws javax.xml.transform.TransformerException
 	  public virtual ElemTemplate getTemplateComposed(XPathContext xctxt, int targetNode, QName mode, int maxImportLevel, int endImportLevel, bool quietConflictWarnings, DTM dtm)
 	  {
@@ -795,8 +794,8 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Get an "xsl:template" property. This looks in the imports as
 	  /// well as this stylesheet. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>"
+	  ////>
 	  /// <param name="qname"> non-null reference to qualified name of template.
 	  /// </param>
 	  /// <returns> reference to named template, or null if not found. </returns>
@@ -828,8 +827,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:variable" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="qname"> Qualified name of variable or param
 	  /// </param>
 	  /// <returns> The ElemVariable with the given qualified name </returns>
@@ -841,10 +840,10 @@ namespace org.apache.xalan.templates
 
 		  for (int i = 0; i < n; i++)
 		  {
-			ElemVariable @var = (ElemVariable)m_variables[i];
-			if (@var.Name.Equals(qname))
+			ElemVariable var = (ElemVariable)m_variables[i];
+			if (var.Name.Equals(qname))
 			{
-			  return @var;
+			  return var;
 			}
 		  }
 		}
@@ -854,8 +853,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get all global "xsl:variable" properties in scope for this stylesheet. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <returns> Vector of all variables and params in scope </returns>
 	  public virtual ArrayList VariablesAndParamsComposed
 	  {
@@ -899,15 +898,15 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get information about whether or not an element should strip whitespace. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <param name="support"> The XPath runtime state. </param>
 	  /// <param name="targetElement"> Element to check
 	  /// </param>
 	  /// <returns> WhiteSpaceInfo for the given element
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public WhiteSpaceInfo getWhiteSpaceInfo(org.apache.xpath.XPathContext support, int targetElement, org.apache.xml.dtm.DTM dtm) throws javax.xml.transform.TransformerException
 	  public virtual WhiteSpaceInfo getWhiteSpaceInfo(XPathContext support, int targetElement, DTM dtm)
 	  {
@@ -924,21 +923,21 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get information about whether or not an element should strip whitespace. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <param name="support"> The XPath runtime state. </param>
 	  /// <param name="targetElement"> Element to check
 	  /// </param>
 	  /// <returns> true if the whitespace should be stripped.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean shouldStripWhiteSpace(org.apache.xpath.XPathContext support, int targetElement) throws javax.xml.transform.TransformerException
 	  public virtual bool shouldStripWhiteSpace(XPathContext support, int targetElement)
 	  {
 		if (null != m_whiteSpaceInfoList)
 		{
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != targetElement)
+		  while (DTM.NULL != targetElement)
 		  {
 			DTM dtm = support.getDTM(targetElement);
 			WhiteSpaceInfo info = (WhiteSpaceInfo) m_whiteSpaceInfoList.getTemplate(support, targetElement, null, false, dtm);
@@ -948,13 +947,13 @@ namespace org.apache.xalan.templates
 			}
 
 			int parent = dtm.getParent(targetElement);
-			if (org.apache.xml.dtm.DTM_Fields.NULL != parent && org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == dtm.getNodeType(parent))
+			if (DTM.NULL != parent && DTM.ELEMENT_NODE == dtm.getNodeType(parent))
 			{
 			  targetElement = parent;
 			}
 			else
 			{
-			  targetElement = org.apache.xml.dtm.DTM_Fields.NULL;
+			  targetElement = DTM.NULL;
 			}
 		  }
 		}
@@ -963,8 +962,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get information about whether or not whitespace can be stripped. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <returns> true if the whitespace can be stripped. </returns>
 	  public override bool canStripWhiteSpace()
 	  {
@@ -1072,7 +1071,7 @@ namespace org.apache.xalan.templates
 	  /// Create the default rule if needed.
 	  /// </summary>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void initDefaultRule(javax.xml.transform.ErrorListener errorListener) throws javax.xml.transform.TransformerException
 	  private void initDefaultRule(ErrorListener errorListener)
 	  {
@@ -1089,7 +1088,7 @@ namespace org.apache.xalan.templates
 		ElemApplyTemplates childrenElement = new ElemApplyTemplates();
 
 		childrenElement.IsDefaultTemplate = true;
-		childrenElement.Select = m_selectDefault;
+		childrenElement.setSelect(m_selectDefault);
 		m_defaultRule.appendChild(childrenElement);
 
 		m_startRule = m_defaultRule;
@@ -1124,7 +1123,7 @@ namespace org.apache.xalan.templates
 
 		childrenElement.IsDefaultTemplate = true;
 		m_defaultRootRule.appendChild(childrenElement);
-		childrenElement.Select = m_selectDefault;
+		childrenElement.setSelect(m_selectDefault);
 	  }
 
 	  /// <summary>
@@ -1215,9 +1214,12 @@ namespace org.apache.xalan.templates
 		/// <summary>
 		/// Return class to track state global state during the compose() operation. </summary>
 		/// <returns> ComposeState reference, or null if endCompose has been called. </returns>
-		internal virtual ComposeState getComposeState()
+		internal virtual ComposeState ComposeState
 		{
-		  return m_composeState;
+			get
+			{
+			  return m_composeState;
+			}
 		}
 
 		/// <summary>
@@ -1285,9 +1287,7 @@ namespace org.apache.xalan.templates
 		  public virtual int getQNameID(QName qname)
 		  {
 
-			return m_ent.getExpandedTypeID(qname.Namespace, qname.LocalName, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
-										   // The type doesn't matter for our 
-										   // purposes. 
+			return m_ent.getExpandedTypeID(qname.Namespace, qname.LocalName, DTM.ELEMENT_NODE);
 		  }
 
 		  /// <summary>
@@ -1301,9 +1301,7 @@ namespace org.apache.xalan.templates
 		  /// the vector is its ID. </summary>
 		  /// <param name="qname"> A qualified name of a param or variable, should be non-null. </param>
 		  /// <returns> the index where the variable was added. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: int addVariableName(final org.apache.xml.utils.QName qname)
-		  internal virtual int addVariableName(QName qname)
+		  internal virtual int addVariableName(in QName qname)
 		  {
 			int pos = m_variableNames.Count;
 			m_variableNames.Add(qname);

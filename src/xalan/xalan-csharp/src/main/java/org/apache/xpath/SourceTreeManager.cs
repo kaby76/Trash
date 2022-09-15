@@ -25,7 +25,6 @@ namespace org.apache.xpath
 {
 
 
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using SystemIDResolver = org.apache.xml.utils.SystemIDResolver;
 
@@ -109,8 +108,8 @@ namespace org.apache.xpath
 	  /// </returns>
 	  /// <exception cref="IOException"> </exception>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public javax.xml.transform.Source resolveURI(String super, String urlString, javax.xml.transform.SourceLocator locator) throws javax.xml.transform.TransformerException, java.io.IOException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public javax.xml.transform.Source resolveURI(String super, String urlString, javax.xml.transform.SourceLocator locator) throws TransformerException, java.io.IOException
 	  public virtual Source resolveURI(string @base, string urlString, SourceLocator locator)
 	  {
 
@@ -138,7 +137,7 @@ namespace org.apache.xpath
 	  /// <param name="n"> The node to remove. </param>
 	  public virtual void removeDocumentFromCache(int n)
 	  {
-		if (org.apache.xml.dtm.DTM_Fields.NULL == n)
+		if (DTM.NULL == n)
 		{
 		  return;
 		}
@@ -166,17 +165,17 @@ namespace org.apache.xpath
 
 		int cachedNode = getNode(source);
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != cachedNode)
+		if (DTM.NULL != cachedNode)
 		{
 		  if (!(cachedNode == n))
 		  {
-			throw new Exception("Programmer's Error!  " + "putDocumentInCache found reparse of doc: " + source.SystemId);
+			throw new Exception("Programmer's Error!  " + "putDocumentInCache found reparse of doc: " + source.getSystemId());
 		  }
 		  return;
 		}
-		if (null != source.SystemId)
+		if (null != source.getSystemId())
 		{
-		  m_sourceTree.Add(new SourceTree(n, source.SystemId));
+		  m_sourceTree.Add(new SourceTree(n, source.getSystemId()));
 		}
 	  }
 
@@ -193,11 +192,11 @@ namespace org.apache.xpath
 	//      return ((DOMSource) source).getNode();
 
 		// TODO: Not sure if the BaseID is really the same thing as the ID.
-		string url = source.SystemId;
+		string url = source.getSystemId();
 
 		if (null == url)
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 
 		int n = m_sourceTree.Count;
@@ -216,7 +215,7 @@ namespace org.apache.xpath
 		}
 
 		// System.out.println("getNode - returning: "+node);
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -230,7 +229,7 @@ namespace org.apache.xpath
 	  /// base and urlString.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> If the URL can not resolve to a node. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int getSourceTree(String super, String urlString, javax.xml.transform.SourceLocator locator, XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public virtual int getSourceTree(string @base, string urlString, SourceLocator locator, XPathContext xctxt)
 	  {
@@ -264,21 +263,21 @@ namespace org.apache.xpath
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if the Source argument can't be resolved to 
 	  ///         a node. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int getSourceTree(javax.xml.transform.Source source, javax.xml.transform.SourceLocator locator, XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public virtual int getSourceTree(Source source, SourceLocator locator, XPathContext xctxt)
 	  {
 
 		int n = getNode(source);
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != n)
+		if (DTM.NULL != n)
 		{
 		  return n;
 		}
 
 		n = parseToNode(source, locator, xctxt);
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != n)
+		if (DTM.NULL != n)
 		{
 		  putDocumentInCache(n, source);
 		}
@@ -296,7 +295,7 @@ namespace org.apache.xpath
 	  /// </returns>
 	  /// <exception cref="TransformerException"> if the source argument can not be resolved 
 	  ///         to a source node. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int parseToNode(javax.xml.transform.Source source, javax.xml.transform.SourceLocator locator, XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public virtual int parseToNode(Source source, SourceLocator locator, XPathContext xctxt)
 	  {
@@ -336,23 +335,23 @@ namespace org.apache.xpath
 	  /// <param name="locator"> The location of the original caller, for diagnostic purposes.
 	  /// </param>
 	  /// <exception cref="TransformerException"> if the reader can not be created. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.xml.sax.XMLReader getXMLReader(javax.xml.transform.Source inputSource, javax.xml.transform.SourceLocator locator) throws javax.xml.transform.TransformerException
 	  public static XMLReader getXMLReader(Source inputSource, SourceLocator locator)
 	  {
 
 		try
 		{
-		  XMLReader reader = (inputSource is SAXSource) ? ((SAXSource) inputSource).XMLReader : null;
+		  XMLReader reader = (inputSource is SAXSource) ? ((SAXSource) inputSource).getXMLReader() : null;
 
 		  if (null == reader)
 		  {
 			try
 			{
 			  javax.xml.parsers.SAXParserFactory factory = javax.xml.parsers.SAXParserFactory.newInstance();
-			  factory.NamespaceAware = true;
+			  factory.setNamespaceAware(true);
 			  javax.xml.parsers.SAXParser jaxpParser = factory.newSAXParser();
-			  reader = jaxpParser.XMLReader;
+			  reader = jaxpParser.getXMLReader();
 
 			}
 			catch (javax.xml.parsers.ParserConfigurationException ex)

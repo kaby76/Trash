@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +24,6 @@ using System.Collections;
  */
 namespace org.apache.xalan.lib
 {
-
 
 
 	using XSLProcessorContext = org.apache.xalan.extensions.XSLProcessorContext;
@@ -120,7 +120,7 @@ namespace org.apache.xalan.lib
 	/// 
 	/// @author Scott Boag
 	/// @version 1.0 </summary>
-	/// <seealso cref= <a href="../../../../../../extensions.html#ex-redirect" target="_top">Example with Redirect extension</a> </seealso>
+	/// <seealso cref="<a href="../../../../../../extensions.html.ex-redirect" target="_top">Example with Redirect extension</a>"/>
 	public class Redirect
 	{
 	  /// <summary>
@@ -148,7 +148,7 @@ namespace org.apache.xalan.lib
 	  /// <summary>
 	  /// Open the given file and put it in the XML, HTML, or Text formatter listener's table.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void open(org.apache.xalan.extensions.XSLProcessorContext context, org.apache.xalan.templates.ElemExtensionCall elem) throws java.net.MalformedURLException, java.io.FileNotFoundException, java.io.IOException, javax.xml.transform.TransformerException
 	  public virtual void open(XSLProcessorContext context, ElemExtensionCall elem)
 	  {
@@ -171,7 +171,7 @@ namespace org.apache.xalan.lib
 	  /// Write the evalutation of the element children to the given file. Then close the file
 	  /// unless it was opened with the open extension element and is in the formatter listener's table.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(org.apache.xalan.extensions.XSLProcessorContext context, org.apache.xalan.templates.ElemExtensionCall elem) throws java.net.MalformedURLException, java.io.FileNotFoundException, java.io.IOException, javax.xml.transform.TransformerException
 	  public virtual void write(XSLProcessorContext context, ElemExtensionCall elem)
 	  {
@@ -206,7 +206,7 @@ namespace org.apache.xalan.lib
 
 		if (!inTable)
 		{
-		  System.IO.Stream ostream = (System.IO.Stream)m_outputStreams[fileName];
+		  Stream ostream = (Stream)m_outputStreams[fileName];
 		  if (null != ostream)
 		  {
 			try
@@ -228,7 +228,7 @@ namespace org.apache.xalan.lib
 	  /// <summary>
 	  /// Close the given file and remove it from the formatter listener's table.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void close(org.apache.xalan.extensions.XSLProcessorContext context, org.apache.xalan.templates.ElemExtensionCall elem) throws java.net.MalformedURLException, java.io.FileNotFoundException, java.io.IOException, javax.xml.transform.TransformerException
 	  public virtual void close(XSLProcessorContext context, ElemExtensionCall elem)
 	  {
@@ -245,7 +245,7 @@ namespace org.apache.xalan.lib
 		  {
 			throw new TransformerException(se);
 		  }
-		  System.IO.Stream ostream = (System.IO.Stream)m_outputStreams[fileName];
+		  Stream ostream = (Stream)m_outputStreams[fileName];
 		  if (null != ostream)
 		  {
 			ostream.Close();
@@ -258,7 +258,7 @@ namespace org.apache.xalan.lib
 	  /// <summary>
 	  /// Get the filename from the 'select' or the 'file' attribute.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private String getFilename(org.apache.xalan.extensions.XSLProcessorContext context, org.apache.xalan.templates.ElemExtensionCall elem) throws java.net.MalformedURLException, java.io.FileNotFoundException, java.io.IOException, javax.xml.transform.TransformerException
 	  private string getFilename(XSLProcessorContext context, ElemExtensionCall elem)
 	  {
@@ -321,7 +321,7 @@ namespace org.apache.xalan.lib
 	  /// <summary>
 	  /// Create a new ContentHandler, based on attributes of the current ContentHandler.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private org.xml.sax.ContentHandler makeFormatterListener(org.apache.xalan.extensions.XSLProcessorContext context, org.apache.xalan.templates.ElemExtensionCall elem, String fileName, boolean shouldPutInTable, boolean mkdirs, boolean append) throws java.net.MalformedURLException, java.io.FileNotFoundException, java.io.IOException, javax.xml.transform.TransformerException
 	  private ContentHandler makeFormatterListener(XSLProcessorContext context, ElemExtensionCall elem, string fileName, bool shouldPutInTable, bool mkdirs, bool append)
 	  {
@@ -329,7 +329,7 @@ namespace org.apache.xalan.lib
 		TransformerImpl transformer = context.Transformer;
 		string @base; // Base URI to use for relative paths
 
-		if (!file.Absolute)
+		if (!file.isAbsolute())
 		{
 		  // This code is attributed to Jon Grov <jon@linpro.no>.  A relative file name
 		  // is relative to the Result used to kick off the transform.  If no such
@@ -339,7 +339,7 @@ namespace org.apache.xalan.lib
 	  //      String base = urlToFileName(elem.getStylesheet().getSystemId());
 
 		  Result outputTarget = transformer.OutputTarget;
-		  if ((null != outputTarget) && (!string.ReferenceEquals((@base = outputTarget.SystemId), null)))
+		  if ((null != outputTarget) && (!string.ReferenceEquals((@base = outputTarget.getSystemId()), null)))
 		  {
 			@base = urlToFileName(@base);
 		  }
@@ -351,14 +351,14 @@ namespace org.apache.xalan.lib
 		  if (null != @base)
 		  {
 			File baseFile = new File(@base);
-			file = new File(baseFile.Parent, fileName);
+			file = new File(baseFile.getParent(), fileName);
 		  }
 		  // System.out.println("file is: "+file.toString());
 		}
 
 		if (mkdirs)
 		{
-		  string dirStr = file.Parent;
+		  string dirStr = file.getParent();
 		  if ((null != dirStr) && (dirStr.Length > 0))
 		  {
 			File dir = new File(dirStr);
@@ -376,7 +376,7 @@ namespace org.apache.xalan.lib
 		//  is implemented as a call to 
 		//  FileOutputStream(File.getPath, append), thus this should be 
 		//  the equivalent instead of getAbsolutePath()
-		System.IO.FileStream ostream = new System.IO.FileStream(file.Path, append);
+		FileStream ostream = new FileStream(file.getPath(), append);
 
 		try
 		{
@@ -435,9 +435,9 @@ namespace org.apache.xalan.lib
 	  /// </returns>
 	  /// <exception cref="java.io.IOException"> </exception>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.serializer.SerializationHandler createSerializationHandler(org.apache.xalan.transformer.TransformerImpl transformer, java.io.FileOutputStream ostream, java.io.File file, org.apache.xalan.templates.OutputProperties format) throws java.io.IOException, javax.xml.transform.TransformerException
-	  public virtual SerializationHandler createSerializationHandler(TransformerImpl transformer, System.IO.FileStream ostream, File file, OutputProperties format)
+	  public virtual SerializationHandler createSerializationHandler(TransformerImpl transformer, FileStream ostream, File file, OutputProperties format)
 	  {
 
 		  SerializationHandler serializer = transformer.createSerializationHandler(new StreamResult(ostream), format);

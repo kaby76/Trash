@@ -26,7 +26,6 @@ using System.Text;
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -51,7 +50,7 @@ namespace org.apache.xalan.xsltc.compiler
 	{
 		// Three possible actions for the translet:
 		public const int USE_PREDICATE = 0;
-		public const int Constants_Fields;
+		public const int STRIP_SPACE = 1;
 		public const int PRESERVE_SPACE = 2;
 
 		// The 3 different categories of strip/preserve rules (order important)
@@ -89,12 +88,12 @@ namespace org.apache.xalan.xsltc.compiler
 			int colon = element.LastIndexOf(':');
 			if (colon >= 0)
 			{
-			_namespace = element.Substring(0,colon);
+			_namespace = element.Substring(0, colon);
 			_element = element.Substring(colon + 1, element.Length - (colon + 1));
 			}
 			else
 			{
-			_namespace = Constants_Fields.EMPTYSTRING;
+			_namespace = Constants.EMPTYSTRING;
 			_element = element;
 			}
 
@@ -104,7 +103,7 @@ namespace org.apache.xalan.xsltc.compiler
 			// Get the strip/preserve type; either "NS:EL", "NS:*" or "*"
 			if (_element.Equals("*"))
 			{
-			if (string.ReferenceEquals(_namespace, Constants_Fields.EMPTYSTRING))
+			if (string.ReferenceEquals(_namespace, Constants.EMPTYSTRING))
 			{
 				_type = RULE_ALL; // Strip/preserve _all_ elements
 				_priority += 2; // Lowest priority
@@ -173,7 +172,7 @@ namespace org.apache.xalan.xsltc.compiler
 		public override void parseContents(Parser parser)
 		{
 			// Determine if this is an xsl:strip- or preserve-space element
-			_action = _qname.LocalPart.EndsWith("strip-space", StringComparison.Ordinal) ? Constants_Fields.STRIP_SPACE : PRESERVE_SPACE;
+			_action = _qname.LocalPart.EndsWith("strip-space", StringComparison.Ordinal) ? STRIP_SPACE : PRESERVE_SPACE;
 
 			// Determine the import precedence
 			_importPrecedence = parser.CurrentImportPrecedence;
@@ -190,7 +189,7 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final SymbolTable stable = parser.getSymbolTable();
 			SymbolTable stable = parser.SymbolTable;
 			StringTokenizer list = new StringTokenizer(_elementList);
-			StringBuilder elements = new StringBuilder(Constants_Fields.EMPTYSTRING);
+			StringBuilder elements = new StringBuilder(Constants.EMPTYSTRING);
 
 			while (list.hasMoreElements())
 			{
@@ -201,7 +200,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 				if (col != -1)
 				{
-					@namespace = lookupNamespace(token.Substring(0,col));
+					@namespace = lookupNamespace(token.Substring(0, col));
 					if (!string.ReferenceEquals(@namespace, null))
 					{
 						elements.Append(@namespace + ":" + token.Substring(col + 1, token.Length - (col + 1)));
@@ -312,7 +311,7 @@ namespace org.apache.xalan.xsltc.compiler
 		for (int i = 0; i < rules.Count; i++)
 		{
 			currentRule = (WhitespaceRule)rules[i];
-			if (currentRule.Action == Constants_Fields.STRIP_SPACE)
+			if (currentRule.Action == STRIP_SPACE)
 			{
 			strip = true;
 			}
@@ -383,7 +382,7 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(IRETURN);
 		for (int i = 0; i < sCount; i++)
 		{
-			strip[i].Target = target;
+			strip[i].setTarget(target);
 		}
 		}
 
@@ -395,7 +394,7 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(IRETURN);
 		for (int i = 0; i < pCount; i++)
 		{
-			preserve[i].Target = target;
+			preserve[i].setTarget(target);
 		}
 		}
 
@@ -418,7 +417,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
@@ -428,8 +427,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// private boolean Translet.stripSpace(int type) - cannot be static
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator stripSpace = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] { org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT }, new String[] { "dom","node","type" }, "stripSpace",classGen.getClassName(),il,cpg);
-		MethodGenerator stripSpace = new MethodGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] {Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT}, new string[] {"dom","node","type"}, "stripSpace",classGen.ClassName,il,cpg);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator stripSpace = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] { org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT }, new String[] { "dom","node","type" }, "stripSpace",classGen.getClassName(),il,cpg);
+		MethodGenerator stripSpace = new MethodGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] {Util.getJCRefType(DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT}, new string[] {"dom", "node", "type"}, "stripSpace",classGen.ClassName,il,cpg);
 
 		classGen.addInterface("org/apache/xalan/xsltc/StripFilter");
 
@@ -456,8 +455,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 			// Returns the namespace for a node in the DOM
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int gns = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNamespaceName", "(I)Ljava/lang/String;");
-			int gns = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNamespaceName", "(I)Ljava/lang/String;");
+//ORIGINAL LINE: final int gns = cpg.addInterfaceMethodref(DOM_INTF, "getNamespaceName", "(I)Ljava/lang/String;");
+			int gns = cpg.addInterfaceMethodref(DOM_INTF, "getNamespaceName", "(I)Ljava/lang/String;");
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int strcmp = cpg.addMethodref("java/lang/String", "compareTo", "(Ljava/lang/String;)I");
@@ -473,7 +472,7 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(new INVOKEVIRTUAL(strcmp));
 			il.append(ICONST_0);
 
-			if (rule.Action == Constants_Fields.STRIP_SPACE)
+			if (rule.Action == STRIP_SPACE)
 			{
 				strip[sCount++] = il.append(new IF_ICMPEQ(null));
 			}
@@ -490,7 +489,7 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final Parser parser = classGen.getParser();
 			Parser parser = classGen.Parser;
 			QName qname;
-			if (!string.ReferenceEquals(rule.Namespace, Constants_Fields.EMPTYSTRING))
+			if (!string.ReferenceEquals(rule.Namespace, Constants.EMPTYSTRING))
 			{
 				qname = parser.getQName(rule.Namespace, null, rule.Element);
 			}
@@ -507,7 +506,7 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(new PUSH(cpg, elementType));
 
 			// Compare current node type with wanted element type
-			if (rule.Action == Constants_Fields.STRIP_SPACE)
+			if (rule.Action == STRIP_SPACE)
 			{
 				strip[sCount++] = il.append(new IF_ICMPEQ(null));
 			}
@@ -518,7 +517,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-		if (defaultAction == Constants_Fields.STRIP_SPACE)
+		if (defaultAction == STRIP_SPACE)
 		{
 			compileStripSpace(strip, sCount, il);
 			compilePreserveSpace(preserve, pCount, il);
@@ -539,7 +538,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = new org.apache.bcel.generic.InstructionList();
 		InstructionList il = new InstructionList();
@@ -549,12 +548,12 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// private boolean Translet.stripSpace(int type) - cannot be static
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator stripSpace = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] { org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT }, new String[] { "dom","node","type" }, "stripSpace",classGen.getClassName(),il,cpg);
-		MethodGenerator stripSpace = new MethodGenerator(Constants_Fields.ACC_PUBLIC | Constants_Fields.ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] {Util.getJCRefType(Constants_Fields.DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT}, new string[] {"dom","node","type"}, "stripSpace",classGen.ClassName,il,cpg);
+//ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.MethodGenerator stripSpace = new org.apache.xalan.xsltc.compiler.util.MethodGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] { org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT }, new String[] { "dom","node","type" }, "stripSpace",classGen.getClassName(),il,cpg);
+		MethodGenerator stripSpace = new MethodGenerator(ACC_PUBLIC | ACC_FINAL, org.apache.bcel.generic.Type.BOOLEAN, new org.apache.bcel.generic.Type[] {Util.getJCRefType(DOM_INTF_SIG), org.apache.bcel.generic.Type.INT, org.apache.bcel.generic.Type.INT}, new string[] {"dom", "node", "type"}, "stripSpace",classGen.ClassName,il,cpg);
 
 		classGen.addInterface("org/apache/xalan/xsltc/StripFilter");
 
-		if (defaultAction == Constants_Fields.STRIP_SPACE)
+		if (defaultAction == STRIP_SPACE)
 		{
 			il.append(ICONST_1);
 		}
@@ -644,7 +643,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type-check contents/attributes - nothing to do...
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{

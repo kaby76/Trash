@@ -21,14 +21,13 @@
 namespace org.apache.xalan.trace
 {
 
-
 	/// <summary>
 	/// Interface the XSL processor calls when it matches a source node, selects a set of source nodes,
 	/// or generates a result node.
 	/// If you want an object instance to be called when a trace event occurs, use the TransformerImpl setTraceListener method. </summary>
-	/// <seealso cref= org.apache.xalan.trace.TracerEvent </seealso>
-	/// <seealso cref= org.apache.xalan.trace.TraceManager#addTraceListener
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="org.apache.xalan.trace.TracerEvent"/>
+	/// <seealso cref="org.apache.xalan.trace.TraceManager.addTraceListener"
+	/// @xsl.usage advanced/>
 	public interface TraceListener : java.util.EventListener
 	{
 
@@ -45,7 +44,7 @@ namespace org.apache.xalan.trace
 	  /// <param name="ev"> the generate event.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void selected(SelectionEvent ev) throws javax.xml.transform.TransformerException;
 	  void selected(SelectionEvent ev);
 

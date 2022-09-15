@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -53,9 +52,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void parseContents(final Parser parser)
-		public override void parseContents(Parser parser)
+		public override void parseContents(in Parser parser)
 		{
 		XSLTC xsltc = parser.XSLTC;
 		Stylesheet context = parser.CurrentStylesheet;
@@ -68,7 +65,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ErrorMsg msg = new org.apache.xalan.xsltc.compiler.util.ErrorMsg(org.apache.xalan.xsltc.compiler.util.ErrorMsg.CIRCULAR_INCLUDE_ERR, docToLoad, this);
 			ErrorMsg msg = new ErrorMsg(ErrorMsg.CIRCULAR_INCLUDE_ERR, docToLoad, this);
-			parser.reportError(Constants_Fields.FATAL, msg);
+			parser.reportError(Constants.FATAL, msg);
 			return;
 			}
 
@@ -83,7 +80,7 @@ namespace org.apache.xalan.xsltc.compiler
 			input = loader.loadSource(docToLoad, currLoadedDoc, xsltc);
 					if (input != null)
 					{
-						docToLoad = input.SystemId;
+						docToLoad = input.getSystemId();
 						reader = xsltc.XMLReader;
 					}
 			}
@@ -101,7 +98,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ErrorMsg msg = new org.apache.xalan.xsltc.compiler.util.ErrorMsg(org.apache.xalan.xsltc.compiler.util.ErrorMsg.FILE_NOT_FOUND_ERR, docToLoad, this);
 			ErrorMsg msg = new ErrorMsg(ErrorMsg.FILE_NOT_FOUND_ERR, docToLoad, this);
-			parser.reportError(Constants_Fields.FATAL, msg);
+			parser.reportError(Constants.FATAL, msg);
 			return;
 			}
 
@@ -181,7 +178,7 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{

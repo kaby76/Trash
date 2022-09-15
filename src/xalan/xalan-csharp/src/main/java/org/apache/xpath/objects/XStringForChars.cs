@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath.objects
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using FastStringBuffer = org.apache.xml.utils.FastStringBuffer;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
@@ -135,7 +134,7 @@ namespace org.apache.xpath.objects
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException
 	  public override void dispatchCharactersEvents(org.xml.sax.ContentHandler ch)
 	  {
@@ -150,7 +149,7 @@ namespace org.apache.xpath.objects
 	  /// <param name="lh"> A non-null reference to a LexicalHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchAsComment(org.xml.sax.ext.LexicalHandler lh) throws org.xml.sax.SAXException
 	  public override void dispatchAsComment(org.xml.sax.ext.LexicalHandler lh)
 	  {

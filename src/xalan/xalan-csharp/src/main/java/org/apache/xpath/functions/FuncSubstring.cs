@@ -22,9 +22,9 @@
  */
 namespace org.apache.xpath.functions
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XMLString = org.apache.xml.utils.XMLString;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XString = org.apache.xpath.objects.XString;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
@@ -45,7 +45,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -73,14 +73,14 @@ namespace org.apache.xpath.functions
 		  }
 		  else
 		  {
-			start = Math.Round(start);
+			start = (long)Math.Round(start, MidpointRounding.AwayFromZero);
 			startIndex = (start > 0) ? (int) start - 1 : 0;
 		  }
 
 		  if (null != m_arg2)
 		  {
 			double len = m_arg2.num(xctxt);
-			int end = (int)(Math.Round(len) + start) - 1;
+			int end = (int)((long)Math.Round(len, MidpointRounding.AwayFromZero) + start) - 1;
 
 			// Normalize end index.
 			if (end < 0)
@@ -119,7 +119,7 @@ namespace org.apache.xpath.functions
 	  /// <param name="argNum"> The number of arguments that is being passed to the function.
 	  /// </param>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void checkNumberArgs(int argNum) throws WrongNumberArgsException
 	  public override void checkNumberArgs(int argNum)
 	  {
@@ -134,7 +134,7 @@ namespace org.apache.xpath.functions
 	  /// message for this function object.
 	  /// </summary>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void reportWrongNumberArgs() throws WrongNumberArgsException
 	  protected internal override void reportWrongNumberArgs()
 	  {

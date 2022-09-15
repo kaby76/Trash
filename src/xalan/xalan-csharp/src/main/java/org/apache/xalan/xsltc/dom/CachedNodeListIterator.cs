@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using DTMAxisIteratorBase = org.apache.xml.dtm.@ref.DTMAxisIteratorBase;
 	using IntegerArray = org.apache.xalan.xsltc.util.IntegerArray;
@@ -98,7 +97,7 @@ namespace org.apache.xalan.xsltc.dom
 			else if (!_isEnded)
 			{
 				int node = _source.next();
-				if (node != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+				if (node != END)
 				{
 					_nodes.add(node);
 					_numCachedNodes++;
@@ -111,7 +110,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 			else
 			{
-				return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+				return END;
 			}
 		}
 

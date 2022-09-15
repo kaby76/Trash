@@ -21,7 +21,6 @@
 
 namespace org.apache.xml.serializer.dom3
 {
-
 	using DOMLocator = org.w3c.dom.DOMLocator;
 	using Node = org.w3c.dom.Node;
 

@@ -22,13 +22,15 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using DTMManager = org.apache.xml.dtm.DTMManager;
 	using PrefixResolver = org.apache.xml.utils.PrefixResolver;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using XNodeSet = org.apache.xpath.objects.XNodeSet;
 	using XObject = org.apache.xpath.objects.XObject;
@@ -47,7 +49,7 @@ namespace org.apache.xpath.axes
 	/// @xsl.usage advanced
 	/// </summary>
 	[Serializable]
-	public abstract class LocPathIterator : PredicatedNodeTest, ICloneable, DTMIterator, PathComponent
+	public abstract class LocPathIterator : PredicatedNodeTest, Cloneable, DTMIterator, PathComponent
 	{
 		private bool InstanceFieldsInitialized = false;
 
@@ -100,7 +102,7 @@ namespace org.apache.xpath.axes
 	  /// opcode list from the compiler.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected LocPathIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis) throws javax.xml.transform.TransformerException
 	  protected internal LocPathIterator(Compiler compiler, int opPos, int analysis) : this(compiler, opPos, analysis, true)
 	  {
@@ -125,7 +127,7 @@ namespace org.apache.xpath.axes
 	  /// it doesn't wish to load child walkers.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected LocPathIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis, boolean shouldLoadWalkers) throws javax.xml.transform.TransformerException
 	  protected internal LocPathIterator(Compiler compiler, int opPos, int analysis, bool shouldLoadWalkers)
 	  {
@@ -157,7 +159,7 @@ namespace org.apache.xpath.axes
 	  /// </param>
 	  /// <exception cref="java.io.IOException"> </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void readObject(java.io.ObjectInputStream stream) throws java.io.IOException, javax.xml.transform.TransformerException
 	  private void readObject(java.io.ObjectInputStream stream)
 	  {
@@ -231,7 +233,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> An XNodeSet reference that holds this iterator.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -256,7 +258,7 @@ namespace org.apache.xpath.axes
 	  /// <exception cref="javax.xml.transform.TransformerException"> if a runtime exception
 	  ///         occurs. </exception>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void executeCharsToContentHandler(org.apache.xpath.XPathContext xctxt, org.xml.sax.ContentHandler handler) throws javax.xml.transform.TransformerException, org.xml.sax.SAXException
 	  public override void executeCharsToContentHandler(XPathContext xctxt, org.xml.sax.ContentHandler handler)
 	  {
@@ -269,7 +271,7 @@ namespace org.apache.xpath.axes
 		DTM dtm = clone.getDTM(node);
 		clone.detach();
 
-		if (node != org.apache.xml.dtm.DTM_Fields.NULL)
+		if (node != DTM.NULL)
 		{
 		  dtm.dispatchCharactersEvents(node, handler, false);
 		}
@@ -286,7 +288,7 @@ namespace org.apache.xpath.axes
 	  /// </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// @xsl.usage experimental </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator asIterator(org.apache.xpath.XPathContext xctxt, int contextNode) throws javax.xml.transform.TransformerException
 	  public override DTMIterator asIterator(XPathContext xctxt, int contextNode)
 	  {
@@ -317,7 +319,7 @@ namespace org.apache.xpath.axes
 	  /// value without having to do a clone operation. </summary>
 	  /// <param name="xctxt"> The XPath runtime context. </param>
 	  /// <returns> the first node out of the nodeset, or DTM.NULL. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int asNode(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override int asNode(XPathContext xctxt)
 	  {
@@ -341,11 +343,11 @@ namespace org.apache.xpath.axes
 	  /// <returns> The result of the operation as a boolean.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean bool(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override bool @bool(XPathContext xctxt)
 	  {
-		return (asNode(xctxt) != org.apache.xml.dtm.DTM_Fields.NULL);
+		return (asNode(xctxt) != DTM.NULL);
 	  }
 
 
@@ -392,7 +394,7 @@ namespace org.apache.xpath.axes
 			m_prefixResolver = xctxt.NamespaceContext;
 		}
 
-		m_lastFetched = org.apache.xml.dtm.DTM_Fields.NULL;
+		m_lastFetched = DTM.NULL;
 		m_foundLast = false;
 		m_pos = 0;
 		m_length = -1;
@@ -561,7 +563,7 @@ namespace org.apache.xpath.axes
     
 			try
 			{
-			  clone = (LocPathIterator) clone();
+			  clone = (LocPathIterator) this.clone();
 			}
 			catch (CloneNotSupportedException)
 			{
@@ -582,7 +584,7 @@ namespace org.apache.xpath.axes
     
 			int next;
     
-			while (org.apache.xml.dtm.DTM_Fields.NULL != (next = clone.nextNode()))
+			while (DTM.NULL != (next = clone.nextNode()))
 			{
 			  pos++;
 			}
@@ -631,14 +633,14 @@ namespace org.apache.xpath.axes
 	  /// interface.</para>
 	  /// </summary>
 	  /// <returns> For now, always NodeFilter.SHOW_ALL & ~NodeFilter.SHOW_ENTITY_REFERENCE. </returns>
-	  /// <seealso cref= org.w3c.dom.traversal.NodeIterator </seealso>
+	  /// <seealso cref="org.w3c.dom.traversal.NodeIterator"/>
 	  public override int WhatToShow
 	  {
 		  get
 		  {
     
 			// TODO: ??
-			return org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL & ~org.apache.xml.dtm.DTMFilter_Fields.SHOW_ENTITY_REFERENCE;
+			return DTMFilter.SHOW_ALL & ~DTMFilter.SHOW_ENTITY_REFERENCE;
 		  }
 	  }
 
@@ -648,7 +650,7 @@ namespace org.apache.xpath.axes
 	  /// interface.
 	  /// </summary>
 	  /// <returns> Always null. </returns>
-	  /// <seealso cref= org.w3c.dom.traversal.NodeIterator </seealso>
+	  /// <seealso cref="org.w3c.dom.traversal.NodeIterator"/>
 	  public virtual DTMFilter Filter
 	  {
 		  get
@@ -724,9 +726,9 @@ namespace org.apache.xpath.axes
 		  m_cdtm = null;
 		  m_length = -1;
 		  m_pos = 0;
-		  m_lastFetched = org.apache.xml.dtm.DTM_Fields.NULL;
-		  m_context = org.apache.xml.dtm.DTM_Fields.NULL;
-		  m_currentContextNode = org.apache.xml.dtm.DTM_Fields.NULL;
+		  m_lastFetched = DTM.NULL;
+		  m_context = DTM.NULL;
+		  m_currentContextNode = DTM.NULL;
 
 		  m_clones.freeInstance(this);
 		}
@@ -747,7 +749,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A cloned NodeIterator set of the start of the query.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator cloneWithReset() throws CloneNotSupportedException
 	  public virtual DTMIterator cloneWithReset()
 	  {
@@ -800,14 +802,14 @@ namespace org.apache.xpath.axes
 	  protected internal virtual int returnNextNode(int nextNode)
 	  {
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != nextNode)
+		if (DTM.NULL != nextNode)
 		{
 		  m_pos++;
 		}
 
 		m_lastFetched = nextNode;
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL == nextNode)
+		if (DTM.NULL == nextNode)
 		{
 		  m_foundLast = true;
 		}
@@ -847,14 +849,14 @@ namespace org.apache.xpath.axes
 
 		if (-1 == index)
 		{
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (n = nextNode()))
+		  while (DTM.NULL != (n = nextNode()))
 		  {
 				  ;
 		  }
 		}
 		else
 		{
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (n = nextNode()))
+		  while (DTM.NULL != (n = nextNode()))
 		  {
 			if (CurrentPos >= index)
 			{
@@ -968,7 +970,7 @@ namespace org.apache.xpath.axes
 	//    m_analysis = a;
 	//  }
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
 	  {
 			   if (visitor.visitLocationPath(owner, this))
@@ -1013,14 +1015,14 @@ namespace org.apache.xpath.axes
 	  /// <summary>
 	  /// The last node that was fetched, usually by nextNode. </summary>
 	  [NonSerialized]
-	  public int m_lastFetched = org.apache.xml.dtm.DTM_Fields.NULL;
+	  public int m_lastFetched = DTM.NULL;
 
 	  /// <summary>
 	  /// The context node for this iterator, which doesn't change through
 	  /// the course of the iteration.
 	  /// </summary>
 	  [NonSerialized]
-	  protected internal int m_context = org.apache.xml.dtm.DTM_Fields.NULL;
+	  protected internal int m_context = DTM.NULL;
 
 	  /// <summary>
 	  /// The node context from where the expression is being
@@ -1029,7 +1031,7 @@ namespace org.apache.xpath.axes
 	  /// expression, rather than the context for the subexpression.
 	  /// </summary>
 	  [NonSerialized]
-	  protected internal int m_currentContextNode = org.apache.xml.dtm.DTM_Fields.NULL;
+	  protected internal int m_currentContextNode = DTM.NULL;
 
 	  /// <summary>
 	  /// The current position of the context node.
@@ -1088,7 +1090,7 @@ namespace org.apache.xpath.axes
 	//   * @serial
 	//   */
 	//  protected int m_analysis = 0x00000000;
-	  /// <seealso cref= PredicatedNodeTest#getLastPos(XPathContext) </seealso>
+	  /// <seealso cref="PredicatedNodeTest.getLastPos(XPathContext)"/>
 	  public override int getLastPos(XPathContext xctxt)
 	  {
 		return Length;

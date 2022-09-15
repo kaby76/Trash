@@ -23,10 +23,11 @@ using System.Collections;
  */
 namespace org.apache.xpath.objects
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using XMLString = org.apache.xml.utils.XMLString;
+	using Expression = org.apache.xpath.Expression;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
 
 	/// <summary>
@@ -62,7 +63,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> the result of executing the select expression
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -97,7 +98,7 @@ namespace org.apache.xpath.objects
 	  /// Cast result object to a number.
 	  /// </summary>
 	  /// <returns> The result tree fragment as a number or NaN </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public double num() throws javax.xml.transform.TransformerException
 	  public override double num()
 	  {

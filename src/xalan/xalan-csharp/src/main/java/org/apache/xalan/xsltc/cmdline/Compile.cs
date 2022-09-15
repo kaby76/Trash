@@ -26,7 +26,6 @@ using System.Text;
 namespace org.apache.xalan.xsltc.cmdline
 {
 
-
 	using GetOpt = org.apache.xalan.xsltc.cmdline.getopt.GetOpt;
 	using GetOptsException = org.apache.xalan.xsltc.cmdline.getopt.GetOptsException;
 	using XSLTC = org.apache.xalan.xsltc.compiler.XSLTC;

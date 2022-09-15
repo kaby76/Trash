@@ -22,11 +22,11 @@
  */
 namespace org.apache.xpath.patterns
 {
-
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisTraverser = org.apache.xml.dtm.DTMAxisTraverser;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using WalkerFactory = org.apache.xpath.axes.WalkerFactory;
 	using XObject = org.apache.xpath.objects.XObject;
 	/// <summary>
@@ -41,7 +41,7 @@ namespace org.apache.xpath.patterns
 	  /// Construct a ContextMatchStepPattern.
 	  /// 
 	  /// </summary>
-	  public ContextMatchStepPattern(int axis, int paxis) : base(org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL, axis, paxis)
+	  public ContextMatchStepPattern(int axis, int paxis) : base(DTMFilter.SHOW_ALL, axis, paxis)
 	  {
 	  }
 
@@ -51,14 +51,14 @@ namespace org.apache.xpath.patterns
 	  /// </summary>
 	  /// <param name="xctxt"> XPath runtime context.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -80,14 +80,14 @@ namespace org.apache.xpath.patterns
 	  /// <param name="xctxt"> The XPath runtime context. </param>
 	  /// NEEDSDOC <param name="prevStep">
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NODETEST"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NONE"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_NSWILD"/>,
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_QNAME"/>, or
-	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest#SCORE_OTHER"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NODETEST"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NONE"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_NSWILD"/>,
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_QNAME"/>, or
+	  ///         <seealso cref="org.apache.xpath.patterns.NodeTest.SCORE_OTHER"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject executeRelativePathPattern(org.apache.xpath.XPathContext xctxt, StepPattern prevStep) throws javax.xml.transform.TransformerException
 	  public virtual XObject executeRelativePathPattern(XPathContext xctxt, StepPattern prevStep)
 	  {
@@ -104,7 +104,7 @@ namespace org.apache.xpath.patterns
 		  int axis = m_axis;
 
 		  bool needToTraverseAttrs = WalkerFactory.isDownwardAxisOfMany(axis);
-		  bool iterRootIsAttr = (dtm.getNodeType(xctxt.IteratorRoot) == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE);
+		  bool iterRootIsAttr = (dtm.getNodeType(xctxt.IteratorRoot) == DTM.ATTRIBUTE_NODE);
 
 		  if ((Axis.PRECEDING == axis) && iterRootIsAttr)
 		  {
@@ -113,7 +113,7 @@ namespace org.apache.xpath.patterns
 
 		  traverser = dtm.getAxisTraverser(axis);
 
-		  for (int relative = traverser.first(context); org.apache.xml.dtm.DTM_Fields.NULL != relative; relative = traverser.next(context, relative))
+		  for (int relative = traverser.first(context); DTM.NULL != relative; relative = traverser.next(context, relative))
 		  {
 			try
 			{
@@ -133,14 +133,14 @@ namespace org.apache.xpath.patterns
 			  score = NodeTest.SCORE_NONE;
 			  }
 
-			  if (needToTraverseAttrs && iterRootIsAttr && (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == dtm.getNodeType(relative)))
+			  if (needToTraverseAttrs && iterRootIsAttr && (DTM.ELEMENT_NODE == dtm.getNodeType(relative)))
 			  {
 				int xaxis = Axis.ATTRIBUTE;
 				for (int i = 0; i < 2; i++)
 				{
 				  DTMAxisTraverser atraverser = dtm.getAxisTraverser(xaxis);
 
-				  for (int arelative = atraverser.first(relative); org.apache.xml.dtm.DTM_Fields.NULL != arelative; arelative = atraverser.next(relative, arelative))
+				  for (int arelative = atraverser.first(relative); DTM.NULL != arelative; arelative = atraverser.next(relative, arelative))
 				  {
 					try
 					{

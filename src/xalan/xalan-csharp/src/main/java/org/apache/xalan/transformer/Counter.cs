@@ -60,7 +60,7 @@ namespace org.apache.xalan.transformer
 	  /// find a counter if the node being counted is not immediatly
 	  /// found in the m_countNodes vector.
 	  /// </summary>
-	  internal int m_fromNode = org.apache.xml.dtm.DTM_Fields.NULL;
+	  internal int m_fromNode = DTM.NULL;
 
 	  /// <summary>
 	  /// The owning xsl:number element.
@@ -81,7 +81,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="countNodes"> A vector of all nodes counted so far.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: Counter(org.apache.xalan.templates.ElemNumber numberElem, org.apache.xpath.NodeSetDTM countNodes) throws javax.xml.transform.TransformerException
 	  internal Counter(ElemNumber numberElem, NodeSetDTM countNodes)
 	  {
@@ -154,7 +154,7 @@ namespace org.apache.xalan.transformer
     
 			int size = m_countNodes.size();
     
-			return (size > 0) ? m_countNodes.elementAt(size - 1) : org.apache.xml.dtm.DTM_Fields.NULL;
+			return (size > 0) ? m_countNodes.elementAt(size - 1) : DTM.NULL;
 		  }
 	  }
 	}

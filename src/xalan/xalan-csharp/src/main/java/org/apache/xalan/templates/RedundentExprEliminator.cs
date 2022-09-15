@@ -247,10 +247,10 @@ namespace org.apache.xalan.templates
 			ElemTemplateElement root = isGlobal ? varScope : findCommonAncestor(matchedPaths);
 			WalkingIterator sharedIter = (WalkingIterator)matchedPaths.m_exprOwner.Expression;
 			WalkingIterator newIter = createIteratorFromSteps(sharedIter, lengthToTest);
-			ElemVariable @var = createPseudoVarDecl(root, newIter, isGlobal);
+			ElemVariable var = createPseudoVarDecl(root, newIter, isGlobal);
 			if (DIAGNOSE_MULTISTEPLIST)
 			{
-				Console.Error.WriteLine("Created var: " + @var.Name + (isGlobal ? "(Global)" : ""));
+				Console.Error.WriteLine("Created var: " + var.Name + (isGlobal ? "(Global)" : ""));
 			}
 			while (null != matchedPaths)
 			{
@@ -262,7 +262,7 @@ namespace org.apache.xalan.templates
 					diagnoseLineNumber(iter);
 				}
 
-				LocPathIterator newIter2 = changePartToRef(@var.Name, iter, lengthToTest, isGlobal);
+				LocPathIterator newIter2 = changePartToRef(var.Name, iter, lengthToTest, isGlobal);
 				owner.Expression = newIter2;
 
 				matchedPaths = matchedPaths.m_next;
@@ -452,19 +452,17 @@ namespace org.apache.xalan.templates
 	  /// <param name="wi"> The walking iterator that is to be changed. </param>
 	  /// <param name="numSteps"> The number of steps to be changed. </param>
 	  /// <param name="isGlobal"> true if this will be a global reference. </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: protected org.apache.xpath.axes.LocPathIterator changePartToRef(final org.apache.xml.utils.QName uniquePseudoVarName, org.apache.xpath.axes.WalkingIterator wi, final int numSteps, final boolean isGlobal)
-	  protected internal virtual LocPathIterator changePartToRef(QName uniquePseudoVarName, WalkingIterator wi, int numSteps, bool isGlobal)
+	  protected internal virtual LocPathIterator changePartToRef(in QName uniquePseudoVarName, WalkingIterator wi, in int numSteps, in bool isGlobal)
 	  {
-		  Variable @var = new Variable();
-		  @var.QName = uniquePseudoVarName;
-		  @var.IsGlobal = isGlobal;
+		  Variable var = new Variable();
+		  var.QName = uniquePseudoVarName;
+		  var.IsGlobal = isGlobal;
 		  if (isGlobal)
 		  {
 			  ElemTemplateElement elem = getElemFromExpression(wi);
 			  StylesheetRoot root = elem.StylesheetRoot;
 			  ArrayList vars = root.VariablesAndParamsComposed;
-			  @var.Index = vars.Count - 1;
+			  var.Index = vars.Count - 1;
 		  }
 
 		  // Walk to the first walker after the one's we are replacing.
@@ -479,7 +477,7 @@ namespace org.apache.xalan.templates
 		  {
 
 			FilterExprWalker few = new FilterExprWalker(wi);
-			few.InnerExpression = @var;
+			few.InnerExpression = var;
 			few.exprSetParent(wi);
 			few.NextWalker = walker;
 			walker.PrevWalker = few;
@@ -488,7 +486,7 @@ namespace org.apache.xalan.templates
 		  }
 		  else
 		  {
-			FilterExprIteratorSimple feis = new FilterExprIteratorSimple(@var);
+			FilterExprIteratorSimple feis = new FilterExprIteratorSimple(var);
 			feis.exprSetParent(wi.exprGetParent());
 			return feis;
 		  }
@@ -501,9 +499,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="numSteps"> The number of steps from the first to copy into the new 
 	  ///                 iterator. </param>
 	  /// <returns> The new iterator. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: protected org.apache.xpath.axes.WalkingIterator createIteratorFromSteps(final org.apache.xpath.axes.WalkingIterator wi, int numSteps)
-	  protected internal virtual WalkingIterator createIteratorFromSteps(WalkingIterator wi, int numSteps)
+	  protected internal virtual WalkingIterator createIteratorFromSteps(in WalkingIterator wi, int numSteps)
 	  {
 		  WalkingIterator newIter = new WalkingIterator(wi.PrefixResolver);
 		  try
@@ -622,7 +618,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="psuedoVarRecipient"> Where to put the psuedo variables.
 	  /// </param>
 	  /// <returns> The number of expression occurances that were modified. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected int findAndEliminateRedundant(int start, int firstOccuranceIndex, org.apache.xpath.ExpressionOwner firstOccuranceOwner, ElemTemplateElement psuedoVarRecipient, java.util.Vector paths) throws org.w3c.dom.DOMException
 	  protected internal virtual int findAndEliminateRedundant(int start, int firstOccuranceIndex, ExpressionOwner firstOccuranceOwner, ElemTemplateElement psuedoVarRecipient, ArrayList paths)
 	  {
@@ -678,12 +674,12 @@ namespace org.apache.xalan.templates
 		{
 			ElemTemplateElement root = isGlobal ? psuedoVarRecipient : findCommonAncestor(head);
 			LocPathIterator sharedIter = (LocPathIterator)head.m_exprOwner.Expression;
-			ElemVariable @var = createPseudoVarDecl(root, sharedIter, isGlobal);
+			ElemVariable var = createPseudoVarDecl(root, sharedIter, isGlobal);
 			if (DIAGNOSE_MULTISTEPLIST)
 			{
-				Console.Error.WriteLine("Created var: " + @var.Name + (isGlobal ? "(Global)" : ""));
+				Console.Error.WriteLine("Created var: " + var.Name + (isGlobal ? "(Global)" : ""));
 			}
-			QName uniquePseudoVarName = @var.Name;
+			QName uniquePseudoVarName = var.Name;
 			while (null != head)
 			{
 				ExpressionOwner owner = head.m_exprOwner;
@@ -696,7 +692,7 @@ namespace org.apache.xalan.templates
 			}
 			// Replace the first occurance with the variable's XPath, so  
 			// that further reduction may take place if needed.
-			paths[firstOccuranceIndex] = @var.Select;
+			paths[firstOccuranceIndex] = var.Select;
 		}
 
 		return numPathsFound;
@@ -705,7 +701,7 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// To be removed.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected int oldFindAndEliminateRedundant(int start, int firstOccuranceIndex, org.apache.xpath.ExpressionOwner firstOccuranceOwner, ElemTemplateElement psuedoVarRecipient, java.util.Vector paths) throws org.w3c.dom.DOMException
 	  protected internal virtual int oldFindAndEliminateRedundant(int start, int firstOccuranceIndex, ExpressionOwner firstOccuranceOwner, ElemTemplateElement psuedoVarRecipient, ArrayList paths)
 	  {
@@ -736,18 +732,18 @@ namespace org.apache.xalan.templates
 						// Insert variable decl into psuedoVarRecipient
 						// We want to insert this into the first legitimate 
 						// position for a variable.
-						ElemVariable @var = createPseudoVarDecl(psuedoVarRecipient, lpi, isGlobal);
-						if (null == @var)
+						ElemVariable var = createPseudoVarDecl(psuedoVarRecipient, lpi, isGlobal);
+						if (null == var)
 						{
 							return 0;
 						}
-						uniquePseudoVarName = @var.Name;
+						uniquePseudoVarName = var.Name;
 
 						changeToVarRef(uniquePseudoVarName, firstOccuranceOwner, paths, psuedoVarRecipient);
 
 						// Replace the first occurance with the variable's XPath, so  
 						// that further reduction may take place if needed.
-						paths[firstOccuranceIndex] = @var.Select;
+						paths[firstOccuranceIndex] = var.Select;
 						numPathsFound++;
 					}
 
@@ -765,14 +761,14 @@ namespace org.apache.xalan.templates
 		// Change all globals in xsl:templates, etc, to global vars no matter what.
 		if ((0 == numPathsFound) && (paths == m_absPaths))
 		{
-		  ElemVariable @var = createPseudoVarDecl(psuedoVarRecipient, lpi, true);
-		  if (null == @var)
+		  ElemVariable var = createPseudoVarDecl(psuedoVarRecipient, lpi, true);
+		  if (null == var)
 		  {
 			return 0;
 		  }
-		  uniquePseudoVarName = @var.Name;
+		  uniquePseudoVarName = var.Name;
 		  changeToVarRef(uniquePseudoVarName, firstOccuranceOwner, paths, psuedoVarRecipient);
-		  paths[firstOccuranceIndex] = @var.Select;
+		  paths[firstOccuranceIndex] = var.Select;
 		  numPathsFound++;
 		}
 		return numPathsFound;
@@ -854,7 +850,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="lpi"> The LocationPathIterator that the variable should represent. </param>
 	  /// <param name="isGlobal"> true if the paths are global. </param>
 	  /// <returns> The new psuedo var element. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected ElemVariable createPseudoVarDecl(ElemTemplateElement psuedoVarRecipient, org.apache.xpath.axes.LocPathIterator lpi, boolean isGlobal) throws org.w3c.dom.DOMException
 	  protected internal virtual ElemVariable createPseudoVarDecl(ElemTemplateElement psuedoVarRecipient, LocPathIterator lpi, bool isGlobal)
 	  {
@@ -880,7 +876,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="lpi"> The LocationPathIterator that the variable should represent. </param>
 	  /// <returns> null if the decl was not created, otherwise the new Pseudo var  
 	  ///              element. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected ElemVariable createGlobalPseudoVarDecl(org.apache.xml.utils.QName uniquePseudoVarName, StylesheetRoot stylesheetRoot, org.apache.xpath.axes.LocPathIterator lpi) throws org.w3c.dom.DOMException
 	  protected internal virtual ElemVariable createGlobalPseudoVarDecl(QName uniquePseudoVarName, StylesheetRoot stylesheetRoot, LocPathIterator lpi)
 	  {
@@ -909,7 +905,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="lpi"> The LocationPathIterator that the variable should represent. </param>
 	  /// <returns> null if the decl was not created, otherwise the new Pseudo var  
 	  ///              element. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected ElemVariable createLocalPseudoVarDecl(org.apache.xml.utils.QName uniquePseudoVarName, ElemTemplateElement psuedoVarRecipient, org.apache.xpath.axes.LocPathIterator lpi) throws org.w3c.dom.DOMException
 	  protected internal virtual ElemVariable createLocalPseudoVarDecl(QName uniquePseudoVarName, ElemTemplateElement psuedoVarRecipient, LocPathIterator lpi)
 	  {
@@ -919,17 +915,17 @@ namespace org.apache.xalan.templates
 			psuedoVar.Select = xpath;
 			psuedoVar.Name = uniquePseudoVarName;
 
-			ElemVariable @var = addVarDeclToElem(psuedoVarRecipient, lpi, psuedoVar);
+			ElemVariable var = addVarDeclToElem(psuedoVarRecipient, lpi, psuedoVar);
 
-			lpi.exprSetParent(@var);
+			lpi.exprSetParent(var);
 
-			return @var;
+			return var;
 	  }
 
 	  /// <summary>
 	  /// Add the given variable to the psuedoVarRecipient.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected ElemVariable addVarDeclToElem(ElemTemplateElement psuedoVarRecipient, org.apache.xpath.axes.LocPathIterator lpi, ElemVariable psuedoVar) throws org.w3c.dom.DOMException
 	  protected internal virtual ElemVariable addVarDeclToElem(ElemTemplateElement psuedoVarRecipient, LocPathIterator lpi, ElemVariable psuedoVar)
 	  {
@@ -1274,7 +1270,7 @@ namespace org.apache.xalan.templates
 	  /// Assert that the expression is a LocPathIterator, and, if 
 	  /// not, try to give some diagnostic info.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private final void assertIsLocPathIterator(org.apache.xpath.Expression expr1, org.apache.xpath.ExpressionOwner eo) throws RuntimeException
 	  private void assertIsLocPathIterator(Expression expr1, ExpressionOwner eo)
 	  {
@@ -1300,7 +1296,7 @@ namespace org.apache.xalan.templates
 	  /// Validate some assumptions about the new LocPathIterator and it's 
 	  /// owner and the state of the list.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static void validateNewAddition(java.util.Vector paths, org.apache.xpath.ExpressionOwner owner, org.apache.xpath.axes.LocPathIterator path) throws RuntimeException
 	  private static void validateNewAddition(ArrayList paths, ExpressionOwner owner, LocPathIterator path)
 	  {
@@ -1342,7 +1338,7 @@ namespace org.apache.xalan.templates
 		/// <summary>
 		/// Clone this object.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 		public virtual object clone()
 		{

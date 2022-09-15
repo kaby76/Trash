@@ -25,7 +25,8 @@ using System.Text;
 namespace org.apache.xalan.xsltc.compiler.util
 {
 
-
+	using Stylesheet = org.apache.xalan.xsltc.compiler.Stylesheet;
+	using SyntaxTreeNode = org.apache.xalan.xsltc.compiler.SyntaxTreeNode;
 
 	/// <summary>
 	/// @author Jacek Ambroziak
@@ -169,7 +170,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 
 		static ErrorMsg()
 		{
-			_bundle = ResourceBundle.getBundle("org.apache.xalan.xsltc.compiler.util.ErrorMessages", Locale.Default);
+			_bundle = ResourceBundle.getBundle("org.apache.xalan.xsltc.compiler.util.ErrorMessages", Locale.getDefault());
 		}
 
 		public ErrorMsg(string code)
@@ -279,7 +280,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		return formatLine() + suffix;
 		}
 
-		public string ToString(object obj)
+		public string toString(object obj)
 		{
 		object[] @params = new object[1];
 		@params[0] = obj.ToString();
@@ -287,7 +288,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		return formatLine() + suffix;
 		}
 
-		public string ToString(object obj0, object obj1)
+		public string toString(object obj0, object obj1)
 		{
 		object[] @params = new object[2];
 		@params[0] = obj0.ToString();

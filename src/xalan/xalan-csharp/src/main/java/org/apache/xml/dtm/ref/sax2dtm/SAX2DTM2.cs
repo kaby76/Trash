@@ -23,7 +23,6 @@ using System.Collections;
  */
 namespace org.apache.xml.dtm.@ref.sax2dtm
 {
-
 	using org.apache.xml.dtm;
 	using org.apache.xml.dtm.@ref;
 	using FastStringBuffer = org.apache.xml.utils.FastStringBuffer;
@@ -109,7 +108,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  if (_isRestartable)
 		  {
 			_startNode = node;
-			_currentNode = (node == DTM_Fields.NULL) ? DTM_Fields.NULL : outerInstance._firstch2(outerInstance.makeNodeIdentity(node));
+			_currentNode = (node == DTM.NULL) ? DTM.NULL : outerInstance._firstch2(outerInstance.makeNodeIdentity(node));
 
 			return resetPosition();
 		  }
@@ -124,14 +123,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		/// are available. </returns>
 		public override int next()
 		{
-		  if (_currentNode != org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (_currentNode != NULL)
 		  {
 			int node = _currentNode;
 			_currentNode = outerInstance._nextsib2(node);
 			return returnNode(outerInstance.makeNodeHandle(node));
 		  }
 
-		  return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  return END;
 		}
 	  } // end of ChildrenIterator
 
@@ -152,7 +151,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		/// <summary>
 		/// The extended type ID that was requested. </summary>
-		internal int _nodeType = DTM_Fields.NULL;
+		internal int _nodeType = DTM.NULL;
 
 		/// <summary>
 		/// Set start to END should 'close' the iterator,
@@ -172,13 +171,13 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  {
 			_startNode = node;
 
-			if (node != DTM_Fields.NULL)
+			if (node != DTM.NULL)
 			{
 			  _currentNode = outerInstance._parent2(outerInstance.makeNodeIdentity(node));
 			}
 			else
 			{
-			  _currentNode = DTM_Fields.NULL;
+			  _currentNode = DTM.NULL;
 			}
 
 			return resetPosition();
@@ -196,9 +195,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		/// <param name="type"> extended type ID.
 		/// </param>
 		/// <returns> ParentIterator configured with the type filter set. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public DTMAxisIterator setNodeType(final int type)
-		public DTMAxisIterator setNodeType(int type)
+		public DTMAxisIterator setNodeType(in int type)
 		{
 
 		  _nodeType = type;
@@ -214,22 +211,22 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		public override int next()
 		{
 		  int result = _currentNode;
-		  if (result == org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+		  if (result == END)
 		  {
-			return DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 
 		  // %OPT% The most common case is handled first.
-		  if (_nodeType == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (_nodeType == NULL)
 		  {
-			_currentNode = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			_currentNode = END;
 			return returnNode(outerInstance.makeNodeHandle(result));
 		  }
-		  else if (_nodeType >= DTM_Fields.NTYPES)
+		  else if (_nodeType >= DTM.NTYPES)
 		  {
 			if (_nodeType == outerInstance._exptype2(result))
 			{
-			  _currentNode = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			  _currentNode = END;
 		  return returnNode(outerInstance.makeNodeHandle(result));
 			}
 		  }
@@ -237,12 +234,12 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  {
 			if (_nodeType == outerInstance._type2(result))
 			{
-		  _currentNode = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  _currentNode = END;
 		  return returnNode(outerInstance.makeNodeHandle(result));
 			}
 		  }
 
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 	  } // end of ParentIterator
 
@@ -289,7 +286,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  if (_isRestartable)
 		  {
 			_startNode = node;
-			_currentNode = (node == DTM_Fields.NULL) ? DTM_Fields.NULL : outerInstance._firstch2(outerInstance.makeNodeIdentity(_startNode));
+			_currentNode = (node == DTM.NULL) ? DTM.NULL : outerInstance._firstch2(outerInstance.makeNodeIdentity(_startNode));
 
 			return resetPosition();
 		  }
@@ -304,18 +301,18 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		public override int next()
 		{
 		  int node = _currentNode;
-		  if (node == DTM_Fields.NULL)
+		  if (node == DTM.NULL)
 		  {
-			return DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int nodeType = _nodeType;
 		  int nodeType = _nodeType;
 
-		  if (nodeType != DTM_Fields.ELEMENT_NODE)
+		  if (nodeType != DTM.ELEMENT_NODE)
 		  {
-			while (node != DTM_Fields.NULL && outerInstance._exptype2(node) != nodeType)
+			while (node != DTM.NULL && outerInstance._exptype2(node) != nodeType)
 			{
 			  node = outerInstance._nextsib2(node);
 			}
@@ -328,10 +325,10 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  else
 		  {
 			  int eType;
-			  while (node != DTM_Fields.NULL)
+			  while (node != DTM.NULL)
 			  {
 				eType = outerInstance._exptype2(node);
-				if (eType >= DTM_Fields.NTYPES)
+				if (eType >= DTM.NTYPES)
 				{
 				  break;
 				}
@@ -342,10 +339,10 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  }
 		  }
 
-		  if (node == DTM_Fields.NULL)
+		  if (node == DTM.NULL)
 		  {
-			_currentNode = DTM_Fields.NULL;
-			return DTM_Fields.NULL;
+			_currentNode = DTM.NULL;
+			return DTM.NULL;
 		  }
 		  else
 		  {
@@ -362,7 +359,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		{
 		  if (position <= 0)
 		  {
-			return DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 
 		  int node = _currentNode;
@@ -371,9 +368,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int nodeType = _nodeType;
 		  int nodeType = _nodeType;
-		  if (nodeType != DTM_Fields.ELEMENT_NODE)
+		  if (nodeType != DTM.ELEMENT_NODE)
 		  {
-			while (node != DTM_Fields.NULL)
+			while (node != DTM.NULL)
 			{
 			  if (outerInstance._exptype2(node) == nodeType)
 			  {
@@ -386,13 +383,13 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 			  node = outerInstance._nextsib2(node);
 			}
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		  else
 		  {
-			  while (node != DTM_Fields.NULL)
+			  while (node != DTM.NULL)
 			  {
-				if (outerInstance._exptype2(node) >= DTM_Fields.NTYPES)
+				if (outerInstance._exptype2(node) >= DTM.NTYPES)
 				{
 				  pos++;
 				  if (pos == position)
@@ -402,7 +399,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 				}
 				node = outerInstance._nextsib2(node);
 			  }
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return NULL;
 		  }
 		}
 
@@ -439,7 +436,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		{
 		  if (_startNode == _currentNode)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -449,7 +446,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  _currentNode = node;
 
-		  if (_nodeType >= DTM_Fields.NTYPES)
+		  if (_nodeType >= DTM.NTYPES)
 		  {
 			if (_nodeType == expType)
 			{
@@ -458,7 +455,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  }
 		  else
 		  {
-			if (expType < DTM_Fields.NTYPES)
+			if (expType < DTM.NTYPES)
 			{
 			  if (expType == _nodeType)
 			  {
@@ -474,7 +471,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  } // end of TypedRootIterator
 
@@ -522,7 +519,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		/// <returns> The next node handle in the iteration, or END. </returns>
 		public override int next()
 		{
-		  _currentNode = (_currentNode == DTM_Fields.NULL) ? DTM_Fields.NULL : outerInstance._nextsib2(_currentNode);
+		  _currentNode = (_currentNode == DTM.NULL) ? DTM.NULL : outerInstance._nextsib2(_currentNode);
 		  return returnNode(outerInstance.makeNodeHandle(_currentNode));
 		}
 	  } // end of FollowingSiblingIterator
@@ -556,9 +553,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		/// <returns> The next node handle in the iteration, or END. </returns>
 		public override int next()
 		{
-		  if (_currentNode == DTM_Fields.NULL)
+		  if (_currentNode == DTM.NULL)
 		  {
-			return DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 
 		  int node = _currentNode;
@@ -566,22 +563,22 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 //ORIGINAL LINE: final int nodeType = _nodeType;
 		  int nodeType = _nodeType;
 
-		  if (nodeType != DTM_Fields.ELEMENT_NODE)
+		  if (nodeType != DTM.ELEMENT_NODE)
 		  {
-			while ((node = outerInstance._nextsib2(node)) != DTM_Fields.NULL && outerInstance._exptype2(node) != nodeType)
+			while ((node = outerInstance._nextsib2(node)) != DTM.NULL && outerInstance._exptype2(node) != nodeType)
 			{
 			}
 		  }
 		  else
 		  {
-			while ((node = outerInstance._nextsib2(node)) != DTM_Fields.NULL && outerInstance._exptype2(node) < DTM_Fields.NTYPES)
+			while ((node = outerInstance._nextsib2(node)) != DTM.NULL && outerInstance._exptype2(node) < DTM.NTYPES)
 			{
 			}
 		  }
 
 		  _currentNode = node;
 
-		  return (node == DTM_Fields.NULL) ? DTM_Fields.NULL : returnNode(outerInstance.makeNodeHandle(node));
+		  return (node == DTM.NULL) ? DTM.NULL : returnNode(outerInstance.makeNodeHandle(node));
 		}
 
 	  } // end of TypedFollowingSiblingIterator
@@ -637,13 +634,13 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 //ORIGINAL LINE: final int node = _currentNode;
 		  int node = _currentNode;
 
-		  if (node != org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (node != NULL)
 		  {
 			_currentNode = outerInstance.getNextAttributeIdentity(node);
 			return returnNode(outerInstance.makeNodeHandle(node));
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  } // end of AttributeIterator
 
@@ -706,7 +703,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  // singleton iterator, since there can only be one attribute of
 		  // a given type.
-		  _currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
+		  _currentNode = NULL;
 
 		  return returnNode(node);
 		}
@@ -761,7 +758,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			_startNode = node;
 			node = _startNodeID = outerInstance.makeNodeIdentity(node);
 
-			if (node == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (node == NULL)
 			{
 			  _currentNode = node;
 			  return resetPosition();
@@ -776,7 +773,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			{
 			  // Be careful to handle the Document node properly
 			  _currentNode = outerInstance._parent2(node);
-			  if (org.apache.xml.dtm.DTM_Fields.NULL != _currentNode)
+			  if (NULL != _currentNode)
 			  {
 				_currentNode = outerInstance._firstch2(_currentNode);
 			  }
@@ -799,9 +796,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		public override int next()
 		{
 
-		  if (_currentNode == _startNodeID || _currentNode == DTM_Fields.NULL)
+		  if (_currentNode == _startNodeID || _currentNode == DTM.NULL)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 		  else
 		  {
@@ -854,25 +851,25 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 //ORIGINAL LINE: final int startNodeID = _startNodeID;
 		  int startNodeID = _startNodeID;
 
-		  if (nodeType != DTM_Fields.ELEMENT_NODE)
+		  if (nodeType != DTM.ELEMENT_NODE)
 		  {
-			while (node != org.apache.xml.dtm.DTM_Fields.NULL && node != startNodeID && outerInstance._exptype2(node) != nodeType)
+			while (node != NULL && node != startNodeID && outerInstance._exptype2(node) != nodeType)
 			{
 			  node = outerInstance._nextsib2(node);
 			}
 		  }
 		  else
 		  {
-			while (node != org.apache.xml.dtm.DTM_Fields.NULL && node != startNodeID && outerInstance._exptype2(node) < DTM_Fields.NTYPES)
+			while (node != NULL && node != startNodeID && outerInstance._exptype2(node) < DTM.NTYPES)
 			{
 			  node = outerInstance._nextsib2(node);
 			}
 		  }
 
-		  if (node == DTM_Fields.NULL || node == startNodeID)
+		  if (node == DTM.NULL || node == startNodeID)
 		  {
-			_currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			_currentNode = NULL;
+			return NULL;
 		  }
 		  else
 		  {
@@ -904,9 +901,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  int startNodeID = _startNodeID;
     
 			  int last = 0;
-			  if (nodeType != DTM_Fields.ELEMENT_NODE)
+			  if (nodeType != DTM.ELEMENT_NODE)
 			  {
-				while (node != org.apache.xml.dtm.DTM_Fields.NULL && node != startNodeID)
+				while (node != NULL && node != startNodeID)
 				{
 				  if (outerInstance._exptype2(node) == nodeType)
 				  {
@@ -917,9 +914,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  }
 			  else
 			  {
-				while (node != org.apache.xml.dtm.DTM_Fields.NULL && node != startNodeID)
+				while (node != NULL && node != startNodeID)
 				{
-				  if (outerInstance._exptype2(node) >= DTM_Fields.NTYPES)
+				  if (outerInstance._exptype2(node) >= DTM.NTYPES)
 				  {
 					last++;
 				  }
@@ -1042,7 +1039,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			// iterator is not a clone
 			int parent, index;
 
-		   if (outerInstance._type2(node) == DTM_Fields.ATTRIBUTE_NODE)
+		   if (outerInstance._type2(node) == DTM.ATTRIBUTE_NODE)
 		   {
 			 node = outerInstance._parent2(node);
 		   }
@@ -1051,7 +1048,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			_stack[index = 0] = node;
 
 			   parent = node;
-		while ((parent = outerInstance._parent2(parent)) != org.apache.xml.dtm.DTM_Fields.NULL)
+		while ((parent = outerInstance._parent2(parent)) != NULL)
 		{
 		  if (++index == _stack.Length)
 		  {
@@ -1093,7 +1090,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			 if (_currentNode < _stack[_sp])
 			 {
 			   int type = outerInstance._type2(_currentNode);
-			   if (type != org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE && type != org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE)
+			   if (type != ATTRIBUTE_NODE && type != NAMESPACE_NODE)
 			   {
 				 return returnNode(outerInstance.makeNodeHandle(_currentNode));
 			   }
@@ -1103,7 +1100,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			   --_sp;
 			 }
 		   }
-		   return org.apache.xml.dtm.DTM_Fields.NULL;
+		   return NULL;
 		}
 
 		// redefine DTMAxisIteratorBase's reset
@@ -1171,7 +1168,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 //ORIGINAL LINE: final int nodeType = _nodeType;
 		  int nodeType = _nodeType;
 
-		  if (nodeType >= DTM_Fields.NTYPES)
+		  if (nodeType >= DTM.NTYPES)
 		  {
 			while (true)
 			{
@@ -1179,14 +1176,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 			  if (_sp < 0)
 			  {
-				node = org.apache.xml.dtm.DTM_Fields.NULL;
+				node = NULL;
 				break;
 			  }
 			  else if (node >= _stack[_sp])
 			  {
 				if (--_sp < 0)
 				{
-				  node = org.apache.xml.dtm.DTM_Fields.NULL;
+				  node = NULL;
 				  break;
 				}
 			  }
@@ -1206,21 +1203,21 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 			  if (_sp < 0)
 			  {
-				node = org.apache.xml.dtm.DTM_Fields.NULL;
+				node = NULL;
 				break;
 			  }
 			  else if (node >= _stack[_sp])
 			  {
 				if (--_sp < 0)
 				{
-				  node = org.apache.xml.dtm.DTM_Fields.NULL;
+				  node = NULL;
 				  break;
 				}
 			  }
 			  else
 			  {
 				expType = outerInstance._exptype2(node);
-				if (expType < DTM_Fields.NTYPES)
+				if (expType < DTM.NTYPES)
 				{
 				  if (expType == nodeType)
 				  {
@@ -1240,7 +1237,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  _currentNode = node;
 
-		  return (node == org.apache.xml.dtm.DTM_Fields.NULL) ? org.apache.xml.dtm.DTM_Fields.NULL : returnNode(outerInstance.makeNodeHandle(node));
+		  return (node == NULL) ? NULL : returnNode(outerInstance.makeNodeHandle(node));
 		}
 	  } // end of TypedPrecedingIterator
 
@@ -1284,12 +1281,12 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			int first;
 			int type = outerInstance._type2(node);
 
-			if ((DTM_Fields.ATTRIBUTE_NODE == type) || (DTM_Fields.NAMESPACE_NODE == type))
+			if ((DTM.ATTRIBUTE_NODE == type) || (DTM.NAMESPACE_NODE == type))
 			{
 			  node = outerInstance._parent2(node);
 			  first = outerInstance._firstch2(node);
 
-			  if (org.apache.xml.dtm.DTM_Fields.NULL != first)
+			  if (NULL != first)
 			  {
 				_currentNode = outerInstance.makeNodeHandle(first);
 				return resetPosition();
@@ -1300,11 +1297,11 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			{
 			  first = outerInstance._nextsib2(node);
 
-			  if (org.apache.xml.dtm.DTM_Fields.NULL == first)
+			  if (NULL == first)
 			  {
 				node = outerInstance._parent2(node);
 			  }
-			} while (org.apache.xml.dtm.DTM_Fields.NULL == first && org.apache.xml.dtm.DTM_Fields.NULL != node);
+			} while (NULL == first && NULL != node);
 
 			_currentNode = outerInstance.makeNodeHandle(first);
 
@@ -1332,13 +1329,13 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			current++;
 
 			int type = outerInstance._type2(current);
-			if (org.apache.xml.dtm.DTM_Fields.NULL == type)
+			if (NULL == type)
 			{
-			  _currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
+			  _currentNode = NULL;
 			  return returnNode(node);
 			}
 
-			if (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == type || org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE == type)
+			if (ATTRIBUTE_NODE == type || NAMESPACE_NODE == type)
 			{
 			  continue;
 			}
@@ -1388,7 +1385,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  int nodeType = _nodeType;
 		  int currentNodeID = outerInstance.makeNodeIdentity(_currentNode);
 
-		  if (nodeType >= DTM_Fields.NTYPES)
+		  if (nodeType >= DTM.NTYPES)
 		  {
 			do
 			{
@@ -1399,10 +1396,10 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  {
 				current++;
 				type = outerInstance._type2(current);
-			  } while (type != org.apache.xml.dtm.DTM_Fields.NULL && (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == type || org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE == type));
+			  } while (type != NULL && (ATTRIBUTE_NODE == type || NAMESPACE_NODE == type));
 
-			  currentNodeID = (type != org.apache.xml.dtm.DTM_Fields.NULL) ? current : org.apache.xml.dtm.DTM_Fields.NULL;
-			} while (node != DTM_Fields.NULL && outerInstance._exptype2(node) != nodeType);
+			  currentNodeID = (type != NULL) ? current : NULL;
+			} while (node != DTM.NULL && outerInstance._exptype2(node) != nodeType);
 		  }
 		  else
 		  {
@@ -1415,14 +1412,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  {
 				current++;
 				type = outerInstance._type2(current);
-			  } while (type != org.apache.xml.dtm.DTM_Fields.NULL && (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == type || org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE == type));
+			  } while (type != NULL && (ATTRIBUTE_NODE == type || NAMESPACE_NODE == type));
 
-			  currentNodeID = (type != org.apache.xml.dtm.DTM_Fields.NULL) ? current : org.apache.xml.dtm.DTM_Fields.NULL;
-			} while (node != DTM_Fields.NULL && (outerInstance._exptype2(node) != nodeType && outerInstance._type2(node) != nodeType));
+			  currentNodeID = (type != NULL) ? current : NULL;
+			} while (node != DTM.NULL && (outerInstance._exptype2(node) != nodeType && outerInstance._type2(node) != nodeType));
 		  }
 
 		  _currentNode = outerInstance.makeNodeHandle(currentNodeID);
-		  return (node == DTM_Fields.NULL ? DTM_Fields.NULL :returnNode(outerInstance.makeNodeHandle(node)));
+		  return (node == DTM.NULL ? DTM.NULL :returnNode(outerInstance.makeNodeHandle(node)));
 		}
 	  } // end of TypedFollowingIterator
 
@@ -1540,9 +1537,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			int nodeID = outerInstance.makeNodeIdentity(node);
 			m_size = 0;
 
-			if (nodeID == DTM_Fields.NULL)
+			if (nodeID == DTM.NULL)
 			{
-			  _currentNode = DTM_Fields.NULL;
+			  _currentNode = DTM.NULL;
 			  m_ancestorsPos = 0;
 			  return this;
 			}
@@ -1557,7 +1554,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 			_startNode = node;
 
-			while (nodeID != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while (nodeID != END)
 			{
 			  //m_ancestors.addElement(node);
 			  if (m_size >= m_ancestors.Length)
@@ -1574,7 +1571,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 			m_ancestorsPos = m_size - 1;
 
-			_currentNode = (m_ancestorsPos >= 0) ? m_ancestors[m_ancestorsPos] : DTM_Fields.NULL;
+			_currentNode = (m_ancestorsPos >= 0) ? m_ancestors[m_ancestorsPos] : DTM.NULL;
 
 			return resetPosition();
 		  }
@@ -1592,7 +1589,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  m_ancestorsPos = m_size - 1;
 
-		  _currentNode = (m_ancestorsPos >= 0) ? m_ancestors[m_ancestorsPos] : DTM_Fields.NULL;
+		  _currentNode = (m_ancestorsPos >= 0) ? m_ancestors[m_ancestorsPos] : DTM.NULL;
 
 		  return resetPosition();
 		}
@@ -1606,10 +1603,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  int next = _currentNode;
 
-//JAVA TO C# CONVERTER TODO TASK: The following line could not be converted:
 		  int pos = --m_ancestorsPos;
 
-		  _currentNode = (pos >= 0) ? m_ancestors[m_ancestorsPos] : DTM_Fields.NULL;
+		  _currentNode = (pos >= 0) ? m_ancestors[m_ancestorsPos] : DTM.NULL;
 
 		  return returnNode(next);
 		}
@@ -1622,7 +1618,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		public override void gotoMark()
 		{
 			m_ancestorsPos = m_markedPos;
-			_currentNode = m_ancestorsPos >= 0 ? m_ancestors[m_ancestorsPos] : DTM_Fields.NULL;
+			_currentNode = m_ancestorsPos >= 0 ? m_ancestors[m_ancestorsPos] : DTM.NULL;
 		}
 	  } // end of AncestorIterator
 
@@ -1670,9 +1666,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			int nodeID = outerInstance.makeNodeIdentity(node);
 			m_size = 0;
 
-			if (nodeID == DTM_Fields.NULL)
+			if (nodeID == DTM.NULL)
 			{
-			  _currentNode = DTM_Fields.NULL;
+			  _currentNode = DTM.NULL;
 			  m_ancestorsPos = 0;
 			  return this;
 			}
@@ -1689,9 +1685,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 			_startNode = node;
 
-			if (nodeType >= DTM_Fields.NTYPES)
+			if (nodeType >= DTM.NTYPES)
 			{
-			  while (nodeID != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			  while (nodeID != END)
 			  {
 				int eType = outerInstance._exptype2(nodeID);
 
@@ -1710,11 +1706,11 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			}
 			else
 			{
-			  while (nodeID != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			  while (nodeID != END)
 			  {
 				int eType = outerInstance._exptype2(nodeID);
 
-				if ((eType < DTM_Fields.NTYPES && eType == nodeType) || (eType >= DTM_Fields.NTYPES && outerInstance.m_extendedTypes[eType].NodeType == nodeType))
+				if ((eType < DTM.NTYPES && eType == nodeType) || (eType >= DTM.NTYPES && outerInstance.m_extendedTypes[eType].NodeType == nodeType))
 				{
 				  if (m_size >= m_ancestors.Length)
 				  {
@@ -1729,7 +1725,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			}
 			m_ancestorsPos = m_size - 1;
 
-			_currentNode = (m_ancestorsPos >= 0) ? m_ancestors[m_ancestorsPos] : DTM_Fields.NULL;
+			_currentNode = (m_ancestorsPos >= 0) ? m_ancestors[m_ancestorsPos] : DTM.NULL;
 
 			return resetPosition();
 		  }
@@ -1748,7 +1744,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  }
 		  else
 		  {
-			return DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 		}
 
@@ -1837,9 +1833,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int startNode = _startNode;
 		  int startNode = _startNode;
-		  if (startNode == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (startNode == NULL)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 
 		  if (_includeSelf && (_currentNode + 1) == startNode)
@@ -1860,12 +1856,12 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  node++;
 			  eType = outerInstance._exptype2(node);
 
-			  if (org.apache.xml.dtm.DTM_Fields.NULL == eType)
+			  if (NULL == eType)
 			  {
-				_currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
-				return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+				_currentNode = NULL;
+				return END;
 			  }
-			} while (eType == org.apache.xml.dtm.DTM_Fields.TEXT_NODE || (type = outerInstance.m_extendedTypes[eType].NodeType) == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE || type == org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE);
+			} while (eType == TEXT_NODE || (type = outerInstance.m_extendedTypes[eType].NodeType) == ATTRIBUTE_NODE || type == NAMESPACE_NODE);
 		  }
 		  else
 		  {
@@ -1874,12 +1870,12 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  node++;
 			  type = outerInstance._type2(node);
 
-			  if (org.apache.xml.dtm.DTM_Fields.NULL == type || !isDescendant(node))
+			  if (NULL == type || !isDescendant(node))
 			  {
-				_currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
-				return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+				_currentNode = NULL;
+				return END;
 			  }
-			} while (org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE == type || org.apache.xml.dtm.DTM_Fields.TEXT_NODE == type || org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE == type);
+			} while (ATTRIBUTE_NODE == type || TEXT_NODE == type || NAMESPACE_NODE == type);
 		  }
 
 		  _currentNode = node;
@@ -1940,9 +1936,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int startNode = _startNode;
 		  int startNode = _startNode;
-		  if (_startNode == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (_startNode == NULL)
 		  {
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		  }
 
 		  int node = _currentNode;
@@ -1952,17 +1948,17 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 //ORIGINAL LINE: final int nodeType = _nodeType;
 		  int nodeType = _nodeType;
 
-		  if (nodeType != DTM_Fields.ELEMENT_NODE)
+		  if (nodeType != DTM.ELEMENT_NODE)
 		  {
 			do
 			{
 			  node++;
 		  expType = outerInstance._exptype2(node);
 
-			  if (org.apache.xml.dtm.DTM_Fields.NULL == expType || outerInstance._parent2(node) < startNode && startNode != node)
+			  if (NULL == expType || outerInstance._parent2(node) < startNode && startNode != node)
 			  {
-				_currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
-				return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+				_currentNode = NULL;
+				return END;
 			  }
 			} while (expType != nodeType);
 		  }
@@ -1976,12 +1972,12 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  node++;
 		  expType = outerInstance._exptype2(node);
 
-		  if (org.apache.xml.dtm.DTM_Fields.NULL == expType)
+		  if (NULL == expType)
 		  {
-			_currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
-			return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			_currentNode = NULL;
+			return END;
 		  }
-		} while (expType < DTM_Fields.NTYPES || outerInstance.m_extendedTypes[expType].NodeType != DTM_Fields.ELEMENT_NODE);
+		} while (expType < DTM.NTYPES || outerInstance.m_extendedTypes[expType].NodeType != DTM.ELEMENT_NODE);
 		  }
 		  else
 		  {
@@ -1990,12 +1986,12 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  node++;
 		  expType = outerInstance._exptype2(node);
 
-			  if (org.apache.xml.dtm.DTM_Fields.NULL == expType || outerInstance._parent2(node) < startNode && startNode != node)
+			  if (NULL == expType || outerInstance._parent2(node) < startNode && startNode != node)
 			  {
-				_currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
-				return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+				_currentNode = NULL;
+				return END;
 			  }
-			} while (expType < DTM_Fields.NTYPES || outerInstance.m_extendedTypes[expType].NodeType != DTM_Fields.ELEMENT_NODE);
+			} while (expType < DTM.NTYPES || outerInstance.m_extendedTypes[expType].NodeType != DTM.ELEMENT_NODE);
 		  }
 
 		  _currentNode = node;
@@ -2036,14 +2032,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int result = _currentNode;
 		  int result = _currentNode;
-		  if (result == org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+		  if (result == END)
 		  {
-			return DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 
-		  _currentNode = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		  _currentNode = END;
 
-		  if (_nodeType >= DTM_Fields.NTYPES)
+		  if (_nodeType >= DTM.NTYPES)
 		  {
 			if (outerInstance._exptype2(outerInstance.makeNodeIdentity(result)) == _nodeType)
 			{
@@ -2058,7 +2054,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  } // end of TypedSingletonIterator
 
@@ -2296,13 +2292,13 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  eType = m_exptype_map[(int)((uint)identity >> m_SHIFT)][identity & m_MASK];
 		}
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL != eType)
+		if (NULL != eType)
 		{
 		  return m_extendedTypes[eType].NodeType;
 		}
 		else
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -2319,7 +2315,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		//return (nodeID != NULL) ? _exptype2(nodeID) : NULL;
 
-		if (nodeID != org.apache.xml.dtm.DTM_Fields.NULL)
+		if (nodeID != NULL)
 		{
 		  if (nodeID < m_blocksize)
 		  {
@@ -2332,7 +2328,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		}
 		else
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -2348,13 +2344,13 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// </summary>
 	  public int _exptype2Type(int exptype)
 	  {
-		if (org.apache.xml.dtm.DTM_Fields.NULL != exptype)
+		if (NULL != exptype)
 		{
 		  return m_extendedTypes[exptype].NodeType;
 		}
 		else
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return NULL;
 		}
 	  }
 
@@ -2401,19 +2397,19 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="attributes"> The specified or defaulted attributes. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startElement </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.startElement"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
 	  public override void startElement(string uri, string localName, string qName, Attributes attributes)
 	  {
 
 		charactersFlush();
 
-		int exName = m_expandedNameTable.getExpandedTypeID(uri, localName, DTM_Fields.ELEMENT_NODE);
+		int exName = m_expandedNameTable.getExpandedTypeID(uri, localName, DTM.ELEMENT_NODE);
 
 		int prefixIndex = (qName.Length != localName.Length) ? m_valuesOrPrefixes.stringToIndex(qName) : 0;
 
-		int elemNode = addNode(DTM_Fields.ELEMENT_NODE, exName, m_parents.peek(), m_previous, prefixIndex, true);
+		int elemNode = addNode(DTM.ELEMENT_NODE, exName, m_parents.peek(), m_previous, prefixIndex, true);
 
 		if (m_indexing)
 		{
@@ -2431,10 +2427,10 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  // SPECIAL CASE: Implied declaration at root element
 		  prefix = "xml";
 		  string declURL = "http://www.w3.org/XML/1998/namespace";
-		  exName = m_expandedNameTable.getExpandedTypeID(null, prefix, DTM_Fields.NAMESPACE_NODE);
+		  exName = m_expandedNameTable.getExpandedTypeID(null, prefix, DTM.NAMESPACE_NODE);
 		  m_values.Add(declURL);
 		  int val = m_valueIndex++;
-		  addNode(DTM_Fields.NAMESPACE_NODE, exName, elemNode, DTM_Fields.NULL, val, false);
+		  addNode(DTM.NAMESPACE_NODE, exName, elemNode, DTM.NULL, val, false);
 		  m_pastFirstElement = true;
 		}
 
@@ -2449,15 +2445,15 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  string declURL = (string) m_prefixMappings[i + 1];
 
-		  exName = m_expandedNameTable.getExpandedTypeID(null, prefix, DTM_Fields.NAMESPACE_NODE);
+		  exName = m_expandedNameTable.getExpandedTypeID(null, prefix, DTM.NAMESPACE_NODE);
 
 		  m_values.Add(declURL);
 		  int val = m_valueIndex++;
 
-		  addNode(DTM_Fields.NAMESPACE_NODE, exName, elemNode, DTM_Fields.NULL, val, false);
+		  addNode(DTM.NAMESPACE_NODE, exName, elemNode, DTM.NULL, val, false);
 		}
 
-		int n = attributes.Length;
+		int n = attributes.getLength();
 
 		for (int i = 0; i < n; i++)
 		{
@@ -2477,11 +2473,11 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  continue; // go to the next attribute.
 			}
 
-			nodeType = DTM_Fields.NAMESPACE_NODE;
+			nodeType = DTM.NAMESPACE_NODE;
 		  }
 		  else
 		  {
-			nodeType = DTM_Fields.ATTRIBUTE_NODE;
+			nodeType = DTM.ATTRIBUTE_NODE;
 
 			if (m_buildIdIndex && attributes.getType(i).equalsIgnoreCase("ID"))
 			{
@@ -2513,18 +2509,18 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  }
 
 		  exName = m_expandedNameTable.getExpandedTypeID(attrUri, attrLocalName, nodeType);
-		  addNode(nodeType, exName, elemNode, DTM_Fields.NULL, val, false);
+		  addNode(nodeType, exName, elemNode, DTM.NULL, val, false);
 		}
 
 		if (null != m_wsfilter)
 		{
 		  short wsv = m_wsfilter.getShouldStripSpace(makeNodeHandle(elemNode), this);
-		  bool shouldStrip = (DTMWSFilter_Fields.INHERIT == wsv) ? ShouldStripWhitespace : (DTMWSFilter_Fields.STRIP == wsv);
+		  bool shouldStrip = (DTMWSFilter.INHERIT == wsv) ? ShouldStripWhitespace : (DTMWSFilter.STRIP == wsv);
 
 		  pushShouldStripWhitespace(shouldStrip);
 		}
 
-		m_previous = DTM_Fields.NULL;
+		m_previous = DTM.NULL;
 
 		m_contextIndexes.push(m_prefixMappings.Count); // for the children.
 	  }
@@ -2547,8 +2543,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  ///        empty string if qualified names are not available. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endElement </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.endElement"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String uri, String localName, String qName) throws SAXException
 	  public override void endElement(string uri, string localName, string qName)
 	  {
@@ -2581,7 +2577,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="start"> The starting position in the array. </param>
 	  /// <param name="length"> The number of characters to use from the array. </param>
 	  /// <exception cref="SAXException"> The application may raise an exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char ch[], int start, int length) throws SAXException
 	  public override void comment(char[] ch, int start, int length)
 	  {
@@ -2598,7 +2594,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		m_values.Add(new string(ch, start, length));
 		int dataIndex = m_valueIndex++;
 
-		m_previous = addNode(DTM_Fields.COMMENT_NODE, DTM_Fields.COMMENT_NODE, m_parents.peek(), m_previous, dataIndex, false);
+		m_previous = addNode(DTM.COMMENT_NODE, DTM.COMMENT_NODE, m_parents.peek(), m_previous, dataIndex, false);
 	  }
 
 	  /// <summary>
@@ -2606,16 +2602,16 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// </summary>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#startDocument </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.startDocument"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocument() throws SAXException
 	  public override void startDocument()
 	  {
 
-		int doc = addNode(DTM_Fields.DOCUMENT_NODE, DTM_Fields.DOCUMENT_NODE, DTM_Fields.NULL, DTM_Fields.NULL, 0, true);
+		int doc = addNode(DTM.DOCUMENT_NODE, DTM.DOCUMENT_NODE, DTM.NULL, DTM.NULL, 0, true);
 
 		m_parents.push(doc);
-		m_previous = DTM_Fields.NULL;
+		m_previous = DTM.NULL;
 
 		m_contextIndexes.push(m_prefixMappings.Count); // for the next element.
 	  }
@@ -2625,8 +2621,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// </summary>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#endDocument </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.endDocument"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws SAXException
 	  public override void endDocument()
 	  {
@@ -2634,10 +2630,10 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		// Add a NULL entry to the end of the node arrays as
 		// the end indication.
-		m_exptype.addElement(org.apache.xml.dtm.DTM_Fields.NULL);
-		m_parent.addElement(org.apache.xml.dtm.DTM_Fields.NULL);
-		m_nextsib.addElement(org.apache.xml.dtm.DTM_Fields.NULL);
-		m_firstch.addElement(org.apache.xml.dtm.DTM_Fields.NULL);
+		m_exptype.addElement(NULL);
+		m_parent.addElement(NULL);
+		m_nextsib.addElement(NULL);
+		m_firstch.addElement(NULL);
 
 		// Set the cached references after the document is built.
 		m_extendedTypes = m_expandedNameTable.ExtendedTypes;
@@ -2672,8 +2668,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  m_maxNodeIndex += (1 << DTMManager.IDENT_DTM_NODE_BITS);
 		}
 
-		m_firstch.addElement(DTM_Fields.NULL);
-		m_nextsib.addElement(DTM_Fields.NULL);
+		m_firstch.addElement(DTM.NULL);
+		m_nextsib.addElement(DTM.NULL);
 		m_parent.addElement(parentIndex);
 		m_exptype.addElement(expandedTypeID);
 		m_dataOrQName.addElement(dataOrPrefix);
@@ -2694,17 +2690,17 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		// Special handling by type: Declare namespaces, attach first child
 		switch (type)
 		{
-		case DTM_Fields.NAMESPACE_NODE:
+		case DTM.NAMESPACE_NODE:
 		  declareNamespaceInContext(parentIndex,nodeIndex);
 		  break;
-		case DTM_Fields.ATTRIBUTE_NODE:
+		case DTM.ATTRIBUTE_NODE:
 		  break;
 		default:
-		  if (DTM_Fields.NULL != previousSibling)
+		  if (DTM.NULL != previousSibling)
 		  {
 			m_nextsib.setElementAt(nodeIndex,previousSibling);
 		  }
-		  else if (DTM_Fields.NULL != parentIndex)
+		  else if (DTM.NULL != parentIndex)
 		  {
 			m_firstch.setElementAt(nodeIndex,parentIndex);
 		  }
@@ -2746,7 +2742,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			  // and length in a bitwise encoded value.
 			  if (length <= TEXT_LENGTH_MAX && m_textPendingStart <= TEXT_OFFSET_MAX)
 			  {
-				m_previous = addNode(m_coalescedTextType, DTM_Fields.TEXT_NODE, m_parents.peek(), m_previous, length + (m_textPendingStart << TEXT_LENGTH_BITS), false);
+				m_previous = addNode(m_coalescedTextType, DTM.TEXT_NODE, m_parents.peek(), m_previous, length + (m_textPendingStart << TEXT_LENGTH_BITS), false);
 
 			  }
 			  else
@@ -2754,7 +2750,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 				// Store offset and length in the m_data array if one exceeds 
 				// the given limits. Use a negative dataIndex as an indication.
 				int dataIndex = m_data.size();
-				m_previous = addNode(m_coalescedTextType, DTM_Fields.TEXT_NODE, m_parents.peek(), m_previous, -dataIndex, false);
+				m_previous = addNode(m_coalescedTextType, DTM.TEXT_NODE, m_parents.peek(), m_previous, -dataIndex, false);
 
 				m_data.addElement(m_textPendingStart);
 				m_data.addElement(length);
@@ -2764,7 +2760,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		  // Reset for next text block
 		  m_textPendingStart = -1;
-		  m_textType = m_coalescedTextType = DTM_Fields.TEXT_NODE;
+		  m_textType = m_coalescedTextType = DTM.TEXT_NODE;
 		}
 	  }
 
@@ -2784,8 +2780,8 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  ///             none is supplied. </param>
 	  /// <exception cref="SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-	  /// <seealso cref= org.xml.sax.ContentHandler#processingInstruction </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.ContentHandler.processingInstruction"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws SAXException
 	  public override void processingInstruction(string target, string data)
 	  {
@@ -2793,7 +2789,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		charactersFlush();
 
 		int dataIndex = m_data.size();
-		m_previous = addNode(DTM_Fields.PROCESSING_INSTRUCTION_NODE, DTM_Fields.PROCESSING_INSTRUCTION_NODE, m_parents.peek(), m_previous, -dataIndex, false);
+		m_previous = addNode(DTM.PROCESSING_INSTRUCTION_NODE, DTM.PROCESSING_INSTRUCTION_NODE, m_parents.peek(), m_previous, -dataIndex, false);
 
 		m_data.addElement(m_valuesOrPrefixes.stringToIndex(target));
 		m_values.Add(data);
@@ -2814,14 +2810,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  {
 		int nodeID = makeNodeIdentity(nodeHandle);
 
-		if (nodeID == DTM_Fields.NULL)
+		if (nodeID == DTM.NULL)
 		{
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 
 		int type = _type2(nodeID);
 
-		if (DTM_Fields.ELEMENT_NODE == type)
+		if (DTM.ELEMENT_NODE == type)
 		{
 		  // Assume that attributes and namespaces immediately follow the element.
 		  while (true)
@@ -2830,18 +2826,18 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		// Assume this can not be null.
 		type = _type2(nodeID);
 
-		if (type == DTM_Fields.ATTRIBUTE_NODE)
+		if (type == DTM.ATTRIBUTE_NODE)
 		{
 		  return makeNodeHandle(nodeID);
 		}
-		else if (DTM_Fields.NAMESPACE_NODE != type)
+		else if (DTM.NAMESPACE_NODE != type)
 		{
 		  break;
 		}
 		  }
 		}
 
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -2855,13 +2851,13 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <returns> Identity of first attribute, or DTM.NULL to indicate none exists. </returns>
 	  protected internal override int getFirstAttributeIdentity(int identity)
 	  {
-		if (identity == org.apache.xml.dtm.DTM_Fields.NULL)
+		if (identity == NULL)
 		{
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return NULL;
 		}
 		int type = _type2(identity);
 
-		if (DTM_Fields.ELEMENT_NODE == type)
+		if (DTM.ELEMENT_NODE == type)
 		{
 		  // Assume that attributes and namespaces immediately follow the element.
 		  while (true)
@@ -2871,18 +2867,18 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			// Assume this can not be null.
 			type = _type2(identity);
 
-			if (type == DTM_Fields.ATTRIBUTE_NODE)
+			if (type == DTM.ATTRIBUTE_NODE)
 			{
 			  return identity;
 			}
-			else if (DTM_Fields.NAMESPACE_NODE != type)
+			else if (DTM.NAMESPACE_NODE != type)
 			{
 			  break;
 			}
 		  }
 		}
 
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -2906,17 +2902,17 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  identity++;
 		  int type = _type2(identity);
 
-		  if (type == DTM_Fields.ATTRIBUTE_NODE)
+		  if (type == DTM.ATTRIBUTE_NODE)
 		  {
 			return identity;
 		  }
-		  else if (type != DTM_Fields.NAMESPACE_NODE)
+		  else if (type != DTM.NAMESPACE_NODE)
 		  {
 			break;
 		  }
 		}
 
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -2936,14 +2932,14 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 
 		int nodeID = makeNodeIdentity(nodeHandle);
 
-		if (nodeID == DTM_Fields.NULL)
+		if (nodeID == DTM.NULL)
 		{
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 
 		int type = _type2(nodeID);
 
-		if (DTM_Fields.ELEMENT_NODE == type)
+		if (DTM.ELEMENT_NODE == type)
 		{
 		  int expType;
 		  while (true)
@@ -2951,30 +2947,30 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		nodeID++;
 		expType = _exptype2(nodeID);
 
-		if (expType != DTM_Fields.NULL)
+		if (expType != DTM.NULL)
 		{
 		  type = m_extendedTypes[expType].NodeType;
 		}
 		else
 		{
-		  return DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 
-		if (type == DTM_Fields.ATTRIBUTE_NODE)
+		if (type == DTM.ATTRIBUTE_NODE)
 		{
 		  if (expType == attType)
 		  {
 			  return makeNodeHandle(nodeID);
 		  }
 		}
-		else if (DTM_Fields.NAMESPACE_NODE != type)
+		else if (DTM.NAMESPACE_NODE != type)
 		{
 		  break;
 		}
 		  }
 		}
 
-		return DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -2992,7 +2988,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  {
 		int expType = _exptype(makeNodeIdentity(nodeHandle));
 
-		if (expType == DTM_Fields.PROCESSING_INSTRUCTION_NODE)
+		if (expType == DTM.PROCESSING_INSTRUCTION_NODE)
 		{
 		  int dataIndex = _dataOrQName(makeNodeIdentity(nodeHandle));
 		  dataIndex = m_data.elementAt(-dataIndex);
@@ -3020,7 +3016,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		int nodeID = makeNodeIdentity(nodeHandle);
 		int eType = _exptype2(nodeID);
 
-		if (eType == DTM_Fields.PROCESSING_INSTRUCTION_NODE)
+		if (eType == DTM.PROCESSING_INSTRUCTION_NODE)
 		{
 		  int dataIndex = _dataOrQName(nodeID);
 		  dataIndex = m_data.elementAt(-dataIndex);
@@ -3080,7 +3076,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  int type = extType.NodeType;
 
 		  string localName = extType.LocalName;
-		  if (type == DTM_Fields.NAMESPACE_NODE)
+		  if (type == DTM.NAMESPACE_NODE)
 		  {
 		if (localName.Length == 0)
 		{
@@ -3091,7 +3087,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  return "xmlns:" + localName;
 		}
 		  }
-		  else if (type == DTM_Fields.PROCESSING_INSTRUCTION_NODE)
+		  else if (type == DTM.PROCESSING_INSTRUCTION_NODE)
 		  {
 		int dataIndex = _dataOrQName(nodeID);
 		dataIndex = m_data.elementAt(-dataIndex);
@@ -3147,18 +3143,18 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  public override XMLString getStringValue(int nodeHandle)
 	  {
 		int identity = makeNodeIdentity(nodeHandle);
-		if (identity == DTM_Fields.NULL)
+		if (identity == DTM.NULL)
 		{
 		  return EMPTY_XML_STR;
 		}
 
 		int type = _type2(identity);
 
-		if (type == DTM_Fields.ELEMENT_NODE || type == DTM_Fields.DOCUMENT_NODE)
+		if (type == DTM.ELEMENT_NODE || type == DTM.DOCUMENT_NODE)
 		{
 		  int startNode = identity;
 		  identity = _firstch2(identity);
-		  if (DTM_Fields.NULL != identity)
+		  if (DTM.NULL != identity)
 		  {
 		int offset = -1;
 		int length = 0;
@@ -3167,7 +3163,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		{
 		  type = _exptype2(identity);
 
-		  if (type == DTM_Fields.TEXT_NODE || type == DTM_Fields.CDATA_SECTION_NODE)
+		  if (type == DTM.TEXT_NODE || type == DTM.CDATA_SECTION_NODE)
 		  {
 			int dataIndex = m_dataOrQName.elementAt(identity);
 			if (dataIndex >= 0)
@@ -3214,7 +3210,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			return EMPTY_XML_STR;
 		  }
 		}
-		else if (DTM_Fields.TEXT_NODE == type || DTM_Fields.CDATA_SECTION_NODE == type)
+		else if (DTM.TEXT_NODE == type || DTM.CDATA_SECTION_NODE == type)
 		{
 		  int dataIndex = m_dataOrQName.elementAt(identity);
 		  if (dataIndex >= 0)
@@ -3276,23 +3272,21 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// <param name="nodeHandle"> The node ID.
 	  /// </param>
 	  /// <returns> A string object that represents the string-value of the given node. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public final String getStringValueX(final int nodeHandle)
-	  public string getStringValueX(int nodeHandle)
+	  public string getStringValueX(in int nodeHandle)
 	  {
 		int identity = makeNodeIdentity(nodeHandle);
-		if (identity == DTM_Fields.NULL)
+		if (identity == DTM.NULL)
 		{
 		  return EMPTY_STR;
 		}
 
 		int type = _type2(identity);
 
-		if (type == DTM_Fields.ELEMENT_NODE || type == DTM_Fields.DOCUMENT_NODE)
+		if (type == DTM.ELEMENT_NODE || type == DTM.DOCUMENT_NODE)
 		{
 		  int startNode = identity;
 		  identity = _firstch2(identity);
-		  if (DTM_Fields.NULL != identity)
+		  if (DTM.NULL != identity)
 		  {
 		int offset = -1;
 		int length = 0;
@@ -3301,7 +3295,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		{
 		  type = _exptype2(identity);
 
-		  if (type == DTM_Fields.TEXT_NODE || type == DTM_Fields.CDATA_SECTION_NODE)
+		  if (type == DTM.TEXT_NODE || type == DTM.CDATA_SECTION_NODE)
 		  {
 			int dataIndex = m_dataOrQName.elementAt(identity);
 			if (dataIndex >= 0)
@@ -3341,7 +3335,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			return EMPTY_STR;
 		  }
 		}
-		else if (DTM_Fields.TEXT_NODE == type || DTM_Fields.CDATA_SECTION_NODE == type)
+		else if (DTM.TEXT_NODE == type || DTM.CDATA_SECTION_NODE == type)
 		{
 		  int dataIndex = m_dataOrQName.elementAt(identity);
 		  if (dataIndex >= 0)
@@ -3375,13 +3369,13 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		  get
 		  {
 			int child = _firstch2(ROOTNODE);
-			if (child == DTM_Fields.NULL)
+			if (child == DTM.NULL)
 			{
 				return EMPTY_STR;
 			}
     
 			// optimization: only create StringBuffer if > 1 child
-			if ((_exptype2(child) == DTM_Fields.TEXT_NODE) && (_nextsib2(child) == DTM_Fields.NULL))
+			if ((_exptype2(child) == DTM.TEXT_NODE) && (_nextsib2(child) == DTM.NULL))
 			{
 			  int dataIndex = m_dataOrQName.elementAt(child);
 			  if (dataIndex >= 0)
@@ -3421,25 +3415,25 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 	  /// function.
 	  /// </param>
 	  /// <exception cref="SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void dispatchCharactersEvents(int nodeHandle, ContentHandler ch, boolean normalize) throws SAXException
 	  public sealed override void dispatchCharactersEvents(int nodeHandle, ContentHandler ch, bool normalize)
 	  {
 
 		int identity = makeNodeIdentity(nodeHandle);
 
-		if (identity == DTM_Fields.NULL)
+		if (identity == DTM.NULL)
 		{
 		  return;
 		}
 
 		int type = _type2(identity);
 
-		if (type == DTM_Fields.ELEMENT_NODE || type == DTM_Fields.DOCUMENT_NODE)
+		if (type == DTM.ELEMENT_NODE || type == DTM.DOCUMENT_NODE)
 		{
 		  int startNode = identity;
 		  identity = _firstch2(identity);
-		  if (DTM_Fields.NULL != identity)
+		  if (DTM.NULL != identity)
 		  {
 		int offset = -1;
 		int length = 0;
@@ -3448,7 +3442,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		{
 		  type = _exptype2(identity);
 
-		  if (type == DTM_Fields.TEXT_NODE || type == DTM_Fields.CDATA_SECTION_NODE)
+		  if (type == DTM.TEXT_NODE || type == DTM.CDATA_SECTION_NODE)
 		  {
 			int dataIndex = m_dataOrQName.elementAt(identity);
 
@@ -3488,7 +3482,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		}
 		  }
 		}
-		else if (DTM_Fields.TEXT_NODE == type || DTM_Fields.CDATA_SECTION_NODE == type)
+		else if (DTM.TEXT_NODE == type || DTM.CDATA_SECTION_NODE == type)
 		{
 		  int dataIndex = m_dataOrQName.elementAt(identity);
 
@@ -3554,7 +3548,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		int identity = makeNodeIdentity(nodeHandle);
 		int type = _type2(identity);
 
-		if (type == DTM_Fields.TEXT_NODE || type == DTM_Fields.CDATA_SECTION_NODE)
+		if (type == DTM.TEXT_NODE || type == DTM.CDATA_SECTION_NODE)
 		{
 		  int dataIndex = _dataOrQName(identity);
 		  if (dataIndex > 0)
@@ -3566,7 +3560,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			return m_chars.getString(m_data.elementAt(-dataIndex), m_data.elementAt(-dataIndex + 1));
 		  }
 		}
-		else if (DTM_Fields.ELEMENT_NODE == type || DTM_Fields.DOCUMENT_FRAGMENT_NODE == type || DTM_Fields.DOCUMENT_NODE == type)
+		else if (DTM.ELEMENT_NODE == type || DTM.DOCUMENT_FRAGMENT_NODE == type || DTM.DOCUMENT_NODE == type)
 		{
 		  return null;
 		}
@@ -3587,12 +3581,11 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		/// <summary>
 		/// Copy the String value of a Text node to a SerializationHandler
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected final void copyTextNode(final int nodeID, org.apache.xml.serializer.SerializationHandler handler) throws SAXException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		protected internal void copyTextNode(int nodeID, SerializationHandler handler)
+		protected internal void copyTextNode(in int nodeID, SerializationHandler handler)
 		{
-			if (nodeID != DTM_Fields.NULL)
+			if (nodeID != DTM.NULL)
 			{
 				  int dataIndex = m_dataOrQName.elementAt(nodeID);
 				if (dataIndex >= 0)
@@ -3613,7 +3606,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		/// <param name="exptype"> The expanded type of the Element node </param>
 		/// <param name="handler"> The SerializationHandler </param>
 		/// <returns> The qualified name of the Element node. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected final String copyElement(int nodeID, int exptype, org.apache.xml.serializer.SerializationHandler handler) throws SAXException
 		protected internal string copyElement(int nodeID, int exptype, SerializationHandler handler)
 		{
@@ -3670,10 +3663,9 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		/// <param name="handler"> The SerializationHandler </param>
 		/// <param name="inScope">  true if all namespaces in scope should be copied,
 		///  false if only the namespace declarations should be copied. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected final void copyNS(final int nodeID, org.apache.xml.serializer.SerializationHandler handler, boolean inScope) throws SAXException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		protected internal void copyNS(int nodeID, SerializationHandler handler, bool inScope)
+		protected internal void copyNS(in int nodeID, SerializationHandler handler, bool inScope)
 		{
 			// %OPT% Optimization for documents which does not have any explicit
 			// namespace nodes. For these documents, there is an implicit
@@ -3708,7 +3700,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 			}
 
 			int nsIndex = 1;
-			while (nextNSNode != DTM_Fields.NULL)
+			while (nextNSNode != DTM.NULL)
 			{
 				// Retrieve the name of the namespace node
 				int eType = _exptype2(nextNSNode);
@@ -3755,18 +3747,18 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		protected internal int getNextNamespaceNode2(int baseID)
 		{
 			int type;
-			while ((type = _type2(++baseID)) == DTM_Fields.ATTRIBUTE_NODE)
+			while ((type = _type2(++baseID)) == DTM.ATTRIBUTE_NODE)
 			{
 					;
 			}
 
-			if (type == DTM_Fields.NAMESPACE_NODE)
+			if (type == DTM.NAMESPACE_NODE)
 			{
 				return baseID;
 			}
 			else
 			{
-				return org.apache.xml.dtm.DTM_Fields.NULL;
+				return NULL;
 			}
 		}
 
@@ -3775,13 +3767,12 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		/// </summary>
 		/// <param name="nodeID"> The Element node identity </param>
 		/// <param name="handler"> The SerializationHandler </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected final void copyAttributes(final int nodeID, org.apache.xml.serializer.SerializationHandler handler) throws SAXException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		protected internal void copyAttributes(int nodeID, SerializationHandler handler)
+		protected internal void copyAttributes(in int nodeID, SerializationHandler handler)
 		{
 
-		   for (int current = getFirstAttributeIdentity(nodeID); current != DTM_Fields.NULL; current = getNextAttributeIdentity(current))
+		   for (int current = getFirstAttributeIdentity(nodeID); current != DTM.NULL; current = getNextAttributeIdentity(current))
 		   {
 				int eType = _exptype2(current);
 				copyAttribute(current, eType, handler);
@@ -3796,7 +3787,7 @@ namespace org.apache.xml.dtm.@ref.sax2dtm
 		/// <param name="nodeID"> The node identity </param>
 		/// <param name="exptype"> The expanded type of the Element node </param>
 		/// <param name="handler"> The SerializationHandler </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected final void copyAttribute(int nodeID, int exptype, org.apache.xml.serializer.SerializationHandler handler) throws SAXException
 		protected internal void copyAttribute(int nodeID, int exptype, SerializationHandler handler)
 		{

@@ -21,7 +21,6 @@
 namespace org.apache.xalan.res
 {
 
-
 	/// <summary>
 	/// Set up error messages.
 	/// We build a two dimensional array of message keys and
@@ -600,7 +599,7 @@ namespace org.apache.xalan.res
 				new object[] {"version2", "<<<<<<<"},
 				new object[] {"yes", "da"},
 				new object[] {"line", "Vrstica #"},
-				new object[] {"column","Stolpec #"},
+				new object[] {"column", "Stolpec #"},
 				new object[] {"xsldone", "XSLProcessor: dokon\u010dano"},
 				new object[] {"xslProc_option", "Ukazna vrstica Xalan-J Mo\u017enosti razreda postopka:"},
 				new object[] {"xslProc_option", "Ukazna vrstica Xalan-J Mo\u017enosti razredov postopkov\u003a"},
@@ -660,8 +659,8 @@ namespace org.apache.xalan.res
 				new object[] {"optionXN", "   [-XN (omogo\u010da vstavljanje predlog)]"},
 				new object[] {"optionXX", "   [-XX (vklopi izhod za dodatna sporo\u010dila za iskanje napak)]"},
 				new object[] {"optionXT", "   [-XT (\u010de je mogo\u010de, uporabite translet za pretvorbo)]"},
-				new object[] {"diagTiming"," --------- Pretvorba {0} prek {1} je trajala {2} ms"},
-				new object[] {"recursionTooDeep","Predloga pregloboko vgnezdena. Gnezdenje = {0}, predloga {1} {2}"},
+				new object[] {"diagTiming", " --------- Pretvorba {0} prek {1} je trajala {2} ms"},
+				new object[] {"recursionTooDeep", "Predloga pregloboko vgnezdena. Gnezdenje = {0}, predloga {1} {2}"},
 				new object[] {"nameIs", "ime je"},
 				new object[] {"matchPatternIs", "primerjalni vzorec je"}
 			};
@@ -710,12 +709,12 @@ namespace org.apache.xalan.res
 	  ///   <param name="className"> the name of the class that implements the resource bundle. </param>
 	  ///   <returns> the ResourceBundle </returns>
 	  ///   <exception cref="MissingResourceException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static final XSLTErrorResources loadResourceBundle(String className) throws java.util.MissingResourceException
 	  public static XSLTErrorResources loadResourceBundle(string className)
 	  {
 
-		Locale locale = Locale.Default;
+		Locale locale = Locale.getDefault();
 		string suffix = getResourceSuffix(locale);
 
 		try
@@ -753,8 +752,8 @@ namespace org.apache.xalan.res
 	  private static string getResourceSuffix(Locale locale)
 	  {
 
-		string suffix = "_" + locale.Language;
-		string country = locale.Country;
+		string suffix = "_" + locale.getLanguage();
+		string country = locale.getCountry();
 
 		if (country.Equals("TW"))
 		{

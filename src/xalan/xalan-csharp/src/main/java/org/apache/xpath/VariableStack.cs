@@ -66,7 +66,7 @@ namespace org.apache.xpath
 	  /// <returns>  a clone of this variable stack.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized Object clone() throws CloneNotSupportedException
 	  public virtual object clone()
 	  {
@@ -76,8 +76,8 @@ namespace org.apache.xpath
 			VariableStack vs = (VariableStack) base.clone();
         
 			// I *think* I can get away with a shallow clone here?
-			vs._stackFrames = (XObject[]) _stackFrames.Clone();
-			vs._links = (int[]) _links.Clone();
+			vs._stackFrames = (XObject[]) (XObject[])_stackFrames.Clone();
+			vs._links = (int[]) (int[])_links.Clone();
         
 			return vs;
 		  }
@@ -120,9 +120,7 @@ namespace org.apache.xpath
 	  /// <param name="i"> index from zero.
 	  /// </param>
 	  /// <returns> The item at the given index. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xpath.objects.XObject elementAt(final int i)
-	  public virtual XObject elementAt(int i)
+	  public virtual XObject elementAt(in int i)
 	  {
 		return _stackFrames[i];
 	  }
@@ -204,9 +202,7 @@ namespace org.apache.xpath
 	  /// </param>
 	  /// <returns> The bottom of the stack frame, from where local variable addressing
 	  /// should start from. </returns>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int link(final int size)
-	  public virtual int link(int size)
+	  public virtual int link(in int size)
 	  {
 
 		_currentFrameBottom = _frameTop;
@@ -237,7 +233,7 @@ namespace org.apache.xpath
 
 	  /// <summary>
 	  /// Free up the stack frame that was last allocated with
-	  /// <seealso cref="#link(int size)"/>.
+	  /// <seealso cref="link(int size)"/>.
 	  /// </summary>
 	  public virtual void unlink()
 	  {
@@ -247,7 +243,7 @@ namespace org.apache.xpath
 
 	  /// <summary>
 	  /// Free up the stack frame that was last allocated with
-	  /// <seealso cref="#link(int size)"/>. </summary>
+	  /// <seealso cref="link(int size)"/>. </summary>
 	  /// <param name="currentFrame"> The current frame to set to 
 	  /// after the unlink. </param>
 	  public virtual void unlink(int currentFrame)
@@ -296,7 +292,7 @@ namespace org.apache.xpath
 	  /// <returns> The value of the variable.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject getLocalVariable(XPathContext xctxt, int index) throws javax.xml.transform.TransformerException
 	  public virtual XObject getLocalVariable(XPathContext xctxt, int index)
 	  {
@@ -331,7 +327,7 @@ namespace org.apache.xpath
 	  /// <returns> The value of the variable.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject getLocalVariable(int index, int frame) throws javax.xml.transform.TransformerException
 	  public virtual XObject getLocalVariable(int index, int frame)
 	  {
@@ -356,7 +352,7 @@ namespace org.apache.xpath
 	  /// <returns> The value of the variable.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject getLocalVariable(XPathContext xctxt, int index, boolean destructiveOK) throws javax.xml.transform.TransformerException
 	  public virtual XObject getLocalVariable(XPathContext xctxt, int index, bool destructiveOK)
 	  {
@@ -389,7 +385,7 @@ namespace org.apache.xpath
 	  /// <returns> true if the value at the index is not null.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean isLocalSet(int index) throws javax.xml.transform.TransformerException
 	  public virtual bool isLocalSet(int index)
 	  {
@@ -424,9 +420,7 @@ namespace org.apache.xpath
 	  /// bottom.
 	  /// </param>
 	  /// <param name="val"> The value of the variable that is being set. </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void setGlobalVariable(final int index, final org.apache.xpath.objects.XObject val)
-	  public virtual void setGlobalVariable(int index, XObject val)
+	  public virtual void setGlobalVariable(in int index, in XObject val)
 	  {
 		_stackFrames[index] = val;
 	  }
@@ -444,10 +438,9 @@ namespace org.apache.xpath
 	  /// <returns> The value of the variable.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject getGlobalVariable(XPathContext xctxt, final int index) throws javax.xml.transform.TransformerException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-	  public virtual XObject getGlobalVariable(XPathContext xctxt, int index)
+	  public virtual XObject getGlobalVariable(XPathContext xctxt, in int index)
 	  {
 
 		XObject val = _stackFrames[index];
@@ -474,10 +467,9 @@ namespace org.apache.xpath
 	  /// <returns> The value of the variable.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject getGlobalVariable(XPathContext xctxt, final int index, boolean destructiveOK) throws javax.xml.transform.TransformerException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-	  public virtual XObject getGlobalVariable(XPathContext xctxt, int index, bool destructiveOK)
+	  public virtual XObject getGlobalVariable(XPathContext xctxt, in int index, bool destructiveOK)
 	  {
 
 		XObject val = _stackFrames[index];
@@ -503,7 +495,7 @@ namespace org.apache.xpath
 	  /// <returns> The evaluated value of the variable.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject getVariableOrParam(XPathContext xctxt, org.apache.xml.utils.QName qname) throws javax.xml.transform.TransformerException
 	  public virtual XObject getVariableOrParam(XPathContext xctxt, org.apache.xml.utils.QName qname)
 	  {

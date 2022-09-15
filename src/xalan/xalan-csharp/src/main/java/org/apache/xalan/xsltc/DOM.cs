@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -23,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc
 {
-
 	using Hashtable = org.apache.xalan.xsltc.runtime.Hashtable;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 
@@ -38,78 +35,56 @@ namespace org.apache.xalan.xsltc
 	/// </summary>
 	public interface DOM
 	{
+		public static int FIRST_TYPE = 0;
+
+		public static int NO_TYPE = -1;
 
 		// 0 is reserved for NodeIterator.END
+		public static int NULL = 0;
 
 		// used by some node iterators to know which node to return
+		public static int RETURN_CURRENT = 0;
+		public static int RETURN_PARENT = 1;
 
 		// Constants used by getResultTreeFrag to indicate the types of the RTFs.
+		public static int SIMPLE_RTF = 0;
+		public static int ADAPTIVE_RTF = 1;
+		public static int TREE_RTF = 2;
 
 		/// <summary>
 		/// returns singleton iterator containg the document root </summary>
 		DTMAxisIterator Iterator {get;}
 		string StringValue {get;}
 
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getChildren(final int node);
-		DTMAxisIterator getChildren(int node);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getTypedChildren(final int type);
-		DTMAxisIterator getTypedChildren(int type);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getAxisIterator(final int axis);
-		DTMAxisIterator getAxisIterator(int axis);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getTypedAxisIterator(final int axis, final int type);
-		DTMAxisIterator getTypedAxisIterator(int axis, int type);
+		DTMAxisIterator getChildren(in int node);
+		DTMAxisIterator getTypedChildren(in int type);
+		DTMAxisIterator getAxisIterator(in int axis);
+		DTMAxisIterator getTypedAxisIterator(in int axis, in int type);
 		DTMAxisIterator getNthDescendant(int node, int n, bool includeself);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getNamespaceAxisIterator(final int axis, final int ns);
-		DTMAxisIterator getNamespaceAxisIterator(int axis, int ns);
+		DTMAxisIterator getNamespaceAxisIterator(in int axis, in int ns);
 		DTMAxisIterator getNodeValueIterator(DTMAxisIterator iter, int returnType, string value, bool op);
 		DTMAxisIterator orderNodes(DTMAxisIterator source, int node);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNodeName(final int node);
-		string getNodeName(int node);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNodeNameX(final int node);
-		string getNodeNameX(int node);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNamespaceName(final int node);
-		string getNamespaceName(int node);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getExpandedTypeID(final int node);
-		int getExpandedTypeID(int node);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getNamespaceType(final int node);
-		int getNamespaceType(int node);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getParent(final int node);
-		int getParent(int node);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getAttributeNode(final int gType, final int element);
-		int getAttributeNode(int gType, int element);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getStringValueX(final int node);
-		string getStringValueX(int node);
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		string getNodeName(in int node);
+		string getNodeNameX(in int node);
+		string getNamespaceName(in int node);
+		int getExpandedTypeID(in int node);
+		int getNamespaceType(in int node);
+		int getParent(in int node);
+		int getAttributeNode(in int gType, in int element);
+		string getStringValueX(in int node);
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void copy(final int node, org.apache.xml.serializer.SerializationHandler handler) throws TransletException;
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		void copy(int node, SerializationHandler handler);
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		void copy(in int node, SerializationHandler handler);
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void copy(org.apache.xml.dtm.DTMAxisIterator nodes, org.apache.xml.serializer.SerializationHandler handler) throws TransletException;
 		void copy(DTMAxisIterator nodes, SerializationHandler handler);
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String shallowCopy(final int node, org.apache.xml.serializer.SerializationHandler handler) throws TransletException;
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		string shallowCopy(int node, SerializationHandler handler);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean lessThan(final int node1, final int node2);
-		bool lessThan(int node1, int node2);
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		string shallowCopy(in int node, SerializationHandler handler);
+		bool lessThan(in int node1, in int node2);
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(final int textNode, org.apache.xml.serializer.SerializationHandler handler) throws TransletException;
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		void characters(int textNode, SerializationHandler handler);
+		void characters(in int textNode, SerializationHandler handler);
 		Node makeNode(int index);
 		Node makeNode(DTMAxisIterator iter);
 		NodeList makeNodeList(int index);
@@ -119,21 +94,13 @@ namespace org.apache.xalan.xsltc
 		string getDocumentURI(int node);
 		StripFilter Filter {set;}
 		void setupMapping(string[] names, string[] urisArray, int[] typesArray, string[] namespaces);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean isElement(final int node);
-		bool isElement(int node);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean isAttribute(final int node);
-		bool isAttribute(int node);
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		bool isElement(in int node);
+		bool isAttribute(in int node);
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String lookupNamespace(int node, String prefix) throws TransletException;
 		string lookupNamespace(int node, string prefix);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getNodeIdent(final int nodehandle);
-		int getNodeIdent(int nodehandle);
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getNodeHandle(final int nodeId);
-		int getNodeHandle(int nodeId);
+		int getNodeIdent(in int nodehandle);
+		int getNodeHandle(in int nodeId);
 		DOM getResultTreeFrag(int initialSize, int rtfType);
 		DOM getResultTreeFrag(int initialSize, int rtfType, bool addToDTMManager);
 		SerializationHandler OutputDomBuilder {get;}
@@ -141,18 +108,6 @@ namespace org.apache.xalan.xsltc
 		int Document {get;}
 		string getUnparsedEntityURI(string name);
 		Hashtable ElementsWithIDs {get;}
-	}
-
-	public static class DOM_Fields
-	{
-		public const int FIRST_TYPE = 0;
-		public const int NO_TYPE = -1;
-		public const int NULL = 0;
-		public const int RETURN_CURRENT = 0;
-		public const int RETURN_PARENT = 1;
-		public const int SIMPLE_RTF = 0;
-		public const int ADAPTIVE_RTF = 1;
-		public const int TREE_RTF = 2;
 	}
 
 }

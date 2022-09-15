@@ -1,4 +1,6 @@
-﻿/*
+﻿using System.IO;
+
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -81,13 +83,13 @@ namespace org.apache.xml.serializer
 	/// 
 	/// </para>
 	/// </summary>
-	/// <seealso cref= Method </seealso>
-	/// <seealso cref= OutputPropertiesFactory </seealso>
-	/// <seealso cref= SerializerFactory </seealso>
-	/// <seealso cref= DOMSerializer </seealso>
-	/// <seealso cref= ContentHandler
+	/// <seealso cref="Method"/>
+	/// <seealso cref="OutputPropertiesFactory"/>
+	/// <seealso cref="SerializerFactory"/>
+	/// <seealso cref="DOMSerializer"/>
+	/// <seealso cref="ContentHandler"
 	/// 
-	/// @xsl.usage general </seealso>
+	/// @xsl.usage general/>
 	public interface Serializer
 	{
 
@@ -106,7 +108,7 @@ namespace org.apache.xml.serializer
 		/// </para>
 		/// </summary>
 		/// <param name="output"> The output stream </param>
-		System.IO.Stream OutputStream {set;get;}
+		Stream OutputStream {set;get;}
 
 
 		/// <summary>
@@ -181,7 +183,7 @@ namespace org.apache.xml.serializer
 		/// <returns> A <seealso cref="ContentHandler"/> interface into this serializer,
 		///  or null if the serializer is not SAX 2 capable </returns>
 		/// <exception cref="IOException"> An I/O exception occured </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.xml.sax.ContentHandler asContentHandler() throws java.io.IOException;
 		ContentHandler asContentHandler();
 
@@ -200,7 +202,7 @@ namespace org.apache.xml.serializer
 		/// <returns> A <seealso cref="DOMSerializer"/> interface into this serializer,
 		///  or null if the serializer is not DOM capable </returns>
 		/// <exception cref="IOException"> An I/O exception occured </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public DOMSerializer asDOMSerializer() throws java.io.IOException;
 		DOMSerializer asDOMSerializer();
 
@@ -230,7 +232,7 @@ namespace org.apache.xml.serializer
 		/// <returns> An Object to be cast to a DOM3Serializer interface into this serializer,
 		///  or null if the serializer is not DOM capable </returns>
 		/// <exception cref="IOException"> An I/O exception occured </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object asDOM3Serializer() throws java.io.IOException;
 		object asDOM3Serializer();
 	}

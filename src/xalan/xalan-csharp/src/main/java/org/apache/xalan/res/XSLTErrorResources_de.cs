@@ -21,7 +21,6 @@
 namespace org.apache.xalan.res
 {
 
-
 	/// <summary>
 	/// Set up error messages.
 	/// We build a two dimensional array of message keys and
@@ -617,7 +616,7 @@ namespace org.apache.xalan.res
 				new object[] {"version2", "<<<<<<<"},
 				new object[] {"yes", "ja"},
 				new object[] {"line", "Zeilennummer"},
-				new object[] {"column","Spaltennummer"},
+				new object[] {"column", "Spaltennummer"},
 				new object[] {"xsldone", "XSLProcessor: fertig"},
 				new object[] {"xslProc_option", "Optionen f\u00fcr Verarbeitungsklassen in der Xalan-J-Befehlszeile:"},
 				new object[] {"xslProc_option", "Optionen f\u00fcr Verarbeitungsklassen in der Xalan-J-Befehlszeile\u003a"},
@@ -677,8 +676,8 @@ namespace org.apache.xalan.res
 				new object[] {"optionXN", "[-XN (Inline-Anordnung f\u00fcr Vorlagen aktivieren)]"},
 				new object[] {"optionXX", "[-XX (Zus\u00e4tzliche Debugnachrichtenausgabe aktivieren)]"},
 				new object[] {"optionXT", "[-XT (Translet f\u00fcr Umsetzung verwenden, wenn m\u00f6glich)]"},
-				new object[] {"diagTiming","--------- Umsetzung von {0} \u00fcber {1} betrug {2} Millisekunden"},
-				new object[] {"recursionTooDeep","Vorlagenverschachtelung ist zu stark. Verschachtelung = {0}, Vorlage {1} {2}"},
+				new object[] {"diagTiming", "--------- Umsetzung von {0} \u00fcber {1} betrug {2} Millisekunden"},
+				new object[] {"recursionTooDeep", "Vorlagenverschachtelung ist zu stark. Verschachtelung = {0}, Vorlage {1} {2}"},
 				new object[] {"nameIs", "Der Name ist"},
 				new object[] {"matchPatternIs", "Das Suchmuster ist"}
 			};
@@ -727,12 +726,12 @@ namespace org.apache.xalan.res
 	  ///   <param name="className"> the name of the class that implements the resource bundle. </param>
 	  ///   <returns> the ResourceBundle </returns>
 	  ///   <exception cref="MissingResourceException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static final XSLTErrorResources loadResourceBundle(String className) throws java.util.MissingResourceException
 	  public static XSLTErrorResources loadResourceBundle(string className)
 	  {
 
-		Locale locale = Locale.Default;
+		Locale locale = Locale.getDefault();
 		string suffix = getResourceSuffix(locale);
 
 		try
@@ -770,8 +769,8 @@ namespace org.apache.xalan.res
 	  private static string getResourceSuffix(Locale locale)
 	  {
 
-		string suffix = "_" + locale.Language;
-		string country = locale.Country;
+		string suffix = "_" + locale.getLanguage();
+		string country = locale.getCountry();
 
 		if (country.Equals("TW"))
 		{

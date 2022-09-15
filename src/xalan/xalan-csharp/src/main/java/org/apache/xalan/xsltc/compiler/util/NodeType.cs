@@ -1,6 +1,4 @@
-﻿using System;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -23,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using CHECKCAST = org.apache.bcel.generic.CHECKCAST;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -38,6 +35,9 @@ namespace org.apache.xalan.xsltc.compiler.util
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using NEW = org.apache.bcel.generic.NEW;
 	using PUSH = org.apache.bcel.generic.PUSH;
+	using Constants = org.apache.xalan.xsltc.compiler.Constants;
+	using FlowList = org.apache.xalan.xsltc.compiler.FlowList;
+	using NodeTest = org.apache.xalan.xsltc.compiler.NodeTest;
 
 	/// <summary>
 	/// @author Jacek Ambroziak
@@ -47,7 +47,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 	{
 		private readonly int _type;
 
-		protected internal NodeType() : this(org.apache.xalan.xsltc.compiler.NodeTest_Fields.ANODE)
+		protected internal NodeType() : this(NodeTest.ANODE)
 		{
 		}
 
@@ -64,7 +64,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			}
 		}
 
-		public override String ToString()
+		public override string ToString()
 		{
 		return "node-type";
 		}
@@ -79,7 +79,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		return _type;
 		}
 
-		public override String toSignature()
+		public override string toSignature()
 		{
 		return "I";
 		}
@@ -98,34 +98,34 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// </summary>
 		public override void translateTo(ClassGenerator classGen, MethodGenerator methodGen, Type type)
 		{
-		if (type == Type.String)
+		if (type == org.apache.xalan.xsltc.compiler.util.Type.String)
 		{
 			translateTo(classGen, methodGen, (StringType) type);
 		}
-		else if (type == Type.Boolean)
+		else if (type == org.apache.xalan.xsltc.compiler.util.Type.Boolean)
 		{
 			translateTo(classGen, methodGen, (BooleanType) type);
 		}
-		else if (type == Type.Real)
+		else if (type == org.apache.xalan.xsltc.compiler.util.Type.Real)
 		{
 			translateTo(classGen, methodGen, (RealType) type);
 		}
-		else if (type == Type.NodeSet)
+		else if (type == org.apache.xalan.xsltc.compiler.util.Type.NodeSet)
 		{
 			translateTo(classGen, methodGen, (NodeSetType) type);
 		}
-		else if (type == Type.Reference)
+		else if (type == org.apache.xalan.xsltc.compiler.util.Type.Reference)
 		{
 			translateTo(classGen, methodGen, (ReferenceType) type);
 		}
-		else if (type == Type.Object)
+		else if (type == org.apache.xalan.xsltc.compiler.util.Type.Object)
 		{
 			translateTo(classGen, methodGen, (ObjectType) type);
 		}
 		else
 		{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), type.ToString());
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
@@ -138,34 +138,34 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		switch (_type)
 		{
-		case org.apache.xalan.xsltc.compiler.NodeTest_Fields.ROOT:
-		case org.apache.xalan.xsltc.compiler.NodeTest_Fields.ELEMENT:
+		case NodeTest.ROOT:
+		case NodeTest.ELEMENT:
 			il.append(methodGen.loadDOM());
 			il.append(SWAP); // dom ref must be below node index
-			int index = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.DOM_INTF, org.apache.xalan.xsltc.compiler.Constants_Fields.GET_ELEMENT_VALUE, org.apache.xalan.xsltc.compiler.Constants_Fields.GET_ELEMENT_VALUE_SIG);
+			int index = cpg.addInterfaceMethodref(DOM_INTF, GET_ELEMENT_VALUE, GET_ELEMENT_VALUE_SIG);
 			il.append(new INVOKEINTERFACE(index, 2));
 			break;
 
-		case org.apache.xalan.xsltc.compiler.NodeTest_Fields.ANODE:
-		case org.apache.xalan.xsltc.compiler.NodeTest_Fields.COMMENT:
-		case org.apache.xalan.xsltc.compiler.NodeTest_Fields.ATTRIBUTE:
-		case org.apache.xalan.xsltc.compiler.NodeTest_Fields.PI:
+		case NodeTest.ANODE:
+		case NodeTest.COMMENT:
+		case NodeTest.ATTRIBUTE:
+		case NodeTest.PI:
 			il.append(methodGen.loadDOM());
 			il.append(SWAP); // dom ref must be below node index
-			index = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.DOM_INTF, org.apache.xalan.xsltc.compiler.Constants_Fields.GET_NODE_VALUE, org.apache.xalan.xsltc.compiler.Constants_Fields.GET_NODE_VALUE_SIG);
+			index = cpg.addInterfaceMethodref(DOM_INTF, GET_NODE_VALUE, GET_NODE_VALUE_SIG);
 			il.append(new INVOKEINTERFACE(index, 2));
 			break;
 
 		default:
 			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), type.ToString());
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+			classGen.Parser.reportError(Constants.FATAL, err);
 			break;
 		}
 		}
@@ -182,14 +182,14 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		FlowList falsel = translateToDesynthesized(classGen, methodGen, type);
 		il.append(ICONST_1);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.BranchHandle truec = il.append(new org.apache.bcel.generic.GOTO(null));
 		BranchHandle truec = il.append(new GOTO(null));
 		falsel.backPatch(il.append(ICONST_0));
-		truec.Target = il.append(NOP);
+		truec.setTarget(il.append(NOP));
 		}
 
 		/// <summary>
@@ -200,8 +200,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// </summary>
 		public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, RealType type)
 		{
-		translateTo(classGen, methodGen, Type.String);
-		Type.String.translateTo(classGen, methodGen, Type.Real);
+		translateTo(classGen, methodGen, org.apache.xalan.xsltc.compiler.util.Type.String);
+		org.apache.xalan.xsltc.compiler.util.Type.String.translateTo(classGen, methodGen, org.apache.xalan.xsltc.compiler.util.Type.Real);
 		}
 
 		/// <summary>
@@ -212,16 +212,16 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// </summary>
 		public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, NodeSetType type)
 		{
-		ConstantPoolGen cpg = classGen.ConstantPool;
-		InstructionList il = methodGen.InstructionList;
+		ConstantPoolGen cpg = classGen.getConstantPool();
+		InstructionList il = methodGen.getInstructionList();
 
 		// Create a new instance of SingletonIterator
-		il.append(new NEW(cpg.addClass(org.apache.xalan.xsltc.compiler.Constants_Fields.SINGLETON_ITERATOR)));
+		il.append(new NEW(cpg.addClass(SINGLETON_ITERATOR)));
 		il.append(DUP_X1);
 		il.append(SWAP);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int init = cpg.addMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.SINGLETON_ITERATOR, "<init>", "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_SIG +")V");
-		int init = cpg.addMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.SINGLETON_ITERATOR, "<init>", "(" + org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_SIG + ")V");
+//ORIGINAL LINE: final int init = cpg.addMethodref(SINGLETON_ITERATOR, "<init>", "(" + NODE_SIG +")V");
+		int init = cpg.addMethodref(SINGLETON_ITERATOR, "<init>", "(" + NODE_SIG + ")V");
 		il.append(new INVOKESPECIAL(init));
 		}
 
@@ -232,7 +232,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// </summary>
 		public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, ObjectType type)
 		{
-			methodGen.InstructionList.append(NOP);
+			methodGen.getInstructionList().append(NOP);
 		}
 
 		/// <summary>
@@ -246,7 +246,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		return new FlowList(il.append(new IFEQ(null)));
 		}
 
@@ -260,15 +260,15 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
-		il.append(new NEW(cpg.addClass(org.apache.xalan.xsltc.compiler.Constants_Fields.RUNTIME_NODE_CLASS)));
+		InstructionList il = methodGen.getInstructionList();
+		il.append(new NEW(cpg.addClass(RUNTIME_NODE_CLASS)));
 		il.append(DUP_X1);
 		il.append(SWAP);
 		il.append(new PUSH(cpg, _type));
-		il.append(new INVOKESPECIAL(cpg.addMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.RUNTIME_NODE_CLASS, "<init>", "(II)V")));
+		il.append(new INVOKESPECIAL(cpg.addMethodref(RUNTIME_NODE_CLASS, "<init>", "(II)V")));
 		}
 
 		/// <summary>
@@ -276,19 +276,20 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// Expects a node on the stack and pushes an object of the appropriate
 		/// type after coercion.
 		/// </summary>
-		public override void translateTo(ClassGenerator classGen, MethodGenerator methodGen, Type clazz)
+		public override void translateTo(ClassGenerator classGen, MethodGenerator methodGen, System.Type clazz)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
-			string className = clazz.Name;
+//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
+			string className = clazz.FullName;
 			if (className.Equals("java.lang.String"))
 			{
-			   translateTo(classGen, methodGen, Type.String);
+			   translateTo(classGen, methodGen, org.apache.xalan.xsltc.compiler.util.Type.String);
 			   return;
 			}
 
@@ -297,18 +298,18 @@ namespace org.apache.xalan.xsltc.compiler.util
 
 			if (className.Equals("org.w3c.dom.Node") || className.Equals("java.lang.Object"))
 			{
-			int index = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.DOM_INTF, org.apache.xalan.xsltc.compiler.Constants_Fields.MAKE_NODE, org.apache.xalan.xsltc.compiler.Constants_Fields.MAKE_NODE_SIG);
+			int index = cpg.addInterfaceMethodref(DOM_INTF, MAKE_NODE, MAKE_NODE_SIG);
 			il.append(new INVOKEINTERFACE(index, 2));
 			}
 		else if (className.Equals("org.w3c.dom.NodeList"))
 		{
-			int index = cpg.addInterfaceMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.DOM_INTF, org.apache.xalan.xsltc.compiler.Constants_Fields.MAKE_NODE_LIST, org.apache.xalan.xsltc.compiler.Constants_Fields.MAKE_NODE_LIST_SIG);
+			int index = cpg.addInterfaceMethodref(DOM_INTF, MAKE_NODE_LIST, MAKE_NODE_LIST_SIG);
 			il.append(new INVOKEINTERFACE(index, 2));
 		}
 		else
 		{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), className);
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
@@ -317,7 +318,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// </summary>
 		public override void translateBox(ClassGenerator classGen, MethodGenerator methodGen)
 		{
-		translateTo(classGen, methodGen, Type.Reference);
+		translateTo(classGen, methodGen, org.apache.xalan.xsltc.compiler.util.Type.Reference);
 		}
 
 		/// <summary>
@@ -327,22 +328,22 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
-		il.append(new CHECKCAST(cpg.addClass(org.apache.xalan.xsltc.compiler.Constants_Fields.RUNTIME_NODE_CLASS)));
-		il.append(new GETFIELD(cpg.addFieldref(org.apache.xalan.xsltc.compiler.Constants_Fields.RUNTIME_NODE_CLASS, org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_FIELD, org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_FIELD_SIG)));
+		InstructionList il = methodGen.getInstructionList();
+		il.append(new CHECKCAST(cpg.addClass(RUNTIME_NODE_CLASS)));
+		il.append(new GETFIELD(cpg.addFieldref(RUNTIME_NODE_CLASS, NODE_FIELD, NODE_FIELD_SIG)));
 		}
 
 		/// <summary>
 		/// Returns the class name of an internal type's external representation.
 		/// </summary>
-		public override String ClassName
+		public override string ClassName
 		{
 			get
 			{
-			return (org.apache.xalan.xsltc.compiler.Constants_Fields.RUNTIME_NODE_CLASS);
+			return (RUNTIME_NODE_CLASS);
 			}
 		}
 

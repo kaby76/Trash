@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using GETSTATIC = org.apache.bcel.generic.GETSTATIC;
 	using INVOKEINTERFACE = org.apache.bcel.generic.INVOKEINTERFACE;
@@ -63,32 +62,31 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Returns the text wrapped inside this node </summary>
 		/// <returns> The text wrapped inside this node </returns>
-		protected internal string getText()
+		protected internal string Text
 		{
-		return _text;
+			get
+			{
+			return _text;
+			}
+			set
+			{
+			if (string.ReferenceEquals(_text, null))
+			{
+				_text = value;
+			}
+			else
+			{
+				_text = _text + value;
+			}
+			}
 		}
 
-		/// <summary>
-		/// Set the text for this node. Appends the given text to any already
-		/// existing text (using string concatenation, so use only when needed). </summary>
-		/// <param name="text"> is the text to wrap inside this node. </param>
-		protected internal void setText(string text)
-		{
-		if (string.ReferenceEquals(_text, null))
-		{
-			_text = text;
-		}
-		else
-		{
-			_text = _text + text;
-		}
-		}
 
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("Text");
-		indent(indent + IndentIncrement);
+		this.indent(indent + IndentIncrement);
 		Util.println(_text);
 		}
 
@@ -108,7 +106,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			if (_textElement)
 			{
-			_text = Constants_Fields.EMPTYSTRING;
+			_text = EMPTYSTRING;
 			}
 			else
 			{
@@ -195,24 +193,24 @@ namespace org.apache.xalan.xsltc.compiler
 
 		private static bool isWhitespace(char c)
 		{
-			return (c == 0x20 || c == 0x09 || c == 0x0A || c == 0x0D);
+			return (c == (char)0x20 || c == (char)0x09 || c == (char)0x0A || c == (char)0x0D);
 		}
 
 		public override void translate(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (!_ignore)
 		{
 			// Turn off character escaping if so is wanted.
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int esc = cpg.addInterfaceMethodref(Constants_Fields.OUTPUT_HANDLER, "setEscaping", "(Z)Z");
-			int esc = cpg.addInterfaceMethodref(Constants_Fields.OUTPUT_HANDLER, "setEscaping", "(Z)Z");
+//ORIGINAL LINE: final int esc = cpg.addInterfaceMethodref(OUTPUT_HANDLER, "setEscaping", "(Z)Z");
+			int esc = cpg.addInterfaceMethodref(OUTPUT_HANDLER, "setEscaping", "(Z)Z");
 			if (!_escaping)
 			{
 			il.append(methodGen.loadHandler());
@@ -227,16 +225,16 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!canLoadAsArrayOffsetLength())
 				{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int characters = cpg.addInterfaceMethodref(Constants_Fields.OUTPUT_HANDLER, "characters", "("+Constants_Fields.STRING_SIG+")V");
-					int characters = cpg.addInterfaceMethodref(Constants_Fields.OUTPUT_HANDLER, "characters", "(" + Constants_Fields.STRING_SIG + ")V");
+//ORIGINAL LINE: final int characters = cpg.addInterfaceMethodref(OUTPUT_HANDLER, "characters", "("+STRING_SIG+")V");
+					int characters = cpg.addInterfaceMethodref(OUTPUT_HANDLER, "characters", "(" + STRING_SIG + ")V");
 					il.append(new PUSH(cpg, _text));
 					il.append(new INVOKEINTERFACE(characters, 2));
 				}
 				else
 				{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int characters = cpg.addInterfaceMethodref(Constants_Fields.OUTPUT_HANDLER, "characters", "([CII)V");
-					int characters = cpg.addInterfaceMethodref(Constants_Fields.OUTPUT_HANDLER, "characters", "([CII)V");
+//ORIGINAL LINE: final int characters = cpg.addInterfaceMethodref(OUTPUT_HANDLER, "characters", "([CII)V");
+					int characters = cpg.addInterfaceMethodref(OUTPUT_HANDLER, "characters", "([CII)V");
 					loadAsArrayOffsetLength(classGen, methodGen);
 				il.append(new INVOKEINTERFACE(characters, 4));
 				}
@@ -257,7 +255,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Check whether this Text node can be stored in a char[] in the translet.
 		/// Calling this is precondition to calling loadAsArrayOffsetLength. </summary>
-		/// <seealso cref= #loadAsArrayOffsetLength(ClassGenerator,MethodGenerator) </seealso>
+		/// <seealso cref=".loadAsArrayOffsetLength(ClassGenerator,MethodGenerator)"/>
 		/// <returns> true if this Text node can be </returns>
 		public bool canLoadAsArrayOffsetLength()
 		{
@@ -279,15 +277,15 @@ namespace org.apache.xalan.xsltc.compiler
 		/// 
 		/// The pre-condition to calling this method is that
 		/// canLoadAsArrayOffsetLength() returns true. </summary>
-		/// <seealso cref= #canLoadArrayOffsetLength() </seealso>
+		/// <seealso cref=".canLoadArrayOffsetLength()"/>
 		public void loadAsArrayOffsetLength(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-			ConstantPoolGen cpg = classGen.ConstantPool;
+			ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-			InstructionList il = methodGen.InstructionList;
+			InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final XSLTC xsltc = classGen.getParser().getXSLTC();
 			XSLTC xsltc = classGen.Parser.XSLTC;
@@ -300,9 +298,9 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int length = _text.length();
 			int length = _text.Length;
-			string charDataFieldName = Constants_Fields.STATIC_CHAR_DATA_FIELD + (xsltc.CharacterDataCount - 1);
+			string charDataFieldName = STATIC_CHAR_DATA_FIELD + (xsltc.CharacterDataCount - 1);
 
-			il.append(new GETSTATIC(cpg.addFieldref(xsltc.ClassName, charDataFieldName, Constants_Fields.STATIC_CHAR_DATA_FIELD_SIG)));
+			il.append(new GETSTATIC(cpg.addFieldref(xsltc.ClassName, charDataFieldName, STATIC_CHAR_DATA_FIELD_SIG)));
 			il.append(new PUSH(cpg, offset));
 			il.append(new PUSH(cpg, _text.Length));
 		}

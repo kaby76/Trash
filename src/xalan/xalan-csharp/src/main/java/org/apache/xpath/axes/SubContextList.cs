@@ -20,6 +20,7 @@
  */
 namespace org.apache.xpath.axes
 {
+	using XPathContext = org.apache.xpath.XPathContext;
 
 	/// <summary>
 	/// A class that implements this interface is a sub context node list, meaning it

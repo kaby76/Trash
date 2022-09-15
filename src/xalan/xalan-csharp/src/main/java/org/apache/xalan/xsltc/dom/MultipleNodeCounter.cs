@@ -21,7 +21,8 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using Translet = org.apache.xalan.xsltc.Translet;
 	using IntegerArray = org.apache.xalan.xsltc.util.IntegerArray;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using Axis = org.apache.xml.dtm.Axis;

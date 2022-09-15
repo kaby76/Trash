@@ -24,7 +24,6 @@ using System.Text;
 
 namespace org.apache.xalan.xsltc.runtime
 {
-
 	using SAXException = org.xml.sax.SAXException;
 
 	using EmptySerializer = org.apache.xml.serializer.EmptySerializer;
@@ -43,7 +42,7 @@ namespace org.apache.xalan.xsltc.runtime
 		private bool m_escaping = false;
 		private int _nestedLevel = 0;
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(char[] ch, int off, int len) throws org.xml.sax.SAXException
 		public override void characters(char[] ch, int off, int len)
 		{
@@ -79,7 +78,7 @@ namespace org.apache.xalan.xsltc.runtime
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(String characters) throws org.xml.sax.SAXException
 		public override void characters(string characters)
 		{
@@ -104,14 +103,14 @@ namespace org.apache.xalan.xsltc.runtime
 		}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String qname) throws org.xml.sax.SAXException
 		public override void startElement(string qname)
 		{
 			_nestedLevel++;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String qname) throws org.xml.sax.SAXException
 		public override void endElement(string qname)
 		{

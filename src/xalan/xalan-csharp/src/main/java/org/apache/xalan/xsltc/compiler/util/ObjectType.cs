@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +23,6 @@ using System.Text;
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ASTORE = org.apache.bcel.generic.ASTORE;
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
@@ -35,6 +33,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 	using Instruction = org.apache.bcel.generic.Instruction;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using PUSH = org.apache.bcel.generic.PUSH;
+	using Constants = org.apache.xalan.xsltc.compiler.Constants;
 
 	/// <summary>
 	/// @author Todd Miller
@@ -44,7 +43,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 	{
 
 		private string _javaClassName = "java.lang.Object";
-		private Type _clazz = typeof(object);
+		private System.Type _clazz = typeof(object);
 
 		/// <summary>
 		/// Used to represent a Java Class type such is required to support 
@@ -64,10 +63,11 @@ namespace org.apache.xalan.xsltc.compiler.util
 		}
 		}
 
-		protected internal ObjectType(Type clazz)
+		protected internal ObjectType(System.Type clazz)
 		{
 			_clazz = clazz;
-			_javaClassName = clazz.Name;
+//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
+			_javaClassName = clazz.FullName;
 		}
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			return (obj is ObjectType);
 		}
 
-		public String JavaClassName
+		public string JavaClassName
 		{
 			get
 			{
@@ -92,7 +92,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			}
 		}
 
-		public Type JavaClass
+		public System.Type JavaClass
 		{
 			get
 			{
@@ -100,7 +100,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			}
 		}
 
-		public override String ToString()
+		public override string ToString()
 		{
 		return _javaClassName;
 		}
@@ -110,7 +110,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		return this == other;
 		}
 
-		public override String toSignature()
+		public override string toSignature()
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final StringBuffer result = new StringBuffer("L");
@@ -140,7 +140,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		else
 		{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), type.ToString());
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
@@ -154,22 +154,22 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		il.append(DUP);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.BranchHandle ifNull = il.append(new org.apache.bcel.generic.IFNULL(null));
 		BranchHandle ifNull = il.append(new IFNULL(null));
-		il.append(new INVOKEVIRTUAL(cpg.addMethodref(_javaClassName, "toString", "()" + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG)));
+		il.append(new INVOKEVIRTUAL(cpg.addMethodref(_javaClassName, "toString", "()" + STRING_SIG)));
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.BranchHandle gotobh = il.append(new org.apache.bcel.generic.GOTO(null));
 		BranchHandle gotobh = il.append(new GOTO(null));
-		ifNull.Target = il.append(POP);
+		ifNull.setTarget(il.append(POP));
 		il.append(new PUSH(cpg, ""));
-		gotobh.Target = il.append(NOP);
+		gotobh.setTarget(il.append(NOP));
 		}
 
 		/// <summary>
@@ -177,25 +177,25 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// by <code>clazz</code>. This method is used to translate parameters 
 		/// when external functions are called.
 		/// </summary>
-		public override void translateTo(ClassGenerator classGen, MethodGenerator methodGen, Type clazz)
+		public override void translateTo(ClassGenerator classGen, MethodGenerator methodGen, System.Type clazz)
 		{
-			if (_clazz.IsSubclassOf(clazz))
+			if (clazz.IsAssignableFrom(_clazz))
 			{
-			methodGen.InstructionList.append(NOP);
+			methodGen.getInstructionList().append(NOP);
 			}
 		else
 		{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.GetType().ToString());
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
 		/// <summary>
 		/// Translates an external Java type into an Object type 
 		/// </summary>
-		public override void translateFrom(ClassGenerator classGen, MethodGenerator methodGen, Type clazz)
+		public override void translateFrom(ClassGenerator classGen, MethodGenerator methodGen, System.Type clazz)
 		{
-		methodGen.InstructionList.append(NOP);
+		methodGen.getInstructionList().append(NOP);
 		}
 
 		public override Instruction LOAD(int slot)

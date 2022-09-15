@@ -23,7 +23,6 @@ using System.Text;
  */
 namespace org.apache.xalan.lib
 {
-
 	using DTMNodeProxy = org.apache.xml.dtm.@ref.DTMNodeProxy;
 
 	using Node = org.w3c.dom.Node;
@@ -40,7 +39,7 @@ namespace org.apache.xalan.lib
 	  /// </summary>
 	  /// <param name="n"> The Node. </param>
 	  /// <returns> The string value of the Node </returns>
-	  protected internal static string ToString(Node n)
+	  protected internal static string toString(Node n)
 	  {
 		if (n is DTMNodeProxy)
 		{
@@ -48,15 +47,15 @@ namespace org.apache.xalan.lib
 		}
 		else
 		{
-		  string value = n.NodeValue;
+		  string value = n.getNodeValue();
 		  if (string.ReferenceEquals(value, null))
 		  {
-			NodeList nodelist = n.ChildNodes;
+			NodeList nodelist = n.getChildNodes();
 			StringBuilder buf = new StringBuilder();
-			for (int i = 0; i < nodelist.Length; i++)
+			for (int i = 0; i < nodelist.getLength(); i++)
 			{
 			  Node childNode = nodelist.item(i);
-			  buf.Append(ToString(childNode));
+			  buf.Append(toString(childNode));
 			}
 			return buf.ToString();
 		  }
@@ -76,7 +75,7 @@ namespace org.apache.xalan.lib
 	  protected internal static double toNumber(Node n)
 	  {
 		double d = 0.0;
-		string str = ToString(n);
+		string str = toString(n);
 		try
 		{
 		  d = Convert.ToDouble(str);

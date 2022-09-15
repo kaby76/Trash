@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using ACONST_NULL = org.apache.bcel.generic.ACONST_NULL;
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ASTORE = org.apache.bcel.generic.ASTORE;
@@ -32,6 +31,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using LocalVariableGen = org.apache.bcel.generic.LocalVariableGen;
 	using Type = org.apache.bcel.generic.Type;
+	using Constants = org.apache.xalan.xsltc.compiler.Constants;
 
 	/// <summary>
 	/// @author Jacek Ambroziak
@@ -44,7 +44,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		private static int CURRENT_INDEX = 2;
 		private static int LEVEL_INDEX = 3;
 		private static int TRANSLET_INDEX = 4;
-		private static int org;
+		private static int LAST_INDEX = 5;
 		private int ITERATOR_INDEX = 6;
 
 		private readonly Instruction _iloadCurrent;
@@ -60,10 +60,10 @@ namespace org.apache.xalan.xsltc.compiler.util
 		_iloadCurrent = new ILOAD(CURRENT_INDEX);
 		_istoreCurrent = new ISTORE(CURRENT_INDEX);
 		_aloadDom = new ALOAD(DOM_INDEX);
-		_iloadLast = new ILOAD(org.apache.xalan.xsltc.compiler.Constants_Fields.LAST_INDEX);
+		_iloadLast = new ILOAD(LAST_INDEX);
 
-		LocalVariableGen iterator = addLocalVariable("iterator", Util.getJCRefType(org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_ITERATOR_SIG), null, null);
-		ITERATOR_INDEX = iterator.Index;
+		LocalVariableGen iterator = addLocalVariable("iterator", Util.getJCRefType(Constants.NODE_ITERATOR_SIG), null, null);
+		ITERATOR_INDEX = iterator.getIndex();
 		_aloadIterator = new ALOAD(ITERATOR_INDEX);
 		_astoreIterator = new ASTORE(ITERATOR_INDEX);
 		il.append(new ACONST_NULL());

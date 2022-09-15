@@ -39,8 +39,8 @@ namespace org.apache.xpath
 	  ///                purposes. </param>
 	  /// <param name="prefixResolver"> This will be called in order to resolve prefixes 
 	  ///        to namespace URIs. </param>
-	  /// <param name="type"> One of <seealso cref="org.apache.xpath.XPath#SELECT"/> or 
-	  ///             <seealso cref="org.apache.xpath.XPath#MATCH"/>.
+	  /// <param name="type"> One of <seealso cref="org.apache.xpath.XPath.SELECT"/> or 
+	  ///             <seealso cref="org.apache.xpath.XPath.MATCH"/>.
 	  /// </param>
 	  /// <returns> an XPath ready for execution. </returns>
 	  XPath create(string exprString, SourceLocator locator, PrefixResolver prefixResolver, int type);

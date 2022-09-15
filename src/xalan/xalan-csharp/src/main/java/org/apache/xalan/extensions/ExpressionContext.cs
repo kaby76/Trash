@@ -58,7 +58,7 @@ namespace org.apache.xalan.extensions
 	  /// Get the value of a node as a string. </summary>
 	  /// <param name="n"> Node to be converted to a string.  May be null. </param>
 	  /// <returns> value of n as a string, or an empty string if n is null. </returns>
-	  string ToString(Node n);
+	  string toString(Node n);
 
 	  /// <summary>
 	  /// Get a variable based on it's qualified name.
@@ -68,7 +68,7 @@ namespace org.apache.xalan.extensions
 	  /// <returns> The evaluated value of the variable.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject getVariableOrParam(org.apache.xml.utils.QName qname) throws javax.xml.transform.TransformerException;
 	  XObject getVariableOrParam(org.apache.xml.utils.QName qname);
 
@@ -80,7 +80,7 @@ namespace org.apache.xalan.extensions
 	  /// </summary>
 	  /// <returns> The current XPathContext. </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.XPathContext getXPathContext() throws javax.xml.transform.TransformerException;
 	  org.apache.xpath.XPathContext XPathContext {get;}
 

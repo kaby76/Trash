@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using IntegerArray = org.apache.xalan.xsltc.util.IntegerArray;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
@@ -60,12 +59,12 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Last value returned by next().
 		/// </summary>
-		private int _lastNext = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		private int _lastNext = END;
 
 		/// <summary>
 		/// Temporary variable to store _lastNext.
 		/// </summary>
-		private int _markedLastNext = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		private int _markedLastNext = END;
 
 		public DupFilterIterator(DTMAxisIterator source)
 		{
@@ -103,7 +102,7 @@ namespace org.apache.xalan.xsltc.dom
 			_source.StartNode = _startNode = node;
 
 			_nodes.clear();
-			while ((node = _source.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			while ((node = _source.next()) != END)
 			{
 				_nodes.add(node);
 			}
@@ -117,7 +116,7 @@ namespace org.apache.xalan.xsltc.dom
 
 			_nodesSize = _nodes.cardinality();
 			_current = 0;
-			_lastNext = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			_lastNext = END;
 			resetPosition();
 			}
 		}
@@ -136,7 +135,7 @@ namespace org.apache.xalan.xsltc.dom
 			return returnNode(_lastNext = next);
 			}
 		}
-		return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		return END;
 		}
 
 		public override DTMAxisIterator cloneIterator()
@@ -182,7 +181,7 @@ namespace org.apache.xalan.xsltc.dom
 		public override DTMAxisIterator reset()
 		{
 		_current = 0;
-		_lastNext = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		_lastNext = END;
 		return resetPosition();
 		}
 	}

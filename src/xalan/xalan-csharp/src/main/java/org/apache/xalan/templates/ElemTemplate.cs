@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.templates
 {
 
-
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
 	using QName = org.apache.xml.utils.QName;
 	using XPath = org.apache.xpath.XPath;
@@ -48,8 +47,8 @@ namespace org.apache.xalan.templates
 	///   %space-att;
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemTemplate : ElemTemplateElement
 	{
@@ -73,7 +72,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> A string containing the public identifier, or
 	  ///         null if none is available. </returns>
-	  /// <seealso cref= #getSystemId </seealso>
+	  /// <seealso cref=".getSystemId"/>
 	  public override string PublicId
 	  {
 		  get
@@ -90,7 +89,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> A string containing the system identifier, or null
 	  ///         if none is available. </returns>
-	  /// <seealso cref= #getPublicId </seealso>
+	  /// <seealso cref=".getPublicId"/>
 	  public override string SystemId
 	  {
 		  get
@@ -108,8 +107,8 @@ namespace org.apache.xalan.templates
 		  set
 		  {
     
-			m_publicId = value.PublicId;
-			m_systemId = value.SystemId;
+			m_publicId = value.getPublicId();
+			m_systemId = value.getSystemId();
     
 			base.LocaterInfo = value;
 		  }
@@ -179,8 +178,8 @@ namespace org.apache.xalan.templates
 	  /// is required unless the xsl:template element has a name
 	  /// attribute (see [6 Named Templates]). It is an error for the
 	  /// value of the match attribute to contain a VariableReference. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#patterns">patterns in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.patterns">patterns in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value to set for the "match" attribute </param>
 	  public virtual XPath Match
 	  {
@@ -194,6 +193,15 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "match" attribute.
+	  /// The match attribute is a Pattern that identifies the source
+	  /// node or nodes to which the rule applies. The match attribute
+	  /// is required unless the xsl:template element has a name
+	  /// attribute (see [6 Named Templates]). It is an error for the
+	  /// value of the match attribute to contain a VariableReference. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.patterns">patterns in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// An xsl:template element with a name attribute specifies a named template.
@@ -206,8 +214,8 @@ namespace org.apache.xalan.templates
 	  /// An xsl:template element with a name attribute specifies a named template.
 	  /// If an xsl:template element has a name attribute, it may, but need not,
 	  /// also have a match attribute. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#named-templates">named-templates in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.named-templates">named-templates in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value to set the "name" attribute </param>
 	  public virtual QName Name
 	  {
@@ -221,6 +229,13 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "name" attribute.
+	  /// An xsl:template element with a name attribute specifies a named template.
+	  /// If an xsl:template element has a name attribute, it may, but need not,
+	  /// also have a match attribute. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.named-templates">named-templates in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// Modes allow an element to be processed multiple times,
@@ -234,8 +249,8 @@ namespace org.apache.xalan.templates
 	  /// Modes allow an element to be processed multiple times,
 	  /// each time producing a different result.  If xsl:template
 	  /// does not have a match attribute, it must not have a mode attribute. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#modes">modes in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.modes">modes in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value to set the "mode" attribute </param>
 	  public virtual QName Mode
 	  {
@@ -249,6 +264,13 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "mode" attribute.
+	  /// Modes allow an element to be processed multiple times,
+	  /// each time producing a different result.  If xsl:template
+	  /// does not have a match attribute, it must not have a mode attribute. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.modes">modes in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// The priority of a template rule is specified by the priority
@@ -263,8 +285,8 @@ namespace org.apache.xalan.templates
 	  /// attribute on the template rule. The value of this must be a
 	  /// real number (positive or negative), matching the production
 	  /// Number with an optional leading minus sign (-). </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#conflict">conflict in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.conflict">conflict in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> The value to set for the "priority" attribute </param>
 	  public virtual double Priority
 	  {
@@ -278,11 +300,19 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "priority" attribute.
+	  /// The priority of a template rule is specified by the priority
+	  /// attribute on the template rule. The value of this must be a
+	  /// real number (positive or negative), matching the production
+	  /// Number with an optional leading minus sign (-). </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.conflict">conflict in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for the element </returns>
 	  public override int XSLToken
 	  {
@@ -330,16 +360,16 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
 		base.compose(sroot);
-		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		StylesheetRoot.ComposeState cstate = sroot.ComposeState;
 		ArrayList vnames = cstate.VariableNames;
 		if (null != m_matchPattern)
 		{
-		  m_matchPattern.fixupVariables(vnames, sroot.getComposeState().GlobalsSize);
+		  m_matchPattern.fixupVariables(vnames, sroot.ComposeState.GlobalsSize);
 		}
 
 		cstate.resetStackFrameSize();
@@ -349,11 +379,11 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// This after the template's children have been composed.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCompose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void endCompose(StylesheetRoot sroot)
 	  {
-		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		StylesheetRoot.ComposeState cstate = sroot.ComposeState;
 		base.endCompose(sroot);
 		m_frameSize = cstate.FrameSize;
 
@@ -368,7 +398,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {

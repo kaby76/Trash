@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath.res
 {
-
 	public class XPATHErrorResources_zh_CN : XPATHErrorResources_zh
 	{
 	}

@@ -197,7 +197,7 @@ namespace org.apache.xml.utils
 	  /// Returns clone of current IntStack
 	  /// </summary>
 	  /// <returns> clone of current IntStack </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public override object clone()
 	  {

@@ -23,7 +23,6 @@ using System.Collections;
  */
 namespace org.apache.xalan.templates
 {
-
 	using QName = org.apache.xml.utils.QName;
 	using XPath = org.apache.xpath.XPath;
 
@@ -33,8 +32,8 @@ namespace org.apache.xalan.templates
 	/// the xsl:key element. When this set of keys contains a member
 	/// with node x, name y and value z, we say that node x has a key
 	/// with name y and value z. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#key">key in XSLT Specification</a>
-	/// @xsl.usage internal </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.key">key in XSLT Specification</a>"
+	/// @xsl.usage internal/>
 	[Serializable]
 	public class KeyDeclaration : ElemTemplateElement
 	{
@@ -102,8 +101,8 @@ namespace org.apache.xalan.templates
 	  /// The match attribute is a Pattern; an xsl:key element gives
 	  /// information about the keys of any node that matches the
 	  /// pattern specified in the match attribute. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#patterns">patterns in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.patterns">patterns in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value to set for the "match" attribute. </param>
 	  public virtual XPath Match
 	  {
@@ -117,6 +116,13 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "match" attribute.
+	  /// The match attribute is a Pattern; an xsl:key element gives
+	  /// information about the keys of any node that matches the
+	  /// pattern specified in the match attribute. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.patterns">patterns in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// The "use" attribute.
@@ -146,8 +152,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for this element </returns>
 	  public override int XSLToken
 	  {
@@ -163,19 +169,19 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
 		base.compose(sroot);
-		ArrayList vnames = sroot.getComposeState().VariableNames;
+		ArrayList vnames = sroot.ComposeState.VariableNames;
 		if (null != m_matchPattern)
 		{
-		  m_matchPattern.fixupVariables(vnames, sroot.getComposeState().GlobalsSize);
+		  m_matchPattern.fixupVariables(vnames, sroot.ComposeState.GlobalsSize);
 		}
 		if (null != m_use)
 		{
-		  m_use.fixupVariables(vnames, sroot.getComposeState().GlobalsSize);
+		  m_use.fixupVariables(vnames, sroot.ComposeState.GlobalsSize);
 		}
 	  }
 

@@ -23,10 +23,13 @@ using System.Collections;
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using PrefixResolver = org.apache.xml.utils.PrefixResolver;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using XObject = org.apache.xpath.objects.XObject;
 	using NodeTest = org.apache.xpath.patterns.NodeTest;
@@ -60,7 +63,7 @@ namespace org.apache.xpath.axes
 	  /// </param>
 	  /// <exception cref="java.io.IOException"> </exception>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void readObject(java.io.ObjectInputStream stream) throws java.io.IOException, javax.xml.transform.TransformerException
 	  private void readObject(java.io.ObjectInputStream stream)
 	  {
@@ -82,7 +85,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A new PredicatedNodeTest that can be used without mutating this one.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public virtual object clone()
 	  {
@@ -153,7 +156,7 @@ namespace org.apache.xpath.axes
 	  /// <param name="opPos"> The op code position of this location step.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void initPredicateInfo(org.apache.xpath.compiler.Compiler compiler, int opPos) throws javax.xml.transform.TransformerException
 	  protected internal virtual void initPredicateInfo(Compiler compiler, int opPos)
 	  {
@@ -265,7 +268,7 @@ namespace org.apache.xpath.axes
 	  /// <param name="i"> The index into the m_proximityPositions array.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void initProximityPosition(int i) throws javax.xml.transform.TransformerException
 	  public virtual void initProximityPosition(int i)
 	  {
@@ -321,7 +324,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> the result of executing the predicate expressions.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: boolean executePredicates(int context, org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  internal virtual bool executePredicates(int context, XPathContext xctxt)
 	  {
@@ -442,7 +445,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> Informative string about the argument. </returns>
 	  protected internal virtual string nodeToString(int n)
 	  {
-		if (org.apache.xml.dtm.DTM_Fields.NULL != n)
+		if (DTM.NULL != n)
 		{
 		  DTM dtm = m_lpi.XPathContext.getDTM(n);
 		  return dtm.getNodeName(n) + "{" + (n + 1) + "}";
@@ -483,11 +486,11 @@ namespace org.apache.xpath.axes
 
 			  if (!executePredicates(n, xctxt))
 			  {
-				return org.apache.xml.dtm.DTMIterator_Fields.FILTER_SKIP;
+				return DTMIterator.FILTER_SKIP;
 			  }
 			}
 
-			return org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT;
+			return DTMIterator.FILTER_ACCEPT;
 		  }
 		}
 		catch (javax.xml.transform.TransformerException se)
@@ -501,7 +504,7 @@ namespace org.apache.xpath.axes
 		  xctxt.popCurrentNode();
 		}
 
-		return org.apache.xml.dtm.DTMIterator_Fields.FILTER_SKIP;
+		return DTMIterator.FILTER_SKIP;
 	  }
 
 
@@ -567,7 +570,7 @@ namespace org.apache.xpath.axes
 		  }
 		}
 
-		/// <seealso cref= Expression#deepEquals(Expression) </seealso>
+		/// <seealso cref="Expression.deepEquals(Expression)"/>
 		public override bool deepEquals(Expression expr)
 		{
 		  if (!base.deepEquals(expr))
@@ -647,7 +650,7 @@ namespace org.apache.xpath.axes
 			  m_index = index;
 		  }
 
-		/// <seealso cref= ExpressionOwner#getExpression() </seealso>
+		/// <seealso cref="ExpressionOwner.getExpression()"/>
 		public virtual Expression Expression
 		{
 			get

@@ -28,6 +28,12 @@ namespace org.apache.xpath.objects
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using XMLString = org.apache.xml.utils.XMLString;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using NodeSetDTM = org.apache.xpath.NodeSetDTM;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathException = org.apache.xpath.XPathException;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
 
 	using DocumentFragment = org.w3c.dom.DocumentFragment;
@@ -85,7 +91,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> This object.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -149,7 +155,7 @@ namespace org.apache.xpath.objects
 	  /// <param name="ch"> A non-null reference to a ContentHandler.
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void dispatchCharactersEvents(org.xml.sax.ContentHandler ch) throws org.xml.sax.SAXException
 	  public virtual void dispatchCharactersEvents(org.xml.sax.ContentHandler ch)
 	  {
@@ -247,7 +253,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> 0.0
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public double num() throws javax.xml.transform.TransformerException
 	  public virtual double num()
 	  {
@@ -263,7 +269,7 @@ namespace org.apache.xpath.objects
 	  /// </summary>
 	  /// <returns> numeric value of the string conversion from the 
 	  /// next node in the NodeSetDTM, or NAN if no node was found </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public double numWithSideEffects() throws javax.xml.transform.TransformerException
 	  public virtual double numWithSideEffects()
 	  {
@@ -276,7 +282,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> false
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean bool() throws javax.xml.transform.TransformerException
 	  public virtual bool @bool()
 	  {
@@ -291,7 +297,7 @@ namespace org.apache.xpath.objects
 	  /// incrementing of an iterator.
 	  /// </summary>
 	  /// <returns> True if there is a next node in the nodeset </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean boolWithSideEffects() throws javax.xml.transform.TransformerException
 	  public virtual bool boolWithSideEffects()
 	  {
@@ -338,7 +344,7 @@ namespace org.apache.xpath.objects
 
 		int result = rtf();
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL == result)
+		if (DTM.NULL == result)
 		{
 		  DTM frag = support.createDocumentFragment();
 
@@ -362,7 +368,7 @@ namespace org.apache.xpath.objects
 		DocumentFragment docFrag = null;
 		int result = rtf();
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL == result)
+		if (DTM.NULL == result)
 		{
 		  DTM frag = support.createDocumentFragment();
 
@@ -396,7 +402,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> null </returns>
 	  public virtual int rtf()
 	  {
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -415,7 +421,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator iter() throws javax.xml.transform.TransformerException
 	  public virtual DTMIterator iter()
 	  {
@@ -444,7 +450,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.traversal.NodeIterator nodeset() throws javax.xml.transform.TransformerException
 	  public virtual NodeIterator nodeset()
 	  {
@@ -460,7 +466,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.NodeList nodelist() throws javax.xml.transform.TransformerException
 	  public virtual NodeList nodelist()
 	  {
@@ -477,7 +483,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> The object as a NodeSetDTM.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.NodeSetDTM mutableNodeset() throws javax.xml.transform.TransformerException
 	  public virtual NodeSetDTM mutableNodeset()
 	  {
@@ -496,7 +502,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> This object as the given type t
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object castToType(int t, org.apache.xpath.XPathContext support) throws javax.xml.transform.TransformerException
 	  public virtual object castToType(int t, XPathContext support)
 	  {
@@ -543,7 +549,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> True if this object is less than the given object
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean lessThan(XObject obj2) throws javax.xml.transform.TransformerException
 	  public virtual bool lessThan(XObject obj2)
 	  {
@@ -569,7 +575,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> True if this object is less than or equal to the given object
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean lessThanOrEqual(XObject obj2) throws javax.xml.transform.TransformerException
 	  public virtual bool lessThanOrEqual(XObject obj2)
 	  {
@@ -595,7 +601,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> True if this object is greater than the given object
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean greaterThan(XObject obj2) throws javax.xml.transform.TransformerException
 	  public virtual bool greaterThan(XObject obj2)
 	  {
@@ -621,7 +627,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> True if this object is greater than or equal to the given object
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean greaterThanOrEqual(XObject obj2) throws javax.xml.transform.TransformerException
 	  public virtual bool greaterThanOrEqual(XObject obj2)
 	  {
@@ -676,7 +682,7 @@ namespace org.apache.xpath.objects
 	  /// <returns> True if this object is not equal to the given object
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean notEquals(XObject obj2) throws javax.xml.transform.TransformerException
 	  public virtual bool notEquals(XObject obj2)
 	  {
@@ -699,7 +705,7 @@ namespace org.apache.xpath.objects
 	  /// <param name="msg"> Error message to issue
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void error(String msg) throws javax.xml.transform.TransformerException
 	  protected internal virtual void error(string msg)
 	  {
@@ -714,7 +720,7 @@ namespace org.apache.xpath.objects
 	  /// <param name="args"> Arguments to use in the message
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void error(String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  protected internal virtual void error(string msg, object[] args)
 	  {
@@ -752,12 +758,12 @@ namespace org.apache.xpath.objects
 		fsb.append(str());
 	  }
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
 	  {
 		  assertion(false, "callVisitors should not be called for this object!!!");
 	  }
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		  if (!isSameClass(expr))

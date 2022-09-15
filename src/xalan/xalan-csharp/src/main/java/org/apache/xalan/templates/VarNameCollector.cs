@@ -71,9 +71,9 @@ namespace org.apache.xalan.templates
 		///              be reset if rewriting takes place. </param>
 		/// <param name="var"> The variable reference object. </param>
 		/// <returns> true if the sub expressions should be traversed. </returns>
-		public override bool visitVariableRef(ExpressionOwner owner, Variable @var)
+		public override bool visitVariableRef(ExpressionOwner owner, Variable var)
 		{
-			m_refs.Add(@var.QName);
+			m_refs.Add(var.QName);
 			return true;
 		}
 

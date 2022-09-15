@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	/// <summary>
 	/// This class holds information about the namespace info
 	/// of a node.  It is used to optimize namespace lookup in

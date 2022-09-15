@@ -23,7 +23,6 @@ using System.Collections;
  */
 namespace org.apache.xalan.templates
 {
-
 	using FastStringBuffer = org.apache.xml.utils.FastStringBuffer;
 	using XPathContext = org.apache.xpath.XPathContext;
 
@@ -61,7 +60,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="nsNode"> The current namespace context (stylesheet tree context).
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public abstract void evaluate(org.apache.xpath.XPathContext xctxt, org.apache.xml.utils.FastStringBuffer buf, int context, org.apache.xml.utils.PrefixResolver nsNode) throws javax.xml.transform.TransformerException;
 	  public abstract void evaluate(XPathContext xctxt, FastStringBuffer buf, int context, org.apache.xml.utils.PrefixResolver nsNode);
 

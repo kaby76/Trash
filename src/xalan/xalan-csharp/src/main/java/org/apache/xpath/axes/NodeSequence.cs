@@ -29,6 +29,8 @@ namespace org.apache.xpath.axes
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using DTMManager = org.apache.xml.dtm.DTMManager;
 	using NodeVector = org.apache.xml.utils.NodeVector;
+	using NodeSetDTM = org.apache.xpath.NodeSetDTM;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 
 	/// <summary>
@@ -36,7 +38,7 @@ namespace org.apache.xpath.axes
 	/// provides random access capabilities.
 	/// </summary>
 	[Serializable]
-	public class NodeSequence : XObject, DTMIterator, ICloneable, PathComponent
+	public class NodeSequence : XObject, DTMIterator, Cloneable, PathComponent
 	{
 		internal new const long serialVersionUID = 3866261934726581044L;
 	  /// <summary>
@@ -239,7 +241,7 @@ namespace org.apache.xpath.axes
 	  }
 
 
-	  /// <seealso cref= DTMIterator#getDTM(int) </seealso>
+	  /// <seealso cref="DTMIterator.getDTM(int)"/>
 	  public virtual DTM getDTM(int nodeHandle)
 	  {
 		  DTMManager mgr = DTMManager;
@@ -254,7 +256,7 @@ namespace org.apache.xpath.axes
 		}
 	  }
 
-	  /// <seealso cref= DTMIterator#getDTMManager() </seealso>
+	  /// <seealso cref="DTMIterator.getDTMManager()"/>
 	  public virtual DTMManager DTMManager
 	  {
 		  get
@@ -263,7 +265,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#getRoot() </seealso>
+	  /// <seealso cref="DTMIterator.getRoot()"/>
 	  public virtual int Root
 	  {
 		  get
@@ -277,12 +279,12 @@ namespace org.apache.xpath.axes
 				  // NodeSetDTM will call this, and so it's not a good thing to throw 
 				  // an assertion here.
 				  // assertion(false, "Can not get the root from a non-iterated NodeSequence!");
-				  return org.apache.xml.dtm.DTM_Fields.NULL;
+				  return DTM.NULL;
 			  }
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#setRoot(int, Object) </seealso>
+	  /// <seealso cref="DTMIterator.setRoot(int, Object)"/>
 	  public virtual void setRoot(int nodeHandle, object environment)
 	  {
 		  if (null != m_iter)
@@ -306,23 +308,23 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#reset() </seealso>
+	  /// <seealso cref="DTMIterator.reset()"/>
 	  public override void reset()
 	  {
 		  m_next = 0;
 		  // not resetting the iterator on purpose!!!
 	  }
 
-	  /// <seealso cref= DTMIterator#getWhatToShow() </seealso>
+	  /// <seealso cref="DTMIterator.getWhatToShow()"/>
 	  public virtual int WhatToShow
 	  {
 		  get
 		  {
-			return hasCache() ? (org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL & ~org.apache.xml.dtm.DTMFilter_Fields.SHOW_ENTITY_REFERENCE) : m_iter.WhatToShow;
+			return hasCache() ? (DTMFilter.SHOW_ALL & ~DTMFilter.SHOW_ENTITY_REFERENCE) : m_iter.WhatToShow;
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#getExpandEntityReferences() </seealso>
+	  /// <seealso cref="DTMIterator.getExpandEntityReferences()"/>
 	  public virtual bool ExpandEntityReferences
 	  {
 		  get
@@ -338,7 +340,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#nextNode() </seealso>
+	  /// <seealso cref="DTMIterator.nextNode()"/>
 	  public virtual int nextNode()
 	  {
 		// If the cache is on, and the node has already been found, then 
@@ -357,23 +359,23 @@ namespace org.apache.xpath.axes
 			else if (cacheComplete() || (-1 != m_last) || (null == m_iter))
 			{
 				m_next++;
-				return org.apache.xml.dtm.DTM_Fields.NULL;
+				return DTM.NULL;
 			}
 		}
 
 	  if (null == m_iter)
 	  {
-		return org.apache.xml.dtm.DTM_Fields.NULL;
+		return DTM.NULL;
 	  }
 
 		 int next = m_iter.nextNode();
-		if (org.apache.xml.dtm.DTM_Fields.NULL != next)
+		if (DTM.NULL != next)
 		{
 			if (hasCache())
 			{
 				if (m_iter.DocOrdered)
 				{
-					ArrayList.addElement(next);
+					Vector.addElement(next);
 					m_next++;
 				}
 				else
@@ -404,14 +406,14 @@ namespace org.apache.xpath.axes
 		return next;
 	  }
 
-	  /// <seealso cref= DTMIterator#previousNode() </seealso>
+	  /// <seealso cref="DTMIterator.previousNode()"/>
 	  public virtual int previousNode()
 	  {
 		  if (hasCache())
 		  {
 			  if (m_next <= 0)
 			  {
-				  return org.apache.xml.dtm.DTM_Fields.NULL;
+				  return DTM.NULL;
 			  }
 			  else
 			  {
@@ -427,7 +429,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#detach() </seealso>
+	  /// <seealso cref="DTMIterator.detach()"/>
 	  public override void detach()
 	  {
 		  if (null != m_iter)
@@ -440,7 +442,7 @@ namespace org.apache.xpath.axes
 	  /// <summary>
 	  /// Calling this with a value of false will cause the nodeset 
 	  /// to be cached. </summary>
-	  /// <seealso cref= DTMIterator#allowDetachToRelease(boolean) </seealso>
+	  /// <seealso cref="DTMIterator.allowDetachToRelease(boolean)"/>
 	  public override void allowDetachToRelease(bool allowRelease)
 	  {
 		  if ((false == allowRelease) && !hasCache())
@@ -455,7 +457,7 @@ namespace org.apache.xpath.axes
 		  base.allowDetachToRelease(allowRelease);
 	  }
 
-	  /// <seealso cref= DTMIterator#getCurrentNode() </seealso>
+	  /// <seealso cref="DTMIterator.getCurrentNode()"/>
 	  public virtual int CurrentNode
 	  {
 		  get
@@ -470,7 +472,7 @@ namespace org.apache.xpath.axes
 				  }
 				  else
 				  {
-					  return org.apache.xml.dtm.DTM_Fields.NULL;
+					  return DTM.NULL;
 				  }
 			  }
     
@@ -480,12 +482,12 @@ namespace org.apache.xpath.axes
 			  }
 			  else
 			  {
-				  return org.apache.xml.dtm.DTM_Fields.NULL;
+				  return DTM.NULL;
 			  }
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#isFresh() </seealso>
+	  /// <seealso cref="DTMIterator.isFresh()"/>
 	  public virtual bool Fresh
 	  {
 		  get
@@ -494,7 +496,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#setShouldCacheNodes(boolean) </seealso>
+	  /// <seealso cref="DTMIterator.setShouldCacheNodes(boolean)"/>
 	  public virtual bool ShouldCacheNodes
 	  {
 		  set
@@ -515,7 +517,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#isMutable() </seealso>
+	  /// <seealso cref="DTMIterator.isMutable()"/>
 	  public virtual bool Mutable
 	  {
 		  get
@@ -524,7 +526,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#getCurrentPos() </seealso>
+	  /// <seealso cref="DTMIterator.getCurrentPos()"/>
 	  public virtual int CurrentPos
 	  {
 		  get
@@ -537,7 +539,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#runTo(int) </seealso>
+	  /// <seealso cref="DTMIterator.runTo(int)"/>
 	  public virtual void runTo(int index)
 	  {
 		int n;
@@ -545,7 +547,7 @@ namespace org.apache.xpath.axes
 		if (-1 == index)
 		{
 		  int pos = m_next;
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (n = nextNode()))
+		  while (DTM.NULL != (n = nextNode()))
 		  {
 				  ;
 		  }
@@ -555,20 +557,20 @@ namespace org.apache.xpath.axes
 		{
 		  return;
 		}
-		else if (hasCache() && m_next < ArrayList.size())
+		else if (hasCache() && m_next < Vector.size())
 		{
 		  m_next = index;
 		}
-		else if ((null == ArrayList) && (index < m_next))
+		else if ((null == Vector) && (index < m_next))
 		{
-		  while ((m_next >= index) && org.apache.xml.dtm.DTM_Fields.NULL != (n = previousNode()))
+		  while ((m_next >= index) && DTM.NULL != (n = previousNode()))
 		  {
 				  ;
 		  }
 		}
 		else
 		{
-		  while ((m_next < index) && org.apache.xml.dtm.DTM_Fields.NULL != (n = nextNode()))
+		  while ((m_next < index) && DTM.NULL != (n = nextNode()))
 		  {
 				  ;
 		  }
@@ -577,7 +579,7 @@ namespace org.apache.xpath.axes
 	  }
 
 
-	  /// <seealso cref= DTMIterator#item(int) </seealso>
+	  /// <seealso cref="DTMIterator.item(int)"/>
 	  public virtual int item(int index)
 	  {
 		  CurrentPos = index;
@@ -586,7 +588,7 @@ namespace org.apache.xpath.axes
 		  return n;
 	  }
 
-	  /// <seealso cref= DTMIterator#setItem(int, int) </seealso>
+	  /// <seealso cref="DTMIterator.setItem(int, int)"/>
 	  public virtual void setItem(int node, int index)
 	  {
 		  NodeVector vec = ArrayList;
@@ -642,7 +644,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#getLength() </seealso>
+	  /// <seealso cref="DTMIterator.getLength()"/>
 	  public virtual int Length
 	  {
 		  get
@@ -685,8 +687,8 @@ namespace org.apache.xpath.axes
 
 	  /// <summary>
 	  /// Note: Not a deep clone. </summary>
-	  /// <seealso cref= DTMIterator#cloneWithReset() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="DTMIterator.cloneWithReset()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator cloneWithReset() throws CloneNotSupportedException
 	  public virtual DTMIterator cloneWithReset()
 	  {
@@ -713,7 +715,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A clone of this object.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public virtual object clone()
 	  {
@@ -736,7 +738,7 @@ namespace org.apache.xpath.axes
 	  }
 
 
-	  /// <seealso cref= DTMIterator#isDocOrdered() </seealso>
+	  /// <seealso cref="DTMIterator.isDocOrdered()"/>
 	  public virtual bool DocOrdered
 	  {
 		  get
@@ -752,7 +754,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= DTMIterator#getAxis() </seealso>
+	  /// <seealso cref="DTMIterator.getAxis()"/>
 	  public virtual int Axis
 	  {
 		  get
@@ -769,7 +771,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= PathComponent#getAnalysisBits() </seealso>
+	  /// <seealso cref="PathComponent.getAnalysisBits()"/>
 	  public virtual int AnalysisBits
 	  {
 		  get
@@ -785,7 +787,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= org.apache.xpath.Expression#fixupVariables(Vector, int) </seealso>
+	  /// <seealso cref="org.apache.xpath.Expression.fixupVariables(Vector, int)"/>
 	  public override void fixupVariables(ArrayList vars, int globalsSize)
 	  {
 		  base.fixupVariables(vars, globalsSize);
@@ -809,7 +811,7 @@ namespace org.apache.xpath.axes
 		  // This needs to do a binary search, but a binary search 
 		  // is somewhat tough because the sequence test involves 
 		  // two nodes.
-		  int size = vec.size(), i ;
+		  int size = vec.size(), i;
 
 		  for (i = size - 1; i >= 0; i--)
 		  {
@@ -1059,9 +1061,12 @@ namespace org.apache.xpath.axes
 		/// a NodeSequence is walked when its
 		/// nextNode() method is called.
 		/// </summary>
-		protected internal virtual IteratorCache getIteratorCache()
+		protected internal virtual IteratorCache IteratorCache
 		{
-			return m_cache;
+			get
+			{
+				return m_cache;
+			}
 		}
 	}
 

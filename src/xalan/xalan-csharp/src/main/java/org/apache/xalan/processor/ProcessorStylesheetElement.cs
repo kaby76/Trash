@@ -23,7 +23,6 @@
 namespace org.apache.xalan.processor
 {
 
-
 	using Stylesheet = org.apache.xalan.templates.Stylesheet;
 	using StylesheetComposed = org.apache.xalan.templates.StylesheetComposed;
 	using StylesheetRoot = org.apache.xalan.templates.StylesheetRoot;
@@ -32,10 +31,10 @@ namespace org.apache.xalan.processor
 
 	/// <summary>
 	/// TransformerFactory for xsl:stylesheet or xsl:transform markup. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a> </seealso>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#stylesheet-element">stylesheet-element in XSLT Specification</a>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.dtd">XSLT DTD</a>"/>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.stylesheet-element">stylesheet-element in XSLT Specification</a>"
 	/// 
-	/// @xsl.usage internal </seealso>
+	/// @xsl.usage internal/>
 	[Serializable]
 	public class ProcessorStylesheetElement : XSLTElementProcessor
 	{
@@ -56,7 +55,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="attributes"> The attributes attached to the element.  If
 	  ///        there are no attributes, it shall be an empty
 	  ///        Attributes object. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(StylesheetHandler handler, String uri, String localName, String rawName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 	  public override void startElement(StylesheetHandler handler, string uri, string localName, string rawName, Attributes attributes)
 	  {
@@ -115,7 +114,7 @@ namespace org.apache.xalan.processor
 	  /// <summary>
 	  /// This method can be over-ridden by a class that extends this one. </summary>
 	  /// <param name="handler"> The calling StylesheetHandler/TemplatesBuilder. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xalan.templates.Stylesheet getStylesheetRoot(StylesheetHandler handler) throws javax.xml.transform.TransformerConfigurationException
 	  protected internal virtual Stylesheet getStylesheetRoot(StylesheetHandler handler)
 	  {
@@ -137,7 +136,7 @@ namespace org.apache.xalan.processor
 	/// <param name="uri"> The Namespace URI, or an empty string. </param>
 	/// <param name="localName"> The local name (without prefix), or empty string if not namespace processing. </param>
 	/// <param name="rawName"> The qualified name (with prefix). </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(StylesheetHandler handler, String uri, String localName, String rawName) throws org.xml.sax.SAXException
 	  public override void endElement(StylesheetHandler handler, string uri, string localName, string rawName)
 	  {

@@ -24,7 +24,6 @@
 namespace org.apache.xalan.xsltc
 {
 
-
 	/// <summary>
 	/// Admin class that assigns a version number to the XSLTC software.
 	/// The version number is made up from three fields as in:

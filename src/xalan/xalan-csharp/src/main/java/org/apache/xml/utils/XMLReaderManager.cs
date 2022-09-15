@@ -77,9 +77,9 @@ namespace org.apache.xml.utils
 		/// Retrieves a cached XMLReader for this thread, or creates a new
 		/// XMLReader, if the existing reader is in use.  When the caller no
 		/// longer needs the reader, it must release it with a call to
-		/// <seealso cref="#releaseXMLReader"/>.
+		/// <seealso cref="releaseXMLReader"/>.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized org.xml.sax.XMLReader getXMLReader() throws org.xml.sax.SAXException
 		public virtual XMLReader XMLReader
 		{
@@ -127,10 +127,10 @@ namespace org.apache.xml.utils
 									if (m_parserFactory == null)
 									{
 										m_parserFactory = SAXParserFactory.newInstance();
-										m_parserFactory.NamespaceAware = true;
+										m_parserFactory.setNamespaceAware(true);
 									}
             
-									reader = m_parserFactory.newSAXParser().XMLReader;
+									reader = m_parserFactory.newSAXParser().getXMLReader();
 							   }
 							   catch (ParserConfigurationException pce)
 							   {

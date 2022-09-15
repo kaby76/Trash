@@ -22,7 +22,6 @@
 namespace org.apache.xalan.lib.sql
 {
 
-
 	/// <summary>
 	/// An interface used to build wrapper classes around existing
 	/// Connection Pool libraries.
@@ -103,7 +102,7 @@ namespace org.apache.xalan.lib.sql
 	  /// Retrive a database connection from the pool
 	  /// </summary>
 	  /// <exception cref="SQLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public java.sql.Connection getConnection()throws java.sql.SQLException;
 	  Connection Connection {get;}
 
@@ -113,7 +112,7 @@ namespace org.apache.xalan.lib.sql
 	   /// <param name="con">
 	   /// </param>
 	   /// <exception cref="SQLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void releaseConnection(java.sql.Connection con)throws java.sql.SQLException;
 	  void releaseConnection(Connection con);
 
@@ -125,7 +124,7 @@ namespace org.apache.xalan.lib.sql
 	   /// <param name="con">
 	   /// </param>
 	   /// <exception cref="SQLException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void releaseConnectionOnError(java.sql.Connection con)throws java.sql.SQLException;
 	  void releaseConnectionOnError(Connection con);
 
@@ -139,9 +138,7 @@ namespace org.apache.xalan.lib.sql
 	  /// then all unused connections will be instantly closed and as
 	  /// connections are released they are closed and removed from the pool.
 	  ///  </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void setPoolEnabled(final boolean flag);
-	  bool PoolEnabled {set;}
+	  in bool PoolEnabled {set;}
 
 	  /// <summary>
 	  /// Used to pass in extra configuration options during the

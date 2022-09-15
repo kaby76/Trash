@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.templates
 {
 
-
 	using StylesheetHandler = org.apache.xalan.processor.StylesheetHandler;
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
@@ -150,7 +149,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="stringedValue"> non-null raw string value.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public AVT(org.apache.xalan.processor.StylesheetHandler handler, String uri, String name, String rawName, String stringedValue, ElemTemplateElement owner) throws javax.xml.transform.TransformerException
 	  public AVT(StylesheetHandler handler, string uri, string name, string rawName, string stringedValue, ElemTemplateElement owner)
 	  {
@@ -494,7 +493,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> The AVT evaluated as a string
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String evaluate(org.apache.xpath.XPathContext xctxt, int context, org.apache.xml.utils.PrefixResolver nsNode) throws javax.xml.transform.TransformerException
 	  public virtual string evaluate(XPathContext xctxt, int context, org.apache.xml.utils.PrefixResolver nsNode)
 	  {
@@ -605,7 +604,7 @@ namespace org.apache.xalan.templates
 		}
 	  }
 
-	  /// <seealso cref= XSLTVisitable#callVisitors(XSLTVisitor) </seealso>
+	  /// <seealso cref="XSLTVisitable.callVisitors(XSLTVisitor)"/>
 	  public virtual void callVisitors(XSLTVisitor visitor)
 	  {
 		  if (visitor.visitAVT(this) && (null != m_parts))

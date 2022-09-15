@@ -68,7 +68,7 @@ namespace org.apache.xml.serializer.dom3
 			}
 		}
 
-		/// <seealso cref= org.apache.xerces.dom3.DOMStringList#item(int) </seealso>
+		/// <seealso cref="org.apache.xerces.dom3.DOMStringList.item(int)"/>
 		public string item(int index)
 		{
 			try
@@ -81,7 +81,7 @@ namespace org.apache.xml.serializer.dom3
 			}
 		}
 
-		/// <seealso cref= org.apache.xerces.dom3.DOMStringList#getLength() </seealso>
+		/// <seealso cref="org.apache.xerces.dom3.DOMStringList.getLength()"/>
 		public int Length
 		{
 			get
@@ -90,7 +90,7 @@ namespace org.apache.xml.serializer.dom3
 			}
 		}
 
-		/// <seealso cref= org.apache.xerces.dom3.DOMStringList#contains(String) </seealso>
+		/// <seealso cref="org.apache.xerces.dom3.DOMStringList.contains(String)"/>
 		public bool contains(string param)
 		{
 			return fStrings.Contains(param);

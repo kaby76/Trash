@@ -22,13 +22,13 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
+	using XPathContext = org.apache.xpath.XPathContext;
 
 	/// <summary>
 	/// Walker for a reverse axes. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xpath#predicates">XPath 2.4 Predicates</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xpath.predicates">XPath 2.4 Predicates</a>"/>
 	[Serializable]
 	public class ReverseAxesWalker : AxesWalker
 	{
@@ -78,7 +78,7 @@ namespace org.apache.xpath.axes
 		  {
 			if (m_foundLast)
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return DTM.NULL;
 			}
     
 			int next = m_iterator.next();
@@ -88,7 +88,7 @@ namespace org.apache.xpath.axes
 			  m_isFresh = false;
 			}
     
-			if (org.apache.xml.dtm.DTM_Fields.NULL == next)
+			if (DTM.NULL == next)
 			{
 			  this.m_foundLast = true;
 			}
@@ -162,7 +162,7 @@ namespace org.apache.xpath.axes
 			count++;
 			int next;
 
-			while (org.apache.xml.dtm.DTM_Fields.NULL != (next = clone.nextNode()))
+			while (DTM.NULL != (next = clone.nextNode()))
 			{
 			  count++;
 			}
@@ -225,7 +225,7 @@ namespace org.apache.xpath.axes
 		  // count = 1;
 		  int next;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (next = clone.nextNode()))
+		  while (DTM.NULL != (next = clone.nextNode()))
 		  {
 			count++;
 		  }

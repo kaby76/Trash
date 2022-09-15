@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using ILOAD = org.apache.bcel.generic.ILOAD;

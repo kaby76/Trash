@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 /*
@@ -24,7 +25,6 @@ using System.Text;
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKEVIRTUAL = org.apache.bcel.generic.INVOKEVIRTUAL;
@@ -66,7 +66,7 @@ namespace org.apache.xalan.xsltc.compiler
 		private bool _disabled = false;
 
 		// Some global constants
-		private const string Constants_Fields;
+		private const string STRING_SIG = "Ljava/lang/String;";
 		private const string XML_VERSION = "1.0";
 		private const string HTML_VERSION = "4.0";
 
@@ -75,7 +75,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("Output " + _method);
 		}
 
@@ -173,7 +173,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Get the output version
 		_version = getAttribute("version");
-		if (_version.Equals(Constants_Fields.EMPTYSTRING))
+		if (_version.Equals(Constants.EMPTYSTRING))
 		{
 			_version = null;
 		}
@@ -184,7 +184,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Get the output method - "xml", "html", "text" or <qname> (but not ncname)
 		_method = getAttribute("method");
-		if (_method.Equals(Constants_Fields.EMPTYSTRING))
+		if (_method.Equals(Constants.EMPTYSTRING))
 		{
 			_method = null;
 		}
@@ -203,7 +203,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Get the output encoding - any value accepted here
 		_encoding = getAttribute("encoding");
-		if (_encoding.Equals(Constants_Fields.EMPTYSTRING))
+		if (_encoding.Equals(Constants.EMPTYSTRING))
 		{
 			_encoding = null;
 		}
@@ -214,19 +214,19 @@ namespace org.apache.xalan.xsltc.compiler
 			// Create a write to verify encoding support
 					string canonicalEncoding;
 					canonicalEncoding = Encodings.convertMime2JavaEncoding(_encoding);
-			System.IO.StreamWriter writer = new System.IO.StreamWriter(System.out, canonicalEncoding);
+			StreamWriter writer = new StreamWriter(System.out, canonicalEncoding);
 			}
 			catch (java.io.UnsupportedEncodingException)
 			{
 			ErrorMsg msg = new ErrorMsg(ErrorMsg.UNSUPPORTED_ENCODING, _encoding, this);
-			parser.reportError(Constants_Fields.WARNING, msg);
+			parser.reportError(Constants.WARNING, msg);
 			}
 			outputProperties.setProperty(OutputKeys.ENCODING, _encoding);
 		}
 
 		// Should the XML header be omitted - translate to true/false
 		attrib = getAttribute("omit-xml-declaration");
-		if (!attrib.Equals(Constants_Fields.EMPTYSTRING))
+		if (!attrib.Equals(Constants.EMPTYSTRING))
 		{
 			if (attrib.Equals("yes"))
 			{
@@ -237,7 +237,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Add 'standalone' decaration to output - use text as is
 		_standalone = getAttribute("standalone");
-		if (_standalone.Equals(Constants_Fields.EMPTYSTRING))
+		if (_standalone.Equals(Constants.EMPTYSTRING))
 		{
 			_standalone = null;
 		}
@@ -248,7 +248,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Get system/public identifiers for output DOCTYPE declaration
 		_doctypeSystem = getAttribute("doctype-system");
-		if (_doctypeSystem.Equals(Constants_Fields.EMPTYSTRING))
+		if (_doctypeSystem.Equals(Constants.EMPTYSTRING))
 		{
 			_doctypeSystem = null;
 		}
@@ -259,7 +259,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 
 		_doctypePublic = getAttribute("doctype-public");
-		if (_doctypePublic.Equals(Constants_Fields.EMPTYSTRING))
+		if (_doctypePublic.Equals(Constants.EMPTYSTRING))
 		{
 			_doctypePublic = null;
 		}
@@ -270,7 +270,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Names the elements of whose text contents should be output as CDATA
 		_cdata = getAttribute("cdata-section-elements");
-		if (_cdata.Equals(Constants_Fields.EMPTYSTRING))
+		if (_cdata.Equals(Constants.EMPTYSTRING))
 		{
 			_cdata = null;
 		}
@@ -286,7 +286,7 @@ namespace org.apache.xalan.xsltc.compiler
 					if (!XML11Char.isXML11ValidQName(qname))
 					{
 						ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, qname, this);
-						parser.reportError(Constants_Fields.ERROR, err);
+						parser.reportError(Constants.ERROR, err);
 					}
 			expandedNames.Append(parser.getQName(qname).ToString()).Append(' ');
 			}
@@ -296,7 +296,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Get the indent setting - only has effect for xml and html output
 		attrib = getAttribute("indent");
-		if (!attrib.Equals(Constants_Fields.EMPTYSTRING))
+		if (!attrib.Equals(EMPTYSTRING))
 		{
 			if (attrib.Equals("yes"))
 			{
@@ -312,18 +312,18 @@ namespace org.apache.xalan.xsltc.compiler
 			// indent-amount: extension attribute of xsl:output
 			_indentamount = getAttribute(lookupPrefix("http://xml.apache.org/xalan"), "indent-amount");
 			//  Hack for supporting Old Namespace URI.
-			if (_indentamount.Equals(Constants_Fields.EMPTYSTRING))
+			if (_indentamount.Equals(EMPTYSTRING))
 			{
 				_indentamount = getAttribute(lookupPrefix("http://xml.apache.org/xslt"), "indent-amount");
 			}
-			if (!_indentamount.Equals(Constants_Fields.EMPTYSTRING))
+			if (!_indentamount.Equals(EMPTYSTRING))
 			{
 				outputProperties.setProperty("indent_amount", _indentamount);
 			}
 
 		// Get the MIME type for the output file
 		_mediaType = getAttribute("media-type");
-		if (_mediaType.Equals(Constants_Fields.EMPTYSTRING))
+		if (_mediaType.Equals(Constants.EMPTYSTRING))
 		{
 			_mediaType = null;
 		}
@@ -356,7 +356,7 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 
 		// Set output properties in current stylesheet
-		parser.CurrentStylesheet.OutputProperties = outputProperties;
+		parser.CurrentStylesheet.setOutputProperties(outputProperties);
 		}
 
 		/// <summary>
@@ -372,8 +372,8 @@ namespace org.apache.xalan.xsltc.compiler
 			return;
 		}
 
-		ConstantPoolGen cpg = classGen.ConstantPool;
-		InstructionList il = methodGen.InstructionList;
+		ConstantPoolGen cpg = classGen.getConstantPool();
+		InstructionList il = methodGen.getInstructionList();
 
 		int field = 0;
 			il.append(classGen.loadTranslet());
@@ -381,7 +381,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Only update _version field if set and different from default
 		if ((!string.ReferenceEquals(_version, null)) && (!_version.Equals(XML_VERSION)))
 		{
-			field = cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "_version", Constants_Fields.STRING_SIG);
+			field = cpg.addFieldref(TRANSLET_CLASS, "_version", STRING_SIG);
 			il.append(DUP);
 			il.append(new PUSH(cpg, _version));
 			il.append(new PUTFIELD(field));
@@ -390,7 +390,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Only update _method field if "method" attribute used
 		if (!string.ReferenceEquals(_method, null))
 		{
-			field = cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "_method", Constants_Fields.STRING_SIG);
+			field = cpg.addFieldref(TRANSLET_CLASS, "_method", STRING_SIG);
 			il.append(DUP);
 			il.append(new PUSH(cpg, _method));
 			il.append(new PUTFIELD(field));
@@ -399,7 +399,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Only update if _encoding field is "encoding" attribute used
 		if (!string.ReferenceEquals(_encoding, null))
 		{
-			field = cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "_encoding", Constants_Fields.STRING_SIG);
+			field = cpg.addFieldref(TRANSLET_CLASS, "_encoding", STRING_SIG);
 			il.append(DUP);
 			il.append(new PUSH(cpg, _encoding));
 			il.append(new PUTFIELD(field));
@@ -408,7 +408,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Only update if "omit-xml-declaration" used and set to 'yes'
 		if (_omitHeader)
 		{
-			field = cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "_omitHeader", "Z");
+			field = cpg.addFieldref(TRANSLET_CLASS, "_omitHeader", "Z");
 			il.append(DUP);
 			il.append(new PUSH(cpg, _omitHeader));
 			il.append(new PUTFIELD(field));
@@ -417,18 +417,18 @@ namespace org.apache.xalan.xsltc.compiler
 		// Add 'standalone' decaration to output - use text as is
 		if (!string.ReferenceEquals(_standalone, null))
 		{
-			field = cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "_standalone", Constants_Fields.STRING_SIG);
+			field = cpg.addFieldref(TRANSLET_CLASS, "_standalone", STRING_SIG);
 			il.append(DUP);
 			il.append(new PUSH(cpg, _standalone));
 			il.append(new PUTFIELD(field));
 		}
 
 		// Set system/public doctype only if both are set
-		field = cpg.addFieldref(Constants_Fields.TRANSLET_CLASS,"_doctypeSystem",Constants_Fields.STRING_SIG);
+		field = cpg.addFieldref(TRANSLET_CLASS,"_doctypeSystem",STRING_SIG);
 		il.append(DUP);
 		il.append(new PUSH(cpg, _doctypeSystem));
 		il.append(new PUTFIELD(field));
-		field = cpg.addFieldref(Constants_Fields.TRANSLET_CLASS,"_doctypePublic",Constants_Fields.STRING_SIG);
+		field = cpg.addFieldref(TRANSLET_CLASS,"_doctypePublic",STRING_SIG);
 		il.append(DUP);
 		il.append(new PUSH(cpg, _doctypePublic));
 		il.append(new PUTFIELD(field));
@@ -436,7 +436,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Add 'medye-type' decaration to output - if used
 		if (!string.ReferenceEquals(_mediaType, null))
 		{
-			field = cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "_mediaType", Constants_Fields.STRING_SIG);
+			field = cpg.addFieldref(TRANSLET_CLASS, "_mediaType", STRING_SIG);
 			il.append(DUP);
 			il.append(new PUSH(cpg, _mediaType));
 			il.append(new PUTFIELD(field));
@@ -445,16 +445,16 @@ namespace org.apache.xalan.xsltc.compiler
 		// Compile code to set output indentation on/off
 		if (_indent)
 		{
-			field = cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "_indent", "Z");
+			field = cpg.addFieldref(TRANSLET_CLASS, "_indent", "Z");
 			il.append(DUP);
 			il.append(new PUSH(cpg, _indent));
 			il.append(new PUTFIELD(field));
 		}
 
 			//Compile code to set indent amount.
-			if (!string.ReferenceEquals(_indentamount, null) && !_indentamount.Equals(Constants_Fields.EMPTYSTRING))
+			if (!string.ReferenceEquals(_indentamount, null) && !_indentamount.Equals(EMPTYSTRING))
 			{
-				field = cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "_indentamount", "I");
+				field = cpg.addFieldref(TRANSLET_CLASS, "_indentamount", "I");
 			il.append(DUP);
 			il.append(new PUSH(cpg, int.Parse(_indentamount)));
 			il.append(new PUTFIELD(field));
@@ -463,7 +463,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Forward to the translet any elements that should be output as CDATA
 		if (!string.ReferenceEquals(_cdata, null))
 		{
-			int index = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "addCdataElement", "(Ljava/lang/String;)V");
+			int index = cpg.addMethodref(TRANSLET_CLASS, "addCdataElement", "(Ljava/lang/String;)V");
 
 			StringTokenizer tokens = new StringTokenizer(_cdata);
 			while (tokens.hasMoreTokens())

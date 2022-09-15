@@ -26,7 +26,10 @@ namespace org.apache.xalan.xsltc.dom
 {
 
 
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using DOMEnhancedForDTM = org.apache.xalan.xsltc.DOMEnhancedForDTM;
+	using StripFilter = org.apache.xalan.xsltc.StripFilter;
+	using TransletException = org.apache.xalan.xsltc.TransletException;
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using Hashtable = org.apache.xalan.xsltc.runtime.Hashtable;
 	using Axis = org.apache.xml.dtm.Axis;
@@ -97,7 +100,7 @@ namespace org.apache.xalan.xsltc.dom
 
 		private bool _escaping = true;
 		private bool _disableEscaping = false;
-		private int _textNodeToProcess = org.apache.xml.dtm.DTM_Fields.NULL;
+		private int _textNodeToProcess = DTM.NULL;
 
 		/* ------------------------------------------------------------------- */
 		/* DOMBuilder fields END                                               */
@@ -178,7 +181,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// is used in the execution of xsl:element when the prefix is not known
 		/// at compile time.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String lookupNamespace(int node, String prefix) throws org.apache.xalan.xsltc.TransletException
 		public string lookupNamespace(int node, string prefix)
 		{
@@ -193,14 +196,14 @@ namespace org.apache.xalan.xsltc.dom
 			}
 
 			ancestors.StartNode = node;
-			while ((anode = ancestors.next()) != org.apache.xml.dtm.DTM_Fields.NULL)
+			while ((anode = ancestors.next()) != DTM.NULL)
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final NamespaceIterator namespaces = new NamespaceIterator();
 				NamespaceIterator namespaces = new NamespaceIterator(this);
 
 				namespaces.StartNode = anode;
-				while ((nsnode = namespaces.next()) != org.apache.xml.dtm.DTM_Fields.NULL)
+				while ((nsnode = namespaces.next()) != DTM.NULL)
 				{
 					if (getLocalName(nsnode).Equals(prefix))
 					{
@@ -216,21 +219,17 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Returns 'true' if a specific node is an element (of any type)
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean isElement(final int node)
-		public bool isElement(int node)
+		public bool isElement(in int node)
 		{
-			return getNodeType(node) == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE;
+			return getNodeType(node) == DTM.ELEMENT_NODE;
 		}
 
 		/// <summary>
 		/// Returns 'true' if a specific node is an attribute (of any type)
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public boolean isAttribute(final int node)
-		public bool isAttribute(int node)
+		public bool isAttribute(in int node)
 		{
-			return getNodeType(node) == org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE;
+			return getNodeType(node) == DTM.ATTRIBUTE_NODE;
 		}
 
 		/// <summary>
@@ -260,12 +259,12 @@ namespace org.apache.xalan.xsltc.dom
 		/// </summary>
 		public bool lessThan(int node1, int node2)
 		{
-			if (node1 == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (node1 == DTM.NULL)
 			{
 				return false;
 			}
 
-			if (node2 == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (node2 == DTM.NULL)
 			{
 				return true;
 			}
@@ -374,17 +373,17 @@ namespace org.apache.xalan.xsltc.dom
 			{
 				if ((string.ReferenceEquals(_nsPrefix, null)) || (_nsPrefix.Length == 0))
 				{
-					return (org.apache.xml.dtm.DTMAxisIterator_Fields.END);
+					return (END);
 				}
-				int node = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
-				for (node = base.next(); node != org.apache.xml.dtm.DTMAxisIterator_Fields.END; node = base.next())
+				int node = END;
+				for (node = base.next(); node != END; node = base.next())
 				{
-					if (_nsPrefix.CompareTo(outerInstance.getLocalName(node)) == 0)
+					if (string.CompareOrdinal(_nsPrefix, outerInstance.getLocalName(node)) == 0)
 					{
 						return returnNode(node);
 					}
 				}
-				return (org.apache.xml.dtm.DTMAxisIterator_Fields.END);
+				return (END);
 			}
 		} // end of TypedNamespaceIterator
 
@@ -404,9 +403,9 @@ namespace org.apache.xalan.xsltc.dom
 		internal string _value;
 		internal bool _op;
 		internal readonly bool _isReverse;
-		internal int _returnType = org.apache.xalan.xsltc.DOM_Fields.RETURN_PARENT;
+		internal int _returnType = RETURN_PARENT;
 
-		public NodeValueIterator(SAXImpl outerInstance, DTMAxisIterator source, int returnType, string value, bool op) : base(outerInstance)
+		public NodeValueIterator(SAXImpl outerInstance, DTMAxisIterator source, int returnType, string value, bool op)
 		{
 			this.outerInstance = outerInstance;
 			_source = source;
@@ -460,12 +459,12 @@ namespace org.apache.xalan.xsltc.dom
 		public override int next()
 		{
 				int node;
-				while ((node = _source.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+				while ((node = _source.next()) != END)
 				{
 					string val = outerInstance.getStringValueX(node);
 					if (_value.Equals(val) == _op)
 					{
-						if (_returnType == org.apache.xalan.xsltc.DOM_Fields.RETURN_CURRENT)
+						if (_returnType == RETURN_CURRENT)
 						{
 							return returnNode(node);
 						}
@@ -475,7 +474,7 @@ namespace org.apache.xalan.xsltc.dom
 						}
 					}
 				}
-				return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+				return END;
 		}
 
 		public override DTMAxisIterator setStartNode(int node)
@@ -544,9 +543,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Returns the namespace type of a specific node
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getNamespaceType(final int node)
-		public override int getNamespaceType(int node)
+		public override int getNamespaceType(in int node)
 		{
 			return base.getNamespaceType(node);
 		}
@@ -573,9 +570,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Returns the internal type associated with an expanded QName
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getGeneralizedType(final String name)
-		public int getGeneralizedType(string name)
+		public int getGeneralizedType(in string name)
 		{
 			return getGeneralizedType(name, true);
 		}
@@ -583,11 +578,9 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Returns the internal type associated with an expanded QName
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getGeneralizedType(final String name, boolean searchOnly)
-		public int getGeneralizedType(string name, bool searchOnly)
+		public int getGeneralizedType(in string name, bool searchOnly)
 		{
-			string lName , ns = null;
+			string lName, ns = null;
 			int index = -1;
 			int code;
 
@@ -605,12 +598,12 @@ namespace org.apache.xalan.xsltc.dom
 			// local part of name.
 			if (name[lNameStartIdx] == '@')
 			{
-				code = org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE;
+				code = DTM.ATTRIBUTE_NODE;
 				lNameStartIdx++;
 			}
 			else
 			{
-				code = org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE;
+				code = DTM.ELEMENT_NODE;
 			}
 
 			// Extract local name
@@ -644,7 +637,7 @@ namespace org.apache.xalan.xsltc.dom
 			short[] result = new short[exLength];
 
 			// primitive types map to themselves
-			for (i = 0; i < org.apache.xml.dtm.DTM_Fields.NTYPES; i++)
+			for (i = 0; i < DTM.NTYPES; i++)
 			{
 				result[i] = (short)i;
 			}
@@ -660,7 +653,7 @@ namespace org.apache.xalan.xsltc.dom
 				int genType = m_expandedNameTable.getExpandedTypeID(uris[i], names[i], types[i], true);
 				if (genType >= 0 && genType < exLength)
 				{
-					result[genType] = (short)(i + org.apache.xml.dtm.DTM_Fields.NTYPES);
+					result[genType] = (short)(i + DTM.NTYPES);
 				}
 			}
 
@@ -674,11 +667,11 @@ namespace org.apache.xalan.xsltc.dom
 		{
 			int i;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int[] result = new int[names.length + org.apache.xml.dtm.DTM_Fields.NTYPES];
-			int[] result = new int[names.Length + org.apache.xml.dtm.DTM_Fields.NTYPES];
+//ORIGINAL LINE: final int[] result = new int[names.length + org.apache.xml.dtm.DTM.NTYPES];
+			int[] result = new int[names.Length + DTM.NTYPES];
 
 			// primitive types map to themselves
-			for (i = 0; i < org.apache.xml.dtm.DTM_Fields.NTYPES; i++)
+			for (i = 0; i < DTM.NTYPES; i++)
 			{
 				result[i] = i;
 			}
@@ -687,7 +680,7 @@ namespace org.apache.xalan.xsltc.dom
 			for (i = 0; i < names.Length; i++)
 			{
 				int type = m_expandedNameTable.getExpandedTypeID(uris[i], names[i], types[i], true);
-				result[i + org.apache.xml.dtm.DTM_Fields.NTYPES] = type;
+				result[i + DTM.NTYPES] = type;
 			}
 			return (result);
 		}
@@ -731,7 +724,7 @@ namespace org.apache.xalan.xsltc.dom
 			short[] result = new short[resultLength];
 
 			// primitive types map to themselves
-			for (i = 0; i < org.apache.xml.dtm.DTM_Fields.NTYPES; i++)
+			for (i = 0; i < DTM.NTYPES; i++)
 			{
 				result[i] = (short)i;
 			}
@@ -747,7 +740,7 @@ namespace org.apache.xalan.xsltc.dom
 				int genType = generalizedTypes[i];
 				if (genType >= 0 && genType < resultLength)
 				{
-					result[genType] = (short)(i + org.apache.xml.dtm.DTM_Fields.NTYPES);
+					result[genType] = (short)(i + DTM.NTYPES);
 				}
 			}
 
@@ -806,7 +799,7 @@ namespace org.apache.xalan.xsltc.dom
 			{
 				int eType = getIdForNamespace(namespaces[i]);
 				int? type = (int?)_nsIndex.get(new int?(eType));
-				result[i] = (type == null) ? -1 : type.Value;
+				result[i] = (type == null) ? -1 : (short)type.Value;
 			}
 
 			return result;
@@ -840,14 +833,14 @@ namespace org.apache.xalan.xsltc.dom
 			{
 				_hasDOMSource = true;
 				DOMSource domsrc = (DOMSource)source;
-				Node node = domsrc.Node;
+				Node node = domsrc.getNode();
 				if (node is Document)
 				{
 					_document = (Document)node;
 				}
 				else
 				{
-					_document = node.OwnerDocument;
+					_document = node.getOwnerDocument();
 				}
 				_node2Ids = new Hashtable();
 			}
@@ -879,11 +872,11 @@ namespace org.apache.xalan.xsltc.dom
 			if (node != null)
 			{
 				int? id = (int?)_node2Ids.get(node);
-				return (id != null) ? id.Value : org.apache.xml.dtm.DTM_Fields.NULL;
+				return (id != null) ? id.Value : DTM.NULL;
 			}
 			else
 			{
-				return org.apache.xml.dtm.DTM_Fields.NULL;
+				return DTM.NULL;
 			}
 		}
 
@@ -903,9 +896,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// Call this when an xml:space attribute is encountered to
 		/// define the whitespace strip/preserve settings.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private void xmlSpaceDefine(String val, final int node)
-		private void xmlSpaceDefine(string val, int node)
+		private void xmlSpaceDefine(string val, in int node)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final boolean setting = val.equals(PRESERVE_STRING);
@@ -921,9 +912,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// Call this from endElement() to revert strip/preserve setting
 		/// to whatever it was before the corresponding startElement().
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: private void xmlSpaceRevert(final int node)
-		private void xmlSpaceRevert(int node)
+		private void xmlSpaceRevert(in int node)
 		{
 			if (node == _xmlSpaceStack[_idx - 1])
 			{
@@ -950,7 +939,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// </summary>
 		private void handleTextEscaping()
 		{
-			if (_disableEscaping && _textNodeToProcess != org.apache.xml.dtm.DTM_Fields.NULL && _type(_textNodeToProcess) == org.apache.xml.dtm.DTM_Fields.TEXT_NODE)
+			if (_disableEscaping && _textNodeToProcess != DTM.NULL && _type(_textNodeToProcess) == DTM.TEXT_NODE)
 			{
 				if (_dontEscape == null)
 				{
@@ -966,7 +955,7 @@ namespace org.apache.xalan.xsltc.dom
 				_dontEscape.Bit = _textNodeToProcess;
 				_disableEscaping = false;
 			}
-			_textNodeToProcess = org.apache.xml.dtm.DTM_Fields.NULL;
+			_textNodeToProcess = DTM.NULL;
 		}
 
 
@@ -979,7 +968,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// SAX2: Receive notification of character data.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(char[] ch, int start, int length) throws org.xml.sax.SAXException
 		public override void characters(char[] ch, int start, int length)
 		{
@@ -992,7 +981,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// SAX2: Receive notification of the beginning of a document.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startDocument() throws org.xml.sax.SAXException
 		public override void startDocument()
 		{
@@ -1005,7 +994,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// SAX2: Receive notification of the end of a document.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 		public override void endDocument()
 		{
@@ -1019,7 +1008,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// Specialized interface used by DOM2SAX. This one has an extra Node
 		/// parameter to build the Node -> id map.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localName, String qname, org.xml.sax.Attributes attributes, org.w3c.dom.Node node) throws org.xml.sax.SAXException
 		public void startElement(string uri, string localName, string qname, Attributes attributes, Node node)
 		{
@@ -1034,7 +1023,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// SAX2: Receive notification of the beginning of an element.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String uri, String localName, String qname, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException
 		public void startElement(string uri, string localName, string qname, Attributes attributes)
 		{
@@ -1060,7 +1049,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// SAX2: Receive notification of the end of an element.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String namespaceURI, String localName, String qname) throws org.xml.sax.SAXException
 		public override void endElement(string namespaceURI, string localName, string qname)
 		{
@@ -1078,7 +1067,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// SAX2: Receive notification of a processing instruction.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws org.xml.sax.SAXException
 		public override void processingInstruction(string target, string data)
 		{
@@ -1090,7 +1079,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// SAX2: Receive notification of ignorable whitespace in element
 		/// content. Similar to characters(char[], int, int).
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void ignorableWhitespace(char[] ch, int start, int length) throws org.xml.sax.SAXException
 		public override void ignorableWhitespace(char[] ch, int start, int length)
 		{
@@ -1101,7 +1090,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// SAX2: Begin the scope of a prefix-URI Namespace mapping.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startPrefixMapping(String prefix, String uri) throws org.xml.sax.SAXException
 		public override void startPrefixMapping(string prefix, string uri)
 		{
@@ -1111,22 +1100,22 @@ namespace org.apache.xalan.xsltc.dom
 			definePrefixAndUri(prefix, uri);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void definePrefixAndUri(String prefix, String uri) throws org.xml.sax.SAXException
 		private void definePrefixAndUri(string prefix, string uri)
 		{
 			// Check if the URI already exists before pushing on stack
 			int? eType = new int?(getIdForNamespace(uri));
-			if ((int?)_nsIndex.get(eType) == null)
+			if ((int?)_nsIndex.get(eType.Value) == null)
 			{
-				_nsIndex.put(eType, new int?(_uriCount++));
+				_nsIndex.put(eType.Value, new int?(_uriCount++));
 			}
 		}
 
 		/// <summary>
 		/// SAX2: Report an XML comment anywhere in the document.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char[] ch, int start, int length) throws org.xml.sax.SAXException
 		public override void comment(char[] ch, int start, int length)
 		{
@@ -1154,13 +1143,13 @@ namespace org.apache.xalan.xsltc.dom
 		{
 			switch (getNodeType(node))
 			{
-			case org.apache.xml.dtm.DTM_Fields.ROOT_NODE:
-			case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE:
+			case DTM.ROOT_NODE:
+			case DTM.DOCUMENT_NODE:
 				print(getFirstChild(node), level);
 				break;
-			case org.apache.xml.dtm.DTM_Fields.TEXT_NODE:
-			case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE:
-			case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE:
+			case DTM.TEXT_NODE:
+			case DTM.COMMENT_NODE:
+			case DTM.PROCESSING_INSTRUCTION_NODE:
 				Console.Write(getStringValueX(node));
 				break;
 			default:
@@ -1168,12 +1157,12 @@ namespace org.apache.xalan.xsltc.dom
 //ORIGINAL LINE: final String name = getNodeName(node);
 				string name = getNodeName(node);
 				Console.Write("<" + name);
-				for (int a = getFirstAttribute(node); a != org.apache.xml.dtm.DTM_Fields.NULL; a = getNextAttribute(a))
+				for (int a = getFirstAttribute(node); a != DTM.NULL; a = getNextAttribute(a))
 				{
 				Console.Write("\n" + getNodeName(a) + "=\"" + getStringValueX(a) + "\"");
 				}
 				Console.Write('>');
-				for (int child = getFirstChild(node); child != org.apache.xml.dtm.DTM_Fields.NULL; child = getNextSibling(child))
+				for (int child = getFirstChild(node); child != DTM.NULL; child = getNextSibling(child))
 				{
 				print(child, level + 1);
 				}
@@ -1185,9 +1174,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Returns the name of a node (attribute or element).
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNodeName(final int node)
-		public override string getNodeName(int node)
+		public override string getNodeName(in int node)
 		{
 		// Get the node type and make sure that it is within limits
 		int nodeh = node;
@@ -1196,12 +1183,12 @@ namespace org.apache.xalan.xsltc.dom
 		short type = getNodeType(nodeh);
 		switch (type)
 		{
-			case org.apache.xml.dtm.DTM_Fields.ROOT_NODE:
-			case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE:
-			case org.apache.xml.dtm.DTM_Fields.TEXT_NODE:
-			case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE:
+			case DTM.ROOT_NODE:
+			case DTM.DOCUMENT_NODE:
+			case DTM.TEXT_NODE:
+			case DTM.COMMENT_NODE:
 				return EMPTYSTRING;
-			case org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE:
+			case DTM.NAMESPACE_NODE:
 			return this.getLocalName(nodeh);
 			default:
 				return base.getNodeName(nodeh);
@@ -1211,11 +1198,9 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Returns the namespace URI to which a node belongs
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getNamespaceName(final int node)
-		public string getNamespaceName(int node)
+		public string getNamespaceName(in int node)
 		{
-			if (node == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (node == DTM.NULL)
 			{
 				return "";
 			}
@@ -1228,39 +1213,33 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Returns the attribute node of a given type (if any) for an element
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public int getAttributeNode(final int type, final int element)
-		public int getAttributeNode(int type, int element)
+		public int getAttributeNode(in int type, in int element)
 		{
-			for (int attr = getFirstAttribute(element); attr != org.apache.xml.dtm.DTM_Fields.NULL; attr = getNextAttribute(attr))
+			for (int attr = getFirstAttribute(element); attr != DTM.NULL; attr = getNextAttribute(attr))
 			{
 				if (getExpandedTypeID(attr) == type)
 				{
 					return attr;
 				}
 			}
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return DTM.NULL;
 		}
 
 		/// <summary>
 		/// Returns the value of a given attribute type of a given element
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getAttributeValue(final int type, final int element)
-		public string getAttributeValue(int type, int element)
+		public string getAttributeValue(in int type, in int element)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int attr = getAttributeNode(type, element);
 			int attr = getAttributeNode(type, element);
-			return (attr != org.apache.xml.dtm.DTM_Fields.NULL) ? getStringValueX(attr) : EMPTYSTRING;
+			return (attr != DTM.NULL) ? getStringValueX(attr) : EMPTYSTRING;
 		}
 
 		/// <summary>
 		/// This method is for testing/debugging only
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public String getAttributeValue(final String name, final int element)
-		public string getAttributeValue(string name, int element)
+		public string getAttributeValue(in string name, in int element)
 		{
 			return getAttributeValue(getGeneralizedType(name), element);
 		}
@@ -1268,9 +1247,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Returns an iterator with all the children of a given node
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getChildren(final int node)
-		public DTMAxisIterator getChildren(int node)
+		public DTMAxisIterator getChildren(in int node)
 		{
 			return (new ChildrenIterator(this, this)).setStartNode(node);
 		}
@@ -1279,9 +1256,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// Returns an iterator with all children of a specific type
 		/// for a given node (element)
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getTypedChildren(final int type)
-		public DTMAxisIterator getTypedChildren(int type)
+		public DTMAxisIterator getTypedChildren(in int type)
 		{
 			return (new TypedChildrenIterator(this, this, type));
 		}
@@ -1292,9 +1267,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// Returns a bare-bones iterator that must be initialized
 		/// with a start node (using iterator.setStartNode()).
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public org.apache.xml.dtm.DTMAxisIterator getAxisIterator(final int axis)
-		public override DTMAxisIterator getAxisIterator(int axis)
+		public override DTMAxisIterator getAxisIterator(in int axis)
 		{
 			switch (axis)
 			{
@@ -1345,7 +1318,7 @@ namespace org.apache.xalan.xsltc.dom
 				return new TypedChildrenIterator(this, this, type);
 			}
 
-			if (type == org.apache.xalan.xsltc.DOM_Fields.NO_TYPE)
+			if (type == NO_TYPE)
 			{
 				return (EMPTYITERATOR);
 			}
@@ -1399,7 +1372,7 @@ namespace org.apache.xalan.xsltc.dom
 
 			DTMAxisIterator iterator = null;
 
-			if (ns == org.apache.xalan.xsltc.DOM_Fields.NO_TYPE)
+			if (ns == NO_TYPE)
 			{
 				return EMPTYITERATOR;
 			}
@@ -1442,7 +1415,7 @@ namespace org.apache.xalan.xsltc.dom
 			/// </summary>
 			/// <param name="axis"> The axis that this iterator will traverse </param>
 			/// <param name="nsType"> The namespace type index </param>
-			public NamespaceWildcardIterator(SAXImpl outerInstance, int axis, int nsType) : base(outerInstance)
+			public NamespaceWildcardIterator(SAXImpl outerInstance, int axis, int nsType)
 			{
 				this.outerInstance = outerInstance;
 				m_nsType = nsType;
@@ -1469,7 +1442,7 @@ namespace org.apache.xalan.xsltc.dom
 					{
 						// In all other cases, the principal node kind is
 						// element
-						m_baseIterator = outerInstance.getTypedAxisIterator(axis, org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE);
+						m_baseIterator = outerInstance.getTypedAxisIterator(axis, DTM.ELEMENT_NODE);
 					}
 				break;
 				}
@@ -1501,7 +1474,7 @@ namespace org.apache.xalan.xsltc.dom
 			{
 				int node;
 
-				while ((node = m_baseIterator.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+				while ((node = m_baseIterator.next()) != END)
 				{
 					// Return only nodes that are in the selected namespace
 					if (outerInstance.getNSType(node) == m_nsType)
@@ -1510,7 +1483,7 @@ namespace org.apache.xalan.xsltc.dom
 					}
 				}
 
-				return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+				return END;
 			}
 
 			/// <summary>
@@ -1581,9 +1554,7 @@ namespace org.apache.xalan.xsltc.dom
 			/// 
 			/// </summary>
 			/// <param name="type"> The extended type ID being requested. </param>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public NamespaceChildrenIterator(final int type)
-			public NamespaceChildrenIterator(SAXImpl outerInstance, int type) : base(outerInstance)
+			public NamespaceChildrenIterator(SAXImpl outerInstance, in int type)
 			{
 				this.outerInstance = outerInstance;
 				_nsType = type;
@@ -1607,7 +1578,7 @@ namespace org.apache.xalan.xsltc.dom
 				if (_isRestartable)
 				{
 					_startNode = node;
-					_currentNode = (node == org.apache.xml.dtm.DTM_Fields.NULL) ? org.apache.xml.dtm.DTM_Fields.NULL : NOTPROCESSED;
+					_currentNode = (node == DTM.NULL) ? DTM.NULL : NOTPROCESSED;
 
 					return resetPosition();
 				}
@@ -1621,9 +1592,9 @@ namespace org.apache.xalan.xsltc.dom
 			/// <returns> The next node handle in the iteration, or END. </returns>
 			public override int next()
 			{
-				if (_currentNode != org.apache.xml.dtm.DTM_Fields.NULL)
+				if (_currentNode != DTM.NULL)
 				{
-					for (int node = (NOTPROCESSED == _currentNode) ? outerInstance._firstch(outerInstance.makeNodeIdentity(_startNode)) : outerInstance._nextsib(_currentNode); node != org.apache.xml.dtm.DTMAxisIterator_Fields.END; node = outerInstance._nextsib(node))
+					for (int node = (NOTPROCESSED == _currentNode) ? outerInstance._firstch(outerInstance.makeNodeIdentity(_startNode)) : outerInstance._nextsib(_currentNode); node != END; node = outerInstance._nextsib(node))
 					{
 						int nodeHandle = outerInstance.makeNodeHandle(node);
 
@@ -1636,7 +1607,7 @@ namespace org.apache.xalan.xsltc.dom
 					}
 				}
 
-				return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+				return END;
 			}
 		} // end of NamespaceChildrenIterator
 
@@ -1685,7 +1656,7 @@ namespace org.apache.xalan.xsltc.dom
 
 					_startNode = node;
 
-					for (node = outerInstance.getFirstAttribute(node); node != org.apache.xml.dtm.DTMAxisIterator_Fields.END; node = outerInstance.getNextAttribute(node))
+					for (node = outerInstance.getFirstAttribute(node); node != END; node = outerInstance.getNextAttribute(node))
 					{
 						if (outerInstance.getNSType(node) == nsType)
 						{
@@ -1710,12 +1681,12 @@ namespace org.apache.xalan.xsltc.dom
 				int nsType = _nsType;
 				int nextNode;
 
-				if (node == org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+				if (node == END)
 				{
-					return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+					return END;
 				}
 
-				for (nextNode = outerInstance.getNextAttribute(node); nextNode != org.apache.xml.dtm.DTMAxisIterator_Fields.END; nextNode = outerInstance.getNextAttribute(nextNode))
+				for (nextNode = outerInstance.getNextAttribute(node); nextNode != END; nextNode = outerInstance.getNextAttribute(nextNode))
 				{
 					if (outerInstance.getNSType(nextNode) == nsType)
 					{
@@ -1750,12 +1721,11 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Copy the string value of a node directly to an output handler
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(final int node, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public void characters(int node, SerializationHandler handler)
+		public void characters(in int node, SerializationHandler handler)
 		{
-			if (node != org.apache.xml.dtm.DTM_Fields.NULL)
+			if (node != DTM.NULL)
 			{
 				try
 				{
@@ -1771,12 +1741,12 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Copy a node-set to an output handler
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void copy(org.apache.xml.dtm.DTMAxisIterator nodes, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
 		public void copy(DTMAxisIterator nodes, SerializationHandler handler)
 		{
 			int node;
-			while ((node = nodes.next()) != org.apache.xml.dtm.DTM_Fields.NULL)
+			while ((node = nodes.next()) != DTM.NULL)
 			{
 				copy(node, handler);
 			}
@@ -1785,7 +1755,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Copy the whole tree to an output handler
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void copy(org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
 		public void copy(SerializationHandler handler)
 		{
@@ -1799,19 +1769,17 @@ namespace org.apache.xalan.xsltc.dom
 		///       add namespace nodes and keep track of NS prefixes
 		/// TODO: Copy comment nodes
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void copy(final int node, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public void copy(int node, SerializationHandler handler)
+		public void copy(in int node, SerializationHandler handler)
 		{
 			copy(node, handler, false);
 		}
 
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private final void copy(final int node, org.apache.xml.serializer.SerializationHandler handler, boolean isChild) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-	 private void copy(int node, SerializationHandler handler, bool isChild)
+	 private void copy(in int node, SerializationHandler handler, bool isChild)
 	 {
 		 int nodeID = makeNodeIdentity(node);
 			int eType = _exptype2(nodeID);
@@ -1821,20 +1789,20 @@ namespace org.apache.xalan.xsltc.dom
 			{
 				switch (type)
 				{
-					case org.apache.xml.dtm.DTM_Fields.ROOT_NODE:
-					case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE:
-						for (int c = _firstch2(nodeID); c != org.apache.xml.dtm.DTM_Fields.NULL; c = _nextsib2(c))
+					case DTM.ROOT_NODE:
+					case DTM.DOCUMENT_NODE:
+						for (int c = _firstch2(nodeID); c != DTM.NULL; c = _nextsib2(c))
 						{
 							copy(makeNodeHandle(c), handler, true);
 						}
 						break;
-					case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE:
+					case DTM.PROCESSING_INSTRUCTION_NODE:
 						copyPI(node, handler);
 						break;
-					case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE:
+					case DTM.COMMENT_NODE:
 						handler.comment(getStringValueX(node));
 						break;
-					case org.apache.xml.dtm.DTM_Fields.TEXT_NODE:
+					case DTM.TEXT_NODE:
 						bool oldEscapeSetting = false;
 						bool escapeBit = false;
 
@@ -1854,14 +1822,14 @@ namespace org.apache.xalan.xsltc.dom
 							handler.Escaping = oldEscapeSetting;
 						}
 						break;
-					case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE:
+					case DTM.ATTRIBUTE_NODE:
 						copyAttribute(nodeID, eType, handler);
 						break;
-					case org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE:
+					case DTM.NAMESPACE_NODE:
 						handler.namespaceAfterStartElement(getNodeNameX(node), getNodeValue(node));
 						break;
 					default:
-						if (type == org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE)
+						if (type == DTM.ELEMENT_NODE)
 						{
 							// Start element definition
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -1872,7 +1840,7 @@ namespace org.apache.xalan.xsltc.dom
 							copyNS(nodeID, handler,!isChild);
 							copyAttributes(nodeID, handler);
 							// Copy element children
-							for (int c = _firstch2(nodeID); c != org.apache.xml.dtm.DTM_Fields.NULL; c = _nextsib2(c))
+							for (int c = _firstch2(nodeID); c != DTM.NULL; c = _nextsib2(c))
 							{
 								copy(makeNodeHandle(c), handler, true);
 							}
@@ -1907,10 +1875,9 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Copies a processing instruction node to an output handler
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void copyPI(final int node, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		private void copyPI(int node, SerializationHandler handler)
+		private void copyPI(in int node, SerializationHandler handler)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String target = getNodeName(node);
@@ -1932,10 +1899,9 @@ namespace org.apache.xalan.xsltc.dom
 		/// <summary>
 		/// Performs a shallow copy (ref. XSLs copy())
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String shallowCopy(final int node, org.apache.xml.serializer.SerializationHandler handler) throws org.apache.xalan.xsltc.TransletException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public string shallowCopy(int node, SerializationHandler handler)
+		public string shallowCopy(in int node, SerializationHandler handler)
 		{
 			int nodeID = makeNodeIdentity(node);
 			int exptype = _exptype2(nodeID);
@@ -1945,28 +1911,28 @@ namespace org.apache.xalan.xsltc.dom
 			{
 				switch (type)
 				{
-					case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE:
+					case DTM.ELEMENT_NODE:
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String name = copyElement(nodeID, exptype, handler);
 						string name = copyElement(nodeID, exptype, handler);
 						copyNS(nodeID, handler, true);
 						return name;
-					case org.apache.xml.dtm.DTM_Fields.ROOT_NODE:
-					case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE:
+					case DTM.ROOT_NODE:
+					case DTM.DOCUMENT_NODE:
 						return EMPTYSTRING;
-					case org.apache.xml.dtm.DTM_Fields.TEXT_NODE:
+					case DTM.TEXT_NODE:
 						copyTextNode(nodeID, handler);
 						return null;
-					case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE:
+					case DTM.PROCESSING_INSTRUCTION_NODE:
 						copyPI(node, handler);
 						return null;
-					case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE:
+					case DTM.COMMENT_NODE:
 						handler.comment(getStringValueX(node));
 						return null;
-					case org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE:
+					case DTM.NAMESPACE_NODE:
 						handler.namespaceAfterStartElement(getNodeNameX(node), getNodeValue(node));
 						return null;
-					case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE:
+					case DTM.ATTRIBUTE_NODE:
 						copyAttribute(nodeID, exptype, handler);
 						return null;
 					default:
@@ -1996,13 +1962,13 @@ namespace org.apache.xalan.xsltc.dom
 		public string getLanguage(int node)
 		{
 			int parent = node;
-			while (org.apache.xml.dtm.DTM_Fields.NULL != parent)
+			while (DTM.NULL != parent)
 			{
-				if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == getNodeType(parent))
+				if (DTM.ELEMENT_NODE == getNodeType(parent))
 				{
 					int langAttr = getAttributeNode(parent, "http://www.w3.org/XML/1998/namespace", "lang");
 
-					if (org.apache.xml.dtm.DTM_Fields.NULL != langAttr)
+					if (DTM.NULL != langAttr)
 					{
 						return getNodeValue(langAttr);
 					}
@@ -2055,7 +2021,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <returns> The DOM object which represents the RTF. </returns>
 		public DOM getResultTreeFrag(int initSize, int rtfType, bool addToManager)
 		{
-			if (rtfType == org.apache.xalan.xsltc.DOM_Fields.SIMPLE_RTF)
+			if (rtfType == DOM.SIMPLE_RTF)
 			{
 				if (addToManager)
 				{
@@ -2069,7 +2035,7 @@ namespace org.apache.xalan.xsltc.dom
 					return new SimpleResultTreeImpl(_dtmManager, 0);
 				}
 			}
-			else if (rtfType == org.apache.xalan.xsltc.DOM_Fields.ADAPTIVE_RTF)
+			else if (rtfType == DOM.ADAPTIVE_RTF)
 			{
 				if (addToManager)
 				{
@@ -2103,7 +2069,7 @@ namespace org.apache.xalan.xsltc.dom
 				}
     
 				// Convert a java.util.Hashtable to an xsltc.runtime.Hashtable
-				IEnumerator idEntries = m_idAttributes.SetOfKeyValuePairs().GetEnumerator();
+				System.Collections.IEnumerator idEntries = m_idAttributes.SetOfKeyValuePairs().GetEnumerator();
 	//JAVA TO C# CONVERTER TODO TASK: Java iterators are only converted within the context of 'while' and 'for' loops:
 				if (!idEntries.hasNext())
 				{
@@ -2134,10 +2100,10 @@ namespace org.apache.xalan.xsltc.dom
 			if (_document != null)
 			{
 				string uri = "";
-				DocumentType doctype = _document.Doctype;
+				DocumentType doctype = _document.getDoctype();
 				if (doctype != null)
 				{
-					NamedNodeMap entities = doctype.Entities;
+					NamedNodeMap entities = doctype.getEntities();
 
 					if (entities == null)
 					{
@@ -2151,13 +2117,13 @@ namespace org.apache.xalan.xsltc.dom
 						return uri;
 					}
 
-					string notationName = entity.NotationName;
+					string notationName = entity.getNotationName();
 					if (!string.ReferenceEquals(notationName, null))
 					{
-						uri = entity.SystemId;
+						uri = entity.getSystemId();
 						if (string.ReferenceEquals(uri, null))
 						{
-							uri = entity.PublicId;
+							uri = entity.getPublicId();
 						}
 					}
 				}

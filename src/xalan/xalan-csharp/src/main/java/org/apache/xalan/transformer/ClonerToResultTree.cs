@@ -127,7 +127,7 @@ namespace org.apache.xalan.transformer
 	  /// clone children attributes
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static void cloneToResultTree(int node, int nodeType, org.apache.xml.dtm.DTM dtm, org.apache.xml.serializer.SerializationHandler rth, boolean shouldCloneAttributes) throws javax.xml.transform.TransformerException
 	  public static void cloneToResultTree(int node, int nodeType, DTM dtm, SerializationHandler rth, bool shouldCloneAttributes)
 	  {
@@ -136,15 +136,15 @@ namespace org.apache.xalan.transformer
 		{
 		  switch (nodeType)
 		  {
-		  case org.apache.xml.dtm.DTM_Fields.TEXT_NODE :
+		  case DTM.TEXT_NODE :
 			dtm.dispatchCharactersEvents(node, rth, false);
 			break;
-		  case org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE :
-		  case org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE :
+		  case DTM.DOCUMENT_FRAGMENT_NODE :
+		  case DTM.DOCUMENT_NODE :
 			// Can't clone a document, but refrain from throwing an error
 			// so that copy-of will work
 			break;
-		  case org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE :
+		  case DTM.ELEMENT_NODE :
 		  {
 			  // Note: SAX apparently expects "no namespace" to be
 			  // represented as "" rather than null.
@@ -169,29 +169,29 @@ namespace org.apache.xalan.transformer
 			  }
 		  }
 			break;
-		  case org.apache.xml.dtm.DTM_Fields.CDATA_SECTION_NODE :
+		  case DTM.CDATA_SECTION_NODE :
 			rth.startCDATA();
 			dtm.dispatchCharactersEvents(node, rth, false);
 			rth.endCDATA();
 			break;
-		  case org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE :
+		  case DTM.ATTRIBUTE_NODE :
 			SerializerUtils.addAttribute(rth, node);
 			break;
-				case org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE:
+				case DTM.NAMESPACE_NODE:
 					// %REVIEW% Normally, these should have been handled with element.
 					// It's possible that someone may write a stylesheet that tries to
 					// clone them explicitly. If so, we need the equivalent of
 					// rth.addAttribute().
-					  SerializerUtils.processNSDecls(rth,node,org.apache.xml.dtm.DTM_Fields.NAMESPACE_NODE,dtm);
+					  SerializerUtils.processNSDecls(rth,node,DTM.NAMESPACE_NODE,dtm);
 					break;
-		  case org.apache.xml.dtm.DTM_Fields.COMMENT_NODE :
+		  case DTM.COMMENT_NODE :
 			XMLString xstr = dtm.getStringValue(node);
 			xstr.dispatchAsComment(rth);
 			break;
-		  case org.apache.xml.dtm.DTM_Fields.ENTITY_REFERENCE_NODE :
+		  case DTM.ENTITY_REFERENCE_NODE :
 			rth.entityReference(dtm.getNodeNameX(node));
 			break;
-		  case org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE :
+		  case DTM.PROCESSING_INSTRUCTION_NODE :
 		  {
 			  // %REVIEW% Is the node name the same as the "target"?
 			  rth.processingInstruction(dtm.getNodeNameX(node), dtm.getNodeValue(node));

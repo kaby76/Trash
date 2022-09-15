@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using Instruction = org.apache.bcel.generic.Instruction;
 
 	/// <summary>
@@ -49,7 +48,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// <summary>
 		/// Private default constructor.  As it has no fields,
 		/// there should be no need to create an instance of this class.  See
-		/// <seealso cref="OutlineableChunkStart#OUTLINEABLECHUNKSTART"/>.
+		/// <seealso cref="OutlineableChunkStart.OUTLINEABLECHUNKSTART"/>.
 		/// </summary>
 		private OutlineableChunkStart()
 		{
@@ -62,7 +61,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 			get
 			{
-				return typeof(OutlineableChunkStart).Name;
+	//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
+				return typeof(OutlineableChunkStart).FullName;
 			}
 		}
 
@@ -77,7 +77,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// <summary>
 		/// Get the name of this instruction.  Used for debugging. </summary>
 		/// <returns> the instruction name </returns>
-		public virtual string ToString(bool verbose)
+		public virtual string toString(bool verbose)
 		{
 			return Name;
 		}

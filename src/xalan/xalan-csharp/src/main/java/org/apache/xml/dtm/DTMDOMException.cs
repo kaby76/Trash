@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.dtm
 {
-
 	/// <summary>
 	/// Simple implementation of DOMException.
 	/// 

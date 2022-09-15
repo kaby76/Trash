@@ -13,7 +13,6 @@
 namespace org.apache.xpath.domapi
 {
 
-
 	/// 
 	/// <summary>
 	/// A new exception to add support for DOM Level 3 XPath API.

@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
 	using MethodGenerator = org.apache.xalan.xsltc.compiler.util.MethodGenerator;
@@ -37,7 +36,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type check all the children of this node.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -50,7 +49,7 @@ namespace org.apache.xalan.xsltc.compiler
 		public override void translate(ClassGenerator classGen, MethodGenerator methodGen)
 		{
 		ErrorMsg msg = new ErrorMsg(ErrorMsg.NOT_IMPLEMENTED_ERR, this.GetType(), this);
-		Parser.reportError(Constants_Fields.FATAL, msg);
+		Parser.reportError(FATAL, msg);
 		}
 	}
 

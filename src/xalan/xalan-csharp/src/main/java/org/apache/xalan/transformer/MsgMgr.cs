@@ -23,7 +23,6 @@
 namespace org.apache.xalan.transformer
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 
 	using Node = org.w3c.dom.Node;
@@ -58,7 +57,7 @@ namespace org.apache.xalan.transformer
 	  /// the error condition is severe enough to halt processing.
 	  /// </exception>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void message(javax.xml.transform.SourceLocator srcLctr, String msg, boolean terminate) throws javax.xml.transform.TransformerException
 	  public virtual void message(SourceLocator srcLctr, string msg, bool terminate)
 	  {
@@ -91,7 +90,7 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warn(javax.xml.transform.SourceLocator srcLctr, String msg) throws javax.xml.transform.TransformerException
 	  public virtual void warn(SourceLocator srcLctr, string msg)
 	  {
@@ -108,7 +107,7 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warn(javax.xml.transform.SourceLocator srcLctr, String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  public virtual void warn(SourceLocator srcLctr, string msg, object[] args)
 	  {
@@ -127,7 +126,7 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warn(javax.xml.transform.SourceLocator srcLctr, org.w3c.dom.Node styleNode, org.w3c.dom.Node sourceNode, String msg) throws javax.xml.transform.TransformerException
 	  public virtual void warn(SourceLocator srcLctr, Node styleNode, Node sourceNode, string msg)
 	  {
@@ -146,7 +145,7 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void warn(javax.xml.transform.SourceLocator srcLctr, org.w3c.dom.Node styleNode, org.w3c.dom.Node sourceNode, String msg, Object args[]) throws javax.xml.transform.TransformerException
 	  public virtual void warn(SourceLocator srcLctr, Node styleNode, Node sourceNode, string msg, object[] args)
 	  {
@@ -202,7 +201,7 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(javax.xml.transform.SourceLocator srcLctr, String msg) throws javax.xml.transform.TransformerException
 	  public virtual void error(SourceLocator srcLctr, string msg)
 	  {
@@ -220,7 +219,7 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(javax.xml.transform.SourceLocator srcLctr, String msg, Object[] args) throws javax.xml.transform.TransformerException
 	  public virtual void error(SourceLocator srcLctr, string msg, object[] args)
 	  {
@@ -238,7 +237,7 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(javax.xml.transform.SourceLocator srcLctr, String msg, Exception e) throws javax.xml.transform.TransformerException
 	  public virtual void error(SourceLocator srcLctr, string msg, Exception e)
 	  {
@@ -257,7 +256,7 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(javax.xml.transform.SourceLocator srcLctr, String msg, Object args[], Exception e) throws javax.xml.transform.TransformerException
 	  public virtual void error(SourceLocator srcLctr, string msg, object[] args, Exception e)
 	  {
@@ -293,7 +292,7 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(javax.xml.transform.SourceLocator srcLctr, org.w3c.dom.Node styleNode, org.w3c.dom.Node sourceNode, String msg) throws javax.xml.transform.TransformerException
 	  public virtual void error(SourceLocator srcLctr, Node styleNode, Node sourceNode, string msg)
 	  {
@@ -313,7 +312,7 @@ namespace org.apache.xalan.transformer
 	  /// </exception>
 	  /// <exception cref="TransformerException">
 	  /// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void error(javax.xml.transform.SourceLocator srcLctr, org.w3c.dom.Node styleNode, org.w3c.dom.Node sourceNode, String msg, Object args[]) throws javax.xml.transform.TransformerException
 	  public virtual void error(SourceLocator srcLctr, Node styleNode, Node sourceNode, string msg, object[] args)
 	  {

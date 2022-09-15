@@ -21,7 +21,6 @@
 namespace org.apache.xalan.res
 {
 
-
 	/// <summary>
 	/// Set up error messages.
 	/// We build a two dimensional array of message keys and
@@ -617,7 +616,7 @@ namespace org.apache.xalan.res
 				new object[] {"version2", "<<<<<<<"},
 				new object[] {"yes", "sim"},
 				new object[] {"line", "Linha n\u00b0"},
-				new object[] {"column","Coluna n\u00b0"},
+				new object[] {"column", "Coluna n\u00b0"},
 				new object[] {"xsldone", "XSLProcessor: conclu\u00eddo"},
 				new object[] {"xslProc_option", "Op\u00e7\u00f5es da classe Process da linha de comando de Xalan-J:"},
 				new object[] {"xslProc_option", "Op\u00e7\u00f5es da classe Process da linha de comandos de Xalan-J\u003a"},
@@ -677,8 +676,8 @@ namespace org.apache.xalan.res
 				new object[] {"optionXN", "   [-XN (ativa a seq\u00fc\u00eancia de templates)]"},
 				new object[] {"optionXX", "   [-XX (ativa a sa\u00edda de mensagem de depura\u00e7\u00e3o adicional)]"},
 				new object[] {"optionXT", "   [-XT (utilizar translet para transforma\u00e7\u00e3o, se poss\u00edvel)]"},
-				new object[] {"diagTiming"," --------- Transforma\u00e7\u00e3o de {0} via {1} levou {2} ms"},
-				new object[] {"recursionTooDeep","Aninhamento de templates muito extenso. aninhamento = {0}, template {1} {2}"},
+				new object[] {"diagTiming", " --------- Transforma\u00e7\u00e3o de {0} via {1} levou {2} ms"},
+				new object[] {"recursionTooDeep", "Aninhamento de templates muito extenso. aninhamento = {0}, template {1} {2}"},
 				new object[] {"nameIs", "o nome \u00e9"},
 				new object[] {"matchPatternIs", "o padr\u00e3o de correspond\u00eancia \u00e9"}
 			};
@@ -727,12 +726,12 @@ namespace org.apache.xalan.res
 	  ///   <param name="className"> the name of the class that implements the resource bundle. </param>
 	  ///   <returns> the ResourceBundle </returns>
 	  ///   <exception cref="MissingResourceException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static final XSLTErrorResources loadResourceBundle(String className) throws java.util.MissingResourceException
 	  public static XSLTErrorResources loadResourceBundle(string className)
 	  {
 
-		Locale locale = Locale.Default;
+		Locale locale = Locale.getDefault();
 		string suffix = getResourceSuffix(locale);
 
 		try
@@ -770,8 +769,8 @@ namespace org.apache.xalan.res
 	  private static string getResourceSuffix(Locale locale)
 	  {
 
-		string suffix = "_" + locale.Language;
-		string country = locale.Country;
+		string suffix = "_" + locale.getLanguage();
+		string country = locale.getCountry();
 
 		if (country.Equals("TW"))
 		{

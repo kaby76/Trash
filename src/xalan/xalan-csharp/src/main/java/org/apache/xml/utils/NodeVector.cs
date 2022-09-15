@@ -83,7 +83,7 @@ namespace org.apache.xml.utils
 	  /// <returns> A clone of this
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public virtual object clone()
 	  {
@@ -186,7 +186,7 @@ namespace org.apache.xml.utils
 
 		int n = m_map[m_firstFree];
 
-		m_map[m_firstFree] = org.apache.xml.dtm.DTM_Fields.NULL;
+		m_map[m_firstFree] = DTM.NULL;
 
 		return n;
 	  }
@@ -201,9 +201,9 @@ namespace org.apache.xml.utils
 
 		m_firstFree--;
 
-		m_map[m_firstFree] = org.apache.xml.dtm.DTM_Fields.NULL;
+		m_map[m_firstFree] = DTM.NULL;
 
-		return (m_firstFree == 0) ? org.apache.xml.dtm.DTM_Fields.NULL : m_map[m_firstFree - 1];
+		return (m_firstFree == 0) ? DTM.NULL : m_map[m_firstFree - 1];
 	  }
 
 	  /// <summary>
@@ -214,7 +214,7 @@ namespace org.apache.xml.utils
 
 		m_firstFree--;
 
-		m_map[m_firstFree] = org.apache.xml.dtm.DTM_Fields.NULL;
+		m_map[m_firstFree] = DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -225,7 +225,7 @@ namespace org.apache.xml.utils
 	  /// <returns> Node at the top of the stack or null if stack is empty. </returns>
 	  public int peepOrNull()
 	  {
-		return ((null != m_map) && (m_firstFree > 0)) ? m_map[m_firstFree - 1] : org.apache.xml.dtm.DTM_Fields.NULL;
+		return ((null != m_map) && (m_firstFree > 0)) ? m_map[m_firstFree - 1] : DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -271,8 +271,8 @@ namespace org.apache.xml.utils
 	  {
 
 		m_firstFree -= 2;
-		m_map[m_firstFree] = org.apache.xml.dtm.DTM_Fields.NULL;
-		m_map[m_firstFree + 1] = org.apache.xml.dtm.DTM_Fields.NULL;
+		m_map[m_firstFree] = DTM.NULL;
+		m_map[m_firstFree + 1] = DTM.NULL;
 	  }
 
 	  /// <summary>
@@ -428,7 +428,7 @@ namespace org.apache.xml.utils
 
 		for (int i = 0; i < m_firstFree; i++)
 		{
-		  m_map[i] = org.apache.xml.dtm.DTM_Fields.NULL;
+		  m_map[i] = DTM.NULL;
 		}
 
 		m_firstFree = 0;
@@ -478,7 +478,7 @@ namespace org.apache.xml.utils
 			}
 			else
 			{
-			  m_map[i] = org.apache.xml.dtm.DTM_Fields.NULL;
+			  m_map[i] = DTM.NULL;
 			}
 
 			m_firstFree--;
@@ -511,7 +511,7 @@ namespace org.apache.xml.utils
 		}
 		else
 		{
-		  m_map[i] = org.apache.xml.dtm.DTM_Fields.NULL;
+		  m_map[i] = DTM.NULL;
 		}
 	  }
 
@@ -552,7 +552,7 @@ namespace org.apache.xml.utils
 
 		if (null == m_map)
 		{
-		  return org.apache.xml.dtm.DTM_Fields.NULL;
+		  return DTM.NULL;
 		}
 
 		return m_map[i];
@@ -654,7 +654,7 @@ namespace org.apache.xml.utils
 	  /// <param name="hi0">  The high index.
 	  /// </param>
 	  /// <exception cref="Exception"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void sort(int a[], int lo0, int hi0) throws Exception
 	  public virtual void sort(int[] a, int lo0, int hi0)
 	  {
@@ -751,7 +751,7 @@ namespace org.apache.xml.utils
 	  /// Sort an array using a quicksort algorithm.
 	  /// </summary>
 	  /// <exception cref="Exception"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void sort() throws Exception
 	  public virtual void sort()
 	  {

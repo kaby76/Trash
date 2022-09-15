@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ASTORE = org.apache.bcel.generic.ASTORE;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -59,7 +58,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("Element " + _name);
 		displayContents(indent + IndentIncrement);
 		}
@@ -81,10 +80,10 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// Handle the 'name' attribute
 		string name = getAttribute("name");
-		if (string.ReferenceEquals(name, Constants_Fields.EMPTYSTRING))
+		if (string.ReferenceEquals(name, EMPTYSTRING))
 		{
 			ErrorMsg msg = new ErrorMsg(ErrorMsg.ILLEGAL_ELEM_NAME_ERR, name, this);
-			parser.reportError(Constants_Fields.WARNING, msg);
+			parser.reportError(WARNING, msg);
 			parseChildren(parser);
 			_ignore = true; // Ignore the element if the QName is invalid
 			return;
@@ -100,7 +99,7 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!XML11Char.isXML11ValidQName(name))
 				{
 			ErrorMsg msg = new ErrorMsg(ErrorMsg.ILLEGAL_ELEM_NAME_ERR, name, this);
-			parser.reportError(Constants_Fields.WARNING, msg);
+			parser.reportError(WARNING, msg);
 			parseChildren(parser);
 			_ignore = true; // Ignore the element if the QName is invalid
 			return;
@@ -114,7 +113,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 			if (string.ReferenceEquals(prefix, null))
 			{
-			prefix = Constants_Fields.EMPTYSTRING;
+			prefix = EMPTYSTRING;
 			}
 
 			if (!hasAttribute("namespace"))
@@ -123,7 +122,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (string.ReferenceEquals(@namespace, null))
 			{
 				ErrorMsg err = new ErrorMsg(ErrorMsg.NAMESPACE_UNDEF_ERR, prefix, this);
-				parser.reportError(Constants_Fields.WARNING, err);
+				parser.reportError(WARNING, err);
 				parseChildren(parser);
 				_ignore = true; // Ignore the element if prefix is undeclared
 				return;
@@ -133,7 +132,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 			else
 			{
-			if (string.ReferenceEquals(prefix, Constants_Fields.EMPTYSTRING))
+			if (string.ReferenceEquals(prefix, EMPTYSTRING))
 			{
 					if (Util.isLiteral(@namespace))
 					{
@@ -148,7 +147,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final StringBuffer newName = new StringBuffer(prefix);
 				StringBuilder newName = new StringBuilder(prefix);
-				if (!string.ReferenceEquals(prefix, Constants_Fields.EMPTYSTRING))
+				if (!string.ReferenceEquals(prefix, EMPTYSTRING))
 				{
 				newName.Append(':');
 				}
@@ -163,7 +162,7 @@ namespace org.apache.xalan.xsltc.compiler
 				// name attribute contains variable parts.  If there is no namespace
 				// attribute, the generated code needs to be prepared to look up
 				// any prefix in the stylesheet at run-time.
-				_namespace = (string.ReferenceEquals(@namespace, Constants_Fields.EMPTYSTRING)) ? null : new AttributeValueTemplate(@namespace, parser, this);
+				_namespace = (string.ReferenceEquals(@namespace, EMPTYSTRING)) ? null : new AttributeValueTemplate(@namespace, parser, this);
 		}
 
 		_name = new AttributeValueTemplate(name, parser, this);
@@ -176,7 +175,7 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!Util.isValidQNames(useSets))
 				{
 					ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, useSets, this);
-					parser.reportError(Constants_Fields.ERROR, err);
+					parser.reportError(Constants.ERROR, err);
 				}
 			FirstElement = new UseAttributeSets(useSets, parser);
 		}
@@ -187,7 +186,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Run type check on element name & contents
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -212,10 +211,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (!_ignore)
 		{
@@ -254,10 +253,10 @@ namespace org.apache.xalan.xsltc.compiler
 		LocalVariableGen local = null;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Optimize translation if element name is a literal
 		if (_isLiteralName)
@@ -270,24 +269,24 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 
 				// if the qname is an AVT, then the qname has to be checked at runtime if it is a valid qname
-				LocalVariableGen nameValue = methodGen.addLocalVariable2("nameValue", Util.getJCRefType(Constants_Fields.STRING_SIG), null);
+				LocalVariableGen nameValue = methodGen.addLocalVariable2("nameValue", Util.getJCRefType(STRING_SIG), null);
 
 				// store the name into a variable first so _name.translate only needs to be called once  
 				_name.translate(classGen, methodGen);
-				nameValue.Start = il.append(new ASTORE(nameValue.Index));
-				il.append(new ALOAD(nameValue.Index));
+				nameValue.setStart(il.append(new ASTORE(nameValue.getIndex())));
+				il.append(new ALOAD(nameValue.getIndex()));
 
 				// call checkQName if the name is an AVT
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int check = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "checkQName", "(" +Constants_Fields.STRING_SIG +")V");
-				int check = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "checkQName", "(" + Constants_Fields.STRING_SIG + ")V");
+//ORIGINAL LINE: final int check = cpg.addMethodref(BASIS_LIBRARY_CLASS, "checkQName", "(" +STRING_SIG +")V");
+				int check = cpg.addMethodref(BASIS_LIBRARY_CLASS, "checkQName", "(" + STRING_SIG + ")V");
 				il.append(new INVOKESTATIC(check));
 
 				// Push handler for call to endElement()
 				il.append(methodGen.loadHandler());
 
 				// load name value again
-				nameValue.End = il.append(new ALOAD(nameValue.Index));
+				nameValue.setEnd(il.append(new ALOAD(nameValue.getIndex())));
 
 			if (_namespace != null)
 			{
@@ -304,12 +303,12 @@ namespace org.apache.xalan.xsltc.compiler
 					string transletClassName = XSLTC.ClassName;
 					il.append(DUP);
 					il.append(new PUSH(cpg, NodeIDForStylesheetNSLookup));
-					il.append(new GETSTATIC(cpg.addFieldref(transletClassName, Constants_Fields.STATIC_NS_ANCESTORS_ARRAY_FIELD, Constants_Fields.NS_ANCESTORS_INDEX_SIG)));
-					il.append(new GETSTATIC(cpg.addFieldref(transletClassName, Constants_Fields.STATIC_PREFIX_URIS_IDX_ARRAY_FIELD, Constants_Fields.PREFIX_URIS_IDX_SIG)));
-					il.append(new GETSTATIC(cpg.addFieldref(transletClassName, Constants_Fields.STATIC_PREFIX_URIS_ARRAY_FIELD, Constants_Fields.PREFIX_URIS_ARRAY_SIG)));
+					il.append(new GETSTATIC(cpg.addFieldref(transletClassName, STATIC_NS_ANCESTORS_ARRAY_FIELD, NS_ANCESTORS_INDEX_SIG)));
+					il.append(new GETSTATIC(cpg.addFieldref(transletClassName, STATIC_PREFIX_URIS_IDX_ARRAY_FIELD, PREFIX_URIS_IDX_SIG)));
+					il.append(new GETSTATIC(cpg.addFieldref(transletClassName, STATIC_PREFIX_URIS_ARRAY_FIELD, PREFIX_URIS_ARRAY_SIG)));
 					// Default namespace is significant
 					il.append(ICONST_0);
-					il.append(new INVOKESTATIC(cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, Constants_Fields.LOOKUP_STYLESHEET_QNAME_NS_REF, Constants_Fields.LOOKUP_STYLESHEET_QNAME_NS_SIG)));
+					il.append(new INVOKESTATIC(cpg.addMethodref(BASIS_LIBRARY_CLASS, LOOKUP_STYLESHEET_QNAME_NS_REF, LOOKUP_STYLESHEET_QNAME_NS_SIG)));
 			}
 
 				// Push additional arguments
@@ -318,7 +317,7 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(methodGen.loadCurrentNode());
 
 				// Invoke BasisLibrary.startXslElemCheckQName()
-				il.append(new INVOKESTATIC(cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "startXslElement", "(" + Constants_Fields.STRING_SIG + Constants_Fields.STRING_SIG + Constants_Fields.TRANSLET_OUTPUT_SIG + Constants_Fields.DOM_INTF_SIG + "I)" + Constants_Fields.STRING_SIG)));
+				il.append(new INVOKESTATIC(cpg.addMethodref(BASIS_LIBRARY_CLASS, "startXslElement", "(" + STRING_SIG + STRING_SIG + TRANSLET_OUTPUT_SIG + DOM_INTF_SIG + "I)" + STRING_SIG)));
 
 
 		}

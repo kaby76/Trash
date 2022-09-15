@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using InstructionHandle = org.apache.bcel.generic.InstructionHandle;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using BooleanType = org.apache.xalan.xsltc.compiler.util.BooleanType;
@@ -50,9 +49,9 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Util.println("If");
-		indent(indent + IndentIncrement);
+		this.indent(indent + IndentIncrement);
 		Console.Write("test ");
 		Util.println(_test.ToString());
 		displayContents(indent + IndentIncrement);
@@ -76,7 +75,7 @@ namespace org.apache.xalan.xsltc.compiler
 		// Ignore xsl:if when test is false (function-available() and
 		// element-available())
 		object result = _test.evaluateAtCompileTime();
-		if (result != null && result is bool?)
+		if (result != null && result is Boolean)
 		{
 			_ignore = !((bool?) result).Value;
 		}
@@ -88,7 +87,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Type-check the "test" expression and contents of this element.
 		/// The contents will be ignored if we know the test will always fail.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -113,18 +112,18 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		_test.translateDesynthesized(classGen, methodGen);
 		// remember end of condition
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionHandle truec = il.getEnd();
-		InstructionHandle truec = il.End;
+		InstructionHandle truec = il.getEnd();
 		if (!_ignore)
 		{
 			translateContents(classGen, methodGen);
 		}
 		_test.backPatchFalseList(il.append(NOP));
-		_test.backPatchTrueList(truec.Next);
+		_test.backPatchTrueList(truec.getNext());
 		}
 	}
 

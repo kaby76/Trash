@@ -48,9 +48,9 @@ namespace org.apache.xalan.transformer
 	  /// before you start a parse or do any configuration with
 	  /// setFeature or setProperty.</para>
 	  /// </summary>
-	  /// <seealso cref= org.xml.sax.XMLReader#setFeature </seealso>
-	  /// <seealso cref= org.xml.sax.XMLReader#setProperty </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.XMLReader.setFeature"/>
+	  /// <seealso cref="org.xml.sax.XMLReader.setProperty"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public TrAXFilter(javax.xml.transform.Templates templates) throws javax.xml.transform.TransformerConfigurationException
 	  public TrAXFilter(Templates templates)
 	  {
@@ -85,11 +85,11 @@ namespace org.apache.xalan.transformer
 	  {
 		  set
 		  {
-			base.Parent = value;
+			base.setParent(value);
     
-			if (null != value.ContentHandler)
+			if (null != value.getContentHandler())
 			{
-			  this.ContentHandler = value.ContentHandler;
+			  this.ContentHandler = value.getContentHandler();
 			}
     
 			// Not really sure if we should do this here, but 
@@ -108,12 +108,12 @@ namespace org.apache.xalan.transformer
 	  /// <exception cref="java.io.IOException"> An IO exception from the parser,
 	  ///            possibly from a byte stream or character stream
 	  ///            supplied by the application. </exception>
-	  /// <seealso cref= org.xml.sax.XMLReader#parse(org.xml.sax.InputSource) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.XMLReader.parse(org.xml.sax.InputSource)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void parse(org.xml.sax.InputSource input) throws org.xml.sax.SAXException, java.io.IOException
 	  public virtual void parse(InputSource input)
 	  {
-		if (null == Parent)
+		if (null == getParent())
 		{
 		  XMLReader reader = null;
 
@@ -121,9 +121,9 @@ namespace org.apache.xalan.transformer
 		  try
 		  {
 			  javax.xml.parsers.SAXParserFactory factory = javax.xml.parsers.SAXParserFactory.newInstance();
-			  factory.NamespaceAware = true;
+			  factory.setNamespaceAware(true);
 
-			  if (m_transformer.Stylesheet.SecureProcessing)
+			  if (m_transformer.Stylesheet.isSecureProcessing())
 			  {
 				  try
 				  {
@@ -135,7 +135,7 @@ namespace org.apache.xalan.transformer
 			  }
 
 			  javax.xml.parsers.SAXParser jaxpParser = factory.newSAXParser();
-			  reader = jaxpParser.XMLReader;
+			  reader = jaxpParser.getXMLReader();
 
 		  }
 		  catch (javax.xml.parsers.ParserConfigurationException ex)
@@ -182,7 +182,7 @@ namespace org.apache.xalan.transformer
 		  throw new org.xml.sax.SAXException(XSLMessages.createMessage(XSLTErrorResources.ER_CANNOT_CALL_PARSE, null)); //"parse can not be called if the ContentHandler has not been set!");
 		}
 
-		Parent.parse(input);
+		getParent().parse(input);
 		Exception e = m_transformer.ExceptionThrown;
 		if (null != e)
 		{
@@ -206,8 +206,8 @@ namespace org.apache.xalan.transformer
 	  /// <exception cref="java.io.IOException"> An IO exception from the parser,
 	  ///            possibly from a byte stream or character stream
 	  ///            supplied by the application. </exception>
-	  /// <seealso cref= org.xml.sax.XMLReader#parse(java.lang.String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+	  /// <seealso cref="org.xml.sax.XMLReader.parse(java.lang.String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void parse(String systemId) throws org.xml.sax.SAXException, java.io.IOException
 	  public virtual void parse(string systemId)
 	  {
@@ -224,7 +224,7 @@ namespace org.apache.xalan.transformer
 	  /// </summary>
 	  private void setupParse()
 	  {
-		XMLReader p = Parent;
+		XMLReader p = getParent();
 		if (p == null)
 		{
 		  throw new System.NullReferenceException(XSLMessages.createMessage(XSLTErrorResources.ER_NO_PARENT_FOR_FILTER, null)); //"No parent for filter");
@@ -233,10 +233,10 @@ namespace org.apache.xalan.transformer
 		ContentHandler ch = m_transformer.InputContentHandler;
 	//    if(ch instanceof SourceTreeHandler)
 	//      ((SourceTreeHandler)ch).setUseMultiThreading(true);
-		p.ContentHandler = ch;
-		p.EntityResolver = this;
-		p.DTDHandler = this;
-		p.ErrorHandler = this;
+		p.setContentHandler(ch);
+		p.setEntityResolver(this);
+		p.setDTDHandler(this);
+		p.setErrorHandler(this);
 	  }
 
 	  /// <summary>
@@ -245,7 +245,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="handler"> The new content handler. </param>
 	  /// <exception cref="java.lang.NullPointerException"> If the handler
 	  ///            is null. </exception>
-	  /// <seealso cref= org.xml.sax.XMLReader#setContentHandler </seealso>
+	  /// <seealso cref="org.xml.sax.XMLReader.setContentHandler"/>
 	  public virtual ContentHandler ContentHandler
 	  {
 		  set

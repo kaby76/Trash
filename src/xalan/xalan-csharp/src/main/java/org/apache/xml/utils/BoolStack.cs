@@ -23,7 +23,6 @@
 namespace org.apache.xml.utils
 {
 
-
 	/// <summary>
 	/// Simple stack for boolean values.
 	/// @xsl.usage internal
@@ -196,7 +195,7 @@ namespace org.apache.xml.utils
 		m_values = newVector;
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public object clone()
 	  {

@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using DTMAxisIteratorBase = org.apache.xml.dtm.@ref.DTMAxisIteratorBase;
@@ -103,7 +102,7 @@ namespace org.apache.xalan.xsltc.dom
 
 			// Calculate the position of the node in the set
 			_position = 1;
-			while ((node = _source.next()) != org.apache.xml.dtm.DTMAxisIterator_Fields.END && node != _match)
+			while ((node = _source.next()) != END && node != _match)
 			{
 			_position++;
 			}

@@ -23,7 +23,7 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
+	using DOM = org.apache.xalan.xsltc.DOM;
 	using BasisLibrary = org.apache.xalan.xsltc.runtime.BasisLibrary;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 	using DTMAxisIteratorBase = org.apache.xml.dtm.@ref.DTMAxisIteratorBase;
@@ -102,7 +102,7 @@ namespace org.apache.xalan.xsltc.dom
 		}
 
 			/// <summary>
-			/// Remembers the current node for the next call to <seealso cref="#gotoMark()"/>.
+			/// Remembers the current node for the next call to <seealso cref="gotoMark()"/>.
 			/// </summary>
 		public virtual void setMark()
 		{
@@ -110,7 +110,7 @@ namespace org.apache.xalan.xsltc.dom
 		}
 
 			/// <summary>
-			/// Restores the current node remembered by <seealso cref="#setMark()"/>.
+			/// Restores the current node remembered by <seealso cref="setMark()"/>.
 			/// </summary>
 		public virtual void gotoMark()
 		{
@@ -154,7 +154,7 @@ namespace org.apache.xalan.xsltc.dom
 		private int _returnedLast;
 
 		// cached returned last for use in gotoMark
-		private int _cachedReturnedLast = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		private int _cachedReturnedLast = END;
 
 		// cached heap size for use in gotoMark
 		private int _cachedHeapSize;
@@ -204,7 +204,7 @@ namespace org.apache.xalan.xsltc.dom
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int smallest = _heap[0]._node;
 			int smallest = _heap[0]._node;
-			if (smallest == org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			if (smallest == END)
 			{ // iterator _heap[0] is done
 			if (_heapSize > 1)
 			{
@@ -217,7 +217,7 @@ namespace org.apache.xalan.xsltc.dom
 			}
 			else
 			{
-				return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+				return END;
 			}
 			}
 			else if (smallest == _returnedLast)
@@ -233,7 +233,7 @@ namespace org.apache.xalan.xsltc.dom
 			// fallthrough if not returned above
 			heapify(0);
 		}
-		return org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		return END;
 		}
 
 		public override DTMAxisIterator setStartNode(int node)
@@ -255,7 +255,7 @@ namespace org.apache.xalan.xsltc.dom
 			{
 			heapify(i);
 			}
-			_returnedLast = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+			_returnedLast = END;
 			return resetPosition();
 		}
 		return this;
@@ -340,7 +340,7 @@ namespace org.apache.xalan.xsltc.dom
 			heapify(i);
 		}
 
-		_returnedLast = org.apache.xml.dtm.DTMAxisIterator_Fields.END;
+		_returnedLast = END;
 		return resetPosition();
 		}
 

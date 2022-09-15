@@ -26,7 +26,6 @@ using System.Text;
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using IFEQ = org.apache.bcel.generic.IFEQ;
 	using INVOKEINTERFACE = org.apache.bcel.generic.INVOKEINTERFACE;
@@ -69,7 +68,7 @@ namespace org.apache.xalan.xsltc.compiler
 		private static readonly ArrayList EMPTY_ARG_LIST = new ArrayList(0);
 
 		// Valid namespaces for Java function-call extension
-		protected internal const string EXT_XSLTC = Constants_Fields.TRANSLET_URI;
+		protected internal static readonly string EXT_XSLTC = TRANSLET_URI;
 
 		protected internal static readonly string JAVA_EXT_XSLTC = EXT_XSLTC + "/java";
 
@@ -106,8 +105,8 @@ namespace org.apache.xalan.xsltc.compiler
 		// External Java function's class/method/signature
 		private string _className;
 		private Type _clazz;
-		private Method _chosenMethod;
-		private Constructor _chosenConstructor;
+		private System.Reflection.MethodInfo _chosenMethod;
+		private System.Reflection.ConstructorInfo _chosenConstructor;
 		private MethodType _chosenMethodType;
 
 		// Encapsulates all unsupported external function calls
@@ -314,17 +313,17 @@ namespace org.apache.xalan.xsltc.compiler
 				if (uri.StartsWith(JAVA_EXT_XSLTC, StringComparison.Ordinal))
 				{
 					  int length = JAVA_EXT_XSLTC.Length + 1;
-					return (uri.Length > length) ? uri.Substring(length) : Constants_Fields.EMPTYSTRING;
+					return (uri.Length > length) ? uri.Substring(length) : EMPTYSTRING;
 				}
 				else if (uri.StartsWith(JAVA_EXT_XALAN, StringComparison.Ordinal))
 				{
 					  int length = JAVA_EXT_XALAN.Length + 1;
-					return (uri.Length > length) ? uri.Substring(length) : Constants_Fields.EMPTYSTRING;
+					return (uri.Length > length) ? uri.Substring(length) : EMPTYSTRING;
 				}
 				else if (uri.StartsWith(JAVA_EXT_XALAN_OLD, StringComparison.Ordinal))
 				{
 					  int length = JAVA_EXT_XALAN_OLD.Length + 1;
-					return (uri.Length > length) ? uri.Substring(length) : Constants_Fields.EMPTYSTRING;
+					return (uri.Length > length) ? uri.Substring(length) : EMPTYSTRING;
 				}
 				else
 				{
@@ -338,7 +337,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Type check a function call. Since different type conversions apply,
 		/// type checking is different for standard and external (Java) functions.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -435,7 +434,7 @@ namespace org.apache.xalan.xsltc.compiler
 				string name = _fname.LocalPart;
 				errorMsg = new ErrorMsg(ErrorMsg.METHOD_NOT_FOUND_ERR, name);
 			}
-			Parser.reportError(Constants_Fields.ERROR, errorMsg);
+			Parser.reportError(ERROR, errorMsg);
 			return _type = Type.Void;
 			}
 		}
@@ -446,7 +445,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// If as a result of the insertion of a CastExpr a type check error is 
 		/// thrown, then catch it and re-throw it with a new "this".
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheckStandard(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public virtual Type typeCheckStandard(SymbolTable stable)
 		{
@@ -495,7 +494,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheckConstructor(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public virtual Type typeCheckConstructor(SymbolTable stable)
 		{
@@ -526,11 +525,11 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			// Check if all parameters to this constructor can be converted
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final Constructor constructor = (Constructor)constructors.elementAt(i);
-			Constructor constructor = (Constructor)constructors[i];
+//ORIGINAL LINE: final java.lang.reflect.Constructor constructor = (java.lang.reflect.Constructor)constructors.elementAt(i);
+			System.Reflection.ConstructorInfo constructor = (System.Reflection.ConstructorInfo)constructors[i];
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final Class[] paramTypes = constructor.getParameterTypes();
-			Type[] paramTypes = constructor.ParameterTypes;
+			Type[] paramTypes = constructor.getParameterTypes();
 
 			Type extType = null;
 			int currConstrDistance = 0;
@@ -597,7 +596,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// Every method of name <code>_fname</code> is inspected
 		/// as a possible candidate.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheckExternal(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public virtual Type typeCheckExternal(SymbolTable stable)
 		{
@@ -696,11 +695,11 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 			// Check if all paramteters to this method can be converted
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final Method method = (Method)methods.elementAt(i);
-			Method method = (Method)methods[i];
+//ORIGINAL LINE: final java.lang.reflect.Method method = (java.lang.reflect.Method)methods.elementAt(i);
+			System.Reflection.MethodInfo method = (System.Reflection.MethodInfo)methods[i];
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final Class[] paramTypes = method.getParameterTypes();
-			Type[] paramTypes = method.ParameterTypes;
+			Type[] paramTypes = method.getParameterTypes();
 
 			int currMethodDistance = 0;
 			for (j = 0; j < nArgs; j++)
@@ -754,7 +753,7 @@ namespace org.apache.xalan.xsltc.compiler
 			if (j == nArgs)
 			{
 			  // Check if the return type can be converted
-			  extType = method.ReturnType;
+			  extType = method.getReturnType();
 
 			  _type = (Type) _java2Internal[extType];
 			  if (_type == null)
@@ -773,7 +772,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 		// It is an error if the chosen method is an instance menthod but we don't
 		// have a this argument.
-		if (_chosenMethod != null && _thisArgument == null && !Modifier.isStatic(_chosenMethod.Modifiers))
+		if (_chosenMethod != null && _thisArgument == null && !Modifier.isStatic(_chosenMethod.getModifiers()))
 		{
 			throw new TypeCheckError(ErrorMsg.NO_JAVA_FUNCT_THIS_REF, getMethodSignature(argsType));
 		}
@@ -793,7 +792,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type check the actual arguments of this function call.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public java.util.Vector typeCheckArgs(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public virtual ArrayList typeCheckArgs(SymbolTable stable)
 		{
@@ -802,7 +801,7 @@ namespace org.apache.xalan.xsltc.compiler
 		ArrayList result = new ArrayList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final java.util.Enumeration e = _arguments.elements();
-		System.Collections.IEnumerator e = _arguments.elements();
+		System.Collections.IEnumerator e = _arguments.GetEnumerator();
 		while (e.MoveNext())
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -847,7 +846,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		translate(classGen, methodGen);
 
 		if ((type is BooleanType) || (type is IntType))
@@ -868,13 +867,13 @@ namespace org.apache.xalan.xsltc.compiler
 		int n = argumentCount();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final boolean isSecureProcessing = classGen.getParser().getXSLTC().isSecureProcessing();
-		bool isSecureProcessing = classGen.Parser.XSLTC.SecureProcessing;
+		bool isSecureProcessing = classGen.Parser.XSLTC.isSecureProcessing();
 		int index;
 
 		// Translate calls to methods in the BasisLibrary
@@ -893,33 +892,33 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String name = _fname.toString().replace('-', '_') + "F";
 			string name = _fname.ToString().Replace('-', '_') + "F";
-			string args = Constants_Fields.EMPTYSTRING;
+			string args = Constants.EMPTYSTRING;
 
 			// Special precautions for some method calls
 			if (name.Equals("sumF"))
 			{
-			args = Constants_Fields.DOM_INTF_SIG;
+			args = DOM_INTF_SIG;
 			il.append(methodGen.loadDOM());
 			}
 			else if (name.Equals("normalize_spaceF"))
 			{
 			if (_chosenMethodType.toSignature(args).Equals("()Ljava/lang/String;"))
 			{
-				args = "I" + Constants_Fields.DOM_INTF_SIG;
+				args = "I" + DOM_INTF_SIG;
 				il.append(methodGen.loadContextNode());
 				il.append(methodGen.loadDOM());
 			}
 			}
 
 			// Invoke the method in the basis library
-			index = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, name, _chosenMethodType.toSignature(args));
+			index = cpg.addMethodref(BASIS_LIBRARY_CLASS, name, _chosenMethodType.toSignature(args));
 			il.append(new INVOKESTATIC(index));
 		}
 		// Add call to BasisLibrary.unresolved_externalF() to generate
 		// run-time error message for unsupported external functions
 		else if (unresolvedExternal)
 		{
-			index = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "unresolved_externalF", "(Ljava/lang/String;)V");
+			index = cpg.addMethodref(BASIS_LIBRARY_CLASS, "unresolved_externalF", "(Ljava/lang/String;)V");
 			il.append(new PUSH(cpg, _fname.ToString()));
 			il.append(new INVOKESTATIC(index));
 		}
@@ -932,8 +931,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String clazz = _chosenConstructor.getDeclaringClass().getName();
-			string clazz = _chosenConstructor.DeclaringClass.Name;
-			Type[] paramTypes = _chosenConstructor.ParameterTypes;
+			string clazz = _chosenConstructor.getDeclaringClass().getName();
+			Type[] paramTypes = _chosenConstructor.getParameterTypes();
 				LocalVariableGen[] paramTemp = new LocalVariableGen[n];
 
 				// Backwards branches are prohibited if an uninitialized object is
@@ -956,7 +955,7 @@ namespace org.apache.xalan.xsltc.compiler
 			exp.startIterator(classGen, methodGen);
 			expType.translateTo(classGen, methodGen, paramTypes[i]);
 					paramTemp[i] = methodGen.addLocalVariable("function_call_tmp" + i, expType.toJCType(), null, null);
-					paramTemp[i].Start = il.append(expType.STORE(paramTemp[i].Index));
+					paramTemp[i].setStart(il.append(expType.STORE(paramTemp[i].getIndex())));
 			}
 
 			il.append(new NEW(cpg.addClass(_className)));
@@ -967,7 +966,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final Expression arg = argument(i);
 					Expression arg = argument(i);
-					paramTemp[i].End = il.append(arg.Type.LOAD(paramTemp[i].Index));
+					paramTemp[i].setEnd(il.append(arg.Type.LOAD(paramTemp[i].getIndex())));
 				}
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -985,7 +984,7 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(new INVOKESPECIAL(index));
 
 			// Convert the return type back to our internal type
-			(Type.Object).translateFrom(classGen, methodGen, _chosenConstructor.DeclaringClass);
+			(Type.Object).translateFrom(classGen, methodGen, _chosenConstructor.getDeclaringClass());
 
 		}
 		// Invoke function calls that are handled in separate classes
@@ -998,8 +997,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String clazz = _chosenMethod.getDeclaringClass().getName();
-			string clazz = _chosenMethod.DeclaringClass.Name;
-			Type[] paramTypes = _chosenMethod.ParameterTypes;
+			string clazz = _chosenMethod.getDeclaringClass().getName();
+			Type[] paramTypes = _chosenMethod.getParameterTypes();
 
 			// Push "this" if it is an instance method
 			if (_thisArgument != null)
@@ -1027,7 +1026,7 @@ namespace org.apache.xalan.xsltc.compiler
 			buffer.Append(getSignature(paramTypes[i]));
 			}
 			buffer.Append(')');
-			buffer.Append(getSignature(_chosenMethod.ReturnType));
+			buffer.Append(getSignature(_chosenMethod.getReturnType()));
 
 			if (_thisArgument != null && _clazz.IsInterface)
 			{
@@ -1041,7 +1040,7 @@ namespace org.apache.xalan.xsltc.compiler
 				}
 
 			// Convert the return type back to our internal type
-			_type.translateFrom(classGen, methodGen, _chosenMethod.ReturnType);
+			_type.translateFrom(classGen, methodGen, _chosenMethod.getReturnType());
 		}
 		}
 
@@ -1057,7 +1056,7 @@ namespace org.apache.xalan.xsltc.compiler
 	//JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 	//ORIGINAL LINE: final String namespace = _fname.getNamespace();
 			string @namespace = _fname.Namespace;
-			return (string.ReferenceEquals(@namespace, null)) || (@namespace.Equals(Constants_Fields.EMPTYSTRING));
+			return (string.ReferenceEquals(@namespace, null)) || (@namespace.Equals(Constants.EMPTYSTRING));
 			}
 		}
 
@@ -1101,7 +1100,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ErrorMsg msg = new org.apache.xalan.xsltc.compiler.util.ErrorMsg(org.apache.xalan.xsltc.compiler.util.ErrorMsg.CLASS_NOT_FOUND_ERR, _className);
 			  ErrorMsg msg = new ErrorMsg(ErrorMsg.CLASS_NOT_FOUND_ERR, _className);
-			  Parser.reportError(Constants_Fields.ERROR, msg);
+			  Parser.reportError(Constants.ERROR, msg);
 			}
 			  }
 
@@ -1109,16 +1108,16 @@ namespace org.apache.xalan.xsltc.compiler
 //ORIGINAL LINE: final String methodName = _fname.getLocalPart();
 			  string methodName = _fname.LocalPart;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final Method[] methods = _clazz.getMethods();
-			  Method[] methods = _clazz.GetMethods();
+//ORIGINAL LINE: final java.lang.reflect.Method[] methods = _clazz.getMethods();
+			  System.Reflection.MethodInfo[] methods = _clazz.GetMethods();
 
 			  for (int i = 0; i < methods.Length; i++)
 			  {
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int mods = methods[i].getModifiers();
-			int mods = methods[i].Modifiers;
+			int mods = methods[i].getModifiers();
 			// Is it public and same number of args ?
-			if (Modifier.isPublic(mods) && methods[i].Name.Equals(methodName) && methods[i].ParameterTypes.length == nArgs)
+			if (Modifier.isPublic(mods) && methods[i].getName().Equals(methodName) && methods[i].getParameterTypes().length == nArgs)
 			{
 			  if (result == null)
 			  {
@@ -1133,7 +1132,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ErrorMsg msg = new org.apache.xalan.xsltc.compiler.util.ErrorMsg(org.apache.xalan.xsltc.compiler.util.ErrorMsg.CLASS_NOT_FOUND_ERR, _className);
 			  ErrorMsg msg = new ErrorMsg(ErrorMsg.CLASS_NOT_FOUND_ERR, _className);
-			  Parser.reportError(Constants_Fields.ERROR, msg);
+			  Parser.reportError(Constants.ERROR, msg);
 			}
 		  }
 		  return result;
@@ -1165,21 +1164,21 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ErrorMsg msg = new org.apache.xalan.xsltc.compiler.util.ErrorMsg(org.apache.xalan.xsltc.compiler.util.ErrorMsg.CLASS_NOT_FOUND_ERR, _className);
 				  ErrorMsg msg = new ErrorMsg(ErrorMsg.CLASS_NOT_FOUND_ERR, _className);
-				  Parser.reportError(Constants_Fields.ERROR, msg);
+				  Parser.reportError(Constants.ERROR, msg);
 				}
 			  }
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final Constructor[] constructors = _clazz.getConstructors();
-			  Constructor[] constructors = _clazz.GetConstructors();
+//ORIGINAL LINE: final java.lang.reflect.Constructor[] constructors = _clazz.getConstructors();
+			  System.Reflection.ConstructorInfo[] constructors = _clazz.GetConstructors();
 
 			  for (int i = 0; i < constructors.Length; i++)
 			  {
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int mods = constructors[i].getModifiers();
-				  int mods = constructors[i].Modifiers;
+				  int mods = constructors[i].getModifiers();
 				  // Is it public, static and same number of args ?
-				  if (Modifier.isPublic(mods) && constructors[i].ParameterTypes.length == nArgs)
+				  if (Modifier.isPublic(mods) && constructors[i].getParameterTypes().length == nArgs)
 				  {
 					if (result == null)
 					{
@@ -1194,7 +1193,7 @@ namespace org.apache.xalan.xsltc.compiler
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.ErrorMsg msg = new org.apache.xalan.xsltc.compiler.util.ErrorMsg(org.apache.xalan.xsltc.compiler.util.ErrorMsg.CLASS_NOT_FOUND_ERR, _className);
 			  ErrorMsg msg = new ErrorMsg(ErrorMsg.CLASS_NOT_FOUND_ERR, _className);
-			  Parser.reportError(Constants_Fields.ERROR, msg);
+			  Parser.reportError(Constants.ERROR, msg);
 			}
 
 			return result;
@@ -1277,7 +1276,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Compute the JVM method descriptor for the method.
 		/// </summary>
-		internal static string getSignature(Method meth)
+		internal static string getSignature(System.Reflection.MethodInfo meth)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final StringBuffer sb = new StringBuffer();
@@ -1285,18 +1284,18 @@ namespace org.apache.xalan.xsltc.compiler
 		sb.Append('(');
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final Class[] params = meth.getParameterTypes();
-		Type[] @params = meth.ParameterTypes; // avoid clone
+		Type[] @params = meth.getParameterTypes(); // avoid clone
 		for (int j = 0; j < @params.Length; j++)
 		{
 			sb.Append(getSignature(@params[j]));
 		}
-		return sb.Append(')').Append(getSignature(meth.ReturnType)).ToString();
+		return sb.Append(')').Append(getSignature(meth.getReturnType())).ToString();
 		}
 
 		/// <summary>
 		/// Compute the JVM constructor descriptor for the constructor.
 		/// </summary>
-		internal static string getSignature(Constructor cons)
+		internal static string getSignature(System.Reflection.ConstructorInfo cons)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final StringBuffer sb = new StringBuffer();
@@ -1304,7 +1303,7 @@ namespace org.apache.xalan.xsltc.compiler
 		sb.Append('(');
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final Class[] params = cons.getParameterTypes();
-		Type[] @params = cons.ParameterTypes; // avoid clone
+		Type[] @params = cons.getParameterTypes(); // avoid clone
 		for (int j = 0; j < @params.Length; j++)
 		{
 			sb.Append(getSignature(@params[j]));
@@ -1368,7 +1367,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		private void translateUnallowedExtension(ConstantPoolGen cpg, InstructionList il)
 		{
-		int index = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "unallowed_extension_functionF", "(Ljava/lang/String;)V");
+		int index = cpg.addMethodref(BASIS_LIBRARY_CLASS, "unallowed_extension_functionF", "(Ljava/lang/String;)V");
 		il.append(new PUSH(cpg, _fname.ToString()));
 		il.append(new INVOKESTATIC(index));
 		}

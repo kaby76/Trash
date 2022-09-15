@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using BranchInstruction = org.apache.bcel.generic.BranchInstruction;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -65,8 +64,8 @@ namespace org.apache.xalan.xsltc.compiler
 		public EqualityExpr(int op, Expression left, Expression right)
 		{
 		_op = op;
-		(_left = left).Parent = this;
-		(_right = right).Parent = this;
+		(_left = left).setParent(this);
+		(_right = right).setParent(this);
 		}
 
 		public override Parser Parser
@@ -150,7 +149,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Typing rules: see XSLT Reference by M. Kay page 345.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -252,7 +251,7 @@ namespace org.apache.xalan.xsltc.compiler
 		Type tleft = _left.Type;
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (tleft is BooleanType)
 		{
@@ -286,10 +285,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.compiler.util.Type tleft = _left.getType();
@@ -306,8 +305,8 @@ namespace org.apache.xalan.xsltc.compiler
 		if (tleft is StringType)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int equals = cpg.addMethodref(Constants_Fields.STRING_CLASS, "equals", "(" + Constants_Fields.OBJECT_SIG +")Z");
-			int equals = cpg.addMethodref(Constants_Fields.STRING_CLASS, "equals", "(" + Constants_Fields.OBJECT_SIG + ")Z");
+//ORIGINAL LINE: final int equals = cpg.addMethodref(STRING_CLASS, "equals", "(" + OBJECT_SIG +")Z");
+			int equals = cpg.addMethodref(STRING_CLASS, "equals", "(" + OBJECT_SIG + ")Z");
 			_left.translate(classGen, methodGen);
 			_right.translate(classGen, methodGen);
 			il.append(new INVOKEVIRTUAL(equals));
@@ -345,8 +344,8 @@ namespace org.apache.xalan.xsltc.compiler
 			falsec = il.append(_op == Operators.EQ ? (BranchInstruction) new IFNE(null) : (BranchInstruction) new IFEQ(null));
 			il.append(ICONST_1);
 			truec = il.append(new GOTO(null));
-			falsec.Target = il.append(ICONST_0);
-			truec.Target = il.append(NOP);
+			falsec.setTarget(il.append(ICONST_0));
+			truec.setTarget(il.append(NOP));
 			return;
 			}
 
@@ -362,8 +361,8 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int equals = cpg.addMethodref(Constants_Fields.STRING_CLASS, "equals", "(" +Constants_Fields.OBJECT_SIG+ ")Z");
-			int equals = cpg.addMethodref(Constants_Fields.STRING_CLASS, "equals", "(" + Constants_Fields.OBJECT_SIG + ")Z");
+//ORIGINAL LINE: final int equals = cpg.addMethodref(STRING_CLASS, "equals", "(" +OBJECT_SIG+ ")Z");
+			int equals = cpg.addMethodref(STRING_CLASS, "equals", "(" + OBJECT_SIG + ")Z");
 			il.append(new INVOKEVIRTUAL(equals));
 
 			if (_op == Operators.NE)
@@ -398,8 +397,8 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(new PUSH(cpg, _op));
 			il.append(methodGen.loadDOM());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int cmp = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "compare", "(" + tleft.toSignature() + tright.toSignature() + "I" + Constants_Fields.DOM_INTF_SIG + ")Z");
-			int cmp = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "compare", "(" + tleft.toSignature() + tright.toSignature() + "I" + Constants_Fields.DOM_INTF_SIG + ")Z");
+//ORIGINAL LINE: final int cmp = cpg.addMethodref(BASIS_LIBRARY_CLASS, "compare", "(" + tleft.toSignature() + tright.toSignature() + "I" + DOM_INTF_SIG + ")Z");
+			int cmp = cpg.addMethodref(BASIS_LIBRARY_CLASS, "compare", "(" + tleft.toSignature() + tright.toSignature() + "I" + DOM_INTF_SIG + ")Z");
 			il.append(new INVOKESTATIC(cmp));
 			return;
 		}
@@ -422,8 +421,8 @@ namespace org.apache.xalan.xsltc.compiler
 		il.append(methodGen.loadDOM());
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int compare = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "compare", "(" + tleft.toSignature() + tright.toSignature() + "I" + Constants_Fields.DOM_INTF_SIG + ")Z");
-		int compare = cpg.addMethodref(Constants_Fields.BASIS_LIBRARY_CLASS, "compare", "(" + tleft.toSignature() + tright.toSignature() + "I" + Constants_Fields.DOM_INTF_SIG + ")Z");
+//ORIGINAL LINE: final int compare = cpg.addMethodref(BASIS_LIBRARY_CLASS, "compare", "(" + tleft.toSignature() + tright.toSignature() + "I" + DOM_INTF_SIG + ")Z");
+		int compare = cpg.addMethodref(BASIS_LIBRARY_CLASS, "compare", "(" + tleft.toSignature() + tright.toSignature() + "I" + DOM_INTF_SIG + ")Z");
 		il.append(new INVOKESTATIC(compare));
 		}
 	}

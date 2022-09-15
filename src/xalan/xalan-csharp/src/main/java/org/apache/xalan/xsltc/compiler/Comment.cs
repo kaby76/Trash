@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using GETFIELD = org.apache.bcel.generic.GETFIELD;
 	using INVOKEINTERFACE = org.apache.bcel.generic.INVOKEINTERFACE;
@@ -46,7 +45,7 @@ namespace org.apache.xalan.xsltc.compiler
 		parseChildren(parser);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -58,10 +57,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 			// Shortcut for literal strings
 			Text rawText = null;
@@ -86,16 +85,16 @@ namespace org.apache.xalan.xsltc.compiler
 				{
 					rawText.loadAsArrayOffsetLength(classGen, methodGen);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int comment = cpg.addInterfaceMethodref(Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "comment", "([CII)V");
-					int comment = cpg.addInterfaceMethodref(Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "comment", "([CII)V");
+//ORIGINAL LINE: final int comment = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "comment", "([CII)V");
+					int comment = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "comment", "([CII)V");
 					il.append(new INVOKEINTERFACE(comment, 4));
 				}
 				else
 				{
-					il.append(new PUSH(cpg, rawText.getText()));
+					il.append(new PUSH(cpg, rawText.Text));
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int comment = cpg.addInterfaceMethodref(Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "comment", "(" + Constants_Fields.STRING_SIG + ")V");
-					int comment = cpg.addInterfaceMethodref(Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "comment", "(" + Constants_Fields.STRING_SIG + ")V");
+//ORIGINAL LINE: final int comment = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "comment", "(" + STRING_SIG + ")V");
+					int comment = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "comment", "(" + STRING_SIG + ")V");
 					il.append(new INVOKEINTERFACE(comment, 2));
 				}
 			}
@@ -107,7 +106,7 @@ namespace org.apache.xalan.xsltc.compiler
 
 				// Get the translet's StringValueHandler
 				il.append(classGen.loadTranslet());
-				il.append(new GETFIELD(cpg.addFieldref(Constants_Fields.TRANSLET_CLASS, "stringValueHandler", Constants_Fields.STRING_VALUE_HANDLER_SIG)));
+				il.append(new GETFIELD(cpg.addFieldref(TRANSLET_CLASS, "stringValueHandler", STRING_VALUE_HANDLER_SIG)));
 				il.append(DUP);
 				il.append(methodGen.storeHandler());
 
@@ -115,11 +114,11 @@ namespace org.apache.xalan.xsltc.compiler
 				translateContents(classGen, methodGen);
 
 				// get String out of the handler
-				il.append(new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.STRING_VALUE_HANDLER, "getValue", "()" + Constants_Fields.STRING_SIG)));
+				il.append(new INVOKEVIRTUAL(cpg.addMethodref(STRING_VALUE_HANDLER, "getValue", "()" + STRING_SIG)));
 				// call "comment"
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int comment = cpg.addInterfaceMethodref(Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "comment", "(" + Constants_Fields.STRING_SIG + ")V");
-				int comment = cpg.addInterfaceMethodref(Constants_Fields.TRANSLET_OUTPUT_INTERFACE, "comment", "(" + Constants_Fields.STRING_SIG + ")V");
+//ORIGINAL LINE: final int comment = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "comment", "(" + STRING_SIG + ")V");
+				int comment = cpg.addInterfaceMethodref(TRANSLET_OUTPUT_INTERFACE, "comment", "(" + STRING_SIG + ")V");
 				il.append(new INVOKEINTERFACE(comment, 2));
 				// Restore old handler base from stack
 				il.append(methodGen.storeHandler());

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +25,6 @@
 namespace org.apache.xalan.xsltc.util
 {
 
-
 	/// <summary>
 	/// Utility class to redirect input to JavaCup program.
 	/// 
@@ -47,7 +47,7 @@ namespace org.apache.xalan.xsltc.util
 			 bool systemExitOK = true;
 
 			 // This is the stream we'll set as our System.in
-			 System.IO.Stream input = null;
+			 Stream input = null;
 
 			 // The number of arguments
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
@@ -72,7 +72,7 @@ namespace org.apache.xalan.xsltc.util
 					  }
 					  try
 					  {
-						  input = new System.IO.FileStream(args[i], System.IO.FileMode.Open, System.IO.FileAccess.Read);
+						  input = new FileStream(args[i], FileMode.Open, FileAccess.Read);
 					  }
 					  catch (FileNotFoundException e)
 					  {
@@ -96,7 +96,7 @@ namespace org.apache.xalan.xsltc.util
 				 }
 			 }
 
-			 System.In = input;
+			 System.setIn(input);
 			 try
 			 {
 				 java_cup.Main.main(new_args);

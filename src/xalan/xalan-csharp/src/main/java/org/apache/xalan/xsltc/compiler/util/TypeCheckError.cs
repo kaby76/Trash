@@ -23,6 +23,7 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
+	using SyntaxTreeNode = org.apache.xalan.xsltc.compiler.SyntaxTreeNode;
 
 	/// <summary>
 	/// @author Jacek Ambroziak
@@ -78,11 +79,11 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 				if (_node != null)
 				{
-					_error = new ErrorMsg(ErrorMsg.TYPE_CHECK_ERR, _node.ToString());
+					_error = new ErrorMsg(org.apache.xalan.xsltc.compiler.util.ErrorMsg.TYPE_CHECK_ERR, _node.ToString());
 				}
 			else
 			{
-				_error = new ErrorMsg(ErrorMsg.TYPE_CHECK_UNK_LOC_ERR);
+				_error = new ErrorMsg(org.apache.xalan.xsltc.compiler.util.ErrorMsg.TYPE_CHECK_UNK_LOC_ERR);
 			}
 		}
 

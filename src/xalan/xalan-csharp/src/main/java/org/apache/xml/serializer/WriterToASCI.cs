@@ -1,4 +1,6 @@
-﻿/*
+﻿using System.IO;
+
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -23,7 +25,6 @@ namespace org.apache.xml.serializer
 
 
 
-
 	/// <summary>
 	/// This class writes ASCII to a byte stream as quickly as possible.  For the
 	/// moment it does not do buffering, though I reserve the right to do some
@@ -39,14 +40,14 @@ namespace org.apache.xml.serializer
 
 	  /// <summary>
 	  /// The byte stream to write to. </summary>
-	  private readonly System.IO.Stream m_os;
+	  private readonly Stream m_os;
 
 	  /// <summary>
 	  /// Create an unbuffered ASCII writer.
 	  /// 
 	  /// </summary>
 	  /// <param name="os"> The byte stream to write to. </param>
-	  public WriterToASCI(System.IO.Stream os)
+	  public WriterToASCI(Stream os)
 	  {
 		m_os = os;
 	  }
@@ -61,7 +62,7 @@ namespace org.apache.xml.serializer
 	  /// <exception cref="IOException">  If an I/O error occurs
 	  /// </exception>
 	  /// <exception cref="java.io.IOException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(char chars[], int start, int length) throws java.io.IOException
 	  public virtual void write(char[] chars, int start, int length)
 	  {
@@ -86,7 +87,7 @@ namespace org.apache.xml.serializer
 	  /// </summary>
 	  /// <param name="c">  int specifying a character to be written. </param>
 	  /// <exception cref="IOException">  If an I/O error occurs </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(int c) throws java.io.IOException
 	  public virtual void write(int c)
 	  {
@@ -99,7 +100,7 @@ namespace org.apache.xml.serializer
 	  /// <param name="s"> String to be written
 	  /// </param>
 	  /// <exception cref="IOException">  If an I/O error occurs </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void write(String s) throws java.io.IOException
 	  public virtual void write(string s)
 	  {
@@ -118,7 +119,7 @@ namespace org.apache.xml.serializer
 	  /// buffers in a chain of Writers and OutputStreams.
 	  /// </summary>
 	  /// <exception cref="IOException">  If an I/O error occurs </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void flush() throws java.io.IOException
 	  public virtual void flush()
 	  {
@@ -131,7 +132,7 @@ namespace org.apache.xml.serializer
 	  /// thrown.  Closing a previously-closed stream, however, has no effect.
 	  /// </summary>
 	  /// <exception cref="IOException">  If an I/O error occurs </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void close() throws java.io.IOException
 	  public virtual void close()
 	  {
@@ -143,7 +144,7 @@ namespace org.apache.xml.serializer
 	  /// </summary>
 	  /// <returns> reference to the result stream, or null of only a writer was
 	  /// set. </returns>
-	  public virtual System.IO.Stream OutputStream
+	  public virtual Stream OutputStream
 	  {
 		  get
 		  {

@@ -23,7 +23,6 @@
 namespace org.apache.xml.serializer.utils
 {
 
-
 	/// <summary>
 	/// Simple stack for boolean values.
 	/// 

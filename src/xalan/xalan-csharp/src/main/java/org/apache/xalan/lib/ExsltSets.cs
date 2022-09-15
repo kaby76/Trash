@@ -23,7 +23,6 @@
 namespace org.apache.xalan.lib
 {
 
-
 	using DOMHelper = org.apache.xml.utils.DOMHelper;
 	using NodeSet = org.apache.xpath.NodeSet;
 	using Node = org.w3c.dom.Node;
@@ -39,8 +38,8 @@ namespace org.apache.xalan.lib
 	/// The documentation for each function has been copied from the relevant
 	/// EXSLT Implementer page. 
 	/// </summary>
-	/// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a>
-	/// @xsl.usage general </seealso>
+	/// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"
+	/// @xsl.usage general/>
 	public class ExsltSets : ExsltBase
 	{
 	  /// <summary>
@@ -55,10 +54,10 @@ namespace org.apache.xalan.lib
 	  /// node in nl2; an empty node-set if the first node in nl2 is not in nl1; all of nl1 if nl2
 	  /// is empty.
 	  /// </returns>
-	  /// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+	  /// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 	  public static NodeList leading(NodeList nl1, NodeList nl2)
 	  {
-		if (nl2.Length == 0)
+		if (nl2.getLength() == 0)
 		{
 		  return nl1;
 		}
@@ -71,7 +70,7 @@ namespace org.apache.xalan.lib
 		  return leadNodes; // empty NodeSet
 		}
 
-		for (int i = 0; i < nl1.Length; i++)
+		for (int i = 0; i < nl1.getLength(); i++)
 		{
 		  Node testNode = nl1.item(i);
 		  if (DOMHelper.isNodeAfter(testNode, endNode) && !DOMHelper.isNodeTheSame(testNode, endNode))
@@ -94,10 +93,10 @@ namespace org.apache.xalan.lib
 	  /// node in nl2; an empty node-set if the first node in nl2 is not in nl1; all of nl1 if nl2
 	  /// is empty.
 	  /// </returns>
-	  /// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+	  /// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 	  public static NodeList trailing(NodeList nl1, NodeList nl2)
 	  {
-		if (nl2.Length == 0)
+		if (nl2.getLength() == 0)
 		{
 		  return nl1;
 		}
@@ -110,7 +109,7 @@ namespace org.apache.xalan.lib
 		  return trailNodes; // empty NodeSet
 		}
 
-		for (int i = 0; i < nl1.Length; i++)
+		for (int i = 0; i < nl1.getLength(); i++)
 		{
 		  Node testNode = nl1.item(i);
 		  if (DOMHelper.isNodeAfter(startNode, testNode) && !DOMHelper.isNodeTheSame(startNode, testNode))
@@ -130,7 +129,7 @@ namespace org.apache.xalan.lib
 	  /// <returns> a NodeList containing the nodes in nl1 that are also
 	  /// in nl2.
 	  /// </returns>
-	  /// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+	  /// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 	  public static NodeList intersection(NodeList nl1, NodeList nl2)
 	  {
 		NodeSet ns1 = new NodeSet(nl1);
@@ -161,7 +160,7 @@ namespace org.apache.xalan.lib
 	  /// <param name="nl2"> NodeList for second node-set. </param>
 	  /// <returns> a NodeList containing the nodes in nl1 that are not in nl2.
 	  /// </returns>
-	  /// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+	  /// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 	  public static NodeList difference(NodeList nl1, NodeList nl2)
 	  {
 		NodeSet ns1 = new NodeSet(nl1);
@@ -194,18 +193,18 @@ namespace org.apache.xalan.lib
 	  /// In other words, if more than one node in nl contains the same string value,
 	  /// only include the first such node found.
 	  /// </returns>
-	  /// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+	  /// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 	  public static NodeList distinct(NodeList nl)
 	  {
 		NodeSet dist = new NodeSet();
 		dist.ShouldCacheNodes = true;
 
-		IDictionary stringTable = new Hashtable();
+		System.Collections.IDictionary stringTable = new Hashtable();
 
-		for (int i = 0; i < nl.Length; i++)
+		for (int i = 0; i < nl.getLength(); i++)
 		{
 		  Node currNode = nl.item(i);
-		  string key = ToString(currNode);
+		  string key = toString(currNode);
 
 		  if (string.ReferenceEquals(key, null))
 		  {
@@ -232,7 +231,7 @@ namespace org.apache.xalan.lib
 	  /// the two node sets contain the exactly the same nodes (perhaps in a different order), 
 	  /// otherwise false.
 	  /// </summary>
-	  /// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a> </seealso>
+	  /// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"/>
 	  public static bool hasSameNode(NodeList nl1, NodeList nl2)
 	  {
 

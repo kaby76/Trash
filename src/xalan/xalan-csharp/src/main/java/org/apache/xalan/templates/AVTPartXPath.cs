@@ -23,7 +23,6 @@ using System.Collections;
  */
 namespace org.apache.xalan.templates
 {
-
 	using FastStringBuffer = org.apache.xml.utils.FastStringBuffer;
 	using XPath = org.apache.xpath.XPath;
 	using XPathContext = org.apache.xpath.XPathContext;
@@ -96,7 +95,7 @@ namespace org.apache.xalan.templates
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException">
 	  /// TODO: Fix or remove this unused c'tor. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public AVTPartXPath(String val, org.apache.xml.utils.PrefixResolver nsNode, org.apache.xpath.compiler.XPathParser xpathProcessor, org.apache.xpath.XPathFactory factory, org.apache.xpath.XPathContext liaison) throws javax.xml.transform.TransformerException
 	  public AVTPartXPath(string val, org.apache.xml.utils.PrefixResolver nsNode, XPathParser xpathProcessor, XPathFactory factory, XPathContext liaison)
 	  {
@@ -127,7 +126,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="nsNode"> The current namespace context (stylesheet tree context).
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void evaluate(org.apache.xpath.XPathContext xctxt, org.apache.xml.utils.FastStringBuffer buf, int context, org.apache.xml.utils.PrefixResolver nsNode) throws javax.xml.transform.TransformerException
 	  public override void evaluate(XPathContext xctxt, FastStringBuffer buf, int context, org.apache.xml.utils.PrefixResolver nsNode)
 	  {
@@ -140,7 +139,7 @@ namespace org.apache.xalan.templates
 		}
 	  }
 
-	  /// <seealso cref= XSLTVisitable#callVisitors(XSLTVisitor) </seealso>
+	  /// <seealso cref="XSLTVisitable.callVisitors(XSLTVisitor)"/>
 	  public override void callVisitors(XSLTVisitor visitor)
 	  {
 		  m_xpath.Expression.callVisitors(m_xpath, visitor);

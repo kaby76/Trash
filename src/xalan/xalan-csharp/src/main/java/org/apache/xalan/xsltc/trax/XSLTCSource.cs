@@ -22,7 +22,8 @@
 namespace org.apache.xalan.xsltc.trax
 {
 
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using StripFilter = org.apache.xalan.xsltc.StripFilter;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
 	using DOMWSFilter = org.apache.xalan.xsltc.dom.DOMWSFilter;
 	using SAXImpl = org.apache.xalan.xsltc.dom.SAXImpl;
@@ -71,14 +72,14 @@ namespace org.apache.xalan.xsltc.trax
 				_systemId = value;
 				if (_source != null)
 				{
-					_source.SystemId = value;
+					_source.setSystemId(value);
 				}
 			}
 			get
 			{
 			if (_source != null)
 			{
-				return _source.SystemId;
+				return _source.getSystemId();
 			}
 			else
 			{
@@ -91,7 +92,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// <summary>
 		/// Internal interface which returns a DOM for a given DTMManager and translet.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected org.apache.xalan.xsltc.DOM getDOM(org.apache.xalan.xsltc.dom.XSLTCDTMManager dtmManager, org.apache.xalan.xsltc.runtime.AbstractTranslet translet) throws org.xml.sax.SAXException
 		protected internal DOM getDOM(XSLTCDTMManager dtmManager, AbstractTranslet translet)
 		{

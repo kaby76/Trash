@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.processor
 {
-
 	using ElemTemplate = org.apache.xalan.templates.ElemTemplate;
 	using ElemTemplateElement = org.apache.xalan.templates.ElemTemplateElement;
 
@@ -44,7 +43,7 @@ namespace org.apache.xalan.processor
 	  /// </param>
 	  /// <exception cref="org.xml.sax.SAXException"> Any SAX exception, possibly
 	  ///            wrapping another exception. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void appendAndPush(StylesheetHandler handler, org.apache.xalan.templates.ElemTemplateElement elem) throws org.xml.sax.SAXException
 	  protected internal override void appendAndPush(StylesheetHandler handler, ElemTemplateElement elem)
 	  {

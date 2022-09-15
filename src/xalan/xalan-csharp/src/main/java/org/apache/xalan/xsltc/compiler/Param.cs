@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using Field = org.apache.bcel.classfile.Field;
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using CHECKCAST = org.apache.bcel.generic.CHECKCAST;
@@ -95,11 +94,11 @@ namespace org.apache.xalan.xsltc.compiler
 		/// </summary>
 		public override void display(int indent)
 		{
-		indent(indent);
+		this.indent(indent);
 		Console.WriteLine("param " + _name);
 		if (_select != null)
 		{
-			indent(indent + IndentIncrement);
+			this.indent(indent + IndentIncrement);
 			Console.WriteLine("select " + _select.ToString());
 		}
 		displayContents(indent + IndentIncrement);
@@ -174,7 +173,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// 'select' expression (if present) or is a result tree if the parameter
 		/// element has a body and no 'select' expression.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -201,10 +200,10 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (_ignore)
 		{
@@ -240,7 +239,7 @@ namespace org.apache.xalan.xsltc.compiler
 					BranchHandle ifBlock = il.append(new IFNONNULL(null));
 					translateValue(classGen, methodGen);
 					il.append(storeInstruction());
-					ifBlock.Target = il.append(NOP);
+					ifBlock.setTarget(il.append(NOP));
 					return;
 				}
 
@@ -250,8 +249,8 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(new PUSH(cpg, true));
 
 			// Call addParameter() from this class
-			il.append(new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.ADD_PARAMETER, Constants_Fields.ADD_PARAMETER_SIG)));
-			if (!string.ReferenceEquals(className, Constants_Fields.EMPTYSTRING))
+			il.append(new INVOKEVIRTUAL(cpg.addMethodref(TRANSLET_CLASS, ADD_PARAMETER, ADD_PARAMETER_SIG)));
+			if (!string.ReferenceEquals(className, EMPTYSTRING))
 			{
 			il.append(new CHECKCAST(cpg.addClass(className)));
 			}
@@ -267,14 +266,14 @@ namespace org.apache.xalan.xsltc.compiler
 			{ // normal case
 			_local = methodGen.addLocalVariable2(name, _type.toJCType(), null);
 			// Cache the result of addParameter() in a local variable
-			_local.Start = il.append(_type.STORE(_local.Index));
+			_local.setStart(il.append(_type.STORE(_local.getIndex())));
 			}
 		}
 		else
 		{
 			if (classGen.containsField(name) == null)
 			{
-			classGen.addField(new Field(Constants_Fields.ACC_PUBLIC, cpg.addUtf8(name), cpg.addUtf8(signature), null, cpg.ConstantPool));
+			classGen.addField(new Field(ACC_PUBLIC, cpg.addUtf8(name), cpg.addUtf8(signature), null, cpg.getConstantPool()));
 			il.append(classGen.loadTranslet());
 			il.append(DUP);
 			il.append(new PUSH(cpg, name));
@@ -282,12 +281,12 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(new PUSH(cpg, true));
 
 			// Call addParameter() from this class
-			il.append(new INVOKEVIRTUAL(cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, Constants_Fields.ADD_PARAMETER, Constants_Fields.ADD_PARAMETER_SIG)));
+			il.append(new INVOKEVIRTUAL(cpg.addMethodref(TRANSLET_CLASS, ADD_PARAMETER, ADD_PARAMETER_SIG)));
 
 			_type.translateUnBox(classGen, methodGen);
 
 			// Cache the result of addParameter() in a field
-			if (!string.ReferenceEquals(className, Constants_Fields.EMPTYSTRING))
+			if (!string.ReferenceEquals(className, EMPTYSTRING))
 			{
 				il.append(new CHECKCAST(cpg.addClass(className)));
 			}

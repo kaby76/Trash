@@ -38,7 +38,7 @@ namespace org.apache.xml.utils
 	 {
 		   if ((string.ReferenceEquals(lang, null)) || lang.Equals(EMPTY_STRING))
 		   { // not specified => getDefault
-				return Locale.Default;
+				return Locale.getDefault();
 		   }
 			string language = EMPTY_STRING;
 			string country = EMPTY_STRING;

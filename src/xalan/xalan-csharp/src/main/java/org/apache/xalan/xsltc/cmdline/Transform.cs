@@ -26,8 +26,9 @@ namespace org.apache.xalan.xsltc.cmdline
 {
 
 
-
+	using TransletException = org.apache.xalan.xsltc.TransletException;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
+	using DOMEnhancedForDTM = org.apache.xalan.xsltc.DOMEnhancedForDTM;
 	using XSLTCDTMManager = org.apache.xalan.xsltc.dom.XSLTCDTMManager;
 	using AbstractTranslet = org.apache.xalan.xsltc.runtime.AbstractTranslet;
 	using Constants = org.apache.xalan.xsltc.runtime.Constants;
@@ -39,6 +40,7 @@ namespace org.apache.xalan.xsltc.cmdline
 	using SAXException = org.xml.sax.SAXException;
 	using XMLReader = org.xml.sax.XMLReader;
 
+	using StripFilter = org.apache.xalan.xsltc.StripFilter;
 	using DTMWSFilter = org.apache.xml.dtm.DTMWSFilter;
 	using DOMWSFilter = org.apache.xalan.xsltc.dom.DOMWSFilter;
 
@@ -114,7 +116,7 @@ namespace org.apache.xalan.xsltc.cmdline
 				Type clazz = ObjectFactory.findProviderClass(_className, ObjectFactory.findClassLoader(), true);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.xalan.xsltc.runtime.AbstractTranslet translet = (org.apache.xalan.xsltc.runtime.AbstractTranslet)clazz.newInstance();
-			AbstractTranslet translet = (AbstractTranslet)clazz.newInstance();
+			AbstractTranslet translet = (AbstractTranslet)System.Activator.CreateInstance(clazz);
 				translet.postInitialization();
 
 			// Create a SAX parser and get the XMLReader object it uses
@@ -123,21 +125,21 @@ namespace org.apache.xalan.xsltc.cmdline
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			try
 			{
-			factory.setFeature(org.apache.xalan.xsltc.runtime.Constants_Fields.NAMESPACE_FEATURE,true);
+			factory.setFeature(Constants.NAMESPACE_FEATURE,true);
 			}
 			catch (Exception)
 			{
-			factory.NamespaceAware = true;
+			factory.setNamespaceAware(true);
 			}
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final javax.xml.parsers.SAXParser parser = factory.newSAXParser();
 			SAXParser parser = factory.newSAXParser();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.xml.sax.XMLReader reader = parser.getXMLReader();
-			XMLReader reader = parser.XMLReader;
+			XMLReader reader = parser.getXMLReader();
 
 			// Set the DOM's DOM builder as the XMLReader's SAX2 content handler
-				XSLTCDTMManager dtmManager = (XSLTCDTMManager)XSLTCDTMManager.DTMManagerClass.newInstance();
+				XSLTCDTMManager dtmManager = (XSLTCDTMManager)System.Activator.CreateInstance(XSLTCDTMManager.DTMManagerClass);
 
 			DTMWSFilter wsfilter;
 			if (translet != null && translet is StripFilter)
@@ -176,12 +178,12 @@ namespace org.apache.xalan.xsltc.cmdline
 			}
 			else if (_iterations > 0)
 			{
-			long mm = DateTimeHelperClass.CurrentUnixTimeMillis();
+			long mm = DateTimeHelper.CurrentUnixTimeMillis();
 			for (int i = 0; i < _iterations; i++)
 			{
 				translet.transform(dom, tohFactory.SerializationHandler);
 			}
-			mm = DateTimeHelperClass.CurrentUnixTimeMillis() - mm;
+			mm = DateTimeHelper.CurrentUnixTimeMillis() - mm;
 
 			Console.Error.WriteLine("\n<!--");
 			Console.Error.WriteLine("  transform  = " + (((double) mm) / ((double) _iterations)) + " ms");
@@ -249,7 +251,7 @@ namespace org.apache.xalan.xsltc.cmdline
 			}
 		catch (SAXException e)
 		{
-			Exception ex = e.Exception;
+			Exception ex = e.getException();
 			if (_debug)
 			{
 			if (ex != null)

@@ -23,10 +23,13 @@ using System.Collections;
  */
 namespace org.apache.xpath.axes
 {
-
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using OpCodes = org.apache.xpath.compiler.OpCodes;
 	using XNodeSet = org.apache.xpath.objects.XNodeSet;
@@ -34,7 +37,7 @@ namespace org.apache.xpath.axes
 	/// <summary>
 	/// Walker for the OP_VARIABLE, or OP_EXTFUNCTION, or OP_FUNCTION, or OP_GROUP,
 	/// op codes. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xpath#NT-FilterExpr">XPath FilterExpr descriptions</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xpath.NT-FilterExpr">XPath FilterExpr descriptions</a>"/>
 	[Serializable]
 	public class FilterExprWalker : AxesWalker
 	{
@@ -56,7 +59,7 @@ namespace org.apache.xpath.axes
 	  /// <param name="stepType"> The type of step.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void init(org.apache.xpath.compiler.Compiler compiler, int opPos, int stepType) throws javax.xml.transform.TransformerException
 	  public override void init(Compiler compiler, int opPos, int stepType)
 	  {
@@ -140,7 +143,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A new FilterExprWalker that can be used without mutating this one.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public override object clone()
 	  {
@@ -172,11 +175,11 @@ namespace org.apache.xpath.axes
 
 			if (!executePredicates(n, m_lpi.XPathContext))
 			{
-			  return org.apache.xml.dtm.DTMIterator_Fields.FILTER_SKIP;
+			  return DTMIterator.FILTER_SKIP;
 			}
 		  }
 
-		  return org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT;
+		  return DTMIterator.FILTER_ACCEPT;
 		}
 		catch (javax.xml.transform.TransformerException se)
 		{
@@ -204,7 +207,7 @@ namespace org.apache.xpath.axes
 			}
 			else
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return DTM.NULL;
 			}
 		  }
 	  }
@@ -319,7 +322,7 @@ namespace org.apache.xpath.axes
 			  this.outerInstance = outerInstance;
 		  }
 
-		  /// <seealso cref= ExpressionOwner#getExpression() </seealso>
+		  /// <seealso cref="ExpressionOwner.getExpression()"/>
 		public virtual Expression Expression
 		{
 			get
@@ -349,7 +352,7 @@ namespace org.apache.xpath.axes
 		}
 
 
-		/// <seealso cref= Expression#deepEquals(Expression) </seealso>
+		/// <seealso cref="Expression.deepEquals(Expression)"/>
 		public override bool deepEquals(Expression expr)
 		{
 		  if (!base.deepEquals(expr))

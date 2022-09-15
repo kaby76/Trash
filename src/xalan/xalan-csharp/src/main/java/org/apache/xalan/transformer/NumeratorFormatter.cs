@@ -23,7 +23,6 @@
 namespace org.apache.xalan.transformer
 {
 
-
 	using Element = org.w3c.dom.Element;
 
 	/// <summary>
@@ -56,7 +55,7 @@ namespace org.apache.xalan.transformer
 
 	  /// <summary>
 	  /// Table to help in converting decimals to roman numerals. </summary>
-	  /// <seealso cref= org.apache.xalan.transformer.DecimalToRoman </seealso>
+	  /// <seealso cref="org.apache.xalan.transformer.DecimalToRoman"/>
 	  private static readonly DecimalToRoman[] m_romanConvertTable = new DecimalToRoman[]
 	  {
 		  new DecimalToRoman(1000, "M", 900, "CM"),
@@ -70,8 +69,8 @@ namespace org.apache.xalan.transformer
 
 	  /// <summary>
 	  /// Chars for converting integers into alpha counts. </summary>
-	  /// <seealso cref= TransformerImpl#int2alphaCount </seealso>
-	  private static readonly char[] m_alphaCountTable = new char[] {'Z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'}; // z for zero
+	  /// <seealso cref="TransformerImpl.int2alphaCount"/>
+	  private static readonly char[] m_alphaCountTable = new char[] {'Z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'};
 
 	  /// <summary>
 	  /// Construct a NumeratorFormatter using an element
@@ -94,10 +93,10 @@ namespace org.apache.xalan.transformer
 	  /// <param name="val"> Value to convert -- must be greater than zero. </param>
 	  /// <param name="table"> a table containing one character for each digit in the radix </param>
 	  /// <returns> String representing alpha count of number. </returns>
-	  /// <seealso cref= org.apache.xalan.transformer.DecimalToRoman
+	  /// <seealso cref="org.apache.xalan.transformer.DecimalToRoman"
 	  /// 
 	  /// Note that the radix of the conversion is inferred from the size
-	  /// of the table. </seealso>
+	  /// of the table./>
 	  protected internal virtual string int2alphaCount(int val, char[] table)
 	  {
 
@@ -174,8 +173,8 @@ namespace org.apache.xalan.transformer
 	  /// <param name="prefixesAreOK"> true_ to enable prefix notation (e.g. 4 = "IV"),
 	  /// false_ to disable prefix notation (e.g. 4 = "IIII"). </param>
 	  /// <returns> Roman numeral string. </returns>
-	  /// <seealso cref= DecimalToRoman </seealso>
-	  /// <seealso cref= m_romanConvertTable </seealso>
+	  /// <seealso cref="DecimalToRoman"/>
+	  /// <seealso cref="m_romanConvertTable"/>
 	  internal virtual string long2roman(long val, bool prefixesAreOK)
 	  {
 
@@ -304,7 +303,7 @@ namespace org.apache.xalan.transformer
 		/// </summary>
 		/// <returns>  the number of tokens remaining in the string using the current
 		///          delimiter set. </returns>
-		/// <seealso cref=     java.util.StringTokenizer#nextToken() </seealso>
+		/// <seealso cref="java.util.StringTokenizer.nextToken()"/>
 		internal virtual int countTokens()
 		{
 

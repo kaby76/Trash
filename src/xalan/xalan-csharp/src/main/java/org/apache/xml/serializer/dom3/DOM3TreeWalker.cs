@@ -26,7 +26,8 @@ using System.Text;
 namespace org.apache.xml.serializer.dom3
 {
 
-
+	using OutputPropertiesFactory = org.apache.xml.serializer.OutputPropertiesFactory;
+	using SerializationHandler = org.apache.xml.serializer.SerializationHandler;
 	using MsgKey = org.apache.xml.serializer.utils.MsgKey;
 	using Utils = org.apache.xml.serializer.utils.Utils;
 	using XML11Char = org.apache.xml.serializer.utils.XML11Char;
@@ -226,13 +227,13 @@ namespace org.apache.xml.serializer.dom3
 			fLocalNSBinder = new NamespaceSupport();
 
 			fDOMConfigProperties = fSerializer.OutputFormat;
-			fSerializer.DocumentLocator = fLocator;
+			fSerializer.setDocumentLocator(fLocator);
 			initProperties(fDOMConfigProperties);
 
 			try
 			{
 				// Bug see Bugzilla  26741
-				fLocator.SystemId = System.getProperty("user.dir") + File.separator + "dummy.xsl";
+				fLocator.setSystemId(System.getProperty("user.dir") + File.separator + "dummy.xsl");
 			}
 			catch (SecurityException)
 			{ // user.dir not accessible from applet
@@ -251,24 +252,24 @@ namespace org.apache.xml.serializer.dom3
 		/// <param name="pos"> Node in the tree where to start traversal
 		/// </param>
 		/// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void traverse(org.w3c.dom.Node pos) throws org.xml.sax.SAXException
 		public void traverse(Node pos)
 		{
 			this.fSerializer.startDocument();
 
 			// Determine if the Node is a DOM Level 3 Core Node.
-			if (pos.NodeType != Node.DOCUMENT_NODE)
+			if (pos.getNodeType() != Node.DOCUMENT_NODE)
 			{
-				Document ownerDoc = pos.OwnerDocument;
-				if (ownerDoc != null && ownerDoc.Implementation.hasFeature("Core", "3.0"))
+				Document ownerDoc = pos.getOwnerDocument();
+				if (ownerDoc != null && ownerDoc.getImplementation().hasFeature("Core", "3.0"))
 				{
 					fIsLevel3DOM = true;
 				}
 			}
 			else
 			{
-				if (((Document) pos).Implementation.hasFeature("Core", "3.0"))
+				if (((Document) pos).getImplementation().hasFeature("Core", "3.0"))
 				{
 					fIsLevel3DOM = true;
 				}
@@ -281,7 +282,7 @@ namespace org.apache.xml.serializer.dom3
 
 			if (fFilter != null)
 			{
-				fWhatToShowFilter = fFilter.WhatToShow;
+				fWhatToShowFilter = fFilter.getWhatToShow();
 			}
 
 			Node top = pos;
@@ -292,7 +293,7 @@ namespace org.apache.xml.serializer.dom3
 
 				Node nextNode = null;
 
-				nextNode = pos.FirstChild;
+				nextNode = pos.getFirstChild();
 
 				while (null == nextNode)
 				{
@@ -303,11 +304,11 @@ namespace org.apache.xml.serializer.dom3
 						break;
 					}
 
-					nextNode = pos.NextSibling;
+					nextNode = pos.getNextSibling();
 
 					if (null == nextNode)
 					{
-						pos = pos.ParentNode;
+						pos = pos.getParentNode();
 
 						if ((null == pos) || (top.Equals(pos)))
 						{
@@ -340,7 +341,7 @@ namespace org.apache.xml.serializer.dom3
 		/// <param name="top"> Node in the tree where to end traversal
 		/// </param>
 		/// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void traverse(org.w3c.dom.Node pos, org.w3c.dom.Node top) throws org.xml.sax.SAXException
 		public void traverse(Node pos, Node top)
 		{
@@ -348,17 +349,17 @@ namespace org.apache.xml.serializer.dom3
 			this.fSerializer.startDocument();
 
 			// Determine if the Node is a DOM Level 3 Core Node.
-			if (pos.NodeType != Node.DOCUMENT_NODE)
+			if (pos.getNodeType() != Node.DOCUMENT_NODE)
 			{
-				Document ownerDoc = pos.OwnerDocument;
-				if (ownerDoc != null && ownerDoc.Implementation.hasFeature("Core", "3.0"))
+				Document ownerDoc = pos.getOwnerDocument();
+				if (ownerDoc != null && ownerDoc.getImplementation().hasFeature("Core", "3.0"))
 				{
 					fIsLevel3DOM = true;
 				}
 			}
 			else
 			{
-				if (((Document) pos).Implementation.hasFeature("Core", "3.0"))
+				if (((Document) pos).getImplementation().hasFeature("Core", "3.0"))
 				{
 					fIsLevel3DOM = true;
 				}
@@ -371,7 +372,7 @@ namespace org.apache.xml.serializer.dom3
 
 			if (fFilter != null)
 			{
-				fWhatToShowFilter = fFilter.WhatToShow;
+				fWhatToShowFilter = fFilter.getWhatToShow();
 			}
 
 			while (null != pos)
@@ -380,7 +381,7 @@ namespace org.apache.xml.serializer.dom3
 
 				Node nextNode = null;
 
-				nextNode = pos.FirstChild;
+				nextNode = pos.getFirstChild();
 
 				while (null == nextNode)
 				{
@@ -391,11 +392,11 @@ namespace org.apache.xml.serializer.dom3
 						break;
 					}
 
-					nextNode = pos.NextSibling;
+					nextNode = pos.getNextSibling();
 
 					if (null == nextNode)
 					{
-						pos = pos.ParentNode;
+						pos = pos.getParentNode();
 
 						if ((null == pos) || ((null != top) && top.Equals(pos)))
 						{
@@ -414,7 +415,7 @@ namespace org.apache.xml.serializer.dom3
 		/// <summary>
 		/// Optimized dispatch of characters.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private final void dispatachChars(org.w3c.dom.Node node) throws org.xml.sax.SAXException
 		private void dispatachChars(Node node)
 		{
@@ -424,7 +425,7 @@ namespace org.apache.xml.serializer.dom3
 			}
 			else
 			{
-				string data = ((Text) node).Data;
+				string data = ((Text) node).getData();
 				this.fSerializer.characters(data.ToCharArray(), 0, data.Length);
 			}
 		}
@@ -435,25 +436,25 @@ namespace org.apache.xml.serializer.dom3
 		/// <param name="node"> Node to process
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void startNode(org.w3c.dom.Node node) throws org.xml.sax.SAXException
 		protected internal void startNode(Node node)
 		{
 			if (node is Locator)
 			{
 				Locator loc = (Locator) node;
-				fLocator.ColumnNumber = loc.ColumnNumber;
-				fLocator.LineNumber = loc.LineNumber;
-				fLocator.PublicId = loc.PublicId;
-				fLocator.SystemId = loc.SystemId;
+				fLocator.setColumnNumber(loc.getColumnNumber());
+				fLocator.setLineNumber(loc.getLineNumber());
+				fLocator.setPublicId(loc.getPublicId());
+				fLocator.setSystemId(loc.getSystemId());
 			}
 			else
 			{
-				fLocator.ColumnNumber = 0;
-				fLocator.LineNumber = 0;
+				fLocator.setColumnNumber(0);
+				fLocator.setLineNumber(0);
 			}
 
-			switch (node.NodeType)
+			switch (node.getNodeType())
 			{
 				case Node.DOCUMENT_TYPE_NODE :
 					serializeDocType((DocumentType) node, true);
@@ -482,7 +483,6 @@ namespace org.apache.xml.serializer.dom3
 					serializeEntityReference((EntityReference) node, true);
 					break;
 				default :
-			break;
 			}
 		}
 
@@ -493,12 +493,12 @@ namespace org.apache.xml.serializer.dom3
 		/// <param name="node"> Node we just finished processing
 		/// </param>
 		/// <exception cref="org.xml.sax.SAXException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void endNode(org.w3c.dom.Node node) throws org.xml.sax.SAXException
 		protected internal void endNode(Node node)
 		{
 
-			switch (node.NodeType)
+			switch (node.getNodeType())
 			{
 				case Node.DOCUMENT_NODE :
 					break;
@@ -514,7 +514,6 @@ namespace org.apache.xml.serializer.dom3
 					serializeEntityReference((EntityReference) node, false);
 					break;
 				default :
-			break;
 			}
 		}
 
@@ -539,7 +538,6 @@ namespace org.apache.xml.serializer.dom3
 					case NodeFilter.FILTER_SKIP :
 						return false; // skip the node
 					default : // fall through..
-				break;
 				}
 			}
 			return true;
@@ -550,16 +548,16 @@ namespace org.apache.xml.serializer.dom3
 		/// </summary>
 		/// <param name="node"> The Docuemnt Type Node to serialize </param>
 		/// <param name="bStart"> Invoked at the start or end of node.  Default true.  </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void serializeDocType(org.w3c.dom.DocumentType node, boolean bStart) throws org.xml.sax.SAXException
 		protected internal void serializeDocType(DocumentType node, bool bStart)
 		{
 			// The DocType and internalSubset can not be modified in DOM and is
 			// considered to be well-formed as the outcome of successful parsing.
-			string docTypeName = node.NodeName;
-			string publicId = node.PublicId;
-			string systemId = node.SystemId;
-			string internalSubset = node.InternalSubset;
+			string docTypeName = node.getNodeName();
+			string publicId = node.getPublicId();
+			string systemId = node.getSystemId();
+			string internalSubset = node.getInternalSubset();
 
 			//DocumentType nodes are never passed to the filter
 
@@ -641,14 +639,14 @@ namespace org.apache.xml.serializer.dom3
 		/// Serializes a Comment Node.
 		/// </summary>
 		/// <param name="node"> The Comment Node to serialize </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void serializeComment(org.w3c.dom.Comment node) throws org.xml.sax.SAXException
 		protected internal void serializeComment(Comment node)
 		{
 			// comments=true
 			if ((fFeatures & COMMENTS) != 0)
 			{
-				string data = node.Data;
+				string data = node.getData();
 
 				// well-formed=true
 				if ((fFeatures & WELLFORMED) != 0)
@@ -675,7 +673,7 @@ namespace org.apache.xml.serializer.dom3
 		/// </summary>
 		/// <param name="node"> The Element Node to serialize </param>
 		/// <param name="bStart"> Invoked at the start or end of node.    </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void serializeElement(org.w3c.dom.Element node, boolean bStart) throws org.xml.sax.SAXException
 		protected internal void serializeElement(Element node, bool bStart)
 		{
@@ -712,7 +710,7 @@ namespace org.apache.xml.serializer.dom3
 				}
 
 				// Namespace normalization
-				fSerializer.startElement(node.NamespaceURI, node.LocalName, node.NodeName);
+				fSerializer.startElement(node.getNamespaceURI(), node.getLocalName(), node.getNodeName());
 
 				serializeAttList(node);
 
@@ -727,7 +725,7 @@ namespace org.apache.xml.serializer.dom3
 					return;
 				}
 
-				this.fSerializer.endElement(node.NamespaceURI, node.LocalName, node.NodeName);
+				this.fSerializer.endElement(node.getNamespaceURI(), node.getLocalName(), node.getNodeName());
 				// since endPrefixMapping was not used by SerializationHandler it was removed
 				// for performance reasons.
 
@@ -743,39 +741,39 @@ namespace org.apache.xml.serializer.dom3
 		/// Serializes the Attr Nodes of an Element.
 		/// </summary>
 		/// <param name="node"> The OwnerElement whose Attr Nodes are to be serialized. </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void serializeAttList(org.w3c.dom.Element node) throws org.xml.sax.SAXException
 		protected internal void serializeAttList(Element node)
 		{
-			NamedNodeMap atts = node.Attributes;
-			int nAttrs = atts.Length;
+			NamedNodeMap atts = node.getAttributes();
+			int nAttrs = atts.getLength();
 
 			for (int i = 0; i < nAttrs; i++)
 			{
 				Node attr = atts.item(i);
 
-				string localName = attr.LocalName;
-				string attrName = attr.NodeName;
-				string attrPrefix = attr.Prefix == null ? "" : attr.Prefix;
-				string attrValue = attr.NodeValue;
+				string localName = attr.getLocalName();
+				string attrName = attr.getNodeName();
+				string attrPrefix = attr.getPrefix() == null ? "" : attr.getPrefix();
+				string attrValue = attr.getNodeValue();
 
 				// Determine the Attr's type.
 				string type = null;
 				if (fIsLevel3DOM)
 				{
-					type = ((Attr) attr).SchemaTypeInfo.TypeName;
+					type = ((Attr) attr).getSchemaTypeInfo().getTypeName();
 				}
 				type = string.ReferenceEquals(type, null) ? "CDATA" : type;
 
-				string attrNS = attr.NamespaceURI;
+				string attrNS = attr.getNamespaceURI();
 				if (!string.ReferenceEquals(attrNS, null) && attrNS.Length == 0)
 				{
 					attrNS = null;
 					// we must remove prefix for this attribute
-					attrName = attr.LocalName;
+					attrName = attr.getLocalName();
 				}
 
-				bool isSpecified = ((Attr) attr).Specified;
+				bool isSpecified = ((Attr) attr).getSpecified();
 				bool addAttr = true;
 				bool applyFilter = false;
 				bool xmlnsAttr = attrName.Equals("xmlns") || attrName.StartsWith("xmlns:", StringComparison.Ordinal);
@@ -913,7 +911,7 @@ namespace org.apache.xml.serializer.dom3
 				{
 					// apply the filter for Attributes that are not default attributes
 					// or namespace decl attributes
-					if (fFilter != null && (fFilter.WhatToShow & NodeFilter.SHOW_ATTRIBUTE) != 0)
+					if (fFilter != null && (fFilter.getWhatToShow() & NodeFilter.SHOW_ATTRIBUTE) != 0)
 					{
 
 						if (!xmlnsAttr)
@@ -926,7 +924,6 @@ namespace org.apache.xml.serializer.dom3
 									addAttr = false;
 									break;
 								default : //fall through..
-							break;
 							}
 						}
 					}
@@ -982,12 +979,12 @@ namespace org.apache.xml.serializer.dom3
 		/// Serializes an ProcessingInstruction Node.
 		/// </summary>
 		/// <param name="node"> The ProcessingInstruction Node to serialize </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void serializePI(org.w3c.dom.ProcessingInstruction node) throws org.xml.sax.SAXException
 		protected internal void serializePI(ProcessingInstruction node)
 		{
 			ProcessingInstruction pi = node;
-			string name = pi.NodeName;
+			string name = pi.getNodeName();
 
 			// well-formed=true
 			if ((fFeatures & WELLFORMED) != 0)
@@ -1008,7 +1005,7 @@ namespace org.apache.xml.serializer.dom3
 			}
 			else
 			{
-				this.fSerializer.processingInstruction(name, pi.Data);
+				this.fSerializer.processingInstruction(name, pi.getData());
 			}
 		}
 
@@ -1016,7 +1013,7 @@ namespace org.apache.xml.serializer.dom3
 		/// Serializes an CDATASection Node.
 		/// </summary>
 		/// <param name="node"> The CDATASection Node to serialize </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void serializeCDATASection(org.w3c.dom.CDATASection node) throws org.xml.sax.SAXException
 		protected internal void serializeCDATASection(CDATASection node)
 		{
@@ -1035,7 +1032,7 @@ namespace org.apache.xml.serializer.dom3
 				// cdata-sections=true
 				// ToStream, by default splits cdata-sections. Hence the check
 				// below.
-				string nodeValue = node.NodeValue;
+				string nodeValue = node.getNodeValue();
 				int endIndex = nodeValue.IndexOf("]]>", StringComparison.Ordinal);
 				if ((fFeatures & SPLITCDATA) != 0)
 				{
@@ -1097,7 +1094,7 @@ namespace org.apache.xml.serializer.dom3
 		/// Serializes an Text Node.
 		/// </summary>
 		/// <param name="node"> The Text Node to serialize </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void serializeText(org.w3c.dom.Text node) throws org.xml.sax.SAXException
 		protected internal void serializeText(Text node)
 		{
@@ -1124,7 +1121,7 @@ namespace org.apache.xml.serializer.dom3
 				bool isElementContentWhitespace = false;
 				if (fIsLevel3DOM)
 				{
-					isElementContentWhitespace = node.ElementContentWhitespace;
+					isElementContentWhitespace = node.isElementContentWhitespace();
 				}
 
 				if (isElementContentWhitespace)
@@ -1158,7 +1155,7 @@ namespace org.apache.xml.serializer.dom3
 		/// </summary>
 		/// <param name="node"> The EntityReference Node to serialize </param>
 		/// <param name="bStart"> Inicates if called from start or endNode  </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void serializeEntityReference(org.w3c.dom.EntityReference node, boolean bStart) throws org.xml.sax.SAXException
 		protected internal void serializeEntityReference(EntityReference node, bool bStart)
 		{
@@ -1197,7 +1194,7 @@ namespace org.apache.xml.serializer.dom3
 					// and PI child nodes.  It does so by setting the m_inEntityRef 
 					// in ToStream and using this to decide if a node is to be 
 					// serialized or not.
-					fLexicalHandler.startEntity(eref.NodeName);
+					fLexicalHandler.startEntity(eref.getNodeName());
 				}
 
 			}
@@ -1207,7 +1204,7 @@ namespace org.apache.xml.serializer.dom3
 				// entities=true or false, 
 				if (fLexicalHandler != null)
 				{
-					fLexicalHandler.endEntity(eref.NodeName);
+					fLexicalHandler.endEntity(eref.getNodeName());
 				}
 			}
 		}
@@ -1509,16 +1506,16 @@ namespace org.apache.xml.serializer.dom3
 			bool isNameWF = false;
 			if ((fFeatures & NAMESPACES) != 0)
 			{
-				isNameWF = isValidQName(node.Prefix, node.LocalName, fIsXMLVersion11);
+				isNameWF = isValidQName(node.getPrefix(), node.getLocalName(), fIsXMLVersion11);
 			}
 			else
 			{
-				isNameWF = isXMLName(node.NodeName, fIsXMLVersion11);
+				isNameWF = isXMLName(node.getNodeName(), fIsXMLVersion11);
 			}
 
 			if (!isNameWF)
 			{
-				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_NODE_NAME, new object[] {"Element", node.NodeName});
+				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_NODE_NAME, new object[] {"Element", node.getNodeName()});
 
 				if (fErrorHandler != null)
 				{
@@ -1538,16 +1535,16 @@ namespace org.apache.xml.serializer.dom3
 			bool isNameWF = false;
 			if ((fFeatures & NAMESPACES) != 0)
 			{
-				isNameWF = isValidQName(node.Prefix, node.LocalName, fIsXMLVersion11);
+				isNameWF = isValidQName(node.getPrefix(), node.getLocalName(), fIsXMLVersion11);
 			}
 			else
 			{
-				isNameWF = isXMLName(node.NodeName, fIsXMLVersion11);
+				isNameWF = isXMLName(node.getNodeName(), fIsXMLVersion11);
 			}
 
 			if (!isNameWF)
 			{
-				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_NODE_NAME, new object[] {"Attr", node.NodeName});
+				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_NODE_NAME, new object[] {"Attr", node.getNodeName()});
 
 				if (fErrorHandler != null)
 				{
@@ -1557,10 +1554,10 @@ namespace org.apache.xml.serializer.dom3
 
 			// Check the Attr's node value
 			// WFC: No < in Attribute Values
-			string value = node.NodeValue;
+			string value = node.getNodeValue();
 			if (value.IndexOf('<') >= 0)
 			{
-				string msg = Utils.messages.createMessage(MsgKey.ER_WF_LT_IN_ATTVAL, new object[] {((Attr) node).OwnerElement.NodeName, node.NodeName});
+				string msg = Utils.messages.createMessage(MsgKey.ER_WF_LT_IN_ATTVAL, new object[] {((Attr) node).getOwnerElement().getNodeName(), node.getNodeName()});
 
 				if (fErrorHandler != null)
 				{
@@ -1570,8 +1567,8 @@ namespace org.apache.xml.serializer.dom3
 
 			// we need to loop through the children of attr nodes and check their values for
 			// well-formedness  
-			NodeList children = node.ChildNodes;
-			for (int i = 0; i < children.Length; i++)
+			NodeList children = node.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++)
 			{
 				Node child = children.item(i);
 				// An attribute node with no text or entity ref child for example
@@ -1586,7 +1583,7 @@ namespace org.apache.xml.serializer.dom3
 					// we should probably report an error
 					continue;
 				}
-				switch (child.NodeType)
+				switch (child.getNodeType())
 				{
 					case Node.TEXT_NODE :
 						isTextWellFormed((Text) child);
@@ -1595,7 +1592,6 @@ namespace org.apache.xml.serializer.dom3
 						isEntityReferneceWellFormed((EntityReference) child);
 						break;
 					default :
-				break;
 				}
 			}
 
@@ -1616,9 +1612,9 @@ namespace org.apache.xml.serializer.dom3
 		protected internal void isPIWellFormed(ProcessingInstruction node)
 		{
 			// Is the PI Target a valid XML name
-			if (!isXMLName(node.NodeName, fIsXMLVersion11))
+			if (!isXMLName(node.getNodeName(), fIsXMLVersion11))
 			{
-				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_NODE_NAME, new object[] {"ProcessingInstruction", node.Target});
+				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_NODE_NAME, new object[] {"ProcessingInstruction", node.getTarget()});
 
 				if (fErrorHandler != null)
 				{
@@ -1629,10 +1625,10 @@ namespace org.apache.xml.serializer.dom3
 			// Does the PI Data carry valid XML characters
 
 			// REVISIT: Should we check if the PI DATA contains a ?> ???
-			char? invalidChar = isWFXMLChar(node.Data);
+			char? invalidChar = isWFXMLChar(node.getData());
 			if (invalidChar != null)
 			{
-				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_PI, new object[] {((int)char.GetNumericValue(invalidChar.Value)).ToString("x")});
+				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_PI, new object[] {Convert.ToString((int)char.GetNumericValue(invalidChar.Value), 16)});
 
 				if (fErrorHandler != null)
 				{
@@ -1651,11 +1647,11 @@ namespace org.apache.xml.serializer.dom3
 		protected internal void isCDATASectionWellFormed(CDATASection node)
 		{
 			// Does the data valid XML character data        
-			char? invalidChar = isWFXMLChar(node.Data);
+			char? invalidChar = isWFXMLChar(node.getData());
 			//if (!isWFXMLChar(node.getData(), invalidChar)) {
 			if (invalidChar != null)
 			{
-				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_CDATA, new object[] {((int)char.GetNumericValue(invalidChar.Value)).ToString("x")});
+				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_CDATA, new object[] {Convert.ToString((int)char.GetNumericValue(invalidChar.Value), 16)});
 
 				if (fErrorHandler != null)
 				{
@@ -1672,10 +1668,10 @@ namespace org.apache.xml.serializer.dom3
 		protected internal void isTextWellFormed(Text node)
 		{
 			// Does the data valid XML character data        
-			char? invalidChar = isWFXMLChar(node.Data);
+			char? invalidChar = isWFXMLChar(node.getData());
 			if (invalidChar != null)
 			{
-				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_TEXT, new object[] {((int)char.GetNumericValue(invalidChar.Value)).ToString("x")});
+				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_TEXT, new object[] {Convert.ToString((int)char.GetNumericValue(invalidChar.Value), 16)});
 
 				if (fErrorHandler != null)
 				{
@@ -1695,9 +1691,9 @@ namespace org.apache.xml.serializer.dom3
 		protected internal void isEntityReferneceWellFormed(EntityReference node)
 		{
 			// Is the EntityReference name a valid XML name
-			if (!isXMLName(node.NodeName, fIsXMLVersion11))
+			if (!isXMLName(node.getNodeName(), fIsXMLVersion11))
 			{
-				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_NODE_NAME, new object[] {"EntityReference", node.NodeName});
+				string msg = Utils.messages.createMessage(MsgKey.ER_WF_INVALID_CHARACTER_IN_NODE_NAME, new object[] {"EntityReference", node.getNodeName()});
 
 				if (fErrorHandler != null)
 				{
@@ -1706,33 +1702,33 @@ namespace org.apache.xml.serializer.dom3
 			}
 
 			// determine the parent node
-			Node parent = node.ParentNode;
+			Node parent = node.getParentNode();
 
 			// Traverse the declared entities and check if the nodeName and namespaceURI
 			// of the EntityReference matches an Entity.  If so, check the if the notationName
 			// is not null, if so, report an error.
-			DocumentType docType = node.OwnerDocument.Doctype;
+			DocumentType docType = node.getOwnerDocument().getDoctype();
 			if (docType != null)
 			{
-				NamedNodeMap entities = docType.Entities;
-				for (int i = 0; i < entities.Length; i++)
+				NamedNodeMap entities = docType.getEntities();
+				for (int i = 0; i < entities.getLength(); i++)
 				{
 					Entity ent = (Entity) entities.item(i);
 
-					string nodeName = node.NodeName == null ? "" : node.NodeName;
-					string nodeNamespaceURI = node.NamespaceURI == null ? "" : node.NamespaceURI;
-					string entName = ent.NodeName == null ? "" : ent.NodeName;
-					string entNamespaceURI = ent.NamespaceURI == null ? "" : ent.NamespaceURI;
+					string nodeName = node.getNodeName() == null ? "" : node.getNodeName();
+					string nodeNamespaceURI = node.getNamespaceURI() == null ? "" : node.getNamespaceURI();
+					string entName = ent.getNodeName() == null ? "" : ent.getNodeName();
+					string entNamespaceURI = ent.getNamespaceURI() == null ? "" : ent.getNamespaceURI();
 					// If referenced in Element content
 					// WFC: Parsed Entity
-					if (parent.NodeType == Node.ELEMENT_NODE)
+					if (parent.getNodeType() == Node.ELEMENT_NODE)
 					{
 						if (entNamespaceURI.Equals(nodeNamespaceURI) && entName.Equals(nodeName))
 						{
 
-							if (ent.NotationName != null)
+							if (ent.getNotationName() != null)
 							{
-								string msg = Utils.messages.createMessage(MsgKey.ER_WF_REF_TO_UNPARSED_ENT, new object[] {node.NodeName});
+								string msg = Utils.messages.createMessage(MsgKey.ER_WF_REF_TO_UNPARSED_ENT, new object[] {node.getNodeName()});
 
 								if (fErrorHandler != null)
 								{
@@ -1744,14 +1740,14 @@ namespace org.apache.xml.serializer.dom3
 
 					// If referenced in an Attr value
 					// WFC: No External Entity References
-					if (parent.NodeType == Node.ATTRIBUTE_NODE)
+					if (parent.getNodeType() == Node.ATTRIBUTE_NODE)
 					{
 						if (entNamespaceURI.Equals(nodeNamespaceURI) && entName.Equals(nodeName))
 						{
 
-							if (ent.PublicId != null || ent.SystemId != null || ent.NotationName != null)
+							if (ent.getPublicId() != null || ent.getSystemId() != null || ent.getNotationName() != null)
 							{
-								string msg = Utils.messages.createMessage(MsgKey.ER_WF_REF_TO_EXTERNAL_ENT, new object[] {node.NodeName});
+								string msg = Utils.messages.createMessage(MsgKey.ER_WF_REF_TO_EXTERNAL_ENT, new object[] {node.getNodeName()});
 
 								if (fErrorHandler != null)
 								{
@@ -1775,19 +1771,19 @@ namespace org.apache.xml.serializer.dom3
 		protected internal void checkUnboundPrefixInEntRef(Node node)
 		{
 			Node child, next;
-			for (child = node.FirstChild; child != null; child = next)
+			for (child = node.getFirstChild(); child != null; child = next)
 			{
-				next = child.NextSibling;
+				next = child.getNextSibling();
 
-				if (child.NodeType == Node.ELEMENT_NODE)
+				if (child.getNodeType() == Node.ELEMENT_NODE)
 				{
 
 					//If a NamespaceURI is not declared for the current
 					//node's prefix, raise a fatal error.
-					string prefix = child.Prefix;
+					string prefix = child.getPrefix();
 					if (!string.ReferenceEquals(prefix, null) && string.ReferenceEquals(fNSBinder.getURI(prefix), null))
 					{
-						string msg = Utils.messages.createMessage(MsgKey.ER_ELEM_UNBOUND_PREFIX_IN_ENTREF, new object[] {node.NodeName, child.NodeName, prefix});
+						string msg = Utils.messages.createMessage(MsgKey.ER_ELEM_UNBOUND_PREFIX_IN_ENTREF, new object[] {node.getNodeName(), child.getNodeName(), prefix});
 
 						if (fErrorHandler != null)
 						{
@@ -1795,14 +1791,14 @@ namespace org.apache.xml.serializer.dom3
 						}
 					}
 
-					NamedNodeMap attrs = child.Attributes;
+					NamedNodeMap attrs = child.getAttributes();
 
-					for (int i = 0; i < attrs.Length; i++)
+					for (int i = 0; i < attrs.getLength(); i++)
 					{
-						string attrPrefix = attrs.item(i).Prefix;
+						string attrPrefix = attrs.item(i).getPrefix();
 						if (!string.ReferenceEquals(attrPrefix, null) && string.ReferenceEquals(fNSBinder.getURI(attrPrefix), null))
 						{
-							string msg = Utils.messages.createMessage(MsgKey.ER_ATTR_UNBOUND_PREFIX_IN_ENTREF, new object[] {node.NodeName, child.NodeName, attrs.item(i)});
+							string msg = Utils.messages.createMessage(MsgKey.ER_ATTR_UNBOUND_PREFIX_IN_ENTREF, new object[] {node.getNodeName(), child.getNodeName(), attrs.item(i)});
 
 							if (fErrorHandler != null)
 							{
@@ -1828,17 +1824,17 @@ namespace org.apache.xml.serializer.dom3
 		/// <param name="Node">, The element node, whose namespace declarations are to be recorded </param>
 		protected internal void recordLocalNSDecl(Node node)
 		{
-			NamedNodeMap atts = ((Element) node).Attributes;
-			int length = atts.Length;
+			NamedNodeMap atts = ((Element) node).getAttributes();
+			int length = atts.getLength();
 
 			for (int i = 0; i < length; i++)
 			{
 				Node attr = atts.item(i);
 
-				string localName = attr.LocalName;
-				string attrPrefix = attr.Prefix;
-				string attrValue = attr.NodeValue;
-				string attrNS = attr.NamespaceURI;
+				string localName = attr.getLocalName();
+				string attrPrefix = attr.getPrefix();
+				string attrValue = attr.getNodeValue();
+				string attrNS = attr.getNamespaceURI();
 
 				localName = string.ReferenceEquals(localName, null) || XMLNS_PREFIX.Equals(localName) ? "" : localName;
 				attrPrefix = string.ReferenceEquals(attrPrefix, null) ? "" : attrPrefix;
@@ -1889,13 +1885,13 @@ namespace org.apache.xml.serializer.dom3
 		/// Fixes an element's namespace
 		/// </summary>
 		/// <param name="Node">, The element node, whose namespace is to be fixed </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void fixupElementNS(org.w3c.dom.Node node) throws org.xml.sax.SAXException
 		protected internal void fixupElementNS(Node node)
 		{
-			string namespaceURI = ((Element) node).NamespaceURI;
-			string prefix = ((Element) node).Prefix;
-			string localName = ((Element) node).LocalName;
+			string namespaceURI = ((Element) node).getNamespaceURI();
+			string prefix = ((Element) node).getPrefix();
+			string localName = ((Element) node).getLocalName();
 
 			if (!string.ReferenceEquals(namespaceURI, null))
 			{
@@ -1941,7 +1937,7 @@ namespace org.apache.xml.serializer.dom3
 				if (string.ReferenceEquals(localName, null) || "".Equals(localName))
 				{
 					//  DOM Level 1 node!
-					string msg = Utils.messages.createMessage(MsgKey.ER_NULL_LOCAL_ELEMENT_NAME, new object[] {node.NodeName});
+					string msg = Utils.messages.createMessage(MsgKey.ER_NULL_LOCAL_ELEMENT_NAME, new object[] {node.getNodeName()});
 
 					if (fErrorHandler != null)
 					{
@@ -2057,7 +2053,7 @@ namespace org.apache.xml.serializer.dom3
 				object iobj = s_propKeys[key];
 				if (iobj != null)
 				{
-					if (iobj is int?)
+					if (iobj is Integer)
 					{
 						// Dealing with a property that has a simple bit value that
 						// we need to set
@@ -2072,7 +2068,7 @@ namespace org.apache.xml.serializer.dom3
 						// well-formed
 						// discard-default-content
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int BITFLAG = ((Nullable<int>) iobj).intValue();
+//ORIGINAL LINE: final int BITFLAG = ((System.Nullable<int>) iobj).intValue();
 						int BITFLAG = ((int?) iobj).Value;
 						if ((properties.getProperty(key).EndsWith("yes")))
 						{

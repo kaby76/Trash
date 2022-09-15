@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
-
 	/// <summary>
 	/// The class ExtendedType represents an extended type object used by
 	/// ExpandedNameTable.

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -26,7 +25,8 @@ namespace org.apache.xalan.xsltc.trax
 {
 
 
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using Translet = org.apache.xalan.xsltc.Translet;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
 	using AbstractTranslet = org.apache.xalan.xsltc.runtime.AbstractTranslet;
 	using Hashtable = org.apache.xalan.xsltc.runtime.Hashtable;
@@ -119,9 +119,7 @@ namespace org.apache.xalan.xsltc.trax
 			/// <summary>
 			/// Access to final protected superclass member from outer class.
 			/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: Class defineClass(final byte[] b)
-		internal Type defineClass(sbyte[] b)
+		internal Type defineClass(in sbyte[] b)
 		{
 				return defineClass(null, b, 0, b.Length);
 		}
@@ -172,8 +170,8 @@ namespace org.apache.xalan.xsltc.trax
 		///  if yes then we need to deserialize the URIResolver
 		///  Fix for bugzilla bug 22438
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: private void readObject(java.io.ObjectInputStream is) throws java.io.IOException, ClassNotFoundException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: private void readObject(java.io.ObjectInputStream is) throws IOException, ClassNotFoundException
 		private void readObject(ObjectInputStream @is)
 		{
 		@is.defaultReadObject();
@@ -191,8 +189,8 @@ namespace org.apache.xalan.xsltc.trax
 		///  If the user defined class implements URIResolver and Serializable
 		///  then we want it to get serialized
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: private void writeObject(java.io.ObjectOutputStream os) throws java.io.IOException, ClassNotFoundException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: private void writeObject(java.io.ObjectOutputStream os) throws IOException, ClassNotFoundException
 		private void writeObject(ObjectOutputStream os)
 		{
 			os.defaultWriteObject();
@@ -321,7 +319,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Defines the translet class and auxiliary classes.
 		/// Returns a reference to the Class object that defines the main class
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void defineTransletClasses() throws javax.xml.transform.TransformerConfigurationException
 		private void defineTransletClasses()
 		{
@@ -393,7 +391,7 @@ namespace org.apache.xalan.xsltc.trax
 				this.outerInstance = outerInstance;
 			}
 
-			public virtual object run()
+			public object run()
 			{
 				return new TransletClassLoader(ObjectFactory.findClassLoader());
 			}
@@ -404,7 +402,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// wrapped inside this Template. The translet instance will later
 		/// be wrapped inside a Transformer object.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private org.apache.xalan.xsltc.Translet getTransletInstance() throws javax.xml.transform.TransformerConfigurationException
 		private Translet TransletInstance
 		{
@@ -424,7 +422,7 @@ namespace org.apache.xalan.xsltc.trax
     
 				// The translet needs to keep a reference to all its auxiliary 
 				// class to prevent the GC from collecting them
-				AbstractTranslet translet = (AbstractTranslet) _class[_transletIndex].newInstance();
+				AbstractTranslet translet = (AbstractTranslet) System.Activator.CreateInstance(_class[_transletIndex]);
 					translet.postInitialization();
 				translet.Templates = this;
 				if (_auxClasses != null)
@@ -451,7 +449,7 @@ namespace org.apache.xalan.xsltc.trax
 		/// Implements JAXP's Templates.newTransformer()
 		/// </summary>
 		/// <exception cref="TransformerConfigurationException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public synchronized javax.xml.transform.Transformer newTransformer() throws javax.xml.transform.TransformerConfigurationException
 		public Transformer newTransformer()
 		{
@@ -488,7 +486,7 @@ namespace org.apache.xalan.xsltc.trax
 				{
 				try
 				{
-					return newTransformer().OutputProperties;
+					return newTransformer().getOutputProperties();
 				}
 				catch (TransformerConfigurationException)
 				{

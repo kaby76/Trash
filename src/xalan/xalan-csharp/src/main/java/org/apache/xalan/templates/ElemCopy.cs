@@ -39,8 +39,8 @@ namespace org.apache.xalan.templates
 	///   use-attribute-sets %qnames; #IMPLIED
 	/// >
 	/// </pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#copying">copying in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.copying">copying in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemCopy : ElemUse
 	{
@@ -48,8 +48,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an int constant identifying the type of element. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants
-	  /// </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"
+	  ////>
 	  /// <returns> The token ID for this element  </returns>
 	  public override int XSLToken
 	  {
@@ -89,7 +89,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -102,7 +102,7 @@ namespace org.apache.xalan.templates
 		  DTM dtm = xctxt.getDTM(sourceNode);
 		  short nodeType = dtm.getNodeType(sourceNode);
 
-		  if ((org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE != nodeType) && (org.apache.xml.dtm.DTM_Fields.DOCUMENT_FRAGMENT_NODE != nodeType))
+		  if ((DTM.DOCUMENT_NODE != nodeType) && (DTM.DOCUMENT_FRAGMENT_NODE != nodeType))
 		  {
 			SerializationHandler rthandler = transformer.SerializationHandler;
 
@@ -114,7 +114,7 @@ namespace org.apache.xalan.templates
 			// TODO: Process the use-attribute-sets stuff
 			ClonerToResultTree.cloneToResultTree(sourceNode, nodeType, dtm, rthandler, false);
 
-			if (org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE == nodeType)
+			if (DTM.ELEMENT_NODE == nodeType)
 			{
 			  base.execute(transformer);
 			  SerializerUtils.processNSDecls(rthandler, sourceNode, nodeType, dtm);

@@ -25,7 +25,6 @@ namespace org.apache.xalan.templates
 {
 
 
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using QName = org.apache.xml.utils.QName;
 	using StringVector = org.apache.xml.utils.StringVector;
@@ -72,7 +71,7 @@ namespace org.apache.xalan.templates
 	/// <!ATTLIST xsl:transform %top-level-atts;>
 	/// 
 	/// </para></pre> </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Stylesheet-Structure">section-Stylesheet-Structure in XSLT Specification</a> </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Stylesheet-Structure">section-Stylesheet-Structure in XSLT Specification</a>"/>
 	[Serializable]
 	public class Stylesheet : ElemTemplateElement // , Document
 	{
@@ -97,9 +96,12 @@ namespace org.apache.xalan.templates
 	  /// on a Stylesheet object, which will return itself.
 	  /// </summary>
 	  /// <returns> The owning stylesheet, itself. </returns>
-	  public override Stylesheet getStylesheet()
+	  public override Stylesheet Stylesheet
 	  {
-		return this;
+		  get
+		  {
+			return this;
+		  }
 	  }
 
 	  /// <summary>
@@ -139,8 +141,8 @@ namespace org.apache.xalan.templates
 	  /// </param>
 	  /// <exception cref="IOException"> </exception>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: private void readObject(java.io.ObjectInputStream stream) throws java.io.IOException, javax.xml.transform.TransformerException
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: private void readObject(java.io.ObjectInputStream stream) throws IOException, javax.xml.transform.TransformerException
 	  private void readObject(ObjectInputStream stream)
 	  {
 
@@ -164,7 +166,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="stream"> The output stream to write out
 	  /// </param>
 	  /// <exception cref="IOException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void writeObject(java.io.ObjectOutputStream stream) throws java.io.IOException
 	  private void writeObject(ObjectOutputStream stream)
 	  {
@@ -185,8 +187,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "xmlns:xsl" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#xslt-namespace">xslt-namespace in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.xslt-namespace">xslt-namespace in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> The value to be set for the "xmlns:xsl" property. </param>
 	  public virtual string XmlnsXsl
 	  {
@@ -200,6 +202,10 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "xmlns:xsl" property. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.xslt-namespace">xslt-namespace in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// The "extension-element-prefixes" property, actually contains URIs.
@@ -209,8 +215,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "extension-element-prefixes" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#extension-element">extension-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.extension-element">extension-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> The value to be set for the "extension-element-prefixes" 
 	  /// property: a vector of extension element URIs. </param>
 	  public virtual StringVector ExtensionElementPrefixes
@@ -223,14 +229,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get and "extension-element-prefix" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#extension-element">extension-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.extension-element">extension-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of extension element URI in list 
 	  /// </param>
 	  /// <returns> The extension element URI at the given index
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getExtensionElementPrefix(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual string getExtensionElementPrefix(int i)
 	  {
@@ -245,8 +251,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "extension-element-prefixes" Strings. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#extension-element">extension-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.extension-element">extension-element in XSLT Specification</a>"
+	  ////>
 	  /// <returns> Number of URIs in the list </returns>
 	  public virtual int ExtensionElementPrefixCount
 	  {
@@ -258,8 +264,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Find out if this contains a given "extension-element-prefix" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#extension-element">extension-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.extension-element">extension-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="uri"> URI of extension element to look for
 	  /// </param>
 	  /// <returns> True if the given URI was found in the list  </returns>
@@ -288,8 +294,8 @@ namespace org.apache.xalan.templates
 	  /// xsl:exclude-result-prefixes attribute; a subtree rooted
 	  /// at an xsl:stylesheet element does not include any stylesheets
 	  /// imported or included by children of that xsl:stylesheet element. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> A StringVector of prefixes to exclude  </param>
 	  public virtual StringVector ExcludeResultPrefixes
 	  {
@@ -307,14 +313,14 @@ namespace org.apache.xalan.templates
 	  /// xsl:exclude-result-prefixes attribute; a subtree rooted
 	  /// at an xsl:stylesheet element does not include any stylesheets
 	  /// imported or included by children of that xsl:stylesheet element. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of prefix to get in list 
 	  /// </param>
 	  /// <returns> Prefix to be excluded at the given index
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getExcludeResultPrefix(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual string getExcludeResultPrefix(int i)
 	  {
@@ -329,8 +335,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "exclude-result-prefixes" Strings. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"
+	  ////>
 	  /// <returns> The number of prefix strings to be excluded.  </returns>
 	  public virtual int ExcludeResultPrefixCount
 	  {
@@ -343,8 +349,8 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Get whether or not the passed prefix is contained flagged by
 	  /// the "exclude-result-prefixes" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="prefix"> non-null reference to prefix that might be excluded. </param>
 	  /// <param name="uri"> reference to namespace that prefix maps to
 	  /// </param>
@@ -383,8 +389,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "id" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Embedding-Stylesheets">section-Embedding-Stylesheets in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Embedding-Stylesheets">section-Embedding-Stylesheets in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value for the "id" property. </param>
 	  public virtual string Id
 	  {
@@ -398,6 +404,10 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "id" property. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Embedding-Stylesheets">section-Embedding-Stylesheets in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// The "version" property.
@@ -413,8 +423,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "version" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#forwards">forwards in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.forwards">forwards in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Value for the "version" property. </param>
 	  public virtual string Version
 	  {
@@ -441,6 +451,10 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
+	  /// <summary>
+	  /// Get the "version" property. </summary>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.forwards">forwards in XSLT Specification</a>"
+	  ////>
 
 	  /// <summary>
 	  /// The "xsl:import" list.
@@ -450,8 +464,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Add a stylesheet to the "import" list. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#import">import in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.import">import in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Stylesheet to add to the import list </param>
 	  public virtual StylesheetComposed Import
 	  {
@@ -471,14 +485,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get a stylesheet from the "import" list. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#import">import in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.import">import in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of the stylesheet to get
 	  /// </param>
 	  /// <returns> The stylesheet at the given index
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public StylesheetComposed getImport(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual StylesheetComposed getImport(int i)
 	  {
@@ -493,8 +507,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of imported stylesheets. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#import">import in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.import">import in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of imported stylesheets. </returns>
 	  public virtual int ImportCount
 	  {
@@ -512,8 +526,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Add a stylesheet to the "include" list. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#include">include in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.include">include in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> Stylesheet to add to the "include" list   </param>
 	  public virtual Stylesheet Include
 	  {
@@ -531,14 +545,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the stylesheet at the given in index in "include" list </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#include">include in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.include">include in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of stylesheet to get
 	  /// </param>
 	  /// <returns> Stylesheet at the given index
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Stylesheet getInclude(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual Stylesheet getInclude(int i)
 	  {
@@ -553,8 +567,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of included stylesheets. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#import">import in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.import">import in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of included stylesheets. </returns>
 	  public virtual int IncludeCount
 	  {
@@ -566,9 +580,9 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Table of tables of element decimal-format. </summary>
-	  /// <seealso cref= DecimalFormatProperties
-	  /// @serial </seealso>
-	  internal Stack m_DecimalFormatDeclarations;
+	  /// <seealso cref="DecimalFormatProperties"
+	  /// @serial/>
+	  internal System.Collections.Stack m_DecimalFormatDeclarations;
 
 	  /// <summary>
 	  /// Process the xsl:decimal-format element.
@@ -581,7 +595,7 @@ namespace org.apache.xalan.templates
     
 			if (null == m_DecimalFormatDeclarations)
 			{
-			  m_DecimalFormatDeclarations = new Stack();
+			  m_DecimalFormatDeclarations = new System.Collections.Stack();
 			}
     
 			// Elements are pushed in by order of importance
@@ -593,9 +607,9 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Get an "xsl:decimal-format" property.
 	  /// </summary>
-	  /// <seealso cref= DecimalFormatProperties </seealso>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#format-number">format-number in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="DecimalFormatProperties"/>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.format-number">format-number in XSLT Specification</a>"
+	  ////>
 	  /// <param name="name"> The qualified name of the decimal format property. </param>
 	  /// <returns> null if not found, otherwise a DecimalFormatProperties
 	  /// object, from which you can get a DecimalFormatSymbols object. </returns>
@@ -624,15 +638,15 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:decimal-format" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#format-number">format-number in XSLT Specification</a> </seealso>
-	  /// <seealso cref= DecimalFormatProperties
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.format-number">format-number in XSLT Specification</a>"/>
+	  /// <seealso cref="DecimalFormatProperties"
+	  ////>
 	  /// <param name="i"> Index of decimal-format property in stack
 	  /// </param>
 	  /// <returns> The decimal-format property at the given index 
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public DecimalFormatProperties getDecimalFormat(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual DecimalFormatProperties getDecimalFormat(int i)
 	  {
@@ -642,13 +656,14 @@ namespace org.apache.xalan.templates
 		  throw new System.IndexOutOfRangeException();
 		}
 
+//JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
 		return (DecimalFormatProperties) m_DecimalFormatDeclarations.elementAt(i);
 	  }
 
 	  /// <summary>
 	  /// Get the number of xsl:decimal-format declarations. </summary>
-	  /// <seealso cref= DecimalFormatProperties
-	  /// </seealso>
+	  /// <seealso cref="DecimalFormatProperties"
+	  ////>
 	  /// <returns> the number of xsl:decimal-format declarations. </returns>
 	  public virtual int DecimalFormatCount
 	  {
@@ -667,8 +682,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "xsl:strip-space" properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <param name="wsi"> WhiteSpaceInfo element to add to list  </param>
 	  public virtual WhiteSpaceInfo StripSpaces
 	  {
@@ -686,14 +701,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:strip-space" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of WhiteSpaceInfo to get
 	  /// </param>
 	  /// <returns> WhiteSpaceInfo at given index
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public WhiteSpaceInfo getStripSpace(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual WhiteSpaceInfo getStripSpace(int i)
 	  {
@@ -708,8 +723,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "xsl:strip-space" properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of "xsl:strip-space" properties. </returns>
 	  public virtual int StripSpaceCount
 	  {
@@ -728,8 +743,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "xsl:preserve-space" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <param name="wsi"> WhiteSpaceInfo element to add to list </param>
 	  public virtual WhiteSpaceInfo PreserveSpaces
 	  {
@@ -747,14 +762,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get a "xsl:preserve-space" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of WhiteSpaceInfo to get
 	  /// </param>
 	  /// <returns> WhiteSpaceInfo at the given index
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public WhiteSpaceInfo getPreserveSpace(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual WhiteSpaceInfo getPreserveSpace(int i)
 	  {
@@ -769,8 +784,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "xsl:preserve-space" properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#strip">strip in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.strip">strip in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of "xsl:preserve-space" properties. </returns>
 	  public virtual int PreserveSpaceCount
 	  {
@@ -788,8 +803,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "xsl:output" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#output">output in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.output">output in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> non-null reference to the OutputProperties object to be 
 	  ///          added to the collection. </param>
 	  public virtual OutputProperties Output
@@ -807,14 +822,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:output" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#output">output in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.output">output in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of OutputFormatExtended to get
 	  /// </param>
 	  /// <returns> non-null reference to an OutputProperties object.
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public OutputProperties getOutput(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual OutputProperties getOutput(int i)
 	  {
@@ -829,8 +844,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "xsl:output" properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#output">output in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.output">output in XSLT Specification</a>"
+	  ////>
 	  /// <returns> The number of OutputProperties objects contained in this stylesheet. </returns>
 	  public virtual int OutputCount
 	  {
@@ -848,8 +863,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "xsl:key" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#key">key in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.key">key in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> KeyDeclaration element to add to the list of key declarations  </param>
 	  public virtual KeyDeclaration Key
 	  {
@@ -867,14 +882,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:key" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#key">key in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.key">key in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of KeyDeclaration element to get
 	  /// </param>
 	  /// <returns> KeyDeclaration element at given index in list 
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public KeyDeclaration getKey(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual KeyDeclaration getKey(int i)
 	  {
@@ -889,8 +904,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "xsl:key" properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#key">key in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.key">key in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of "xsl:key" properties. </returns>
 	  public virtual int KeyCount
 	  {
@@ -908,8 +923,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "xsl:attribute-set" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#attribute-sets">attribute-sets in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.attribute-sets">attribute-sets in XSLT Specification</a>"
+	  ////>
 	  /// <param name="attrSet"> ElemAttributeSet to add to the list of attribute sets </param>
 	  public virtual ElemAttributeSet AttributeSet
 	  {
@@ -927,14 +942,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:attribute-set" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#attribute-sets">attribute-sets in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.attribute-sets">attribute-sets in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of ElemAttributeSet to get in list
 	  /// </param>
 	  /// <returns> ElemAttributeSet at the given index
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ElemAttributeSet getAttributeSet(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual ElemAttributeSet getAttributeSet(int i)
 	  {
@@ -949,8 +964,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "xsl:attribute-set" properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#attribute-sets">attribute-sets in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.attribute-sets">attribute-sets in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of "xsl:attribute-set" properties. </returns>
 	  public virtual int AttributeSetCount
 	  {
@@ -968,8 +983,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "xsl:variable" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> ElemVariable object to add to list of top level variables </param>
 	  public virtual ElemVariable Variable
 	  {
@@ -987,8 +1002,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:variable" or "xsl:param" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="qname"> non-null reference to the qualified name of the variable.
 	  /// </param>
 	  /// <returns> The ElemVariable with the given name in the list or null </returns>
@@ -1001,11 +1016,11 @@ namespace org.apache.xalan.templates
 
 		  for (int i = 0; i < n; i++)
 		  {
-			ElemVariable @var = (ElemVariable) getVariableOrParam(i);
+			ElemVariable var = (ElemVariable) getVariableOrParam(i);
 
-			if (@var.Name.Equals(qname))
+			if (var.Name.Equals(qname))
 			{
-			  return @var;
+			  return var;
 			}
 		  }
 		}
@@ -1016,8 +1031,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:variable" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="qname"> Qualified name of the xsl:variable to get 
 	  /// </param>
 	  /// <returns> reference to the variable named by qname, or null if not found. </returns>
@@ -1030,10 +1045,10 @@ namespace org.apache.xalan.templates
 
 		  for (int i = 0; i < n; i++)
 		  {
-			ElemVariable @var = getVariableOrParam(i);
-			if ((@var.XSLToken == Constants.ELEMNAME_VARIABLE) && (@var.Name.Equals(qname)))
+			ElemVariable var = getVariableOrParam(i);
+			if ((var.XSLToken == Constants.ELEMNAME_VARIABLE) && (var.Name.Equals(qname)))
 			{
-			  return @var;
+			  return var;
 			}
 		  }
 		}
@@ -1043,14 +1058,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:variable" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of variable to get in the list
 	  /// </param>
 	  /// <returns> ElemVariable at the given index in the list 
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ElemVariable getVariableOrParam(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual ElemVariable getVariableOrParam(int i)
 	  {
@@ -1065,8 +1080,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "xsl:variable" properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of "xsl:variable" properties. </returns>
 	  public virtual int VariableOrParamCount
 	  {
@@ -1078,8 +1093,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set an "xsl:param" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> A non-null ElemParam reference. </param>
 	  public virtual ElemParam Param
 	  {
@@ -1091,8 +1106,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:param" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <param name="qname"> non-null reference to qualified name of the parameter.
 	  /// </param>
 	  /// <returns> ElemParam with the given name in the list or null </returns>
@@ -1105,10 +1120,10 @@ namespace org.apache.xalan.templates
 
 		  for (int i = 0; i < n; i++)
 		  {
-			ElemVariable @var = getVariableOrParam(i);
-			if ((@var.XSLToken == Constants.ELEMNAME_PARAMVARIABLE) && (@var.Name.Equals(qname)))
+			ElemVariable var = getVariableOrParam(i);
+			if ((var.XSLToken == Constants.ELEMNAME_PARAMVARIABLE) && (var.Name.Equals(qname)))
 			{
-			  return (ElemParam)@var;
+			  return (ElemParam)var;
 			}
 		  }
 		}
@@ -1124,8 +1139,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set an "xsl:template" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>"
+	  ////>
 	  /// <param name="v"> ElemTemplate to add to list of templates </param>
 	  public virtual ElemTemplate Template
 	  {
@@ -1144,14 +1159,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:template" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of ElemTemplate in the list to get
 	  /// </param>
 	  /// <returns> ElemTemplate at the given index in the list
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public ElemTemplate getTemplate(int i) throws javax.xml.transform.TransformerException
 	  public virtual ElemTemplate getTemplate(int i)
 	  {
@@ -1166,8 +1181,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "xsl:template" properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.section-Defining-Template-Rules">section-Defining-Template-Rules in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of "xsl:template" properties. </returns>
 	  public virtual int TemplateCount
 	  {
@@ -1185,8 +1200,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set the "xsl:namespace-alias" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="na"> NamespaceAlias elemeent to add to the list </param>
 	  public virtual NamespaceAlias NamespaceAlias
 	  {
@@ -1204,14 +1219,14 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get an "xsl:namespace-alias" property. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.literal-result-element">literal-result-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="i"> Index of NamespaceAlias element to get from the list 
 	  /// </param>
 	  /// <returns> NamespaceAlias element at the given index in the list
 	  /// </returns>
 	  /// <exception cref="ArrayIndexOutOfBoundsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public NamespaceAlias getNamespaceAlias(int i) throws ArrayIndexOutOfBoundsException
 	  public virtual NamespaceAlias getNamespaceAlias(int i)
 	  {
@@ -1226,8 +1241,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get the number of "xsl:namespace-alias" properties. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#top-level-variables">top-level-variables in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.top-level-variables">top-level-variables in XSLT Specification</a>"
+	  ////>
 	  /// <returns> the number of "xsl:namespace-alias" properties. </returns>
 	  public virtual int NamespaceAliasCount
 	  {
@@ -1245,8 +1260,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Set found a non-xslt element. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#stylesheet-element">stylesheet-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.stylesheet-element">stylesheet-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="name"> Qualified name of the element </param>
 	  /// <param name="obj"> The element object </param>
 	  public virtual void setNonXslTopLevel(QName name, object obj)
@@ -1262,8 +1277,8 @@ namespace org.apache.xalan.templates
 
 	  /// <summary>
 	  /// Get a non-xslt element. </summary>
-	  /// <seealso cref= <a href="http://www.w3.org/TR/xslt#stylesheet-element">stylesheet-element in XSLT Specification</a>
-	  /// </seealso>
+	  /// <seealso cref="<a href="http://www.w3.org/TR/xslt.stylesheet-element">stylesheet-element in XSLT Specification</a>"
+	  ////>
 	  /// <param name="name"> Qualified name of the element to get
 	  /// </param>
 	  /// <returns> The object associate with the given name  </returns>
@@ -1320,8 +1335,8 @@ namespace org.apache.xalan.templates
     
 			if (null != value)
 			{
-			  m_publicId = value.PublicId;
-			  m_systemId = value.SystemId;
+			  m_publicId = value.getPublicId();
+			  m_systemId = value.getSystemId();
     
 			  if (null != m_systemId)
 			  {
@@ -1420,7 +1435,7 @@ namespace org.apache.xalan.templates
 	  {
 		  get
 		  {
-			return org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE;
+			return DTM.DOCUMENT_NODE;
 		  }
 	  }
 
@@ -1429,7 +1444,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> An integer representation of the element, defined in the
 	  ///     Constants class. </returns>
-	  /// <seealso cref= org.apache.xalan.templates.Constants </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"/>
 	  public override int XSLToken
 	  {
 		  get
@@ -1461,7 +1476,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="i"> Index of template to be replaced
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void replaceTemplate(ElemTemplate v, int i) throws javax.xml.transform.TransformerException
 	  public virtual void replaceTemplate(ElemTemplate v, int i)
 	  {
@@ -1558,10 +1573,10 @@ namespace org.apache.xalan.templates
 		  s = VariableOrParamCount;
 		  for (int j = 0; j < s; j++)
 		  {
-			  ElemVariable @var = getVariableOrParam(j);
-			if (visitor.visitTopLevelVariableOrParamDecl(@var))
+			  ElemVariable var = getVariableOrParam(j);
+			if (visitor.visitTopLevelVariableOrParamDecl(var))
 			{
-			  @var.callChildVisitors(visitor);
+			  var.callChildVisitors(visitor);
 			}
 		  }
 

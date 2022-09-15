@@ -20,7 +20,6 @@
  */
 namespace org.apache.xpath
 {
-
 	/// <summary>
 	/// A class that implements this interface will call a XPathVisitor 
 	/// for itself and members within it's heararchy.  If the XPathVisitor's 

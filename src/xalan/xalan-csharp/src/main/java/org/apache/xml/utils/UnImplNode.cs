@@ -22,7 +22,6 @@
  */
 namespace org.apache.xml.utils
 {
-
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
 	using XMLMessages = org.apache.xml.res.XMLMessages;
 
@@ -95,7 +94,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node appendChild(org.w3c.dom.Node newChild) throws org.w3c.dom.DOMException
 	  public virtual Node appendChild(Node newChild)
 	  {
@@ -310,7 +309,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Attr removeAttributeNode(org.w3c.dom.Attr oldAttr) throws org.w3c.dom.DOMException
 	  public virtual Attr removeAttributeNode(Attr oldAttr)
 	  {
@@ -328,7 +327,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Attr setAttributeNode(org.w3c.dom.Attr newAttr) throws org.w3c.dom.DOMException
 	  public virtual Attr setAttributeNode(Attr newAttr)
 	  {
@@ -390,7 +389,7 @@ namespace org.apache.xml.utils
 	  /// <param name="name"> Attribute node name to remove from list of attributes
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void removeAttribute(String name) throws org.w3c.dom.DOMException
 	  public virtual void removeAttribute(string name)
 	  {
@@ -404,7 +403,7 @@ namespace org.apache.xml.utils
 	  /// <param name="value"> Value of attribute
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setAttribute(String name, String value) throws org.w3c.dom.DOMException
 	  public virtual void setAttribute(string name, string value)
 	  {
@@ -460,7 +459,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Attr setAttributeNodeNS(org.w3c.dom.Attr newAttr) throws org.w3c.dom.DOMException
 	  public virtual Attr setAttributeNodeNS(Attr newAttr)
 	  {
@@ -492,7 +491,7 @@ namespace org.apache.xml.utils
 	  /// <param name="localName"> Local part of qualified name of attribute node to remove
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void removeAttributeNS(String namespaceURI, String localName) throws org.w3c.dom.DOMException
 	  public virtual void removeAttributeNS(string namespaceURI, string localName)
 	  {
@@ -507,7 +506,7 @@ namespace org.apache.xml.utils
 	  /// <param name="value"> value of attribute
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setAttributeNS(String namespaceURI, String qualifiedName, String value) throws org.w3c.dom.DOMException
 	  public virtual void setAttributeNS(string namespaceURI, string qualifiedName, string value)
 	  {
@@ -564,7 +563,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getNodeValue() throws org.w3c.dom.DOMException
 	  public virtual string NodeValue
 	  {
@@ -603,7 +602,7 @@ namespace org.apache.xml.utils
 	  /// <param name="value"> Value to set this node to
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setValue(String value) throws org.w3c.dom.DOMException
 	  public virtual string Value
 	  {
@@ -677,7 +676,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node insertBefore(org.w3c.dom.Node newChild, org.w3c.dom.Node refChild) throws org.w3c.dom.DOMException
 	  public virtual Node insertBefore(Node newChild, Node refChild)
 	  {
@@ -696,7 +695,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node replaceChild(org.w3c.dom.Node newChild, org.w3c.dom.Node oldChild) throws org.w3c.dom.DOMException
 	  public virtual Node replaceChild(Node newChild, Node oldChild)
 	  {
@@ -714,7 +713,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node removeChild(org.w3c.dom.Node oldChild) throws org.w3c.dom.DOMException
 	  public virtual Node removeChild(Node oldChild)
 	  {
@@ -845,7 +844,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Element createElement(String tagName) throws org.w3c.dom.DOMException
 	  public virtual Element createElement(string tagName)
 	  {
@@ -903,7 +902,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.CDATASection createCDATASection(String data) throws org.w3c.dom.DOMException
 	  public virtual CDATASection createCDATASection(string data)
 	  {
@@ -922,7 +921,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.ProcessingInstruction createProcessingInstruction(String target, String data) throws org.w3c.dom.DOMException
 	  public virtual ProcessingInstruction createProcessingInstruction(string target, string data)
 	  {
@@ -940,7 +939,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Attr createAttribute(String name) throws org.w3c.dom.DOMException
 	  public virtual Attr createAttribute(string name)
 	  {
@@ -958,7 +957,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.EntityReference createEntityReference(String name) throws org.w3c.dom.DOMException
 	  public virtual EntityReference createEntityReference(string name)
 	  {
@@ -980,7 +979,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node importNode(org.w3c.dom.Node importedNode, boolean deep) throws org.w3c.dom.DOMException
 	  public virtual Node importNode(Node importedNode, bool deep)
 	  {
@@ -999,7 +998,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Element createElementNS(String namespaceURI, String qualifiedName) throws org.w3c.dom.DOMException
 	  public virtual Element createElementNS(string namespaceURI, string qualifiedName)
 	  {
@@ -1018,7 +1017,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Attr createAttributeNS(String namespaceURI, String qualifiedName) throws org.w3c.dom.DOMException
 	  public virtual Attr createAttributeNS(string namespaceURI, string qualifiedName)
 	  {
@@ -1049,7 +1048,7 @@ namespace org.apache.xml.utils
 	  /// <param name="data"> data to set for this node
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setData(String data) throws org.w3c.dom.DOMException
 	  public virtual string Data
 	  {
@@ -1068,7 +1067,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String substringData(int offset, int count) throws org.w3c.dom.DOMException
 	  public virtual string substringData(int offset, int count)
 	  {
@@ -1084,7 +1083,7 @@ namespace org.apache.xml.utils
 	  /// <param name="arg"> String data to append
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void appendData(String arg) throws org.w3c.dom.DOMException
 	  public virtual void appendData(string arg)
 	  {
@@ -1098,7 +1097,7 @@ namespace org.apache.xml.utils
 	  /// NEEDSDOC <param name="arg">
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void insertData(int offset, String arg) throws org.w3c.dom.DOMException
 	  public virtual void insertData(int offset, string arg)
 	  {
@@ -1112,7 +1111,7 @@ namespace org.apache.xml.utils
 	  /// <param name="count"> The length of the substring to delete.
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void deleteData(int offset, int count) throws org.w3c.dom.DOMException
 	  public virtual void deleteData(int offset, int count)
 	  {
@@ -1127,7 +1126,7 @@ namespace org.apache.xml.utils
 	  /// <param name="arg"> substring to replace with
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void replaceData(int offset, int count, String arg) throws org.w3c.dom.DOMException
 	  public virtual void replaceData(int offset, int count, string arg)
 	  {
@@ -1142,7 +1141,7 @@ namespace org.apache.xml.utils
 	  /// <returns> null, unimplemented
 	  /// </returns>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Text splitText(int offset) throws org.w3c.dom.DOMException
 	  public virtual Text splitText(int offset)
 	  {
@@ -1161,7 +1160,7 @@ namespace org.apache.xml.utils
 	  /// NEEDSDOC (adoptNode) @return
 	  /// </param>
 	  /// <exception cref="DOMException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node adoptNode(org.w3c.dom.Node source) throws org.w3c.dom.DOMException
 	  public virtual Node adoptNode(Node source)
 	  {
@@ -1325,7 +1324,7 @@ namespace org.apache.xml.utils
 			{
 				return true;
 			}
-			if (arg.NodeType != NodeType)
+			if (arg.getNodeType() != NodeType)
 			{
 				return false;
 			}
@@ -1333,60 +1332,60 @@ namespace org.apache.xml.utils
 			// who knows what other implementations may be doing?...
 			if (string.ReferenceEquals(NodeName, null))
 			{
-				if (arg.NodeName != null)
+				if (arg.getNodeName() != null)
 				{
 					return false;
 				}
 			}
-			else if (!NodeName.Equals(arg.NodeName))
+			else if (!NodeName.Equals(arg.getNodeName()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(LocalName, null))
 			{
-				if (arg.LocalName != null)
+				if (arg.getLocalName() != null)
 				{
 					return false;
 				}
 			}
-			else if (!LocalName.Equals(arg.LocalName))
+			else if (!LocalName.Equals(arg.getLocalName()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(NamespaceURI, null))
 			{
-				if (arg.NamespaceURI != null)
+				if (arg.getNamespaceURI() != null)
 				{
 					return false;
 				}
 			}
-			else if (!NamespaceURI.Equals(arg.NamespaceURI))
+			else if (!NamespaceURI.Equals(arg.getNamespaceURI()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(Prefix, null))
 			{
-				if (arg.Prefix != null)
+				if (arg.getPrefix() != null)
 				{
 					return false;
 				}
 			}
-			else if (!Prefix.Equals(arg.Prefix))
+			else if (!Prefix.Equals(arg.getPrefix()))
 			{
 				return false;
 			}
 
 			if (string.ReferenceEquals(NodeValue, null))
 			{
-				if (arg.NodeValue != null)
+				if (arg.getNodeValue() != null)
 				{
 					return false;
 				}
 			}
-			else if (!NodeValue.Equals(arg.NodeValue))
+			else if (!NodeValue.Equals(arg.getNodeValue()))
 			{
 				return false;
 			}
@@ -1439,22 +1438,22 @@ namespace org.apache.xml.utils
 					if (this.hasAttributes())
 					{
 						NamedNodeMap map = this.Attributes;
-						int length = map.Length;
+						int length = map.getLength();
 						for (int i = 0;i < length;i++)
 						{
 							Node attr = map.item(i);
-							string attrPrefix = attr.Prefix;
-							string value = attr.NodeValue;
-							@namespace = attr.NamespaceURI;
+							string attrPrefix = attr.getPrefix();
+							string value = attr.getNodeValue();
+							@namespace = attr.getNamespaceURI();
 							if (!string.ReferenceEquals(@namespace, null) && @namespace.Equals("http://www.w3.org/2000/xmlns/"))
 							{
 								// at this point we are dealing with DOM Level 2 nodes only
-								if (string.ReferenceEquals(specifiedPrefix, null) && attr.NodeName.Equals("xmlns"))
+								if (string.ReferenceEquals(specifiedPrefix, null) && attr.getNodeName().Equals("xmlns"))
 								{
 									// default namespace
 									return value;
 								}
-								else if (!string.ReferenceEquals(attrPrefix, null) && attrPrefix.Equals("xmlns") && attr.LocalName.Equals(specifiedPrefix))
+								else if (!string.ReferenceEquals(attrPrefix, null) && attrPrefix.Equals("xmlns") && attr.getLocalName().Equals(specifiedPrefix))
 								{
 					 // non default namespace
 									return value;
@@ -1486,7 +1485,7 @@ namespace org.apache.xml.utils
 				return null;
 			case Node.ATTRIBUTE_NODE:
 			{
-					if (this.OwnerElement.NodeType == Node.ELEMENT_NODE)
+					if (this.OwnerElement.getNodeType() == Node.ELEMENT_NODE)
 					{
 						return OwnerElement.lookupNamespaceURI(specifiedPrefix);
 
@@ -1622,7 +1621,7 @@ namespace org.apache.xml.utils
 				return null;
 			case Node.ATTRIBUTE_NODE:
 			{
-					if (this.OwnerElement.NodeType == Node.ELEMENT_NODE)
+					if (this.OwnerElement.getNodeType() == Node.ELEMENT_NODE)
 					{
 						return OwnerElement.lookupPrefix(namespaceURI);
 
@@ -1705,7 +1704,7 @@ namespace org.apache.xml.utils
 		///   fit in a <code>DOMString</code> variable on the implementation
 		///   platform.
 		/// @since DOM Level 3 </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setTextContent(String textContent) throws org.w3c.dom.DOMException
 		public virtual string TextContent
 		{
@@ -1727,7 +1726,7 @@ namespace org.apache.xml.utils
 		/// <returns> Returns how the given node is positioned relatively to this
 		///   node.
 		/// @since DOM Level 3 </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public short compareDocumentPosition(org.w3c.dom.Node other) throws org.w3c.dom.DOMException
 		public virtual short compareDocumentPosition(Node other)
 		{
@@ -1770,7 +1769,7 @@ namespace org.apache.xml.utils
 		/// DOM Level 3
 		/// Renaming node
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node renameNode(org.w3c.dom.Node n, String namespaceURI, String name) throws org.w3c.dom.DOMException
 		public virtual Node renameNode(Node n, string namespaceURI, string name)
 		{
@@ -1849,7 +1848,7 @@ namespace org.apache.xml.utils
 		/// <summary>
 		/// DOM Level 3
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Text replaceWholeText(String content) throws org.w3c.dom.DOMException
 		public virtual Text replaceWholeText(string content)
 		{
@@ -1945,12 +1944,9 @@ namespace org.apache.xml.utils
 		/// NON-DOM: set the type of this attribute to be ID type.
 		/// </summary>
 		/// <param name="id"> </param>
-		public virtual bool IdAttribute
+		public virtual void setIdAttribute(bool id)
 		{
-			set
-			{
-				//PENDING
-			}
+			//PENDING
 		}
 
 		/// <summary>

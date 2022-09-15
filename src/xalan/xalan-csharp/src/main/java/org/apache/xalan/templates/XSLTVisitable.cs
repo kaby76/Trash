@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.templates
 {
-
 	/// <summary>
 	/// A class that implements this interface will call a XSLTVisitor 
 	/// for itself and members within it's heararchy.  If the XSLTVistor's 

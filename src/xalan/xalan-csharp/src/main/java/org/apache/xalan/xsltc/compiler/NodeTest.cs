@@ -21,7 +21,7 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
+	using DOM = org.apache.xalan.xsltc.DOM;
 	using DTM = org.apache.xml.dtm.DTM;
 
 	/// <summary>
@@ -30,20 +30,17 @@ namespace org.apache.xalan.xsltc.compiler
 	/// </summary>
 	public interface NodeTest
 	{
+		public static int TEXT = DTM.TEXT_NODE;
+		public static int COMMENT = DTM.COMMENT_NODE;
+		public static int PI = DTM.PROCESSING_INSTRUCTION_NODE;
+		public static int ROOT = DTM.DOCUMENT_NODE;
+		public static int ELEMENT = DTM.ELEMENT_NODE;
+		public static int ATTRIBUTE = DTM.ATTRIBUTE_NODE;
 
 		// generalized type
-	}
+		public static int GTYPE = DTM.NTYPES;
 
-	public static class NodeTest_Fields
-	{
-		public const int TEXT = org.apache.xml.dtm.DTM_Fields.TEXT_NODE;
-		public const int COMMENT = org.apache.xml.dtm.DTM_Fields.COMMENT_NODE;
-		public const int PI = org.apache.xml.dtm.DTM_Fields.PROCESSING_INSTRUCTION_NODE;
-		public const int ROOT = org.apache.xml.dtm.DTM_Fields.DOCUMENT_NODE;
-		public const int ELEMENT = org.apache.xml.dtm.DTM_Fields.ELEMENT_NODE;
-		public const int ATTRIBUTE = org.apache.xml.dtm.DTM_Fields.ATTRIBUTE_NODE;
-		public const int GTYPE = org.apache.xml.dtm.DTM_Fields.NTYPES;
-		public static readonly int ANODE = org.apache.xalan.xsltc.DOM_Fields.FIRST_TYPE - 1;
+		public static int ANODE = DOM.FIRST_TYPE - 1;
 	}
 
 }

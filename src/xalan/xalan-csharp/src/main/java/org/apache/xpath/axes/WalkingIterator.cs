@@ -23,9 +23,12 @@ using System.Collections;
  */
 namespace org.apache.xpath.axes
 {
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using PrefixResolver = org.apache.xml.utils.PrefixResolver;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using VariableStack = org.apache.xpath.VariableStack;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using OpMap = org.apache.xpath.compiler.OpMap;
 
@@ -51,7 +54,7 @@ namespace org.apache.xpath.axes
 	  /// it doesn't wish to load child walkers.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: WalkingIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis, boolean shouldLoadWalkers) throws javax.xml.transform.TransformerException
 	  internal WalkingIterator(Compiler compiler, int opPos, int analysis, bool shouldLoadWalkers) : base(compiler, opPos, analysis, shouldLoadWalkers)
 	  {
@@ -106,7 +109,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A clone of this iterator that holds the same node position.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public override object clone()
 	  {
@@ -168,7 +171,7 @@ namespace org.apache.xpath.axes
 	  {
 		  if (m_foundLast)
 		  {
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return DTM.NULL;
 		  }
 
 		// If the variable stack position is not -1, we'll have to 
@@ -287,7 +290,7 @@ namespace org.apache.xpath.axes
 		}
 	  }
 
-	  /// <seealso cref= org.apache.xpath.XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor) </seealso>
+	  /// <seealso cref="org.apache.xpath.XPathVisitable.callVisitors(ExpressionOwner, XPathVisitor)"/>
 	  public override void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
 	  {
 			   if (visitor.visitLocationPath(owner, this))
@@ -312,7 +315,7 @@ namespace org.apache.xpath.axes
 	  /// </summary>
 	  protected internal AxesWalker m_firstWalker;
 
-	  /// <seealso cref= ExpressionOwner#getExpression() </seealso>
+	  /// <seealso cref="ExpressionOwner.getExpression()"/>
 	  public virtual Expression Expression
 	  {
 		  get
@@ -327,7 +330,7 @@ namespace org.apache.xpath.axes
 	  }
 
 
-		/// <seealso cref= Expression#deepEquals(Expression) </seealso>
+		/// <seealso cref="Expression.deepEquals(Expression)"/>
 		public override bool deepEquals(Expression expr)
 		{
 		  if (!base.deepEquals(expr))

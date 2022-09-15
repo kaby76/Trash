@@ -1,4 +1,6 @@
-﻿/*
+﻿using System.IO;
+
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -21,7 +23,6 @@
 
 namespace org.apache.xml.serializer.dom3
 {
-
 	using LSOutput = org.w3c.dom.ls.LSOutput;
 
 
@@ -61,7 +62,7 @@ namespace org.apache.xml.serializer.dom3
 	{
 
 		private Writer fCharStream = null;
-		private System.IO.Stream fByteStream = null;
+		private Stream fByteStream = null;
 		private string fSystemId = null;
 		private string fEncoding = null;
 
@@ -89,8 +90,8 @@ namespace org.apache.xml.serializer.dom3
 			set
 			{
 				fCharStream = value;
-			};
-		};
+			}
+		}
 
 
 
@@ -102,7 +103,7 @@ namespace org.apache.xml.serializer.dom3
 		///  Amendment 1 of [ISO/IEC 10646]).
 		/// </summary>
 
-		public System.IO.Stream ByteStream
+		public Stream ByteStream
 		{
 			get
 			{
@@ -111,8 +112,8 @@ namespace org.apache.xml.serializer.dom3
 			set
 			{
 				fByteStream = value;
-			};
-		};
+			}
+		}
 
 
 
@@ -134,8 +135,8 @@ namespace org.apache.xml.serializer.dom3
 			set
 			{
 				fSystemId = value;
-			};
-		};
+			}
+		}
 
 
 
@@ -159,8 +160,8 @@ namespace org.apache.xml.serializer.dom3
 			set
 			{
 				fEncoding = value;
-			};
-		};
+			}
+		}
 
 
 

@@ -25,6 +25,7 @@
 namespace org.apache.xpath.domapi
 {
 
+	using XPath = org.apache.xpath.XPath;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
 	using XPATHMessages = org.apache.xpath.res.XPATHMessages;
@@ -55,10 +56,10 @@ namespace org.apache.xpath.domapi
 	/// 
 	/// </para>
 	/// </summary>
-	/// <seealso cref= org.apache.xpath.objects.XObject </seealso>
-	/// <seealso cref= org.w3c.dom.xpath.XPathResult
+	/// <seealso cref="org.apache.xpath.objects.XObject"/>
+	/// <seealso cref="org.w3c.dom.xpath.XPathResult"
 	/// 
-	/// @xsl.usage internal </seealso>
+	/// @xsl.usage internal/>
 	internal class XPathResultImpl : XPathResult, EventListener
 	{
 
@@ -151,7 +152,7 @@ namespace org.apache.xpath.domapi
 				catch (TransformerException)
 				{
 					// probably not a node type
-					string fmsg = XPATHMessages.createXPATHMessage(XPATHErrorResources.ER_INCOMPATIBLE_TYPES, new object[] {m_xpath.PatternString, getTypeString(getTypeFromXObject(m_resultObj)),getTypeString(m_resultType)});
+					string fmsg = XPATHMessages.createXPATHMessage(XPATHErrorResources.ER_INCOMPATIBLE_TYPES, new object[] {m_xpath.PatternString, getTypeString(getTypeFromXObject(m_resultObj)), getTypeString(m_resultType)});
 					  throw new XPathException(XPathException.TYPE_ERR, fmsg); // "The XPathResult of XPath expression {0} has an XPathResultType of {1} which cannot be coerced into the specified XPathResultType of {2}."},
 				}
 
@@ -173,13 +174,13 @@ namespace org.apache.xpath.domapi
 				catch (TransformerException)
 				{
 					// probably not a node type 
-					string fmsg = XPATHMessages.createXPATHMessage(XPATHErrorResources.ER_INCOMPATIBLE_TYPES, new object[] {m_xpath.PatternString, getTypeString(getTypeFromXObject(m_resultObj)),getTypeString(m_resultType)});
+					string fmsg = XPATHMessages.createXPATHMessage(XPATHErrorResources.ER_INCOMPATIBLE_TYPES, new object[] {m_xpath.PatternString, getTypeString(getTypeFromXObject(m_resultObj)), getTypeString(m_resultType)});
 					throw new XPathException(XPathException.TYPE_ERR, fmsg); // "The XPathResult of XPath expression {0} has an XPathResultType of {1} which cannot be coerced into the specified XPathResultType of {2}."},
 				}
 			}
 		 }
 
-		/// <seealso cref= org.w3c.dom.xpath.XPathResult#getResultType() </seealso>
+		/// <seealso cref="org.w3c.dom.xpath.XPathResult.getResultType()"/>
 		public virtual short ResultType
 		{
 			get
@@ -193,8 +194,8 @@ namespace org.apache.xpath.domapi
 		/// <exception cref="XPathException">
 		///   TYPE_ERR: raised if <code>resultType</code> is not 
 		///   <code>NUMBER_TYPE</code>. </exception>
-		/// <seealso cref= org.w3c.dom.xpath.XPathResult#getNumberValue() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.xpath.XPathResult.getNumberValue()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public double getNumberValue() throws org.w3c.dom.xpath.XPathException
 		public virtual double NumberValue
 		{
@@ -227,8 +228,8 @@ namespace org.apache.xpath.domapi
 		///   TYPE_ERR: raised if <code>resultType</code> is not 
 		///   <code>STRING_TYPE</code>.
 		/// </exception>
-		/// <seealso cref= org.w3c.dom.xpath.XPathResult#getStringValue() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.xpath.XPathResult.getStringValue()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public String getStringValue() throws org.w3c.dom.xpath.XPathException
 		public virtual string StringValue
 		{
@@ -255,8 +256,8 @@ namespace org.apache.xpath.domapi
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.xpath.XPathResult#getBooleanValue() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.xpath.XPathResult.getBooleanValue()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean getBooleanValue() throws org.w3c.dom.xpath.XPathException
 		public virtual bool BooleanValue
 		{
@@ -290,8 +291,8 @@ namespace org.apache.xpath.domapi
 		///   <code>ANY_UNORDERED_NODE_TYPE</code> or 
 		///   <code>FIRST_ORDERED_NODE_TYPE</code>.
 		/// </exception>
-		/// <seealso cref= org.w3c.dom.xpath.XPathResult#getSingleNodeValue() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.xpath.XPathResult.getSingleNodeValue()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node getSingleNodeValue() throws org.w3c.dom.xpath.XPathException
 		public virtual Node SingleNodeValue
 		{
@@ -335,7 +336,7 @@ namespace org.apache.xpath.domapi
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.xpath.XPathResult#getInvalidIteratorState() </seealso>
+		/// <seealso cref="org.w3c.dom.xpath.XPathResult.getInvalidIteratorState()"/>
 		public virtual bool InvalidIteratorState
 		{
 			get
@@ -353,8 +354,8 @@ namespace org.apache.xpath.domapi
 		///   <code>UNORDERED_NODE_SNAPSHOT_TYPE</code> or 
 		///   <code>ORDERED_NODE_SNAPSHOT_TYPE</code>.
 		/// </exception>
-		/// <seealso cref= org.w3c.dom.xpath.XPathResult#getSnapshotLength() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.xpath.XPathResult.getSnapshotLength()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int getSnapshotLength() throws org.w3c.dom.xpath.XPathException
 		public virtual int SnapshotLength
 		{
@@ -368,7 +369,7 @@ namespace org.apache.xpath.domapi
 		//				"The method getSnapshotLength cannot be called on the XPathResult of XPath expression {0} because its XPathResultType is {1}.
 				}
     
-				return m_list.Length;
+				return m_list.getLength();
 			}
 		}
 
@@ -383,9 +384,9 @@ namespace org.apache.xpath.domapi
 		/// <exception cref="DOMException">
 		///   INVALID_STATE_ERR: The document has been mutated since the result was 
 		///   returned. </exception>
-		/// <seealso cref= org.w3c.dom.xpath.XPathResult#iterateNext() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public org.w3c.dom.Node iterateNext() throws org.w3c.dom.xpath.XPathException, org.w3c.dom.DOMException
+		/// <seealso cref="org.w3c.dom.xpath.XPathResult.iterateNext()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+//ORIGINAL LINE: public org.w3c.dom.Node iterateNext() throws XPathException, org.w3c.dom.DOMException
 		public virtual Node iterateNext()
 		{
 			if ((m_resultType != UNORDERED_NODE_ITERATOR_TYPE) && (m_resultType != ORDERED_NODE_ITERATOR_TYPE))
@@ -433,8 +434,8 @@ namespace org.apache.xpath.domapi
 		///   <code>UNORDERED_NODE_SNAPSHOT_TYPE</code> or 
 		///   <code>ORDERED_NODE_SNAPSHOT_TYPE</code>.
 		/// </exception>
-		/// <seealso cref= org.w3c.dom.xpath.XPathResult#snapshotItem(int) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.w3c.dom.xpath.XPathResult.snapshotItem(int)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node snapshotItem(int index) throws org.w3c.dom.xpath.XPathException
 		public virtual Node snapshotItem(int index)
 		{
@@ -486,11 +487,11 @@ namespace org.apache.xpath.domapi
 			}
 		}
 
-		/// <seealso cref= org.w3c.dom.events.EventListener#handleEvent(Event) </seealso>
+		/// <seealso cref="org.w3c.dom.events.EventListener.handleEvent(Event)"/>
 		public virtual void handleEvent(Event @event)
 		{
 
-			if (@event.Type.Equals("DOMSubtreeModified"))
+			if (@event.getType().Equals("DOMSubtreeModified"))
 			{
 				// invalidate the iterator
 				m_isInvalidIteratorState = true;
@@ -581,7 +582,7 @@ namespace org.apache.xpath.domapi
 	  private bool isNamespaceNode(Node node)
 	  {
 
-		 if ((null != node) && (node.NodeType == Node.ATTRIBUTE_NODE) && (node.NodeName.StartsWith("xmlns:") || node.NodeName.Equals("xmlns")))
+		 if ((null != node) && (node.getNodeType() == Node.ATTRIBUTE_NODE) && (node.getNodeName().StartsWith("xmlns:") || node.getNodeName().Equals("xmlns")))
 		 {
 			return true;
 		 }

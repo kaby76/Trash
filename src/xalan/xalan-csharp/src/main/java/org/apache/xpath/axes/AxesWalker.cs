@@ -28,6 +28,10 @@ namespace org.apache.xpath.axes
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisTraverser = org.apache.xml.dtm.DTMAxisTraverser;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
 
@@ -36,7 +40,7 @@ namespace org.apache.xpath.axes
 	/// state variables.
 	/// </summary>
 	[Serializable]
-	public class AxesWalker : PredicatedNodeTest, ICloneable, PathComponent, ExpressionOwner
+	public class AxesWalker : PredicatedNodeTest, Cloneable, PathComponent, ExpressionOwner
 	{
 		internal new const long serialVersionUID = -2966031951306601247L;
 
@@ -63,7 +67,7 @@ namespace org.apache.xpath.axes
 	  /// <param name="stepType">  The type of location step.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void init(org.apache.xpath.compiler.Compiler compiler, int opPos, int stepType) throws javax.xml.transform.TransformerException
 	  public virtual void init(Compiler compiler, int opPos, int stepType)
 	  {
@@ -79,7 +83,7 @@ namespace org.apache.xpath.axes
 	  /// <returns> A new AxesWalker that can be used without mutating this one.
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public override object clone()
 	  {
@@ -106,7 +110,7 @@ namespace org.apache.xpath.axes
 	  /// </param>
 	  /// <returns> non-null clone, which may be a new clone, or may be a clone 
 	  ///         contained on the cloneList. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: AxesWalker cloneDeep(WalkingIterator cloneOwner, java.util.Vector cloneList) throws CloneNotSupportedException
 	  internal virtual AxesWalker cloneDeep(WalkingIterator cloneOwner, ArrayList cloneList)
 	  {
@@ -184,11 +188,11 @@ namespace org.apache.xpath.axes
 	  /// </summary>
 	  public virtual void detach()
 	  {
-		  m_currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
+		  m_currentNode = DTM.NULL;
 		  m_dtm = null;
 		  m_traverser = null;
 		  m_isFresh = true;
-		  m_root = org.apache.xml.dtm.DTM_Fields.NULL;
+		  m_root = DTM.NULL;
 	  }
 
 	  //=============== TreeWalker Implementation ===============
@@ -215,7 +219,7 @@ namespace org.apache.xpath.axes
 			m_root = value;
 			m_currentNode = value;
     
-			if (org.apache.xml.dtm.DTM_Fields.NULL == value)
+			if (DTM.NULL == value)
 			{
 			  throw new Exception(XSLMessages.createXPATHMessage(XPATHErrorResources.ER_SETTING_WALKER_ROOT_TO_NULL, null)); //"\n !!!! Error! Setting the root of a walker to null!!!");
 			}
@@ -319,7 +323,7 @@ namespace org.apache.xpath.axes
 		  {
 			if (m_foundLast)
 			{
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return DTM.NULL;
 			}
     
 			if (m_isFresh)
@@ -330,12 +334,12 @@ namespace org.apache.xpath.axes
 			// I shouldn't have to do this the check for current node, I think.
 			// numbering\numbering24.xsl fails if I don't do this.  I think 
 			// it occurs as the walkers are backing up. -sb
-			else if (org.apache.xml.dtm.DTM_Fields.NULL != m_currentNode)
+			else if (DTM.NULL != m_currentNode)
 			{
 			  m_currentNode = m_traverser.next(m_root, m_currentNode);
 			}
     
-			if (org.apache.xml.dtm.DTM_Fields.NULL == m_currentNode)
+			if (DTM.NULL == m_currentNode)
 			{
 			  this.m_foundLast = true;
 			}
@@ -354,7 +358,7 @@ namespace org.apache.xpath.axes
 	  ///   next node  in the TreeWalker's logical view. </returns>
 	  public virtual int nextNode()
 	  {
-		int nextNode = org.apache.xml.dtm.DTM_Fields.NULL;
+		int nextNode = DTM.NULL;
 		AxesWalker walker = wi().LastUsedWalker;
 
 		while (true)
@@ -366,14 +370,14 @@ namespace org.apache.xpath.axes
 
 		  nextNode = walker.NextNode;
 
-		  if (org.apache.xml.dtm.DTM_Fields.NULL == nextNode)
+		  if (DTM.NULL == nextNode)
 		  {
 
 			walker = walker.m_prevWalker;
 		  }
 		  else
 		  {
-			if (walker.acceptNode(nextNode) != org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT)
+			if (walker.acceptNode(nextNode) != DTMIterator.FILTER_ACCEPT)
 			{
 			  continue;
 			}
@@ -441,7 +445,7 @@ namespace org.apache.xpath.axes
 
 		  int next;
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (next = walker.nextNode()))
+		  while (DTM.NULL != (next = walker.nextNode()))
 		  {
 			pos++;
 		  }
@@ -536,7 +540,7 @@ namespace org.apache.xpath.axes
 		  }
 	  }
 
-	  /// <seealso cref= ExpressionOwner#getExpression() </seealso>
+	  /// <seealso cref="ExpressionOwner.getExpression()"/>
 	  public virtual Expression Expression
 	  {
 		  get
@@ -551,7 +555,7 @@ namespace org.apache.xpath.axes
 	  }
 
 
-		/// <seealso cref= Expression#deepEquals(Expression) </seealso>
+		/// <seealso cref="Expression.deepEquals(Expression)"/>
 		public override bool deepEquals(Expression expr)
 		{
 		  if (!base.deepEquals(expr))
@@ -572,13 +576,13 @@ namespace org.apache.xpath.axes
 	  ///  The root node of the TreeWalker, as specified when it was created.
 	  /// </summary>
 	  [NonSerialized]
-	  internal int m_root = org.apache.xml.dtm.DTM_Fields.NULL;
+	  internal int m_root = DTM.NULL;
 
 	  /// <summary>
 	  ///  The node at which the TreeWalker is currently positioned.
 	  /// </summary>
 	  [NonSerialized]
-	  private int m_currentNode = org.apache.xml.dtm.DTM_Fields.NULL;
+	  private int m_currentNode = DTM.NULL;
 
 	  /// <summary>
 	  /// True if an itteration has not begun. </summary>

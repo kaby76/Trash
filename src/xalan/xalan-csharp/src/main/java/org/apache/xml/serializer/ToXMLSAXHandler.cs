@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,7 +23,6 @@
  */
  namespace org.apache.xml.serializer
  {
-
 
 	using Node = org.w3c.dom.Node;
 	using Attributes = org.xml.sax.Attributes;
@@ -54,7 +54,7 @@
 			initCDATA();
 		}
 
-		/// <seealso cref= Serializer#getOutputFormat() </seealso>
+		/// <seealso cref="Serializer.getOutputFormat()"/>
 		public override Properties OutputFormat
 		{
 			get
@@ -66,8 +66,8 @@
 			}
 		}
 
-		/// <seealso cref= Serializer#getOutputStream() </seealso>
-		public override System.IO.Stream OutputStream
+		/// <seealso cref="Serializer.getOutputStream()"/>
+		public override Stream OutputStream
 		{
 			get
 			{
@@ -78,7 +78,7 @@
 			}
 		}
 
-		/// <seealso cref= Serializer#getWriter() </seealso>
+		/// <seealso cref="Serializer.getWriter()"/>
 		public override Writer Writer
 		{
 			get
@@ -93,22 +93,22 @@
 		/// <summary>
 		/// Do nothing for SAX.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void indent(int n) throws org.xml.sax.SAXException
 		public void indent(int n)
 		{
 		}
 
 
-		/// <seealso cref= DOMSerializer#serialize(Node) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="DOMSerializer.serialize(Node)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void serialize(org.w3c.dom.Node node) throws java.io.IOException
 		public override void serialize(Node node)
 		{
 		}
 
-		/// <seealso cref= SerializationHandler#setEscaping(boolean) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="SerializationHandler.setEscaping(boolean)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean setEscaping(boolean escape) throws org.xml.sax.SAXException
 		public override bool setEscaping(bool escape)
 		{
@@ -130,29 +130,29 @@
 
 
 
-		/// <seealso cref= org.xml.sax.ext.DeclHandler#attributeDecl(String, String, String, String, String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ext.DeclHandler.attributeDecl(String, String, String, String, String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void attributeDecl(String arg0, String arg1, String arg2, String arg3, String arg4) throws org.xml.sax.SAXException
 		public void attributeDecl(string arg0, string arg1, string arg2, string arg3, string arg4)
 		{
 		}
 
-		/// <seealso cref= org.xml.sax.ext.DeclHandler#elementDecl(String, String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ext.DeclHandler.elementDecl(String, String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void elementDecl(String arg0, String arg1) throws org.xml.sax.SAXException
 		public void elementDecl(string arg0, string arg1)
 		{
 		}
 
-		/// <seealso cref= org.xml.sax.ext.DeclHandler#externalEntityDecl(String, String, String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ext.DeclHandler.externalEntityDecl(String, String, String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void externalEntityDecl(String arg0, String arg1, String arg2) throws org.xml.sax.SAXException
 		public void externalEntityDecl(string arg0, string arg1, string arg2)
 		{
 		}
 
-		/// <seealso cref= org.xml.sax.ext.DeclHandler#internalEntityDecl(String, String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ext.DeclHandler.internalEntityDecl(String, String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void internalEntityDecl(String arg0, String arg1) throws org.xml.sax.SAXException
 		public void internalEntityDecl(string arg0, string arg1)
 		{
@@ -160,8 +160,8 @@
 
 		/// <summary>
 		/// Receives notification of the end of the document. </summary>
-		/// <seealso cref= org.xml.sax.ContentHandler#endDocument() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ContentHandler.endDocument()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDocument() throws org.xml.sax.SAXException
 		public void endDocument()
 		{
@@ -181,7 +181,7 @@
 		/// This method is called when all the data needed for a call to the
 		/// SAX handler's startElement() method has been gathered.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void closeStartTag() throws org.xml.sax.SAXException
 		protected internal override void closeStartTag()
 		{
@@ -218,7 +218,7 @@
 		/// handler.
 		/// 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void closeCDATA() throws org.xml.sax.SAXException
 		public override void closeCDATA()
 		{
@@ -237,8 +237,8 @@
 			m_cdataTagOpen = false;
 		}
 
-		/// <seealso cref= org.xml.sax.ContentHandler#endElement(String, String, String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ContentHandler.endElement(String, String, String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String namespaceURI, String localName, String qName) throws org.xml.sax.SAXException
 		public void endElement(string namespaceURI, string localName, string qName)
 		{
@@ -283,8 +283,8 @@
 			m_elemContext = m_elemContext.m_prev;
 		}
 
-		/// <seealso cref= org.xml.sax.ContentHandler#endPrefixMapping(String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ContentHandler.endPrefixMapping(String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endPrefixMapping(String prefix) throws org.xml.sax.SAXException
 		public void endPrefixMapping(string prefix)
 		{
@@ -294,35 +294,35 @@
 			 return;
 		}
 
-		/// <seealso cref= org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ContentHandler.ignorableWhitespace(char[], int, int)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void ignorableWhitespace(char[] arg0, int arg1, int arg2) throws org.xml.sax.SAXException
 		public void ignorableWhitespace(char[] arg0, int arg1, int arg2)
 		{
 			m_saxHandler.ignorableWhitespace(arg0,arg1,arg2);
 		}
 
-		/// <seealso cref= org.xml.sax.ContentHandler#setDocumentLocator(Locator) </seealso>
+		/// <seealso cref="org.xml.sax.ContentHandler.setDocumentLocator(Locator)"/>
 		public override Locator DocumentLocator
 		{
 			set
 			{
-				m_saxHandler.DocumentLocator = value;
+				m_saxHandler.setDocumentLocator(value);
 			}
 		}
 
-		/// <seealso cref= org.xml.sax.ContentHandler#skippedEntity(String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ContentHandler.skippedEntity(String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void skippedEntity(String arg0) throws org.xml.sax.SAXException
 		public void skippedEntity(string arg0)
 		{
 			m_saxHandler.skippedEntity(arg0);
 		}
 
-		/// <seealso cref= org.xml.sax.ContentHandler#startPrefixMapping(String, String) </seealso>
+		/// <seealso cref="org.xml.sax.ContentHandler.startPrefixMapping(String, String)"/>
 		/// <param name="prefix"> The prefix that maps to the URI </param>
 		/// <param name="uri"> The URI for the namespace </param>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startPrefixMapping(String prefix, String uri) throws org.xml.sax.SAXException
 		public void startPrefixMapping(string prefix, string uri)
 		{
@@ -332,13 +332,13 @@
 		/// <summary>
 		/// Remember the prefix/uri mapping at the current nested element depth.
 		/// </summary>
-		/// <seealso cref= org.xml.sax.ContentHandler#startPrefixMapping(String, String) </seealso>
+		/// <seealso cref="org.xml.sax.ContentHandler.startPrefixMapping(String, String)"/>
 		/// <param name="prefix"> The prefix that maps to the URI </param>
 		/// <param name="uri"> The URI for the namespace </param>
 		/// <param name="shouldFlush"> a flag indicating if the mapping applies to the
 		/// current element or an up coming child (not used). </param>
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean startPrefixMapping(String prefix, String uri, boolean shouldFlush) throws org.xml.sax.SAXException
 		public override bool startPrefixMapping(string prefix, string uri, bool shouldFlush)
 		{
@@ -377,14 +377,14 @@
 					   * just covering our butt here.
 					   */
 					  string name;
-					  if (SerializerConstants_Fields.EMPTYSTRING.Equals(prefix))
+					  if (EMPTYSTRING.Equals(prefix))
 					  {
 						  name = "xmlns";
-						  addAttributeAlways(SerializerConstants_Fields.XMLNS_URI, name, name,"CDATA",uri, false);
+						  addAttributeAlways(XMLNS_URI, name, name,"CDATA",uri, false);
 					  }
 					  else
 					  {
-						  if (!SerializerConstants_Fields.EMPTYSTRING.Equals(uri)) // hack for attribset16 test
+						  if (!EMPTYSTRING.Equals(uri)) // hack for attribset16 test
 						  { // that maps ns1 prefix to "" URI
 							  name = "xmlns:" + prefix;
 
@@ -392,7 +392,7 @@
 									 *  the uri is the value, that is why we pass it in the
 									 * value, or 5th slot of addAttributeAlways()
 								  */
-							  addAttributeAlways(SerializerConstants_Fields.XMLNS_URI, prefix, name,"CDATA",uri, false);
+							  addAttributeAlways(XMLNS_URI, prefix, name,"CDATA",uri, false);
 						  }
 					  }
 				}
@@ -401,8 +401,8 @@
 		}
 
 
-		/// <seealso cref= org.xml.sax.ext.LexicalHandler#comment(char[], int, int) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ext.LexicalHandler.comment(char[], int, int)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void comment(char[] arg0, int arg1, int arg2) throws org.xml.sax.SAXException
 		public void comment(char[] arg0, int arg1, int arg2)
 		{
@@ -418,8 +418,8 @@
 			}
 		}
 
-		/// <seealso cref= org.xml.sax.ext.LexicalHandler#endCDATA() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ext.LexicalHandler.endCDATA()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endCDATA() throws org.xml.sax.SAXException
 		public void endCDATA()
 		{
@@ -446,8 +446,8 @@
 			 */ 
 		}
 
-		/// <seealso cref= org.xml.sax.ext.LexicalHandler#endDTD() </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ext.LexicalHandler.endDTD()"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endDTD() throws org.xml.sax.SAXException
 		public void endDTD()
 		{
@@ -457,8 +457,8 @@
 			}
 		}
 
-		/// <seealso cref= org.xml.sax.ext.LexicalHandler#startEntity(String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ext.LexicalHandler.startEntity(String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startEntity(String arg0) throws org.xml.sax.SAXException
 		public void startEntity(string arg0)
 		{
@@ -468,8 +468,8 @@
 			}
 		}
 
-		/// <seealso cref= ExtendedContentHandler#characters(String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="ExtendedContentHandler.characters(String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(String chars) throws org.xml.sax.SAXException
 		public override void characters(string chars)
 		{
@@ -504,7 +504,7 @@
 		/// Start an element in the output document. This might be an XML element
 		/// (<elem>data</elem> type) or a CDATA section.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String elementNamespaceURI, String elementLocalName, String elementName) throws org.xml.sax.SAXException
 		public override void startElement(string elementNamespaceURI, string elementLocalName, string elementName)
 		{
@@ -512,7 +512,7 @@
 
 
 		}
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String elementName) throws org.xml.sax.SAXException
 		public override void startElement(string elementName)
 		{
@@ -520,7 +520,7 @@
 		}
 
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void characters(char[] ch, int off, int len) throws org.xml.sax.SAXException
 		public void characters(char[] ch, int off, int len)
 		{
@@ -561,8 +561,8 @@
 		}
 
 
-		/// <seealso cref= ExtendedContentHandler#endElement(String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="ExtendedContentHandler.endElement(String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void endElement(String elemName) throws org.xml.sax.SAXException
 		public override void endElement(string elemName)
 		{
@@ -575,18 +575,17 @@
 		/// declaration will not be include if the namespace is already in scope
 		/// with the same prefix.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void namespaceAfterStartElement(final String prefix, final String uri) throws org.xml.sax.SAXException
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-		public override void namespaceAfterStartElement(string prefix, string uri)
+		public override void namespaceAfterStartElement(in string prefix, in string uri)
 		{
 			startPrefixMapping(prefix,uri,false);
 		}
 
 		/// 
-		/// <seealso cref= org.xml.sax.ContentHandler#processingInstruction(String, String)
-		/// Send a processing instruction to the output document </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ContentHandler.processingInstruction(String, String)"
+		/// Send a processing instruction to the output document/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void processingInstruction(String target, String data) throws org.xml.sax.SAXException
 		public override void processingInstruction(string target, string data)
 		{
@@ -624,7 +623,7 @@
 			return false;
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startCDATA() throws org.xml.sax.SAXException
 		public void startCDATA()
 		{
@@ -651,8 +650,8 @@
 			}
 		}
 
-		/// <seealso cref= org.xml.sax.ContentHandler#startElement(String, String, String, Attributes) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="org.xml.sax.ContentHandler.startElement(String, String, String, Attributes)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startElement(String namespaceURI, String localName, String name, org.xml.sax.Attributes atts) throws org.xml.sax.SAXException
 		public override void startElement(string namespaceURI, string localName, string name, Attributes atts)
 		{
@@ -694,7 +693,7 @@
 
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void ensurePrefixIsDeclared(String ns, String rawName) throws org.xml.sax.SAXException
 		private void ensurePrefixIsDeclared(string ns, string rawName)
 		{
@@ -720,7 +719,7 @@
 						{
 							// Bugzilla1133: Generate attribute as well as namespace event.
 							// SAX does expect both.
-							this.addAttributeAlways("http://www.w3.org/2000/xmlns/", no_prefix ? "xmlns" : prefix, no_prefix ? "xmlns" : ("xmlns:" + prefix), "CDATA", ns, false); // qname -  local name
+							this.addAttributeAlways("http://www.w3.org/2000/xmlns/", no_prefix ? "xmlns" : prefix, no_prefix ? "xmlns" : ("xmlns:" + prefix), "CDATA", ns, false);
 						}
 					}
 
@@ -738,8 +737,8 @@
 		/// <param name="type"> the type of the attribute (probably CDATA) </param>
 		/// <param name="value"> the value of the attribute </param>
 		/// <param name="XSLAttribute"> true if this attribute is coming from an xsl:attribute element </param>
-		/// <seealso cref= ExtendedContentHandler#addAttribute(String, String, String, String, String) </seealso>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+		/// <seealso cref="ExtendedContentHandler.addAttribute(String, String, String, String, String)"/>
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void addAttribute(String uri, String localName, String rawName, String type, String value, boolean XSLAttribute) throws org.xml.sax.SAXException
 		public override void addAttribute(string uri, string localName, string rawName, string type, string value, bool XSLAttribute)
 		{
@@ -757,7 +756,7 @@
 		/// (mostly for performance reasons).
 		/// </summary>
 		/// <returns> true if the class was successfuly reset. </returns>
-		/// <seealso cref= Serializer#reset() </seealso>
+		/// <seealso cref="Serializer.reset()"/>
 		public override bool reset()
 		{
 			bool wasReset = false;

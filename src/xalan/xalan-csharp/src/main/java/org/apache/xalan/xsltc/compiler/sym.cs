@@ -5,7 +5,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	/// <summary>
 	/// CUP generated class containing symbol constants. </summary>
 	public class sym

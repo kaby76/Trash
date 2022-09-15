@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.templates
 {
 
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using XSLTErrorResources = org.apache.xalan.res.XSLTErrorResources;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
@@ -35,8 +34,8 @@ namespace org.apache.xalan.templates
 	/// This acts as a superclass for ElemCopy, ElemAttributeSet,
 	/// ElemElement, and ElemLiteralResult, on order to implement
 	/// shared behavior the use-attribute-sets attribute. </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xslt#attribute-sets">attribute-sets in XSLT Specification</a>
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xslt.attribute-sets">attribute-sets in XSLT Specification</a>"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class ElemUse : ElemTemplateElement
 	{
@@ -98,9 +97,12 @@ namespace org.apache.xalan.templates
 	  /// described in [2.4 Qualified Names].
 	  /// </summary>
 	  /// <returns> The value of the "use-attribute-sets" attribute.  </returns>
-	  public virtual QName[] getUseAttributeSets()
+	  public virtual QName[] UseAttributeSets
 	  {
-		return m_attributeSetsNames;
+		  get
+		  {
+			return m_attributeSetsNames;
+		  }
 	  }
 
 	  /// <summary>
@@ -114,7 +116,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="stylesheet"> The owning root stylesheet
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void applyAttrSets(org.apache.xalan.transformer.TransformerImpl transformer, StylesheetRoot stylesheet) throws javax.xml.transform.TransformerException
 	  public virtual void applyAttrSets(TransformerImpl transformer, StylesheetRoot stylesheet)
 	  {
@@ -133,7 +135,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="attributeSetsNames"> List of attribute sets names to apply
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private void applyAttrSets(org.apache.xalan.transformer.TransformerImpl transformer, StylesheetRoot stylesheet, org.apache.xml.utils.QName attributeSetsNames[]) throws javax.xml.transform.TransformerException
 	  private void applyAttrSets(TransformerImpl transformer, StylesheetRoot stylesheet, QName[] attributeSetsNames)
 	  {
@@ -145,7 +147,7 @@ namespace org.apache.xalan.templates
 		  for (int i = 0; i < nNames; i++)
 		  {
 			QName qname = attributeSetsNames[i];
-			IList attrSets = stylesheet.getAttributeSetComposed(qname);
+			System.Collections.IList attrSets = stylesheet.getAttributeSetComposed(qname);
 
 			if (null != attrSets)
 			{
@@ -182,7 +184,7 @@ namespace org.apache.xalan.templates
 	  /// <param name="transformer"> non-null reference to the the current transform-time state.
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {

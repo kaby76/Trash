@@ -22,7 +22,6 @@
  */
 namespace org.apache.xpath
 {
-
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
 	using DOM2Helper = org.apache.xml.utils.DOM2Helper;
 	using ContextNodeList = org.apache.xpath.axes.ContextNodeList;
@@ -59,7 +58,7 @@ namespace org.apache.xpath
 	/// less-than-enlightening results when you do so.</para>
 	/// @xsl.usage advanced
 	/// </summary>
-	public class NodeSet : NodeList, NodeIterator, ICloneable, ContextNodeList
+	public class NodeSet : NodeList, NodeIterator, Cloneable, ContextNodeList
 	{
 
 	  /// <summary>
@@ -147,12 +146,12 @@ namespace org.apache.xpath
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> if this subclass of NodeSet
 	  /// does not support the clone() operation. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.traversal.NodeIterator cloneWithReset() throws CloneNotSupportedException
 	  public virtual NodeIterator cloneWithReset()
 	  {
 
-		NodeSet clone = (NodeSet) clone();
+		NodeSet clone = (NodeSet) this.clone();
 
 		clone.reset();
 
@@ -238,7 +237,7 @@ namespace org.apache.xpath
 	  /// <exception cref="DOMException">
 	  ///    INVALID_STATE_ERR: Raised if this method is called after the
 	  ///   <code>detach</code> method was invoked. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node nextNode() throws org.w3c.dom.DOMException
 	  public virtual Node nextNode()
 	  {
@@ -267,7 +266,7 @@ namespace org.apache.xpath
 	  ///   <code>detach</code> method was invoked. </exception>
 	  /// <exception cref="RuntimeException"> thrown if this NodeSet is not of 
 	  /// a cached type, and hence doesn't know what the previous node was. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node previousNode() throws org.w3c.dom.DOMException
 	  public virtual Node previousNode()
 	  {
@@ -457,7 +456,7 @@ namespace org.apache.xpath
 
 		if (null != nodelist) // defensive to fix a bug that Sanjiva reported.
 		{
-		  int nChildren = nodelist.Length;
+		  int nChildren = nodelist.getLength();
 
 		  for (int i = 0; i < nChildren; i++)
 		  {
@@ -543,7 +542,7 @@ namespace org.apache.xpath
 		  throw new Exception(XSLMessages.createXPATHMessage(XPATHErrorResources.ER_NODESET_NOT_MUTABLE, null)); //"This NodeSet is not mutable!");
 		}
 
-		int nChildren = nodelist.Length;
+		int nChildren = nodelist.getLength();
 
 		for (int i = 0; i < nChildren; i++)
 		{
@@ -668,7 +667,7 @@ namespace org.apache.xpath
 		  // This needs to do a binary search, but a binary search 
 		  // is somewhat tough because the sequence test involves 
 		  // two nodes.
-		  int size = size(), i ;
+		  int size = this.size(), i;
 
 		  for (i = size - 1; i >= 0; i--)
 		  {
@@ -881,7 +880,7 @@ namespace org.apache.xpath
 	  /// <returns> A clone of this
 	  /// </returns>
 	  /// <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public Object clone() throws CloneNotSupportedException
 	  public virtual object clone()
 	  {

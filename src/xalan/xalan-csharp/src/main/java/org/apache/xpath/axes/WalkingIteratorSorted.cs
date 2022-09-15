@@ -23,7 +23,6 @@ using System.Collections;
  */
 namespace org.apache.xpath.axes
 {
-
 	using Axis = org.apache.xml.dtm.Axis;
 	using PrefixResolver = org.apache.xml.utils.PrefixResolver;
 	using Compiler = org.apache.xpath.compiler.Compiler;
@@ -69,7 +68,7 @@ namespace org.apache.xpath.axes
 	  /// it doesn't wish to load child walkers.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: WalkingIteratorSorted(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis, boolean shouldLoadWalkers) throws javax.xml.transform.TransformerException
 	  internal WalkingIteratorSorted(Compiler compiler, int opPos, int analysis, bool shouldLoadWalkers) : base(compiler, opPos, analysis, shouldLoadWalkers)
 	  {

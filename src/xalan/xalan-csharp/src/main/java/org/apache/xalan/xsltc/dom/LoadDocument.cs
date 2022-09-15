@@ -24,7 +24,10 @@
 namespace org.apache.xalan.xsltc.dom
 {
 
-
+	using DOM = org.apache.xalan.xsltc.DOM;
+	using DOMCache = org.apache.xalan.xsltc.DOMCache;
+	using DOMEnhancedForDTM = org.apache.xalan.xsltc.DOMEnhancedForDTM;
+	using TransletException = org.apache.xalan.xsltc.TransletException;
 	using AbstractTranslet = org.apache.xalan.xsltc.runtime.AbstractTranslet;
 	using TemplatesImpl = org.apache.xalan.xsltc.trax.TemplatesImpl;
 	using DTM = org.apache.xml.dtm.DTM;
@@ -48,7 +51,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// several documents are requested.
 		/// 2 arguments arg1 and arg2.  document(Obj, node-set) call 
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xml.dtm.DTMAxisIterator documentF(Object arg1, org.apache.xml.dtm.DTMAxisIterator arg2, String xslURI, org.apache.xalan.xsltc.runtime.AbstractTranslet translet, org.apache.xalan.xsltc.DOM dom) throws org.apache.xalan.xsltc.TransletException
 		public static DTMAxisIterator documentF(object arg1, DTMAxisIterator arg2, string xslURI, AbstractTranslet translet, DOM dom)
 		{
@@ -56,7 +59,7 @@ namespace org.apache.xalan.xsltc.dom
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final int arg2FirstNode = arg2.next();
 			int arg2FirstNode = arg2.next();
-			if (arg2FirstNode == org.apache.xml.dtm.DTMAxisIterator_Fields.END)
+			if (arg2FirstNode == DTMAxisIterator.END)
 			{
 				//  the second argument node-set is empty
 				return EmptyIterator.Instance;
@@ -110,7 +113,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// several documents are requested.
 		/// 1 arguments arg.  document(Obj) call
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xml.dtm.DTMAxisIterator documentF(Object arg, String xslURI, org.apache.xalan.xsltc.runtime.AbstractTranslet translet, org.apache.xalan.xsltc.DOM dom) throws org.apache.xalan.xsltc.TransletException
 		public static DTMAxisIterator documentF(object arg, string xslURI, AbstractTranslet translet, DOM dom)
 		{
@@ -178,14 +181,14 @@ namespace org.apache.xalan.xsltc.dom
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static org.apache.xml.dtm.DTMAxisIterator document(String uri, String super, org.apache.xalan.xsltc.runtime.AbstractTranslet translet, org.apache.xalan.xsltc.DOM dom) throws Exception
 		private static DTMAxisIterator document(string uri, string @base, AbstractTranslet translet, DOM dom)
 		{
 			return document(uri, @base, translet, dom, false);
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static org.apache.xml.dtm.DTMAxisIterator document(String uri, String super, org.apache.xalan.xsltc.runtime.AbstractTranslet translet, org.apache.xalan.xsltc.DOM dom, boolean cacheDOM) throws Exception
 		private static DTMAxisIterator document(string uri, string @base, AbstractTranslet translet, DOM dom, bool cacheDOM)
 		{
@@ -279,14 +282,14 @@ namespace org.apache.xalan.xsltc.dom
 		}
 
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static org.apache.xml.dtm.DTMAxisIterator document(org.apache.xml.dtm.DTMAxisIterator arg1, String baseURI, org.apache.xalan.xsltc.runtime.AbstractTranslet translet, org.apache.xalan.xsltc.DOM dom) throws Exception
 		private static DTMAxisIterator document(DTMAxisIterator arg1, string baseURI, AbstractTranslet translet, DOM dom)
 		{
 			UnionIterator union = new UnionIterator(dom);
-			int node = org.apache.xml.dtm.DTM_Fields.NULL;
+			int node = DTM.NULL;
 
-			while ((node = arg1.next()) != org.apache.xml.dtm.DTM_Fields.NULL)
+			while ((node = arg1.next()) != DTM.NULL)
 			{
 				string uri = dom.getStringValueX(node);
 				//document(node-set) if true;  document(node-set,node-set) if false
@@ -311,7 +314,7 @@ namespace org.apache.xalan.xsltc.dom
 		/// <param name="translet"> the translet </param>
 		/// <param name="the"> main dom (should be a MultiDOM) </param>
 		/// <returns> a DTMAxisIterator from the document root </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static org.apache.xml.dtm.DTMAxisIterator document(org.apache.xalan.xsltc.DOM newdom, org.apache.xalan.xsltc.runtime.AbstractTranslet translet, org.apache.xalan.xsltc.DOM dom) throws Exception
 		private static DTMAxisIterator document(DOM newdom, AbstractTranslet translet, DOM dom)
 		{

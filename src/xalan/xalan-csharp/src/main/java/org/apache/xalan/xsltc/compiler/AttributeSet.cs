@@ -25,7 +25,6 @@ using System.Text;
 namespace org.apache.xalan.xsltc.compiler
 {
 
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using INVOKESPECIAL = org.apache.bcel.generic.INVOKESPECIAL;
 	using InstructionList = org.apache.bcel.generic.InstructionList;
@@ -105,13 +104,13 @@ namespace org.apache.xalan.xsltc.compiler
 			if (!XML11Char.isXML11ValidQName(name))
 			{
 				ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, name, this);
-				parser.reportError(Constants_Fields.ERROR, err);
+				parser.reportError(Constants.ERROR, err);
 			}
 			_name = parser.getQNameIgnoreDefaultNs(name);
-		if ((_name == null) || (_name.Equals(Constants_Fields.EMPTYSTRING)))
+		if ((_name == null) || (_name.Equals(EMPTYSTRING)))
 		{
 			ErrorMsg msg = new ErrorMsg(ErrorMsg.UNNAMED_ATTRIBSET_ERR, this);
-			parser.reportError(Constants_Fields.ERROR, msg);
+			parser.reportError(Constants.ERROR, msg);
 		}
 
 		// Get any included attribute sets (similar to inheritance...)
@@ -123,7 +122,7 @@ namespace org.apache.xalan.xsltc.compiler
 				if (!Util.isValidQNames(useSets))
 				{
 					ErrorMsg err = new ErrorMsg(ErrorMsg.INVALID_QNAME_ERR, useSets, this);
-					parser.reportError(Constants_Fields.ERROR, err);
+					parser.reportError(Constants.ERROR, err);
 				}
 			_useSets = new UseAttributeSets(useSets, parser);
 		}
@@ -151,7 +150,7 @@ namespace org.apache.xalan.xsltc.compiler
 			else
 			{
 			ErrorMsg msg = new ErrorMsg(ErrorMsg.ILLEGAL_CHILD_ERR, this);
-			parser.reportError(Constants_Fields.ERROR, msg);
+			parser.reportError(Constants.ERROR, msg);
 			}
 		}
 
@@ -162,7 +161,7 @@ namespace org.apache.xalan.xsltc.compiler
 		/// <summary>
 		/// Type check the contents of this element
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -205,10 +204,10 @@ namespace org.apache.xalan.xsltc.compiler
 			{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-				ConstantPoolGen cpg = classGen.ConstantPool;
+				ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-				InstructionList il = methodGen.InstructionList;
+				InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final String methodName = _mergeSet.getMethodName();
 				string methodName = _mergeSet.MethodName;
@@ -218,8 +217,8 @@ namespace org.apache.xalan.xsltc.compiler
 				il.append(methodGen.loadIterator());
 				il.append(methodGen.loadHandler());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int method = cpg.addMethodref(classGen.getClassName(), methodName, Constants_Fields.ATTR_SET_SIG);
-				int method = cpg.addMethodref(classGen.ClassName, methodName, Constants_Fields.ATTR_SET_SIG);
+//ORIGINAL LINE: final int method = cpg.addMethodref(classGen.getClassName(), methodName, ATTR_SET_SIG);
+				int method = cpg.addMethodref(classGen.ClassName, methodName, ATTR_SET_SIG);
 				il.append(new INVOKESPECIAL(method));
 			}
 
@@ -247,7 +246,7 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		il.append(RETURN);
 
 		classGen.addMethod(methodGen);

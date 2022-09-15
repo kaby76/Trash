@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Text;
 
 /*
@@ -24,7 +25,6 @@ using System.Text;
  */
 namespace org.apache.xalan.xslt
 {
-
 
 	using Document = org.w3c.dom.Document;
 	using Element = org.w3c.dom.Element;
@@ -91,7 +91,7 @@ namespace org.apache.xalan.xslt
 	  /// <summary>
 	  /// Command line runnability: checks for [-out outFilename] arg.
 	  /// <para>Command line entrypoint; Sets output and calls 
-	  /// <seealso cref="#checkEnvironment(PrintWriter)"/>.</para> </summary>
+	  /// <seealso cref="checkEnvironment(PrintWriter)"/>.</para> </summary>
 	  /// <param name="args"> command line args </param>
 	  public static void Main(string[] args)
 	  {
@@ -101,7 +101,7 @@ namespace org.apache.xalan.xslt
 		// Read our simplistic input args, if supplied
 		for (int i = 0; i < args.Length; i++)
 		{
-		  if ("-out".Equals(args[i], StringComparison.CurrentCultureIgnoreCase))
+		  if ("-out".Equals(args[i], StringComparison.OrdinalIgnoreCase))
 		  {
 			i++;
 
@@ -109,7 +109,7 @@ namespace org.apache.xalan.xslt
 			{
 			  try
 			  {
-				sendOutputTo = new PrintWriter(new System.IO.StreamWriter(args[i], true));
+				sendOutputTo = new PrintWriter(new StreamWriter(args[i], true));
 			  }
 			  catch (Exception e)
 			  {
@@ -149,7 +149,7 @@ namespace org.apache.xalan.xslt
 	  /// to System.out if null </param>
 	  /// <returns> true if your environment appears to have no major 
 	  /// problems; false if potential environment problems found </returns>
-	  /// <seealso cref= #getEnvironmentHash() </seealso>
+	  /// <seealso cref=".getEnvironmentHash()"/>
 	  public virtual bool checkEnvironment(PrintWriter pw)
 	  {
 
@@ -242,8 +242,8 @@ namespace org.apache.xalan.xslt
 	  /// filled in by our various check*() methods </param>
 	  /// <returns> true if your environment appears to have no major 
 	  /// problems; false if potential environment problems found </returns>
-	  /// <seealso cref= #appendEnvironmentReport(Node, Document, Hashtable)
-	  /// for an equivalent that appends to a Node instead </seealso>
+	  /// <seealso cref=".appendEnvironmentReport(Node, Document, Hashtable)"
+	  /// for an equivalent that appends to a Node instead/>
 	  protected internal virtual bool writeEnvironmentReport(Hashtable h)
 	  {
 
@@ -259,7 +259,6 @@ namespace org.apache.xalan.xslt
 
 		// Fake the Properties-like output
 		for (System.Collections.IEnumerator keys = h.Keys.GetEnumerator(); keys.MoveNext();)
-			/* no increment portion */
 		{
 		  object key = keys.Current;
 		  string keyStr = (string) key;
@@ -339,7 +338,7 @@ namespace org.apache.xalan.xslt
 	  /// </param>
 	  /// <returns> false if OK, true if any .jars were reported 
 	  /// as having errors </returns>
-	  /// <seealso cref= #checkPathForJars(String, String[]) </seealso>
+	  /// <seealso cref=".checkPathForJars(String, String[])"/>
 	  protected internal virtual bool logFoundJars(ArrayList v, string desc)
 	  {
 
@@ -357,7 +356,6 @@ namespace org.apache.xalan.xslt
 		  Hashtable subhash = (Hashtable) v[i];
 
 		  for (System.Collections.IEnumerator keys = subhash.Keys.GetEnumerator(); keys.MoveNext();)
-			   /* no increment portion */
 		  {
 			object key = keys.Current;
 			string keyStr = (string) key;
@@ -392,9 +390,9 @@ namespace org.apache.xalan.xslt
 	  /// </para> </summary>
 	  /// <param name="container"> Node to append our report to </param>
 	  /// <param name="factory"> Document providing createElement, etc. services </param>
-	  /// <param name="h"> Hash presumably from <seealso cref="#getEnvironmentHash()"/> </param>
-	  /// <seealso cref= #writeEnvironmentReport(Hashtable)
-	  /// for an equivalent that writes to a PrintWriter instead </seealso>
+	  /// <param name="h"> Hash presumably from <seealso cref="getEnvironmentHash()"/> </param>
+	  /// <seealso cref=".writeEnvironmentReport(Hashtable)"
+	  /// for an equivalent that writes to a PrintWriter instead/>
 	  public virtual void appendEnvironmentReport(Node container, Document factory, Hashtable h)
 	  {
 		if ((null == container) || (null == factory))
@@ -423,7 +421,6 @@ namespace org.apache.xalan.xslt
 		  envCheckNode.appendChild(hashNode);
 
 		  for (System.Collections.IEnumerator keys = h.Keys.GetEnumerator(); keys.MoveNext();)
-			  /* no increment portion */
 		  {
 			object key = keys.Current;
 			string keyStr = (string) key;
@@ -488,7 +485,7 @@ namespace org.apache.xalan.xslt
 	  /// </param>
 	  /// <returns> false if OK, true if any .jars were reported 
 	  /// as having errors </returns>
-	  /// <seealso cref= #checkPathForJars(String, String[]) </seealso>
+	  /// <seealso cref=".checkPathForJars(String, String[])"/>
 	  protected internal virtual bool appendFoundJars(Node container, Document factory, ArrayList v, string desc)
 	  {
 
@@ -504,7 +501,6 @@ namespace org.apache.xalan.xslt
 		  Hashtable subhash = (Hashtable) v[i];
 
 		  for (System.Collections.IEnumerator keys = subhash.Keys.GetEnumerator(); keys.MoveNext();)
-			   /* no increment portion */
 		  {
 			object key = keys.Current;
 			try
@@ -542,8 +538,8 @@ namespace org.apache.xalan.xslt
 	  /// //  *.jar files therein! This should be updated
 	  /// </summary>
 	  /// <param name="h"> Hashtable to put information in </param>
-	  /// <seealso cref= #jarNames </seealso>
-	  /// <seealso cref= #checkPathForJars(String, String[]) </seealso>
+	  /// <seealso cref=".jarNames"/>
+	  /// <seealso cref=".checkPathForJars(String, String[])"/>
 	  protected internal virtual void checkSystemProperties(Hashtable h)
 	  {
 
@@ -637,10 +633,10 @@ namespace org.apache.xalan.xslt
 	  /// <param name="jars"> array of .jar base filenames to look for
 	  /// </param>
 	  /// <returns> Vector of Hashtables filled with info about found .jars </returns>
-	  /// <seealso cref= #jarNames </seealso>
-	  /// <seealso cref= #logFoundJars(Vector, String) </seealso>
-	  /// <seealso cref= #appendFoundJars(Node, Document, Vector, String ) </seealso>
-	  /// <seealso cref= #getApparentVersion(String, long) </seealso>
+	  /// <seealso cref=".jarNames"/>
+	  /// <seealso cref=".logFoundJars(Vector, String)"/>
+	  /// <seealso cref=".appendFoundJars(Node, Document, Vector, String )"/>
+	  /// <seealso cref=".getApparentVersion(String, long)"/>
 	  protected internal virtual ArrayList checkPathForJars(string cp, string[] jars)
 	  {
 
@@ -673,14 +669,14 @@ namespace org.apache.xalan.xslt
 				{
 				  Hashtable h = new Hashtable(2);
 				  // Note "-" char is looked for in appendFoundJars
-				  h[jars[i] + "-path"] = f.AbsolutePath;
+				  h[jars[i] + "-path"] = f.getAbsolutePath();
 
 				  // We won't bother reporting on the xalan.jar apparent version
 				  // since this requires knowing the jar size of the xalan.jar
 				  // before we build it. 
 				  // For other jars, eg. xml-apis.jar and xercesImpl.jar, we 
 				  // report the apparent version of the file we've found
-				  if (!("xalan.jar".Equals(jars[i], StringComparison.CurrentCultureIgnoreCase)))
+				  if (!("xalan.jar".Equals(jars[i], StringComparison.OrdinalIgnoreCase)))
 				  {
 					h[jars[i] + "-apparent.version"] = getApparentVersion(jars[i], f.length());
 				  }
@@ -737,7 +733,7 @@ namespace org.apache.xalan.xslt
 		}
 		else
 		{
-		  if ("xerces.jar".Equals(jarName, StringComparison.CurrentCultureIgnoreCase) || "xercesImpl.jar".Equals(jarName, StringComparison.CurrentCultureIgnoreCase))
+		  if ("xerces.jar".Equals(jarName, StringComparison.OrdinalIgnoreCase) || "xercesImpl.jar".Equals(jarName, StringComparison.OrdinalIgnoreCase))
 		  {
 	//              || "xalan.jar".equalsIgnoreCase(jarName))
 
@@ -783,7 +779,7 @@ namespace org.apache.xalan.xslt
 
 		  clazz = ObjectFactory.findProviderClass(JAXP1_CLASS, ObjectFactory.findClassLoader(), true);
 
-		  Method method = clazz.GetMethod(JAXP11_METHOD, noArgs);
+		  System.Reflection.MethodInfo method = clazz.GetMethod(JAXP11_METHOD, noArgs);
 
 		  // If we succeeded, we at least have JAXP 1.1 available
 		  h[VERSION + "JAXP"] = "1.1 or higher";
@@ -831,7 +827,7 @@ namespace org.apache.xalan.xslt
 
 		  // Found Xalan-J 1.x, grab it's version fields
 		  StringBuilder buf = new StringBuilder();
-		  Field f = clazz.GetField("PRODUCT");
+		  System.Reflection.FieldInfo f = clazz.GetField("PRODUCT");
 
 		  buf.Append(f.get(null));
 		  buf.Append(';');
@@ -862,7 +858,7 @@ namespace org.apache.xalan.xslt
 
 		  // Found Xalan-J 2.x, grab it's version fields
 		  StringBuilder buf = new StringBuilder();
-		  Field f = clazz.GetField("S_VERSION");
+		  System.Reflection.FieldInfo f = clazz.GetField("S_VERSION");
 		  buf.Append(f.get(null));
 
 		  h[VERSION + "xalan2x"] = buf.ToString();
@@ -882,7 +878,7 @@ namespace org.apache.xalan.xslt
 
 		  Type clazz = ObjectFactory.findProviderClass(XALAN2_2_VERSION_CLASS, ObjectFactory.findClassLoader(), true);
 
-		  Method method = clazz.GetMethod(XALAN2_2_VERSION_METHOD, noArgs);
+		  System.Reflection.MethodInfo method = clazz.GetMethod(XALAN2_2_VERSION_METHOD, noArgs);
 		  object returnValue = method.invoke(null, new object[0]);
 
 		  h[VERSION + "xalan2_2"] = (string)returnValue;
@@ -916,7 +912,7 @@ namespace org.apache.xalan.xslt
 		  Type clazz = ObjectFactory.findProviderClass(XERCES1_VERSION_CLASS, ObjectFactory.findClassLoader(), true);
 
 		  // Found Xerces-J 1.x, grab it's version fields
-		  Field f = clazz.GetField("fVersion");
+		  System.Reflection.FieldInfo f = clazz.GetField("fVersion");
 		  string parserVersion = (string) f.get(null);
 
 		  h[VERSION + "xerces1"] = parserVersion;
@@ -934,7 +930,7 @@ namespace org.apache.xalan.xslt
 		  Type clazz = ObjectFactory.findProviderClass(XERCES2_VERSION_CLASS, ObjectFactory.findClassLoader(), true);
 
 		  // Found Xerces-J 2.x, grab it's version fields
-		  Field f = clazz.GetField("fVersion");
+		  System.Reflection.FieldInfo f = clazz.GetField("fVersion");
 		  string parserVersion = (string) f.get(null);
 
 		  h[VERSION + "xerces2"] = parserVersion;
@@ -981,7 +977,7 @@ namespace org.apache.xalan.xslt
 
 		  Type clazz = ObjectFactory.findProviderClass(ANT_VERSION_CLASS, ObjectFactory.findClassLoader(), true);
 
-		  Method method = clazz.GetMethod(ANT_VERSION_METHOD, noArgs);
+		  System.Reflection.MethodInfo method = clazz.GetMethod(ANT_VERSION_METHOD, noArgs);
 		  object returnValue = method.invoke(null, new object[0]);
 
 		  h[VERSION + "ant"] = (string)returnValue;
@@ -1022,7 +1018,7 @@ namespace org.apache.xalan.xslt
 		{
 		  Type clazz = ObjectFactory.findProviderClass(DOM_LEVEL2_CLASS, ObjectFactory.findClassLoader(), true);
 
-		  Method method = clazz.GetMethod(DOM_LEVEL2_METHOD, twoStringArgs);
+		  System.Reflection.MethodInfo method = clazz.GetMethod(DOM_LEVEL2_METHOD, twoStringArgs);
 
 		  // If we succeeded, we have loaded interfaces from a 
 		  //  level 2 DOM somewhere
@@ -1104,7 +1100,7 @@ namespace org.apache.xalan.xslt
 		  //  see changes.html "Changes from SAX 2.0beta2 to SAX 2.0prerelease"
 		  Type clazz = ObjectFactory.findProviderClass(SAX_VERSION2BETA_CLASSNF, ObjectFactory.findClassLoader(), true);
 
-		  Method method = clazz.GetMethod(SAX_VERSION2BETA_METHODNF, attributesArg);
+		  System.Reflection.MethodInfo method = clazz.GetMethod(SAX_VERSION2BETA_METHODNF, attributesArg);
 
 		  // If we succeeded, we have loaded interfaces from a 
 		  //  real, final SAX version 2.0 somewhere
@@ -1120,7 +1116,7 @@ namespace org.apache.xalan.xslt
 		  {
 			Type clazz = ObjectFactory.findProviderClass(SAX_VERSION2_CLASS, ObjectFactory.findClassLoader(), true);
 
-			Method method = clazz.GetMethod(SAX_VERSION2_METHOD, oneStringArg);
+			System.Reflection.MethodInfo method = clazz.GetMethod(SAX_VERSION2_METHOD, oneStringArg);
 
 			// If we succeeded, we have loaded interfaces from a 
 			//  SAX version 2.0beta2 or earlier; these might work but 
@@ -1137,7 +1133,7 @@ namespace org.apache.xalan.xslt
 			{
 			  Type clazz = ObjectFactory.findProviderClass(SAX_VERSION1_CLASS, ObjectFactory.findClassLoader(), true);
 
-			  Method method = clazz.GetMethod(SAX_VERSION1_METHOD, oneStringArg);
+			  System.Reflection.MethodInfo method = clazz.GetMethod(SAX_VERSION1_METHOD, oneStringArg);
 
 			  // If we succeeded, we have loaded interfaces from a 
 			  //  SAX version 1.0 somewhere; which won't work very 
@@ -1161,14 +1157,14 @@ namespace org.apache.xalan.xslt
 	  /// key=jarsize, value=jarname ' from ' distro name
 	  /// Note assumption: two jars cannot have the same size!
 	  /// </summary>
-	  /// <seealso cref= #getApparentVersion(String, long) </seealso>
+	  /// <seealso cref=".getApparentVersion(String, long)"/>
 	  private static Hashtable jarVersions = new Hashtable();
 
 	  /// <summary>
 	  /// Static initializer for jarVersions table.  
 	  /// Doing this just once saves time and space.
 	  /// </summary>
-	  /// <seealso cref= #getApparentVersion(String, long) </seealso>
+	  /// <seealso cref=".getApparentVersion(String, long)"/>
 	  static EnvironmentCheck()
 	  {
 		// Note: hackish Hashtable, this could use improvement

@@ -20,7 +20,9 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
-
+	using DTM = org.apache.xml.dtm.DTM;
+	using DTMDOMException = org.apache.xml.dtm.DTMDOMException;
+	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 
 	using DOMException = org.w3c.dom.DOMException;
 	using Node = org.w3c.dom.Node;
@@ -179,7 +181,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <exception cref="DOMException"> - INVALID_STATE_ERR Raised if this method is
 	  /// called after the detach method was invoked.
 	  ///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.w3c.dom.Node nextNode() throws org.w3c.dom.DOMException
 	  public virtual Node nextNode()
 	  {
@@ -189,7 +191,7 @@ namespace org.apache.xml.dtm.@ref
 		  }
 
 		  int handle = dtm_iter.nextNode();
-		  if (handle == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (handle == DTM.NULL)
 		  {
 			return null;
 		  }
@@ -211,7 +213,7 @@ namespace org.apache.xml.dtm.@ref
 		  }
 
 		  int handle = dtm_iter.previousNode();
-		  if (handle == org.apache.xml.dtm.DTM_Fields.NULL)
+		  if (handle == DTM.NULL)
 		  {
 			return null;
 		  }

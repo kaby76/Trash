@@ -25,6 +25,12 @@ namespace org.apache.xpath.functions
 {
 
 	using XSLMessages = org.apache.xalan.res.XSLMessages;
+	using Expression = org.apache.xpath.Expression;
+	using ExpressionNode = org.apache.xpath.ExpressionNode;
+	using ExpressionOwner = org.apache.xpath.ExpressionOwner;
+	using ExtensionsProvider = org.apache.xpath.ExtensionsProvider;
+	using XPathContext = org.apache.xpath.XPathContext;
+	using XPathVisitor = org.apache.xpath.XPathVisitor;
 	using XNull = org.apache.xpath.objects.XNull;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
@@ -185,7 +191,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -234,7 +240,7 @@ namespace org.apache.xpath.functions
 	  /// </param>
 	  /// <exception cref="WrongNumberArgsException"> If the argNum parameter is beyond what
 	  /// is specified for this function. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void setArg(org.apache.xpath.Expression arg, int argNum) throws WrongNumberArgsException
 	  public override void setArg(Expression arg, int argNum)
 	  {
@@ -249,7 +255,7 @@ namespace org.apache.xpath.functions
 	  /// <param name="argNum"> The number of arguments that is being passed to the function.
 	  /// </param>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void checkNumberArgs(int argNum) throws WrongNumberArgsException
 	  public override void checkNumberArgs(int argNum)
 	  {
@@ -269,7 +275,7 @@ namespace org.apache.xpath.functions
 			  m_exp = exp;
 		  }
 
-		/// <seealso cref= ExpressionOwner#getExpression() </seealso>
+		/// <seealso cref="ExpressionOwner.getExpression()"/>
 		public virtual Expression Expression
 		{
 			get
@@ -327,7 +333,7 @@ namespace org.apache.xpath.functions
 	  /// number of arguments, so this method must never be called.
 	  /// </summary>
 	  /// <exception cref="WrongNumberArgsException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: protected void reportWrongNumberArgs() throws WrongNumberArgsException
 	  protected internal override void reportWrongNumberArgs()
 	  {

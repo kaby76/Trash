@@ -46,7 +46,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> An integer representation of the element, defined in the
 	  ///     Constants class. </returns>
-	  /// <seealso cref= org.apache.xalan.templates.Constants </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"/>
 	  public override int XSLToken
 	  {
 		  get
@@ -58,7 +58,7 @@ namespace org.apache.xalan.templates
 	   /// <summary>
 	   /// Return the node name, defined in the
 	   ///     Constants class. </summary>
-	   /// <seealso cref= org.apache.xalan.templates.Constants </seealso>
+	   /// <seealso cref="org.apache.xalan.templates.Constants"/>
 	   /// <returns> The node name
 	   ///  </returns>
 	  public override string NodeName
@@ -69,7 +69,7 @@ namespace org.apache.xalan.templates
 		  }
 	  }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer, org.apache.xpath.objects.XObject[] args) throws javax.xml.transform.TransformerException
 	  public virtual void execute(TransformerImpl transformer, XObject[] args)
 	  {
@@ -143,14 +143,14 @@ namespace org.apache.xalan.templates
 	  /// values that may be based on some other property that
 	  /// depends on recomposition.
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void compose(StylesheetRoot sroot) throws javax.xml.transform.TransformerException
 	  public override void compose(StylesheetRoot sroot)
 	  {
 		base.compose(sroot);
 
 		// Register the function namespace (if not already registered).
-		string @namespace = Name.Namespace;
+		string @namespace = Name.getNamespace();
 		string handlerClass = sroot.ExtensionHandlerClass;
 		object[] args = new object[] {@namespace, sroot};
 		ExtensionNamespaceSupport extNsSpt = new ExtensionNamespaceSupport(@namespace, handlerClass, args);

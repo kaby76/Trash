@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using GOTO = org.apache.bcel.generic.GOTO;
 	using IFNE = org.apache.bcel.generic.IFNE;
@@ -58,7 +57,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -107,26 +106,26 @@ namespace org.apache.xalan.xsltc.compiler
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Returns the KeyIndex object of a given name
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getKeyIndex = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "getKeyIndex", "(Ljava/lang/String;)"+ Constants_Fields.KEY_INDEX_SIG);
-		int getKeyIndex = cpg.addMethodref(Constants_Fields.TRANSLET_CLASS, "getKeyIndex", "(Ljava/lang/String;)" + Constants_Fields.KEY_INDEX_SIG);
+//ORIGINAL LINE: final int getKeyIndex = cpg.addMethodref(TRANSLET_CLASS, "getKeyIndex", "(Ljava/lang/String;)"+ KEY_INDEX_SIG);
+		int getKeyIndex = cpg.addMethodref(TRANSLET_CLASS, "getKeyIndex", "(Ljava/lang/String;)" + KEY_INDEX_SIG);
 
 		// Initialises a KeyIndex to return nodes with specific values
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int lookupId = cpg.addMethodref(Constants_Fields.KEY_INDEX_CLASS, "containsID", "(ILjava/lang/Object;)I");
-		int lookupId = cpg.addMethodref(Constants_Fields.KEY_INDEX_CLASS, "containsID", "(ILjava/lang/Object;)I");
+//ORIGINAL LINE: final int lookupId = cpg.addMethodref(KEY_INDEX_CLASS, "containsID", "(ILjava/lang/Object;)I");
+		int lookupId = cpg.addMethodref(KEY_INDEX_CLASS, "containsID", "(ILjava/lang/Object;)I");
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int lookupKey = cpg.addMethodref(Constants_Fields.KEY_INDEX_CLASS, "containsKey", "(ILjava/lang/Object;)I");
-		int lookupKey = cpg.addMethodref(Constants_Fields.KEY_INDEX_CLASS, "containsKey", "(ILjava/lang/Object;)I");
+//ORIGINAL LINE: final int lookupKey = cpg.addMethodref(KEY_INDEX_CLASS, "containsKey", "(ILjava/lang/Object;)I");
+		int lookupKey = cpg.addMethodref(KEY_INDEX_CLASS, "containsKey", "(ILjava/lang/Object;)I");
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getNodeIdent = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNodeIdent", "(I)"+Constants_Fields.NODE_SIG);
-		int getNodeIdent = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, "getNodeIdent", "(I)" + Constants_Fields.NODE_SIG);
+//ORIGINAL LINE: final int getNodeIdent = cpg.addInterfaceMethodref(DOM_INTF, "getNodeIdent", "(I)"+NODE_SIG);
+		int getNodeIdent = cpg.addInterfaceMethodref(DOM_INTF, "getNodeIdent", "(I)" + NODE_SIG);
 
 		// Call getKeyIndex in AbstractTranslet with the name of the key
 		// to get the index for this key (which is also a node iterator).

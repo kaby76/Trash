@@ -22,7 +22,7 @@
  */
 namespace org.apache.xpath.operations
 {
-
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XBoolean = org.apache.xpath.objects.XBoolean;
 	using XObject = org.apache.xpath.objects.XObject;
 
@@ -40,11 +40,11 @@ namespace org.apache.xpath.operations
 	  /// </summary>
 	  /// <param name="xctxt"> The runtime execution context.
 	  /// </param>
-	  /// <returns> <seealso cref="org.apache.xpath.objects.XBoolean#S_TRUE"/> or 
-	  /// <seealso cref="org.apache.xpath.objects.XBoolean#S_FALSE"/>.
+	  /// <returns> <seealso cref="org.apache.xpath.objects.XBoolean.S_TRUE"/> or 
+	  /// <seealso cref="org.apache.xpath.objects.XBoolean.S_FALSE"/>.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -71,7 +71,7 @@ namespace org.apache.xpath.operations
 	  /// <returns> The result of the operation as a boolean.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public boolean bool(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override bool @bool(XPathContext xctxt)
 	  {

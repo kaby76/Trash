@@ -23,7 +23,6 @@
 namespace org.apache.xml.serializer.utils
 {
 
-
 	/// <summary>
 	/// A utility class for issuing error messages.
 	/// 
@@ -97,7 +96,7 @@ namespace org.apache.xml.serializer.utils
 	{
 		/// <summary>
 		/// The local object to use. </summary>
-		private readonly Locale m_locale = Locale.Default;
+		private readonly Locale m_locale = Locale.getDefault();
 
 		/// <summary>
 		/// The language specific resource object for messages. </summary>
@@ -298,7 +297,7 @@ namespace org.apache.xml.serializer.utils
 		/// <returns> the ResourceBundle </returns>
 		/// <exception cref="MissingResourceException">
 		/// @xsl.usage internal </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private java.util.ListResourceBundle loadResourceBundle(String resourceBundle) throws java.util.MissingResourceException
 		private ListResourceBundle loadResourceBundle(string resourceBundle)
 		{
@@ -345,8 +344,8 @@ namespace org.apache.xml.serializer.utils
 		private static string getResourceSuffix(Locale locale)
 		{
 
-			string suffix = "_" + locale.Language;
-			string country = locale.Country;
+			string suffix = "_" + locale.getLanguage();
+			string country = locale.getCountry();
 
 			if (country.Equals("TW"))
 			{

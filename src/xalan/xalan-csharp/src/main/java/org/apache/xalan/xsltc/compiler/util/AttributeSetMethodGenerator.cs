@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using ALOAD = org.apache.bcel.generic.ALOAD;
 	using ASTORE = org.apache.bcel.generic.ASTORE;
 	using ClassGen = org.apache.bcel.generic.ClassGen;
@@ -43,12 +42,12 @@ namespace org.apache.xalan.xsltc.compiler.util
 
 		static AttributeSetMethodGenerator()
 		{
-		   argTypes[0] = Util.getJCRefType(org.apache.xalan.xsltc.compiler.Constants_Fields.DOM_INTF_SIG);
-		   argNames[0] = org.apache.xalan.xsltc.compiler.Constants_Fields.DOM_PNAME;
-		   argTypes[1] = Util.getJCRefType(org.apache.xalan.xsltc.compiler.Constants_Fields.NODE_ITERATOR_SIG);
-		   argNames[1] = org.apache.xalan.xsltc.compiler.Constants_Fields.ITERATOR_PNAME;
-		   argTypes[2] = Util.getJCRefType(org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_SIG);
-		   argNames[2] = org.apache.xalan.xsltc.compiler.Constants_Fields.TRANSLET_OUTPUT_PNAME;
+		   argTypes[0] = Util.getJCRefType(DOM_INTF_SIG);
+		   argNames[0] = DOM_PNAME;
+		   argTypes[1] = Util.getJCRefType(NODE_ITERATOR_SIG);
+		   argNames[1] = ITERATOR_PNAME;
+		   argTypes[2] = Util.getJCRefType(TRANSLET_OUTPUT_SIG);
+		   argNames[2] = TRANSLET_OUTPUT_PNAME;
 		}
 
 
@@ -59,7 +58,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		private readonly Instruction _astoreHandler;
 		private readonly Instruction _aloadHandler;
 
-		public AttributeSetMethodGenerator(string methodName, ClassGen classGen) : base(org.apache.bcel.Constants.ACC_PRIVATE, org.apache.bcel.generic.Type.VOID, argTypes, argNames, methodName, classGen.ClassName, new InstructionList(), classGen.ConstantPool)
+		public AttributeSetMethodGenerator(string methodName, ClassGen classGen) : base(org.apache.bcel.Constants.ACC_PRIVATE, org.apache.bcel.generic.Type.VOID, argTypes, argNames, methodName, classGen.getClassName(), new InstructionList(), classGen.getConstantPool())
 		{
 
 		_aloadDom = new ALOAD(DOM_INDEX);

@@ -23,7 +23,6 @@
 namespace org.apache.xalan.transformer
 {
 
-
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
 	using XPathContext = org.apache.xpath.XPathContext;
@@ -69,7 +68,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="support"> XPath context to use
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void sort(org.apache.xml.dtm.DTMIterator v, java.util.Vector keys, org.apache.xpath.XPathContext support) throws javax.xml.transform.TransformerException
 	  public virtual void sort(DTMIterator v, ArrayList keys, XPathContext support)
 	  {
@@ -122,7 +121,7 @@ namespace org.apache.xalan.transformer
 	  /// <returns> The results of the compare of the two nodes.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: int compare(NodeCompareElem n1, NodeCompareElem n2, int kIndex, org.apache.xpath.XPathContext support) throws javax.xml.transform.TransformerException
 	  internal virtual int compare(NodeCompareElem n1, NodeCompareElem n2, int kIndex, XPathContext support)
 	  {
@@ -236,8 +235,8 @@ namespace org.apache.xalan.transformer
 		  //Process caseOrder parameter
 		  if (k.m_caseOrderUpper)
 		  {
-			string tempN1 = n1String.SourceString.ToLower();
-			string tempN2 = n2String.SourceString.ToLower();
+			string tempN1 = n1String.getSourceString().ToLower();
+			string tempN2 = n2String.getSourceString().ToLower();
 
 			if (tempN1.Equals(tempN2))
 			{
@@ -292,7 +291,7 @@ namespace org.apache.xalan.transformer
 	  /// <param name="support"> XPath context to use
 	  /// </param>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: void mergesort(java.util.Vector a, java.util.Vector b, int l, int r, org.apache.xpath.XPathContext support) throws javax.xml.transform.TransformerException
 	  internal virtual void mergesort(ArrayList a, ArrayList b, int l, int r, XPathContext support)
 	  {
@@ -504,7 +503,7 @@ namespace org.apache.xalan.transformer
 		/// <param name="node"> Current node
 		/// </param>
 		/// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: NodeCompareElem(int node) throws javax.xml.transform.TransformerException
 		internal NodeCompareElem(NodeSorter outerInstance, int node)
 		{
@@ -535,7 +534,7 @@ namespace org.apache.xalan.transformer
 			  // %REVIEW%
 			  DTMIterator ni = ((XNodeSet)r).iterRaw();
 			  int current = ni.CurrentNode;
-			  if (org.apache.xml.dtm.DTM_Fields.NULL == current)
+			  if (DTM.NULL == current)
 			  {
 				current = ni.nextNode();
 			  }

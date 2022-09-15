@@ -24,7 +24,6 @@ using System.Collections;
 namespace org.apache.xalan.processor
 {
 
-
 	using Constants = org.apache.xalan.templates.Constants;
 	using QName = org.apache.xml.utils.QName;
 
@@ -477,7 +476,7 @@ namespace org.apache.xalan.processor
 	  /// <param name="localName"> The local name (without prefix), or empty string if not namespace processing.
 	  /// </param>
 	  /// <returns> normally a <seealso cref="ProcessorUnknown"/> reference. </returns>
-	  /// <seealso cref= ProcessorUnknown </seealso>
+	  /// <seealso cref="ProcessorUnknown"/>
 	  internal virtual XSLTElementProcessor getProcessorForUnknown(string uri, string localName)
 	  {
 

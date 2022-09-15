@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.serializer
 {
-
 	using Attributes = org.xml.sax.Attributes;
 
 	/// <summary>
@@ -37,42 +36,52 @@ namespace org.apache.xml.serializer
 	  /// Event type generated when a document begins.
 	  /// 
 	  /// </summary>
+	  public static int EVENTTYPE_STARTDOCUMENT = 1;
 
 	  /// <summary>
 	  /// Event type generated when a document ends.
 	  /// </summary>
+	  public static int EVENTTYPE_ENDDOCUMENT = 2;
 
 	  /// <summary>
 	  /// Event type generated when an element begins (after the attributes have been processed but before the children have been added).
 	  /// </summary>
+	  public static int EVENTTYPE_STARTELEMENT = 3;
 
 	  /// <summary>
 	  /// Event type generated when an element ends, after it's children have been added.
 	  /// </summary>
+	  public static int EVENTTYPE_ENDELEMENT = 4;
 
 	  /// <summary>
 	  /// Event type generated for character data (CDATA and Ignorable Whitespace have their own events).
 	  /// </summary>
+	  public static int EVENTTYPE_CHARACTERS = 5;
 
 	  /// <summary>
 	  /// Event type generated for ignorable whitespace (I'm not sure how much this is actually called.
 	  /// </summary>
+	  public static int EVENTTYPE_IGNORABLEWHITESPACE = 6;
 
 	  /// <summary>
 	  /// Event type generated for processing instructions.
 	  /// </summary>
+	  public static int EVENTTYPE_PI = 7;
 
 	  /// <summary>
 	  /// Event type generated after a comment has been added.
 	  /// </summary>
+	  public static int EVENTTYPE_COMMENT = 8;
 
 	  /// <summary>
 	  /// Event type generate after an entity ref is created.
 	  /// </summary>
+	  public static int EVENTTYPE_ENTITYREF = 9;
 
 	  /// <summary>
 	  /// Event type generated after CDATA is generated.
 	  /// </summary>
+	  public static int EVENTTYPE_CDATA = 10;
 
 	  /// <summary>
 	  /// Event type generated when characters might be written to an output stream,
@@ -83,10 +92,12 @@ namespace org.apache.xml.serializer
 	  /// ouput to the document the real characters will be written out using the
 	  /// EVENTTYPE_OUTPUT_CHARACTERS.
 	  /// </summary>
+	  public static int EVENTTYPE_OUTPUT_PSEUDO_CHARACTERS = 11;
 
 	  /// <summary>
 	  /// Event type generated when characters are written to an output stream.
 	  /// </summary>
+	  public static int EVENTTYPE_OUTPUT_CHARACTERS = 12;
 
 
 	  /// <summary>
@@ -134,22 +145,6 @@ namespace org.apache.xml.serializer
 	  /// <param name="data"> The comment or entity ref data. </param>
 	  void fireGenerateEvent(int eventType, string data);
 
-	}
-
-	public static class SerializerTrace_Fields
-	{
-	  public const int EVENTTYPE_STARTDOCUMENT = 1;
-	  public const int EVENTTYPE_ENDDOCUMENT = 2;
-	  public const int EVENTTYPE_STARTELEMENT = 3;
-	  public const int EVENTTYPE_ENDELEMENT = 4;
-	  public const int EVENTTYPE_CHARACTERS = 5;
-	  public const int EVENTTYPE_IGNORABLEWHITESPACE = 6;
-	  public const int EVENTTYPE_PI = 7;
-	  public const int EVENTTYPE_COMMENT = 8;
-	  public const int EVENTTYPE_ENTITYREF = 9;
-	  public const int EVENTTYPE_CDATA = 10;
-	  public const int EVENTTYPE_OUTPUT_PSEUDO_CHARACTERS = 11;
-	  public const int EVENTTYPE_OUTPUT_CHARACTERS = 12;
 	}
 
 }

@@ -116,7 +116,7 @@ namespace org.apache.xml.utils
 				{
             
 				  // Remove object from end of free pool.
-				  object result = freeStack.Remove(freeStack.Count - 1);
+				  object result = freeStack.RemoveAndReturn(freeStack.Count - 1);
 				  return result;
 				}
             
@@ -144,7 +144,7 @@ namespace org.apache.xml.utils
 				  // Create a new object if so.
 				  try
 				  {
-					return objectType.newInstance();
+					return System.Activator.CreateInstance(objectType);
 				  }
 				  catch (InstantiationException)
 				  {
@@ -160,7 +160,7 @@ namespace org.apache.xml.utils
 				{
             
 				  // Remove object from end of free pool.
-				  object result = freeStack.Remove(freeStack.Count - 1);
+				  object result = freeStack.RemoveAndReturn(freeStack.Count - 1);
             
 				  return result;
 				}

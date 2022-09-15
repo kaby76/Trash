@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.trace
 {
-
 	using ElemTemplateElement = org.apache.xalan.templates.ElemTemplateElement;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
 	using XPath = org.apache.xpath.XPath;

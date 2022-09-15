@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using ClassGenerator = org.apache.xalan.xsltc.compiler.util.ClassGenerator;
 	using ErrorMsg = org.apache.xalan.xsltc.compiler.util.ErrorMsg;
@@ -50,8 +49,8 @@ namespace org.apache.xalan.xsltc.compiler
 		public BinOpExpr(int op, Expression left, Expression right)
 		{
 		_op = op;
-		(_left = left).Parent = this;
-		(_right = right).Parent = this;
+		(_left = left).setParent(this);
+		(_right = right).setParent(this);
 		}
 
 		/// <summary>
@@ -89,7 +88,7 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -127,7 +126,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		_left.translate(classGen, methodGen);
 		_right.translate(classGen, methodGen);
@@ -151,7 +150,7 @@ namespace org.apache.xalan.xsltc.compiler
 			break;
 		default:
 			ErrorMsg msg = new ErrorMsg(ErrorMsg.ILLEGAL_BINARY_OP_ERR, this);
-			Parser.reportError(Constants_Fields.ERROR, msg);
+			Parser.reportError(Constants.ERROR, msg);
 		break;
 		}
 		}

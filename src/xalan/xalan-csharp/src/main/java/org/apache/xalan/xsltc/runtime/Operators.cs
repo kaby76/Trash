@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.runtime
 {
-
 	/// <summary>
 	/// @author Jacek Ambroziak
 	/// @author Santiago Pericas-Geertsen

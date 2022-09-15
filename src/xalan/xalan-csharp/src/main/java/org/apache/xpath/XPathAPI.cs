@@ -46,8 +46,8 @@ namespace org.apache.xpath
 	/// consider using an instance of CachedXPathAPI rather than these static
 	/// methods.
 	/// </summary>
-	/// <seealso cref= <a href="http://www.w3.org/TR/xpath">XPath Specification</a> 
-	///  </seealso>
+	/// <seealso cref="<a href="http://www.w3.org/TR/xpath">XPath Specification</a> "
+	/// />
 	public class XPathAPI
 	{
 
@@ -61,7 +61,7 @@ namespace org.apache.xpath
 	  /// <returns> The first node found that matches the XPath, or null.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.w3c.dom.Node selectSingleNode(org.w3c.dom.Node contextNode, String str) throws javax.xml.transform.TransformerException
 	  public static Node selectSingleNode(Node contextNode, string str)
 	  {
@@ -78,7 +78,7 @@ namespace org.apache.xpath
 	  /// <returns> The first node found that matches the XPath, or null.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.w3c.dom.Node selectSingleNode(org.w3c.dom.Node contextNode, String str, org.w3c.dom.Node namespaceNode) throws javax.xml.transform.TransformerException
 	  public static Node selectSingleNode(Node contextNode, string str, Node namespaceNode)
 	  {
@@ -99,7 +99,7 @@ namespace org.apache.xpath
 	  ///  <returns> A NodeIterator, should never be null.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.w3c.dom.traversal.NodeIterator selectNodeIterator(org.w3c.dom.Node contextNode, String str) throws javax.xml.transform.TransformerException
 	  public static NodeIterator selectNodeIterator(Node contextNode, string str)
 	  {
@@ -116,7 +116,7 @@ namespace org.apache.xpath
 	  ///  <returns> A NodeIterator, should never be null.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.w3c.dom.traversal.NodeIterator selectNodeIterator(org.w3c.dom.Node contextNode, String str, org.w3c.dom.Node namespaceNode) throws javax.xml.transform.TransformerException
 	  public static NodeIterator selectNodeIterator(Node contextNode, string str, Node namespaceNode)
 	  {
@@ -137,7 +137,7 @@ namespace org.apache.xpath
 	  ///  <returns> A NodeIterator, should never be null.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.w3c.dom.NodeList selectNodeList(org.w3c.dom.Node contextNode, String str) throws javax.xml.transform.TransformerException
 	  public static NodeList selectNodeList(Node contextNode, string str)
 	  {
@@ -154,7 +154,7 @@ namespace org.apache.xpath
 	  ///  <returns> A NodeIterator, should never be null.
 	  /// </returns>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.w3c.dom.NodeList selectNodeList(org.w3c.dom.Node contextNode, String str, org.w3c.dom.Node namespaceNode) throws javax.xml.transform.TransformerException
 	  public static NodeList selectNodeList(Node contextNode, string str, Node namespaceNode)
 	  {
@@ -172,15 +172,15 @@ namespace org.apache.xpath
 	  ///  <param name="contextNode"> The node to start searching from. </param>
 	  ///  <param name="str"> A valid XPath string. </param>
 	  ///  <returns> An XObject, which can be used to obtain a string, number, nodelist, etc, should never be null. </returns>
-	  ///  <seealso cref= org.apache.xpath.objects.XObject </seealso>
-	  ///  <seealso cref= org.apache.xpath.objects.XNull </seealso>
-	  ///  <seealso cref= org.apache.xpath.objects.XBoolean </seealso>
-	  ///  <seealso cref= org.apache.xpath.objects.XNumber </seealso>
-	  ///  <seealso cref= org.apache.xpath.objects.XString </seealso>
-	  ///  <seealso cref= org.apache.xpath.objects.XRTreeFrag
-	  /// </seealso>
+	  ///  <seealso cref="org.apache.xpath.objects.XObject"/>
+	  ///  <seealso cref="org.apache.xpath.objects.XNull"/>
+	  ///  <seealso cref="org.apache.xpath.objects.XBoolean"/>
+	  ///  <seealso cref="org.apache.xpath.objects.XNumber"/>
+	  ///  <seealso cref="org.apache.xpath.objects.XString"/>
+	  ///  <seealso cref="org.apache.xpath.objects.XRTreeFrag"
+	  ////>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xpath.objects.XObject eval(org.w3c.dom.Node contextNode, String str) throws javax.xml.transform.TransformerException
 	  public static XObject eval(Node contextNode, string str)
 	  {
@@ -198,15 +198,15 @@ namespace org.apache.xpath
 	  ///  <param name="str"> A valid XPath string. </param>
 	  ///  <param name="namespaceNode"> The node from which prefixes in the XPath will be resolved to namespaces. </param>
 	  ///  <returns> An XObject, which can be used to obtain a string, number, nodelist, etc, should never be null. </returns>
-	  ///  <seealso cref= org.apache.xpath.objects.XObject </seealso>
-	  ///  <seealso cref= org.apache.xpath.objects.XNull </seealso>
-	  ///  <seealso cref= org.apache.xpath.objects.XBoolean </seealso>
-	  ///  <seealso cref= org.apache.xpath.objects.XNumber </seealso>
-	  ///  <seealso cref= org.apache.xpath.objects.XString </seealso>
-	  ///  <seealso cref= org.apache.xpath.objects.XRTreeFrag
-	  /// </seealso>
+	  ///  <seealso cref="org.apache.xpath.objects.XObject"/>
+	  ///  <seealso cref="org.apache.xpath.objects.XNull"/>
+	  ///  <seealso cref="org.apache.xpath.objects.XBoolean"/>
+	  ///  <seealso cref="org.apache.xpath.objects.XNumber"/>
+	  ///  <seealso cref="org.apache.xpath.objects.XString"/>
+	  ///  <seealso cref="org.apache.xpath.objects.XRTreeFrag"
+	  ////>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xpath.objects.XObject eval(org.w3c.dom.Node contextNode, String str, org.w3c.dom.Node namespaceNode) throws javax.xml.transform.TransformerException
 	  public static XObject eval(Node contextNode, string str, Node namespaceNode)
 	  {
@@ -224,7 +224,7 @@ namespace org.apache.xpath
 		// XPath namespaces are resolved from the input context node's document element
 		// if it is a root node, or else the current context node (for lack of a better
 		// resolution space, given the simplicity of this sample code).
-		PrefixResolverDefault prefixResolver = new PrefixResolverDefault((namespaceNode.NodeType == Node.DOCUMENT_NODE) ? ((Document) namespaceNode).DocumentElement : namespaceNode);
+		PrefixResolverDefault prefixResolver = new PrefixResolverDefault((namespaceNode.getNodeType() == Node.DOCUMENT_NODE) ? ((Document) namespaceNode).getDocumentElement() : namespaceNode);
 
 		// Create the XPath object.
 		XPath xpath = new XPath(str, null, prefixResolver, XPath.SELECT, null);
@@ -248,15 +248,15 @@ namespace org.apache.xpath
 	  ///   <param name="prefixResolver"> Will be called if the parser encounters namespace
 	  ///                         prefixes, to resolve the prefixes to URLs. </param>
 	  ///   <returns> An XObject, which can be used to obtain a string, number, nodelist, etc, should never be null. </returns>
-	  ///   <seealso cref= org.apache.xpath.objects.XObject </seealso>
-	  ///   <seealso cref= org.apache.xpath.objects.XNull </seealso>
-	  ///   <seealso cref= org.apache.xpath.objects.XBoolean </seealso>
-	  ///   <seealso cref= org.apache.xpath.objects.XNumber </seealso>
-	  ///   <seealso cref= org.apache.xpath.objects.XString </seealso>
-	  ///   <seealso cref= org.apache.xpath.objects.XRTreeFrag
-	  /// </seealso>
+	  ///   <seealso cref="org.apache.xpath.objects.XObject"/>
+	  ///   <seealso cref="org.apache.xpath.objects.XNull"/>
+	  ///   <seealso cref="org.apache.xpath.objects.XBoolean"/>
+	  ///   <seealso cref="org.apache.xpath.objects.XNumber"/>
+	  ///   <seealso cref="org.apache.xpath.objects.XString"/>
+	  ///   <seealso cref="org.apache.xpath.objects.XRTreeFrag"
+	  ////>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static org.apache.xpath.objects.XObject eval(org.w3c.dom.Node contextNode, String str, org.apache.xml.utils.PrefixResolver prefixResolver) throws javax.xml.transform.TransformerException
 	  public static XObject eval(Node contextNode, string str, PrefixResolver prefixResolver)
 	  {

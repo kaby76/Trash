@@ -25,7 +25,6 @@ namespace org.apache.xml.dtm
 {
 
 
-
 	using XMLErrorResources = org.apache.xml.res.XMLErrorResources;
 	using XMLMessages = org.apache.xml.res.XMLMessages;
 
@@ -72,7 +71,7 @@ namespace org.apache.xml.dtm
 		/// This method retrieves an exception that this exception wraps.
 		/// </summary>
 		/// <returns> An Throwable object, or null. </returns>
-		/// <seealso cref= #getCause </seealso>
+		/// <seealso cref=".getCause"/>
 		public virtual Exception Exception
 		{
 			get
@@ -102,14 +101,14 @@ namespace org.apache.xml.dtm
 		/// <para>This method can be called at most once.  It is generally called from
 		/// within the constructor, or immediately after creating the
 		/// throwable.  If this throwable was created
-		/// with <seealso cref="#DTMException(Throwable)"/> or
-		/// <seealso cref="#DTMException(String,Throwable)"/>, this method cannot be called
+		/// with <seealso cref="DTMException(Throwable)"/> or
+		/// <seealso cref="DTMException(String,Throwable)"/>, this method cannot be called
 		/// even once.
 		/// 
 		/// </para>
 		/// </summary>
 		/// <param name="cause"> the cause (which is saved for later retrieval by the
-		///         <seealso cref="#getCause()"/> method).  (A <tt>null</tt> value is
+		///         <seealso cref="getCause()"/> method).  (A <tt>null</tt> value is
 		///         permitted, and indicates that the cause is nonexistent or
 		///         unknown.) </param>
 		/// <returns>  a reference to this <code>Throwable</code> instance. </returns>
@@ -117,8 +116,8 @@ namespace org.apache.xml.dtm
 		///         throwable.  (A throwable cannot
 		///         be its own cause.) </exception>
 		/// <exception cref="IllegalStateException"> if this throwable was
-		///         created with <seealso cref="#DTMException(Throwable)"/> or
-		///         <seealso cref="#DTMException(String,Throwable)"/>, or this method has already
+		///         created with <seealso cref="DTMException(Throwable)"/> or
+		///         <seealso cref="DTMException(String,Throwable)"/>, or this method has already
 		///         been called on this throwable. </exception>
 		public virtual Exception initCause(Exception cause)
 		{
@@ -233,9 +232,9 @@ namespace org.apache.xml.dtm
     
 				if (null != locator)
 				{
-					string systemID = locator.SystemId;
-					int line = locator.LineNumber;
-					int column = locator.ColumnNumber;
+					string systemID = locator.getSystemId();
+					int line = locator.getLineNumber();
+					int column = locator.getColumnNumber();
     
 					if (null != systemID)
 					{
@@ -273,9 +272,9 @@ namespace org.apache.xml.dtm
 				if (null != locator)
 				{
 					StringBuilder sbuffer = new StringBuilder();
-					string systemID = locator.SystemId;
-					int line = locator.LineNumber;
-					int column = locator.ColumnNumber;
+					string systemID = locator.getSystemId();
+					int line = locator.getLineNumber();
+					int column = locator.getColumnNumber();
     
 					if (null != systemID)
 					{
@@ -395,7 +394,7 @@ namespace org.apache.xml.dtm
 
 					try
 					{
-						Method meth = ((object) exception).GetType().GetMethod("getException", null);
+						System.Reflection.MethodInfo meth = ((object) exception).GetType().GetMethod("getException", null);
 
 						if (null != meth)
 						{

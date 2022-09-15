@@ -23,7 +23,6 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	/// <summary>
 	/// Marks a class of errors in which XSLTC has reached some incorrect internal
 	/// state from which it cannot recover.

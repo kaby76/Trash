@@ -56,7 +56,7 @@ namespace org.apache.xalan.templates
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -68,7 +68,7 @@ namespace org.apache.xalan.templates
 		DTM dtm = xctxt.getDTM(context);
 		int docContext = dtm.getDocumentRoot(context);
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL == docContext)
+		if (DTM.NULL == docContext)
 		{
 
 		  // path.error(context, XPATHErrorResources.ER_CONTEXT_HAS_NO_OWNERDOC); //"context does not have an owner document!");
@@ -100,7 +100,7 @@ namespace org.apache.xalan.templates
 		  UnionPathIterator upi = new UnionPathIterator();
 		  upi.exprSetParent(this);
 
-		  while (org.apache.xml.dtm.DTM_Fields.NULL != (pos = ni.nextNode()))
+		  while (DTM.NULL != (pos = ni.nextNode()))
 		  {
 			dtm = xctxt.getDTM(pos);
 			XMLString @ref = dtm.getStringValue(pos);

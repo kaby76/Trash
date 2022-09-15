@@ -141,7 +141,7 @@ namespace org.apache.xml.utils
 	  /// Construct an ElementDescription with an initial set of flags.
 	  /// </summary>
 	  /// <param name="flags"> Element flags </param>
-	  /// <seealso cref= m_flags </seealso>
+	  /// <seealso cref="m_flags"/>
 	  internal ElemDesc(int flags)
 	  {
 		m_flags = flags;
@@ -161,8 +161,8 @@ namespace org.apache.xml.utils
 	  /// <returns> true if the flags set in the parameter are also set in the
 	  /// element's stored flags.
 	  /// </returns>
-	  /// <seealso cref= m_flags </seealso>
-	  /// <seealso cref= isAttrFlagSet </seealso>
+	  /// <seealso cref="m_flags"/>
+	  /// <seealso cref="isAttrFlagSet"/>
 	  internal virtual bool @is(int flags)
 	  {
 		// int which = (m_flags & flags);
@@ -195,7 +195,7 @@ namespace org.apache.xml.utils
 	  /// </param>
 	  /// <returns> True if the flag is set in the attribute. Returns false
 	  /// if the attribute is not found </returns>
-	  /// <seealso cref= m_flags </seealso>
+	  /// <seealso cref="m_flags"/>
 	  internal virtual bool isAttrFlagSet(string name, int flags)
 	  {
 

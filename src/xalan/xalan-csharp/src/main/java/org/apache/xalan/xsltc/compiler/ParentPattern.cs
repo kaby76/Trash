@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using ILOAD = org.apache.bcel.generic.ILOAD;
 	using INVOKEINTERFACE = org.apache.bcel.generic.INVOKEINTERFACE;
@@ -46,8 +45,8 @@ namespace org.apache.xalan.xsltc.compiler
 
 		public ParentPattern(Pattern left, RelativePathPattern right)
 		{
-		(_left = left).Parent = this;
-		(_right = right).Parent = this;
+		(_left = left).setParent(this);
+		(_right = right).setParent(this);
 		}
 
 		public override Parser Parser
@@ -81,7 +80,7 @@ namespace org.apache.xalan.xsltc.compiler
 		_right.reduceKernelPattern();
 		}
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xalan.xsltc.compiler.util.Type typeCheck(SymbolTable stable) throws org.apache.xalan.xsltc.compiler.util.TypeCheckError
 		public override Type typeCheck(SymbolTable stable)
 		{
@@ -93,20 +92,20 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final org.apache.bcel.generic.LocalVariableGen local = methodGen.addLocalVariable2("ppt", org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(Constants_Fields.NODE_SIG), null);
-		LocalVariableGen local = methodGen.addLocalVariable2("ppt", Util.getJCRefType(Constants_Fields.NODE_SIG), null);
+//ORIGINAL LINE: final org.apache.bcel.generic.LocalVariableGen local = methodGen.addLocalVariable2("ppt", org.apache.xalan.xsltc.compiler.util.Util.getJCRefType(NODE_SIG), null);
+		LocalVariableGen local = methodGen.addLocalVariable2("ppt", Util.getJCRefType(NODE_SIG), null);
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.Instruction loadLocal = new org.apache.bcel.generic.ILOAD(local.getIndex());
-		org.apache.bcel.generic.Instruction loadLocal = new ILOAD(local.Index);
+		org.apache.bcel.generic.Instruction loadLocal = new ILOAD(local.getIndex());
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.Instruction storeLocal = new org.apache.bcel.generic.ISTORE(local.getIndex());
-		org.apache.bcel.generic.Instruction storeLocal = new ISTORE(local.Index);
+		org.apache.bcel.generic.Instruction storeLocal = new ISTORE(local.getIndex());
 
 		if (_right.Wildcard)
 		{
@@ -116,12 +115,12 @@ namespace org.apache.xalan.xsltc.compiler
 		else if (_right is StepPattern)
 		{
 			il.append(DUP);
-			local.Start = il.append(storeLocal);
+			local.setStart(il.append(storeLocal));
 
 			_right.translate(classGen, methodGen);
 
 			il.append(methodGen.loadDOM());
-			local.End = il.append(loadLocal);
+			local.setEnd(il.append(loadLocal));
 		}
 		else
 		{
@@ -135,13 +134,13 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int getParent = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_PARENT, Constants_Fields.GET_PARENT_SIG);
-		int getParent = cpg.addInterfaceMethodref(Constants_Fields.DOM_INTF, Constants_Fields.GET_PARENT, Constants_Fields.GET_PARENT_SIG);
+//ORIGINAL LINE: final int getParent = cpg.addInterfaceMethodref(DOM_INTF, GET_PARENT, GET_PARENT_SIG);
+		int getParent = cpg.addInterfaceMethodref(DOM_INTF, GET_PARENT, GET_PARENT_SIG);
 		il.append(new INVOKEINTERFACE(getParent, 2));
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final SyntaxTreeNode p = getParent();
-		SyntaxTreeNode p = Parent;
+		SyntaxTreeNode p = this.Parent;
 		if (p == null || p is Instruction || p is TopLevelElement)
 		{
 			_left.translate(classGen, methodGen);
@@ -151,14 +150,14 @@ namespace org.apache.xalan.xsltc.compiler
 			il.append(DUP);
 			InstructionHandle storeInst = il.append(storeLocal);
 
-				if (local.Start == null)
+				if (local.getStart() == null)
 				{
-					local.Start = storeInst;
+					local.setStart(storeInst);
 				}
 			_left.translate(classGen, methodGen);
 
 			il.append(methodGen.loadDOM());
-			local.End = il.append(loadLocal);
+			local.setEnd(il.append(loadLocal));
 		}
 
 		methodGen.removeLocalVariable(local);

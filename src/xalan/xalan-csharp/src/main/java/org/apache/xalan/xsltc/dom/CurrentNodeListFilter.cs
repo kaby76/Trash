@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.dom
 {
-
 	using AbstractTranslet = org.apache.xalan.xsltc.runtime.AbstractTranslet;
 	using DTMAxisIterator = org.apache.xml.dtm.DTMAxisIterator;
 

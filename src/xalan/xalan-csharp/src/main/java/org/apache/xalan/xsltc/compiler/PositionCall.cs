@@ -21,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler
 {
-
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
 	using ILOAD = org.apache.bcel.generic.ILOAD;
 	using INVOKEINTERFACE = org.apache.bcel.generic.INVOKEINTERFACE;
@@ -52,7 +51,7 @@ namespace org.apache.xalan.xsltc.compiler
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (methodGen is CompareGenerator)
 		{
@@ -60,16 +59,16 @@ namespace org.apache.xalan.xsltc.compiler
 		}
 		else if (methodGen is TestGenerator)
 		{
-			il.append(new ILOAD(Constants_Fields.POSITION_INDEX));
+			il.append(new ILOAD(POSITION_INDEX));
 		}
 		else
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-			ConstantPoolGen cpg = classGen.ConstantPool;
+			ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-//ORIGINAL LINE: final int index = cpg.addInterfaceMethodref(Constants_Fields.NODE_ITERATOR, "getPosition", "()I");
-				int index = cpg.addInterfaceMethodref(Constants_Fields.NODE_ITERATOR, "getPosition", "()I");
+//ORIGINAL LINE: final int index = cpg.addInterfaceMethodref(NODE_ITERATOR, "getPosition", "()I");
+				int index = cpg.addInterfaceMethodref(NODE_ITERATOR, "getPosition", "()I");
 
 			il.append(methodGen.loadIterator());
 				il.append(new INVOKEINTERFACE(index,1));

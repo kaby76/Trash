@@ -46,7 +46,7 @@ namespace org.apache.xalan.transformer
 	/// This interface contains only getter methods, any setters are in the interface
 	/// TransformStateSetter which this interface extends.
 	/// </summary>
-	/// <seealso cref= org.apache.xml.serializer.TransformStateSetter </seealso>
+	/// <seealso cref="org.apache.xml.serializer.TransformStateSetter"/>
 	public interface TransformState : TransformStateSetter
 	{
 

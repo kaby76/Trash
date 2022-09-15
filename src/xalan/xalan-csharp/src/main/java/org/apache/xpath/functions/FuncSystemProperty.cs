@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +24,7 @@
 namespace org.apache.xpath.functions
 {
 
-
+	using XPathContext = org.apache.xpath.XPathContext;
 	using XObject = org.apache.xpath.objects.XObject;
 	using XString = org.apache.xpath.objects.XString;
 	using XPATHErrorResources = org.apache.xpath.res.XPATHErrorResources;
@@ -50,7 +51,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {
@@ -168,7 +169,7 @@ namespace org.apache.xpath.functions
 		try
 		{
 		  // Use SecuritySupport class to provide privileged access to property file
-		  System.IO.Stream @is = SecuritySupport.getResourceAsStream(ObjectFactory.findClassLoader(), file);
+		  Stream @is = SecuritySupport.getResourceAsStream(ObjectFactory.findClassLoader(), file);
 
 		  // get a buffered version
 		  BufferedInputStream bis = new BufferedInputStream(@is);

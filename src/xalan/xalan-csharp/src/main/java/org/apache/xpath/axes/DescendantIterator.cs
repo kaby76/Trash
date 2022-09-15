@@ -22,12 +22,13 @@
  */
 namespace org.apache.xpath.axes
 {
-
 	using Axis = org.apache.xml.dtm.Axis;
 	using DTM = org.apache.xml.dtm.DTM;
 	using DTMAxisTraverser = org.apache.xml.dtm.DTMAxisTraverser;
 	using DTMFilter = org.apache.xml.dtm.DTMFilter;
 	using DTMIterator = org.apache.xml.dtm.DTMIterator;
+	using Expression = org.apache.xpath.Expression;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using Compiler = org.apache.xpath.compiler.Compiler;
 	using OpCodes = org.apache.xpath.compiler.OpCodes;
 	using OpMap = org.apache.xpath.compiler.OpMap;
@@ -36,8 +37,8 @@ namespace org.apache.xpath.axes
 	/// <summary>
 	/// This class implements an optimized iterator for
 	/// descendant, descendant-or-self, or "//foo" patterns. </summary>
-	/// <seealso cref= org.apache.xpath.axes.LocPathIterator
-	/// @xsl.usage advanced </seealso>
+	/// <seealso cref="org.apache.xpath.axes.LocPathIterator"
+	/// @xsl.usage advanced/>
 	[Serializable]
 	public class DescendantIterator : LocPathIterator
 	{
@@ -50,7 +51,7 @@ namespace org.apache.xpath.axes
 	  /// location path expression for this itterator.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: DescendantIterator(org.apache.xpath.compiler.Compiler compiler, int opPos, int analysis) throws javax.xml.transform.TransformerException
 	  internal DescendantIterator(Compiler compiler, int opPos, int analysis) : base(compiler, opPos, analysis, false)
 	  {
@@ -130,7 +131,7 @@ namespace org.apache.xpath.axes
 
 		int whatToShow = compiler.getWhatToShow(firstStepPos);
 
-		if ((0 == (whatToShow & (org.apache.xml.dtm.DTMFilter_Fields.SHOW_ATTRIBUTE | org.apache.xml.dtm.DTMFilter_Fields.SHOW_ELEMENT | org.apache.xml.dtm.DTMFilter_Fields.SHOW_PROCESSING_INSTRUCTION))) || (whatToShow == org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL))
+		if ((0 == (whatToShow & (DTMFilter.SHOW_ATTRIBUTE | DTMFilter.SHOW_ELEMENT | DTMFilter.SHOW_PROCESSING_INSTRUCTION))) || (whatToShow == DTMFilter.SHOW_ALL))
 		{
 		  initNodeTest(whatToShow);
 		}
@@ -148,7 +149,7 @@ namespace org.apache.xpath.axes
 	  public DescendantIterator() : base(null)
 	  {
 		m_axis = Axis.DESCENDANTSORSELFFROMROOT;
-		int whatToShow = org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL;
+		int whatToShow = DTMFilter.SHOW_ALL;
 		initNodeTest(whatToShow);
 	  }
 
@@ -160,7 +161,7 @@ namespace org.apache.xpath.axes
 	  ///  <returns> A cloned NodeIterator set of the start of the query.
 	  /// </returns>
 	  ///  <exception cref="CloneNotSupportedException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xml.dtm.DTMIterator cloneWithReset() throws CloneNotSupportedException
 	  public override DTMIterator cloneWithReset()
 	  {
@@ -188,10 +189,10 @@ namespace org.apache.xpath.axes
 	  {
 		   if (m_foundLast)
 		   {
-			  return org.apache.xml.dtm.DTM_Fields.NULL;
+			  return DTM.NULL;
 		   }
 
-		if (org.apache.xml.dtm.DTM_Fields.NULL == m_lastFetched)
+		if (DTM.NULL == m_lastFetched)
 		{
 		  resetProximityPositions();
 		}
@@ -222,16 +223,16 @@ namespace org.apache.xpath.axes
 		  {
 			if (0 == m_extendedTypeID)
 			{
-			  next = m_lastFetched = (org.apache.xml.dtm.DTM_Fields.NULL == m_lastFetched) ? m_traverser.first(m_context) : m_traverser.next(m_context, m_lastFetched);
+			  next = m_lastFetched = (DTM.NULL == m_lastFetched) ? m_traverser.first(m_context) : m_traverser.next(m_context, m_lastFetched);
 			}
 			else
 			{
-			  next = m_lastFetched = (org.apache.xml.dtm.DTM_Fields.NULL == m_lastFetched) ? m_traverser.first(m_context, m_extendedTypeID) : m_traverser.next(m_context, m_lastFetched, m_extendedTypeID);
+			  next = m_lastFetched = (DTM.NULL == m_lastFetched) ? m_traverser.first(m_context, m_extendedTypeID) : m_traverser.next(m_context, m_lastFetched, m_extendedTypeID);
 			}
 
-			if (org.apache.xml.dtm.DTM_Fields.NULL != next)
+			if (DTM.NULL != next)
 			{
-			  if (org.apache.xml.dtm.DTMIterator_Fields.FILTER_ACCEPT == acceptNode(next))
+			  if (DTMIterator.FILTER_ACCEPT == acceptNode(next))
 			  {
 				break;
 			  }
@@ -244,9 +245,9 @@ namespace org.apache.xpath.axes
 			{
 			  break;
 			}
-		  } while (next != org.apache.xml.dtm.DTM_Fields.NULL);
+		  } while (next != DTM.NULL);
 
-		  if (org.apache.xml.dtm.DTM_Fields.NULL != next)
+		  if (DTM.NULL != next)
 		  {
 			  m_pos++;
 			return next;
@@ -255,7 +256,7 @@ namespace org.apache.xpath.axes
 		  {
 			m_foundLast = true;
 
-			return org.apache.xml.dtm.DTM_Fields.NULL;
+			return DTM.NULL;
 		  }
 		}
 		finally
@@ -284,7 +285,7 @@ namespace org.apache.xpath.axes
 		int what = m_whatToShow;
 		// System.out.println("what: ");
 		// NodeTest.debugWhatToShow(what);
-		if (org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL == what || NodeTest.WILD.Equals(localName) || NodeTest.WILD.Equals(@namespace))
+		if (DTMFilter.SHOW_ALL == what || NodeTest.WILD.Equals(localName) || NodeTest.WILD.Equals(@namespace))
 		{
 		  m_extendedTypeID = 0;
 		}
@@ -303,7 +304,7 @@ namespace org.apache.xpath.axes
 	  /// <para>WARNING: Do not mutate this class from this function!</para> </summary>
 	  /// <param name="xctxt"> The XPath runtime context. </param>
 	  /// <returns> the first node out of the nodeset, or DTM.NULL. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public int asNode(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override int asNode(XPathContext xctxt)
 	  {
@@ -325,7 +326,7 @@ namespace org.apache.xpath.axes
 
 		// System.out.println("what: ");
 		// NodeTest.debugWhatToShow(what);
-		if (org.apache.xml.dtm.DTMFilter_Fields.SHOW_ALL == what || string.ReferenceEquals(localName, NodeTest.WILD) || string.ReferenceEquals(@namespace, NodeTest.WILD))
+		if (DTMFilter.SHOW_ALL == what || string.ReferenceEquals(localName, NodeTest.WILD) || string.ReferenceEquals(@namespace, NodeTest.WILD))
 		{
 		  return traverser.first(current);
 		}
@@ -383,7 +384,7 @@ namespace org.apache.xpath.axes
 	  /// The extended type ID, not set until setRoot. </summary>
 	  protected internal int m_extendedTypeID;
 
-	  /// <seealso cref= Expression#deepEquals(Expression) </seealso>
+	  /// <seealso cref="Expression.deepEquals(Expression)"/>
 	  public override bool deepEquals(Expression expr)
 	  {
 		  if (!base.deepEquals(expr))

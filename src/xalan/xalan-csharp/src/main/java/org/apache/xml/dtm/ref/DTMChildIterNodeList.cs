@@ -20,7 +20,7 @@
  */
 namespace org.apache.xml.dtm.@ref
 {
-
+	using DTM = org.apache.xml.dtm.DTM;
 	using Node = org.w3c.dom.Node;
 
 	/// <summary>
@@ -97,11 +97,11 @@ namespace org.apache.xml.dtm.@ref
 		public override Node item(int index)
 		{
 			int handle = m_firstChild;
-			while (--index >= 0 && handle != org.apache.xml.dtm.DTM_Fields.NULL)
+			while (--index >= 0 && handle != DTM.NULL)
 			{
 				handle = m_parentDTM.getNextSibling(handle);
 			}
-			if (handle == org.apache.xml.dtm.DTM_Fields.NULL)
+			if (handle == DTM.NULL)
 			{
 				return null;
 			}
@@ -117,7 +117,7 @@ namespace org.apache.xml.dtm.@ref
 			get
 			{
 				int count = 0;
-				for (int handle = m_firstChild; handle != org.apache.xml.dtm.DTM_Fields.NULL; handle = m_parentDTM.getNextSibling(handle))
+				for (int handle = m_firstChild; handle != DTM.NULL; handle = m_parentDTM.getNextSibling(handle))
 				{
 					++count;
 				}

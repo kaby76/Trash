@@ -22,8 +22,9 @@
  */
 namespace org.apache.xpath.functions
 {
-
 	using Constants = org.apache.xalan.templates.Constants;
+	using ExtensionsProvider = org.apache.xpath.ExtensionsProvider;
+	using XPathContext = org.apache.xpath.XPathContext;
 	using FunctionTable = org.apache.xpath.compiler.FunctionTable;
 	using XBoolean = org.apache.xpath.objects.XBoolean;
 	using XObject = org.apache.xpath.objects.XObject;
@@ -47,7 +48,7 @@ namespace org.apache.xpath.functions
 	  /// <returns> A valid XObject.
 	  /// </returns>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public org.apache.xpath.objects.XObject execute(org.apache.xpath.XPathContext xctxt) throws javax.xml.transform.TransformerException
 	  public override XObject execute(XPathContext xctxt)
 	  {

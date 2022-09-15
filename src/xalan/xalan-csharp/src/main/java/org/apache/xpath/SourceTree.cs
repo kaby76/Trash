@@ -21,7 +21,6 @@
 namespace org.apache.xpath
 {
 
-
 	/// <summary>
 	/// This object represents a Source Tree, and any associated
 	/// information.

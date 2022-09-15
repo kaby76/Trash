@@ -42,9 +42,9 @@ namespace org.apache.xalan.lib
 	/// The documentation for each function has been copied from the relevant
 	/// EXSLT Implementer page.
 	/// </summary>
-	/// <seealso cref= <a href="http://www.exslt.org/">EXSLT</a>
+	/// <seealso cref="<a href="http://www.exslt.org/">EXSLT</a>"
 	/// 
-	/// @xsl.usage general </seealso>
+	/// @xsl.usage general/>
 	public class ExsltStrings : ExsltBase
 	{
 	  /// <summary>
@@ -121,10 +121,10 @@ namespace org.apache.xalan.lib
 	  public static string concat(NodeList nl)
 	  {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < nl.Length; i++)
+		for (int i = 0; i < nl.getLength(); i++)
 		{
 		  Node node = nl.item(i);
-		  string value = ToString(node);
+		  string value = toString(node);
 
 		  if (!string.ReferenceEquals(value, null) && value.Length > 0)
 		  {

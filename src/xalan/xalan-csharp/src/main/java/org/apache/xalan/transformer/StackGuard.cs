@@ -126,7 +126,7 @@ namespace org.apache.xalan.transformer
 	  /// Check if we are in an infinite loop
 	  /// </summary>
 	  /// <exception cref="TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void checkForInfinateLoop() throws javax.xml.transform.TransformerException
 	  public virtual void checkForInfinateLoop()
 	  {
@@ -166,7 +166,7 @@ namespace org.apache.xalan.transformer
 				{
 					new int?(loopCount),
 					idIs,
-					((null != template.Name) ? template.Name.ToString() : template.Match.PatternString)
+					((null != template.Name) ? template.Name.ToString() : template.Match.getPatternString())
 				};
 				string msg = XSLMessages.createMessage("recursionTooDeep", msgArgs);
 

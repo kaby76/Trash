@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 /*
@@ -24,7 +25,6 @@ using System.Text;
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 
 
 	/// <summary>
@@ -99,7 +99,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		///                              is found.  Use null to mean no fallback.
 		/// </param>
 		/// <exception cref="ObjectFactory.ConfigurationError"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Object createObject(String factoryId, String fallbackClassName) throws ConfigurationError
 		internal static object createObject(string factoryId, string fallbackClassName)
 		{
@@ -127,11 +127,11 @@ namespace org.apache.xalan.xsltc.compiler.util
 		///                              is found.  Use null to mean no fallback.
 		/// </param>
 		/// <exception cref="ObjectFactory.ConfigurationError"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Object createObject(String factoryId, String propertiesFilename, String fallbackClassName) throws ConfigurationError
 		internal static object createObject(string factoryId, string propertiesFilename, string fallbackClassName)
 		{
-			Type factoryClass = lookUpFactoryClass(factoryId, propertiesFilename, fallbackClassName);
+			System.Type factoryClass = lookUpFactoryClass(factoryId, propertiesFilename, fallbackClassName);
 
 			if (factoryClass == null)
 			{
@@ -140,7 +140,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 
 			try
 			{
-				object instance = factoryClass.newInstance();
+				object instance = System.Activator.CreateInstance(factoryClass);
 				debugPrintln("created new instance of factory " + factoryId);
 				return instance;
 			}
@@ -171,9 +171,9 @@ namespace org.apache.xalan.xsltc.compiler.util
 		///                              is found.  Use null to mean no fallback.
 		/// </param>
 		/// <exception cref="ObjectFactory.ConfigurationError"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Class lookUpFactoryClass(String factoryId) throws ConfigurationError
-		internal static Type lookUpFactoryClass(string factoryId)
+		internal static System.Type lookUpFactoryClass(string factoryId)
 		{
 			return lookUpFactoryClass(factoryId, null, null);
 		} // lookUpFactoryClass(String):Class
@@ -199,9 +199,9 @@ namespace org.apache.xalan.xsltc.compiler.util
 		///                              is found.  Use null to mean no fallback.
 		/// </param>
 		/// <exception cref="ObjectFactory.ConfigurationError"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Class lookUpFactoryClass(String factoryId, String propertiesFilename, String fallbackClassName) throws ConfigurationError
-		internal static Type lookUpFactoryClass(string factoryId, string propertiesFilename, string fallbackClassName)
+		internal static System.Type lookUpFactoryClass(string factoryId, string propertiesFilename, string fallbackClassName)
 		{
 			string factoryClassName = lookUpFactoryClassName(factoryId, propertiesFilename, fallbackClassName);
 			ClassLoader cl = findClassLoader();
@@ -214,7 +214,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			// assert(className != null);
 			try
 			{
-				Type providerClass = findProviderClass(factoryClassName, cl, true);
+				System.Type providerClass = findProviderClass(factoryClassName, cl, true);
 				debugPrintln("created new instance of " + providerClass + " using ClassLoader: " + cl);
 				return providerClass;
 			}
@@ -292,7 +292,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 				lock (typeof(ObjectFactory))
 				{
 					bool loadProperties = false;
-					System.IO.FileStream fis = null;
+					FileStream fis = null;
 					try
 					{
 						// file existed last time
@@ -361,7 +361,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			}
 			else
 			{
-				System.IO.FileStream fis = null;
+				FileStream fis = null;
 				try
 				{
 					fis = SecuritySupport.getFileInputStream(new File(propertiesFilename));
@@ -419,7 +419,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// Figure out which ClassLoader to use.  For JDK 1.2 and later use
 		/// the context ClassLoader.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static ClassLoader findClassLoader() throws ConfigurationError
 		internal static ClassLoader findClassLoader()
 		{
@@ -441,7 +441,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 					// ClassLoader otherwise); normal classloaders delegate
 					// back to system ClassLoader first so this widening doesn't
 					// change the fact that context ClassLoader will be consulted
-					ClassLoader current = typeof(ObjectFactory).ClassLoader;
+					ClassLoader current = typeof(ObjectFactory).getClassLoader();
 
 					chain = system;
 					while (true)
@@ -483,15 +483,15 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// <summary>
 		/// Create an instance of a class using the specified ClassLoader
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Object newInstance(String className, ClassLoader cl, boolean doFallback) throws ConfigurationError
 		internal static object newInstance(string className, ClassLoader cl, bool doFallback)
 		{
 			// assert(className != null);
 			try
 			{
-				Type providerClass = findProviderClass(className, cl, doFallback);
-				object instance = providerClass.newInstance();
+				System.Type providerClass = findProviderClass(className, cl, doFallback);
+				object instance = System.Activator.CreateInstance(providerClass);
 				debugPrintln("created new instance of " + providerClass + " using ClassLoader: " + cl);
 				return instance;
 			}
@@ -508,13 +508,13 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// <summary>
 		/// Find a Class using the specified ClassLoader
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: static Class findProviderClass(String className, ClassLoader cl, boolean doFallback) throws ClassNotFoundException, ConfigurationError
-		internal static Type findProviderClass(string className, ClassLoader cl, bool doFallback)
+		internal static System.Type findProviderClass(string className, ClassLoader cl, bool doFallback)
 		{
 			//throw security exception if the calling thread is not allowed to access the
 			//class. Restrict the access to the package classes as specified in java.security policy.
-			SecurityManager security = System.SecurityManager;
+			SecurityManager security = System.getSecurityManager();
 			try
 			{
 					if (security != null)
@@ -535,7 +535,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 				throw e;
 			}
 
-			Type providerClass;
+			System.Type providerClass;
 			if (cl == null)
 			{
 				// XXX Use the bootstrap ClassLoader.  There is no way to
@@ -547,7 +547,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 				//
 				// Thus Class.forName(String) will use the current
 				// ClassLoader which will be the bootstrap ClassLoader.
-				providerClass = Type.GetType(className);
+				providerClass = System.Type.GetType(className);
 			}
 			else
 			{
@@ -560,10 +560,10 @@ namespace org.apache.xalan.xsltc.compiler.util
 					if (doFallback)
 					{
 						// Fall back to current classloader
-						ClassLoader current = typeof(ObjectFactory).ClassLoader;
+						ClassLoader current = typeof(ObjectFactory).getClassLoader();
 						if (current == null)
 						{
-							providerClass = Type.GetType(className);
+							providerClass = System.Type.GetType(className);
 						}
 						else if (cl != current)
 						{
@@ -592,7 +592,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		private static string findJarServiceProviderName(string factoryId)
 		{
 			string serviceId = SERVICES_PATH + factoryId;
-			System.IO.Stream @is = null;
+			Stream @is = null;
 
 			// First try the Context ClassLoader
 			ClassLoader cl = findClassLoader();
@@ -602,7 +602,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 			// If no provider found then try the current ClassLoader
 			if (@is == null)
 			{
-				ClassLoader current = typeof(ObjectFactory).ClassLoader;
+				ClassLoader current = typeof(ObjectFactory).getClassLoader();
 				if (cl != current)
 				{
 					cl = current;
@@ -634,14 +634,14 @@ namespace org.apache.xalan.xsltc.compiler.util
 			// enough to keep us on the air until we're ready to
 			// officially decommit from VJ++. [Edited comment from
 			// jkesselm]
-			System.IO.StreamReader rd;
+			StreamReader rd;
 			try
 			{
-				rd = new System.IO.StreamReader(@is, Encoding.UTF8);
+				rd = new StreamReader(@is, Encoding.UTF8);
 			}
 			catch (java.io.UnsupportedEncodingException)
 			{
-				rd = new System.IO.StreamReader(@is);
+				rd = new StreamReader(@is);
 			}
 
 			string factoryClassName = null;

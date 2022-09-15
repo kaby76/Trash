@@ -52,7 +52,7 @@ namespace org.apache.xalan.templates
 	  /// index slot assigned for it in ElemExsltFunction compose().
 	  /// 
 	  /// </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void execute(org.apache.xalan.transformer.TransformerImpl transformer) throws javax.xml.transform.TransformerException
 	  public override void execute(TransformerImpl transformer)
 	  {
@@ -74,9 +74,9 @@ namespace org.apache.xalan.templates
 		int sourceNode = context.CurrentNode;
 
 		// Set the return value;
-		XObject @var = getValue(transformer, sourceNode);
+		XObject var = getValue(transformer, sourceNode);
 		transformer.popCurrentFuncResult();
-		transformer.pushCurrentFuncResult(@var);
+		transformer.pushCurrentFuncResult(var);
 
 		if (transformer.Debug)
 		{
@@ -89,7 +89,7 @@ namespace org.apache.xalan.templates
 	  /// </summary>
 	  /// <returns> An integer representation of the element, defined in the
 	  ///     Constants class. </returns>
-	  /// <seealso cref= org.apache.xalan.templates.Constants </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"/>
 	  public override int XSLToken
 	  {
 		  get
@@ -101,7 +101,7 @@ namespace org.apache.xalan.templates
 	  /// <summary>
 	  /// Return the node name, defined in the
 	  ///     Constants class. </summary>
-	  /// <seealso cref= org.apache.xalan.templates.Constants </seealso>
+	  /// <seealso cref="org.apache.xalan.templates.Constants"/>
 	  /// <returns> The node name
 	  ///  </returns>
 	   public override string NodeName

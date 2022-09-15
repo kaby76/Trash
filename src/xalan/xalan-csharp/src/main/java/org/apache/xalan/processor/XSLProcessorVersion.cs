@@ -22,7 +22,6 @@
  */
 namespace org.apache.xalan.processor
 {
-
 	/// <summary>
 	/// Administrative class to keep track of the version number of
 	/// the Xalan release.

@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils.res
 {
-
 	/// 
 	/// <summary>
 	/// It is a mutable object to wrap the long[] used in

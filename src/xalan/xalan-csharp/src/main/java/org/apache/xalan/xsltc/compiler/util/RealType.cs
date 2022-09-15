@@ -1,6 +1,4 @@
-﻿using System;
-
-/*
+﻿/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -23,7 +21,6 @@
 
 namespace org.apache.xalan.xsltc.compiler.util
 {
-
 	using BranchHandle = org.apache.bcel.generic.BranchHandle;
 	using CHECKCAST = org.apache.bcel.generic.CHECKCAST;
 	using ConstantPoolGen = org.apache.bcel.generic.ConstantPoolGen;
@@ -40,6 +37,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 	using InstructionList = org.apache.bcel.generic.InstructionList;
 	using LocalVariableGen = org.apache.bcel.generic.LocalVariableGen;
 	using NEW = org.apache.bcel.generic.NEW;
+	using Constants = org.apache.xalan.xsltc.compiler.Constants;
+	using FlowList = org.apache.xalan.xsltc.compiler.FlowList;
 
 	/// <summary>
 	/// @author Jacek Ambroziak
@@ -51,7 +50,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 		}
 
-		public override String ToString()
+		public override string ToString()
 		{
 		return "real";
 		}
@@ -61,7 +60,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		return this == other;
 		}
 
-		public override String toSignature()
+		public override string toSignature()
 		{
 		return "D";
 		}
@@ -117,7 +116,7 @@ namespace org.apache.xalan.xsltc.compiler.util
 		else
 		{
 			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), type.ToString());
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
@@ -131,11 +130,11 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
-		il.append(new INVOKESTATIC(cpg.addMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.BASIS_LIBRARY_CLASS, "realToString", "(D)" + org.apache.xalan.xsltc.compiler.Constants_Fields.STRING_SIG)));
+		InstructionList il = methodGen.getInstructionList();
+		il.append(new INVOKESTATIC(cpg.addMethodref(BASIS_LIBRARY_CLASS, "realToString", "(D)" + STRING_SIG)));
 		}
 
 		/// <summary>
@@ -148,14 +147,14 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		FlowList falsel = translateToDesynthesized(classGen, methodGen, type);
 		il.append(ICONST_1);
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.BranchHandle truec = il.append(new org.apache.bcel.generic.GOTO(null));
 		BranchHandle truec = il.append(new GOTO(null));
 		falsel.backPatch(il.append(ICONST_0));
-		truec.Target = il.append(NOP);
+		truec.setTarget(il.append(NOP));
 		}
 
 		/// <summary>
@@ -167,11 +166,11 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
-		il.append(new INVOKESTATIC(cpg.addMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.BASIS_LIBRARY_CLASS, "realToInt","(D)I")));
+		InstructionList il = methodGen.getInstructionList();
+		il.append(new INVOKESTATIC(cpg.addMethodref(BASIS_LIBRARY_CLASS, "realToInt","(D)I")));
 		}
 
 		/// <summary>
@@ -189,15 +188,15 @@ namespace org.apache.xalan.xsltc.compiler.util
 		FlowList flowlist = new FlowList();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		// Store real into a local variable
 		il.append(DUP2);
 		local = methodGen.addLocalVariable("real_to_boolean_tmp", org.apache.bcel.generic.Type.DOUBLE, null, null);
-		local.Start = il.append(new DSTORE(local.Index));
+		local.setStart(il.append(new DSTORE(local.getIndex())));
 
 		// Compare it to 0.0
 		il.append(DCONST_0);
@@ -206,8 +205,8 @@ namespace org.apache.xalan.xsltc.compiler.util
 
 		//!!! call isNaN
 		// Compare it to itself to see if NaN
-		il.append(new DLOAD(local.Index));
-		local.End = il.append(new DLOAD(local.Index));
+		il.append(new DLOAD(local.getIndex()));
+		local.setEnd(il.append(new DLOAD(local.getIndex())));
 		il.append(DCMPG);
 		flowlist.add(il.append(new IFNE(null))); // NaN != NaN
 		return flowlist;
@@ -223,15 +222,15 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
-		il.append(new NEW(cpg.addClass(org.apache.xalan.xsltc.compiler.Constants_Fields.DOUBLE_CLASS)));
+		InstructionList il = methodGen.getInstructionList();
+		il.append(new NEW(cpg.addClass(DOUBLE_CLASS)));
 		il.append(DUP_X2);
 		il.append(DUP_X2);
 		il.append(POP);
-		il.append(new INVOKESPECIAL(cpg.addMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.DOUBLE_CLASS, "<init>", "(D)V")));
+		il.append(new INVOKESPECIAL(cpg.addMethodref(DOUBLE_CLASS, "<init>", "(D)V")));
 		}
 
 		/// <summary>
@@ -239,13 +238,11 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// Expects a real on the stack and pushes a number of the appropriate
 		/// type after coercion.
 		/// </summary>
-//JAVA TO C# CONVERTER WARNING: 'final' parameters are not available in .NET:
-//ORIGINAL LINE: public void translateTo(ClassGenerator classGen, MethodGenerator methodGen, final Class clazz)
-		public override void translateTo(ClassGenerator classGen, MethodGenerator methodGen, Type clazz)
+		public override void translateTo(ClassGenerator classGen, MethodGenerator methodGen, in System.Type clazz)
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 		if (clazz == Character.TYPE)
 		{
 			il.append(D2I);
@@ -278,14 +275,15 @@ namespace org.apache.xalan.xsltc.compiler.util
 			il.append(NOP);
 		}
 			// Is Double <: clazz? I.e. clazz in { Double, Number, Object }
-			else if (typeof(Double).IsSubclassOf(clazz))
+			else if (clazz.IsAssignableFrom(typeof(Double)))
 			{
 				translateTo(classGen, methodGen, Type.Reference);
 			}
 		else
 		{
-			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.Name);
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
+			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.FullName);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
@@ -293,9 +291,9 @@ namespace org.apache.xalan.xsltc.compiler.util
 		/// Translates an external (primitive) Java type into a real. Expects a java 
 		/// object on the stack and pushes a real (i.e., a double).
 		/// </summary>
-		public override void translateFrom(ClassGenerator classGen, MethodGenerator methodGen, Type clazz)
+		public override void translateFrom(ClassGenerator classGen, MethodGenerator methodGen, System.Type clazz)
 		{
-		InstructionList il = methodGen.InstructionList;
+		InstructionList il = methodGen.getInstructionList();
 
 		if (clazz == Character.TYPE || clazz == Byte.TYPE || clazz == Short.TYPE || clazz == Integer.TYPE)
 		{
@@ -315,8 +313,9 @@ namespace org.apache.xalan.xsltc.compiler.util
 		}
 		else
 		{
-			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.Name);
-			classGen.Parser.reportError(org.apache.xalan.xsltc.compiler.Constants_Fields.FATAL, err);
+//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
+			ErrorMsg err = new ErrorMsg(ErrorMsg.DATA_CONVERSION_ERR, ToString(), clazz.FullName);
+			classGen.Parser.reportError(Constants.FATAL, err);
 		}
 		}
 
@@ -335,12 +334,12 @@ namespace org.apache.xalan.xsltc.compiler.util
 		{
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.ConstantPoolGen cpg = classGen.getConstantPool();
-		ConstantPoolGen cpg = classGen.ConstantPool;
+		ConstantPoolGen cpg = classGen.getConstantPool();
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final org.apache.bcel.generic.InstructionList il = methodGen.getInstructionList();
-		InstructionList il = methodGen.InstructionList;
-		il.append(new CHECKCAST(cpg.addClass(org.apache.xalan.xsltc.compiler.Constants_Fields.DOUBLE_CLASS)));
-		il.append(new INVOKEVIRTUAL(cpg.addMethodref(org.apache.xalan.xsltc.compiler.Constants_Fields.DOUBLE_CLASS, org.apache.xalan.xsltc.compiler.Constants_Fields.DOUBLE_VALUE, org.apache.xalan.xsltc.compiler.Constants_Fields.DOUBLE_VALUE_SIG)));
+		InstructionList il = methodGen.getInstructionList();
+		il.append(new CHECKCAST(cpg.addClass(DOUBLE_CLASS)));
+		il.append(new INVOKEVIRTUAL(cpg.addMethodref(DOUBLE_CLASS, DOUBLE_VALUE, DOUBLE_VALUE_SIG)));
 		}
 
 		public override Instruction ADD()

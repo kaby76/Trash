@@ -20,7 +20,6 @@
  */
 namespace org.apache.xml.utils.res
 {
-
 	//
 	//  LangResources_de.properties
 	//

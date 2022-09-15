@@ -20,7 +20,6 @@
  */
 namespace org.apache.xalan.templates
 {
-
 	using XPathVisitor = org.apache.xpath.XPathVisitor;
 
 	/// <summary>

@@ -23,7 +23,6 @@
 namespace org.apache.xalan.trace
 {
 
-
 	using ElemTemplateElement = org.apache.xalan.templates.ElemTemplateElement;
 	using TransformerImpl = org.apache.xalan.transformer.TransformerImpl;
 	using XPath = org.apache.xpath.XPath;
@@ -61,7 +60,7 @@ namespace org.apache.xalan.trace
 	  /// <param name="tl"> Trace listener to be added.
 	  /// </param>
 	  /// <exception cref="TooManyListenersException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void addTraceListener(TraceListener tl) throws java.util.TooManyListenersException
 	  public virtual void addTraceListener(TraceListener tl)
 	  {
@@ -134,10 +133,10 @@ namespace org.apache.xalan.trace
 
 		if (hasTraceListeners())
 		{
-		  int sourceNode = m_transformer.XPathContext.CurrentNode;
+		  int sourceNode = m_transformer.XPathContext.getCurrentNode();
 		  Node source = getDOMNodeFromDTM(sourceNode);
 
-		  fireTraceEvent(new TracerEvent(m_transformer, source, m_transformer.Mode, styleNode)); //sourceNode, mode,
+		  fireTraceEvent(new TracerEvent(m_transformer, source, m_transformer.Mode, styleNode));
 		}
 	  }
 
@@ -151,10 +150,10 @@ namespace org.apache.xalan.trace
 
 		if (hasTraceListeners())
 		{
-		  int sourceNode = m_transformer.XPathContext.CurrentNode;
+		  int sourceNode = m_transformer.XPathContext.getCurrentNode();
 		  Node source = getDOMNodeFromDTM(sourceNode);
 
-		  fireTraceEndEvent(new TracerEvent(m_transformer, source, m_transformer.Mode, styleNode)); //sourceNode, mode,
+		  fireTraceEndEvent(new TracerEvent(m_transformer, source, m_transformer.Mode, styleNode));
 		}
 	  }
 
@@ -212,7 +211,7 @@ namespace org.apache.xalan.trace
 	  /// <param name="selection"> The result of the selection.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fireSelectedEvent(int sourceNode, org.apache.xalan.templates.ElemTemplateElement styleNode, String attributeName, org.apache.xpath.XPath xpath, org.apache.xpath.objects.XObject selection) throws javax.xml.transform.TransformerException
 	  public virtual void fireSelectedEvent(int sourceNode, ElemTemplateElement styleNode, string attributeName, XPath xpath, XObject selection)
 	  {
@@ -235,7 +234,7 @@ namespace org.apache.xalan.trace
 	  /// <param name="selection"> The result of the selection.
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fireSelectedEndEvent(int sourceNode, org.apache.xalan.templates.ElemTemplateElement styleNode, String attributeName, org.apache.xpath.XPath xpath, org.apache.xpath.objects.XObject selection) throws javax.xml.transform.TransformerException
 	  public virtual void fireSelectedEndEvent(int sourceNode, ElemTemplateElement styleNode, string attributeName, XPath xpath, XObject selection)
 	  {
@@ -254,7 +253,7 @@ namespace org.apache.xalan.trace
 	  /// <param name="se"> Selection event to fire
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fireSelectedEndEvent(EndSelectionEvent se) throws javax.xml.transform.TransformerException
 	  public virtual void fireSelectedEndEvent(EndSelectionEvent se)
 	  {
@@ -281,7 +280,7 @@ namespace org.apache.xalan.trace
 	  /// <param name="se"> Selection event to fire
 	  /// </param>
 	  /// <exception cref="javax.xml.transform.TransformerException"> </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void fireSelectedEvent(SelectionEvent se) throws javax.xml.transform.TransformerException
 	  public virtual void fireSelectedEvent(SelectionEvent se)
 	  {
@@ -303,12 +302,12 @@ namespace org.apache.xalan.trace
 	  /// <summary>
 	  /// Fire an end extension event.
 	  /// </summary>
-	  /// <seealso cref= java.lang.reflect.Method#invoke
-	  /// </seealso>
+	  /// <seealso cref="java.lang.reflect.Method.invoke"
+	  ////>
 	  /// <param name="method"> The java method about to be executed </param>
 	  /// <param name="instance"> The instance the method will be executed on </param>
 	  /// <param name="arguments"> Parameters passed to the method. </param>
-	  public virtual void fireExtensionEndEvent(Method method, object instance, object[] arguments)
+	  public virtual void fireExtensionEndEvent(System.Reflection.MethodInfo method, object instance, object[] arguments)
 	  {
 		  ExtensionEvent ee = new ExtensionEvent(m_transformer, method, instance, arguments);
 
@@ -330,12 +329,12 @@ namespace org.apache.xalan.trace
 	  /// <summary>
 	  /// Fire an end extension event.
 	  /// </summary>
-	  /// <seealso cref= java.lang.reflect.Method#invoke
-	  /// </seealso>
+	  /// <seealso cref="java.lang.reflect.Method.invoke"
+	  ////>
 	  /// <param name="method"> The java method about to be executed </param>
 	  /// <param name="instance"> The instance the method will be executed on </param>
 	  /// <param name="arguments"> Parameters passed to the method. </param>
-	  public virtual void fireExtensionEvent(Method method, object instance, object[] arguments)
+	  public virtual void fireExtensionEvent(System.Reflection.MethodInfo method, object instance, object[] arguments)
 	  {
 		ExtensionEvent ee = new ExtensionEvent(m_transformer, method, instance, arguments);
 
@@ -357,8 +356,8 @@ namespace org.apache.xalan.trace
 	  /// <summary>
 	  /// Fire an end extension event.
 	  /// </summary>
-	  /// <seealso cref= java.lang.reflect.Method#invoke
-	  /// </seealso>
+	  /// <seealso cref="java.lang.reflect.Method.invoke"
+	  ////>
 	  /// <param name="ee"> the ExtensionEvent to fire </param>
 	  public virtual void fireExtensionEndEvent(ExtensionEvent ee)
 	  {
@@ -380,8 +379,8 @@ namespace org.apache.xalan.trace
 	  /// <summary>
 	  /// Fire an end extension event.
 	  /// </summary>
-	  /// <seealso cref= java.lang.reflect.Method#invoke
-	  /// </seealso>
+	  /// <seealso cref="java.lang.reflect.Method.invoke"
+	  ////>
 	  /// <param name="ee"> the ExtensionEvent to fire </param>
 	  public virtual void fireExtensionEvent(ExtensionEvent ee)
 	  {

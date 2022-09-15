@@ -21,7 +21,6 @@
 
 namespace org.apache.xml.dtm.@ref
 {
-
 	using ContentHandler = org.xml.sax.ContentHandler;
 	using InputSource = org.xml.sax.InputSource;
 	using SAXException = org.xml.sax.SAXException;
@@ -92,7 +91,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// <exception cref="SAXException"> is parse thread is already in progress
 	  /// or parsing can not be started.
 	  ///  </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
+//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void startParse(org.xml.sax.InputSource source) throws org.xml.sax.SAXException;
 	  void startParse(InputSource source);
 
