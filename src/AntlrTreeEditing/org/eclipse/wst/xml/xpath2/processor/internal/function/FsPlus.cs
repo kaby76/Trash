@@ -219,48 +219,45 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.function
 		/// <returns> Result of operation. </returns>
 		public static ResultSequence do_math_op(ICollection args, Type type, string mname)
         {
-            throw new Exception();
-            //// sanity check args + convert em
-            //if (args.Count != 2)
-            //{
-            //	DynamicError.throw_type_error();
-            //}
+            // sanity check args + convert em
+            if (args.Count != 2)
+            {
+                DynamicError.throw_type_error();
+            }
 
-            //ICollection cargs = convert_args(args);
+			ICollection cargs = convert_args(args);
 
-            //if (cargs.Count == 0)
-            //{
-            //	return ResultBuffer.EMPTY;
-            //}
+			if (cargs.Count == 0)
+			{
+				return ResultBuffer.EMPTY;
+			}
 
-            //// make sure arugments are good [at least the first one]
-            //IEnumerator argi = cargs.GetEnumerator();
-            //         argi.MoveNext();
-            //Item arg = ((ResultSequence) argi.Current).item(0);
-            //         argi.MoveNext();
-            //ResultSequence arg2 = (ResultSequence) argi.Current;
+			// make sure arugments are good [at least the first one]
+			IEnumerator argi = cargs.GetEnumerator();
+			argi.MoveNext();
+			Item arg = ((ResultSequence) argi.Current).item(0);
+			argi.MoveNext();
+			ResultSequence arg2 = (ResultSequence) argi.Current;
 
-            //if (!(type.IsInstanceOfType(arg)))
-            //{
-            //	DynamicError.throw_type_error();
-            //}
+            if (!(type.IsInstanceOfType(arg)))
+            {
+                DynamicError.throw_type_error();
+            }
 
-            //// here is da ownage
-            //try
-            //{
-            //	Type[] margsdef = new Type[] {typeof(ResultSequence)};
-            //	Method method = null;
+            // here is da ownage
+            try
+            {
+                Type[] margsdef = new Type[] { typeof(ResultSequence) };
 
-            //	method = type.GetMethod(mname, margsdef);
+                var method = type.GetMethod(mname, margsdef);
 
-            //	object[] margs = new object[] {arg2};
-            //	return (ResultSequence) method.invoke(arg, margs);
-            //         }
-            //catch
-            //         {
-            //             throw;
-            //         }
-            //return null; // unreach!
+                object[] margs = new object[] { arg2 };
+                return (ResultSequence)method.Invoke(arg, margs);
+            }
+            catch
+            {
+                throw;
+            }
         }
 	}
 

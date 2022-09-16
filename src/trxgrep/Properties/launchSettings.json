@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt //parserRuleSpec|doc('*')//lexerRuleSpec",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\x"
+      "commandLineArgs": "-f o.pt string-length('abc')",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\fix\\grammars-v4\\ebnf\\Generated\\"
     }
   }
 }

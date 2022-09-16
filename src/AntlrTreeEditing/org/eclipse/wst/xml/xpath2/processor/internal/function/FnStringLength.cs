@@ -85,8 +85,6 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.function
 		/// <exception cref="DynamicError">
 		///             Dynamic error. </exception>
 		/// <returns> The result of obtaining the string length from the arguments. </returns>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: public static org.eclipse.wst.xml.xpath2.api.ResultSequence string_length(java.util.Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws org.eclipse.wst.xml.xpath2.processor.DynamicError
 		public static ResultSequence string_length(ICollection args, EvaluationContext ec)
 		{
 			ICollection cargs = Function.convert_arguments(args, expected_args());
@@ -110,8 +108,7 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.function
 			{
 				str = ((XSString) arg1.first()).value();
 			}
-
-            BigInteger.TryParse(str, out BigInteger v);
+			var v = str.Length;
 			return new XSInteger(v);
 		}
 
