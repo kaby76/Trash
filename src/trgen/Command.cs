@@ -185,6 +185,24 @@
 
         public void DoPomDirectedGenerate(string cd)
         {
+            if (_config.todo_pattern != null)
+            {
+                var te = new Regex(_config.todo_pattern).IsMatch(cd);
+                if (!te)
+                {
+                    System.Console.Error.WriteLine("Skipping.");
+                    return;
+                }
+            }
+            else if (_config.skip_pattern != null)
+            {
+                var te = new Regex(_config.skip_pattern).IsMatch(cd);
+                if (te)
+                {
+                    System.Console.Error.WriteLine("Skipping.");
+                    return;
+                }
+            }
             // Read pom.xml in current directory.
             Environment.CurrentDirectory = cd;
             System.Console.Error.WriteLine(cd);
@@ -223,24 +241,6 @@
             //
             // Determine if we skip this grammar.
             //
-            if (_config.todo_pattern != null)
-            {
-                var te = new Regex(_config.todo_pattern).IsMatch(cd);
-                if (!te)
-                {
-                    System.Console.Error.WriteLine("Skipping.");
-                    return;
-                }
-            }
-            else if (_config.skip_pattern != null)
-            {
-                var te = new Regex(_config.skip_pattern).IsMatch(cd);
-                if (te)
-                {
-                    System.Console.Error.WriteLine("Skipping.");
-                    return;
-                }
-            }
             //
             // Process grammar pom.xml here.
             //
