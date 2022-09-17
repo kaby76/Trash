@@ -63,7 +63,7 @@
             return 0;
         }
 
-        public static string version = "0.17.0";
+        public static string version = "0.17.1";
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
         public string root_directory;
@@ -142,7 +142,7 @@
             }
             // Find all source files.
             this.all_target_files = new List<string>();
-            this.all_source_files = new Domemtech.Globbing.Glob()
+            this.all_source_files = new TrashGlobbing.Glob()
                     .RegexContents(this._config.all_source_pattern)
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                     .Select(f => f.FullName.Replace('\\', '/'))
@@ -285,7 +285,7 @@
             else
             {
                 var regex_string = "^(.*(files|" + _config.template + "/)).*$";
-                var files_to_copy = new Domemtech.Globbing.Glob(_config.templates)
+                var files_to_copy = new TrashGlobbing.Glob(_config.templates)
                     .RegexContents(regex_string)
                     .Where(f =>
                     {

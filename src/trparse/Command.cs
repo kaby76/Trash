@@ -44,7 +44,7 @@ namespace Trash
             path = Path.GetFullPath(path);
             path = path.Replace("\\", "/");
             if (!path.EndsWith("/")) path = path + "/";
-            var fp = new Domemtech.Globbing.Glob(path)
+            var fp = new TrashGlobbing.Glob(path)
                 .RegexContents("(Generated/)?bin/.*(?!ref)/Test.dll$")
                 .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                 .Select(f => f.FullName.Replace('\\', '/'))
@@ -54,13 +54,13 @@ namespace Trash
             {
                 System.Console.Error.WriteLine("Parser doesn't exist");
                 System.Console.Error.WriteLine("fp " + String.Join(" ", fp));
-                var is_generated_cs = new Domemtech.Globbing.Glob(path)
+                var is_generated_cs = new TrashGlobbing.Glob(path)
                     .RegexContents("(Generated/)*.cs")
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                     .Select(f => f.FullName.Replace('\\', '/'))
                     .ToList();
                 System.Console.Error.WriteLine("is_generated_cs = " + String.Join(" ", is_generated_cs));
-                var is_generated_java = new Domemtech.Globbing.Glob(path)
+                var is_generated_java = new TrashGlobbing.Glob(path)
                     .RegexContents("(Generated/)*.java")
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                     .Select(f => f.FullName.Replace('\\', '/'))

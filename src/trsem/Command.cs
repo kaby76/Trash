@@ -85,7 +85,7 @@
                     + target_specific_src_directory + "/)"
                     + ").sem$";
                     var any =
-                        new Domemtech.Globbing.Glob()
+                        new TrashGlobbing.Glob()
                             .RegexContents(pattern)
                             .Where(f => f is FileInfo)
                             .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
@@ -100,7 +100,7 @@
                     var pattern =
                         "^(?!.*(" + (ignore_string != null ? ignore_string + "|" : "") + "ignore/|Generated/|target/|examples/|Lexer)).*[.]sem$";
                     var any =
-                        new Domemtech.Globbing.Glob()
+                        new TrashGlobbing.Glob()
                             .RegexContents(pattern)
                             .Where(f => f is FileInfo)
                             .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
@@ -195,7 +195,7 @@
             else
             {
                 var regex_string = "^(?!.*(files|" + AllButTargetName((TargetType)config.target) + "/)).*$";
-                var files_to_copy = new Domemtech.Globbing.Glob(config.template_sources_directory)
+                var files_to_copy = new TrashGlobbing.Glob(config.template_sources_directory)
                     .RegexContents(regex_string)
                     .Where(f =>
                     {

@@ -42,7 +42,7 @@
 
 
         public Config _config;
-        public static string version = "0.17.0";
+        public static string version = "0.17.1";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -474,7 +474,7 @@
             foreach (var p in pom_grammars) merged_list.Add(p);
             foreach (var x in merged_list.ToList())
             {
-                if (!new Domemtech.Globbing.Glob()
+                if (!new TrashGlobbing.Glob()
                  .RegexContents(x)
                  .Where(f => f is FileInfo)
                  .Select(f => f.FullName.Replace('\\', '/').Replace(cd, ""))
@@ -591,7 +591,7 @@
                  + Command.AllButTargetName(_config.target)
                  + "/)).+[.]g4"
                  + "$";
-            var grammar_list = new Domemtech.Globbing.Glob(per_grammar.current_directory)
+            var grammar_list = new TrashGlobbing.Glob(per_grammar.current_directory)
                 .RegexContents(all_grammars_pattern)
                 .Where(f =>
                 {
@@ -1023,7 +1023,7 @@
                  + Command.AllButTargetName(_config.target)
                  + "/)).+"
                  + "$";
-            per_grammar.all_source_files = new Domemtech.Globbing.Glob()
+            per_grammar.all_source_files = new TrashGlobbing.Glob()
                     .RegexContents(all_source_pattern)
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                     .Select(f => f.FullName.Replace('\\', '/'))
@@ -1215,7 +1215,7 @@
             else
             {
                 var regex_string = "^(?!.*(files|" + AllButTargetName(_config.target) + "/)).*$";
-                var files_to_copy = new Domemtech.Globbing.Glob(_config.template_sources_directory)
+                var files_to_copy = new TrashGlobbing.Glob(_config.template_sources_directory)
                     .RegexContents(regex_string)
                     .Where(f =>
                     {

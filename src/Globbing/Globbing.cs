@@ -1,4 +1,4 @@
-﻿namespace Domemtech.Globbing
+﻿namespace TrashGlobbing
 {
     using System;
     using System.Collections.Generic;

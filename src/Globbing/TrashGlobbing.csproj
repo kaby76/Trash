@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
 	<TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Domemtech.Globbing</RootNamespace>
-    <AssemblyName>Domemtech.Globbing</AssemblyName>
+    <RootNamespace>TrashGlobbing</RootNamespace>
+    <AssemblyName>TrashGlobbing</AssemblyName>
     <Description>A file system globbing package for C#.</Description>
     <Copyright>Ken Domino</Copyright>
     <Company>Domemtech</Company>
-    <AssemblyTitle>Domemtech.Globbing</AssemblyTitle>
+    <AssemblyTitle>TrashGlobbing</AssemblyTitle>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

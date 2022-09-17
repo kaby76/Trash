@@ -73,7 +73,7 @@
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                     foreach (var node in nodes)
                     {
-                        TreeEdits.Delete(tokstream, node);
+                        TreeEdits.DeleteInStreams(tokstream, node);
                     }
 
                     var tuple = new ParsingResultSet()

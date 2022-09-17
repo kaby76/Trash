@@ -2,8 +2,8 @@
   "profiles": {
     "trrename": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt -r \"PPKWAnd,KWAnd;PPKWAndEq,KWAndEq;PPKWBitAnd,KWBitAnd;PPKWBitOr,KWBitOr;PPKWCompl,KWCompl;PPKWDefine,KWDefine;PPKWDefined,KWDefined;PPKWDelete,KWDelete;PPKWElif,KWElif;PPKWElse,KWElse;PPKWEndif,KWEndif;PPKWError,KWError;PPKWWarning,KWWarning;PPKWFalse,KWFalse;PPKWTrue,KWTrue_;PPKWIf,KWIf;PPKWIfdef,KWIfdef;KWIfndef;PPKWInclude,KWInclude;PPKWLine,KWLine;PPKWNew,KWNew;PPKWNot,KWNot;PPKWNotEq,KWNotEq;PPKWOr,KWOr;PPKWOrEq,KWOrEq;PPKWPragma,KWPragma;PPKWUndef,KWUndef;PPKWXor,KWXor;PPKWXorEq,KWXorEq\"",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\scrape-c-plus-plus-spec"
+      "commandLineArgs": "-f o.pt -R ren",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\fix\\grammars-v4\\abb"
     }
   }
 }

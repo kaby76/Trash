@@ -150,7 +150,7 @@
             foreach (var t in trees) Delete(t);
         }
 
-        public static void Delete(AltAntlr.MyTokenStream tokstream, IParseTree node)
+        public static void DeleteInStreams(AltAntlr.MyTokenStream tokstream, IParseTree node)
         {
             AltAntlr.MyCharStream cs;
             AltAntlr.MyToken t2;
@@ -536,6 +536,136 @@
             Reset(root);
         }
 
+        public static void InsertBeforeInStreams(IParseTree to, IParseTree node)
+        {
+            TerminalNodeImpl leaf = TreeEdits.Frontier(to).First();
+            // 'node' is either a terminal node or an internal node.
+            // Payload means different things for the two.
+            AltAntlr.MyToken token;
+            AltAntlr.MyCharStream charstream;
+            AltAntlr.MyLexer lexer;
+            AltAntlr.MyParser parser;
+            AltAntlr.MyTokenStream tokstream = null;
+            // Gather all information before modifying the token and char streams.
+            if (to is AltAntlr.MyTerminalNodeImpl myterminalnode)
+            {
+                lexer = myterminalnode.Lexer;
+                parser = myterminalnode.Parser;
+                tokstream = myterminalnode.TokenStream;
+                token = myterminalnode.Payload as AltAntlr.MyToken;
+                charstream = myterminalnode.InputStream;
+            }
+            else if (to is AltAntlr.MyParserRuleContext myinternalnode)
+            {
+                lexer = myinternalnode.Lexer;
+                parser = myinternalnode.Parser;
+                tokstream = myinternalnode.TokenStream;
+                var lmf = TreeEdits.LeftMostToken(to) as AltAntlr.MyTerminalNodeImpl;
+                token = lmf.Payload as AltAntlr.MyToken;
+                charstream = myinternalnode.InputStream;
+            }
+            else throw new Exception("Tree editing must be on AltAntlr tree.");
+
+            IParseTree parent_from = node.Parent;
+            var ctx_parent_from = parent_from as ParserRuleContext;
+            if (ctx_parent_from != null)
+            {
+                throw new Exception("Cannot move a node already in the tree. Sorry.");
+            }
+            IParseTree parent_to = to.Parent;
+            var ctx_parent_to = parent_to as ParserRuleContext;
+            bool found = false;
+            for (int k = 0; k < ctx_parent_to.ChildCount; ++k)
+            {
+                var child = ctx_parent_to.children[k];
+                if (child == to)
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                throw new Exception("Cannot find point of insertion within parent. This likely means the data structure is corrupted.");
+            }
+
+            // Compute a string that will contain all text in the new tree.
+            var old_buffer = charstream.Text;
+            var leaves_of_node = TreeEdits.Frontier(node).ToList();
+            var new_text = "";
+            foreach (var l in leaves_of_node)
+            {
+                var ll = l as AltAntlr.MyTerminalNodeImpl;
+                var t = ll.GetText();
+                // Assume space between each leaf.
+                if (new_text != "") new_text += " ";
+                new_text += t;
+            }
+            // Modify the char stream, token stream, the tree.
+            var leaves_of_to = TreeEdits.Frontier(to).ToList();
+            var leftmost_leaf_of_to = leaves_of_to.First() as AltAntlr.MyTerminalNodeImpl;
+            var leftmost_token_of_to = leftmost_leaf_of_to.Payload as AltAntlr.MyToken;
+            var rightmost_leaf_of_to = leaves_of_to.Last() as AltAntlr.MyTerminalNodeImpl;
+            var last_token_of_to = rightmost_leaf_of_to.Payload as AltAntlr.MyToken;
+            var s_to = leftmost_token_of_to.StartIndex; // Char stream index
+
+            // Modify char stream first.
+            var new_buffer = old_buffer.Insert(s_to, new_text);
+
+            // Gather information before moving.
+            var start = 0;
+            Dictionary<int, int> old_indices = new Dictionary<int, int>();
+            var i = start;
+            tokstream.Seek(i);
+            for (; ; )
+            {
+                if (i >= tokstream.Size) break;
+                var tt = tokstream.Get(i);
+                var tok = tt as AltAntlr.MyToken;
+                var line = tok.Line;
+                var col = tok.Column;
+                var i2 = AltAntlr.Util.GetIndex(line, col, old_buffer);
+                old_indices[i] = i2;
+                if (tt.Type == -1) break;
+                ++i;
+            }
+
+            // Move tokens in the token stream from "to" to the end of the token stream.
+            var leftmost_token_to_move_tokenindex = leftmost_token_of_to.TokenIndex;
+            charstream.Text = new_buffer;
+            tokstream.Text = new_buffer;
+            tokstream.Seek(i);
+            for (i = 0; i < leaves_of_node.Count; ++i)
+            {
+                tokstream.Insert(i + leftmost_token_to_move_tokenindex, leaves_of_node[i].Payload);
+            }
+
+            // Update charstream indices for each token moved.
+            i = leftmost_token_to_move_tokenindex + leaves_of_node.Count;
+            var increment = new_text.Length;
+            for (; ; )
+            {
+                if (i >= tokstream.Size) break;
+                var tt = tokstream.Get(i);
+                var tok = tt as AltAntlr.MyToken;
+                tok.StartIndex += increment;
+                tok.StopIndex += increment;
+                var new_index = tok.StartIndex;
+                if (new_index >= 0)
+                {
+                    var (line, col) = AltAntlr.Util.GetLineColumn(new_index, new_buffer);
+                    tok.Line = line;
+                    tok.Column = col;
+                }
+                if (tt.Type == -1) break;
+                ++i;
+            }
+            charstream.Text = new_buffer;
+
+            // Adjust intervals up the tree.
+            Reset(node);
+        }
+
         public static void InsertBeforeInStreams(IParseTree node, AltAntlr.MyTerminalNodeImpl to_insert)
         {
             TerminalNodeImpl leaf = TreeEdits.Frontier(node).First();
@@ -584,7 +714,7 @@
             to_insert_tok.Column = token.Column;
             charstream.Text = new_buffer;
             tokstream.Text = new_buffer;
-            for (int i = start+1; i < tokstream.Size; ++i)
+            for (int i = start + 1; i < tokstream.Size; ++i)
             {
                 tokstream.Seek(i);
                 var tt = tokstream.Get(i);
@@ -870,6 +1000,44 @@
                 {
                     var child = original.GetChild(i);
                     CopyTreeRecursive(child, new_node, text_to_left);
+                }
+                return new_node;
+            }
+            else return null;
+        }
+       
+        public static IParseTree CopyTreeRecursive(IParseTree original, IParseTree parent = null)
+        {
+            if (original == null) return null;
+            else if (original is AltAntlr.MyTerminalNodeImpl)
+            {
+                var o = original as AltAntlr.MyTerminalNodeImpl;
+                var t = o.Symbol as AltAntlr.MyToken;
+                var tt = new AltAntlr.MyToken() { Type = t.Type, Text = t.Text, Channel = t.Channel };
+                var oo = new AltAntlr.MyTerminalNodeImpl(tt);
+                if (parent != null)
+                {
+                    var parent_rule_context = (ParserRuleContext)parent;
+                    oo.Parent = parent_rule_context;
+                    parent_rule_context.AddChild(oo);
+                }
+                return oo;
+            }
+            else if (original is ParserRuleContext)
+            {
+                var type = original.GetType();
+                var new_node = (ParserRuleContext)Activator.CreateInstance(type, null, 0);
+                if (parent != null)
+                {
+                    var parent_rule_context = (ParserRuleContext)parent;
+                    new_node.Parent = parent_rule_context;
+                    parent_rule_context.AddChild(new_node);
+                }
+                int child_count = original.ChildCount;
+                for (int i = 0; i < child_count; ++i)
+                {
+                    var child = original.GetChild(i);
+                    CopyTreeRecursive(child, new_node);
                 }
                 return new_node;
             }
@@ -1393,9 +1561,14 @@
 
         public static void Replace(AltAntlr.MyTokenStream tokstream, IParseTree node, string arbitrary_string)
         {
-            throw new NotImplementedException();
-            //InsertBeforeInStreams(node, arbitrary_string);
-            //Delete(tokstream, node);
+            InsertBeforeInStreams(node, arbitrary_string);
+            DeleteInStreams(tokstream, node);
+        }
+
+        public static void Replace(AltAntlr.MyTokenStream tokstream, IParseTree node, IParseTree new_node)
+        {
+            InsertBeforeInStreams(node, new_node);
+            DeleteInStreams(tokstream, node);
         }
 
         public static void Replace(AltAntlr.MyTokenStream tokstream, IEnumerable<IParseTree> nodes, string arbitrary_string)

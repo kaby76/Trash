@@ -7102,7 +7102,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
                         .ToArray();
-                    foreach (var n in nodes) TreeEdits.Delete(tokstream, n);
+                    foreach (var n in nodes) TreeEdits.DeleteInStreams(tokstream, n);
                 }
                 {
                     var nodes = engine.parseExpression(
@@ -7110,7 +7110,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
                         .ToArray();
-                    foreach (var n in nodes) TreeEdits.Delete(tokstream, n);
+                    foreach (var n in nodes) TreeEdits.DeleteInStreams(tokstream, n);
                 }
                 {
                     var nodes = engine.parseExpression(
@@ -7118,7 +7118,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
                         .ToArray();
-                    foreach (var n in nodes) TreeEdits.Delete(tokstream, n);
+                    foreach (var n in nodes) TreeEdits.DeleteInStreams(tokstream, n);
                 }
 
 

@@ -262,7 +262,7 @@ namespace Trash
                                 for (int j = old_children.Length - 1; j >= i; --j)
                                 {
                                     var ch = old_children[j];
-                                    TreeEdits.Delete(tokstream, ch);
+                                    TreeEdits.DeleteInStreams(tokstream, ch);
                                     if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
                                 }
                             }
