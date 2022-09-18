@@ -23,7 +23,12 @@ namespace Trash
             catch (Exception e)
             {
                 System.Console.Error.WriteLine(e.ToString());
-                System.Environment.Exit(1);
+                Environment.ExitCode = 1;
+                // Write something to avoid https://github.com/kaby76/Domemtech.Trash/issues/134
+                // and https://github.com/dotnet/runtime/issues/50780
+                System.Console.Out.WriteLine();
+                System.Console.Out.Flush();
+                System.Console.Out.Close();
             }
         }
 

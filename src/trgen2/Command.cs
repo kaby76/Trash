@@ -42,6 +42,7 @@
                     lines = System.Console.In.ReadToEnd();
                     if (lines != null && lines != "") break;
                 }
+                lines = lines.Trim();
             }
             else
             {
@@ -63,7 +64,7 @@
             return 0;
         }
 
-        public static string version = "0.17.1";
+        public static string version = "0.18.0";
         public List<string> all_source_files = null;
         public List<string> all_target_files = null;
         public string root_directory;

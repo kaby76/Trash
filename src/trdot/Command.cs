@@ -32,6 +32,7 @@
                     lines = System.Console.In.ReadToEnd();
                     if (lines != null && lines != "") break;
                 }
+                lines = lines.Trim();
             }
             else
             {
