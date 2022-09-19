@@ -34,3 +34,5 @@ do
 	$tool --version
 	cd ..
 done
+dotnet tool uninstall -g trxml2 $version > /dev/null 2>&1
+dotnet tool install -g trxml2 $version > /dev/null 2>&1

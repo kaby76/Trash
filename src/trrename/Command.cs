@@ -91,18 +91,22 @@
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
                 {
-                    var expr = "//(parserRuleSpec | lexerRuleSpec)//(RULE_REF | TOKEN_REF)[text()='"
-                        + string.Join("' or text()='", rename_map.Select(r => r.Key))
-                        + "']";
+                    string expr;
+                    if (config.Expr == null)
+                        expr = "//(parserRuleSpec | lexerRuleSpec)//(RULE_REF | TOKEN_REF)";
+                    else
+                        expr = config.Expr;
                     var nodes = engine.parseExpression(
                         expr, new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                     foreach (var node in nodes)
                     {
-                        var new_name = rename_map[node.GetText()];
-                        var new_node = TreeEdits.CopyTreeRecursive(node);
-                        (new_node.Payload as AltAntlr.MyToken).Text = new_name;
-                        TreeEdits.Replace(tokstream, node, new_node);
+                        if (rename_map.TryGetValue(node.GetText(), out string new_name))
+                        {
+                            var new_node = TreeEdits.CopyTreeRecursive(node);
+                            (new_node.Payload as AltAntlr.MyToken).Text = new_name;
+                            TreeEdits.Replace(tokstream, node, new_node);
+                        }
                     }
                     var tuple = new ParsingResultSet()
                     {

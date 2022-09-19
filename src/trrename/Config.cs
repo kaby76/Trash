@@ -5,6 +5,9 @@ namespace Trash
 {
     public class Config
     {
+        [Option('e', "expr", Required = false, Default = "//(parserRuleSpec | lexerRuleSpec)//(RULE_REF | TOKEN_REF)")]
+        public string Expr { get; set; }
+
         [Option('f', "file", Required = false)]
         public string File { get; set; }
 
