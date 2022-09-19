@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-v -f o.pt repeat.pig",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\piggy"
+      "commandLineArgs": "-v -f o.pt repl",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\fix\\grammars-v4\\ebnf"
     }
   }
 }
