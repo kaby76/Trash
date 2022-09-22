@@ -750,35 +750,35 @@
 
         private static void Reset(IParseTree tree)
         {
-            if (tree is AltAntlr.MyTerminalNodeImpl l)
-            {
-                var t = l.Payload as AltAntlr.MyToken;
-                l.Start = t.TokenIndex;
-                l.Stop = t.TokenIndex;
-                l._sourceInterval = new Antlr4.Runtime.Misc.Interval(t.TokenIndex, t.TokenIndex);
-            }
-            else if (tree is AltAntlr.MyParserRuleContext p)
-            {
-                var res = p.SourceInterval;
-                if (p.ChildCount > 0)
-                {
-                    int min = int.MaxValue;
-                    int max = int.MinValue;
-                    for (int i = 0; i < tree.ChildCount; ++i)
-                    {
-                        var c = tree.GetChild(i);
-                        Reset(c);
-                        min = Math.Min(min, c.SourceInterval.a);
-                        max = Math.Max(max, c.SourceInterval.b);
-                    }
-                    res = new Antlr4.Runtime.Misc.Interval(min, max);
-                }
-                else
-                {
-                    res = new Antlr4.Runtime.Misc.Interval(int.MaxValue, -1);
-                }
-                p._sourceInterval = res;
-            }
+            //if (tree is AltAntlr.MyTerminalNodeImpl l)
+            //{
+            //    var t = l.Payload as AltAntlr.MyToken;
+            //    l.Start = t.TokenIndex;
+            //    l.Stop = t.TokenIndex;
+            //    l._sourceInterval = new Antlr4.Runtime.Misc.Interval(t.TokenIndex, t.TokenIndex);
+            //}
+            //else if (tree is AltAntlr.MyParserRuleContext p)
+            //{
+            //    var res = p.SourceInterval;
+            //    if (p.ChildCount > 0)
+            //    {
+            //        int min = int.MaxValue;
+            //        int max = int.MinValue;
+            //        for (int i = 0; i < tree.ChildCount; ++i)
+            //        {
+            //            var c = tree.GetChild(i);
+            //            Reset(c);
+            //            min = Math.Min(min, c.SourceInterval.a);
+            //            max = Math.Max(max, c.SourceInterval.b);
+            //        }
+            //        res = new Antlr4.Runtime.Misc.Interval(min, max);
+            //    }
+            //    else
+            //    {
+            //        res = new Antlr4.Runtime.Misc.Interval(int.MaxValue, -1);
+            //    }
+            //    p._sourceInterval = res;
+            //}
         }
 
         private static void Adjust(IParseTree tree)
