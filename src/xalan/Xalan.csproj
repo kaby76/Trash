@@ -12,6 +12,10 @@
     <ItemGroup>
         <ProjectReference Include="..\AltAntlr\AltAntlr.csproj" />
     </ItemGroup>
+    <ItemGroup>
+	<None Include="old-xalan-csharp\**"></None>
+	<None Include="xalan-java\**"></None>
+    </ItemGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <NoWarn>3021;1701;1702</NoWarn>
     </PropertyGroup>

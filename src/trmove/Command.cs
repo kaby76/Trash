@@ -85,7 +85,8 @@
                     var nodes = engine.parseExpression(from,
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
 				            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-		            var to_node = engine.parseExpression(to,
+                    if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
+                    var to_node = engine.parseExpression(to,
 			            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
 				            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList().FirstOrDefault();
 

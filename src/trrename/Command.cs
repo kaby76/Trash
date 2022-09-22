@@ -27,7 +27,7 @@
             {
                 if (config.Verbose)
                 {
-                    System.Console.Error.WriteLine("reading from stdin");
+                    LoggerNs.TimedStderrOutput.WriteLine("reading from stdin");
                 }
                 for (; ; )
                 {
@@ -40,7 +40,7 @@
             {
                 if (config.Verbose)
                 {
-                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
+                    LoggerNs.TimedStderrOutput.WriteLine("reading from file >>>" + config.File + "<<<");
                 }
                 lines = File.ReadAllText(config.File);
             }
@@ -99,6 +99,7 @@
                     var nodes = engine.parseExpression(
                         expr, new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     foreach (var node in nodes)
                     {
                         if (rename_map.TryGetValue(node.GetText(), out string new_name))
@@ -106,8 +107,10 @@
                             var new_node = TreeEdits.CopyTreeRecursive(node);
                             (new_node.Payload as AltAntlr.MyToken).Text = new_name;
                             TreeEdits.Replace(tokstream, node, new_node);
+                            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Replaced " + node.GetText());
                         }
                     }
+                    if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Finished editing.");
                     var tuple = new ParsingResultSet()
                     {
                         Text = tokstream.Text,

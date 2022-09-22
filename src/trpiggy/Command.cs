@@ -183,7 +183,7 @@ namespace Trash
                         var nodes = engine.parseExpression(expr_text,
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue)).ToArray();
-                        if (_config.Verbose) System.Console.Error.WriteLine("Result size " + nodes.Count());
+                        if (_config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Length + " nodes.");
                         List<IParseTree> res = new List<IParseTree>();
                         foreach (var v in nodes)
                         {

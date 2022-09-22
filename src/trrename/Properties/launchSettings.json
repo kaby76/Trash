@@ -2,7 +2,7 @@
   "profiles": {
     "trrename": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt -e //rule_/lhs/id_ -R rename1.txt",
+      "commandLineArgs": "-f o.pt -e //rule_/lhs/id_ -R rename1.txt -v",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\fix\\grammars-v4\\ebnf"
     }
   }

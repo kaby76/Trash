@@ -100,4 +100,21 @@
     {
         public static LogTextWriter Log { get; set; } = new LogTextWriter();
     }
+
+
+    public class TimedStderrOutput
+    {
+        static Nullable<DateTime> _before = null;
+
+        public static void WriteLine(string str)
+        {
+            DateTime dateTime = DateTime.Now;
+            if (_before == null)
+            {
+                _before = dateTime;
+            }
+            string time = String.Format("{0,-20}", (dateTime - _before));
+            System.Console.Error.WriteLine(time + str);
+        }
+    }
 }

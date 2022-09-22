@@ -94,6 +94,7 @@
                         var to_add = engine.parseExpression(expr,
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                         nodes.AddRange(to_add);
                     }
                     var res = LanguageServer.Transform.Group(nodes, doc);

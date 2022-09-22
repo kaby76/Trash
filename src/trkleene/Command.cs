@@ -83,6 +83,7 @@
                         nodes = engine.parseExpression(expr,
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     }
                     var res = LanguageServer.Transform.ConvertRecursionToKleeneOperator(doc, nodes);
                     Docs.Class1.EnactEdits(res);

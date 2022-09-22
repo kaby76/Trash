@@ -84,6 +84,7 @@
                     List<TerminalNodeImpl> nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                    if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     var (text_before, other) = LanguageServer.TreeEdits.TextToLeftOfLeaves(tokstream, atrees[0]);
                     LanguageServer.Transform.Unfold(nodes, doc);
                     var t = LanguageServer.TreeOutput.OutputTree(atrees.First(), lexer, parser, null).ToString();
