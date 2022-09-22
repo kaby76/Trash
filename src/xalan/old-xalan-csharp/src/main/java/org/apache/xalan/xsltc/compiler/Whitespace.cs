@@ -51,7 +51,7 @@ namespace org.apache.xalan.xsltc.compiler
 	{
 		// Three possible actions for the translet:
 		public const int USE_PREDICATE = 0;
-		public const int Constants_Fields;
+		public int Constants_Fields;
 		public const int PRESERVE_SPACE = 2;
 
 		// The 3 different categories of strip/preserve rules (order important)

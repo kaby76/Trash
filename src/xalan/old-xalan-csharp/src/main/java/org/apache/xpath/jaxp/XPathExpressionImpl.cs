@@ -57,7 +57,7 @@ namespace org.apache.xpath.jaxp
 		/// </summary>
 		protected internal XPathExpressionImpl()
 		{
-		};
+		}
 
 		protected internal XPathExpressionImpl(org.apache.xpath.XPath xpath, JAXPPrefixResolver prefixResolver, XPathFunctionResolver functionResolver, XPathVariableResolver variableResolver)
 		{
@@ -66,7 +66,7 @@ namespace org.apache.xpath.jaxp
 			this.functionResolver = functionResolver;
 			this.variableResolver = variableResolver;
 			this.featureSecureProcessing = false;
-		};
+		}
 
 		protected internal XPathExpressionImpl(org.apache.xpath.XPath xpath, JAXPPrefixResolver prefixResolver, XPathFunctionResolver functionResolver, XPathVariableResolver variableResolver, bool featureSecureProcessing)
 		{
@@ -75,7 +75,7 @@ namespace org.apache.xpath.jaxp
 			this.functionResolver = functionResolver;
 			this.variableResolver = variableResolver;
 			this.featureSecureProcessing = featureSecureProcessing;
-		};
+		}
 
 		public virtual org.apache.xpath.XPath XPath
 		{

@@ -338,7 +338,7 @@ namespace org.apache.xalan.xsltc.compiler
 		private void yy_error(int code, bool fatal)
 		{
 			Console.Write(yy_error_string[code]);
-			System.out.flush();
+			System.Console.Out.Flush();
 			if (fatal)
 			{
 				throw new Exception("Fatal Error.\n");

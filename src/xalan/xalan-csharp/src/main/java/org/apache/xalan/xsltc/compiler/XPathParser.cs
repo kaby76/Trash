@@ -69,13 +69,13 @@ namespace org.apache.xalan.xsltc.compiler
 
 	  /// <summary>
 	  /// Instance of action encapsulation class. </summary>
-	  protected internal CUP$XPathParser$actions action_obj;
+	  protected internal CUP_XPathParser_actions action_obj;
 
 	  /// <summary>
 	  /// Action encapsulation object initializer. </summary>
 	  protected internal virtual void init_actions()
 	  {
-		  action_obj = new CUP$XPathParser$actions(this);
+		  action_obj = new CUP_XPathParser_actions(this);
 	  }
 
 	  /// <summary>
@@ -85,7 +85,7 @@ namespace org.apache.xalan.xsltc.compiler
 	  public virtual java_cup.runtime.Symbol do_action(int act_num, java_cup.runtime.lr_parser parser, System.Collections.Stack stack, int top)
 	  {
 		/* call code in generated class */
-		return action_obj.CUP$XPathParser$do_action(act_num, parser, stack, top);
+		return action_obj.CUP_XPathParser_do_action(act_num, parser, stack, top);
 	  }
 
 	  /// <summary>
@@ -429,28 +429,28 @@ namespace org.apache.xalan.xsltc.compiler
 
 	/// <summary>
 	/// Cup generated class to encapsulate user supplied action code. </summary>
-	internal class CUP$XPathParser$actions
+	internal class CUP_XPathParser_actions
 	{
 	  private readonly XPathParser parser;
 
 	  /// <summary>
 	  /// Constructor </summary>
-	  internal CUP$XPathParser$actions(XPathParser parser)
+	  internal CUP_XPathParser_actions(XPathParser parser)
 	  {
 		this.parser = parser;
 	  }
 
-	  /// <summary>
-	  /// Method with the actual generated action code. </summary>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: public final java_cup.runtime.Symbol CUP$XPathParser$do_action(int CUP$XPathParser$act_num, java_cup.runtime.lr_parser CUP$XPathParser$parser, java.util.Stack CUP$XPathParser$stack, int CUP$XPathParser$top) throws java.lang.Exception
-	  public java_cup.runtime.Symbol CUP$XPathParser$do_action(int CUP$XPathParser$act_num, java_cup.runtime.lr_parser CUP$XPathParser$parser, System.Collections.Stack CUP$XPathParser$stack, int CUP$XPathParser$top)
+		/// <summary>
+		/// Method with the actual generated action code. </summary>
+		//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+		//ORIGINAL LINE: public final java_cup.runtime.Symbol CUP_XPathParser_do_action(int CUP_XPathParser_act_num, java_cup.runtime.lr_parser CUP_XPathParser_parser, java.util.Stack CUP_XPathParser_stack, int CUP_XPathParser_top) throws java.lang.Exception
+		public java_cup.runtime.Symbol CUP_XPathParser_do_action(int CUP_XPathParser_act_num, java_cup.runtime.lr_parser CUP_XPathParser_parser, System.Collections.Stack CUP_XPathParser_stack, int CUP_XPathParser_top)
 	  {
 		  /* Symbol object for return from actions */
-		  java_cup.runtime.Symbol CUP$XPathParser$result;
+		  java_cup.runtime.Symbol CUP_XPathParser_result;
 
 		  /* select the action based on the action number */
-		  switch (CUP$XPathParser$act_num)
+		  switch (CUP_XPathParser_act_num)
 		  {
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 140: // QName ::= ID
@@ -458,9 +458,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("id");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 139: // QName ::= SELF
@@ -468,9 +468,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("self");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 138: // QName ::= PRECEDINGSIBLING
@@ -478,9 +478,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("preceding-sibling");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 137: // QName ::= PRECEDING
@@ -488,9 +488,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("preceding");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 136: // QName ::= PARENT
@@ -498,9 +498,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("parent");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 135: // QName ::= NAMESPACE
@@ -508,9 +508,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("namespace");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 134: // QName ::= FOLLOWINGSIBLING
@@ -518,9 +518,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("following-sibling");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 133: // QName ::= FOLLOWING
@@ -528,9 +528,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("following");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 132: // QName ::= DESCENDANTORSELF
@@ -538,9 +538,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("decendant-or-self");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 131: // QName ::= DESCENDANT
@@ -548,9 +548,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("decendant");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 130: // QName ::= CHILD
@@ -558,9 +558,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("child");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 129: // QName ::= ATTRIBUTE
@@ -568,9 +568,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("attribute");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 128: // QName ::= ANCESTORORSELF
@@ -578,9 +578,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("ancestor-or-self");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 127: // QName ::= ANCESTOR
@@ -588,9 +588,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("child");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 126: // QName ::= KEY
@@ -598,9 +598,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("key");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 125: // QName ::= MOD
@@ -608,9 +608,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("mod");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 124: // QName ::= DIV
@@ -618,41 +618,41 @@ namespace org.apache.xalan.xsltc.compiler
 				  QName RESULT = null;
 			 RESULT = parser.getQNameIgnoreDefaultNs("div");
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 123: // QName ::= QNAME
 			  {
 				  QName RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int qnameleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int qnameleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int qnameright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int qnameright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			string qname = (string)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			string qname = (string)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = parser.getQNameIgnoreDefaultNs(qname);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(37, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 122: // NameTest ::= QName
 			  {
 				  object RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int qnleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int qnleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int qnright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int qnright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			QName qn = (QName)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			QName qn = (QName)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = qn;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(26, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(26, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 121: // NameTest ::= STAR
@@ -660,9 +660,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  object RESULT = null;
 			 RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(26, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(26, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 120: // NodeTest ::= PI
@@ -670,20 +670,20 @@ namespace org.apache.xalan.xsltc.compiler
 				  object RESULT = null;
 			 RESULT = new int?(NodeTest.PI);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 119: // NodeTest ::= PIPARAM LPAREN Literal RPAREN
 			  {
 				  object RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int lleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int lright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			string l = (string)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			string l = (string)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 
 			   QName name = parser.getQNameIgnoreDefaultNs("name");
 			   Expression exp = new EqualityExpr(Operators.EQ, new NameCall(name), new LiteralExpr(l));
@@ -692,9 +692,9 @@ namespace org.apache.xalan.xsltc.compiler
 			   RESULT = new Step(Axis.CHILD, NodeTest.PI, predicates);
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 3)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 3)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 118: // NodeTest ::= COMMENT
@@ -702,9 +702,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  object RESULT = null;
 			 RESULT = new int?(NodeTest.COMMENT);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 117: // NodeTest ::= TEXT
@@ -712,9 +712,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  object RESULT = null;
 			 RESULT = new int?(NodeTest.TEXT);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 116: // NodeTest ::= NODE
@@ -722,137 +722,137 @@ namespace org.apache.xalan.xsltc.compiler
 				  object RESULT = null;
 			 RESULT = new int?(NodeTest.ANODE);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 115: // NodeTest ::= NameTest
 			  {
 				  object RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ntleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ntright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			object nt = (object)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			object nt = (object)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = nt;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(25, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 114: // Argument ::= Expr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int exleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int exleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int exright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int exright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ex = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ex = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = ex;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(3, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(3, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 113: // VariableName ::= QName
 			  {
 				  QName RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int vnameleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int vnameleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int vnameright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int vnameright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			QName vname = (QName)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			QName vname = (QName)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			RESULT = vname;
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(39, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(39, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 112: // FunctionName ::= QName
 			  {
 				  QName RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fnameleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int fnameleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fnameright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int fnameright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			QName fname = (QName)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			QName fname = (QName)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			RESULT = fname;
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(38, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(38, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 111: // NonemptyArgumentList ::= Argument COMMA NonemptyArgumentList
 			  {
 				  ArrayList RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int argleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int argleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int argright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int argright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression arg = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression arg = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int arglleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int arglleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int arglright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int arglright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			ArrayList argl = (ArrayList)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			ArrayList argl = (ArrayList)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 argl.Insert(0, arg);
 			 RESULT = argl;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(36, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(36, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 110: // NonemptyArgumentList ::= Argument
 			  {
 				  ArrayList RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int argleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int argleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int argright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int argright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression arg = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression arg = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 				ArrayList temp = new ArrayList();
 				temp.Add(arg);
 				RESULT = temp;
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(36, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(36, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 109: // FunctionCall ::= FunctionName LPAREN NonemptyArgumentList RPAREN
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fnameleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 3)).left;
+			int fnameleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 3)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fnameright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 3)).right;
+			int fnameright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 3)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			QName fname = (QName)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 3)).value;
+			QName fname = (QName)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 3)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int arglleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int arglleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int arglright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int arglright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			ArrayList argl = (ArrayList)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			ArrayList argl = (ArrayList)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 
 			  if (parser.getQNameIgnoreDefaultNs("concat").Equals(fname))
 			  {
@@ -964,20 +964,20 @@ namespace org.apache.xalan.xsltc.compiler
 			  }
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(16, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 3)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(16, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 3)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 108: // FunctionCall ::= FunctionName LPAREN RPAREN
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fnameleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int fnameleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fnameright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int fnameright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			QName fname = (QName)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			QName fname = (QName)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 
 
 			  if (parser.getQNameIgnoreDefaultNs("current").Equals(fname))
@@ -1038,20 +1038,20 @@ namespace org.apache.xalan.xsltc.compiler
 			  }
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(16, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(16, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 107: // VariableReference ::= DOLLAR VariableName
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int varNameleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int varNameleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int varNameright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int varNameright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			QName varName = (QName)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			QName varName = (QName)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 				// An empty qname prefix for a variable or parameter reference
 				// should map to the null namespace and not the default URI.
@@ -1079,52 +1079,52 @@ namespace org.apache.xalan.xsltc.compiler
 				}
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(15, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(15, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 106: // PrimaryExpr ::= FunctionCall
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fcleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int fcleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fcright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int fcright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression fc = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression fc = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = fc;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 105: // PrimaryExpr ::= REAL
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int numleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int numleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int numright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int numright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			double? num = (double?)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			double? num = (double?)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new RealExpr(num.Value);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 104: // PrimaryExpr ::= INT
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int numleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int numleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int numright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int numright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			long? num = (long?)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			long? num = (long?)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 		   long value = num.Value;
 		   if (value < int.MinValue || value > int.MaxValue)
@@ -1152,20 +1152,20 @@ namespace org.apache.xalan.xsltc.compiler
 		   }
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 103: // PrimaryExpr ::= Literal
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int stringleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int stringleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int stringright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int stringright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			string @string = (string)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			string @string = (string)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 		/*
 		* If the string appears to have the syntax of a QName, store 
@@ -1188,79 +1188,79 @@ namespace org.apache.xalan.xsltc.compiler
 		RESULT = (string.ReferenceEquals(@namespace, null)) ? new LiteralExpr(@string) : new LiteralExpr(@string, @namespace);
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 102: // PrimaryExpr ::= LPAREN Expr RPAREN
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int exleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int exleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int exright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int exright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ex = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			Expression ex = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 			 RESULT = ex;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 101: // PrimaryExpr ::= VariableReference
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int vrleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int vrleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int vrright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int vrright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression vr = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression vr = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = vr;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(17, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 100: // FilterExpr ::= PrimaryExpr Predicates
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int primaryleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int primaryleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int primaryright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int primaryright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression primary = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			Expression primary = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new FilterExpr(primary, pp);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(6, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(6, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 99: // FilterExpr ::= PrimaryExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int primaryleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int primaryleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int primaryright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int primaryright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression primary = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression primary = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = primary;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(6, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(6, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 98: // AbbreviatedStep ::= DDOT
@@ -1268,9 +1268,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  Expression RESULT = null;
 			 RESULT = new Step(Axis.PARENT, NodeTest.ANODE, null);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(20, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(20, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 97: // AbbreviatedStep ::= DOT
@@ -1278,9 +1278,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  Expression RESULT = null;
 			 RESULT = new Step(Axis.SELF, NodeTest.ANODE, null);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(20, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(20, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 96: // AxisName ::= SELF
@@ -1288,9 +1288,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.SELF);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 95: // AxisName ::= PRECEDINGSIBLING
@@ -1298,9 +1298,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.PRECEDINGSIBLING);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 94: // AxisName ::= PRECEDING
@@ -1308,9 +1308,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.PRECEDING);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 93: // AxisName ::= PARENT
@@ -1318,9 +1318,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.PARENT);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 92: // AxisName ::= NAMESPACE
@@ -1328,9 +1328,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.NAMESPACE);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 91: // AxisName ::= FOLLOWINGSIBLING
@@ -1338,9 +1338,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.FOLLOWINGSIBLING);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 90: // AxisName ::= FOLLOWING
@@ -1348,9 +1348,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.FOLLOWING);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 89: // AxisName ::= DESCENDANTORSELF
@@ -1358,9 +1358,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.DESCENDANTORSELF);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 88: // AxisName ::= DESCENDANT
@@ -1368,9 +1368,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.DESCENDANT);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 87: // AxisName ::= CHILD
@@ -1378,9 +1378,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.CHILD);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 86: // AxisName ::= ATTRIBUTE
@@ -1388,9 +1388,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.ATTRIBUTE);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 85: // AxisName ::= ANCESTORORSELF
@@ -1398,9 +1398,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.ANCESTORORSELF);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 84: // AxisName ::= ANCESTOR
@@ -1408,9 +1408,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.ANCESTOR);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(40, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 83: // AxisSpecifier ::= ATSIGN
@@ -1418,110 +1418,110 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.ATTRIBUTE);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(41, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(41, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 82: // AxisSpecifier ::= AxisName DCOLON
 			  {
 				  int? RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int anleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int anleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int anright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int anright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int? an = (int?)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			int? an = (int?)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 			 RESULT = an;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(41, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(41, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 81: // Step ::= AbbreviatedStep
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int abbrevleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int abbrevleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int abbrevright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int abbrevright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression abbrev = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression abbrev = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = abbrev;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(7, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(7, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 80: // Step ::= AxisSpecifier NodeTest
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int axisleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int axisright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int? axis = (int?)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			int? axis = (int?)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntestleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ntestleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntestright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ntestright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			object ntest = (object)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			object ntest = (object)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new Step(axis.Value, parser.findNodeType(axis.Value, ntest), null);
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(7, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(7, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 79: // Step ::= AxisSpecifier NodeTest Predicates
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int axisleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int axisright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int? axis = (int?)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			int? axis = (int?)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntestleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int ntestleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntestright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int ntestright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			object ntest = (object)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			object ntest = (object)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new Step(axis.Value, parser.findNodeType(axis.Value, ntest), pp);
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(7, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(7, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 78: // Step ::= NodeTest Predicates
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntestleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int ntestleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntestright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int ntestright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			object ntest = (object)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			object ntest = (object)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 				if (ntest is Step)
 				{
@@ -1535,20 +1535,20 @@ namespace org.apache.xalan.xsltc.compiler
 				}
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(7, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(7, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 77: // Step ::= NodeTest
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntestleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ntestleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntestright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ntestright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			object ntest = (object)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			object ntest = (object)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 				if (ntest is Step)
 				{
@@ -1560,20 +1560,20 @@ namespace org.apache.xalan.xsltc.compiler
 				}
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(7, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(7, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 76: // AbbreviatedAbsoluteLocationPath ::= DSLASH RelativeLocationPath
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rlpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rlpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			   // 
 		   // Expand '//' into '/descendant-or-self::node()/' or
@@ -1590,26 +1590,26 @@ namespace org.apache.xalan.xsltc.compiler
 		   RESULT = new AbsoluteLocationPath(parser.insertStep(step, (RelativeLocationPath) rlp));
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(24, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(24, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 75: // AbbreviatedRelativeLocationPath ::= RelativeLocationPath DSLASH Step
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int rlpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int rlpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int stepleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int stepleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int stepright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int stepright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression step = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression step = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 //JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
 //ORIGINAL LINE: final Step right = (Step)step;
@@ -1677,41 +1677,41 @@ namespace org.apache.xalan.xsltc.compiler
 		   }
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(22, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(22, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 74: // AbsoluteLocationPath ::= AbbreviatedAbsoluteLocationPath
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aalpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int aalpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aalpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int aalpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression aalp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression aalp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = aalp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(23, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(23, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 73: // AbsoluteLocationPath ::= SLASH RelativeLocationPath
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rlpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rlpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new AbsoluteLocationPath(rlp);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(23, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(23, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 72: // AbsoluteLocationPath ::= SLASH
@@ -1719,42 +1719,42 @@ namespace org.apache.xalan.xsltc.compiler
 				  Expression RESULT = null;
 			 RESULT = new AbsoluteLocationPath();
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(23, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(23, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 71: // RelativeLocationPath ::= AbbreviatedRelativeLocationPath
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int arlpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int arlpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int arlpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int arlpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression arlp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression arlp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = arlp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(21, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(21, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 70: // RelativeLocationPath ::= RelativeLocationPath SLASH Step
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int rlpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int rlpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int stepleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int stepleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int stepright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int stepright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression step = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression step = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			if (rlp is Step && ((Step) rlp).AbbreviatedDot)
 			{
@@ -1770,74 +1770,74 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(21, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(21, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 69: // RelativeLocationPath ::= Step
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int stepleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int stepleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int stepright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int stepright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression step = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression step = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = step;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(21, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(21, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 68: // LocationPath ::= AbsoluteLocationPath
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int alpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int alpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int alpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int alpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression alp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression alp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = alp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(4, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(4, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 67: // LocationPath ::= RelativeLocationPath
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rlpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rlpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = rlp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(4, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(4, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 66: // PathExpr ::= FilterExpr DSLASH RelativeLocationPath
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fexpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int fexpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fexpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int fexpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression fexp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression fexp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rlpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rlpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			   // 
 		   // Expand '//' into '/descendant-or-self::node()/' or
@@ -1860,592 +1860,592 @@ namespace org.apache.xalan.xsltc.compiler
 			   RESULT = fpp;
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(19, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(19, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 65: // PathExpr ::= FilterExpr SLASH RelativeLocationPath
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fexpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int fexpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fexpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int fexpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression fexp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression fexp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rlpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rlpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rlpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression rlp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new FilterParentPath(fexp, rlp);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(19, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(19, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 64: // PathExpr ::= FilterExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fexpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int fexpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int fexpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int fexpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression fexp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression fexp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = fexp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(19, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(19, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 63: // PathExpr ::= LocationPath
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int lpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int lpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression lp = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression lp = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = lp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(19, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(19, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 62: // UnionExpr ::= PathExpr VBAR UnionExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int peleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int peleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int peright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int peright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression pe = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression pe = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int restleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int restleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int restright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int restright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression rest = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression rest = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new UnionPathExpr(pe, rest);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(18, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(18, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 61: // UnionExpr ::= PathExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int peleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int peleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int peright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int peright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression pe = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression pe = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = pe;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(18, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(18, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 60: // UnaryExpr ::= MINUS UnaryExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ueleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ueright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new UnaryOpExpr(ue);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(14, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(14, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 59: // UnaryExpr ::= UnionExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ueleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ueright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = ue;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(14, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(14, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 58: // MultiplicativeExpr ::= MultiplicativeExpr MOD UnaryExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int meleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int meright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression me = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression me = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ueleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ueright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new BinOpExpr(BinOpExpr.MOD, me, ue);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(13, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(13, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 57: // MultiplicativeExpr ::= MultiplicativeExpr DIV UnaryExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int meleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int meright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression me = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression me = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ueleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ueright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new BinOpExpr(BinOpExpr.DIV, me, ue);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(13, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(13, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 56: // MultiplicativeExpr ::= MultiplicativeExpr MULT UnaryExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int meleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int meright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression me = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression me = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ueleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ueright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new BinOpExpr(BinOpExpr.TIMES, me, ue);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(13, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(13, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 55: // MultiplicativeExpr ::= UnaryExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ueleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ueright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ueright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ue = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = ue;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(13, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(13, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 54: // AdditiveExpr ::= AdditiveExpr MINUS MultiplicativeExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int aeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int aeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int meleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int meright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression me = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression me = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new BinOpExpr(BinOpExpr.MINUS, ae, me);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(12, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(12, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 53: // AdditiveExpr ::= AdditiveExpr PLUS MultiplicativeExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int aeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int aeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int meleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int meright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression me = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression me = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new BinOpExpr(BinOpExpr.PLUS, ae, me);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(12, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(12, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 52: // AdditiveExpr ::= MultiplicativeExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int meleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int meright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int meright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression me = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression me = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = me;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(12, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(12, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 51: // RelationalExpr ::= RelationalExpr GE AdditiveExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int releft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int releft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int reright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int reright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression re = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression re = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int aeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int aeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new RelationalExpr(Operators.GE, re, ae);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(11, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(11, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 50: // RelationalExpr ::= RelationalExpr LE AdditiveExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int releft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int releft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int reright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int reright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression re = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression re = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int aeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int aeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new RelationalExpr(Operators.LE, re, ae);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(11, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(11, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 49: // RelationalExpr ::= RelationalExpr GT AdditiveExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int releft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int releft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int reright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int reright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression re = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression re = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int aeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int aeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new RelationalExpr(Operators.GT, re, ae);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(11, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(11, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 48: // RelationalExpr ::= RelationalExpr LT AdditiveExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int releft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int releft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int reright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int reright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression re = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression re = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int aeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int aeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new RelationalExpr(Operators.LT, re, ae);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(11, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(11, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 47: // RelationalExpr ::= AdditiveExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int aeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int aeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = ae;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(11, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(11, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 46: // EqualityExpr ::= EqualityExpr NE RelationalExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int eeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int eeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int eeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int eeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ee = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression ee = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int releft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int releft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int reright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int reright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression re = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression re = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new EqualityExpr(Operators.NE, ee, re);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(10, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(10, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 45: // EqualityExpr ::= EqualityExpr EQ RelationalExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int eeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int eeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int eeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int eeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ee = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression ee = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int releft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int releft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int reright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int reright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression re = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression re = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new EqualityExpr(Operators.EQ, ee, re);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(10, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(10, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 44: // EqualityExpr ::= RelationalExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int releft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int releft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int reright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int reright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression re = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression re = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = re;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(10, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(10, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 43: // AndExpr ::= AndExpr AND EqualityExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int aeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int aeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int eeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int eeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int eeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int eeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ee = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ee = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new LogicalExpr(LogicalExpr.AND, ae, ee);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(9, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(9, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 42: // AndExpr ::= EqualityExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int eleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int eleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int eright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int eright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression e = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression e = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = e;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(9, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(9, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 41: // OrExpr ::= OrExpr OR AndExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int oeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int oeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int oeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int oeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression oe = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Expression oe = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int aeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int aeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new LogicalExpr(LogicalExpr.OR, oe, ae);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(8, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(8, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 40: // OrExpr ::= AndExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int aeleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int aeright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int aeright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ae = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = ae;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(8, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(8, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 39: // Expr ::= OrExpr
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int exleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int exleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int exright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int exright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression ex = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression ex = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = ex;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(2, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(2, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 38: // Predicate ::= LBRACK Expr RBRACK
 			  {
 				  Expression RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int eleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int eleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int eright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int eright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression e = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			Expression e = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 
 			RESULT = new Predicate(e);
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(5, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(5, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 37: // Predicates ::= Predicate Predicates
 			  {
 				  ArrayList RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int pleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int pright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression p = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			Expression p = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 pp.Insert(0, p);
 			 RESULT = pp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(35, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(35, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 36: // Predicates ::= Predicate
 			  {
 				  ArrayList RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int pleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int pright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression p = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression p = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			ArrayList temp = new ArrayList();
 			temp.Add(p);
 			RESULT = temp;
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(35, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(35, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 35: // ChildOrAttributeAxisSpecifier ::= ATTRIBUTE DCOLON
@@ -2453,9 +2453,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.ATTRIBUTE);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(42, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(42, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 34: // ChildOrAttributeAxisSpecifier ::= CHILD DCOLON
@@ -2463,9 +2463,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.CHILD);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(42, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(42, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 33: // ChildOrAttributeAxisSpecifier ::= ATSIGN
@@ -2473,25 +2473,25 @@ namespace org.apache.xalan.xsltc.compiler
 				  int? RESULT = null;
 			 RESULT = new int?(Axis.ATTRIBUTE);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(42, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(42, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 32: // NameTestPattern ::= QName
 			  {
 				  object RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int qnleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int qnleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int qnright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int qnright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			QName qn = (QName)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			QName qn = (QName)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = qn;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(34, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(34, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 31: // NameTestPattern ::= STAR
@@ -2499,9 +2499,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  object RESULT = null;
 			 RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(34, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(34, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 30: // NodeTestPattern ::= PI
@@ -2509,9 +2509,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  object RESULT = null;
 			 RESULT = new int?(NodeTest.PI);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(33, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(33, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 29: // NodeTestPattern ::= COMMENT
@@ -2519,9 +2519,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  object RESULT = null;
 			 RESULT = new int?(NodeTest.COMMENT);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(33, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(33, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 28: // NodeTestPattern ::= TEXT
@@ -2529,9 +2529,9 @@ namespace org.apache.xalan.xsltc.compiler
 				  object RESULT = null;
 			 RESULT = new int?(NodeTest.TEXT);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(33, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(33, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 27: // NodeTestPattern ::= NODE
@@ -2539,438 +2539,438 @@ namespace org.apache.xalan.xsltc.compiler
 				  object RESULT = null;
 			 RESULT = new int?(NodeTest.ANODE);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(33, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(33, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 26: // NodeTestPattern ::= NameTestPattern
 			  {
 				  object RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ntleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ntright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			object nt = (object)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			object nt = (object)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = nt;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(33, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(33, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 25: // StepPattern ::= ChildOrAttributeAxisSpecifier ProcessingInstructionPattern Predicates
 			  {
 				  StepPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int axisleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int axisright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int? axis = (int?)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			int? axis = (int?)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pipleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int pipleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pipright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int pipright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			StepPattern pip = (StepPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			StepPattern pip = (StepPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			   // TODO: report error if axis is attribute	
 			   RESULT = (ProcessingInstructionPattern)pip.setPredicates(pp);
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 24: // StepPattern ::= ChildOrAttributeAxisSpecifier ProcessingInstructionPattern
 			  {
 				  StepPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int axisleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int axisright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int? axis = (int?)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			int? axis = (int?)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pipleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int pipleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pipright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int pipright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			StepPattern pip = (StepPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			StepPattern pip = (StepPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			   RESULT = pip; // TODO: report error if axis is attribute
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 23: // StepPattern ::= ChildOrAttributeAxisSpecifier NodeTestPattern Predicates
 			  {
 				  StepPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int axisleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int axisright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int? axis = (int?)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			int? axis = (int?)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int ntleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int ntright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			object nt = (object)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			object nt = (object)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			   RESULT = parser.createStepPattern(axis.Value, nt, pp);
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 22: // StepPattern ::= ChildOrAttributeAxisSpecifier NodeTestPattern
 			  {
 				  StepPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int axisleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int axisright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int axisright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int? axis = (int?)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			int? axis = (int?)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ntleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ntright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			object nt = (object)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			object nt = (object)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			   RESULT = parser.createStepPattern(axis.Value, nt, null);
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 21: // StepPattern ::= ProcessingInstructionPattern Predicates
 			  {
 				  StepPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pipleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int pipleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pipright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int pipright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			StepPattern pip = (StepPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			StepPattern pip = (StepPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = (ProcessingInstructionPattern)pip.setPredicates(pp);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 20: // StepPattern ::= ProcessingInstructionPattern
 			  {
 				  StepPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pipleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int pipleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pipright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int pipright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			StepPattern pip = (StepPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			StepPattern pip = (StepPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = pip;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 19: // StepPattern ::= NodeTestPattern Predicates
 			  {
 				  StepPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int ntleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int ntright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			object nt = (object)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			object nt = (object)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			ArrayList pp = (ArrayList)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			RESULT = parser.createStepPattern(Axis.CHILD, nt, pp);
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 18: // StepPattern ::= NodeTestPattern
 			  {
 				  StepPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ntleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ntright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ntright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			object nt = (object)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			object nt = (object)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 
 			RESULT = parser.createStepPattern(Axis.CHILD, nt, null);
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(32, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 17: // RelativePathPattern ::= StepPattern DSLASH RelativePathPattern
 			  {
 				  RelativePathPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int spleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int spleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int spright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int spright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			StepPattern sp = (StepPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			StepPattern sp = (StepPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new AncestorPattern(sp, rpp);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(31, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(31, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 16: // RelativePathPattern ::= StepPattern SLASH RelativePathPattern
 			  {
 				  RelativePathPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int spleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int spleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int spright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int spright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			StepPattern sp = (StepPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			StepPattern sp = (StepPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new ParentPattern(sp, rpp);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(31, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(31, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 15: // RelativePathPattern ::= StepPattern
 			  {
 				  RelativePathPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int spleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int spleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int spright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int spright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			StepPattern sp = (StepPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			StepPattern sp = (StepPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = sp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(31, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(31, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 14: // ProcessingInstructionPattern ::= PIPARAM LPAREN Literal RPAREN
 			  {
 				  StepPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int lleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int lright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			string l = (string)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			string l = (string)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 			 RESULT = new ProcessingInstructionPattern(l);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(30, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 3)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(30, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 3)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 13: // IdKeyPattern ::= KEY LPAREN Literal COMMA Literal RPAREN
 			  {
 				  IdKeyPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int l1left = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 3)).left;
+			int l1left = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 3)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int l1right = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 3)).right;
+			int l1right = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 3)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			string l1 = (string)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 3)).value;
+			string l1 = (string)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 3)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int l2left = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int l2left = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int l2right = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int l2right = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			string l2 = (string)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			string l2 = (string)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 			 RESULT = new KeyPattern(l1, l2);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(27, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 5)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(27, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 5)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 12: // IdKeyPattern ::= ID LPAREN Literal RPAREN
 			  {
 				  IdKeyPattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int lleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int lright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			string l = (string)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			string l = (string)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 			 RESULT = new IdPattern(l);
 				   parser.HasIdCall = true;
 
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(27, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 3)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(27, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 3)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 11: // LocationPathPattern ::= RelativePathPattern
 			  {
 				  Pattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = rpp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 10: // LocationPathPattern ::= DSLASH RelativePathPattern
 			  {
 				  Pattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new AncestorPattern(rpp);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 9: // LocationPathPattern ::= IdKeyPattern DSLASH RelativePathPattern
 			  {
 				  Pattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ikpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int ikpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ikpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int ikpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			IdKeyPattern ikp = (IdKeyPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			IdKeyPattern ikp = (IdKeyPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new AncestorPattern(ikp, rpp);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 8: // LocationPathPattern ::= IdKeyPattern SLASH RelativePathPattern
 			  {
 				  Pattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ikpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int ikpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ikpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int ikpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			IdKeyPattern ikp = (IdKeyPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			IdKeyPattern ikp = (IdKeyPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new ParentPattern(ikp, rpp);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 7: // LocationPathPattern ::= IdKeyPattern
 			  {
 				  Pattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ikpleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int ikpleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int ikpright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int ikpright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			IdKeyPattern ikp = (IdKeyPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			IdKeyPattern ikp = (IdKeyPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = ikp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 6: // LocationPathPattern ::= SLASH RelativePathPattern
 			  {
 				  Pattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int rppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int rppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int rppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			RelativePathPattern rpp = (RelativePathPattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new AbsolutePathPattern(rpp);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 5: // LocationPathPattern ::= SLASH
@@ -2978,97 +2978,97 @@ namespace org.apache.xalan.xsltc.compiler
 				  Pattern RESULT = null;
 			 RESULT = new AbsolutePathPattern(null);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(29, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 4: // Pattern ::= LocationPathPattern VBAR Pattern
 			  {
 				  Pattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left;
+			int lppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).right;
+			int lppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Pattern lpp = (Pattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).value;
+			Pattern lpp = (Pattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).value;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int pleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int pright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int pright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Pattern p = (Pattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Pattern p = (Pattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = new AlternativePattern(lpp, p);
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(28, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 2)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(28, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 2)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 3: // Pattern ::= LocationPathPattern
 			  {
 				  Pattern RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lppleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int lppleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int lppright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int lppright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Pattern lpp = (Pattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Pattern lpp = (Pattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = lpp;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(28, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(28, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 2: // TopLevel ::= EXPRESSION Expr
 			  {
 				  SyntaxTreeNode RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int exprleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int exprleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int exprright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int exprright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Expression expr = (Expression)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Expression expr = (Expression)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = expr;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(1, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(1, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 1: // TopLevel ::= PATTERN Pattern
 			  {
 				  SyntaxTreeNode RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int patternleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).left;
+			int patternleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int patternright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right;
+			int patternright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			Pattern pattern = (Pattern)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).value;
+			Pattern pattern = (Pattern)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).value;
 			 RESULT = pattern;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(1, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(1, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
-			  return CUP$XPathParser$result;
+			  return CUP_XPathParser_result;
 
 			  /*. . . . . . . . . . . . . . . . . . . .*/
 			  case 0: // $START ::= TopLevel EOF
 			  {
 				  object RESULT = null;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int start_valleft = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left;
+			int start_valleft = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			int start_valright = ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).right;
+			int start_valright = ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).right;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-			SyntaxTreeNode start_val = (SyntaxTreeNode)((java_cup.runtime.Symbol) CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).value;
+			SyntaxTreeNode start_val = (SyntaxTreeNode)((java_cup.runtime.Symbol) CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).value;
 			RESULT = start_val;
 //JAVA TO C# CONVERTER TODO TASK: There is no direct .NET Stack equivalent to Java Stack methods based on internal indexing:
-				  CUP$XPathParser$result = new java_cup.runtime.Symbol(0, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 1)).left, ((java_cup.runtime.Symbol)CUP$XPathParser$stack.elementAt(CUP$XPathParser$top - 0)).right, RESULT);
+				  CUP_XPathParser_result = new java_cup.runtime.Symbol(0, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 1)).left, ((java_cup.runtime.Symbol)CUP_XPathParser_stack.elementAt(CUP_XPathParser_top - 0)).right, RESULT);
 			  }
 			  /* ACCEPT */
-			  CUP$XPathParser$parser.done_parsing();
-			  return CUP$XPathParser$result;
+			  CUP_XPathParser_parser.done_parsing();
+			  return CUP_XPathParser_result;
 
 			  /* . . . . . .*/
 			  default:
