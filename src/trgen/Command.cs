@@ -122,20 +122,8 @@
 
         public static string GetAntlrToolPath()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                return "/tmp/antlr4-4.11.1-complete.jar";
-            }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                return (home + "/Downloads/antlr4-4.11.1-complete.jar").Replace('\\', '/');
-            }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return "~/Downloads/antlr4-4.11.1-complete.jar";
-            }
-            throw new Exception("Cannot determine operating system!");
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            return (home + "/.m2/antlr4-4.11.1-complete.jar").Replace('\\', '/');
         }
 
         public static string TargetName(string target)
@@ -587,7 +575,7 @@
             per_grammar.package = _config.target == "Go" ? "parser" : "";
             var all_grammars_pattern = "^(?!.*(" +
                  (per_grammar.ignore_string != null ? per_grammar.ignore_string + "|" : "")
-                 + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
+                 + "/ignore/|/Generated/|/target/|/examples/|/.git/|/.gitignore/|/.ignore/|"
                  + Command.AllButTargetName(_config.target)
                  + "/)).+[.]g4"
                  + "$";
