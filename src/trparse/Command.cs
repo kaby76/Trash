@@ -120,11 +120,12 @@ namespace Trash
                 if (config.NoParsingResultSets) return;
                 string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
                 System.Console.WriteLine(js1);
+                Environment.ExitCode = 0;
             }
             else
             {
                 var grun = new Grun(config);
-                grun.Run();
+                Environment.ExitCode = grun.Run();
             }
         }
     }

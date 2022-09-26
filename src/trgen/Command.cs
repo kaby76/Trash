@@ -595,10 +595,6 @@
                     return true;
                 }).Select(f => f.Replace(per_grammar.current_directory, "")).ToHashSet();
             // Find parser and combined grammars, start rules, etc.
-            if (per_grammar.start_rule == null)
-            {
-
-            }
             Doit(per_grammar, grammar_list);
         }
 

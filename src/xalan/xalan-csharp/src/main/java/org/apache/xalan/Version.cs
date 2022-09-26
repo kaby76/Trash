@@ -33,7 +33,7 @@ namespace org.apache.xalan
 	/// information about the version of the XSLT spec we support.</P>
 	/// @xsl.usage general
 	/// </summary>
-	public class Version
+	public class Version_
 	{
 
 	  /// <summary>
@@ -56,10 +56,10 @@ namespace org.apache.xalan
 	  /// Print the processor version to the command line.
 	  /// </summary>
 	  /// <param name="argv"> command line arguments, unused. </param>
-	  public static void Main(string[] argv)
-	  {
-		Console.WriteLine(Version);
-	  }
+	 // public static void Main(string[] argv)
+	 // {
+		//Console.WriteLine(Version);
+	 // }
 
 	  /// <summary>
 	  /// Name of product: Xalan.
@@ -79,7 +79,7 @@ namespace org.apache.xalan
 	  {
 		  get
 		  {
-			return "Java";
+			return "C#";
 		  }
 	  }
 
@@ -100,7 +100,6 @@ namespace org.apache.xalan
 		  get
 		  {
 			return 2;
-    
 		  }
 	  }
 

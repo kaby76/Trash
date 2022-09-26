@@ -70,8 +70,9 @@
         {
         }
 
-        public void Run()
+        public int Run()
         {
+            int result = 0;
             try
             {
                 var data = new List<AntlrJson.ParsingResultSet>();
@@ -85,12 +86,12 @@
                         if (lines != null && lines != "") break;
                     }
                     txt = lines;
-                    Doit(txt, data);
+                    result = Doit(txt, data);
                 }
                 else if (config.Input != null)
                 {
                     txt = config.Input;
-                    Doit(txt, data);
+                    result = Doit(txt, data);
                 }
                 else if (config.Files != null)
                 {
@@ -104,22 +105,27 @@
                         {
                             txt = file;
                         }
-                        Doit(txt, data);
+                        result = result == 0 ? Doit(txt, data) : result;
                     }
                 }
-                if (config.NoParsingResultSets) return;
+                if (config.NoParsingResultSets) return result;
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = true;
                 string js1 = JsonSerializer.Serialize(data.ToArray(), serializeOptions);
                 System.Console.WriteLine(js1);
             }
+            catch (Exception e)
+            {
+                result = 1; 
+            }
             finally
             {
             }
+            return result;
         }
 
-        void Doit(string txt, List<AntlrJson.ParsingResultSet> data)
+        int Doit(string txt, List<AntlrJson.ParsingResultSet> data)
         {
             string path = config.ParserLocation != null ? config.ParserLocation
                 : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
@@ -144,7 +150,13 @@
             var tree = res as IParseTree;
             var t2 = tree as ParserRuleContext;
             var parser = type.GetProperty("Parser").GetValue(null, new object[0]) as Antlr4.Runtime.Parser;
-            var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
+	        var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
+            parser.RemoveErrorListeners();
+            lexer.RemoveErrorListeners();
+            var elp = new ErrorListener<IToken>();
+            parser.AddErrorListener(elp);
+            var ell = new ErrorListener<int>();
+            lexer.AddErrorListener(ell);
             var tokstream = type.GetProperty("TokenStream").GetValue(null, new object[0]) as ITokenStream;
             var commontokstream = tokstream as CommonTokenStream;
             var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
@@ -152,6 +164,7 @@
             if (config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Stream = tokstream as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = parser, Lexer = lexer };
             data.Add(tuple);
+            return elp.had_error || ell.had_error ? 1 : 0;
         }
     }
 }

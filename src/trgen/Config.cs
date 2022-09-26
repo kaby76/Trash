@@ -32,6 +32,9 @@ namespace Trash
         [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
         public string output_directory { get; set; }
 
+        [Option('p', "package", Required = false)]
+        public string name_space { get; set; }
+
         private string _backing_template_sources_directory;
         [Option("template-sources-directory", Required = false)]
         public string template_sources_directory { get { return _backing_template_sources_directory; } set { _backing_template_sources_directory = Path.GetFullPath(value); } }
@@ -50,7 +53,6 @@ namespace Trash
         public bool? flatten { get; set; }
         public LineTranslationType? line_translation { get; set; }
         public bool? maven { get; set; }
-        public string name_space { get; set; }
         public PathSepType? path_sep { get; set; }
         public string tool_grammar_files_pattern { get; set; }
         public int? watchdog_timeout { get; set; }
