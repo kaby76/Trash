@@ -1094,6 +1094,7 @@ namespace LanguageServer
                 pd.Parser = parser;
                 pd.Lexer = lexer;
                 pd.ParseTree = pt;
+		pd.NumberOfErrors = lexer_error_listener._number_of_errors + parser_error_listener._number_of_errors;
             }
         }
 

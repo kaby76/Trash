@@ -25,6 +25,8 @@ namespace Trash
 
         public void Execute(Config config)
         {
+            int exit_code = 0;
+
             // There are two ways to do this. One is a
             // bootstrapped method using LanguageServer, the
             // other is by using the generated code, with the loading
@@ -116,11 +118,12 @@ namespace Trash
                         MetaStartSymbol = ""
                     };
                     results.Add(tuple);
+                    if (exit_code == 0 & pr.NumberOfErrors > 0) exit_code = 1;
                 }
+                Environment.ExitCode = exit_code;
                 if (config.NoParsingResultSets) return;
                 string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
                 System.Console.WriteLine(js1);
-                Environment.ExitCode = 0;
             }
             else
             {

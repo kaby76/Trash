@@ -43,4 +43,4 @@ _tests/trcombine/o1.pt
 _tests/trcombine/o2.pt
 _tests/piggy/o1.pt
 _tests/piggy/o2.pt
-output
+./output

@@ -1,15 +1,15 @@
 namespace LanguageServer
 {
-	using Antlr4.Runtime;
-	using Antlr4.Runtime.Misc;
-	using Antlr4.Runtime.Tree;
+    using Antlr4.Runtime;
+    using Antlr4.Runtime.Misc;
+    using Antlr4.Runtime.Tree;
     using Domemtech.Symtab;
     using System;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Linq;
-	using System.Text;
-	using Workspaces;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using Workspaces;
 
     internal class W3CebnfParsingResults : ParsingResults, IParserDescription
     {
@@ -114,10 +114,10 @@ namespace LanguageServer
             true, // Terminal
             false, // comment
             false, // keyword
-			false, // mode
-			false, // mode
-			false, // channel
-			false, // channel
+            false, // mode
+            false, // mode
+            false, // channel
+            false, // channel
             false, // literal
             false, // punctuation
             false, // operator
@@ -852,6 +852,7 @@ namespace LanguageServer
             pd.Parser = parser;
             pd.Lexer = lexer;
             pd.ParseTree = pt;
+        pd.NumberOfErrors = lexer_error_listener._number_of_errors + parser_error_listener._number_of_errors;
         }
 
         public override void Parse(string code,

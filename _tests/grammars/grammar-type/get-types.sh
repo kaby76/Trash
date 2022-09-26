@@ -1,25 +1,35 @@
 #!/usr/bin/bash
+echo -n $1 ": "
+type=""
+trparse -e -t antlr2 $1 > /dev/null 2>&1
+if [ "$?" == "0" ]
+then
+	type="$type antlr2"
+fi
+trparse -e -t antlr3 $1 > /dev/null 2>&1
+if [ "$?" == "0" ]
+then
+	type="$type antlr3"
+fi
+trparse -e -t antlr4 $1 > /dev/null 2>&1
+if [ "$?" == "0" ]
+then
+	type="$type antlr4"
+	l=`trparse $1 -t antlr4 | trxgrep '/grammarSpec/grammarDecl/grammarType/LEXER' | trtext -c`
+	if [ "$l" != "0" ]
+	then
+		type="$type lexer"
+	fi
+	p=`trparse $1 -t antlr4 | trxgrep '/grammarSpec/grammarDecl/grammarType/PARSER' | trtext -c`
+	if [ "$p" != "0" ]
+	then
+		type="$type parser"
+	fi
+	if [ "$l" = "0" ] && [ "$p" = "0" ]
+	then
+		type="$type combined"
+	fi
+fi
 
-# "Setting MSYS2_ARG_CONV_EXCL so that Trash XPaths do not get mutulated."
-export MSYS2_ARG_CONV_EXCL="*"
-# Sanity check.
-is_grammar=`trparse $1 -t antlr4 | trxgrep '/grammarSpec/grammarDecl[not(grammarType/LEXER)]' | trtext -c`
-if [ "$is_grammar" != "1" ]
-then
- echo $1 is not a combined or parser Antlr4 grammar.
- exit 1
-fi
-count=`trparse $1 -t antlr4 2> /dev/null \
- | trxgrep '//parserRuleSpec//alternative/element[.//TOKEN_REF/text()="EOF"]/following-sibling::element' \
- | trtext -c`
-if [ "$count" != "0" ]
-then
- echo $1 has an EOF usage followed by another element.
-fi
-count=`trparse $1 -t antlr4 2> /dev/null \
- | trxgrep '//labeledAlt[.//TOKEN_REF/text()="EOF" and count(../labeledAlt) > 1]' \
- | trtext -c`
-if [ "$count" != "0" ]
-then
- echo $1 has an EOF in one alt, but not in another.
-fi
+echo $type
+

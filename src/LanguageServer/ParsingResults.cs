@@ -140,7 +140,7 @@ namespace LanguageServer
             }
         }
         public virtual BufferedTokenStream TokStream { get; set; } = null;
-
+        public int NumberOfErrors { get; internal set; }
 
         protected static readonly Dictionary<string, IScope> _scopes = new Dictionary<string, IScope>();
         public static Dictionary<string, HashSet<string>> InverseImports = new Dictionary<string, HashSet<string>>();
