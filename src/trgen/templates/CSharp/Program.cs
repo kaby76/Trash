@@ -18,7 +18,7 @@ public class Program
     public static IParseTree Tree { get; set; }
     public static string StartSymbol { get; set; } = "<start_symbol>";
     public static string Input { get; set; }
-    public static void SetupParse2(string input)
+    public static void SetupParse2(string input, bool quiet = false)
     {
         ICharStream str = new AntlrInputStream(input);
         <if (case_insensitive_type)>
@@ -30,9 +30,9 @@ public class Program
         TokenStream = tokens;
         var parser = new <parser_name>(tokens);
         Parser = parser;
-        var listener_lexer = new ErrorListener\<int>();
+        var listener_lexer = new ErrorListener\<int>(quiet);
         LexerErrorListener = listener_lexer;
-        var listener_parser = new ErrorListener\<IToken>();
+        var listener_parser = new ErrorListener\<IToken>(quiet);
         ParserErrorListener = listener_parser;
         lexer.RemoveErrorListeners();
         parser.RemoveErrorListeners();

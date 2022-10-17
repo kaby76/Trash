@@ -26,6 +26,9 @@ namespace Trash
         [Option('g', "encoding", Required = false, HelpText = "Set the encoding for the grammar.")]
         public string Encoding { get; set; }
 
+        [Option('q', "--quiet", Required =false, Default = false, HelpText = "Do not output anything; only set error code.")]
+        public bool Quiet { get; set; }
+
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
     }

@@ -113,7 +113,7 @@
                 serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
                 serializeOptions.WriteIndented = true;
                 string js1 = JsonSerializer.Serialize(data.ToArray(), serializeOptions);
-                System.Console.WriteLine(js1);
+                if (!config.Quiet) System.Console.WriteLine(js1);
             }
             catch (Exception e)
             {
@@ -142,7 +142,7 @@
             Type type = asm.GetType("Program");
 
             MethodInfo methodInfo = type.GetMethod("SetupParse2");
-            object[] parm1 = new object[] { txt };
+            object[] parm1 = new object[] { txt, config.Quiet };
             var res = methodInfo.Invoke(null, parm1);
 
             MethodInfo methodInfo2 = type.GetMethod("Parse2");
@@ -163,9 +163,9 @@
             var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
             var tree = res as IParseTree;
             var t2 = tree as ParserRuleContext;
-            System.Console.Error.WriteLine("Time to parse: " + (after - before));
-            System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
-            if (config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
+            if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
+            if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
+            if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Stream = tokstream as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = parser, Lexer = lexer };
             data.Add(tuple);
             return (bool)res3 ? 1 : 0;
