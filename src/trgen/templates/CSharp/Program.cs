@@ -11,7 +11,9 @@ using System.Runtime.CompilerServices;
 public class Program
 {
     public static <parser_name> Parser { get; set; }
+    public static ErrorListener\<IToken> ParserErrorListener { get; set; }
     public static Lexer Lexer { get; set; }
+    public static ErrorListener\<int> LexerErrorListener { get; set; }
     public static ITokenStream TokenStream { get; set; }
     public static IParseTree Tree { get; set; }
     public static string StartSymbol { get; set; } = "<start_symbol>";
@@ -29,7 +31,9 @@ public class Program
         var parser = new <parser_name>(tokens);
         Parser = parser;
         var listener_lexer = new ErrorListener\<int>();
+        LexerErrorListener = listener_lexer;
         var listener_parser = new ErrorListener\<IToken>();
+        ParserErrorListener = listener_parser;
         lexer.RemoveErrorListeners();
         parser.RemoveErrorListeners();
         lexer.AddErrorListener(listener_lexer);
@@ -43,6 +47,10 @@ public class Program
         Tree = tree;
         return tree;
     }
+    public static bool AnyErrors()
+    {
+        return ParserErrorListener.had_error || LexerErrorListener.had_error;
+    }
     public static IParseTree Parse(string input)
     {
         ICharStream str = new AntlrInputStream(input);
@@ -53,15 +61,15 @@ public class Program
         Lexer = lexer;
         var tokens = new CommonTokenStream(lexer);
         TokenStream = tokens;
-        var parser = new < parser_name > (tokens);
+        var parser = new <parser_name>(tokens);
         Parser = parser;
-        var listener_lexer = new ErrorListener\< int > ();
-        var listener_parser = new ErrorListener\< IToken > ();
+        var listener_lexer = new ErrorListener\<int>();
+        var listener_parser = new ErrorListener\<IToken>();
         lexer.RemoveErrorListeners();
         parser.RemoveErrorListeners();
         lexer.AddErrorListener(listener_lexer);
         parser.AddErrorListener(listener_parser);
-        var tree = parser.< start_symbol > ();
+        var tree = parser.<start_symbol>();
         Input = lexer.InputStream.ToString();
         TokenStream = parser.TokenStream;
         Tree = tree;

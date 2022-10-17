@@ -140,31 +140,35 @@
             var xxxxxx = asm1.GetTypes();
             Type[] types = asm.GetTypes();
             Type type = asm.GetType("Program");
-            var methods = type.GetMethods();
-            MethodInfo methodInfo = type.GetMethod("Parse");
-            object[] parm = new object[] { txt };
+
+            MethodInfo methodInfo = type.GetMethod("SetupParse2");
+            object[] parm1 = new object[] { txt };
+            var res = methodInfo.Invoke(null, parm1);
+
+            MethodInfo methodInfo2 = type.GetMethod("Parse2");
+            object[] parm2 = new object[] { };
             DateTime before = DateTime.Now;
-            var res = methodInfo.Invoke(null, parm);
+            var res2 = methodInfo2.Invoke(null, parm2);
             DateTime after = DateTime.Now;
-            System.Console.Error.WriteLine("Time to parse: " + (after - before));
-            var tree = res as IParseTree;
-            var t2 = tree as ParserRuleContext;
+
+            MethodInfo methodInfo3 = type.GetMethod("AnyErrors");
+            object[] parm3 = new object[] { };
+            var res3 = methodInfo3.Invoke(null, parm3);
+
             var parser = type.GetProperty("Parser").GetValue(null, new object[0]) as Antlr4.Runtime.Parser;
-	        var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
-            parser.RemoveErrorListeners();
-            lexer.RemoveErrorListeners();
-            var elp = new ErrorListener<IToken>();
-            parser.AddErrorListener(elp);
-            var ell = new ErrorListener<int>();
-            lexer.AddErrorListener(ell);
+            var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
+
             var tokstream = type.GetProperty("TokenStream").GetValue(null, new object[0]) as ITokenStream;
             var commontokstream = tokstream as CommonTokenStream;
             var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
+            var tree = res as IParseTree;
+            var t2 = tree as ParserRuleContext;
+            System.Console.Error.WriteLine("Time to parse: " + (after - before));
             System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
             if (config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Stream = tokstream as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = parser, Lexer = lexer };
             data.Add(tuple);
-            return elp.had_error || ell.had_error ? 1 : 0;
+            return (bool)res3 ? 1 : 0;
         }
     }
 }

@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-t antlr2 examples/abbLexer.g4",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\grammars\\grammar-type"
+      "commandLineArgs": "c:\\msys64\\home\\Kenne\\big-index\\grammars-v4\\asl\\readme.md",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\big-index\\markdown\\md\\Generated"
     }
   }
 }

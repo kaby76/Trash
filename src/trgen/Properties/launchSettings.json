@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-s module",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\Antlr4BuildTasks\\_tests\\multitarget"
+      "commandLineArgs": "-t Java",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\fix\\grammars-v4\\abb"
     }
   }
 }
