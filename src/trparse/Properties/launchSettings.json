@@ -2,7 +2,7 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "c:\\msys64\\home\\Kenne\\big-index\\grammars-v4\\asl\\readme.md",
+      "commandLineArgs": "c:\\msys64\\home\\Kenne\\big-index\\grammars-v4\\abnf\\readme.md",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\big-index\\markdown\\md\\Generated"
     }
   }
