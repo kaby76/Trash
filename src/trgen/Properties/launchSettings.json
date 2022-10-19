@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Java",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\fix\\grammars-v4\\abb"
+      "commandLineArgs": "-s daedalusFile",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issue-3934\\cs"
     }
   }
 }

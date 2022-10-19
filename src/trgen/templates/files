@@ -20,7 +20,6 @@
 ./Cpp/Program.cpp
 ./Cpp/readme.md
 ./Cpp/test.sh
-./CSharp/CaseChangingCharStream.cs
 ./CSharp/Encodings.cs
 ./CSharp/ErrorListener.cs
 ./CSharp/makefile
@@ -35,7 +34,6 @@
 ./Dart/test.sh
 ./Dart/tester.psm1
 ./files
-./Go/antlr_resource/case_changing_stream.go
 ./Go/go.mod
 ./Go/makefile
 ./Go/Test.go

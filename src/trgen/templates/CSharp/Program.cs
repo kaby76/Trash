@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 public class Program
 {
@@ -76,15 +77,17 @@ public class Program
         return tree;
     }
 
+    static bool show_profile = false;
+    static bool show_tree = false;
+    static bool show_tokens = false;
+    static bool old = false;
+    static bool two_byte = false;
+    static Encoding encoding = null;
+
     static void Main(string[] args)
     {
-        bool show_profile = false;
-        bool show_tree = false;
-        bool show_tokens = false;
-        bool old = false;
-        bool two_byte = false;
-        string file_name = null;
-        string input = null;
+        List\<bool> is_fns = new List\<bool>();
+        List\<string> inputs = new List\<string>();
         System.Text.Encoding encoding = null;
         for (int i = 0; i \< args.Length; ++i)
         {
@@ -114,9 +117,10 @@ public class Program
                 continue;
             }
             else if (args[i].Equals("-input"))
-                input = args[++i];
-            else if (args[i].Equals("-file"))
-                file_name = args[++i];
+            {
+                inputs.Add(args[++i]);
+                is_fns.Add(false);
+            }
             else if (args[i].Equals("-encoding"))
             {
                 ++i;
@@ -127,31 +131,60 @@ public class Program
                 if (encoding == null)
                     throw new Exception(@"Unknown encoding. Must be an Internet Assigned Numbers Authority (IANA) code page name. https://www.iana.org/assignments/character-sets/character-sets.xhtml");
             }
+	    else
+	    {
+		    inputs.Add(args[i]);
+		    is_fns.Add(true);
+	    }
         }
-        ICharStream str = null;
-        if (input == null && file_name == null)
+        if (inputs.Count() == 0)
         {
-            str = CharStreams.fromStream(System.Console.OpenStandardInput());
-        } else if (input != null)
+            ParseStdin();
+        }
+        else
         {
-            str = CharStreams.fromString(input);
-        } else if (file_name != null)
-        {
-            if (two_byte)
-                str = new TwoByteCharStream(file_name);
-            else if (old)
+            DateTime before = DateTime.Now;
+            for (int f = 0; f \< inputs.Count(); ++f)
             {
-                FileStream fs = new FileStream(file_name, FileMode.Open);
-                str = new Antlr4.Runtime.AntlrInputStream(fs);
+                if (is_fns[f])
+                    ParseFilename(inputs[f]);
+                else
+                    ParseString(inputs[f]);
             }
-            else if (encoding == null)
-                str = CharStreams.fromPath(file_name);
-            else
-                str = CharStreams.fromPath(file_name, encoding);
+	    DateTime after = DateTime.Now;
+	    System.Console.Error.WriteLine("Total Time: " + (after - before));
         }
-<if (case_insensitive_type)>
-        str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
-<endif>
+    }
+    static void ParseStdin()
+    {
+        ICharStream str = null;
+        str = CharStreams.fromStream(System.Console.OpenStandardInput());
+        DoParse(str);
+    }
+    static void ParseString(string input)
+    {
+        ICharStream str = null;
+        str = CharStreams.fromString(input);
+        DoParse(str);
+    }
+    static void ParseFilename(string file_name)
+    {
+        ICharStream str = null;
+        if (two_byte)
+            str = new TwoByteCharStream(file_name);
+        else if (old)
+        {
+            FileStream fs = new FileStream(file_name, FileMode.Open);
+            str = new Antlr4.Runtime.AntlrInputStream(fs);
+        }
+        else if (encoding == null)
+            str = CharStreams.fromPath(file_name);
+        else
+            str = CharStreams.fromPath(file_name, encoding);
+        DoParse(str);
+    }
+    static void DoParse(ICharStream str)
+    {
         var lexer = new <lexer_name>(str);
         if (show_tokens)
         {
@@ -200,6 +233,6 @@ public class Program
         {
                 System.Console.Out.WriteLine(String.Join(",\n\r", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
         }
-        System.Environment.Exit(listener_lexer.had_error || listener_parser.had_error ? 1 : 0);
+        if (Environment.ExitCode == 0) Environment.ExitCode = listener_lexer.had_error || listener_parser.had_error ? 1 : 0;
     }
 }

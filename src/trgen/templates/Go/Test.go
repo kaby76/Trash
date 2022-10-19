@@ -8,9 +8,6 @@ import (
     "time"
     "github.com/antlr/antlr4/runtime/Go/antlr/v4"
     "example.com/myparser/<package_name>"
-<if (case_insensitive_type)>
-    "example.com/myparser/antlr_resource"
-<endif>
 )
 type CustomErrorListener struct {
     errors int
@@ -37,14 +34,14 @@ func (l *CustomErrorListener) ReportContextSensitivity(recognizer antlr.Parser, 
     antlr.ConsoleErrorListenerINSTANCE.ReportContextSensitivity(recognizer, dfa, startIndex, stopIndex, prediction, configs)
 }
 
+var inputs = make([]string, 0)
+var is_fns = make([]bool, 0)
+var error_code int = 0
+var show_tree = false
+var show_tokens = false
 
 func main() {
-    var show_tree = false
-    var show_tokens = false
-    var file_name = ""
-    var input = ""
-    var str antlr.CharStream = nil
-    for i := 0; i \< len(os.Args); i = i + 1 {
+    for i := 1; i \< len(os.Args); i = i + 1 {
         if os.Args[i] == "-tokens" {
             show_tokens = true
             continue
@@ -53,31 +50,62 @@ func main() {
             continue
         } else if os.Args[i] == "-input" {
             i = i + 1
-            input = os.Args[i]
-        } else if os.Args[i] == "-file" {
-            i = i + 1
-            file_name = os.Args[i]
+            inputs = append(inputs, os.Args[i])
+            is_fns = append(is_fns, false)
+        } else {
+            inputs = append(inputs, os.Args[i])
+            is_fns = append(is_fns, true)
         }
     }
-    if input == "" && file_name == "" {
-        var b []byte = make([]byte, 1)
-        var st = ""
-        for {
-            _, err := os.Stdin.Read(b)
-            if err == io.EOF {
-                break
+    if len(inputs) == 0 {
+        ParseStdin()
+    } else {
+        start := time.Now()
+        for i := 0; i \< len(inputs); i = i + 1 {
+            if is_fns[i] {
+                ParseFilename(inputs[i])
+            } else {
+                ParseString(inputs[i])
             }
-            st = st + string(b)
         }
-        str = antlr.NewInputStream(st)
-    } else if input != "" {
-        str = antlr.NewInputStream(input)
-    } else if file_name != "" {
-        str, _ = antlr.NewFileStream(file_name);        
+        elapsed := time.Since(start)
+        fmt.Printf("Total Time: %.3f s", elapsed.Seconds())
+        fmt.Println()
     }
-<if (case_insensitive_type)>
-    str = antlr_resource.NewCaseChangingStream(str, "<case_insensitive_type>" == "Upper");
-<endif>
+    if error_code != 0 {
+        os.Exit(1)
+    } else {
+        os.Exit(0)
+    }
+}
+
+func ParseStdin() {
+    var b []byte = make([]byte, 1)
+    var st = ""
+    for {
+        _, err := os.Stdin.Read(b)
+        if err == io.EOF {
+            break
+        }
+        st = st + string(b)
+    }
+    var str antlr.CharStream = nil
+    str = antlr.NewInputStream(st)
+    DoParse(str)
+}
+
+func ParseString(input string) {
+    str := antlr.NewInputStream(input)
+    DoParse(str)
+}
+
+func ParseFilename(file_name string) {
+    var str antlr.CharStream = nil
+    str, _ = antlr.NewFileStream(file_name)        
+    DoParse(str)
+}
+
+func DoParse(str antlr.CharStream) {
     var lexer = <go_lexer_name>(str);
     if show_tokens {
         j := 0
@@ -122,8 +150,6 @@ func main() {
         fmt.Println(ss)
     }
     if parserErrors.errors > 0 || lexerErrors.errors > 0 {
-        os.Exit(1)
-    } else {
-        os.Exit(0)
+        error_code = 1
     }
 }

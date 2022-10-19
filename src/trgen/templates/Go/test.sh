@@ -9,7 +9,7 @@ do
   if [ "$x1" != "errors" ]
   then
     echo "$file"
-    trwdog ./<exec_name> -file "$file"
+    trwdog ./<exec_name> "$file"
     status="$?"
     if [ -f "$file".errors ]
     then
