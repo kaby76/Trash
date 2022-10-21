@@ -39,7 +39,6 @@
 ./Go/Test.go
 ./Go/test.sh
 ./Go/tester.psm1
-./Java/CaseChangingCharStream.java
 ./Java/ErrorListener.java
 ./Java/makefile
 ./Java/Program.java

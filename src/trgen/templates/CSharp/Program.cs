@@ -38,8 +38,9 @@ public class Program
         lexer.RemoveErrorListeners();
         parser.RemoveErrorListeners();
         lexer.AddErrorListener(listener_lexer);
-		parser.AddErrorListener(listener_parser);
+        parser.AddErrorListener(listener_parser);
     }
+
     public static IParseTree Parse2()
     {
         var tree = Parser.<start_symbol>();
@@ -48,10 +49,12 @@ public class Program
         Tree = tree;
         return tree;
     }
+
     public static bool AnyErrors()
     {
         return ParserErrorListener.had_error || LexerErrorListener.had_error;
     }
+
     public static IParseTree Parse(string input)
     {
         ICharStream str = new AntlrInputStream(input);
@@ -82,6 +85,7 @@ public class Program
     static bool show_tokens = false;
     static bool old = false;
     static bool two_byte = false;
+    static int exit_code = 0;
     static Encoding encoding = null;
 
     static void Main(string[] args)
@@ -131,11 +135,11 @@ public class Program
                 if (encoding == null)
                     throw new Exception(@"Unknown encoding. Must be an Internet Assigned Numbers Authority (IANA) code page name. https://www.iana.org/assignments/character-sets/character-sets.xhtml");
             }
-	    else
-	    {
-		    inputs.Add(args[i]);
-		    is_fns.Add(true);
-	    }
+            else
+            {
+                 inputs.Add(args[i]);
+                 is_fns.Add(true);
+            }
         }
         if (inputs.Count() == 0)
         {
@@ -151,22 +155,26 @@ public class Program
                 else
                     ParseString(inputs[f]);
             }
-	    DateTime after = DateTime.Now;
-	    System.Console.Error.WriteLine("Total Time: " + (after - before));
+            DateTime after = DateTime.Now;
+            System.Console.Error.WriteLine("Total Time: " + (after - before));
         }
+        Environment.ExitCode = exit_code;
     }
+
     static void ParseStdin()
     {
         ICharStream str = null;
         str = CharStreams.fromStream(System.Console.OpenStandardInput());
         DoParse(str);
     }
+
     static void ParseString(string input)
     {
         ICharStream str = null;
         str = CharStreams.fromString(input);
         DoParse(str);
     }
+
     static void ParseFilename(string file_name)
     {
         ICharStream str = null;
@@ -183,6 +191,7 @@ public class Program
             str = CharStreams.fromPath(file_name, encoding);
         DoParse(str);
     }
+
     static void DoParse(ICharStream str)
     {
         var lexer = new <lexer_name>(str);
@@ -220,6 +229,7 @@ public class Program
         if (listener_lexer.had_error || listener_parser.had_error)
         {
             System.Console.Error.WriteLine("Parse failed.");
+            exit_code = 1;
         }
         else
         {
@@ -233,6 +243,5 @@ public class Program
         {
                 System.Console.Out.WriteLine(String.Join(",\n\r", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
         }
-        if (Environment.ExitCode == 0) Environment.ExitCode = listener_lexer.had_error || listener_parser.had_error ? 1 : 0;
     }
 }
