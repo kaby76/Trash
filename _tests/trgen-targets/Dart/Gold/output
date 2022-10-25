@@ -1,0 +1,2 @@
+trwdog dart.bat run cli.dart -input "hello world" -tree
+(hello hello world)

@@ -9,7 +9,6 @@
 #include "ErrorListener.h"
 <tool_grammar_tuples:{x | #include "<x.GeneratedIncludeFileName>"
 } >
-#include "CaseChangingCharStream.h"
 
 std::string formatDuration(uint64_t duration) {
     std::stringstream oss;
@@ -64,11 +63,7 @@ int TryParse(std::vector\<std::string>& args)
         std::fstream fs(*file_name);
         str = new antlr4::ANTLRInputStream(fs);
     }
-    <if (case_insensitive_type)>
-    bool up = (new std::string("Upper"))->compare("Upper") == 0;
-    str = new antlr4::runtime::CaseChangingCharStream(str, up);
-    <endif>
-        antlr4::Lexer * lexer = new <lexer_name>(str);
+    antlr4::Lexer * lexer = new <lexer_name>(str);
     if (show_tokens)
     {
         for (int i = 0; ; ++i)

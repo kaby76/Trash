@@ -1,12 +1,9 @@
-./Antlr4cs/CaseChangingCharStream.cs
 ./Antlr4cs/makefile
 ./Antlr4cs/Program.cs
 ./Antlr4cs/Test.csproj
 ./Antlr4cs/test.sh
 ./Antlr4cs/tester.psm1
 ./Arithmetic.g4
-./Cpp/CaseChangingCharStream.cpp
-./Cpp/CaseChangingCharStream.h
 ./Cpp/cmake/antlr4-generator.cmake.in
 ./Cpp/cmake/antlr4-runtime.cmake.in
 ./Cpp/cmake/Antlr4Package.md
@@ -44,7 +41,6 @@
 ./Java/Program.java
 ./Java/test.sh
 ./Java/tester.psm1
-./JavaScript/CaseChangingStream.js
 ./JavaScript/index.js
 ./JavaScript/makefile
 ./JavaScript/package.json
@@ -55,7 +51,6 @@
 ./PHP/Test.php
 ./PHP/test.sh
 ./PHP/tester.psm1
-./Python3/CaseChangingStream.py
 ./Python3/makefile
 ./Python3/Program.py
 ./Python3/requirements.txt

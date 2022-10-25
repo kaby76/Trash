@@ -44,3 +44,15 @@ _tests/trcombine/o2.pt
 _tests/piggy/o1.pt
 _tests/piggy/o2.pt
 ./output
+_tests/trgen-targets/Antlr4cs/output
+_tests/trgen-targets/Antlr4cs/simple.g4
+_tests/trgen-targets/CSharp/output
+_tests/trgen-targets/CSharp/simple.g4
+_tests/trgen-targets/Java/simple.g4
+_tests/trgen-targets/Go/simple.g4
+_tests/trgen-targets/Dart/output
+_tests/trgen-targets/Java/output
+_tests/trgen-targets/Go/output
+_tests/trgen-targets/Dart/simple.g4
+_tests/trgen-targets/Python3/simple.g4
+_tests/trgen-targets/Python3/output

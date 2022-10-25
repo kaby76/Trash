@@ -3,7 +3,6 @@
 import antlr4 from 'antlr4';
 <tool_grammar_tuples: {x | import <x.GrammarAutomName> from './<x.GeneratedFileName>';
 } >
-import CaseChangingStream from './CaseChangingStream.js';
 import strops from 'typescript-string-operations';
 import fs from 'fs-extra';
 
@@ -65,9 +64,6 @@ if (input == null && file_name == null)
     str = antlr4.CharStreams.fromPathSync(file_name, 'utf8');
 }
 var num_errors = 0;
-<if (case_insensitive_type) >
-str = new CaseChangingStream(str, "<case_insensitive_type>" === "Upper");
-<endif>
 const lexer = new <lexer_name>(str);
 lexer.strictMode = false;
 const tokens = new antlr4.CommonTokenStream(lexer);

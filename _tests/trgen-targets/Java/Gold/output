@@ -1,0 +1,2 @@
+trwdog java -classpath C:/Users/Kenne/.m2/antlr4-4.11.1-complete.jar\;. Program -input "hello world" -tree
+(hello hello world)

@@ -33,8 +33,6 @@ add_executable(Test
     Program.cpp
     ErrorListener.cpp
     ErrorListener.h
-    CaseChangingCharStream.cpp
-    CaseChangingCharStream.h
     <additional_sources:{x | <x>
     } >${ANTLR_<grammar_name>_CXX_OUTPUTS}
     )
@@ -60,8 +58,6 @@ add_executable(Test
     Program.cpp
     ErrorListener.cpp
     ErrorListener.h
-    CaseChangingCharStream.cpp
-    CaseChangingCharStream.h
     <additional_sources:{x | <x>
     } >${ANTLR_<lexer_name>_CXX_OUTPUTS}
     ${ANTLR_<parser_name>_CXX_OUTPUTS}

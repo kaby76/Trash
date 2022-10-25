@@ -69,8 +69,8 @@ func main() {
             }
         }
         elapsed := time.Since(start)
-        fmt.Printf("Total Time: %.3f s", elapsed.Seconds())
-        fmt.Println()
+        fmt.Fprintf(os.Stderr, "Total Time: %.3f s", elapsed.Seconds())
+        fmt.Fprintln(os.Stderr)
     }
     if error_code != 0 {
         os.Exit(1)
