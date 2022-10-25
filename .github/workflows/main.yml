@@ -33,10 +33,17 @@ jobs:
           dotnet --info
           dotnet --list-runtimes
           dotnet --list-sdks
-      - name: Build
+      - name: Install Dart
+        if: ${{ matrix.language == 'Dart' }}
+        uses: dart-lang/setup-dart@v1
+      - name: Do not trust Dart env
+        if: ${{ matrix.language == 'Dart' }}
         run: |
-          make build
-          make install
+          dart --version
+        - name: Build
+          run: |
+            make build
+            make install
       - name: Test
         run: |
           cd _tests
