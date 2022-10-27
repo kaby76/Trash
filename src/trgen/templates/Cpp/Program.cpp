@@ -5,6 +5,7 @@
 #include \<string>
 #include \<chrono>
 #include \<atomic>
+#include \<vector>
 #include "ANTLRInputStream.h"
 #include "ErrorListener.h"
 <tool_grammar_tuples:{x | #include "<x.GeneratedIncludeFileName>"
@@ -28,42 +29,15 @@ std::string formatDuration(uint64_t duration) {
     return oss.str();
 }
 
-int TryParse(std::vector\<std::string>& args)
+bool show_tree = false;
+bool show_tokens = false;
+std::vector\<std::string> inputs;
+std::vector\<bool> is_fns;
+int error_code = 0;
+
+void DoParse(antlr4::CharStream* str)
 {
-    bool show_tree = false;
-    bool show_tokens = false;
-    std::string * file_name = nullptr;
-    std::string * input = nullptr;
-    for (int i = 0; i \< args.size(); ++i)
-    {
-        if (args[i] == "-tokens")
-        {
-            show_tokens = true;
-            continue;
-        }
-        else if (args[i] == "-tree")
-        {
-            show_tree = true;
-            continue;
-        }
-        else if (args[i] == "-input")
-            input = & args[++i];
-        else if (args[i] == "-file")
-            file_name = & args[++i];
-    }
-    antlr4::CharStream* str = nullptr;
-    if (input == nullptr && file_name == nullptr)
-    {
-        str = new antlr4::ANTLRInputStream(std::cin);
-    } else if (input != nullptr)
-    {
-        str = new antlr4::ANTLRInputStream(*input);
-    } else if (file_name != nullptr)
-    {
-        std::fstream fs(*file_name);
-        str = new antlr4::ANTLRInputStream(fs);
-    }
-    antlr4::Lexer * lexer = new <lexer_name>(str);
+    antlr4::Lexer* lexer = new <lexer_name>(str);
     if (show_tokens)
     {
         for (int i = 0; ; ++i)
@@ -76,7 +50,7 @@ int TryParse(std::vector\<std::string>& args)
         lexer->reset();
     }
     auto tokens = new antlr4::CommonTokenStream(lexer);
-    auto * parser = new <parser_name>(tokens);
+    auto* parser = new <parser_name>(tokens);
     auto listener_lexer = new ErrorListener();
     auto listener_parser = new ErrorListener();
     lexer->removeErrorListeners();
@@ -90,6 +64,7 @@ int TryParse(std::vector\<std::string>& args)
     if (listener_parser->had_error || listener_lexer->had_error)
     {
         std::cerr \<\< "Parse failed." \<\< std::endl;
+        error_code = 1;
     }
     else
     {
@@ -97,10 +72,79 @@ int TryParse(std::vector\<std::string>& args)
     }
     if (show_tree)
     {
-//        System.Console.Error.WriteLine(tree.ToStringTree(parser));
+        //        System.Console.Error.WriteLine(tree.ToStringTree(parser));
     }
     std::cerr \<\< "Time: " \<\< formatDuration(duration.count()) \<\< std::endl;
-    return 0;
+}
+
+
+void ParseStdin()
+{
+    antlr4::CharStream* str = nullptr;
+    str = new antlr4::ANTLRInputStream(std::cin);
+    DoParse(str);
+}
+
+void ParseString(std::string input)
+{
+    antlr4::CharStream* str = nullptr;
+    str = new antlr4::ANTLRInputStream(input);
+    DoParse(str);
+}
+
+void ParseFilename(std::string file_name)
+{
+    antlr4::CharStream* str = nullptr;
+    std::fstream fs(file_name);
+    str = new antlr4::ANTLRInputStream(fs);
+    DoParse(str);
+}
+
+int TryParse(std::vector\<std::string>& args)
+{
+    for (int i = 0; i \< args.size(); ++i)
+    {
+        if (args[i] == "-tokens")
+        {
+            show_tokens = true;
+            continue;
+        }
+        else if (args[i] == "-tree")
+        {
+            show_tree = true;
+            continue;
+        }
+        else if (args[i] == "-input")
+        {
+            ++i;
+            inputs.push_back(args[i]);
+            is_fns.push_back(false);
+        }
+        else
+        {
+            inputs.push_back(args[i]);
+            is_fns.push_back(true);
+        }
+    }
+    if (inputs.size() == 0)
+    {
+        ParseStdin();
+    }
+    else
+    {
+        auto before = std::chrono::steady_clock::now();
+        for (int f = 0; f \< inputs.size(); ++f)
+        {
+            if (is_fns[f])
+                ParseFilename(inputs[f]);
+            else
+                ParseString(inputs[f]);
+        }
+        auto after = std::chrono::steady_clock::now();
+        auto duration = std::chrono::duration_cast\<std::chrono::microseconds>(after - before);
+        std::cerr \<\< "Total Time: " \<\< formatDuration(duration.count()) \<\< std::endl;
+    }
+    return error_code;
 }
 
 int main(int argc, const char * argv[])
@@ -110,6 +154,6 @@ int main(int argc, const char * argv[])
     {
         args.push_back(argv[i]);
     }   
-    TryParse(args);
+    return TryParse(args);
 }
 
