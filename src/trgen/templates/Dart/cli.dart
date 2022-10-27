@@ -114,6 +114,7 @@ Future\<void> DoParse(CharStream str) async
     if (parser.numberOfSyntaxErrors > 0)
     {
         stderr.writeln("Parse failed.");
+        error_code = 1;
     }
     else
     {
