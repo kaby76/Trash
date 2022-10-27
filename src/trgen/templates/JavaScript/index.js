@@ -5,6 +5,8 @@ import antlr4 from 'antlr4';
 } >
 import strops from 'typescript-string-operations';
 import fs from 'fs-extra';
+import pkg from 'timer-node';
+const { Timer, Time, TimerOptions } = pkg;
 
 function getChar() {
     let buffer = Buffer.alloc(1);
@@ -15,6 +17,8 @@ function getChar() {
     return buffer.toString('utf8');
 }
 
+var num_errors = 0;
+
 class MyErrorListener extends antlr4.error.ErrorListener {
     syntaxError(recognizer, offendingSymbol, line, column, msg, err) {
         num_errors++;
@@ -22,81 +26,112 @@ class MyErrorListener extends antlr4.error.ErrorListener {
     }
 }
 
-var show_tokens = false;
-var show_tree = false;
-var input = null;
-var file_name = null;
-for (let i = 2; i \< process.argv.length; ++i)
-{
-    switch (process.argv[i]) {
-        case '-tokens':
-            var show_tokens = true;
-            break;
-        case '-tree':
-            var show_tree = true;
-            break;
-        case '-input':
-            var input = process.argv[++i];
-            break;
-        case '-file':
-            var file_name = process.argv[++i];
-            break;
-        default:
-            console.log('unknown '.concat(process.argv[i]));
-    }
-}
-var str = null;
-if (input == null && file_name == null)
-{
+function ParseStdin() {
     var sb = new strops.StringBuilder();
     var ch;
-    while ((ch = getChar()) != '')
-    {
+    while ((ch = getChar()) != '') {
         sb.Append(ch);
     }
     var input = sb.ToString();
-    str = antlr4.CharStreams.fromString(input);
-} else if (input != null)
-{
-    str = antlr4.CharStreams.fromString(input);
-} else if (file_name != null)
-{
-    str = antlr4.CharStreams.fromPathSync(file_name, 'utf8');
+    var str = antlr4.CharStreams.fromString(input);
+    DoParse(str);
 }
-var num_errors = 0;
-const lexer = new <lexer_name>(str);
-lexer.strictMode = false;
-const tokens = new antlr4.CommonTokenStream(lexer);
-const parser = new <parser_name>(tokens);
-lexer.removeErrorListeners();
-parser.removeErrorListeners();
-parser.addErrorListener(new MyErrorListener());
-lexer.addErrorListener(new MyErrorListener());
-if (show_tokens)
-{
-    for (var i = 0; ; ++i)
+
+function ParseString(input) {
+    var str = antlr4.CharStreams.fromString(input);
+    DoParse(str);
+}
+
+function ParseFilename(input) {
+    var str = antlr4.CharStreams.fromPathSync(input, encoding);
+    DoParse(str);
+}
+
+var show_tokens = false;
+var show_tree = false;
+var inputs = [];
+var is_fns = [];
+var error_code = 0;
+var encoding = 'utf8';
+
+function main() {
+    for (let i = 2; i \< process.argv.length; ++i)
     {
-        var ro_token = lexer.nextToken();
-        var token = ro_token;
-        token.TokenIndex = i;
-        console.log(token.toString());
-        if (token.type === antlr4.Token.EOF)
-            break;
+        switch (process.argv[i]) {
+            case '-tokens':
+                var show_tokens = true;
+                break;
+            case '-tree':
+                var show_tree = true;
+                break;
+            case '-encoding':
+                var encoding = process.args[++i];
+                break;
+            case '-input':
+                inputs.push(process.argv[++i]);
+                is_fns.push(false);
+                break;
+            default:
+                inputs.push(process.argv[i]);
+                is_fns.push(true);
+                break;
+        }
     }
-    lexer.reset();
+    if (inputs.length == 0) {
+        ParseStdin();
+    }
+    else {
+        const timer = new Timer({ label: 'test-timer' });
+        timer.start();
+        for (var f = 0; f \< inputs.length; ++f)
+        {
+            if (is_fns[f])
+                ParseFilename(inputs[f]);
+            else
+                ParseString(inputs[f]);
+        }
+        timer.stop();
+        console.error(timer.format('Total Time: %mm %ss %msms'));
+    }
+    process.exitCode = error_code;
 }
-const tree = parser.<start_symbol>();
-if (show_tree)
-{
-    console.log(tree.toStringTree(parser.ruleNames));
+
+function DoParse(str) {
+    const lexer = new <lexer_name>(str);
+    lexer.strictMode = false;
+    const tokens = new antlr4.CommonTokenStream(lexer);
+    const parser = new <parser_name>(tokens);
+    lexer.removeErrorListeners();
+    parser.removeErrorListeners();
+    parser.addErrorListener(new MyErrorListener());
+    lexer.addErrorListener(new MyErrorListener());
+    if (show_tokens) {
+        for (var i = 0; ; ++i) {
+            var ro_token = lexer.nextToken();
+            var token = ro_token;
+            token.TokenIndex = i;
+            console.log(token.toString());
+            if (token.type === antlr4.Token.EOF)
+                break;
+        }
+        lexer.reset();
+    }
+    const timer = new Timer({ label: 'test-timer2' });
+    timer.start();
+    const tree = parser.< start_symbol > ();
+    timer.stop();
+    if (show_tree) {
+        console.log(tree.toStringTree(parser.ruleNames));
+    }
+    if (num_errors > 0) {
+        console.error('Parse failed.');
+        error_code = 1;
+    }
+    else {
+        console.error('Parse succeeded.');
+    }
+    console.error(timer.format('Time: %mm %ss %msms'));
 }
-if (num_errors > 0)
-{
-    console.error('Parse failed.');
-    process.exitCode = 1;
-}
-else
-{
-    console.error('Parse succeeded.');
-    process.exitCode = 0;
-}
+
+
+main()

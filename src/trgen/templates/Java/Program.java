@@ -34,17 +34,17 @@ public class Program {
                 continue;
             }
             else if (args[i].equals("-input")) {
-		inputs.add(args[++i]);
-		is_fns.add(false);
-	    }
+                inputs.add(args[++i]);
+                is_fns.add(false);
+            }
             else if (args[i].equals("-encoding"))
             {
                 charset = java.nio.charset.Charset.forName(args[++i]);
             }
-	    else {
-		inputs.add(args[i]);
-		is_fns.add(true);
-	    }
+            else {
+                inputs.add(args[i]);
+                is_fns.add(true);
+            }
         }
         CharStream str = null;
         if (inputs.size() == 0)
