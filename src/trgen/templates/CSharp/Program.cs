@@ -237,11 +237,11 @@ public class Program
         }
         if (show_tree)
         {
-            System.Console.Error.WriteLine(tree.ToStringTree(parser));
+            System.Console.Out.WriteLine(tree.ToStringTree(parser));
         }
         if (show_profile)
         {
-                System.Console.Out.WriteLine(String.Join(",\n\r", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
+            System.Console.Out.WriteLine(String.Join(",\n\r", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
         }
     }
 }

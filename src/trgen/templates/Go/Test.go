@@ -138,12 +138,12 @@ func DoParse(str antlr.CharStream) {
     start := time.Now()
     var tree = parser.<cap_start_symbol>()
     elapsed := time.Since(start)
-    fmt.Printf("Time: %.3f s", elapsed.Seconds())
-    fmt.Println()
+    fmt.Fprintln(os.Stderr, "Time: %.3f s", elapsed.Seconds())
+    fmt.Fprintln(os.Stderr)
     if parserErrors.errors > 0 || lexerErrors.errors > 0 {
-        fmt.Println("Parse failed.");
+        fmt.Fprintln(os.Stderr, "Parse failed.");
     } else {
-        fmt.Println("Parse succeeded.")
+        fmt.Fprintln(os.Stderr, "Parse succeeded.")
     }
     if show_tree {
         ss := tree.ToStringTree(parser.RuleNames, parser)

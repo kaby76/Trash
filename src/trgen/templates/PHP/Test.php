@@ -42,7 +42,7 @@ class MyErrorListener extends BaseErrorListener /*extends ConsoleErrorListener*/
         string $msg,
         ?RecognitionException $e
     ) : void {
-        \fwrite(\STDERR, \sprintf("line %d:%d %s\n", $line, $charPositionInLine, $msg));
+        \fwrite(\STDOUT, \sprintf("line %d:%d %s\n", $line, $charPositionInLine, $msg));
         //parent::syntaxError($recognizer,$offendingSymbol,$line,$charPositionInLine,$msg,$e);
         $this->noError = false;
     }
@@ -89,7 +89,7 @@ function main($argv) : void {
                 ParseString($inputs[$f]);
         }
         $duration = $timer->stop();
-        print("Total Time: " . $duration->asString() . "\n");
+        fwrite(STDERR, "Total Time: " . $duration->asString() . "\n");
     }
     exit($error_code);
 }   
@@ -149,12 +149,12 @@ function DoParse($str) {
         print($tree->toStringTree($parser->getRuleNames()) . "\n");
     }
     if ($parserErrorListener->noError && $lexerErrorListener->noError) {
-        print("Parse succeeded." . "\n");
+        fwrite(STDERR, "Parse succeeded." . "\n");
     }
     else {
-        print("Parse failed." . "\n");
+        fwrite(STDERR, "Parse failed." . "\n");
     }
-    print("Total Time: " . $duration->asString() . "\n");
+    fwrite(STDERR, "Total Time: " . $duration->asString() . "\n");
 }
 
 main($argv);

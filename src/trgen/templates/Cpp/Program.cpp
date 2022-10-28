@@ -72,7 +72,7 @@ void DoParse(antlr4::CharStream* str)
     }
     if (show_tree)
     {
-        //        System.Console.Error.WriteLine(tree.ToStringTree(parser));
+        std::out \<\< tree.ToStringTree(parser) \<\< std:end1;
     }
     std::cerr \<\< "Time: " \<\< formatDuration(duration.count()) \<\< std::endl;
 }

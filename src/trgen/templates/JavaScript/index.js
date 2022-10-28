@@ -118,7 +118,7 @@ function DoParse(str) {
     }
     const timer = new Timer({ label: 'test-timer2' });
     timer.start();
-    const tree = parser.< start_symbol > ();
+    const tree = parser.<start_symbol>();
     timer.stop();
     if (show_tree) {
         console.log(tree.toStringTree(parser.ruleNames));
