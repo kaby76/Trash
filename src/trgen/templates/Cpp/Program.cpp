@@ -70,11 +70,11 @@ void DoParse(antlr4::CharStream* str)
     {
         std::cerr \<\< "Parse succeeded." \<\< std::endl;
     }
+	std::cerr \<\< "Time: " \<\< formatDuration(duration.count()) \<\< std::endl;
     if (show_tree)
     {
         std::out \<\< tree.ToStringTree(parser) \<\< std:end1;
     }
-    std::cerr \<\< "Time: " \<\< formatDuration(duration.count()) \<\< std::endl;
 }
 
 
@@ -87,15 +87,17 @@ void ParseStdin()
 
 void ParseString(std::string input)
 {
+    std::cerr \<\< "Input: " \<\< input \<\< std::endl;
     antlr4::CharStream* str = nullptr;
     str = new antlr4::ANTLRInputStream(input);
     DoParse(str);
 }
 
-void ParseFilename(std::string file_name)
+void ParseFilename(std::string input)
 {
+    std::cerr \<\< "File:: " \<\< input \<\< std::endl;
     antlr4::CharStream* str = nullptr;
-    std::fstream fs(file_name);
+    std::fstream fs(input);
     str = new antlr4::ANTLRInputStream(fs);
     DoParse(str);
 }

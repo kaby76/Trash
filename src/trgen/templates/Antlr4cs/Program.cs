@@ -20,17 +20,26 @@ public class Program
     public static string StartSymbol { get; set; } = "<start_symbol>";
     public static string Input { get; set; }
 
+    static bool show_profile = false;
+    static bool show_tree = false;
+    static bool show_tokens = false;
+    static bool old = false;
+    static bool two_byte = false;
+    static int exit_code = 0;
+    static Encoding encoding = null;
+
     static void Main(string[] args)
     {
-        bool show_tree = false;
-        bool show_tokens = false;
-        bool old = false;
-        bool two_byte = false;
-        string file_name = null;
-        string input = null;
+        List\<bool> is_fns = new List\<bool>();
+        List\<string> inputs = new List\<string>();
         for (int i = 0; i \< args.Length; ++i)
         {
-            if (args[i].Equals("-tokens"))
+            if (args[i].Equals("-profile"))
+            {
+                show_profile = true;
+                continue;
+            }
+            else if (args[i].Equals("-tokens"))
             {
                 show_tokens = true;
                 continue;
@@ -51,32 +60,80 @@ public class Program
                 continue;
             }
             else if (args[i].Equals("-input"))
-                input = args[++i];
-            else if (args[i].Equals("-file"))
-                file_name = args[++i];
-        }
-        ICharStream str = null;
-        if (input == null && file_name == null)
-        {
-            StringBuilder sb = new StringBuilder();
-            int ch;
-            while ((ch = System.Console.Read()) != -1)
             {
-                sb.Append((char)ch);
+                inputs.Add(args[++i]);
+                is_fns.Add(false);
             }
-            input = sb.ToString();
-            str = new Antlr4.Runtime.AntlrInputStream(
-                new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
+            else if (args[i].Equals("-encoding"))
+            {
+                ++i;
+                encoding = Encoding.GetEncoding(
+                    args[i],
+                    new EncoderReplacementFallback("(unknown)"),
+                    new DecoderReplacementFallback("(error)"));
+                if (encoding == null)
+                    throw new Exception(@"Unknown encoding. Must be an Internet Assigned Numbers Authority (IANA) code page name. https://www.iana.org/assignments/character-sets/character-sets.xhtml");
+            }
+            else
+            {
+                inputs.Add(args[i]);
+                is_fns.Add(true);
+            }
         }
-        else if (input != null)
+        if (inputs.Count() == 0)
         {
-            str = new Antlr4.Runtime.AntlrInputStream(
-                    new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
-        } else if (file_name != null)
-        {
-            FileStream fs = new FileStream(file_name, FileMode.Open);
-            str = new Antlr4.Runtime.AntlrInputStream(fs);
+            ParseStdin();
         }
+        else
+        {
+            DateTime before = DateTime.Now;
+            for (int f = 0; f \< inputs.Count(); ++f)
+            {
+                if (is_fns[f])
+                    ParseFilename(inputs[f]);
+                else
+                    ParseString(inputs[f]);
+            }
+            DateTime after = DateTime.Now;
+            System.Console.Error.WriteLine("Total Time: " + (after - before));
+        }
+        Environment.ExitCode = exit_code;
+    }
+
+    static void ParseStdin()
+    {
+        StringBuilder sb = new StringBuilder();
+        int ch;
+        while ((ch = System.Console.Read()) != -1)
+        {
+            sb.Append((char)ch);
+        }
+        input = sb.ToString();
+        str = new Antlr4.Runtime.AntlrInputStream(
+            new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
+        DoParse(str);
+    }
+
+    static void ParseString(string input)
+    {
+        System.Console.Error.WriteLine("Input: " + input);
+        ICharStream str = null;
+        str = new Antlr4.Runtime.AntlrInputStream(
+            new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
+        DoParse(str);
+    }
+
+    static void ParseFilename(string input)
+    {
+        System.Console.Error.WriteLine("File: " + input);
+        ICharStream str = null;
+        FileStream fs = new FileStream(input, FileMode.Open);
+        str = new Antlr4.Runtime.AntlrInputStream(fs);
+        DoParse(str);
+    }
+
+    static void DoParse(ICharStream str)
+    {
 <if (case_insensitive_type)>
         str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
 < endif >
@@ -101,20 +158,20 @@ public class Program
         DateTime before = DateTime.Now;
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;
-        System.Console.Error.WriteLine("Time: " + (after - before));
         if (parser.NumberOfSyntaxErrors > 0)
         {
             System.Console.Error.WriteLine("Parse failed.");
+            exit_code = 1;
         }
         else
         {
             System.Console.Error.WriteLine("Parse succeeded.");
         }
+		System.Console.Error.WriteLine("Time: " + (after - before));
         if (show_tree)
         {
             System.Console.Out.WriteLine(tree.ToStringTree(parser));
         }
-        System.Environment.Exit(parser.NumberOfSyntaxErrors > 0 ? 1 : 0);
     }
 }
 

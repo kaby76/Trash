@@ -73,13 +73,15 @@ Future\<void> ParseStdin() async
 
 Future\<void> ParseString(String input) async
 {
+    stderr.writeln("Input: " + input);
     var str = await InputStream.fromString(input);
     await DoParse(str);
 }
 
-Future\<void> ParseFilename(String file_name) async
+Future\<void> ParseFilename(String input) async
 {
-    var str = await InputStream.fromPath(file_name);
+    stderr.writeln("File: " + input);
+    var str = await InputStream.fromPath(input);
     await DoParse(str);
 }
 
@@ -110,7 +112,6 @@ Future\<void> DoParse(CharStream str) async
     var tree = parser.<start_symbol>();
     s.stop();
     var et = s.elapsedMilliseconds / 1000.0;
-    stderr.writeln("Time: " + et.toString());
     if (parser.numberOfSyntaxErrors > 0)
     {
         stderr.writeln("Parse failed.");
@@ -120,6 +121,7 @@ Future\<void> DoParse(CharStream str) async
     {
         stderr.writeln("Parse succeeded.");
     }
+    stderr.writeln("Time: " + et.toString());
     if (show_tree)
     {
         print(tree.toStringTree(parser: parser));

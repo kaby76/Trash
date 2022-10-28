@@ -92,7 +92,6 @@ public class Program
     {
         List\<bool> is_fns = new List\<bool>();
         List\<string> inputs = new List\<string>();
-        System.Text.Encoding encoding = null;
         for (int i = 0; i \< args.Length; ++i)
         {
             if (args[i].Equals("-profile"))
@@ -170,25 +169,27 @@ public class Program
 
     static void ParseString(string input)
     {
+        System.Console.Error.WriteLine("Input: " + input);
         ICharStream str = null;
         str = CharStreams.fromString(input);
         DoParse(str);
     }
 
-    static void ParseFilename(string file_name)
+    static void ParseFilename(string input)
     {
+        System.Console.Error.WriteLine("File: " + input);
         ICharStream str = null;
         if (two_byte)
-            str = new TwoByteCharStream(file_name);
+            str = new TwoByteCharStream(input);
         else if (old)
         {
-            FileStream fs = new FileStream(file_name, FileMode.Open);
+            FileStream fs = new FileStream(input, FileMode.Open);
             str = new Antlr4.Runtime.AntlrInputStream(fs);
         }
         else if (encoding == null)
-            str = CharStreams.fromPath(file_name);
+            str = CharStreams.fromPath(input);
         else
-            str = CharStreams.fromPath(file_name, encoding);
+            str = CharStreams.fromPath(input, encoding);
         DoParse(str);
     }
 
@@ -225,7 +226,6 @@ public class Program
         }
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;
-        System.Console.Error.WriteLine("Time: " + (after - before));
         if (listener_lexer.had_error || listener_parser.had_error)
         {
             System.Console.Error.WriteLine("Parse failed.");
@@ -235,6 +235,7 @@ public class Program
         {
             System.Console.Error.WriteLine("Parse succeeded.");
         }
+		System.Console.Error.WriteLine("Time: " + (after - before));
         if (show_tree)
         {
             System.Console.Out.WriteLine(tree.ToStringTree(parser));

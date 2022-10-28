@@ -106,11 +106,13 @@ function ParseStdin() {
 }
 
 function ParseString($input) {
+    fwrite(STDERR, "Input: " . $input . "\n");
     $str = InputStream::fromString($input);
     DoParse($str);
 }
 
 function ParseFilename($input) {
+    fwrite(STDERR, "File: " . $input . "\n");
     $str = InputStream::fromPath($input);
     DoParse($str);
 }
@@ -145,16 +147,17 @@ function DoParse($str) {
     $timer2->start();
     $tree = $parser-><start_symbol>();
     $duration = $timer2->stop();
-    if ($show_tree) {
-        print($tree->toStringTree($parser->getRuleNames()) . "\n");
-    }
     if ($parserErrorListener->noError && $lexerErrorListener->noError) {
         fwrite(STDERR, "Parse succeeded." . "\n");
     }
     else {
         fwrite(STDERR, "Parse failed." . "\n");
+        $error_code = 1;
     }
     fwrite(STDERR, "Time: " . $duration->asString() . "\n");
+    if ($show_tree) {
+        print($tree->toStringTree($parser->getRuleNames()) . "\n");
+    }
 }
 
 main($argv);

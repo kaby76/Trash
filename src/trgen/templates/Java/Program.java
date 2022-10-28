@@ -74,17 +74,19 @@ public class Program {
     }
 
     static void ParseString(String input) throws IOException {
+        System.err.println("Input: " + input);
         var str = CharStreams.fromString(input);
         DoParse(str);
     }
 
-    static void ParseFilename(String file_name) throws IOException
+    static void ParseFilename(String input) throws IOException
     {
+        System.err.println("File: " + input);
         CharStream str = null;
         if (charset == null)
-            str = CharStreams.fromFileName(file_name);
+            str = CharStreams.fromFileName(input);
         else
-            str = CharStreams.fromFileName(file_name, charset);
+            str = CharStreams.fromFileName(input, charset);
         DoParse(str);
     }
 
@@ -118,7 +120,6 @@ public class Program {
         ParseTree tree = parser.<start_symbol>();
         Instant finish = Instant.now();
         long timeElapsed = Duration.between(start, finish).toMillis();
-        System.err.println("Time: " + (timeElapsed * 1.0) / 1000.0);
         if (listener.had_error || lexer_listener.had_error)
         {
             System.err.println("Parse failed.");
@@ -126,6 +127,7 @@ public class Program {
         }
         else
             System.err.println("Parse succeeded.");
+	System.err.println("Time: " + (timeElapsed * 1.0) / 1000.0);
         if (show_tree)
         {
             System.out.println(tree.toStringTree(parser));

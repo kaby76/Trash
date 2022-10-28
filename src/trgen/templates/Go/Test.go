@@ -95,13 +95,15 @@ func ParseStdin() {
 }
 
 func ParseString(input string) {
+    fmt.Fprintln(os.Stderr, "Input: " + input)
     str := antlr.NewInputStream(input)
     DoParse(str)
 }
 
-func ParseFilename(file_name string) {
+func ParseFilename(input string) {
+    fmt.Fprintln(os.Stderr, "File: " + input)
     var str antlr.CharStream = nil
-    str, _ = antlr.NewFileStream(file_name)        
+    str, _ = antlr.NewFileStream(input)        
     DoParse(str)
 }
 
@@ -138,18 +140,16 @@ func DoParse(str antlr.CharStream) {
     start := time.Now()
     var tree = parser.<cap_start_symbol>()
     elapsed := time.Since(start)
-    fmt.Fprintln(os.Stderr, "Time: %.3f s", elapsed.Seconds())
-    fmt.Fprintln(os.Stderr)
     if parserErrors.errors > 0 || lexerErrors.errors > 0 {
         fmt.Fprintln(os.Stderr, "Parse failed.");
+        error_code = 1
     } else {
         fmt.Fprintln(os.Stderr, "Parse succeeded.")
     }
+    fmt.Fprintf(os.Stderr, "Time: %.3f s", elapsed.Seconds())
+    fmt.Fprintln(os.Stderr)
     if show_tree {
         ss := tree.ToStringTree(parser.RuleNames, parser)
         fmt.Println(ss)
-    }
-    if parserErrors.errors > 0 || lexerErrors.errors > 0 {
-        error_code = 1
     }
 }

@@ -87,11 +87,13 @@ function ParseStdin() {
 }
 
 function ParseString(input) {
+    console.error('Input: ' + input);
     var str = antlr4.CharStreams.fromString(input);
     DoParse(str);
 }
 
 function ParseFilename(input) {
+    console.error('File: ' + input);
     var str = antlr4.CharStreams.fromPathSync(input, encoding);
     DoParse(str);
 }
@@ -120,9 +122,6 @@ function DoParse(str) {
     timer.start();
     const tree = parser.<start_symbol>();
     timer.stop();
-    if (show_tree) {
-        console.log(tree.toStringTree(parser.ruleNames));
-    }
     if (num_errors > 0) {
         console.error('Parse failed.');
         error_code = 1;
@@ -130,7 +129,10 @@ function DoParse(str) {
     else {
         console.error('Parse succeeded.');
     }
-    console.error(timer.format('Time: %mm %ss %msms'));
+	console.error(timer.format('Time: %mm %ss %msms'));
+	if (show_tree) {
+		console.log(tree.toStringTree(parser.ruleNames));
+	}
 }
 
 
