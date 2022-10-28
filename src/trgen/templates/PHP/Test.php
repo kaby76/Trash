@@ -154,7 +154,7 @@ function DoParse($str) {
     else {
         fwrite(STDERR, "Parse failed." . "\n");
     }
-    fwrite(STDERR, "Total Time: " . $duration->asString() . "\n");
+    fwrite(STDERR, "Time: " . $duration->asString() . "\n");
 }
 
 main($argv);
