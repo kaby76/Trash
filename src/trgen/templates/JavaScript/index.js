@@ -59,13 +59,13 @@ function main() {
     {
         switch (process.argv[i]) {
             case '-tokens':
-                var show_tokens = true;
+                show_tokens = true;
                 break;
             case '-tree':
-                var show_tree = true;
+                show_tree = true;
                 break;
             case '-encoding':
-                var encoding = process.args[++i];
+                encoding = process.argv[++i];
                 break;
             case '-input':
                 inputs.push(process.argv[++i]);
