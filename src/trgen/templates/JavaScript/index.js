@@ -26,27 +26,6 @@ class MyErrorListener extends antlr4.error.ErrorListener {
     }
 }
 
-function ParseStdin() {
-    var sb = new strops.StringBuilder();
-    var ch;
-    while ((ch = getChar()) != '') {
-        sb.Append(ch);
-    }
-    var input = sb.ToString();
-    var str = antlr4.CharStreams.fromString(input);
-    DoParse(str);
-}
-
-function ParseString(input) {
-    var str = antlr4.CharStreams.fromString(input);
-    DoParse(str);
-}
-
-function ParseFilename(input) {
-    var str = antlr4.CharStreams.fromPathSync(input, encoding);
-    DoParse(str);
-}
-
 var show_tokens = false;
 var show_tree = false;
 var inputs = [];
@@ -94,6 +73,27 @@ function main() {
         console.error(timer.format('Total Time: %mm %ss %msms'));
     }
     process.exitCode = error_code;
+}
+
+function ParseStdin() {
+    var sb = new strops.StringBuilder();
+    var ch;
+    while ((ch = getChar()) != '') {
+        sb.Append(ch);
+    }
+    var input = sb.ToString();
+    var str = antlr4.CharStreams.fromString(input);
+    DoParse(str);
+}
+
+function ParseString(input) {
+    var str = antlr4.CharStreams.fromString(input);
+    DoParse(str);
+}
+
+function ParseFilename(input) {
+    var str = antlr4.CharStreams.fromPathSync(input, encoding);
+    DoParse(str);
 }
 
 function DoParse(str) {
