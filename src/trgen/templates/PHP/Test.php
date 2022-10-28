@@ -60,7 +60,7 @@ function main($argv) : void {
     global $inputs;
     global $is_fns;
     global $error_code;
-    for ($i = 0; $i \< count($argv); $i++) {
+    for ($i = 1; $i \< count($argv); $i++) {
         if ($argv[$i] == "-tokens") {
             $show_tokens = true;
             continue;
