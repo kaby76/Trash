@@ -13,6 +13,8 @@ classes: $(SOURCES)
 clean:
 	rm -f *.interp
 	rm -f *.tokens
+	rm -rf vendor
+	rm -f composer.lock
 	rm -f $(GENERATED)
 run:
 	trwdog php Test.php $(RUNARGS)

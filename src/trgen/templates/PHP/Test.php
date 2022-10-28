@@ -144,7 +144,7 @@ function DoParse($str) {
     $timer2 = new Timer;
     $timer2->start();
     $tree = $parser-><start_symbol>();
-    $duration = $timer->stop();
+    $duration = $timer2->stop();
     if ($show_tree) {
         print($tree->toStringTree($parser->getRuleNames()) . "\n");
     }

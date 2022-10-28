@@ -13,8 +13,6 @@ classes: $(SOURCES)
 	pip install -r requirements.txt
 clean:
 	rm -f *.tokens *.interp
-	rm -f *.interp
-	rm -f *.tokens
 	rm -f $(GENERATED)
 	rm -rf __pycache__
 run:
