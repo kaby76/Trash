@@ -1,6 +1,6 @@
 {
     "require": {
-        "antlr/antlr4-php-runtime": "0.7.1"
+        "antlr/antlr4-php-runtime": "0.7.1",
         "phpunit/php-timer": "^5.0"
     }
 }

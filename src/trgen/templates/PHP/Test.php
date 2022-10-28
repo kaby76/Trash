@@ -89,9 +89,9 @@ function main($argv) : void {
                 ParseString($inputs[$f]);
         }
         $duration = $timer->stop();
-        print("Total Time: " . $duration . "\n");
+        print("Total Time: " . $duration->asString() . "\n");
     }
-    exit(error_code);
+    exit($error_code);
 }   
 
 function ParseStdin() {
@@ -154,7 +154,7 @@ function DoParse($str) {
     else {
         print("Parse failed." . "\n");
     }
-    print("Total Time: " . $duration . "\n");
+    print("Total Time: " . $duration->asString() . "\n");
 }
 
 main($argv);
