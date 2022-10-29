@@ -146,7 +146,7 @@ func DoParse(str antlr.CharStream) {
     } else {
         fmt.Fprintln(os.Stderr, "Parse succeeded.")
     }
-    fmt.Fprintf(os.Stderr, "Time: %.3f s", elapsed.Seconds())
+    fmt.Fprintf(os.Stderr, "Time: %.3f", elapsed.Seconds())
     fmt.Fprintln(os.Stderr)
     if show_tree {
         ss := tree.ToStringTree(parser.RuleNames, parser)

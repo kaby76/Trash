@@ -70,7 +70,8 @@ function main() {
                 ParseString(inputs[f]);
         }
         timer.stop();
-        console.error(timer.format('Total Time: %mm %ss %msms'));
+        var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
+        console.error('Total Time: + t);
     }
     process.exitCode = error_code;
 }
@@ -129,7 +130,8 @@ function DoParse(str) {
     else {
         console.error('Parse succeeded.');
     }
-	console.error(timer.format('Time: %mm %ss %msms'));
+    var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
+    console.error('Time: + t);
 	if (show_tree) {
 		console.log(tree.toStringTree(parser.ruleNames));
 	}
