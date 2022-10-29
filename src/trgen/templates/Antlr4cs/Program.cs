@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 <if(has_name_space)>namespace <name_space>
 {<endif>
@@ -95,7 +96,7 @@ public class Program
                     ParseString(inputs[f]);
             }
             DateTime after = DateTime.Now;
-            System.Console.Error.WriteLine("Total Time: " + (after - before));
+            System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
         }
         Environment.ExitCode = exit_code;
     }
@@ -108,8 +109,8 @@ public class Program
         {
             sb.Append((char)ch);
         }
-        input = sb.ToString();
-        str = new Antlr4.Runtime.AntlrInputStream(
+        var input = sb.ToString();
+        var str = new Antlr4.Runtime.AntlrInputStream(
             new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
         DoParse(str);
     }
@@ -167,7 +168,7 @@ public class Program
         {
             System.Console.Error.WriteLine("Parse succeeded.");
         }
-		System.Console.Error.WriteLine("Time: " + (after - before));
+		System.Console.Error.WriteLine("Time: " + (after - before).TotalSeconds);
         if (show_tree)
         {
             System.Console.Out.WriteLine(tree.ToStringTree(parser));

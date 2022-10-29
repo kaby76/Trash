@@ -155,7 +155,7 @@ public class Program
                     ParseString(inputs[f]);
             }
             DateTime after = DateTime.Now;
-            System.Console.Error.WriteLine("Total Time: " + (after - before));
+            System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
         }
         Environment.ExitCode = exit_code;
     }
@@ -235,7 +235,7 @@ public class Program
         {
             System.Console.Error.WriteLine("Parse succeeded.");
         }
-		System.Console.Error.WriteLine("Time: " + (after - before));
+		System.Console.Error.WriteLine("Time: " + (after - before).TotalSeconds);
         if (show_tree)
         {
             System.Console.Out.WriteLine(tree.ToStringTree(parser));

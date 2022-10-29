@@ -29,6 +29,18 @@ std::string formatDuration(uint64_t duration) {
     return oss.str();
 }
 
+std::string formatDurationSeconds(uint64_t duration) {
+    std::stringstream oss;
+    // duration is in microseconds units.
+    long tseconds = duration / 1000000;
+    long minutes = tseconds / 60;
+    long seconds = tseconds % 60;
+    long microseconds = duration % 1000000;
+    double s = minutes * 60.0 + seconds + (microseconds / 1000000.0);
+    oss \<\< s;
+    return oss.str();
+}
+
 bool show_tree = false;
 bool show_tokens = false;
 std::vector\<std::string> inputs;
@@ -58,7 +70,7 @@ void DoParse(antlr4::CharStream* str)
     lexer->addErrorListener(listener_lexer);
     parser->addErrorListener(listener_parser);
     auto before = std::chrono::steady_clock::now();
-    auto tree = parser-><start_symbol>();
+    auto* tree = parser-><start_symbol>();
     auto after = std::chrono::steady_clock::now();
     auto duration = std::chrono::duration_cast\<std::chrono::microseconds>(after - before);
     if (listener_parser->had_error || listener_lexer->had_error)
@@ -70,10 +82,10 @@ void DoParse(antlr4::CharStream* str)
     {
         std::cerr \<\< "Parse succeeded." \<\< std::endl;
     }
-	std::cerr \<\< "Time: " \<\< formatDuration(duration.count()) \<\< std::endl;
+	std::cerr \<\< "Time: " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
     if (show_tree)
     {
-        std::out \<\< tree.ToStringTree(parser) \<\< std:end1;
+        std::cout \<\< tree->toStringTree(parser) \<\< std::endl;
     }
 }
 
@@ -144,7 +156,7 @@ int TryParse(std::vector\<std::string>& args)
         }
         auto after = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast\<std::chrono::microseconds>(after - before);
-        std::cerr \<\< "Total Time: " \<\< formatDuration(duration.count()) \<\< std::endl;
+        std::cerr \<\< "Total Time: " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
     }
     return error_code;
 }

@@ -25,33 +25,48 @@ class MyErrorListener(ErrorListener):
         self.num_errors = self.num_errors + 1
         super().syntaxError(recognizer, offendingSymbol, line, column, msg, e)
 
+show_tokens = False
+show_tree = False
+inputs = []
+is_fns = []
+encoding = "utf-8"
+error_code = 0
+
 def main(argv):
-    show_tokens = False
-    show_tree = False
-    input = None
-    file_name = None
     i = 1
-    encoding = "utf-8"
     while i \< len(argv):
         arg = argv[i]
         if arg in ("-tokens"):
             show_tokens = True
         elif arg in ("-tree"):
             show_tree = True
-        elif arg in ("-input"):
-            i = i + 1
-            input = argv[i]
-        elif arg in ("-file"):
-            i = i + 1
-            file_name = argv[i]
         elif arg in ("-encoding"):
             i = i + 1
             encoding = argv[i]
+        elif arg in ("-input"):
+            i = i + 1
+            inputs.append(argv[i])
+            is_fns.append(false)
         else:
-            print("unknown")
+            inputs.append(argv[i])
+            is_fns.append(True)
         i = i + 1
+    if len(inputs) == 0:
+        ParseStdin()
+    else:
+        start_time = datetime.now()
+        for f in range(0, len(inputs)):
+            if is_fns[f]:
+                ParseFilename(inputs[f])
+            else:
+                ParseString(inputs[f])
+        end_time = datetime.now()
+        diff = end_time - start_time
+        diff_time = diff.total_seconds()
+        print(f'Total Time: {diff_time}', file=sys.stderr);
+    sys.exit(error_code)
 
-    if (input == None and file_name == None):
+def ParseStdin():
         sb = ""
         ch = getChar()
         while (ch != ''):
@@ -59,10 +74,19 @@ def main(argv):
             ch = getChar()
         input = sb
         str = InputStream(input);
-    elif (input != None):
-        str = InputStream(input);
-    elif (file_name != None):
-        str = FileStream(file_name, encoding);
+        DoParse(str)
+
+def ParseString(input):
+    print('Input: ' + input, file=sys.stderr);
+    str = InputStream(input);
+    DoParse(str);
+
+def ParseFilename(input):
+    print('File: ' + input, file=sys.stderr);
+    str = FileStream(input, encoding);
+    DoParse(str);
+
+def DoParse(str):
     lexer = <lexer_name>(str);
     lexer.removeErrorListeners()
     l_listener = MyErrorListener()
@@ -89,15 +113,14 @@ def main(argv):
     end_time = datetime.now()
     diff = end_time - start_time
     diff_time = diff.total_seconds()
+    if p_listener.num_errors > 0 or l_listener.num_errors > 0:
+        print('Parse failed.', file=sys.stderr);
+        error_code = 1;
+    else:
+        print('Parse succeeded.', file=sys.stderr);
     print(f'Time: {diff_time}', file=sys.stderr);
     if (show_tree):
         print(tree.toStringTree(recog=parser))
-    if p_listener.num_errors > 0 or l_listener.num_errors > 0:
-        print('Parse failed.', file=sys.stderr);
-        sys.exit(1)
-    else:
-        print('Parse succeeded.', file=sys.stderr);
-        sys.exit(0)
 
 if __name__ == '__main__':
     main(sys.argv)

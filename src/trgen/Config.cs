@@ -49,7 +49,7 @@ namespace Trash
         public bool Verbose { get; set; }
 
         public IEnumerable<string> antlr_tool_args { get; set; }
-        public EnvType? env_type { get; set; }
+        public OSType? env_type { get; set; }
         public bool? flatten { get; set; }
         public LineTranslationType? line_translation { get; set; }
         public bool? maven { get; set; }

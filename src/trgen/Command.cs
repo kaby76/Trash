@@ -86,19 +86,19 @@
             throw new Exception("Cannot determine operating system!");
         }
 
-        public static EnvType GetEnvType()
+        public static OSType GetEnvType()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return EnvType.Unix;
+                return OSType.Unix;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return EnvType.Windows;
+                return OSType.Windows;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return EnvType.Mac;
+                return OSType.Mac;
             }
             throw new Exception("Cannot determine operating system!");
         }
@@ -535,7 +535,7 @@
                 // and they cannot be changed!
                 if (_config.name_space != null && _config.name_space != "")
                 {
-                    if (_config.env_type == EnvType.Windows)
+                    if (_config.env_type == OSType.Windows)
                     {
                         additional.Add("-o");
                         additional.Add(_config.name_space.Replace('.', '/'));
@@ -764,7 +764,7 @@
                         genfn = pre1 + name.Replace("Parser", "_parser").ToLower() + Suffix(_config);
                         genincfn = "";
                         if (per_grammar.package != null && per_grammar.package != "")
-                            antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                            antlr_args = _config.env_type == OSType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                         else
                             antlr_args = "";
                         autom_name = pre2 + name;
@@ -775,7 +775,7 @@
                         genfn = pre1 + name + Suffix(_config);
                         genincfn = pre1 + name + ".h";
                         if (per_grammar.package != null && per_grammar.package != "")
-                            antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                            antlr_args = _config.env_type == OSType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                         else
                             antlr_args = "";
                         autom_name = pre2 + name;
@@ -801,7 +801,7 @@
                         genfn = pre1 + name.Replace("Lexer", "_lexer").ToLower() + Suffix(_config);
                         genincfn = "";
                         if (per_grammar.package != null && per_grammar.package != "")
-                            antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                            antlr_args = _config.env_type == OSType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                         else
                             antlr_args = "";
                         autom_name = pre2 + name;
@@ -812,7 +812,7 @@
                         genfn = pre1 + name + Suffix(_config);
                         genincfn = pre1 + name + ".h";
                         if (per_grammar.package != null && per_grammar.package != "")
-                            antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                            antlr_args = _config.env_type == OSType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                         else
                             antlr_args = "";
                         autom_name = pre2 + name;
@@ -845,7 +845,7 @@
                               + "New" + name
                               + "Parser";
                             if (per_grammar.package != null && per_grammar.package != "")
-                                antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                                antlr_args = _config.env_type == OSType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                             else
                                 antlr_args = "";
                         }
@@ -858,7 +858,7 @@
                                + "Parser";
                             goname = "";
                             if (per_grammar.package != null && per_grammar.package != "")
-                                antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                                antlr_args = _config.env_type == OSType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                             else
                                 antlr_args = "";
                         }
@@ -887,7 +887,7 @@
                               + "New" + name
                               + "Lexer";
                             if (per_grammar.package != null && per_grammar.package != "")
-                                antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                                antlr_args = _config.env_type == OSType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                             else
                                 antlr_args = "";
                         }
@@ -900,7 +900,7 @@
                                + "Lexer";
                             goname = "";
                             if (per_grammar.package != null && per_grammar.package != "")
-                                antlr_args = _config.env_type == EnvType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
+                                antlr_args = _config.env_type == OSType.Windows ? "-o " + per_grammar.package + " -lib " + per_grammar.package + " -package " + per_grammar.package : " -package " + per_grammar.package;
                             else
                                 antlr_args = "";
                         }
@@ -1163,13 +1163,13 @@
                     t.Add("antlr_tool_path", _config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(per_grammar.start_rule));
                     t.Add("case_insensitive_type", per_grammar.case_insensitive_type);
-                    t.Add("cli_bash", (EnvType)p._config.env_type == EnvType.Unix);
-                    t.Add("cli_cmd", (EnvType)p._config.env_type == EnvType.Windows);
-                    t.Add("cmake_target", p._config.env_type == EnvType.Windows
-                        ? "-G \"MSYS Makefiles\"" : "");
+                    t.Add("cli_bash", (OSType)p._config.env_type == OSType.Unix);
+                    t.Add("cli_cmd", (OSType)p._config.env_type == OSType.Windows);
+                    t.Add("cmake_target", p._config.env_type == OSType.Windows
+                        ? "-G \"Visual Studio 17 2022\" -A x64" : "");
                     t.Add("example_files_unix", RemoveTrailingSlash(per_grammar.example_files.Replace('\\', '/')));
                     t.Add("example_files_win", RemoveTrailingSlash(per_grammar.example_files.Replace('/', '\\')));
-                    t.Add("exec_name", p._config.env_type == EnvType.Windows ?
+                    t.Add("exec_name", p._config.env_type == OSType.Windows ?
                         "Test.exe" : "Test");
                     t.Add("go_lexer_name", per_grammar.fully_qualified_go_lexer_name);
                     t.Add("go_parser_name", per_grammar.fully_qualified_go_parser_name);
@@ -1181,13 +1181,14 @@
                     t.Add("lexer_name", per_grammar.fully_qualified_lexer_name);
                     t.Add("name_space", per_grammar.package.Replace("/", "."));
                     t.Add("package_name", per_grammar.package.Replace(".", "/"));
-                    t.Add("os_win", (EnvType)p._config.env_type == EnvType.Windows);
+                    t.Add("os_type", ((OSType)p._config.env_type).ToString());
+                    t.Add("os_win", (OSType)p._config.env_type == OSType.Windows);
                     t.Add("parser_name", per_grammar.fully_qualified_parser_name);
                     t.Add("parser_grammar_file", per_grammar.parser_grammar_file_name);
                     t.Add("path_sep_colon", p._config.path_sep == PathSepType.Colon);
                     t.Add("path_sep_semi", p._config.path_sep == PathSepType.Semi);
                     t.Add("start_symbol", per_grammar.start_rule);
-                    t.Add("temp_dir", p._config.env_type == EnvType.Windows
+                    t.Add("temp_dir", p._config.env_type == OSType.Windows
                         ? "c:/temp" : "/tmp");
                     t.Add("tool_grammar_files", per_grammar.tool_grammar_files);
                     t.Add("tool_grammar_tuples", per_grammar.tool_grammar_tuples);
@@ -1252,13 +1253,13 @@
                     t.Add("antlr_tool_path", _config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(per_grammar.start_rule));
                     t.Add("case_insensitive_type", per_grammar.case_insensitive_type);
-                    t.Add("cli_bash", (EnvType)p._config.env_type == EnvType.Unix);
-                    t.Add("cli_cmd", (EnvType)p._config.env_type == EnvType.Windows);
-                    t.Add("cmake_target", p._config.env_type == EnvType.Windows
-                        ? "-G \"MSYS Makefiles\"" : "");
+                    t.Add("cli_bash", (OSType)p._config.env_type == OSType.Unix);
+                    t.Add("cli_cmd", (OSType)p._config.env_type == OSType.Windows);
+                    t.Add("cmake_target", p._config.env_type == OSType.Windows
+                        ? "-G \"Visual Studio 17 2022\" -A x64" : "");
                     t.Add("example_files_unix", RemoveTrailingSlash(per_grammar.example_files.Replace('\\', '/')));
                     t.Add("example_files_win", RemoveTrailingSlash(per_grammar.example_files.Replace('/', '\\')));
-                    t.Add("exec_name", p._config.env_type == EnvType.Windows ?
+                    t.Add("exec_name", p._config.env_type == OSType.Windows ?
                       "Test.exe" : "Test");
                     t.Add("go_lexer_name", per_grammar.fully_qualified_go_lexer_name);
                     t.Add("go_parser_name", per_grammar.fully_qualified_go_parser_name);
@@ -1270,13 +1271,14 @@
 		            t.Add("lexer_name", per_grammar.fully_qualified_lexer_name);
                     t.Add("name_space", per_grammar.package.Replace("/", "."));
                     t.Add("package_name", per_grammar.package.Replace(".", "/"));
-                    t.Add("os_win", (EnvType)p._config.env_type == EnvType.Windows);
+                    t.Add("os_type", ((OSType)p._config.env_type).ToString());
+                    t.Add("os_win", (OSType)p._config.env_type == OSType.Windows);
                     t.Add("parser_name", per_grammar.fully_qualified_parser_name);
                     t.Add("parser_grammar_file", per_grammar.parser_grammar_file_name);
                     t.Add("path_sep_colon", p._config.path_sep == PathSepType.Colon);
                     t.Add("path_sep_semi", p._config.path_sep == PathSepType.Semi);
                     t.Add("start_symbol", per_grammar.start_rule);
-                    t.Add("temp_dir", p._config.env_type == EnvType.Windows
+                    t.Add("temp_dir", p._config.env_type == OSType.Windows
                         ? "c:/temp" : "/tmp");
                     t.Add("tool_grammar_files", per_grammar.tool_grammar_files);
                     t.Add("tool_grammar_tuples", per_grammar.tool_grammar_tuples);

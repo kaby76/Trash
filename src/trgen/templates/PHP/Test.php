@@ -89,7 +89,7 @@ function main($argv) : void {
                 ParseString($inputs[$f]);
         }
         $duration = $timer->stop();
-        fwrite(STDERR, "Total Time: " . $duration->asString() . "\n");
+        fwrite(STDERR, "Total Time: " . $duration->asSeconds() . "\n");
     }
     exit($error_code);
 }   
@@ -154,7 +154,7 @@ function DoParse($str) {
         fwrite(STDERR, "Parse failed." . "\n");
         $error_code = 1;
     }
-    fwrite(STDERR, "Time: " . $duration->asString() . "\n");
+    fwrite(STDERR, "Time: " . $duration->asSeconds() . "\n");
     if ($show_tree) {
         print($tree->toStringTree($parser->getRuleNames()) . "\n");
     }
