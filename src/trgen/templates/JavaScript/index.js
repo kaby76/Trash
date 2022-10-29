@@ -71,7 +71,7 @@ function main() {
         }
         timer.stop();
         var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
-        console.error('Total Time: + t);
+        console.error('Total Time: ' + t);
     }
     process.exitCode = error_code;
 }
@@ -131,7 +131,7 @@ function DoParse(str) {
         console.error('Parse succeeded.');
     }
     var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
-    console.error('Time: + t);
+    console.error('Time: ' + t);
 	if (show_tree) {
 		console.log(tree.toStringTree(parser.ruleNames));
 	}
