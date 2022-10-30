@@ -31,6 +31,7 @@ inputs = []
 is_fns = []
 encoding = "utf-8"
 error_code = 0
+string_instance = 0
 
 def main(argv):
     i = 1
@@ -67,27 +68,26 @@ def main(argv):
     sys.exit(error_code)
 
 def ParseStdin():
-        sb = ""
+    sb = ""
+    ch = getChar()
+    while (ch != ''):
+        sb = sb + ch
         ch = getChar()
-        while (ch != ''):
-            sb = sb + ch
-            ch = getChar()
-        input = sb
-        str = InputStream(input);
-        DoParse(str)
+    input = sb
+    str = InputStream(input);
+    DoParse(str, 'stdin')
 
 def ParseString(input):
-    print('Input: ' + input, file=sys.stderr);
-    str = InputStream(input);
-    DoParse(str);
+    str = InputStream(input)
+    DoParse(str, 'string' + string_instance)
+    string_instance = string_instance + 1
 
 def ParseFilename(input):
-    print('File: ' + input, file=sys.stderr);
-    str = FileStream(input, encoding);
-    DoParse(str);
+    str = FileStream(input, encoding)
+    DoParse(str, input)
 
-def DoParse(str):
-    lexer = <lexer_name>(str);
+def DoParse(str, input_name):
+    lexer = <lexer_name>(str)
     lexer.removeErrorListeners()
     l_listener = MyErrorListener()
     lexer.addErrorListener(l_listener)
@@ -113,14 +113,15 @@ def DoParse(str):
     end_time = datetime.now()
     diff = end_time - start_time
     diff_time = diff.total_seconds()
+    result = ''
     if p_listener.num_errors > 0 or l_listener.num_errors > 0:
-        print('Parse failed.', file=sys.stderr);
-        error_code = 1;
+        result = 'fail'
+        error_code = 1
     else:
-        print('Parse succeeded.', file=sys.stderr);
-    print(f'Time: {diff_time}', file=sys.stderr);
+        result = 'success'
     if (show_tree):
         print(tree.toStringTree(recog=parser))
+    print('Python3 ' + input_name + ' ' + result + ' ' + f'{diff_time}', file=sys.stderr);
 
 if __name__ == '__main__':
     main(sys.argv)

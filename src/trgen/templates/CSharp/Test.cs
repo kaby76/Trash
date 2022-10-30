@@ -87,6 +87,7 @@ public class Program
     static bool two_byte = false;
     static int exit_code = 0;
     static Encoding encoding = null;
+    static int string_instance = 0;
 
     static void Main(string[] args)
     {
@@ -164,20 +165,18 @@ public class Program
     {
         ICharStream str = null;
         str = CharStreams.fromStream(System.Console.OpenStandardInput());
-        DoParse(str);
+        DoParse(str, "stdin");
     }
 
     static void ParseString(string input)
     {
-        System.Console.Error.WriteLine("Input: " + input);
         ICharStream str = null;
         str = CharStreams.fromString(input);
-        DoParse(str);
+        DoParse(str, "string" + string_instance++);
     }
 
     static void ParseFilename(string input)
     {
-        System.Console.Error.WriteLine("File: " + input);
         ICharStream str = null;
         if (two_byte)
             str = new TwoByteCharStream(input);
@@ -190,10 +189,10 @@ public class Program
             str = CharStreams.fromPath(input);
         else
             str = CharStreams.fromPath(input, encoding);
-        DoParse(str);
+        DoParse(str, input);
     }
 
-    static void DoParse(ICharStream str)
+    static void DoParse(ICharStream str, string input_name)
     {
         var lexer = new <lexer_name>(str);
         if (show_tokens)
@@ -226,16 +225,16 @@ public class Program
         }
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;
+        var result = "";
         if (listener_lexer.had_error || listener_parser.had_error)
         {
-            System.Console.Error.WriteLine("Parse failed.");
+            result = "fail";
             exit_code = 1;
         }
         else
         {
-            System.Console.Error.WriteLine("Parse succeeded.");
+            result = "success";
         }
-		System.Console.Error.WriteLine("Time: " + (after - before).TotalSeconds);
         if (show_tree)
         {
             System.Console.Out.WriteLine(tree.ToStringTree(parser));
@@ -244,5 +243,6 @@ public class Program
         {
             System.Console.Out.WriteLine(String.Join(",\n\r", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
         }
+        System.Console.Error.WriteLine("CSharp " + input_name + " " + result + " " + (after - before).TotalSeconds);
     }
 }

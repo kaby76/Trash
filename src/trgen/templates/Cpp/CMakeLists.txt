@@ -33,7 +33,7 @@ include_directories(${ANTLR4_INCLUDE_DIRS})
 include_directories(${ANTLR_<grammar_name>_OUTPUT_DIR})
 
 add_executable(Test
-    Program.cpp
+    Test.cpp
     ErrorListener.cpp
     ErrorListener.h
     <additional_sources:{x | <x>
@@ -58,7 +58,7 @@ include_directories(${ANTLR_<lexer_name>_OUTPUT_DIR})
 include_directories(${ANTLR_<parser_name>_OUTPUT_DIR})
 
 add_executable(Test
-    Program.cpp
+    Test.cpp
     ErrorListener.cpp
     ErrorListener.h
     <additional_sources:{x | <x>

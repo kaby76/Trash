@@ -53,6 +53,7 @@ $show_tokens = false;
 $inputs = array();
 $is_fns = array();
 $error_code = 0;
+$string_instance = 0;
 
 function main($argv) : void {
     global $show_tree;
@@ -102,22 +103,21 @@ function ParseStdin() {
     }
     $str = InputStream::fromString($s);
     fclose($in);
-    DoParse($str);
+    DoParse($str, "stdin");
 }
 
 function ParseString($input) {
-    fwrite(STDERR, "Input: " . $input . "\n");
+    global $string_instance;
     $str = InputStream::fromString($input);
-    DoParse($str);
+    DoParse($str, "string" . $string_instance++);
 }
 
 function ParseFilename($input) {
-    fwrite(STDERR, "File: " . $input . "\n");
     $str = InputStream::fromPath($input);
-    DoParse($str);
+    DoParse($str, $input);
 }
 
-function DoParse($str) {
+function DoParse($str, $input_name) {
     global $show_tree;
     global $show_tokens;
     global $inputs;
@@ -147,17 +147,18 @@ function DoParse($str) {
     $timer2->start();
     $tree = $parser-><start_symbol>();
     $duration = $timer2->stop();
+    $result = "";
     if ($parserErrorListener->noError && $lexerErrorListener->noError) {
-        fwrite(STDERR, "Parse succeeded." . "\n");
+        $result = "success";
     }
     else {
-        fwrite(STDERR, "Parse failed." . "\n");
+        $result = "fail";
         $error_code = 1;
     }
-    fwrite(STDERR, "Time: " . $duration->asSeconds() . "\n");
     if ($show_tree) {
         print($tree->toStringTree($parser->getRuleNames()) . "\n");
     }
+    fwrite(STDERR, "PHP " . $input_name . " " . $result . " " . $duration->asSeconds() . "\n");
 }
 
 main($argv);

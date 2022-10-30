@@ -11,6 +11,7 @@ var show_tokens = false;
 var inputs = List\<String>.empty(growable: true);
 var is_fns = List\<bool>.empty(growable: true);
 var error_code = 0;
+var string_instance = 0;
 
 void main(List\<String> args) async {
     for (int i = 0; i \< args.length; ++i)
@@ -68,24 +69,23 @@ Future\<void> ParseStdin() async
     }
     var input = utf8.decode(bytes);
     var str = await InputStream.fromString(input);
-    await DoParse(str);
+    await DoParse(str, "stdin");
 }
 
 Future\<void> ParseString(String input) async
 {
-    stderr.writeln("Input: " + input);
     var str = await InputStream.fromString(input);
-    await DoParse(str);
+    await DoParse(str, "string" + string_instance.toString());
+    string_instance++;
 }
 
 Future\<void> ParseFilename(String input) async
 {
-    stderr.writeln("File: " + input);
     var str = await InputStream.fromPath(input);
-    await DoParse(str);
+    await DoParse(str, input);
 }
 
-Future\<void> DoParse(CharStream str) async
+Future\<void> DoParse(CharStream str, String input_name) async
 {
     <tool_grammar_tuples:{x|<x.GrammarAutomName>.checkVersion();
     }>
@@ -112,18 +112,19 @@ Future\<void> DoParse(CharStream str) async
     var tree = parser.<start_symbol>();
     s.stop();
     var et = s.elapsedMilliseconds / 1000.0;
+    var result = "";
     if (parser.numberOfSyntaxErrors > 0)
     {
-        stderr.writeln("Parse failed.");
+        result = "fail";
         error_code = 1;
     }
     else
     {
-        stderr.writeln("Parse succeeded.");
+        result = "success";
     }
-    stderr.writeln("Time: " + et.toString());
     if (show_tree)
     {
         print(tree.toStringTree(parser: parser));
     }
+    stderr.writeln("Dart " + input_name + " " + result + " " + et.toString());
 }

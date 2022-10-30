@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Program {
+public class Test {
 
     static int error_code = 0;
     static boolean show_tree = false;
     static boolean show_tokens = false;
     static java.nio.charset.Charset charset = null;
+    static int string_instance = 0;
 
     public static void main(String[] args) throws  FileNotFoundException, IOException
     {
@@ -70,27 +71,25 @@ public class Program {
 
     static void ParseStdin()throws IOException {
         CharStream str = CharStreams.fromStream(System.in);
-        DoParse(str);
+        DoParse(str, "stdin");
     }
 
     static void ParseString(String input) throws IOException {
-        System.err.println("Input: " + input);
         var str = CharStreams.fromString(input);
-        DoParse(str);
+        DoParse(str, "string" + string_instance++);
     }
 
     static void ParseFilename(String input) throws IOException
     {
-        System.err.println("File: " + input);
         CharStream str = null;
         if (charset == null)
             str = CharStreams.fromFileName(input);
         else
             str = CharStreams.fromFileName(input, charset);
-        DoParse(str);
+        DoParse(str, input);
     }
 
-    static void DoParse(CharStream str) {
+    static void DoParse(CharStream str, String input_name) {
         <lexer_name> lexer = new <lexer_name>(str);
         if (show_tokens)
         {
@@ -120,17 +119,18 @@ public class Program {
         ParseTree tree = parser.<start_symbol>();
         Instant finish = Instant.now();
         long timeElapsed = Duration.between(start, finish).toMillis();
+        String result = "";
         if (listener.had_error || lexer_listener.had_error)
         {
-            System.err.println("Parse failed.");
+            result = "fail";
             error_code = 1;
         }
         else
-            System.err.println("Parse succeeded.");
-	System.err.println("Time: " + (timeElapsed * 1.0) / 1000.0);
+            result = "success";
         if (show_tree)
         {
             System.out.println(tree.toStringTree(parser));
         }
+        System.err.println("Java " + input_name + " " + result + " " + (timeElapsed * 1.0) / 1000.0);
     }
 }

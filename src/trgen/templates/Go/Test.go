@@ -39,6 +39,7 @@ var is_fns = make([]bool, 0)
 var error_code int = 0
 var show_tree = false
 var show_tokens = false
+var string_instance = 0
 
 func main() {
     for i := 1; i \< len(os.Args); i = i + 1 {
@@ -91,23 +92,21 @@ func ParseStdin() {
     }
     var str antlr.CharStream = nil
     str = antlr.NewInputStream(st)
-    DoParse(str)
+    DoParse(str, "stdin")
 }
 
 func ParseString(input string) {
-    fmt.Fprintln(os.Stderr, "Input: " + input)
     str := antlr.NewInputStream(input)
-    DoParse(str)
+    DoParse(str, input)
 }
 
 func ParseFilename(input string) {
-    fmt.Fprintln(os.Stderr, "File: " + input)
     var str antlr.CharStream = nil
     str, _ = antlr.NewFileStream(input)        
-    DoParse(str)
+    DoParse(str, input)
 }
 
-func DoParse(str antlr.CharStream) {
+func DoParse(str antlr.CharStream, input_name string) {
     var lexer = <go_lexer_name>(str);
     if show_tokens {
         j := 0
@@ -140,16 +139,20 @@ func DoParse(str antlr.CharStream) {
     start := time.Now()
     var tree = parser.<cap_start_symbol>()
     elapsed := time.Since(start)
+    var result = ""
     if parserErrors.errors > 0 || lexerErrors.errors > 0 {
-        fmt.Fprintln(os.Stderr, "Parse failed.");
+        result = "fail"
         error_code = 1
     } else {
-        fmt.Fprintln(os.Stderr, "Parse succeeded.")
+        result = "success"
     }
-    fmt.Fprintf(os.Stderr, "Time: %.3f", elapsed.Seconds())
-    fmt.Fprintln(os.Stderr)
     if show_tree {
         ss := tree.ToStringTree(parser.RuleNames, parser)
         fmt.Println(ss)
     }
+    fmt.Fprintf(os.Stderr, "Go ")
+    fmt.Fprintf(os.Stderr, "%s ", input_name)
+    fmt.Fprintf(os.Stderr, "%s ", result)
+    fmt.Fprintf(os.Stderr, "%.3f", elapsed.Seconds())
+    fmt.Fprintln(os.Stderr)
 }

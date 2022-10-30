@@ -46,8 +46,9 @@ bool show_tokens = false;
 std::vector\<std::string> inputs;
 std::vector\<bool> is_fns;
 int error_code = 0;
+int string_instance = 0;
 
-void DoParse(antlr4::CharStream* str)
+void DoParse(antlr4::CharStream* str, std::string input_name)
 {
     antlr4::Lexer* lexer = new <lexer_name>(str);
     if (show_tokens)
@@ -73,20 +74,21 @@ void DoParse(antlr4::CharStream* str)
     auto* tree = parser-><start_symbol>();
     auto after = std::chrono::steady_clock::now();
     auto duration = std::chrono::duration_cast\<std::chrono::microseconds>(after - before);
+    std::string result;
     if (listener_parser->had_error || listener_lexer->had_error)
     {
-        std::cerr \<\< "Parse failed." \<\< std::endl;
+        result = "fail";
         error_code = 1;
     }
     else
     {
-        std::cerr \<\< "Parse succeeded." \<\< std::endl;
+        result = "success";
     }
-	std::cerr \<\< "Time: " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
     if (show_tree)
     {
         std::cout \<\< tree->toStringTree(parser) \<\< std::endl;
     }
+    std::cerr \<\< "Cpp " \<\< input_name \<\< " " \<\< result \<\< " " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
 }
 
 
@@ -94,24 +96,22 @@ void ParseStdin()
 {
     antlr4::CharStream* str = nullptr;
     str = new antlr4::ANTLRInputStream(std::cin);
-    DoParse(str);
+    DoParse(str, "stdin");
 }
 
 void ParseString(std::string input)
 {
-    std::cerr \<\< "Input: " \<\< input \<\< std::endl;
     antlr4::CharStream* str = nullptr;
     str = new antlr4::ANTLRInputStream(input);
-    DoParse(str);
+    DoParse(str, "string" + string_instance++);
 }
 
 void ParseFilename(std::string input)
 {
-    std::cerr \<\< "File:: " \<\< input \<\< std::endl;
     antlr4::CharStream* str = nullptr;
     std::fstream fs(input);
     str = new antlr4::ANTLRInputStream(fs);
-    DoParse(str);
+    DoParse(str, input);
 }
 
 int TryParse(std::vector\<std::string>& args)

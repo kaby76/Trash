@@ -28,6 +28,7 @@ public class Program
     static bool two_byte = false;
     static int exit_code = 0;
     static Encoding encoding = null;
+    static int string_instance = 0;
 
     static void Main(string[] args)
     {
@@ -112,7 +113,7 @@ public class Program
         var input = sb.ToString();
         var str = new Antlr4.Runtime.AntlrInputStream(
             new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
-        DoParse(str);
+        DoParse(str, "stdin");
     }
 
     static void ParseString(string input)
@@ -121,19 +122,18 @@ public class Program
         ICharStream str = null;
         str = new Antlr4.Runtime.AntlrInputStream(
             new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
-        DoParse(str);
+        DoParse(str, "string" + string_instance++);
     }
 
     static void ParseFilename(string input)
     {
-        System.Console.Error.WriteLine("File: " + input);
         ICharStream str = null;
         FileStream fs = new FileStream(input, FileMode.Open);
         str = new Antlr4.Runtime.AntlrInputStream(fs);
-        DoParse(str);
+        DoParse(str, input);
     }
 
-    static void DoParse(ICharStream str)
+    static void DoParse(ICharStream str, string input_name)
     {
 <if (case_insensitive_type)>
         str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
@@ -159,20 +159,21 @@ public class Program
         DateTime before = DateTime.Now;
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;
+        var result = "";
         if (parser.NumberOfSyntaxErrors > 0)
         {
-            System.Console.Error.WriteLine("Parse failed.");
+            result = "fail";
             exit_code = 1;
         }
         else
         {
-            System.Console.Error.WriteLine("Parse succeeded.");
+            result = "success";
         }
-		System.Console.Error.WriteLine("Time: " + (after - before).TotalSeconds);
         if (show_tree)
         {
             System.Console.Out.WriteLine(tree.ToStringTree(parser));
         }
+        System.Console.Error.WriteLine("Antlr4cs " + input_name + " " + result + " " + (after - before).TotalSeconds);
     }
 }
 

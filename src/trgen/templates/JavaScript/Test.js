@@ -32,6 +32,7 @@ var inputs = [];
 var is_fns = [];
 var error_code = 0;
 var encoding = 'utf8';
+var string_instance = 0;
 
 function main() {
     for (let i = 2; i \< process.argv.length; ++i)
@@ -84,22 +85,20 @@ function ParseStdin() {
     }
     var input = sb.ToString();
     var str = antlr4.CharStreams.fromString(input);
-    DoParse(str);
+    DoParse(str, "stdin");
 }
 
 function ParseString(input) {
-    console.error('Input: ' + input);
     var str = antlr4.CharStreams.fromString(input);
-    DoParse(str);
+    DoParse(str, "string" + string_instance++);
 }
 
 function ParseFilename(input) {
-    console.error('File: ' + input);
     var str = antlr4.CharStreams.fromPathSync(input, encoding);
-    DoParse(str);
+    DoParse(str, input);
 }
 
-function DoParse(str) {
+function DoParse(str, input_name) {
     const lexer = new <lexer_name>(str);
     lexer.strictMode = false;
     const tokens = new antlr4.CommonTokenStream(lexer);
@@ -123,18 +122,19 @@ function DoParse(str) {
     timer.start();
     const tree = parser.<start_symbol>();
     timer.stop();
+    var result = "";
     if (num_errors > 0) {
-        console.error('Parse failed.');
+        result = 'fail';
         error_code = 1;
     }
     else {
-        console.error('Parse succeeded.');
+        result = 'success';
     }
     var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
-    console.error('Time: ' + t);
 	if (show_tree) {
 		console.log(tree.toStringTree(parser.ruleNames));
 	}
+    console.error('JavaScript ' + input_name + ' ' + result + ' ' + t);
 }
 
 
