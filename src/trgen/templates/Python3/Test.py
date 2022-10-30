@@ -32,6 +32,7 @@ is_fns = []
 encoding = "utf-8"
 error_code = 0
 string_instance = 0
+prefix = ""
 
 def main(argv):
     i = 1
@@ -44,6 +45,9 @@ def main(argv):
         elif arg in ("-encoding"):
             i = i + 1
             encoding = argv[i]
+        elif arg in ("-prefix"):
+            i = i + 1
+            prefix = argv[i] + " "
         elif arg in ("-input"):
             i = i + 1
             inputs.append(argv[i])
@@ -53,21 +57,21 @@ def main(argv):
             is_fns.append(True)
         i = i + 1
     if len(inputs) == 0:
-        ParseStdin()
+        ParseStdin(prefix)
     else:
         start_time = datetime.now()
         for f in range(0, len(inputs)):
             if is_fns[f]:
-                ParseFilename(inputs[f])
+                ParseFilename(inputs[f], prefix)
             else:
-                ParseString(inputs[f])
+                ParseString(inputs[f], prefix)
         end_time = datetime.now()
         diff = end_time - start_time
         diff_time = diff.total_seconds()
         print(f'Total Time: {diff_time}', file=sys.stderr);
     sys.exit(error_code)
 
-def ParseStdin():
+def ParseStdin(myp):
     sb = ""
     ch = getChar()
     while (ch != ''):
@@ -75,18 +79,18 @@ def ParseStdin():
         ch = getChar()
     input = sb
     str = InputStream(input);
-    DoParse(str, 'stdin')
+    DoParse(str, 'stdin', myp)
 
-def ParseString(input):
+def ParseString(input, myp):
     str = InputStream(input)
-    DoParse(str, 'string' + string_instance)
+    DoParse(str, 'string' + string_instance, myp)
     string_instance = string_instance + 1
 
-def ParseFilename(input):
+def ParseFilename(input, myp):
     str = FileStream(input, encoding)
-    DoParse(str, input)
+    DoParse(str, input, myp)
 
-def DoParse(str, input_name):
+def DoParse(str, input_name, myp):
     lexer = <lexer_name>(str)
     lexer.removeErrorListeners()
     l_listener = MyErrorListener()
@@ -121,7 +125,8 @@ def DoParse(str, input_name):
         result = 'success'
     if (show_tree):
         print(tree.toStringTree(recog=parser))
-    print('Python3 ' + input_name + ' ' + result + ' ' + f'{diff_time}', file=sys.stderr);
+    # Extremely weird bug with Python3, where "prefix" seems to be empty always, so use "myp"
+    print(myp + 'Python3 ' + input_name + ' ' + result + ' ' + f'{diff_time}', file=sys.stderr);
 
 if __name__ == '__main__':
     main(sys.argv)

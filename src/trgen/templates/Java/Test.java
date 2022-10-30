@@ -17,6 +17,7 @@ public class Test {
     static boolean show_tokens = false;
     static java.nio.charset.Charset charset = null;
     static int string_instance = 0;
+    static String prefix = "";
 
     public static void main(String[] args) throws  FileNotFoundException, IOException
     {
@@ -33,6 +34,10 @@ public class Test {
             {
                 show_tree = true;
                 continue;
+            }
+            else if (args[i].equals("-prefix"))
+            {
+                prefix = args[++i] + " ";
             }
             else if (args[i].equals("-input")) {
                 inputs.add(args[++i]);
@@ -131,6 +136,6 @@ public class Test {
         {
             System.out.println(tree.toStringTree(parser));
         }
-        System.err.println("Java " + input_name + " " + result + " " + (timeElapsed * 1.0) / 1000.0);
+        System.err.println(prefix + "Java " + input_name + " " + result + " " + (timeElapsed * 1.0) / 1000.0);
     }
 }

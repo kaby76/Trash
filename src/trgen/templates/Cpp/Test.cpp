@@ -47,6 +47,7 @@ std::vector\<std::string> inputs;
 std::vector\<bool> is_fns;
 int error_code = 0;
 int string_instance = 0;
+std::string prefix;
 
 void DoParse(antlr4::CharStream* str, std::string input_name)
 {
@@ -88,7 +89,7 @@ void DoParse(antlr4::CharStream* str, std::string input_name)
     {
         std::cout \<\< tree->toStringTree(parser) \<\< std::endl;
     }
-    std::cerr \<\< "Cpp " \<\< input_name \<\< " " \<\< result \<\< " " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
+    std::cerr \<\< prefix \<\< "Cpp " \<\< input_name \<\< " " \<\< result \<\< " " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
 }
 
 
@@ -127,6 +128,10 @@ int TryParse(std::vector\<std::string>& args)
         {
             show_tree = true;
             continue;
+        }
+        else if (args[i] == "-prefix")
+        {
+            prefix = args[++i] + " ";
         }
         else if (args[i] == "-input")
         {

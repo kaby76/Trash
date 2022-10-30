@@ -33,6 +33,7 @@ var is_fns = [];
 var error_code = 0;
 var encoding = 'utf8';
 var string_instance = 0;
+var prefix = '';
 
 function main() {
     for (let i = 2; i \< process.argv.length; ++i)
@@ -46,6 +47,9 @@ function main() {
                 break;
             case '-encoding':
                 encoding = process.argv[++i];
+                break;
+            case '-prefix':
+                prefix = process.argv[++i] + ' ';
                 break;
             case '-input':
                 inputs.push(process.argv[++i]);
@@ -134,7 +138,7 @@ function DoParse(str, input_name) {
 	if (show_tree) {
 		console.log(tree.toStringTree(parser.ruleNames));
 	}
-    console.error('JavaScript ' + input_name + ' ' + result + ' ' + t);
+    console.error(prefix + 'JavaScript ' + input_name + ' ' + result + ' ' + t);
 }
 
 

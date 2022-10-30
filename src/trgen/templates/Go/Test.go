@@ -6,6 +6,7 @@ import (
     "os"
     "io"
     "time"
+    "strconv"
     "github.com/antlr/antlr4/runtime/Go/antlr/v4"
     "example.com/myparser/<package_name>"
 )
@@ -40,6 +41,7 @@ var error_code int = 0
 var show_tree = false
 var show_tokens = false
 var string_instance = 0
+var prefix = ""
 
 func main() {
     for i := 1; i \< len(os.Args); i = i + 1 {
@@ -49,6 +51,9 @@ func main() {
         } else if os.Args[i] == "-tree" {
             show_tree = true
             continue
+        } else if os.Args[i] == "-prefix" {
+            i = i + 1
+            prefix = os.Args[i] + " ";
         } else if os.Args[i] == "-input" {
             i = i + 1
             inputs = append(inputs, os.Args[i])
@@ -97,7 +102,8 @@ func ParseStdin() {
 
 func ParseString(input string) {
     str := antlr.NewInputStream(input)
-    DoParse(str, input)
+    DoParse(str, "string" + strconv.Itoa(string_instance))
+    string_instance = string_instance + 1
 }
 
 func ParseFilename(input string) {
@@ -150,6 +156,7 @@ func DoParse(str antlr.CharStream, input_name string) {
         ss := tree.ToStringTree(parser.RuleNames, parser)
         fmt.Println(ss)
     }
+    fmt.Fprintf(os.Stderr, "%s", prefix)
     fmt.Fprintf(os.Stderr, "Go ")
     fmt.Fprintf(os.Stderr, "%s ", input_name)
     fmt.Fprintf(os.Stderr, "%s ", result)

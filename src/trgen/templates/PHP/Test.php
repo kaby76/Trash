@@ -54,6 +54,7 @@ $inputs = array();
 $is_fns = array();
 $error_code = 0;
 $string_instance = 0;
+$prefix = "";
 
 function main($argv) : void {
     global $show_tree;
@@ -61,6 +62,7 @@ function main($argv) : void {
     global $inputs;
     global $is_fns;
     global $error_code;
+    global $prefix;
     for ($i = 1; $i \< count($argv); $i++) {
         if ($argv[$i] == "-tokens") {
             $show_tokens = true;
@@ -68,6 +70,8 @@ function main($argv) : void {
         } else if ($argv[$i] == "-tree") {
             $show_tree = true;
             continue;
+        } else if ($argv[$i] == "-prefix") {
+            $prefix = $argv[++$i] . " ";
         } else if ($argv[$i] == "-input") {
             array_push($inputs, $argv[++$i]);
             array_push($is_fns, true);
@@ -123,6 +127,7 @@ function DoParse($str, $input_name) {
     global $inputs;
     global $is_fns;
     global $error_code;
+    global $prefix;
     $lexer = new <lexer_name>($str);
     if ($show_tokens) {
         for ($i=0;  ; $i++) {
@@ -158,7 +163,7 @@ function DoParse($str, $input_name) {
     if ($show_tree) {
         print($tree->toStringTree($parser->getRuleNames()) . "\n");
     }
-    fwrite(STDERR, "PHP " . $input_name . " " . $result . " " . $duration->asSeconds() . "\n");
+    fwrite(STDERR, $prefix . "PHP " . $input_name . " " . $result . " " . $duration->asSeconds() . "\n");
 }
 
 main($argv);

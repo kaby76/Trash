@@ -12,6 +12,7 @@ var inputs = List\<String>.empty(growable: true);
 var is_fns = List\<bool>.empty(growable: true);
 var error_code = 0;
 var string_instance = 0;
+var prefix = "";
 
 void main(List\<String> args) async {
     for (int i = 0; i \< args.length; ++i)
@@ -25,6 +26,10 @@ void main(List\<String> args) async {
         {
             show_tree = true;
             continue;
+        }
+        else if (args[i] == "-prefix")
+        {
+            prefix = args[++i] + " ";
         }
         else if (args[i] == "-input")
         {
@@ -126,5 +131,5 @@ Future\<void> DoParse(CharStream str, String input_name) async
     {
         print(tree.toStringTree(parser: parser));
     }
-    stderr.writeln("Dart " + input_name + " " + result + " " + et.toString());
+    stderr.writeln(prefix + "Dart " + input_name + " " + result + " " + et.toString());
 }

@@ -88,6 +88,7 @@ public class Program
     static int exit_code = 0;
     static Encoding encoding = null;
     static int string_instance = 0;
+    static string prefix = "";
 
     static void Main(string[] args)
     {
@@ -119,6 +120,10 @@ public class Program
             {
                 show_tree = true;
                 continue;
+            }
+            else if (args[i].Equals("-prefix"))
+            {
+                prefix = args[++i] + " ";
             }
             else if (args[i].Equals("-input"))
             {
@@ -243,6 +248,6 @@ public class Program
         {
             System.Console.Out.WriteLine(String.Join(",\n\r", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
         }
-        System.Console.Error.WriteLine("CSharp " + input_name + " " + result + " " + (after - before).TotalSeconds);
+        System.Console.Error.WriteLine(prefix + "CSharp " + input_name + " " + result + " " + (after - before).TotalSeconds);
     }
 }

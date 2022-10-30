@@ -29,6 +29,7 @@ public class Program
     static int exit_code = 0;
     static Encoding encoding = null;
     static int string_instance = 0;
+    static string prefix = "";
 
     static void Main(string[] args)
     {
@@ -60,6 +61,10 @@ public class Program
             {
                 show_tree = true;
                 continue;
+            }
+            else if (args[i].Equals("-prefix"))
+            {
+                prefix = args[++i] + " ";
             }
             else if (args[i].Equals("-input"))
             {
@@ -173,7 +178,7 @@ public class Program
         {
             System.Console.Out.WriteLine(tree.ToStringTree(parser));
         }
-        System.Console.Error.WriteLine("Antlr4cs " + input_name + " " + result + " " + (after - before).TotalSeconds);
+        System.Console.Error.WriteLine(prefix + "Antlr4cs " + input_name + " " + result + " " + (after - before).TotalSeconds);
     }
 }
 
