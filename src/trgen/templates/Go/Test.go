@@ -69,9 +69,9 @@ func main() {
         start := time.Now()
         for i := 0; i \< len(inputs); i = i + 1 {
             if is_fns[i] {
-                ParseFilename(inputs[i])
+                ParseFilename(inputs[i], i)
             } else {
-                ParseString(inputs[i])
+                ParseString(inputs[i], i)
             }
         }
         elapsed := time.Since(start)
@@ -97,22 +97,22 @@ func ParseStdin() {
     }
     var str antlr.CharStream = nil
     str = antlr.NewInputStream(st)
-    DoParse(str, "stdin")
+    DoParse(str, "stdin", 0)
 }
 
-func ParseString(input string) {
+func ParseString(input string, row_number int) {
     str := antlr.NewInputStream(input)
-    DoParse(str, "string" + strconv.Itoa(string_instance))
+    DoParse(str, "string" + strconv.Itoa(string_instance), row_number)
     string_instance = string_instance + 1
 }
 
-func ParseFilename(input string) {
+func ParseFilename(input string, row_number int) {
     var str antlr.CharStream = nil
     str, _ = antlr.NewFileStream(input)        
-    DoParse(str, input)
+    DoParse(str, input, row_number)
 }
 
-func DoParse(str antlr.CharStream, input_name string) {
+func DoParse(str antlr.CharStream, input_name string, row_number int) {
     var lexer = <go_lexer_name>(str);
     if show_tokens {
         j := 0
@@ -158,6 +158,7 @@ func DoParse(str antlr.CharStream, input_name string) {
     }
     fmt.Fprintf(os.Stderr, "%s", prefix)
     fmt.Fprintf(os.Stderr, "Go ")
+    fmt.Fprintf(os.Stderr, "%d ", row_number)
     fmt.Fprintf(os.Stderr, "%s ", input_name)
     fmt.Fprintf(os.Stderr, "%s ", result)
     fmt.Fprintf(os.Stderr, "%.3f", elapsed.Seconds())

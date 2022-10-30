@@ -63,9 +63,9 @@ public class Test {
             for (int f = 0; f \< inputs.size(); ++f)
             {
                 if (is_fns.get(f))
-                    ParseFilename(inputs.get(f));
+                    ParseFilename(inputs.get(f), f);
                 else
-                    ParseString(inputs.get(f));
+                    ParseString(inputs.get(f), f);
             }
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(start, finish).toMillis();
@@ -76,25 +76,25 @@ public class Test {
 
     static void ParseStdin()throws IOException {
         CharStream str = CharStreams.fromStream(System.in);
-        DoParse(str, "stdin");
+        DoParse(str, "stdin", 0);
     }
 
-    static void ParseString(String input) throws IOException {
+    static void ParseString(String input, int row_number) throws IOException {
         var str = CharStreams.fromString(input);
-        DoParse(str, "string" + string_instance++);
+        DoParse(str, "string" + string_instance++, row_number);
     }
 
-    static void ParseFilename(String input) throws IOException
+    static void ParseFilename(String input, int row_number) throws IOException
     {
         CharStream str = null;
         if (charset == null)
             str = CharStreams.fromFileName(input);
         else
             str = CharStreams.fromFileName(input, charset);
-        DoParse(str, input);
+        DoParse(str, input, row_number);
     }
 
-    static void DoParse(CharStream str, String input_name) {
+    static void DoParse(CharStream str, String input_name, int row_number) {
         <lexer_name> lexer = new <lexer_name>(str);
         if (show_tokens)
         {
@@ -136,6 +136,6 @@ public class Test {
         {
             System.out.println(tree.toStringTree(parser));
         }
-        System.err.println(prefix + "Java " + input_name + " " + result + " " + (timeElapsed * 1.0) / 1000.0);
+        System.err.println(prefix + "Java " + row_number + " " + input_name + " " + result + " " + (timeElapsed * 1.0) / 1000.0);
     }
 }

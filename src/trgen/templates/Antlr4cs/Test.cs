@@ -97,9 +97,9 @@ public class Program
             for (int f = 0; f \< inputs.Count(); ++f)
             {
                 if (is_fns[f])
-                    ParseFilename(inputs[f]);
+                    ParseFilename(inputs[f], f);
                 else
-                    ParseString(inputs[f]);
+                    ParseString(inputs[f], f);
             }
             DateTime after = DateTime.Now;
             System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
@@ -118,27 +118,27 @@ public class Program
         var input = sb.ToString();
         var str = new Antlr4.Runtime.AntlrInputStream(
             new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
-        DoParse(str, "stdin");
+        DoParse(str, "stdin", 0);
     }
 
-    static void ParseString(string input)
+    static void ParseString(string input, int row_number)
     {
         System.Console.Error.WriteLine("Input: " + input);
         ICharStream str = null;
         str = new Antlr4.Runtime.AntlrInputStream(
             new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
-        DoParse(str, "string" + string_instance++);
+        DoParse(str, "string" + string_instance++, row_number);
     }
 
-    static void ParseFilename(string input)
+    static void ParseFilename(string input, int row_number)
     {
         ICharStream str = null;
         FileStream fs = new FileStream(input, FileMode.Open);
         str = new Antlr4.Runtime.AntlrInputStream(fs);
-        DoParse(str, input);
+        DoParse(str, input, row_number);
     }
 
-    static void DoParse(ICharStream str, string input_name)
+    static void DoParse(ICharStream str, string input_name, int row_number)
     {
 <if (case_insensitive_type)>
         str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
@@ -178,7 +178,7 @@ public class Program
         {
             System.Console.Out.WriteLine(tree.ToStringTree(parser));
         }
-        System.Console.Error.WriteLine(prefix + "Antlr4cs " + input_name + " " + result + " " + (after - before).TotalSeconds);
+        System.Console.Error.WriteLine(prefix + "Antlr4cs " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
     }
 }
 

@@ -70,9 +70,9 @@ function main() {
         for (var f = 0; f \< inputs.length; ++f)
         {
             if (is_fns[f])
-                ParseFilename(inputs[f]);
+                ParseFilename(inputs[f], f);
             else
-                ParseString(inputs[f]);
+                ParseString(inputs[f], f);
         }
         timer.stop();
         var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
@@ -89,20 +89,20 @@ function ParseStdin() {
     }
     var input = sb.ToString();
     var str = antlr4.CharStreams.fromString(input);
-    DoParse(str, "stdin");
+    DoParse(str, "stdin", 0);
 }
 
-function ParseString(input) {
+function ParseString(input, row_number) {
     var str = antlr4.CharStreams.fromString(input);
-    DoParse(str, "string" + string_instance++);
+    DoParse(str, "string" + string_instance++, row_number);
 }
 
-function ParseFilename(input) {
+function ParseFilename(input, row_number) {
     var str = antlr4.CharStreams.fromPathSync(input, encoding);
-    DoParse(str, input);
+    DoParse(str, input, row_number);
 }
 
-function DoParse(str, input_name) {
+function DoParse(str, input_name, row_number) {
     const lexer = new <lexer_name>(str);
     lexer.strictMode = false;
     const tokens = new antlr4.CommonTokenStream(lexer);
@@ -138,7 +138,7 @@ function DoParse(str, input_name) {
 	if (show_tree) {
 		console.log(tree.toStringTree(parser.ruleNames));
 	}
-    console.error(prefix + 'JavaScript ' + input_name + ' ' + result + ' ' + t);
+    console.error(prefix + 'JavaScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t);
 }
 
 

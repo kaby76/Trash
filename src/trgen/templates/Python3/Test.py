@@ -62,9 +62,9 @@ def main(argv):
         start_time = datetime.now()
         for f in range(0, len(inputs)):
             if is_fns[f]:
-                ParseFilename(inputs[f], prefix)
+                ParseFilename(inputs[f], prefix, f)
             else:
-                ParseString(inputs[f], prefix)
+                ParseString(inputs[f], prefix, f)
         end_time = datetime.now()
         diff = end_time - start_time
         diff_time = diff.total_seconds()
@@ -79,18 +79,18 @@ def ParseStdin(myp):
         ch = getChar()
     input = sb
     str = InputStream(input);
-    DoParse(str, 'stdin', myp)
+    DoParse(str, 'stdin', myp, 0)
 
-def ParseString(input, myp):
+def ParseString(input, myp, row_number):
     str = InputStream(input)
-    DoParse(str, 'string' + string_instance, myp)
+    DoParse(str, 'string' + string_instance, myp, row_number)
     string_instance = string_instance + 1
 
-def ParseFilename(input, myp):
+def ParseFilename(input, myp, row_number):
     str = FileStream(input, encoding)
-    DoParse(str, input, myp)
+    DoParse(str, input, myp, row_number)
 
-def DoParse(str, input_name, myp):
+def DoParse(str, input_name, myp, row_number):
     lexer = <lexer_name>(str)
     lexer.removeErrorListeners()
     l_listener = MyErrorListener()
@@ -126,7 +126,7 @@ def DoParse(str, input_name, myp):
     if (show_tree):
         print(tree.toStringTree(recog=parser))
     # Extremely weird bug with Python3, where "prefix" seems to be empty always, so use "myp"
-    print(myp + 'Python3 ' + input_name + ' ' + result + ' ' + f'{diff_time}', file=sys.stderr);
+    print(myp + 'Python3 ' + str(row_number) + ' ' + str(input_name) + ' ' + result + ' ' + f'{diff_time}', file=sys.stderr);
 
 if __name__ == '__main__':
     main(sys.argv)

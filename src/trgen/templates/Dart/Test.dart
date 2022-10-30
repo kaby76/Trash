@@ -53,9 +53,9 @@ void main(List\<String> args) async {
         for (int f = 0; f \< inputs.length; ++f)
         {
             if (is_fns[f])
-                await ParseFilename(inputs[f]);
+                await ParseFilename(inputs[f], f);
             else
-                await ParseString(inputs[f]);
+                await ParseString(inputs[f], f);
         }
         s.stop();
         var et = s.elapsedMilliseconds / 1000.0;
@@ -74,23 +74,23 @@ Future\<void> ParseStdin() async
     }
     var input = utf8.decode(bytes);
     var str = await InputStream.fromString(input);
-    await DoParse(str, "stdin");
+    await DoParse(str, "stdin", 0);
 }
 
-Future\<void> ParseString(String input) async
+Future\<void> ParseString(String input, int row_number) async
 {
     var str = await InputStream.fromString(input);
-    await DoParse(str, "string" + string_instance.toString());
+    await DoParse(str, "string" + string_instance.toString(), row_number);
     string_instance++;
 }
 
-Future\<void> ParseFilename(String input) async
+Future\<void> ParseFilename(String input, int row_number) async
 {
     var str = await InputStream.fromPath(input);
-    await DoParse(str, input);
+    await DoParse(str, input, row_number);
 }
 
-Future\<void> DoParse(CharStream str, String input_name) async
+Future\<void> DoParse(CharStream str, String input_name, int row_number) async
 {
     <tool_grammar_tuples:{x|<x.GrammarAutomName>.checkVersion();
     }>
@@ -131,5 +131,5 @@ Future\<void> DoParse(CharStream str, String input_name) async
     {
         print(tree.toStringTree(parser: parser));
     }
-    stderr.writeln(prefix + "Dart " + input_name + " " + result + " " + et.toString());
+    stderr.writeln(prefix + "Dart " + row_number.toString() + " " + input_name + " " + result + " " + et.toString());
 }

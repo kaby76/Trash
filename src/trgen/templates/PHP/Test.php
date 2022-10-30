@@ -89,9 +89,9 @@ function main($argv) : void {
         for ($f = 0; $f \< count($inputs); ++$f)
         {
             if ($is_fns[$f])
-                ParseFilename($inputs[$f]);
+                ParseFilename($inputs[$f], $f);
             else
-                ParseString($inputs[$f]);
+                ParseString($inputs[$f], $f);
         }
         $duration = $timer->stop();
         fwrite(STDERR, "Total Time: " . $duration->asSeconds() . "\n");
@@ -107,21 +107,21 @@ function ParseStdin() {
     }
     $str = InputStream::fromString($s);
     fclose($in);
-    DoParse($str, "stdin");
+    DoParse($str, "stdin", 0);
 }
 
-function ParseString($input) {
+function ParseString($input, $row_number) {
     global $string_instance;
     $str = InputStream::fromString($input);
-    DoParse($str, "string" . $string_instance++);
+    DoParse($str, "string" . $string_instance++, $row_number);
 }
 
-function ParseFilename($input) {
+function ParseFilename($input, $row_number) {
     $str = InputStream::fromPath($input);
-    DoParse($str, $input);
+    DoParse($str, $input, $row_number);
 }
 
-function DoParse($str, $input_name) {
+function DoParse($str, $input_name, $row_number) {
     global $show_tree;
     global $show_tokens;
     global $inputs;
@@ -163,7 +163,7 @@ function DoParse($str, $input_name) {
     if ($show_tree) {
         print($tree->toStringTree($parser->getRuleNames()) . "\n");
     }
-    fwrite(STDERR, $prefix . "PHP " . $input_name . " " . $result . " " . $duration->asSeconds() . "\n");
+    fwrite(STDERR, $prefix . "PHP " . $row_number . " " . $input_name . " " . $result . " " . $duration->asSeconds() . "\n");
 }
 
 main($argv);

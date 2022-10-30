@@ -156,9 +156,9 @@ public class Program
             for (int f = 0; f \< inputs.Count(); ++f)
             {
                 if (is_fns[f])
-                    ParseFilename(inputs[f]);
+                    ParseFilename(inputs[f], f);
                 else
-                    ParseString(inputs[f]);
+                    ParseString(inputs[f], f);
             }
             DateTime after = DateTime.Now;
             System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
@@ -170,17 +170,17 @@ public class Program
     {
         ICharStream str = null;
         str = CharStreams.fromStream(System.Console.OpenStandardInput());
-        DoParse(str, "stdin");
+        DoParse(str, "stdin", 0);
     }
 
-    static void ParseString(string input)
+    static void ParseString(string input, int row_number)
     {
         ICharStream str = null;
         str = CharStreams.fromString(input);
-        DoParse(str, "string" + string_instance++);
+        DoParse(str, "string" + string_instance++, row_number);
     }
 
-    static void ParseFilename(string input)
+    static void ParseFilename(string input, int row_number)
     {
         ICharStream str = null;
         if (two_byte)
@@ -194,10 +194,10 @@ public class Program
             str = CharStreams.fromPath(input);
         else
             str = CharStreams.fromPath(input, encoding);
-        DoParse(str, input);
+        DoParse(str, input, row_number);
     }
 
-    static void DoParse(ICharStream str, string input_name)
+    static void DoParse(ICharStream str, string input_name, int row_number)
     {
         var lexer = new <lexer_name>(str);
         if (show_tokens)
@@ -248,6 +248,6 @@ public class Program
         {
             System.Console.Out.WriteLine(String.Join(",\n\r", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
         }
-        System.Console.Error.WriteLine(prefix + "CSharp " + input_name + " " + result + " " + (after - before).TotalSeconds);
+        System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
     }
 }

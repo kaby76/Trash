@@ -49,7 +49,7 @@ int error_code = 0;
 int string_instance = 0;
 std::string prefix;
 
-void DoParse(antlr4::CharStream* str, std::string input_name)
+void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
 {
     antlr4::Lexer* lexer = new <lexer_name>(str);
     if (show_tokens)
@@ -89,7 +89,7 @@ void DoParse(antlr4::CharStream* str, std::string input_name)
     {
         std::cout \<\< tree->toStringTree(parser) \<\< std::endl;
     }
-    std::cerr \<\< prefix \<\< "Cpp " \<\< input_name \<\< " " \<\< result \<\< " " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
+    std::cerr \<\< prefix \<\< "Cpp " \<\< row_number \<\< " " \<\< input_name \<\< " " \<\< result \<\< " " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
 }
 
 
@@ -97,22 +97,22 @@ void ParseStdin()
 {
     antlr4::CharStream* str = nullptr;
     str = new antlr4::ANTLRInputStream(std::cin);
-    DoParse(str, "stdin");
+    DoParse(str, "stdin", 0);
 }
 
-void ParseString(std::string input)
+void ParseString(std::string input, int row_number)
 {
     antlr4::CharStream* str = nullptr;
     str = new antlr4::ANTLRInputStream(input);
-    DoParse(str, "string" + string_instance++);
+    DoParse(str, "string" + string_instance++, row_number);
 }
 
-void ParseFilename(std::string input)
+void ParseFilename(std::string input, int row_number)
 {
     antlr4::CharStream* str = nullptr;
     std::fstream fs(input);
     str = new antlr4::ANTLRInputStream(fs);
-    DoParse(str, input);
+    DoParse(str, input, row_number);
 }
 
 int TryParse(std::vector\<std::string>& args)
@@ -155,9 +155,9 @@ int TryParse(std::vector\<std::string>& args)
         for (int f = 0; f \< inputs.size(); ++f)
         {
             if (is_fns[f])
-                ParseFilename(inputs[f]);
+                ParseFilename(inputs[f], f);
             else
-                ParseString(inputs[f]);
+                ParseString(inputs[f], f);
         }
         auto after = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast\<std::chrono::microseconds>(after - before);
