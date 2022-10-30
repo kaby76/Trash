@@ -17,7 +17,7 @@ clean:
 	rm -f $(GENERATED)
 	rm -f pubspec.lock
 run:
-	trwdog <if(os_win)>test.exe<else>test<endif> $(RUNARGS)
+	@trwdog <if(os_win)>test.exe<else>test<endif> $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) -encoding <antlr_encoding> -Dlanguage=Dart <antlr_tool_args:{y | <y> } > $\<
 } >

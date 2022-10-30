@@ -16,7 +16,7 @@ clean:
 	rm -f $(GENERATED)
 	rm -rf __pycache__
 run:
-	trwdog python3 Test.py $(RUNARGS)
+	@trwdog python3 Test.py $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) -encoding <antlr_encoding> -Dlanguage=Python3 <antlr_tool_args:{y | <y> } > $\<
 } >

@@ -4,7 +4,7 @@ default: setup
 setup:
 	if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
 run:
-	trwdog ./build/<if(os_win)>Debug/<endif><exec_name> $(RUNARGS)
+	@trwdog ./build/<if(os_win)>Debug/<endif><exec_name> $(RUNARGS)
 clean:
 	rm -rf build <temp_dir>/antlr4_runtime
 test:

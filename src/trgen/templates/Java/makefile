@@ -15,7 +15,7 @@ clean:
 	rm -f *.class *.interp *.tokens
 	rm -f $(GENERATED)
 run:
-	trwdog java -classpath $(CLASSPATH) Test $(RUNARGS)
+	@trwdog java -classpath $(CLASSPATH) Test $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) -encoding <antlr_encoding> <antlr_tool_args:{y | <y> } > $\<
 } >

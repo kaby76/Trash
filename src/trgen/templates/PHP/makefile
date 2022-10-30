@@ -17,7 +17,7 @@ clean:
 	rm -f composer.lock
 	rm -f $(GENERATED)
 run:
-	trwdog php Test.php $(RUNARGS)
+	@trwdog php Test.php $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) -encoding <antlr_encoding> -Dlanguage=PHP <antlr_tool_args:{y | <y> } > $\<
 } >

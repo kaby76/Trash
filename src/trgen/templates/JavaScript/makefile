@@ -17,7 +17,7 @@ clean:
 	rm -f *.tokens
 	rm -f $(GENERATED)
 run:
-	trwdog node Test.js $(RUNARGS)
+	@trwdog node Test.js $(RUNARGS)
 <tool_grammar_tuples:{x | <x.GeneratedFileName> : <x.GrammarFileName>
 	java -jar $(JAR) -encoding <antlr_encoding> -Dlanguage=JavaScript <antlr_tool_args:{y | <y> } > $\<
 } >
