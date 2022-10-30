@@ -393,15 +393,15 @@ You must have the NET SDK installed to build and run.
 Trash is a long-term project (already going on 3 years).
 I'm envisioning for the "first" release to support:
 
-* grep utility that finds data in parse trees
-* print a parse tree in various formats
-* sponge (converts parse tree data into files)
+* grep utility that finds data in parse trees &#10003;
+* print a parse tree in various formats &#10003;
+* sponge (converts parse tree data into files) &#10003;
 * be able to specify analyses and refactorings via high-level specifications
-    * basic refactorings (insert, delete, rename, reorder, split, combine, fold, unfold)
+    * basic refactorings (insert, delete, rename, reorder, split, combine, fold, unfold) &#10003;
     * piggy -- a parse tree rewriter
 * basic analyses (indirect and direct recursion, infinite recursion, LL(1), LR(1), LALR(1), SLR(1), LR(0), etc)
 * grammar extraction from pdfs and text
 * extract context-free grammars directly from source code via machine learning
-* reading and conversion of ABNF, Antlr2/3/4, Bison, Coco/R, ISO14977, JavaCC, Lark, LBNF, Pegen, Peg.js, Pest, Rex, W3C EBNF, XText
+* reading and conversion of ABNF, Antlr2/3/4, Bison, Coco/R, ISO14977, JavaCC, Lark, LBNF, Pegen, Peg.js, Pest, Rex, W3C EBNF, XText ~&#10003;
 
 If you have any questions, email me at ken.domino <at> gmail.com
