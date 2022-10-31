@@ -12,7 +12,7 @@ find_package(Threads REQUIRED)
 #SET(GCC_COVERAGE_COMPILE_FLAGS "-g -pg")
 #SET(GCC_COVERAGE_LINK_FLAGS    "-g -pg")
 <if(os_win)>
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /MTd")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /MT")
 <endif>
 #SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 #SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
@@ -69,7 +69,7 @@ add_executable(Test
 <endif>
 
 <if(os_win)>
-target_compile_options(Test PUBLIC /MTd)
+target_compile_options(Test PUBLIC /MT)
 <endif>
 
 target_link_libraries(Test antlr4_static Threads::Threads)
