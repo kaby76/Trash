@@ -32,9 +32,9 @@ is_fns = []
 encoding = "utf-8"
 error_code = 0
 string_instance = 0
-prefix = ""
 
 def main(argv):
+    prefix = ""
     i = 1
     while i \< len(argv):
         arg = argv[i]
@@ -125,8 +125,18 @@ def DoParse(str, input_name, myp, row_number):
         result = 'success'
     if (show_tree):
         print(tree.toStringTree(recog=parser))
-    # Extremely weird bug with Python3, where "prefix" seems to be empty always, so use "myp"
-    print(myp + 'Python3 ' + str(row_number) + ' ' + str(input_name) + ' ' + result + ' ' + f'{diff_time}', file=sys.stderr);
+    # Extremely weird bug with Python3, where "prefix" seems to be
+    # empty always, so use "myp"
+    sys.stderr.write(myp)
+    sys.stderr.write('Python3 ')
+    sys.stderr.write(f'{row_number}')
+    sys.stderr.write(' ')
+    sys.stderr.write(result)
+    sys.stderr.write(' ')
+    sys.stderr.write(input_name)
+    sys.stderr.write(' ')
+    sys.stderr.write(f'{diff_time}')
+    sys.stderr.write('\n')
 
 if __name__ == '__main__':
     main(sys.argv)
