@@ -23,7 +23,7 @@ function Test-Case {
         $TreeFile,
         $ErrorFile
     )
-    $o = trwdog python3 Test.py -file $InputFile
+    $o = trwdog python3 Test.py $InputFile
     $failed = $LASTEXITCODE -ne 0
     if ($failed -and $errorFile) {
         return $true

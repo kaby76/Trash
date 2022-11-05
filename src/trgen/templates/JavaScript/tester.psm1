@@ -23,7 +23,7 @@ function Test-Case {
         $TreeFile,
         $ErrorFile
     )
-    $o = trwdog node index.js -file $InputFile
+    $o = trwdog node Test.js $InputFile
     $failed = $LASTEXITCODE -ne 0
     if ($failed -and $errorFile) {
         return $true

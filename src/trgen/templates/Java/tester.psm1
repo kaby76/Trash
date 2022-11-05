@@ -9,8 +9,8 @@ function Build-Grammar {
         \}
     \}
 }>
-    Write-Host "javac -cp <antlr_tool_path><if(path_sep_semi)>\;<else>:<endif>. <tool_grammar_tuples:{x|<x.GeneratedFileName> }> Program.java ErrorListener.java"
-    $msg = javac -cp "<antlr_tool_path><if(path_sep_semi)>;<else>:<endif>." <tool_grammar_tuples:{x|<x.GeneratedFileName> }> Program.java ErrorListener.java
+    Write-Host "javac -cp <antlr_tool_path><if(path_sep_semi)>\;<else>:<endif>. <tool_grammar_tuples:{x|<x.GeneratedFileName> }> Test.java ErrorListener.java"
+    $msg = javac -cp "<antlr_tool_path><if(path_sep_semi)>;<else>:<endif>." <tool_grammar_tuples:{x|<x.GeneratedFileName> }> Test.java ErrorListener.java
     return @{
         Message = $msg
         Success = $LASTEXITCODE -eq 0

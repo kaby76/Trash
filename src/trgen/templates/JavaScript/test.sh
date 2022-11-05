@@ -9,7 +9,7 @@ do
   if [ "$x1" != "errors" ]
   then
     echo "$file"
-    trwdog node index.js -file "$file" 2>&1 | head -55
+    trwdog node Test.js "$file" 2>&1 | head -55
     status="${PIPESTATUS[0]}"
     if [ -f "$file".errors ]
     then

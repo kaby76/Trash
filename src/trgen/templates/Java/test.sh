@@ -11,7 +11,7 @@ do
   if [ "$x1" != "errors" ]
   then
     echo "$file"
-    trwdog java -classpath $CLASSPATH Program -file "$file"
+    trwdog java -classpath $CLASSPATH Test "$file"
     status="$?"
     if [ -f "$file".errors ]
     then
