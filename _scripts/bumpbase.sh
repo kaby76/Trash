@@ -3,7 +3,7 @@
 version_framework="net6.0"
 version_base="4.5.0"
 version_tree="5.2.0"
-version_antlr4buildtasks="11.2"
+version_antlr4buildtasks="11.5"
 version_stringtemplate="4.2.0"
 version_antlrruntime="4.11.1"
 

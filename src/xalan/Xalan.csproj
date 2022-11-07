@@ -7,7 +7,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
-		<PackageReference Include="Antlr4BuildTasks" Version="11.5.0" />
+		<PackageReference Include="Antlr4BuildTasks" Version="11.5" />
 	</ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\AltAntlr\AltAntlr.csproj" />
