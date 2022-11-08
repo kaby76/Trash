@@ -162,11 +162,11 @@ trparse ada.g2 | trconvert | trprint | less
 This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g2)
 using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trparse),
 converts the parse tree data to Antlr4 syntax using
- [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert)
+ [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trconvert)
  and
 finally [prints out the converted parse tree data, ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4)
 using
-[trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/trprint). Other
+[trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trprint). Other
 grammar that can be converted are Antlr3, Bison, and ISO EBNF. In order to
 use the grammar to parse data, you will need to convert it to an Antlr4 grammar.
 
