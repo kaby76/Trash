@@ -160,7 +160,7 @@ and
 trparse ada.g2 | trconvert | trprint | less
 ```
 This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g2)
-using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse),
+using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trparse),
 converts the parse tree data to Antlr4 syntax using
  [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/trconvert)
  and
