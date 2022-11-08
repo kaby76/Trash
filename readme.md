@@ -176,7 +176,7 @@ mkdir foobar; cd foobar; trgen
 ```
 This command creates a parser application for the C# target.
 If executed in an empty directory, which is done in the example
-shown above, [trgen](https://github.com/kaby76/Domemtech.Trash/tree/main/trgen)
+shown above, [trgen](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trgen)
 creates an application using the Arithmetic grammar.
 If executed in a directory containing
 a Antlr Maven plugin (`pom.xml`), `trgen` will create a program according
@@ -209,10 +209,10 @@ with most tools of Trash, is parse tree data.
         trparse -i "1+2+3" | trxgrep " //SCIENTIFIC_NUMBER" | trst
 
 With this command, a directory is created, the Arithmetic grammar generated, build,
-and then run using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/trparse).
+and then run using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trparse).
 The `trparse` tool unifies all parsing, whether it's parsing a grammar or parsing input
 using a generated parser application. The output from the `trparse` tool is a parse
-tree which you can search. [Trxgrep](https://github.com/kaby76/Domemtech.Trash/tree/main/trxgrep)
+tree which you can search. [Trxgrep](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trxgrep)
 is the generalized search program for parse trees. `Trxgrep` uses XPath expressions to
 precisely identify nodes in the parse tree.
 
@@ -228,7 +228,7 @@ used more often in compiler construction.
     trparse Arithmetic.g4 | trrename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
 
 In these two examples, the Arithmetic grammar is parsed.
-[trrename](https://github.com/kaby76/Domemtech.Trash/tree/main/trrename) reads the parse tree data and
+[trrename](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trrename) reads the parse tree data and
 modifies it by renaming the `expression` symbol two ways: first by XPath expression identifying the LHS terminal
 symbol of the `expression` symbol, and the second by assumption that the tree is an Antlr4 parse tree,
 then renaming a semi-colon-separated list of paired renames. The resulting code is reconstructed and saved.
@@ -263,7 +263,7 @@ when super classes are needed for different targets.
 
     trcombine ArithmeticLexer.g4 ArithmeticParser.g4 | trprint > Arithmetic.g4
 
-This command calls [trcombine](https://github.com/kaby76/Domemtech.Trash/tree/main/trcombine)
+This command calls [trcombine](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trcombine)
 which parses two split grammar files
 [ArithmeticLexer.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/combine/ArithmeticLexer.g4)
 and
@@ -273,10 +273,10 @@ for the two.
 
     trparse Arithmetic.g4 | trsplit | trsponge -o true
 
-This command calls [trsplit](https://github.com/kaby76/Domemtech.Trash/tree/main/trsplit)
+This command calls [trsplit](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trsplit)
 which splits the grammar into two parse tree results, one that defines
 ArithmeticLexer.g4 and the other that defines ArithmeticParser.g4.
-The tool [trsponge](https://github.com/kaby76/Domemtech.Trash/tree/main/trsponge)
+The tool [trsponge](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trsponge)
 is similar to the [tee](https://en.wikipedia.org/wiki/Tee_(command)) in
 Linux: the parse tree data is split and placed in files.
 
@@ -375,16 +375,18 @@ You must have the NET SDK installed to build and run.
 
 # Current release
 
-## 0.17.0 ("pre-alpha" -- still prototyping)
+## 0.18.0 (still prototyping)
 
-* Add GitHub Action building and testing.
-* Add trperf -- performance measurements of an Antlr program.
-* Add trpiggy -- parse tree rewriter.
-* Reorganize source code.
-* Merge Domemtech.TrashBase into Trash in order to simplify life.
-* Fix bugs.
-* Add cross-document xpath searching.
-* Add some grammar checking scripts in tests.
+* Adding Xalan code.
+* Fix #180.
+* Fix crash in trgen antlr/grammars-v4#2818.
+* Fix #134.
+* Add -e option to trrename.
+* Update Antlr4BuildTasks version.
+* Fix #197, #198.
+* Fix trparse exit code.
+* Add --quiet option to trparse to just get exit code.
+* Change trgen templates to remove -file option, make file name parsing the default.
 
 # Prior Releases
 
