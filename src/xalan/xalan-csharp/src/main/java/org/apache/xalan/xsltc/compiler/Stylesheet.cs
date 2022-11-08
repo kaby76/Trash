@@ -365,56 +365,56 @@ namespace org.apache.xalan.xsltc.compiler
 			}
 		}
 
-		public in int ImportPrecedence
+		public int ImportPrecedence
 		{
 			set
 			{
-			// Set import value for this stylesheet
-			_importPrecedence = value;
-    
-			// Set import value for all included stylesheets
-	//JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-	//ORIGINAL LINE: final java.util.Enumeration elements = elements();
-			System.Collections.IEnumerator elements = this.elements();
-			while (elements.MoveNext())
-			{
-				SyntaxTreeNode child = (SyntaxTreeNode)elements.Current;
-				if (child is Include)
+				// Set import value for this stylesheet
+				_importPrecedence = value;
+
+				// Set import value for all included stylesheets
+				//JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
+				//ORIGINAL LINE: final java.util.Enumeration elements = elements();
+				System.Collections.IEnumerator elements = this.elements();
+				while (elements.MoveNext())
 				{
-				Stylesheet included = ((Include)child).IncludedStylesheet;
-				if (included != null && included._includedFrom == this)
+					SyntaxTreeNode child = (SyntaxTreeNode)elements.Current;
+					if (child is Include)
+					{
+						Stylesheet included = ((Include)child).IncludedStylesheet;
+						if (included != null && included._includedFrom == this)
+						{
+							included.ImportPrecedence = value;
+						}
+					}
+				}
+
+				// Set import value for the stylesheet that imported this one
+				if (_importedFrom != null)
 				{
-					included.ImportPrecedence = value;
+					if (_importedFrom.ImportPrecedence < value)
+					{
+						//JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
+						//ORIGINAL LINE: final Parser parser = getParser();
+						Parser parser = Parser;
+						//JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
+						//ORIGINAL LINE: final int nextPrecedence = parser.getNextImportPrecedence();
+						int nextPrecedence = parser.NextImportPrecedence;
+						_importedFrom.ImportPrecedence = nextPrecedence;
+					}
 				}
-				}
-			}
-    
-			// Set import value for the stylesheet that imported this one
-			if (_importedFrom != null)
-			{
-				if (_importedFrom.ImportPrecedence < value)
+				// Set import value for the stylesheet that included this one
+				else if (_includedFrom != null)
 				{
-	//JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-	//ORIGINAL LINE: final Parser parser = getParser();
-				Parser parser = Parser;
-	//JAVA TO C# CONVERTER WARNING: The original Java variable was marked 'final':
-	//ORIGINAL LINE: final int nextPrecedence = parser.getNextImportPrecedence();
-				int nextPrecedence = parser.NextImportPrecedence;
-				_importedFrom.ImportPrecedence = nextPrecedence;
+					if (_includedFrom.ImportPrecedence != value)
+					{
+						_includedFrom.ImportPrecedence = value;
+					}
 				}
-			}
-			// Set import value for the stylesheet that included this one
-			else if (_includedFrom != null)
-			{
-				if (_includedFrom.ImportPrecedence != value)
-				{
-				_includedFrom.ImportPrecedence = value;
-				}
-			}
 			}
 			get
 			{
-			return _importPrecedence;
+				return _importPrecedence;
 			}
 		}
 
