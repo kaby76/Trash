@@ -34,6 +34,10 @@ diff -r "$where/Gold/output" "$where/Generated/output"
 if [ "$?" != "0" ]
 then
 	echo Test failed.
+	echo "generated:"
+	cat "$where/Generated/output"
+	echo "gold:"
+	cat "$where/Gold/output"
 	exit 1
 else
 	echo Test succeeded.
