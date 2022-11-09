@@ -1,4 +1,1 @@
-trwdog ./Test.exe -input "hello world" -tree
-Time: 0.000 s
-Parse succeeded.
 (hello hello world)

@@ -14,6 +14,7 @@ do
 	echo $i
 	bash find-non-frag-ref.sh $i >> Generated/output
 done
+dos2unix Generated/output
 diff -r Gold Generated
 if [ "$?" != "0" ]
 then

@@ -22,6 +22,7 @@ do
 	trgen -s hello -t $i
 	cd Generated; make
 	make run RUNARGS='-input "hello world" -tree' > ../output
+	dos2unix ../output
 	cd ..
 	diff output Gold/
 	rm -rf Generated/

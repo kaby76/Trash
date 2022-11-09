@@ -21,6 +21,7 @@ do
 	rm -rf grammar-temp
 done
 cd "$where"
+dos2unix Generated/output
 diff -r Gold Generated
 if [ "$?" != "0" ]
 then

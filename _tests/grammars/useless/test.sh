@@ -9,6 +9,7 @@ mkdir Generated
 for i in *.g4
 do
 	bash find-useless.sh $i > Generated/$i.out
+	dos2unix Generated/$i.out
 done
 diff -r Gold Generated
 if [ "$?" != "0" ]
