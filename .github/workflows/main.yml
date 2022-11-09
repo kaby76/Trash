@@ -26,6 +26,7 @@ jobs:
       - name: Install dos2unix
         run: |
           sudo apt-get install tofrodos
+	  sudo ln -s /usr/bin/fromdos /usr/bin/dos2unix
       - name: Install Dotnet
         uses: actions/setup-dotnet@v2
         with:
