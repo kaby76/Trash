@@ -56,3 +56,4 @@ _tests/trgen-targets/Go/output
 _tests/trgen-targets/Dart/simple.g4
 _tests/trgen-targets/Python3/simple.g4
 _tests/trgen-targets/Python3/output
+_tests/trperf/output
