@@ -10,4 +10,9 @@ echo $tests
 for i in $tests
 do
 	bash $i
+	result=$?
+	if [ "$result" != 0 ]
+	then
+		exit 1
+	fi
 done
