@@ -23,6 +23,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
+      - name: Install dos2unix
+        run: |
+          sudo apt install tofrodos
       - name: Install Dotnet
         uses: actions/setup-dotnet@v2
         with:
