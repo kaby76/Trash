@@ -92,7 +92,7 @@
             Type type = asm.GetType("Program");
             var methods = type.GetMethods();
             MethodInfo methodInfo = type.GetMethod("SetupParse2");
-            object[] parm = new object[] { "" };
+            object[] parm = new object[] { "", true };
             DateTime before = DateTime.Now;
             var res = methodInfo.Invoke(null, parm);
             DateTime after = DateTime.Now;

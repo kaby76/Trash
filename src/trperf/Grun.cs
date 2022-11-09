@@ -131,7 +131,7 @@
             var methods = type.GetMethods();
             {
                 MethodInfo methodInfo = type.GetMethod("SetupParse2");
-                object[] parm = new object[] { txt };
+                object[] parm = new object[] { txt, false };
                 var res = methodInfo.Invoke(null, parm);
             }
 	        // Set perf.
