@@ -15,14 +15,14 @@ echo "abb/" >> .git/info/sparse-checkout
 echo "abnf/" >> .git/info/sparse-checkout
 echo "/asm" >> .git/info/sparse-checkout
 git pull origin 0d8be4573d284a89444a46beeface54f48853c8a
-for i in `find . -name pom.xml`
+for i in `find . -name pom.xml | sort`
 do
     base=`dirname $i`
     echo $i
     grep -qs . $base/*.g4
     if [ "$?" = "0" ]
     then
-	for j in "$base"/*.g4
+	for j in `echo "$base"/*.g4 | sort`
 	do
 		bash "$where/check.sh" "$j" >> "$where/Generated/output" 2>&1
 	done
