@@ -9,7 +9,7 @@ rm -rf Generated/
 trgen
 dotnet restore Generated/Test.csproj
 dotnet build Generated/Test.csproj
-trperf -i "1+2"  | tail -n +2 | sort -k6 -n -r | column -t | sed 's/[0-9][0-9]*[.][0-9][0-9]*/xxx/g'> output
+trperf -i "1+2"  | tail -n +2 | sort -k6 -n -r | sed 's/[0-9][0-9]*[.][0-9][0-9]*/xxx/g'> output
 rm -rf Generated/
 dos2unix output
 diff output Gold/
