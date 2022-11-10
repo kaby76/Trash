@@ -1,19 +1,19 @@
 
-( file_
-  ( expression
-    ( expression
-      ( atom
-        ( scientific
-          ( SCIENTIFIC_NUMBER i=0 txt=1 tt=2 DEFAULT_TOKEN_CHANNEL
+( file_ int:0..3
+  ( expression int:0..2
+    ( expression int:0..0
+      ( atom int:0..0
+        ( scientific int:0..0
+          ( SCIENTIFIC_NUMBER int:0..0 text:1 tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:1 chnl:DEFAULT_TOKEN_CHANNEL l:1 c:0 si:0 ei:0 ti:0 tstext:1
     ) ) ) ) 
-    ( PLUS i=1 txt=+ tt=5 DEFAULT_TOKEN_CHANNEL
+    ( PLUS int:0..0 text:+ tt:5 chnl:DEFAULT_TOKEN_CHANNEL text:+ chnl:DEFAULT_TOKEN_CHANNEL l:1 c:1 si:1 ei:1 ti:1 tstext:+
     ) 
-    ( expression
-      ( atom
-        ( scientific
-          ( SCIENTIFIC_NUMBER i=2 txt=2 tt=2 DEFAULT_TOKEN_CHANNEL
+    ( expression int:2..2
+      ( atom int:2..2
+        ( scientific int:2..2
+          ( SCIENTIFIC_NUMBER int:0..0 text:2 tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:2 chnl:DEFAULT_TOKEN_CHANNEL l:1 c:2 si:2 ei:2 ti:2 tstext:2
   ) ) ) ) ) 
-  ( EOF i=3 txt= tt=-1 DEFAULT_TOKEN_CHANNEL
+  ( EOF int:0..0 text: tt:-1 chnl:DEFAULT_TOKEN_CHANNEL text: chnl:DEFAULT_TOKEN_CHANNEL l:1 c:3 si:3 ei:2 ti:3 tstext:
 ) ) 
 
 
