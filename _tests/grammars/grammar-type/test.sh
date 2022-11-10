@@ -6,7 +6,7 @@ where=`dirname -- "$0"`
 cd "$where"
 rm -rf Generated
 mkdir Generated
-for i in `echo examples/* | sort -u`
+for i in `ls examples/* | sort -u`
 do
 	bash get-types.sh $i >> Generated/output
 done
