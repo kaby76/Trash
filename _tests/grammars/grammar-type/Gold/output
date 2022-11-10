@@ -1,6 +1,6 @@
 examples/abbLexer.g4 : antlr3 antlr4 lexer
 examples/abbParser.g4 : antlr3 antlr4 parser
-examples/ada.g2 : antlr2 antlr3
-examples/Arithmetic.g4 : antlr3 antlr4 combined
+examples/ada.g2 : antlr2
+examples/Arithmetic.g4 : antlr4 combined
 examples/ASN.g : antlr3 antlr4 combined
 examples/C.g : antlr3
