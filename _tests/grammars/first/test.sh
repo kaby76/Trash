@@ -22,7 +22,8 @@ do
 done
 cd "$where"
 dos2unix Generated/output
-diff -r Gold Generated
+dos2unix Gold/output
+diff -r Gold/output Generated/output
 if [ "$?" != "0" ]
 then
 	echo Test failed.
