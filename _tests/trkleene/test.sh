@@ -5,21 +5,21 @@ export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
 cd "$where"
 rm -rf Generated
-trparse t1.g4 | trkleene | trsponge -c -o "$where/Generated"
-trparse t2.g4 | trkleene | trsponge -c -o "$where/Generated"
-trparse t3.g4 | trkleene | trsponge -c -o "$where/Generated"
-trparse t4.g4 | trkleene | trsponge -c -o "$where/Generated"
-trparse t5.g4 | trkleene | trsponge -c -o "$where/Generated"
-trparse PostgreSQLParser.g4 PostgreSQLLexer.g4 | trkleene | trsponge -c -o "$where/Generated"
-for i in "$where/Generated/*"
+trparse t1.g4 | trkleene | trsponge -c -o "Generated"
+trparse t2.g4 | trkleene | trsponge -c -o "Generated"
+trparse t3.g4 | trkleene | trsponge -c -o "Generated"
+trparse t4.g4 | trkleene | trsponge -c -o "Generated"
+trparse t5.g4 | trkleene | trsponge -c -o "Generated"
+trparse PostgreSQLParser.g4 PostgreSQLLexer.g4 | trkleene | trsponge -c -o "Generated"
+for i in "Generated/*"
 do
 	dos2unix $i
 done
-for i in "$where/Gold/*"
+for i in "Gold/*"
 do
 	dos2unix $i
 done
-diff -r "$where/Gold" "$where/Generated"
+diff -r "Gold" "Generated"
 if [ "$?" != "0" ]
 then
 	echo Test failed.
