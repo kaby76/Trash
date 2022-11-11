@@ -25,7 +25,7 @@ cd "$where"
 # Diff.
 dos2unix output
 dos2unix Gold/output
-diff output Gold/
+diff output Gold/output
 rm -rf Generated/
 if [ "$?" != "0" ]
 then
