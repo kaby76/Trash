@@ -1,11 +1,23 @@
 #!/usr/bin/bash
-# "Setting MSYS2_ARG_CONV_EXCL so that Trash XPaths do not get mutulated."
+
+# BASH error handling:
+#   exit on command failure
+set -e
+#   print
+# set -x
+#   keep track of the last executed command
+trap 'LAST_COMMAND=$CURRENT_COMMAND; CURRENT_COMMAND=$BASH_COMMAND' DEBUG
+#   on error: print the failed command
+trap 'ERROR_CODE=$?; FAILED_COMMAND=$LAST_COMMAND; tput setaf 1; echo "ERROR: command \"$FAILED_COMMAND\" failed with exit code $ERROR_CODE"; put sgr0;' ERR INT TERM
 export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
 cd "$where"
 where=`pwd`
+cd "$where"
 rm -rf Generated
 mkdir Generated
+
+# Test.
 cd Generated
 git init grammars-v4
 cd grammars-v4
@@ -19,15 +31,17 @@ for i in `find . -name pom.xml | sort`
 do
     base=`dirname $i`
     echo $i
-    grep -qs . $base/*.g4
-    if [ "$?" = "0" ]
+    if [ "$base" != "./asm" ]
     then
-	for j in `echo "$base"/*.g4 | sort`
+	for j in `ls "$base"/*.g4 | sort`
 	do
 		bash "$where/check.sh" "$j" >> "$where/Generated/output" 2>&1
 	done
     fi
 done
+echo Done
+
+# Diff.
 dos2unix "$where/Generated/output"
 dos2unix "$where/Gold/output"
 diff -r "$where/Gold/output" "$where/Generated/output"
@@ -42,3 +56,4 @@ then
 else
 	echo Test succeeded.
 fi
+exit 0
