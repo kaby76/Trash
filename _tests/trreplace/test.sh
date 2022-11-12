@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # BASH error handling:
 #   exit on command failure
 set -e
@@ -17,19 +16,18 @@ where=`pwd`
 
 # Test.
 rm -rf Generated
-trgen
-cd Generated
-make
-echo "1 + 2 + 3" | trparse | trxgrep ' //SCIENTIFIC_NUMBER' | trtree > ../output
-cd ..
-rm -rf Generated
+trparse Expression.g4 | trreplace '//parserRuleSpec/RULE_REF[text()="a"]' 'atom' | trsponge -c -o Generated
 
 # Diff result.
-for i in output Gold/output
+for i in Gold/*
 do
 	dos2unix $i
 done
-diff output Gold
+for i in Generated/*
+do
+	dos2unix $i
+done
+diff -r Generated Gold
 if [ "$?" != "0" ]
 then
 	echo Test failed.
