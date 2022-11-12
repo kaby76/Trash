@@ -16,8 +16,9 @@ rm -rf Generated
 mkdir Generated
 
 # Test.
-trparse Expression.g4 | trdelete '//parserRuleSpec[RULE_REF/text()="a"]' | trsponge -c -o Generated
+trparse Expression.g4 | trfoldlit | trsponge -c -o Generated
 
+# Diff.
 # Diff.
 for i in "$where/Generated/*"
 do
@@ -36,3 +37,6 @@ else
 	echo Test succeeded.
 fi
 exit 0
+
+
+
