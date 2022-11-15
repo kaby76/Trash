@@ -4713,8 +4713,37 @@ namespace LanguageServer
             List<TerminalNodeImpl> replace_these,
             List<IParseTree> all_sources,
             Parser parser,
-            Lexer Lexer)
+            Lexer Lexer,
+            AltAntlr.MyTokenStream tokstream)
         {
+            // Verify antlr4 grammar.
+            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(all_sources, parser))
+            {
+                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                {
+                    var n1 = engine.parseExpression(
+                        @"/grammarSpec",
+                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                             .Count();
+                    if (n1 != 1)
+                    {
+                        throw new LanguageServerException("A grammar file is not selected.");
+                    }
+                }
+                {
+                    var n1 = engine.parseExpression(
+                        @"/grammarSpec/grammarDecl/grammarType[GRAMMAR and not(LEXER)]",
+                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                             .Count();
+                    if (n1 != 1)
+                    {
+                        throw new LanguageServerException("Can only operate on a split parser or combined grammar file.");
+                    }
+                }
+            }
             Dictionary<string, string> result = new Dictionary<string, string>();
             Dictionary<string, IParseTree> rhs_replacement = new Dictionary<string, IParseTree>();
             foreach (var @ref in replace_these)
@@ -4723,13 +4752,16 @@ namespace LanguageServer
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(all_sources, parser))
                 {
-                    var nodes = engine.parseExpression(
-                        @"//lexerRuleSpec[TOKEN_REF/text() = '" + @ref.GetText() + "']",
+                    var defs = engine.parseExpression(
+                        @"//(lexerRuleSpec[TOKEN_REF/text()='" + @ref.GetText() + "'] | parserRuleSpec[RULE_REF/text()='" + @ref.GetText() + "'])/(ruleBlock | lexerRuleBlock)",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-                    if (nodes.Count > 1 || nodes.Count == 0)
+                    if (defs.Count > 1 || defs.Count == 0)
                         continue;
-
+                    // Copy def RHS.
+                    var new_node = TreeEdits.CopyTreeRecursive(defs.First());
+                    // Replace refs with defs.
+                    TreeEdits.ReplaceInStream(tokstream, @ref, new_node);
                 }
             }
             return result;

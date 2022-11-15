@@ -106,7 +106,7 @@
                         {
                             var new_node = TreeEdits.CopyTreeRecursive(node);
                             (new_node.Payload as AltAntlr.MyToken).Text = new_name;
-                            TreeEdits.Replace(tokstream, node, new_node);
+                            TreeEdits.ReplaceInStream(tokstream, node, new_node);
                             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Replaced " + node.GetText());
                         }
                     }

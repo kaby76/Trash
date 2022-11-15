@@ -42,7 +42,7 @@
 
 
         public Config _config;
-        public static string version = "0.18.1";
+        public static string version = "0.18.2";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();

@@ -2,8 +2,8 @@
   "profiles": {
     "trunfold": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//parserRuleSpec[RULE_REF/text()='repeatable_command']//RULE_REF[text()='repeated_command']\" ",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\issue-2405\\bcpl\\x"
+      "commandLineArgs": "-f o.pt \"//parserRuleSpec[RULE_REF/text()='s']//RULE_REF[text()='e']\" ",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trunfold"
     }
   }
 }

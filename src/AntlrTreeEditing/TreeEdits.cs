@@ -1565,7 +1565,7 @@
             DeleteInStreams(tokstream, node);
         }
 
-        public static void Replace(AltAntlr.MyTokenStream tokstream, IParseTree node, IParseTree new_node)
+        public static void ReplaceInStream(AltAntlr.MyTokenStream tokstream, IParseTree node, IParseTree new_node)
         {
             InsertBeforeInStreams(node, new_node);
             DeleteInStreams(tokstream, node);
