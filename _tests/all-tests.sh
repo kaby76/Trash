@@ -14,12 +14,13 @@ do
 	result=$?
 	if [ "$result" != 0 ]
 	then
-		failed+=($i)
+		echo Failed $i
+		failed+=( $i )
 	fi
 done
 if (( ${#failed[@]} != 0 ))
 then
-	echo Tests failed: $failed.
+	echo Tests failed: ${failed[*]}
 	exit 1
 else
 	echo Tests succeeded.
