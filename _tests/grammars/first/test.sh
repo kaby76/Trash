@@ -23,11 +23,11 @@ do
 	cp $i grammar-temp
 	cd grammar-temp
 	trgen -s s
-	cd Generated
+	cd Generated-CSharp
 	dotnet build
+	echo $i >> ../../Generated/output
+	trfirst >> ../../Generated/output
 	cd ..
-	echo $i >> ../Generated/output
-	trfirst >> ../Generated/output
 	cd ..
 	rm -rf grammar-temp
 done

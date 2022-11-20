@@ -4,7 +4,7 @@
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
 
-    public class MyTerminalNodeImpl : TerminalNodeImpl
+    public class MyTerminalNodeImpl : TerminalNodeImpl, IMyParseTree
     {
         public MyTerminalNodeImpl(IToken symbol) : base(symbol)
         {
@@ -12,7 +12,7 @@
 
         public void Reset() { }
 
-        public void ComputeSourceInterval() { }
+        public void ComputeSourceInterval(int start) { }
 
         public override Interval SourceInterval
         {

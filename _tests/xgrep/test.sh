@@ -16,13 +16,13 @@ cd "$where"
 where=`pwd`
 
 # Test.
-rm -rf Generated
+rm -rf Generated-CSharp
 trgen
-cd Generated
+cd Generated-CSharp
 make
 echo "1 + 2 + 3" | trparse | trxgrep ' //SCIENTIFIC_NUMBER' | trtree > ../output
 cd ..
-rm -rf Generated
+rm -rf Generated-CSharp
 
 # Diff result.
 for i in output Gold/output

@@ -36,6 +36,7 @@ tool/target/
 
 # Ignore generated test suite
 Generated/
+Generated-*/
 x/
 packages-microsoft-prod.deb
 _tests/trcombine/o3.pt

@@ -1,2 +1,2 @@
-(file_ (expression (expression (atom (scientific 1))) + (expression (atom (scientific 2)))) )
+(file_ (expression (expression (atom (scientific 1))) + (expression (atom (scientific 2)))) <EOF>)
 

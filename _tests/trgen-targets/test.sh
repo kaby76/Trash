@@ -20,11 +20,11 @@ do
 	cp ../simple.g4 .
 	rm -rf Generated/
 	trgen -s hello -t $i
-	cd Generated; make
+	cd Generated-$i; make
 	make run RUNARGS='-input "hello world" -tree' > ../output
 	dos2unix ../output
 	cd ..
 	diff output Gold/
-	rm -rf Generated/
+	rm -rf Generated-$i/
 	popd
 done

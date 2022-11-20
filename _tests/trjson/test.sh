@@ -12,12 +12,11 @@ where=`dirname -- "$0"`
 cd "$where"
 where=`pwd`
 cd "$where"
-rm -rf Generated
-mkdir Generated
+rm -rf Generated-CSharp
 
 # Test.
 trgen
-cd Generated
+cd Generated-CSharp
 dotnet build
 trparse -i "1+2" | trjson > ../output
 cd "$where"
@@ -26,7 +25,7 @@ cd "$where"
 dos2unix output
 dos2unix Gold/output
 diff output Gold/output
-rm -rf Generated/
+rm -rf Generated-CSharp/
 if [ "$?" != "0" ]
 then
 	echo Test failed.

@@ -15,6 +15,8 @@ export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
 cd "$where"
 where=`pwd`
+cd "$where"
+echo "$where"
 
 # Test.
 rm -rf Generated
@@ -25,6 +27,18 @@ trparse Expression.g4 | trdelete -v '//xxxx' > Generated/trdelete.tree
 wc=`cat Generated/trparse.tree | wc -l`
 echo $wc
 cat Generated/trdelete.tree | head -"$wc" > Generated/new.tree
+
+for j in eof no-eof
+do
+	cd $j
+	rm -rf Generated-CSharp
+	trgen -s s
+	cd Generated-CSharp
+	make
+	echo "1 + 2 + 3" | trparse -e -v > trparse.tree 2>&1
+	cd ..
+	cd ..
+done
 
 # Diff result.
 for i in Generated/*

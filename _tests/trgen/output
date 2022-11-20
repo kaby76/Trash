@@ -4,16 +4,16 @@
     ( expression int:0..0
       ( atom int:0..0
         ( scientific int:0..0
-          ( SCIENTIFIC_NUMBER int:0..0 text:1 tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:1 chnl:DEFAULT_TOKEN_CHANNEL l:1 c:0 si:0 ei:0 ti:0 tstext:1
+          ( SCIENTIFIC_NUMBER int:0..0 text:1 tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:1 chnl:DEFAULT_TOKEN_CHANNEL l:1 c:0 si:0 ei:0 ti:0
     ) ) ) ) 
-    ( PLUS int:0..0 text:+ tt:5 chnl:DEFAULT_TOKEN_CHANNEL text:+ chnl:DEFAULT_TOKEN_CHANNEL l:1 c:1 si:1 ei:1 ti:1 tstext:+
+    ( PLUS int:1..1 text:+ tt:5 chnl:DEFAULT_TOKEN_CHANNEL text:+ chnl:DEFAULT_TOKEN_CHANNEL l:1 c:1 si:1 ei:1 ti:1
     ) 
     ( expression int:2..2
       ( atom int:2..2
         ( scientific int:2..2
-          ( SCIENTIFIC_NUMBER int:0..0 text:2 tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:2 chnl:DEFAULT_TOKEN_CHANNEL l:1 c:2 si:2 ei:2 ti:2 tstext:2
+          ( SCIENTIFIC_NUMBER int:2..2 text:2 tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:2 chnl:DEFAULT_TOKEN_CHANNEL l:1 c:2 si:2 ei:2 ti:2
   ) ) ) ) ) 
-  ( EOF int:0..0 text: tt:-1 chnl:DEFAULT_TOKEN_CHANNEL text: chnl:DEFAULT_TOKEN_CHANNEL l:1 c:3 si:3 ei:2 ti:3 tstext:
+  ( EOF int:3..3 text:<EOF> tt:-1 chnl:DEFAULT_TOKEN_CHANNEL text:<EOF> chnl:DEFAULT_TOKEN_CHANNEL l:1 c:3 si:3 ei:2 ti:3
 ) ) 
 
 

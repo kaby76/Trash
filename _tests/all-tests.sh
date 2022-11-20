@@ -5,7 +5,7 @@
 export TERM=xterm-mono
 export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
-tests=`find "$where" -name test.sh | grep -v Generated | sort`
+tests=`find "$where" -name test.sh | grep -v Generated\* | sort`
 echo Tests in Trash: $tests
 failed=()
 for i in $tests

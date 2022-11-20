@@ -2,12 +2,14 @@
 export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
 cd "$where"
-rm -rf Generated/
+rm -rf Generated-CSharp/
 trgen
-dotnet restore Generated/Test.csproj
-dotnet build Generated/Test.csproj
-trparse -i "1+2" | trst > output
-rm -rf Generated/
+dotnet restore Generated-CSharp/Test.csproj
+dotnet build Generated-CSharp/Test.csproj
+cd Generated-CSharp
+trparse -i "1+2" | trst > ../output
+cd ..
+rm -rf Generated-CSharp/
 dos2unix output
 diff output Gold/
 if [ "$?" != "0" ]

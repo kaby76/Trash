@@ -12,14 +12,16 @@ where=`dirname -- "$0"`
 cd "$where"
 where=`pwd`
 cd "$where"
-rm -rf Generated
+rm -rf Generated-CSharp
 
 # Test.
 trgen
-dotnet restore Generated/Test.csproj
-dotnet build Generated/Test.csproj
-trfirst 3 > output
-rm -rf Generated/
+cd Generated-CSharp
+dotnet restore Test.csproj
+dotnet build Test.csproj
+trfirst 3 > ../output
+cd ..
+rm -rf Generated-CSharp
 dos2unix output
 diff output Gold/
 if [ "$?" != "0" ]

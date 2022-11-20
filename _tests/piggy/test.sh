@@ -13,15 +13,15 @@ cd "$where"
 where=`pwd`
 cd antlr4
 pwd
-rm -rf Generated
+rm -rf Generated-CSharp
 trgen
-cd Generated
+cd Generated-CSharp
 dotnet build
 cd "$where"
 rm -rf Generated
 mkdir Generated
 echo trparse -p "antlr4/Generated" "Repeat.g4"
-trparse -p "antlr4/Generated" "Repeat.g4" > o1.pt
+trparse -p "antlr4/Generated-CSharp" "Repeat.g4" > o1.pt
 echo trpiggy "repeat.pig"
 cat o1.pt | trpiggy "repeat.pig" > o2.pt
 echo trtext

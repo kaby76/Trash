@@ -58,21 +58,34 @@
         {
             get
             {
-                if (_source_interval == null) this.ComputeSourceInterval();
+                if (_source_interval == null) this.ComputeSourceInterval(0);
                 return new Interval(this._source_interval.a, this._source_interval.b);
             }
         }
 
         public void Reset() { this._source_interval = null; }
 
-        public void ComputeSourceInterval()
+        public void ComputeSourceInterval(int start)
         {
             if (_source_interval != null) return;
-            for (int i = 0; i < this.children.Count; ++i)
+            var mi = new MyInterval();
+            if (this.children == null || this.children.Count == 0)
             {
-                var child = this.children[i] as IMyParseTree;
-                child.ComputeSourceInterval();
+                mi.a = start;
+                mi.b = start - 2;
             }
+            else
+            {
+                for (int i = 0; i < this.children.Count; ++i)
+                {
+                    var child = this.children[i] as IMyParseTree;
+                    child.ComputeSourceInterval(start);
+                    start = child.SourceInterval.b;
+                    if (i == 0) mi.a = child.SourceInterval.a;
+                    mi.b = start;
+                }
+            }
+            _source_interval = mi;
         }
 
         public MyCharStream InputStream { get; set; }
