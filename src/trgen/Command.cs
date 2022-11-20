@@ -575,7 +575,7 @@
             per_grammar.package = _config.target == "Go" ? "parser" : "";
             var all_grammars_pattern = "^(?!.*(" +
                  (per_grammar.ignore_string != null ? per_grammar.ignore_string + "|" : "")
-                 + "/ignore/|/Generated/|/target/|/examples/|/.git/|/.gitignore/|/.ignore/|"
+                 + "/ignore/|/Generated/|/Generated-[^/]*/|/target/|/examples/|/.git/|/.gitignore/|/.ignore/|"
                  + Command.AllButTargetName(_config.target)
                  + "/)).+[.]g4"
                  + "$";
@@ -1003,7 +1003,7 @@
             per_grammar.all_target_files = new List<string>();
             var all_source_pattern = "^(?!.*(" +
                  (per_grammar.ignore_string != null ? per_grammar.ignore_string + "|" : "")
-                 + "ignore/|Generated/|target/|examples/|.git/|.gitignore|"
+                 + "ignore/|Generated/|Generated-[^/]*/|target/|examples/|.git/|.gitignore|"
                  + Command.AllButTargetName(_config.target)
                  + "/)).+"
                  + "$";

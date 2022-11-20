@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-s daedalusFile",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issue-3934\\cs"
+      "commandLineArgs": "-t Go",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3875\\asm8080"
     }
   }
 }

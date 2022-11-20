@@ -23,7 +23,11 @@ namespace Trash
         public string target
         {
             get { return _backing_target; }
-            set { _backing_target = value; }
+            set
+            {
+                _backing_target = value;
+                this.output_directory = "Generated-" + value + "/";
+            }
         }
 
         [Option("antlr-tool-path", Required = false)]
@@ -62,23 +66,15 @@ namespace Trash
         public Config()
         {
             // Get default from OS, or just default.
-            this.line_translation = Command.GetLineTranslationType();
-            this.env_type = Command.GetEnvType();
-            this.path_sep = Command.GetPathSep();
-            this.antlr_tool_path = Command.GetAntlrToolPath();
-            this.target = "CSharp";
-            this.tool_grammar_files_pattern = "^(?!.*(/Generated|/target|/examples)).+g4$";
-            this.output_directory = "Generated/";
-            this.flatten = false;
-            this.watchdog_timeout = 60;
-            if (target == "Go")
-            {
-                name_space = "parser";
-            }
-            else
-            {
-                name_space = null;
-            }
+            line_translation = Command.GetLineTranslationType();
+            env_type = Command.GetEnvType();
+            path_sep = Command.GetPathSep();
+            antlr_tool_path = Command.GetAntlrToolPath();
+            target = "CSharp";
+            tool_grammar_files_pattern = "^(?!.*(/Generated|/Generated-[^/]|/target|/examples)).+g4$";
+            output_directory = "Generated-" + target + "/";
+            flatten = false;
+            watchdog_timeout = 60;
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + SetupFfn))
             {
@@ -93,6 +89,15 @@ namespace Trash
                     }
                 }
             }
+            if (target == "Go")
+            {
+                name_space = "parser";
+            }
+            else
+            {
+                name_space = null;
+            }
+            output_directory = "Generated-" + target + "/";
             string cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             this.root_directory = cd;
             if (this.maven == null) maven = File.Exists(cd + Path.DirectorySeparatorChar + @"pom.xml");
