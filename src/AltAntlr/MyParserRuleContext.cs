@@ -3,12 +3,12 @@
     using Antlr4.Runtime;
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
+    using System;
 
-    public class MyParserRuleContext : ParserRuleContext
+    public class MyParserRuleContext : ParserRuleContext, IMyParseTree
     {
         public MyParserRuleContext(ParserRuleContext parent, int invokingStateNumber) : base(parent, invokingStateNumber)
         {
-            //_sourceInterval = new Interval(0, 0);
         }
 
         public int _ruleIndex;
@@ -53,17 +53,25 @@
             return null;
         }
 
+        MyInterval _source_interval = null;
         public override Interval SourceInterval
         {
             get
             {
-                // This is always just a computed value.
-                var lm = LeftMost(this);
-                int lmi = lm is AltAntlr.MyParserRuleContext ? -1 : (lm as AltAntlr.MyTerminalNodeImpl).Payload.TokenIndex;
-                var rm = RightMost(this);
-                int rmi = rm is AltAntlr.MyParserRuleContext ? -2 : (rm as AltAntlr.MyTerminalNodeImpl).Payload.TokenIndex;
-                return new Interval(lmi, rmi);
-                //return _sourceInterval;
+                if (_source_interval == null) this.ComputeSourceInterval();
+                return new Interval(this._source_interval.a, this._source_interval.b);
+            }
+        }
+
+        public void Reset() { this._source_interval = null; }
+
+        public void ComputeSourceInterval()
+        {
+            if (_source_interval != null) return;
+            for (int i = 0; i < this.children.Count; ++i)
+            {
+                var child = this.children[i] as IMyParseTree;
+                child.ComputeSourceInterval();
             }
         }
 

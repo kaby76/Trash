@@ -64,6 +64,7 @@
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
                 var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+                if (config.Verbose) System.Console.WriteLine(LanguageServer.TreeOutput.OutputTree(trees.First(), lexer, parser, tokstream).ToString());
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 IParseTree[] root = trees.ToArray();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();

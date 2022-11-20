@@ -1,5 +1,6 @@
 ﻿namespace LanguageServer
 {
+    using AltAntlr;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using System;
@@ -593,13 +594,23 @@
             var old_buffer = charstream.Text;
             var leaves_of_node = TreeEdits.Frontier(node).ToList();
             var new_text = "";
-            foreach (var l in leaves_of_node)
+            // Get first and last char index of tokens in "node" tree.
+            // Copy that text.
+            if (leaves_of_node.First().Payload.StartIndex != 0)
             {
-                var ll = l as AltAntlr.MyTerminalNodeImpl;
-                var t = ll.GetText();
-                // Assume space between each leaf.
-                if (new_text != "") new_text += " ";
-                new_text += t;
+                int a = leaves_of_node.First().Payload.StartIndex;
+                int b = leaves_of_node.Last().Payload.StopIndex;
+                new_text = charstream.Text.Substring(a, b - a + 1);
+            } else
+            {
+                foreach (var l in leaves_of_node)
+                {
+                    var ll = l as AltAntlr.MyTerminalNodeImpl;
+                    var t = ll.GetText();
+                    // Assume space between each leaf.
+                    if (new_text != "") new_text += " ";
+                    new_text += t;
+                }
             }
             // Modify the char stream, token stream, the tree.
             var leaves_of_to = TreeEdits.Frontier(to).ToList();
@@ -784,24 +795,24 @@
         private static void Adjust(IParseTree tree)
         {
             Reset(tree);
-            var leaves = TreeEdits.Frontier(tree).ToList();
-            Stack<IParseTree> stack = new Stack<IParseTree>();
-            foreach (var leaf in leaves) stack.Push(leaf);
-            while (stack.Count > 0)
-            {
-                var leaf = stack.Pop();
-                if (leaf is AltAntlr.MyTerminalNodeImpl l)
-                {
-                    var t = l.Payload as AltAntlr.MyToken;
-                    l._sourceInterval = new Antlr4.Runtime.Misc.Interval(t.TokenIndex, t.TokenIndex);
-                }
-                else if (leaf is AltAntlr.MyParserRuleContext p)
-                {
-                    var s = p.Start;
-                    var e = p.Stop;
+            //var leaves = TreeEdits.Frontier(tree).ToList();
+            //Stack<IParseTree> stack = new Stack<IParseTree>();
+            //foreach (var leaf in leaves) stack.Push(leaf);
+            //while (stack.Count > 0)
+            //{
+            //    var leaf = stack.Pop();
+            //    if (leaf is AltAntlr.MyTerminalNodeImpl l)
+            //    {
+            //        var t = l.Payload as AltAntlr.MyToken;
+            //        l._sourceInterval = new Antlr4.Runtime.Misc.Interval(t.TokenIndex, t.TokenIndex);
+            //    }
+            //    else if (leaf is AltAntlr.MyParserRuleContext p)
+            //    {
+            //        var s = p.Start;
+            //        var e = p.Stop;
 
-                }
-            }
+            //    }
+            //}
         }
 
         public static TerminalNodeImpl LeftMostToken(IParseTree tree)
@@ -1005,16 +1016,17 @@
             }
             else return null;
         }
-       
-        public static IParseTree CopyTreeRecursive(IParseTree original, IParseTree parent = null)
+
+        public static IParseTree CopyTreeRecursiveAux(IParseTree original, IParseTree parent, MyCharStream ncs)
         {
             if (original == null) return null;
-            else if (original is AltAntlr.MyTerminalNodeImpl)
+            else if (original is AltAntlr.MyTerminalNodeImpl a)
             {
-                var o = original as AltAntlr.MyTerminalNodeImpl;
+                var o = a;
                 var t = o.Symbol as AltAntlr.MyToken;
-                var tt = new AltAntlr.MyToken() { Type = t.Type, Text = t.Text, Channel = t.Channel };
+                var tt = new AltAntlr.MyToken() { Type = t.Type, Text = t.Text, Channel = t.Channel, StartIndex = t.StartIndex, StopIndex = t.StopIndex, InputStream = ncs };
                 var oo = new AltAntlr.MyTerminalNodeImpl(tt);
+                oo.InputStream = ncs;
                 if (parent != null)
                 {
                     var parent_rule_context = (ParserRuleContext)parent;
@@ -1023,25 +1035,46 @@
                 }
                 return oo;
             }
-            else if (original is ParserRuleContext)
+            else if (original is MyParserRuleContext b)
             {
-                var type = original.GetType();
-                var new_node = (ParserRuleContext)Activator.CreateInstance(type, null, 0);
-                if (parent != null)
+                var p = parent as MyParserRuleContext;
+                var new_node = new MyParserRuleContext(p, 0);
+                new_node._ruleIndex = b.RuleIndex;
+                if (p != null)
                 {
-                    var parent_rule_context = (ParserRuleContext)parent;
+                    var parent_rule_context = p;
                     new_node.Parent = parent_rule_context;
                     parent_rule_context.AddChild(new_node);
                 }
+                new_node.Start = b.Start;
+                new_node.Stop = b.Stop;
                 int child_count = original.ChildCount;
                 for (int i = 0; i < child_count; ++i)
                 {
                     var child = original.GetChild(i);
-                    CopyTreeRecursive(child, new_node);
+                    CopyTreeRecursiveAux(child, new_node, ncs);
                 }
                 return new_node;
             }
             else return null;
+        }
+
+        public static IParseTree CopyTreeRecursive(IParseTree original, IParseTree parent = null)
+        {
+            if (original == null) return null;
+            // Make a copy of the token stream and char streams and attach them to this new tree.
+            var ncs = new MyCharStream();
+            if (original is MyParserRuleContext o_)
+            {
+                var t = TreeEdits.LeftMostToken(o_);
+                var ti = t.Payload.TokenSource;
+                var ts = o_.TokenStream;
+                var cs = ts._charstream;
+                ncs.Text = String.Copy(cs.Text);
+            }
+            var copy = CopyTreeRecursiveAux(original, parent, ncs);
+
+            return copy;
         }
 
         public static void Reconstruct(StringBuilder sb, IEnumerable<IParseTree> trees, Dictionary<TerminalNodeImpl, string> text_to_left)

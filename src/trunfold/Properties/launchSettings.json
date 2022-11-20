@@ -2,7 +2,7 @@
   "profiles": {
     "trunfold": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//parserRuleSpec[RULE_REF/text()='s']//RULE_REF[text()='e']\" ",
+      "commandLineArgs": "-v -f o.pt \"//parserRuleSpec[RULE_REF/text()='s']//RULE_REF[text()='e']\" ",
       "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trunfold"
     }
   }

@@ -17,6 +17,7 @@
         protected internal IToken lastToken;
         protected internal IToken lastTokenBufferStart;
         protected internal int currentTokenIndex = 0;
+        public MyCharStream _charstream;
 
         public class FuckYouAntlr : ITokenSource
         {

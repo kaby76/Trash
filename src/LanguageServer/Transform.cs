@@ -4713,7 +4713,7 @@ namespace LanguageServer
             List<TerminalNodeImpl> replace_these,
             List<IParseTree> all_sources,
             Parser parser,
-            Lexer Lexer,
+            Lexer lexer,
             AltAntlr.MyTokenStream tokstream)
         {
             // Verify antlr4 grammar.
@@ -4759,7 +4759,11 @@ namespace LanguageServer
                     if (defs.Count > 1 || defs.Count == 0)
                         continue;
                     // Copy def RHS.
+                    System.Console.WriteLine(TreeOutput.OutputTree(defs.First(), lexer, parser,
+                        null).ToString());
                     var new_node = TreeEdits.CopyTreeRecursive(defs.First());
+                    System.Console.WriteLine(TreeOutput.OutputTree(new_node, lexer, parser,
+                        null).ToString());
                     // Replace refs with defs.
                     TreeEdits.ReplaceInStream(tokstream, @ref, new_node);
                 }

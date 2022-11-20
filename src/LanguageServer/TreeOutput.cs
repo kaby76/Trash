@@ -14,7 +14,7 @@ namespace LanguageServer
         private static int changed = 0;
         private static bool first_time = true;
 
-        public static StringBuilder OutputTree(IParseTree tree, Lexer lexer, Parser parser, CommonTokenStream stream)
+        public static StringBuilder OutputTree(IParseTree tree, Lexer lexer, Parser parser, ITokenStream stream)
         {
             changed = 0;
             first_time = true;
@@ -23,7 +23,7 @@ namespace LanguageServer
             return sb;
         }
 
-        private static void ParenthesizedAST(IParseTree tree, StringBuilder sb, Lexer lexer, Parser parser, CommonTokenStream stream, int level = 0)
+        private static void ParenthesizedAST(IParseTree tree, StringBuilder sb, Lexer lexer, Parser parser, ITokenStream stream, int level = 0)
         {
             // Antlr always names a non-terminal with first letter lowercase,
             // but renames it when creating the type in C#. So, remove the prefix,
@@ -33,8 +33,8 @@ namespace LanguageServer
             {
                 TerminalNodeImpl leaf = tree as TerminalNodeImpl;
                 IList<IToken> inter = null;
-                if (leaf.Symbol.TokenIndex >= 0)
-                    inter = stream?.GetHiddenTokensToLeft(leaf.Symbol.TokenIndex);
+                //if (leaf.Symbol.TokenIndex >= 0)
+                //    inter = stream?.GetHiddenTokensToLeft(leaf.Symbol.TokenIndex);
                 if (inter != null)
                     foreach (var t in inter)
                     {
@@ -49,13 +49,13 @@ namespace LanguageServer
                                 + " ei:" + t.StopIndex
                                 + " ti:" + t.TokenIndex
                                 );
-                        if (lexer is AltAntlr.MyLexer mylexer)
-                        {
-                            var ss = mylexer._inputstream;
-                            var s = ss as AltAntlr.MyCharStream;
-                            var st = s.Text.Substring(t.StartIndex, t.StopIndex - t.StartIndex + 1);
-                            sb.Append(" tstext:" + PerformEscapes(st));
-                        }
+                        //if (lexer is AltAntlr.MyLexer mylexer)
+                        //{
+                        //    var ss = mylexer._inputstream;
+                        //    var s = ss as AltAntlr.MyCharStream;
+                        //    var st = s.Text.Substring(t.StartIndex, t.StopIndex - t.StartIndex + 1);
+                        //    sb.Append(" tstext:" + PerformEscapes(st));
+                        //}
                         sb.AppendLine();
                     }
                 {
@@ -77,13 +77,13 @@ namespace LanguageServer
                         + " ei:" + t.StopIndex
                         + " ti:" + t.TokenIndex
                         );
-                    if (lexer is AltAntlr.MyLexer mylexer)
-                    {
-                        var ss = mylexer._inputstream;
-                        var s = ss as AltAntlr.MyCharStream;
-                        var st = s.Text.Substring(t.StartIndex, t.StopIndex - t.StartIndex + 1);
-                        sb.Append(" tstext:" + PerformEscapes(st));
-                    }
+                    //if (lexer is AltAntlr.MyLexer mylexer)
+                    //{
+                    //    var ss = mylexer._inputstream;
+                    //    var s = ss as AltAntlr.MyCharStream;
+                    //    var st = s.Text.Substring(t.StartIndex, t.StopIndex - t.StartIndex + 1);
+                    //    sb.Append(" tstext:" + PerformEscapes(st));
+                    //}
                     sb.AppendLine();
                 }
             }

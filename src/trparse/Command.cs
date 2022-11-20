@@ -1,4 +1,5 @@
-﻿using Antlr4.Runtime.Tree;
+﻿using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using AntlrJson;
 using LanguageServer;
 using System;
@@ -105,6 +106,7 @@ namespace Trash
                     Docs.Class1.ParseDoc(doc, 10, config.Type);
                     var pr = ParsingResultsFactory.Create(doc);
                     IParseTree pt = pr.ParseTree;
+                    if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(pt, pr.Lexer, pr.Parser, pr.TokStream as CommonTokenStream));
                     var rel_path = Path.GetRelativePath(Environment.CurrentDirectory, doc.FullPath);
                     var tuple = new ParsingResultSet()
                     {

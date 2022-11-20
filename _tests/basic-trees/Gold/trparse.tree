@@ -1,0 +1,117 @@
+( grammarSpec int:0..49
+  ( grammarDecl int:0..3
+    ( grammarType int:0..0
+      ( GRAMMAR int:0..0 text:grammar tt:19 chnl:DEFAULT_TOKEN_CHANNEL text:grammar chnl:DEFAULT_TOKEN_CHANNEL l:1 c:0 si:0 ei:6 ti:0
+    ) ) 
+    ( identifier int:2..2
+      ( TOKEN_REF int:2..2 text:Expresion tt:1 chnl:DEFAULT_TOKEN_CHANNEL text:Expresion chnl:DEFAULT_TOKEN_CHANNEL l:1 c:8 si:8 ei:16 ti:2
+    ) ) 
+    ( SEMI int:3..3 text:; tt:32 chnl:DEFAULT_TOKEN_CHANNEL text:; chnl:DEFAULT_TOKEN_CHANNEL l:1 c:17 si:17 ei:17 ti:3
+  ) ) 
+  ( rules int:5..49
+    ( ruleSpec int:5..11
+      ( parserRuleSpec int:5..11
+        ( RULE_REF int:5..5 text:s tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:s chnl:DEFAULT_TOKEN_CHANNEL l:2 c:0 si:19 ei:19 ti:5
+        ) 
+        ( COLON int:7..7 text:: tt:29 chnl:DEFAULT_TOKEN_CHANNEL text:: chnl:DEFAULT_TOKEN_CHANNEL l:2 c:2 si:21 ei:21 ti:7
+        ) 
+        ( ruleBlock int:9..9
+          ( ruleAltList int:9..9
+            ( labeledAlt int:9..9
+              ( alternative int:9..9
+                ( element int:9..9
+                  ( atom int:9..9
+                    ( ruleref int:9..9
+                      ( RULE_REF int:9..9 text:e tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:e chnl:DEFAULT_TOKEN_CHANNEL l:2 c:4 si:23 ei:23 ti:9
+        ) ) ) ) ) ) ) ) 
+        ( SEMI int:11..11 text:; tt:32 chnl:DEFAULT_TOKEN_CHANNEL text:; chnl:DEFAULT_TOKEN_CHANNEL l:2 c:6 si:25 ei:25 ti:11
+        ) 
+        ( exceptionGroup int:13..11
+    ) ) ) 
+    ( ruleSpec int:13..27
+      ( parserRuleSpec int:13..27
+        ( RULE_REF int:13..13 text:e tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:e chnl:DEFAULT_TOKEN_CHANNEL l:3 c:0 si:27 ei:27 ti:13
+        ) 
+        ( COLON int:15..15 text:: tt:29 chnl:DEFAULT_TOKEN_CHANNEL text:: chnl:DEFAULT_TOKEN_CHANNEL l:3 c:2 si:29 ei:29 ti:15
+        ) 
+        ( ruleBlock int:17..25
+          ( ruleAltList int:17..25
+            ( labeledAlt int:17..21
+              ( alternative int:17..21
+                ( element int:17..17
+                  ( atom int:17..17
+                    ( ruleref int:17..17
+                      ( RULE_REF int:17..17 text:e tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:e chnl:DEFAULT_TOKEN_CHANNEL l:3 c:4 si:31 ei:31 ti:17
+                ) ) ) ) 
+                ( element int:19..19
+                  ( atom int:19..19
+                    ( terminal int:19..19
+                      ( STRING_LITERAL int:19..19 text:'*' tt:8 chnl:DEFAULT_TOKEN_CHANNEL text:'*' chnl:DEFAULT_TOKEN_CHANNEL l:3 c:6 si:33 ei:35 ti:19
+                ) ) ) ) 
+                ( element int:21..21
+                  ( atom int:21..21
+                    ( ruleref int:21..21
+                      ( RULE_REF int:21..21 text:e tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:e chnl:DEFAULT_TOKEN_CHANNEL l:3 c:10 si:37 ei:37 ti:21
+            ) ) ) ) ) ) 
+            ( OR int:23..23 text:| tt:45 chnl:DEFAULT_TOKEN_CHANNEL text:| chnl:DEFAULT_TOKEN_CHANNEL l:4 c:4 si:43 ei:43 ti:23
+            ) 
+            ( labeledAlt int:25..25
+              ( alternative int:25..25
+                ( element int:25..25
+                  ( atom int:25..25
+                    ( terminal int:25..25
+                      ( TOKEN_REF int:25..25 text:INT tt:1 chnl:DEFAULT_TOKEN_CHANNEL text:INT chnl:DEFAULT_TOKEN_CHANNEL l:4 c:6 si:45 ei:47 ti:25
+        ) ) ) ) ) ) ) ) 
+        ( SEMI int:27..27 text:; tt:32 chnl:DEFAULT_TOKEN_CHANNEL text:; chnl:DEFAULT_TOKEN_CHANNEL l:5 c:4 si:53 ei:53 ti:27
+        ) 
+        ( exceptionGroup int:29..27
+    ) ) ) 
+    ( ruleSpec int:29..36
+      ( lexerRuleSpec int:29..36
+        ( TOKEN_REF int:29..29 text:INT tt:1 chnl:DEFAULT_TOKEN_CHANNEL text:INT chnl:DEFAULT_TOKEN_CHANNEL l:6 c:0 si:55 ei:57 ti:29
+        ) 
+        ( COLON int:31..31 text:: tt:29 chnl:DEFAULT_TOKEN_CHANNEL text:: chnl:DEFAULT_TOKEN_CHANNEL l:6 c:4 si:59 ei:59 ti:31
+        ) 
+        ( lexerRuleBlock int:33..34
+          ( lexerAltList int:33..34
+            ( lexerAlt int:33..34
+              ( lexerElements int:33..34
+                ( lexerElement int:33..34
+                  ( lexerAtom int:33..33
+                    ( LEXER_CHAR_SET int:33..33 text:[0-9] tt:3 chnl:DEFAULT_TOKEN_CHANNEL text:[0-9] chnl:DEFAULT_TOKEN_CHANNEL l:6 c:6 si:61 ei:65 ti:33
+                  ) ) 
+                  ( ebnfSuffix int:34..34
+                    ( PLUS int:34..34 text:+ tt:44 chnl:DEFAULT_TOKEN_CHANNEL text:+ chnl:DEFAULT_TOKEN_CHANNEL l:6 c:11 si:66 ei:66 ti:34
+        ) ) ) ) ) ) ) 
+        ( SEMI int:36..36 text:; tt:32 chnl:DEFAULT_TOKEN_CHANNEL text:; chnl:DEFAULT_TOKEN_CHANNEL l:6 c:13 si:68 ei:68 ti:36
+    ) ) ) 
+    ( ruleSpec int:38..49
+      ( lexerRuleSpec int:38..49
+        ( TOKEN_REF int:38..38 text:WS tt:1 chnl:DEFAULT_TOKEN_CHANNEL text:WS chnl:DEFAULT_TOKEN_CHANNEL l:7 c:0 si:70 ei:71 ti:38
+        ) 
+        ( COLON int:40..40 text:: tt:29 chnl:DEFAULT_TOKEN_CHANNEL text:: chnl:DEFAULT_TOKEN_CHANNEL l:7 c:3 si:73 ei:73 ti:40
+        ) 
+        ( lexerRuleBlock int:42..47
+          ( lexerAltList int:42..47
+            ( lexerAlt int:42..47
+              ( lexerElements int:42..43
+                ( lexerElement int:42..43
+                  ( lexerAtom int:42..42
+                    ( LEXER_CHAR_SET int:42..42 text:[ \\t\\n] tt:3 chnl:DEFAULT_TOKEN_CHANNEL text:[ \\t\\n] chnl:DEFAULT_TOKEN_CHANNEL l:7 c:5 si:75 ei:81 ti:42
+                  ) ) 
+                  ( ebnfSuffix int:43..43
+                    ( PLUS int:43..43 text:+ tt:44 chnl:DEFAULT_TOKEN_CHANNEL text:+ chnl:DEFAULT_TOKEN_CHANNEL l:7 c:12 si:82 ei:82 ti:43
+              ) ) ) ) 
+              ( lexerCommands int:45..47
+                ( RARROW int:45..45 text:-> tt:37 chnl:DEFAULT_TOKEN_CHANNEL text:-> chnl:DEFAULT_TOKEN_CHANNEL l:7 c:14 si:84 ei:85 ti:45
+                ) 
+                ( lexerCommand int:47..47
+                  ( lexerCommandName int:47..47
+                    ( identifier int:47..47
+                      ( RULE_REF int:47..47 text:skip tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:skip chnl:DEFAULT_TOKEN_CHANNEL l:7 c:17 si:87 ei:90 ti:47
+        ) ) ) ) ) ) ) ) 
+        ( SEMI int:49..49 text:; tt:32 chnl:DEFAULT_TOKEN_CHANNEL text:; chnl:DEFAULT_TOKEN_CHANNEL l:7 c:22 si:92 ei:92 ti:49
+  ) ) ) ) 
+  ( EOF int:51..51 text:<EOF> tt:-1 chnl:DEFAULT_TOKEN_CHANNEL text:<EOF> chnl:DEFAULT_TOKEN_CHANNEL l:8 c:0 si:94 ei:93 ti:51
+) ) 
+

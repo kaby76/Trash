@@ -10,10 +10,17 @@
         {
         }
 
-        public Interval _sourceInterval;
+        public void Reset() { }
+
+        public void ComputeSourceInterval() { }
+
         public override Interval SourceInterval
         {
-            get { return _sourceInterval; }
+            get
+            {
+                var t = this.Payload.TokenIndex;
+                return new Interval(t, t);
+            }
         }
 
         /// <summary>

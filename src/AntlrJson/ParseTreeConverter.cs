@@ -221,13 +221,15 @@
                 fake_char_stream.SourceName = file_name;
                 fake_char_stream.Text = text;
                 out_token_stream._tokenSource = lexer;
+                out_token_stream._charstream = fake_char_stream;
                 lexer.TokenStream = out_token_stream;
                 lexer._inputstream = fake_char_stream;
                 foreach (var t in list_of_tokens)
                 {
                     t.TokenSource = lexer;
                     t.InputStream = lexer.InputStream;
-                    t.Text = out_token_stream.Text.Substring(t.StartIndex, t.StopIndex - t.StartIndex + 1);
+                    if (t.Type == -1) t.Text = "<EOF>";
+                    else t.Text = out_token_stream.Text.Substring(t.StartIndex, t.StopIndex - t.StartIndex + 1);
                     out_token_stream.Add(t);
                 }
                 parser._vocabulary = vocab;
