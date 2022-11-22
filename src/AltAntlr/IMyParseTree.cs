@@ -4,7 +4,7 @@ namespace AltAntlr
 {
     interface IMyParseTree
     {
-        void ComputeSourceInterval(int start);
+        void ComputeSourceInterval(ref int start);
         void Reset();
         Interval SourceInterval { get; }
     }

@@ -12,7 +12,25 @@
 
         public void Reset() { }
 
-        public void ComputeSourceInterval(int start) { }
+        public void ComputeSourceInterval(ref int start)
+        {
+            start = this.Payload.TokenIndex + 1;
+            if (this.TokenStream is MyTokenStream ts)
+            {
+                for (; ; )
+                {
+                    if (start >= ts._tokens.Count) break;
+                    var tok = ts.Get(start);
+                    if (tok == null) break;
+                    if (tok.Type == TokenConstants.EOF) break;
+                    if (tok.Channel == TokenConstants.DefaultChannel)
+                    {
+                        break;
+                    }
+                    start++;
+                }
+            }
+        }
 
         public override Interval SourceInterval
         {

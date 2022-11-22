@@ -9,8 +9,8 @@
     ( SEMI int:3..3 text:; tt:32 chnl:DEFAULT_TOKEN_CHANNEL text:; chnl:DEFAULT_TOKEN_CHANNEL l:1 c:18 si:18 ei:18 ti:3
   ) ) 
   ( rules int:5..75
-    ( ruleSpec int:5..9
-      ( parserRuleSpec int:5..9
+    ( ruleSpec int:5..11
+      ( parserRuleSpec int:5..11
         ( RULE_REF int:5..5 text:s tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:s chnl:DEFAULT_TOKEN_CHANNEL l:2 c:0 si:20 ei:20 ti:5
         ) 
         ( COLON int:7..7 text:: tt:29 chnl:DEFAULT_TOKEN_CHANNEL text:: chnl:DEFAULT_TOKEN_CHANNEL l:2 c:2 si:22 ei:22 ti:7
@@ -26,10 +26,10 @@
         ) ) ) ) ) ) ) ) 
         ( SEMI int:11..11 text:; tt:32 chnl:DEFAULT_TOKEN_CHANNEL text:; chnl:DEFAULT_TOKEN_CHANNEL l:2 c:6 si:26 ei:26 ti:11
         ) 
-        ( exceptionGroup int:11..9
+        ( exceptionGroup int:13..11
     ) ) ) 
-    ( ruleSpec int:13..51
-      ( parserRuleSpec int:13..51
+    ( ruleSpec int:13..53
+      ( parserRuleSpec int:13..53
         ( RULE_REF int:13..13 text:e tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:e chnl:DEFAULT_TOKEN_CHANNEL l:3 c:0 si:28 ei:28 ti:13
         ) 
         ( COLON int:15..15 text:: tt:29 chnl:DEFAULT_TOKEN_CHANNEL text:: chnl:DEFAULT_TOKEN_CHANNEL l:3 c:2 si:30 ei:30 ti:15
@@ -148,7 +148,7 @@
         ) ) ) ) ) ) ) ) 
         ( SEMI int:53..53 text:; tt:32 chnl:DEFAULT_TOKEN_CHANNEL text:; chnl:DEFAULT_TOKEN_CHANNEL l:3 c:54 si:82 ei:82 ti:53
         ) 
-        ( exceptionGroup int:53..51
+        ( exceptionGroup int:55..53
     ) ) ) 
     ( ruleSpec int:55..62
       ( lexerRuleSpec int:55..62

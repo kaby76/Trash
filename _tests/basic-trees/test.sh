@@ -21,8 +21,8 @@ echo "$where"
 # Test.
 rm -rf Generated
 mkdir Generated
-trparse -e -v Expression.g4 > Generated/trparse.tree 2>&1
-trparse Expression.g4 | trdelete -v '//xxxx' > Generated/trdelete.tree
+trparse -e -v Expression.g4 -t antlr4 > Generated/trparse.tree 2>&1
+trparse Expression.g4 -t antlr4 | trdelete -v '//xxxx' > Generated/trdelete.tree
 # remove tail from trdelete.tree.
 wc=`cat Generated/trparse.tree | wc -l`
 echo $wc

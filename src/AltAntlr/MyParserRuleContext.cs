@@ -53,21 +53,28 @@
             return null;
         }
 
-        MyInterval _source_interval = null;
+        MyInterval _source_interval { get; set; }
         public override Interval SourceInterval
         {
             get
             {
-                if (_source_interval == null) this.ComputeSourceInterval(0);
+                if (_source_interval == null)
+                {
+                    var start = (this.TokenStream as MyTokenStream)._tokens.Count > 0 ? 0 : -1;
+                    this.ComputeSourceInterval(ref start);
+                }
                 return new Interval(this._source_interval.a, this._source_interval.b);
             }
         }
 
         public void Reset() { this._source_interval = null; }
 
-        public void ComputeSourceInterval(int start)
+        public void ComputeSourceInterval(ref int start)
         {
-            if (_source_interval != null) return;
+            if (_source_interval != null)
+            {
+                return;
+            }
             var mi = new MyInterval();
             if (this.children == null || this.children.Count == 0)
             {
@@ -79,10 +86,26 @@
                 for (int i = 0; i < this.children.Count; ++i)
                 {
                     var child = this.children[i] as IMyParseTree;
-                    child.ComputeSourceInterval(start);
-                    start = child.SourceInterval.b;
-                    if (i == 0) mi.a = child.SourceInterval.a;
-                    mi.b = start;
+                    child.ComputeSourceInterval(ref start);
+                    if (i == 0)
+                    {
+                        if (child is MyTerminalNodeImpl tt)
+                        {
+                            mi.a = child.SourceInterval.a;
+                        }
+                        else if (child is MyParserRuleContext pp)
+                        {
+                            mi.a = pp._source_interval.a;
+                        }
+                    }
+                    if (child is MyTerminalNodeImpl tt2)
+                    {
+                        mi.b = child.SourceInterval.b;
+                    }
+                    else if (child is MyParserRuleContext pp2)
+                    {
+                        mi.b = pp2._source_interval.b;
+                    }
                 }
             }
             _source_interval = mi;
