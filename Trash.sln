@@ -109,7 +109,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trpiggy", "src\trpiggy\trpi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Algorithms", "src\Algorithms\Algorithms.csproj", "{A231C02C-2985-4417-A568-97D817AB2F9C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EditableAntlrTrees", "src\AltAntlr\EditableAntlrTrees.csproj", "{669399E7-B8BC-4D26-9882-B9F9A772F0D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EditableAntlrTrees", "src\EditableAntlrTree\EditableAntlrTree.csproj", "{669399E7-B8BC-4D26-9882-B9F9A772F0D7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrTreeEditing", "src\AntlrTreeEditing\AntlrTreeEditing.csproj", "{08B1EDE6-1960-408A-97A5-628937F75A22}"
 EndProject
