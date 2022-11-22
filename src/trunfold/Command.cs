@@ -72,7 +72,7 @@
                 var atrees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
                 if (config.Verbose) System.Console.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees.First(), lexer, parser, tokstream).ToString());
 
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -84,10 +84,10 @@
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     var (text_before, other) = LanguageServer.TreeEdits.TextToLeftOfLeaves(tokstream, atrees[0]);
-                    LanguageServer.Transform.Unfold(nodes, atrees.ToList(), parser, lexer, (AltAntlr.MyTokenStream)tokstream);
+                    LanguageServer.Transform.Unfold(nodes, atrees.ToList(), parser, lexer, (EditableAntlrTree.MyTokenStream)tokstream);
                     var tuple = new ParsingResultSet()
                     {
-                        Text = ((AltAntlr.MyTokenStream)tokstream).Text,
+                        Text = ((EditableAntlrTree.MyTokenStream)tokstream).Text,
                         FileName = fn,
                         Stream = tokstream,
                         Nodes = atrees,

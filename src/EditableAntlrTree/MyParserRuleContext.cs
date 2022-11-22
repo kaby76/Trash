@@ -1,4 +1,4 @@
-﻿namespace AltAntlr
+﻿namespace EditableAntlrTree
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Misc;
@@ -53,7 +53,7 @@
             return null;
         }
 
-        MyInterval _source_interval { get; set; }
+        public MyInterval _source_interval { get; set; }
         public override Interval SourceInterval
         {
             get
@@ -67,7 +67,21 @@
             }
         }
 
-        public void Reset() { this._source_interval = null; }
+        public void Reset()
+        {
+            if (this.children == null)
+            {
+            }
+            else
+            {
+                for (int i = 0; i < this.children.Count; ++i)
+                {
+                    var child = this.children[i] as IMyParseTree;
+                    child.Reset();
+                }
+            }
+            _source_interval = null;
+        }
 
         public void ComputeSourceInterval(ref int start)
         {

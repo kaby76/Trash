@@ -1,8 +1,8 @@
 ﻿using Antlr4.Runtime.Misc;
 
-namespace AltAntlr
+namespace EditableAntlrTree
 {
-    interface IMyParseTree
+    public interface IMyParseTree
     {
         void ComputeSourceInterval(ref int start);
         void Reset();

@@ -4714,7 +4714,7 @@ namespace LanguageServer
             List<IParseTree> all_sources,
             Parser parser,
             Lexer lexer,
-            AltAntlr.MyTokenStream tokstream)
+            EditableAntlrTree.MyTokenStream tokstream)
         {
             // Verify antlr4 grammar.
             using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
@@ -7102,7 +7102,7 @@ and not(lexerRuleBlock//ebnfSuffix)
             return result;
         }
 
-        public static void Delabel(AltAntlr.MyParser parser, AltAntlr.MyLexer lexer, AltAntlr.MyTokenStream tokstream, List<AltAntlr.MyParserRuleContext> trees)
+        public static void Delabel(EditableAntlrTree.MyParser parser, EditableAntlrTree.MyLexer lexer, EditableAntlrTree.MyTokenStream tokstream, List<EditableAntlrTree.MyParserRuleContext> trees)
         {
             // Verify antlr4 grammar.
             using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =

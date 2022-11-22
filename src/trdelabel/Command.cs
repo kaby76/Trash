@@ -47,10 +47,10 @@
 			{
 				var text = parse_info.Text;
 				var fn = parse_info.FileName;
-				var atrees = parse_info.Nodes.Select(t => t as AltAntlr.MyParserRuleContext).ToList();
-				var parser = parse_info.Parser as AltAntlr.MyParser;
-				var lexer = parse_info.Lexer as AltAntlr.MyLexer;
-				var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+				var atrees = parse_info.Nodes.Select(t => t as EditableAntlrTree.MyParserRuleContext).ToList();
+				var parser = parse_info.Parser as EditableAntlrTree.MyParser;
+				var lexer = parse_info.Lexer as EditableAntlrTree.MyLexer;
+				var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
 				LanguageServer.Transform.Delabel(parser, lexer, tokstream, atrees);
 				var tuple = new ParsingResultSet()
 				{

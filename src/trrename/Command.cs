@@ -82,10 +82,10 @@
             {
                 var text = parse_info.Text;
                 var fn = parse_info.FileName;
-                var trees = parse_info.Nodes.Select(t => t as AltAntlr.MyParserRuleContext).ToList();
-                var parser = parse_info.Parser as AltAntlr.MyParser;
-                var lexer = parse_info.Lexer as AltAntlr.MyLexer;
-                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+                var trees = parse_info.Nodes.Select(t => t as EditableAntlrTree.MyParserRuleContext).ToList();
+                var parser = parse_info.Parser as EditableAntlrTree.MyParser;
+                var lexer = parse_info.Lexer as EditableAntlrTree.MyLexer;
+                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
                 var before_tokens = tokstream.GetTokens();
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
@@ -105,7 +105,7 @@
                         if (rename_map.TryGetValue(node.GetText(), out string new_name))
                         {
                             var new_node = TreeEdits.CopyTreeRecursive(node);
-                            (new_node.Payload as AltAntlr.MyToken).Text = new_name;
+                            (new_node.Payload as EditableAntlrTree.MyToken).Text = new_name;
                             TreeEdits.ReplaceInStream(tokstream, node, new_node);
                             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Replaced " + node.GetText());
                         }

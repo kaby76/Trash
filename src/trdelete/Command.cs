@@ -63,7 +63,7 @@
                 var trees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
 
                 if (config.Verbose) System.Console.WriteLine(LanguageServer.TreeOutput.OutputTree(trees.First(), lexer, parser, tokstream).ToString());
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -95,7 +95,7 @@
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);
         }
-        private string OutputTokens(AltAntlr.MyTokenStream tokstream, IParseTree tree)
+        private string OutputTokens(EditableAntlrTree.MyTokenStream tokstream, IParseTree tree)
         {
             var frontier = TreeEdits.Frontier(tree).ToList();
             var first = frontier.First();

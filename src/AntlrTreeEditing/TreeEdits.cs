@@ -1,6 +1,6 @@
 ﻿namespace LanguageServer
 {
-    using AltAntlr;
+    using EditableAntlrTree;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using System;
@@ -151,37 +151,37 @@
             foreach (var t in trees) Delete(t);
         }
 
-        public static void DeleteInStreams(AltAntlr.MyTokenStream tokstream, IParseTree node)
+        public static void DeleteInStreams(EditableAntlrTree.MyTokenStream tokstream, IParseTree node)
         {
-            AltAntlr.MyCharStream cs;
-            AltAntlr.MyToken t2;
+            EditableAntlrTree.MyCharStream cs;
+            EditableAntlrTree.MyToken t2;
             // Gather all information before modifying the token and char streams.
             if (node is TerminalNodeImpl)
             {
-                t2 = node.Payload as AltAntlr.MyToken;
-                cs = t2.InputStream as AltAntlr.MyCharStream;
+                t2 = node.Payload as EditableAntlrTree.MyToken;
+                cs = t2.InputStream as EditableAntlrTree.MyCharStream;
             }
             else
             {
                 var lmf = TreeEdits.LeftMostToken(node);
-                t2 = lmf.Payload as AltAntlr.MyToken;
-                cs = t2.InputStream as AltAntlr.MyCharStream;
+                t2 = lmf.Payload as EditableAntlrTree.MyToken;
+                cs = t2.InputStream as EditableAntlrTree.MyCharStream;
             }
             var root = node;
             for (; root.Parent != null; root = root.Parent) ;
-            AltAntlr.MyCharStream ts = null;
+            EditableAntlrTree.MyCharStream ts = null;
             var leaves = TreeEdits.Frontier(node).ToList();
-            var first = leaves.First() as AltAntlr.MyTerminalNodeImpl;
-            var first_token = first.Payload as AltAntlr.MyToken;
-            var last = leaves.Last() as AltAntlr.MyTerminalNodeImpl;
-            var last_token = last.Payload as AltAntlr.MyToken;
+            var first = leaves.First() as EditableAntlrTree.MyTerminalNodeImpl;
+            var first_token = first.Payload as EditableAntlrTree.MyToken;
+            var last = leaves.Last() as EditableAntlrTree.MyTerminalNodeImpl;
+            var last_token = last.Payload as EditableAntlrTree.MyToken;
             int sub = 0;
             int index = 0;
             var s = first_token.StartIndex; // Char stream index
             var e = last_token.StopIndex; // Char stream index
             sub = 1 + e - s;
             index = s;
-            ts = first_token.InputStream as AltAntlr.MyCharStream;
+            ts = first_token.InputStream as EditableAntlrTree.MyCharStream;
             var old_buffer = ts.Text;
             var new_buffer = old_buffer.Remove(index, sub);
             var start = last.Payload.TokenIndex + 1;
@@ -192,10 +192,10 @@
             {
                 if (i >= tokstream.Size) break;
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var line = tok.Line;
                 var col = tok.Column;
-                var i2 = AltAntlr.Util.GetIndex(line, col, old_buffer);
+                var i2 = EditableAntlrTree.Util.GetIndex(line, col, old_buffer);
                 old_indices[i] = i2;
                 if (tt.Type == -1) break;
                 ++i;
@@ -209,11 +209,11 @@
             {
                 if (i >= tokstream.Size) break;
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var new_index = old_indices[i] - sub;
                 if (new_index >= 0)
                 {
-                    var (line, col) = AltAntlr.Util.GetLineColumn(new_index, new_buffer);
+                    var (line, col) = EditableAntlrTree.Util.GetLineColumn(new_index, new_buffer);
                     tok.Line = line;
                     tok.Column = col;
                 }
@@ -231,7 +231,7 @@
 
             for (i = 0; i < tokstream.Size; ++i)
             {
-                var t = tokstream.Get(i) as AltAntlr.MyToken;
+                var t = tokstream.Get(i) as EditableAntlrTree.MyToken;
                 t.TokenIndex = i;
             }
 
@@ -310,32 +310,32 @@
             TerminalNodeImpl leaf = TreeEdits.Frontier(node).First();
             // 'node' is either a terminal node or an internal node.
             // Payload means different things for the two.
-            AltAntlr.MyToken token;
-            AltAntlr.MyCharStream charstream;
-            AltAntlr.MyLexer lexer;
-            AltAntlr.MyParser parser;
-            AltAntlr.MyTokenStream tokstream;
+            EditableAntlrTree.MyToken token;
+            EditableAntlrTree.MyCharStream charstream;
+            EditableAntlrTree.MyLexer lexer;
+            EditableAntlrTree.MyParser parser;
+            EditableAntlrTree.MyTokenStream tokstream;
             // Gather all information before modifying the token and char streams.
-            if (node is AltAntlr.MyTerminalNodeImpl myterminalnode)
+            if (node is EditableAntlrTree.MyTerminalNodeImpl myterminalnode)
             {
                 lexer = myterminalnode.Lexer;
                 parser = myterminalnode.Parser;
                 tokstream = myterminalnode.TokenStream;
-                token = myterminalnode.Payload as AltAntlr.MyToken;
+                token = myterminalnode.Payload as EditableAntlrTree.MyToken;
                 charstream = myterminalnode.InputStream;
             }
-            else if (node is AltAntlr.MyParserRuleContext myinternalnode)
+            else if (node is EditableAntlrTree.MyParserRuleContext myinternalnode)
             {
                 lexer = myinternalnode.Lexer;
                 parser = myinternalnode.Parser;
                 tokstream = myinternalnode.TokenStream;
-                var lmf = TreeEdits.LeftMostToken(node) as AltAntlr.MyTerminalNodeImpl;
-                token = lmf.Payload as AltAntlr.MyToken;
+                var lmf = TreeEdits.LeftMostToken(node) as EditableAntlrTree.MyTerminalNodeImpl;
+                token = lmf.Payload as EditableAntlrTree.MyToken;
                 charstream = myinternalnode.InputStream;
             }
-            else throw new Exception("Tree editing must be on AltAntlr tree.");
+            else throw new Exception("Tree editing must be on EditableAntlrTree tree.");
             var old_buffer = charstream.Text;
-            var index = AltAntlr.Util.GetIndex(token.Line, token.Column, old_buffer);
+            var index = EditableAntlrTree.Util.GetIndex(token.Line, token.Column, old_buffer);
             index += token.Text.Length;
             var add = arbitrary_string.Length;
             var new_buffer = old_buffer.Insert(index, arbitrary_string);
@@ -350,11 +350,11 @@
             {
                 if (i >= tokstream.Size) break;
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 tok.TokenIndex = i;
                 tok.StartIndex += add;
                 tok.StopIndex += add;
-                var (line, col) = AltAntlr.Util.GetLineColumn(tok.StartIndex, new_buffer);
+                var (line, col) = EditableAntlrTree.Util.GetLineColumn(tok.StartIndex, new_buffer);
                 tok.Line = line;
                 tok.Column = col;
                 if (tt.Type == -1) break;
@@ -465,35 +465,35 @@
 
         public static void InsertBeforeInStreams(IParseTree node, string str)
         {
-            AltAntlr.MyToken token;
-            AltAntlr.MyCharStream charstream;
-            AltAntlr.MyLexer lexer;
-            AltAntlr.MyParser parser;
-            AltAntlr.MyTokenStream tokstream = null;
+            EditableAntlrTree.MyToken token;
+            EditableAntlrTree.MyCharStream charstream;
+            EditableAntlrTree.MyLexer lexer;
+            EditableAntlrTree.MyParser parser;
+            EditableAntlrTree.MyTokenStream tokstream = null;
             // Gather all information before modifying the token and char streams.
-            if (node is AltAntlr.MyTerminalNodeImpl myterminalnode)
+            if (node is EditableAntlrTree.MyTerminalNodeImpl myterminalnode)
             {
                 lexer = myterminalnode.Lexer;
                 parser = myterminalnode.Parser;
                 tokstream = myterminalnode.TokenStream;
-                token = myterminalnode.Payload as AltAntlr.MyToken;
+                token = myterminalnode.Payload as EditableAntlrTree.MyToken;
                 charstream = myterminalnode.InputStream;
             }
-            else if (node is AltAntlr.MyParserRuleContext myinternalnode)
+            else if (node is EditableAntlrTree.MyParserRuleContext myinternalnode)
             {
                 lexer = myinternalnode.Lexer;
                 parser = myinternalnode.Parser;
                 tokstream = myinternalnode.TokenStream;
-                var lmf = TreeEdits.LeftMostToken(node) as AltAntlr.MyTerminalNodeImpl;
-                token = lmf.Payload as AltAntlr.MyToken;
+                var lmf = TreeEdits.LeftMostToken(node) as EditableAntlrTree.MyTerminalNodeImpl;
+                token = lmf.Payload as EditableAntlrTree.MyToken;
                 charstream = myinternalnode.InputStream;
             }
-            else throw new Exception("Tree editing must be on AltAntlr tree.");
-            var to_insert_tok = new AltAntlr.MyToken() { Text = str };
+            else throw new Exception("Tree editing must be on EditableAntlrTree tree.");
+            var to_insert_tok = new EditableAntlrTree.MyToken() { Text = str };
             TerminalNodeImpl leaf = TreeEdits.Frontier(node).First();
             var arbitrary_string = str;
             var old_buffer = charstream.Text;
-            var index = AltAntlr.Util.GetIndex(token.Line, token.Column, old_buffer);
+            var index = EditableAntlrTree.Util.GetIndex(token.Line, token.Column, old_buffer);
             var add = arbitrary_string.Length;
             var new_buffer = old_buffer.Insert(index, arbitrary_string);
             var start = leaf.Payload.TokenIndex;
@@ -511,11 +511,11 @@
             {
                 tokstream.Seek(i);
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 tok.TokenIndex = i;
                 tok.StartIndex += add;
                 tok.StopIndex += add;
-                var (line, col) = AltAntlr.Util.GetLineColumn(tok.StartIndex, new_buffer);
+                var (line, col) = EditableAntlrTree.Util.GetLineColumn(tok.StartIndex, new_buffer);
                 tok.Line = line;
                 tok.Column = col;
                 if (tt.Type == -1) break;
@@ -526,7 +526,7 @@
                 tokstream.Seek(i);
                 var tt = tokstream.Get(i);
                 if (tt.Type == -1) break;
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var text1 = tt.Text;
                 var text2 = charstream.Text.Substring(tt.StartIndex, tt.StopIndex - tt.StartIndex + 1);
                 if (text1 != text2) throw new Exception("mismatch after insert.");
@@ -542,27 +542,27 @@
             TerminalNodeImpl leaf = TreeEdits.Frontier(to).First();
             // 'node' is either a terminal node or an internal node.
             // Payload means different things for the two.
-            AltAntlr.MyToken token;
-            AltAntlr.MyCharStream charstream;
-            AltAntlr.MyLexer lexer;
-            AltAntlr.MyParser parser;
-            AltAntlr.MyTokenStream tokstream = null;
+            EditableAntlrTree.MyToken token;
+            EditableAntlrTree.MyCharStream charstream;
+            EditableAntlrTree.MyLexer lexer;
+            EditableAntlrTree.MyParser parser;
+            EditableAntlrTree.MyTokenStream tokstream = null;
             // Gather all information before modifying the token and char streams.
-            if (to is AltAntlr.MyTerminalNodeImpl myterminalnode)
+            if (to is EditableAntlrTree.MyTerminalNodeImpl myterminalnode)
             {
                 lexer = myterminalnode.Lexer;
                 parser = myterminalnode.Parser;
                 tokstream = myterminalnode.TokenStream;
-                token = myterminalnode.Payload as AltAntlr.MyToken;
+                token = myterminalnode.Payload as EditableAntlrTree.MyToken;
                 charstream = myterminalnode.InputStream;
             }
-            else if (to is AltAntlr.MyParserRuleContext myinternalnode)
+            else if (to is EditableAntlrTree.MyParserRuleContext myinternalnode)
             {
                 lexer = myinternalnode.Lexer;
                 parser = myinternalnode.Parser;
                 tokstream = myinternalnode.TokenStream;
-                var lmf = TreeEdits.LeftMostToken(to) as AltAntlr.MyTerminalNodeImpl;
-                token = lmf.Payload as AltAntlr.MyToken;
+                var lmf = TreeEdits.LeftMostToken(to) as EditableAntlrTree.MyTerminalNodeImpl;
+                token = lmf.Payload as EditableAntlrTree.MyToken;
                 charstream = myinternalnode.InputStream;
             }
             else throw new Exception("Tree editing must be on AltAntlr tree.");
@@ -605,7 +605,7 @@
             {
                 foreach (var l in leaves_of_node)
                 {
-                    var ll = l as AltAntlr.MyTerminalNodeImpl;
+                    var ll = l as EditableAntlrTree.MyTerminalNodeImpl;
                     var t = ll.GetText();
                     // Assume space between each leaf.
                     if (new_text != "") new_text += " ";
@@ -614,10 +614,10 @@
             }
             // Modify the char stream, token stream, the tree.
             var leaves_of_to = TreeEdits.Frontier(to).ToList();
-            var leftmost_leaf_of_to = leaves_of_to.First() as AltAntlr.MyTerminalNodeImpl;
-            var leftmost_token_of_to = leftmost_leaf_of_to.Payload as AltAntlr.MyToken;
-            var rightmost_leaf_of_to = leaves_of_to.Last() as AltAntlr.MyTerminalNodeImpl;
-            var last_token_of_to = rightmost_leaf_of_to.Payload as AltAntlr.MyToken;
+            var leftmost_leaf_of_to = leaves_of_to.First() as EditableAntlrTree.MyTerminalNodeImpl;
+            var leftmost_token_of_to = leftmost_leaf_of_to.Payload as EditableAntlrTree.MyToken;
+            var rightmost_leaf_of_to = leaves_of_to.Last() as EditableAntlrTree.MyTerminalNodeImpl;
+            var last_token_of_to = rightmost_leaf_of_to.Payload as EditableAntlrTree.MyToken;
             var s_to = leftmost_token_of_to.StartIndex; // Char stream index
 
             // Modify char stream first.
@@ -632,10 +632,10 @@
             {
                 if (i >= tokstream.Size) break;
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var line = tok.Line;
                 var col = tok.Column;
-                var i2 = AltAntlr.Util.GetIndex(line, col, old_buffer);
+                var i2 = EditableAntlrTree.Util.GetIndex(line, col, old_buffer);
                 old_indices[i] = i2;
                 if (tt.Type == -1) break;
                 ++i;
@@ -658,13 +658,13 @@
             {
                 if (i >= tokstream.Size) break;
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 tok.StartIndex += increment;
                 tok.StopIndex += increment;
                 var new_index = tok.StartIndex;
                 if (new_index >= 0)
                 {
-                    var (line, col) = AltAntlr.Util.GetLineColumn(new_index, new_buffer);
+                    var (line, col) = EditableAntlrTree.Util.GetLineColumn(new_index, new_buffer);
                     tok.Line = line;
                     tok.Column = col;
                 }
@@ -677,43 +677,43 @@
             Reset(node);
         }
 
-        public static void InsertBeforeInStreams(IParseTree node, AltAntlr.MyTerminalNodeImpl to_insert)
+        public static void InsertBeforeInStreams(IParseTree node, EditableAntlrTree.MyTerminalNodeImpl to_insert)
         {
             TerminalNodeImpl leaf = TreeEdits.Frontier(node).First();
             // 'node' is either a terminal node or an internal node.
             // Payload means different things for the two.
-            AltAntlr.MyToken token;
-            AltAntlr.MyCharStream charstream;
-            AltAntlr.MyLexer lexer;
-            AltAntlr.MyParser parser;
-            AltAntlr.MyTokenStream tokstream = null;
+            EditableAntlrTree.MyToken token;
+            EditableAntlrTree.MyCharStream charstream;
+            EditableAntlrTree.MyLexer lexer;
+            EditableAntlrTree.MyParser parser;
+            EditableAntlrTree.MyTokenStream tokstream = null;
             // Gather all information before modifying the token and char streams.
-            if (node is AltAntlr.MyTerminalNodeImpl myterminalnode)
+            if (node is EditableAntlrTree.MyTerminalNodeImpl myterminalnode)
             {
                 lexer = myterminalnode.Lexer;
                 parser = myterminalnode.Parser;
                 tokstream = myterminalnode.TokenStream;
-                token = myterminalnode.Payload as AltAntlr.MyToken;
+                token = myterminalnode.Payload as EditableAntlrTree.MyToken;
                 charstream = myterminalnode.InputStream;
             }
-            else if (node is AltAntlr.MyParserRuleContext myinternalnode)
+            else if (node is EditableAntlrTree.MyParserRuleContext myinternalnode)
             {
                 lexer = myinternalnode.Lexer;
                 parser = myinternalnode.Parser;
                 tokstream = myinternalnode.TokenStream;
-                var lmf = TreeEdits.LeftMostToken(node) as AltAntlr.MyTerminalNodeImpl;
-                token = lmf.Payload as AltAntlr.MyToken;
+                var lmf = TreeEdits.LeftMostToken(node) as EditableAntlrTree.MyTerminalNodeImpl;
+                token = lmf.Payload as EditableAntlrTree.MyToken;
                 charstream = myinternalnode.InputStream;
             }
             else throw new Exception("Tree editing must be on AltAntlr tree.");
             var arbitrary_string = to_insert.Payload.Text;
             var old_buffer = charstream.Text;
-            var index = AltAntlr.Util.GetIndex(token.Line, token.Column, old_buffer);
+            var index = EditableAntlrTree.Util.GetIndex(token.Line, token.Column, old_buffer);
             var add = arbitrary_string.Length;
             var new_buffer = old_buffer.Insert(index, arbitrary_string);
             var start = leaf.Payload.TokenIndex;
             tokstream.Insert(start, to_insert.Payload);
-            var to_insert_tok = to_insert.Payload as AltAntlr.MyToken;
+            var to_insert_tok = to_insert.Payload as EditableAntlrTree.MyToken;
             to_insert.Start = start;
             to_insert.Stop = start;
             to_insert_tok.InputStream = charstream;
@@ -729,10 +729,10 @@
             {
                 tokstream.Seek(i);
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 tok.StartIndex += add;
                 tok.StopIndex += add;
-                var (line, col) = AltAntlr.Util.GetLineColumn(tok.StartIndex, new_buffer);
+                var (line, col) = EditableAntlrTree.Util.GetLineColumn(tok.StartIndex, new_buffer);
                 tok.Line = line;
                 tok.Column = col;
                 tok.TokenIndex = i;
@@ -747,7 +747,7 @@
                 tokstream.Seek(i);
                 var tt = tokstream.Get(i);
                 if (tt.Type == -1) break;
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var text1 = tt.Text;
                 var text2 = charstream.Text.Substring(tt.StartIndex, tt.StopIndex - tt.StartIndex + 1);
                 if (text1 != text2) throw new Exception("mismatch after insert.");
@@ -761,6 +761,10 @@
 
         private static void Reset(IParseTree tree)
         {
+            if (tree is MyParserRuleContext root)
+            {
+                root.Reset();
+            }
             //if (tree is AltAntlr.MyTerminalNodeImpl l)
             //{
             //    var t = l.Payload as AltAntlr.MyToken;
@@ -1020,12 +1024,12 @@
         public static IParseTree CopyTreeRecursiveAux(IParseTree original, IParseTree parent, MyCharStream ncs)
         {
             if (original == null) return null;
-            else if (original is AltAntlr.MyTerminalNodeImpl a)
+            else if (original is EditableAntlrTree.MyTerminalNodeImpl a)
             {
                 var o = a;
-                var t = o.Symbol as AltAntlr.MyToken;
-                var tt = new AltAntlr.MyToken() { Type = t.Type, Text = t.Text, Channel = t.Channel, StartIndex = t.StartIndex, StopIndex = t.StopIndex, InputStream = ncs };
-                var oo = new AltAntlr.MyTerminalNodeImpl(tt);
+                var t = o.Symbol as EditableAntlrTree.MyToken;
+                var tt = new EditableAntlrTree.MyToken() { Type = t.Type, Text = t.Text, Channel = t.Channel, StartIndex = t.StartIndex, StopIndex = t.StopIndex, InputStream = ncs };
+                var oo = new EditableAntlrTree.MyTerminalNodeImpl(tt);
                 oo.InputStream = ncs;
                 if (parent != null)
                 {
@@ -1219,26 +1223,26 @@
         public static void NukeTokensSurrounding(IParseTree node)
         {
             if (node == null) return;
-            AltAntlr.MyToken token;
-            AltAntlr.MyCharStream charstream;
-            AltAntlr.MyLexer lexer;
-            AltAntlr.MyParser parser;
-            AltAntlr.MyTokenStream tokstream;
-            if (node is AltAntlr.MyTerminalNodeImpl myterminalnode)
+            EditableAntlrTree.MyToken token;
+            EditableAntlrTree.MyCharStream charstream;
+            EditableAntlrTree.MyLexer lexer;
+            EditableAntlrTree.MyParser parser;
+            EditableAntlrTree.MyTokenStream tokstream;
+            if (node is EditableAntlrTree.MyTerminalNodeImpl myterminalnode)
             {
                 lexer = myterminalnode.Lexer;
                 parser = myterminalnode.Parser;
                 tokstream = myterminalnode.TokenStream;
-                token = myterminalnode.Payload as AltAntlr.MyToken;
+                token = myterminalnode.Payload as EditableAntlrTree.MyToken;
                 charstream = myterminalnode.InputStream;
             }
-            else if (node is AltAntlr.MyParserRuleContext myinternalnode)
+            else if (node is EditableAntlrTree.MyParserRuleContext myinternalnode)
             {
                 lexer = myinternalnode.Lexer;
                 parser = myinternalnode.Parser;
                 tokstream = myinternalnode.TokenStream;
-                var lmf = TreeEdits.LeftMostToken(node) as AltAntlr.MyTerminalNodeImpl;
-                token = lmf.Payload as AltAntlr.MyToken;
+                var lmf = TreeEdits.LeftMostToken(node) as EditableAntlrTree.MyTerminalNodeImpl;
+                token = lmf.Payload as EditableAntlrTree.MyToken;
                 charstream = myinternalnode.InputStream;
             }
             else throw new Exception("Tree editing must be on AltAntlr tree.");
@@ -1246,11 +1250,11 @@
             var is_root = parent_from == null;
             var old_buffer = charstream.Text;
             var leaves_of_node = TreeEdits.Frontier(node).ToList();
-            var leftmost_leaf_of_node = leaves_of_node.First() as AltAntlr.MyTerminalNodeImpl;
-            var leftmost_token_of_node = leftmost_leaf_of_node.Payload as AltAntlr.MyToken;
+            var leftmost_leaf_of_node = leaves_of_node.First() as EditableAntlrTree.MyTerminalNodeImpl;
+            var leftmost_token_of_node = leftmost_leaf_of_node.Payload as EditableAntlrTree.MyToken;
             var leftmost_token_of_node_tokenindex = leftmost_token_of_node.TokenIndex;
-            var rightmost_leaf_of_node = leaves_of_node.Last() as AltAntlr.MyTerminalNodeImpl;
-            var rightmost_token_of_node = rightmost_leaf_of_node.Payload as AltAntlr.MyToken;
+            var rightmost_leaf_of_node = leaves_of_node.Last() as EditableAntlrTree.MyTerminalNodeImpl;
+            var rightmost_token_of_node = rightmost_leaf_of_node.Payload as EditableAntlrTree.MyToken;
             var rightmost_token_of_node_tokenindex = rightmost_token_of_node.TokenIndex;
             int token_index = rightmost_token_of_node_tokenindex + 1;
             for (; ; )
@@ -1258,7 +1262,7 @@
                 if (token_index >= tokstream.Size) break;
                 if (token_index < 0) break;
                 var tt = tokstream.Get(token_index);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 if (tok.Type == TokenConstants.EOF) break;
                 if (tok.Channel == Lexer.DefaultTokenChannel) break;
                 token_index++;
@@ -1269,7 +1273,7 @@
             {
                 tokstream.Seek(i);
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var chars_to_delete_right = tok.StopIndex - tok.StartIndex + 1;
                 tokstream.Seek(i);
                 tokstream.Delete();
@@ -1277,7 +1281,7 @@
                 for (int j = i; j < tokstream.Size; ++j)
                 {
                     var t2 = tokstream.Get(j);
-                    var tok2 = t2 as AltAntlr.MyToken;
+                    var tok2 = t2 as EditableAntlrTree.MyToken;
                     tok2.StartIndex -= chars_to_delete_right;
                     tok2.StopIndex -= chars_to_delete_right;
                     tok2.TokenIndex -= 1;
@@ -1290,7 +1294,7 @@
                 if (token_index >= tokstream.Size) break;
                 if (token_index < 0) break;
                 var tt = tokstream.Get(token_index);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 if (tok.Type == TokenConstants.EOF) break;
                 if (tok.Channel == Lexer.DefaultTokenChannel) break;
                 token_index--;
@@ -1301,7 +1305,7 @@
             {
                 tokstream.Seek(token_index);
                 var tt = tokstream.Get(token_index);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var chars_to_delete_right = tok.StopIndex - tok.StartIndex + 1;
                 var start = tok.StartIndex;
                 tokstream.Seek(token_index);
@@ -1310,7 +1314,7 @@
                 for (int j = token_index; j < tokstream.Size; ++j)
                 {
                     var t2 = tokstream.Get(j);
-                    var tok2 = t2 as AltAntlr.MyToken;
+                    var tok2 = t2 as EditableAntlrTree.MyToken;
                     tok2.StartIndex -= chars_to_delete_right;
                     tok2.StopIndex -= chars_to_delete_right;
                     tok2.TokenIndex -= 1;
@@ -1321,11 +1325,11 @@
             {
                 if (i >= tokstream.Size) break;
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var new_index = tok.StartIndex;
                 if (new_index >= 0)
                 {
-                    var (line, col) = AltAntlr.Util.GetLineColumn(new_index, new_buffer);
+                    var (line, col) = EditableAntlrTree.Util.GetLineColumn(new_index, new_buffer);
                     tok.Line = line;
                     tok.Column = col;
                 }
@@ -1342,7 +1346,7 @@
                 tokstream.Seek(i);
                 var tt = tokstream.Get(i);
                 if (tt.Type == -1) break;
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var text1 = tt.Text;
                 string text2;
                 if (tt.StopIndex - tt.StartIndex + 1 < 0) text2 = "";
@@ -1362,26 +1366,26 @@
             if (node == null) return;
             if (to == null) return;
             if (node == to) return;
-            AltAntlr.MyToken token;
-            AltAntlr.MyCharStream charstream;
-            AltAntlr.MyLexer lexer;
-            AltAntlr.MyParser parser;
-            AltAntlr.MyTokenStream tokstream;
-            if (node is AltAntlr.MyTerminalNodeImpl myterminalnode)
+            EditableAntlrTree.MyToken token;
+            EditableAntlrTree.MyCharStream charstream;
+            EditableAntlrTree.MyLexer lexer;
+            EditableAntlrTree.MyParser parser;
+            EditableAntlrTree.MyTokenStream tokstream;
+            if (node is EditableAntlrTree.MyTerminalNodeImpl myterminalnode)
             {
                 lexer = myterminalnode.Lexer;
                 parser = myterminalnode.Parser;
                 tokstream = myterminalnode.TokenStream;
-                token = myterminalnode.Payload as AltAntlr.MyToken;
+                token = myterminalnode.Payload as EditableAntlrTree.MyToken;
                 charstream = myterminalnode.InputStream;
             }
-            else if (node is AltAntlr.MyParserRuleContext myinternalnode)
+            else if (node is EditableAntlrTree.MyParserRuleContext myinternalnode)
             {
                 lexer = myinternalnode.Lexer;
                 parser = myinternalnode.Parser;
                 tokstream = myinternalnode.TokenStream;
-                var lmf = TreeEdits.LeftMostToken(node) as AltAntlr.MyTerminalNodeImpl;
-                token = lmf.Payload as AltAntlr.MyToken;
+                var lmf = TreeEdits.LeftMostToken(node) as EditableAntlrTree.MyTerminalNodeImpl;
+                token = lmf.Payload as EditableAntlrTree.MyToken;
                 charstream = myinternalnode.InputStream;
             }
             else throw new Exception("Tree editing must be on AltAntlr tree.");
@@ -1412,27 +1416,27 @@
             // Modify the char stream, token stream, and the intervals of the tree.
             
             // Gather information about char and token streams.
-            AltAntlr.MyCharStream cs;
+            EditableAntlrTree.MyCharStream cs;
             // Gather all information before modifying the token and char streams.
-            var mylexer = tokstream.TokenSource as AltAntlr.MyLexer;
+            var mylexer = tokstream.TokenSource as EditableAntlrTree.MyLexer;
             tokstream = mylexer.TokenStream;
-            cs = mylexer.InputStream as AltAntlr.MyCharStream;
+            cs = mylexer.InputStream as EditableAntlrTree.MyCharStream;
 
             // Get section of char stream that needs to be moved.
             var old_buffer = cs.Text;
             var leaves_of_node = TreeEdits.Frontier(node).ToList();
-            var leftmost_leaf_of_node = leaves_of_node.First() as AltAntlr.MyTerminalNodeImpl;
-            var leftmost_token_to_move = leftmost_leaf_of_node.Payload as AltAntlr.MyToken;
+            var leftmost_leaf_of_node = leaves_of_node.First() as EditableAntlrTree.MyTerminalNodeImpl;
+            var leftmost_token_to_move = leftmost_leaf_of_node.Payload as EditableAntlrTree.MyToken;
             var leftmost_token_to_move_tokenindex = leftmost_token_to_move.TokenIndex;
-            var rightmost_leaf_of_node = leaves_of_node.Last() as AltAntlr.MyTerminalNodeImpl;
-            var last_token_of_node = rightmost_leaf_of_node.Payload as AltAntlr.MyToken;
+            var rightmost_leaf_of_node = leaves_of_node.Last() as EditableAntlrTree.MyTerminalNodeImpl;
+            var last_token_of_node = rightmost_leaf_of_node.Payload as EditableAntlrTree.MyToken;
             int token_index = last_token_of_node.TokenIndex + 1;
             for (; ; )
             {
                 if (token_index >= tokstream.Size) break;
                 if (token_index == 0) break;
                 var tt = tokstream.Get(token_index);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 // We're going to try to move everything after the last token
                 // that is intertree junk. Just look for the first token
                 // that is on the default channel and backup.
@@ -1454,10 +1458,10 @@
             int char_length_to_move = 1 + end_char_index_to_move - start_char_index_to_move;
             var string_to_move = old_buffer.Substring(start_char_index_to_move, char_length_to_move);
             var leaves_of_to = TreeEdits.Frontier(to).ToList();
-            var leftmost_leaf_of_to = leaves_of_to.First() as AltAntlr.MyTerminalNodeImpl;
-            var leftmost_token_of_to = leftmost_leaf_of_to.Payload as AltAntlr.MyToken;
-            var rightmost_leaf_of_to = leaves_of_to.Last() as AltAntlr.MyTerminalNodeImpl;
-            var last_token_of_to = rightmost_leaf_of_to.Payload as AltAntlr.MyToken;
+            var leftmost_leaf_of_to = leaves_of_to.First() as EditableAntlrTree.MyTerminalNodeImpl;
+            var leftmost_token_of_to = leftmost_leaf_of_to.Payload as EditableAntlrTree.MyToken;
+            var rightmost_leaf_of_to = leaves_of_to.Last() as EditableAntlrTree.MyTerminalNodeImpl;
+            var last_token_of_to = rightmost_leaf_of_to.Payload as EditableAntlrTree.MyToken;
             var s_to = leftmost_token_of_to.StartIndex; // Char stream index
             //var e_to = last_token_of_to.StopIndex; // Char stream index
             //int char_length_to = 1 + e_to - s_to;
@@ -1473,10 +1477,10 @@
             {
                 if (i >= tokstream.Size) break;
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var line = tok.Line;
                 var col = tok.Column;
-                var i2 = AltAntlr.Util.GetIndex(line, col, old_buffer);
+                var i2 = EditableAntlrTree.Util.GetIndex(line, col, old_buffer);
                 old_indices[i] = i2;
                 if (tt.Type == -1) break;
                 ++i;
@@ -1496,11 +1500,11 @@
             {
                 if (i >= tokstream.Size) break;
                 var tt = tokstream.Get(i);
-                var tok = tt as AltAntlr.MyToken;
+                var tok = tt as EditableAntlrTree.MyToken;
                 var new_index = tok.StartIndex;
                 if (new_index >= 0)
                 {
-                    var (line, col) = AltAntlr.Util.GetLineColumn(new_index, new_buffer);
+                    var (line, col) = EditableAntlrTree.Util.GetLineColumn(new_index, new_buffer);
                     tok.Line = line;
                     tok.Column = col;
                 }
@@ -1592,19 +1596,19 @@
             return leaf;
         }
 
-        public static void Replace(AltAntlr.MyTokenStream tokstream, IParseTree node, string arbitrary_string)
+        public static void Replace(EditableAntlrTree.MyTokenStream tokstream, IParseTree node, string arbitrary_string)
         {
             InsertBeforeInStreams(node, arbitrary_string);
             DeleteInStreams(tokstream, node);
         }
 
-        public static void ReplaceInStream(AltAntlr.MyTokenStream tokstream, IParseTree node, IParseTree new_node)
+        public static void ReplaceInStream(EditableAntlrTree.MyTokenStream tokstream, IParseTree node, IParseTree new_node)
         {
             InsertBeforeInStreams(node, new_node);
             DeleteInStreams(tokstream, node);
         }
 
-        public static void Replace(AltAntlr.MyTokenStream tokstream, IEnumerable<IParseTree> nodes, string arbitrary_string)
+        public static void Replace(EditableAntlrTree.MyTokenStream tokstream, IEnumerable<IParseTree> nodes, string arbitrary_string)
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
             foreach (var node in nodes)

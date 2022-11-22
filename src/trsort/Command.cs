@@ -62,7 +62,7 @@
                 var fn = parse_info.FileName;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
                 var before_tokens = tokstream.GetTokens();
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
@@ -76,12 +76,12 @@
                             "(//ruleSpec)[1]",
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree
-                                as AltAntlr.MyParserRuleContext).First();
+                                as EditableAntlrTree.MyParserRuleContext).First();
                         var nodes = engine.parseExpression(
                             "//ruleSpec[parserRuleSpec]",
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree
-                                as AltAntlr.MyParserRuleContext).ToList();
+                                as EditableAntlrTree.MyParserRuleContext).ToList();
                         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                         // HACK FIX BELOW GetChild(---> 0)
                         var sorted = nodes.OrderBy(x => x.GetChild(0).GetText()).ToList();

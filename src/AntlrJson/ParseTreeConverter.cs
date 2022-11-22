@@ -9,7 +9,7 @@
     using System.Reflection;
     using System.Text.Json;
     using System.Text.Json.Serialization;
-    using AltAntlr;
+    using EditableAntlrTree;
 
     public class ParseTreeConverter : JsonConverter<ParsingResultSet[]>
     {
@@ -305,18 +305,18 @@
         
         private void Reset(IParseTree tree, MyParser parser, MyLexer lexer, MyTokenStream ts, MyCharStream cs)
         {
-            if (tree is AltAntlr.MyTerminalNodeImpl l)
+            if (tree is EditableAntlrTree.MyTerminalNodeImpl l)
             {
                 l.Parser = parser;
                 l.Lexer = lexer;
                 l.TokenStream = ts;
                 l.InputStream = cs;
-                var t = l.Payload as AltAntlr.MyToken;
+                var t = l.Payload as EditableAntlrTree.MyToken;
                 l.Start = t.TokenIndex;
                 l.Stop = t.TokenIndex;
                 //l._sourceInterval = new Antlr4.Runtime.Misc.Interval(t.TokenIndex, t.TokenIndex);
             }
-            else if (tree is AltAntlr.MyParserRuleContext p)
+            else if (tree is EditableAntlrTree.MyParserRuleContext p)
             {
                 p.Parser = parser;
                 p.Lexer = lexer;

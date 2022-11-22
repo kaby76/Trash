@@ -1,4 +1,4 @@
-﻿namespace AltAntlr
+﻿namespace EditableAntlrTree
 {
     using System;
     using System.Collections.Generic;
@@ -430,7 +430,7 @@
                 for (int i = 0; i < result.Length; i++) _tokens[i] = result[i];
                 for (int i = 0; i < this.Size; ++i)
                 {
-                    var c = this._tokens[i] as AltAntlr.MyToken;
+                    var c = this._tokens[i] as EditableAntlrTree.MyToken;
                     c.TokenIndex = i;
                     if (i < from) ; // aa
                     else if (i >= from && i < from + cc_len) // cc
@@ -498,7 +498,7 @@
                 for (int i = 0; i < result.Length; i++) _tokens[i] = result[i];
                 for (int i = 0; i < this.Size; ++i)
                 {
-                    var c = this._tokens[i] as AltAntlr.MyToken;
+                    var c = this._tokens[i] as EditableAntlrTree.MyToken;
                     c.TokenIndex = i;
                     if (i < to) ; // aa
                     else if (i >= to && i < to + cc_len) // cccccccccc
@@ -518,7 +518,7 @@
             // Compare text of token with input.
             for (int i = 0; i < this.Size; ++i)
             {
-                var c = this._tokens[i] as AltAntlr.MyToken;
+                var c = this._tokens[i] as EditableAntlrTree.MyToken;
                 var text1 = c.Text;
                 string text2;
                 if (c.StopIndex - c.StartIndex + 1 < 0) text2 = "";

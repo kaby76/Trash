@@ -40,7 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Algorithms\Algorithms.csproj" />
-    <ProjectReference Include="..\AltAntlr\AltAntlr.csproj" />
+    <ProjectReference Include="..\EditableAntlrTree\EditableAntlrTree.csproj" />
     <ProjectReference Include="..\AntlrTreeEditing\AntlrTreeEditing.csproj" />
     <ProjectReference Include="..\Logger\Logger.csproj" />
     <ProjectReference Include="..\NWayDiff\NWayDiff.csproj" />

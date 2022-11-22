@@ -1,4 +1,4 @@
-﻿namespace AltAntlr
+﻿namespace EditableAntlrTree
 {
     using System.Collections.Generic;
 

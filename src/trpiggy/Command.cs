@@ -157,10 +157,10 @@ namespace Trash
                 var text = parse_info.Text;
                 var fn = parse_info.FileName;
                 var atrees = parse_info.Nodes;
-                var parser = parse_info.Parser as AltAntlr.MyParser;
-                var lexer = parse_info.Lexer as AltAntlr.MyLexer;
-                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
-                var charstream = lexer.InputStream as AltAntlr.MyCharStream;
+                var parser = parse_info.Parser as EditableAntlrTree.MyParser;
+                var lexer = parse_info.Lexer as EditableAntlrTree.MyLexer;
+                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
+                var charstream = lexer.InputStream as EditableAntlrTree.MyCharStream;
                 foreach (var pat in pattern)
                 {
                     var expr = pat.xpath();
@@ -190,7 +190,7 @@ namespace Trash
                             if (v is AntlrTreeEditing.AntlrDOM.AntlrElement)
                             {
                                 var q = v as AntlrTreeEditing.AntlrDOM.AntlrElement;
-                                var r = q.AntlrIParseTree as AltAntlr.MyParserRuleContext;
+                                var r = q.AntlrIParseTree as EditableAntlrTree.MyParserRuleContext;
                                 if (without_intertokens)
                                 {
                                     TreeEdits.NukeTokensSurrounding(r);
@@ -198,7 +198,7 @@ namespace Trash
                                 }
                                 var leaf = TreeEdits.LeftMostToken(r);
                                 var first_child = r.GetChild(0);
-                                var place_holder = new AltAntlr.MyTerminalNodeImpl(new AltAntlr.MyToken() { Text = "xxx"}) { Parser = parser, Lexer = lexer, TokenStream = tokstream, InputStream = charstream } ;
+                                var place_holder = new EditableAntlrTree.MyTerminalNodeImpl(new EditableAntlrTree.MyToken() { Text = "xxx"}) { Parser = parser, Lexer = lexer, TokenStream = tokstream, InputStream = charstream } ;
                                 if (first_child != null)
                                 {
                                     TreeEdits.InsertBeforeInStreams(first_child, place_holder);
@@ -259,7 +259,7 @@ namespace Trash
                                 for (; i < place_holder.Parent.ChildCount; ++i)
                                     if (place_holder.Parent.GetChild(i) == place_holder)
                                         break;
-                                var old_children = (place_holder.Parent as AltAntlr.MyParserRuleContext).children.ToArray();
+                                var old_children = (place_holder.Parent as EditableAntlrTree.MyParserRuleContext).children.ToArray();
                                 for (int j = old_children.Length - 1; j >= i; --j)
                                 {
                                     var ch = old_children[j];

@@ -299,9 +299,9 @@
                 {
                     var attr = new AntlrAttr(null);
                     var interval = t.SourceInterval;
-                    if (interval.a <= interval.b && t is AltAntlr.MyParserRuleContext)
+                    if (interval.a <= interval.b && t is EditableAntlrTree.MyParserRuleContext)
                     {
-                        var n = t as AltAntlr.MyParserRuleContext;
+                        var n = t as EditableAntlrTree.MyParserRuleContext;
                         var s = n.TokenStream.Get(interval.a);
                         if (s != null)
                         {
@@ -319,9 +319,9 @@
                 {
                     var attr = new AntlrAttr(null);
                     var interval = t.SourceInterval;
-                    if (interval.a <= interval.b && t is AltAntlr.MyParserRuleContext)
+                    if (interval.a <= interval.b && t is EditableAntlrTree.MyParserRuleContext)
                     {
-                        var n = t as AltAntlr.MyParserRuleContext;
+                        var n = t as EditableAntlrTree.MyParserRuleContext;
                         var s = n.TokenStream.Get(interval.a);
                         if (s != null)
                         {

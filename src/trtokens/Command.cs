@@ -19,7 +19,7 @@
             }
         }
 
-        private string OutputTokens(AltAntlr.MyTokenStream tokstream, IParseTree tree)
+        private string OutputTokens(EditableAntlrTree.MyTokenStream tokstream, IParseTree tree)
         {
             var frontier = TreeEdits.Frontier(tree);
             var first = frontier.First();
@@ -69,7 +69,7 @@
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
                 var fn = parse_info.FileName;
-                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
                 foreach (var node in nodes)
                 {
                     System.Console.WriteLine(OutputTokens(tokstream, node));

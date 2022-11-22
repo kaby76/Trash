@@ -64,7 +64,7 @@
                 var fn = parse_info.FileName;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream as AltAntlr.MyTokenStream;
+                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
                 var before_tokens = tokstream.GetTokens();
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();

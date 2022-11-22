@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AltAntlr
+namespace EditableAntlrTree
 {
     public class MyInterval
     {
