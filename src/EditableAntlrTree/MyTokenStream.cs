@@ -10,7 +10,7 @@
     public class MyTokenStream : BufferedTokenStream, ITokenStream
     {
         public ITokenSource _tokenSource;
-        protected internal List<IToken> _tokens;
+        public List<MyToken> _tokens;
         protected internal int n;
         protected new internal int p = 0;
         protected internal int numMarkers = 0;
@@ -38,7 +38,7 @@
         public MyTokenStream()
             : base(new FuckYouAntlr())
         {
-            this._tokens = new List<IToken>();
+            this._tokens = new List<MyToken>();
             n = 0;
             this._tokenSource = null;
         }
@@ -47,14 +47,31 @@
             : base(new FuckYouAntlr())
         {
             Text = t;
-            this._tokens = new List<IToken>();
+            this._tokens = new List<MyToken>();
             n = 0;
             this._tokenSource = null;
         }
 
+        public MyTokenStream(MyTokenStream orig_ts) : base(new FuckYouAntlr())
+        {
+            this._tokens = new List<MyToken>();
+            for (int i = 0; i < orig_ts.Size; ++i)
+            {
+                var tok = orig_ts.Get(i);
+                var mytok = tok as MyToken;
+                var new_tok = new MyToken(mytok);
+                this.Add(new_tok);
+            }
+            this._tokenSource = null;
+        }
+        static IEnumerable<I> ForAll<T, I>(IList<T> lst) where T : I
+        {
+            foreach (I item in lst) yield return item;
+        }
+
         public override IList<IToken> GetTokens()
         {
-            return _tokens;
+            return ForAll<MyToken, IToken>(_tokens).ToList();
         }
 
         public override IToken Get(int i)
@@ -154,7 +171,7 @@
             return n;
         }
 
-        public virtual void Add(IToken t)
+        public virtual void Add(MyToken t)
         {
             if (t is IWritableToken)
             {
@@ -398,7 +415,7 @@
                 // |aa|bbbbbb|cc|dddddddddd|
                 // |aa|cc|bbbbbb|dddddddddd|
                 var temp_array = this._tokens.ToArray();
-                var result = new IToken[this._tokens.Count];
+                var result = new MyToken[this._tokens.Count];
                 var after_from = from + number;
                 var from_char_start = this._tokens[from].StartIndex;
                 var after_from_char_start = this._tokens[after_from].StartIndex;
@@ -458,7 +475,7 @@
                 // |aa|bbbbbbbb|cccccccccc|ddd|
                 // |aa|cccccccccc|bbbbbbbb|ddd|
                 var temp_array = this._tokens.ToArray();
-                var result = new IToken[this._tokens.Count];
+                var result = new MyToken[this._tokens.Count];
                 var to_char_start = this._tokens[to].StartIndex;
                 var from_char_start = this._tokens[from].StartIndex;
                 var after_from = from + number;
@@ -527,7 +544,7 @@
             }
         }
 
-        public void Insert(int i, IToken payload)
+        public void Insert(int i, MyToken payload)
         {
             this._tokens.Insert(i, payload);
             n++;

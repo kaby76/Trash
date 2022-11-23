@@ -12,6 +12,23 @@
         public int Channel { get; set; }
         public int TokenIndex { get; set; }
         private int _startindex;
+
+        public MyToken()
+        {
+        }
+
+        public MyToken(MyToken mytok)
+        {
+            this.Line = mytok.Line;
+            this.Text = mytok.Text;
+            this.Type = mytok.Type;
+            this.StartIndex= mytok.StartIndex;
+            this.StopIndex= mytok.StopIndex;
+            this.Channel = mytok.Channel;
+            this.TokenIndex = mytok.TokenIndex;
+            this.Column = mytok.Column;
+        }
+
         public int StartIndex { get { return _startindex; } set { if (value < 0) throw new System.Exception(); _startindex = value; } }
         public int StopIndex { get; set; }
         public ITokenSource TokenSource { get; set; }

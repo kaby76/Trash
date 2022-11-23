@@ -16,7 +16,9 @@ rm -rf Generated
 mkdir Generated
 
 # Test.
-trparse Expression.g4 | trdelete '//parserRuleSpec[RULE_REF/text()="a"]' | trsponge -c -o Generated
+trparse Expression.g4 | trdelete '//parserRuleSpec[RULE_REF/text()="a"]' > o.pt
+cat o.pt | trsponge -c -o Generated
+cat o.pt | trtree > Generated/trtree.tree
 
 # Diff.
 for i in "$where/Generated/*"

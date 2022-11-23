@@ -542,13 +542,13 @@
             TerminalNodeImpl leaf = TreeEdits.Frontier(to).First();
             // 'node' is either a terminal node or an internal node.
             // Payload means different things for the two.
-            EditableAntlrTree.MyToken token;
-            EditableAntlrTree.MyCharStream charstream;
-            EditableAntlrTree.MyLexer lexer;
-            EditableAntlrTree.MyParser parser;
-            EditableAntlrTree.MyTokenStream tokstream = null;
+            MyToken token;
+            MyCharStream charstream;
+            MyLexer lexer;
+            MyParser parser;
+            MyTokenStream tokstream = null;
             // Gather all information before modifying the token and char streams.
-            if (to is EditableAntlrTree.MyTerminalNodeImpl myterminalnode)
+            if (to is MyTerminalNodeImpl myterminalnode)
             {
                 lexer = myterminalnode.Lexer;
                 parser = myterminalnode.Parser;
@@ -596,7 +596,7 @@
             var new_text = "";
             // Get first and last char index of tokens in "node" tree.
             // Copy that text.
-            if (leaves_of_node.First().Payload.StartIndex != 0)
+            if (leaves_of_node.First().Payload.StartIndex != -1)
             {
                 int a = leaves_of_node.First().Payload.StartIndex;
                 int b = leaves_of_node.Last().Payload.StopIndex;
@@ -612,17 +612,13 @@
                     new_text += t;
                 }
             }
-            // Modify the char stream, token stream, the tree.
+            // Modify the char stream, token stream, and the tree.
             var leaves_of_to = TreeEdits.Frontier(to).ToList();
             var leftmost_leaf_of_to = leaves_of_to.First() as EditableAntlrTree.MyTerminalNodeImpl;
             var leftmost_token_of_to = leftmost_leaf_of_to.Payload as EditableAntlrTree.MyToken;
             var rightmost_leaf_of_to = leaves_of_to.Last() as EditableAntlrTree.MyTerminalNodeImpl;
             var last_token_of_to = rightmost_leaf_of_to.Payload as EditableAntlrTree.MyToken;
             var s_to = leftmost_token_of_to.StartIndex; // Char stream index
-
-            // Modify char stream first.
-            var new_buffer = old_buffer.Insert(s_to, new_text);
-
             // Gather information before moving.
             var start = 0;
             Dictionary<int, int> old_indices = new Dictionary<int, int>();
@@ -641,14 +637,27 @@
                 ++i;
             }
 
-            // Move tokens in the token stream from "to" to the end of the token stream.
+            // Modify char stream.
+            var new_buffer = old_buffer.Insert(s_to, new_text);
+
+            // Add tokens in the token stream starting before the "to" tree's tokens.
             var leftmost_token_to_move_tokenindex = leftmost_token_of_to.TokenIndex;
             charstream.Text = new_buffer;
             tokstream.Text = new_buffer;
             tokstream.Seek(i);
             for (i = 0; i < leaves_of_node.Count; ++i)
             {
-                tokstream.Insert(i + leftmost_token_to_move_tokenindex, leaves_of_node[i].Payload);
+                tokstream.Insert(i + leftmost_token_to_move_tokenindex, leaves_of_node[i].Payload as MyToken);
+            }
+
+            // Note, all token indices in token stream from "to" and on
+            // are now off after the insert. All tokens in the inserted "node"
+            // tree now start at where "to" started. We don't need to update anything
+            // in the tree itself because the tree leaves have a pointer "Payload"
+            // directly to the token.
+            for (i = leftmost_token_to_move_tokenindex; i < tokstream._tokens.Count; ++i)
+            {
+                tokstream._tokens[i].TokenIndex = i;
             }
 
             // Update charstream indices for each token moved.
@@ -672,10 +681,20 @@
                 ++i;
             }
             charstream.Text = new_buffer;
+            
+            // Insert tree.
+            InsertBefore(to, node);
 
             // Adjust intervals up the tree.
-            Reset(node);
+            Reset(GoToRoot(to));
         }
+
+        static IParseTree GoToRoot(IParseTree p)
+        {
+            if (p.Parent == null) return p;
+            else return GoToRoot(p.Parent);
+        }
+
 
         public static void InsertBeforeInStreams(IParseTree node, EditableAntlrTree.MyTerminalNodeImpl to_insert)
         {
@@ -712,7 +731,7 @@
             var add = arbitrary_string.Length;
             var new_buffer = old_buffer.Insert(index, arbitrary_string);
             var start = leaf.Payload.TokenIndex;
-            tokstream.Insert(start, to_insert.Payload);
+            tokstream.Insert(start, to_insert.Payload as MyToken);
             var to_insert_tok = to_insert.Payload as EditableAntlrTree.MyToken;
             to_insert.Start = start;
             to_insert.Stop = start;
@@ -793,29 +812,6 @@
             //        res = new Antlr4.Runtime.Misc.Interval(int.MaxValue, -1);
             //    }
             //    p._sourceInterval = res;
-            //}
-        }
-
-        private static void Adjust(IParseTree tree)
-        {
-            Reset(tree);
-            //var leaves = TreeEdits.Frontier(tree).ToList();
-            //Stack<IParseTree> stack = new Stack<IParseTree>();
-            //foreach (var leaf in leaves) stack.Push(leaf);
-            //while (stack.Count > 0)
-            //{
-            //    var leaf = stack.Pop();
-            //    if (leaf is AltAntlr.MyTerminalNodeImpl l)
-            //    {
-            //        var t = l.Payload as AltAntlr.MyToken;
-            //        l._sourceInterval = new Antlr4.Runtime.Misc.Interval(t.TokenIndex, t.TokenIndex);
-            //    }
-            //    else if (leaf is AltAntlr.MyParserRuleContext p)
-            //    {
-            //        var s = p.Start;
-            //        var e = p.Stop;
-
-            //    }
             //}
         }
 
@@ -1021,15 +1017,16 @@
             else return null;
         }
 
-        public static IParseTree CopyTreeRecursiveAux(IParseTree original, IParseTree parent, MyCharStream ncs)
+        public static IParseTree CopyTreeRecursiveAux(IParseTree original, IParseTree parent, MyTokenStream nts, MyCharStream ncs)
         {
             if (original == null) return null;
             else if (original is EditableAntlrTree.MyTerminalNodeImpl a)
             {
                 var o = a;
                 var t = o.Symbol as EditableAntlrTree.MyToken;
-                var tt = new EditableAntlrTree.MyToken() { Type = t.Type, Text = t.Text, Channel = t.Channel, StartIndex = t.StartIndex, StopIndex = t.StopIndex, InputStream = ncs };
-                var oo = new EditableAntlrTree.MyTerminalNodeImpl(tt);
+                var tt = new MyToken() { Type = t.Type, Text = t.Text, Channel = t.Channel, StartIndex = t.StartIndex, StopIndex = t.StopIndex, TokenIndex = t.TokenIndex, InputStream = ncs };
+                var oo = new MyTerminalNodeImpl(tt);
+                oo.TokenStream = nts;
                 oo.InputStream = ncs;
                 if (parent != null)
                 {
@@ -1043,6 +1040,8 @@
             {
                 var p = parent as MyParserRuleContext;
                 var new_node = new MyParserRuleContext(p, 0);
+                new_node.TokenStream = nts;
+                new_node.InputStream = ncs;
                 new_node._ruleIndex = b.RuleIndex;
                 if (p != null)
                 {
@@ -1056,7 +1055,7 @@
                 for (int i = 0; i < child_count; ++i)
                 {
                     var child = original.GetChild(i);
-                    CopyTreeRecursiveAux(child, new_node, ncs);
+                    CopyTreeRecursiveAux(child, new_node, nts, ncs);
                 }
                 return new_node;
             }
@@ -1068,15 +1067,18 @@
             if (original == null) return null;
             // Make a copy of the token stream and char streams and attach them to this new tree.
             var ncs = new MyCharStream();
+            var nts = new MyTokenStream();
             if (original is MyParserRuleContext o_)
             {
+                var orig_ts = o_.TokenStream;
+                nts = new MyTokenStream(orig_ts);
                 var t = TreeEdits.LeftMostToken(o_);
                 var ti = t.Payload.TokenSource;
                 var ts = o_.TokenStream;
                 var cs = ts._charstream;
                 ncs.Text = String.Copy(cs.Text);
             }
-            var copy = CopyTreeRecursiveAux(original, parent, ncs);
+            var copy = CopyTreeRecursiveAux(original, parent, nts, ncs);
 
             return copy;
         }

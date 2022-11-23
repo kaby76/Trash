@@ -4748,27 +4748,44 @@ namespace LanguageServer
             Dictionary<string, IParseTree> rhs_replacement = new Dictionary<string, IParseTree>();
             foreach (var @ref in replace_these)
             {
+                var upup = @ref.Parent.Parent;
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(all_sources, parser))
                 {
                     var defs = engine.parseExpression(
-                        @"//(lexerRuleSpec[TOKEN_REF/text()='" + @ref.GetText() + "'] | parserRuleSpec[RULE_REF/text()='" + @ref.GetText() + "'])/(ruleBlock | lexerRuleBlock)",
+                        @"//(lexerRuleSpec[TOKEN_REF/text()='" + upup.GetText() + "'] | parserRuleSpec[RULE_REF/text()='" + upup.GetText() + "'])/(ruleBlock | lexerRuleBlock)",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
                     if (defs.Count > 1 || defs.Count == 0)
                         continue;
                     // Copy def RHS.
-                    System.Console.WriteLine(TreeOutput.OutputTree(defs.First(), lexer, parser,
-                        null).ToString());
+                    System.Console.WriteLine("RHS:");
+                    System.Console.WriteLine(TreeOutput.OutputTree(defs.First(), lexer, parser, null).ToString());
                     var new_node = TreeEdits.CopyTreeRecursive(defs.First());
-                    System.Console.WriteLine(TreeOutput.OutputTree(new_node, lexer, parser,
-                        null).ToString());
+                    System.Console.WriteLine("after copy new node:");
+                    System.Console.WriteLine(TreeOutput.OutputTree(new_node, lexer, parser, null).ToString());
                     // Replace refs with defs.
-                    TreeEdits.ReplaceInStream(tokstream, @ref, new_node);
+                    System.Console.WriteLine("@ref:");
+                    System.Console.WriteLine(TreeOutput.OutputTree(upup, lexer, parser, null).ToString());
+                    System.Console.WriteLine("before insert, entire tree:");
+                    System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
+                    TreeEdits.InsertBeforeInStreams(upup, new_node);
+                    System.Console.WriteLine("after insert, entire tree:");
+                    System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
+                    TreeEdits.DeleteInStreams(tokstream, upup);
+                    System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
+                    //TreeEdits.ReplaceInStream(tokstream, upup, new_node);
+                    //System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
                 }
             }
             return result;
+        }
+
+        static IParseTree GoToRoot(IParseTree p)
+        {
+            if (p.Parent == null) return p;
+            else return GoToRoot(p.Parent);
         }
 
         static int fold_number = 0;
