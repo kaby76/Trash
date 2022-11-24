@@ -85,6 +85,11 @@
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     var (text_before, other) = LanguageServer.TreeEdits.TextToLeftOfLeaves(tokstream, atrees[0]);
                     LanguageServer.Transform.Unfold(nodes, atrees.ToList(), parser, lexer, (EditableAntlrTree.MyTokenStream)tokstream);
+                    if (config.Verbose)
+                    {
+                        System.Console.Error.WriteLine("Final tree:");
+                        System.Console.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees.First(), lexer, parser, tokstream).ToString());
+                    }
                     var tuple = new ParsingResultSet()
                     {
                         Text = ((EditableAntlrTree.MyTokenStream)tokstream).Text,

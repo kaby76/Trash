@@ -4760,21 +4760,21 @@ namespace LanguageServer
                     if (defs.Count > 1 || defs.Count == 0)
                         continue;
                     // Copy def RHS.
-                    System.Console.WriteLine("RHS:");
-                    System.Console.WriteLine(TreeOutput.OutputTree(defs.First(), lexer, parser, null).ToString());
+                    //System.Console.WriteLine("RHS:");
+                    //System.Console.WriteLine(TreeOutput.OutputTree(defs.First(), lexer, parser, null).ToString());
                     var new_node = TreeEdits.CopyTreeRecursive(defs.First());
-                    System.Console.WriteLine("after copy new node:");
-                    System.Console.WriteLine(TreeOutput.OutputTree(new_node, lexer, parser, null).ToString());
+                    //System.Console.WriteLine("after copy new node:");
+                    //System.Console.WriteLine(TreeOutput.OutputTree(new_node, lexer, parser, null).ToString());
                     // Replace refs with defs.
-                    System.Console.WriteLine("@ref:");
-                    System.Console.WriteLine(TreeOutput.OutputTree(upup, lexer, parser, null).ToString());
-                    System.Console.WriteLine("before insert, entire tree:");
-                    System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
+                    //System.Console.WriteLine("@ref:");
+                    //System.Console.WriteLine(TreeOutput.OutputTree(upup, lexer, parser, null).ToString());
+                    //System.Console.WriteLine("before insert, entire tree:");
+                    //System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
                     TreeEdits.InsertBeforeInStreams(upup, new_node);
-                    System.Console.WriteLine("after insert, entire tree:");
-                    System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
+                    //System.Console.WriteLine("after insert, entire tree:");
+                    //System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
                     TreeEdits.DeleteInStreams(tokstream, upup);
-                    System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
+                    //System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
                     //TreeEdits.ReplaceInStream(tokstream, upup, new_node);
                     //System.Console.WriteLine(TreeOutput.OutputTree(GoToRoot(upup), lexer, parser, null).ToString());
                 }

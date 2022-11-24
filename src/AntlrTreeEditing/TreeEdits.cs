@@ -594,12 +594,16 @@
             var old_buffer = charstream.Text;
             var leaves_of_node = TreeEdits.Frontier(node).ToList();
             var new_text = "";
+            int decrement = 0;
+            int text_size_added = 0;
             // Get first and last char index of tokens in "node" tree.
             // Copy that text.
             if (leaves_of_node.First().Payload.StartIndex != -1)
             {
                 int a = leaves_of_node.First().Payload.StartIndex;
                 int b = leaves_of_node.Last().Payload.StopIndex;
+                decrement = a;
+                text_size_added = b - a + 1;
                 new_text = charstream.Text.Substring(a, b - a + 1);
             } else
             {
@@ -660,7 +664,29 @@
                 tokstream._tokens[i].TokenIndex = i;
             }
 
-            // Update charstream indices for each token moved.
+            // Update charstream indices for each token of "node".
+            i = leftmost_token_to_move_tokenindex;
+            for (; ; )
+            {
+                if (i >= tokstream.Size) break;
+                if (i >= leftmost_token_to_move_tokenindex + leaves_of_node.Count) break;
+                var tt = tokstream.Get(i);
+                var tok = tt as EditableAntlrTree.MyToken;
+                tok.StartIndex -= decrement;
+                tok.StartIndex += s_to;
+                tok.StopIndex -= decrement;
+                tok.StopIndex += s_to;
+                var new_index = tok.StartIndex;
+                if (new_index >= 0)
+                {
+                    var (line, col) = EditableAntlrTree.Util.GetLineColumn(new_index, new_buffer);
+                    tok.Line = line;
+                    tok.Column = col;
+                }
+                if (tt.Type == -1) break;
+                ++i;
+            }
+            // Update charstream indices for each token of "to" and after.
             i = leftmost_token_to_move_tokenindex + leaves_of_node.Count;
             var increment = new_text.Length;
             for (; ; )
