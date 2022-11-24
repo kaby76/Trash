@@ -11,6 +11,7 @@ cd Generated-CSharp
 dotnet restore Test.csproj
 dotnet build Test.csproj
 trperf -i "1+2"  | tail -n +2 | sort -k6 -n -r | sed 's/[0-9][0-9]*[.][0-9][0-9]*/xxx/g'> ../output
+cd ..
 rm -rf Generated-CSharp/
 dos2unix output
 diff output Gold/
