@@ -11,6 +11,7 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Text.Json;
+    using System.Threading;
     using Document = Workspaces.Document;
     using Workspace = Workspaces.Workspace;
 
@@ -80,6 +81,7 @@
                 string txt = config.Input;
                 if (config.ReadFileNameStdin)
                 {
+                    Thread.Sleep(20000);
                     List<string> inputs = new List<string>();
                     for (; ; )
                     {
@@ -94,6 +96,7 @@
                     DateTime before = DateTime.Now;
                     for (int f = 0; f < inputs.Count(); ++f)
                     {
+                        System.Console.WriteLine(f);
                         try
                         {
                             txt = File.ReadAllText(inputs[f]);
@@ -102,7 +105,8 @@
                         {
                             txt = inputs[f];
                         }
-                        result = result == 0 ? DoParse(txt, "", inputs[f], f, data) : result;
+                        var r = DoParse(txt, "", inputs[f], f, data);
+                        result = result == 0 ? r : result;
                     }
                     DateTime after = DateTime.Now;
                     System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
@@ -135,7 +139,8 @@
                         {
                             txt = file;
                         }
-                        result = result == 0 ? DoParse(txt, "", file, 0, data) : result;
+                        var r = DoParse(txt, "", file, 0, data);
+                        result = result == 0 ? r : result;
                     }
                 }
                 if (config.NoParsingResultSets) return result;
