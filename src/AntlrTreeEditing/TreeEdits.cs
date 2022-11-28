@@ -1088,9 +1088,9 @@
             else return null;
         }
 
-        public static IParseTree CopyTreeRecursive(IParseTree original, IParseTree parent = null)
+        public static (IParseTree, MyCharStream, MyTokenStream) CopyTreeRecursive(IParseTree original, IParseTree parent = null)
         {
-            if (original == null) return null;
+            if (original == null) return (null, null, null);
             // Make a copy of the token stream and char streams and attach them to this new tree.
             var ncs = new MyCharStream();
             var nts = new MyTokenStream();
@@ -1106,7 +1106,7 @@
             }
             var copy = CopyTreeRecursiveAux(original, parent, nts, ncs);
 
-            return copy;
+            return (copy, ncs, nts);
         }
 
         public static void Reconstruct(StringBuilder sb, IEnumerable<IParseTree> trees, Dictionary<TerminalNodeImpl, string> text_to_left)
@@ -1749,6 +1749,16 @@
                 // Shift all tokens over.
                 // Shift text over.
             }
+        }
+
+        public static void ReplaceInStream(MyTokenStream tokenStream, MyTerminalNodeImpl new_node, string new_name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void ReplaceInStream(MyTokenStream new_ts, IParseTree new_node, string new_name)
+        {
+            throw new NotImplementedException();
         }
     }
 }

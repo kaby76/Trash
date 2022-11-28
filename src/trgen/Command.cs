@@ -28,6 +28,10 @@
         public int Execute(Config co)
         {
             _config = co;
+            if (_config.Files != null && _config.Files.Count() > 0)
+            {
+                _config.root_directory = _config.Files.First();
+            }
             if ((bool)_config.maven)
                 DoPomDirectedGenerate(_config.root_directory);
             else

@@ -8,17 +8,18 @@ namespace Trash
 {
     public class Config
     {
+        [Value(0)]
+        public IEnumerable<string> Files { get; set; }
+
         [Option('x', "profile", Required = false, HelpText = "Add in Antlr profiling code.")]
         public bool? profile { get; set; }
 
-        // This is for overriding pom.xml, or for non-pom grammars.
         [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
         public string start_rule { get; set; }
 
         [Option('g', "grammar-name", Required = false, HelpText = "Grammar for parse.")]
         public string grammar_name { get; set; }
 
-        private string _backing_target;
         [Option('t', "target", Required = false, HelpText = "The target language for the project.")]
         public string target
         {
@@ -39,7 +40,6 @@ namespace Trash
         [Option('p', "package", Required = false)]
         public string name_space { get; set; }
 
-        private string _backing_template_sources_directory;
         [Option("template-sources-directory", Required = false)]
         public string template_sources_directory { get { return _backing_template_sources_directory; } set { _backing_template_sources_directory = Path.GetFullPath(value); } }
 
@@ -52,6 +52,10 @@ namespace Trash
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
 
+
+
+        private string _backing_template_sources_directory;
+        private string _backing_target;
         public IEnumerable<string> antlr_tool_args { get; set; }
         public OSType? env_type { get; set; }
         public bool? flatten { get; set; }

@@ -4762,7 +4762,7 @@ namespace LanguageServer
                     // Copy def RHS.
                     //System.Console.WriteLine("RHS:");
                     //System.Console.WriteLine(TreeOutput.OutputTree(defs.First(), lexer, parser, null).ToString());
-                    var new_node = TreeEdits.CopyTreeRecursive(defs.First());
+                    var (new_node, new_cs, new_ts) = TreeEdits.CopyTreeRecursive(defs.First());
                     //System.Console.WriteLine("after copy new node:");
                     //System.Console.WriteLine(TreeOutput.OutputTree(new_node, lexer, parser, null).ToString());
                     // Replace refs with defs.

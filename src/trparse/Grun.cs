@@ -8,6 +8,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Security.Cryptography;
     using System.Text;
     using System.Text.Json;
     using Document = Workspaces.Document;
@@ -77,7 +78,36 @@
             {
                 var data = new List<AntlrJson.ParsingResultSet>();
                 string txt = config.Input;
-                if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
+                if (config.ReadFileNameStdin)
+                {
+                    List<string> inputs = new List<string>();
+                    for (; ; )
+                    {
+                        var line = System.Console.In.ReadLine();
+                        line = line?.Trim();
+                        if (line == null || line == "")
+                        {
+                            break;
+                        }
+                        inputs.Add(line);
+                    }
+                    DateTime before = DateTime.Now;
+                    for (int f = 0; f < inputs.Count(); ++f)
+                    {
+                        try
+                        {
+                            txt = File.ReadAllText(inputs[f]);
+                        }
+                        catch
+                        {
+                            txt = inputs[f];
+                        }
+                        result = result == 0 ? DoParse(txt, "", inputs[f], f, data) : result;
+                    }
+                    DateTime after = DateTime.Now;
+                    System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
+                }
+                else if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
                 {
                     string lines = null;
                     for (; ; )
@@ -86,12 +116,12 @@
                         if (lines != null && lines != "") break;
                     }
                     txt = lines;
-                    result = Doit(txt, data);
+                    result = DoParse(txt, "", "stdin", 0, data);
                 }
                 else if (config.Input != null)
                 {
                     txt = config.Input;
-                    result = Doit(txt, data);
+                    result = DoParse(txt, "", "string", 0, data);
                 }
                 else if (config.Files != null)
                 {
@@ -105,7 +135,7 @@
                         {
                             txt = file;
                         }
-                        result = result == 0 ? Doit(txt, data) : result;
+                        result = result == 0 ? DoParse(txt, "", file, 0, data) : result;
                     }
                 }
                 if (config.NoParsingResultSets) return result;
@@ -117,6 +147,7 @@
             }
             catch (Exception e)
             {
+                System.Console.WriteLine(e.ToString());
                 result = 1; 
             }
             finally
@@ -125,7 +156,7 @@
             return result;
         }
 
-        int Doit(string txt, List<AntlrJson.ParsingResultSet> data)
+        int DoParse(string txt, string prefix, string input_name, int row_number, List<AntlrJson.ParsingResultSet> data)
         {
             string path = config.ParserLocation != null ? config.ParserLocation
                 : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
@@ -154,6 +185,16 @@
             MethodInfo methodInfo3 = type.GetMethod("AnyErrors");
             object[] parm3 = new object[] { };
             var res3 = methodInfo3.Invoke(null, parm3);
+            var result = "";
+            if ((bool)res3)
+            {
+                result = "fail";
+            }
+            else
+            {
+                result = "success";
+            }
+            System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
 
             var parser = type.GetProperty("Parser").GetValue(null, new object[0]) as Antlr4.Runtime.Parser;
             var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
@@ -163,8 +204,8 @@
             var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
             var tree = res2 as IParseTree;
             var t2 = tree as ParserRuleContext;
-            if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
-            if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
+            //if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
+            //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
             if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Stream = tokstream as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = parser, Lexer = lexer };
             data.Add(tuple);

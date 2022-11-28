@@ -31,5 +31,8 @@ namespace Trash
 
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
+
+        [Option('x', Required = false)]
+        public bool ReadFileNameStdin { get; set; }
     }
 }

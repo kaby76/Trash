@@ -2,6 +2,7 @@
 {
     using Antlr4.Runtime.Tree;
     using AntlrJson;
+    using EditableAntlrTree;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Collections.Generic;
@@ -104,9 +105,8 @@
                     {
                         if (rename_map.TryGetValue(node.GetText(), out string new_name))
                         {
-                            var new_node = TreeEdits.CopyTreeRecursive(node);
-                            (new_node.Payload as EditableAntlrTree.MyToken).Text = new_name;
-                            TreeEdits.ReplaceInStream(tokstream, node, new_node);
+                            var (new_node, new_cs, new_ts) = TreeEdits.CopyTreeRecursive(node);
+                            TreeEdits.ReplaceInStream(new_ts, new_node as MyTerminalNodeImpl, new_name);
                             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Replaced " + node.GetText());
                         }
                     }
