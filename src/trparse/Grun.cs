@@ -81,7 +81,6 @@
                 string txt = config.Input;
                 if (config.ReadFileNameStdin)
                 {
-                    Thread.Sleep(20000);
                     List<string> inputs = new List<string>();
                     for (; ; )
                     {
@@ -96,7 +95,6 @@
                     DateTime before = DateTime.Now;
                     for (int f = 0; f < inputs.Count(); ++f)
                     {
-                        System.Console.WriteLine(f);
                         try
                         {
                             txt = File.ReadAllText(inputs[f]);
