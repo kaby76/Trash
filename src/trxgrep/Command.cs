@@ -73,9 +73,8 @@
                 parser = parse_info.Parser;
                 lexer = parse_info.Lexer;
                 tokstream = parse_info.Stream;
-                IParseTree root = atrees.First().Root();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser);
+                AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser);
                 dc.Add(dynamicContext);
                 d.Add(dynamicContext.Document);
             }
@@ -90,8 +89,6 @@
                 parser = parse_info.Parser;
                 lexer = parse_info.Lexer;
                 tokstream = parse_info.Stream;
-                IParseTree root = atrees.First().Root();
-                //IEnumerable<AntlrTreeEditing.AntlrDOM.AntlrNode> l = atrees.Select(t => ate.FindDomNode(t));
                 AntlrTreeEditing.AntlrDOM.AntlrNode[] l = new AntlrTreeEditing.AntlrDOM.AntlrNode[1] { a };
                 var nodes = engine.parseExpression(expr,
                         new StaticContextBuilder()).evaluate(dynamicContext, l)
