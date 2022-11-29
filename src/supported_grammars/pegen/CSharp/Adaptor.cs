@@ -19,19 +19,25 @@ public abstract class Adaptor : Lexer
     {
         stream = input;
     }
+
     private int CurrentRuleType { get; set; } = TokenConstants.InvalidType;
+
+    public bool AtEnd()
+    {
+        return CurrentMode == pegen_v3_10Lexer.ACTION_MODE;
+    }
 
     protected void handleEndAction()
     {
         int oldMode = CurrentMode;
         int newMode = PopMode();
         bool isActionWithinAction = ModeStack.Count > 0
-            && newMode == pegen_v3_10Lexer.ACTION
+            && newMode == pegen_v3_10Lexer.ACTION_MODE
             && oldMode == newMode;
 
         if (isActionWithinAction)
         {
-            CurrentRuleType = (pegen_v3_10Lexer.ACTION_CONTENT);
+            CurrentRuleType = (pegen_v3_10Lexer.ACTION);
         }
     }
 }

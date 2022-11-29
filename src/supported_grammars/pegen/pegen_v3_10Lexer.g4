@@ -5,22 +5,20 @@
 lexer grammar pegen_v3_10Lexer;
 
 options { superClass = Adaptor; }
+tokens { ACTION }
 
 MEMO: 'memo';
-
-//ENDMARKER : '\n';
-NAME: LETTER('_'|(DIGIT|LETTER))*;
+OP: 'op';
+NAME: LETTER ('_' | DIGIT | LETTER)* ;
 fragment LETTER  : CAPITAL | SMALL ;
 fragment CAPITAL : [A-Z\u00C0-\u00D6\u00D8-\u00DE] ;
 fragment SMALL   : [a-z\u00DF-\u00F6\u00F8-\u00FF] ;
 fragment DIGIT   : [0-9] ;
 NUMBER : DIGIT+;
-STRING : '"' -> more, mode(STRINGMODE);
+STRING : '"""' .*? '"""' | '\'\'\'' .*? '\'\'\'' ;
+STRING2 :  '"' -> more, mode(STRINGMODE);
 CHAR : '\''   -> more, mode(CHARMODE);
-//NEWLINE : '\r\n';
-//INDENT
-//DEDENT
-
+fragment NEWLINE : [\n\r]+ ;
 LPAR :                  '(';
 RPAR :                  ')';
 LSQB :                  '[';
@@ -39,7 +37,7 @@ GREATER :               '>';
 EQUAL :                 '=';
 DOT :                   '.';
 PERCENT :               '%';
-LBRACE :                '{'; // -> pushMode(ACTION) ;
+LBRACE :                '{' -> more, pushMode(ACTION_MODE) ;
 RBRACE :                '}';
 EQEQUAL :               '==';
 NOTEQUAL :              '!=';
@@ -72,25 +70,21 @@ DOLLAR: '$';
 BANG: '!';
 QUESTION: '?';
 
+SKIP_
+ : ( SPACES | COMMENT | LINE_JOINING | NEWLINE ) -> skip
+ ;
 
-//OP
-//AWAIT
-//ASYNC
-//TYPE_IGNORE
-//TYPE_COMMENT
-//SOFT_KEYWORD
-//ERRORTOKEN
+fragment SPACES
+ : [ \t]+
+ ;
 
-// These aren't used by the C tokenizer but are needed for tokenize.py
-COMMENT : '#' ~[\n\r]* -> channel(HIDDEN) ;
-//NL
-//ENCODING
+fragment COMMENT
+ : '#' ~[\r\n\f]*
+ ;
 
-WS_INLINE: Space+ -> channel(HIDDEN) ;
-fragment Space : (' '| '\t' | '\n' | '\r' | '\f' | 'u2B7F' );
-
-ErrorToken : . ;
-
+fragment LINE_JOINING
+ : '\\' SPACES? ( '\r'? '\n' | '\r' | '\f')
+ ;
 
 // Escapable sequences
 fragment
@@ -112,17 +106,13 @@ CHARESC : '\\' -> more , pushMode(CHARESCAPE);
 CHAREND : '\'' ->  type(STRING), mode(DEFAULT_MODE);
 CHARTEXT : ~['\\] -> more;
 
-mode ACTION;
-NESTED_ACTION : LBRACE -> type (ACTION_CONTENT) , pushMode (ACTION) ;
-ACTION_ESCAPE : EscAny -> type (ACTION_CONTENT) ;
-//ACTION_STRING_LITERAL : DQuoteLiteral -> type (ACTION_CONTENT) ;
-//ACTION_CHAR_LITERAL : SQuoteLiteral -> type (ACTION_CONTENT) ;
-//ACTION_DOC_COMMENT : DocComment -> type (ACTION_CONTENT) ;
-//ACTION_BLOCK_COMMENT : BlockComment -> type (ACTION_CONTENT) ;
-//ACTION_LINE_COMMENT : LineComment -> type (ACTION_CONTENT) ;
-END_ACTION : RBRACE { this.handleEndAction(); } ;
+mode ACTION_MODE;
+NESTED_ACTION : LBRACE -> more, pushMode (ACTION_MODE) ;
+ACTION_ESCAPE : EscAny -> more ;
+ACTION : RBRACE { this.AtEnd() }? -> popMode ;
+CLOSE : RBRACE -> more, popMode ;
 UNTERMINATED_ACTION : EOF -> popMode ;
-ACTION_CONTENT : . ;
+CONTENT : . -> more ;
 fragment EscAny : Esc . ;
 fragment Esc : '\\' ;
 

@@ -10,100 +10,82 @@ start: grammar_ EOF ;
 
 grammar_ : metas? rules ;
 
-metas : meta metas? ;
+metas : meta+ ;
 
 meta
-    : '@' NAME
-    | '@' a=NAME b=NAME
-    | '@' NAME STRING
+    : '@' name newline
+    | '@' name name newline
+    | '@' name string newline
     ;
 
-rules : rule_ rules? ;
+rules : rule_+ ;
 
 rule_
-//    : rulename memoflag? ':' alts NEWLINE INDENT more_alts DEDENT
-//    | rulename memoflag? ':' NEWLINE INDENT more_alts DEDENT
-//    | rulename memoflag? ':' alts NEWLINE
-    : rulename memoflag? ':' alts // more_alts?
+    : rulename memoflag? ':' alts newline indent more_alts dedent
+    | rulename memoflag? ':' newline indent more_alts dedent
+    | rulename memoflag? ':' alts newline
     ;
 
 rulename
-    : NAME '[' type=NAME '*'? ']'
-    | NAME
+    : name attribute?
     ;
+
+attribute : ('[' name '*'? ']');
 
 // In the future this may return something more complicated
 memoflag : '(' 'memo' ')' ;
 
-alts : '|'? alt ('|' alt)* ;
+alts : alt ('|' alt)* ;
 
-//more_alts
-//    : '|' alts NEWLINE more_alts
-//    | '|' alts NEWLINE
-//    ;
+more_alts
+    : '|' alts newline more_alts
+    | '|' alts newline
+    ;
 
 alt
-    : items '$' action
-    | items '$'
-    | items action
-    | items
+    : items '$' action?
+    | items action?
     ;
 
 items : named_item items? ;
 
 named_item
-    : NAME '[' type=NAME '*' ']' '=' item      // ~ item
-    | NAME '[' type=NAME ']' '=' item          // ~ item
-    | NAME '=' item                            // ~ item
-    | item
-    | it=forced_atom
-    | it2=lookahead
+    : attribute_name? item
+    | forced_atom
+    | lookahead
     ;
 
+attribute_name : name '[' name '*' ']' '=' | name '[' name ']' '=' | name '=' ;
+
 forced_atom
-    : '&''&' atom               // ~ atom
+    : '&' '&' atom
     ;
 
 lookahead
-    : '&' atom                  // ~ atom
-    | '!' atom                  // ~ atom
+    : '&' atom
+    | '!' atom
     | '~'
     ;
 
 item
-    : '[' alts                  // ~ alts
-      ']'
+    : '[' alts ']'
     |  atom '?'
     |  atom '*'
     |  atom '+'
-    |  sep=atom '.' node=atom '+'
+    |  atom '.' atom '+'
     |  atom
     ;
 
 atom
-    : '(' alts                  // ~ alts
-      ')'
-    | NAME
-    | STRING
+    : '(' alts ')'
+    | name
+    | string
     ;
 
-// Mini-grammar for the actions
-
-action: '{' target_atoms                    // ~ target_atoms
-        '}' ;
-
-target_atoms : target_atom target_atoms? ;
-
-target_atom
-    : '{' target_atoms                       // ~ target_atoms
-      '}'
-    | NAME
-    | NUMBER
-    | STRING
-    | '?'
-    | ':'
-    | ~'}'
-//    | //~
-//      '}' OP
-    ;
-
+action: ACTION;
+name : NAME ;
+string : STRING ;
+newline : ;
+indent : ;
+dedent : ;
+number : NUMBER ;
