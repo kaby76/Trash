@@ -76,20 +76,35 @@
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     foreach (var node in nodes)
                     {
-                        TerminalNodeImpl leaf = TreeEdits.Frontier(node).First();
-                        // There are two ways to insert text: as a token/tree node,
-                        // or in the intertoken character range between tokens in the
-                        // token stream. Both have issues, but
-                        // there are differences.
-
-                        if (config.AsTree)
+                        var frontier = TreeEdits.Frontier(node).ToList();
+                        if (frontier.Count == 0)
                         {
-                            throw new System.NotImplementedException();
+
                         }
                         else
                         {
-                            if (!config.After) TreeEdits.InsertBeforeInStreams(node, str);
-                            else TreeEdits.InsertAfterInStreams(leaf, str);
+                            // There are two ways to insert text: as a token/tree node,
+                            // or in the intertoken character range between tokens in the
+                            // token stream. Both have issues, but
+                            // there are differences.
+
+                            if (config.AsTree)
+                            {
+                                throw new System.NotImplementedException();
+                            }
+                            else
+                            {
+                                if (!config.After)
+                                {
+                                    TerminalNodeImpl leaf = frontier.First();
+                                    TreeEdits.InsertAfterInStreams(leaf, str);
+                                }
+                                else
+                                {
+                                    TerminalNodeImpl leaf = frontier.Last();
+                                    TreeEdits.InsertBeforeInStreams(node, str);
+                                }
+                            }
                         }
                     }
                     var tuple = new ParsingResultSet()

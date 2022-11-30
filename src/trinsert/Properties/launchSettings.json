@@ -2,8 +2,8 @@
   "profiles": {
     "trinsert": {
       "commandName": "Project",
-      "commandLineArgs": "-f o \"//parserRuleSpec[RULE_REF/text()='acmeCompUnit']/SEMI\" \"EOF\"",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\g-current\\fix-issue-2597\\acme\\Generated"
+      "commandLineArgs": "-f o.pt //dedent xxx",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\supported_grammars\\pegen\\Generated-CSharp"
     }
   }
 }
