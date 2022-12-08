@@ -35,8 +35,8 @@ tool/target/
 /build/nuget/
 
 # Ignore generated test suite
-Generated/
-Generated-*/
+_tests/**/Generated/
+_tests/**/Generated-*/
 x/
 packages-microsoft-prod.deb
 _tests/trcombine/o3.pt

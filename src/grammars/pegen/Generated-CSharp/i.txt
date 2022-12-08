@@ -1,0 +1,3 @@
+file: statements ENDMARKER { _PyPegen_make_module(p, a) }
+interactive: statement_newline { _PyAST_Interactive(a, p->arena) }
+
