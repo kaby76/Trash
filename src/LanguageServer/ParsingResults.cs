@@ -3,6 +3,7 @@ namespace LanguageServer
     using Antlr4.Runtime;
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
+    using AntlrTreeEditing.AntlrDOM;
     using Domemtech.Symtab;
     using System;
     using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace LanguageServer
 
     public abstract class ParsingResults : IParserDescription, ICloneable
     {
-        public virtual IEnumerable<IParseTree> AllNodes { get; set; } = null;
+        public virtual IEnumerable<AntlrNode> AllNodes { get; set; } = null;
         public virtual Dictionary<IParseTree, IList<CombinedScopeSymbol>> Attributes { get; set; } = new Dictionary<IParseTree, IList<CombinedScopeSymbol>>();
         public virtual List<bool> CanFindAllRefs
         {

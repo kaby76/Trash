@@ -1,14 +1,11 @@
 ﻿namespace AntlrTreeEditing.AntlrDOM
 {
-    using Antlr4.Runtime.Tree;
     using org.w3c.dom;
     using System;
 
-    public class AntlrNode : Node, IAntlrObserver
+    public abstract class AntlrNode : Node, IAntlrObserver
     {
-        private AntlrNode() { }
-        public AntlrNode(IParseTree n) { AntlrIParseTree = n; }
-        public IParseTree AntlrIParseTree { get; set; }
+        public AntlrNode() { }
         public short NodeType { get; set; }
         public virtual string LocalName { get; set; }
         public virtual Document OwnerDocument { get; set; }
@@ -46,7 +43,7 @@
             throw new NotImplementedException();
         }
 
-        public virtual void OnParentDisconnect(IParseTree value)
+        public virtual void OnParentDisconnect(AntlrNode value)
         {
             if (ParentNode != null)
             {
@@ -56,15 +53,15 @@
             ParentNode = null;
         }
 
-        public virtual void OnParentConnect(IParseTree value)
+        public virtual void OnParentConnect(AntlrNode value)
         {
         }
 
-        public virtual void OnChildDisconnect(IParseTree value)
+        public virtual void OnChildDisconnect(AntlrNode value)
         {
         }
 
-        public virtual void OnChildConnect(IParseTree value)
+        public virtual void OnChildConnect(AntlrNode value)
         {
         }
 
@@ -85,11 +82,6 @@
 
         public virtual void Dispose()
         {
-            var tree = AntlrIParseTree as ObserverParserRuleContext;
-            if (tree != null)
-            {
-                tree.Unsubscribe(this);
-            }
             if (ChildNodes != null)
             {
                 for (int i = 0; i < ChildNodes.Length; ++i)
@@ -99,6 +91,36 @@
                     cc?.Dispose();
                 }
             }
+        }
+
+        public int _ruleIndex;
+        public int RuleIndex
+        {
+            get { return _ruleIndex; }
+        }
+
+        private AntlrNode LeftMost(AntlrNode node)
+        {
+            if (node != null)
+            {
+                if (node.ChildNodes != null && node.ChildNodes.Length > 0)
+                    return LeftMost(node.ChildNodes.item(0) as AntlrNode);
+                else
+                    return node;
+            }
+            return null;
+        }
+
+        private AntlrNode RightMost(AntlrNode node)
+        {
+            if (node != null)
+            {
+                if (node.ChildNodes != null && node.ChildNodes.Length > 0)
+                    return RightMost(node.ChildNodes.item(node.ChildNodes.Length-1) as AntlrNode);
+                else
+                    return node;
+            }
+            return null;
         }
     }
 }

@@ -15,8 +15,7 @@
 
         public override int Column => throw new NotImplementedException();
 
-        public ICharStream _inputstream;
-        public new ICharStream InputStream { get { return _inputstream; } }
+        public new ICharStream InputStream { get { throw new NotImplementedException(); } }
 
         public override string SourceName => throw new NotImplementedException();
 
@@ -65,9 +64,7 @@
         [return: NotNull]
         public override IToken NextToken()
         {
-            if (CurrentToken < Tokens.Count)
-                return Tokens[CurrentToken++];
-            throw new Exception("Reading past EOF.");
+            throw new NotImplementedException();
         }
 
         public MyLexer(ICharStream input) : base(input)
@@ -77,8 +74,5 @@
         public MyLexer(ICharStream input, TextWriter output, TextWriter errorOutput) : base(input, output, errorOutput)
         {
         }
-
-        MyTokenStream _token_stream;
-        public MyTokenStream TokenStream { get { return _token_stream; } set { _token_stream = value; } }
     }
 }

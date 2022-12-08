@@ -14,6 +14,7 @@ namespace XmlDOM
     using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
+    using System.Xml.Linq;
     using DynamicContext = org.eclipse.wst.xml.xpath2.api.DynamicContext;
 
     public class ConvertToDOM : XMLParserBaseVisitor<object>
@@ -56,7 +57,7 @@ namespace XmlDOM
                     var child_count = t.ChildCount;
                     attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
                     attr.Name = "ChildCount";
-                    attr.Value = child_count.ToString();
+                    attr.StringValue = child_count.ToString();
                     attr.ParentNode = result;
                     nl.Add(attr);
                 }
@@ -68,7 +69,7 @@ namespace XmlDOM
                     var a = source_interval.a;
                     var b = source_interval.b;
                     attr.Name = "SourceInterval";
-                    attr.Value = "[" + a + "," + b + "]";
+                    attr.StringValue = "[" + a + "," + b + "]";
                     attr.ParentNode = result;
                     nl.Add(attr);
                 }
@@ -97,7 +98,7 @@ namespace XmlDOM
                     attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
                     attr.Name = "ChildCount";
                     attr.LocalName = "ChildCount";
-                    attr.Value = child_count.ToString();
+                    attr.StringValue = child_count.ToString();
                     attr.ParentNode = result;
                     nl.Add(attr);
                     map.Add(attr);
@@ -111,7 +112,7 @@ namespace XmlDOM
                     var b = source_interval.b;
                     attr.Name = "Start";
                     attr.LocalName = "Start";
-                    attr.Value = a.ToString();
+                    attr.StringValue = a.ToString();
                     attr.ParentNode = result;
                     nl.Add(attr);
                     map.Add(attr);
@@ -124,7 +125,7 @@ namespace XmlDOM
                     var b = source_interval.b;
                     attr.Name = "End";
                     attr.LocalName = "End";
-                    attr.Value = b.ToString();
+                    attr.StringValue = b.ToString();
                     attr.ParentNode = result;
                     nl.Add(attr);
                     map.Add(attr);
@@ -147,7 +148,7 @@ namespace XmlDOM
             var attr = new XmlAttr();
             attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
             attr.Name = context.Name();
-            attr.Value = context.STRING().GetText();
+            attr.StringValue = context.STRING().GetText();
             attr.ChildNodes = new AntlrNodeList();
             return attr;
         }
@@ -288,7 +289,7 @@ namespace XmlDOM
 
     public class AntlrNodeList : NodeList
     {
-        public List<XmlNode> _node_list = new List<XmlNode>();
+        public ArrayList<Node> _node_list = new ArrayList<Node>();
 
         public int Length
         {
@@ -301,9 +302,19 @@ namespace XmlDOM
             return _node_list[i];
         }
 
-        public void Add(XmlNode e)
+        public void Add(Node node)
         {
-            _node_list.Add(e);
+            _node_list.Add(node);
+        }
+
+        public void Insert(int i, Node node)
+        {
+            _node_list.Insert(i, node);
+        }
+
+        public void RemoveAt(int i)
+        {
+            _node_list.RemoveAt(i);
         }
     }
 
@@ -316,9 +327,14 @@ namespace XmlDOM
     {
         public string Prefix { get; set; }
         public object Name { get; set; }
-        public string Value { get; set; }
+        public string StringValue { get; set; }
         public Node OwnerElement { get; set; }
         public TypeInfo SchemaTypeInfo { get; set; }
+        public object Value
+        {
+            get { return StringValue; }
+            set { StringValue = value as string; }
+        }
     }
 
     public class XmlDocument : XmlNode, Document

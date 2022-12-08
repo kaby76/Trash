@@ -113,7 +113,7 @@
                     else if (v is AntlrTreeEditing.AntlrDOM.AntlrAttr)
                     {
                         var q = v as AntlrTreeEditing.AntlrDOM.AntlrAttr;
-                        var s = q.Value;
+                        var s = q.StringValue;
                         do_rs = false;
                         System.Console.WriteLine(s);
                     }

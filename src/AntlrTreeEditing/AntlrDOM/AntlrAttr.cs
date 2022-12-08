@@ -1,16 +1,32 @@
 ﻿namespace AntlrTreeEditing.AntlrDOM
 {
-    using Antlr4.Runtime.Tree;
     using org.w3c.dom;
 
     public class AntlrAttr : AntlrNode, Attr
     {
-        private AntlrAttr() : base(null) { }
-        public AntlrAttr(IParseTree n) : base(n) { }
+        public AntlrAttr() { }
+        public AntlrAttr(AntlrAttr c)
+        {
+            this.ParentNode = c.ParentNode;
+            this.Prefix= c.Prefix;
+            this.LocalName = c.LocalName;
+            this.NamespaceURI = c.NamespaceURI;
+            this.StringValue = c.StringValue;
+            this.Attributes = c.Attributes;
+            this.NodeType = c.NodeType;
+            this.Name = c.Name;
+            this.OwnerElement = c.OwnerElement;
+            this.SchemaTypeInfo = c.SchemaTypeInfo;
+        }
         public string Prefix { get; set; }
         public object Name { get; set; }
-        public string Value { get; set; }
+        public string StringValue { get; set; }
         public Node OwnerElement { get; set; }
         public TypeInfo SchemaTypeInfo { get; set; }
+        public object Value
+        {
+            get { return StringValue; }
+            set { StringValue = value as string; }
+        }
     }
 }

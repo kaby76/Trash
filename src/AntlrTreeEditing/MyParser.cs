@@ -5,8 +5,8 @@
 
     public class MyParser : Parser
     {
-        public MyParser(ITokenStream input) : base(input) { }
-        public MyParser(ITokenStream input, TextWriter output, TextWriter errorOutput) : base(input, output, errorOutput) { }
+        public MyParser() : base(null) { }
+        public MyParser(ITokenStream input, TextWriter output, TextWriter errorOutput) : base(null, output, errorOutput) { }
         public string[] _ruleNames;
         public override string[] RuleNames { get { return _ruleNames; } }
         public string _grammarFileName;

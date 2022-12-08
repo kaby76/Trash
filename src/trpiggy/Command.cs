@@ -190,7 +190,7 @@ namespace Trash
                             if (v is AntlrTreeEditing.AntlrDOM.AntlrElement)
                             {
                                 var q = v as AntlrTreeEditing.AntlrDOM.AntlrElement;
-                                var r = q.AntlrIParseTree as EditableAntlrTree.MyParserRuleContext;
+                                var r = q.AntlrIParseTree as EditableAntlrTree.MyParserTreeNode;
                                 if (without_intertokens)
                                 {
                                     TreeEdits.NukeTokensSurrounding(r);
@@ -259,7 +259,7 @@ namespace Trash
                                 for (; i < place_holder.Parent.ChildCount; ++i)
                                     if (place_holder.Parent.GetChild(i) == place_holder)
                                         break;
-                                var old_children = (place_holder.Parent as EditableAntlrTree.MyParserRuleContext).children.ToArray();
+                                var old_children = (place_holder.Parent as EditableAntlrTree.MyParserTreeNode).children.ToArray();
                                 for (int j = old_children.Length - 1; j >= i; --j)
                                 {
                                     var ch = old_children[j];

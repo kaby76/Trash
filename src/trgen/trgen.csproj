@@ -27,16 +27,6 @@ This program is part of the Trash toolkit.]]>
     <None Include="templates\**\*.*"></None>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="templates\Antlr4cs\CaseChangingCharStream.cs" />
-    <None Remove="templates\Cpp\CaseChangingCharStream.cpp" />
-    <None Remove="templates\Cpp\CaseChangingCharStream.h" />
-    <None Remove="templates\CSharp\CaseChangingCharStream.cs" />
-    <None Remove="templates\Go\case_changing_stream.go" />
-    <None Remove="templates\JavaScript\CaseChangingStream.js" />
-    <None Remove="templates\Java\CaseChangingCharStream.java" />
-    <None Remove="templates\Python3\CaseChangingStream.py" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
@@ -47,8 +37,9 @@ This program is part of the Trash toolkit.]]>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
-    <ProjectReference Include="..\Docs\Docs.csproj" />
     <ProjectReference Include="../Globbing/TrashGlobbing.csproj" />
+    <ProjectReference Include="..\Algorithms\Algorithms.csproj" />
+    <ProjectReference Include="..\grammars\antlr4\Generated\antlr4.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

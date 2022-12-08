@@ -32,7 +32,6 @@ This program is part of the Trash toolkit.]]>
   <ItemGroup>
     <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
     <ProjectReference Include="../Globbing/TrashGlobbing.csproj" />
-    <ProjectReference Include="..\Docs\Docs.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

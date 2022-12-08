@@ -1067,7 +1067,7 @@ namespace org.apache.xalan.templates
 
 			  /// 
 			  /// <returns> The value of this attribute returned as string </returns>
-			  public virtual string Value
+			  public virtual string StringValue
 			  {
 				  get
 				  {

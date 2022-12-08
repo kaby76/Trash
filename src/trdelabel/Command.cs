@@ -47,7 +47,7 @@
 			{
 				var text = parse_info.Text;
 				var fn = parse_info.FileName;
-				var atrees = parse_info.Nodes.Select(t => t as EditableAntlrTree.MyParserRuleContext).ToList();
+				var atrees = parse_info.Nodes.Select(t => t as EditableAntlrTree.MyParserTreeNode).ToList();
 				var parser = parse_info.Parser as EditableAntlrTree.MyParser;
 				var lexer = parse_info.Lexer as EditableAntlrTree.MyLexer;
 				var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;

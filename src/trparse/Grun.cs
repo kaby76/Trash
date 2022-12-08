@@ -2,18 +2,15 @@
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
+    using AntlrTreeEditing.AntlrDOM;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Security.Cryptography;
     using System.Text;
     using System.Text.Json;
-    using System.Threading;
-    using Document = Workspaces.Document;
-    using Workspace = Workspaces.Workspace;
 
     public class Grun
     {
@@ -23,12 +20,6 @@
         {
             config = co;
         }
-
-        public List<Document> Grammars { get; set; }
-
-        public List<Document> ImportGrammars { get; set; }
-
-        public List<Document> SupportCode { get; set; }
 
         private static string JoinArguments(IEnumerable<string> arguments)
         {
@@ -62,14 +53,6 @@
         private void HandleOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             System.Console.WriteLine(e.Data);
-        }
-
-        public void ReadWorkspace(string csproj)
-        {
-        }
-
-        public void CreateMsbuildWorkspace(Workspace workspace)
-        {
         }
 
         public int Run()
@@ -198,19 +181,19 @@
                 result = "success";
             }
             System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
-
             var parser = type.GetProperty("Parser").GetValue(null, new object[0]) as Antlr4.Runtime.Parser;
             var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
-
             var tokstream = type.GetProperty("TokenStream").GetValue(null, new object[0]) as ITokenStream;
+            var charstream = type.GetProperty("CharStream").GetValue(null, new object[0]) as ICharStream;
             var commontokstream = tokstream as CommonTokenStream;
             var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
             var tree = res2 as IParseTree;
             var t2 = tree as ParserRuleContext;
             //if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
             //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
-            if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
-            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Stream = tokstream as ITokenStream, Nodes = new IParseTree[] { t2 }, Parser = parser, Lexer = lexer };
+            //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
+            var converted_tree = ConvertToDOM.BottomUpConvert(t2, parser, lexer, commontokstream, charstream);
+            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Nodes = new AntlrNode[] { converted_tree }, Parser = parser, Lexer = lexer };
             data.Add(tuple);
             return (bool)res3 ? 1 : 0;
         }

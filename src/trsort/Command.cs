@@ -76,12 +76,12 @@
                             "(//ruleSpec)[1]",
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree
-                                as EditableAntlrTree.MyParserRuleContext).First();
+                                as EditableAntlrTree.MyParserTreeNode).First();
                         var nodes = engine.parseExpression(
                             "//ruleSpec[parserRuleSpec]",
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree
-                                as EditableAntlrTree.MyParserRuleContext).ToList();
+                                as EditableAntlrTree.MyParserTreeNode).ToList();
                         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                         // HACK FIX BELOW GetChild(---> 0)
                         var sorted = nodes.OrderBy(x => x.GetChild(0).GetText()).ToList();
