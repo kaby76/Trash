@@ -11,6 +11,7 @@
     using org.w3c.dom;
     using Antlr4.Runtime;
     using SharpCompress.Writers;
+    using static System.Net.Mime.MediaTypeNames;
 
     public class ParsingResultSetSerializer : JsonConverter<ParsingResultSet[]>
     {
@@ -226,6 +227,8 @@
                         node = new AntlrElement();
                         node._ruleIndex = reader.GetInt32();
                         reader.Read();
+                        node.LocalName = reader.GetString();
+                        reader.Read();
                     }
                     break;
                 case 2:
@@ -440,6 +443,7 @@
             else if (node is AntlrElement n)
             {
                 _writer.WriteNumberValue(n.RuleIndex);
+                _writer.WriteStringValue(n.LocalName);
             }
             else throw new Exception();
             if (node.ChildNodes != null)

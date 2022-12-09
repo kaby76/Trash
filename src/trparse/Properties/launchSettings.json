@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "test.java",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\big-index\\issue-update-python\\java\\java9\\Generated"
+      "commandLineArgs": "-i aaab",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
     }
   }
 }

@@ -87,8 +87,7 @@ namespace Trash
             if (tree is AntlrElement e)
             {
                 var x = e;
-                var ri = x.RuleIndex;
-                var name = parser.RuleNames.Length <= ri ? "unknown" : parser.RuleNames[ri];
+                var name = e.LocalName;
                 StartLine(sb, level);
                 sb.Append(
                     "( " + name
