@@ -75,7 +75,7 @@
                 }
             }
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new ParseTreeConverter());
+            serializeOptions.Converters.Add(new ParsingResultSetSerializer());
             serializeOptions.WriteIndented = true;
             var data = JsonSerializer.Deserialize<ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();

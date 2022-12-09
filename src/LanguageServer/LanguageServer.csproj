@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
-    <PackageReference Include="Antlr4BuildTasks" Version="12.0" />
+    <PackageReference Include="Antlr4BuildTasks" Version="12.1" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.3.1" />

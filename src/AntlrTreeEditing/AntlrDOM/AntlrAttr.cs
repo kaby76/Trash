@@ -28,5 +28,7 @@
             get { return StringValue; }
             set { StringValue = value as string; }
         }
+        public int TokenType { get; set; }
+        public int Channel { get; set; }
     }
 }

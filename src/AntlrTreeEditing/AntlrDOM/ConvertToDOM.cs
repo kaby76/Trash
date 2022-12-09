@@ -85,16 +85,22 @@
                 // intertoken channel text.
                 int start_cs;
                 int stop_cs;
+                int channel;
+                int tt;
                 if (i < 0)
                 {
                     start_cs = 0;
                     stop_cs = term_token.StartIndex;
                     i = term_index;
+                    channel = -1;
+                    tt = -1;
                 }
                 else
                 {
                     start_cs = tokstream.Get(i).StopIndex + 1;
                     stop_cs = term_token.StartIndex;
+                    channel = tokstream.Get(i).Channel;
+                    tt = tokstream.Get(i).Type;
                 }
 
                 do
@@ -107,6 +113,8 @@
                         attr.Name = "Before";
                         attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
                         attr.ParentNode = result;
+                        attr.TokenType = tt;
+                        attr.Channel = channel;
                         nl.Add(attr);
                         map.Add(attr);
                     }
@@ -117,6 +125,8 @@
                         i++;
                         start_cs = tokstream.Get(i).StopIndex + 1;
                         stop_cs = term_token.StartIndex;
+                        channel = tokstream.Get(i).Channel;
+                        tt = tokstream.Get(i).Type;
                     }
                 } while (i < term_index);
 

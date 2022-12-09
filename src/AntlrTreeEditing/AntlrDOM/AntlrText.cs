@@ -8,5 +8,7 @@
         public AntlrText() : base() { }
         public string Data { get; set; }
         public override object NodeValue { get { return Data; } set { Data = (string)value; } }
+        public int TokenType { get; set; }
+        public int Channel { get; set; }
     }
 }
