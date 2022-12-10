@@ -74,11 +74,11 @@
                 var hidden_tokens = tokstream.GetHiddenTokensToLeft(term_index);
                 if (hidden_tokens != null && hidden_tokens.Count > 0)
                 {
-                    stop_token_index = hidden_tokens.First().TokenIndex;
+                    i = hidden_tokens.First().TokenIndex;
                 }
                 else
                 {
-                    stop_token_index = term_index;
+                    i = term_index;
                 }
 
                 // Start at the current token and create a new attribute for
@@ -87,27 +87,31 @@
                 int stop_cs;
                 int channel;
                 int tt;
-                if (i < 0)
+                if (i <= 0)
                 {
                     start_cs = 0;
                     stop_cs = term_token.StartIndex;
                     i = term_index;
                     channel = -1;
-                    tt = -1;
+                    tt = tokstream.Get(i).Type;
                 }
                 else
                 {
-                    start_cs = tokstream.Get(i).StopIndex + 1;
+                    start_cs = tokstream.Get(i-1).StopIndex + 1;
                     stop_cs = term_token.StartIndex;
-                    channel = tokstream.Get(i).Channel;
-                    tt = tokstream.Get(i).Type;
+                    channel = tokstream.Get(i-1).Channel;
+                    tt = tokstream.Get(i-1).Type;
                 }
 
-                do
+                for (; ;)
                 {
                     // Get text in interval [start_cs, stop_cs] and make attribute.
                     if (stop_cs - start_cs > 0)
                     {
+                        start_cs = tokstream.Get(i).StopIndex;
+                        stop_cs = term_token.StartIndex;
+                        channel = -1;
+                        tt = -1;
                         var attr = new AntlrAttr();
                         attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
                         attr.Name = "Before";
@@ -119,27 +123,38 @@
                         map.Add(attr);
                     }
 
-                    // if start on skip, move to token.
-                    if (start_cs == tokstream.Get(i).StopIndex + 1)
+                    if (i == term_index) break;
+
+                    {
+                        channel = tokstream.Get(i).Channel;
+                        tt = tokstream.Get(i).Type;
+                        var attr = new AntlrAttr();
+                        attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
+                        attr.Name = "Before";
+                        attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
+                        attr.ParentNode = result;
+                        attr.TokenType = tt;
+                        attr.Channel = channel;
+                        nl.Add(attr);
+                        map.Add(attr);
+                    }
+
                     {
                         i++;
                         start_cs = tokstream.Get(i).StopIndex + 1;
                         stop_cs = term_token.StartIndex;
-                        channel = tokstream.Get(i).Channel;
-                        tt = tokstream.Get(i).Type;
                     }
-                } while (i < term_index);
+                }
 
-                
-                    //var p3 = TreeEdits.GetText(hidden_tokens);
-                    //var attr = new AntlrAttr();
-                    //var child_count = t.ChildCount;
-                    //attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
-                    //attr.Name = "Before";
-                    //attr.StringValue = p3;
-                    //attr.ParentNode = result;
-                    //nl.Add(attr);
-                    //map.Add(attr);
+                //var p3 = TreeEdits.GetText(hidden_tokens);
+                //var attr = new AntlrAttr();
+                //var child_count = t.ChildCount;
+                //attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
+                //attr.Name = "Before";
+                //attr.StringValue = p3;
+                //attr.ParentNode = result;
+                //nl.Add(attr);
+                //map.Add(attr);
 
                 var child = new AntlrText();
                 child.NodeType = NodeConstants.TEXT_NODE;
