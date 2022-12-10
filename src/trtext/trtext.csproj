@@ -32,8 +32,7 @@ This program is part of the Trash toolkit.
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
-    <ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
-    <ProjectReference Include="..\Workspaces\Workspaces.csproj" />
+    <ProjectReference Include="../AntlrTreeEditing/AntlrTreeEditing.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

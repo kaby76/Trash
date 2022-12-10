@@ -144,7 +144,7 @@
                 var child = new AntlrText();
                 child.NodeType = NodeConstants.TEXT_NODE;
                 //                child.Data = new xpath.org.eclipse.wst.xml.xpath2.processor.@internal.OutputParseTree().PerformEscapes(/*"'" + */ tree.GetText() /*+ "'"*/);
-                child.Data = tree.GetText();
+                child.Data = tt < 0 ? "" : tree.GetText();
                 child.ParentNode = result;
                 nl.Add(child);
                 //{
