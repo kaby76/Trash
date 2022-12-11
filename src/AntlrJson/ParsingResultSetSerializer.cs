@@ -222,16 +222,17 @@
             AntlrNode node = null;
             switch (type)
             {
-                case 1:
+                case NodeConstants.ELEMENT_NODE:
                     {
                         node = new AntlrElement();
+                        node.NodeType = (short)type;
                         node.RuleIndex = reader.GetInt32();
                         reader.Read();
                         node.LocalName = reader.GetString();
                         reader.Read();
                     }
                     break;
-                case 2:
+                case NodeConstants.TEXT_NODE:
                     {
                         var text = new AntlrText();
                         text.Data = reader.GetString();
@@ -243,7 +244,7 @@
                         node = text;
                     }
                     break;
-                case 3:
+                case NodeConstants.ATTRIBUTE_NODE:
                     {
                         var attr = new AntlrAttr();
                         attr.Name = reader.GetString();
@@ -417,16 +418,7 @@
         private void WriteRecurseTree(Node node)
         {
             _writer.WriteStartArray();
-            _writer.WriteNumberValue(
-                node switch
-                {
-                    AntlrDocument => 4,
-                    AntlrAttr => 3,
-                    AntlrText => 2,
-                    AntlrNode => 1,
-                    _ => throw new NotImplementedException(),
-                }
-                );
+            _writer.WriteNumberValue(node.NodeType);
             if (node is AntlrAttr a)
             {
                 _writer.WriteStringValue(a.Name as string);

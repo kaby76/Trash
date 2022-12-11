@@ -4,7 +4,10 @@
 
     public class AntlrAttr : AntlrNode, Attr
     {
-        public AntlrAttr() { }
+        public AntlrAttr()
+        {
+            this.NodeType = NodeConstants.ATTRIBUTE_NODE;
+        }
         public AntlrAttr(AntlrAttr c)
         {
             this.ParentNode = c.ParentNode;

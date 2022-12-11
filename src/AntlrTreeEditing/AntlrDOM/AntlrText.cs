@@ -5,7 +5,10 @@
 
     public class AntlrText : AntlrNode, Text
     {
-        public AntlrText() : base() { }
+        public AntlrText() : base()
+        {
+            this.NodeType = NodeConstants.TEXT_NODE;
+        }
         public string Data { get; set; }
         public override object NodeValue { get { return Data; } set { Data = (string)value; } }
         public int TokenType { get; set; }

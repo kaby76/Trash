@@ -5,7 +5,10 @@
 
     public class AntlrDocument : AntlrNode, Document
     {
-        public AntlrDocument() { }
+        public AntlrDocument()
+        {
+            this.NodeType = NodeConstants.DOCUMENT_NODE;
+        }
         public string DocumentURI { get; set; }
         public NodeList getElementsByTagNameNS(string ns, string local)
         {

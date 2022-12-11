@@ -6,7 +6,12 @@
     public abstract class AntlrNode : Node, IAntlrObserver
     {
         public AntlrNode() { }
-        public short NodeType { get; set; }
+        short _NodeType;
+        public short NodeType
+        {
+            get { return _NodeType; }
+            set { _NodeType = value; }
+        }
         public virtual string LocalName { get; set; }
         public virtual Document OwnerDocument { get; set; }
         public virtual NodeList ChildNodes { get; set; }

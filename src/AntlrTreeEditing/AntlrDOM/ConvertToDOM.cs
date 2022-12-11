@@ -114,7 +114,6 @@
                         channel = -1;
                         tt = -1;
                         var attr = new AntlrAttr();
-                        attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
                         attr.Name = "Before";
                         attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
                         attr.ParentNode = result;
@@ -130,7 +129,6 @@
                         channel = tokstream.Get(i).Channel;
                         tt = tokstream.Get(i).Type;
                         var attr = new AntlrAttr();
-                        attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
                         attr.Name = "Before";
                         attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
                         attr.ParentNode = result;

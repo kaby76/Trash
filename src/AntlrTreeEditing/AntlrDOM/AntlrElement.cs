@@ -8,7 +8,10 @@
 
     public class AntlrElement : AntlrNode, Element
     {
-        public AntlrElement() { }
+        public AntlrElement()
+        {
+            this.NodeType = NodeConstants.ELEMENT_NODE;
+        }
 
         public virtual void EnterRule(IMyParseTreeListener listener)
         {
