@@ -2,7 +2,7 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-i aaab",
+      "commandLineArgs": "-i \"a  b\"",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
     }
   }

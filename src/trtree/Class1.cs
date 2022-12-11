@@ -12,6 +12,8 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using AntlrTreeEditing.AntlrDOM;
+using org.w3c.dom;
+using System.Threading.Channels;
 
 namespace Trash
 {
@@ -84,17 +86,7 @@ namespace Trash
             //    }
             //}
             //else
-            if (tree is AntlrElement e)
-            {
-                var x = e;
-                var name = e.LocalName;
-                StartLine(sb, level);
-                sb.Append(
-                    "( " + name
-                    );
-                sb.AppendLine();
-            }
-            else if (tree is AntlrText t)
+            if (tree is AntlrText t)
             {
                 StartLine(sb, level);
                 sb.Append(
@@ -107,6 +99,26 @@ namespace Trash
                     //+ " si:" + t.StartIndex
                     //+ " ei:" + t.StopIndex
                     //+ " ti:" + t.TokenIndex
+                    );
+                sb.AppendLine();
+            }
+            else if (tree is AntlrAttr a)
+            {
+                StartLine(sb, level);
+                sb.Append(
+                    "( intertoken"
+                    + " text:" + PerformEscapes(a.StringValue)
+                    + " tt:" + a.TokenType);
+                if (a.Channel >= 0)
+                    sb.Append(" chnl:" + lexer.ChannelNames[a.Channel]);
+            }
+            else if (tree is AntlrElement e)
+            {
+                var x = e;
+                var name = e.LocalName;
+                StartLine(sb, level);
+                sb.Append(
+                    "( " + name
                     );
                 sb.AppendLine();
             }

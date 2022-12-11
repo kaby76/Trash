@@ -98,7 +98,7 @@
                 else
                 {
                     start_cs = tokstream.Get(i-1).StopIndex + 1;
-                    stop_cs = term_token.StartIndex;
+                    stop_cs = tokstream.Get(i).StartIndex;
                     channel = tokstream.Get(i-1).Channel;
                     tt = tokstream.Get(i-1).Type;
                 }
@@ -108,8 +108,8 @@
                     // Get text in interval [start_cs, stop_cs] and make attribute.
                     if (stop_cs - start_cs > 0)
                     {
-                        start_cs = tokstream.Get(i).StopIndex;
-                        stop_cs = term_token.StartIndex;
+                        start_cs = tokstream.Get(i - 1).StopIndex + 1;
+                        stop_cs = tokstream.Get(i).StartIndex;
                         channel = -1;
                         tt = -1;
                         var attr = new AntlrAttr();
@@ -141,8 +141,10 @@
 
                     {
                         i++;
-                        start_cs = tokstream.Get(i).StopIndex + 1;
-                        stop_cs = term_token.StartIndex;
+                        start_cs = tokstream.Get(i - 1).StopIndex + 1;
+                        stop_cs = tokstream.Get(i).StartIndex;
+                        channel = tokstream.Get(i - 1).Channel;
+                        tt = tokstream.Get(i - 1).Type;
                     }
                 }
 
@@ -159,6 +161,8 @@
                 var child = new AntlrText();
                 child.NodeType = NodeConstants.TEXT_NODE;
                 //                child.Data = new xpath.org.eclipse.wst.xml.xpath2.processor.@internal.OutputParseTree().PerformEscapes(/*"'" + */ tree.GetText() /*+ "'"*/);
+                channel = tokstream.Get(i).Channel;
+                tt = tokstream.Get(i).Type;
                 child.Data = tt < 0 ? "" : tree.GetText();
                 child.ParentNode = result;
                 nl.Add(child);
