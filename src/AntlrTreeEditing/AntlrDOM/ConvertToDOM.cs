@@ -264,6 +264,7 @@
                 result.LocalName = name;
                 var nl = new AntlrNodeList();
                 result.ChildNodes = nl;
+                result.RuleIndex = t.RuleIndex;
                 var map = new AntlrNamedNodeMap();
                 result.Attributes = map;
                 //{

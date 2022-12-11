@@ -93,11 +93,7 @@
             }
         }
 
-        public int _ruleIndex;
-        public int RuleIndex
-        {
-            get { return _ruleIndex; }
-        }
+        public int RuleIndex { get; set; }
 
         private AntlrNode LeftMost(AntlrNode node)
         {

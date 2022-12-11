@@ -225,7 +225,7 @@
                 case 1:
                     {
                         node = new AntlrElement();
-                        node._ruleIndex = reader.GetInt32();
+                        node.RuleIndex = reader.GetInt32();
                         reader.Read();
                         node.LocalName = reader.GetString();
                         reader.Read();

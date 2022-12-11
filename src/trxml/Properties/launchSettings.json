@@ -3,7 +3,7 @@
     "trxml": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trgen\\empty"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
     }
   }
 }
