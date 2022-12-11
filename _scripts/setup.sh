@@ -18,39 +18,15 @@ echo "$machine"
 echo "$cwd"
 dotnet tool install -g trxml2
 cd src
-directories=`find . -maxdepth 1 -type d`
-for i in $directories
+exes=`find . -name 'tr*.exe' | grep -v publish`
+for i in $exes
 do
-	if [ "$i" == "." ]
-	then
-		continue
-	fi
-	cd $i
-	csproj=`find . -maxdepth 1 -name '*.csproj'`
-	if [[ "$csproj" == "" ]]
-	then
-		cd ..
-		continue
-	fi
-	if [[ ! -f "$i.csproj" ]]
-	then
-		cd ..
-		continue
-	fi
-	trxml2 "$i.csproj" | grep -i PackAsTool 2> /dev/null 1> /dev/null
-	if [[ "$?" != "0" ]]
-	then
-		cd ..
-		continue
-	fi
-	tool=${i##*/}
-	if [[ -d "$cwd/src/$tool/bin/Debug/" ]]
-	then
-		echo $i
-		dotnet nuget add source $cwd/src/$tool/bin/Debug/ --name nuget-$tool > /dev/null 2>&1
-	fi
+	d=`echo $i | awk -F '/' '{print $2}'`
+	cd $d
+	tool=$d
+	dotnet nuget add source $cwd/src/$tool/bin/Debug/ --name nuget-$tool > /dev/null 2>&1
 	cd ..
 done
-dotnet nuget add source "$cwd/src/AntlrJson/bin/Debug/" --name nuget-AntlrJson > /dev/null 2>&1
-dotnet nuget add source "$cwd/src/Docs/bin/Debug/" --name nuget-Docs > /dev/null 2>&1
+#dotnet nuget add source "$cwd/src/AntlrJson/bin/Debug/" --name nuget-AntlrJson > /dev/null 2>&1
+#dotnet nuget add source "$cwd/src/Docs/bin/Debug/" --name nuget-Docs > /dev/null 2>&1
 dotnet nuget list source
