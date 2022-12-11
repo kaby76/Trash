@@ -54,6 +54,7 @@
                 result.ChildNodes = nl;
                 var map = new AntlrNamedNodeMap();
                 result.Attributes = map;
+                result.RuleIndex = -1;
 
                 // The terminal leaf must have a token.
                 var term_token = t.Payload;

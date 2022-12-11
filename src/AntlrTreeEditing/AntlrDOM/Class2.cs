@@ -12,7 +12,7 @@
             //    return;
             //}
 
-            if (t.ChildNodes.Length == 0)
+            if (t.RuleIndex < 0)
             {
                 listener.VisitTerminal(t);
                 return;
