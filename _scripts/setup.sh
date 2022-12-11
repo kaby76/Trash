@@ -16,17 +16,10 @@ else
 fi
 echo "$machine"
 echo "$cwd"
-dotnet tool install -g trxml2
-cd src
-exes=`find . -name 'tr*.exe' | grep -v publish`
-for i in $exes
+tools=`find . -name 'tr*.exe' | grep -v publish | awk -F '/' '{print $3}'`
+echo $tools
+for i in $tools
 do
-	d=`echo $i | awk -F '/' '{print $2}'`
-	cd $d
-	tool=$d
-	dotnet nuget add source $cwd/src/$tool/bin/Debug/ --name nuget-$tool > /dev/null 2>&1
-	cd ..
+	dotnet nuget add source $cwd/src/$i/bin/Debug/ --name trtool-$i > /dev/null 2>&1
 done
-#dotnet nuget add source "$cwd/src/AntlrJson/bin/Debug/" --name nuget-AntlrJson > /dev/null 2>&1
-#dotnet nuget add source "$cwd/src/Docs/bin/Debug/" --name nuget-Docs > /dev/null 2>&1
 dotnet nuget list source
