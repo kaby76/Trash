@@ -1,9 +1,10 @@
 ﻿namespace Trash
 {
     using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
     using AntlrJson;
+    using AntlrTreeEditing.AntlrDOM;
     using org.eclipse.wst.xml.xpath2.processor.util;
+    using org.w3c.dom;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
@@ -28,7 +29,7 @@
             {
                 System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
             }
-            IParseTree[] atrees;
+            AntlrNode[] atrees;
             Parser parser;
             Lexer lexer;
             string text;
@@ -62,8 +63,8 @@
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
             bool do_rs = !config.NoParsingResultSets;
-            List<AntlrTreeEditing.AntlrDOM.AntlrNode> d = new List<AntlrTreeEditing.AntlrDOM.AntlrNode>();
-            List<AntlrTreeEditing.AntlrDOM.AntlrDynamicContext> dc = new List<AntlrTreeEditing.AntlrDOM.AntlrDynamicContext>();
+            List<AntlrNode> d = new List<AntlrNode>();
+            List<AntlrDynamicContext> dc = new List<AntlrDynamicContext>();
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
             foreach (var parse_info in data)
             {
@@ -72,7 +73,6 @@
                 atrees = parse_info.Nodes;
                 parser = parse_info.Parser;
                 lexer = parse_info.Lexer;
-                tokstream = parse_info.Stream;
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser);
                 dc.Add(dynamicContext);
@@ -88,25 +88,23 @@
                 atrees = parse_info.Nodes;
                 parser = parse_info.Parser;
                 lexer = parse_info.Lexer;
-                tokstream = parse_info.Stream;
                 AntlrTreeEditing.AntlrDOM.AntlrNode[] l = new AntlrTreeEditing.AntlrDOM.AntlrNode[1] { a };
                 var nodes = engine.parseExpression(expr,
                         new StaticContextBuilder()).evaluate(dynamicContext, l)
                     .Select(x => (x.NativeValue)).ToArray();
                 if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Length + " nodes.");
-                List<IParseTree> res = new List<IParseTree>();
+                List<AntlrNode> res = new List<AntlrNode>();
                 foreach (var v in nodes)
                 {
                     if (v is AntlrTreeEditing.AntlrDOM.AntlrElement)
                     {
                         var q = v as AntlrTreeEditing.AntlrDOM.AntlrElement;
-                        IParseTree r = q.AntlrIParseTree;
-                        res.Add(r);
+                        res.Add(q);
                     }
                     else if (v is AntlrTreeEditing.AntlrDOM.AntlrText)
                     {
                         var q = v as AntlrTreeEditing.AntlrDOM.AntlrText;
-                        var s = q.AntlrIParseTree.GetText();
+                        var s = q.Data;
                         do_rs = false;
                         System.Console.WriteLine(s);
                     }
@@ -129,7 +127,7 @@
                         System.Console.WriteLine(v);
                     }
                 }
-                var parse_info_out = new AntlrJson.ParsingResultSet() { Text = text, FileName = fn, Lexer = lexer, Parser = parser, Stream = tokstream, Nodes = res.ToArray() };
+                var parse_info_out = new AntlrJson.ParsingResultSet() { Text = text, FileName = fn, Lexer = lexer, Parser = parser, Nodes = res.ToArray() };
                 results.Add(parse_info_out);
             }
             if (do_rs)
