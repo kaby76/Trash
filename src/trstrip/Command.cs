@@ -44,7 +44,7 @@
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = true;
+            serializeOptions.WriteIndented = false;
             var data = JsonSerializer.Deserialize<ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
             foreach (var parse_info in data)

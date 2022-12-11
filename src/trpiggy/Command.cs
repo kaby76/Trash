@@ -275,7 +275,7 @@ namespace Trash
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = true;
+            serializeOptions.WriteIndented = false;
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);
         }

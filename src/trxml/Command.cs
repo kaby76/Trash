@@ -1,7 +1,7 @@
 ﻿namespace Trash
 {
     using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
+    using AntlrTreeEditing.AntlrDOM;
     using System;
     using System.IO;
     using System.Text.Json;
@@ -17,7 +17,7 @@
             }
         }
 
-        class XmlWalk : IParseTreeListener
+        class XmlWalk : IMyParseTreeListener
         {
             int INDENT = 4;
             int level = 0;
@@ -28,7 +28,7 @@
                 parser = p;
             }
 
-            public void EnterEveryRule(ParserRuleContext ctx)
+            public void EnterEveryRule(AntlrElement ctx)
             {
                 System.Console.WriteLine(
                     indent()
@@ -37,7 +37,7 @@
                 ++level;
             }
 
-            public void ExitEveryRule(ParserRuleContext ctx)
+            public void ExitEveryRule(AntlrElement ctx)
             {
                 --level;
                 System.Console.WriteLine(
@@ -46,12 +46,17 @@
                     + ">");
             }
 
-            public void VisitErrorNode(IErrorNode node)
+            public void VisitErrorNode(AntlrElement node)
             {
                 throw new NotImplementedException();
             }
 
-            public void VisitTerminal(ITerminalNode node)
+            //public void VisitErrorNode(IErrorNode node)
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            public void VisitTerminal(AntlrElement node)
             {
                 string value = node.GetText();
                 {
@@ -105,7 +110,7 @@
                 var fn = parse_info.FileName;
                 foreach (var node in parse_info.Nodes)
                 {
-                    ParseTreeWalker.Default.Walk(new XmlWalk(parser), node);
+                    if (node is AntlrElement e) MyParseTreeWalker.Default.Walk(new XmlWalk(parser), e);
                 }
             }
         }

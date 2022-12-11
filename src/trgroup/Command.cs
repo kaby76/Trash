@@ -60,7 +60,7 @@
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = true;
+            serializeOptions.WriteIndented = false;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
             var docs = new List<Workspaces.Document>();

@@ -7,6 +7,14 @@
     {
         public AntlrElement() { }
 
+        public virtual void EnterRule(IMyParseTreeListener listener)
+        {
+        }
+
+        public virtual void ExitRule(IMyParseTreeListener listener)
+        {
+        }
+
         public object getAttributeNS(string sCHEMA_INSTANCE, string nIL_ATTRIBUTE)
         {
             return null;
@@ -20,6 +28,11 @@
         }
 
         public bool isDefaultNamespace(object elementNamespaceUri)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetText()
         {
             throw new NotImplementedException();
         }

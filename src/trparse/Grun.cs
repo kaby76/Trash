@@ -127,7 +127,7 @@
                 if (config.NoParsingResultSets) return result;
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-                serializeOptions.WriteIndented = true;
+                serializeOptions.WriteIndented = false;
                 string js1 = JsonSerializer.Serialize(data.ToArray(), serializeOptions);
                 if (!config.Quiet) System.Console.WriteLine(js1);
             }
