@@ -375,7 +375,11 @@ You must have the NET SDK installed to build and run.
 
 # Current release
 
-## 0.18.0 (still prototyping)
+## 0.18.1 -- Nov 12, 2022
+
+Re-adding CI tests and stabilizing the tools.
+
+## 0.18.0 -- Nov 7, 2022
 
 * Adding Xalan code.
 * Fix #180.
