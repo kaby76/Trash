@@ -1,13 +1,16 @@
 
-( SCIENTIFIC_NUMBER int:8..8 text:3 tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:3 chnl:DEFAULT_TOKEN_CHANNEL l:1 c:8 si:8 ei:8 ti:8
-) 
+( SCIENTIFIC_NUMBER
+  (  text:1 tt:0 chnl:DEFAULT_TOKEN_CHANNEL
+) ) 
 
 
-( SCIENTIFIC_NUMBER int:4..4 text:2 tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:2 chnl:DEFAULT_TOKEN_CHANNEL l:1 c:4 si:4 ei:4 ti:4
-) 
+( SCIENTIFIC_NUMBER
+  (  text:2 tt:0 chnl:DEFAULT_TOKEN_CHANNEL
+) ) 
 
 
-( SCIENTIFIC_NUMBER int:0..0 text:1 tt:2 chnl:DEFAULT_TOKEN_CHANNEL text:1 chnl:DEFAULT_TOKEN_CHANNEL l:1 c:0 si:0 ei:0 ti:0
-) 
+( SCIENTIFIC_NUMBER
+  (  text:3 tt:0 chnl:DEFAULT_TOKEN_CHANNEL
+) ) 
 
 

@@ -6,7 +6,7 @@
 
     public class AntlrNodeList : NodeList
     {
-        public List<AntlrNode> _node_list = new List<AntlrNode>();
+        public List<Node> _node_list = new List<Node>();
 
         public int Length
         {
@@ -32,7 +32,7 @@
 
         public void Add(Node node)
         {
-            throw new NotImplementedException();
+            _node_list.Add(node);
         }
 
         public void Insert(int i, Node node)

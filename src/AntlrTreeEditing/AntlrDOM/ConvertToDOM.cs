@@ -40,21 +40,21 @@
             return result;
         }
 
-        public static AntlrNode BottomUpConvert(IParseTree tree, Parser parser, Lexer lexer, CommonTokenStream tokstream, ICharStream charstream)
+        public static AntlrElement BottomUpConvert(IParseTree tree, AntlrElement parent, Parser parser, Lexer lexer, CommonTokenStream tokstream, ICharStream charstream)
         {
             if (tree is TerminalNodeImpl)
             {
                 TerminalNodeImpl t = tree as TerminalNodeImpl;
-                var result = new AntlrElement();
+                var new_node = new AntlrElement();
                 Interval interval = t.SourceInterval;
-                result.NodeType = NodeConstants.ELEMENT_NODE;
+                new_node.NodeType = NodeConstants.ELEMENT_NODE;
                 var fixed_name = parser.Vocabulary.GetSymbolicName(t.Symbol.Type);
-                result.LocalName = fixed_name;
+                new_node.LocalName = fixed_name;
                 var nl = new AntlrNodeList();
-                result.ChildNodes = nl;
+                new_node.ChildNodes = nl;
                 var map = new AntlrNamedNodeMap();
-                result.Attributes = map;
-                result.RuleIndex = -1;
+                new_node.Attributes = map;
+                new_node.RuleIndex = -1;
 
                 // The terminal leaf must have a token.
                 var term_token = t.Payload;
@@ -69,6 +69,12 @@
                     var tok = tokstream.Get(i);
                     if (tok.Channel == term_token.Channel) break;
                 }
+
+                // Add in all previous hidden tokens or skips. Note, some of these
+                // attributes get added to the parent of the new AntlrElement node
+                // which corresponds to a parser rule node. The reason for this is
+                // because we don't want hidden tokens associated with the TerminalImplNode
+                // itself.
 
                 // Set up copy to first hidden token or terminal token.
                 int stop_token_index;
@@ -116,10 +122,10 @@
                         var attr = new AntlrAttr();
                         attr.Name = "Before";
                         attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
-                        attr.ParentNode = result;
+                        attr.ParentNode = parent;
                         attr.TokenType = tt;
                         attr.Channel = channel;
-                        nl.Add(attr);
+                        parent.ChildNodes.Add(attr);
                         map.Add(attr);
                     }
 
@@ -131,10 +137,10 @@
                         var attr = new AntlrAttr();
                         attr.Name = "Before";
                         attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
-                        attr.ParentNode = result;
+                        attr.ParentNode = parent;
                         attr.TokenType = tt;
                         attr.Channel = channel;
-                        nl.Add(attr);
+                        parent.ChildNodes.Add(attr);
                         map.Add(attr);
                     }
 
@@ -157,14 +163,16 @@
                 //nl.Add(attr);
                 //map.Add(attr);
 
+                parent.ChildNodes.Add(new_node);
+
                 var child = new AntlrText();
                 child.NodeType = NodeConstants.TEXT_NODE;
                 //                child.Data = new xpath.org.eclipse.wst.xml.xpath2.processor.@internal.OutputParseTree().PerformEscapes(/*"'" + */ tree.GetText() /*+ "'"*/);
                 channel = tokstream.Get(i).Channel;
                 tt = tokstream.Get(i).Type;
                 child.Data = tt < 0 ? "" : tree.GetText();
-                child.ParentNode = result;
-                nl.Add(child);
+                child.ParentNode = new_node;
+                new_node.ChildNodes.Add(child);
                 //{
                 //    var attr = new AntlrAttr();
                 //    var child_count = t.ChildCount;
@@ -250,22 +258,23 @@
                 //    nl.Add(attr);
                 //    map.Add(attr);
                 //}
-                return result;
+                return new_node;
             }
             else
             {
-                var result = new AntlrElement();
+                var new_node = new AntlrElement();
                 var t = tree as ParserRuleContext;
                 var t2 = tree as ObserverParserRuleContext;
-                if (t2 != null) t2.Subscribe(result);
-                result.NodeType = NodeConstants.ELEMENT_NODE;
+                if (t2 != null) t2.Subscribe(new_node);
+                new_node.NodeType = NodeConstants.ELEMENT_NODE;
                 var name = parser.RuleNames[(tree as RuleContext).RuleIndex];
-                result.LocalName = name;
+                new_node.LocalName = name;
                 var nl = new AntlrNodeList();
-                result.ChildNodes = nl;
-                result.RuleIndex = t.RuleIndex;
+                new_node.ChildNodes = nl;
+                new_node.RuleIndex = t.RuleIndex;
                 var map = new AntlrNamedNodeMap();
-                result.Attributes = map;
+                new_node.Attributes = map;
+                if (parent != null) parent.ChildNodes.Add(new_node);
                 //{
                 //    var attr = new AntlrAttr();
                 //    var child_count = t.ChildCount;
@@ -364,9 +373,7 @@
                 for (int i = 0; i < tree.ChildCount; ++i)
                 {
                     var child = tree.GetChild(i);
-                    var convert = BottomUpConvert(child, parser, lexer, tokstream, charstream);
-                    nl.Add(convert);
-                    convert.ParentNode = result;
+                    BottomUpConvert(child, new_node, parser, lexer, tokstream, charstream);
                 }
                 for (int i = 0; i < nl.Length; ++i)
                 {
@@ -378,7 +385,7 @@
                         pre.NextSibling = x;
                     }
                 }
-                return result;
+                return new_node;
             }
         }
     }
