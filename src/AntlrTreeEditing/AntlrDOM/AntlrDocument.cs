@@ -1,12 +1,14 @@
 ﻿namespace AntlrTreeEditing.AntlrDOM
 {
-    using Antlr4.Runtime.Tree;
     using org.w3c.dom;
     using System;
 
     public class AntlrDocument : AntlrNode, Document
     {
-        public AntlrDocument(IParseTree n) : base(n) { }
+        public AntlrDocument()
+        {
+            this.NodeType = NodeConstants.DOCUMENT_NODE;
+        }
         public string DocumentURI { get; set; }
         public NodeList getElementsByTagNameNS(string ns, string local)
         {

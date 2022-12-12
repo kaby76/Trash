@@ -29,12 +29,13 @@
 
         public override void AddChild(ITerminalNode t)
         {
-            base.AddChild(t);
-            this.NotifyAddChild(t);
-            if (t is ObserverParserRuleContext o)
-            {
-                o.NotifyAddParent(this);
-            }
+            throw new NotImplementedException();
+            //base.AddChild(t);
+            //this.NotifyAddChild(t);
+            //if (t is ObserverParserRuleContext o)
+            //{
+            //    o.NotifyAddParent(this);
+            //}
         }
 
         public override ITerminalNode AddChild(IToken matchedToken)
@@ -44,12 +45,13 @@
 
         public override void AddChild(RuleContext ruleInvocation)
         {
-            base.AddChild(ruleInvocation);
-            this.NotifyAddChild(ruleInvocation);
-            if (ruleInvocation is ObserverParserRuleContext o)
-            {
-                o.NotifyAddParent(this);
-            }
+            throw new NotImplementedException();
+            //base.AddChild(ruleInvocation);
+            //this.NotifyAddChild(ruleInvocation);
+            //if (ruleInvocation is ObserverParserRuleContext o)
+            //{
+            //    o.NotifyAddParent(this);
+            //}
         }
 
 
@@ -78,16 +80,17 @@
             }
             set
             {
-                var before = base.Parent;
-                if (before != null)
-                {
-                    this.NotifyRemoveParent(before);
-                }
-                base.Parent = value;
-                if (value != null)
-                {
-                    this.NotifyAddParent(value);
-                }
+                throw new NotImplementedException();
+                //var before = base.Parent;
+                //if (before != null)
+                //{
+                //    this.NotifyRemoveParent(before);
+                //}
+                //base.Parent = value;
+                //if (value != null)
+                //{
+                //    this.NotifyAddParent(value);
+                //}
             }
         }
 
@@ -117,7 +120,7 @@
             }
         }
 
-        public void NotifyAddParent(IParseTree loc)
+        public void NotifyAddParent(AntlrNode loc)
         {
             foreach (var observer in observers)
             {
@@ -127,26 +130,29 @@
 
         public void NotifyRemoveParent(IParseTree loc)
         {
-            foreach (var observer in observers)
-            {
-                observer.OnParentDisconnect(loc);
-            }
+            throw new NotImplementedException();
+            //foreach (var observer in observers)
+            //{
+            //    observer.OnParentDisconnect(loc);
+            //}
         }
 
         public void NotifyAddChild(IParseTree loc)
         {
-            foreach (var observer in observers)
-            {
-                observer.OnChildConnect(loc);
-            }
+            throw new NotImplementedException();
+            //foreach (var observer in observers)
+            //{
+            //    observer.OnChildConnect(loc);
+            //}
         }
 
         public void NotifyRemoveChild(IParseTree loc)
         {
-            foreach (var observer in observers)
-            {
-                observer.OnChildDisconnect(loc);
-            }
+            throw new NotImplementedException();
+            //foreach (var observer in observers)
+            //{
+            //    observer.OnChildDisconnect(loc);
+            //}
         }
 
         public void EndTransmission()

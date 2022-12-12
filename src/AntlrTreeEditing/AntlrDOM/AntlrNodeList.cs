@@ -30,5 +30,19 @@
                 _node_list.Remove(e);
         }
 
+        public void Add(Node node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Insert(int i, Node node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveAt(int i)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

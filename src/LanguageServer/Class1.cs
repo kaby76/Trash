@@ -66,7 +66,7 @@ namespace LanguageServer
 
         private static IParseTree ConvertSingle(IParseTree node, IParseTree parent)
         {
-            var r = node as MyParserRuleContext;
+            var r = node as MyParserTreeNode;
             var p = parent as Antlr4.Runtime.ParserRuleContext;
             IParseTree c = null;
             switch (r.RuleIndex)

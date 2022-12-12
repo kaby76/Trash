@@ -146,7 +146,7 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.function
 						continue;
 					}
 
-					string xmllangValue = attr.Value;
+					string xmllangValue = attr.StringValue;
 					int hyphenIndex = xmllangValue.IndexOf('-');
 
 					if (hyphenIndex > -1)

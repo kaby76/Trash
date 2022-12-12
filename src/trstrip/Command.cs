@@ -43,8 +43,8 @@
                 lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new ParseTreeConverter());
-            serializeOptions.WriteIndented = true;
+            serializeOptions.Converters.Add(new ParsingResultSetSerializer());
+            serializeOptions.WriteIndented = false;
             var data = JsonSerializer.Deserialize<ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
             foreach (var parse_info in data)

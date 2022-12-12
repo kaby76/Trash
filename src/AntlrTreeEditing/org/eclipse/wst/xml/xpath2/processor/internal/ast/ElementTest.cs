@@ -218,7 +218,27 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.ast
 				return node;
 			}
 
-			public virtual int Length
+            Node NodeList.item(int i)
+            {
+                throw new NotImplementedException();
+            }
+
+            void NodeList.Add(Node node)
+            {
+                throw new NotImplementedException();
+            }
+
+            void NodeList.Insert(int i, Node node)
+            {
+                throw new NotImplementedException();
+            }
+
+            void NodeList.RemoveAt(int i)
+            {
+                throw new NotImplementedException();
+            }
+
+            public virtual int Length
 			{
 				get
 				{
@@ -237,7 +257,8 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.ast
                 }
 			}
 
-		}
+            int NodeList.Length { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        }
 
 
         public override ICollection<XPathNode> GetAllChildren()

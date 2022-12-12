@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Go",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3875\\asm8080"
+      "commandLineArgs": "",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\antlr4"
     }
   }
 }

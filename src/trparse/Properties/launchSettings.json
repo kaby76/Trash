@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-e -v -i 1+2",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\basic-trees\\no-eof"
+      "commandLineArgs": "-i \"a  b\"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
     }
   }
 }

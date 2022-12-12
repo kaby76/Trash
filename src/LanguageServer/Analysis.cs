@@ -460,7 +460,7 @@ namespace LanguageServer
                     var nodes = engine.parseExpression(
                         @"//LEXER_CHAR_SET",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement))
                     .ToArray();
                     foreach (var n in nodes)
                     {

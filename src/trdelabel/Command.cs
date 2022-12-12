@@ -39,15 +39,15 @@
 				lines = File.ReadAllText(config.File);
 			}
 			var serializeOptions = new JsonSerializerOptions();
-			serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-			serializeOptions.WriteIndented = true;
+			serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
+			serializeOptions.WriteIndented = false;
 			var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
 			var results = new List<ParsingResultSet>();
 			foreach (var parse_info in data)
 			{
 				var text = parse_info.Text;
 				var fn = parse_info.FileName;
-				var atrees = parse_info.Nodes.Select(t => t as EditableAntlrTree.MyParserRuleContext).ToList();
+				var atrees = parse_info.Nodes.Select(t => t as EditableAntlrTree.MyParserTreeNode).ToList();
 				var parser = parse_info.Parser as EditableAntlrTree.MyParser;
 				var lexer = parse_info.Lexer as EditableAntlrTree.MyLexer;
 				var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;

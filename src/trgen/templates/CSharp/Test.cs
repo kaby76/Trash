@@ -16,16 +16,15 @@ public class Program
     public static Lexer Lexer { get; set; }
     public static ErrorListener\<int> LexerErrorListener { get; set; }
     public static ITokenStream TokenStream { get; set; }
+    public static ICharStream CharStream { get; set; }
     public static IParseTree Tree { get; set; }
     public static string StartSymbol { get; set; } = "<start_symbol>";
     public static string Input { get; set; }
     public static void SetupParse2(string input, bool quiet = false)
     {
         ICharStream str = new AntlrInputStream(input);
-        <if (case_insensitive_type)>
-                str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
-        <endif>
-                var lexer = new <lexer_name>(str);
+        CharStream = str;
+        var lexer = new <lexer_name>(str);
         Lexer = lexer;
         var tokens = new CommonTokenStream(lexer);
         TokenStream = tokens;
@@ -58,10 +57,8 @@ public class Program
     public static IParseTree Parse(string input)
     {
         ICharStream str = new AntlrInputStream(input);
-    <if (case_insensitive_type)>
-            str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
-    < endif >
-        var lexer = new < lexer_name > (str);
+        CharStream = str;
+        var lexer = new <lexer_name>(str);
         Lexer = lexer;
         var tokens = new CommonTokenStream(lexer);
         TokenStream = tokens;

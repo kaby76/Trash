@@ -1260,7 +1260,7 @@ namespace org.apache.xml.dtm.@ref
 	  /// 
 	  /// 
 	  /// <seealso cref="org.w3c.dom.Attr"/>
-	  public string Value
+	  public string StringValue
 	  {
 		  get
 		  {

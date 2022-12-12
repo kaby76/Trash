@@ -7119,7 +7119,7 @@ and not(lexerRuleBlock//ebnfSuffix)
             return result;
         }
 
-        public static void Delabel(EditableAntlrTree.MyParser parser, EditableAntlrTree.MyLexer lexer, EditableAntlrTree.MyTokenStream tokstream, List<EditableAntlrTree.MyParserRuleContext> trees)
+        public static void Delabel(EditableAntlrTree.MyParser parser, EditableAntlrTree.MyLexer lexer, EditableAntlrTree.MyTokenStream tokstream, List<EditableAntlrTree.MyParserTreeNode> trees)
         {
             // Verify antlr4 grammar.
             using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =

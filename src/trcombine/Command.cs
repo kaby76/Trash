@@ -47,7 +47,7 @@
                     }
                 };
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
             serializeOptions.WriteIndented = false;
             string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
             System.Console.WriteLine(js1);

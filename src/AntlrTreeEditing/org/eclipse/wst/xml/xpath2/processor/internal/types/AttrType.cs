@@ -80,8 +80,14 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.types
 		{
 			get
 			{
-				return _value.Value;
+				return _value.StringValue;
 			}
+		}
+
+		public object Value
+		{
+			get { return _value.Value; }
+			set { _value.Value = value; }
 		}
 
 		/// <summary>

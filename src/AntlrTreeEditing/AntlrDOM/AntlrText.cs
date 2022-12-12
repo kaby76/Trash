@@ -5,9 +5,13 @@
 
     public class AntlrText : AntlrNode, Text
     {
-        private AntlrText() : base(null) { }
-        public AntlrText(IParseTree n) : base(n) { }
+        public AntlrText() : base()
+        {
+            this.NodeType = NodeConstants.TEXT_NODE;
+        }
         public string Data { get; set; }
         public override object NodeValue { get { return Data; } set { Data = (string)value; } }
+        public int TokenType { get; set; }
+        public int Channel { get; set; }
     }
 }

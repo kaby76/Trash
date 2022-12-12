@@ -1,13 +1,17 @@
 ﻿namespace Trash
 {
     using Algorithms;
+    using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using Antlr4.StringTemplate;
+    using AntlrJson;
+    using AntlrTreeEditing.AntlrDOM;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -46,7 +50,7 @@
 
 
         public Config _config;
-        public static string version = "0.18.2";
+        public static string version = "0.19.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -623,11 +627,12 @@
                 // except possibley in the "source directory".
                 string sgfn;  // Where the grammar is.
                 string tgfn; // Where the grammar existed in the generated output parser directory.
-                Workspaces.Document doc = null;
-                LanguageServer.ParsingResults pr = null;
-                Workspaces.Workspace workspace = null;
+                //Workspaces.Document doc = null;
+                //LanguageServer.ParsingResults pr = null;
+                //Workspaces.Workspace workspace = null;
                 var p = per_grammar.package.Replace(".", "/");
                 var pre = p == "" ? "" : p + "/";
+                List<ParsingResultSet> pr = new List<ParsingResultSet>();
                 if (f == "Arithmetic.g4")
                 {
                     sgfn = f;
@@ -642,17 +647,7 @@
                     {
                         code = File.ReadAllText(f);
                     }
-                    doc = Docs.Class1.CreateDoc(sgfn, code);
-                    pr = LanguageServer.ParsingResultsFactory.Create(doc);
-                    workspace = doc.Workspace;
-                    _ = new LanguageServer.Module().Compile(workspace);
-                    if (pr.Errors.Any())
-                    {
-                        System.Console.Error.WriteLine("Your grammar "
-                            + sgfn
-                            + " does not compile as an Antlr4 grammar! Please check it.");
-                        throw new Exception();
-                    }
+                    DoParse(code, f, pr);
                 }
                 else
                 {
@@ -677,56 +672,73 @@
                         System.Console.Error.WriteLine("Unknown grammar file" + f);
                         throw new Exception();
                     }
-                    doc = Docs.Class1.ReadDoc(sgfn);
-                    pr = LanguageServer.ParsingResultsFactory.Create(doc);
-                    workspace = doc.Workspace;
-                    _ = new LanguageServer.Module().Compile(workspace);
-                    if (pr.Errors.Any())
-                    {
-                        System.Console.Error.WriteLine("Your grammar "
-                            + sgfn
-                            + " does not compile as an Antlr4 grammar! Please check it.");
-                        throw new Exception();
-                    }
+
+                    string code = null;
+                    code = File.ReadAllText(f);
+                    DoParse(code, f, pr);
+
+
+                    //doc = Docs.Class1.ReadDoc(sgfn);
+                    //pr = LanguageServer.ParsingResultsFactory.Create(doc);
+                    //workspace = doc.Workspace;
+                    //_ = new LanguageServer.Module().Compile(workspace);
+                    //if (pr.Errors.Any())
+                    //{
+                    //    System.Console.Error.WriteLine("Your grammar "
+                    //        + sgfn
+                    //        + " does not compile as an Antlr4 grammar! Please check it.");
+                    //    throw new Exception();
+                    //}
                 }
 
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                List<IParseTree> nodes = null;
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(pr.ParseTree, pr.Parser))
+                List<AntlrElement> is_par = null;
+                List<AntlrElement> is_lex = null;
+                List<string> name_ = null;
+                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(pr.First().Nodes.First(), pr.First().Parser))
                 {
-                    nodes = engine.parseExpression(
-                        @"/grammarSpec/grammarDecl",
+                    is_par = engine.parseExpression(
+                        @"/grammarSpec/grammarDecl/grammarType/PARSER",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as IParseTree).ToList();
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement))
+                        .ToList();
+                    is_lex = engine.parseExpression(
+                        @"/grammarSpec/grammarDecl/grammarType/LEXER",
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
+                    name_ = engine.parseExpression(
+                        @"/grammarSpec/grammarDecl/identifier/(TOKEN_REF | RULE_REF)/text()",
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as AntlrText).NodeValue as string).ToList();
                 }
 
-                if (nodes == null)
-                {
-                    System.Console.Error.WriteLine("Your grammar "
-                        + sgfn
-                        + " does not compile as an Antlr4 grammar! Please check it.");
-                    throw new Exception();
-                }
-                if (nodes.Count() == 0 || nodes.Count() > 1)
-                {
-                    System.Console.Error.WriteLine("Your grammar "
-                        + sgfn
-                        + " does not compile as an Antlr4 grammar! Please check it.");
-                    throw new Exception();
-                }
-                var grammarDecl = nodes.First() as LanguageServer.ANTLRv4Parser.GrammarDeclContext;
-                if (nodes.Count() == 0 || nodes.Count() > 1)
-                {
-                    System.Console.Error.WriteLine("Your grammar "
-                        + sgfn
-                        + " does not compile as an Antlr4 grammar! Please check it.");
-                    throw new Exception();
-                }
-                var is_parser_grammar = grammarDecl.grammarType()?.PARSER() != null;
-                var is_lexer_grammar = grammarDecl.grammarType()?.LEXER() != null;
+                //if (nodes == null)
+                //{
+                //    System.Console.Error.WriteLine("Your grammar "
+                //        + sgfn
+                //        + " does not compile as an Antlr4 grammar! Please check it.");
+                //    throw new Exception();
+                //}
+                //if (nodes.Count() == 0 || nodes.Count() > 1)
+                //{
+                //    System.Console.Error.WriteLine("Your grammar "
+                //        + sgfn
+                //        + " does not compile as an Antlr4 grammar! Please check it.");
+                //    throw new Exception();
+                //}
+                //var grammarDecl = nodes.First();
+                //if (nodes.Count() == 0 || nodes.Count() > 1)
+                //{
+                //    System.Console.Error.WriteLine("Your grammar "
+                //        + sgfn
+                //        + " does not compile as an Antlr4 grammar! Please check it.");
+                //    throw new Exception();
+                //}
+                var is_parser_grammar = is_par.Count() != 0;
+                var is_lexer_grammar = is_lex.Count() != 0;
                 var is_combined = !is_parser_grammar && !is_lexer_grammar;
-                var name = grammarDecl.identifier().GetText();
+                var name = name_.First();
                 if (!(is_combined && !is_parser_grammar && !is_lexer_grammar
                     || !is_combined && is_parser_grammar && !is_lexer_grammar
                     || !is_combined && !is_parser_grammar && is_lexer_grammar))
@@ -1356,39 +1368,39 @@
 
         void ComputeSort(PerGrammar per_grammar)
         {
-            Digraph<string> graph = new Digraph<string>();
-            Workspaces.Workspace workspace = new Workspaces.Workspace();
-            foreach (var t in per_grammar.tool_grammar_tuples)
-            {
-                var f = t.OriginalSourceFileName;
-                var doc = Docs.Class1._workspace.FindDocument(f);
-                var pr = LanguageServer.ParsingResultsFactory.Create(doc);
-                workspace = doc.Workspace;
-            }
-            _ = new LanguageServer.Module().Compile(workspace);
-            foreach (var t in per_grammar.tool_grammar_tuples)
-            {
-                var f = t.OriginalSourceFileName;
-                var doc = Docs.Class1._workspace.FindDocument(f);
-                var pr = LanguageServer.ParsingResultsFactory.Create(doc);
-                workspace = doc.Workspace;
-                var imports = pr.Imports;
-                foreach (var d in imports)
-                {
-                    var dd = d.Replace("\\", "/");
-                    // Import file names are in absolute path names. Change
-                    // it back to relative paths.
-                    var v = per_grammar.tool_grammar_tuples.Select(t => t.OriginalSourceFileName.Replace("\\","/"))
-                        .Where(t => dd.EndsWith(t)).FirstOrDefault();
-                    if (v == null) continue;
-                    DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
-                    graph.AddEdge(e);
-                }
-            }
-            var subset = graph.Vertices.ToList();
-            var sort = new TopologicalSort<string, DirectedEdge<string>>(graph, subset);
-            List<string> order = sort.Topological_sort();
-            per_grammar.tool_grammar_tuples.Sort(new GrammarOrderCompare(order));
+            //Digraph<string> graph = new Digraph<string>();
+            //Workspaces.Workspace workspace = new Workspaces.Workspace();
+            //foreach (var t in per_grammar.tool_grammar_tuples)
+            //{
+            //    var f = t.OriginalSourceFileName;
+            //    var doc = Docs.Class1._workspace.FindDocument(f);
+            //    var pr = LanguageServer.ParsingResultsFactory.Create(doc);
+            //    workspace = doc.Workspace;
+            //}
+            //_ = new LanguageServer.Module().Compile(workspace);
+            //foreach (var t in per_grammar.tool_grammar_tuples)
+            //{
+            //    var f = t.OriginalSourceFileName;
+            //    var doc = Docs.Class1._workspace.FindDocument(f);
+            //    var pr = LanguageServer.ParsingResultsFactory.Create(doc);
+            //    workspace = doc.Workspace;
+            //    var imports = pr.Imports;
+            //    foreach (var d in imports)
+            //    {
+            //        var dd = d.Replace("\\", "/");
+            //        // Import file names are in absolute path names. Change
+            //        // it back to relative paths.
+            //        var v = per_grammar.tool_grammar_tuples.Select(t => t.OriginalSourceFileName.Replace("\\","/"))
+            //            .Where(t => dd.EndsWith(t)).FirstOrDefault();
+            //        if (v == null) continue;
+            //        DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
+            //        graph.AddEdge(e);
+            //    }
+            //}
+            //var subset = graph.Vertices.ToList();
+            //var sort = new TopologicalSort<string, DirectedEdge<string>>(graph, subset);
+            //List<string> order = sort.Topological_sort();
+            //per_grammar.tool_grammar_tuples.Sort(new GrammarOrderCompare(order));
         }
 
         string FixedName(string from, Trash.PerGrammar per_grammar)
@@ -1454,5 +1466,58 @@
                 }
             }
         }
+
+        int DoParse(string txt, string input_name, List<AntlrJson.ParsingResultSet> data)
+        {
+            System.Reflection.Assembly a = this.GetType().Assembly;
+            var path = a.Location;// + Path.DirectorySeparatorChar;
+            var full_path = Path.GetFullPath(path);
+            full_path = Path.GetDirectoryName(full_path);
+            full_path = full_path.Replace("\\", "/");
+            if (!full_path.EndsWith("/")) full_path = full_path + "/";
+            Assembly asm = Assembly.LoadFile(full_path + "antlr4.dll");
+            Type[] types = asm.GetTypes();
+            Type type = asm.GetType("Program");
+
+            MethodInfo methodInfo = type.GetMethod("SetupParse2");
+            object[] parm1 = new object[] { txt, false };
+            var res = methodInfo.Invoke(null, parm1);
+
+            MethodInfo methodInfo2 = type.GetMethod("Parse2");
+            object[] parm2 = new object[] { };
+            DateTime before = DateTime.Now;
+            var res2 = methodInfo2.Invoke(null, parm2);
+            DateTime after = DateTime.Now;
+
+            MethodInfo methodInfo3 = type.GetMethod("AnyErrors");
+            object[] parm3 = new object[] { };
+            var res3 = methodInfo3.Invoke(null, parm3);
+            var result = "";
+            if ((bool)res3)
+            {
+                result = "fail";
+            }
+            else
+            {
+                result = "success";
+            }
+            System.Console.Error.WriteLine("CSharp " + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+            var parser = type.GetProperty("Parser").GetValue(null, new object[0]) as Antlr4.Runtime.Parser;
+            var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
+            var tokstream = type.GetProperty("TokenStream").GetValue(null, new object[0]) as ITokenStream;
+            var charstream = type.GetProperty("CharStream").GetValue(null, new object[0]) as ICharStream;
+            var commontokstream = tokstream as CommonTokenStream;
+            var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
+            var tree = res2 as IParseTree;
+            var t2 = tree as ParserRuleContext;
+            //if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
+            //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
+            //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
+            var converted_tree = ConvertToDOM.BottomUpConvert(t2, parser, lexer, commontokstream, charstream);
+            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Nodes = new AntlrNode[] { converted_tree }, Parser = parser, Lexer = lexer };
+            data.Add(tuple);
+            return (bool)res3 ? 1 : 0;
+        }
+
     }
 }

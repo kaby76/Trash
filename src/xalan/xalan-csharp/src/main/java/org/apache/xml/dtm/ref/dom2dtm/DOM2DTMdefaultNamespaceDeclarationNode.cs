@@ -117,7 +117,7 @@ namespace org.apache.xml.dtm.@ref.dom2dtm
 			  throw new DTMException(NOT_SUPPORTED_ERR);
 		  }
 	  }
-	  public virtual string Value
+	  public virtual string StringValue
 	  {
 		  get
 		  {

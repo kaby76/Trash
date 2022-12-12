@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Text;
 using java.util;
 using org.eclipse.wst.xml.xpath2.processor;
+using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
 using org.w3c.dom;
 
 
@@ -429,7 +430,8 @@ namespace org.w3c.dom
     {
         string Prefix { get; set; }
         object Name { get; set; }
-        string Value { get; set; }
+        string StringValue { get; }
+        object Value { get; set; }
         Node OwnerElement { get; set; }
         TypeInfo SchemaTypeInfo { get; set; }
     }
@@ -459,6 +461,9 @@ namespace org.w3c.dom
     {
         int Length { get; set; }
         Node item(int i);
+        void Add(Node node);
+        void Insert(int i, Node node);
+        void RemoveAt(int i);
     }
 
     public interface Text : CharacterData

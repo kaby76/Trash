@@ -1,24 +1,10 @@
 #!/usr/bin/bash
 cd src
-directories=`find . -maxdepth 1 -type d -name "tr*"`
-cwd=`pwd`
-for i in $directories
+exes=`find . -name 'tr*.exe' | grep -v publish`
+for i in $exes
 do
-	if [ "$i" == "." ]
-	then
-		continue
-	fi
-	cd "$cwd/$i"
-	csproj=`find . -maxdepth 1 -name '*.csproj'`
-	if [[ "$csproj" == "" ]]
-	then
-		continue
-	fi
-	if [[ ! -f "$i.csproj" ]]
-	then
-		continue
-	fi
-	echo $i
-	tool=${i##*/}
-	dotnet tool uninstall -g $tool
+	d=`echo $i | awk -F '/' '{print $2}'`
+	cd $d
+	tool=$d
+	dotnet tool uninstall -g $tool > /dev/null 2>&1
 done

@@ -49,8 +49,8 @@
                 lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-            serializeOptions.WriteIndented = true;
+            serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
+            serializeOptions.WriteIndented = false;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
             var docs = new List<Workspaces.Document>();

@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Algorithms\Algorithms.csproj" />
-    <ProjectReference Include="..\EditableAntlrTree\EditableAntlrTree.csproj" />
     <ProjectReference Include="..\AntlrTreeEditing\AntlrTreeEditing.csproj" />
     <ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
     <ProjectReference Include="..\Workspaces\Workspaces.csproj" />

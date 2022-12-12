@@ -52,8 +52,8 @@
                 lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-            serializeOptions.WriteIndented = true;
+            serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
+            serializeOptions.WriteIndented = false;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
             foreach (var parse_info in data)
@@ -63,7 +63,6 @@
                 var trees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
 
                 if (config.Verbose) System.Console.WriteLine(LanguageServer.TreeOutput.OutputTree(trees.First(), lexer, parser, tokstream).ToString());
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();

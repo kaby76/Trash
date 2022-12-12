@@ -41,7 +41,7 @@
                 lines = File.ReadAllText(config.File);
             }
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
+            serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
             serializeOptions.WriteIndented = false;
             AntlrJson.ParsingResultSet[] data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             foreach (AntlrJson.ParsingResultSet parse_info in data)
