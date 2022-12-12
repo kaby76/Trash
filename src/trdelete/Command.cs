@@ -2,9 +2,10 @@
 {
     using Antlr4.Runtime.Tree;
     using AntlrJson;
+    using AntlrTreeEditing.AntlrDOM;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
-    using System;
+    using LoggerNs;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -64,26 +65,29 @@
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
 
-                if (config.Verbose) System.Console.WriteLine(LanguageServer.TreeOutput.OutputTree(trees.First(), lexer, parser, tokstream).ToString());
+                if (config.Verbose)
+                {
+                    foreach (var n in trees)
+                        System.Console.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
+                }
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                IParseTree[] root = trees.ToArray();
+                var root = trees.ToArray();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
                 {
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     foreach (var node in nodes)
                     {
-                        TreeEdits.DeleteInStreams(tokstream, node);
+                        TreeEdits.Delete(node);
                     }
 
                     var tuple = new ParsingResultSet()
                     {
-                        Text = tokstream.Text,
+                        Text = text,
                         FileName = fn,
-                        Stream = tokstream,
                         Nodes = trees,
                         Lexer = lexer,
                         Parser = parser
@@ -93,21 +97,6 @@
             }
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);
-        }
-        private string OutputTokens(EditableAntlrTree.MyTokenStream tokstream, IParseTree tree)
-        {
-            var frontier = TreeEdits.Frontier(tree).ToList();
-            var first = frontier.First();
-            var last = frontier.Last();
-            var first_index = first.Payload.TokenIndex;
-            var last_index = last.Payload.TokenIndex;
-            StringBuilder sb = new StringBuilder();
-            for (var i = first_index; i <= last_index; i++)
-            {
-                var token = tokstream.Get(i);
-                sb.AppendLine(token.ToString());
-            }
-            return sb.ToString();
         }
     }
 }

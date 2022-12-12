@@ -2,8 +2,8 @@
   "profiles": {
     "trinsert": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt //dedent xxx",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\supported_grammars\\pegen\\Generated-CSharp"
+      "commandLineArgs": "-f o.pt //B xxx",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
     }
   }
 }

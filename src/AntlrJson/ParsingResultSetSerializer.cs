@@ -170,7 +170,7 @@
                         reader.Read();
                         while (reader.TokenType != JsonTokenType.EndArray)
                         {
-                            var n = ReadRecursiveTree(ref reader);
+                            var n = ReadRecursiveTree(ref reader, null);
                             result.Add(n);
                         }
                         reader.Read();
@@ -212,7 +212,7 @@
             return results.ToArray();
         }
 
-        private AntlrNode ReadRecursiveTree(ref Utf8JsonReader reader)
+        private AntlrNode ReadRecursiveTree(ref Utf8JsonReader reader, AntlrElement parent)
         {
             if (reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
             reader.Read();
@@ -230,6 +230,11 @@
                         reader.Read();
                         node.LocalName = reader.GetString();
                         reader.Read();
+                        if (parent != null)
+                        {
+                            parent.ChildNodes.Add(node);
+                            node.ParentNode = parent;
+                        }
                     }
                     break;
                 case NodeConstants.TEXT_NODE:
@@ -242,6 +247,11 @@
                         text.TokenType = reader.GetInt32();
                         reader.Read();
                         node = text;
+                        if (parent != null)
+                        {
+                            parent.ChildNodes.Add(node);
+                            node.ParentNode = parent;
+                        }
                     }
                     break;
                 case NodeConstants.ATTRIBUTE_NODE:
@@ -256,6 +266,12 @@
                         attr.TokenType = reader.GetInt32();
                         reader.Read();
                         node = attr;
+                        if (parent != null)
+                        {
+                            parent.ChildNodes.Add(node);
+                            node.ParentNode = parent;
+                            //parent.Attributes.?????(node);
+                        }
                     }
                     break;
                 default:
@@ -268,8 +284,7 @@
                 reader.Read();
                 while (reader.TokenType != JsonTokenType.EndArray)
                 {
-                    var child = ReadRecursiveTree(ref reader);
-                    nl.Add(child);
+                    ReadRecursiveTree(ref reader, node as AntlrElement);
                 }
                 reader.Read();
             }

@@ -1,10 +1,9 @@
 ﻿using Antlr4.Runtime;
-using AntlrTreeEditing.AntlrDOM;
 using System;
 using System.IO;
 using System.Text;
 
-namespace Trash
+namespace AntlrTreeEditing.AntlrDOM
 {
     public class TreeOutput
     {

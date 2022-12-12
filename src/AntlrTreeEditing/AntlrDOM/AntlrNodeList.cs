@@ -37,12 +37,12 @@
 
         public void Insert(int i, Node node)
         {
-            throw new NotImplementedException();
+            this._node_list.Insert(i, node);
         }
 
         public void RemoveAt(int i)
         {
-            throw new NotImplementedException();
+            this._node_list.RemoveAt(i);
         }
     }
 }

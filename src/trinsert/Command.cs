@@ -64,54 +64,29 @@
                 var fn = parse_info.FileName;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
-                var before_tokens = tokstream.GetTokens();
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
                 {
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     foreach (var node in nodes)
                     {
-                        var frontier = TreeEdits.Frontier(node).ToList();
-                        if (frontier.Count == 0)
+                        if (!config.After)
                         {
-
+                            TreeEdits.InsertAfter(node, str);
                         }
                         else
                         {
-                            // There are two ways to insert text: as a token/tree node,
-                            // or in the intertoken character range between tokens in the
-                            // token stream. Both have issues, but
-                            // there are differences.
-
-                            if (config.AsTree)
-                            {
-                                throw new System.NotImplementedException();
-                            }
-                            else
-                            {
-                                if (!config.After)
-                                {
-                                    TerminalNodeImpl leaf = frontier.First();
-                                    TreeEdits.InsertAfterInStreams(leaf, str);
-                                }
-                                else
-                                {
-                                    TerminalNodeImpl leaf = frontier.Last();
-                                    TreeEdits.InsertBeforeInStreams(node, str);
-                                }
-                            }
+                            TreeEdits.InsertBefore(node, str);
                         }
                     }
                     var tuple = new ParsingResultSet()
                     {
-                        Text = tokstream.Text,
+                        Text = text,
                         FileName = fn,
-                        Stream = tokstream,
                         Nodes = trees,
                         Lexer = lexer,
                         Parser = parser
@@ -122,27 +97,5 @@
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);
         }
-
-        private string OutputTokens(IParseTree tree)
-        {
-            Stack<IParseTree> stack = new Stack<IParseTree>();
-            stack.Push(tree);
-            StringBuilder sb = new StringBuilder();
-            while (stack.Any())
-            {
-                var n = stack.Pop();
-                if (n is TerminalNodeImpl term)
-                {
-                    sb.AppendLine(term.Symbol.ToString());
-                }
-                else
-                    for (int i = n.ChildCount - 1; i >= 0; i--)
-                    {
-                        stack.Push(n.GetChild(i));
-                    }
-            }
-            return sb.ToString();
-        }
-
     }
 }
