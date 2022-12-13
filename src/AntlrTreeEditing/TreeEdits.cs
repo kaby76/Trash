@@ -672,7 +672,7 @@
             //}
         }
 
-        public static void MoveBefore(IEnumerable<AntlrNode> from_list, AntlrNode to)
+        public static void MoveBefore(IEnumerable<AntlrElement> from_list, AntlrNode to)
         {
             if (from_list == null) return;
             if (to == null) return;
@@ -820,49 +820,32 @@
             //}
         }
 
-        private static void MoveBefore(AntlrNode from, AntlrNode to)
+        private static void MoveBefore(AntlrElement from, AntlrNode to)
         {
             throw new NotImplementedException();
         }
+
+
 
         public static AntlrNode Replace(AntlrNode node, string arbitrary_string)
         {
-            throw new NotImplementedException();
-            //var token = new CommonToken(0) { Line = -1, Column = -1, Text = arbitrary_string };
-            //var leaf = new TerminalNodeImpl(token);
-
-            //IParseTree parent = node.Parent;
-            //var c = parent as ParserRuleContext;
-            //for (int i = 0; i < c.ChildCount; ++i)
-            //{
-            //    var child = c.children[i];
-            //    if (child == node)
-            //    {
-            //        var temp = c.children[i];
-            //        if (temp is TerminalNodeImpl)
-            //        {
-            //            var t = temp as TerminalNodeImpl;
-            //            t.Parent = null;
-            //            c.children[i] = leaf;
-            //            var r = leaf;
-            //            r.Parent = c;
-            //        }
-            //        else if (temp is ParserRuleContext)
-            //        {
-            //            var t = temp as ParserRuleContext;
-            //            t.Parent = null;
-            //            c.children[i] = leaf;
-            //            var r = leaf;
-            //            r.Parent = c;
-            //        }
-            //        else
-            //            throw new Exception("Tree contains something other than TerminalNodeImpl or ParserRuleContext");
-            //        break;
-            //    }
-            //}
-            //return leaf;
+            var node_to_insert = new AntlrText();
+            node_to_insert.Data = arbitrary_string;
+            var parent = node.ParentNode;
+            for (int i = 0; i < parent.ChildNodes.Length; ++i)
+            {
+                var child = parent.ChildNodes.item(i);
+                if (child == node)
+                {
+                    parent.ChildNodes.RemoveAt(i);
+                    parent.ChildNodes.Insert(i, node_to_insert);
+                    node_to_insert.ParentNode = parent;
+                    child.ParentNode = null;
+                    break;
+                }
+            }
+            return node_to_insert;
         }
-
 
         public static void Replace(AntlrNode tree, Fun find)
         {

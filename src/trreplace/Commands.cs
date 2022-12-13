@@ -63,21 +63,22 @@
                 var atrees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
                 using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
                 {
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
-                    TreeEdits.Replace(tokstream, nodes, str);
+                    foreach (var node in nodes)
+                    {
+                        TreeEdits.Replace(node, str);
+                    }
                     var tuple = new ParsingResultSet()
                     {
-                        Text = ((EditableAntlrTree.MyTokenStream)tokstream).Text,
+                        Text = text,
                         FileName = fn,
-                        Stream = tokstream,
                         Nodes = atrees,
                         Lexer = lexer,
                         Parser = parser
