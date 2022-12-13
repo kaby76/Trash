@@ -114,6 +114,7 @@
                             start_cs = tokstream.Get(i - 1).StopIndex + 1;
                         }
                         stop_cs = tokstream.Get(i).StartIndex;
+                        if (stop_cs > 0) stop_cs--;
                         channel = -1;
                         tt = -1;
                         var attr = new AntlrAttr();
