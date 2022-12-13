@@ -74,7 +74,7 @@
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     foreach (var node in nodes)
                     {
-                        if (!config.After)
+                        if (config.After)
                         {
                             TreeEdits.InsertAfter(node, str);
                         }

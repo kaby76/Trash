@@ -146,7 +146,7 @@
 
         public static void InsertBefore(Node node, string arbitrary_string)
         {
-            var node_to_insert = new XmlText();
+            var node_to_insert = new AntlrText();
             node_to_insert.Data = arbitrary_string;
             var parent = node.ParentNode;
             for (int i = 0; i < parent.ChildNodes.Length; ++i)
