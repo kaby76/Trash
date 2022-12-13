@@ -123,7 +123,9 @@
                         //    System.Console.Write(line_a + "," + col_a
                         //            + "-" + line_b + "," + col_b + ":");
                         //}
-                        System.Console.WriteLine(this.Reconstruct(node));
+                        
+                        // Write, not WriteLine since the text reconstructed is exact.
+                        System.Console.Write(this.Reconstruct(node));
                     }
                 }
             }
