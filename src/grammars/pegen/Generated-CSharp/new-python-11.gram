@@ -1,0 +1,1075 @@
+
+
+# ========================= START OF THE GRAMMAR =========================
+
+# General grammatical elements and rules:
+#
+# * Strings with double quotes (") denote SOFT KEYWORDS
+# * Strings with single quotes (') denote KEYWORDS
+# * Upper case names (NAME) denote tokens in the Grammar/Tokens file
+# * Rule names starting with "invalid_" are used for specialized syntax errors
+#     - These rules are NOT used in the first pass of the parser.
+#     - Only if the first pass fails to parse, a second pass including the invalid
+#       rules will be executed.
+#     - If the parser fails in the second phase with a generic syntax error, the
+#       location of the generic failure of the first pass will be used (this avoids
+#       reporting incorrect locations due to the invalid rules).
+#     - The order of the alternatives involving invalid rules matter
+#       (like any rule in PEG).
+#
+# Grammar Syntax (see PEP 617 for more information):
+#
+# rule_name: expression
+#   Optionally, a type can be included right after the rule name, which
+#   specifies the return type of the C or Python function corresponding to the
+#   rule:
+# rule_name[return_type]: expression
+#   If the return type is omitted, then a void * is returned in C and an Any in
+#   Python.
+# e1 e2
+#   Match e1, then match e2.
+# e1 | e2
+#   Match e1 or e2.
+#   The first alternative can also appear on the line after the rule name for
+#   formatting purposes. In that case, a | must be used before the first
+#   alternative, like so:
+#       rule_name[return_type]:
+#            | first_alt
+#            | second_alt
+# ( e )
+#   Match e (allows also to use other operators in the group like '(e)*')
+# [ e ] or e?
+#   Optionally match e.
+# e*
+#   Match zero or more occurrences of e.
+# e+
+#   Match one or more occurrences of e.
+# s.e+
+#   Match one or more occurrences of e, separated by s. The generated parse tree
+#   does not include the separator. This is otherwise identical to (e (s e)*).
+# &e
+#   Succeed if e can be parsed, without consuming any input.
+# !e
+#   Fail if e can be parsed, without consuming any input.
+# ~
+#   Commit to the current alternative, even if it fails to parse.
+#
+
+# STARTING RULES
+# ==============
+
+file:[statements] ENDMARKER
+interactive:statement_newline
+eval:expressions NEWLINE* ENDMARKER
+func_type: '('[type_expressions] ')' '->'expression NEWLINE* ENDMARKER
+fstring: star_expressions
+
+# GENERAL STATEMENTS
+# ==================
+
+statements:statement+
+
+statement:compound_stmt simple_stmts
+
+statement_newline:
+    compound_stmt NEWLINE
+    | simple_stmts
+    | NEWLINE
+    | ENDMARKER
+
+simple_stmts:
+    simple_stmt !';' NEWLINE # Not needed, there for speedup
+    |';'.simple_stmt+ [';'] NEWLINE
+
+# NOTE: assignment MUST precede expression, else parsing a simple assignment
+# will throw a SyntaxError.
+simple_stmt (memo):
+     assignment
+    |star_expressions
+    | &'return' return_stmt
+    | &('import' | 'from') import_stmt
+    | &'raise' raise_stmt
+    | 'pass'
+    | &'del' del_stmt
+    | &'yield' yield_stmt
+    | &'assert' assert_stmt
+    | 'break'
+    | 'continue'
+    | &'global' global_stmt
+    | &'nonlocal' nonlocal_stmt
+
+compound_stmt:
+     &('def' | '@' | ASYNC) function_def
+    | &'if' if_stmt
+    | &('class' | '@') class_def
+    | &('with' | ASYNC) with_stmt
+    | &('for' | ASYNC) for_stmt
+    | &'try' try_stmt
+    | &'while' while_stmt
+    | match_stmt
+
+# SIMPLE STATEMENTS
+# =================
+
+# NOTE: annotated_rhs may start with 'yield'; yield_expr must start with 'yield'
+assignment:
+    NAME ':'expression['='annotated_rhs]
+    |('('single_target ')'
+         | single_subscript_attribute_target) ':'expression['='annotated_rhs]
+    |(star_targets '=')+(yield_expr | star_expressions) !'='[TYPE_COMMENT]
+    |single_targetaugassign ~(yield_expr | star_expressions)
+    | invalid_assignment
+
+annotated_rhs: yield_expr  star_expressions
+
+augassign:
+     '+='
+    | '-='
+    | '*='
+    | '@='
+    | '/='
+    | '%='
+    | '&='
+    | '|='
+    | '^='
+    | '<<='
+    | '>>='
+    | '**='
+    | '//='
+
+return_stmt:
+     'return'[star_expressions]
+
+raise_stmt:
+     'raise'expression['from'expression]
+    | 'raise'
+
+global_stmt: 'global'','.NAME+
+
+nonlocal_stmt: 'nonlocal'','.NAME+
+
+del_stmt:
+     'del'del_targets &(';' | NEWLINE)
+    | invalid_del_stmt
+
+yield_stmt:yield_expr
+
+assert_stmt: 'assert'expression[','expression]
+
+import_stmt: import_name  import_from
+
+# Import statements
+# -----------------
+
+import_name: 'import'dotted_as_names
+# note below: the ('.' | '...') is necessary because '...' is tokenized as ELLIPSIS
+import_from:
+     'from'('.' | '...')*dotted_name 'import'import_from_targets
+    | 'from'('.' | '...')+ 'import'import_from_targets
+import_from_targets:
+     '('import_from_as_names [','] ')'
+    | import_from_as_names !','
+    | '*'
+    | invalid_import_from_targets
+import_from_as_names:
+    ','.import_from_as_name+
+import_from_as_name:
+    NAME['as'NAME]
+dotted_as_names:
+    ','.dotted_as_name+
+dotted_as_name:
+    dotted_name['as'NAME]
+dotted_name:
+    dotted_name '.'NAME
+    | NAME
+
+# COMPOUND STATEMENTS
+# ===================
+
+# Common elements
+# ---------------
+
+block (memo):
+     NEWLINE INDENTstatements DEDENT
+    | simple_stmts
+    | invalid_block
+
+decorators:('@'named_expression NEWLINE)+
+
+# Class definitions
+# -----------------
+
+class_def:
+    decoratorsclass_def_raw
+    | class_def_raw
+
+class_def_raw:
+     invalid_class_def_raw
+    | 'class'NAME['('[arguments] ')'] ':'block
+
+# Function definitions
+# --------------------
+
+function_def:
+    decoratorsfunction_def_raw
+    | function_def_raw
+
+function_def_raw:
+     invalid_def_raw
+    | 'def'NAME &&'('[params] ')'['->'expression] &&':'[func_type_comment]block
+    | ASYNC 'def'NAME &&'('[params] ')'['->'expression] &&':'[func_type_comment]block
+
+# Function parameters
+# -------------------
+
+params:
+     invalid_parameters
+    | parameters
+
+parameters:
+    slash_no_defaultparam_no_default*param_with_default*[star_etc]
+    |slash_with_defaultparam_with_default*[star_etc]
+    |param_no_default+param_with_default*[star_etc]
+    |param_with_default+[star_etc]
+    |star_etc
+
+# Some duplication here because we can't write (',' | &')'),
+# which is because we don't support empty alternatives (yet).
+
+slash_no_default:
+    param_no_default+ '/' ','
+    |param_no_default+ '/' &')'
+slash_with_default:
+    param_no_default*param_with_default+ '/' ','
+    |param_no_default*param_with_default+ '/' &')'
+
+star_etc:
+     invalid_star_etc
+    | '*'param_no_defaultparam_maybe_default*[kwds]
+    | '*'param_no_default_star_annotationparam_maybe_default*[kwds]
+    | '*' ','param_maybe_default+[kwds]
+    |kwds
+
+kwds:
+     invalid_kwds
+    | '**'param_no_default
+
+# One parameter.  This *includes* a following comma and type comment.
+#
+# There are three styles:
+# - No default
+# - With default
+# - Maybe with default
+#
+# There are two alternative forms of each, to deal with type comments:
+# - Ends in a comma followed by an optional type comment
+# - No comma, optional type comment, must be followed by close paren
+# The latter form is for a final parameter without trailing comma.
+#
+
+param_no_default:
+    param ','TYPE_COMMENT?
+    |paramTYPE_COMMENT? &')'
+param_no_default_star_annotation:
+    param_star_annotation ','TYPE_COMMENT?
+    |param_star_annotationTYPE_COMMENT? &')'
+param_with_default:
+    paramdefault ','TYPE_COMMENT?
+    |paramdefaultTYPE_COMMENT? &')'
+param_maybe_default:
+    paramdefault? ','TYPE_COMMENT?
+    |paramdefault?TYPE_COMMENT? &')'
+param:NAMEannotation?
+param_star_annotation:NAMEstar_annotation
+annotation: ':'expression
+star_annotation: ':'star_expression
+default: '='expression  invalid_default
+
+# If statement
+# ------------
+
+if_stmt:
+     invalid_if_stmt
+    | 'if'named_expression ':'blockelif_stmt
+    | 'if'named_expression ':'block[else_block]
+elif_stmt:
+     invalid_elif_stmt
+    | 'elif'named_expression ':'blockelif_stmt
+    | 'elif'named_expression ':'block[else_block]
+else_block:
+     invalid_else_stmt
+    | 'else' &&':'block
+
+# While statement
+# ---------------
+
+while_stmt:
+     invalid_while_stmt
+    | 'while'named_expression ':'block[else_block]
+
+# For statement
+# -------------
+
+for_stmt:
+     invalid_for_stmt
+    | 'for'star_targets 'in' ~star_expressions ':'[TYPE_COMMENT]block[else_block]
+    | ASYNC 'for'star_targets 'in' ~star_expressions ':'[TYPE_COMMENT]block[else_block]
+    | invalid_for_target
+
+# With statement
+# --------------
+
+with_stmt:
+     invalid_with_stmt_indent
+    | 'with' '('','.with_item+ ','? ')' ':'block
+    | 'with'','.with_item+ ':'[TYPE_COMMENT]block
+    | ASYNC 'with' '('','.with_item+ ','? ')' ':'block
+    | ASYNC 'with'','.with_item+ ':'[TYPE_COMMENT]block
+    | invalid_with_stmt
+
+with_item:
+    expression 'as'star_target &(',' | ')' | ':')
+    | invalid_with_item
+    |expression
+
+# Try statement
+# -------------
+
+try_stmt:
+     invalid_try_stmt
+    | 'try' &&':'blockfinally_block
+    | 'try' &&':'blockexcept_block+[else_block][finally_block]
+    | 'try' &&':'blockexcept_star_block+[else_block][finally_block]
+
+
+# Except statement
+# ----------------
+
+except_block:
+     invalid_except_stmt_indent
+    | 'except'expression['as'NAME] ':'block
+    | 'except' ':'block
+    | invalid_except_stmt
+except_star_block:
+     invalid_except_star_stmt_indent
+    | 'except' '*'expression['as'NAME] ':'block
+    | invalid_except_stmt
+finally_block:
+     invalid_finally_stmt
+    | 'finally' &&':'block
+
+# Match statement
+# ---------------
+
+match_stmt:
+     "match"subject_expr ':' NEWLINE INDENTcase_block+ DEDENT
+    | invalid_match_stmt
+
+subject_expr:
+    star_named_expression ','star_named_expressions?
+    | named_expression
+
+case_block:
+     invalid_case_block
+    | "case"patternsguard? ':'block
+
+guard: 'if'named_expression
+
+patterns:
+    open_sequence_pattern
+    | pattern
+
+pattern:
+     as_pattern
+    | or_pattern
+
+as_pattern:
+    or_pattern 'as'pattern_capture_target
+    | invalid_as_pattern
+
+or_pattern:
+    '|'.closed_pattern+
+
+closed_pattern (memo):
+     literal_pattern
+    | capture_pattern
+    | wildcard_pattern
+    | value_pattern
+    | group_pattern
+    | sequence_pattern
+    | mapping_pattern
+    | class_pattern
+
+# Literal patterns are used for equality and identity constraints
+literal_pattern:
+    signed_number !('+' | '-')
+    |complex_number
+    |strings
+    | 'None'
+    | 'True'
+    | 'False'
+
+# Literal expressions are used to restrict permitted mapping pattern keys
+literal_expr:
+     signed_number !('+' | '-')
+    | complex_number
+    | strings
+    | 'None'
+    | 'True'
+    | 'False'
+
+complex_number:
+    signed_real_number '+'imaginary_number
+    |signed_real_number '-'imaginary_number
+
+signed_number:
+     NUMBER
+    | '-'NUMBER
+
+signed_real_number:
+     real_number
+    | '-'real_number
+
+real_number:
+    NUMBER
+
+imaginary_number:
+    NUMBER
+
+capture_pattern:
+    pattern_capture_target
+
+pattern_capture_target:
+     !"_"NAME !('.' | '(' | '=')
+
+wildcard_pattern:
+     "_"
+
+value_pattern:
+    attr !('.' | '(' | '=')
+
+attr:
+    name_or_attr '.'NAME
+
+name_or_attr:
+     attr
+    | NAME
+
+group_pattern:
+     '('pattern ')'
+
+sequence_pattern:
+     '['maybe_sequence_pattern? ']'
+    | '('open_sequence_pattern? ')'
+
+open_sequence_pattern:
+    maybe_star_pattern ','maybe_sequence_pattern?
+
+maybe_sequence_pattern:
+    ','.maybe_star_pattern+ ','?
+
+maybe_star_pattern:
+     star_pattern
+    | pattern
+
+star_pattern (memo):
+     '*'pattern_capture_target
+    | '*' wildcard_pattern
+
+mapping_pattern:
+     '{' '}'
+    | '{'double_star_pattern ','? '}'
+    | '{'items_pattern ','double_star_pattern ','? '}'
+    | '{'items_pattern ','? '}'
+
+items_pattern:
+     ','.key_value_pattern+
+
+key_value_pattern:
+    (literal_expr | attr) ':'pattern
+
+double_star_pattern:
+     '**'pattern_capture_target
+
+class_pattern:
+    name_or_attr '(' ')'
+    |name_or_attr '('positional_patterns ','? ')'
+    |name_or_attr '('keyword_patterns ','? ')'
+    |name_or_attr '('positional_patterns ','keyword_patterns ','? ')'
+    | invalid_class_pattern
+
+positional_patterns:
+    ','.pattern+
+
+keyword_patterns:
+     ','.keyword_pattern+
+
+keyword_pattern:
+    NAME '='pattern
+
+# EXPRESSIONS
+# -----------
+
+expressions:
+    expression(','expression)+ [',']
+    |expression ','
+    | expression
+
+expression (memo):
+     invalid_expression
+    | invalid_legacy_expression
+    |disjunction 'if'disjunction 'else'expression
+    | disjunction
+    | lambdef
+
+yield_expr:
+     'yield' 'from'expression
+    | 'yield'[star_expressions]
+
+star_expressions:
+    star_expression(','star_expression)+ [',']
+    |star_expression ','
+    | star_expression
+
+star_expression (memo):
+     '*'bitwise_or
+    | expression
+
+star_named_expressions:','.star_named_expression+ [',']
+
+star_named_expression:
+     '*'bitwise_or
+    | named_expression
+
+assignment_expression:
+    NAME ':=' ~expression
+
+named_expression:
+     assignment_expression
+    | invalid_named_expression
+    | expression !':='
+
+disjunction (memo):
+    conjunction('or'conjunction)+
+    | conjunction
+
+conjunction (memo):
+    inversion('and'inversion)+
+    | inversion
+
+inversion (memo):
+     'not'inversion
+    | comparison
+
+# Comparison operators
+# --------------------
+
+comparison:
+    bitwise_orcompare_op_bitwise_or_pair+
+    | bitwise_or
+
+compare_op_bitwise_or_pair:
+     eq_bitwise_or
+    | noteq_bitwise_or
+    | lte_bitwise_or
+    | lt_bitwise_or
+    | gte_bitwise_or
+    | gt_bitwise_or
+    | notin_bitwise_or
+    | in_bitwise_or
+    | isnot_bitwise_or
+    | is_bitwise_or
+
+eq_bitwise_or: '=='bitwise_or
+noteq_bitwise_or:
+     ('!=')bitwise_or
+lte_bitwise_or: '<='bitwise_or
+lt_bitwise_or: '<'bitwise_or
+gte_bitwise_or: '>='bitwise_or
+gt_bitwise_or: '>'bitwise_or
+notin_bitwise_or: 'not' 'in'bitwise_or
+in_bitwise_or: 'in'bitwise_or
+isnot_bitwise_or: 'is' 'not'bitwise_or
+is_bitwise_or: 'is'bitwise_or
+
+# Bitwise operators
+# -----------------
+
+bitwise_or:
+    bitwise_or '|'bitwise_xor
+    | bitwise_xor
+
+bitwise_xor:
+    bitwise_xor '^'bitwise_and
+    | bitwise_and
+
+bitwise_and:
+    bitwise_and '&'shift_expr
+    | shift_expr
+
+shift_expr:
+    shift_expr '<<'sum
+    |shift_expr '>>'sum
+    | sum
+
+# Arithmetic operators
+# --------------------
+
+sum:
+    sum '+'term
+    |sum '-'term
+    | term
+
+term:
+    term '*'factor
+    |term '/'factor
+    |term '//'factor
+    |term '%'factor
+    |term '@'factor
+    | factor
+
+factor (memo):
+     '+'factor
+    | '-'factor
+    | '~'factor
+    | power
+
+power:
+    await_primary '**'factor
+    | await_primary
+
+# Primary elements
+# ----------------
+
+# Primary elements are things like "obj.something.something", "obj[something]", "obj(something)", "obj" ...
+
+await_primary (memo):
+     AWAITprimary
+    | primary
+
+primary:
+    primary '.'NAME
+    |primarygenexp
+    |primary '('[arguments] ')'
+    |primary '['slices ']'
+    | atom
+
+slices:
+    slice !','
+    |','.(slice | starred_expression)+ [',']
+
+slice:
+    [expression] ':'[expression][':'[expression]]
+    |named_expression
+
+atom:
+     NAME
+    | 'True'
+    | 'False'
+    | 'None'
+    | &STRING strings
+    | NUMBER
+    | &'(' (tuple | group | genexp)
+    | &'[' (list | listcomp)
+    | &'{' (dict | set | dictcomp | setcomp)
+    | '...'
+
+group:
+     '('(yield_expr | named_expression) ')'
+    | invalid_group
+
+# Lambda functions
+# ----------------
+
+lambdef:
+     'lambda'[lambda_params] ':'expression
+
+lambda_params:
+     invalid_lambda_parameters
+    | lambda_parameters
+
+# lambda_parameters etc. duplicates parameters but without annotations
+# or type comments, and if there's no comma after a parameter, we expect
+# a colon, not a close parenthesis.  (For more, see parameters above.)
+#
+lambda_parameters:
+    lambda_slash_no_defaultlambda_param_no_default*lambda_param_with_default*[lambda_star_etc]
+    |lambda_slash_with_defaultlambda_param_with_default*[lambda_star_etc]
+    |lambda_param_no_default+lambda_param_with_default*[lambda_star_etc]
+    |lambda_param_with_default+[lambda_star_etc]
+    |lambda_star_etc
+
+lambda_slash_no_default:
+    lambda_param_no_default+ '/' ','
+    |lambda_param_no_default+ '/' &':'
+
+lambda_slash_with_default:
+    lambda_param_no_default*lambda_param_with_default+ '/' ','
+    |lambda_param_no_default*lambda_param_with_default+ '/' &':'
+
+lambda_star_etc:
+     invalid_lambda_star_etc
+    | '*'lambda_param_no_defaultlambda_param_maybe_default*[lambda_kwds]
+    | '*' ','lambda_param_maybe_default+[lambda_kwds]
+    |lambda_kwds
+
+lambda_kwds:
+     invalid_lambda_kwds
+    | '**'lambda_param_no_default
+
+lambda_param_no_default:
+    lambda_param ','
+    |lambda_param &':'
+lambda_param_with_default:
+    lambda_paramdefault ','
+    |lambda_paramdefault &':'
+lambda_param_maybe_default:
+    lambda_paramdefault? ','
+    |lambda_paramdefault? &':'
+lambda_param:NAME
+
+# LITERALS
+# ========
+
+strings (memo):STRING+
+
+list:
+     '['[star_named_expressions] ']'
+
+tuple:
+     '('[star_named_expression ','[star_named_expressions] ] ')'
+
+set: '{'star_named_expressions '}'
+
+# Dicts
+# -----
+
+dict:
+     '{'[double_starred_kvpairs] '}'
+    | '{' invalid_double_starred_kvpairs '}'
+
+double_starred_kvpairs:','.double_starred_kvpair+ [',']
+
+double_starred_kvpair:
+     '**'bitwise_or
+    | kvpair
+
+kvpair:expression ':'expression
+
+# Comprehensions & Generators
+# ---------------------------
+
+for_if_clauses:
+    for_if_clause+
+
+for_if_clause:
+     ASYNC 'for'star_targets 'in' ~disjunction('if'disjunction)*
+    | 'for'star_targets 'in' ~disjunction('if'disjunction)*
+    | invalid_for_target
+
+listcomp:
+     '['named_expressionfor_if_clauses ']'
+    | invalid_comprehension
+
+setcomp:
+     '{'named_expressionfor_if_clauses '}'
+    | invalid_comprehension
+
+genexp:
+     '('( assignment_expression | expression !':=')for_if_clauses ')'
+    | invalid_comprehension
+
+dictcomp:
+     '{'kvpairfor_if_clauses '}'
+    | invalid_dict_comprehension
+
+# FUNCTION CALL ARGUMENTS
+# =======================
+
+arguments (memo):
+    args [','] &')'
+    | invalid_arguments
+
+args:
+    ','.(starred_expression | ( assignment_expression | expression !':=') !'=')+[','kwargs]
+    |kwargs
+
+kwargs:
+    ','.kwarg_or_starred+ ','','.kwarg_or_double_starred+
+    | ','.kwarg_or_starred+
+    | ','.kwarg_or_double_starred+
+
+starred_expression:
+     '*'expression
+
+kwarg_or_starred:
+     invalid_kwarg
+    |NAME '='expression
+    |starred_expression
+
+kwarg_or_double_starred:
+     invalid_kwarg
+    |NAME '='expression
+    | '**'expression
+
+# ASSIGNMENT TARGETS
+# ==================
+
+# Generic targets
+# ---------------
+
+# NOTE: star_targets may contain *bitwise_or, targets may not.
+star_targets:
+    star_target !','
+    |star_target(','star_target)* [',']
+
+star_targets_list_seq:','.star_target+ [',']
+
+star_targets_tuple_seq:
+    star_target(','star_target)+ [',']
+    |star_target ','
+
+star_target (memo):
+     '*'(!'*' star_target)
+    | target_with_star_atom
+
+target_with_star_atom (memo):
+    t_primary '.'NAME !t_lookahead
+    |t_primary '['slices ']' !t_lookahead
+    | star_atom
+
+star_atom:
+    NAME
+    | '('target_with_star_atom ')'
+    | '('[star_targets_tuple_seq] ')'
+    | '['[star_targets_list_seq] ']'
+
+single_target:
+     single_subscript_attribute_target
+    |NAME
+    | '('single_target ')'
+
+single_subscript_attribute_target:
+    t_primary '.'NAME !t_lookahead
+    |t_primary '['slices ']' !t_lookahead
+
+t_primary:
+    t_primary '.'NAME &t_lookahead
+    |t_primary '['slices ']' &t_lookahead
+    |t_primarygenexp &t_lookahead
+    |t_primary '('[arguments] ')' &t_lookahead
+    |atom &t_lookahead
+
+t_lookahead: '(' | '['  '.'
+
+# Targets for del statements
+# --------------------------
+
+del_targets:','.del_target+ [',']
+
+del_target (memo):
+    t_primary '.'NAME !t_lookahead
+    |t_primary '['slices ']' !t_lookahead
+    | del_t_atom
+
+del_t_atom:
+    NAME
+    | '('del_target ')'
+    | '('[del_targets] ')'
+    | '['[del_targets] ']'
+
+# TYPING ELEMENTS
+# ---------------
+
+# type_expressions allow */** but ignore them
+type_expressions:
+    ','.expression+ ',' '*'expression ',' '**'expression
+    |','.expression+ ',' '*'expression
+    |','.expression+ ',' '**'expression
+    | '*'expression ',' '**'expression
+    | '*'expression
+    | '**'expression
+    |','.expression+
+
+func_type_comment:
+     NEWLINETYPE_COMMENT &(NEWLINE INDENT)  # Must be followed by indented block
+    | invalid_double_type_comments
+    | TYPE_COMMENT
+
+# ========================= END OF THE GRAMMAR ===========================
+
+
+
+# ========================= START OF INVALID RULES =======================
+
+# From here on, there are rules for invalid syntax with specialised error messages
+invalid_arguments:
+    args ',' '*'
+    |expressionfor_if_clauses ',' [args | expression for_if_clauses]
+    |NAME'=' expression for_if_clauses
+    |argsfor_if_clauses
+    | args ','expressionfor_if_clauses
+    |args ',' args
+invalid_kwarg:
+    ('True'|'False'|'None')'='
+    |NAME'=' expression for_if_clauses
+    | !(NAME '=')expression'='
+
+# IMPORTANT: Note that the "_without_invalid" suffix causes the rule to not call invalid rules under it
+expression_without_invalid:
+    disjunction 'if'disjunction 'else'expression
+    | disjunction
+    | lambdef
+invalid_legacy_expression:
+    NAME !'('star_expressions
+
+invalid_expression:
+    # !(NAME STRING) is not matched so we don't show this error with some invalid string prefixes like: kf"dsfsdf"
+    # Soft keywords need to also be ignored because they can be parsed as NAME NAME
+    !(NAME STRING | SOFT_KEYWORD)disjunctionexpression_without_invalid
+   |disjunction 'if'disjunction !('else'|':')
+
+invalid_named_expression(memo):
+    expression ':=' expression
+    |NAME '='bitwise_or !('='|':=')
+    | !(list|tuple|genexp|'True'|'None'|'False')bitwise_or'=' bitwise_or !('='|':=')
+
+invalid_assignment:
+    invalid_ann_assign_target ':' expression
+    |star_named_expression ',' star_named_expressions* ':' expression
+    |expression ':' expression
+    | (star_targets '=')*star_expressions '='
+    | (star_targets '=')*yield_expr '='
+    |star_expressions augassign (yield_expr | star_expressions)
+invalid_ann_assign_target:
+     list
+    | tuple
+    | '('invalid_ann_assign_target ')'
+invalid_del_stmt:
+     'del'star_expressions
+invalid_block:
+     NEWLINE !INDENT
+invalid_comprehension:
+     ('[' | '(' | '{')starred_expression for_if_clauses
+    | ('[' | '{')star_named_expression ','star_named_expressions for_if_clauses
+    | ('[' | '{')star_named_expression',' for_if_clauses
+invalid_dict_comprehension:
+     '{''**' bitwise_or for_if_clauses '}'
+invalid_parameters:
+     param_no_default* invalid_parameters_helperparam_no_default
+    | param_no_default*'(' param_no_default+ ','?')'
+    |"/" ','
+    | (slash_no_default | slash_with_default) param_maybe_default*'/'
+    | (slash_no_default | slash_with_default)? param_maybe_default* '*' (',' | param_no_default) param_maybe_default*'/'
+    | param_maybe_default+ '/''*'
+invalid_default:
+    '=' &(')'|',')
+invalid_star_etc:
+    '*' (')' | ',' (')' | '**'))
+    | '*' ',' TYPE_COMMENT
+    | '*' param'='
+    | '*' (param_no_default | ',') param_maybe_default*'*' (param_no_default | ',')
+invalid_kwds:
+     '**' param'='
+    | '**' param ','param
+    | '**' param ','('*'|'**'|'/')
+invalid_parameters_helper: # This is only there to avoid type errors
+    slash_with_default
+    | param_with_default+
+invalid_lambda_parameters:
+     lambda_param_no_default* invalid_lambda_parameters_helperlambda_param_no_default
+    | lambda_param_no_default*'(' ','.lambda_param+ ','?')'
+    |"/" ','
+    | (lambda_slash_no_default | lambda_slash_with_default) lambda_param_maybe_default*'/'
+    | (lambda_slash_no_default | lambda_slash_with_default)? lambda_param_maybe_default* '*' (',' | lambda_param_no_default) lambda_param_maybe_default*'/'
+    | lambda_param_maybe_default+ '/''*'
+invalid_lambda_parameters_helper:
+    lambda_slash_with_default
+    | lambda_param_with_default+
+invalid_lambda_star_etc:
+     '*' (':' | ',' (':' | '**'))
+    | '*' lambda_param'='
+    | '*' (lambda_param_no_default | ',') lambda_param_maybe_default*'*' (lambda_param_no_default | ',')
+invalid_lambda_kwds:
+     '**' lambda_param'='
+    | '**' lambda_param ','lambda_param
+    | '**' lambda_param ','('*'|'**'|'/')
+invalid_double_type_comments:
+     TYPE_COMMENT NEWLINE TYPE_COMMENT NEWLINE INDENT
+invalid_with_item:
+     expression 'as'expression &(',' | ')' | ':')
+
+invalid_for_target:
+     ASYNC? 'for'star_expressions
+
+invalid_group:
+     '('starred_expression ')'
+    | '(''**' expression ')'
+invalid_import_from_targets:
+     import_from_as_names ',' NEWLINE
+
+invalid_with_stmt:
+     [ASYNC] 'with' ','.(expression ['as' star_target])+ NEWLINE
+    | [ASYNC] 'with' '(' ','.(expressions ['as' star_target])+ ','? ')' NEWLINE
+invalid_with_stmt_indent:
+     [ASYNC]'with' ','.(expression ['as' star_target])+ ':' NEWLINE !INDENT
+    | [ASYNC]'with' '(' ','.(expressions ['as' star_target])+ ','? ')' ':' NEWLINE !INDENT
+
+invalid_try_stmt:
+    'try' ':' NEWLINE !INDENT
+    | 'try' ':' block !('except' | 'finally')
+    | 'try' ':' block* except_block+'except''*' expression ['as' NAME] ':'
+    | 'try' ':' block* except_star_block+'except' [expression ['as' NAME]] ':'
+invalid_except_stmt:
+     'except' '*'?expression ',' expressions ['as' NAME ] ':'
+    |'except' '*'? expression ['as' NAME ] NEWLINE
+    |'except' NEWLINE
+    |'except' '*' (NEWLINE | ':')
+invalid_finally_stmt:
+    'finally' ':' NEWLINE !INDENT
+invalid_except_stmt_indent:
+    'except' expression ['as' NAME ] ':' NEWLINE !INDENT
+    |'except' ':' NEWLINE !INDENT
+invalid_except_star_stmt_indent:
+    'except' '*' expression ['as' NAME ] ':' NEWLINE !INDENT
+invalid_match_stmt:
+     "match" subject_expr NEWLINE
+    |"match"subject_expr ':' NEWLINE !INDENT
+invalid_case_block:
+     "case" patterns guard? NEWLINE
+    |"case" patterns guard? ':' NEWLINE !INDENT
+invalid_as_pattern:
+     or_pattern 'as'"_"
+    | or_pattern 'as' !NAMEexpression
+invalid_class_pattern:
+     name_or_attr '('invalid_class_argument_pattern
+invalid_class_argument_pattern:
+     [positional_patterns ','] keyword_patterns ','positional_patterns
+invalid_if_stmt:
+     'if' named_expression NEWLINE
+    |'if'named_expression ':' NEWLINE !INDENT
+invalid_elif_stmt:
+     'elif' named_expression NEWLINE
+    |'elif' named_expression ':' NEWLINE !INDENT
+invalid_else_stmt:
+    'else' ':' NEWLINE !INDENT
+invalid_while_stmt:
+     'while' named_expression NEWLINE
+    |'while' named_expression ':' NEWLINE !INDENT
+invalid_for_stmt:
+     [ASYNC] 'for' star_targets 'in' star_expressions NEWLINE
+    | [ASYNC]'for' star_targets 'in' star_expressions ':' NEWLINE !INDENT
+invalid_def_raw:
+     [ASYNC]'def' NAME '(' [params] ')' ['->' expression] ':' NEWLINE !INDENT
+invalid_class_def_raw:
+     'class' NAME ['(' [arguments] ')'] NEWLINE
+    |'class' NAME ['(' [arguments] ')'] ':' NEWLINE !INDENT
+
+invalid_double_starred_kvpairs:
+     ','.double_starred_kvpair+ ',' invalid_kvpair
+    | expression ':''*' bitwise_or
+    | expression':' &('}'|',')
+invalid_kvpair:
+    expression !(':')
+    | expression ':''*' bitwise_or
+    | expression':' &('}'|',')

@@ -287,6 +287,16 @@
                     ReadRecursiveTree(ref reader, node as AntlrElement);
                 }
                 reader.Read();
+                for (int i = 0; i < node.ChildNodes.Length; ++i)
+                {
+                    if (i > 0)
+                    {
+                        var pre = node.ChildNodes.item(i - 1);
+                        var x = node.ChildNodes.item(i);
+                        x.PreviousSibling = pre;
+                        pre.NextSibling = x;
+                    }
+                }
             }
             reader.Read();
             return node;

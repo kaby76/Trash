@@ -373,12 +373,17 @@
                     var child = tree.GetChild(i);
                     BottomUpConvert(child, new_node, parser, lexer, tokstream, charstream);
                 }
-                for (int i = 0; i < nl.Length; ++i)
+//                Node prev = null;
+                for (int i = 0; i < new_node.ChildNodes.Length; ++i)
                 {
-                    var x = nl._node_list[i];
+//                    Node curr = new_node.ChildNodes.item(i);
+//                    if (curr is AntlrElement)
+//                    {
+//                    }
                     if (i > 0)
                     {
-                        var pre = nl._node_list[i - 1];
+                        var pre = new_node.ChildNodes.item(i - 1);
+                        var x = new_node.ChildNodes.item(i);
                         x.PreviousSibling = pre;
                         pre.NextSibling = x;
                     }
