@@ -43,6 +43,7 @@
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
             serializeOptions.WriteIndented = false;
+            serializeOptions.MaxDepth = 10000;
             AntlrJson.ParsingResultSet[] data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             foreach (AntlrJson.ParsingResultSet parse_info in data)
             {

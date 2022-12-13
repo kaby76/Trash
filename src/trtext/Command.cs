@@ -74,6 +74,7 @@
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
             serializeOptions.WriteIndented = false;
+            serializeOptions.MaxDepth = 10000;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             bool more_than_one_fn = data.Count() > 1;
             bool files_with_matches = config.FilesWithMatches;

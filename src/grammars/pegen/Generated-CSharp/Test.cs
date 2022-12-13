@@ -1,4 +1,4 @@
-// Template generated code from trgen 0.18.2
+// Template generated code from trgen 0.19.0
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
@@ -16,13 +16,15 @@ public class Program
     public static Lexer Lexer { get; set; }
     public static ErrorListener<int> LexerErrorListener { get; set; }
     public static ITokenStream TokenStream { get; set; }
+    public static ICharStream CharStream { get; set; }
     public static IParseTree Tree { get; set; }
     public static string StartSymbol { get; set; } = "start";
     public static string Input { get; set; }
     public static void SetupParse2(string input, bool quiet = false)
     {
         ICharStream str = new AntlrInputStream(input);
-                var lexer = new pegen_v3_10Lexer(str);
+        CharStream = str;
+        var lexer = new pegen_v3_10Lexer(str);
         Lexer = lexer;
         var tokens = new CommonTokenStream(lexer);
         TokenStream = tokens;
@@ -55,7 +57,8 @@ public class Program
     public static IParseTree Parse(string input)
     {
         ICharStream str = new AntlrInputStream(input);
-        var lexer = new pegen_v3_10Lexer (str);
+        CharStream = str;
+        var lexer = new pegen_v3_10Lexer(str);
         Lexer = lexer;
         var tokens = new CommonTokenStream(lexer);
         TokenStream = tokens;

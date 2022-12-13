@@ -124,10 +124,21 @@
                         result = result == 0 ? r : result;
                     }
                 }
+                if (config.Verbose)
+                {
+                    foreach (var d in data)
+                    {
+                        foreach (var t in d.Nodes)
+                        {
+                            System.Console.Error.WriteLine(TreeOutput.OutputTree(t, d.Lexer, d.Parser));
+                        }
+                    }
+                }
                 if (config.NoParsingResultSets) return result;
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
                 serializeOptions.WriteIndented = false;
+                serializeOptions.MaxDepth = 10000;
                 string js1 = JsonSerializer.Serialize(data.ToArray(), serializeOptions);
                 if (!config.Quiet) System.Console.WriteLine(js1);
             }
@@ -153,7 +164,7 @@
             if (!exists) full_path = path + "bin/Debug/net6.0/";
             full_path = Path.GetFullPath(full_path);
             Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
-            Assembly asm = Assembly.LoadFile(full_path + "Test.dll");
+            Assembly asm = Assembly.LoadFile(full_path + config.Dll + ".dll");
             var xxxxxx = asm1.GetTypes();
             Type[] types = asm.GetTypes();
             Type type = asm.GetType("Program");

@@ -63,12 +63,6 @@
 
                 // back up to previous channel for terminal token,
                 // or the beginning of token stream.
-                int i;
-                for (i = term_index - 1; i >= 0; --i)
-                {
-                    var tok = tokstream.Get(i);
-                    if (tok.Channel == term_token.Channel) break;
-                }
 
                 // Add in all previous hidden tokens or skips. Note, some of these
                 // attributes get added to the parent of the new AntlrElement node
@@ -79,6 +73,7 @@
                 // Set up copy to first hidden token or terminal token.
                 int stop_token_index;
                 var hidden_tokens = tokstream.GetHiddenTokensToLeft(term_index);
+                int i;
                 if (hidden_tokens != null && hidden_tokens.Count > 0)
                 {
                     i = hidden_tokens.First().TokenIndex;
@@ -94,20 +89,15 @@
                 int stop_cs;
                 int channel;
                 int tt;
-                if (i <= 0)
+                if (i == 0)
                 {
                     start_cs = 0;
-                    stop_cs = term_token.StartIndex;
-                    i = term_index;
-                    channel = -1;
-                    tt = tokstream.Get(i).Type;
+                    stop_cs = tokstream.Get(i).StartIndex;
                 }
                 else
                 {
                     start_cs = tokstream.Get(i-1).StopIndex + 1;
                     stop_cs = tokstream.Get(i).StartIndex;
-                    channel = tokstream.Get(i-1).Channel;
-                    tt = tokstream.Get(i-1).Type;
                 }
 
                 for (; ;)
@@ -115,7 +105,14 @@
                     // Get text in interval [start_cs, stop_cs] and make attribute.
                     if (stop_cs - start_cs > 0)
                     {
-                        start_cs = tokstream.Get(i - 1).StopIndex + 1;
+                        if (i <= 0)
+                        {
+                            start_cs = 0;
+                        }
+                        else
+                        {
+                            start_cs = tokstream.Get(i - 1).StopIndex + 1;
+                        }
                         stop_cs = tokstream.Get(i).StartIndex;
                         channel = -1;
                         tt = -1;

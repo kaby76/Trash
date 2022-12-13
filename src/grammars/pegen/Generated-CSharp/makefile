@@ -1,4 +1,4 @@
-# Generated code from trgen 0.18.2
+# Generated code from trgen 0.19.0
 GENERATED = pegen_v3_10Lexer.cs pegen_v3_10Parser.cs 
 default:
 	dotnet restore

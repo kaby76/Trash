@@ -39,7 +39,7 @@ namespace Trash
             path = path.Replace("\\", "/");
             if (!path.EndsWith("/")) path = path + "/";
             var fp = new TrashGlobbing.Glob(path)
-                .RegexContents("(Generated-CSharp/)?bin/.*(?!ref)/Test.dll$")
+                .RegexContents("(Generated-CSharp/)?bin/.*(?!ref)/" + config.Dll + ".dll$")
                 .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                 .Select(f => f.FullName.Replace('\\', '/'))
                 .ToList();

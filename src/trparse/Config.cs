@@ -34,5 +34,8 @@ namespace Trash
 
         [Option('x', Required = false)]
         public bool ReadFileNameStdin { get; set; }
+
+        [Option('d', "dll", Required = false, HelpText = "Search for parser in dll with this specified name.")]
+        public string Dll { get; set; } = "Test";
     }
 }

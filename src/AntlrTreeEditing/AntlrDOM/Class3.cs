@@ -99,6 +99,7 @@ namespace AntlrTreeEditing.AntlrDOM
                     + " tt:" + a.TokenType);
                 if (a.Channel >= 0)
                     sb.Append(" chnl:" + lexer.ChannelNames[a.Channel]);
+                sb.AppendLine();
             }
             else if (tree is AntlrElement e)
             {

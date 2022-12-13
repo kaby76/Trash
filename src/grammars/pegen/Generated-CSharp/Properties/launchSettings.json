@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "Test": {
-      "commandName": "Project",
-      "commandLineArgs": "i.txt -tokens",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\supported_grammars\\pegen\\Generated-CSharp"
-    }
-  }
-}
