@@ -130,16 +130,18 @@
                     {
                         foreach (var t in d.Nodes)
                         {
-                            System.Console.Error.WriteLine(TreeOutput.OutputTree(t, d.Lexer, d.Parser));
+                            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(t, d.Lexer, d.Parser).ToString());
                         }
                     }
                 }
                 if (config.NoParsingResultSets) return result;
+                if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
                 serializeOptions.WriteIndented = false;
                 serializeOptions.MaxDepth = 10000;
                 string js1 = JsonSerializer.Serialize(data.ToArray(), serializeOptions);
+                if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
                 if (!config.Quiet) System.Console.WriteLine(js1);
             }
             catch (Exception e)

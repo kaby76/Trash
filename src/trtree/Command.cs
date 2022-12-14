@@ -47,7 +47,9 @@
             serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
             serializeOptions.WriteIndented = false;
             serializeOptions.MaxDepth = 10000;
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
             foreach (var in_tuple in data)
             {
                 var nodes = in_tuple.Nodes;

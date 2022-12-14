@@ -2,8 +2,8 @@
   "profiles": {
     "trtokens": {
       "commandName": "Project",
-      "commandLineArgs": "-f o2.pt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\te3\\Generated"
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
     }
   }
 }

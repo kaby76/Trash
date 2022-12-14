@@ -61,7 +61,9 @@
             serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
             serializeOptions.WriteIndented = false;
             serializeOptions.MaxDepth = 10000;
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
             var results = new List<ParsingResultSet>();
             bool do_rs = !config.NoParsingResultSets;
             List<AntlrNode> d = new List<AntlrNode>();
@@ -133,7 +135,9 @@
             }
             if (do_rs)
             {
+                if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
                 string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+                if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
                 System.Console.WriteLine(js1);
             }
         }

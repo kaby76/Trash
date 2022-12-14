@@ -130,15 +130,27 @@
             while (stack.Any())
             {
                 var n = stack.Pop();
-                if (n is AntlrNode v && n.ChildNodes.Length == 0)
+                if (n is AntlrElement e)
                 {
-                    yield return v;
+                    bool term = true;
+                    for (int i = 0; i < e.ChildNodes.Length; ++i)
+                    {
+                        var t = e.ChildNodes.item(i);
+                        if (t is AntlrElement)
+                        {
+                            term = false;
+                            break;
+                        }
+                    }
+                    if (term) yield return n as AntlrNode;
                 }
                 if (!(n is AntlrNode))
                     continue;
+                if (n.ChildNodes == null) continue;
                 for (int i = n.ChildNodes.Length - 1; i >= 0; --i)
                 {
                     var c = n.ChildNodes.item(i);
+                    if (!(c is AntlrElement)) continue;
                     stack.Push(c);
                 }
             }

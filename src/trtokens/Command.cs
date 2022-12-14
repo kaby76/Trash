@@ -1,8 +1,7 @@
 ﻿namespace Trash
 {
-    using Antlr4.Runtime.Tree;
+    using AntlrTreeEditing.AntlrDOM;
     using LanguageServer;
-    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -19,18 +18,18 @@
             }
         }
 
-        private string OutputTokens(EditableAntlrTree.MyTokenStream tokstream, IParseTree tree)
+        private string OutputTokens(AntlrElement tree)
         {
-            var frontier = TreeEdits.Frontier(tree);
+            var frontier = TreeEdits.Frontier(tree).ToList();
+            if (frontier.Count == 0) return "";
             var first = frontier.First();
             var last = frontier.Last();
-            var first_index = first.Payload.TokenIndex;
-            var last_index = last.Payload.TokenIndex;
             StringBuilder sb = new StringBuilder();
-            for (var i = first_index; i <= last_index; i++)
+            foreach (AntlrNode i in frontier)
             {
-                var token = tokstream.Get(i);
-                sb.AppendLine(token.ToString());
+                var e = i as AntlrElement;
+                if (e == null) continue;
+                sb.AppendLine(e.GetText());
             }
             return sb.ToString();
         }
@@ -70,10 +69,9 @@
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
                 var fn = parse_info.FileName;
-                var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
                 foreach (var node in nodes)
                 {
-                    System.Console.WriteLine(OutputTokens(tokstream, node));
+                    System.Console.WriteLine(OutputTokens(node as AntlrElement));
                 }
             }
         }
