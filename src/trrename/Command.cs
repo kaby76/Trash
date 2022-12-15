@@ -76,7 +76,7 @@
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = false;
+            serializeOptions.WriteIndented = config.Format;
             serializeOptions.MaxDepth = 10000;
             var data = JsonSerializer.Deserialize<ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();

@@ -11,6 +11,9 @@ namespace Trash
         [Option('f', "file", Required = false)]
         public string File { get; set; }
 
+        [Option("fmt", Required = false)]
+        public bool Format { get; set; }
+
         [Option('r', "rename-map", Required = false, Default = null)]
         public string RenameMap { get; set; }
 

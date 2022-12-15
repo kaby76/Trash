@@ -138,7 +138,7 @@
                 if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-                serializeOptions.WriteIndented = false;
+                serializeOptions.WriteIndented = config.Format;
                 serializeOptions.MaxDepth = 10000;
                 string js1 = JsonSerializer.Serialize(data.ToArray(), serializeOptions);
                 if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");

@@ -47,7 +47,7 @@ alt
     | items action?
     ;
 
-items : named_item items? ;
+items : named_item+ ;
 
 named_item
     : attribute_name? item

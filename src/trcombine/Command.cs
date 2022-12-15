@@ -48,7 +48,7 @@
                 };
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = false;
+            serializeOptions.WriteIndented = config.Format;
             serializeOptions.MaxDepth = 10000;
             string js1 = JsonSerializer.Serialize(tuple, serializeOptions);
             System.Console.WriteLine(js1);

@@ -8,6 +8,9 @@ namespace Trash
         [Value(0)]
         public IEnumerable<string> Files { get; set; }
 
+        [Option("fmt", Required = false)]
+        public bool Format { get; set; }
+
         [Option('i', "input", Required = false)]
         public string Input { get; set; }
 

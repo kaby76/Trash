@@ -2,8 +2,8 @@
   "profiles": {
     "trinsert": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt //B x",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
+      "commandLineArgs": "-f o.pt -v -a \"//items[named_item/lookahead/TILDE]/following-sibling::items\" \"*/\" ",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\pegen\\Generated-CSharp"
     }
   }
 }
