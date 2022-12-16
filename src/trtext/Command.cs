@@ -126,8 +126,8 @@
                         //            + "-" + line_b + "," + col_b + ":");
                         //}
                         
-                        // Write, not WriteLine since the text reconstructed is exact.
-                        System.Console.Write(this.Reconstruct(node));
+                        // WriteLine, remove last newline if you need to.
+                        System.Console.WriteLine(this.Reconstruct(node));
                     }
                 }
             }

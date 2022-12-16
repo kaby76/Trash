@@ -38,8 +38,7 @@ memoflag : '(' 'memo' ')' ;
 alts : alt ('|' alt)* ;
 
 more_alts
-    : '|' alts newline more_alts
-    | '|' alts newline
+    : ('|' alts newline)+
     ;
 
 alt

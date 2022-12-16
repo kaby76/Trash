@@ -72,7 +72,7 @@
                 if (config.Verbose)
                 {
                     foreach (var n in trees)
-                        System.Console.Error.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
+                        LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
                 }
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
@@ -84,7 +84,7 @@
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     foreach (var node in nodes)
                     {
-                        System.Console.WriteLine(TreeOutput.OutputTree(node, lexer, parser).ToString());
+                        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(node, lexer, parser).ToString());
                         if (config.After)
                         {
                             TreeEdits.InsertAfter(node, str);

@@ -59,3 +59,9 @@ _tests/trgen-targets/Python3/simple.g4
 _tests/trgen-targets/Python3/output
 _tests/trperf/output
 _tests/trfirst/output
+src/grammars/pegen/Generated-CSharp/v2.txt
+src/grammars/pegen/Generated-CSharp/v3.txt
+src/grammars/pegen/Generated-CSharp/v1.txt
+src/grammars/pegen/Generated-CSharp/orig.txt
+src/grammars/pegen/Generated-CSharp/o.pt
+src/grammars/pegen/Generated-CSharp/orig.pt

@@ -12,6 +12,7 @@
     using Antlr4.Runtime;
     using SharpCompress.Writers;
     using static System.Net.Mime.MediaTypeNames;
+    using System.Net.Http;
 
     public class ParsingResultSetSerializer : JsonConverter<ParsingResultSet[]>
     {
@@ -260,6 +261,7 @@
                         attr.Name = reader.GetString();
                         reader.Read();
                         attr.StringValue = reader.GetString();
+                        attr.LocalName = attr.Name as string;
                         reader.Read();
                         attr.Channel = reader.GetInt32();
                         reader.Read();
@@ -270,7 +272,14 @@
                         {
                             parent.ChildNodes.Add(node);
                             node.ParentNode = parent;
-                            //parent.Attributes.?????(node);
+                            AntlrNamedNodeMap map;
+                            if (parent.Attributes == null)
+                            {
+                                map = new AntlrNamedNodeMap();
+                                parent.Attributes = map;
+                            }
+                            map = parent.Attributes as AntlrNamedNodeMap;
+                            map.Add(attr);
                         }
                     }
                     break;
