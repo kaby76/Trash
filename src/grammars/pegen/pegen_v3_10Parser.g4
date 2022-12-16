@@ -38,8 +38,7 @@ memoflag : '(' 'memo' ')' ;
 alts : alt ('|' alt)* ;
 
 more_alts
-    : '|' alts newline more_alts
-    | '|' alts newline
+    : ('|' alts newline)+
     ;
 
 alt
@@ -47,7 +46,7 @@ alt
     | items action?
     ;
 
-items : named_item items? ;
+items : named_item+ ;
 
 named_item
     : attribute_name? item
