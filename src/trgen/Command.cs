@@ -6,6 +6,7 @@
     using Antlr4.StringTemplate;
     using AntlrJson;
     using AntlrTreeEditing.AntlrDOM;
+    using org.eclipse.wst.xml.xpath2.processor.@internal.function;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
     using System.Collections.Generic;
@@ -1109,6 +1110,7 @@
                                 );
                     }
                 }
+                if (from.Contains("pom.xml") && _config.target != "Java") continue;
                 System.Console.Error.WriteLine("Copying source file from "
                   + from
                   + " to "

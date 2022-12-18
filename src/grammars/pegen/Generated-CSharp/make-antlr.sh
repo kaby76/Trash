@@ -3,66 +3,109 @@
 export MSYS2_ARG_CONV_EXCL="*"
 date
 trparse -d pegen ../examples/python-11.gram > orig.pt
-cat orig.pt \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_kvpair"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_arguments"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_kwarg"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="expression_without_invalid"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_legacy_expression"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_expression"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_named_expression"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_assignment"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_ann_assign_target"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_del_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_block"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_comprehension"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_dict_comprehension"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_parameters"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_default"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_star_etc"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_kwds"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_parameters_helper"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_lambda_parameters"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_lambda_parameters_helper"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_lambda_star_etc"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_lambda_kwds"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_double_type_comments"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_with_item"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_for_target"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_group"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_import_from_targets"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_with_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_with_stmt_indent"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_try_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_except_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_finally_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_except_stmt_indent"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_except_star_stmt_indent"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_match_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_case_block"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_as_pattern"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_class_pattern"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_class_argument_pattern"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_if_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_elif_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_else_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_while_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_for_stmt"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_def_raw"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_class_def_raw"]' \
-	| trdelete '//rule_[rulename/name/NAME/text()="invalid_double_starred_kvpairs"]' \
+
+cat orig.pt > o.pt
+cat o.pt | trtext > o.txt
+cat o.pt | trtree > o.tree
+dos2unix o.*
+
+# This refactoring removes occurrences of the "invalid_..." symbols.
+# Usually, these occur just after a VBAR.
+# Example:
+#   params[arguments_ty]:
+#    | invalid_parameters
+#    | parameters
+#
+#    =>
+#
+#   params[arguments_ty]:
+#    |
+#    | parameters
+#
+# The main problem this refactoring is the production of "naked VBARs".
+# 
+#        ( newline
+#        ) 
+#        ( indent
+#        ) 
+#        ( more_alts
+#          ( intertoken text:\r\n     tt:-1
+#          ) 
+#          ( VBAR
+#            (  text:| tt:0 chnl:DEFAULT_TOKEN_CHANNEL
+#          ) ) 
+#          ( alts
+#            ( intertoken text:\r\n     tt:-1
+#            ) 
+#            ( VBAR
+#              (  text:| tt:0 chnl:DEFAULT_TOKEN_CHANNEL
+#            ) ) 
+#            ( alt
+#              ( items
+#                ( named_item
+#                  ( item
+#                    ( atom
+#                      ( name
+#                        ( intertoken text:  tt:-1
+#                        ) 
+#                        ( NAME
+#                          (  text:parameters tt:0 chnl:DEFAULT_TOKEN_CHANNEL
+#          ) ) ) ) ) ) ) ) ) 
+#          ( newline
+#        ) ) 
+#        ( dedent
+#      ) ) 
+
+cat o.pt \
+	| trdelete '//alt[items/named_item/item/atom/name/NAME[contains(text(),"invalid_")]]' \
+> o2.pt
+cat o2.pt | trtext > o2.txt
+cat o2.pt | trtree > o2.tree
+dos2unix o2.*
+
+cat o2.pt \
+	| trdelete '//VBAR[following-sibling::*[1][name()="alts"][*[1]VBAR]]' \
+	> o3.pt
+cat o3.pt | trtext > o3.txt
+cat o3.pt | trtree > o3.tree
+dos2unix o3.*
+exit	
+
+# This refactoring removes the first VBAR in a new line of alts.
+# Example:
+#   params[arguments_ty]:
+#    | invalid_parameters
+#    | parameters
+#
+#    =>
+#
+#   params[arguments_ty]:
+#     invalid_parameters
+#    | parameters
+#
+# Note, this refactoring affects the search for invalid_* uses.
+cat o.pt \
+	| trdelete '//more_alts[contains(@Before,"
+")]/VBAR' \
+> o2.pt
+
+cat o.pt | trtext > o.txt
+cat o.pt | trtree > o.tree
+cat o2.pt | trtext > o2.txt
+cat o2.pt | trtree > o2.tree
+dos2unix o.* o2.*
+exit
+	| trdelete '//VBAR[not(following-sibling::*)]' \
+	| trdelete '//meta/(AT | name | string | newline)' \
+	| trdelete '//rule_[rulename/name/NAME[contains(text(),"invalid_") or contains(text(),"expression_without_invalid")]]' \
 	| trreplace '//name/NAME[text()="ENDMARKER"]' 'EOF' \
 	| trreplace '//name/NAME[text()="TYPE_COMMENT"]' 'type_comment' \
-	| trxgrep '//rule_' \
 	| trdelete '//action' \
 	| trreplace '//attribute' ' ' \
 	| trreplace '//attribute_name' ' ' \
-	| trinsert '//lookahead' ' /* (lookahead) ' \
-	| trinsert -a '//lookahead' ' */ ' \
+	| trreplace '//lookahead' ' ' \
 	| trreplace '//item/LSQB' '(' \
 	| trreplace '//item/RSQB' ')?' \
-	| trdelete '//more_alts[contains(@Before,"
-")]/VBAR' \
 	| trinsert -a '//rule_/newline[not(following-sibling::*)]' ';' \
 	| trinsert '//dedent' '
 ;
@@ -71,9 +114,9 @@ cat orig.pt \
 	| trdelete '//forced_atom/AMPER' \
 	> o.pt
 cat o.pt \
-	| trtext > v1.txt
+	| trtext \
+	> v1.txt
 dos2unix v1.txt
-
 strings=`cat o.pt | trxgrep ' //STRING/text()' | grep '"'`
 for i in $strings
 do
@@ -97,6 +140,7 @@ cat v2.txt | sed 's%# %// %' >> Python3Parser.g4
 cp Python3Parser.g4 x
 cp Python3Lexer.g4 x
 date
+exit
 rm -f v1.txt
 rm -f v2.txt
 rm -f o.pt
