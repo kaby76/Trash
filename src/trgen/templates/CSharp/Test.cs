@@ -137,6 +137,20 @@ public class Program
                 if (encoding == null)
                     throw new Exception(@"Unknown encoding. Must be an Internet Assigned Numbers Authority (IANA) code page name. https://www.iana.org/assignments/character-sets/character-sets.xhtml");
             }
+            else if (args[i] == "-x")
+            {
+                for (; ; )
+                {
+                    var line = System.Console.In.ReadLine();
+                    line = line?.Trim();
+                    if (line == null || line == "")
+                    {
+                        break;
+                    }
+                    inputs.Add(line);
+                    is_fns.Add(true);
+                }
+            }
             else
             {
                  inputs.Add(args[i]);
