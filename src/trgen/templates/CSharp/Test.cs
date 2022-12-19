@@ -86,6 +86,7 @@ public class Program
     static Encoding encoding = null;
     static int string_instance = 0;
     static string prefix = "";
+    static bool quiet = false;
 
     static void Main(string[] args)
     {
@@ -150,6 +151,10 @@ public class Program
                     inputs.Add(line);
                     is_fns.Add(true);
                 }
+            }
+            else if (args[i] == "-q")
+            {
+                quiet = true;
             }
             else
             {
@@ -259,6 +264,6 @@ public class Program
         {
             System.Console.Out.WriteLine(String.Join(",\n\r", parser.ParseInfo.getDecisionInfo().Select(d => d.ToString())));
         }
-        System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+        if (!quiet) System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
     }
 }

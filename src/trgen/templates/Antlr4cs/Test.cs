@@ -30,6 +30,7 @@ public class Program
     static Encoding encoding = null;
     static int string_instance = 0;
     static string prefix = "";
+    static bool quiet = false;
 
     static void Main(string[] args)
     {
@@ -95,6 +96,10 @@ public class Program
                     is_fns.Add(true);
                 }
             }
+            else if (args[i] == "-q")
+            {
+                quiet = true;
+            }
             else
             {
                 inputs.Add(args[i]);
@@ -156,7 +161,7 @@ public class Program
     {
 <if (case_insensitive_type)>
         str = new Antlr4.Runtime.CaseChangingCharStream(str, "<case_insensitive_type>" == "Upper");
-< endif >
+<endif>
         var lexer = new Test.<lexer_name>(str);
         if (show_tokens)
         {
@@ -192,7 +197,7 @@ public class Program
         {
             System.Console.Out.WriteLine(tree.ToStringTree(parser));
         }
-        System.Console.Error.WriteLine(prefix + "Antlr4cs " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+        if (!quiet) System.Console.Error.WriteLine(prefix + "Antlr4cs " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
     }
 }
 
