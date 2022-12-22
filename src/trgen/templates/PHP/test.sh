@@ -9,7 +9,7 @@ do
   if [ "$x1" != "errors" ]
   then
     echo "$file"
-    trwdog php Test.php -file "$file"
+    trwdog php Test.php "$file"
     status="$?"
     if [ -f "$file".errors ]
     then
