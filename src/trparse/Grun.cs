@@ -55,7 +55,7 @@
             System.Console.WriteLine(e.Data);
         }
 
-        public int Run()
+        public int Run(string parser_type = "")
         {
             int result = 0;
             try
@@ -86,7 +86,7 @@
                         {
                             txt = inputs[f];
                         }
-                        var r = DoParse(txt, "", inputs[f], f, data);
+                        var r = DoParse(parser_type, txt, "", inputs[f], f, data);
                         result = result == 0 ? r : result;
                     }
                     DateTime after = DateTime.Now;
@@ -101,12 +101,12 @@
                         if (lines != null && lines != "") break;
                     }
                     txt = lines;
-                    result = DoParse(txt, "", "stdin", 0, data);
+                    result = DoParse(parser_type, txt, "", "stdin", 0, data);
                 }
                 else if (config.Input != null)
                 {
                     txt = config.Input;
-                    result = DoParse(txt, "", "string", 0, data);
+                    result = DoParse(parser_type, txt, "", "string", 0, data);
                 }
                 else if (config.Files != null)
                 {
@@ -120,7 +120,7 @@
                         {
                             txt = file;
                         }
-                        var r = DoParse(txt, "", file, 0, data);
+                        var r = DoParse(parser_type, txt, "", file, 0, data);
                         result = result == 0 ? r : result;
                     }
                 }
@@ -147,7 +147,7 @@
             catch (Exception e)
             {
                 System.Console.WriteLine(e.ToString());
-                result = 1; 
+                result = 1;
             }
             finally
             {
@@ -155,21 +155,42 @@
             return result;
         }
 
-        int DoParse(string txt, string prefix, string input_name, int row_number, List<AntlrJson.ParsingResultSet> data)
+        int DoParse(string parser_type, string txt, string prefix, string input_name, int row_number, List<AntlrJson.ParsingResultSet> data)
         {
-            string path = config.ParserLocation != null ? config.ParserLocation
-                : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
-            path = path.Replace("\\", "/");
-            if (!path.EndsWith("/")) path = path + "/";
-            var full_path = path + "Generated-CSharp/bin/Debug/net6.0/";
-            var exists = File.Exists(full_path + "Test.dll");
-            if (!exists) full_path = path + "bin/Debug/net6.0/";
-            full_path = Path.GetFullPath(full_path);
-            Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
-            Assembly asm = Assembly.LoadFile(full_path + config.Dll + ".dll");
-            var xxxxxx = asm1.GetTypes();
-            Type[] types = asm.GetTypes();
-            Type type = asm.GetType("Program");
+            Type type = null;
+            if (parser_type == null || parser_type == "")
+            {
+                string path = config.ParserLocation != null ? config.ParserLocation
+                    : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
+                path = path.Replace("\\", "/");
+                if (!path.EndsWith("/")) path = path + "/";
+                var full_path = path + "Generated-CSharp/bin/Debug/net6.0/";
+                var exists = File.Exists(full_path + "Test.dll");
+                if (!exists) full_path = path + "bin/Debug/net6.0/";
+                full_path = Path.GetFullPath(full_path);
+                Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
+                Assembly asm = Assembly.LoadFile(full_path + config.Dll + ".dll");
+                var xxxxxx = asm1.GetTypes();
+                Type[] types = asm.GetTypes();
+                type = asm.GetType("Program");
+            }
+            else
+            {
+                // Get this assembly.
+                System.Reflection.Assembly a = this.GetType().Assembly;
+                string path = a.Location;
+                path = Path.GetDirectoryName(path);
+                path = path.Replace("\\", "/");
+                if (!path.EndsWith("/")) path = path + "/";
+                var full_path = path;
+                var exists = File.Exists(full_path + parser_type + ".dll");
+                full_path = Path.GetFullPath(full_path);
+                Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
+                Assembly asm = Assembly.LoadFile(full_path + parser_type + ".dll");
+                var xxxxxx = asm1.GetTypes();
+                Type[] types = asm.GetTypes();
+                type = asm.GetType("Program");
+            }
 
             MethodInfo methodInfo = type.GetMethod("SetupParse2");
             object[] parm1 = new object[] { txt, config.Quiet };

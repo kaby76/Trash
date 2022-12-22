@@ -85,37 +85,20 @@ namespace Trash
 
             if (config.Type != null && config.Type != "gen" || !exists)
             {
-                //Dictionary<string, Document> list = new Dictionary<string, Document>();
-                //var serializeOptions = new JsonSerializerOptions();
-                //serializeOptions.Converters.Add(new AntlrJson.ParseTreeConverter());
-                //serializeOptions.WriteIndented = true;
-                //var results = new List<ParsingResultSet>();
-                //foreach (var file in config.Files)
-                //{
-                //    Document doc = Docs.Class1.ReadDoc(file);
-                //    list.Add(file, doc);
-                //    Docs.Class1.ParseDoc(doc, 10, config.Type);
-                //    var pr = ParsingResultsFactory.Create(doc);
-                //    IParseTree pt = pr.ParseTree;
-                //    if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(pt, pr.Lexer, pr.Parser, pr.TokStream as CommonTokenStream));
-                //    var rel_path = Path.GetRelativePath(Environment.CurrentDirectory, doc.FullPath);
-                //    var tuple = new ParsingResultSet()
-                //    {
-                //        Text = doc.Code,
-                //        FileName = rel_path,
-                //        Nodes = new AntlrTreeEditing.AntlrTree { pt },
-                //        Lexer = pr.Lexer,
-                //        Parser = pr.Parser,
-                //        StartSymbol = "",
-                //        MetaStartSymbol = ""
-                //    };
-                //    results.Add(tuple);
-                //    if (exit_code == 0 & pr.NumberOfErrors > 0) exit_code = 1;
-                //}
-                //Environment.ExitCode = exit_code;
-                //if (config.NoParsingResultSets) return;
-                //string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
-                //System.Console.WriteLine(js1);
+                // If there is no generated parser, then use one of the built-in parsers.
+                // Hack for now.
+                // Take suffix of first file, get type of parser,
+                // then use that to determine parse.
+                var ext = Path.GetExtension(config.Files.First());
+                var parser_type = ext switch {
+                    ".g4" => "antlr4",
+                    ".g3" => "antlr3",
+                    ".g2" => "antlr2",
+                    ".gram" => "pegen",
+                    _ => throw new Exception("Unknown file extension, cannot load in a built-in parser.")
+                };
+                var grun = new Grun(config);
+                Environment.ExitCode = grun.Run(parser_type);
             }
             else
             {

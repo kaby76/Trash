@@ -34,6 +34,7 @@ This program is part of the Trash toolkit.]]>
 	  <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
 	  <ProjectReference Include="../AntlrTreeEditing/AntlrTreeEditing.csproj" />
 	  <ProjectReference Include="../Logger/Logger.csproj" />
+	  <ProjectReference Include="../grammars/antlr4/Generated/antlr4.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "--fmt -v ../examples/python-11.gram -d pegen",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\pegen\\Generated-CSharp"
+      "commandLineArgs": "JavaLexer.g4 JavaParser.g4",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\mlorek\\grammars-v4\\java\\java"
     }
   }
 }
