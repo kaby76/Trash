@@ -1370,39 +1370,28 @@
 
         void ComputeSort(PerGrammar per_grammar)
         {
-            //Digraph<string> graph = new Digraph<string>();
-            //Workspaces.Workspace workspace = new Workspaces.Workspace();
-            //foreach (var t in per_grammar.tool_grammar_tuples)
-            //{
-            //    var f = t.OriginalSourceFileName;
-            //    var doc = Docs.Class1._workspace.FindDocument(f);
-            //    var pr = LanguageServer.ParsingResultsFactory.Create(doc);
-            //    workspace = doc.Workspace;
-            //}
-            //_ = new LanguageServer.Module().Compile(workspace);
-            //foreach (var t in per_grammar.tool_grammar_tuples)
-            //{
-            //    var f = t.OriginalSourceFileName;
-            //    var doc = Docs.Class1._workspace.FindDocument(f);
-            //    var pr = LanguageServer.ParsingResultsFactory.Create(doc);
-            //    workspace = doc.Workspace;
-            //    var imports = pr.Imports;
-            //    foreach (var d in imports)
-            //    {
-            //        var dd = d.Replace("\\", "/");
-            //        // Import file names are in absolute path names. Change
-            //        // it back to relative paths.
-            //        var v = per_grammar.tool_grammar_tuples.Select(t => t.OriginalSourceFileName.Replace("\\","/"))
-            //            .Where(t => dd.EndsWith(t)).FirstOrDefault();
-            //        if (v == null) continue;
-            //        DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
-            //        graph.AddEdge(e);
-            //    }
-            //}
-            //var subset = graph.Vertices.ToList();
-            //var sort = new TopologicalSort<string, DirectedEdge<string>>(graph, subset);
-            //List<string> order = sort.Topological_sort();
-            //per_grammar.tool_grammar_tuples.Sort(new GrammarOrderCompare(order));
+            Digraph<string> graph = new Digraph<string>();
+            foreach (var t in per_grammar.tool_grammar_tuples)
+            {
+                var f = t.OriginalSourceFileName;
+                // First approximation. If a parser, make dependent on lexer.
+                if (t.WhatType == GrammarTuple.Type.Parser)
+                {
+                    foreach (var u in per_grammar.tool_grammar_tuples)
+                    {
+                        if (u.WhatType == GrammarTuple.Type.Lexer)
+                        {
+                            var v = u.OriginalSourceFileName;
+                            DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
+                            graph.AddEdge(e);
+                        }
+                    }
+                }
+            }
+            var subset = graph.Vertices.ToList();
+            var sort = new TopologicalSort<string, DirectedEdge<string>>(graph, subset);
+            List<string> order = sort.Topological_sort();
+            per_grammar.tool_grammar_tuples.Sort(new GrammarOrderCompare(order));
         }
 
         string FixedName(string from, Trash.PerGrammar per_grammar)
