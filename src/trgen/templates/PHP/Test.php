@@ -50,6 +50,7 @@ class MyErrorListener extends BaseErrorListener /*extends ConsoleErrorListener*/
 
 $show_tree = false;
 $show_tokens = false;
+$show_trace = false;
 $inputs = array();
 $is_fns = array();
 $error_code = 0;
@@ -59,6 +60,7 @@ $prefix = "";
 function main($argv) : void {
     global $show_tree;
     global $show_tokens;
+    global $show_trace;
     global $inputs;
     global $is_fns;
     global $error_code;
@@ -75,6 +77,8 @@ function main($argv) : void {
         } else if ($argv[$i] == "-input") {
             array_push($inputs, $argv[++$i]);
             array_push($is_fns, true);
+        } else if ($argv[$i] == "-trace") {
+            $show_trace = true;
         } else {
             array_push($inputs, $argv[$i]);
             array_push($is_fns, true);
@@ -124,6 +128,7 @@ function ParseFilename($input, $row_number) {
 function DoParse($str, $input_name, $row_number) {
     global $show_tree;
     global $show_tokens;
+    global $show_trace;
     global $inputs;
     global $is_fns;
     global $error_code;
@@ -148,6 +153,10 @@ function DoParse($str, $input_name, $row_number) {
     $parserErrorListener = new MyErrorListener();
     $parser->removeErrorListeners();
     $parser->addErrorListener($parserErrorListener);
+    if ($show_trace) {
+        $parser->setTrace(true);
+        Antlr\Antlr4\Runtime\Atn\ParserATNSimulator::$traceAtnSimulation = true;
+    }
     $timer2 = new Timer;
     $timer2->start();
     $tree = $parser-><start_symbol>();

@@ -1,6 +1,7 @@
 // Template generated code from trgen <version>
 
 using Antlr4.Runtime;
+using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
 using System;
 using System.IO;
@@ -80,6 +81,7 @@ public class Program
     static bool show_profile = false;
     static bool show_tree = false;
     static bool show_tokens = false;
+    static bool show_trace = false;
     static bool old = false;
     static bool two_byte = false;
     static int exit_code = 0;
@@ -155,6 +157,10 @@ public class Program
             else if (args[i] == "-q")
             {
                 quiet = true;
+            }
+            else if (args[i] == "-trace")
+            {
+                show_trace = true;
             }
             else
             {
@@ -242,7 +248,12 @@ public class Program
         DateTime before = DateTime.Now;
         if (show_profile)
         {
-                parser.Profile = true;
+            parser.Profile = true;
+        }
+        if (show_trace)
+        {
+            parser.Trace = true;
+            ParserATNSimulator.trace_atn_sim = true;
         }
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;

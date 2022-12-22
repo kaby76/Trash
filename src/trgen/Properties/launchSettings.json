@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\antlr4"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\big-index\\issue-update-python\\sql\\tsql"
     }
   }
 }

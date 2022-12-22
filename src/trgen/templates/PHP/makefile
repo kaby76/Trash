@@ -9,6 +9,7 @@ default: setup classes
 setup:
 	if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
 	composer install
+	cp -r /c/msys64/home/Kenne/issue-12/issue-12/src/* vendor/antlr/antlr4-php-runtime/src
 classes: $(SOURCES)
 clean:
 	rm -f *.interp
