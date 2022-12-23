@@ -43,6 +43,7 @@ std::string formatDurationSeconds(uint64_t duration) {
 
 bool show_tree = false;
 bool show_tokens = false;
+bool show_trace = false;
 std::vector\<std::string> inputs;
 std::vector\<bool> is_fns;
 int error_code = 0;
@@ -71,6 +72,11 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
     parser->removeErrorListeners();
     lexer->addErrorListener(listener_lexer);
     parser->addErrorListener(listener_parser);
+    if (show_trace)
+    {
+        parser->setTrace(true);
+        // Missing ATN trace.
+    }
     auto before = std::chrono::steady_clock::now();
     auto* tree = parser-><start_symbol>();
     auto after = std::chrono::steady_clock::now();
@@ -138,6 +144,11 @@ int TryParse(std::vector\<std::string>& args)
             ++i;
             inputs.push_back(args[i]);
             is_fns.push_back(false);
+        }
+        else if (args[i] == "-trace")
+        {
+            show_trace = true;
+            continue;
         }
         else
         {

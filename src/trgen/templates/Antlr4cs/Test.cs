@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
-
+using System.Net;
 <if(has_name_space)>namespace <name_space>
 {<endif>
 
@@ -24,6 +24,7 @@ public class Program
     static bool show_profile = false;
     static bool show_tree = false;
     static bool show_tokens = false;
+    static bool show_trace = false;
     static bool old = false;
     static bool two_byte = false;
     static int exit_code = 0;
@@ -99,6 +100,11 @@ public class Program
             else if (args[i] == "-q")
             {
                 quiet = true;
+            }
+            else if (args[if] == "-trace")
+            {
+                show_trace = true;
+                continue;
             }
             else
             {
@@ -180,6 +186,11 @@ public class Program
         }
         var tokens = new CommonTokenStream(lexer);
         var parser = new Test.<parser_name>(tokens);
+        if (show_trace)
+        {
+            parser.Trace = true;
+            // ATN tracing missing.
+        }
         DateTime before = DateTime.Now;
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;

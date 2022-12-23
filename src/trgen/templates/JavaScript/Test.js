@@ -28,6 +28,7 @@ class MyErrorListener extends antlr4.error.ErrorListener {
 
 var show_tokens = false;
 var show_tree = false;
+var show_trace = false;
 var inputs = [];
 var is_fns = [];
 var error_code = 0;
@@ -54,6 +55,9 @@ function main() {
             case '-input':
                 inputs.push(process.argv[++i]);
                 is_fns.push(false);
+                break;
+            case '-trace':
+                show_trace = true;
                 break;
             default:
                 inputs.push(process.argv[i]);
@@ -121,6 +125,10 @@ function DoParse(str, input_name, row_number) {
                 break;
         }
         lexer.reset();
+    }
+    if (show_trace) {
+        parser._interp.trace_atn_sim = true;
+        antlr4.context.PredictionContext.trace_atn_sim = true;
     }
     const timer = new Timer({ label: 'test-timer2' });
     timer.start();

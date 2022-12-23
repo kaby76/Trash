@@ -40,6 +40,7 @@ var is_fns = make([]bool, 0)
 var error_code int = 0
 var show_tree = false
 var show_tokens = false
+var show_trace = false
 var string_instance = 0
 var prefix = ""
 
@@ -58,6 +59,9 @@ func main() {
             i = i + 1
             inputs = append(inputs, os.Args[i])
             is_fns = append(is_fns, false)
+        } else if os.Args[i] == "-trace" {
+            show_trace = true
+            continue
         } else {
             inputs = append(inputs, os.Args[i])
             is_fns = append(is_fns, true)
@@ -141,6 +145,10 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
     parser.RemoveErrorListeners()
     parser.AddErrorListener(parserErrors)
 
+    if show_trace {
+        parser.SetTrace(true)
+        antlr.ParserATNSimulatorTraceATNSim = true
+    }
     // mutated name--not lowercase.
     start := time.Now()
     var tree = parser.<cap_start_symbol>()

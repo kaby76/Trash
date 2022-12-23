@@ -15,6 +15,7 @@ public class Test {
     static int error_code = 0;
     static boolean show_tree = false;
     static boolean show_tokens = false;
+    static boolean show_trace = false;
     static java.nio.charset.Charset charset = null;
     static int string_instance = 0;
     static String prefix = "";
@@ -46,6 +47,11 @@ public class Test {
             else if (args[i].equals("-encoding"))
             {
                 charset = java.nio.charset.Charset.forName(args[++i]);
+            }
+            else if (args[i].equals("-trace"))
+            {
+                show_trace = true;
+                continue;
             }
             else {
                 inputs.add(args[i]);
@@ -120,6 +126,11 @@ public class Test {
         lexer.removeErrorListeners();
         parser.addErrorListener(listener);
         lexer.addErrorListener(lexer_listener);
+        if (show_trace)
+        {
+            parser.setTrace(true);
+            ParserATNSimulator.trace_atn_sim = true;
+        }
         Instant start = Instant.now();
         ParseTree tree = parser.<start_symbol>();
         Instant finish = Instant.now();

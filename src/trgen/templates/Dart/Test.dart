@@ -8,6 +8,7 @@ import 'dart:convert';
 
 var show_tree = false;
 var show_tokens = false;
+var show_trace = false;
 var inputs = List\<String>.empty(growable: true);
 var is_fns = List\<bool>.empty(growable: true);
 var error_code = 0;
@@ -35,6 +36,11 @@ void main(List\<String> args) async {
         {
             inputs.add(args[++i]);
             is_fns.add(false);
+        }
+        else if (args[i] == "-trace")
+        {
+            show_trace = true;
+            continue;
         }
         else
         {
@@ -112,6 +118,11 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
 //    var listener_parser = ErrorListener();
 //    lexer.AddErrorListener(listener_lexer);
 //    parser.AddErrorListener(listener_parser);
+    if (show_trace)
+    {
+        parser.setTrace(true);
+        // Missing ATN trace.
+    }
     Stopwatch s = new Stopwatch();
     s.start();
     var tree = parser.<start_symbol>();

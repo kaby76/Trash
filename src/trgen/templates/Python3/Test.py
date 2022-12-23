@@ -27,6 +27,7 @@ class MyErrorListener(ErrorListener):
 
 show_tokens = False
 show_tree = False
+show_trace = False
 inputs = []
 is_fns = []
 encoding = "utf-8"
@@ -52,6 +53,8 @@ def main(argv):
             i = i + 1
             inputs.append(argv[i])
             is_fns.append(false)
+        elif arg in ("-trace"):
+            show_trace = True
         else:
             inputs.append(argv[i])
             is_fns.append(True)
@@ -112,6 +115,10 @@ def DoParse(str, input_name, myp, row_number):
             if (token.type == -1):
                 break
         lexer.reset()
+    if (show_trace) :
+        parser.setTrace(False)
+        ParserATNSimulator.trace_atn_sim = True
+        PredictionContext._trace_atn_sim = True
     start_time = datetime.now()
     tree = parser.<start_symbol>()
     end_time = datetime.now()
