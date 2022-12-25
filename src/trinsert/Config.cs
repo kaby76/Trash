@@ -8,7 +8,7 @@ namespace Trash
         [Option('f', "file", Required = false)]
         public string File { get; set; }
 
-        [Option("fmt", Required = false)]
+        [Option("fmt", Required = false, HelpText = "Output formatted parsing results set.")]
         public bool Format { get; set; }
 
         [Option('a', "after", Required = false, Default = false)]

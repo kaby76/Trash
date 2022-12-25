@@ -29,8 +29,9 @@ This program is part of the Trash toolkit.]]>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
-    <ProjectReference Include="..\Docs\Docs.csproj" />
+	  <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+	  <ProjectReference Include="../AntlrTreeEditing/AntlrTreeEditing.csproj" />
+	  <ProjectReference Include="../Logger/Logger.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

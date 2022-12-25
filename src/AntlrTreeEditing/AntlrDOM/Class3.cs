@@ -79,7 +79,7 @@ namespace AntlrTreeEditing.AntlrDOM
                 StartLine(sb, level);
                 sb.Append(
                     "( "
-                    + " text:" + PerformEscapes(t.Data)
+                    + " text:'" + PerformEscapes(t.Data) + "'"
                     + " tt:" + t.TokenType
                     + " chnl:" + lexer.ChannelNames[t.Channel]
                     //+ " l:" + t.Line
@@ -95,7 +95,7 @@ namespace AntlrTreeEditing.AntlrDOM
                 StartLine(sb, level);
                 sb.Append(
                     "( intertoken"
-                    + " text:" + PerformEscapes(a.StringValue)
+                    + " text:'" + PerformEscapes(a.StringValue) + "'"
                     + " tt:" + a.TokenType);
                 if (a.Channel >= 0)
                     sb.Append(" chnl:" + lexer.ChannelNames[a.Channel]);

@@ -2,9 +2,13 @@
 {
     using Antlr4.Runtime.Tree;
     using AntlrJson;
+    using AntlrTreeEditing.AntlrDOM;
     using LanguageServer;
+    using org.w3c.dom;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Text.Json;
 
     class Command
@@ -40,7 +44,6 @@
             }
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = config.Format;
             serializeOptions.MaxDepth = 10000;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             foreach (var parse_info in data)
@@ -60,8 +63,41 @@
                 if (File.Exists(fn) && (!(bool)config.Clobber ))
                     throw new System.Exception("Attempting to overwrite '" + fn + "'. Use -c/--clobber option if it is intended.");
                 System.Console.Error.WriteLine("Writing to " + fn);
-                File.WriteAllText(fn, code);
+                StringBuilder sb = new StringBuilder();
+                foreach (var v in nodes)
+                {
+                    sb.Append(this.Reconstruct(v));
+                }
+                File.WriteAllText(fn, sb.ToString());
             }
+        }
+
+        public string Reconstruct(Node tree)
+        {
+            Stack<Node> stack = new Stack<Node>();
+            stack.Push(tree);
+            StringBuilder sb = new StringBuilder();
+            int last = -1;
+            while (stack.Any())
+            {
+                var n = stack.Pop();
+                if (n is AntlrAttr a)
+                {
+                    sb.Append(a.StringValue);
+                }
+                else if (n is AntlrText t)
+                {
+                    sb.Append(t.NodeValue);
+                }
+                else if (n is AntlrElement e)
+                {
+                    for (int i = n.ChildNodes.Length - 1; i >= 0; i--)
+                    {
+                        stack.Push(n.ChildNodes.item(i));
+                    }
+                }
+            }
+            return sb.ToString();
         }
     }
 }

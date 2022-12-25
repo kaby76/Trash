@@ -134,6 +134,8 @@
                         tt = tokstream.Get(i).Type;
                         var attr = new AntlrAttr();
                         attr.Name = "Before";
+                        start_cs = tokstream.Get(i).StartIndex;
+                        stop_cs = tokstream.Get(i).StopIndex;
                         attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
                         attr.ParentNode = parent;
                         attr.TokenType = tt;

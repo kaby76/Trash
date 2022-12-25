@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "JavaLexer.g4 JavaParser.g4",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\mlorek\\grammars-v4\\java\\java"
+      "commandLineArgs": "abbParser.g4",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3462\\grammars-v4\\abb"
     }
   }
 }
