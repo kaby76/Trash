@@ -6,7 +6,7 @@
 Most tools are currently not being built in CI except for
 trdelete, trgen, trinsert, trparse, trrename, trreplace, trsponge, trtext, trtokens, trtree, trwdog, trxgrep, trxml, and trxml2. The current release 18.2 still contains all tools. The new parse trees diverge slightly from
 the Antlr4 data structures in that there is no longer a token and char stream. All text is hanged directly
-off the parse tree, which allows for much, much faster tree rewriting.** 
+off the parse tree, which allows for much, much faster tree rewriting. For more information, see my [blog](http://codinggorilla.com/blog/2022/12/13/antlr-parse-trees.html).** 
 
 Trash is a collection of ~40 command-line tools to analyze and transform
 Antlr parse trees and grammars. The toolkit can: generate a parser
