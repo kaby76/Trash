@@ -2,6 +2,12 @@
 
 [![Build](https://github.com/kaby76/Domemtech.Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Domemtech.Trash/actions?query=workflow%3ACI)
 
+**Status: The toolset is undergoing a large rewrite due to the way parse trees are represented.
+Most tools are currently not being built in CI except for
+trdelete, trgen, trinsert, trparse, trrename, trreplace, trsponge, trtext, trtokens, trtree, trwdog, trxgrep, trxml, and trxml2. The current release 18.2 still contains all tools. The new parse trees diverge slightly from
+the Antlr4 data structures in that there is no longer a token and char stream. All text is hanged directly
+off the parse tree, which allows for much, much faster tree rewriting.** 
+
 Trash is a collection of ~40 command-line tools to analyze and transform
 Antlr parse trees and grammars. The toolkit can: generate a parser
 application for an Antlr4 grammar for any target and any OS; analyze the
@@ -75,7 +81,8 @@ foreach ($i in $apps) {
 1) <a href="src/trdelabel/readme.md">trdelabel</a> -- Remove labels from an Antlr4 grammar
 1) <a href="src/trdelete/readme.md">trdelete</a> -- Delete nodes in a parse tree
 1) <a href="src/trdot/readme.md">trdot</a> -- Print a parse tree in Graphvis Dot format
-1) <a href="src/trenum/readme.md">trenum</a> -- 1) <a href="src/trfirst/readme.md">trfirst</a> -- Outputs first sets of a grammar
+1) <a href="src/trenum/readme.md">trenum</a> -- Not functional, to enumerate strings from grammar.
+1) <a href="src/trfirst/readme.md">trfirst</a> -- Outputs first sets of a grammar
 1) <a href="src/trfold/readme.md">trfold</a> -- Perform fold transform on a grammar
 1) <a href="src/trfoldlit/readme.md">trfoldlit</a> -- Perform fold transform on grammar with literals
 1) <a href="src/trformat/readme.md">trformat</a> -- Format a grammar
