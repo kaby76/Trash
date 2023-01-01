@@ -50,15 +50,18 @@
             Dictionary<string, string> rename_map = new Dictionary<string, string>();
             if (config.RenameMap != null)
             {
-                var l1 = config.RenameMap.Split(';').ToList();
-                foreach (var l in l1)
+                foreach (var s in config.RenameMap)
                 {
-                    var l2 = l.Split(',').ToList();
-                    if (l2.Count != 2)
-                        throw new System.Exception("Rename map not correct. '"
-                            + l
-                            + "' doesn't have correct number of commans, should be 'oldval,newval'.");
-                    rename_map[l2[0]] = l2[1];
+                    var l1 = s.Split(';').ToList();
+                    foreach (var l in l1)
+                    {
+                        var l2 = l.Split(',').ToList();
+                        if (l2.Count != 2)
+                            throw new System.Exception("Rename map not correct. '"
+                                + l
+                                + "' doesn't have correct number of commans, should be 'oldval,newval'.");
+                        rename_map[l2[0]] = l2[1];
+                    }
                 }
             }
             else if (config.RenameMapFile != null)
