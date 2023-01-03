@@ -23,7 +23,7 @@ function Test-Case {
         $TreeFile,
         $ErrorFile
     )
-    $o = trwdog php Test.php -file $InputFile
+    $o = trwdog php -d memory_limit=1G Test.php -file $InputFile
     $failed = $LASTEXITCODE -ne 0
     if ($failed -and $errorFile) {
         return $true
