@@ -1,33 +1,13 @@
 #!/usr/bin/bash
-version=0.18.1
+version=0.19.0-alpha1
 cd src
-directories=`find . -maxdepth 1 -type d -name "tr*"`
-cwd=`pwd`
-for i in $directories
+exes=`find . -name 'tr*.exe' | grep -v publish`
+for i in $exes
 do
-	if [ "$i" == "." ]
-	then
-		continue
-	fi
-	cd "$cwd/$i"
-	if [[ "$?" != "0" ]]
-	then
-		continue
-	fi
-	if [[ ! -f "$i.csproj" ]]
-	then
-		continue
-	fi
-	if [[ ! -f "bin/Debug/$i.$version.nupkg" ]]
-	then
-		continue
-	fi
-	echo $i
-	cd bin/Debug
-	if [[ "$?" != "0" ]]
-	then
-		continue
-	fi
-	tool=${i##*/}
+	d=`echo $i | awk -F '/' '{print $2}'`
+	echo $d
+	tool=$d
+	pushd $d/bin/Debug
 	dotnet nuget push $tool.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json
+	popd
 done

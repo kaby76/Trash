@@ -19,4 +19,4 @@ The generated parser is placed in the directory <current-directory>/Generated/.
 
 ## Current version
 
-0.19.0 Complete rewrite of parse tree representation.
+0.19.0-alpha1 Complete rewrite of parse tree representation.

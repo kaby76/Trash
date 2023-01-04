@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 version=""
-#version="--version 0.8.1"
+version="--prerelease"
 cd src
 exes=`find . -name 'tr*.exe' | grep -v publish`
 for i in $exes

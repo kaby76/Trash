@@ -8,5 +8,6 @@ run:
 clean:
 	dotnet clean
 	rm -rf bin obj
+	rm -f parse_out.*
 test:
 	bash test.sh

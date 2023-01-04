@@ -18,4 +18,4 @@ Format of grammar using machine learning.
 
 ## Current version
 
-0.19.0 Complete rewrite of parse tree representation.
+0.19.0-alpha1 Complete rewrite of parse tree representation.
