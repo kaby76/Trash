@@ -18,4 +18,4 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 ## Current version
 
-0.19.0-alpha2 Complete rewrite of parse tree representation.
+0.19.0-alpha3 Complete rewrite of parse tree representation.

@@ -51,7 +51,7 @@
 
 
         public Config _config;
-        public static string version = "0.19.0-alpha2";
+        public static string version = "0.19.0-alpha3";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();

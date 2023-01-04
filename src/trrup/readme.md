@@ -42,4 +42,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.19.0-alpha2 Complete rewrite of parse tree representation.
+0.19.0-alpha3 Complete rewrite of parse tree representation.

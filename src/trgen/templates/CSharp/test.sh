@@ -2,46 +2,35 @@
 err=0
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
-parse_out_file=`mktemp --tmpdir=. parse_out.XXXXXXXXXX`
 files=`find ../<example_files_unix> -type f | grep -v '.errors$' | grep -v '.tree$'`
-
-echo "$files" | trwdog ./bin/Debug/net6.0/<exec_name> -x -tree > "$parse_out_file"
-status="$?"
-if [ -f "$file".errors ]
+echo "$files" | trwdog ./bin/Debug/net6.0/<exec_name> -x -shunt -tree
+status=$?
+rm -rf `find ../<example_files_unix> -type f -size 0 -name '*.errors' -o -name '*.tree'`
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
+if [[ "$machine" == "MinGw" || "$machine" == "Msys" || "$machine" == "Cygwin" || "#machine" == "Linux" ]]
 then
-  if [ "$status" = "0" ]
-  then
-    echo Expected parse fail.
-    err=1
-  else
-    echo Expected.
-    diff \<(tr -d "\r\n" \< "$file".errors) \<(tr -d "\r\n" \< "$parse_out_file")
-    status="$?"
-    if [ "$status" = "0" ]
-    then
-      echo Parse errors match succeeded.
-    else
-      echo Expected parse errors match.
-      err=1
-    fi
-  fi
-else # No .errors file
-  if [ "$status" != "0" ]
-  then
-    err=1
-  fi
-  if [ -f "$file".tree ]
-  then
-    diff \<(tr -d "\r\n" \< "$file".tree) \<(tr -d "\r\n" \< "$parse_out_file")
-    status="$?"
-    if [ "$status" = "0" ]
-    then
-      echo Parse tree match succeeded.
-    else
-      echo Expected parse tree match.
-      err=1
-    fi
-  fi
+  dos2unix `find ../<example_files_unix> -type f -name '*.errors' -o -name '*.tree'`
 fi
-#rm "$parse_out_file"
+cd ../<example_files_unix>
+git diff --exit-code --name-only . > temp-output.txt 2>&1
+diffs=$?
+if [ "$diffs" = "129" ]
+then
+  err=$status
+elif [ "$diffs" = "1" ]
+then
+  cat temp-output.txt
+  echo Output difference--failed test.
+  err=1
+else
+  err=$status
+fi
+rm -f temp-output.txt
 exit $err
