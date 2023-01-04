@@ -18,4 +18,4 @@ Get strings from a PDF file using IText.
 
 ## Current version
 
-0.19.0-alpha1 Complete rewrite of parse tree representation.
+0.19.0-alpha2 Complete rewrite of parse tree representation.

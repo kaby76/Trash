@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\big-index\\issue-update-python\\sql\\tsql"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-2988\\grammars-v4\\sql\\mysql"
     }
   }
 }

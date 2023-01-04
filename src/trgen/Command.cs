@@ -51,7 +51,7 @@
 
 
         public Config _config;
-        public static string version = "0.19.0-alpha1";
+        public static string version = "0.19.0-alpha2";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -675,8 +675,8 @@
                     }
 
                     string code = null;
-                    code = File.ReadAllText(f);
-                    DoParse(code, f, pr);
+                    code = File.ReadAllText(sgfn);
+                    DoParse(code, sgfn, pr);
 
 
                     //doc = Docs.Class1.ReadDoc(sgfn);
