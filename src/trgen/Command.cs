@@ -187,7 +187,7 @@
                 var te = new Regex(_config.todo_pattern).IsMatch(cd);
                 if (!te)
                 {
-                    System.Console.Error.WriteLine("Skipping.");
+                    System.Console.Error.WriteLine("Skipping because " + cd + " is not on the 'to do' list.");
                     return;
                 }
             }
@@ -196,7 +196,7 @@
                 var te = new Regex(_config.skip_pattern).IsMatch(cd);
                 if (te)
                 {
-                    System.Console.Error.WriteLine("Skipping.");
+                    System.Console.Error.WriteLine("Skipping because " + cd + " is on the 'skip' list.");
                     return;
                 }
             }
