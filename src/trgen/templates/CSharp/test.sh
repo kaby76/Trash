@@ -5,7 +5,7 @@ IFS=$(echo -en "\n\b")
 files=`find ../<example_files_unix> -type f | grep -v '.errors$' | grep -v '.tree$'`
 echo "$files" | trwdog ./bin/Debug/net6.0/<exec_name> -x -shunt -tree
 status=$?
-rm -rf `find ../<example_files_unix> -type f -size 0 -name '*.errors' -o -name '*.tree'`
+# rm -rf `find ../<example_files_unix> -type f -name '*.errors' -o -name '*.tree' -size 0`
 unameOut="$(uname -s)"
 case "${unameOut}" in
     Linux*)     machine=Linux;;
@@ -16,21 +16,26 @@ case "${unameOut}" in
 esac
 if [[ "$machine" == "MinGw" || "$machine" == "Msys" || "$machine" == "Cygwin" || "#machine" == "Linux" ]]
 then
-  dos2unix `find ../<example_files_unix> -type f -name '*.errors' -o -name '*.tree'`
+  gen=`find ../examples -type f -name '*.errors' -o -name '*.tree'`
+  if [ "$gen" != "" ]
+  then
+    dos2unix $gen
+  fi
 fi
+old=`pwd`
 cd ../<example_files_unix>
-git diff --exit-code --name-only . > temp-output.txt 2>&1
+git diff --exit-code --name-only . > $old/temp-output.txt 2>&1
 diffs=$?
 if [ "$diffs" = "129" ]
 then
   err=$status
 elif [ "$diffs" = "1" ]
 then
-  cat temp-output.txt
+  cat $old/temp-output.txt
   echo Output difference--failed test.
   err=1
 else
   err=$status
 fi
-rm -f temp-output.txt
+rm -f $old/temp-output.txt
 exit $err
