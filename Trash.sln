@@ -139,6 +139,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "antlr4", "src\grammars\antl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pegen", "src\grammars\pegen\Generated-CSharp\pegen.csproj", "{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdeltree", "src\trdeltree\trdeltree.csproj", "{15A6F421-711C-465A-9A8E-6959E3416DC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -236,6 +238,7 @@ Global
 		{71FA41D9-6BE1-4498-B2FF-C1562AC648B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71FA41D9-6BE1-4498-B2FF-C1562AC648B7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9E19B447-23BD-48B7-9C46-8314E150F4E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E19B447-23BD-48B7-9C46-8314E150F4E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E19B447-23BD-48B7-9C46-8314E150F4E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E19B447-23BD-48B7-9C46-8314E150F4E5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CFBBEC3B-1EEB-42CA-A231-8971CBCB93BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -358,6 +361,10 @@ Global
 		{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15A6F421-711C-465A-9A8E-6959E3416DC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15A6F421-711C-465A-9A8E-6959E3416DC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15A6F421-711C-465A-9A8E-6959E3416DC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15A6F421-711C-465A-9A8E-6959E3416DC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -87,7 +87,9 @@
                     results.Add(tuple);
                 }
             }
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
             System.Console.WriteLine(js1);
         }
     }

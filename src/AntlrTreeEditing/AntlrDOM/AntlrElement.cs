@@ -12,6 +12,10 @@
         {
             this.NodeType = NodeConstants.ELEMENT_NODE;
         }
+        public AntlrElement(AntlrElement orig) : base(orig)
+        {
+            this.NodeType = NodeConstants.ELEMENT_NODE;
+        }
 
         public virtual void EnterRule(IMyParseTreeListener listener)
         {

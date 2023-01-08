@@ -76,7 +76,7 @@ function main($argv) : void {
             $prefix = $argv[++$i] . " ";
         } else if ($argv[$i] == "-input") {
             array_push($inputs, $argv[++$i]);
-            array_push($is_fns, true);
+            array_push($is_fns, false);
         } else if ($argv[$i] == "-trace") {
             $show_trace = true;
         } else {

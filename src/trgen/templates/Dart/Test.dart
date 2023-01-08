@@ -3,9 +3,11 @@
 import 'package:antlr4/antlr4.dart';
 <tool_grammar_tuples:{x | import '<x.GeneratedFileName>';
 } >
+import 'MyErrorListener.dart';
 import 'dart:io';
 import 'dart:convert';
 
+var shunt_output = false;
 var show_tree = false;
 var show_tokens = false;
 var show_trace = false;
@@ -14,6 +16,7 @@ var is_fns = List\<bool>.empty(growable: true);
 var error_code = 0;
 var string_instance = 0;
 var prefix = "";
+var quiet = false;
 
 void main(List\<String> args) async {
     for (int i = 0; i \< args.length; ++i)
@@ -36,6 +39,25 @@ void main(List\<String> args) async {
         {
             inputs.add(args[++i]);
             is_fns.add(false);
+        }
+        else if (args[i] == "-shunt")
+        {
+            shunt_output = true;
+            continue;
+        }
+        else if (args[i] == "-x")
+        {
+            for (; ; )
+            {
+                String? line = stdin.readLineSync(encoding: utf8);
+                line = line?.trim();
+                if (line == null || line == "")
+                {
+                    break;
+                }
+                inputs.add(line);
+                is_fns.add(true);
+            }
         }
         else if (args[i] == "-trace")
         {
@@ -114,8 +136,8 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     }
     var tokens = CommonTokenStream(lexer);
     var parser = <parser_name>(tokens);
-//    var listener_lexer = ErrorListener();
-//    var listener_parser = ErrorListener();
+    var listener_lexer = new MyErrorListener();
+    var listener_parser = new MyErrorListener();
 //    lexer.AddErrorListener(listener_lexer);
 //    parser.AddErrorListener(listener_parser);
     if (show_trace)
@@ -140,7 +162,22 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     }
     if (show_tree)
     {
-        print(tree.toStringTree(parser: parser));
+        if (shunt_output)
+        {
+            try {
+                final fn = input_name + ".tree";
+                final File file = File(fn);
+                await file.writeAsString(tree.toStringTree(parser: parser));
+            } catch (e) {
+            }
+        }
+        else
+        {
+            print(tree.toStringTree(parser: parser));
+        }
     }
-    stderr.writeln(prefix + "Dart " + row_number.toString() + " " + input_name + " " + result + " " + et.toString());
+    if (!quiet)
+    {
+        stderr.writeln(prefix + "Dart " + row_number.toString() + " " + input_name + " " + result + " " + et.toString());
+    }
 }

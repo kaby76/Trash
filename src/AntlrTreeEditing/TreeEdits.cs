@@ -966,5 +966,35 @@
             //    // Shift text over.
             //}
         }
+
+        public static void DeleteAndReattachChildren(AntlrElement node)
+        {
+            if (node == null) return;
+            var n = node;
+            var parent = n.ParentNode;
+            var c = parent;
+            if (c != null)
+            {
+                int i = 0;
+                for (i = 0; i < c.ChildNodes.Length; ++i)
+                {
+                    var child = c.ChildNodes.item(i);
+                    if (child == n)
+                    {
+                        var temp = c.ChildNodes.item(i);
+                        var t = temp;
+                        t.ParentNode = null;
+                        c.ChildNodes.RemoveAt(i);
+                        break;
+                    }
+                }
+                for (int j = n.ChildNodes.Length - 1; j >= 0; --j)
+                {
+                    var child = n.ChildNodes.item(j);
+                    child.ParentNode = c;
+                    c.ChildNodes.Insert(i, child);
+                }
+            }
+        }
     }
 }

@@ -2,59 +2,19 @@
 
 ## Summary
 
-Delete nodes in a parse tree
+Delete nodes in a parse tree and reposition children to parents
 
 ## Description
 
-Reads a parse tree from stdin, deletes nodes in the tree using
-the specified XPath expression, and writes the modified tree
-to stdout. The input and output are Parse Tree Data.
+Reads a parse tree from stdin, and given an XPath expression
+for the nodes in the parse tree, delete the nodes and reattach
+the children of the deleted nodes to the parent. Finally,
+write the modified tree to stdout. The input and output are
+Parse Tree Data.
 
 ## Usage
 
     trdelete <string>
-
-## Example
-
-Before:
-
-    grammar Expression;
-    e : e ('*' | '/') e
-      | e ('+' | '-') e
-      | '(' e ')'
-      | ('-' | '+')* a
-      ;
-    a : INT ;
-    INT : ('0' .. '9')+ ;
-    MUL : '*' ;
-    DIV : '/' ;
-    ADD : '+' ;
-    SUB : '-' ;
-    LP : '(' ;
-    RP : ')' ;
-    WS : [ \r\n\t] + -> skip ;
-
-Command:
-
-    trparse Expression.g4 | trdelete "//parserRuleSpec[RULE_REF/text() = 'a']" | trprint
-
-After:
-
-    grammar Expression;
-    e : e ('*' | '/') e
-      | e ('+' | '-') e
-      | '(' e ')'
-      | ('-' | '+')* a
-      ;
-    a : INT ;
-    INT : ('0' .. '9')+ ;
-    MUL : '*' ;
-    DIV : '/' ;
-    ADD : '+' ;
-    SUB : '-' ;
-    LP : '(' ;
-    RP : ')' ;
-    WS : [ \r\n\t] + -> skip ;
 
 ## Notes
 
@@ -64,4 +24,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.19.0-alpha3 Complete rewrite of parse tree representation.
+0.19.0-alpha4 Complete rewrite of parse tree representation.

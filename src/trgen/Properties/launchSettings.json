@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-2988\\grammars-v4\\sql\\mysql"
+      "commandLineArgs": "-t Dart",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-2988\\check\\abb"
     }
   }
 }

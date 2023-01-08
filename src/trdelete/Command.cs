@@ -84,7 +84,7 @@
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     foreach (var node in nodes)
                     {
-                        TreeEdits.Delete(node);
+                        TreeEdits.DeleteAndReattachChildren(node);
                     }
 
                     var tuple = new ParsingResultSet()

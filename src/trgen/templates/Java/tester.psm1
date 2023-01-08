@@ -24,13 +24,35 @@ function Test-Case {
         $TreeFile,
         $ErrorFile
     )
-    $o = trwdog java Program -file $InputFile
-    $failed = $LASTEXITCODE -ne 0
-    if ($failed -and $errorFile) {
-        return $true
+    # Save input and output character encodings and switch to UTF-8.
+    $oldInputEncoding = [console]::InputEncoding
+    $oldOutputEncoding = [console]::OutputEncoding
+    $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
+
+    $parseOutFile = $InputFile + ".out"
+    $o = trwdog java -cp "<antlr_tool_path><if(path_sep_semi)>;<else>:<endif>." Test -file $InputFile -tree | Out-File -LiteralPath "$parseOutFile" -Encoding UTF8
+
+    $parseOk = $LASTEXITCODE -eq 0
+    $treeMatch = $true
+    if ($errorFile) {
+        # If we expected errors, then a failed parse was a successful test.
+        if (!$parseOk) {
+            Write-Host "Expected."
+            # Confirm that the errors we received are the ones we expected.
+            # (Skip because it's done in other testers.)
     }
-    if(!$failed -and !$errorFile){
-        return $true
+    } else {
+        if ($parseOk -and (Test-Path $TreeFile)) {
+            # Confirm that the parse tree we received is the one we expected.
+            $expectedData = Get-Content $TreeFile -Encoding UTF8
+            $actualData = Get-Content $parseOutFile -Encoding UTF8
+            $treeMatch = ($actualData -eq $expectedData)
+        }
     }
-    return $false
+    # Restore input and output character encodings.
+    [console]::InputEncoding = $oldInputEncoding
+    [console]::OutputEncoding = $oldOutputEncoding
+
+    Remove-Item $parseOutFile
+    return $parseOk, $treeMatch
 }
