@@ -5,11 +5,22 @@
  */
 
 import 'package:antlr4/antlr4.dart';
+import 'dart:io';
+import 'dart:convert';
 
 /// This is all the parsing support code essentially; most of it is error recovery stuff. */
 class MyErrorListener extends BaseErrorListener
 {
-  MyErrorListener() {}
+  bool _quiet = false;
+  bool had_error = false;
+  IOSink _output = stdout;
+
+  MyErrorListener(bool quiet, IOSink output)
+  {
+      _quiet = quiet;
+      had_error = false;
+      _output = output;
+  }
 
   @override
   void syntaxError(
@@ -19,7 +30,13 @@ class MyErrorListener extends BaseErrorListener
     int charPositionInLine,
     String msg,
     RecognitionException? e,
-  ) {}
+  ) {
+    had_error = true;
+    if (!_quiet)
+    {
+        _output.writeln('line $line:$charPositionInLine $msg');
+    }
+  }
 
   /* @override
   void reportAmbiguity(

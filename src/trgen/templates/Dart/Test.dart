@@ -136,8 +136,9 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     }
     var tokens = CommonTokenStream(lexer);
     var parser = <parser_name>(tokens);
-    var listener_lexer = new MyErrorListener();
-    var listener_parser = new MyErrorListener();
+    IOSink output = shunt_output ? File(input_name + ".errors").openWrite() : stdout;
+    var listener_lexer = new MyErrorListener(quiet, output);
+    var listener_parser = new MyErrorListener(quiet, output);
 //    lexer.AddErrorListener(listener_lexer);
 //    parser.AddErrorListener(listener_parser);
     if (show_trace)
@@ -180,4 +181,5 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     {
         stderr.writeln(prefix + "Dart " + row_number.toString() + " " + input_name + " " + result + " " + et.toString());
     }
+    if (shunt_output) output.close();
 }

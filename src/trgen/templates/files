@@ -19,13 +19,14 @@
 ./Cpp/readme.md
 ./Cpp/Test.cpp
 ./Cpp/test.sh
+./CSharp/build.ps1
 ./CSharp/Encodings.cs
 ./CSharp/ErrorListener.cs
 ./CSharp/makefile
 ./CSharp/Test.cs
 ./CSharp/Test.csproj
+./CSharp/test.ps1
 ./CSharp/test.sh
-./CSharp/tester.psm1
 ./Dart/analysis_options.yaml
 ./Dart/makefile
 ./Dart/MyErrorListener.dart
