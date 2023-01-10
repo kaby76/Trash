@@ -33,7 +33,14 @@ final class TreeShapeListener implements ParseTreeListener {
 
 // TODO: should ConsoleErrorListener be final?
 class MyErrorListener extends BaseErrorListener /*extends ConsoleErrorListener*/ {
-    public bool $noError = true;
+    public bool $had_error;
+    public bool $quiet;
+    public mixed $output;
+    public function __construct($q, $o) {
+        $this->output = $o;
+        $this->quiet = $q;
+        $this->had_error = false;
+    }
     public function syntaxError(
         Recognizer $recognizer,
         ?object $offendingSymbol,
@@ -42,12 +49,13 @@ class MyErrorListener extends BaseErrorListener /*extends ConsoleErrorListener*/
         string $msg,
         ?RecognitionException $e
     ) : void {
-        \fwrite(\STDOUT, \sprintf("line %d:%d %s\n", $line, $charPositionInLine, $msg));
-        //parent::syntaxError($recognizer,$offendingSymbol,$line,$charPositionInLine,$msg,$e);
-        $this->noError = false;
+        $this->had_error = true;
+        fwrite($this->output, sprintf("line %d:%d %s\n", $line, $charPositionInLine, $msg));
     }
 }
 
+$shunt_output = false;
+$show_profile = false;
 $show_tree = false;
 $show_tokens = false;
 $show_trace = false;
@@ -56,8 +64,11 @@ $is_fns = array();
 $error_code = 0;
 $string_instance = 0;
 $prefix = "";
+$quiet = false;
 
 function main($argv) : void {
+    global $shunt_output;
+    global $show_profile;
     global $show_tree;
     global $show_tokens;
     global $show_trace;
@@ -65,18 +76,25 @@ function main($argv) : void {
     global $is_fns;
     global $error_code;
     global $prefix;
+    global $quiet;
     for ($i = 1; $i \< count($argv); $i++) {
         if ($argv[$i] == "-tokens") {
             $show_tokens = true;
-            continue;
         } else if ($argv[$i] == "-tree") {
             $show_tree = true;
-            continue;
         } else if ($argv[$i] == "-prefix") {
             $prefix = $argv[++$i] . " ";
         } else if ($argv[$i] == "-input") {
             array_push($inputs, $argv[++$i]);
             array_push($is_fns, false);
+        } else if ($argv[$i] == "-shunt") {
+            $shunt_output = true;
+        } else if ($argv[$i] == "-x") {
+            while($f = fgets(STDIN)){
+                $f = trim($f);
+                array_push($inputs, $f);
+                array_push($is_fns, true);
+            }
         } else if ($argv[$i] == "-trace") {
             $show_trace = true;
         } else {
@@ -126,6 +144,7 @@ function ParseFilename($input, $row_number) {
 }
 
 function DoParse($str, $input_name, $row_number) {
+    global $shunt_output;
     global $show_tree;
     global $show_tokens;
     global $show_trace;
@@ -133,6 +152,7 @@ function DoParse($str, $input_name, $row_number) {
     global $is_fns;
     global $error_code;
     global $prefix;
+    global $quiet;
     $lexer = new <lexer_name>($str);
     if ($show_tokens) {
         for ($i=0;  ; $i++) {
@@ -145,12 +165,18 @@ function DoParse($str, $input_name, $row_number) {
         }
         $lexer->reset();
     }
-    $lexerErrorListener = new MyErrorListener();
+
+    if ( $shunt_output ) {
+        $output = fopen($input_name . ".errors", "w");
+    } else {
+        $output = STDOUT;
+    }
+    $lexerErrorListener = new MyErrorListener($quiet, $output);
     $lexer->removeErrorListeners();
     $lexer->addErrorListener($lexerErrorListener);
     $tokens = new CommonTokenStream($lexer);
     $parser = new <parser_name>($tokens);
-    $parserErrorListener = new MyErrorListener();
+    $parserErrorListener = new MyErrorListener($quiet, $output);
     $parser->removeErrorListeners();
     $parser->addErrorListener($parserErrorListener);
     if ($show_trace) {
@@ -162,17 +188,26 @@ function DoParse($str, $input_name, $row_number) {
     $tree = $parser-><start_symbol>();
     $duration = $timer2->stop();
     $result = "";
-    if ($parserErrorListener->noError && $lexerErrorListener->noError) {
-        $result = "success";
-    }
-    else {
+    if ($parserErrorListener->had_error || $lexerErrorListener->had_error) {
         $result = "fail";
         $error_code = 1;
     }
+    else {
+        $result = "success";
+    }
     if ($show_tree) {
-        print($tree->toStringTree($parser->getRuleNames()) . "\n");
+        if ($shunt_output) {
+            $handle = fopen($input_name . ".tree", "w");
+            fprintf($handle, "%s", $tree->toStringTree($parser->getRuleNames()));
+            fclose($handle);
+        } else {
+            print($tree->toStringTree($parser->getRuleNames()));
+        }
     }
     fwrite(STDERR, $prefix . "PHP " . $row_number . " " . $input_name . " " . $result . " " . $duration->asSeconds() . "\n");
+    if ( $shunt_output ) {
+        fclose($output);
+    }
 }
 
 main($argv);
