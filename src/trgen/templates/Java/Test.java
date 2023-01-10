@@ -13,13 +13,16 @@ import java.util.List;
 
 public class Test {
 
-    static int error_code = 0;
+	static boolean shunt_output = false;
+	static boolean show_profile = false;
     static boolean show_tree = false;
     static boolean show_tokens = false;
     static boolean show_trace = false;
-    static java.nio.charset.Charset charset = null;
+	static int error_code = 0;
+	static java.nio.charset.Charset charset = null;
     static int string_instance = 0;
     static String prefix = "";
+	static boolean quiet = false;
 
     public static void main(String[] args) throws  FileNotFoundException, IOException
     {
@@ -27,15 +30,17 @@ public class Test {
         List\<String> inputs = new ArrayList\<String>();
         for (int i = 0; i \< args.length; ++i)
         {
-            if (args[i].equals("-tokens"))
+			if (args[i].Equals("-profile"))
+			{
+				show_profile = true;
+			}
+			else if (args[i].equals("-tokens"))
             {
                 show_tokens = true;
-                continue;
             }
             else if (args[i].equals("-tree"))
             {
                 show_tree = true;
-                continue;
             }
             else if (args[i].equals("-prefix"))
             {
@@ -45,10 +50,32 @@ public class Test {
                 inputs.add(args[++i]);
                 is_fns.add(false);
             }
+			else if (args[i].equals("-shunt"))
+			{
+				shunt_output = true;
+			}
             else if (args[i].equals("-encoding"))
             {
                 charset = java.nio.charset.Charset.forName(args[++i]);
             }
+			else if (args[i].equals("-x"))
+			{
+				for (; ; )
+				{
+					var line = System.Console.In.ReadLine();
+					line = line?.Trim();
+					if (line == null || line == "")
+					{
+						break;
+					}
+					inputs.Add(line);
+					is_fns.Add(true);
+				}
+			}
+			else if (args[i].equals("-q"))
+			{
+				quiet = true;
+			}
             else if (args[i].equals("-trace"))
             {
                 show_trace = true;
@@ -121,23 +148,24 @@ public class Test {
         }
         var tokens = new CommonTokenStream(lexer);
         <parser_name> parser = new <parser_name>(tokens);
-        ErrorListener lexer_listener = new ErrorListener();
-        ErrorListener listener = new ErrorListener();
+		output = shunt_output ? new StreamWriter(input_name + ".errors") : System.Console.Out;
+        ErrorListener listener_lexer = new ErrorListener(quiet, output);
+        ErrorListener listener_parser = new ErrorListener(quiet, output);
         parser.removeErrorListeners();
         lexer.removeErrorListeners();
-        parser.addErrorListener(listener);
-        lexer.addErrorListener(lexer_listener);
+        parser.addErrorListener(listener_parser);
+        lexer.addErrorListener(listener_lexer);
         if (show_trace)
         {
             parser.setTrace(true);
-            ParserATNSimulator.trace_atn_sim = true;
+//            ParserATNSimulator.trace_atn_sim = true;
         }
         Instant start = Instant.now();
         ParseTree tree = parser.<start_symbol>();
         Instant finish = Instant.now();
         long timeElapsed = Duration.between(start, finish).toMillis();
         String result = "";
-        if (listener.had_error || lexer_listener.had_error)
+        if (listener_parser.had_error || listener_lexer.had_error)
         {
             result = "fail";
             error_code = 1;
@@ -146,8 +174,18 @@ public class Test {
             result = "success";
         if (show_tree)
         {
-            System.out.println(tree.toStringTree(parser));
+			if (shunt_output)
+			{
+				System.out.println(tree.toStringTree(parser));
+			} else
+			{
+				System.out.println(tree.toStringTree(parser));
+			}
         }
-        System.err.println(prefix + "Java " + row_number + " " + input_name + " " + result + " " + (timeElapsed * 1.0) / 1000.0);
+		if (!quiet)
+		{
+			System.err.println(prefix + "Java " + row_number + " " + input_name + " " + result + " " + (timeElapsed * 1.0) / 1000.0);
+		}
+		if (shunt_output) output.close();
     }
 }

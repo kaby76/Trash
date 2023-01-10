@@ -47,11 +47,12 @@
 ./Go/Test.go
 ./Go/test.ps1
 ./Go/test.sh
+./Java/build.ps1
 ./Java/ErrorListener.java
 ./Java/makefile
 ./Java/Test.java
+./Java/test.ps1
 ./Java/test.sh
-./Java/tester.psm1
 ./JavaScript/makefile
 ./JavaScript/package.json
 ./JavaScript/Test.js
