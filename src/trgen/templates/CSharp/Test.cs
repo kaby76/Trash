@@ -10,6 +10,8 @@ using System.Text;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Net.Sockets;
+<if(has_name_space)>namespace <name_space>
+{<endif>
 
 public class Program
 {
@@ -101,27 +103,22 @@ public class Program
             if (args[i].Equals("-profile"))
             {
                 show_profile = true;
-                continue;
             }
             else if (args[i].Equals("-tokens"))
             {
                 show_tokens = true;
-                continue;
             }
             else if (args[i].Equals("-two-byte"))
             {
                 two_byte = true;
-                continue;
             }
             else if (args[i].Equals("-old"))
             {
                 old = true;
-                continue;
             }
             else if (args[i].Equals("-tree"))
             {
                 show_tree = true;
-                continue;
             }
             else if (args[i].Equals("-prefix"))
             {
@@ -135,7 +132,6 @@ public class Program
             else if (args[i].Equals("-shunt"))
             {
                 shunt_output = true;
-                continue;
             }
             else if (args[i].Equals("-encoding"))
             {
@@ -253,7 +249,6 @@ public class Program
         parser.RemoveErrorListeners();
         lexer.AddErrorListener(listener_lexer);
         parser.AddErrorListener(listener_parser);
-        DateTime before = DateTime.Now;
         if (show_profile)
         {
             parser.Profile = true;
@@ -263,6 +258,7 @@ public class Program
             parser.Trace = true;
 //            ParserATNSimulator.trace_atn_sim = true;
         }
+        DateTime before = DateTime.Now;
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;
         var result = "";
@@ -296,3 +292,5 @@ public class Program
         if (shunt_output) output.Close();
     }
 }
+
+<if(has_name_space)>}<endif>

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+<if(has_name_space)>namespace <name_space>
+{<endif>
 public class ErrorListener\<S> : IAntlrErrorListener\< S>
 {
     public bool had_error;
@@ -29,3 +31,4 @@ public class ErrorListener\<S> : IAntlrErrorListener\< S>
         }
     }
 }
+<if(has_name_space)>}<endif>

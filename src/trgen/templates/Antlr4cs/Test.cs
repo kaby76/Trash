@@ -1,6 +1,7 @@
 // Template generated code from trgen <version>
 
 using Antlr4.Runtime;
+using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
 using System;
 using System.IO;
@@ -21,6 +22,7 @@ public class Program
     public static string StartSymbol { get; set; } = "<start_symbol>";
     public static string Input { get; set; }
 
+    static bool shunt_output = false;
     static bool show_profile = false;
     static bool show_tree = false;
     static bool show_tokens = false;
@@ -73,6 +75,11 @@ public class Program
                 inputs.Add(args[++i]);
                 is_fns.Add(false);
             }
+            else if (args[i].Equals("-shunt"))
+            {
+                shunt_output = true;
+                continue;
+            }
             else if (args[i].Equals("-encoding"))
             {
                 ++i;
@@ -101,10 +108,9 @@ public class Program
             {
                 quiet = true;
             }
-            else if (args[if] == "-trace")
+            else if (args[i] == "-trace")
             {
                 show_trace = true;
-                continue;
             }
             else
             {
@@ -148,7 +154,6 @@ public class Program
 
     static void ParseString(string input, int row_number)
     {
-        System.Console.Error.WriteLine("Input: " + input);
         ICharStream str = null;
         str = new Antlr4.Runtime.AntlrInputStream(
             new MemoryStream(Encoding.UTF8.GetBytes(input ?? "")));
@@ -186,9 +191,16 @@ public class Program
         }
         var tokens = new CommonTokenStream(lexer);
         var parser = new Test.<parser_name>(tokens);
+        var output = shunt_output ? new StreamWriter(input_name + ".errors") : System.Console.Out;
+        var listener_lexer = new ErrorListener\<int>(quiet, output);
+        var listener_parser = new ErrorListener\<IToken>(quiet, output);
+        lexer.RemoveErrorListeners();
+        parser.RemoveErrorListeners();
+        lexer.AddErrorListener(listener_lexer);
+        parser.AddErrorListener(listener_parser);
         if (show_trace)
         {
-            parser.Trace = true;
+            // parser.Trace = true;
             // ATN tracing missing.
         }
         DateTime before = DateTime.Now;
@@ -206,9 +218,18 @@ public class Program
         }
         if (show_tree)
         {
-            System.Console.Out.WriteLine(tree.ToStringTree(parser));
+            if (shunt_output)
+            {
+                System.IO.File.WriteAllText(input_name + ".tree", tree.ToStringTree(parser));
+            } else
+            {
+                System.Console.Out.WriteLine(tree.ToStringTree(parser));
+            }
         }
-        if (!quiet) System.Console.Error.WriteLine(prefix + "Antlr4cs " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+        if (!quiet)
+        {
+            System.Console.Error.WriteLine(prefix + "Antlr4cs " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+        }
     }
 }
 

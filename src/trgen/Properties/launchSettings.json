@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "",
+      "commandLineArgs": "-t Antlr4cs",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-2988\\grammars-v4\\abb"
     }
   }

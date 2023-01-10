@@ -1094,7 +1094,8 @@
                             : f
                             );
 
-                    if (_config.name_space != null)
+                    if (_config.name_space != null
+                        && !(_config.target == "Antlr4cs" || _config.target == "CSharp"))
                     {
                         to = this._config.output_directory
                             + _config.name_space.Replace('.', '/') + '/'

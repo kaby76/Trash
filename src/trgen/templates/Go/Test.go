@@ -7,20 +7,30 @@ import (
     "io"
     "time"
     "strconv"
+    "bufio"
     "github.com/antlr/antlr4/runtime/Go/antlr/v4"
     "example.com/myparser/<package_name>"
 )
 type CustomErrorListener struct {
     errors int
+    quiet bool
+    output io.Writer
 }
 
-func NewCustomErrorListener() *CustomErrorListener {
-    return new(CustomErrorListener)
+func NewCustomErrorListener(q bool, o io.Writer) *CustomErrorListener {
+    p := new(CustomErrorListener)
+    p.quiet = q
+    p.errors = 0
+    p.output = o
+    return p
 }
 
-func (l *CustomErrorListener) SyntaxError(recognizer antlr.Recognizer, offendingSymbol interface{}, line, column int, msg string, e antlr.RecognitionException) {
+func (l *CustomErrorListener) SyntaxError(recognizer antlr.Recognizer, offendingSymbol interface{}, line int, column int, msg string, e antlr.RecognitionException) {
     l.errors += 1
-    antlr.ConsoleErrorListenerINSTANCE.SyntaxError(recognizer, offendingSymbol, line, column, msg, e)
+    if ! l.quiet {
+        fmt.Fprintf(l.output, "line %d:%d %s", line, column, msg)
+	fmt.Fprintln(l.output)
+    }
 }
 
 func (l *CustomErrorListener) ReportAmbiguity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, exact bool, ambigAlts *antlr.BitSet, configs antlr.ATNConfigSet) {
@@ -43,15 +53,15 @@ var show_tokens = false
 var show_trace = false
 var string_instance = 0
 var prefix = ""
+var quiet = false
+var shunt_output = false
 
 func main() {
     for i := 1; i \< len(os.Args); i = i + 1 {
         if os.Args[i] == "-tokens" {
             show_tokens = true
-            continue
         } else if os.Args[i] == "-tree" {
             show_tree = true
-            continue
         } else if os.Args[i] == "-prefix" {
             i = i + 1
             prefix = os.Args[i] + " ";
@@ -59,9 +69,19 @@ func main() {
             i = i + 1
             inputs = append(inputs, os.Args[i])
             is_fns = append(is_fns, false)
+        } else if os.Args[i] == "-shunt" {
+            shunt_output = true
+        } else if os.Args[i] == "-x" {
+            scanner := bufio.NewScanner(os.Stdin)
+            for scanner.Scan() {
+                line := scanner.Text()
+                inputs = append(inputs, line)
+                is_fns = append(is_fns, true)
+            }
+        } else if os.Args[i] == "-q" {
+            quiet = true
         } else if os.Args[i] == "-trace" {
             show_trace = true
-            continue
         } else {
             inputs = append(inputs, os.Args[i])
             is_fns = append(is_fns, true)
@@ -137,17 +157,28 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
     var tokens = antlr.NewCommonTokenStream(lexer, 0)
     var parser = <go_parser_name>(tokens)
 
-    lexerErrors := &CustomErrorListener{}
+    var (
+        output io.Writer
+    )
+    if shunt_output {
+        f, _ := os.Create(input_name + ".errors")
+        defer f.Close()
+        output = bufio.NewWriter(f)
+    } else {
+        output = os.Stdout
+    }
+
+    lexerErrors := NewCustomErrorListener(quiet, output)
     lexer.RemoveErrorListeners()
     lexer.AddErrorListener(lexerErrors)
 
-    parserErrors := &CustomErrorListener{}
+    parserErrors := NewCustomErrorListener(quiet, output)
     parser.RemoveErrorListeners()
     parser.AddErrorListener(parserErrors)
 
     if show_trace {
-        parser.SetTrace(true)
-        antlr.ParserATNSimulatorTraceATNSim = true
+        //parser.SetTrace(true)
+        //antlr.ParserATNSimulatorTraceATNSim = true
     }
     // mutated name--not lowercase.
     start := time.Now()
@@ -162,13 +193,23 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
     }
     if show_tree {
         ss := tree.ToStringTree(parser.RuleNames, parser)
-        fmt.Println(ss)
+        if shunt_output {
+            f, _ := os.Create(input_name + ".tree")
+            defer f.Close()
+            w := bufio.NewWriter(f)
+            fmt.Fprintln(w, ss)
+            w.Flush()
+        } else {
+            fmt.Println(ss)
+        }
     }
-    fmt.Fprintf(os.Stderr, "%s", prefix)
-    fmt.Fprintf(os.Stderr, "Go ")
-    fmt.Fprintf(os.Stderr, "%d ", row_number)
-    fmt.Fprintf(os.Stderr, "%s ", input_name)
-    fmt.Fprintf(os.Stderr, "%s ", result)
-    fmt.Fprintf(os.Stderr, "%.3f", elapsed.Seconds())
-    fmt.Fprintln(os.Stderr)
+    if ! quiet {
+        fmt.Fprintf(os.Stderr, "%s", prefix)
+        fmt.Fprintf(os.Stderr, "Go ")
+        fmt.Fprintf(os.Stderr, "%d ", row_number)
+        fmt.Fprintf(os.Stderr, "%s ", input_name)
+        fmt.Fprintf(os.Stderr, "%s ", result)
+        fmt.Fprintf(os.Stderr, "%.3f", elapsed.Seconds())
+        fmt.Fprintln(os.Stderr)
+    }
 }
