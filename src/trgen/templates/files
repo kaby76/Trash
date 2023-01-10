@@ -53,11 +53,12 @@
 ./Java/Test.java
 ./Java/test.ps1
 ./Java/test.sh
+./JavaScript/build.ps1
 ./JavaScript/makefile
 ./JavaScript/package.json
 ./JavaScript/Test.js
+./JavaScript/test.ps1
 ./JavaScript/test.sh
-./JavaScript/tester.psm1
 ./PHP/composer.json
 ./PHP/makefile
 ./PHP/Test.php

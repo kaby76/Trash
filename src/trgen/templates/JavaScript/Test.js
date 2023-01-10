@@ -6,11 +6,17 @@ import antlr4 from 'antlr4';
 import strops from 'typescript-string-operations';
 import fs from 'fs-extra';
 import pkg from 'timer-node';
+import * as readline from 'node:readline';
+
 const { Timer, Time, TimerOptions } = pkg;
 
 function getChar() {
-    let buffer = Buffer.alloc(1);
-    var xx = fs.readSync(0, buffer, 0, 1);
+	let buffer = Buffer.alloc(1);
+	var xx = 0;
+	try {
+		xx = fs.readSync(0, buffer, 0, 1);
+	} catch (err) {
+	}
     if (xx === 0) {
         return '';
     }
@@ -26,15 +32,20 @@ class MyErrorListener extends antlr4.error.ErrorListener {
     }
 }
 
-var show_tokens = false;
+var shunt_output = false;
+var show_profile = false;
 var show_tree = false;
+var show_tokens = false;
 var show_trace = false;
-var inputs = [];
-var is_fns = [];
 var error_code = 0;
 var encoding = 'utf8';
 var string_instance = 0;
 var prefix = '';
+var quiet = false;
+var inputs = [];
+var is_fns = [];
+
+function splitLines(t) { return t.split(/\r\n|\r|\n/); }
 
 function main() {
     for (let i = 2; i \< process.argv.length; ++i)
@@ -46,15 +57,33 @@ function main() {
             case '-tree':
                 show_tree = true;
                 break;
-            case '-encoding':
-                encoding = process.argv[++i];
-                break;
             case '-prefix':
                 prefix = process.argv[++i] + ' ';
                 break;
             case '-input':
                 inputs.push(process.argv[++i]);
                 is_fns.push(false);
+                break;
+            case '-shunt':
+                shunt_output = true;
+                break;
+            case '-encoding':
+                encoding = process.argv[++i];
+                break;
+			case '-x':
+				var sb = new strops.StringBuilder();
+				var ch;
+				while ((ch = getChar()) != '') {
+					console.error("read " + ch);
+					sb.Append(ch);
+				}
+				var input = sb.ToString();
+				var sp = splitLines(input);
+				for (var ii of sp) {
+					if ( ii == '' ) continue;
+					inputs.push(ii);
+					is_fns.push(true);
+				}
                 break;
             case '-trace':
                 show_trace = true;
@@ -143,9 +172,13 @@ function DoParse(str, input_name, row_number) {
         result = 'success';
     }
     var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
-	if (show_tree) {
-		console.log(tree.toStringTree(parser.ruleNames));
-	}
+    if (show_tree) {
+        if (shunt_output) {
+            fs.writeFileSync(input_name + ".tree", tree.toStringTree(parser.ruleNames));
+        } else {
+            console.log(tree.toStringTree(parser.ruleNames));
+        }
+    }
     console.error(prefix + 'JavaScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t);
 }
 
