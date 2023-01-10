@@ -41,6 +41,7 @@ std::string formatDurationSeconds(uint64_t duration) {
     return oss.str();
 }
 
+bool shunt_output = false;
 bool show_tree = false;
 bool show_tokens = false;
 bool show_trace = false;
@@ -49,6 +50,7 @@ std::vector\<bool> is_fns;
 int error_code = 0;
 int string_instance = 0;
 std::string prefix;
+bool quiet = false;
 
 void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
 {
@@ -66,8 +68,11 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
     }
     auto tokens = new antlr4::CommonTokenStream(lexer);
     auto* parser = new <parser_name>(tokens);
-    auto listener_lexer = new ErrorListener();
-    auto listener_parser = new ErrorListener();
+    std::ostream* output = shunt_output
+        ? new std::ofstream(input_name + ".errors")
+        : &std::cout;
+    auto listener_lexer = new ErrorListener(quiet, output);
+    auto listener_parser = new ErrorListener(quiet, output);
     lexer->removeErrorListeners();
     parser->removeErrorListeners();
     lexer->addErrorListener(listener_lexer);
@@ -93,9 +98,26 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
     }
     if (show_tree)
     {
-        std::cout \<\< tree->toStringTree(parser) \<\< std::endl;
+        if (shunt_output)
+        {
+            try {
+                auto fn = input_name + ".tree";
+                auto out = new std::ofstream(fn);
+		(*out) \<\< tree->toStringTree(parser);
+		delete out;
+            }
+            catch (...) {
+            }
+        }
+        else
+        {
+            std::cout \<\< tree->toStringTree(parser) \<\< std::endl;
+        }
     }
-    std::cerr \<\< prefix \<\< "Cpp " \<\< row_number \<\< " " \<\< input_name \<\< " " \<\< result \<\< " " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
+    if (!quiet)
+    {
+        std::cerr \<\< prefix \<\< "Cpp " \<\< row_number \<\< " " \<\< input_name \<\< " " \<\< result \<\< " " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
+    }
 }
 
 
@@ -128,12 +150,10 @@ int TryParse(std::vector\<std::string>& args)
         if (args[i] == "-tokens")
         {
             show_tokens = true;
-            continue;
         }
         else if (args[i] == "-tree")
         {
             show_tree = true;
-            continue;
         }
         else if (args[i] == "-prefix")
         {
@@ -145,10 +165,33 @@ int TryParse(std::vector\<std::string>& args)
             inputs.push_back(args[i]);
             is_fns.push_back(false);
         }
+        else if (args[i] == "-shunt")
+        {
+            shunt_output = true;
+        }
+        else if (args[i] == "-x")
+        {
+            for (; ; )
+            {
+                std::string line;
+                if (! std::getline(std::cin, line)) break;
+                std::string_view v = line;
+                v.remove_prefix(std::min(v.find_first_not_of(" "), v.size()));
+                if (line == "")
+                {
+                    break;
+                }
+                inputs.push_back(line);
+                is_fns.push_back(true);
+            }
+        }
+        else if (args[i] == "-q")
+        {
+            quiet = true;
+        }
         else if (args[i] == "-trace")
         {
             show_trace = true;
-            continue;
         }
         else
         {

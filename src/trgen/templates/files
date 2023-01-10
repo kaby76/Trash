@@ -7,6 +7,7 @@
 ./Antlr4cs/test.ps1
 ./Antlr4cs/test.sh
 ./Arithmetic.g4
+./Cpp/build.ps1
 ./Cpp/CaseChangingCharStream.cpp
 ./Cpp/CaseChangingCharStream.h
 ./Cpp/cmake/antlr4-generator.cmake.in
@@ -21,6 +22,7 @@
 ./Cpp/makefile
 ./Cpp/readme.md
 ./Cpp/Test.cpp
+./Cpp/test.ps1
 ./Cpp/test.sh
 ./CSharp/build.ps1
 ./CSharp/Encodings.cs
