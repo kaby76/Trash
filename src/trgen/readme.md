@@ -23,4 +23,4 @@ create a parser for the Arithmetic.g4 grammar.
 
 ## Current version
 
-0.19.0-alpha4 Complete rewrite of parse tree representation.
+0.19.0-alpha5 Complete rewrite of parse tree representation.
