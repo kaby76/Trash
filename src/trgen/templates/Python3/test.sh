@@ -58,6 +58,10 @@ then
   echo "Difference in output."
   echo "Test failed."
   err=1
+elif [ "$status" = "1" ]
+then
+  echo "Test failed."
+  err=1
 else
   echo "Test succeeded."
   err=0

@@ -17,24 +17,38 @@ def getChar():
 class MyErrorListener(ErrorListener):
     __slots__ = 'num_errors'
 
-    def __init__(self):
+    def __init__(self, q, o):
         super().__init__()
         self.num_errors = 0
+        self.quiet = q
+        self.output = o
 
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
         self.num_errors = self.num_errors + 1
-        super().syntaxError(recognizer, offendingSymbol, line, column, msg, e)
+        if (not self.quiet):
+            self.output.write(f"line {line}:{column} {msg}\n");
 
+shunt_output = False
 show_tokens = False
 show_tree = False
 show_trace = False
-inputs = []
-is_fns = []
 encoding = "utf-8"
 error_code = 0
 string_instance = 0
+prefix = ""
+quiet = False
 
 def main(argv):
+    global shunt_output
+    global show_tokens
+    global show_tree
+    global show_trace
+    global encoding
+    global prefix
+    global quiet
+    
+    inputs = []
+    is_fns = []
     prefix = ""
     i = 1
     while i \< len(argv):
@@ -43,9 +57,6 @@ def main(argv):
             show_tokens = True
         elif arg in ("-tree"):
             show_tree = True
-        elif arg in ("-encoding"):
-            i = i + 1
-            encoding = argv[i]
         elif arg in ("-prefix"):
             i = i + 1
             prefix = argv[i] + " "
@@ -53,6 +64,16 @@ def main(argv):
             i = i + 1
             inputs.append(argv[i])
             is_fns.append(false)
+        elif arg in ("-encoding"):
+            i = i + 1
+            encoding = argv[i]
+        elif arg in ("-shunt"):
+            shunt_output = True
+        elif arg in ("-x"):
+            while f := sys.stdin.readline():
+                f = f.strip()
+                inputs.append(f)
+                is_fns.append(True)
         elif arg in ("-trace"):
             show_trace = True
         else:
@@ -60,21 +81,21 @@ def main(argv):
             is_fns.append(True)
         i = i + 1
     if len(inputs) == 0:
-        ParseStdin(prefix)
+        ParseStdin()
     else:
         start_time = datetime.now()
         for f in range(0, len(inputs)):
             if is_fns[f]:
-                ParseFilename(inputs[f], prefix, f)
+                ParseFilename(inputs[f], f)
             else:
-                ParseString(inputs[f], prefix, f)
+                ParseString(inputs[f], f)
         end_time = datetime.now()
         diff = end_time - start_time
         diff_time = diff.total_seconds()
         print(f'Total Time: {diff_time}', file=sys.stderr);
     sys.exit(error_code)
 
-def ParseStdin(myp):
+def ParseStdin():
     sb = ""
     ch = getChar()
     while (ch != ''):
@@ -82,28 +103,40 @@ def ParseStdin(myp):
         ch = getChar()
     input = sb
     str = InputStream(input);
-    DoParse(str, 'stdin', myp, 0)
+    DoParse(str, 'stdin', 0)
 
-def ParseString(input, myp, row_number):
+def ParseString(input, row_number):
     str = InputStream(input)
-    DoParse(str, 'string' + string_instance, myp, row_number)
+    DoParse(str, 'string' + string_instance, row_number)
     string_instance = string_instance + 1
 
-def ParseFilename(input, myp, row_number):
+def ParseFilename(input, row_number):
     str = FileStream(input, encoding)
-    DoParse(str, input, myp, row_number)
+    DoParse(str, input, row_number)
 
-def DoParse(str, input_name, myp, row_number):
+def DoParse(str, input_name, row_number):
+    global shunt_output
+    global show_tokens
+    global show_tree
+    global show_trace
+    global encoding
+    global prefix
+    global quiet
+
     lexer = <lexer_name>(str)
     lexer.removeErrorListeners()
-    l_listener = MyErrorListener()
-    lexer.addErrorListener(l_listener)
+    if (shunt_output):
+        output = open(input_name + ".errors", "w")
+    else:
+        output = sys.stdout
+    listener_lexer = MyErrorListener(quiet, output)
+    lexer.addErrorListener(listener_lexer)
     # lexer.strictMode = false
     tokens = CommonTokenStream(lexer)
     parser = <parser_name>(tokens)
     parser.removeErrorListeners()
-    p_listener = MyErrorListener()
-    parser.addErrorListener(p_listener)
+    listener_parser = MyErrorListener(quiet, output)
+    parser.addErrorListener(listener_parser)
     if (show_tokens):
         i = 0
         while True:
@@ -125,16 +158,18 @@ def DoParse(str, input_name, myp, row_number):
     diff = end_time - start_time
     diff_time = diff.total_seconds()
     result = ''
-    if p_listener.num_errors > 0 or l_listener.num_errors > 0:
+    if listener_parser.num_errors > 0 or listener_lexer.num_errors > 0:
         result = 'fail'
         error_code = 1
     else:
         result = 'success'
     if (show_tree):
-        print(tree.toStringTree(recog=parser))
-    # Extremely weird bug with Python3, where "prefix" seems to be
-    # empty always, so use "myp"
-    sys.stderr.write(myp)
+        if (shunt_output):
+            f = open(input_name + '.tree', 'w')
+            f.write(tree.toStringTree(recog=parser))
+        else:
+            print(tree.toStringTree(recog=parser))
+    sys.stderr.write(prefix)
     sys.stderr.write('Python3 ')
     sys.stderr.write(f'{row_number}')
     sys.stderr.write(' ')
