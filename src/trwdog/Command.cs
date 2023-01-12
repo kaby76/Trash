@@ -67,7 +67,7 @@ namespace Trash
                         if (process == null)
                         {
                             System.Console.Error.WriteLine("Cannot start process--Process.Start() returned null.");
-                            exit_code = 1;
+                            exit_code = 255;
                             System.Environment.Exit(exit_code);
                         }
                         //System.Console.WriteLine("started");
@@ -82,14 +82,14 @@ namespace Trash
                         {
                             System.Console.Error.WriteLine("Process is taking longer than " + secs + " seconds. Killing process.");
                             process.Kill(true);
-                            exit_code = 1;
+                            exit_code = 255;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     System.Console.Error.WriteLine(ex.Message);
-                    exit_code = 1;
+                    exit_code = 255;
                 }
                 //System.Console.WriteLine("Finished Post Process");
                 System.Environment.Exit(exit_code);

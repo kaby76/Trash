@@ -13,11 +13,13 @@ public class ErrorListener\<S> : IAntlrErrorListener\< S>
 {
     public bool had_error;
     bool _quiet;
+    bool _tee;
     TextWriter _out;
 
-    public ErrorListener(bool quiet, TextWriter @out)
+    public ErrorListener(bool quiet, bool tee, TextWriter @out)
     {
         _quiet = quiet;
+        _tee = tee;
         _out = @out;
     }
 
@@ -27,7 +29,11 @@ public class ErrorListener\<S> : IAntlrErrorListener\< S>
         had_error = true;
         if (!_quiet)
         {
-            _out.WriteLine("line " + line + ":" + col + " " + msg);
+            if (_tee)
+            {
+                _out.WriteLine("line " + line + ":" + col + " " + msg);
+            }
+            System.Console.Out.WriteLine("line " + line + ":" + col + " " + msg);
         }
     }
 }
