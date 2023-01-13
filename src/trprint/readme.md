@@ -18,4 +18,4 @@ Read stdin and print out the text for the tree.
 
 ## Current version
 
-0.19.0-alpha5 Complete rewrite of parse tree representation.
+0.19.0-alpha6 Complete rewrite of parse tree representation.
