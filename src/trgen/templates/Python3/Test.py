@@ -114,6 +114,7 @@ def ParseString(input, row_number):
     string_instance = string_instance + 1
 
 def ParseFilename(input, row_number):
+    global encoding
     str = FileStream(input, encoding)
     DoParse(str, input, row_number)
 
@@ -171,6 +172,7 @@ def DoParse(str, input_name, row_number):
         if (tee):
             f = open(input_name + '.tree', 'w', encoding='utf-8')
             f.write(tree.toStringTree(recog=parser))
+            f.close()
         else:
             print(tree.toStringTree(recog=parser), file=sys.stderr)
     if (not quiet):
