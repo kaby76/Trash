@@ -12,6 +12,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.io.File;
 
 public class Test {
@@ -146,7 +150,7 @@ public class Test {
                 if (token.getType() == IntStream.EOF)
                     break;
             }
-            System.out.println(new_s.toString());
+            System.err.println(new_s.toString());
             lexer.reset();
         }
         var tokens = new CommonTokenStream(lexer);
@@ -155,9 +159,9 @@ public class Test {
         try {
             output = tee ? new PrintStream(new File(input_name + ".errors")) : System.out;
         } catch (NullPointerException e) {
-            output = System.out;
+            output = System.err;
         } catch (FileNotFoundException e2) {
-            output = System.out;
+            output = System.err;
         }
         ErrorListener listener_lexer = new ErrorListener(quiet, tee, output);
         ErrorListener listener_parser = new ErrorListener(quiet, tee, output);
@@ -186,18 +190,20 @@ public class Test {
         {
             if (tee)
             {
-                PrintStream treef = null;
+                PrintWriter treef = null;
                 try {
-                    treef = new PrintStream(new File(input_name + ".tree"));
+                    treef = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(input_name + ".tree")), StandardCharsets.UTF_8), true);
+                    //treef = new PrintStream(new File(input_name + ".tree"));
                 } catch (NullPointerException e) {
-                    treef = System.out;
+                    treef = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);;
                 } catch (FileNotFoundException e2) {
-                    treef = System.out;
+                    treef = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
                 }
                 treef.print(tree.toStringTree(parser));
+                treef.close();
             } else
             {
-                System.out.println(tree.toStringTree(parser));
+                System.err.println(tree.toStringTree(parser));
             }
         }
         if (!quiet)
