@@ -40,7 +40,7 @@
                 {
                     h.AdditionalNewLineAfterOption = false;
                     h.Heading = "trwdog";
-                    h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
+                    h.Copyright = "Copyright (c) 2023 Ken Domino"; //change copyright text
                     h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);

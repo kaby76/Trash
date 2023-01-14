@@ -38,7 +38,7 @@ namespace Trash
 				{
 					h.AdditionalNewLineAfterOption = false;
 					h.Heading = "trtext";
-					h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
+					h.Copyright = "Copyright (c) 2023 Ken Domino"; //change copyright text
 					h.AddPreOptionsText(new Command().Help());
 					return HelpText.DefaultParsingErrorsHandler(result, h);
 				}, e => e);

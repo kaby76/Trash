@@ -35,8 +35,8 @@ namespace Trash
                 helpText = HelpText.AutoBuild(result, h =>
                 {
                     h.AdditionalNewLineAfterOption = false;
-                    h.Heading = "trcombine";
-                    h.Copyright = "Copyright (c) 2021 Ken Domino";
+                    h.Heading = "trfirst";
+                    h.Copyright = "Copyright (c) 2023 Ken Domino";
                     h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);

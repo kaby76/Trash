@@ -43,7 +43,7 @@ namespace Trash
                 {
                     h.AdditionalNewLineAfterOption = false;
                     h.Heading = "trpiggy";
-                    h.Copyright = "Copyright (c) 2022 Ken Domino";
+                    h.Copyright = "Copyright (c) 2023 Ken Domino";
                     h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);

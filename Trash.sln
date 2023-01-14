@@ -141,6 +141,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pegen", "src\grammars\pegen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdeltree", "src\trdeltree\trdeltree.csproj", "{15A6F421-711C-465A-9A8E-6959E3416DC5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "triconv", "src\triconv\triconv.csproj", "{1A999C2F-36DD-43FD-8B8D-940531872D96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -365,6 +367,10 @@ Global
 		{15A6F421-711C-465A-9A8E-6959E3416DC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15A6F421-711C-465A-9A8E-6959E3416DC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15A6F421-711C-465A-9A8E-6959E3416DC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A999C2F-36DD-43FD-8B8D-940531872D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A999C2F-36DD-43FD-8B8D-940531872D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A999C2F-36DD-43FD-8B8D-940531872D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A999C2F-36DD-43FD-8B8D-940531872D96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

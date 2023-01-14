@@ -35,8 +35,8 @@
                 helpText = HelpText.AutoBuild(result, h =>
                 {
                     h.AdditionalNewLineAfterOption = false;
-                    h.Heading = "trparse";
-                    h.Copyright = "Copyright (c) 2021 Ken Domino"; //change copyright text
+                    h.Heading = "trxml2";
+                    h.Copyright = "Copyright (c) 2023 Ken Domino"; //change copyright text
                     h.AddPreOptionsText(new Command().Help());
                     return HelpText.DefaultParsingErrorsHandler(result, h);
                 }, e => e);
