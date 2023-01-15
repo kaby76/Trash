@@ -45,4 +45,4 @@ modified.
 
 ## Current version
 
-0.19.0-alpha7 Complete rewrite of parse tree representation.
+0.19.0-alpha8 Complete rewrite of parse tree representation.
