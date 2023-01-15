@@ -1,8 +1,9 @@
 #!/usr/bin/bash
-version="0.19.0-alpha6"
+version="0.19.0-alpha7"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
+dotnet tool install -g trxml2
 for i in $directories
 do
 	echo $i
