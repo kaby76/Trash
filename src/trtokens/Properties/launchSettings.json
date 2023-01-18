@@ -3,7 +3,7 @@
     "trtokens": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-2988\\grammars-v4\\abb"
     }
   }
 }

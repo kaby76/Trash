@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "x.g4",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\pr-3015\\grammars-v4\\php"
+      "commandLineArgs": "abbLexer.g4",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-2988\\grammars-v4\\abb"
     }
   }
 }

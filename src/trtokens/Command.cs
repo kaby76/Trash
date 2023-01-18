@@ -27,9 +27,12 @@
             StringBuilder sb = new StringBuilder();
             foreach (AntlrNode i in frontier)
             {
+                var a = i as AntlrAttr;
+
                 var e = i as AntlrElement;
                 if (e == null) continue;
-                sb.AppendLine(e.GetText());
+
+                sb.AppendLine("[@" + e.GetText());
             }
             return sb.ToString();
         }
