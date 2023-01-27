@@ -11,7 +11,7 @@ namespace Trash
 		
         public string Help()
         {
-            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trxml2.readme.md"))
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("triconv.readme.md"))
             using (StreamReader reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();

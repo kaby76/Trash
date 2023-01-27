@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "triconv": {
+      "commandName": "Project",
+      "commandLineArgs": "-f utf-8 00136.stmt",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-2988\\fixed-issue-2988\\rego\\examples"
+    }
+  }
+}
