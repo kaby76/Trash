@@ -74,7 +74,8 @@
                 var fn = parse_info.FileName;
                 foreach (var node in nodes)
                 {
-                    System.Console.WriteLine(OutputTokens(node as AntlrElement));
+                    var s = TokenOutput.OutputTokens(node, lexer, parser).ToString();
+                    System.Console.WriteLine(s);
                 }
             }
         }
