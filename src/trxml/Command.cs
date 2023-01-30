@@ -1,6 +1,5 @@
 ﻿namespace Trash
 {
-    using Antlr4.Runtime;
     using AntlrTreeEditing.AntlrDOM;
     using System;
     using System.IO;
@@ -21,18 +20,16 @@
         {
             int INDENT = 4;
             int level = 0;
-            Parser parser;
 
-            public XmlWalk(Parser p)
+            public XmlWalk()
             {
-                parser = p;
             }
 
             public void EnterEveryRule(AntlrNode ctx)
             {
                 System.Console.WriteLine(
                     indent()
-                    + "<" + parser.RuleNames[ctx.RuleIndex]
+                    + "<" + ctx.LocalName
                     + ">");
                 ++level;
             }
@@ -42,7 +39,7 @@
                 --level;
                 System.Console.WriteLine(
                     indent()
-                    + "</" + parser.RuleNames[ctx.RuleIndex]
+                    + "</" + ctx.LocalName
                     + ">");
             }
 
@@ -113,7 +110,7 @@
                 var fn = parse_info.FileName;
                 foreach (var node in parse_info.Nodes)
                 {
-                    if (node is AntlrElement e) MyParseTreeWalker.Default.Walk(new XmlWalk(parser), e);
+                    if (node is AntlrElement e) MyParseTreeWalker.Default.Walk(new XmlWalk(), e);
                 }
             }
         }

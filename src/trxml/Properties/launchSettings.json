@@ -3,7 +3,7 @@
     "trxml": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-2883\\trial-fix-issue-2883\\abb\\Generated-CSharp"
     }
   }
 }

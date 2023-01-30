@@ -1,6 +1,5 @@
 ﻿namespace Trash
 {
-    using Antlr4.Runtime;
     using AntlrTreeEditing.AntlrDOM;
     using System;
     using System.IO;
@@ -21,11 +20,9 @@
         {
             int INDENT = 4;
             int level = 0;
-            Parser parser;
 
-            public JsonWalk(Parser p)
+            public JsonWalk()
             {
-                parser = p;
             }
 
             public void EnterEveryRule(AntlrNode ctx)
@@ -124,7 +121,7 @@
                 var fn = parse_info.FileName;
                 foreach (var node in nodes)
                 {
-                    MyParseTreeWalker.Default.Walk(new JsonWalk(parser), node);
+                    MyParseTreeWalker.Default.Walk(new JsonWalk(), node);
                 }
             }
         }
