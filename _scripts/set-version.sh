@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-version="0.19.1"
+version="0.19.3"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`

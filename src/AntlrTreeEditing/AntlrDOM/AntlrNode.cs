@@ -1,5 +1,6 @@
 ﻿namespace AntlrTreeEditing.AntlrDOM
 {
+    using Antlr4.Runtime.Tree;
     using org.w3c.dom;
     using System;
 
@@ -131,5 +132,14 @@
             }
             return null;
         }
+
+        public virtual void EnterRule(MyParseTreeListener listener)
+        {
+        }
+
+        public virtual void ExitRule(MyParseTreeListener listener)
+        {
+        }
+
     }
 }

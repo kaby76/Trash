@@ -1,7 +1,7 @@
 ﻿namespace Trash
 {
     using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
+    using AntlrTreeEditing.AntlrDOM;
     using System;
     using System.IO;
     using System.Text.Json;
@@ -17,7 +17,7 @@
             }
         }
 
-        class JsonWalk : IParseTreeListener
+        class JsonWalk : MyParseTreeListener
         {
             int INDENT = 4;
             int level = 0;
@@ -28,14 +28,14 @@
                 parser = p;
             }
 
-            public void EnterEveryRule(ParserRuleContext ctx)
+            public void EnterEveryRule(AntlrNode ctx)
             {
                 System.Console.WriteLine(
                     indent()
                     + "{");
                 System.Console.WriteLine(
                     indent()
-                    + "\"" + parser.RuleNames[ctx.RuleIndex]
+                    + "\"" + ctx.LocalName
                     + "\":");
                 System.Console.WriteLine(
                     indent()
@@ -43,7 +43,7 @@
                 ++level;
             }
 
-            public void ExitEveryRule(ParserRuleContext ctx)
+            public void ExitEveryRule(AntlrNode ctx)
             {
                 --level;
                 System.Console.WriteLine(
@@ -54,14 +54,15 @@
                     + "}");
             }
 
-            public void VisitErrorNode(IErrorNode node)
+            public void VisitErrorNode(AntlrNode node)
             {
                 throw new NotImplementedException();
             }
 
-            public void VisitTerminal(ITerminalNode node)
+            public void VisitTerminal(AntlrNode node)
             {
-                string value = node.GetText();
+                var text_node = (AntlrText)node;
+                string value = text_node.Data;
                 {
                     System.Console.WriteLine(
                         indent()
@@ -70,7 +71,7 @@
                         indent()
                         + "\"Text\":"
                         + "\""
-                        + node.GetText()
+                        + text_node.Data
                         + "\""
                     );
                     System.Console.WriteLine(
@@ -123,7 +124,7 @@
                 var fn = parse_info.FileName;
                 foreach (var node in nodes)
                 {
-                    ParseTreeWalker.Default.Walk(new JsonWalk(parser), node);
+                    MyParseTreeWalker.Default.Walk(new JsonWalk(parser), node);
                 }
             }
         }

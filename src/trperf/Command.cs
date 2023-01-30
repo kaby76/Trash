@@ -1,19 +1,15 @@
 ﻿using Antlr4.Runtime.Tree;
 using AntlrJson;
-using LanguageServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using Workspaces;
 
 namespace Trash
 {
     class Command
     {
-        public Workspace _workspace { get; set; } = new Workspace();
-
         public string Help()
         {
             using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trperf.readme.md"))

@@ -10,8 +10,6 @@
     using System.Reflection;
     using System.Text;
     using System.Text.Json;
-    using Document = Workspaces.Document;
-    using Workspace = Workspaces.Workspace;
 
     public class Grun
     {
@@ -21,12 +19,6 @@
         {
             config = co;
         }
-
-        public List<Document> Grammars { get; set; }
-
-        public List<Document> ImportGrammars { get; set; }
-
-        public List<Document> SupportCode { get; set; }
 
         private static string JoinArguments(IEnumerable<string> arguments)
         {
@@ -60,14 +52,6 @@
         private void HandleOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             System.Console.WriteLine(e.Data);
-        }
-
-        public void ReadWorkspace(string csproj)
-        {
-        }
-
-        public void CreateMsbuildWorkspace(Workspace workspace)
-        {
         }
 
         public void Run()

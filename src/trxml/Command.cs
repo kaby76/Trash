@@ -17,7 +17,7 @@
             }
         }
 
-        class XmlWalk : IMyParseTreeListener
+        class XmlWalk : MyParseTreeListener
         {
             int INDENT = 4;
             int level = 0;
@@ -28,7 +28,7 @@
                 parser = p;
             }
 
-            public void EnterEveryRule(AntlrElement ctx)
+            public void EnterEveryRule(AntlrNode ctx)
             {
                 System.Console.WriteLine(
                     indent()
@@ -37,7 +37,7 @@
                 ++level;
             }
 
-            public void ExitEveryRule(AntlrElement ctx)
+            public void ExitEveryRule(AntlrNode ctx)
             {
                 --level;
                 System.Console.WriteLine(
@@ -46,7 +46,7 @@
                     + ">");
             }
 
-            public void VisitErrorNode(AntlrElement node)
+            public void VisitErrorNode(AntlrNode node)
             {
                 throw new NotImplementedException();
             }
@@ -56,14 +56,14 @@
             //    throw new NotImplementedException();
             //}
 
-            public void VisitTerminal(AntlrElement node)
+            public void VisitTerminal(AntlrNode node)
             {
-                string value = node.GetText();
+                string value = (node as AntlrText).Data;
                 {
                     System.Console.WriteLine(
                        indent()
                        + "<t>"
-                       + node.GetText()
+                       + value
                        + "</t>");
                 }
             }
