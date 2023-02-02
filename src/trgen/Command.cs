@@ -1081,19 +1081,24 @@
                 else
                 {
                     // Now remove target directory.
-                    f = (
+                    if (_config.target == "Go" && f.EndsWith(".go"))
+                    {
+                        to = this._config.output_directory + "parser" + f.Substring(_config.target.Length);
+                    }
+                    else {
+                        f = (
                             f.StartsWith(
                                 Command.TargetName(this._config.target) + '/')
                             ? f.Substring((Command.TargetName(this._config.target) + '/').Length)
                             : f
                             );
+                    }
                     // Remove "src/main/java", a royal hangover from the Maven plugin.
                     f = (
                             f.StartsWith("src/main/java/")
                             ? f.Substring("src/main/java".Length)
                             : f
                             );
-
                     if (_config.name_space != null
                         && !(_config.target == "Antlr4cs" || _config.target == "CSharp"))
                     {
