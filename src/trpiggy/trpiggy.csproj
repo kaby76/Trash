@@ -17,7 +17,7 @@ This program is part of the Trash toolkit.]]>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>0.19.2</Version>
+    <Version>0.19.3</Version>
     <RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/src/trpiggy</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
@@ -32,7 +32,7 @@ This program is part of the Trash toolkit.]]>
     <ProjectReference Include="../Globbing/TrashGlobbing.csproj">
       <Aliases>MainGlobbing</Aliases>
     </ProjectReference>
-    <PackageReference Include="Antlr4BuildTasks" Version = "12.2.0" PrivateAssets="all" Aliases="NewAliasForNamespace" />
+    <PackageReference Include="Antlr4BuildTasks" Version="12.2" PrivateAssets="all" Aliases="NewAliasForNamespace" />
     <PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />

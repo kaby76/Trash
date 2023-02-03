@@ -27,4 +27,4 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.19.2 Complete rewrite of parse tree representation. NB: not all Trash tools supported yet.
+0.19.3 Complete rewrite of parse tree representation. NB: not all Trash tools supported yet.

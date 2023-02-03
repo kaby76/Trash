@@ -1,20 +1,20 @@
-# trformat
+# trxml
 
 ## Summary
 
-Format a grammar
+Print a parse tree in XML structured format
 
 ## Description
 
-Format of grammar using machine learning.
+Read a tree from stdin and write an XML represenation of it.
 
 ## Usage
 
-    trformat
+    trxml
 
 ## Examples
 
-    trparse A.g4 | trformat
+    trparse A.g4 | trxml
 
 ## Current version
 
