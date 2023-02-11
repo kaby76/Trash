@@ -536,7 +536,7 @@
                 per_grammar.ignore_string = string.Join("|", ignore_lines);
             }
             else per_grammar.ignore_string = null;
-            if (!(_config.target == "JavaScript" || _config.target == "Dart"))
+            if (!(_config.target == "JavaScript" || _config.target == "Dart" || _config.target == "TypeScript"))
             {
                 List<string> additional = new List<string>();
                 _config.antlr_tool_args = additional;

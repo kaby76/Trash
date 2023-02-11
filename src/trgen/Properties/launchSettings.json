@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Go",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3042\\grammars-v4\\sql\\plsql"
+      "commandLineArgs": "-s ttQL",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\so\\so75340450"
     }
   }
 }

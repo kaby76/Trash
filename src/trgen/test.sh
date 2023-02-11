@@ -7,7 +7,7 @@
         . ~/.bash_profile
     fi
 
-    for i in CSharp Java JavaScript Dart Python3 Go
+    for i in CSharp Java JavaScript Dart Python3 Go TypeScript
     do
         echo $i
         rm -rf Generated
