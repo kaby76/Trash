@@ -4,7 +4,7 @@ default:
 clean:
 	bash clean.sh
 run:
-	@trwdog ts-node Test.js $(RUNARGS)
+	bash run.sh
 FORCE: ;
 test: FORCE
 	bash test.sh

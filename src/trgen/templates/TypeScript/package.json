@@ -10,7 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "antlr4": "^4.12.0-beta.4",
-    "buffer": "^6.0.3"
+    "buffer": "^6.0.3",
+    "typescript-string-operations": "^1.5.0"
   },
   "type": "module",
   "devDependencies": {

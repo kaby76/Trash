@@ -1,8 +1,9 @@
 // Generated from trgen 0.19.3
 
 import { CharStream, CommonTokenStream }  from 'antlr4';
-import ArithmeticParser from './ArithmeticParser';
-import ArithmeticLexer from './ArithmeticLexer';
+<tool_grammar_tuples: {x | import <x.GrammarAutomName> from './<x.GrammarAutomName>';
+} >
+import { StringBuilder, emptyString, joinString, formatString, isNullOrWhiteSpace } from 'typescript-string-operations';
 
 const input = "1+2"
 const chars = new CharStream(input); // replace this with a FileStream as required
