@@ -103,7 +103,6 @@
 ./TypeScript/makefile
 ./TypeScript/package.json
 ./TypeScript/run.sh
-./TypeScript/Test.js
 ./TypeScript/test.ps1
 ./TypeScript/test.sh
 ./TypeScript/Test.ts

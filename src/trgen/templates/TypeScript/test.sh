@@ -32,7 +32,17 @@ do
 done
 
 # Parse all input files.
-echo "${files[*]}" | trwdog ts-node Test.js -q -x -tee -tree 2>&1 > parse.txt 
+# ts-node is a bash script, so duplicate that code and call node via trwdog.
+tsnode=`which ts-node`
+basedir=$(dirname "$(echo "$tsnode" | sed -e 's,\\\\,/,g')")
+case `uname` in
+    *CYGWIN*|*MINGW*|*MSYS*) basedir=`cygpath -w "$basedir"`;;
+esac
+if [ -x "$basedir/node" ]; then
+  echo "${files[*]}" | trwdog "$basedir/node" "$basedir/node_modules/ts-node/dist/bin.js" Test.js -q -x -tee -tree 2>&1 > parse.txt
+else 
+  echo "${files[*]}" | trwdog node "$basedir/node_modules/ts-node/dist/bin.js" Test.js -q -x -tee -tree 2>&1 > parse.txt
+fi
 status="$?"
 
 # trwdog returns 255 if it cannot spawn the process. This could happen
