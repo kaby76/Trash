@@ -212,7 +212,7 @@ function DoParse(str: CharStream, input_name: string, row_number: number) {
         }
     }
     if (!quiet) {
-        console.error(prefix + 'JavaScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t);
+        console.error(prefix + 'TypeScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t);
     }
     if (tee) {
         closeSync(output);
