@@ -159,7 +159,7 @@
             var cwd = _current_directory;
             DirectoryInfo di = new DirectoryInfo(cwd);
             if (!di.Exists)
-                throw new Exception("directory or file does not exist.");
+                throw new Exception("Directory " + cwd + " does not exist.");
             var p = System.IO.Path.GetFullPath(di.FullName);
             return Closure(p);
         }

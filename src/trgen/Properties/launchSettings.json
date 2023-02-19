@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t TypeScript  --antlr-tool-path c:/Users/Kenne/.m2/antlr4-4.11.2-SNAPSHOT-complete.jar",
+      "commandLineArgs": "--template-sources-directory C:\\msys64\\home\\Kenne\\issues\\issue-2883\\fix-issue-2883-2\\abb\\_scripts\\templates",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-2883\\fix-issue-2883-2\\abb"
     }
   }
