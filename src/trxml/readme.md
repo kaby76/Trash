@@ -18,4 +18,4 @@ Read a tree from stdin and write an XML represenation of it.
 
 ## Current version
 
-0.19.2 Complete rewrite of parse tree representation. NB: not all Trash tools supported yet.
+0.20.0 Complete rewrite of parse tree representation. NB: not all Trash tools supported yet.

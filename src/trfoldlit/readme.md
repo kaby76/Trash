@@ -65,4 +65,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.19.3 Complete rewrite of parse tree representation. NB: not all Trash tools supported yet.
+0.20.0 Complete rewrite of parse tree representation. NB: not all Trash tools supported yet.

@@ -1,7 +1,7 @@
 <!-- Template generated code from Antlr4BuildTasks.dotnet-antlr v 0.7.0 -->
 <Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
