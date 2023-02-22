@@ -132,7 +132,7 @@
         public static string GetAntlrToolPath()
         {
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return (home + "/.m2/antlr4-4.11.1-complete.jar").Replace('\\', '/');
+            return (home + "/.m2/antlr4-4.12.0-complete.jar").Replace('\\', '/');
         }
 
         public static string TargetName(string target)

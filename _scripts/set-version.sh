@@ -41,7 +41,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Complete rewrite of parse tree representation. NB: not all Trash tools supported yet.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Dotnet 7.0 dependency. NB: not all Trash tools supported yet.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
@@ -78,7 +78,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Complete rewrite of parse tree representation. NB: not all Trash tools supported yet.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Dotnet 7.0 dependency. NB: not all Trash tools supported yet.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done

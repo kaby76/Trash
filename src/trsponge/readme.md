@@ -19,4 +19,4 @@ results to file(s).
 
 ## Current version
 
-0.20.0 Complete rewrite of parse tree representation. NB: not all Trash tools supported yet.
+0.20.0 Dotnet 7.0 dependency. NB: not all Trash tools supported yet.
