@@ -1,10 +1,8 @@
 ﻿namespace Trash
 {
-    using Antlr4.Runtime.Tree;
     using AntlrJson;
     using AntlrTreeEditing.AntlrDOM;
     using LanguageServer;
-    using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using org.w3c.dom;
     using System;
