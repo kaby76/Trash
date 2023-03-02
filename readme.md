@@ -42,7 +42,7 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 Copy this script and execute it in a Bash shell.
 ```
 #
-for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfirst trfold trfoldlit trformat trgen trgroup trinsert tritext trjson trkleene trmove trparse trperf trpiggy trprint trrename trreplace trrr trrup trsort trsplit trsponge trst trstrip trtext trtokens trtree trull trunfold trungroup trwdog trxgrep trxml trxml2
+for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfirst trfold trfoldlit trformat trgen trgroup triconv trinsert tritext trjson trkleene trmove trparse trperf trpiggy trprint trrename trreplace trrr trrup trsort trsplit trsponge trst trstrip trtext trtokens trtree trull trunfold trungroup trwdog trxgrep trxml trxml2
 do
     dotnet tool install -g $i
 done
@@ -50,9 +50,9 @@ done
 ### Windows or Linux Powershell
 Copy this script and execute it in a Powershell shell.
 ```
-$apps = @('tranalyze','trcombine','trconvert','trdelabel','trdelete','trdot','trfirst','trfold','trfoldlit','trformat','trgen','trgroup','trinsert','tritext','trjson','trkleene','trmove','trparse','trperf','trpiggy','trprint','trrename','trreplace','trrr','trrup','trsort','trsplit','trsponge','trst','trstrip','trtext','trtokens','trtree','trull','trunfold','trungroup','trwdog','trxgrep','trxml','trxml2')
+$apps = @('tranalyze','trcombine','trconvert','trdelabel','trdelete','trdot','trfirst','trfold','trfoldlit','trformat','trgen','trgroup','triconv','trinsert','tritext','trjson','trkleene','trmove','trparse','trperf','trpiggy','trprint','trrename','trreplace','trrr','trrup','trsort','trsplit','trsponge','trst','trstrip','trtext','trtokens','trtree','trull','trunfold','trungroup','trwdog','trxgrep','trxml','trxml2')
 foreach ($i in $apps) {
-	dotnet tool install -g $i --version 0.19.2
+	dotnet tool install -g $i --version 0.20.0
 }
 ```
 ## Uninstall
@@ -60,7 +60,7 @@ foreach ($i in $apps) {
 Copy this script and execute it in a Bash shell.
 ```
 #
-for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfirst trfold trfoldlit trformat trgen trgroup trinsert tritext trjson trkleene trmove trparse trperf trpiggy trprint trrename trreplace trrr trrup trsort trsplit trsponge trst trstrip trtext trtokens trtree trull trunfold trungroup trwdog trxgrep trxml trxml2
+for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfirst trfold trfoldlit trformat trgen trgroup triconv trinsert tritext trjson trkleene trmove trparse trperf trpiggy trprint trrename trreplace trrr trrup trsort trsplit trsponge trst trstrip trtext trtokens trtree trull trunfold trungroup trwdog trxgrep trxml trxml2
 do
     dotnet tool uninstall -g $i
 done
@@ -68,7 +68,7 @@ done
 ### Windows or Linux Powershell
 Copy this script and execute it in a Powershell shell.
 ```
-$apps = @('tranalyze','trcombine','trconvert','trdelabel','trdelete','trdot','trfold','trfoldlit','trformat','trgen','trgroup','trinsert','tritext','trjson','trkleene','trmove','trparse','trperf','trpiggy','trprint','trrename','trreplace','trrr','trrup','trsort','trsplit','trsponge','trst','trstrip','trtext','trtokens','trtree','trull','trunfold','trungroup','trwdog','trxgrep','trxml','trxml2')
+$apps = @('tranalyze','trcombine','trconvert','trdelabel','trdelete','trdot','trfold','trfoldlit','trformat','trgen','trgroup','triconv','trinsert','tritext','trjson','trkleene','trmove','trparse','trperf','trpiggy','trprint','trrename','trreplace','trrr','trrup','trsort','trsplit','trsponge','trst','trstrip','trtext','trtokens','trtree','trull','trunfold','trungroup','trwdog','trxgrep','trxml','trxml2')
 foreach ($i in $apps) {
 	dotnet tool uninstall -g $i
 }
