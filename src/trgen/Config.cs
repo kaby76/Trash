@@ -8,6 +8,9 @@ namespace Trash
 {
     public class Config
     {
+        [Option('a', "arithmetic", Required = false, HelpText = "Generate arithmetic example from templates.")]
+        public bool arithmetic { get; set; }
+
         [Value(0)]
         public IEnumerable<string> Files { get; set; }
 
@@ -27,9 +30,10 @@ namespace Trash
             set
             {
                 _backing_target = value;
-                this.output_directory = "Generated-" + value + "/";
+                this.output_directory = "Generated-" + value;
             }
         }
+        private string _backing_target;
 
         [Option("antlr-tool-path", Required = false)]
         public string antlr_tool_path { get; set; }
@@ -42,43 +46,60 @@ namespace Trash
 
         [Option("template-sources-directory", Required = false)]
         public string template_sources_directory { get { return _backing_template_sources_directory; } set { _backing_template_sources_directory = Path.GetFullPath(value); } }
-
-        [Option("skip-pattern", Required = false, HelpText = "Replacement for skip-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
-        public string skip_pattern { get; set; }
-
-        [Option("todo-pattern", Required = false, HelpText = "Replacement for todo-list. R.E. on what to do, what not to do, of the grammars in the poms.")]
-        public string todo_pattern { get; set; }
+        private string _backing_template_sources_directory;
 
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
 
 
-
-        private string _backing_template_sources_directory;
-        private string _backing_target;
         public IEnumerable<string> antlr_tool_args { get; set; }
         public OSType? env_type { get; set; }
         public bool? flatten { get; set; }
         public LineTranslationType? line_translation { get; set; }
-        public bool? maven { get; set; }
+        public bool pom { get; set; }
+        public bool desc { get; set; }
         public PathSepType? path_sep { get; set; }
-        public string tool_grammar_files_pattern { get; set; }
         public int? watchdog_timeout { get; set; }
         public string SetupFfn = ".trgen.rc";
         public string root_directory;
 
         public Config()
         {
-            // Get default from OS, or just default.
-            line_translation = Command.GetLineTranslationType();
-            env_type = Command.GetEnvType();
-            path_sep = Command.GetPathSep();
-            antlr_tool_path = Command.GetAntlrToolPath();
-            target = "CSharp";
-            tool_grammar_files_pattern = "^(?!.*(/Generated|/Generated-[^/]|/target|/examples)).+g4$";
-            output_directory = "Generated-" + target + "/";
-            flatten = false;
-            watchdog_timeout = 60;
+            this.antlr_tool_path = Command.GetAntlrToolPath();
+            this.arithmetic = false;
+            this.desc = true;
+            this.env_type = Command.GetEnvType();
+            this.Files = new List<string>();
+            this.flatten = false;
+            this.grammar_name = null; // means find using parsing and xpath of grammars.
+            this.line_translation = Command.GetLineTranslationType();
+            this.name_space = null;
+            this.output_directory = "Generated-" + "CSharp";
+            this.path_sep = Command.GetPathSep();
+            this.pom = false;
+            this.root_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
+            this.start_rule = null; // means find using parsing and xpath of grammars.
+            this.target = "CSharp";
+            this.watchdog_timeout = 60;
+        }
+
+        public Config(Config copy)
+        {
+            var ty = typeof(Config);
+            foreach (var prop in ty.GetProperties())
+            {
+                if (prop.GetValue(copy, null) != null)
+                {
+                    prop.SetValue(this, prop.GetValue(copy, null));
+                    this.name_space = this.target == "Go" ? "parser" : null;
+                    this.output_directory = "Generated-" + this.target;
+                }
+            }
+        }
+
+        public void OverrideWithTrgenRc()
+        {
+            // Add in defaults from .trgen.rc
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             if (System.IO.File.Exists(home + Path.DirectorySeparatorChar + SetupFfn))
             {
@@ -90,33 +111,15 @@ namespace Trash
                     if (prop.GetValue(o, null) != null)
                     {
                         prop.SetValue(this, prop.GetValue(o, null));
+                        this.name_space = this.target == "Go" ? "parser" : null;
+                        this.output_directory = "Generated-" + this.target;
                     }
                 }
             }
-            if (target == "Go")
-            {
-                name_space = "parser";
-            }
-            else
-            {
-                name_space = null;
-            }
-            output_directory = "Generated-" + target + "/";
-            string cd = Environment.CurrentDirectory.Replace('\\', '/') + "/";
-            this.root_directory = cd;
-            if (this.maven == null) maven = File.Exists(cd + Path.DirectorySeparatorChar + @"pom.xml");
         }
 
-        public Config(Config copy)
-        {
-            var ty = typeof(Config);
-            foreach (var prop in ty.GetProperties())
-            {
-                if (prop.GetValue(copy, null) != null)
-                {
-                    prop.SetValue(this, prop.GetValue(copy, null));
-                }
-            }
-        }
+        public static readonly Config DEFAULT = new Config();
+
+        public PerGrammar per_grammar = new PerGrammar();
     }
 }

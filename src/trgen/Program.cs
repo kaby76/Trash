@@ -82,11 +82,9 @@ namespace Trash
                         prop.SetValue(config, prop.GetValue(o, null));
                     }
                 }
-
                 if (o.target != null && o.target == "Antlr4cs") config.name_space = "Test";
             });
             if (stop) return;
-
             return_value = cgen.Execute(config);
         }
     }

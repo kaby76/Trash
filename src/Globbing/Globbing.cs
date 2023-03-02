@@ -22,7 +22,7 @@
             _current_directory = dir;
         }
 
-        private static string GlobToRegex(string glob)
+        public static string GlobToRegex(string glob)
         {
             var regex = new StringBuilder();
             var characterClass = false;

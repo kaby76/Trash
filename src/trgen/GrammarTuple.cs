@@ -1,4 +1,7 @@
-﻿namespace Trash
+﻿using Antlr4.Runtime.Tree;
+using XmlDOM;
+
+namespace Trash
 {
     public class GrammarTuple
     {

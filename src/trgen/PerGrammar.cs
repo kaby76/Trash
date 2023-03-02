@@ -2,8 +2,9 @@
 
 namespace Trash
 {
-    class PerGrammar
+    public class PerGrammar
     {
+        public string test_name { get; set; } = "";
         public List<string> tool_grammar_files = null;
         public List<string> generated_files = null;
         public HashSet<string> tool_src_grammar_files = null;
@@ -18,9 +19,9 @@ namespace Trash
         public string grammar_name { get; set; }
         public string lexer_grammar_file_name = null;
         public string parser_grammar_file_name = null;
-        public string example_files { get; set; }
+        public string example_files { get; set; } = "examples/";
         public string start_rule { get; set; }
-        public string package;
+        public string package { get; set; } = "";
         public CaseInsensitiveType? case_insensitive_type { get; set; } = null;
         public string ignore_string = null;
         public string antlr_encoding { get; set; } = "utf-8";
