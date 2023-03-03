@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using Microsoft.CodeAnalysis.Host;
+using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
 
 namespace Trash
 {
@@ -30,7 +32,7 @@ namespace Trash
             set
             {
                 _backing_target = value;
-                this.output_directory = "Generated-" + value;
+                this.output_directory = "Generated" + value;
             }
         }
         private string _backing_target;
@@ -63,6 +65,8 @@ namespace Trash
         public string SetupFfn = ".trgen.rc";
         public string root_directory;
 
+        public List<Test> Tests;
+
         public Config()
         {
             this.antlr_tool_path = Command.GetAntlrToolPath();
@@ -74,12 +78,13 @@ namespace Trash
             this.grammar_name = null; // means find using parsing and xpath of grammars.
             this.line_translation = Command.GetLineTranslationType();
             this.name_space = null;
-            this.output_directory = "Generated-" + "CSharp";
+            this.output_directory = "Generated";
             this.path_sep = Command.GetPathSep();
             this.pom = false;
             this.root_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             this.start_rule = null; // means find using parsing and xpath of grammars.
-            this.target = "CSharp";
+            this.target = null;
+            this.Tests = new List<Test>();
             this.watchdog_timeout = 60;
         }
 
@@ -92,7 +97,6 @@ namespace Trash
                 {
                     prop.SetValue(this, prop.GetValue(copy, null));
                     this.name_space = this.target == "Go" ? "parser" : null;
-                    this.output_directory = "Generated-" + this.target;
                 }
             }
         }
@@ -112,14 +116,11 @@ namespace Trash
                     {
                         prop.SetValue(this, prop.GetValue(o, null));
                         this.name_space = this.target == "Go" ? "parser" : null;
-                        this.output_directory = "Generated-" + this.target;
                     }
                 }
             }
         }
 
         public static readonly Config DEFAULT = new Config();
-
-        public PerGrammar per_grammar = new PerGrammar();
     }
 }
