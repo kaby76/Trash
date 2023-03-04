@@ -682,9 +682,11 @@ namespace Trash
                 var targets = xtargets.First().Split(';');
                 foreach (var target in targets)
                 {
+                    if (!(config.target != null && config.target == target)) continue;
                     var test = new Test();
                     test.target = target;
                     test.package = test.target == "Go" ? "parser" : test.package;
+                    test.package = test.target == "Antlr4cs" ? "Test" : test.package;
                     config.Tests.Add(test);
                 }
             }
@@ -694,14 +696,34 @@ namespace Trash
                 {
                     List<string> spec_antlr_tool_args = new List<string>();
                     var test = new Test();
-                    config.Tests.Add(test);
                     test.package = test.target == "Go" ? "parser" : test.package;
+                    test.package = test.target == "Antlr4cs" ? "Test" : test.package;
                     var test_name = xmltest
                         .Select("name", nsmgr)
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .ToList()
                         .FirstOrDefault();
+                    var xtargets = xmltest
+                        .Select("name", nsmgr)
+                        .Cast<XPathNavigator>()
+                        .Select(t => t.Value)
+                        .ToList();
+                    if (xtargets.Count > 1)
+                        throw new Exception("Too many <targets> elements, there should be only one.");
+                    if (xtargets.Count == 0)
+                        throw new Exception("No <targets> elements specified, there must be one.");
+                    var targets = xtargets.First().Split(';');
+                    bool found = false;
+                    foreach (var target in targets)
+                    {
+                        if (config.target != null && config.target == target)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) continue;
                     var spec_grammar_file_names = xmltest
                         .Select("grammars", nsmgr)
                         .Cast<XPathNavigator>()
@@ -832,10 +854,12 @@ namespace Trash
                         ? spec_package_name.First() + "/"
                         : "");
                     test.package = test.target == "Go" ? "parser" : test.package;
+                    test.package = test.target == "Antlr4cs" ? "Test" : test.package;
                     test.start_rule = config.start_rule != null && config.start_rule != ""
                         ? config.start_rule
                         : spec_entry_point;
                     test.test_name = test_name ?? (gen++).ToString();
+                    config.Tests.Add(test);
                 }
             }
         }
@@ -1086,8 +1110,9 @@ namespace Trash
                     additional.Add(test.package.Replace('.', '/'));
                 }
             }
-            test.package = (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
             test.package = test.target == "Go" ? "parser" : test.package;
+            test.package = test.target == "Antlr4cs" ? "Test" : test.package;
+            test.package = (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
             test.start_rule = config.start_rule != null && config.start_rule != "" ? config.start_rule : pom_entry_point.First();
         }
 
