@@ -124,9 +124,9 @@ namespace Trash
                             sgfn = test.current_directory + f;
                             tgfn = pre + f;
                         }
-                        else if (File.Exists(config.target + "/" + f))
+                        else if (File.Exists(test.target + "/" + f))
                         {
-                            sgfn = config.target + "/" + f;
+                            sgfn = test.target + "/" + f;
                             tgfn = pre + f;
                         }
                         else
@@ -651,11 +651,6 @@ namespace Trash
             return filter;
         }
 
-        public static string TargetSpecificSrcDirectory(Config config)
-        {
-            return TargetName(config.target);
-        }
-
         private void ModifyWithDesc(Config config)
         {
             //
@@ -689,6 +684,7 @@ namespace Trash
                 {
                     var test = new Test();
                     test.target = target;
+                    test.package = test.target == "Go" ? "parser" : test.package;
                     config.Tests.Add(test);
                 }
             }
@@ -699,6 +695,7 @@ namespace Trash
                     List<string> spec_antlr_tool_args = new List<string>();
                     var test = new Test();
                     config.Tests.Add(test);
+                    test.package = test.target == "Go" ? "parser" : test.package;
                     var test_name = xmltest
                         .Select("name", nsmgr)
                         .Cast<XPathNavigator>()
@@ -764,11 +761,11 @@ namespace Trash
                     if (spec_antlr_tool_args.Contains("-package"))
                     {
                         var ns = spec_antlr_tool_args[spec_antlr_tool_args.IndexOf("-package") + 1];
-                        config.name_space = ns;
+                        test.package = ns;
                     }
                     else if (spec_package_name != null)
                     {
-                        config.name_space = spec_package_name;
+                        test.package = spec_package_name;
                     }
                     var merged_list = new HashSet<string>();
                     foreach (var x in spec_grammar_file_names)
@@ -812,22 +809,22 @@ namespace Trash
                     }
                     else test.ignore_string = null;
 
-                    if (!(config.target == "JavaScript" || config.target == "Dart" || config.target == "TypeScript"))
+                    if (!(test.target == "JavaScript" || test.target == "Dart" || test.target == "TypeScript"))
                     {
                         List<string> additional = new List<string>();
                         config.antlr_tool_args = additional;
                         // On Linux, the flies are automatically place in the package,
                         // and they cannot be changed!
-                        if (config.name_space != null && config.name_space != "")
+                        if (test.package != null && test.package != "")
                         {
                             if (config.env_type == OSType.Windows)
                             {
                                 additional.Add("-o");
-                                additional.Add(config.name_space.Replace('.', '/'));
+                                additional.Add(test.package.Replace('.', '/'));
                             }
 
                             additional.Add("-lib");
-                            additional.Add(config.name_space.Replace('.', '/'));
+                            additional.Add(test.package.Replace('.', '/'));
                         }
                     }
 
@@ -994,11 +991,11 @@ namespace Trash
             if (pom_antlr_tool_args.Contains("-package"))
             {
                 var ns = pom_antlr_tool_args[pom_antlr_tool_args.IndexOf("-package") + 1];
-                config.name_space = ns;
+                test.package = ns;
             }
             else if (pom_package_name.Any())
             {
-                config.name_space = pom_package_name.First();
+                test.package = pom_package_name.First();
             }
             // Make sure all the grammar files actually existance.
             // People don't check their bullshit.
@@ -1078,15 +1075,15 @@ namespace Trash
                 config.antlr_tool_args = additional;
                 // On Linux, the flies are automatically place in the package,
                 // and they cannot be changed!
-                if (config.name_space != null && config.name_space != "")
+                if (test.package != null && test.package != "")
                 {
                     if (config.env_type == OSType.Windows)
                     {
                         additional.Add("-o");
-                        additional.Add(config.name_space.Replace('.', '/'));
+                        additional.Add(test.package.Replace('.', '/'));
                     }
                     additional.Add("-lib");
-                    additional.Add(config.name_space.Replace('.', '/'));
+                    additional.Add(test.package.Replace('.', '/'));
                 }
             }
             test.package = (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
@@ -1122,7 +1119,7 @@ namespace Trash
                                                ? test.ignore_string + "|"
                                                : "")
                                            + "/ignore/|/Generated/|/Generated-[^/]*/|/target/|/examples/|/.git/|/.gitignore/|/.ignore/|"
-                                           + Command.AllButTargetName(config.target)
+                                           + Command.AllButTargetName(test.target)
                                            + "/)).+[.]g4"
                                            + "$";
                 var grammar_list = new TrashGlobbing.Glob(test.current_directory)
@@ -1239,7 +1236,7 @@ namespace Trash
                              + "-"
                              + test.target
                              + (test.test_name != null ? ("-" + test.test_name) : "")
-                             + "/" + "parser" + f.Substring(config.target.Length);
+                             + "/" + "parser" + f.Substring(test.target.Length);
                     }
                     else {
                         f = (
@@ -1255,7 +1252,7 @@ namespace Trash
                             ? f.Substring("src/main/java".Length)
                             : f
                             );
-                    if (config.name_space != null
+                    if (test.package != null
                         && !(test.target == "Antlr4cs" || test.target == "CSharp"))
                     {
                         to = config.output_directory
@@ -1263,7 +1260,7 @@ namespace Trash
                              + test.target
                              + (test.test_name != null ? ("-" + test.test_name) : "")
                              + '/'
-                             + config.name_space.Replace('.', '/') + '/'
+                             + test.package.Replace('.', '/') + '/'
                              + f;
                     }
                     if (to == null)
@@ -1276,7 +1273,7 @@ namespace Trash
                              + f;
                     }
                 }
-                if (from.Contains("pom.xml") && config.target != "Java") continue;
+                if (from.Contains("pom.xml") && test.target != "Java") continue;
                 System.Console.Error.WriteLine("Copying source file from "
                   + from
                   + " to "
@@ -1288,7 +1285,7 @@ namespace Trash
 
         private void GenFromTemplates(Command p, Config config, Test test)
         {
-            var append_namespace = (!(config.target == "CSharp" || config.target == "Antlr4cs"));
+            var append_namespace = (!(test.target == "CSharp" || test.target == "Antlr4cs"));
             if (config.template_sources_directory == null)
             {
                 System.Reflection.Assembly a = this.GetType().Assembly;
@@ -1383,7 +1380,7 @@ namespace Trash
             }
             else
             {
-                var regex_string = "^(?!.*(files|" + AllButTargetName(config.target) + "/)).*$";
+                var regex_string = "^(?!.*(files|" + AllButTargetName(test.target) + "/)).*$";
                 var files_to_copy = new TrashGlobbing.Glob(config.template_sources_directory)
                     .RegexContents(regex_string)
                     .Where(f =>
@@ -1414,8 +1411,8 @@ namespace Trash
                     }
                     var from = file;
                     var e = file.Substring(prefix_to_remove.Length);
-                    var to = e.StartsWith(TargetName(config.target))
-                         ? e.Substring((TargetName(config.target)).Length + 1)
+                    var to = e.StartsWith(TargetName(test.target))
+                         ? e.Substring((TargetName(test.target)).Length + 1)
                          : e;
                     to = ((string)config.output_directory).Replace('\\', '/') + to;
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');

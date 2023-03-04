@@ -26,16 +26,7 @@ namespace Trash
         public string grammar_name { get; set; }
 
         [Option('t', "target", Required = false, HelpText = "The target language for the project.")]
-        public string target
-        {
-            get { return _backing_target; }
-            set
-            {
-                _backing_target = value;
-                this.output_directory = "Generated" + value;
-            }
-        }
-        private string _backing_target;
+        public string target { get; set; }
 
         [Option("antlr-tool-path", Required = false)]
         public string antlr_tool_path { get; set; }
@@ -96,7 +87,6 @@ namespace Trash
                 if (prop.GetValue(copy, null) != null)
                 {
                     prop.SetValue(this, prop.GetValue(copy, null));
-                    this.name_space = this.target == "Go" ? "parser" : null;
                 }
             }
         }
@@ -115,7 +105,6 @@ namespace Trash
                     if (prop.GetValue(o, null) != null)
                     {
                         prop.SetValue(this, prop.GetValue(o, null));
-                        this.name_space = this.target == "Go" ? "parser" : null;
                     }
                 }
             }
