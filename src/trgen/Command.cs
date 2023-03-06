@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using TrashGlobbing;
 
 namespace Trash
 {
@@ -33,14 +34,15 @@ namespace Trash
 
         public int Execute(Config config)
         {
-            if (config.Files == null || !config.Files.Any())
+            if (!config.Files.Any())
             {
                 var list = new List<string>();
-                var tool_grammar_files_pattern = "^(?!.*(/Generated|/Generated-[^/]|/target|/examples)).+g4$";
+                var tool_grammar_files_pattern = ".+g4$";
                 var list_pp = new TrashGlobbing.Glob()
-                    .RegexContents(tool_grammar_files_pattern)
+                    .RegexContents(tool_grammar_files_pattern, false)
                     .Where(f => f is FileInfo)
-                    .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""));
+                    .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                    .ToList();
                 foreach (var y in list_pp)
                 {
                     list.Add(y);
@@ -72,7 +74,7 @@ namespace Trash
             {
                 var test = new Test();
                 config.Tests.Add(test);
-                config.Files = new HashSet<string>() { "Arithmetic.g4" };
+                config.Files = new List<string>() { "Arithmetic.g4" };
                 config.start_rule = "file_";
                 test.start_rule = config.start_rule;
             }
@@ -83,7 +85,7 @@ namespace Trash
             foreach (var test in config.Tests)
             {
                 test.tool_grammar_tuples = new List<GrammarTuple>();
-                foreach (var f in config.Files)
+                foreach (var f in test.tool_grammar_files)
                 {
                     // We're going to assume that the grammars are in
                     // the current directory. That's because this is the Maven
@@ -138,19 +140,6 @@ namespace Trash
                         string code = null;
                         code = File.ReadAllText(sgfn);
                         DoParse(code, sgfn, pr);
-
-
-                        //doc = Docs.Class1.ReadDoc(sgfn);
-                        //pr = LanguageServer.ParsingResultsFactory.Create(doc);
-                        //workspace = doc.Workspace;
-                        //_ = new LanguageServer.Module().Compile(workspace);
-                        //if (pr.Errors.Any())
-                        //{
-                        //    System.Console.Error.WriteLine("Your grammar "
-                        //        + sgfn
-                        //        + " does not compile as an Antlr4 grammar! Please check it.");
-                        //    throw new Exception();
-                        //}
                     }
 
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
@@ -186,28 +175,6 @@ namespace Trash
                             .Select(x => (x.NativeValue as AntlrText).NodeValue as string).ToList();
                     }
 
-                    //if (nodes == null)
-                    //{
-                    //    System.Console.Error.WriteLine("Your grammar "
-                    //        + sgfn
-                    //        + " does not compile as an Antlr4 grammar! Please check it.");
-                    //    throw new Exception();
-                    //}
-                    //if (nodes.Count() == 0 || nodes.Count() > 1)
-                    //{
-                    //    System.Console.Error.WriteLine("Your grammar "
-                    //        + sgfn
-                    //        + " does not compile as an Antlr4 grammar! Please check it.");
-                    //    throw new Exception();
-                    //}
-                    //var grammarDecl = nodes.First();
-                    //if (nodes.Count() == 0 || nodes.Count() > 1)
-                    //{
-                    //    System.Console.Error.WriteLine("Your grammar "
-                    //        + sgfn
-                    //        + " does not compile as an Antlr4 grammar! Please check it.");
-                    //    throw new Exception();
-                    //}
                     var is_parser_grammar = is_par.Count() != 0;
                     var is_lexer_grammar = is_lex.Count() != 0;
                     var is_combined = !is_parser_grammar && !is_lexer_grammar;
@@ -682,9 +649,10 @@ namespace Trash
                 var targets = xtargets.First().Split(';');
                 foreach (var target in targets)
                 {
-                    if (!(config.target != null && config.target == target)) continue;
+                    if (config.target != null && config.target != target) continue;
                     var test = new Test();
                     test.target = target;
+                    test.tool_grammar_files = config.Files.ToList();
                     test.package = test.target == "Go" ? "parser" : test.package;
                     test.package = test.target == "Antlr4cs" ? "Test" : test.package;
                     config.Tests.Add(test);
@@ -695,9 +663,6 @@ namespace Trash
                 foreach (var xmltest in xtests)
                 {
                     List<string> spec_antlr_tool_args = new List<string>();
-                    var test = new Test();
-                    test.package = test.target == "Go" ? "parser" : test.package;
-                    test.package = test.target == "Antlr4cs" ? "Test" : test.package;
                     var test_name = xmltest
                         .Select("name", nsmgr)
                         .Cast<XPathNavigator>()
@@ -705,30 +670,50 @@ namespace Trash
                         .ToList()
                         .FirstOrDefault();
                     var xtargets = xmltest
-                        .Select("name", nsmgr)
+                        .Select("targets", nsmgr)
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .ToList();
                     if (xtargets.Count > 1)
                         throw new Exception("Too many <targets> elements, there should be only one.");
                     if (xtargets.Count == 0)
-                        throw new Exception("No <targets> elements specified, there must be one.");
-                    var targets = xtargets.First().Split(';');
-                    bool found = false;
-                    foreach (var target in targets)
                     {
-                        if (config.target != null && config.target == target)
-                        {
-                            found = true;
-                            break;
-                        }
+                        xtargets = navigator
+                            .Select("//desc/targets", nsmgr)
+                            .Cast<XPathNavigator>()
+                            .Select(t => t.Value)
+                            .ToList();
+                        if (xtargets.Count > 1)
+                            throw new Exception("Too many <targets> elements, there should be only one.");
+                        if (xtargets.Count == 0)
+                            throw new Exception("No <targets> elements specified, there must be one.");
                     }
-                    if (!found) continue;
+                    var targets = xtargets.First().Split(';');
+                    if (config.target != null)
+                    {
+                        bool found = false;
+                        foreach (var target in targets)
+                        {
+                            if (config.target == target)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) continue;
+                    }
                     var spec_grammar_file_names = xmltest
                         .Select("grammars", nsmgr)
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .ToList();
+                    var new_lst = new List<string>();
+                    foreach (var s in spec_grammar_file_names)
+                    {
+                        var sp = s.Split(';');
+                        foreach (var t in sp) new_lst.Add(t);
+                    }
+                    spec_grammar_file_names = new_lst;
                     if (!spec_grammar_file_names.Any()) spec_grammar_file_names.Add("*.g4");
                     var spec_source_directory = navigator
                         .Select("sourceDirectory", nsmgr)
@@ -741,10 +726,6 @@ namespace Trash
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    if (spec_grammar_name != null)
-                    {
-                        test.grammar_name = spec_grammar_name.Trim();
-                    }
                     var spec_lexer_name = navigator
                         .Select("lexerName", nsmgr)
                         .Cast<XPathNavigator>()
@@ -767,99 +748,116 @@ namespace Trash
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    if (spec_example_directory != null)
+                    foreach (var target in targets)
                     {
-                        test.example_files = spec_example_directory;
-                        if (!Directory.Exists(spec_example_directory))
+                        var test = new Test();
+                        test.target = target;
+                        test.package = test.target == "Go" ? "parser" : test.package;
+                        test.package = test.target == "Antlr4cs" ? "Test" : test.package;
+                        if (spec_grammar_name != null)
                         {
-                            System.Console.Error.WriteLine("Examples directory doesn't exist " +
-                                                           spec_example_directory.First());
+                            test.grammar_name = spec_grammar_name.Trim();
                         }
-                    }
-                    else
-                    {
-                        test.example_files = "examples";
-                    }
-                    if (spec_antlr_tool_args.Contains("-package"))
-                    {
-                        var ns = spec_antlr_tool_args[spec_antlr_tool_args.IndexOf("-package") + 1];
-                        test.package = ns;
-                    }
-                    else if (spec_package_name != null)
-                    {
-                        test.package = spec_package_name;
-                    }
-                    var merged_list = new HashSet<string>();
-                    foreach (var x in spec_grammar_file_names)
-                    {
-                        var pp = TrashGlobbing.Glob.GlobToRegex(x);
-                        var list_pp = new TrashGlobbing.Glob()
-                            .RegexContents(pp)
-                            .Where(f => f is FileInfo)
-                            .Select(f => f.FullName.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""));
-                        foreach (var y in list_pp)
-                        {
-                            merged_list.Add(y);
-                        }
-                    }
 
-                    if (spec_source_directory != null)
-                    {
-                        test.current_directory = spec_source_directory
-                            .Replace("${basedir}", "")
-                            .Trim();
-                        if (test.current_directory.StartsWith('/'))
-                            test.current_directory = test.current_directory.Substring(1);
-                        if (test.current_directory != "" && !test.current_directory.EndsWith("/"))
+                        if (spec_example_directory != null)
                         {
-                            test.current_directory = test.current_directory + "/";
-                        }
-                    }
-                    else
-                    {
-                        test.current_directory = "";
-                    }
-
-                    // Check for existence of .trgen-ignore file.
-                    // If there is one, read and create pattern of what to ignore.
-                    if (File.Exists(ignore_list_of_files))
-                    {
-                        var ignore = new StringBuilder();
-                        var lines = File.ReadAllLines(ignore_list_of_files);
-                        var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
-                        test.ignore_string = string.Join("|", ignore_lines);
-                    }
-                    else test.ignore_string = null;
-
-                    if (!(test.target == "JavaScript" || test.target == "Dart" || test.target == "TypeScript"))
-                    {
-                        List<string> additional = new List<string>();
-                        config.antlr_tool_args = additional;
-                        // On Linux, the flies are automatically place in the package,
-                        // and they cannot be changed!
-                        if (test.package != null && test.package != "")
-                        {
-                            if (config.env_type == OSType.Windows)
+                            test.example_files = spec_example_directory;
+                            if (!Directory.Exists(spec_example_directory))
                             {
-                                additional.Add("-o");
+                                System.Console.Error.WriteLine("Examples directory doesn't exist " +
+                                                               spec_example_directory.First());
+                            }
+                        }
+                        else
+                        {
+                            test.example_files = "examples";
+                        }
+
+                        if (spec_antlr_tool_args.Contains("-package"))
+                        {
+                            var ns = spec_antlr_tool_args[spec_antlr_tool_args.IndexOf("-package") + 1];
+                            test.package = ns;
+                        }
+                        else if (spec_package_name != null)
+                        {
+                            test.package = spec_package_name;
+                        }
+
+                        var merged_list = new HashSet<string>();
+                        foreach (var x in spec_grammar_file_names)
+                        {
+                            var pp = TrashGlobbing.Glob.GlobToRegex(x);
+                            var tool_grammar_files_pattern = "^(?!.*(/Generated|/Generated-[^/]|/target|/examples)).+g4$";
+                            var list_pp = new TrashGlobbing.Glob()
+                                .RegexContents(pp)
+                                .RegexAgain(tool_grammar_files_pattern)
+                                .Where(f => f is FileInfo)
+                                .Select(f => f.FullName.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                                .ToList();
+                            foreach (var y in list_pp)
+                            {
+                                merged_list.Add(y);
+                            }
+                        }
+                        test.tool_grammar_files = merged_list.ToList();
+                        if (spec_source_directory != null)
+                        {
+                            test.current_directory = spec_source_directory
+                                .Replace("${basedir}", "")
+                                .Trim();
+                            if (test.current_directory.StartsWith('/'))
+                                test.current_directory = test.current_directory.Substring(1);
+                            if (test.current_directory != "" && !test.current_directory.EndsWith("/"))
+                            {
+                                test.current_directory = test.current_directory + "/";
+                            }
+                        }
+                        else
+                        {
+                            test.current_directory = "";
+                        }
+
+                        // Check for existence of .trgen-ignore file.
+                        // If there is one, read and create pattern of what to ignore.
+                        if (File.Exists(ignore_list_of_files))
+                        {
+                            var ignore = new StringBuilder();
+                            var lines = File.ReadAllLines(ignore_list_of_files);
+                            var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
+                            test.ignore_string = string.Join("|", ignore_lines);
+                        }
+                        else test.ignore_string = null;
+
+                        if (!(test.target == "JavaScript" || test.target == "Dart" || test.target == "TypeScript"))
+                        {
+                            List<string> additional = new List<string>();
+                            config.antlr_tool_args = additional;
+                            // On Linux, the flies are automatically place in the package,
+                            // and they cannot be changed!
+                            if (test.package != null && test.package != "")
+                            {
+                                if (config.env_type == OSType.Windows)
+                                {
+                                    additional.Add("-o");
+                                    additional.Add(test.package.Replace('.', '/'));
+                                }
+
+                                additional.Add("-lib");
                                 additional.Add(test.package.Replace('.', '/'));
                             }
-
-                            additional.Add("-lib");
-                            additional.Add(test.package.Replace('.', '/'));
                         }
-                    }
 
-                    test.package = (spec_package_name != null && spec_package_name.Any()
-                        ? spec_package_name.First() + "/"
-                        : "");
-                    test.package = test.target == "Go" ? "parser" : test.package;
-                    test.package = test.target == "Antlr4cs" ? "Test" : test.package;
-                    test.start_rule = config.start_rule != null && config.start_rule != ""
-                        ? config.start_rule
-                        : spec_entry_point;
-                    test.test_name = test_name ?? (gen++).ToString();
-                    config.Tests.Add(test);
+                        test.package = (spec_package_name != null && spec_package_name.Any()
+                            ? spec_package_name.First() + "/"
+                            : "");
+                        test.package = test.target == "Go" ? "parser" : test.package;
+                        test.package = test.target == "Antlr4cs" ? "Test" : test.package;
+                        test.start_rule = config.start_rule != null && config.start_rule != ""
+                            ? config.start_rule
+                            : spec_entry_point;
+                        test.test_name = test_name ?? (gen++).ToString();
+                        config.Tests.Add(test);
+                    }
                 }
             }
         }
@@ -1439,7 +1437,12 @@ namespace Trash
                     var to = e.StartsWith(TargetName(test.target))
                          ? e.Substring((TargetName(test.target)).Length + 1)
                          : e;
-                    to = ((string)config.output_directory).Replace('\\', '/') + to;
+                    to = config.output_directory.Replace('\\', '/')
+                         + "-"
+                         + test.target
+                         + (test.test_name != null ? ("-" + test.test_name) : "")
+                         + '/'
+                         + to;
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = File.ReadAllText(from);

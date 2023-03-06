@@ -26,7 +26,7 @@
         {
             var regex = new StringBuilder();
             var characterClass = false;
-            regex.Append("^");
+            //regex.Append("^");
             foreach (var c in glob)
             {
                 if (characterClass)
@@ -154,17 +154,17 @@
             }
         }
 
-        private List<FileSystemInfo> Closure()
+        private List<FileSystemInfo> Closure(bool recursive)
         {
             var cwd = _current_directory;
             DirectoryInfo di = new DirectoryInfo(cwd);
             if (!di.Exists)
                 throw new Exception("Directory " + cwd + " does not exist.");
             var p = System.IO.Path.GetFullPath(di.FullName);
-            return Closure(p);
+            return Closure(p, recursive);
         }
 
-        private List<FileSystemInfo> Closure(string expr)
+        private List<FileSystemInfo> Closure(string expr, bool recursive)
         {
             var result = new List<FileSystemInfo>();
             var stack = new Stack<FileSystemInfo>();
@@ -189,9 +189,12 @@
                 }
                 else if (fsi is DirectoryInfo di)
                 {
-                    foreach (var i in di.GetDirectories())
+                    if (recursive)
                     {
-                        stack.Push(i);
+                        foreach (var i in di.GetDirectories())
+                        {
+                            stack.Push(i);
+                        }
                     }
                     foreach (var i in di.GetFiles())
                     {
@@ -203,14 +206,29 @@
         }
 
         // Whole new Regex pattern matching of files and directories.
-        public List<FileSystemInfo> RegexContents(string expr = ".*")
+        public List<FileSystemInfo> RegexContents(string expr = ".*", bool recursive = true)
         {
             var result = new List<FileSystemInfo>();
             if (expr == null)
                 throw new Exception("Regex expression cannot be null.");
-            var closure = Closure();
+            var closure = Closure(recursive);
             var cwd = _current_directory.Replace('\\', '/') + "/";
             foreach (var i in closure)
+            {
+                var regex = new PathRegex(expr);
+                if (regex.IsMatch(i))
+                    result.Add(i);
+            }
+            return result;
+        }
+    }
+
+    public static class HelperGlobbing
+    {
+        public static List<FileSystemInfo> RegexAgain(this List<FileSystemInfo> old, string expr)
+        {
+            var result = new List<FileSystemInfo>();
+            foreach (var i in old)
             {
                 var regex = new PathRegex(expr);
                 if (regex.IsMatch(i))
