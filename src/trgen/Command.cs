@@ -9,6 +9,7 @@ namespace Trash
     using Antlr4.StringTemplate;
     using AntlrJson;
     using AntlrTreeEditing.AntlrDOM;
+    using org.eclipse.wst.xml.xpath2.api;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
     using System.Collections.Generic;
@@ -180,7 +181,25 @@ namespace Trash
                     var is_combined = !is_parser_grammar && !is_lexer_grammar;
                     var name = name_.First();
                     var start_symbol = ss.FirstOrDefault();
-                    if (test.start_rule == null && start_symbol != null)
+                    string grammar_name = null;
+                    if (is_combined)
+                    {
+                        grammar_name = name;
+                    }
+                    else
+                    {
+                        if (is_parser_grammar)
+                        {
+                            grammar_name = name
+                                .Substring(0, name.LastIndexOf("Parser"));
+                        }
+                        else if (is_lexer_grammar)
+                        {
+                            grammar_name = name
+                                .Substring(0, name.LastIndexOf("Lexer"));
+                        }
+                    }
+                    if (test.grammar_name == grammar_name && test.start_rule == null && start_symbol != null)
                     {
                         test.start_rule = start_symbol;
                         config.start_rule = start_symbol;
@@ -702,47 +721,34 @@ namespace Trash
                         }
                         if (!found) continue;
                     }
-                    var spec_grammar_file_names = xmltest
-                        .Select("grammars", nsmgr)
-                        .Cast<XPathNavigator>()
-                        .Select(t => t.Value)
-                        .ToList();
-                    var new_lst = new List<string>();
-                    foreach (var s in spec_grammar_file_names)
-                    {
-                        var sp = s.Split(';');
-                        foreach (var t in sp) new_lst.Add(t);
-                    }
-                    spec_grammar_file_names = new_lst;
-                    if (!spec_grammar_file_names.Any()) spec_grammar_file_names.Add("*.g4");
-                    var spec_source_directory = navigator
+                    var spec_source_directory = xmltest
                         .Select("sourceDirectory", nsmgr)
                         .Cast<XPathNavigator>()
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    var spec_grammar_name = navigator
+                    var spec_grammar_name = xmltest
                         .Select("grammarName", nsmgr)
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    var spec_lexer_name = navigator
+                    var spec_lexer_name = xmltest
                         .Select("lexerName", nsmgr)
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    var spec_entry_point = navigator
+                    var spec_entry_point = xmltest
                         .Select("entryPoint", nsmgr)
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    var spec_package_name = navigator
+                    var spec_package_name = xmltest
                         .Select("packageName", nsmgr)
                         .Cast<XPathNavigator>()
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    var spec_example_directory = navigator
+                    var spec_example_directory = xmltest
                         .Select("inputs", nsmgr)
                         .Cast<XPathNavigator>()
                         .Where(t => t.Value != "")
@@ -784,22 +790,22 @@ namespace Trash
                         }
 
                         var merged_list = new HashSet<string>();
-                        foreach (var x in spec_grammar_file_names)
-                        {
-                            var pp = TrashGlobbing.Glob.GlobToRegex(x);
-                            var tool_grammar_files_pattern = "^(?!.*(/Generated|/Generated-[^/]|/target|/examples)).+g4$";
-                            var list_pp = new TrashGlobbing.Glob()
-                                .RegexContents(pp)
-                                .RegexAgain(tool_grammar_files_pattern)
-                                .Where(f => f is FileInfo)
-                                .Select(f => f.FullName.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
-                                .ToList();
-                            foreach (var y in list_pp)
-                            {
-                                merged_list.Add(y);
-                            }
-                        }
-                        test.tool_grammar_files = merged_list.ToList();
+                        //foreach (var x in config.Files)
+                        //{
+                        //    var pp = TrashGlobbing.Glob.GlobToRegex(x);
+                        //    var tool_grammar_files_pattern = "^(?!.*(/Generated|/Generated-[^/]|/target|/examples)).+g4$";
+                        //    var list_pp = new TrashGlobbing.Glob()
+                        //        .RegexContents(pp)
+                        //        .RegexAgain(tool_grammar_files_pattern)
+                        //        .Where(f => f is FileInfo)
+                        //        .Select(f => f.FullName.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                        //        .ToList();
+                        //    foreach (var y in list_pp)
+                        //    {
+                        //        merged_list.Add(y);
+                        //    }
+                        //}
+                        test.tool_grammar_files = config.Files.ToList();
                         if (spec_source_directory != null)
                         {
                             test.current_directory = spec_source_directory
