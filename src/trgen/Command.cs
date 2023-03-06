@@ -199,12 +199,15 @@ namespace Trash
                                 .Substring(0, name.LastIndexOf("Lexer"));
                         }
                     }
-                    if (test.grammar_name == grammar_name && test.start_rule == null && start_symbol != null)
+                    if (start_symbol != null)
                     {
-                        test.start_rule = start_symbol;
-                        config.start_rule = start_symbol;
+                        if (test.grammar_name == null
+                            || test.grammar_name == grammar_name)
+                        {
+                            test.start_rule = start_symbol;
+                            config.start_rule = start_symbol;
+                        }
                     }
-
                     if (!(is_combined && !is_parser_grammar && !is_lexer_grammar
                           || !is_combined && is_parser_grammar && !is_lexer_grammar
                           || !is_combined && !is_parser_grammar && is_lexer_grammar))
