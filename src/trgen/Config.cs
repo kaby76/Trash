@@ -25,8 +25,8 @@ namespace Trash
         [Option('g', "grammar-name", Required = false, HelpText = "Grammar for parse.")]
         public string grammar_name { get; set; }
 
-        [Option('t', "target", Required = false, HelpText = "The target language for the project.")]
-        public string target { get; set; }
+        [Option('t', "targets", Required = false, HelpText = "The target language for the project.")]
+        public IEnumerable<string> targets { get; set; }
 
         [Option("antlr-tool-path", Required = false)]
         public string antlr_tool_path { get; set; }
@@ -74,7 +74,7 @@ namespace Trash
             this.pom = false;
             this.root_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             this.start_rule = null; // means find using parsing and xpath of grammars.
-            this.target = null;
+            this.targets = null;
             this.Tests = new List<Test>();
             this.watchdog_timeout = 60;
         }

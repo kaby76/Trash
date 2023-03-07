@@ -199,7 +199,7 @@ namespace Trash
                                 .Substring(0, name.LastIndexOf("Lexer"));
                         }
                     }
-                    if (start_symbol != null)
+                    if (start_symbol != null && test.start_rule == null)
                     {
                         if (test.grammar_name == null
                             || test.grammar_name == grammar_name)
@@ -646,21 +646,47 @@ namespace Trash
             // Process desc.xml.
             //
             System.Console.Error.WriteLine(Environment.CurrentDirectory);
-            XmlTextReader reader = new XmlTextReader(Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"desc.xml");
+            XmlTextReader reader =
+                new XmlTextReader(Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"desc.xml");
             reader.Namespaces = false;
             XPathDocument document = new XPathDocument(reader);
             XPathNavigator navigator = document.CreateNavigator();
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(reader.NameTable);
             int gen = 0;
-            var xtests = navigator
-                .Select("//desc/test", nsmgr)
-                .Cast<XPathNavigator>()
-                .ToList();
-            if (!xtests.Any())
             {
-                // Get all targets, create one test per target.
+                var xgrammars = navigator
+                    .Select("/desc/grammars", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                if (xgrammars.Count > 1)
+                    throw new Exception("Too many <grammars> elements, there should be only one.");
+                if (xgrammars.Count == 1)
+                {
+                    var grammars = xgrammars.First().Split(';');
+                    var merged_list = new List<string>();
+                    foreach (var x in grammars)
+                    {
+                        var pp = TrashGlobbing.Glob.GlobToRegex(x);
+                        var tool_grammar_files_pattern = x + "$";
+                        var list_pp = new TrashGlobbing.Glob()
+                            .RegexContents(pp, false)
+                            .RegexAgain(tool_grammar_files_pattern)
+                            .Where(f => f is FileInfo)
+                            .Select(f => f.FullName.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                            .ToList();
+                        foreach (var y in list_pp)
+                        {
+                            merged_list.Add(y);
+                        }
+                    }
+
+                    config.Files = merged_list;
+                }
+            }
+            {
                 var xtargets = navigator
-                    .Select("//desc/targets", nsmgr)
+                    .Select("/desc/targets", nsmgr)
                     .Cast<XPathNavigator>()
                     .Select(t => t.Value)
                     .ToList();
@@ -668,10 +694,18 @@ namespace Trash
                     throw new Exception("Too many <targets> elements, there should be only one.");
                 if (xtargets.Count == 0)
                     throw new Exception("No <targets> elements specified, there must be one.");
-                var targets = xtargets.First().Split(';');
-                foreach (var target in targets)
+                var targets = xtargets.First().Split(';').ToList();
+                if (config.targets == null) config.targets = targets;
+            }
+            var xtests = navigator
+                .Select("/desc/test", nsmgr)
+                .Cast<XPathNavigator>()
+                .ToList();
+            if (!xtests.Any())
+            {
+                // Get all targets, create one test per target.
+                foreach (var target in config.targets)
                 {
-                    if (config.target != null && config.target != target) continue;
                     var test = new Test();
                     test.target = target;
                     test.tool_grammar_files = config.Files.ToList();
@@ -701,7 +735,7 @@ namespace Trash
                     if (xtargets.Count == 0)
                     {
                         xtargets = navigator
-                            .Select("//desc/targets", nsmgr)
+                            .Select("/desc/targets", nsmgr)
                             .Cast<XPathNavigator>()
                             .Select(t => t.Value)
                             .ToList();
@@ -710,20 +744,19 @@ namespace Trash
                         if (xtargets.Count == 0)
                             throw new Exception("No <targets> elements specified, there must be one.");
                     }
-                    var targets = xtargets.First().Split(';');
-                    if (config.target != null)
+                    var test_targets = xtargets.First().Split(';').ToList();
+                    var new_test_targets = new List<string>();
+                    if (config.targets != null)
                     {
-                        bool found = false;
-                        foreach (var target in targets)
+                        foreach (var target in test_targets)
                         {
-                            if (config.target == target)
+                            if (config.targets.Contains(target))
                             {
-                                found = true;
-                                break;
+                                new_test_targets.Add(target);
                             }
                         }
-                        if (!found) continue;
                     }
+                    test_targets = new_test_targets;
                     var spec_source_directory = xmltest
                         .Select("sourceDirectory", nsmgr)
                         .Cast<XPathNavigator>()
@@ -757,7 +790,7 @@ namespace Trash
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    foreach (var target in targets)
+                    foreach (var target in test_targets)
                     {
                         var test = new Test();
                         test.target = target;
@@ -793,21 +826,6 @@ namespace Trash
                         }
 
                         var merged_list = new HashSet<string>();
-                        //foreach (var x in config.Files)
-                        //{
-                        //    var pp = TrashGlobbing.Glob.GlobToRegex(x);
-                        //    var tool_grammar_files_pattern = "^(?!.*(/Generated|/Generated-[^/]|/target|/examples)).+g4$";
-                        //    var list_pp = new TrashGlobbing.Glob()
-                        //        .RegexContents(pp)
-                        //        .RegexAgain(tool_grammar_files_pattern)
-                        //        .Where(f => f is FileInfo)
-                        //        .Select(f => f.FullName.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
-                        //        .ToList();
-                        //    foreach (var y in list_pp)
-                        //    {
-                        //        merged_list.Add(y);
-                        //    }
-                        //}
                         test.tool_grammar_files = config.Files.ToList();
                         if (spec_source_directory != null)
                         {
