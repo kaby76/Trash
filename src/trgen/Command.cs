@@ -35,6 +35,7 @@ namespace Trash
 
         public int Execute(Config config)
         {
+System.Console.WriteLine("Before " + String.Join(" ", config.Files));
             if (!config.Files.Any())
             {
                 var list = new List<string>();
@@ -50,6 +51,7 @@ namespace Trash
                 }
                 config.Files = list;
             }
+System.Console.WriteLine("After " + String.Join(" ", config.Files));
 
 
             if (config.pom)
@@ -83,6 +85,7 @@ namespace Trash
             // Let's first parse the input grammar files and gather information
             // about them. Note, people pump in all sorts of bullshit, so
             // be ready to handle the worse of the worse.
+System.Console.WriteLine("Yo " + String.Join(" ", config.Tests));
             foreach (var test in config.Tests)
             {
                 test.tool_grammar_tuples = new List<GrammarTuple>();
@@ -516,7 +519,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.1";
+        public static string version = "0.20.2";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -669,11 +672,15 @@ namespace Trash
                     {
                         var pp = TrashGlobbing.Glob.GlobToRegex(x);
                         var tool_grammar_files_pattern = x + "$";
+                        var cwd = Environment.CurrentDirectory.Replace("\\", "/");
+                        if (!cwd.EndsWith("/")) cwd += "/";
                         var list_pp = new TrashGlobbing.Glob()
                             .RegexContents(pp, false)
                             .RegexAgain(tool_grammar_files_pattern)
                             .Where(f => f is FileInfo)
-                            .Select(f => f.FullName.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                            .Select(f => f.FullName
+                                .Replace('\\', '/')
+                                .Replace(cwd, ""))
                             .ToList();
                         foreach (var y in list_pp)
                         {
@@ -682,6 +689,7 @@ namespace Trash
                     }
 
                     config.Files = merged_list;
+System.Console.WriteLine("updated1 " + String.Join(" ", config.Files));
                 }
             }
             {

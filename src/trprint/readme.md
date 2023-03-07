@@ -18,4 +18,4 @@ Read stdin and print out the text for the tree.
 
 ## Current version
 
-0.20.1 Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.
+0.20.2 Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.
