@@ -66,7 +66,7 @@ namespace Trash
             this.env_type = Command.GetEnvType();
             this.Files = new List<string>();
             this.flatten = false;
-            this.grammar_name = null; // means find using parsing and xpath of grammars.
+            this.grammar_name = null; // null means find using parsing and xpath of grammars.
             this.line_translation = Command.GetLineTranslationType();
             this.name_space = null;
             this.output_directory = "Generated";

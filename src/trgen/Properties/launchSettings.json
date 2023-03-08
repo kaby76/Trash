@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Java",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3138\\grammars-v4\\oncrpc"
+      "commandLineArgs": "-t CSharp",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3138\\grammars-v4\\sql\\hive\\v3"
     }
   }
 }

@@ -35,7 +35,6 @@ namespace Trash
 
         public int Execute(Config config)
         {
-System.Console.WriteLine("Before " + String.Join(" ", config.Files));
             if (!config.Files.Any())
             {
                 var list = new List<string>();
@@ -51,9 +50,6 @@ System.Console.WriteLine("Before " + String.Join(" ", config.Files));
                 }
                 config.Files = list;
             }
-System.Console.WriteLine("After " + String.Join(" ", config.Files));
-
-
             if (config.pom)
                 ModifyWithPom(config);
             else if (config.desc)
@@ -85,7 +81,6 @@ System.Console.WriteLine("After " + String.Join(" ", config.Files));
             // Let's first parse the input grammar files and gather information
             // about them. Note, people pump in all sorts of bullshit, so
             // be ready to handle the worse of the worse.
-System.Console.WriteLine("Yo " + String.Join(" ", config.Tests));
             foreach (var test in config.Tests)
             {
                 test.tool_grammar_tuples = new List<GrammarTuple>();
@@ -519,7 +514,7 @@ System.Console.WriteLine("Yo " + String.Join(" ", config.Tests));
             }
         }
 
-        public static string version = "0.20.2";
+        public static string version = "0.20.3";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -658,12 +653,12 @@ System.Console.WriteLine("Yo " + String.Join(" ", config.Tests));
             int gen = 0;
             {
                 var xgrammars = navigator
-                    .Select("/desc/grammars", nsmgr)
+                    .Select("/desc/grammar-files", nsmgr)
                     .Cast<XPathNavigator>()
                     .Select(t => t.Value)
                     .ToList();
                 if (xgrammars.Count > 1)
-                    throw new Exception("Too many <grammars> elements, there should be only one.");
+                    throw new Exception("Too many <grammar-files> elements, there should be only one.");
                 if (xgrammars.Count == 1)
                 {
                     var grammars = xgrammars.First().Split(';');
@@ -689,7 +684,28 @@ System.Console.WriteLine("Yo " + String.Join(" ", config.Tests));
                     }
 
                     config.Files = merged_list;
-System.Console.WriteLine("updated1 " + String.Join(" ", config.Files));
+                }
+            }
+            {
+                var spec_grammar_name = navigator
+                    .Select("/desc/grammar-name", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .FirstOrDefault();
+                if (spec_grammar_name != null)
+                {
+                    config.grammar_name = spec_grammar_name.Trim();
+                }
+            }
+            {
+                var spec_entry_point = navigator
+                    .Select("/desc/entry-point", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .FirstOrDefault();
+                if (spec_entry_point != null)
+                {
+                    config.start_rule = spec_entry_point.Trim();
                 }
             }
             {
@@ -716,6 +732,8 @@ System.Console.WriteLine("updated1 " + String.Join(" ", config.Files));
                 {
                     var test = new Test();
                     test.target = target;
+                    test.grammar_name = config.grammar_name;
+                    test.start_rule = config.start_rule;
                     test.tool_grammar_files = config.Files.ToList();
                     test.package = test.target == "Go" ? "parser" : test.package;
                     test.package = test.target == "Antlr4cs" ? "Test" : test.package;
@@ -766,28 +784,28 @@ System.Console.WriteLine("updated1 " + String.Join(" ", config.Files));
                     }
                     test_targets = new_test_targets;
                     var spec_source_directory = xmltest
-                        .Select("sourceDirectory", nsmgr)
+                        .Select("source-directory", nsmgr)
                         .Cast<XPathNavigator>()
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
                         .FirstOrDefault();
                     var spec_grammar_name = xmltest
-                        .Select("grammarName", nsmgr)
+                        .Select("grammar-name", nsmgr)
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .FirstOrDefault();
                     var spec_lexer_name = xmltest
-                        .Select("lexerName", nsmgr)
+                        .Select("lexer-name", nsmgr)
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .FirstOrDefault();
                     var spec_entry_point = xmltest
-                        .Select("entryPoint", nsmgr)
+                        .Select("entry-point", nsmgr)
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .FirstOrDefault();
                     var spec_package_name = xmltest
-                        .Select("packageName", nsmgr)
+                        .Select("package-name", nsmgr)
                         .Cast<XPathNavigator>()
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
@@ -807,6 +825,9 @@ System.Console.WriteLine("updated1 " + String.Join(" ", config.Files));
                         if (spec_grammar_name != null)
                         {
                             test.grammar_name = spec_grammar_name.Trim();
+                        } else if (config.grammar_name != null)
+                        {
+                            test.grammar_name = config.grammar_name.Trim();
                         }
 
                         if (spec_example_directory != null)
@@ -833,7 +854,6 @@ System.Console.WriteLine("updated1 " + String.Join(" ", config.Files));
                             test.package = spec_package_name;
                         }
 
-                        var merged_list = new HashSet<string>();
                         test.tool_grammar_files = config.Files.ToList();
                         if (spec_source_directory != null)
                         {
