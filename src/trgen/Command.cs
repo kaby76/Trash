@@ -35,21 +35,6 @@ namespace Trash
 
         public int Execute(Config config)
         {
-            if (!config.Files.Any())
-            {
-                var list = new List<string>();
-                var tool_grammar_files_pattern = ".+g4$";
-                var list_pp = new TrashGlobbing.Glob()
-                    .RegexContents(tool_grammar_files_pattern, false)
-                    .Where(f => f is FileInfo)
-                    .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
-                    .ToList();
-                foreach (var y in list_pp)
-                {
-                    list.Add(y);
-                }
-                config.Files = list;
-            }
             if (config.pom)
                 ModifyWithPom(config);
             else if (config.desc)
@@ -78,11 +63,29 @@ namespace Trash
                 test.start_rule = config.start_rule;
             }
 
+            if (!config.Files.Any())
+            {
+                var list = new List<string>();
+                var tool_grammar_files_pattern = ".+g4$";
+                var list_pp = new TrashGlobbing.Glob()
+                    .RegexContents(tool_grammar_files_pattern, false)
+                    .Where(f => f is FileInfo)
+                    .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                    .ToList();
+                foreach (var y in list_pp)
+                {
+                    list.Add(y);
+                }
+                config.Files = list;
+            }
+
             // Let's first parse the input grammar files and gather information
             // about them. Note, people pump in all sorts of bullshit, so
             // be ready to handle the worse of the worse.
             foreach (var test in config.Tests)
             {
+                if (!test.tool_grammar_files.Any())
+                    test.tool_grammar_files = config.Files.ToList();
                 test.tool_grammar_tuples = new List<GrammarTuple>();
                 foreach (var f in test.tool_grammar_files)
                 {
@@ -514,7 +517,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.3";
+        public static string version = "0.20.4";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -692,7 +695,7 @@ namespace Trash
                     .Cast<XPathNavigator>()
                     .Select(t => t.Value)
                     .FirstOrDefault();
-                if (spec_grammar_name != null)
+                if (config.grammar_name == null && spec_grammar_name != null)
                 {
                     config.grammar_name = spec_grammar_name.Trim();
                 }
@@ -703,7 +706,7 @@ namespace Trash
                     .Cast<XPathNavigator>()
                     .Select(t => t.Value)
                     .FirstOrDefault();
-                if (spec_entry_point != null)
+                if (config.start_rule == null && spec_entry_point != null)
                 {
                     config.start_rule = spec_entry_point.Trim();
                 }
@@ -719,7 +722,7 @@ namespace Trash
                 if (xtargets.Count == 0)
                     throw new Exception("No <targets> elements specified, there must be one.");
                 var targets = xtargets.First().Split(';').ToList();
-                if (config.targets == null) config.targets = targets;
+                if (config.targets == null || !config.targets.Any()) config.targets = targets;
             }
             var xtests = navigator
                 .Select("/desc/test", nsmgr)
