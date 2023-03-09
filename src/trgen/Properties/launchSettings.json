@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "",
+      "commandLineArgs": "-t Java",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3138\\grammars-v4\\sql\\tsql"
     }
   }

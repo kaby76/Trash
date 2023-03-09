@@ -712,17 +712,23 @@ namespace Trash
                 }
             }
             {
-                var xtargets = navigator
-                    .Select("/desc/targets", nsmgr)
+                var parsing_type = navigator
+                    .Select("/desc/parsing-type", nsmgr)
                     .Cast<XPathNavigator>()
                     .Select(t => t.Value)
-                    .ToList();
-                if (xtargets.Count > 1)
-                    throw new Exception("Too many <targets> elements, there should be only one.");
-                if (xtargets.Count == 0)
-                    throw new Exception("No <targets> elements specified, there must be one.");
-                var targets = xtargets.First().Split(';').ToList();
-                if (config.targets == null || !config.targets.Any()) config.targets = targets;
+                    .FirstOrDefault();
+                if (config.parsing_type == null) config.parsing_type = parsing_type;
+            }
+            {
+                var spec_grammar_name = navigator
+                    .Select("/desc/grammar-name", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .FirstOrDefault();
+                if (config.grammar_name == null && spec_grammar_name != null)
+                {
+                    config.grammar_name = spec_grammar_name.Trim();
+                }
             }
             var xtests = navigator
                 .Select("/desc/test", nsmgr)
@@ -740,6 +746,8 @@ namespace Trash
                     test.tool_grammar_files = config.Files.ToList();
                     test.package = test.target == "Go" ? "parser" : test.package;
                     test.package = test.target == "Antlr4cs" ? "Test" : test.package;
+                    if (test.parsing_type == null) test.parsing_type = config.parsing_type;
+                    if (test.parsing_type == null) test.parsing_type = "grouped";
                     config.Tests.Add(test);
                 }
             }
@@ -914,6 +922,8 @@ namespace Trash
                             ? config.start_rule
                             : spec_entry_point;
                         test.test_name = test_name ?? (gen++).ToString();
+                        if (test.parsing_type == null) test.parsing_type = config.parsing_type;
+                        if (test.parsing_type == null) test.parsing_type = "grouped";
                         config.Tests.Add(test);
                     }
                 }
@@ -1170,6 +1180,8 @@ namespace Trash
             test.package = test.target == "Antlr4cs" ? "Test" : test.package;
             test.package = (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
             test.start_rule = config.start_rule != null && config.start_rule != "" ? config.start_rule : pom_entry_point.First();
+            if (test.parsing_type == null) test.parsing_type = config.parsing_type;
+            if (test.parsing_type == null) test.parsing_type = "grouped";
         }
 
         public void DoNonPomDirectedGenerate(Config config)
@@ -1443,6 +1455,8 @@ namespace Trash
                     t.Add("lexer_name", test.fully_qualified_lexer_name);
                     t.Add("name_space", test.package.Replace("/", "."));
                     t.Add("package_name", test.package.Replace(".", "/"));
+                    t.Add("grouped_parsing", test.parsing_type == "grouped");
+                    t.Add("individual_parsing", test.parsing_type == "individual");
                     t.Add("os_type", ((OSType)config.env_type).ToString());
                     t.Add("os_win", (OSType)config.env_type == OSType.Windows);
                     t.Add("parser_name", test.fully_qualified_parser_name);
@@ -1532,6 +1546,8 @@ namespace Trash
                     t.Add("go_parser_name", test.fully_qualified_go_parser_name);
                     t.Add("grammar_file", test.tool_grammar_files.First());
                     t.Add("grammar_name", test.grammar_name);
+                    t.Add("grouped_parsing", test.parsing_type == "grouped");
+                    t.Add("individual_parsing", test.parsing_type == "individual");
                     t.Add("has_name_space", test.package != null && test.package != "");
                     t.Add("is_combined_grammar", test.tool_grammar_files.Count() == 1);
                     t.Add("lexer_grammar_file", test.lexer_grammar_file_name);

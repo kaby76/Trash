@@ -24,6 +24,7 @@ namespace Trash
         public string lexer_grammar_file_name = null;
         public string package { get; set; } = "";
         public string parser_grammar_file_name = null;
+        public string parsing_type { get; set; }
         public string start_rule { get; set; }
         public string target { get; set; }
         public string test_name { get; set; } = null;

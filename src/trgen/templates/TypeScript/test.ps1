@@ -49,9 +49,13 @@ if (-not(Test-Path -Path "tests.txt" -PathType Leaf)) {
     exit 0
 }
 
+<if(individual_parsing)>
+Get-Content "tests.txt" | ForEach-Object { trwdog pwsh -command "ts-node Test.js -q -tee -tree $_" 2>&1 >> parse.txt }
+<else>
 # Parse all input files.
 get-content "tests.txt" | trwdog pwsh -command "ts-node Test.js -q -x -tee -tree" 2>&1 > parse.txt
 $status=$LASTEXITCODE
+<endif>
 
 # trwdog returns 255 if it cannot spawn the process. This could happen
 # if the environment for running the program does not exist, or the

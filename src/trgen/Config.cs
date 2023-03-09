@@ -49,6 +49,7 @@ namespace Trash
         public OSType? env_type { get; set; }
         public bool? flatten { get; set; }
         public LineTranslationType? line_translation { get; set; }
+        public string parsing_type { get; set; }
         public bool pom { get; set; }
         public bool desc { get; set; }
         public PathSepType? path_sep { get; set; }
@@ -70,6 +71,7 @@ namespace Trash
             this.line_translation = Command.GetLineTranslationType();
             this.name_space = null;
             this.output_directory = "Generated";
+            this.parsing_type = null;
             this.path_sep = Command.GetPathSep();
             this.pom = false;
             this.root_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
