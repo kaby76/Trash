@@ -35,6 +35,7 @@ done
 JAR="<antlr_tool_path>"
 CLASSPATH="$JAR<if(path_sep_semi)>\;<else>:<endif>."
 <if(individual_parsing)>
+# Individual parsing.
 rm -f parse.txt
 for f in "${files[*]}"
 do
@@ -46,6 +47,7 @@ do
     fi
 done
 <else>
+# Group parsing.
 echo "${files[*]}" | trwdog java -classpath "$CLASSPATH" Test -q -x -tee -tree > parse.txt 2>&1
 status=$?
 <endif>

@@ -97,6 +97,7 @@ namespace Trash
                     string tgfn; // Where the grammar existed in the generated output parser directory.
                     var p = test.package.Replace(".", "/");
                     var pre = p == "" ? "" : p + "/";
+                    if (test.target == "Antlr4cs" || test.target == "CSharp") pre = ""; // Erase. Packages don't need to be placed in a directory named for the package.
                     List<ParsingResultSet> pr = new List<ParsingResultSet>();
                     if (f == "Arithmetic.g4")
                     {
@@ -737,6 +738,29 @@ namespace Trash
             if (!xtests.Any())
             {
                 // Get all targets, create one test per target.
+                var xtargets = navigator
+                    .Select("/desc/targets", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                if (xtargets.Count > 1)
+                    throw new Exception("Too many <targets> elements, there should be only one.");
+                if (xtargets.Count == 0)
+                    throw new Exception("No <targets> elements specified, there must be one.");
+                var test_targets = xtargets.First().Split(';').ToList();
+                var new_test_targets = new List<string>();
+                if (config.targets != null && config.targets.Any())
+                {
+                    foreach (var target in test_targets)
+                    {
+                        if (config.targets.Contains(target))
+                        {
+                            new_test_targets.Add(target);
+                        }
+                    }
+                }
+                else new_test_targets = test_targets;
+                config.targets = new_test_targets;
                 foreach (var target in config.targets)
                 {
                     var test = new Test();
@@ -747,7 +771,7 @@ namespace Trash
                     test.package = test.target == "Go" ? "parser" : test.package;
                     test.package = test.target == "Antlr4cs" ? "Test" : test.package;
                     if (test.parsing_type == null) test.parsing_type = config.parsing_type;
-                    if (test.parsing_type == null) test.parsing_type = "grouped";
+                    if (test.parsing_type == null) test.parsing_type = "group";
                     config.Tests.Add(test);
                 }
             }
@@ -783,7 +807,7 @@ namespace Trash
                     }
                     var test_targets = xtargets.First().Split(';').ToList();
                     var new_test_targets = new List<string>();
-                    if (config.targets != null)
+                    if (config.targets != null && config.targets.Any())
                     {
                         foreach (var target in test_targets)
                         {
@@ -923,7 +947,7 @@ namespace Trash
                             : spec_entry_point;
                         test.test_name = test_name ?? (gen++).ToString();
                         if (test.parsing_type == null) test.parsing_type = config.parsing_type;
-                        if (test.parsing_type == null) test.parsing_type = "grouped";
+                        if (test.parsing_type == null) test.parsing_type = "group";
                         config.Tests.Add(test);
                     }
                 }
@@ -1181,7 +1205,7 @@ namespace Trash
             test.package = (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
             test.start_rule = config.start_rule != null && config.start_rule != "" ? config.start_rule : pom_entry_point.First();
             if (test.parsing_type == null) test.parsing_type = config.parsing_type;
-            if (test.parsing_type == null) test.parsing_type = "grouped";
+            if (test.parsing_type == null) test.parsing_type = "group";
         }
 
         public void DoNonPomDirectedGenerate(Config config)
@@ -1455,7 +1479,7 @@ namespace Trash
                     t.Add("lexer_name", test.fully_qualified_lexer_name);
                     t.Add("name_space", test.package.Replace("/", "."));
                     t.Add("package_name", test.package.Replace(".", "/"));
-                    t.Add("grouped_parsing", test.parsing_type == "grouped");
+                    t.Add("group_parsing", test.parsing_type == "group");
                     t.Add("individual_parsing", test.parsing_type == "individual");
                     t.Add("os_type", ((OSType)config.env_type).ToString());
                     t.Add("os_win", (OSType)config.env_type == OSType.Windows);
@@ -1546,7 +1570,7 @@ namespace Trash
                     t.Add("go_parser_name", test.fully_qualified_go_parser_name);
                     t.Add("grammar_file", test.tool_grammar_files.First());
                     t.Add("grammar_name", test.grammar_name);
-                    t.Add("grouped_parsing", test.parsing_type == "grouped");
+                    t.Add("group_parsing", test.parsing_type == "group");
                     t.Add("individual_parsing", test.parsing_type == "individual");
                     t.Add("has_name_space", test.package != null && test.package != "");
                     t.Add("is_combined_grammar", test.tool_grammar_files.Count() == 1);

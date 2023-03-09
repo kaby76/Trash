@@ -35,7 +35,7 @@ done
 rm -f parse.txt
 for f in "${files[*]}"
 do
-    trwdog bash -c "ts-node Test.js -q -tee -tree $f" 2>&1 >> parse.txt
+    trwdog sh -c "ts-node Test.js -q -tee -tree $f" >> parse.txt 2>&1
     xxx="$?"
     if [ "$xxx" -ne 0 ]
     then
@@ -44,7 +44,7 @@ do
 done
 <else>
 # Parse all input files.
-echo "${files[*]}" | trwdog bash -c "ts-node Test.js -q -x -tee -tree" 2>&1 > parse.txt
+echo "${files[*]}" | trwdog sh -c "ts-node Test.js -q -x -tee -tree" > parse.txt 2>&1
 status="$?"
 <endif>
 
