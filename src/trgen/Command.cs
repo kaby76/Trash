@@ -518,7 +518,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.4";
+        public static string version = "0.20.5";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -655,6 +655,36 @@ namespace Trash
             XPathNavigator navigator = document.CreateNavigator();
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(reader.NameTable);
             int gen = 0;
+            // Get all targets, create one test per target.
+            {
+                var xtargets = navigator
+                    .Select("/desc/targets", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                if (xtargets.Count > 1)
+                    throw new Exception("Too many <targets> elements, there should be only one.");
+                if (xtargets.Count == 0)
+                    throw new Exception("No <targets> elements specified, there must be one.");
+                var test_targets = xtargets.First().Split(';').ToList();
+                var new_test_targets = new List<string>();
+                if (config.targets.Any())
+                {
+                    // Remove anything that this grammar cannot support.
+                    foreach (var target in test_targets)
+                    {
+                        if (config.targets.Contains(target))
+                        {
+                            new_test_targets.Add(target);
+                        }
+                    }
+                }
+                else
+                {
+                    // Add all targets not explicitly asked for on command-line but mentioned here.
+                    config.targets = test_targets;
+                }
+            }
             {
                 var xgrammars = navigator
                     .Select("/desc/grammar-files", nsmgr)
@@ -737,30 +767,6 @@ namespace Trash
                 .ToList();
             if (!xtests.Any())
             {
-                // Get all targets, create one test per target.
-                var xtargets = navigator
-                    .Select("/desc/targets", nsmgr)
-                    .Cast<XPathNavigator>()
-                    .Select(t => t.Value)
-                    .ToList();
-                if (xtargets.Count > 1)
-                    throw new Exception("Too many <targets> elements, there should be only one.");
-                if (xtargets.Count == 0)
-                    throw new Exception("No <targets> elements specified, there must be one.");
-                var test_targets = xtargets.First().Split(';').ToList();
-                var new_test_targets = new List<string>();
-                if (config.targets != null && config.targets.Any())
-                {
-                    foreach (var target in test_targets)
-                    {
-                        if (config.targets.Contains(target))
-                        {
-                            new_test_targets.Add(target);
-                        }
-                    }
-                }
-                else new_test_targets = test_targets;
-                config.targets = new_test_targets;
                 foreach (var target in config.targets)
                 {
                     var test = new Test();
@@ -777,6 +783,7 @@ namespace Trash
             }
             else
             {
+                // Create a test for each target listed in <test> elements.
                 foreach (var xmltest in xtests)
                 {
                     List<string> spec_antlr_tool_args = new List<string>();
@@ -785,6 +792,11 @@ namespace Trash
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .ToList()
+                        .FirstOrDefault(); 
+                    var parsing_type = xmltest
+                        .Select("parsing-type", nsmgr)
+                        .Cast<XPathNavigator>()
+                        .Select(t => t.Value)
                         .FirstOrDefault();
                     var xtargets = xmltest
                         .Select("targets", nsmgr)
@@ -793,28 +805,13 @@ namespace Trash
                         .ToList();
                     if (xtargets.Count > 1)
                         throw new Exception("Too many <targets> elements, there should be only one.");
-                    if (xtargets.Count == 0)
-                    {
-                        xtargets = navigator
-                            .Select("/desc/targets", nsmgr)
-                            .Cast<XPathNavigator>()
-                            .Select(t => t.Value)
-                            .ToList();
-                        if (xtargets.Count > 1)
-                            throw new Exception("Too many <targets> elements, there should be only one.");
-                        if (xtargets.Count == 0)
-                            throw new Exception("No <targets> elements specified, there must be one.");
-                    }
                     var test_targets = xtargets.First().Split(';').ToList();
                     var new_test_targets = new List<string>();
-                    if (config.targets != null && config.targets.Any())
+                    foreach (var target in test_targets)
                     {
-                        foreach (var target in test_targets)
+                        if (config.targets.Contains(target))
                         {
-                            if (config.targets.Contains(target))
-                            {
-                                new_test_targets.Add(target);
-                            }
+                            new_test_targets.Add(target);
                         }
                     }
                     test_targets = new_test_targets;
@@ -946,10 +943,27 @@ namespace Trash
                             ? config.start_rule
                             : spec_entry_point;
                         test.test_name = test_name ?? (gen++).ToString();
+                        test.parsing_type = parsing_type;
                         if (test.parsing_type == null) test.parsing_type = config.parsing_type;
                         if (test.parsing_type == null) test.parsing_type = "group";
                         config.Tests.Add(test);
                     }
+                }
+                // Any target that was not created under a <test>, create here if config.targets mentions that target.
+                foreach (var t in config.targets)
+                {
+                    bool test_handled = false;
+                    foreach (var xt in config.Tests)
+                    {
+                        if (xt.target == t)
+                        {
+                            test_handled = true;
+                            break;
+                        }
+                    }
+
+                    if (test_handled) continue;
+                    System.Console.WriteLine("Need a test for " + t);
                 }
             }
         }

@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Antlr4cs",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3138\\grammars-v4\\abb"
+      "commandLineArgs": "",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3138\\grammars-v4\\sql\\tsql"
     }
   }
 }

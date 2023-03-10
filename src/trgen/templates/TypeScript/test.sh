@@ -31,7 +31,9 @@ do
     fi
 done
 
+# Parse all input files.
 <if(individual_parsing)>
+# Individual parsing.
 rm -f parse.txt
 for f in "${files[*]}"
 do
@@ -43,7 +45,7 @@ do
     fi
 done
 <else>
-# Parse all input files.
+# Group parsing.
 echo "${files[*]}" | trwdog sh -c "ts-node Test.js -q -x -tee -tree" > parse.txt 2>&1
 status="$?"
 <endif>
