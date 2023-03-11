@@ -518,7 +518,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.5";
+        public static string version = "0.20.6";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -805,16 +805,26 @@ namespace Trash
                         .ToList();
                     if (xtargets.Count > 1)
                         throw new Exception("Too many <targets> elements, there should be only one.");
-                    var test_targets = xtargets.First().Split(';').ToList();
-                    var new_test_targets = new List<string>();
-                    foreach (var target in test_targets)
+                    List<string> test_targets = null;
+                    if (xtargets.Count == 0)
                     {
-                        if (config.targets.Contains(target))
-                        {
-                            new_test_targets.Add(target);
-                        }
+                        test_targets = config.targets.ToList();
                     }
-                    test_targets = new_test_targets;
+                    else
+                    {
+                        test_targets = xtargets.First().Split(';').ToList();
+                        var new_test_targets = new List<string>();
+                        foreach (var target in test_targets)
+                        {
+                            if (config.targets.Contains(target))
+                            {
+                                new_test_targets.Add(target);
+                            }
+                        }
+
+                        test_targets = new_test_targets;
+                    }
+
                     var spec_source_directory = xmltest
                         .Select("source-directory", nsmgr)
                         .Cast<XPathNavigator>()
