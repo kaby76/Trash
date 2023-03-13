@@ -19,4 +19,4 @@ The generated parser is placed in the directory <current-directory>/Generated/.
 
 ## Current version
 
-0.20.6 Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.
+0.20.7 Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.

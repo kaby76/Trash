@@ -192,13 +192,15 @@ namespace Trash
                     {
                         if (is_parser_grammar)
                         {
-                            grammar_name = name
-                                .Substring(0, name.LastIndexOf("Parser"));
+                            grammar_name = name.LastIndexOf("Parser") < 0
+                                ? name
+                                : name.Substring(0, name.LastIndexOf("Parser"));
                         }
                         else if (is_lexer_grammar)
                         {
-                            grammar_name = name
-                                .Substring(0, name.LastIndexOf("Lexer"));
+                            grammar_name = name.LastIndexOf("Lexer") < 0
+                                ? name
+                                : name.Substring(0, name.LastIndexOf("Lexer"));
                         }
                     }
                     if (start_symbol != null && test.start_rule == null)
@@ -518,7 +520,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.6";
+        public static string version = "0.20.7";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1422,8 +1424,50 @@ namespace Trash
                 test.all_target_files.Add(to);
                 this.CopyFile(from, to);
             }
+            // Copy examples directory.
+            {
+                var from = test.example_files;
+                var to = config.output_directory
+                         + "-"
+                         + test.target
+                         + (test.test_name != null ? ("-" + test.test_name) : "");
+                CopyDirectory(from, to, true);
+            }
         }
 
+        static void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
+        {
+            // Get information about the source directory
+            var dir = new DirectoryInfo(sourceDir);
+
+            // Check if the source directory exists
+            if (!dir.Exists)
+                throw new DirectoryNotFoundException($"Source directory not found: {dir.FullName}");
+
+            // Cache directories before we start copying
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            // Create the destination directory
+            Directory.CreateDirectory(destinationDir);
+
+            // Get the files in the source directory and copy to the destination directory
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                string targetFilePath = Path.Combine(destinationDir, file.Name);
+                file.CopyTo(targetFilePath);
+            }
+
+            // If recursive and copying subdirectories, recursively call this method
+            if (recursive)
+            {
+                foreach (DirectoryInfo subDir in dirs)
+                {
+                    string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+                    CopyDirectory(subDir.FullName, newDestinationDir, true);
+                }
+            }
+        }
+     
         private void GenFromTemplates(Command p, Config config, Test test)
         {
             var append_namespace = (!(test.target == "CSharp" || test.target == "Antlr4cs"));
