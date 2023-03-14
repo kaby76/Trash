@@ -520,7 +520,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.8";
+        public static string version = "0.20.9";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -887,15 +887,16 @@ namespace Trash
                         if (spec_example_directory != null)
                         {
                             test.example_files = spec_example_directory;
-                            if (!Directory.Exists(spec_example_directory))
-                            {
-                                System.Console.Error.WriteLine("Examples directory doesn't exist " +
-                                                               spec_example_directory.First());
-                            }
                         }
                         else
                         {
                             test.example_files = "examples";
+                        }
+                        if (!Directory.Exists(test.example_files))
+                        {
+                            System.Console.Error.WriteLine("Examples directory doesn't exist " +
+                                                           spec_example_directory);
+                            test.example_files = "";
                         }
 
                         if (spec_antlr_tool_args.Contains("-package"))
@@ -1462,13 +1463,16 @@ namespace Trash
             // Copy examples directory.
             {
                 var from = test.example_files;
-                var to = config.output_directory
-                         + "-"
-                         + test.target
-                         + (test.test_name != null ? ("-" + test.test_name) : "")
-                         + "/"
-                         + test.example_files;
-                CopyDirectory(from, to, true);
+                if (!string.IsNullOrEmpty(from) && Directory.Exists(from))
+                {
+                    var to = config.output_directory
+                             + "-"
+                             + test.target
+                             + (test.test_name != null ? ("-" + test.test_name) : "")
+                             + "/"
+                             + test.example_files;
+                    CopyDirectory(from, to, true);
+                }
             }
         }
 

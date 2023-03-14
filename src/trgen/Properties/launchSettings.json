@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\fb\\fixed\\oncrpc"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\fb\\fixed\\apt"
     }
   }
 }
