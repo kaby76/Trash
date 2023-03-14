@@ -254,7 +254,7 @@ namespace Trash
                             genfn = pre1 + name.Replace("Parser", "_parser").ToLower() + Suffix(test.target);
                             genincfn = "";
                             if (test.package != null && test.package != "")
-                                antlr_args = config.env_type == OSType.Windows
+                                antlr_args = GetOSTarget() == OSTarget.Windows
                                     ? "-o " + test.package + " -lib " + test.package +
                                       " -package " + test.package
                                     : " -package " + test.package;
@@ -268,7 +268,7 @@ namespace Trash
                             genfn = pre1 + name + Suffix(test.target);
                             genincfn = pre1 + name + ".h";
                             if (test.package != null && test.package != "")
-                                antlr_args = config.env_type == OSType.Windows
+                                antlr_args = GetOSTarget() == OSTarget.Windows
                                     ? "-o " + test.package + " -lib " + test.package +
                                       " -package " + test.package
                                     : " -package " + test.package;
@@ -299,7 +299,7 @@ namespace Trash
                             genfn = pre1 + name.Replace("Lexer", "_lexer").ToLower() + Suffix(test.target);
                             genincfn = "";
                             if (test.package != null && test.package != "")
-                                antlr_args = config.env_type == OSType.Windows
+                                antlr_args = GetOSTarget() == OSTarget.Windows
                                     ? "-o " + test.package + " -lib " + test.package +
                                       " -package " + test.package
                                     : " -package " + test.package;
@@ -313,7 +313,7 @@ namespace Trash
                             genfn = pre1 + name + Suffix(test.target);
                             genincfn = pre1 + name + ".h";
                             if (test.package != null && test.package != "")
-                                antlr_args = config.env_type == OSType.Windows
+                                antlr_args = GetOSTarget() == OSTarget.Windows
                                     ? "-o " + test.package + " -lib " + test.package +
                                       " -package " + test.package
                                     : " -package " + test.package;
@@ -352,7 +352,7 @@ namespace Trash
                                          + "New" + name
                                          + "Parser";
                                 if (test.package != null && test.package != "")
-                                    antlr_args = config.env_type == OSType.Windows
+                                    antlr_args = GetOSTarget() == OSTarget.Windows
                                         ? "-o " + test.package + " -lib " + test.package +
                                           " -package " + test.package
                                         : " -package " + test.package;
@@ -368,7 +368,7 @@ namespace Trash
                                              + "Parser";
                                 goname = "";
                                 if (test.package != null && test.package != "")
-                                    antlr_args = config.env_type == OSType.Windows
+                                    antlr_args = GetOSTarget() == OSTarget.Windows
                                         ? "-o " + test.package + " -lib " + test.package +
                                           " -package " + test.package
                                         : " -package " + test.package;
@@ -403,7 +403,7 @@ namespace Trash
                                          + "New" + name
                                          + "Lexer";
                                 if (test.package != null && test.package != "")
-                                    antlr_args = config.env_type == OSType.Windows
+                                    antlr_args = GetOSTarget() == OSTarget.Windows
                                         ? "-o " + test.package + " -lib " + test.package +
                                           " -package " + test.package
                                         : " -package " + test.package;
@@ -419,7 +419,7 @@ namespace Trash
                                              + "Lexer";
                                 goname = "";
                                 if (test.package != null && test.package != "")
-                                    antlr_args = config.env_type == OSType.Windows
+                                    antlr_args = GetOSTarget() == OSTarget.Windows
                                         ? "-o " + test.package + " -lib " + test.package +
                                           " -package " + test.package
                                         : " -package " + test.package;
@@ -520,7 +520,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.9";
+        public static string version = "0.20.10";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -564,19 +564,19 @@ namespace Trash
             throw new Exception("Cannot determine operating system!");
         }
 
-        public static OSType GetEnvType()
+        public static OSTarget GetOSTarget()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return OSType.Unix;
+                return OSTarget.Unix;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return OSType.Windows;
+                return OSTarget.Windows;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return OSType.Mac;
+                return OSTarget.Mac;
             }
             throw new Exception("Cannot determine operating system!");
         }
@@ -680,11 +680,44 @@ namespace Trash
                             new_test_targets.Add(target);
                         }
                     }
+                    config.targets = new_test_targets;
                 }
                 else
                 {
                     // Add all targets not explicitly asked for on command-line but mentioned here.
                     config.targets = test_targets;
+                }
+            }
+            {
+                var xtargets = navigator
+                    .Select("/desc/os-targets", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .ToList();
+                if (xtargets.Count > 1)
+                    throw new Exception("Too many <os-targets> elements, there should be only one.");
+                var test_targets = xtargets.First().Split(';').ToList();
+                var new_test_targets = new List<string>();
+                if (config.os_targets.Any())
+                {
+                    // Remove anything that this grammar cannot support.
+                    foreach (var ostarget in test_targets)
+                    {
+                        if (config.os_targets
+                            .Select(t => t.ToString())
+                            .Contains(ostarget))
+                        {
+                            new_test_targets.Add(ostarget);
+                        }
+                    }
+                    config.os_targets = new_test_targets
+                        .Select(t => t.ToOSTarget());
+                }
+                else
+                {
+                    // Add all targets not explicitly asked for on command-line but mentioned here.
+                    config.os_targets = test_targets
+                        .Select(t => t.ToOSTarget());
                 }
             }
             {
@@ -782,6 +815,7 @@ namespace Trash
                 foreach (var target in config.targets)
                 {
                     var test = new Test();
+                    if (!config.os_targets.Contains(GetOSTarget())) continue;
                     test.target = target;
                     test.grammar_name = config.grammar_name;
                     test.start_rule = config.start_rule;
@@ -873,6 +907,7 @@ namespace Trash
                     foreach (var target in test_targets)
                     {
                         var test = new Test();
+                        if (!config.os_targets.Contains(GetOSTarget())) continue;
                         test.target = target;
                         test.package = test.target == "Go" ? "parser" : test.package;
                         test.package = test.target == "Antlr4cs" ? "Test" : test.package;
@@ -946,7 +981,7 @@ namespace Trash
                             // and they cannot be changed!
                             if (test.package != null && test.package != "")
                             {
-                                if (config.env_type == OSType.Windows)
+                                if (GetOSTarget() == OSTarget.Windows)
                                 {
                                     additional.Add("-o");
                                     additional.Add(test.package.Replace('.', '/'));
@@ -1253,7 +1288,7 @@ namespace Trash
                 // and they cannot be changed!
                 if (test.package != null && test.package != "")
                 {
-                    if (config.env_type == OSType.Windows)
+                    if (GetOSTarget() == OSTarget.Windows)
                     {
                         additional.Add("-o");
                         additional.Add(test.package.Replace('.', '/'));
@@ -1570,13 +1605,13 @@ namespace Trash
                     t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(test.start_rule));
                     t.Add("case_insensitive_type", test.case_insensitive_type);
-                    t.Add("cli_bash", (OSType)config.env_type == OSType.Unix);
-                    t.Add("cli_cmd", (OSType)config.env_type == OSType.Windows);
-                    t.Add("cmake_target", config.env_type == OSType.Windows
+                    t.Add("cli_bash", config.os_targets.Contains(OSTarget.Unix));
+                    t.Add("cli_cmd", GetOSTarget() == OSTarget.Windows);
+                    t.Add("cmake_target", GetOSTarget() == OSTarget.Windows
                         ? "-G \"Visual Studio 17 2022\" -A x64" : "");
                     t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
                     t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
-                    t.Add("exec_name", config.env_type == OSType.Windows ?
+                    t.Add("exec_name", GetOSTarget() == OSTarget.Windows ?
                         "Test.exe" : "Test");
                     t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
                     t.Add("go_parser_name", test.fully_qualified_go_parser_name);
@@ -1590,14 +1625,14 @@ namespace Trash
                     t.Add("package_name", test.package.Replace(".", "/"));
                     t.Add("group_parsing", test.parsing_type == "group");
                     t.Add("individual_parsing", test.parsing_type == "individual");
-                    t.Add("os_type", ((OSType)config.env_type).ToString());
-                    t.Add("os_win", (OSType)config.env_type == OSType.Windows);
+                    t.Add("os_type", config.os_targets.First().ToString());
+                    t.Add("os_win", GetOSTarget() == OSTarget.Windows);
                     t.Add("parser_name", test.fully_qualified_parser_name);
                     t.Add("parser_grammar_file", test.parser_grammar_file_name);
                     t.Add("path_sep_colon", config.path_sep == PathSepType.Colon);
                     t.Add("path_sep_semi", config.path_sep == PathSepType.Semi);
                     t.Add("start_symbol", test.start_rule);
-                    t.Add("temp_dir", config.env_type == OSType.Windows
+                    t.Add("temp_dir", GetOSTarget() == OSTarget.Windows
                         ? "c:/temp" : "/tmp");
                     t.Add("tool_grammar_files", test.tool_grammar_files);
                     t.Add("tool_grammar_tuples", test.tool_grammar_tuples);
@@ -1667,13 +1702,13 @@ namespace Trash
                     t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(test.start_rule));
                     t.Add("case_insensitive_type", test.case_insensitive_type);
-                    t.Add("cli_bash", (OSType)config.env_type == OSType.Unix);
-                    t.Add("cli_cmd", (OSType)config.env_type == OSType.Windows);
-                    t.Add("cmake_target", config.env_type == OSType.Windows
+                    t.Add("cli_bash", config.os_targets.Contains(OSTarget.Unix));
+                    t.Add("cli_cmd", GetOSTarget() == OSTarget.Windows);
+                    t.Add("cmake_target", GetOSTarget() == OSTarget.Windows
                         ? "-G \"Visual Studio 17 2022\" -A x64" : "");
                     t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
                     t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
-                    t.Add("exec_name", config.env_type == OSType.Windows ?
+                    t.Add("exec_name", GetOSTarget() == OSTarget.Windows ?
                       "Test.exe" : "Test");
                     t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
                     t.Add("go_parser_name", test.fully_qualified_go_parser_name);
@@ -1687,14 +1722,14 @@ namespace Trash
 		            t.Add("lexer_name", test.fully_qualified_lexer_name);
                     t.Add("name_space", test.package.Replace("/", "."));
                     t.Add("package_name", test.package.Replace(".", "/"));
-                    t.Add("os_type", ((OSType)config.env_type).ToString());
-                    t.Add("os_win", (OSType)config.env_type == OSType.Windows);
+                    t.Add("os_type", config.os_targets.First().ToString());
+                    t.Add("os_win", GetOSTarget() == OSTarget.Windows);
                     t.Add("parser_name", test.fully_qualified_parser_name);
                     t.Add("parser_grammar_file", test.parser_grammar_file_name);
                     t.Add("path_sep_colon", config.path_sep == PathSepType.Colon);
                     t.Add("path_sep_semi", config.path_sep == PathSepType.Semi);
                     t.Add("start_symbol", test.start_rule);
-                    t.Add("temp_dir", config.env_type == OSType.Windows
+                    t.Add("temp_dir", GetOSTarget() == OSTarget.Windows
                         ? "c:/temp" : "/tmp");
                     t.Add("tool_grammar_files", test.tool_grammar_files);
                     t.Add("tool_grammar_tuples", test.tool_grammar_tuples);

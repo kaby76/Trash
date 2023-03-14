@@ -49,4 +49,4 @@ the `--type` command-line option:
 
 ## Current version
 
-0.20.9 Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.
+0.20.10 Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.

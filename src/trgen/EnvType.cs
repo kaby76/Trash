@@ -1,6 +1,6 @@
 ﻿namespace Trash
 {
-    public enum OSType
+    public enum OSTarget
     {
         Unix,
         Windows,
@@ -9,13 +9,26 @@
 
     public static class Extensions
     {
-        public static string ToString(this OSType os_type)
+        public static string ToString(this OSTarget osTarget)
         {
-            var s = os_type switch
+            var s = osTarget switch
             {
-                OSType.Unix => "unix",
-                OSType.Windows => "windows",
-                OSType.Mac => "mac",
+                OSTarget.Unix => "Linux",
+                OSTarget.Windows => "Windows",
+                OSTarget.Mac => "MacOS",
+            };
+            return s;
+        }
+
+        public static OSTarget ToOSTarget(this string osTarget)
+        {
+            var s = osTarget switch
+            {
+                "Unix" => OSTarget.Unix,
+                "Linux" => OSTarget.Unix,
+                "Windows" => OSTarget.Windows,
+                "MacOS" => OSTarget.Mac,
+                "Mac" => OSTarget.Mac,
             };
             return s;
         }
