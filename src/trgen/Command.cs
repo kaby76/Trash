@@ -520,7 +520,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.7";
+        public static string version = "0.20.8";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -701,11 +701,21 @@ namespace Trash
                     var merged_list = new List<string>();
                     foreach (var x in grammars)
                     {
-                        var pp = TrashGlobbing.Glob.GlobToRegex(x);
+                        var xx = x.Trim().Replace("\\", "/");
+                        // Split the dirname and basename of the path x.
+                        // Add the dirname to the current directory.
+                        // Set the pattern to be the basename.
+                        var dir = Dirname(xx);
+                        if (dir == ".") dir = ""; // erase.
+                        if (dir != "" && !dir.EndsWith("/")) dir += "/";
+                        var bn = Basename(xx);
+                        var pp = TrashGlobbing.Glob.GlobToRegex(bn);
                         var tool_grammar_files_pattern = x + "$";
                         var cwd = Environment.CurrentDirectory.Replace("\\", "/");
                         if (!cwd.EndsWith("/")) cwd += "/";
-                        var list_pp = new TrashGlobbing.Glob()
+                        cwd = cwd + dir;
+                        if (!cwd.EndsWith("/")) cwd += "/";
+                        var list_pp = new TrashGlobbing.Glob(cwd)
                             .RegexContents(pp, false)
                             .RegexAgain(tool_grammar_files_pattern)
                             .Where(f => f is FileInfo)
@@ -715,7 +725,7 @@ namespace Trash
                             .ToList();
                         foreach (var y in list_pp)
                         {
-                            merged_list.Add(y);
+                            merged_list.Add(dir + y);
                         }
                     }
 
@@ -978,6 +988,31 @@ namespace Trash
                     System.Console.WriteLine("Need a test for " + t);
                 }
             }
+        }
+
+        static string Dirname(string path)
+        {
+            // Split the path into parts separated by '/'
+            string[] parts = path.Split('/');
+
+            // If there is only one part, return "."
+            if (parts.Length == 1)
+            {
+                return ".";
+            }
+
+            // Remove the last part and join the remaining parts with '/'
+            return string.Join("/", parts.Take(parts.Length - 1));
+        }
+
+        // Returns the base name (i.e., the file name) of a given path
+        static string Basename(string path)
+        {
+            // Split the path into parts separated by '/'
+            string[] parts = path.Split('/');
+
+            // Return the last part
+            return parts.LastOrDefault();
         }
 
         public void ModifyWithPom(Config config)
@@ -1430,7 +1465,9 @@ namespace Trash
                 var to = config.output_directory
                          + "-"
                          + test.target
-                         + (test.test_name != null ? ("-" + test.test_name) : "");
+                         + (test.test_name != null ? ("-" + test.test_name) : "")
+                         + "/"
+                         + test.example_files;
                 CopyDirectory(from, to, true);
             }
         }
@@ -1454,7 +1491,7 @@ namespace Trash
             foreach (FileInfo file in dir.GetFiles())
             {
                 string targetFilePath = Path.Combine(destinationDir, file.Name);
-                file.CopyTo(targetFilePath);
+                file.CopyTo(targetFilePath, true);
             }
 
             // If recursive and copying subdirectories, recursively call this method

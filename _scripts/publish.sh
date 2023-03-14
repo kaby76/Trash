@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-version=0.20.7
+version=0.20.8
 cd src
 exes=`find . -name 'tr*.exe' | grep -v publish`
 for i in $exes
