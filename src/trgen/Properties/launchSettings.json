@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t CSharp",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\fb\\fixed\\javascript\\ecmascript"
+      "commandLineArgs": "",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\fb\\fixed\\java\\java"
     }
   }
 }

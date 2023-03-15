@@ -521,7 +521,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.10";
+        public static string version = "0.20.11";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -665,7 +665,7 @@ namespace Trash
                 if (xtargets.Count > 1)
                     throw new Exception("Too many <targets> elements, there should be only one.");
                 if (xtargets.Count == 0)
-                    throw new Exception("No <targets> elements specified, there must be one.");
+                    throw new Exception("A <desc><targets> element is required.");
                 test_targets = xtargets.First().Split(';').ToList();
                 if (config.targets == null || !config.targets.Any()) config.targets = test_targets;
             }
@@ -775,7 +775,7 @@ namespace Trash
                 .ToList();
             if (!xtests.Any())
             {
-                foreach (var target in test_targets)
+                foreach (var target in test_targets.Intersect(config.targets))
                 {
                     if (!test_ostargets.Contains(GetOSTarget().ToString())) continue;
                     var test = new Test();
@@ -835,16 +835,6 @@ namespace Trash
                     else
                     {
                         test_targets = xtargets.First().Split(';').ToList();
-                        var new_test_targets = new List<string>();
-                        foreach (var target in test_targets)
-                        {
-                            if (config.targets.Contains(target))
-                            {
-                                new_test_targets.Add(target);
-                            }
-                        }
-
-                        test_targets = new_test_targets;
                     }
 
                     var spec_source_directory = xmltest
@@ -880,7 +870,7 @@ namespace Trash
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    foreach (var target in test_targets)
+                    foreach (var target in test_targets.Intersect(config.targets))
                     {
                         if (!test_ostargets.Contains(GetOSTarget().ToString())) continue;
                         var test = new Test();
