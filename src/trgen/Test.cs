@@ -31,5 +31,7 @@ namespace Trash
         public List<string> tool_grammar_files = null;
         public List<GrammarTuple> tool_grammar_tuples = null;
         public HashSet<string> tool_src_grammar_files = null;
+        public List<string> os_targets { get; set; } = null;
+        public Test() {}
     }
 }

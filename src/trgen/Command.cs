@@ -60,6 +60,7 @@ namespace Trash
                 config.Tests.Add(test);
                 config.Files = new List<string>() { "Arithmetic.g4" };
                 config.start_rule = "file_";
+                test.os_targets = new List<string>() { GetOSTarget().ToString() };
                 test.start_rule = config.start_rule;
             }
 
@@ -646,9 +647,6 @@ namespace Trash
 
         private void ModifyWithDesc(Config config)
         {
-            //
-            // Process desc.xml.
-            //
             System.Console.Error.WriteLine(Environment.CurrentDirectory);
             XmlTextReader reader =
                 new XmlTextReader(Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"desc.xml");
@@ -657,7 +655,7 @@ namespace Trash
             XPathNavigator navigator = document.CreateNavigator();
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(reader.NameTable);
             int gen = 0;
-            // Get all targets, create one test per target.
+            List<string> test_targets = config.targets.ToList();
             {
                 var xtargets = navigator
                     .Select("/desc/targets", nsmgr)
@@ -668,26 +666,10 @@ namespace Trash
                     throw new Exception("Too many <targets> elements, there should be only one.");
                 if (xtargets.Count == 0)
                     throw new Exception("No <targets> elements specified, there must be one.");
-                var test_targets = xtargets.First().Split(';').ToList();
-                var new_test_targets = new List<string>();
-                if (config.targets.Any())
-                {
-                    // Remove anything that this grammar cannot support.
-                    foreach (var target in test_targets)
-                    {
-                        if (config.targets.Contains(target))
-                        {
-                            new_test_targets.Add(target);
-                        }
-                    }
-                    config.targets = new_test_targets;
-                }
-                else
-                {
-                    // Add all targets not explicitly asked for on command-line but mentioned here.
-                    config.targets = test_targets;
-                }
+                test_targets = xtargets.First().Split(';').ToList();
+                if (config.targets == null || !config.targets.Any()) config.targets = test_targets;
             }
+            List<string> test_ostargets = config.os_targets.ToList();
             {
                 var xtargets = navigator
                     .Select("/desc/os-targets", nsmgr)
@@ -696,28 +678,9 @@ namespace Trash
                     .ToList();
                 if (xtargets.Count > 1)
                     throw new Exception("Too many <os-targets> elements, there should be only one.");
-                var test_targets = xtargets.First().Split(';').ToList();
-                var new_test_targets = new List<string>();
-                if (config.os_targets.Any())
+                if (xtargets.Count != 0)
                 {
-                    // Remove anything that this grammar cannot support.
-                    foreach (var ostarget in test_targets)
-                    {
-                        if (config.os_targets
-                            .Select(t => t.ToString())
-                            .Contains(ostarget))
-                        {
-                            new_test_targets.Add(ostarget);
-                        }
-                    }
-                    config.os_targets = new_test_targets
-                        .Select(t => t.ToOSTarget());
-                }
-                else
-                {
-                    // Add all targets not explicitly asked for on command-line but mentioned here.
-                    config.os_targets = test_targets
-                        .Select(t => t.ToOSTarget());
+                    test_ostargets = xtargets.First().Split(';').ToList();
                 }
             }
             {
@@ -812,10 +775,11 @@ namespace Trash
                 .ToList();
             if (!xtests.Any())
             {
-                foreach (var target in config.targets)
+                foreach (var target in test_targets)
                 {
+                    if (!test_ostargets.Contains(GetOSTarget().ToString())) continue;
                     var test = new Test();
-                    if (!config.os_targets.Contains(GetOSTarget())) continue;
+                    test.os_targets = new List<string>() { GetOSTarget().ToString() };
                     test.target = target;
                     test.grammar_name = config.grammar_name;
                     test.start_rule = config.start_rule;
@@ -838,7 +802,20 @@ namespace Trash
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value)
                         .ToList()
-                        .FirstOrDefault(); 
+                        .FirstOrDefault();
+                    {
+                        var xostargets = xmltest
+                            .Select("os-targets", nsmgr)
+                            .Cast<XPathNavigator>()
+                            .Select(t => t.Value)
+                            .ToList();
+                        if (xostargets.Count > 1)
+                            throw new Exception("Too many <os-targets> elements, there should be only one.");
+                        if (xostargets.Count != 0)
+                        {
+                            test_ostargets = xostargets.First().Split(';').ToList();
+                        } 
+                    }
                     var parsing_type = xmltest
                         .Select("parsing-type", nsmgr)
                         .Cast<XPathNavigator>()
@@ -851,7 +828,6 @@ namespace Trash
                         .ToList();
                     if (xtargets.Count > 1)
                         throw new Exception("Too many <targets> elements, there should be only one.");
-                    List<string> test_targets = null;
                     if (xtargets.Count == 0)
                     {
                         test_targets = config.targets.ToList();
@@ -906,9 +882,10 @@ namespace Trash
                         .FirstOrDefault();
                     foreach (var target in test_targets)
                     {
+                        if (!test_ostargets.Contains(GetOSTarget().ToString())) continue;
                         var test = new Test();
-                        if (!config.os_targets.Contains(GetOSTarget())) continue;
                         test.target = target;
+                        test.os_targets = new List<string>() { GetOSTarget().ToString() };
                         test.package = test.target == "Go" ? "parser" : test.package;
                         test.package = test.target == "Antlr4cs" ? "Test" : test.package;
                         if (spec_grammar_name != null)
@@ -1303,6 +1280,7 @@ namespace Trash
             test.start_rule = config.start_rule != null && config.start_rule != "" ? config.start_rule : pom_entry_point.First();
             if (test.parsing_type == null) test.parsing_type = config.parsing_type;
             if (test.parsing_type == null) test.parsing_type = "group";
+            test.os_targets = new List<string>() { GetOSTarget().ToString() };
         }
 
         public void DoNonPomDirectedGenerate(Config config)
@@ -1605,7 +1583,7 @@ namespace Trash
                     t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(test.start_rule));
                     t.Add("case_insensitive_type", test.case_insensitive_type);
-                    t.Add("cli_bash", config.os_targets.Contains(OSTarget.Unix));
+                    t.Add("cli_bash", test.os_targets.Contains(OSTarget.Unix.ToString()));
                     t.Add("cli_cmd", GetOSTarget() == OSTarget.Windows);
                     t.Add("cmake_target", GetOSTarget() == OSTarget.Windows
                         ? "-G \"Visual Studio 17 2022\" -A x64" : "");
@@ -1702,7 +1680,7 @@ namespace Trash
                     t.Add("antlr_tool_path", config.antlr_tool_path);
                     t.Add("cap_start_symbol", Cap(test.start_rule));
                     t.Add("case_insensitive_type", test.case_insensitive_type);
-                    t.Add("cli_bash", config.os_targets.Contains(OSTarget.Unix));
+                    t.Add("cli_bash", test.os_targets.Contains(OSTarget.Unix.ToString()));
                     t.Add("cli_cmd", GetOSTarget() == OSTarget.Windows);
                     t.Add("cmake_target", GetOSTarget() == OSTarget.Windows
                         ? "-G \"Visual Studio 17 2022\" -A x64" : "");

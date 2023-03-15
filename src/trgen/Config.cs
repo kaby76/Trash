@@ -46,7 +46,7 @@ namespace Trash
 
 
         public IEnumerable<string> antlr_tool_args { get; set; }
-        public IEnumerable<OSTarget> os_targets { get; set; }
+        public IEnumerable<string> os_targets { get; set; }
         public bool? flatten { get; set; }
         public LineTranslationType? line_translation { get; set; }
         public string parsing_type { get; set; }
@@ -64,7 +64,7 @@ namespace Trash
             this.antlr_tool_path = Command.GetAntlrToolPath();
             this.arithmetic = false;
             this.desc = true;
-            this.os_targets = new List<OSTarget>() { Command.GetOSTarget() };
+            this.os_targets = new List<string>() { Command.GetOSTarget().ToString() };
             this.Files = new List<string>();
             this.flatten = false;
             this.grammar_name = null; // null means find using parsing and xpath of grammars.
