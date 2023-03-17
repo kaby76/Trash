@@ -26,7 +26,7 @@
         {
             var regex = new StringBuilder();
             var characterClass = false;
-            //regex.Append("^");
+            regex.Append("^");
             foreach (var c in glob)
             {
                 if (characterClass)

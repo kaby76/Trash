@@ -27,4 +27,4 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.20.11 Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.
+0.20.12 Add -force option to trgen to generate a target. Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.

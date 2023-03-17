@@ -521,7 +521,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.11";
+        public static string version = "0.20.12";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -699,21 +699,22 @@ namespace Trash
                     {
                         var xx = x.Trim().Replace("\\", "/");
                         // Split the dirname and basename of the path x.
-                        // Add the dirname to the current directory.
-                        // Set the pattern to be the basename.
                         var dir = Dirname(xx);
+                        var bn = Basename(xx);
+
+                        // Add the dirname to the current directory.
                         if (dir == ".") dir = ""; // erase.
                         if (dir != "" && !dir.EndsWith("/")) dir += "/";
-                        var bn = Basename(xx);
-                        var pp = TrashGlobbing.Glob.GlobToRegex(bn);
-                        var tool_grammar_files_pattern = x + "$";
                         var cwd = Environment.CurrentDirectory.Replace("\\", "/");
                         if (!cwd.EndsWith("/")) cwd += "/";
                         cwd = cwd + dir;
-                        if (!cwd.EndsWith("/")) cwd += "/";
+
+                        // Set the pattern to be the full path name.
+                        var fp = cwd + bn;
+                        var pp = TrashGlobbing.Glob.GlobToRegex(fp);
+
                         var list_pp = new TrashGlobbing.Glob(cwd)
                             .RegexContents(pp, false)
-                            .RegexAgain(tool_grammar_files_pattern)
                             .Where(f => f is FileInfo)
                             .Select(f => f.FullName
                                 .Replace('\\', '/')
@@ -775,7 +776,8 @@ namespace Trash
                 .ToList();
             if (!xtests.Any())
             {
-                foreach (var target in test_targets.Intersect(config.targets))
+                var all = config.force ? config.targets : test_targets.Intersect(config.targets);
+                foreach (var target in all)
                 {
                     if (!test_ostargets.Contains(GetOSTarget().ToString())) continue;
                     var test = new Test();
@@ -869,8 +871,9 @@ namespace Trash
                         .Cast<XPathNavigator>()
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
-                        .FirstOrDefault();
-                    foreach (var target in test_targets.Intersect(config.targets))
+			            .FirstOrDefault();
+                    var all = config.force ? config.targets : test_targets.Intersect(config.targets);
+                    foreach (var target in all)
                     {
                         if (!test_ostargets.Contains(GetOSTarget().ToString())) continue;
                         var test = new Test();

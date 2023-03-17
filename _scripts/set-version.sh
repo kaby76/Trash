@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-version="0.20.11"
+version="0.20.12"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
@@ -41,7 +41,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Add -force option to trgen to generate a target. Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
@@ -78,7 +78,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Add -force option to trgen to generate a target. Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done

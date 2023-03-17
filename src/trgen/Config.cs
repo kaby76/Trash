@@ -10,26 +10,17 @@ namespace Trash
 {
     public class Config
     {
-        [Option('a', "arithmetic", Required = false, HelpText = "Generate arithmetic example from templates.")]
+        [Option("antlr-tool-path", Required = false)]
+        public string antlr_tool_path { get; set; }
+
+        [Option("arithmetic", Required = false, HelpText = "Generate arithmetic example from templates.")]
         public bool arithmetic { get; set; }
 
-        [Value(0)]
-        public IEnumerable<string> Files { get; set; }
-
-        [Option('x', "profile", Required = false, HelpText = "Add in Antlr profiling code.")]
-        public bool? profile { get; set; }
-
-        [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
-        public string start_rule { get; set; }
+        [Option("force", Required = false, HelpText = "Force the generation of a target.")]
+        public bool force { get; set; }
 
         [Option('g', "grammar-name", Required = false, HelpText = "Grammar for parse.")]
         public string grammar_name { get; set; }
-
-        [Option('t', "targets", Required = false, HelpText = "The target language for the project.")]
-        public IEnumerable<string> targets { get; set; }
-
-        [Option("antlr-tool-path", Required = false)]
-        public string antlr_tool_path { get; set; }
 
         [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
         public string output_directory { get; set; }
@@ -37,12 +28,24 @@ namespace Trash
         [Option('p', "package", Required = false)]
         public string name_space { get; set; }
 
+        [Option('s', "start-rule", Required = false, HelpText = "Start rule name.")]
+        public string start_rule { get; set; }
+
         [Option("template-sources-directory", Required = false)]
         public string template_sources_directory { get { return _backing_template_sources_directory; } set { _backing_template_sources_directory = Path.GetFullPath(value); } }
         private string _backing_template_sources_directory;
 
+        [Option('t', "targets", Required = false, HelpText = "The target language for the project.")]
+        public IEnumerable<string> targets { get; set; }
+
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
+
+        [Option('x', "profile", Required = false, HelpText = "Add in Antlr profiling code.")]
+        public bool? profile { get; set; }
+
+        [Value(0)]
+        public IEnumerable<string> Files { get; set; }
 
 
         public IEnumerable<string> antlr_tool_args { get; set; }

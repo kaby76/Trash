@@ -18,4 +18,4 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-0.20.11 Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.
+0.20.12 Add -force option to trgen to generate a target. Dotnet 7.0 dependency; desc.xml replacement for pom.xml. NB: not all Trash tools supported yet.
