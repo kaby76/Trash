@@ -8,7 +8,7 @@ namespace Trash
 {
     public class Test
     {
-        public List<string> all_source_files = null;
+        public List<string> grammar_directory_source_files = null;
         public List<string> all_target_files = null;
         public string antlr_encoding { get; set; } = "utf-8";
         public CaseInsensitiveType? case_insensitive_type { get; set; } = null;

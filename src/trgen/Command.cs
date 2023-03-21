@@ -521,7 +521,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.12";
+        public static string version = "0.20.13";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -698,6 +698,7 @@ namespace Trash
                     foreach (var x in grammars)
                     {
                         var xx = x.Trim().Replace("\\", "/");
+
                         // Split the dirname and basename of the path x.
                         var dir = Dirname(xx);
                         var bn = Basename(xx);
@@ -1353,7 +1354,7 @@ namespace Trash
                                          + Command.AllButTargetName(test.target)
                                          + "/)).+"
                                          + "$";
-                test.all_source_files = new TrashGlobbing.Glob()
+                test.grammar_directory_source_files = new TrashGlobbing.Glob()
                     .RegexContents(all_source_pattern)
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                     .Select(f => f.FullName.Replace('\\', '/'))
@@ -1397,7 +1398,7 @@ namespace Trash
             var cd = Environment.CurrentDirectory + "/";
             cd = cd.Replace('\\', '/');
             var set = new HashSet<string>();
-            foreach (var path in test.all_source_files)
+            foreach (var path in test.grammar_directory_source_files)
             {
                 // Construct proper starting directory based on namespace.
                 var from = path;
@@ -1436,27 +1437,8 @@ namespace Trash
                             f.StartsWith("src/main/java/")
                             ? f.Substring("src/main/java".Length)
                             : f
-                            );
-                    if (test.package != null
-                        && !(test.target == "Antlr4cs" || test.target == "CSharp"))
-                    {
-                        to = config.output_directory
-                             + "-"
-                             + test.target
-                             + (test.test_name != null ? ("-" + test.test_name) : "")
-                             + '/'
-                             + test.package.Replace('.', '/') + '/'
-                             + f;
-                    }
-                    if (to == null)
-                    {
-                        to = config.output_directory
-                             + "-"
-                             + test.target
-                             + (test.test_name != null ? ("-" + test.test_name) : "")
-                             + '/'
-                             + f;
-                    }
+                            ); 
+                    to = FixedName(f, config, test);
                 }
                 if (from.Contains("pom.xml") && test.target != "Java") continue;
                 System.Console.Error.WriteLine("Copying source file from "
@@ -1528,7 +1510,7 @@ namespace Trash
                 var prefix = "trgen.templates.";
                 var regex_string = "^(?!.*(" + AllButTargetName(test.target) + "/)).*$";
                 var regex = new Regex(regex_string);
-                var files_to_copy = orig_file_names.Where(f =>
+                var template_directory_files_to_copy = orig_file_names.Where(f =>
                 {
                     if (test.fully_qualified_parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
                     if (f == "./files") return false;
@@ -1536,7 +1518,7 @@ namespace Trash
                     return v;
                 }).Select(f => f.Substring(("./").Length)).ToList();
                 var set = new HashSet<string>();
-                foreach (var file in files_to_copy)
+                foreach (var file in template_directory_files_to_copy)
                 {
                     var from = file;
                     // copy the file straight up if it doesn't begin
@@ -1548,7 +1530,7 @@ namespace Trash
                     {
                         continue;
                     }
-                    var to = FixedName(from, config, test);
+                    var to = FixedTemplatedFileName(from, config, test);
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = ReadAllResource(a, prefix + from.Replace('/','.'));
@@ -1557,7 +1539,7 @@ namespace Trash
                         + " to "
                         + to);
                     Template t = new Template(content);
-                    var yo1 = test.all_source_files
+                    var yo1 = test.grammar_directory_source_files
                         .Select(t =>
                             FixedName(t, config, test)
                             .Substring(config.output_directory.Length))
@@ -1615,7 +1597,7 @@ namespace Trash
             else
             {
                 var regex_string = "^(?!.*(files|" + AllButTargetName(test.target) + "/)).*$";
-                var files_to_copy = new TrashGlobbing.Glob(config.template_sources_directory)
+                var template_directory_files_to_copy = new TrashGlobbing.Glob(config.template_sources_directory)
                     .RegexContents(regex_string)
                     .Where(f =>
                     {
@@ -1635,7 +1617,7 @@ namespace Trash
                 prefix_to_remove = prefix_to_remove.Replace("//", "/");
                 System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
                 var set = new HashSet<string>();
-                foreach (var file in files_to_copy)
+                foreach (var file in template_directory_files_to_copy)
                 {
                     if (file.EndsWith("Arithmetic.g4")
                         && test.grammar_name != "Arithmetic"
@@ -1645,15 +1627,7 @@ namespace Trash
                     }
                     var from = file;
                     var e = file.Substring(prefix_to_remove.Length);
-                    var to = e.StartsWith(TargetName(test.target))
-                         ? e.Substring((TargetName(test.target)).Length + 1)
-                         : e;
-                    to = config.output_directory.Replace('\\', '/')
-                         + "-"
-                         + test.target
-                         + (test.test_name != null ? ("-" + test.test_name) : "")
-                         + '/'
-                         + to;
+                    var to = FixedTemplatedFileName(e, config, test);
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
                     string content = File.ReadAllText(from);
@@ -1662,7 +1636,7 @@ namespace Trash
                         + " to "
                         + to);
                     Template t = new Template(content);
-		            var yo1 = test.all_source_files
+		            var yo1 = test.grammar_directory_source_files
 			              .Select(t => FixedName(t, config, test)
 					         .Substring(config.output_directory.Length))
 			              .Where(t => t.Contains(Suffix(test.target)))
@@ -1801,31 +1775,63 @@ namespace Trash
         string FixedName(string from, Config config, Test test)
         {
             string to = null;
-            if (from.StartsWith(test.target)) to = from.Substring(test.target.Length + 1);
-            else to = from;
-            if (test.tool_grammar_tuples.Where(t => from.Substring(test.target.Length) == t.OriginalSourceFileName).Select(t => t.GrammarFileName).Any())
-            {
-                to = config.output_directory
-                     + "-"
-                     + test.target
-                     + (test.test_name != null ? ("-" + test.test_name) : "")
-                     + '/'
-                     + test.tool_grammar_tuples.Where(t => to == t.OriginalSourceFileName).Select(t => t.GrammarFileName).First();
-            }
-            else
-            {
-                to = config.output_directory
-                     + "-"
-                     + test.target
-                     + (test.test_name != null ? ("-" + test.test_name) : "")
-                     + '/'
-                     + to;
+            var cwd = System.Environment.CurrentDirectory.Replace("\\", "/");
+            if (cwd != "" && !cwd.EndsWith("/")) cwd = cwd + "/";
 
-            }
+            if (from.StartsWith(cwd))
+                from = from.Substring(cwd.Length);
+
+            // Split the dirname and basename of the path x.
+            var dir = Dirname(from);
+            if (dir == ".") dir = "";
+            if (dir != "" && !dir.EndsWith("/")) dir = dir + "/";
+            if (dir.StartsWith(cwd)) dir = dir.Substring(cwd.Length);
+            if (dir.StartsWith(test.target + "/")) dir = dir.Substring(test.target.Length + 1);
+            if (dir != "" && !dir.EndsWith("/")) dir = dir + "/";
+
+            var bn = Basename(from);
+
+            to = dir + bn;
+
+            to = config.output_directory
+                 + "-"
+                 + test.target
+                 + (test.test_name != null ? ("-" + test.test_name) : "")
+                 + '/'
+                 + (test.target == "Go" && test.package != "" && (bn.EndsWith(".g4") || bn.EndsWith(".go")) ? test.package + "/" : "")
+                 + to;
             to = to.Replace('\\', '/');
             return to;
         }
-        
+
+        string FixedTemplatedFileName(string from, Config config, Test test)
+        {
+            string to = null;
+            var cwd = System.Environment.CurrentDirectory.Replace("\\", "/");
+            if (cwd != "" && !cwd.EndsWith("/")) cwd = cwd + "/";
+
+            // Split the dirname and basename of the path x.
+            var dir = Dirname(from);
+            if (dir == ".") dir = "";
+            if (dir != "" && !dir.EndsWith("/")) dir = dir + "/";
+            if (dir.StartsWith(cwd)) dir = dir.Substring(cwd.Length);
+            if (dir.StartsWith(test.target + "/")) dir = dir.Substring(test.target.Length + 1);
+            if (dir != "" && !dir.EndsWith("/")) dir = dir + "/";
+
+            var bn = Basename(from);
+
+            to = dir + bn;
+
+            to = config.output_directory
+                 + "-"
+                 + test.target
+                 + (test.test_name != null ? ("-" + test.test_name) : "")
+                 + '/'
+                 + to;
+            to = to.Replace('\\', '/');
+            return to;
+        }
+
         class GrammarOrderCompare : IComparer<GrammarTuple>
         {
             List<string> _order;

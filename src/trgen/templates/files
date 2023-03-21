@@ -5,6 +5,7 @@
 ./Antlr4cs/clean.sh
 ./Antlr4cs/ErrorListener.cs
 ./Antlr4cs/makefile
+./Antlr4cs/perf.sh
 ./Antlr4cs/run.ps1
 ./Antlr4cs/run.sh
 ./Antlr4cs/Test.cs
@@ -26,6 +27,7 @@
 ./Cpp/ErrorListener.cpp
 ./Cpp/ErrorListener.h
 ./Cpp/makefile
+./Cpp/perf.sh
 ./Cpp/readme.md
 ./Cpp/run.ps1
 ./Cpp/run.sh
@@ -39,6 +41,7 @@
 ./CSharp/Encodings.cs
 ./CSharp/ErrorListener.cs
 ./CSharp/makefile
+./CSharp/perf.sh
 ./CSharp/run.ps1
 ./CSharp/run.sh
 ./CSharp/Test.cs
@@ -52,6 +55,7 @@
 ./Dart/clean.sh
 ./Dart/makefile
 ./Dart/MyErrorListener.dart
+./Dart/perf.sh
 ./Dart/pubspec.yaml
 ./Dart/run.ps1
 ./Dart/run.sh
@@ -65,6 +69,7 @@
 ./Go/clean.sh
 ./Go/go.mod
 ./Go/makefile
+./Go/perf.sh
 ./Go/run.ps1
 ./Go/run.sh
 ./Go/Test.go
@@ -76,6 +81,7 @@
 ./Java/clean.sh
 ./Java/ErrorListener.java
 ./Java/makefile
+./Java/perf.sh
 ./Java/run.ps1
 ./Java/run.sh
 ./Java/Test.java
@@ -87,6 +93,7 @@
 ./JavaScript/clean.sh
 ./JavaScript/makefile
 ./JavaScript/package.json
+./JavaScript/perf.sh
 ./JavaScript/run.ps1
 ./JavaScript/run.sh
 ./JavaScript/Test.js
@@ -98,6 +105,7 @@
 ./PHP/clean.sh
 ./PHP/composer.json
 ./PHP/makefile
+./PHP/perf.sh
 ./PHP/run.ps1
 ./PHP/run.sh
 ./PHP/Test.php
@@ -108,6 +116,7 @@
 ./Python3/clean.ps1
 ./Python3/clean.sh
 ./Python3/makefile
+./Python3/perf.sh
 ./Python3/requirements.txt
 ./Python3/run.ps1
 ./Python3/run.sh
@@ -120,8 +129,10 @@
 ./TypeScript/clean.sh
 ./TypeScript/makefile
 ./TypeScript/package.json
+./TypeScript/perf.sh
 ./TypeScript/run.sh
 ./TypeScript/test.ps1
 ./TypeScript/test.sh
 ./TypeScript/Test.ts
 ./TypeScript/tsconfig.json
+./xxxx

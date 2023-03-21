@@ -6,7 +6,7 @@ if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
 java -jar "<antlr_tool_path>" -encoding <antlr_encoding> -Dlanguage=Java <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
 }>
 
-JAR=<antlr_tool_path>
+JAR="<antlr_tool_path>"
 CLASSPATH="$JAR<if(path_sep_semi)>\;<else>:<endif>."
 javac -cp "$CLASSPATH" *.java
 
