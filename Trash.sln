@@ -143,6 +143,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdeltree", "src\trdeltree\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "triconv", "src\triconv\triconv.csproj", "{1A999C2F-36DD-43FD-8B8D-940531872D96}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "src\Server\Server.csproj", "{BBECDBF5-8FE8-48E2-81D4-17EFABE1A155}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LspHelpers", "src\LspHelpers\LspHelpers.csproj", "{E9E42BB9-2473-4C5F-A504-AF95FFEE4E60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -374,6 +378,14 @@ Global
 		{1A999C2F-36DD-43FD-8B8D-940531872D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A999C2F-36DD-43FD-8B8D-940531872D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A999C2F-36DD-43FD-8B8D-940531872D96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBECDBF5-8FE8-48E2-81D4-17EFABE1A155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBECDBF5-8FE8-48E2-81D4-17EFABE1A155}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBECDBF5-8FE8-48E2-81D4-17EFABE1A155}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBECDBF5-8FE8-48E2-81D4-17EFABE1A155}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9E42BB9-2473-4C5F-A504-AF95FFEE4E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9E42BB9-2473-4C5F-A504-AF95FFEE4E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9E42BB9-2473-4C5F-A504-AF95FFEE4E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9E42BB9-2473-4C5F-A504-AF95FFEE4E60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Algorithms\Algorithms.csproj" />
+    <ProjectReference Include="../../src/Algorithms/Algorithms.csproj" />
   </ItemGroup>
 
 </Project>

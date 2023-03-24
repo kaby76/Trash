@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AntlrJson\AntlrJson.csproj" />
-    <ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
-    <ProjectReference Include="..\Workspaces\Workspaces.csproj" />
+    <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+    <ProjectReference Include="../LanguageServer/LanguageServer.csproj" />
+    <ProjectReference Include="../Workspaces/Workspaces.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.12.0" />

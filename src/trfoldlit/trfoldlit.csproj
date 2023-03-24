@@ -30,7 +30,7 @@ This program is part of the Trash toolkit.]]>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
-    <ProjectReference Include="..\Docs\Docs.csproj" />
+    <ProjectReference Include="../Docs/Docs.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

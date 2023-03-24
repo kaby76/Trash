@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="StreamJsonRpc" Version="2.6.121" />
+		<PackageReference Include="System.IO.Pipes" Version="4.3.0" />
+		<PackageReference Include="System.IO.Pipes.AccessControl" Version="5.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol" Version="17.2.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="../Logger/Logger.csproj" />
+		<ProjectReference Include="../LspHelpers/LspHelpers.csproj" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+	</PropertyGroup>
+
+</Project>

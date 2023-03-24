@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Options\Options.csproj" />
+    <ProjectReference Include="../Options/Options.csproj" />
   </ItemGroup>
 
 </Project>

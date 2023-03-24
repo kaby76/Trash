@@ -1,0 +1,160 @@
+{
+  "name": "Antlrvsix-vscode",
+  "author": "Ken Domino",
+  "bugs": {
+    "url": "https://github.com/kaby76/AntlrVSIX/issues"
+  },
+  "categories": [],
+  "description": "Language server for Antlr2, 3, 4, Bison, ISO 14977, LBNF, W3C EBNF",
+  "homepage": "https://github.com/kaby76/AntlrVSIX/blob/master/README.md",
+  "icon": "AntlrVSIX_large.png",
+  "keywords": [
+    "antlr",
+    "bison",
+    "ebnf"
+  ],
+  "license": "MIT",
+  "publisher": "KenDomino",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaby76/AntlrVSIX"
+  },
+  "version": "1.3.0",
+  "engines": {
+    "vscode": "^1.76.0"
+  },
+  "activationEvents": [
+    "onLanguage:antlr2",
+    "onLanguage:antlr3",
+    "onLanguage:antlr4",
+    "onLanguage:bison",
+    "onLanguage:ebnf",
+    "onLanguage:iso14977",
+    "onLanguage:lbnf"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "languages": [
+      {
+        "id": "antlr2",
+        "extensions": [
+          ".g2"
+        ]
+      },
+      {
+        "id": "antlr3",
+        "extensions": [
+          ".g3"
+        ]
+      },
+      {
+        "id": "antlr4",
+        "extensions": [
+          ".g4"
+        ]
+      },
+      {
+        "id": "bison",
+        "extensions": [
+          ".y"
+        ]
+      },
+      {
+        "id": "ebnf",
+        "extensions": [
+          ".ebnf"
+        ]
+      },
+      {
+        "id": "iso14977",
+        "extensions": [
+          ".iso",
+          ".iso14977"
+        ]
+      },
+      {
+        "id": "lbnf",
+        "extensions": [
+          ".cf"
+        ]
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Example configuration",
+      "properties": {
+        "languageServerExample.maxNumberOfProblems": {
+          "scope": "resource",
+          "type": "number",
+          "default": 100,
+          "description": "Controls the maximum number of problems produced by the server."
+        },
+        "languageServerExample.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the language server."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm install",
+    "compile": "tsc -p ./"
+  },
+  "dependencies": {
+    "abort-controller": "3.0.0",
+    "jsonc-parser": "2.3.0",
+    "vscode-jsonrpc": "^8.1.0",
+    "vscode-languageclient": "^8.1.0",
+    "vscode-languageserver": "^8.1.0",
+    "vscode-languageserver-protocol": "^3.17.3",
+    "vscode-languageserver-types": "^3.17.3"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.76.0",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "@vscode/test-electron": "^2.2.3",
+    "eslint": "^8.34.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^4.9.5"
+  },
+  "configuration": {
+    "type": "object",
+    "title": "server configuration",
+    "properties": {
+      "antlr.path": {
+        "type": "string",
+        "default": "antlr",
+        "description": "The path to server executable"
+      },
+      "antlr.arguments": {
+        "type": "array",
+        "default": [],
+        "items": {
+          "type": "string"
+        },
+        "description": "Arguments for server"
+      },
+      "antlr.syncFileEvents": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not to send file events to server (File created, changed or deleted). This can be disabled for performance consideration."
+      },
+      "antlr.trace": {
+        "type": "string",
+        "description": "Names a file that server should log a performance trace to, in chrome trace-viewer JSON format."
+      }
+    }
+  }
+}
