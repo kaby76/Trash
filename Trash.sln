@@ -109,7 +109,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trpiggy", "src\trpiggy\trpi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Algorithms", "src\Algorithms\Algorithms.csproj", "{A231C02C-2985-4417-A568-97D817AB2F9C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseTreeEditing", "src\AntlrTreeEditing\ParseTreeEditing.csproj", "{08B1EDE6-1960-408A-97A5-628937F75A22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseTreeEditing", "src\ParseTreeEditing\ParseTreeEditing.csproj", "{08B1EDE6-1960-408A-97A5-628937F75A22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LanguageServer", "src\LanguageServer\LanguageServer.csproj", "{E5FB7560-2E6D-40ED-BA31-99454855D595}"
 EndProject

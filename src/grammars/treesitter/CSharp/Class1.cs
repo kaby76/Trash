@@ -135,7 +135,7 @@ public class Class1 : JavaScriptParserBaseVisitor<object>
     public static void MyMain(IParseTree tree, Parser parser)
     {
         var visitor = new Class1();
-        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+        using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
         {
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
             var nodes = engine.parseExpression(
@@ -144,7 +144,7 @@ public class Class1 : JavaScriptParserBaseVisitor<object>
 			    /singleExpression/objectLiteral/propertyAssignment
 			    ",
                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.AntlrElement).AntlrIParseTree).ToList();
 
             foreach (var r in nodes)
             {

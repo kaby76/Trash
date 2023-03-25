@@ -21,13 +21,13 @@ public class Class1 : JSON5BaseVisitor<object>
         var sb = new StringBuilder();
         sb.AppendLine("grammar foo;");
         sb.AppendLine();
-        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(_tree, _parser))
+        using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(_tree, _parser))
         {
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
             var nodes = engine.parseExpression(
                 "/json5/value/obj/pair[key/STRING/text()='\"rules\"']/value/obj/pair",
                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as JSON5Parser.PairContext).ToList();
+                .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as JSON5Parser.PairContext).ToList();
             foreach (var r in nodes)
             {
                 var lhs = r.key()?.GetText().Replace("\"","");

@@ -40,7 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Algorithms\Algorithms.csproj" />
-    <ProjectReference Include="..\AntlrTreeEditing\ParseTreeEditing.csproj" />
+    <ProjectReference Include="..\ParseTreeEditing\ParseTreeEditing.csproj" />
     <ProjectReference Include="..\Logger\Logger.csproj" />
     <ProjectReference Include="..\NWayDiff\NWayDiff.csproj" />
     <ProjectReference Include="..\Workspaces\Workspaces.csproj" />
