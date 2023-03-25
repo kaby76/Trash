@@ -66,9 +66,9 @@
                 var tokstream = parse_info.Stream as EditableAntlrTree.MyTokenStream;
                 var before_tokens = tokstream.GetTokens();
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
+                var ate = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
                 var (text_before, other) = TreeEdits.TextToLeftOfLeaves(tokstream, trees);
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
                 {
                     // Types of sorts.
                     if (config.Alphabetic)
@@ -76,12 +76,12 @@
                         var first = engine.parseExpression(
                             "(//ruleSpec)[1]",
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree
+                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree
                                 as EditableAntlrTree.MyParserTreeNode).First();
                         var nodes = engine.parseExpression(
                             "//ruleSpec[parserRuleSpec]",
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree
+                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree
                                 as EditableAntlrTree.MyParserTreeNode).ToList();
                         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                         // HACK FIX BELOW GetChild(---> 0)

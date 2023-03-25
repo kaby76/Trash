@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AntlrTreeEditing\AntlrTreeEditing.csproj" />
+    <ProjectReference Include="..\AntlrTreeEditing\ParseTreeEditing.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

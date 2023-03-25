@@ -2,7 +2,7 @@
 {
     using Antlr4.Runtime;
     using AntlrJson;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using org.w3c.dom;
     using System.Collections.Generic;
@@ -29,7 +29,7 @@
             {
                 System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
             }
-            AntlrNode[] atrees;
+            UnvParseTreeNode[] atrees;
             Parser parser;
             Lexer lexer;
             string text;
@@ -66,7 +66,7 @@
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
             var results = new List<ParsingResultSet>();
             bool do_rs = !config.NoParsingResultSets;
-            List<AntlrNode> d = new List<AntlrNode>();
+            List<UnvParseTreeNode> d = new List<UnvParseTreeNode>();
             List<AntlrDynamicContext> dc = new List<AntlrDynamicContext>();
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
             foreach (var parse_info in data)
@@ -76,8 +76,8 @@
                 atrees = parse_info.Nodes;
                 parser = parse_info.Parser;
                 lexer = parse_info.Lexer;
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser);
+                var ate = new ParseTreeEditing.ParseTreeDOM.ConvertToDOM();
+                ParseTreeEditing.ParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser);
                 dc.Add(dynamicContext);
                 d.Add(dynamicContext.Document);
             }
@@ -91,36 +91,36 @@
                 atrees = parse_info.Nodes;
                 parser = parse_info.Parser;
                 lexer = parse_info.Lexer;
-                AntlrTreeEditing.AntlrDOM.AntlrNode[] l = new AntlrTreeEditing.AntlrDOM.AntlrNode[1] { a };
+                ParseTreeEditing.ParseTreeDOM.UnvParseTreeNode[] l = new ParseTreeEditing.ParseTreeDOM.UnvParseTreeNode[1] { a };
                 var nodes = engine.parseExpression(expr,
                         new StaticContextBuilder()).evaluate(dynamicContext, l)
                     .Select(x => (x.NativeValue)).ToArray();
                 if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Length + " nodes.");
-                List<AntlrNode> res = new List<AntlrNode>();
+                List<UnvParseTreeNode> res = new List<UnvParseTreeNode>();
                 foreach (var v in nodes)
                 {
-                    if (v is AntlrTreeEditing.AntlrDOM.AntlrElement)
+                    if (v is ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement)
                     {
-                        var q = v as AntlrTreeEditing.AntlrDOM.AntlrElement;
+                        var q = v as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement;
                         res.Add(q);
                     }
-                    else if (v is AntlrTreeEditing.AntlrDOM.AntlrText)
+                    else if (v is ParseTreeEditing.ParseTreeDOM.UnvParseTreeText)
                     {
-                        var q = v as AntlrTreeEditing.AntlrDOM.AntlrText;
+                        var q = v as ParseTreeEditing.ParseTreeDOM.UnvParseTreeText;
                         var s = q.Data;
                         do_rs = false;
                         System.Console.WriteLine(s);
                     }
-                    else if (v is AntlrTreeEditing.AntlrDOM.AntlrAttr)
+                    else if (v is ParseTreeEditing.ParseTreeDOM.UnvParseTreeAttr)
                     {
-                        var q = v as AntlrTreeEditing.AntlrDOM.AntlrAttr;
+                        var q = v as ParseTreeEditing.ParseTreeDOM.UnvParseTreeAttr;
                         var s = q.StringValue;
                         do_rs = false;
                         System.Console.WriteLine(s);
                     }
-                    else if (v is AntlrTreeEditing.AntlrDOM.AntlrDocument)
+                    else if (v is ParseTreeEditing.ParseTreeDOM.UnvParseTreeDocument)
                     {
-                        var q = v as AntlrTreeEditing.AntlrDOM.AntlrDocument;
+                        var q = v as ParseTreeEditing.ParseTreeDOM.UnvParseTreeDocument;
                         do_rs = false;
                         System.Console.WriteLine(v);
                     }

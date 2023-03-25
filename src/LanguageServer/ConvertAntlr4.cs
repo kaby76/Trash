@@ -47,8 +47,8 @@ namespace LanguageServer
                 string suffix = null;
 
                 // Remove nodes that I cannot deal with at this point.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                        new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                        new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -88,13 +88,13 @@ namespace LanguageServer
                         )",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                     TreeEdits.Delete(nodes);
                 }
                 
                 // Convert '-> skip' or '-> channel(.....)' into '%ignore'
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -102,7 +102,7 @@ namespace LanguageServer
                         @"//lexerCommands",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                     // Add to end of file %ignore FOOBAR
                     StringBuilder sb2 = new StringBuilder();
                     foreach (var n in nodes)
@@ -127,8 +127,8 @@ namespace LanguageServer
                 // Colon must be placed on same line after LHS symbol.
                 // Change case of symbols for new Lark grammar: parser
                 // rules are all lower case; lexer rules are all upper case.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                        new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                        new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -136,7 +136,7 @@ namespace LanguageServer
                         @"//(parserRuleSpec | lexerRuleSpec)",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                     foreach (var n in nodes)
                     {
                         if (n is ANTLRv4Parser.ParserRuleSpecContext prs)
@@ -159,8 +159,8 @@ namespace LanguageServer
                 }
 
                 // Convert lexer expressions that contain '~'.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -168,7 +168,7 @@ namespace LanguageServer
                         @"//NOT",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                     foreach (var n in nodes)
                     {
                         var parent = n.Parent as ANTLRv4Parser.NotSetContext;
@@ -211,8 +211,8 @@ namespace LanguageServer
                 // Are modes are unnecessary in Lark? Context dependent lexing is default.
 
                 // Convert '...' to "..." for string literals.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -220,7 +220,7 @@ namespace LanguageServer
                         @"//STRING_LITERAL",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                     foreach (var n in nodes)
                     {
                         // Convert "foobar" to 'foobar', taking care of single quote nonsense.
@@ -244,8 +244,8 @@ namespace LanguageServer
                 }
 
                 // Rewrite LHS symbol of all rules to conform to Lark case style.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -253,7 +253,7 @@ namespace LanguageServer
                         @"//(parserRuleSpec | lexerRuleSpec)//(TOKEN_REF | RULE_REF)",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                     foreach (var n in nodes)
                     {
                         var z = n as TerminalNodeImpl;

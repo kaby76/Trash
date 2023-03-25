@@ -1,6 +1,6 @@
 ﻿namespace Trash
 {
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
     using System;
     using System.IO;
     using System.Text.Json;
@@ -25,7 +25,7 @@
             {
             }
 
-            public void EnterEveryRule(AntlrNode ctx)
+            public void EnterEveryRule(UnvParseTreeNode ctx)
             {
                 System.Console.WriteLine(
                     indent()
@@ -40,7 +40,7 @@
                 ++level;
             }
 
-            public void ExitEveryRule(AntlrNode ctx)
+            public void ExitEveryRule(UnvParseTreeNode ctx)
             {
                 --level;
                 System.Console.WriteLine(
@@ -51,14 +51,14 @@
                     + "}");
             }
 
-            public void VisitErrorNode(AntlrNode node)
+            public void VisitErrorNode(UnvParseTreeNode node)
             {
                 throw new NotImplementedException();
             }
 
-            public void VisitTerminal(AntlrNode node)
+            public void VisitTerminal(UnvParseTreeNode node)
             {
-                var text_node = (AntlrText)node;
+                var text_node = (UnvParseTreeText)node;
                 string value = text_node.Data;
                 {
                     System.Console.WriteLine(

@@ -4,7 +4,7 @@ namespace LanguageServer
     using Antlr4.Runtime;
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.AntlrDOM;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -620,7 +620,7 @@ namespace LanguageServer
 
                 // Find literals in lexer rules.
                 var (tree, parser, lexer) = (pd_doc.ParseTree, pd_doc.Parser, pd_doc.Lexer);
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     var dom_literals = engine.parseExpression(
@@ -635,13 +635,13 @@ namespace LanguageServer
                                                     /terminal[not(@ChildCount > 1)]
                                                         /STRING_LITERAL",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToArray();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement)).ToArray();
                     if (dom_literals.Length == 0) continue;
                     var old_names = dom_literals.Select(x => x.AntlrIParseTree.GetText()).ToList();
                     var new_names = engine.parseExpression(
                             "../../../../../../../../TOKEN_REF",
                             new StaticContextBuilder()).evaluate(dynamicContext, dom_literals)
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree.GetText()).ToArray();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree.GetText()).ToArray();
                     for (int i = 0; i < old_names.Count; ++i) subs.Add(old_names[i], new_names[i]);
                 }
             }
@@ -781,21 +781,21 @@ namespace LanguageServer
             // Filter lexer rules for criteria for an acceptable replacement.
             List<string> old_names = new List<string>();
             List<string> new_names = new List<string>();
-            var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-            AntlrElement[] dom_literals;
+            var ate = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
+            UnvParseTreeElement[] dom_literals;
             if (nodes == null)
             {
                 var pr = ParsingResultsFactory.Create(lexer_or_combined);
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     nodes = engine.parseExpression(
                         @"//lexerRuleSpec/TOKEN_REF",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                 }
             }
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 dom_literals = engine.parseExpression(
@@ -809,13 +809,13 @@ namespace LanguageServer
                                                     /terminal[not(@ChildCount > 1)]
                                                         /STRING_LITERAL",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToArray();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement)).ToArray();
                 if (dom_literals.Length == 0) return result;
 
                 var allowable_lexer_rules = engine.parseExpression(
                         "../../../../../../../../TOKEN_REF",
                         new StaticContextBuilder()).evaluate(dynamicContext, dom_literals)
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                 for (int i = 0; i < allowable_lexer_rules.Count; ++i)
                 {
                     var l = allowable_lexer_rules[i];
@@ -2009,13 +2009,13 @@ namespace LanguageServer
             var aparser = pr.Parser;
             var atree = pr.ParseTree;
             List<TerminalNodeImpl> all_nodes;
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 all_nodes = engine.parseExpression(
                     @"//parserRuleSpec/RULE_REF",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as TerminalNodeImpl).ToList();
             }
 
             Digraph<Domemtech.Symtab.ISymbol> graph = new Digraph<Domemtech.Symtab.ISymbol>();
@@ -2617,13 +2617,13 @@ namespace LanguageServer
                 var pr = ParsingResultsFactory.Create(document);
                 var aparser = pr.Parser;
                 var atree = pr.ParseTree;
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     nodes = engine.parseExpression(
                         @"(//parserRuleSpec/RULE_REF | //lexerRuleSpec/TOKEN_REF)",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                 }
             }
 
@@ -2768,13 +2768,13 @@ namespace LanguageServer
                 var pr = ParsingResultsFactory.Create(document);
                 var aparser = pr.Parser;
                 var atree = pr.ParseTree;
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     nodes = engine.parseExpression(
                         @"//parserRuleSpec/RULE_REF",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                 }
             }
             foreach (var node in nodes)
@@ -4717,15 +4717,15 @@ namespace LanguageServer
             EditableAntlrTree.MyTokenStream tokstream)
         {
             // Verify antlr4 grammar.
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(all_sources, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(all_sources, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 {
                     var n1 = engine.parseExpression(
                         @"/grammarSpec",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                             .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                              .Count();
                     if (n1 != 1)
                     {
@@ -4736,7 +4736,7 @@ namespace LanguageServer
                     var n1 = engine.parseExpression(
                         @"/grammarSpec/grammarDecl/grammarType[GRAMMAR and not(LEXER)]",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                             .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                             .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                              .Count();
                     if (n1 != 1)
                     {
@@ -4750,13 +4750,13 @@ namespace LanguageServer
             {
                 var upup = @ref.Parent.Parent;
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(all_sources, parser))
+                var ate = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(all_sources, parser))
                 {
                     var defs = engine.parseExpression(
                         @"//(lexerRuleSpec[TOKEN_REF/text()='" + upup.GetText() + "'] | parserRuleSpec[RULE_REF/text()='" + upup.GetText() + "'])/(ruleBlock | lexerRuleBlock)",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                     if (defs.Count > 1 || defs.Count == 0)
                         continue;
                     // Copy def RHS.
@@ -4891,7 +4891,7 @@ namespace LanguageServer
                 // grab lhs of rule.
                 var the_rule = lhs_path[j];
                 var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     var RHS = engine.parseExpression(
@@ -4899,13 +4899,13 @@ namespace LanguageServer
                             /ruleBlock
                                 /ruleAltList",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).First();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).First();
                     var Possible = engine.parseExpression(
                             @"//parserRuleSpec
                             /ruleBlock
                                 //altList",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
 
                     foreach (var p in Possible)
                     {
@@ -5125,7 +5125,7 @@ namespace LanguageServer
                 // grab lhs of rule.
                 var the_rule = lhs_path[j];
                 var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     var RHS = engine.parseExpression(
@@ -5133,13 +5133,13 @@ namespace LanguageServer
                             /ruleBlock
                                 /ruleAltList",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).First();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).First();
                     var Possible = engine.parseExpression(
                             @"//parserRuleSpec
                             /ruleBlock
                                 //altList",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
 
                     foreach (var p in Possible)
                     {
@@ -5586,7 +5586,7 @@ namespace LanguageServer
                 var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
                 {
                     List<IParseTree> parens1 = new List<IParseTree>();
-                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                    using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                     {
                         org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                         // When can I remove "()"'s?
@@ -5603,7 +5603,7 @@ namespace LanguageServer
                             ]
                             /(LPAREN | RPAREN)",
                           new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
 
                         // Delete parentheses, and adjust the "before_text" for
                         // correct off-channel tokens for the remaining subtree.
@@ -5837,7 +5837,7 @@ namespace LanguageServer
             List<TerminalNodeImpl> to_check_literals;
             List<ANTLRv4Parser.LexerElementsContext> elements;
             var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var dom_literals = engine.parseExpression(
@@ -5851,11 +5851,11 @@ namespace LanguageServer
                                                 /terminal[not(@ChildCount > 1)]
                                                     /STRING_LITERAL",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToArray();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement)).ToArray();
                 elements = engine.parseExpression(
                         "../../../..",
                         new StaticContextBuilder()).evaluate(dynamicContext, dom_literals)
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as ANTLRv4Parser.LexerElementsContext).ToList();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as ANTLRv4Parser.LexerElementsContext).ToList();
                 to_check_literals = dom_literals.Select(x => x.AntlrIParseTree as TerminalNodeImpl).ToList();
             }
             List<IParseTree> subs_elems = new List<IParseTree>();
@@ -5975,14 +5975,14 @@ namespace LanguageServer
             // Find keyword-like literals in lexer rules.
             List<TerminalNodeImpl> to_check_lexer_rule_spec;
             var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var dom_lexer_rule_spec = engine.parseExpression(
                         @"
 //lexerRuleSpec//STRING_LITERAL",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToArray();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement)).ToArray();
                 to_check_lexer_rule_spec = dom_lexer_rule_spec.Select(x => x.AntlrIParseTree as TerminalNodeImpl).ToList();
             }
             var (text_before, other) = TreeEdits.TextToLeftOfLeaves(pd_parser.TokStream, pd_parser.ParseTree);
@@ -6092,7 +6092,7 @@ namespace LanguageServer
             // Find keyword-like literals in lexer rules.
             List<ANTLRv4Parser.LexerRuleSpecContext> to_check_lexer_rule_spec;
             var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var dom_literals = engine.parseExpression(
@@ -6101,7 +6101,7 @@ namespace LanguageServer
 and not(lexerRuleBlock//ebnfSuffix)
 ]",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToArray();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement)).ToArray();
                 to_check_lexer_rule_spec = dom_literals.Select(x => x.AntlrIParseTree as ANTLRv4Parser.LexerRuleSpecContext).ToList();
             }
             List<IParseTree> subs_elems = new List<IParseTree>();
@@ -6677,14 +6677,14 @@ and not(lexerRuleBlock//ebnfSuffix)
                     {
                         // Make sure every labeledAlt is "simple".
                         var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                        using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                         {
                             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                             var elements = engine.parseExpression(
                                     @"./alternative
                                         /element",
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { (las[i] as ObserverParserRuleContext).Observers.First() as AntlrNode })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { (las[i] as ObserverParserRuleContext).Observers.First() as UnvParseTreeNode })
+                                .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                             exprs.Add(elements);
                         }
                     }
@@ -6794,13 +6794,13 @@ and not(lexerRuleBlock//ebnfSuffix)
                     for (int i = 0; i < @as.Length; ++i)
                     {
                         var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                        using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                         {
                             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                             var elements = engine.parseExpression(
                                     @"./lexerElements/lexerElement",
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { (@as[i] as ObserverParserRuleContext).Observers.First() as AntlrNode })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { (@as[i] as ObserverParserRuleContext).Observers.First() as UnvParseTreeNode })
+                                .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                             exprs.Add(elements);
                         }
                     }
@@ -6909,13 +6909,13 @@ and not(lexerRuleBlock//ebnfSuffix)
                     for (int i = 0; i < @as.Length; ++i)
                     {
                         var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
-                        using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                        using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                         {
                             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                             var elements = engine.parseExpression(
                                     @"./element",
-                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { (@as[i] as ObserverParserRuleContext).Observers.First() as AntlrNode })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                                    new StaticContextBuilder()).evaluate(dynamicContext, new object[] { (@as[i] as ObserverParserRuleContext).Observers.First() as UnvParseTreeNode })
+                                .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                             exprs.Add(elements);
                         }
                     }
@@ -7122,8 +7122,8 @@ and not(lexerRuleBlock//ebnfSuffix)
         public static void Delabel(EditableAntlrTree.MyParser parser, EditableAntlrTree.MyLexer lexer, EditableAntlrTree.MyTokenStream tokstream, List<EditableAntlrTree.MyParserTreeNode> trees)
         {
             // Verify antlr4 grammar.
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(trees, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(trees, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
 
@@ -7131,7 +7131,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var n1 = engine.parseExpression(
                             @"/grammarSpec",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .Count();
                     if (n1 != 1)
                     {
@@ -7142,7 +7142,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var n1 = engine.parseExpression(
                             @"/grammarSpec/grammarDecl/grammarType[GRAMMAR and not(LEXER)]",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .Count();
                     if (n1 != 1)
                     {
@@ -7153,7 +7153,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//labeledAlt/(POUND | identifier)",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.DeleteInStreams(tokstream, n);
                 }
@@ -7161,7 +7161,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//labeledLexerElement/(identifier | ASSIGN | PLUS_ASSIGN)",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.DeleteInStreams(tokstream, n);
                 }
@@ -7169,7 +7169,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//labeledElement/(identifier | ASSIGN | PLUS_ASSIGN)",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.DeleteInStreams(tokstream, n);
                 }
@@ -7227,15 +7227,15 @@ and not(lexerRuleBlock//ebnfSuffix)
             var text_before = new Dictionary<TerminalNodeImpl, string>();
 
             var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 {
                     var nodes = engine.parseExpression(
                             @"//DOC_COMMENT",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7243,7 +7243,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//labeledAlt/(POUND | identifier)",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7251,7 +7251,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//labeledLexerElement/(identifier | ASSIGN | PLUS_ASSIGN)",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7259,7 +7259,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//labeledElement/(identifier | ASSIGN | PLUS_ASSIGN)",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7267,7 +7267,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//rulePrequel",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7275,7 +7275,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//ruleReturns",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7283,7 +7283,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//exceptionGroup",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7291,7 +7291,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//throwsSpec",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7299,7 +7299,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//prequelConstruct",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7307,7 +7307,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//elementOptions",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7315,7 +7315,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//actionBlock",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes)
                     {
@@ -7338,7 +7338,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//argActionBlock",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     foreach (var n in nodes) TreeEdits.Delete(n);
                 }
@@ -7346,7 +7346,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//parserRuleSpec",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     var l1 = nodes.Select(n => TreeEdits.LeftMostToken(n)).ToList();
                     foreach (var l in l1) text_before[l] = "\n";
@@ -7355,7 +7355,7 @@ and not(lexerRuleBlock//ebnfSuffix)
                     var nodes = engine.parseExpression(
                             @"//lexerRuleSpec",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                         .ToArray();
                     var l1 = nodes.Select(n => TreeEdits.LeftMostToken(n)).ToList();
                     foreach (var l in l1) text_before[l] = "\n";

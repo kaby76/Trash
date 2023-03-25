@@ -27,7 +27,7 @@ This program is part of the Trash toolkit.]]>
   </ItemGroup>
   <ItemGroup>
 	  <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
-	  <ProjectReference Include="../AntlrTreeEditing/AntlrTreeEditing.csproj" />
+	  <ProjectReference Include="..\AntlrTreeEditing\ParseTreeEditing.csproj" />
 	  <ProjectReference Include="../Logger/Logger.csproj" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -1,13 +1,13 @@
-﻿namespace AntlrTreeEditing.AntlrDOM
+﻿namespace ParseTreeEditing.ParseTreeDOM
 {
     public interface MyParseTreeListener
     {
-        void VisitTerminal(AntlrNode node);
+        void VisitTerminal(UnvParseTreeNode node);
 
-        void VisitErrorNode(AntlrNode node);
+        void VisitErrorNode(UnvParseTreeNode node);
 
-        void EnterEveryRule(AntlrNode ctx);
+        void EnterEveryRule(UnvParseTreeNode ctx);
 
-        void ExitEveryRule(AntlrNode ctx);
+        void ExitEveryRule(UnvParseTreeNode ctx);
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Trash
 {
     using AntlrJson;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using org.w3c.dom;
@@ -61,32 +61,32 @@
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
+                var ate = new ParseTreeEditing.ParseTreeDOM.ConvertToDOM();
                 // Collect all parser rules.
-                List<AntlrTreeEditing.AntlrDOM.AntlrElement> parser_rules = null;
-                List<AntlrTreeEditing.AntlrDOM.AntlrElement> lexer_rules = null;
-                List<AntlrTreeEditing.AntlrDOM.AntlrElement> id = null;
-                AntlrElement z;
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
+                List<ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement> parser_rules = null;
+                List<ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement> lexer_rules = null;
+                List<ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement> id = null;
+                UnvParseTreeElement z;
+                using (ParseTreeEditing.ParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
                 {
                     id = engine.parseExpression(
                         "/grammarSpec/grammarDecl/identifier",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement)).ToList();
                     parser_rules = engine.parseExpression(
                         "//parserRuleSpec",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement)).ToList();
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + parser_rules.Count + " parser rules.");
                     lexer_rules = engine.parseExpression(
                         "//lexerRuleSpec",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement)).ToList();
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + lexer_rules.Count + " parser rules.");
                     z = engine.parseExpression(
                         "/grammarSpec",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList().First();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement)).ToList().First();
                 }
                 // Create text files.
                 StringBuilder sb_parser = new StringBuilder();
@@ -104,15 +104,15 @@
                 }
                 string parser_g4_file_path = (id.First().GetText() + "Parser.g4").Trim();
                 string lexer_g4_file_path = (id.First().GetText() + "Lexer.g4").Trim();
-                var r1 = new AntlrElement(z);
-                var r2 = new AntlrElement(z);
-                TreeEdits.AddChildren(r1, new AntlrText() { Data = sb_parser.ToString() });
-                TreeEdits.AddChildren(r2, new AntlrText() { Data = sb_lexer.ToString() });
+                var r1 = new UnvParseTreeElement(z);
+                var r2 = new UnvParseTreeElement(z);
+                TreeEdits.AddChildren(r1, new UnvParseTreeText() { Data = sb_parser.ToString() });
+                TreeEdits.AddChildren(r2, new UnvParseTreeText() { Data = sb_lexer.ToString() });
                 var tuple1 = new ParsingResultSet()
                 {
                     Text = sb_parser.ToString(),
                     FileName = parser_g4_file_path,
-                    Nodes = new AntlrNode[] { r1 },
+                    Nodes = new UnvParseTreeNode[] { r1 },
                     Lexer = lexer,
                     Parser = parser
                 };
@@ -121,7 +121,7 @@
                 {
                     Text = sb_lexer.ToString(),
                     FileName = lexer_g4_file_path,
-                    Nodes = new AntlrNode[] { r2 },
+                    Nodes = new UnvParseTreeNode[] { r2 },
                     Lexer = lexer,
                     Parser = parser
                 };
@@ -142,15 +142,15 @@
             while (stack.Any())
             {
                 var n = stack.Pop();
-                if (n is AntlrAttr a)
+                if (n is UnvParseTreeAttr a)
                 {
                     sb.Append(a.StringValue);
                 }
-                else if (n is AntlrText t)
+                else if (n is UnvParseTreeText t)
                 {
                     sb.Append(t.NodeValue);
                 }
-                else if (n is AntlrElement e)
+                else if (n is UnvParseTreeElement e)
                 {
                     for (int i = n.ChildNodes.Length - 1; i >= 0; i--)
                     {

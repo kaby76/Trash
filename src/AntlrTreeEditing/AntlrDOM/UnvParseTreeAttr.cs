@@ -1,14 +1,14 @@
-﻿namespace AntlrTreeEditing.AntlrDOM
+﻿namespace ParseTreeEditing.ParseTreeDOM
 {
     using org.w3c.dom;
 
-    public class AntlrAttr : AntlrNode, Attr
+    public class UnvParseTreeAttr : UnvParseTreeNode, Attr
     {
-        public AntlrAttr()
+        public UnvParseTreeAttr()
         {
             this.NodeType = NodeConstants.ATTRIBUTE_NODE;
         }
-        public AntlrAttr(AntlrAttr c)
+        public UnvParseTreeAttr(UnvParseTreeAttr c)
         {
             this.ParentNode = c.ParentNode;
             this.Prefix= c.Prefix;

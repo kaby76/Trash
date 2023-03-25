@@ -3,14 +3,14 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace AntlrTreeEditing.AntlrDOM
+namespace ParseTreeEditing.ParseTreeDOM
 {
     public class TreeOutput
     {
         private static int changed = 0;
         private static bool first_time = true;
 
-        public static StringBuilder OutputTree(AntlrNode tree, Lexer lexer, Parser parser)
+        public static StringBuilder OutputTree(UnvParseTreeNode tree, Lexer lexer, Parser parser)
         {
             changed = 0;
             first_time = true;
@@ -19,7 +19,7 @@ namespace AntlrTreeEditing.AntlrDOM
             return sb;
         }
 
-        private static void ParenthesizedAST(AntlrNode tree, StringBuilder sb, Lexer lexer, Parser parser, int level = 0)
+        private static void ParenthesizedAST(UnvParseTreeNode tree, StringBuilder sb, Lexer lexer, Parser parser, int level = 0)
         {
             // Antlr always names a non-terminal with first letter lowercase,
             // but renames it when creating the type in C#. So, remove the prefix,
@@ -74,7 +74,7 @@ namespace AntlrTreeEditing.AntlrDOM
             //    }
             //}
             //else
-            if (tree is AntlrText t)
+            if (tree is UnvParseTreeText t)
             {
                 StartLine(sb, level);
                 sb.Append(
@@ -90,7 +90,7 @@ namespace AntlrTreeEditing.AntlrDOM
                     );
                 sb.AppendLine();
             }
-            else if (tree is AntlrAttr a)
+            else if (tree is UnvParseTreeAttr a)
             {
                 StartLine(sb, level);
                 sb.Append(
@@ -101,7 +101,7 @@ namespace AntlrTreeEditing.AntlrDOM
                     sb.Append(" chnl:" + lexer.ChannelNames[a.Channel]);
                 sb.AppendLine();
             }
-            else if (tree is AntlrElement e)
+            else if (tree is UnvParseTreeElement e)
             {
                 var x = e;
                 var name = e.LocalName;
@@ -114,7 +114,7 @@ namespace AntlrTreeEditing.AntlrDOM
             for (int i = 0; tree.ChildNodes != null && i < tree.ChildNodes.Length; ++i)
             {
                 var c = tree.ChildNodes.item(i);
-                ParenthesizedAST(c as AntlrNode, sb, lexer, parser, level + 1);
+                ParenthesizedAST(c as UnvParseTreeNode, sb, lexer, parser, level + 1);
             }
             if (level == 0)
             {

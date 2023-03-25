@@ -1,6 +1,6 @@
 ﻿namespace Trash
 {
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
     using LanguageServer;
     using System.IO;
     using System.Linq;
@@ -18,18 +18,18 @@
             }
         }
 
-        private string OutputTokens(AntlrElement tree)
+        private string OutputTokens(UnvParseTreeElement tree)
         {
             var frontier = TreeEdits.Frontier(tree).ToList();
             if (frontier.Count == 0) return "";
             var first = frontier.First();
             var last = frontier.Last();
             StringBuilder sb = new StringBuilder();
-            foreach (AntlrNode i in frontier)
+            foreach (UnvParseTreeNode i in frontier)
             {
-                var a = i as AntlrAttr;
+                var a = i as UnvParseTreeAttr;
 
-                var e = i as AntlrElement;
+                var e = i as UnvParseTreeElement;
                 if (e == null) continue;
 
                 sb.AppendLine("[@" + e.GetText());

@@ -82,12 +82,12 @@
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     IParseTree root = atrees.Root();
-                    var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
+                    var ate = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
+                    using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
                     {
                         nodes = engine.parseExpression(expr,
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as TerminalNodeImpl).ToList();
                         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     }
                 }

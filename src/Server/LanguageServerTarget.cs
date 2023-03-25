@@ -1,6 +1,11 @@
 ﻿using System.Reflection;
 using System.Reflection.Metadata;
 using Microsoft.VisualStudio.LanguageServer.Protocol;
+using System.Collections.Generic;
+using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
+using AntlrJson;
+using ParseTreeEditing.ParseTreeDOM;
 
 namespace Server
 {
@@ -23,10 +28,12 @@ namespace Server
         private readonly LSPServer server;
         private readonly bool trace = true;
         //private readonly Workspaces.Workspace _workspace;
+        private Dictionary<string, string> workspace = new Dictionary<string, string>();
         private static readonly object _object = new object();
         private readonly Dictionary<string, bool> ignore_next_change = new Dictionary<string, bool>();
         private int current_version;
-
+        private Dictionary<string, AntlrJson.ParsingResultSet> data = new Dictionary<string, ParsingResultSet>();
+        
         public LanguageServerTarget(LSPServer server)
         {
             this.server = server;
@@ -407,6 +414,19 @@ namespace Server
                     Logger.Log.WriteLine(arg.ToString());
                 }
                 DidOpenTextDocumentParams request = arg.ToObject<DidOpenTextDocumentParams>();
+                var language_id = request.TextDocument.LanguageId;
+                var text = request.TextDocument.Text;
+                string fn = request.TextDocument.Uri.LocalPath;
+                workspace[fn] = text;
+                switch (language_id)
+                {
+                    case "antlr4":
+                        DoParse(language_id, text, "", fn, 0);
+                        break;
+                    default:
+                        break;
+                }
+
                 //var document = CheckDoc(request.TextDocument.Uri);
                 //var language_id = request.TextDocument.LanguageId;
                 //document.Code = request.TextDocument.Text;
@@ -1422,6 +1442,12 @@ namespace Server
                         Logger.Log.WriteLine(arg.ToString());
                     }
                     DocumentSymbolParams request = arg.ToObject<DocumentSymbolParams>();
+                    string fn = request.TextDocument.Uri.LocalPath;
+                    var found = data.TryGetValue(fn, out ParsingResultSet prs);
+                    if (found)
+                    {
+                    }
+
                     //Document document = CheckDoc(request.TextDocument.Uri);
                     //var r = new LanguageServer.Module().Get(document);
                     //List<object> symbols = new List<object>();
@@ -1496,5 +1522,83 @@ namespace Server
                 return result;
             }
         }
+
+        int DoParse(string parser_type, string txt, string prefix, string input_name, int row_number)
+        {
+            Type type = null;
+            if (parser_type == null || parser_type == "")
+            {
+                string path = server.config.ParserLocation != null ? server.config.ParserLocation
+                    : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
+                path = path.Replace("\\", "/");
+                if (!path.EndsWith("/")) path = path + "/";
+                var full_path = path + "Generated-CSharp/bin/Debug/net7.0/";
+                var exists = File.Exists(full_path + "Test.dll");
+                if (!exists) full_path = path + "bin/Debug/net7.0/";
+                full_path = Path.GetFullPath(full_path);
+                Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
+                Assembly asm = Assembly.LoadFile(full_path + server.config.Dll + ".dll");
+                var xxxxxx = asm1.GetTypes();
+                Type[] types = asm.GetTypes();
+                type = asm.GetType("Program");
+            }
+            else
+            {
+                // Get this assembly.
+                System.Reflection.Assembly a = this.GetType().Assembly;
+                string path = a.Location;
+                path = Path.GetDirectoryName(path);
+                path = path.Replace("\\", "/");
+                if (!path.EndsWith("/")) path = path + "/";
+                var full_path = path;
+                var exists = File.Exists(full_path + parser_type + ".dll");
+                full_path = Path.GetFullPath(full_path);
+                Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
+                Assembly asm = Assembly.LoadFile(full_path + parser_type + ".dll");
+                var xxxxxx = asm1.GetTypes();
+                Type[] types = asm.GetTypes();
+                type = asm.GetType("Program");
+            }
+
+            MethodInfo methodInfo = type.GetMethod("SetupParse2");
+            object[] parm1 = new object[] { txt, true };
+            var res = methodInfo.Invoke(null, parm1);
+
+            MethodInfo methodInfo2 = type.GetMethod("Parse2");
+            object[] parm2 = new object[] { };
+            DateTime before = DateTime.Now;
+            var res2 = methodInfo2.Invoke(null, parm2);
+            DateTime after = DateTime.Now;
+
+            MethodInfo methodInfo3 = type.GetMethod("AnyErrors");
+            object[] parm3 = new object[] { };
+            var res3 = methodInfo3.Invoke(null, parm3);
+            var result = "";
+            if ((bool)res3)
+            {
+                result = "fail";
+            }
+            else
+            {
+                result = "success";
+            }
+            System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+            var parser = type.GetProperty("Parser").GetValue(null, new object[0]) as Antlr4.Runtime.Parser;
+            var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
+            var tokstream = type.GetProperty("TokenStream").GetValue(null, new object[0]) as ITokenStream;
+            var charstream = type.GetProperty("CharStream").GetValue(null, new object[0]) as ICharStream;
+            var commontokstream = tokstream as CommonTokenStream;
+            var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
+            var tree = res2 as IParseTree;
+            var t2 = tree as ParserRuleContext;
+            //if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
+            //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
+            //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
+            var converted_tree = ConvertToDOM.BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
+            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = input_name, Nodes = new UnvParseTreeNode[] { converted_tree }, Parser = parser, Lexer = lexer };
+            data.Add(input_name, tuple);
+            return (bool)res3 ? 1 : 0;
+        }
+
     }
 }

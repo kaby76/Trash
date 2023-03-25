@@ -1,11 +1,11 @@
-﻿namespace AntlrTreeEditing.AntlrDOM
+﻿namespace ParseTreeEditing.ParseTreeDOM
 {
     using org.w3c.dom;
     using System;
 
-    public class AntlrDocument : AntlrNode, Document
+    public class UnvParseTreeDocument : UnvParseTreeNode, Document
     {
-        public AntlrDocument()
+        public UnvParseTreeDocument()
         {
             this.NodeType = NodeConstants.DOCUMENT_NODE;
         }

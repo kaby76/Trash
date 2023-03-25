@@ -1,4 +1,4 @@
-﻿namespace AntlrTreeEditing.AntlrDOM
+﻿namespace ParseTreeEditing.ParseTreeDOM
 {
     using org.eclipse.wst.xml.xpath2.api;
     using System.Collections.Generic;

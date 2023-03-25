@@ -56,8 +56,8 @@ namespace LanguageServer
 
             TreeEdits.InsertBefore(tree.GetChild(0), "grammar " + name + ";" + Environment.NewLine);
 
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -65,12 +65,12 @@ namespace LanguageServer
                         @"//rhs",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 foreach (var n in nodes) TreeEdits.InsertAfter(n, " ;");
             }
 
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -78,15 +78,15 @@ namespace LanguageServer
                         @"//PPEQ",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 foreach (var n in nodes) TreeEdits.Replace(n,
                     ":");
             }
 
             // Convert double-quoted string literals to single quote.
             {
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                      new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -94,7 +94,7 @@ namespace LanguageServer
                             @"//STRING",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                     foreach (var n in nodes)
                     {
                         var text = n.GetText();

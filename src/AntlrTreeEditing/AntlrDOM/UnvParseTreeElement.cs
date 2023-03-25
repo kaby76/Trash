@@ -1,4 +1,4 @@
-﻿namespace AntlrTreeEditing.AntlrDOM
+﻿namespace ParseTreeEditing.ParseTreeDOM
 {
     using org.w3c.dom;
     using System;
@@ -6,13 +6,13 @@
     using System.Linq;
     using System.Text;
 
-    public class AntlrElement : AntlrNode, Element
+    public class UnvParseTreeElement : UnvParseTreeNode, Element
     {
-        public AntlrElement()
+        public UnvParseTreeElement()
         {
             this.NodeType = NodeConstants.ELEMENT_NODE;
         }
-        public AntlrElement(AntlrElement orig) : base(orig)
+        public UnvParseTreeElement(UnvParseTreeElement orig) : base(orig)
         {
             this.NodeType = NodeConstants.ELEMENT_NODE;
         }
@@ -51,15 +51,15 @@
             while (stack.Any())
             {
                 var n = stack.Pop();
-                if (n is AntlrAttr a)
+                if (n is UnvParseTreeAttr a)
                 {
                     sb.Append(a.StringValue);
                 }
-                else if (n is AntlrText t)
+                else if (n is UnvParseTreeText t)
                 {
                     sb.Append(t.NodeValue);
                 }
-                else if (n is AntlrElement e)
+                else if (n is UnvParseTreeElement e)
                 {
                     for (int i = n.ChildNodes.Length - 1; i >= 0; i--)
                     {

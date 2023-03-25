@@ -53,8 +53,8 @@ namespace LanguageServer
             var (text_before, other) = TreeEdits.TextToLeftOfLeaves(tokens, tree);
 
             // Remove unused options at top of grammar def.
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -72,13 +72,13 @@ namespace LanguageServer
                                         ]]",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 TreeEdits.Delete(nodes);
                 var options = engine.parseExpression(
                         @"//grammarDef/optionsSpec",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 foreach (var os in options)
                 {
                     if (os.ChildCount == 3) TreeEdits.Delete(os);
@@ -87,8 +87,8 @@ namespace LanguageServer
 
             // Fix options in the beginning of rules.
             // See https://theantlrguy.atlassian.net/wiki/spaces/ANTLR3/pages/2687029/Rule+and+subrule+options
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -106,13 +106,13 @@ namespace LanguageServer
                                         ]]",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 TreeEdits.Delete(nodes);
                 var options = engine.parseExpression(
                         @"//rule_/optionsSpec",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 foreach (var os in options)
                 {
                     if (os.ChildCount == 3) TreeEdits.Delete(os);
@@ -120,8 +120,8 @@ namespace LanguageServer
             }
 
             // Use new tokens {} syntax
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -131,7 +131,7 @@ namespace LanguageServer
                                 /SEMI",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 if (nodes.Any())
                 {
                     // Delete tha last ";" in tokens list--change in syntax.
@@ -156,7 +156,7 @@ namespace LanguageServer
                             /tokenSpec[EQUAL]",
                         new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document }
-                    ).Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    ).Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                 // Antlr4 doesn't support assignment of lexer tokens.
                 // Rewrite these as plain lexer rules.
                 if (equals.Any())
@@ -179,7 +179,7 @@ namespace LanguageServer
                           @"//rule_[id/TOKEN_REF]",
                           new StaticContextBuilder()).evaluate(
                           dynamicContext, new object[] { dynamicContext.Document }
-                          ).Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).LastOrDefault();
+                          ).Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).LastOrDefault();
                     if (last_rule != null)
                     {
                         var par = last_rule.Parent as ParserRuleContext;
@@ -215,8 +215,8 @@ namespace LanguageServer
             // Remove unnecessary rulecatch block (use BailErrorStrategy instead)
 
             // Remove unsupported rewrite syntax and AST operators
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 // Note, for this operation, we are just deleting everything,
                 // no conversion to a visitor.
@@ -227,7 +227,7 @@ namespace LanguageServer
                             /(ROOT | BANG)",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 if (n1.Any())
                 {
                     foreach (var n in n1) TreeEdits.Delete(n);
@@ -237,7 +237,7 @@ namespace LanguageServer
                             /(ROOT | BANG)",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 if (n2.Any())
                 {
                     foreach (var n in n2) TreeEdits.Delete(n);
@@ -246,7 +246,7 @@ namespace LanguageServer
                         @"//rewrite",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 if (n3.Any())
                 {
                     foreach (var n in n3) TreeEdits.Delete(n);
@@ -255,14 +255,14 @@ namespace LanguageServer
                         @"//rule_/BANG",
                         new StaticContextBuilder()).evaluate(
                      dynamicContext, new object[] { dynamicContext.Document })
-                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                     .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 foreach (var n in n4) TreeEdits.Delete(n);
             }
 
             // Scopes are not in Antlr4 (equivalent are locals).
             // For now nuke.
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -270,14 +270,14 @@ namespace LanguageServer
                         @"//rule_/ruleScopeSpec",
                         new StaticContextBuilder()).evaluate(
                      dynamicContext, new object[] { dynamicContext.Document })
-                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                     .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 foreach (var n in rule_scope_spec) TreeEdits.Delete(rule_scope_spec);
             }
 
             // labels in lexer rules are not supported in ANTLR 4.
             // Nuke.
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -288,7 +288,7 @@ namespace LanguageServer
                                     [EQUAL or PEQ]",
                         new StaticContextBuilder()).evaluate(
                      dynamicContext, new object[] { dynamicContext.Document })
-                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                     .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 if (enos.Any())
                 {
                     foreach (var n in enos)
@@ -301,8 +301,8 @@ namespace LanguageServer
 
             // fragment rule cannot contain an action or command.
             // Nuke.
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -313,7 +313,7 @@ namespace LanguageServer
                                     /actionBlock[not(QM)]",
                         new StaticContextBuilder()).evaluate(
                      dynamicContext, new object[] { dynamicContext.Document })
-                     .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                     .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 if (ab.Any())
                 {
                     foreach (var n in ab) TreeEdits.Delete(n);
@@ -321,8 +321,8 @@ namespace LanguageServer
             }
 
             // Remove syntactic predicates (unnecessary and unsupported in ANTLR 4)
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -331,7 +331,7 @@ namespace LanguageServer
                             [SEMPREDOP]",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 if (n2.Any())
                 {
                     foreach (var n in n2) TreeEdits.Delete(n);
@@ -345,8 +345,8 @@ namespace LanguageServer
             // Use non-greedy matching in lexer rule
 
             // Semantic predicates do not need to be explicitly gated in ANTLR 4
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -356,7 +356,7 @@ namespace LanguageServer
                                 /SEMPREDOP",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 if (n1.Any())
                 {
                     foreach (var n in n1) TreeEdits.Delete(n);
@@ -366,8 +366,8 @@ namespace LanguageServer
             // Remove unsupported option k=3 (1, 2, 4, 5, ...)
             // Replace "( options { greedy=false; } : a | b | c )*" with
             // "(a | b | c)*?"
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -381,7 +381,7 @@ namespace LanguageServer
                                         ]]",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                 // greedy=false.
                 var greedy = engine.parseExpression(
                         @"//optionsSpec[not(../@id = 'grammarDef')]
@@ -391,13 +391,13 @@ namespace LanguageServer
                                 optionValue/id/RULE_REF[text() = 'false']]",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                 var greedyOptionSpec = greedy.Select(t => t.Parent).ToList();
                 var optionsSpec = engine.parseExpression(
                        @"//optionsSpec[not(../@id = 'grammarDef')]",
                        new StaticContextBuilder()).evaluate(
                        dynamicContext, new object[] { dynamicContext.Document })
-                   .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                   .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 // Nuke options.
                 TreeEdits.Delete(tree, (in IParseTree n, out bool c) =>
                 {

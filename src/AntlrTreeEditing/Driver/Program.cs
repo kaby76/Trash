@@ -5,7 +5,7 @@
 //namespace ConsoleApp1
 //{
 //    using Antlr4.Runtime;
-//    using AntlrTreeEditing.AntlrDOM;
+//    using AntlrTreeEditing.ParseTreeDOM;
 //    using org.eclipse.wst.xml.xpath2.processor;
 //    using org.eclipse.wst.xml.xpath2.processor.util;
 //    using System;
@@ -19,9 +19,9 @@
 //        {
 //            {
 //                org.eclipse.wst.xml.xpath2.processor.Engine engine = new Engine();
-//                var input = System.IO.File.ReadAllText("../AntlrDOM/ANTLRv4Parser.g4");
-//                var (tree, parser, lexer) = AntlrDOM.Parse.Try(input);
-//                AntlrDynamicContext dynamicContext = AntlrDOM.ConvertToDOM.Try(tree, parser);
+//                var input = System.IO.File.ReadAllText("../ParseTreeDOM/ANTLRv4Parser.g4");
+//                var (tree, parser, lexer) = ParseTreeDOM.Parse.Try(input);
+//                AntlrDynamicContext dynamicContext = ParseTreeDOM.ConvertToDOM.Try(tree, parser);
 
 
 //                {
@@ -60,7 +60,7 @@
 //                    OutputResultSet(expression, rs, parser);
 //                    if (rs.size() != 113) throw new Exception();
 //                    var first = rs.first();
-//                    var ant = first.NativeValue as AntlrDOM.AntlrElement;
+//                    var ant = first.NativeValue as ParseTreeDOM.AntlrElement;
 //                    if (!(ant.AntlrIParseTree is ANTLRv4Parser.AtomContext)) throw new Exception();
 //                }
 //                {
@@ -318,9 +318,9 @@
 //            }
 //            {
 //                org.eclipse.wst.xml.xpath2.processor.Engine engine = new Engine();
-//                var input = System.IO.File.ReadAllText("../AntlrDOM/ANTLRv4Lexer.g4");
-//                var (tree, parser, lexer) = AntlrDOM.Parse.Try(input);
-//                AntlrDynamicContext dynamicContext = AntlrDOM.ConvertToDOM.Try(tree, parser);
+//                var input = System.IO.File.ReadAllText("../ParseTreeDOM/ANTLRv4Lexer.g4");
+//                var (tree, parser, lexer) = ParseTreeDOM.Parse.Try(input);
+//                AntlrDynamicContext dynamicContext = ParseTreeDOM.ConvertToDOM.Try(tree, parser);
 //                {
 //                    //  ( rules
 //                    //    ( ruleSpec

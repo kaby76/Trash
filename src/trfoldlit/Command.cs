@@ -79,15 +79,15 @@
                 // var doc = Docs.Class1.CreateDoc(parse_info);
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 IParseTree root = atrees.Root();
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
+                var ate = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
                 List<IParseTree> nodes = null;
                 if (expr != null && expr != "")
                 {
-                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
+                    using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
                     {
                         nodes = engine.parseExpression(expr,
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as IParseTree).ToList();
+                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as IParseTree).ToList();
                         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     }
                 }

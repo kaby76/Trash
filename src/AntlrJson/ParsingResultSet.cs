@@ -1,7 +1,7 @@
 ﻿namespace AntlrJson
 {
     using Antlr4.Runtime;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
 
     public class ParsingResultSet
     {
@@ -9,7 +9,7 @@
         public string Text { get; set; }
         public string StartSymbol { get; set; }
         public string MetaStartSymbol { get; set; }
-        public AntlrNode[] Nodes { get; set; }
+        public UnvParseTreeNode[] Nodes { get; set; }
         public Lexer Lexer { get; set; }
         public Parser Parser { get; set; }
     }

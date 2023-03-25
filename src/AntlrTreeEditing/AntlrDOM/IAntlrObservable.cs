@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AntlrTreeEditing.AntlrDOM
+namespace ParseTreeEditing.ParseTreeDOM
 {
     public interface IAntlrObservable : IObservable<ObserverParserRuleContext>
     {

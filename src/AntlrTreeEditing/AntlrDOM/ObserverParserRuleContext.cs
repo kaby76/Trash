@@ -1,4 +1,4 @@
-﻿namespace AntlrTreeEditing.AntlrDOM
+﻿namespace ParseTreeEditing.ParseTreeDOM
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -120,7 +120,7 @@
             }
         }
 
-        public void NotifyAddParent(AntlrNode loc)
+        public void NotifyAddParent(UnvParseTreeNode loc)
         {
             foreach (var observer in observers)
             {

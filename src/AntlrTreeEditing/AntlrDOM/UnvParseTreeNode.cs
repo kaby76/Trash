@@ -1,13 +1,12 @@
-﻿namespace AntlrTreeEditing.AntlrDOM
+﻿namespace ParseTreeEditing.ParseTreeDOM
 {
-    using Antlr4.Runtime.Tree;
     using org.w3c.dom;
     using System;
 
-    public abstract class AntlrNode : Node, IAntlrObserver
+    public abstract class UnvParseTreeNode : Node, IAntlrObserver
     {
-        public AntlrNode() { }
-        public AntlrNode(AntlrNode orig)
+        public UnvParseTreeNode() { }
+        public UnvParseTreeNode(UnvParseTreeNode orig)
         {
             _NodeType = orig._NodeType;
             LocalName = orig.LocalName;
@@ -23,7 +22,7 @@
         }
         public virtual string LocalName { get; set; }
         public virtual Document OwnerDocument { get; set; }
-        public virtual NodeList ChildNodes { get; set; } = new AntlrNodeList();
+        public virtual NodeList ChildNodes { get; set; } = new UnvParseTreeNodeList();
         public virtual Node NextSibling { get; set; }
         public virtual string BaseURI { get; set; }
         public virtual NamedNodeMap Attributes { get; set; }
@@ -57,25 +56,25 @@
             throw new NotImplementedException();
         }
 
-        public virtual void OnParentDisconnect(AntlrNode value)
+        public virtual void OnParentDisconnect(UnvParseTreeNode value)
         {
             if (ParentNode != null)
             {
-                AntlrNodeList children = ParentNode.ChildNodes as AntlrNodeList;
+                UnvParseTreeNodeList children = ParentNode.ChildNodes as UnvParseTreeNodeList;
                 children.Delete(this);
             }
             ParentNode = null;
         }
 
-        public virtual void OnParentConnect(AntlrNode value)
+        public virtual void OnParentConnect(UnvParseTreeNode value)
         {
         }
 
-        public virtual void OnChildDisconnect(AntlrNode value)
+        public virtual void OnChildDisconnect(UnvParseTreeNode value)
         {
         }
 
-        public virtual void OnChildConnect(AntlrNode value)
+        public virtual void OnChildConnect(UnvParseTreeNode value)
         {
         }
 
@@ -101,7 +100,7 @@
                 for (int i = 0; i < ChildNodes.Length; ++i)
                 {
                     Node c = ChildNodes.item(i);
-                    var cc = c as AntlrNode;
+                    var cc = c as UnvParseTreeNode;
                     cc?.Dispose();
                 }
             }
@@ -109,24 +108,24 @@
 
         public int RuleIndex { get; set; }
 
-        private AntlrNode LeftMost(AntlrNode node)
+        private UnvParseTreeNode LeftMost(UnvParseTreeNode node)
         {
             if (node != null)
             {
                 if (node.ChildNodes != null && node.ChildNodes.Length > 0)
-                    return LeftMost(node.ChildNodes.item(0) as AntlrNode);
+                    return LeftMost(node.ChildNodes.item(0) as UnvParseTreeNode);
                 else
                     return node;
             }
             return null;
         }
 
-        private AntlrNode RightMost(AntlrNode node)
+        private UnvParseTreeNode RightMost(UnvParseTreeNode node)
         {
             if (node != null)
             {
                 if (node.ChildNodes != null && node.ChildNodes.Length > 0)
-                    return RightMost(node.ChildNodes.item(node.ChildNodes.Length-1) as AntlrNode);
+                    return RightMost(node.ChildNodes.item(node.ChildNodes.Length-1) as UnvParseTreeNode);
                 else
                     return node;
             }

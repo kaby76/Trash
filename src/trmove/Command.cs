@@ -80,16 +80,16 @@
                 var lexer = pr.Lexer;
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 IParseTree root = tree;
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
+                var ate = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
                 {
                     var nodes = engine.parseExpression(from,
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-				            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+				            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     var to_node = engine.parseExpression(to,
 			            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-				            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList().FirstOrDefault();
+				            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList().FirstOrDefault();
 
                     Dictionary<string, string> res;
                     if (config.After)

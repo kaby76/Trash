@@ -2,7 +2,7 @@
 {
     using Antlr4.Runtime.Tree;
     using AntlrJson;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.AntlrDOM;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System.Collections.Generic;
     using System.IO;
@@ -70,12 +70,12 @@
                         System.Console.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
                 }
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                var ate = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
                 {
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement)).ToList();
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     //LanguageServer.Transform.Unfold(nodes, atrees.ToList(), parser, lexer, (EditableAntlrTree.MyTokenStream)tokstream);
                     if (config.Verbose)

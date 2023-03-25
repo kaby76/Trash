@@ -132,8 +132,8 @@ namespace LanguageServer
                 if (ParseTree == null) return false;
                 this.Attributes[ParseTree] = new List<CombinedScopeSymbol>() { (CombinedScopeSymbol)this.RootScope };
                 // Collect def lexer symbols.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                        new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                        new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -141,7 +141,7 @@ namespace LanguageServer
                             @"//token_decls//token_decl/id[position() = 1]",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as BisonParser.IdContext);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as BisonParser.IdContext);
                     Antlr4.Runtime.Tree.IParseTree parent;
                     foreach (var id in nodes)
                     {
@@ -190,8 +190,8 @@ namespace LanguageServer
                 }
 
                 // Collect def parser symbols.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                        new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                        new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -199,7 +199,7 @@ namespace LanguageServer
                             @"//rules",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement));
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement));
                     foreach (var rule in nodes)
                     {
                         var r = rule.AntlrIParseTree;
@@ -221,8 +221,8 @@ namespace LanguageServer
             {
                 if (ParseTree == null) return false;
                 // Collect ref symbols.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                        new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                        new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -230,7 +230,7 @@ namespace LanguageServer
                             @"//rules",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement));
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement));
                     foreach (var rule in nodes)
                     {
                         var r = rule.AntlrIParseTree;
@@ -238,14 +238,14 @@ namespace LanguageServer
                                 @".//rhses_1/rhs",
                                 new StaticContextBuilder()).evaluate(
                                 dynamicContext, new object[] { rule })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement));
+                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement));
                         foreach (var r1 in rhses)
                         {
                             var sym = engine.parseExpression(
                                     @".//symbol",
                                     new StaticContextBuilder()).evaluate(
                                     dynamicContext, new object[] { r1 })
-                                .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as BisonParser.SymbolContext);
+                                .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as BisonParser.SymbolContext);
                             foreach (var s3 in sym)
                             {
                                 var id = s3.id();

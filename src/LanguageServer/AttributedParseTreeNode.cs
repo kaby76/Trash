@@ -6,7 +6,7 @@ namespace LanguageServer
     using System.Collections.Generic;
     using System.Linq;
 
-    public class AttributedParseTreeNode : AntlrTreeEditing.AntlrDOM.ObserverParserRuleContext
+    public class AttributedParseTreeNode : ParseTreeEditing.AntlrDOM.ObserverParserRuleContext
     {
         public AttributedParseTreeNode()
             : base()

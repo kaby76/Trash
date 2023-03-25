@@ -1,10 +1,10 @@
-﻿namespace AntlrTreeEditing.AntlrDOM
+﻿namespace ParseTreeEditing.ParseTreeDOM
 {
     using org.w3c.dom;
     using System;
     using System.Collections.Generic;
 
-    public class AntlrNodeList : NodeList
+    public class UnvParseTreeNodeList : NodeList
     {
         public List<Node> _node_list = new List<Node>();
 
@@ -19,12 +19,12 @@
             return _node_list[i];
         }
 
-        public void Add(AntlrNode e)
+        public void Add(UnvParseTreeNode e)
         {
             _node_list.Add(e);
         }
 
-        public void Delete(AntlrNode e)
+        public void Delete(UnvParseTreeNode e)
         {
             if (_node_list.Contains(e))
                 _node_list.Remove(e);

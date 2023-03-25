@@ -178,8 +178,8 @@ namespace Trash
                     var template_parser = new TemplateParser(new Antlr4.Runtime.CommonTokenStream(template_lexer));
                     var template_tree = template_parser.file_();
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
+                    var ate = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
+                    using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
                     {
                         var nodes = engine.parseExpression(expr_text,
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
@@ -188,9 +188,9 @@ namespace Trash
                         List<IParseTree> res = new List<IParseTree>();
                         foreach (var v in nodes)
                         {
-                            if (v is AntlrTreeEditing.AntlrDOM.AntlrElement)
+                            if (v is ParseTreeEditing.AntlrDOM.UnvParseTreeElement)
                             {
-                                var q = v as AntlrTreeEditing.AntlrDOM.AntlrElement;
+                                var q = v as ParseTreeEditing.AntlrDOM.UnvParseTreeElement;
                                 var r = q.AntlrIParseTree as EditableAntlrTree.MyParserTreeNode;
                                 if (without_intertokens)
                                 {
@@ -234,16 +234,16 @@ namespace Trash
                                         if (_config.Verbose) System.Console.Error.WriteLine("Result size " + nodes2.Count());
                                         foreach (var z in nodes2)
                                         {
-                                            if (z is AntlrTreeEditing.AntlrDOM.AntlrElement)
+                                            if (z is ParseTreeEditing.AntlrDOM.UnvParseTreeElement)
                                             {
-                                                var q2 = z as AntlrTreeEditing.AntlrDOM.AntlrElement;
+                                                var q2 = z as ParseTreeEditing.AntlrDOM.UnvParseTreeElement;
                                                 var r2 = q2.AntlrIParseTree;
                                                 if (r2 == null) throw new Exception("null value.");
                                                 TreeEdits.MoveBeforeInStreams(r2, place_holder);
                                                 if (_config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(atrees[0], lexer, parser, null).ToString());
-                                            } else if (z is AntlrTreeEditing.AntlrDOM.AntlrText)
+                                            } else if (z is ParseTreeEditing.AntlrDOM.UnvParseTreeText)
                                             {
-                                                var q2 = z as AntlrTreeEditing.AntlrDOM.AntlrText;
+                                                var q2 = z as ParseTreeEditing.AntlrDOM.UnvParseTreeText;
                                                 string to_replace = q2.Data;
                                             }
                                             else if (z is string)

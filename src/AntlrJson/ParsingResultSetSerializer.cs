@@ -6,7 +6,7 @@
     using System.Reflection;
     using System.Text.Json;
     using System.Text.Json.Serialization;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
     using EditableAntlrTree;
     using org.w3c.dom;
     using Antlr4.Runtime;
@@ -53,9 +53,9 @@
                 List<string> symbolic_names = new List<string>();
                 Dictionary<string, int> token_type_map = new Dictionary<string, int>();
                 List<string> parser_rule_names = new List<string>();
-                Dictionary<int, AntlrNode> nodes = new Dictionary<int, AntlrNode>();
+                Dictionary<int, UnvParseTreeNode> nodes = new Dictionary<int, UnvParseTreeNode>();
                 List<MyToken> list_of_tokens = new List<MyToken>();
-                List<AntlrNode> result = new List<AntlrNode>();
+                List<UnvParseTreeNode> result = new List<UnvParseTreeNode>();
                 List<int> parents = new List<int>();
                 List<int> type_of_nodes = new List<int>();
                 while (reader.TokenType == JsonTokenType.PropertyName)
@@ -166,7 +166,7 @@
                     }
                     else if (pn == "Nodes")
                     {
-                        List<AntlrNode> list_of_nodes = new List<AntlrNode>();
+                        List<UnvParseTreeNode> list_of_nodes = new List<UnvParseTreeNode>();
                         if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
                         reader.Read();
                         while (reader.TokenType != JsonTokenType.EndArray)
@@ -213,19 +213,19 @@
             return results.ToArray();
         }
 
-        private AntlrNode ReadRecursiveTree(ref Utf8JsonReader reader, AntlrElement parent)
+        private UnvParseTreeNode ReadRecursiveTree(ref Utf8JsonReader reader, UnvParseTreeElement parent)
         {
             if (reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
             reader.Read();
             int type = reader.GetInt32();
             reader.Read();
             //if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
-            AntlrNode node = null;
+            UnvParseTreeNode node = null;
             switch (type)
             {
                 case NodeConstants.ELEMENT_NODE:
                     {
-                        node = new AntlrElement();
+                        node = new UnvParseTreeElement();
                         node.NodeType = (short)type;
                         node.RuleIndex = reader.GetInt32();
                         reader.Read();
@@ -240,7 +240,7 @@
                     break;
                 case NodeConstants.TEXT_NODE:
                     {
-                        var text = new AntlrText();
+                        var text = new UnvParseTreeText();
                         text.Data = reader.GetString();
                         reader.Read();
                         text.Channel = reader.GetInt32();
@@ -257,7 +257,7 @@
                     break;
                 case NodeConstants.ATTRIBUTE_NODE:
                     {
-                        var attr = new AntlrAttr();
+                        var attr = new UnvParseTreeAttr();
                         attr.Name = reader.GetString();
                         reader.Read();
                         attr.StringValue = reader.GetString();
@@ -288,12 +288,12 @@
             }
             if (reader.TokenType == JsonTokenType.StartArray)
             {
-                AntlrNodeList nl = new AntlrNodeList();
+                UnvParseTreeNodeList nl = new UnvParseTreeNodeList();
                 node.ChildNodes = nl;
                 reader.Read();
                 while (reader.TokenType != JsonTokenType.EndArray)
                 {
-                    ReadRecursiveTree(ref reader, node as AntlrElement);
+                    ReadRecursiveTree(ref reader, node as UnvParseTreeElement);
                 }
                 reader.Read();
                 for (int i = 0; i < node.ChildNodes.Length; ++i)
@@ -453,20 +453,20 @@
         {
             _writer.WriteStartArray();
             _writer.WriteNumberValue(node.NodeType);
-            if (node is AntlrAttr a)
+            if (node is UnvParseTreeAttr a)
             {
                 _writer.WriteStringValue(a.Name as string);
                 _writer.WriteStringValue(a.StringValue);
                 _writer.WriteNumberValue(a.Channel);
                 _writer.WriteNumberValue(a.TokenType);
             }
-            else if (node is AntlrText t)
+            else if (node is UnvParseTreeText t)
             {
                 _writer.WriteStringValue(t.Data);
                 _writer.WriteNumberValue(t.Channel);
                 _writer.WriteNumberValue(t.TokenType);
             }
-            else if (node is AntlrElement n)
+            else if (node is UnvParseTreeElement n)
             {
                 _writer.WriteNumberValue(n.RuleIndex);
                 _writer.WriteStringValue(n.LocalName);

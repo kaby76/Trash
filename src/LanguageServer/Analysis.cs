@@ -405,15 +405,15 @@ namespace LanguageServer
             // aren't other escapes. In other words, it gets confusing when you write '\u123456'.
             // Did you mean '\u{123456}' or did you mean '\u1234' '56'?
             var (tree, parser, lexer) = (pd_parser.ParseTree, pd_parser.Parser, pd_parser.Lexer);
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 {
                     var nodes = engine.parseExpression(
                         @"//STRING_LITERAL",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree)
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree)
                     .ToArray();
                     foreach (var n in nodes)
                     {
@@ -452,15 +452,15 @@ namespace LanguageServer
                 }
             }
 
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 {
                     var nodes = engine.parseExpression(
                         @"//LEXER_CHAR_SET",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement))
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement))
                     .ToArray();
                     foreach (var n in nodes)
                     {
@@ -500,22 +500,22 @@ namespace LanguageServer
                 }
             }
 
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 {
                     var nodes = engine.parseExpression(
                         @"//parserRuleSpec",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement))
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement))
                     .ToArray();
                     foreach (var n in nodes)
                     {
                         var elements = engine.parseExpression(
                             @"ruleBlock/ruleAltList/labeledAlt/alternative/element[1]/atom/terminal/TOKEN_REF",
                                 new StaticContextBuilder()).evaluate(dynamicContext, new object[] { n })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl)
+                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as TerminalNodeImpl)
                             .Select(x => x.GetText())
                             .ToArray();
                         // If there are more than 1 of any name, flag rule.
@@ -546,18 +546,18 @@ namespace LanguageServer
                 List<ANTLRv4Parser.ElementContext> elements;
                 List<ANTLRv4Parser.AltListContext> altlists2;
                 List<ANTLRv4Parser.ElementContext> elements2;
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
 
                     altlists = engine.parseExpression(
                         "//(altList | labeledAlt)/alternative/element/ebnf[not(child::blockSuffix)]/block/altList[not(@ChildCount > 1)]",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as ANTLRv4Parser.AltListContext).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as ANTLRv4Parser.AltListContext).ToList();
                     altlists2 = engine.parseExpression(
                         "//(altList | labeledAlt)[not(@ChildCount > 1)]/alternative[not(@ChildCount > 1)]/element/ebnf[not(child::blockSuffix)]/block/altList[@ChildCount > 1]",
                         new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as ANTLRv4Parser.AltListContext).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as ANTLRv4Parser.AltListContext).ToList();
                     elements = altlists.Select(t => t.Parent.Parent.Parent as ANTLRv4Parser.ElementContext).ToList();
                     elements2 = altlists2.Select(t => t.Parent.Parent.Parent as ANTLRv4Parser.ElementContext).ToList();
                 }

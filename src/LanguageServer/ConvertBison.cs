@@ -43,8 +43,8 @@ namespace LanguageServer
             List<Tuple<string, List<List<string>>>> rules = new List<Tuple<string, List<List<string>>>>();
 
             // Collect terminals.
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -52,7 +52,7 @@ namespace LanguageServer
                         @"//token_decls//token_decl/id[position() = 1]",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                 foreach (var token in nodes)
                 {
                     string tok = token.GetText();
@@ -71,8 +71,8 @@ namespace LanguageServer
             }
 
             // Collect rules.
-            using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                    new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+            using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -80,7 +80,7 @@ namespace LanguageServer
                         @"//rules",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement));
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement));
                 foreach (var rule in nodes)
                 {
                     var r = rule.AntlrIParseTree;
@@ -101,7 +101,7 @@ namespace LanguageServer
                             @".//rhses_1/rhs",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { rule })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement));
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement));
                     foreach (var r1 in rhses)
                     {
                         rhs.Add(new List<string>());
@@ -109,7 +109,7 @@ namespace LanguageServer
                                 @".//symbol[not(preceding-sibling::PERCENT_PREC)]",
                                 new StaticContextBuilder()).evaluate(
                                 dynamicContext, new object[] { r1 })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree);
+                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree);
                         foreach (var s in sym)
                         {
                             List<string> l = rhs.Last();

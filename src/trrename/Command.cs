@@ -2,7 +2,7 @@
 {
     using Antlr4.Runtime.Tree;
     using AntlrJson;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
     using EditableAntlrTree;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
@@ -100,8 +100,8 @@
                         System.Console.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
                 }
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                var ate = new ParseTreeEditing.ParseTreeDOM.ConvertToDOM();
+                using (ParseTreeEditing.ParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
                 {
                     string expr;
                     if (config.Expr == null)
@@ -110,16 +110,16 @@
                         expr = config.Expr;
                     var nodes = engine.parseExpression(
                         expr, new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement)).ToList();
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     foreach (var node in nodes)
                     {
                         string c = null;
-                        AntlrText t = null;
+                        UnvParseTreeText t = null;
                         for (int k = 0; k < node.ChildNodes.Length; k++)
                         {
                             var n = node.ChildNodes.item(k);
-                            t = n as AntlrText;
+                            t = n as UnvParseTreeText;
                             if (n != null)
                             {
                                 c = t.NodeValue as string;

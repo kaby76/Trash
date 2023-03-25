@@ -2,7 +2,7 @@ using Algorithms;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using AntlrTreeEditing.AntlrDOM;
+using ParseTreeEditing.AntlrDOM;
 using Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -66,26 +66,26 @@ namespace LanguageServer
         {
             {
                 var (ptree, pparser, plexer) = (_pr_parser.ParseTree, _pr_parser.Parser, _pr_parser.Lexer);
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(ptree, pparser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(ptree, pparser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     var rules = engine.parseExpression(
                             @"//ruleSpec/parserRuleSpec",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as ParserRuleContext).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as ParserRuleContext).ToList();
                     if (rules.Count == 0) throw new Exception("No rules.");
                     _prules = rules.ToList();
                 }
             }
             {
                 var (ptree, pparser, plexer) = (_pr_lexer.ParseTree, _pr_lexer.Parser, _pr_lexer.Lexer);
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(ptree, pparser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(ptree, pparser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                     var rules = engine.parseExpression(
                             @"//ruleSpec/lexerRuleSpec",
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as ParserRuleContext).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as ParserRuleContext).ToList();
                     if (rules.Count == 0) throw new Exception("No rules.");
                     _lrules = rules.ToList();
                 }
@@ -110,8 +110,8 @@ namespace LanguageServer
         {
             Random _random = new Random();
             ConvertToDOM _convertToDOM;
-            AntlrTreeEditing.AntlrDOM.AntlrDynamicContext _pdynamicContext;
-            AntlrTreeEditing.AntlrDOM.AntlrDynamicContext _ldynamicContext;
+            ParseTreeEditing.AntlrDOM.AntlrDynamicContext _pdynamicContext;
+            ParseTreeEditing.AntlrDOM.AntlrDynamicContext _ldynamicContext;
             org.eclipse.wst.xml.xpath2.processor.Engine _engine;
             public ParsingResults _pr_parser;
             public List<ParserRuleContext> _prules;
@@ -124,7 +124,7 @@ namespace LanguageServer
                 _prules = prules;
                 _pr_lexer = pr_lexer;
                 _lrules = lrules;
-                _convertToDOM = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
+                _convertToDOM = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
                 _pdynamicContext = _convertToDOM.Try(_pr_parser.ParseTree, _pr_parser.Parser);
                 _ldynamicContext = _convertToDOM.Try(_pr_lexer.ParseTree, _pr_lexer.Parser);
                 _engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -174,7 +174,7 @@ namespace LanguageServer
                 var res = _engine.parseExpression(
                         v,
                         new StaticContextBuilder()).evaluate(_pdynamicContext, new object[] { node })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as ParserRuleContext).ToList();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as ParserRuleContext).ToList();
                 if (res.Count == 0) return false;
                 else return true;
             }
@@ -186,7 +186,7 @@ namespace LanguageServer
                 var res = _engine.parseExpression(
                         "lexerRuleBlock/lexerAltList/lexerAlt/lexerElements/lexerElement/lexerAtom/terminal/STRING_LITERAL",
                         new StaticContextBuilder()).evaluate(_ldynamicContext, new object[] { node })
-                    .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl).ToList();
+                    .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as TerminalNodeImpl).ToList();
                 if (res.Count == 1) return res.First().Symbol.Text.Substring(1, res.First().Symbol.Text.Length - 2);
                 else return null;
             }

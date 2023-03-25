@@ -7,7 +7,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
     using org.w3c.dom;
     using XmlDOM;
     using System.Xml.Linq;
@@ -17,10 +17,10 @@
     public class TreeEdits
     {
 
-        public delegate AntlrNode Fun(in AntlrNode arg1, out bool arg2);
+        public delegate UnvParseTreeNode Fun(in UnvParseTreeNode arg1, out bool arg2);
 
 
-        public static void AddChildren(AntlrNode parent, List<AntlrNode> list)
+        public static void AddChildren(UnvParseTreeNode parent, List<UnvParseTreeNode> list)
         {
             foreach (var mc in list)
             {
@@ -30,16 +30,16 @@
 
         }
 
-        public static void AddChildren(AntlrNode parent, AntlrNode child)
+        public static void AddChildren(UnvParseTreeNode parent, UnvParseTreeNode child)
         {
             child.ParentNode = parent;
             parent.ChildNodes.Add(child);
         }
 
-        public static void Delete(AntlrNode tree, Fun find)
+        public static void Delete(UnvParseTreeNode tree, Fun find)
         {
             if (tree == null) return;
-            Stack<AntlrNode> stack = new Stack<AntlrNode>();
+            Stack<UnvParseTreeNode> stack = new Stack<UnvParseTreeNode>();
             stack.Push(tree);
             while (stack.Any())
             {
@@ -47,7 +47,7 @@
                 var found = find(n, out bool @continue);
                 if (found != null)
                 {
-                    AntlrNode parent = n.ParentNode as AntlrNode;
+                    UnvParseTreeNode parent = n.ParentNode as UnvParseTreeNode;
                     var c = parent;
                     if (c != null)
                     {
@@ -70,13 +70,13 @@
                     for (int i = n.ChildNodes.Length - 1; i >= 0; --i)
                     {
                         var c = n.ChildNodes.item(i);
-                        stack.Push(c as AntlrNode);
+                        stack.Push(c as UnvParseTreeNode);
                     }
                 }
             }
         }
 
-        public static void Delete(AntlrNode tree)
+        public static void Delete(UnvParseTreeNode tree)
         {
             if (tree == null) return;
             var n = tree;
@@ -99,14 +99,14 @@
             }
         }
 
-        public static void Delete(IEnumerable<AntlrNode> trees)
+        public static void Delete(IEnumerable<UnvParseTreeNode> trees)
         {
             foreach (var t in trees) Delete(t);
         }
 
-        public static IEnumerable<AntlrNode> FindTopDown(AntlrNode tree, Fun find)
+        public static IEnumerable<UnvParseTreeNode> FindTopDown(UnvParseTreeNode tree, Fun find)
         {
-            Stack<AntlrNode> stack = new Stack<AntlrNode>();
+            Stack<UnvParseTreeNode> stack = new Stack<UnvParseTreeNode>();
             stack.Push(tree);
             while (stack.Any())
             {
@@ -118,39 +118,39 @@
                 for (int i = 0; i < n.ChildNodes.Length; ++i)
                 {
                     var c = n.ChildNodes.item(i);
-                    if (c is AntlrNode child) stack.Push(child);
+                    if (c is UnvParseTreeNode child) stack.Push(child);
                 }
             }
         }
 
-        public static IEnumerable<AntlrNode> Frontier(AntlrNode tree)
+        public static IEnumerable<UnvParseTreeNode> Frontier(UnvParseTreeNode tree)
         {
             Stack<Node> stack = new Stack<Node>();
             stack.Push(tree);
             while (stack.Any())
             {
                 var n = stack.Pop();
-                if (n is AntlrElement e)
+                if (n is UnvParseTreeElement e)
                 {
                     bool term = true;
                     for (int i = 0; i < e.ChildNodes.Length; ++i)
                     {
                         var t = e.ChildNodes.item(i);
-                        if (t is AntlrElement)
+                        if (t is UnvParseTreeElement)
                         {
                             term = false;
                             break;
                         }
                     }
-                    if (term) yield return n as AntlrNode;
+                    if (term) yield return n as UnvParseTreeNode;
                 }
-                if (!(n is AntlrNode))
+                if (!(n is UnvParseTreeNode))
                     continue;
                 if (n.ChildNodes == null) continue;
                 for (int i = n.ChildNodes.Length - 1; i >= 0; --i)
                 {
                     var c = n.ChildNodes.item(i);
-                    if (!(c is AntlrElement)) continue;
+                    if (!(c is UnvParseTreeElement)) continue;
                     stack.Push(c);
                 }
             }
@@ -158,7 +158,7 @@
 
         public static void InsertBefore(Node node, string arbitrary_string)
         {
-            var node_to_insert = new AntlrText();
+            var node_to_insert = new UnvParseTreeText();
             node_to_insert.Data = arbitrary_string;
             var parent = node.ParentNode;
             for (int i = 0; i < parent.ChildNodes.Length; ++i)
@@ -190,7 +190,7 @@
 
         public static void InsertAfter(Node node, string arbitrary_string)
         {
-            var node_to_insert = new AntlrText();
+            var node_to_insert = new UnvParseTreeText();
             node_to_insert.Data = arbitrary_string;
             var parent = node.ParentNode;
             for (int i = 0; i < parent.ChildNodes.Length; ++i)
@@ -220,7 +220,7 @@
             }
         }
 
-        public static bool InsertAfter(AntlrNode tree, Func<AntlrNode, AntlrNode> insert_point)
+        public static bool InsertAfter(UnvParseTreeNode tree, Func<UnvParseTreeNode, UnvParseTreeNode> insert_point)
         {
             throw new NotImplementedException();
             //var insert_this = insert_point(tree);
@@ -280,7 +280,7 @@
             else return GoToRoot(p.ParentNode);
         }
 
-        public static AntlrNode LeftMostToken(Node tree)
+        public static UnvParseTreeNode LeftMostToken(Node tree)
         {
             if (tree == null) return null;
             for (int i = 0; i < tree.ChildNodes.Length; ++i)
@@ -288,14 +288,14 @@
                 var c = tree.ChildNodes.item(i);
                 if (c == null)
                     return null;
-                var lmt = LeftMostToken(c as AntlrNode);
+                var lmt = LeftMostToken(c as UnvParseTreeNode);
                 if (lmt != null)
                     return lmt;
             }
             return null;
         }
 
-        public static AntlrNode RightMostToken(Node tree)
+        public static UnvParseTreeNode RightMostToken(Node tree)
         {
             if (tree == null) return null;
             for (int i = tree.ChildNodes.Length - 1; i >= 0; --i)
@@ -303,14 +303,14 @@
                 var c = tree.ChildNodes.item(i);
                 if (c == null)
                     return null;
-                var lmt = RightMostToken(c as AntlrNode);
+                var lmt = RightMostToken(c as UnvParseTreeNode);
                 if (lmt != null)
                     return lmt;
             }
             return null;
         }
 
-        public static AntlrNode NextToken(XmlAttr leaf)
+        public static UnvParseTreeNode NextToken(XmlAttr leaf)
         {
             if (leaf == null)
                 throw new ArgumentNullException(nameof(leaf));
@@ -350,7 +350,7 @@
             return sb.ToString();
         }
 
-        public static (Dictionary<AntlrNode, string>, List<string>) TextToLeftOfLeaves(BufferedTokenStream stream, IParseTree tree)
+        public static (Dictionary<UnvParseTreeNode, string>, List<string>) TextToLeftOfLeaves(BufferedTokenStream stream, IParseTree tree)
         {
             throw new NotImplementedException();
             //var result = new Dictionary<TerminalNodeImpl, string>();
@@ -394,7 +394,7 @@
             //return (result, result2);
         }
 
-        public static (Dictionary<AntlrNode, string>, List<string>) TextToLeftOfLeaves(BufferedTokenStream stream, IEnumerable<IParseTree> trees)
+        public static (Dictionary<UnvParseTreeNode, string>, List<string>) TextToLeftOfLeaves(BufferedTokenStream stream, IEnumerable<IParseTree> trees)
         {
             throw new NotImplementedException();
             //var result = new Dictionary<TerminalNodeImpl, string>();
@@ -441,7 +441,7 @@
             //return (result, result2);
         }
 
-        public static AntlrNode CopyTreeRecursive(AntlrNode original, IParseTree parent, Dictionary<TerminalNodeImpl, string> text_to_left)
+        public static UnvParseTreeNode CopyTreeRecursive(UnvParseTreeNode original, IParseTree parent, Dictionary<TerminalNodeImpl, string> text_to_left)
         {
             throw new NotImplementedException();
             //if (original == null) return null;
@@ -483,7 +483,7 @@
             //else return null;
         }
 
-        public static AntlrNode CopyTreeRecursiveAux(AntlrNode original, AntlrNode parent)
+        public static UnvParseTreeNode CopyTreeRecursiveAux(UnvParseTreeNode original, UnvParseTreeNode parent)
         {
             throw new NotImplementedException();
             //if (original == null) return null;
@@ -530,7 +530,7 @@
             //else return null;
         }
 
-        public static AntlrNode CopyTreeRecursive(AntlrNode original)
+        public static UnvParseTreeNode CopyTreeRecursive(UnvParseTreeNode original)
         {
             throw new NotImplementedException();
             //if (original == null) return (null, null, null);
@@ -552,7 +552,7 @@
             //return (copy, ncs, nts);
         }
 
-        public static void Reconstruct(StringBuilder sb, IEnumerable<AntlrNode> trees, Dictionary<TerminalNodeImpl, string> text_to_left)
+        public static void Reconstruct(StringBuilder sb, IEnumerable<UnvParseTreeNode> trees, Dictionary<TerminalNodeImpl, string> text_to_left)
         {
             throw new NotImplementedException();
             //foreach (var tree in trees)
@@ -580,7 +580,7 @@
             //}
         }
 
-        public static void Reconstruct(StringBuilder sb, AntlrNode tree, Dictionary<TerminalNodeImpl, string> text_to_left)
+        public static void Reconstruct(StringBuilder sb, UnvParseTreeNode tree, Dictionary<TerminalNodeImpl, string> text_to_left)
         {
             throw new NotImplementedException();
             //if (tree as TerminalNodeImpl != null)
@@ -605,7 +605,7 @@
             //}
         }
 
-        public static AntlrNode Find(IToken token, AntlrNode tree)
+        public static UnvParseTreeNode Find(IToken token, UnvParseTreeNode tree)
         {
             throw new NotImplementedException();
             //if (tree == null) return null;
@@ -631,7 +631,7 @@
             //return null;
         }
 
-        public static void MoveAfter(IEnumerable<AntlrNode> from_list, AntlrNode to)
+        public static void MoveAfter(IEnumerable<UnvParseTreeNode> from_list, UnvParseTreeNode to)
         {
             throw new NotImplementedException();
             //if (from_list == null) return;
@@ -684,7 +684,7 @@
             //}
         }
 
-        public static void MoveBefore(IEnumerable<AntlrElement> from_list, AntlrNode to)
+        public static void MoveBefore(IEnumerable<UnvParseTreeElement> from_list, UnvParseTreeNode to)
         {
             if (from_list == null) return;
             if (to == null) return;
@@ -695,7 +695,7 @@
         }
 
 
-        public static void NukeTokensSurrounding(AntlrNode node)
+        public static void NukeTokensSurrounding(UnvParseTreeNode node)
         {
             throw new NotImplementedException();
             //if (node == null) return;
@@ -832,16 +832,16 @@
             //}
         }
 
-        private static void MoveBefore(AntlrElement from, AntlrNode to)
+        private static void MoveBefore(UnvParseTreeElement from, UnvParseTreeNode to)
         {
             throw new NotImplementedException();
         }
 
 
 
-        public static AntlrNode Replace(AntlrNode node, string arbitrary_string)
+        public static UnvParseTreeNode Replace(UnvParseTreeNode node, string arbitrary_string)
         {
-            var node_to_insert = new AntlrText();
+            var node_to_insert = new UnvParseTreeText();
             node_to_insert.Data = arbitrary_string;
             var parent = node.ParentNode;
             for (int i = 0; i < parent.ChildNodes.Length; ++i)
@@ -859,7 +859,7 @@
             return node_to_insert;
         }
 
-        public static void Replace(AntlrNode tree, Fun find)
+        public static void Replace(UnvParseTreeNode tree, Fun find)
         {
             throw new NotImplementedException();
             //if (tree == null) return;
@@ -921,7 +921,7 @@
             //}
         }
 
-        public static void Replace(AntlrNode replace_this, AntlrNode with_this)
+        public static void Replace(UnvParseTreeNode replace_this, UnvParseTreeNode with_this)
         {
             throw new NotImplementedException();
             //if (replace_this == null) return;
@@ -967,7 +967,7 @@
             //}
         }
 
-        public static void DeleteAndReattachChildren(AntlrElement node)
+        public static void DeleteAndReattachChildren(UnvParseTreeElement node)
         {
             if (node == null) return;
             var n = node;

@@ -39,9 +39,9 @@ added a wrapper to Antlr parse trees to make it look like
 a "DOM".
 
     org.eclipse.wst.xml.xpath2.processor.Engine engine = new Engine();
-    var input = System.IO.File.ReadAllText("../AntlrDOM/ANTLRv4Parser.g4");
-    var (tree, parser, lexer) = AntlrDOM.Parse.Try(input);
-    AntlrDynamicContext dynamicContext = AntlrDOM.ConvertToDOM.Try(tree, parser);
+    var input = System.IO.File.ReadAllText("../ParseTreeDOM/ANTLRv4Parser.g4");
+    var (tree, parser, lexer) = ParseTreeDOM.Parse.Try(input);
+    AntlrDynamicContext dynamicContext = ParseTreeDOM.ConvertToDOM.Try(tree, parser);
     var expression = engine.parseExpression("//ruleSpec", new StaticContextBuilder());
     object[] contexts = new object[] {dynamicContext.Document};
     var rs = expression.evaluate(dynamicContext, contexts);

@@ -2,7 +2,7 @@
 {
     using Antlr4.Runtime.Tree;
     using AntlrJson;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
     using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using LoggerNs;
@@ -75,12 +75,12 @@
                 }
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var root = trees.ToArray();
-                var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                var ate = new ParseTreeEditing.ParseTreeDOM.ConvertToDOM();
+                using (ParseTreeEditing.ParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
                 {
                     var nodes = engine.parseExpression(expr,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
+                        .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement)).ToList();
                     if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                     foreach (var node in nodes)
                     {

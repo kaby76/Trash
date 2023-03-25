@@ -8,7 +8,7 @@ namespace Trash
     using Antlr4.Runtime.Tree;
     using Antlr4.StringTemplate;
     using AntlrJson;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
     using org.eclipse.wst.xml.xpath2.api;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
@@ -148,35 +148,35 @@ namespace Trash
 
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    var ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
-                    List<AntlrElement> is_par = null;
-                    List<AntlrElement> is_lex = null;
+                    var ate = new ParseTreeEditing.ParseTreeDOM.ConvertToDOM();
+                    List<UnvParseTreeElement> is_par = null;
+                    List<UnvParseTreeElement> is_lex = null;
                     List<string> name_ = null;
                     List<string> ss = null;
-                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                    using (ParseTreeEditing.ParseTreeDOM.AntlrDynamicContext dynamicContext =
                            ate.Try(pr.First().Nodes.First(), pr.First().Parser))
                     {
                         is_par = engine.parseExpression(
                                 @"/grammarSpec/grammarDecl/grammarType/PARSER",
                                 new StaticContextBuilder()).evaluate(dynamicContext,
                                 new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement))
+                            .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement))
                             .ToList();
                         is_lex = engine.parseExpression(
                                 @"/grammarSpec/grammarDecl/grammarType/LEXER",
                                 new StaticContextBuilder()).evaluate(dynamicContext,
                                 new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement)).ToList();
+                            .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement)).ToList();
                         name_ = engine.parseExpression(
                                 @"/grammarSpec/grammarDecl/identifier/(TOKEN_REF | RULE_REF)/text()",
                                 new StaticContextBuilder()).evaluate(dynamicContext,
                                 new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrText).NodeValue as string).ToList();
+                            .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
                         ss = engine.parseExpression(
                                 @"//parserRuleSpec[ruleBlock//TOKEN_REF/text()='EOF']/RULE_REF/text()",
                                 new StaticContextBuilder()).evaluate(dynamicContext,
                                 new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrText).NodeValue as string).ToList();
+                            .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
                     }
 
                     var is_parser_grammar = is_par.Count() != 0;
@@ -1927,7 +1927,7 @@ namespace Trash
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             
             var converted_tree = ConvertToDOM.BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
-            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Nodes = new AntlrNode[] { converted_tree }, Parser = parser, Lexer = lexer };
+            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Nodes = new UnvParseTreeNode[] { converted_tree }, Parser = parser, Lexer = lexer };
             data.Add(tuple);
             return (bool)res3 ? 1 : 0;
         }

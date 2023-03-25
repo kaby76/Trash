@@ -23,6 +23,7 @@ namespace Server
         private Dictionary<string, DiagnosticSeverity> diagnostics;
         private bool isDisposed;
         private int counter = 100;
+        public Config config;
 
         public LSPServer(Stream sender, Stream reader)
         {

@@ -2,7 +2,7 @@
 {
     using Antlr4.Runtime.Tree;
     using AntlrJson;
-    using AntlrTreeEditing.AntlrDOM;
+    using ParseTreeEditing.ParseTreeDOM;
     using LanguageServer;
     using org.w3c.dom;
     using System.Collections.Generic;
@@ -81,15 +81,15 @@
             while (stack.Any())
             {
                 var n = stack.Pop();
-                if (n is AntlrAttr a)
+                if (n is UnvParseTreeAttr a)
                 {
                     sb.Append(a.StringValue);
                 }
-                else if (n is AntlrText t)
+                else if (n is UnvParseTreeText t)
                 {
                     sb.Append(t.NodeValue);
                 }
-                else if (n is AntlrElement e)
+                else if (n is UnvParseTreeElement e)
                 {
                     for (int i = n.ChildNodes.Length - 1; i >= 0; i--)
                     {

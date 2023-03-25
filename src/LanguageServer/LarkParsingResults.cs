@@ -132,8 +132,8 @@ namespace LanguageServer
                 if (ParseTree == null) return false;
                 this.Attributes[ParseTree] = new List<CombinedScopeSymbol>() { (CombinedScopeSymbol)this.RootScope };
                 // Collect def lexer symbols.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                        new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                        new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -141,7 +141,7 @@ namespace LanguageServer
                             @"//token/TOKEN",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as TerminalNodeImpl);
                     foreach (var id in nodes)
                     {
                         var token = id;
@@ -155,8 +155,8 @@ namespace LanguageServer
                 }
 
                 // Collect def parser symbols.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                        new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                        new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -164,7 +164,7 @@ namespace LanguageServer
                             @"//rule_/RULE",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as TerminalNodeImpl);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as TerminalNodeImpl);
                     foreach (var id in nodes)
                     {
                         var token = id;
@@ -183,8 +183,8 @@ namespace LanguageServer
             {
                 if (ParseTree == null) return false;
                 // Collect ref symbols.
-                using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
-                        new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                        new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(this.ParseTree, this.Parser))
                 {
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
@@ -192,7 +192,7 @@ namespace LanguageServer
                             @"//name",
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree as LarkParser.NameContext);
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as LarkParser.NameContext);
                     foreach (var name in nodes)
                     {
                         var id_str = name.GetText();

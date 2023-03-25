@@ -3,13 +3,13 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace AntlrTreeEditing.AntlrDOM
+namespace ParseTreeEditing.ParseTreeDOM
 {
     public class TokenOutput
     {
         private static int TokenIndex = -1;
 
-        public static StringBuilder OutputTokens(AntlrNode tree, Lexer lexer, Parser parser)
+        public static StringBuilder OutputTokens(UnvParseTreeNode tree, Lexer lexer, Parser parser)
         {
             TokenIndex = 0;
             var sb = new StringBuilder();
@@ -17,9 +17,9 @@ namespace AntlrTreeEditing.AntlrDOM
             return sb;
         }
 
-        private static void ParenthesizedAST(AntlrNode tree, StringBuilder sb, Lexer lexer, Parser parser, int level = 0)
+        private static void ParenthesizedAST(UnvParseTreeNode tree, StringBuilder sb, Lexer lexer, Parser parser, int level = 0)
         {
-            if (tree is AntlrText t)
+            if (tree is UnvParseTreeText t)
             {
                 sb.Append(
                     "[@" + TokenIndex++
@@ -30,7 +30,7 @@ namespace AntlrTreeEditing.AntlrDOM
                     );
                 sb.AppendLine();
             }
-            else if (tree is AntlrAttr a)
+            else if (tree is UnvParseTreeAttr a)
             {
                 sb.Append(
                     "[@" + TokenIndex++
@@ -44,7 +44,7 @@ namespace AntlrTreeEditing.AntlrDOM
             for (int i = 0; tree.ChildNodes != null && i < tree.ChildNodes.Length; ++i)
             {
                 var c = tree.ChildNodes.item(i);
-                ParenthesizedAST(c as AntlrNode, sb, lexer, parser, level + 1);
+                ParenthesizedAST(c as UnvParseTreeNode, sb, lexer, parser, level + 1);
             }
             if (level == 0)
             {

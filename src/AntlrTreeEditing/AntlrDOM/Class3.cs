@@ -1,13 +1,13 @@
-﻿namespace AntlrTreeEditing.AntlrDOM
+﻿namespace ParseTreeEditing.ParseTreeDOM
 {
     public interface MyParseTreeVisitor<out Result>
     {
-        Result Visit(AntlrNode tree);
+        Result Visit(UnvParseTreeNode tree);
 
-        Result VisitChildren(AntlrNode node);
+        Result VisitChildren(UnvParseTreeNode node);
 
-        Result VisitTerminal(AntlrNode node);
+        Result VisitTerminal(UnvParseTreeNode node);
 
-        Result VisitErrorNode(AntlrNode node);
+        Result VisitErrorNode(UnvParseTreeNode node);
     }
 }

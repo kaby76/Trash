@@ -6,15 +6,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.12.0" />
 		<PackageReference Include="StreamJsonRpc" Version="2.6.121" />
 		<PackageReference Include="System.IO.Pipes" Version="4.3.0" />
 		<PackageReference Include="System.IO.Pipes.AccessControl" Version="5.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol" Version="17.2.8" />
+		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="../Logger/Logger.csproj" />
 		<ProjectReference Include="../LspHelpers/LspHelpers.csproj" />
+		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+		<ProjectReference Include="../Globbing/TrashGlobbing.csproj" />
+		<ProjectReference Include="../Algorithms/Algorithms.csproj" />
+		<ProjectReference Include="../grammars/antlr4/Generated/antlr4.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.LanguageServer.Protocol;
+﻿using System.Threading;
+using Microsoft.VisualStudio.LanguageServer.Protocol;
 
 namespace Server
 {
@@ -19,9 +20,9 @@ namespace Server
 
         public static void Main(string[] args)
         {
-            //TimeSpan delay = new TimeSpan(0, 0, 0, 20);
-            //Console.Error.WriteLine("Waiting " + delay + " seconds...");
-            //Thread.Sleep((int)delay.TotalMilliseconds);
+            TimeSpan delay = new TimeSpan(0, 0, 0, 20);
+            Console.Error.WriteLine("Waiting " + delay + " seconds...");
+            Thread.Sleep((int)delay.TotalMilliseconds);
             LoggerNs.Logger.Log.WriteLine("Starting");
             Program program = new Program();
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
