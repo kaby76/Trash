@@ -1,4 +1,4 @@
-﻿namespace ParseTreeEditing.ParseTreeDOM
+﻿namespace ParseTreeEditing.UnvParseTreeDOM
 {
     public interface IMyParseTreeListener
     {

@@ -135,7 +135,7 @@ public class Class1 : JavaScriptParserBaseVisitor<object>
     public static void MyMain(IParseTree tree, Parser parser)
     {
         var visitor = new Class1();
-        using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
+        using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(tree, parser))
         {
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
             var nodes = engine.parseExpression(

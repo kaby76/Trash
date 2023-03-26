@@ -8,7 +8,7 @@ namespace Trash
     using Antlr4.Runtime.Tree;
     using Antlr4.StringTemplate;
     using AntlrJson;
-    using ParseTreeEditing.ParseTreeDOM;
+    using ParseTreeEditing.UnvParseTreeDOM;
     using org.eclipse.wst.xml.xpath2.api;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
@@ -148,25 +148,25 @@ namespace Trash
 
                     org.eclipse.wst.xml.xpath2.processor.Engine engine =
                         new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    var ate = new ParseTreeEditing.ParseTreeDOM.ConvertToDOM();
+                    var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
                     List<UnvParseTreeElement> is_par = null;
                     List<UnvParseTreeElement> is_lex = null;
                     List<string> name_ = null;
                     List<string> ss = null;
-                    using (ParseTreeEditing.ParseTreeDOM.AntlrDynamicContext dynamicContext =
+                    using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
                            ate.Try(pr.First().Nodes.First(), pr.First().Parser))
                     {
                         is_par = engine.parseExpression(
                                 @"/grammarSpec/grammarDecl/grammarType/PARSER",
                                 new StaticContextBuilder()).evaluate(dynamicContext,
                                 new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement))
+                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
                             .ToList();
                         is_lex = engine.parseExpression(
                                 @"/grammarSpec/grammarDecl/grammarType/LEXER",
                                 new StaticContextBuilder()).evaluate(dynamicContext,
                                 new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as ParseTreeEditing.ParseTreeDOM.UnvParseTreeElement)).ToList();
+                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                         name_ = engine.parseExpression(
                                 @"/grammarSpec/grammarDecl/identifier/(TOKEN_REF | RULE_REF)/text()",
                                 new StaticContextBuilder()).evaluate(dynamicContext,

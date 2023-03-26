@@ -1,8 +1,8 @@
-﻿namespace ParseTreeEditing.ParseTreeDOM
+﻿namespace ParseTreeEditing.UnvParseTreeDOM
 {
-    public class MyParseTreeWalker
+    public class ParseTreeWalker
     {
-        public static readonly MyParseTreeWalker Default = new MyParseTreeWalker();
+        public static readonly ParseTreeWalker Default = new ParseTreeWalker();
 
         public virtual void Walk(MyParseTreeListener listener, UnvParseTreeNode t)
         {
@@ -11,21 +11,22 @@
             //    listener.VisitErrorNode((IErrorNode)t);
             //    return;
             //}
-
+            //else
             if (t is UnvParseTreeText)
             {
-                listener.VisitTerminal(t);
+                listener.VisitTerminal((UnvParseTreeText)t);
                 return;
             }
-
-            EnterRule(listener, t);
-            int childCount = t.ChildNodes.Length;
-            for (int i = 0; i < childCount; i++)
+            else if (t is UnvParseTreeAttr a)
             {
-                var it = t.ChildNodes.item(i);
-                if (it is UnvParseTreeElement e) Walk(listener, e);
+                return;
             }
-
+            EnterRule(listener, t);
+            for (int i = 0; t.ChildNodes != null && i < t.ChildNodes.Length; ++i)
+            {
+                var c = (UnvParseTreeNode)t.ChildNodes.item(i);
+                Walk(listener, c);
+            }
             ExitRule(listener, t);
         }
 

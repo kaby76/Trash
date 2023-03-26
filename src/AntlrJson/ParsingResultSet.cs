@@ -1,7 +1,7 @@
 ﻿namespace AntlrJson
 {
     using Antlr4.Runtime;
-    using ParseTreeEditing.ParseTreeDOM;
+    using ParseTreeEditing.UnvParseTreeDOM;
 
     public class ParsingResultSet
     {

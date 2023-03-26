@@ -1,6 +1,5 @@
-﻿namespace ParseTreeEditing.AntlrDOM
+﻿namespace ParseTreeEditing.UnvParseTreeDOM
 {
-    using ParseTreeEditing;
     using java.net;
     using java.util;
     using javax.xml.datatype;
@@ -23,7 +22,7 @@
         }
 
         public Node LimitNode { get; }
-        public AntlrDocument Document { get; set; }
+        public UnvParseTreeDocument Document { get; set; }
         public ResultSequence getVariable(QName name)
         {
             throw new NotImplementedException();

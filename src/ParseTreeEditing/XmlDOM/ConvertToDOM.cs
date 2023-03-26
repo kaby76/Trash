@@ -2,7 +2,8 @@
 
 namespace XmlDOM
 {
-    using Antlr4.Runtime;
+	using ParseTreeEditing;
+	using Antlr4.Runtime;
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
     using java.net;
@@ -264,28 +265,10 @@ namespace XmlDOM
         public IList<Document> DefaultCollection { get; }
         public CollationProvider CollationProvider
         {
-            get { return new AntlrCollationProvider(); }
+            get { return new MyCollationProvider(); }
         }
     }
 
-
-    public class AntlrCollationProvider : CollationProvider
-    {
-        public class StringCmp : IComparer<string>
-        {
-            public int Compare(string x, string y)
-            {
-                return x.CompareTo(y);
-            }
-        }
-
-        public IComparer<string> getCollation(string name)
-        {
-            return new StringCmp();
-        }
-
-        public string DefaultCollation { get; }
-    }
 
     public class AntlrNodeList : NodeList
     {

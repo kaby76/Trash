@@ -1,4 +1,4 @@
-# AntlrTreeEditing
+# ParseTreeEditing
 
 This library contains a collection of routines for editing
 Antlr4 parse trees. [As noted by Parr](https://theantlrguy.atlassian.net/wiki/spaces/~admin/blog/2012/12/08/524353/Tree+rewriting+in+ANTLR+v4),

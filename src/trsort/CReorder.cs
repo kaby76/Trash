@@ -60,12 +60,14 @@
 //                    var pr = ParsingResultsFactory.Create(doc);
 //                    var aparser = pr.Parser;
 //                    var atree = pr.ParseTree;
-//                    using (AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new AntlrTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
+//                    using
+//                    (ParseTreeEditing.AntlrDOM.AntlrDynamicContext
+//                    dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
 //                    {
 //                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
 //                        nodes = engine.parseExpression(expr,
 //                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-//                            .Select(x => (x.NativeValue as AntlrTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
+//                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
 //                    }
 //                }
 //                results = LanguageServer.Transform.ReorderParserRules(doc, order, nodes);

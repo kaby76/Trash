@@ -1,9 +1,9 @@
-﻿namespace ParseTreeEditing.ParseTreeDOM
+﻿namespace ParseTreeEditing
 {
     using org.eclipse.wst.xml.xpath2.api;
     using System.Collections.Generic;
 
-    public class AntlrCollationProvider : CollationProvider
+    public class MyCollationProvider : CollationProvider
     {
         public class StringCmp : IComparer<string>
         {

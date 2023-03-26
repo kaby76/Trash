@@ -1,14 +1,12 @@
-﻿namespace ParseTreeEditing.ParseTreeDOM
+﻿namespace ParseTreeEditing.AntlrDOM
 {
+    using Antlr4.Runtime.Tree;
     using org.w3c.dom;
     using System;
 
-    public class UnvParseTreeDocument : UnvParseTreeNode, Document
+    public class AntlrDocument : AntlrNode, Document
     {
-        public UnvParseTreeDocument()
-        {
-            this.NodeType = NodeConstants.DOCUMENT_NODE;
-        }
+        public AntlrDocument(IParseTree n) : base(n) { }
         public string DocumentURI { get; set; }
         public NodeList getElementsByTagNameNS(string ns, string local)
         {

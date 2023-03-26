@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace ParseTreeEditing.ParseTreeDOM
+namespace ParseTreeEditing.UnvParseTreeDOM
 {
     public class TreeOutput
     {

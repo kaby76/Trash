@@ -17,12 +17,12 @@ class Scoping
 
     public Parser parser { get; set; }
     public IParseTree root { get; set; }
-    AntlrTreeEditing.AntlrDOM.ConvertToDOM ate = null;
-    AntlrTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = null;
+    ParseTreeEditing.AntlrDOM.ConvertToDOM ate = null;
+    ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = null;
 
     public void Walk()
     {
-        ate = new AntlrTreeEditing.AntlrDOM.ConvertToDOM();
+        ate = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
         dynamicContext = ate.Try(root, parser);
         Visit(root);
     }

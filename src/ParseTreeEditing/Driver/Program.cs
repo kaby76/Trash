@@ -5,7 +5,7 @@
 //namespace ConsoleApp1
 //{
 //    using Antlr4.Runtime;
-//    using AntlrTreeEditing.ParseTreeDOM;
+//    using ParseTreeEditing.ParseTreeDOM;
 //    using org.eclipse.wst.xml.xpath2.processor;
 //    using org.eclipse.wst.xml.xpath2.processor.util;
 //    using System;

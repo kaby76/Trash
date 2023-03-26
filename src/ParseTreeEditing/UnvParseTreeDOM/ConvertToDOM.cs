@@ -1,4 +1,4 @@
-﻿namespace ParseTreeEditing.ParseTreeDOM
+﻿namespace ParseTreeEditing.UnvParseTreeDOM
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Misc;
