@@ -1,27 +1,28 @@
 ﻿using System.Reflection;
 using System.Reflection.Metadata;
-using Microsoft.VisualStudio.LanguageServer.Protocol;
+//using Microsoft.VisualStudio.LanguageServer.Protocol;
 using System.Collections.Generic;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using AntlrJson;
-using ParseTreeEditing.UnvParseTreeDOM;
+//using ParseTreeEditing.UnvParseTreeDOM;
+//using LanguageServer;
+using LoggerNs;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using LspTypes;
+using StreamJsonRpc;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using ParseTreeEditing.AntlrDOM;
+using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
+
+using org.eclipse.wst.xml.xpath2.processor.util;
 
 namespace Server
 {
-    //using LanguageServer;
-    using LoggerNs;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    //using LspTypes;
-    using StreamJsonRpc;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading;
-    //using Workspaces;
-    //using DocumentSymbol = LanguageServer.DocumentSymbol;
 
     public class LanguageServerTarget
     {
@@ -32,7 +33,7 @@ namespace Server
         private static readonly object _object = new object();
         private readonly Dictionary<string, bool> ignore_next_change = new Dictionary<string, bool>();
         private int current_version;
-        private Dictionary<string, AntlrJson.ParsingResultSet> data = new Dictionary<string, ParsingResultSet>();
+        private Dictionary<string, ParsingResultSet> data = new Dictionary<string, ParsingResultSet>();
         
         public LanguageServerTarget(LSPServer server)
         {
@@ -161,7 +162,7 @@ namespace Server
 
                 var init_params = arg.ToObject<InitializeParams>();
 
-                ServerCapabilities capabilities = new ServerCapabilities
+                ServerCapabilities capabilities = new LspTypes.ServerCapabilities
                 {
                     TextDocumentSync = new TextDocumentSyncOptions
                     {
@@ -182,23 +183,28 @@ namespace Server
                             }
                             : null),
 
-                    HoverProvider = true,
+                    //HoverProvider = true,
+                    HoverProvider = false,
 
                     SignatureHelpProvider = null,
 
                     // DeclarationProvider not supported.
 
-                    DefinitionProvider = true,
+                    //DefinitionProvider = true,
+                    DefinitionProvider = false,
 
                     TypeDefinitionProvider = false, // Does not make sense for Antlr.
 
                     ImplementationProvider = false, // Does not make sense for Antlr.
 
-                    ReferencesProvider = true,
+                    //ReferencesProvider = true,
+                    ReferencesProvider = false,
 
-                    DocumentHighlightProvider = true,
+                    //DocumentHighlightProvider = true,
+                    DocumentHighlightProvider = false,
 
-                    DocumentSymbolProvider = true,
+                    //DocumentSymbolProvider = true,
+                    DocumentSymbolProvider = false,
 
                     CodeLensProvider = null,
 
@@ -206,27 +212,33 @@ namespace Server
 
                     // ColorProvider not supported.
 
-                    DocumentFormattingProvider = true,
+                    //DocumentFormattingProvider = true,
+                    DocumentFormattingProvider = false,
 
                     DocumentRangeFormattingProvider = false,
 
-                    RenameProvider = true,
+                    //RenameProvider = true,
+                    RenameProvider = false,
 
-                    FoldingRangeProvider = new SumType<bool, FoldingRangeOptions>(false),
+                    //FoldingRangeProvider = new SumType<bool, FoldingRangeOptions>(false),
+                    FoldingRangeProvider = new SumType<bool, FoldingRangeOptions, FoldingRangeRegistrationOptions>(false),
 
                     ExecuteCommandProvider = null,
 
                     // SelectionRangeProvider not supported.
 
                     WorkspaceSymbolProvider = false,
-
-                    SemanticTokensOptions = new SemanticTokensOptions()
+                    SemanticTokensProvider = 
+                    //SemanticTokensOptions =
+                    new SemanticTokensOptions()
                     {
                         Full = true,
                         Range = false,
                         Legend = new SemanticTokensLegend()
                         {
-                            TokenTypes = new string[] {
+                            tokenTypes = 
+                            //TokenTypes = 
+                            new string[] {
                                 "class",
                                 "variable",
                                 "enum",
@@ -234,7 +246,9 @@ namespace Server
                                 "string",
                                 "keyword",
                             },
-                            TokenModifiers = new string[] {
+                            tokenModifiers = 
+                            //TokenModifiers =
+                            new string[] {
                                 "declaration",
                                 "documentation",
                             }
@@ -416,7 +430,8 @@ namespace Server
                 DidOpenTextDocumentParams request = arg.ToObject<DidOpenTextDocumentParams>();
                 var language_id = request.TextDocument.LanguageId;
                 var text = request.TextDocument.Text;
-                string fn = request.TextDocument.Uri.LocalPath;
+                string fn = request.TextDocument.Uri;
+                //string fn = request.TextDocument.Uri.LocalPath;
                 workspace[fn] = text;
                 switch (language_id)
                 {
@@ -1428,7 +1443,8 @@ namespace Server
             }
         }
 
-        [JsonRpcMethod(Methods.TextDocumentSemanticTokensFullName)]
+        //[JsonRpcMethod(Methods.TextDocumentSemanticTokensFullName)]
+        [JsonRpcMethod(Methods.TextDocumentSemanticTokensFull)]
         public SemanticTokens SemanticTokens(JToken arg)
         {
             lock (_object)
@@ -1441,12 +1457,113 @@ namespace Server
                         Logger.Log.WriteLine("<-- SemanticTokens");
                         Logger.Log.WriteLine(arg.ToString());
                     }
+
                     DocumentSymbolParams request = arg.ToObject<DocumentSymbolParams>();
-                    string fn = request.TextDocument.Uri.LocalPath;
+                    string fn = request.TextDocument.Uri;
+                    //string fn = request.TextDocument.Uri.LocalPath;
                     var found = data.TryGetValue(fn, out ParsingResultSet prs);
                     if (found)
                     {
                     }
+
+                    List<object> symbols = new List<object>();
+                    List<uint> d = new List<uint>();
+                    // Let us fill up temp values to figure out.
+                    (int,int) start = (1, 0);
+
+                    org.eclipse.wst.xml.xpath2.processor.Engine engine =
+                        new org.eclipse.wst.xml.xpath2.processor.Engine();
+                    var ate = new ParseTreeEditing.AntlrDOM.ConvertToAntlrDOM();
+                    var expr = "//parserRuleSpec/RULE_REF";
+                    using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(prs.Nodes, prs.Parser))
+                    {
+                        var nodes = engine.parseExpression(expr,
+                                new StaticContextBuilder()).evaluate(dynamicContext,
+                                new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue as AntlrElement).AntlrIParseTree)
+                            .ToList();
+                        foreach (var node in nodes)
+                        {
+                            if (trace)
+                            {
+                                Logger.Log.WriteLine("Found " + node.ToString());
+                            }
+                            // Parser symbol
+                            var kind = 0;
+                            int ai = node.SourceInterval.a;
+                            int bi = node.SourceInterval.b;
+                            var tai = prs.Parser.TokenStream.Get(ai);
+                            var tbi = prs.Parser.TokenStream.Get(bi);
+                            // Stupid LSP works with line/columns rather than absolute index into buffer.
+                            // Convert.
+                            (int, int) lc_start = start;
+                            (int, int) lcs = (tai.Line, tai.Column);
+                            var len = tbi.StopIndex - tbi.StartIndex + 1;
+                            (int, int) lce = (tbi.Line, tbi.Column + len);
+
+                            var diff_l = lcs.Item1 - lc_start.Item1;
+                            var diff_c = diff_l != 0 ? lcs.Item2 : lcs.Item2 - lc_start.Item2;
+                            // line
+                            d.Add((uint)diff_l);
+                            // startChar
+                            d.Add((uint)diff_c);
+                            // length
+                            d.Add((uint)(tbi.StopIndex - tai.StartIndex + 1));
+                            // tokenType
+                            d.Add((uint)kind);
+                            // tokenModifiers
+                            d.Add(0);
+                            start = (tai.Line, tai.Column);
+                        }
+                        var expr2 = "//lexerRuleSpec/TOKEN_REF";
+                        var nodes2 = engine.parseExpression(expr2,
+                                 new StaticContextBuilder()).evaluate(dynamicContext,
+                                 new object[] { dynamicContext.Document })
+                             .Select(x => (x.NativeValue as AntlrElement).AntlrIParseTree)
+                             .ToList();
+                        foreach (var node in nodes2)
+                        {
+                            if (trace)
+                            {
+                                Logger.Log.WriteLine("Found " + node.ToString());
+                            }
+                            // Parser symbol
+                            var kind = 0;
+                            int ai = node.SourceInterval.a;
+                            int bi = node.SourceInterval.b;
+                            var tai = prs.Parser.TokenStream.Get(ai);
+                            var tbi = prs.Parser.TokenStream.Get(bi);
+                            // Stupid LSP works with line/columns rather than absolute index into buffer.
+                            // Convert.
+                            (int, int) lc_start = start;
+                            (int, int) lcs = (tai.Line, tai.Column);
+                            var len = tbi.StopIndex - tbi.StartIndex + 1;
+                            (int, int) lce = (tbi.Line, tbi.Column + len);
+
+                            var diff_l = lcs.Item1 - lc_start.Item1;
+                            var diff_c = diff_l != 0 ? lcs.Item2 : lcs.Item2 - lc_start.Item2;
+                            // line
+                            d.Add((uint)diff_l);
+                            // startChar
+                            d.Add((uint)diff_c);
+                            // length
+                            d.Add((uint)(tbi.StopIndex - tai.StartIndex + 1));
+                            // tokenType
+                            d.Add((uint)kind);
+                            // tokenModifiers
+                            d.Add(0);
+                            start = (tai.Line, tai.Column);
+                        }
+                    }
+
+                    result = new SemanticTokens();
+                    result.Data = d.ToArray();
+                    if (trace)
+                    {
+                        Logger.Log.Write("returning semantictokens");
+                        Logger.Log.WriteLine(string.Join(" ", data));
+                    }
+
 
                     //Document document = CheckDoc(request.TextDocument.Uri);
                     //var r = new LanguageServer.Module().Get(document);
@@ -1517,10 +1634,17 @@ namespace Server
                 }
                 catch (Exception e)
                 {
+                    //server.ShowMessage(e.Message, (Microsoft.VisualStudio.LanguageServer.Protocol.MessageType)MessageType.Info);
                     server.ShowMessage(e.Message, MessageType.Info);
                 }
+
                 return result;
             }
+        }
+
+        private (int, int) GetLineColumn(int start)
+        {
+            throw new NotImplementedException();
         }
 
         int DoParse(string parser_type, string txt, string prefix, string input_name, int row_number)
@@ -1594,11 +1718,23 @@ namespace Server
             //if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
             //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
-            var converted_tree = ConvertToDOM.BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
-            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = input_name, Nodes = new UnvParseTreeNode[] { converted_tree }, Parser = parser, Lexer = lexer };
+            var tuple = new ParsingResultSet() { Text = (r5 as string), FileName = input_name, Nodes = new IParseTree[] { t2 }, Parser = parser, Lexer = lexer };
             data.Add(input_name, tuple);
             return (bool)res3 ? 1 : 0;
         }
 
+    }
+
+    internal class ParsingResultSet
+    {
+        public ParsingResultSet()
+        {
+        }
+
+        public string Text { get; set; }
+        public string FileName { get; set; }
+        public IParseTree[] Nodes { get; set; }
+        public Parser Parser { get; set; }
+        public Lexer Lexer { get; set; }
     }
 }

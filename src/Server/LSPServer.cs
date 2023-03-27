@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.LanguageServer.Protocol;
+﻿//using Microsoft.VisualStudio.LanguageServer.Protocol;
 
 namespace Server
 {
     //using LanguageServer;
     using Newtonsoft.Json.Linq;
-    //using LspTypes;
+    using LspTypes;
     using StreamJsonRpc;
     using System;
     using System.Collections.Generic;
@@ -173,7 +173,7 @@ namespace Server
             ShowMessageRequestParams parameter = new ShowMessageRequestParams()
             {
                 Message = message,
-                MessageType = messageType,
+                //MessageType = messageType,
                 Actions = actionItems.Select(a => new MessageActionItem { Title = a }).ToArray()
             };
             JToken response = await rpc.InvokeWithParameterObjectAsync<JToken>(Methods.WindowShowMessageRequestName, parameter).ConfigureAwait(false); ;
@@ -209,7 +209,7 @@ namespace Server
         {
             if (line.Contains(wordToMatch))
             {
-                var range = new Microsoft.VisualStudio.LanguageServer.Protocol.Range();
+                var range = new LspTypes.Range();
                 range.Start = new Position(0, 0);
                 range.End = new Position(0, 10);
                 Diagnostic diagnostic = new Diagnostic

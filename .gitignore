@@ -66,3 +66,6 @@ src/grammars/pegen/Generated-CSharp/orig.txt
 src/grammars/pegen/Generated-CSharp/o.pt
 src/grammars/pegen/Generated-CSharp/orig.pt
 src/VsCode/node_modules/
+src/VsCode/out/
+*.vsix
+src/VsCode/package-lock.json

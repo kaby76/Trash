@@ -1,5 +1,7 @@
 ﻿using System.Threading;
-using Microsoft.VisualStudio.LanguageServer.Protocol;
+//using Microsoft.VisualStudio.LanguageServer.Protocol;
+using LspTypes;
+
 
 namespace Server
 {
