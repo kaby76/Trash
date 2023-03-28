@@ -191,8 +191,8 @@ namespace Server
 
                     // DeclarationProvider not supported.
 
-                    //DefinitionProvider = true,
-                    DefinitionProvider = false,
+                    DefinitionProvider = true,
+                    //DefinitionProvider = false,
 
                     TypeDefinitionProvider = false, // Does not make sense for Antlr.
 
@@ -850,8 +850,8 @@ namespace Server
                     TextDocumentPositionParams request = arg.ToObject<TextDocumentPositionParams>();
                     string fn = request.TextDocument.Uri;
                     Position position = request.Position;
-                    int line = (int)position.Line;
-                    int column = (int)position.Character;
+                    int line = 1 + (int)position.Line; // LSP zero based, Antlr 1 based.
+                    int column = (int)position.Character; // zero based, Antlr 0 based.
                     List<object> locations = new List<object>();
 
                     // Find def
@@ -883,8 +883,8 @@ namespace Server
                                 location.Range = new LspTypes.Range();
                                 var si = l.SourceInterval.a;
                                 var ts = prs.Parser.TokenStream.Get(si);
-                                location.Range.Start = new Position((uint)ts.Line, (uint)ts.Column);
-                                location.Range.End = new Position((uint)ts.Line, (uint)(ts.Column + ts.StopIndex - ts.StartIndex + 1));
+                                location.Range.Start = new Position((uint)ts.Line - 1, (uint)ts.Column); // -1 because it's LSP zero based line numbers.
+                                location.Range.End = new Position((uint)ts.Line - 1, (uint)(ts.Column + ts.StopIndex - ts.StartIndex + 1));
                                 locations.Add(location);
                             }
                             result = locations.ToArray();
