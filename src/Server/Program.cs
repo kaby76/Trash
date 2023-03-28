@@ -24,7 +24,7 @@ namespace Server
         {
             TimeSpan delay = new TimeSpan(0, 0, 0, 20);
             Console.Error.WriteLine("Waiting " + delay + " seconds...");
-            Thread.Sleep((int)delay.TotalMilliseconds);
+            //Thread.Sleep((int)delay.TotalMilliseconds);
             LoggerNs.Logger.Log.WriteLine("Starting");
             Program program = new Program();
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits

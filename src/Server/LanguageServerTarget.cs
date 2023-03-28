@@ -20,6 +20,7 @@ using ParseTreeEditing.AntlrDOM;
 using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
 
 using org.eclipse.wst.xml.xpath2.processor.util;
+using System.Collections;
 
 namespace Server
 {
@@ -436,7 +437,67 @@ namespace Server
                 switch (language_id)
                 {
                     case "antlr4":
-                        DoParse(language_id, text, "", fn, 0);
+                        var prs = DoParse(language_id, text, "", fn, 0);
+                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                        var ate = new ParseTreeEditing.AntlrDOM.ConvertToAntlrDOM();
+                        using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
+                               ate.Try(prs.Nodes, prs.Parser))
+                        {
+                            {
+                                var expr = "//parserRuleSpec/RULE_REF";
+                                var nodes = engine.parseExpression(expr,
+                                        new StaticContextBuilder()).evaluate(dynamicContext,
+                                        new object[] { dynamicContext.Document })
+                                    .Select(x => (x.NativeValue as AntlrElement).AntlrIParseTree)
+                                    .ToList();
+                                foreach (var node in nodes)
+                                {
+                                    if (trace)
+                                    {
+                                        Logger.Log.WriteLine("Found " + node.ToString());
+                                    }
+
+                                    // Parser symbol
+                                    prs.ParserDefs.Add(node);
+                                }
+                            }
+                            {
+                                var expr = "//lexerRuleSpec/TOKEN_REF";
+                                var nodes = engine.parseExpression(expr,
+                                        new StaticContextBuilder()).evaluate(dynamicContext,
+                                        new object[] { dynamicContext.Document })
+                                    .Select(x => (x.NativeValue as AntlrElement).AntlrIParseTree)
+                                    .ToList();
+                                foreach (var node in nodes)
+                                {
+                                    if (trace)
+                                    {
+                                        Logger.Log.WriteLine("Found " + node.ToString());
+                                    }
+
+                                    // Lexer symbol
+                                    prs.LexerDefs.Add(node);
+                                }
+                            }
+                            {
+                                var expr = "//(lexerRuleSpec/lexerRuleBlock//terminal/TOKEN_REF | parserRuleSpec/ruleBlock//(ruleref/RULE_REF | terminal/TOKEN_REF))";
+                                var nodes = engine.parseExpression(expr,
+                                        new StaticContextBuilder()).evaluate(dynamicContext,
+                                        new object[] { dynamicContext.Document })
+                                    .Select(x => (x.NativeValue as AntlrElement).AntlrIParseTree)
+                                    .ToList();
+                                foreach (var node in nodes)
+                                {
+                                    if (trace)
+                                    {
+                                        Logger.Log.WriteLine("Found " + node.ToString());
+                                    }
+
+                                    // Lexer symbol
+                                    prs.Refs.Add(node);
+                                }
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -693,41 +754,6 @@ namespace Server
             }
         }
 
-        //public Document CheckDoc(string uri)
-        //{
-        //    var decoded_string = System.Uri.UnescapeDataString(uri);
-        //    var uri_decoded_string = new Uri(decoded_string);
-        //    var file_name = uri_decoded_string.LocalPath;
-        //    Document document = this._workspace.FindDocument(file_name);
-        //    if (document == null)
-        //    {
-        //        document = new Workspaces.Document(file_name);
-        //        try
-        //        {   // Open the text file using a stream reader.
-        //            using (StreamReader sr = new StreamReader(file_name))
-        //            {
-        //                // Read the stream to a string, and write the string to the console.
-        //                string str = sr.ReadToEnd();
-        //                document.Code = str;
-        //            }
-        //        }
-        //        catch (IOException)
-        //        {
-        //        }
-        //        Project project = this._workspace.FindProject("Misc");
-        //        if (project == null)
-        //        {
-        //            project = new Project("Misc", "Misc", "Misc");
-        //            Workspaces.Workspace.Instance.AddChild(project);
-        //        }
-        //        project.AddDocument(document);
-        //        document.Changed = true;
-        //        _ = ParsingResultsFactory.Create(document);
-        //        _ = new LanguageServer.Module().Compile(this._workspace);
-        //    }
-        //    return document;
-        //}
-
         [JsonRpcMethod(Methods.TextDocumentHoverName)]
         public object TextDocumentHoverName(JToken arg)
         {
@@ -822,6 +848,48 @@ namespace Server
                         Logger.Log.WriteLine(arg.ToString());
                     }
                     TextDocumentPositionParams request = arg.ToObject<TextDocumentPositionParams>();
+                    string fn = request.TextDocument.Uri;
+                    Position position = request.Position;
+                    int line = (int)position.Line;
+                    int column = (int)position.Character;
+                    List<object> locations = new List<object>();
+
+                    // Find def
+                    var found = data.TryGetValue(fn, out ParsingResultSet prs);
+
+                    var sym = prs.Refs.Where(r =>
+                    {
+                        var si = r.SourceInterval.a;
+                        var ts = prs.Parser.TokenStream.Get(si);
+                        return ts.Line == line && ts.Column <= column &&
+                               column <= ts.Column + (ts.StopIndex - ts.StartIndex + 1);
+                    }).FirstOrDefault();
+                    if (sym != null)
+                    {
+                        var text = sym.GetText();
+                        if ('a' <= text[0] && text[0] <= 'z')
+                        {
+                            var l = prs.ParserDefs.Where(r =>
+                                {
+                                    return text == r.GetText();
+                                }
+                            ).FirstOrDefault();
+                            if (l != null)
+                            {
+                                LspTypes.Location location = new LspTypes.Location
+                                {
+                                    Uri = new Uri(fn).ToString()
+                                };
+                                location.Range = new LspTypes.Range();
+                                var si = l.SourceInterval.a;
+                                var ts = prs.Parser.TokenStream.Get(si);
+                                location.Range.Start = new Position((uint)ts.Line, (uint)ts.Column);
+                                location.Range.End = new Position((uint)ts.Line, (uint)(ts.Column + ts.StopIndex - ts.StartIndex + 1));
+                                locations.Add(location);
+                            }
+                            result = locations.ToArray();
+                        }
+                    }
                     //Document document = CheckDoc(request.TextDocument.Uri);
                     //Position position = request.Position;
                     //int line = (int)position.Line;
@@ -1093,18 +1161,69 @@ namespace Server
                         Logger.Log.WriteLine(arg.ToString());
                     }
                     DocumentSymbolParams request = arg.ToObject<DocumentSymbolParams>();
-                    //Document document = CheckDoc(request.TextDocument.Uri);
-                    //Logger.Log.WriteLine("B4 GetSymbols " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
-                    //IEnumerable<DocumentSymbol> r = new LanguageServer.Module().GetSymbols(document);
-                    //Logger.Log.WriteLine("Af GetSymbols " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
-                    //List<object> symbols = new List<object>();
-                    //foreach (DocumentSymbol s in r)
-                    //{
-                    //    SymbolInformation si = new SymbolInformation();
-                    //    if (s.kind == 0)
-                    //    {
-                    //        si.Kind = SymbolKind.Variable; // Nonterminal
-                    //    }
+                    var fn = request.TextDocument.Uri;
+                    var found = data.TryGetValue(fn, out ParsingResultSet prs);
+                    if (!found)
+                    {
+
+                    }
+
+                    List<object> symbols = new List<object>();
+                    foreach (var s in prs.ParserDefs)
+                    {
+                        SymbolInformation si = new SymbolInformation();
+                        si.Kind = SymbolKind.Variable; // Nonterminal
+                        si.Name = s.GetText();
+                        si.Location = new LspTypes.Location
+                        {
+                            Uri = request.TextDocument.Uri
+                        };
+                        var t = s as TerminalNodeImpl;
+                        si.Location.Range = new LspTypes.Range
+                        {
+                            Start = new Position((uint)t.Symbol.Line, (uint)t.Symbol.Column),
+                            End = new Position((uint)t.Symbol.Line, (uint)(t.Symbol.Column + t.Symbol.Text.Length))
+                        };
+                        symbols.Add(si);
+                    }
+                    foreach (var s in prs.LexerDefs)
+                    {
+                        SymbolInformation si = new SymbolInformation();
+                        si.Kind = SymbolKind.Enum; // terminal
+                        si.Name = s.GetText();
+                        si.Location = new LspTypes.Location
+                        {
+                            Uri = request.TextDocument.Uri
+                        };
+                        var t = s as TerminalNodeImpl;
+                        si.Location.Range = new LspTypes.Range
+                        {
+                            Start = new Position((uint)t.Symbol.Line, (uint)t.Symbol.Column),
+                            End = new Position((uint)t.Symbol.Line, (uint)(t.Symbol.Column + t.Symbol.Text.Length))
+                        };
+                        symbols.Add(si);
+                    }
+                    foreach (var s in prs.Refs)
+                    {
+                        SymbolInformation si = new SymbolInformation();
+                        si.Name = s.GetText();
+                        var fchar = si.Name[0];
+                        si.Kind = (fchar >= 'a' && fchar <= 'z') ? SymbolKind.Variable : SymbolKind.Enum;
+                        si.Location = new LspTypes.Location
+                        {
+                            Uri = request.TextDocument.Uri
+                        };
+                        var t = s as TerminalNodeImpl;
+                        si.Location.Range = new LspTypes.Range
+                        {
+                            Start = new Position((uint)t.Symbol.Line, (uint)t.Symbol.Column),
+                            End = new Position((uint)t.Symbol.Line, (uint)(t.Symbol.Column + t.Symbol.Text.Length))
+                        };
+                        symbols.Add(si);
+                    }
+                    result = symbols.ToArray();
+                    Logger.Log.WriteLine("return " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
+
                     //    else if (s.kind == 1)
                     //    {
                     //        si.Kind = SymbolKind.Enum; // Terminal
@@ -1462,100 +1581,55 @@ namespace Server
                     string fn = request.TextDocument.Uri;
                     //string fn = request.TextDocument.Uri.LocalPath;
                     var found = data.TryGetValue(fn, out ParsingResultSet prs);
-                    if (found)
+                    if (!found)
                     {
+
                     }
 
                     List<object> symbols = new List<object>();
                     List<uint> d = new List<uint>();
-                    // Let us fill up temp values to figure out.
+                    SortedList<int, IParseTree> sorted_symbols = new SortedList<int, IParseTree>();
+                    foreach (var n in prs.ParserDefs) sorted_symbols.Add(prs.Parser.TokenStream.Get(n.SourceInterval.a).StartIndex, n);
+                    foreach (var n in prs.LexerDefs) sorted_symbols.Add(prs.Parser.TokenStream.Get(n.SourceInterval.a).StartIndex, n);
+                    foreach (var n in prs.Refs) sorted_symbols.Add(prs.Parser.TokenStream.Get(n.SourceInterval.a).StartIndex, n);
+
                     (int,int) start = (1, 0);
 
-                    org.eclipse.wst.xml.xpath2.processor.Engine engine =
-                        new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    var ate = new ParseTreeEditing.AntlrDOM.ConvertToAntlrDOM();
-                    var expr = "//parserRuleSpec/RULE_REF";
-                    using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(prs.Nodes, prs.Parser))
+                    foreach (var pair in sorted_symbols)
                     {
-                        var nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext,
-                                new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as AntlrElement).AntlrIParseTree)
-                            .ToList();
-                        foreach (var node in nodes)
+                        var node = pair.Value;
+                        if (trace)
                         {
-                            if (trace)
-                            {
-                                Logger.Log.WriteLine("Found " + node.ToString());
-                            }
-                            // Parser symbol
-                            var kind = 0;
-                            int ai = node.SourceInterval.a;
-                            int bi = node.SourceInterval.b;
-                            var tai = prs.Parser.TokenStream.Get(ai);
-                            var tbi = prs.Parser.TokenStream.Get(bi);
-                            // Stupid LSP works with line/columns rather than absolute index into buffer.
-                            // Convert.
-                            (int, int) lc_start = start;
-                            (int, int) lcs = (tai.Line, tai.Column);
-                            var len = tbi.StopIndex - tbi.StartIndex + 1;
-                            (int, int) lce = (tbi.Line, tbi.Column + len);
-
-                            var diff_l = lcs.Item1 - lc_start.Item1;
-                            var diff_c = diff_l != 0 ? lcs.Item2 : lcs.Item2 - lc_start.Item2;
-                            // line
-                            d.Add((uint)diff_l);
-                            // startChar
-                            d.Add((uint)diff_c);
-                            // length
-                            d.Add((uint)(tbi.StopIndex - tai.StartIndex + 1));
-                            // tokenType
-                            d.Add((uint)kind);
-                            // tokenModifiers
-                            d.Add(0);
-                            start = (tai.Line, tai.Column);
+                            Logger.Log.WriteLine("Found " + node.ToString());
                         }
-                        var expr2 = "//lexerRuleSpec/TOKEN_REF";
-                        var nodes2 = engine.parseExpression(expr2,
-                                 new StaticContextBuilder()).evaluate(dynamicContext,
-                                 new object[] { dynamicContext.Document })
-                             .Select(x => (x.NativeValue as AntlrElement).AntlrIParseTree)
-                             .ToList();
-                        foreach (var node in nodes2)
-                        {
-                            if (trace)
-                            {
-                                Logger.Log.WriteLine("Found " + node.ToString());
-                            }
-                            // Parser symbol
-                            var kind = 0;
-                            int ai = node.SourceInterval.a;
-                            int bi = node.SourceInterval.b;
-                            var tai = prs.Parser.TokenStream.Get(ai);
-                            var tbi = prs.Parser.TokenStream.Get(bi);
-                            // Stupid LSP works with line/columns rather than absolute index into buffer.
-                            // Convert.
-                            (int, int) lc_start = start;
-                            (int, int) lcs = (tai.Line, tai.Column);
-                            var len = tbi.StopIndex - tbi.StartIndex + 1;
-                            (int, int) lce = (tbi.Line, tbi.Column + len);
 
-                            var diff_l = lcs.Item1 - lc_start.Item1;
-                            var diff_c = diff_l != 0 ? lcs.Item2 : lcs.Item2 - lc_start.Item2;
-                            // line
-                            d.Add((uint)diff_l);
-                            // startChar
-                            d.Add((uint)diff_c);
-                            // length
-                            d.Add((uint)(tbi.StopIndex - tai.StartIndex + 1));
-                            // tokenType
-                            d.Add((uint)kind);
-                            // tokenModifiers
-                            d.Add(0);
-                            start = (tai.Line, tai.Column);
-                        }
+                        // Parser symbol
+                        var kind = 0;
+                        int ai = node.SourceInterval.a;
+                        int bi = node.SourceInterval.b;
+                        var tai = prs.Parser.TokenStream.Get(ai);
+                        var tbi = prs.Parser.TokenStream.Get(bi);
+                        // Stupid LSP works with line/columns rather than absolute index into buffer.
+                        // Convert.
+                        (int, int) lc_start = start;
+                        (int, int) lcs = (tai.Line, tai.Column);
+                        var len = tbi.StopIndex - tbi.StartIndex + 1;
+                        (int, int) lce = (tbi.Line, tbi.Column + len);
+
+                        var diff_l = lcs.Item1 - lc_start.Item1;
+                        var diff_c = diff_l != 0 ? lcs.Item2 : lcs.Item2 - lc_start.Item2;
+                        // line
+                        d.Add((uint)diff_l);
+                        // startChar
+                        d.Add((uint)diff_c);
+                        // length
+                        d.Add((uint)(tbi.StopIndex - tai.StartIndex + 1));
+                        // tokenType
+                        d.Add((uint)kind);
+                        // tokenModifiers
+                        d.Add(0);
+                        start = (tai.Line, tai.Column);
                     }
-
                     result = new SemanticTokens();
                     result.Data = d.ToArray();
                     if (trace)
@@ -1647,7 +1721,7 @@ namespace Server
             throw new NotImplementedException();
         }
 
-        int DoParse(string parser_type, string txt, string prefix, string input_name, int row_number)
+        ParsingResultSet DoParse(string parser_type, string txt, string prefix, string input_name, int row_number)
         {
             Type type = null;
             if (parser_type == null || parser_type == "")
@@ -1720,7 +1794,8 @@ namespace Server
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             var tuple = new ParsingResultSet() { Text = (r5 as string), FileName = input_name, Nodes = new IParseTree[] { t2 }, Parser = parser, Lexer = lexer };
             data.Add(input_name, tuple);
-            return (bool)res3 ? 1 : 0;
+            return tuple;
+            //return (bool)res3 ? 1 : 0;
         }
 
     }
@@ -1729,6 +1804,9 @@ namespace Server
     {
         public ParsingResultSet()
         {
+            ParserDefs = new List<IParseTree>();
+            LexerDefs = new List<IParseTree>();
+            Refs = new List<IParseTree>();
         }
 
         public string Text { get; set; }
@@ -1736,5 +1814,8 @@ namespace Server
         public IParseTree[] Nodes { get; set; }
         public Parser Parser { get; set; }
         public Lexer Lexer { get; set; }
+        public List<IParseTree> ParserDefs { get; set; }
+        public List<IParseTree> LexerDefs { get; set; }
+        public List<IParseTree> Refs { get; set; }
     }
 }
