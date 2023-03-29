@@ -61,7 +61,7 @@ let client: vscodelc.LanguageClient;
 
 export function activate(context: vscode.ExtensionContext)
 {
-    var fn = __dirname + '/../Server/bin/Debug/net7.0/Server.exe';
+    var fn = __dirname + '/../Server/bin/Debug/net7.0/LspServer.exe';
 
     const server: vscodelc.Executable =
     {

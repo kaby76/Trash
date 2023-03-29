@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable
+  xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<Extern href="stdidcmd.h" />
+	<Extern href="vsshlids.h" />
+
+	<Commands package="guidVSPackageCommandCodeWindowContextMenu">
+
+		<Bitmaps>
+			<Bitmap guid="guidImages" href="..\Resources\Command1.png" usedList="bmpPic1" />
+			<Bitmap guid="guidImages1" href="..\Resources\FindRefsWindowCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+		</Bitmaps>
+
+		<Groups>
+			<Group guid="guidMenuAndCommandsCmdSet" id="MyMenuGroup" priority="0x600">
+				<Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_MAINMENU"/>
+			</Group>
+			<Group guid="guidMenuAndCommandsCmdSet" id="TopLevelMenuGroup" priority="0x0600">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TopLevelMenu"/>
+			</Group>
+			<Group guid="guidMenuAndCommandsCmdSet" id="NavigateMenuGroup" priority="0x0600">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="NavigateMenu"/>
+			</Group>
+			<Group guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup" priority="0x0600">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenu"/>
+			</Group>
+			<Group guid="guidMenuAndCommandsCmdSet" id="AnalyzeMenuGroup" priority="0x0600">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="AnalyzeMenu"/>
+			</Group>
+		</Groups>
+
+		<Buttons>
+			<Button guid="guidMenuAndCommandsCmdSet" id="NextRuleCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="NavigateMenuGroup"/>
+				<Strings>
+					<ButtonText>Next rule</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidMenuAndCommandsCmdSet" id="PrevRuleCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="NavigateMenuGroup"/>
+				<Strings>
+					<ButtonText>Previous rule</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidMenuAndCommandsCmdSet" id="GoToListenerCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="NavigateMenuGroup"/>
+				<Strings>
+					<ButtonText>Go to Listener</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidMenuAndCommandsCmdSet" id="GoToVisitorCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="NavigateMenuGroup"/>
+				<Strings>
+					<ButtonText>Go to Visitor</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="ReplaceParserLiteralCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Replace Parser Literal</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="RemoveUselessParserProductionsCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Remove useless parser productions</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="MoveStartRuleToTopCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Move start rule to top</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="ReorderAlphabeticallyCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Reorder parser rules alphabetically</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="ReorderBFSCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Reorder parser rules vis BFS</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="ReorderDFSCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Reorder parser rules via DFS pre-order</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="SplitGrammarCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Split combined grammar</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="CombineGrammarsCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Combine split grammars</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="EliminateDirectLeftRecursionCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Eliminate direct left recursion</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="EliminateIndirectLeftRecursionCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Eliminate indirect left recursion</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="ConvertRecursionToKleeneOperator" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Convert recursion to Kleene operator</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="EliminateAntlrKeywordsInRulesCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Eliminate Antlr keywords in rules</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="SortModesCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Sort lexer modes</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="UnfoldCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Unfold (sub. RHS where LHS sym used)</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="FoldCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Fold (extract RHS into rule)</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="RemoveUselessParenthesesCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Remove useless parentheses</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="UpperLowerCaseLiteralCmd" priority="0x100" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TransformMenuGroup"/>
+				<Strings>
+					<ButtonText>Convert string literals to upper and lower case</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="PerformAnalysisCmd" priority="0x700" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="AnalyzeMenuGroup"/>
+				<Strings>
+					<ButtonText>Analyze grammar</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="ImportCmd" priority="0x700" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TopLevelMenuGroup"/>
+				<Strings>
+					<ButtonText>Import</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="OptionsCmd" priority="0x700" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TopLevelMenuGroup"/>
+				<Strings>
+					<ButtonText>Options</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidMenuAndCommandsCmdSet" id="AboutCmd" priority="0x900" type="Button">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TopLevelMenuGroup"/>
+				<Strings>
+					<ButtonText>About</ButtonText>
+				</Strings>
+			</Button>
+		</Buttons>
+
+		<Menus>
+			<Menu guid="guidMenuAndCommandsCmdSet" id="TopLevelMenu" priority="0x700" type="Menu">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="MyMenuGroup" />
+				<Strings>
+					<ButtonText>AntlrVSIX</ButtonText>
+					<CommandName>AntlrVSIX</CommandName>
+				</Strings>
+			</Menu>
+			<Menu guid="guidMenuAndCommandsCmdSet" id="NavigateMenu" priority="0x700" type="Menu">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TopLevelMenuGroup" />
+				<Strings>
+					<ButtonText>Navigate</ButtonText>
+					<CommandName>Navigate</CommandName>
+				</Strings>
+			</Menu>
+			<Menu guid="guidMenuAndCommandsCmdSet" id="TransformMenu" priority="0x700" type="Menu">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TopLevelMenuGroup" />
+				<Strings>
+					<ButtonText>Transform</ButtonText>
+					<CommandName>Transform</CommandName>
+				</Strings>
+			</Menu>
+			<Menu guid="guidMenuAndCommandsCmdSet" id="AnalyzeMenu" priority="0x700" type="Menu">
+				<Parent guid="guidMenuAndCommandsCmdSet" id="TopLevelMenuGroup" />
+				<Strings>
+					<ButtonText>Analyze</ButtonText>
+					<CommandName>Analyze</CommandName>
+				</Strings>
+			</Menu>
+		</Menus>
+
+	</Commands>
+
+	<Symbols>
+		<GuidSymbol name="guidVSPackageCommandCodeWindowContextMenu" value="{49bf9144-398a-467c-9b87-ac26d1e62737}" />
+
+		<GuidSymbol name="guidImages" value="{68759f95-6f1d-4a77-87ea-192fc8d811f1}">
+			<IDSymbol name="bmpPic1" value="1" />
+		</GuidSymbol>
+
+		<GuidSymbol name="guidAntlrLanguagePackageCmdSet" value="{9bd1fb43-7317-4992-8f66-8c2277ac652d}" >
+			<IDSymbol name="cmdidFindRefsWindowCommand" value="256" />
+		</GuidSymbol>
+
+		<GuidSymbol name="guidImages1" value="{0b47160c-3bd1-4c1b-a4a5-adef07e3787e}" >
+			<IDSymbol name="bmpPic1" value="1" />
+			<IDSymbol name="bmpPic2" value="2" />
+			<IDSymbol name="bmpPicSearch" value="3" />
+			<IDSymbol name="bmpPicX" value="4" />
+			<IDSymbol name="bmpPicArrows" value="5" />
+			<IDSymbol name="bmpPicStrikethrough" value="6" />
+		</GuidSymbol>
+
+		<GuidSymbol name="guidMenuAndCommandsPkg" value="{3C7C5ABE-82AC-4A37-B077-0FF60E8B1FD3}" />
+
+		<GuidSymbol name="guidMenuAndCommandsCmdSet" value="{1B4BF8E5-B60D-4DF7-95CB-FF3684750363}">
+			<IDSymbol name="MyMenuGroup" value="0x6010" />
+			<IDSymbol name="TopLevelMenu" value="0x6011" />
+			<IDSymbol name="TopLevelMenuGroup" value="0x6012" />
+			<IDSymbol name="NavigateMenu" value="0x6013" />
+			<IDSymbol name="NavigateMenuGroup" value="0x6014" />
+			<IDSymbol name="TransformMenu" value="0x6015" />
+			<IDSymbol name="TransformMenuGroup" value="0x6016" />
+			<IDSymbol name="AnalyzeMenu" value="0x6017" />
+			<IDSymbol name="AnalyzeMenuGroup" value="0x6018" />
+			<IDSymbol name="NextRuleCmd" value="0x7002" />
+			<IDSymbol name="PrevRuleCmd" value="0x7003" />
+			<IDSymbol name="GoToListenerCmd" value="0x7005" />
+			<IDSymbol name="GoToVisitorCmd" value="0x7006" />
+			<IDSymbol name="OptionsCmd" value="0x7007" />
+			<IDSymbol name="AboutCmd" value="0x7010" />
+			<IDSymbol name="ReplaceParserLiteralCmd" value="0x7011" />
+			<IDSymbol name="RemoveUselessParserProductionsCmd" value="0x7012" />
+			<IDSymbol name="MoveStartRuleToTopCmd" value="0x7013" />
+			<IDSymbol name="ReorderAlphabeticallyCmd" value="0x7014" />
+			<IDSymbol name="ReorderBFSCmd" value="0x7015" />
+			<IDSymbol name="ReorderDFSCmd" value="0x7016" />
+			<IDSymbol name="SplitGrammarCmd" value="0x7017" />
+			<IDSymbol name="CombineGrammarsCmd" value="0x7018" />
+			<IDSymbol name="ImportCmd" value="0x7019" />
+			<IDSymbol name="EliminateDirectLeftRecursionCmd" value="0x7020" />
+			<IDSymbol name="EliminateAntlrKeywordsInRulesCmd" value="0x7021" />
+			<IDSymbol name="SortModesCmd" value="0x7023" />
+			<IDSymbol name="EliminateIndirectLeftRecursionCmd" value="0x7024" />
+			<IDSymbol name="ConvertRecursionToKleeneOperator" value="0x7025" />
+			<IDSymbol name="UnfoldCmd" value="0x7026" />
+			<IDSymbol name="FoldCmd" value="0x7027" />
+			<IDSymbol name="RemoveUselessParenthesesCmd" value="0x7028" />
+			<IDSymbol name="PerformAnalysisCmd" value="0x7029" />
+			<IDSymbol name="ReplacePrioritizationCmd" value="0x702A"/>
+			<IDSymbol name="UpperLowerCaseLiteralCmd" value="0x702B"/>
+		</GuidSymbol>
+	</Symbols>
+</CommandTable>

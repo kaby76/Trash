@@ -143,9 +143,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdeltree", "src\trdeltree\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "triconv", "src\triconv\triconv.csproj", "{1A999C2F-36DD-43FD-8B8D-940531872D96}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "src\Server\Server.csproj", "{BBECDBF5-8FE8-48E2-81D4-17EFABE1A155}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LspServer", "src\LspServer\LspServer.csproj", "{BBECDBF5-8FE8-48E2-81D4-17EFABE1A155}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LspHelpers", "src\LspHelpers\LspHelpers.csproj", "{E9E42BB9-2473-4C5F-A504-AF95FFEE4E60}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrVSIX", "src\VsIde\AntlrVSIX.csproj", "{29235F0E-091B-4D17-921B-1E1679A36990}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -386,6 +388,12 @@ Global
 		{E9E42BB9-2473-4C5F-A504-AF95FFEE4E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9E42BB9-2473-4C5F-A504-AF95FFEE4E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9E42BB9-2473-4C5F-A504-AF95FFEE4E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29235F0E-091B-4D17-921B-1E1679A36990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29235F0E-091B-4D17-921B-1E1679A36990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29235F0E-091B-4D17-921B-1E1679A36990}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{29235F0E-091B-4D17-921B-1E1679A36990}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29235F0E-091B-4D17-921B-1E1679A36990}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29235F0E-091B-4D17-921B-1E1679A36990}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

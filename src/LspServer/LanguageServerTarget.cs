@@ -172,7 +172,9 @@ namespace Server
                         Save = new SaveOptions
                         {
                             IncludeText = true
-                        }
+                        },
+                        WillSave = false,
+                        WillSaveWaitUntil = false,
                     },
 
                     CompletionProvider =
@@ -229,15 +231,16 @@ namespace Server
                     // SelectionRangeProvider not supported.
 
                     WorkspaceSymbolProvider = false,
+                    //SemanticTokensProvider = false
+
                     SemanticTokensProvider = 
-                    //SemanticTokensOptions =
                     new SemanticTokensOptions()
                     {
                         Full = true,
                         Range = false,
                         Legend = new SemanticTokensLegend()
                         {
-                            tokenTypes = 
+                            tokenTypes =
                             //TokenTypes = 
                             new string[] {
                                 "class",
@@ -247,7 +250,7 @@ namespace Server
                                 "string",
                                 "keyword",
                             },
-                            tokenModifiers = 
+                            tokenModifiers =
                             //TokenModifiers =
                             new string[] {
                                 "declaration",
@@ -430,14 +433,18 @@ namespace Server
                 }
                 DidOpenTextDocumentParams request = arg.ToObject<DidOpenTextDocumentParams>();
                 var language_id = request.TextDocument.LanguageId;
+                if (language_id == "Antlr") language_id = "antlr4";
                 var text = request.TextDocument.Text;
                 string fn = request.TextDocument.Uri;
                 //string fn = request.TextDocument.Uri.LocalPath;
                 workspace[fn] = text;
+                // We should use suffix to do the right parse.
+                // Buf for now, it's "Antlr" when VS2022 is connecting.
                 switch (language_id)
                 {
                     case "antlr4":
                         var prs = DoParse(language_id, text, "", fn, 0);
+                        data.Add(fn, prs);
                         org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
                         var ate = new ParseTreeEditing.AntlrDOM.ConvertToAntlrDOM();
                         using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
@@ -673,7 +680,10 @@ namespace Server
                     Logger.Log.WriteLine("<-- TextDocumentDidClose");
                     Logger.Log.WriteLine(arg.ToString());
                 }
-                // Nothing to do--who cares.
+                DidCloseTextDocumentParams request = arg.ToObject<DidCloseTextDocumentParams>();
+                string fn = request.TextDocument.Uri;
+                workspace.Remove(fn);
+                data.Remove(fn);
             }
         }
 
@@ -866,30 +876,58 @@ namespace Server
                     }).FirstOrDefault();
                     if (sym != null)
                     {
-                        var text = sym.GetText();
-                        if ('a' <= text[0] && text[0] <= 'z')
+                        foreach (var pair in data)
                         {
-                            var l = prs.ParserDefs.Where(r =>
-                                {
-                                    return text == r.GetText();
-                                }
-                            ).FirstOrDefault();
-                            if (l != null)
+                            prs = pair.Value;
+                            fn = pair.Key;
+                            var text = sym.GetText();
+                            if ('a' <= text[0] && text[0] <= 'z')
                             {
-                                LspTypes.Location location = new LspTypes.Location
+                                var l = prs.ParserDefs.Where(r => { return text == r.GetText(); }
+                                ).FirstOrDefault();
+                                if (l != null)
                                 {
-                                    Uri = new Uri(fn).ToString()
-                                };
-                                location.Range = new LspTypes.Range();
-                                var si = l.SourceInterval.a;
-                                var ts = prs.Parser.TokenStream.Get(si);
-                                location.Range.Start = new Position((uint)ts.Line - 1, (uint)ts.Column); // -1 because it's LSP zero based line numbers.
-                                location.Range.End = new Position((uint)ts.Line - 1, (uint)(ts.Column + ts.StopIndex - ts.StartIndex + 1));
-                                locations.Add(location);
+                                    LspTypes.Location location = new LspTypes.Location
+                                    {
+                                        Uri = new Uri(fn).ToString()
+                                    };
+                                    location.Range = new LspTypes.Range();
+                                    var si = l.SourceInterval.a;
+                                    var ts = prs.Parser.TokenStream.Get(si);
+                                    location.Range.Start =
+                                        new Position((uint)ts.Line - 1,
+                                            (uint)ts.Column); // -1 because it's LSP zero based line numbers.
+                                    location.Range.End = new Position((uint)ts.Line - 1,
+                                        (uint)(ts.Column + ts.StopIndex - ts.StartIndex + 1));
+                                    locations.Add(location);
+                                }
+                                result = locations.ToArray();
                             }
-                            result = locations.ToArray();
+                            else if ('A' <= text[0] && text[0] <= 'Z')
+                            {
+                                var l = prs.LexerDefs.Where(r => { return text == r.GetText(); }
+                                ).FirstOrDefault();
+                                if (l != null)
+                                {
+                                    LspTypes.Location location = new LspTypes.Location
+                                    {
+                                        Uri = new Uri(fn).ToString()
+                                    };
+                                    location.Range = new LspTypes.Range();
+                                    var si = l.SourceInterval.a;
+                                    var ts = prs.Parser.TokenStream.Get(si);
+                                    location.Range.Start =
+                                        new Position((uint)ts.Line - 1,
+                                            (uint)ts.Column); // -1 because it's LSP zero based line numbers.
+                                    location.Range.End = new Position((uint)ts.Line - 1,
+                                        (uint)(ts.Column + ts.StopIndex - ts.StartIndex + 1));
+                                    locations.Add(location);
+                                }
+                                result = locations.ToArray();
+                            }
                         }
                     }
+
                     //Document document = CheckDoc(request.TextDocument.Uri);
                     //Position position = request.Position;
                     //int line = (int)position.Line;
@@ -1793,7 +1831,6 @@ namespace Server
             //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             var tuple = new ParsingResultSet() { Text = (r5 as string), FileName = input_name, Nodes = new IParseTree[] { t2 }, Parser = parser, Lexer = lexer };
-            data.Add(input_name, tuple);
             return tuple;
             //return (bool)res3 ? 1 : 0;
         }

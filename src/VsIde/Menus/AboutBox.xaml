@@ -1,0 +1,26 @@
+<Window 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="LspAntlr.AboutBox"
+    Title="About"
+    Height="307.334"
+    Width="650"
+    MinHeight="10"
+    MinWidth="300"
+    ResizeMode="CanResizeWithGrip"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner" 
+    FocusManager.FocusedElement="{Binding ElementName=leftMarginTextBox}">
+
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBox Grid.Column="1" Grid.Row="1" Name="_info" IsReadOnly="True" MinWidth="250" BorderThickness="0"></TextBox>
+    </Grid >
+</Window>
