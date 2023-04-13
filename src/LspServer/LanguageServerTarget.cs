@@ -194,14 +194,12 @@ namespace Server
                     // DeclarationProvider not supported.
 
                     DefinitionProvider = true,
-                    //DefinitionProvider = false,
 
                     TypeDefinitionProvider = false, // Does not make sense for Antlr.
 
                     ImplementationProvider = false, // Does not make sense for Antlr.
 
-                    //ReferencesProvider = true,
-                    ReferencesProvider = false,
+                    ReferencesProvider = true,
 
                     //DocumentHighlightProvider = true,
                     DocumentHighlightProvider = false,
@@ -220,8 +218,8 @@ namespace Server
 
                     DocumentRangeFormattingProvider = false,
 
-                    //RenameProvider = true,
-                    RenameProvider = false,
+                    RenameProvider = true,
+                    //RenameProvider = false,
 
                     //FoldingRangeProvider = new SumType<bool, FoldingRangeOptions>(false),
                     FoldingRangeProvider = new SumType<bool, FoldingRangeOptions, FoldingRangeRegistrationOptions>(false),
@@ -1075,6 +1073,52 @@ namespace Server
                         Logger.Log.WriteLine(arg.ToString());
                     }
                     TextDocumentPositionParams request = arg.ToObject<TextDocumentPositionParams>();
+                    string fn = request.TextDocument.Uri;
+                    Position position = request.Position;
+                    int line = 1 + (int)position.Line; // LSP zero based, Antlr 1 based.
+                    int column = (int)position.Character; // zero based, Antlr 0 based.
+                    List<object> locations = new List<object>();
+
+                    // Find whatever we are pointing to.
+                    var found = data.TryGetValue(fn, out ParsingResultSet prs);
+
+                    var sym = prs.Refs.Where(r =>
+                    {
+                        var si = r.SourceInterval.a;
+                        var ts = prs.Parser.TokenStream.Get(si);
+                        return ts.Line == line && ts.Column <= column &&
+                               column <= ts.Column + (ts.StopIndex - ts.StartIndex + 1);
+                    }).FirstOrDefault();
+                    if (sym != null)
+                    {
+                        foreach (var pair in data)
+                        {
+                            prs = pair.Value;
+                            fn = pair.Key;
+                            var text = sym.GetText();
+                            var all = prs.Refs.Where(r => { return text == r.GetText(); }
+                                ).ToList();
+                            foreach (var l in all)
+                            {
+                                LspTypes.Location location = new LspTypes.Location
+                                {
+                                    Uri = new Uri(fn).ToString()
+                                };
+                                location.Range = new LspTypes.Range();
+                                var si = l.SourceInterval.a;
+                                var ts = prs.Parser.TokenStream.Get(si);
+                                location.Range.Start =
+                                    new Position((uint)ts.Line - 1,
+                                        (uint)ts.Column); // -1 because it's LSP zero based line numbers.
+                                location.Range.End = new Position((uint)ts.Line - 1,
+                                    (uint)(ts.Column + ts.StopIndex - ts.StartIndex + 1));
+                                locations.Add(location);
+                            }
+                        }
+                    }
+                    result = locations.ToArray();
+
+
                     //Document document = CheckDoc(request.TextDocument.Uri);
                     //Position position = request.Position;
                     //int line = (int)position.Line;
@@ -1529,6 +1573,8 @@ namespace Server
                     Position position = request.Position;
                     int line = (int)position.Line;
                     int character = (int)position.Character;
+
+
                     //Document document = CheckDoc(request.TextDocument.Uri);
                     //if (!ignore_next_change.ContainsKey(document.FullPath))
                     //{

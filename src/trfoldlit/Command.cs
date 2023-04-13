@@ -1,11 +1,18 @@
-﻿namespace Trash
+﻿using org.w3c.dom;
+
+namespace Trash
 {
+    using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using AntlrJson;
+    using LanguageServer;
+    using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
     using org.eclipse.wst.xml.xpath2.processor.util;
+    using ParseTreeEditing.UnvParseTreeDOM;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Text.Json;
 
     class Command
@@ -19,9 +26,65 @@
             }
         }
 
+        public string Reconstruct(Node tree)
+        {
+            Stack<Node> stack = new Stack<Node>();
+            stack.Push(tree);
+            StringBuilder sb = new StringBuilder();
+            int last = -1;
+            while (stack.Any())
+            {
+                var n = stack.Pop();
+                if (n is UnvParseTreeAttr a)
+                {
+                    sb.Append(a.StringValue);
+                }
+                else if (n is UnvParseTreeText t)
+                {
+                    sb.Append(t.NodeValue);
+                }
+                else if (n is UnvParseTreeElement e)
+                {
+                    for (int i = n.ChildNodes.Length - 1; i >= 0; i--)
+                    {
+                        stack.Push(n.ChildNodes.item(i));
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
+        public string StrictReconstruct(Node tree)
+        {
+            Stack<Node> stack = new Stack<Node>();
+            stack.Push(tree);
+            StringBuilder sb = new StringBuilder();
+            int last = -1;
+            while (stack.Any())
+            {
+                var n = stack.Pop();
+                if (n is UnvParseTreeAttr a)
+                {
+                }
+                else if (n is UnvParseTreeText t)
+                {
+                    sb.Append(t.NodeValue);
+                }
+                else if (n is UnvParseTreeElement e)
+                {
+                    for (int i = n.ChildNodes.Length - 1; i >= 0; i--)
+                    {
+                        stack.Push(n.ChildNodes.item(i));
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
         public void Execute(Config config)
         {
-            var expr = config.Expr != null && config.Expr.Any() ? config.Expr.First() : null;
+            var expr = config.Expr.FirstOrDefault();
+            if (expr == null) expr = "//lexerRuleSpec/TOKEN_REF";
             if (config.Verbose)
             {
                 System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
@@ -54,7 +117,8 @@
             serializeOptions.MaxDepth = 10000;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
-            var docs = new List<Workspaces.Document>();
+            List<UnvParseTreeElement> nodes = new List<UnvParseTreeElement>();
+            // First pass: gather all lexer rules.
             foreach (var parse_info in data)
             {
                 var text = parse_info.Text;
@@ -62,50 +126,67 @@
                 var atrees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                var tokstream = parse_info.Stream;
-                var doc = Docs.Class1.CreateDoc(parse_info);
-                docs.Add(doc);
-            }
-            foreach (var doc in docs)
-            {
-                var pr = LanguageServer.ParsingResultsFactory.Create(doc);
-                var workspace = doc.Workspace;
-                _ = new LanguageServer.Module().Compile(workspace);
-                var text = doc.Code;
-                var fn = doc.FullPath;
-                var atrees = doc.ParseTree;
-                var parser = pr.Parser;
-                var lexer = pr.Lexer;
-                // var doc = Docs.Class1.CreateDoc(parse_info);
                 org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                IParseTree root = atrees.Root();
-                var ate = new ParseTreeEditing.AntlrDOM.ConvertToDOM();
-                List<IParseTree> nodes = null;
-                if (expr != null && expr != "")
+                var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
                 {
-                    using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = ate.Try(root, parser))
-                    {
-                        nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree as IParseTree).ToList();
-                        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
-                    }
+                    var n = engine.parseExpression(expr,
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
+                    nodes.AddRange(n);
                 }
-                var res = LanguageServer.Transform.Foldlit(nodes, doc);
-                Docs.Class1.EnactEdits(res);
-                IParseTree pt = pr.ParseTree;
-                var tuple = new ParsingResultSet()
-                {
-                    Text = doc.Code,
-                    FileName = doc.FullPath,
-                    Stream = pr.TokStream,
-                    Nodes = new IParseTree[] { pt },
-                    Lexer = pr.Lexer,
-                    Parser = pr.Parser
-                };
-                results.Add(tuple);
             }
+            // Second pass to replace.
+            foreach (var parse_info in data)
+            {
+                var text = parse_info.Text;
+                var fn = parse_info.FileName;
+                var atrees = parse_info.Nodes;
+                var parser = parse_info.Parser;
+                var lexer = parse_info.Lexer;
+                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
+                {
+                    // These are LHS symbols.
+                    foreach (var node in nodes)
+                    {
+                        var parent = node.ParentNode;
+                        var rhs = parent.ChildNodes.item(parent.ChildNodes.Length - 2);
+                        var str = this.StrictReconstruct(rhs).Trim();
+                        if (str == "") continue;
+                        var expr2 = "//parserRuleSpec/ruleBlock//STRING_LITERAL[text() = \"" + str + "\"]";
+                        var refs = engine.parseExpression(expr2,
+                                new StaticContextBuilder()).evaluate(dynamicContext,
+                                new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
+                            .ToList();
+                        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + refs.Count + " nodes.");
+                        foreach (var r in refs)
+                        {
+                            TreeEdits.Replace(r, this.StrictReconstruct(node));
+                        }
+
+                        // Find rule refs, replace.
+                        //TreeEdits.Replace(node, str);
+                    }
+
+                    var tuple = new ParsingResultSet()
+                    {
+                        Text = text,
+                        FileName = fn,
+                        Nodes = atrees,
+                        Lexer = lexer,
+                        Parser = parser
+                    };
+                    results.Add(tuple);
+                }
+            }
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
             System.Console.WriteLine(js1);
         }
     }

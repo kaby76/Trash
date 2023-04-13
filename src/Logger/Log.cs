@@ -77,23 +77,29 @@
             }
         }
 
+        public override void WriteLine()
+        {
+                var log = home
+                          + System.IO.Path.DirectorySeparatorChar
+                          + ".antlrlog";
+                cacheLock.EnterWriteLock();
+                try
+                {
+                        using (StreamWriter w = File.AppendText(log))
+                        {
+                                w.WriteLine();
+                        }
+                }
+                finally
+                {
+                        cacheLock.ExitWriteLock();
+                }
+        }
+
         public void Notify(string message)
         {
             WriteLine(message);
-            bool options = Options.Option.GetBoolean("OptInLogging");
-            if (options)
-            {
-                try
-                {
-                    HttpClient httpClient = new HttpClient();
-                    HttpResponseMessage result = httpClient.GetAsync("http://domemtech.com/home/db?" + message).Result;
-                }
-                catch (Exception)
-                {
-                }
-            }
         }
-
     }
 
     public class Logger
