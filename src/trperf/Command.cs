@@ -81,8 +81,29 @@ namespace Trash
                 exists = File.Exists(full_path);
             }
 
+	    
             var grun = new Grun(config);
-            grun.Run();
+	        if (config.Type == null && !exists)
+	        {
+		        // Come up with a type to parse.
+		        // If there is no generated parser, then use one of the built-in parsers.
+		        // Hack for now.
+		        // Take suffix of first file, get type of parser,
+		        // then use that to determine parse.
+		        var ext = Path.GetExtension(config.Files.First());
+		        var parser_type = ext switch
+		        {
+			        ".g4" => "antlr4",
+			        ".g3" => "antlr3",
+			        ".g2" => "antlr2",
+			        ".gram" => "pegen",
+			        ".rex" => "rex",
+			        ".y" => "bison",
+			        _ => throw new Exception("Unknown file extension, cannot load in a built-in parser.")
+		        };
+		        config.Type = parser_type;
+	        }
+	        Environment.ExitCode = grun.Run(config.Type);
         }
     }
 }

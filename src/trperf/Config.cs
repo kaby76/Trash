@@ -17,6 +17,9 @@ namespace Trash
         [Option('p', "parser", Required = false, HelpText = "Location of pre-built parser (aka the trgen Generated/ directory)")]
         public string ParserLocation { get; set; }
 
+        [Option('t', "type", Required = false)]
+        public string Type { get; set; }
+
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
     }

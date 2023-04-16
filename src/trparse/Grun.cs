@@ -149,9 +149,6 @@
                 System.Console.WriteLine(e.ToString());
                 result = 1;
             }
-            finally
-            {
-            }
             return result;
         }
 

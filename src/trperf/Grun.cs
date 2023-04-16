@@ -54,8 +54,9 @@
             System.Console.WriteLine(e.Data);
         }
 
-        public void Run()
+        public int Run(string parser_type = null)
         {
+            int result = 0;
             try
             {
                 var data = new List<AntlrJson.ParsingResultSet>();
@@ -92,9 +93,12 @@
                     }
                 }
             }
-            finally
+            catch (Exception e)
             {
+                System.Console.WriteLine(e.ToString());
+                result = 1;
             }
+            return result;
         }
 
         void Doit(string txt)
