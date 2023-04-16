@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "abbLexer.g4",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-2988\\grammars-v4\\abb"
+      "commandLineArgs": " ada.g2 -q",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3260\\fix-for-scala\\antlr\\antlr2\\examples"
     }
   }
 }

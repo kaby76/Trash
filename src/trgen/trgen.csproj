@@ -17,7 +17,7 @@ This program is part of the Trash toolkit.]]>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>0.20.13</Version>
+    <Version>0.20.14</Version>
     <RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/src/trgen</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
@@ -39,7 +39,7 @@ This program is part of the Trash toolkit.]]>
     <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
     <ProjectReference Include="../Globbing/TrashGlobbing.csproj" />
     <ProjectReference Include="../Algorithms/Algorithms.csproj" />
-    <ProjectReference Include="../grammars/antlr4/Generated/antlr4.csproj" />
+    <ProjectReference Include="../grammars/antlr4/Generated-CSharp/antlr4.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

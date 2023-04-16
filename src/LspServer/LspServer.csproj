@@ -23,7 +23,7 @@
 		<ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />
 		<ProjectReference Include="../Globbing/TrashGlobbing.csproj" />
 		<ProjectReference Include="../Algorithms/Algorithms.csproj" />
-		<ProjectReference Include="../grammars/antlr4/Generated/antlr4.csproj" />
+		<ProjectReference Include="../grammars/antlr4/Generated-CSharp/antlr4.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>

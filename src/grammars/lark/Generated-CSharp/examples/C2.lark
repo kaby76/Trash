@@ -1,0 +1,254 @@
+start : translationunit
+primaryexpression : IDENTIFIER | CONSTANT | STRINGLITERAL+ | "(" expression ")" | genericselection | "__extension__"? "(" compoundstatement ")" | "__builtin_va_arg" "(" unaryexpression "," typename ")" |   "__builtin_offsetof" "(" typename "," unaryexpression ")"
+genericselection : "_Generic" "(" assignmentexpression "," genericassoclist ")"
+genericassoclist : genericassociation ("," genericassociation)*
+genericassociation : (typename | "default") ":" assignmentexpression
+postfixexpression : ( primaryexpression | "__extension__"? "(" typename ")" "{" initializerlist ","? "}" ) ("[" expression "]" | "(" argumentexpressionlist? ")" | ("." | "->") IDENTIFIER | ("++" | "--") )*
+argumentexpressionlist : assignmentexpression ("," assignmentexpression)*
+unaryexpression : ("++" |  "--" |  "sizeof")* (postfixexpression | unaryoperator castexpression |   ("sizeof" | "_Alignof") "(" typename ")" |   "&&" IDENTIFIER )
+unaryoperator :   "&" | "*" | "+" | "-" | "~" | "!"
+castexpression :   "__extension__"? "(" typename ")" castexpression | unaryexpression | DIGITSEQUENCE
+multiplicativeexpression : castexpression (("*"|"/"|"%") castexpression)*
+additiveexpression : multiplicativeexpression (("+"|"-") multiplicativeexpression)*
+shiftexpression : additiveexpression (("<<"|">>") additiveexpression)*
+relationalexpression : shiftexpression (("<"|">"|"<="|">=") shiftexpression)*
+equalityexpression : relationalexpression (("=="| "!=") relationalexpression)*
+andexpression : equalityexpression ( "&" equalityexpression)*
+exclusiveorexpression : andexpression ("^" andexpression)*
+inclusiveorexpression : exclusiveorexpression ("|" exclusiveorexpression)*
+logicalandexpression : inclusiveorexpression ("&&" inclusiveorexpression)*
+logicalorexpression : logicalandexpression ( "||" logicalandexpression)*
+conditionalexpression : logicalorexpression ("?" expression ":" conditionalexpression)?
+assignmentexpression : conditionalexpression | unaryexpression assignmentoperator assignmentexpression | DIGITSEQUENCE
+assignmentoperator : "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | "&=" | "^=" | "|="
+expression : assignmentexpression ("," assignmentexpression)*
+constantexpression : conditionalexpression
+declaration : declarationspecifiers initdeclaratorlist? ";" | staticassertdeclaration
+declarationspecifiers : declarationspecifier+
+declarationspecifiers2 : declarationspecifier+
+declarationspecifier : storageclassspecifier | typespecifier | typequalifier | functionspecifier | alignmentspecifier
+initdeclaratorlist : initdeclarator ("," initdeclarator)*
+initdeclarator : declarator ("=" initializer)?
+storageclassspecifier : "typedef" |   "extern" |   "static" |   "_Thread_local" |   "auto" |   "register"
+typespecifier : ("void" | "char" | "short" | "int" | "long" | "float" | "double" | "signed" | "unsigned" | "_Bool" | "_Complex" | "__m128" | "__m128d" | "__m128i") | "__extension__" "(" ("__m128" | "__m128d" | "__m128i") ")" | atomictypespecifier | structorunionspecifier | enumspecifier | typedefname | "__typeof__" "(" constantexpression ")" | typespecifier pointer
+structorunionspecifier : structorunion IDENTIFIER? "{" structdeclarationlist "}" | structorunion IDENTIFIER
+structorunion : "struct" | "union"
+structdeclarationlist : structdeclaration+
+structdeclaration : specifierqualifierlist structdeclaratorlist? ";" | staticassertdeclaration
+specifierqualifierlist : (typespecifier| typequalifier) specifierqualifierlist?
+structdeclaratorlist : structdeclarator ("," structdeclarator)*
+structdeclarator : declarator | declarator? ":" constantexpression
+enumspecifier : "enum" IDENTIFIER? "{" enumeratorlist ","? "}" | "enum" IDENTIFIER
+enumeratorlist : enumerator ("," enumerator)*
+enumerator : enumerationconstant ("=" constantexpression)?
+enumerationconstant : IDENTIFIER
+atomictypespecifier : "_Atomic" "(" typename ")"
+typequalifier : "const" | "restrict" | "volatile" | "_Atomic"
+functionspecifier : ("inline" | "_Noreturn" | "__inline__" | "__stdcall") | gccattributespecifier | "__declspec" "(" IDENTIFIER ")"
+alignmentspecifier : "_Alignas" "(" (typename | constantexpression) ")"
+declarator : pointer? directdeclarator gccdeclaratorextension*
+directdeclarator : IDENTIFIER |   "(" declarator ")" |   directdeclarator "[" typequalifierlist? assignmentexpression? "]" |   directdeclarator "[" "static" typequalifierlist? assignmentexpression "]" |   directdeclarator "[" typequalifierlist "static" assignmentexpression "]" |   directdeclarator "[" typequalifierlist? "*" "]" |   directdeclarator "(" parametertypelist ")" |   directdeclarator "(" identifierlist? ")" |   IDENTIFIER ":" DIGITSEQUENCE |   "(" typespecifier? pointer directdeclarator ")"
+gccdeclaratorextension : "__asm" "(" STRINGLITERAL+ ")" | gccattributespecifier
+gccattributespecifier :   "__attribute__" "(" "(" gccattributelist ")" ")"
+gccattributelist :   gccattribute? ("," gccattribute?)*
+//gccattribute : ~("," | "(" | ")") ("(" argumentexpressionlist? ")")?
+gccattribute : any ("(" argumentexpressionlist? ")")?
+//nestedparenthesesblock : ( ~("(" | ")") | "(" nestedparenthesesblock ")" )*
+pointer : (("*"|"^") typequalifierlist?)+
+typequalifierlist : typequalifier+
+parametertypelist : parameterlist ("," "...")?
+parameterlist : parameterdeclaration ("," parameterdeclaration)*
+parameterdeclaration : declarationspecifiers declarator | declarationspecifiers2 abstractdeclarator?
+identifierlist : IDENTIFIER ("," IDENTIFIER)*
+typename : specifierqualifierlist abstractdeclarator?
+abstractdeclarator : pointer | pointer? directabstractdeclarator gccdeclaratorextension*
+directabstractdeclarator :   "(" abstractdeclarator ")" gccdeclaratorextension* |   "[" typequalifierlist? assignmentexpression? "]" |   "[" "static" typequalifierlist? assignmentexpression "]" |   "[" typequalifierlist "static" assignmentexpression "]" |   "[" "*" "]" |   "(" parametertypelist? ")" gccdeclaratorextension* |   directabstractdeclarator "[" typequalifierlist? assignmentexpression? "]" |   directabstractdeclarator "[" "static" typequalifierlist? assignmentexpression "]" |   directabstractdeclarator "[" typequalifierlist "static" assignmentexpression "]" |   directabstractdeclarator "[" "*" "]" |   directabstractdeclarator "(" parametertypelist? ")" gccdeclaratorextension*
+typedefname : IDENTIFIER
+initializer :   assignmentexpression |   "{" initializerlist ","? "}"
+initializerlist :   designation? initializer ("," designation? initializer)*
+designation :   designatorlist "="
+designatorlist :   designator+
+designator :   "[" constantexpression "]" |   "." IDENTIFIER
+staticassertdeclaration :   "_Static_assert" "(" constantexpression "," STRINGLITERAL+ ")" ";"
+statement :   labeledstatement |   compoundstatement |   expressionstatement |   selectionstatement |   iterationstatement |   jumpstatement |   ("__asm" | "__asm__") ("volatile" | "__volatile__") "(" (logicalorexpression ("," logicalorexpression)*)? (":" (logicalorexpression ("," logicalorexpression)*)?)* ")" ";"
+labeledstatement :   IDENTIFIER ":" statement |   "case" constantexpression ":" statement |   "default" ":" statement
+compoundstatement :   "{" blockitemlist? "}"
+blockitemlist :   blockitem+
+blockitem :   statement |   declaration
+expressionstatement :   expression? ";"
+selectionstatement :   "if" "(" expression ")" statement ("else" statement)? |   "switch" "(" expression ")" statement
+iterationstatement :   WHILE "(" expression ")" statement |   DO statement WHILE "(" expression ")" ";" |   FOR "(" forcondition ")" statement
+forcondition : (fordeclaration | expression?) ";" forexpression? ";" forexpression?
+fordeclaration : declarationspecifiers initdeclaratorlist?
+forexpression : assignmentexpression ("," assignmentexpression)*
+jumpstatement : ("goto" IDENTIFIER | ("continue"| "break") | "return" expression? | "goto" unaryexpression ) ";"
+compilationunit : translationunit?
+translationunit : externaldeclaration+
+externaldeclaration : functiondefinition | declaration | ";"
+functiondefinition : declarationspecifiers? declarator declarationlist? compoundstatement
+declarationlist : declaration+
+
+AUTO : "auto"
+BREAK : "break"
+CASE : "case"
+CHAR : "char"
+CONST : "const"
+CONTINUE : "continue"
+DEFAULT : "default"
+DO : "do"
+DOUBLE : "double"
+ELSE : "else"
+ENUM : "enum"
+EXTERN : "extern"
+FLOAT : "float"
+FOR : "for"
+GOTO : "goto"
+IF : "if"
+INLINE : "inline"
+INT : "int"
+LONG : "long"
+REGISTER : "register"
+RESTRICT : "restrict"
+RETURN : "return"
+SHORT : "short"
+SIGNED : "signed"
+SIZEOF : "sizeof"
+STATIC : "static"
+STRUCT : "struct"
+SWITCH : "switch"
+TYPEDEF : "typedef"
+UNION : "union"
+UNSIGNED : "unsigned"
+VOID : "void"
+VOLATILE : "volatile"
+WHILE : "while"
+ALIGNAS : "_Alignas"
+ALIGNOF : "_Alignof"
+ATOMIC : "_Atomic"
+BOOL : "_Bool"
+COMPLEX : "_Complex"
+GENERIC : "_Generic"
+IMAGINARY : "_Imaginary"
+NORETURN : "_Noreturn"
+STATICASSERT : "_Static_assert"
+THREADLOCAL : "_Thread_local"
+LEFTPAREN : "("
+RIGHTPAREN : ")"
+LEFTBRACKET : "["
+RIGHTBRACKET : "]"
+LEFTBRACE : "{"
+RIGHTBRACE : "}"
+LESS : "<"
+LESSEQUAL : "<="
+GREATER : ">"
+GREATEREQUAL : ">="
+LEFTSHIFT : "<<"
+RIGHTSHIFT : ">>"
+PLUS : "+"
+PLUSPLUS : "++"
+MINUS : "-"
+MINUSMINUS : "--"
+STAR : "*"
+DIV : "/"
+MOD : "%"
+AND : "&"
+OR : "|"
+ANDAND : "&&"
+OROR : "||"
+CARET : "^"
+NOT : "!"
+TILDE : "~"
+QUESTION : "?"
+COLON : ":"
+SEMI : ";"
+COMMA : ","
+ASSIGN : "="
+STARASSIGN : "*="
+DIVASSIGN : "/="
+MODASSIGN : "%="
+PLUSASSIGN : "+="
+MINUSASSIGN : "-="
+LEFTSHIFTASSIGN : "<<="
+RIGHTSHIFTASSIGN : ">>="
+ANDASSIGN : "&="
+XORASSIGN : "^="
+ORASSIGN : "|="
+EQUAL : "=="
+NOTEQUAL : "!="
+ARROW : "->"
+DOT : "."
+ELLIPSIS : "..."
+IDENTIFIER : IDENTIFIERNONDIGIT ( IDENTIFIERNONDIGIT | DIGIT )*
+IDENTIFIERNONDIGIT : NONDIGIT | UNIVERSALCHARACTERNAME
+NONDIGIT : /[a-zA-Z_]/
+DIGIT : /[0-9]/
+UNIVERSALCHARACTERNAME : "\\u" HEXQUAD | "\\U" HEXQUAD HEXQUAD
+HEXQUAD : HEXADECIMALDIGIT HEXADECIMALDIGIT HEXADECIMALDIGIT HEXADECIMALDIGIT
+CONSTANT : INTEGERCONSTANT | FLOATINGCONSTANT | CHARACTERCONSTANT
+INTEGERCONSTANT : DECIMALCONSTANT INTEGERSUFFIX? | OCTALCONSTANT INTEGERSUFFIX? | HEXADECIMALCONSTANT INTEGERSUFFIX? | BINARYCONSTANT
+BINARYCONSTANT : "0" /[bB]/ /[0-1]/+
+DECIMALCONSTANT : NONZERODIGIT DIGIT*
+OCTALCONSTANT : "0" OCTALDIGIT*
+HEXADECIMALCONSTANT : HEXADECIMALPREFIX HEXADECIMALDIGIT+
+HEXADECIMALPREFIX : "0" /[xX]/
+NONZERODIGIT : /[1-9]/
+OCTALDIGIT : /[0-7]/
+HEXADECIMALDIGIT : /[0-9a-fA-F]/
+INTEGERSUFFIX : UNSIGNEDSUFFIX LONGSUFFIX? | UNSIGNEDSUFFIX LONGLONGSUFFIX | LONGSUFFIX UNSIGNEDSUFFIX? | LONGLONGSUFFIX UNSIGNEDSUFFIX?
+UNSIGNEDSUFFIX : /[uU]/
+LONGSUFFIX : /[lL]/
+LONGLONGSUFFIX : "ll" | "LL"
+FLOATINGCONSTANT : DECIMALFLOATINGCONSTANT | HEXADECIMALFLOATINGCONSTANT
+DECIMALFLOATINGCONSTANT : FRACTIONALCONSTANT EXPONENTPART? FLOATINGSUFFIX? | DIGITSEQUENCE EXPONENTPART FLOATINGSUFFIX?
+HEXADECIMALFLOATINGCONSTANT : HEXADECIMALPREFIX (HEXADECIMALFRACTIONALCONSTANT | HEXADECIMALDIGITSEQUENCE) BINARYEXPONENTPART FLOATINGSUFFIX?
+FRACTIONALCONSTANT : DIGITSEQUENCE? "." DIGITSEQUENCE | DIGITSEQUENCE "."
+EXPONENTPART : /[eE]/ SIGN? DIGITSEQUENCE
+SIGN : /[+-]/
+DIGITSEQUENCE : DIGIT+
+HEXADECIMALFRACTIONALCONSTANT : HEXADECIMALDIGITSEQUENCE? "." HEXADECIMALDIGITSEQUENCE | HEXADECIMALDIGITSEQUENCE "."
+BINARYEXPONENTPART : /[pP]/ SIGN? DIGITSEQUENCE
+HEXADECIMALDIGITSEQUENCE : HEXADECIMALDIGIT+
+FLOATINGSUFFIX : /[flFL]/
+CHARACTERCONSTANT : "\"" CCHARSEQUENCE "\"" | "L\"" CCHARSEQUENCE "\"" | "u'" CCHARSEQUENCE "'" |   "U'" CCHARSEQUENCE "'"
+CCHARSEQUENCE : CCHAR+
+CCHAR : /[^'\\\r\n]/ | ESCAPESEQUENCE
+ESCAPESEQUENCE : SIMPLEESCAPESEQUENCE | OCTALESCAPESEQUENCE | HEXADECIMALESCAPESEQUENCE | UNIVERSALCHARACTERNAME
+SIMPLEESCAPESEQUENCE : "\\" /['"?abfnrtv\\]/
+OCTALESCAPESEQUENCE :   "\\" OCTALDIGIT OCTALDIGIT? OCTALDIGIT?
+HEXADECIMALESCAPESEQUENCE : "\\x" HEXADECIMALDIGIT+
+STRINGLITERAL : ENCODINGPREFIX? "\"" SCHARSEQUENCE? "\""
+ENCODINGPREFIX : "u8" | "u" | "U" | "L"
+SCHARSEQUENCE : SCHAR+
+SCHAR : /[^"\\\r\n]/ | ESCAPESEQUENCE | "\\\n" | "\\\r\n"
+
+COMPLEXDEFINE : "#" WHITESPACE? "define" /[^#\r\n]/*
+%ignore COMPLEXDEFINE
+
+INCLUDEDIRECTIVE : "#" WHITESPACE? "include" WHITESPACE? (("\"" /[^\r\n]/* "\"") | ("<" /[^\r\n]/* ">" )) WHITESPACE? NEWLINE
+%ignore INCLUDEDIRECTIVE
+
+ASMBLOCK : "asm" /[^{]/* "{" /[^}]/* "}"
+%ignore ASMBLOCK
+
+LINEAFTERPREPROCESSING : "#line" WHITESPACE* /[^\r\n]/*
+%ignore LINEAFTERPREPROCESSING
+
+LINEDIRECTIVE : "#" WHITESPACE? DECIMALCONSTANT WHITESPACE? STRINGLITERAL /[^\r\n]/*
+%ignore LINEDIRECTIVE
+
+PRAGMADIRECTIVE : "#" WHITESPACE? "pragma" WHITESPACE /[^\r\n]/*
+%ignore PRAGMADIRECTIVE
+
+WHITESPACE : /[ \t]/+
+%ignore WHITESPACE
+
+NEWLINE : ("\r" "\n") | "\n"
+%ignore NEWLINE
+
+BLOCKCOMMENT :   "/*" /./* "*/"
+%ignore BLOCKCOMMENT
+
+LINECOMMENT :   "//" /[^\r\n]/*
+%ignore LINECOMMENT
+
+any : AUTO | BREAK | CASE | CHAR | CONST | CONTINUE | DEFAULT | DO | DOUBLE | ELSE | ENUM | EXTERN | FLOAT | FOR | GOTO | IF | INLINE | INT | LONG | REGISTER | RESTRICT | RETURN | SHORT | SIGNED | SIZEOF | STATIC | STRUCT | SWITCH | TYPEDEF | UNION | UNSIGNED | VOID | VOLATILE | WHILE | ALIGNAS | ALIGNOF | ATOMIC | BOOL | COMPLEX | GENERIC | IMAGINARY | NORETURN | STATICASSERT | THREADLOCAL | LEFTPAREN | RIGHTPAREN | LEFTBRACKET | RIGHTBRACKET | LEFTBRACE | RIGHTBRACE | LESS | LESSEQUAL | GREATER | GREATEREQUAL | LEFTSHIFT | RIGHTSHIFT | PLUS | PLUSPLUS | MINUS | MINUSMINUS | STAR | DIV | MOD | AND | OR | ANDAND | OROR | CARET | NOT | TILDE | QUESTION | COLON | SEMI | COMMA | ASSIGN | STARASSIGN | DIVASSIGN | MODASSIGN | PLUSASSIGN | MINUSASSIGN | LEFTSHIFTASSIGN | RIGHTSHIFTASSIGN | ANDASSIGN | XORASSIGN | ORASSIGN | EQUAL | NOTEQUAL | ARROW | DOT | ELLIPSIS | IDENTIFIER | IDENTIFIERNONDIGIT | NONDIGIT | DIGIT | UNIVERSALCHARACTERNAME | HEXQUAD | CONSTANT | INTEGERCONSTANT | BINARYCONSTANT | DECIMALCONSTANT | OCTALCONSTANT | HEXADECIMALCONSTANT | HEXADECIMALPREFIX | NONZERODIGIT | OCTALDIGIT | HEXADECIMALDIGIT | INTEGERSUFFIX | UNSIGNEDSUFFIX | LONGSUFFIX | LONGLONGSUFFIX | FLOATINGCONSTANT | DECIMALFLOATINGCONSTANT | HEXADECIMALFLOATINGCONSTANT | FRACTIONALCONSTANT | EXPONENTPART | SIGN | DIGITSEQUENCE | HEXADECIMALFRACTIONALCONSTANT | BINARYEXPONENTPART | HEXADECIMALDIGITSEQUENCE | FLOATINGSUFFIX | CHARACTERCONSTANT | CCHARSEQUENCE | CCHAR | ESCAPESEQUENCE | SIMPLEESCAPESEQUENCE | OCTALESCAPESEQUENCE | HEXADECIMALESCAPESEQUENCE | STRINGLITERAL | ENCODINGPREFIX | SCHARSEQUENCE | SCHAR | COMPLEXDEFINE | INCLUDEDIRECTIVE | ASMBLOCK | LINEAFTERPREPROCESSING | LINEDIRECTIVE | PRAGMADIRECTIVE | WHITESPACE | NEWLINE | BLOCKCOMMENT | LINECOMMENT

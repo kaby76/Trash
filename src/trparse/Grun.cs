@@ -55,7 +55,7 @@
             System.Console.WriteLine(e.Data);
         }
 
-        public int Run(string parser_type = "")
+        public int Run(string parser_type = null)
         {
             int result = 0;
             try

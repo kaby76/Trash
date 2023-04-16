@@ -150,13 +150,16 @@ namespace Trash
                 var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
                 using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
                 {
-                    // These are LHS symbols.
+                    // Go through lexer LHS symbols.
                     foreach (var node in nodes)
                     {
+                        // Get RHS string literal of the lexer rule.
                         var parent = node.ParentNode;
                         var rhs = parent.ChildNodes.item(parent.ChildNodes.Length - 2);
                         var str = this.StrictReconstruct(rhs).Trim();
                         if (str == "") continue;
+                        // Find string literals on RHS of parser rules that match lexer
+                        // string literal.
                         var expr2 = "//parserRuleSpec/ruleBlock//STRING_LITERAL[text() = \"" + str + "\"]";
                         var refs = engine.parseExpression(expr2,
                                 new StaticContextBuilder()).evaluate(dynamicContext,
@@ -164,15 +167,12 @@ namespace Trash
                             .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
                             .ToList();
                         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + refs.Count + " nodes.");
+                        // Replace all occurrences of string literal with the lexer LHS symbol.
                         foreach (var r in refs)
                         {
                             TreeEdits.Replace(r, this.StrictReconstruct(node));
                         }
-
-                        // Find rule refs, replace.
-                        //TreeEdits.Replace(node, str);
                     }
-
                     var tuple = new ParsingResultSet()
                     {
                         Text = text,

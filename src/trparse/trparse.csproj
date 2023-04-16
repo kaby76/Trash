@@ -17,7 +17,7 @@ This program is part of the Trash toolkit.]]>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>0.20.13</Version>
+    <Version>0.20.14</Version>
     <RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/src/trparse</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
@@ -34,7 +34,20 @@ This program is part of the Trash toolkit.]]>
 	  <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
 	  <ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />
 	  <ProjectReference Include="../Logger/Logger.csproj" />
-	  <ProjectReference Include="../grammars/antlr4/Generated/antlr4.csproj" />
+  </ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="../grammars/antlr2/Generated-CSharp/antlr2.csproj" />
+	  <ProjectReference Include="../grammars/antlr3/Generated-CSharp/antlr3.csproj" />
+	  <ProjectReference Include="../grammars/antlr4/Generated-CSharp/antlr4.csproj" />
+	  <ProjectReference Include="../grammars/bison/Generated-CSharp/bison.csproj" />
+	  <ProjectReference Include="../grammars/javacc/Generated-CSharp/javacc.csproj" />
+	  <ProjectReference Include="../grammars/lark/Generated-CSharp/lark.csproj" />
+	  <ProjectReference Include="../grammars/lbnf/Generated-CSharp/lbnf.csproj" />
+	  <ProjectReference Include="../grammars/pegen/Generated-CSharp/pegen.csproj" />
+	  <ProjectReference Include="../grammars/princeton/Generated-CSharp/princeton.csproj" />
+	  <ProjectReference Include="../grammars/rex/Generated-CSharp/rex.csproj" />
+	  <ProjectReference Include="../grammars/w3cebnf/Generated-CSharp/w3cebnf.csproj" />
+	  <ProjectReference Include="../grammars/xtext/Generated-CSharp/xtext.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -56,4 +69,9 @@ This program is part of the Trash toolkit.]]>
   <ItemGroup>
     <EmbeddedResource Include="readme.md" />
   </ItemGroup>
+	<ItemGroup>
+	<Content Include="$(SolutionDir)grammars\antlr4\bin\Debug\**\*.*"
+		CopyToOutputDirectory="Always"
+		TargetPath="bin\Debug\net7.0\foo\%(Filename)%(Extension)" />
+	</ItemGroup>
 </Project>

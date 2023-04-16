@@ -26,7 +26,7 @@ namespace Trash
             // If Generated/exists, and it's a CSharp program that compiles,
             // use that to parse the input.
             //
-            // If Generated/ does not exist, then parse as Antlr4.
+            // If Generated-CSharp/ does not exist, then parse as Antlr4.
             // If Type=="gen", then parse using Generated/.
             // If Type=="antlr2", then parse using Antlr2.
             // Etc.
@@ -83,28 +83,28 @@ namespace Trash
                 exists = File.Exists(full_path);
             }
 
-            if (config.Type != null && config.Type != "gen" || !exists)
+            var grun = new Grun(config);
+            if (config.Type == null && !exists)
             {
+                // Come up with a type to parse.
                 // If there is no generated parser, then use one of the built-in parsers.
                 // Hack for now.
                 // Take suffix of first file, get type of parser,
                 // then use that to determine parse.
                 var ext = Path.GetExtension(config.Files.First());
-                var parser_type = ext switch {
+                var parser_type = ext switch
+                {
                     ".g4" => "antlr4",
                     ".g3" => "antlr3",
                     ".g2" => "antlr2",
                     ".gram" => "pegen",
+                    ".rex" => "rex",
+                    ".y" => "bison",
                     _ => throw new Exception("Unknown file extension, cannot load in a built-in parser.")
                 };
-                var grun = new Grun(config);
-                Environment.ExitCode = grun.Run(parser_type);
+                config.Type = parser_type;
             }
-            else
-            {
-                var grun = new Grun(config);
-                Environment.ExitCode = grun.Run();
-            }
+            Environment.ExitCode = grun.Run(config.Type);
         }
     }
 }
