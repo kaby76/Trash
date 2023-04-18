@@ -2,8 +2,8 @@
   "profiles": {
     "tragl": {
       "commandName": "Executable",
-      "executablePath": "C:\\Program Files\\dotnet\\dotnet.exe",
-      "commandLineArgs": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\tragl\\bin\\Debug\\net5-windows\\tragl.dll -f c:/Users/kenne/Documents/GitHub/Domemtech.Trash/_tests/xgrep/o.pt"
+      "executablePath": "C:/Program Files/dotnet/dotnet.exe",
+      "commandLineArgs": "c:/Users/kenne/Documents/GitHub/Domemtech.Trash/src/tragl/bin/Debug/net7.0-windows/tragl.dll -f c:\\\\msys64\\\\home\\\\Kenne\\\\issues\\\\weston\\\\grammars-v4\\\\sql\\\\tsql\\\\Generated-CSharp-0\\\\o.pt"
     }
   }
 }

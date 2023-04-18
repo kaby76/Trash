@@ -463,6 +463,7 @@ namespace org.w3c.dom
         Node item(int i);
         void Add(Node node);
         void Insert(int i, Node node);
+        void Replace(int i, Node node);
         void RemoveAt(int i);
     }
 

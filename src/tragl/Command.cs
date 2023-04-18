@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using System;
+
+namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -11,6 +13,8 @@
 
     class Command
     {
+        public static Dictionary<int, string> node_names = new Dictionary<int, string>();
+
         public string Help()
         {
             using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("tragl.readme.md"))
@@ -20,7 +24,7 @@
             }
         }
 
-        public static Graph CreateGraph(IParseTree[] trees, IList<string> parserRules, IList<string> lexerRules)
+        public static Graph CreateGraph(ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode[] trees, IList<string> parserRules, IList<string> lexerRules)
         {
             var graph = new Graph();
             foreach (var tree in trees)
@@ -28,8 +32,9 @@
                 if (tree != null)
                 {
                     var base_hash_code = tree.GetHashCode();
+                    node_names[(base_hash_code + tree.GetHashCode())] = tree.LocalName;
                     graph.AddNode((base_hash_code + tree.GetHashCode()).ToString());
-                    if (tree.ChildCount != 0)
+                    if (tree.ChildNodes.Length != 0)
                         GraphEdges(graph, tree, tree.GetHashCode());
                     FormatNodes(graph, tree, parserRules, lexerRules, tree.GetHashCode());
                 }
@@ -37,11 +42,11 @@
             return graph;
         }
 
-        private static void GraphEdges(Graph graph, ITree tree, int base_hash_code)
+        private static void GraphEdges(Graph graph, org.w3c.dom.Node tree, int base_hash_code)
         {
-            for (var i = tree.ChildCount - 1; i > -1; i--)
+            for (var i = tree.ChildNodes.Length - 1; i > -1; i--)
             {
-                var child = tree.GetChild(i);
+                org.w3c.dom.Node child = tree.ChildNodes.item(i);
                 graph.AddEdge((base_hash_code + tree.GetHashCode()).ToString(),
                     (base_hash_code + child.GetHashCode()).ToString());
 
@@ -49,40 +54,41 @@
             }
         }
 
-        private static void FormatNodes(Graph graph, ITree tree, IList<string> parserRules, IList<string> lexerRules, int base_hash_code)
+        private static void FormatNodes(Graph graph, org.w3c.dom.Node tree, IList<string> parserRules, IList<string> lexerRules, int base_hash_code)
         {
             var node = graph.FindNode((base_hash_code + tree.GetHashCode()).ToString());
             if (node != null)
             {
-                node.LabelText = Trees.GetNodeText(tree, parserRules);
+                node.LabelText = tree.LocalName;
                 var ruleFailedAndMatchedNothing = false;
-                if (tree is ParserRuleContext context)
+                //if (tree is ParserRuleContext context)
+                //{
+                //    ruleFailedAndMatchedNothing =
+                //        // ReSharper disable once ComplexConditionExpression
+                //        context.exception != null &&
+                //        context.Stop != null
+                //        && context.Stop.TokenIndex < context.Start.TokenIndex;
+                //}
+                //else if (tree is TerminalNodeImpl term)
                 {
-                    ruleFailedAndMatchedNothing =
-                       // ReSharper disable once ComplexConditionExpression
-                       context.exception != null &&
-                       context.Stop != null
-                       && context.Stop.TokenIndex < context.Start.TokenIndex;
+                    //var token = term.Symbol.Type;
+                    //var token_value = term.Symbol.Text;
+                    //node.LabelText = token > 0 ? (lexerRules[token - 1] + "/" + token_value) : "EOF";
                 }
-                else if (tree is TerminalNodeImpl term)
-                {
-                    var token = term.Symbol.Type;
-                    var token_value = term.Symbol.Text;
-                    node.LabelText = token > 0 ?
-                        (lexerRules[token-1] + "/" + token_value) : "EOF";
-                }
-                if (tree is IErrorNode || ruleFailedAndMatchedNothing)
-                    node.Label.FontColor = Color.Red;
-                else
+
+//                if (tree is IErrorNode || ruleFailedAndMatchedNothing)
+//                    node.Label.FontColor = Color.Red;
+//                else
                     node.Label.FontColor = Color.Black;
                 node.Attr.Color = Color.Black;
                 node.UserData = tree;
                 //if (BackgroundColor.HasValue)
                 //    node.Attr.FillColor = BackgroundColor.Value;
             }
+            else throw new Exception();
 
-            for (int i = 0; i < tree.ChildCount; i++)
-                FormatNodes(graph, tree.GetChild(i), parserRules, lexerRules, base_hash_code);
+            for (int i = 0; i < tree.ChildNodes.Length; i++)
+                FormatNodes(graph, tree.ChildNodes.item(i), parserRules, lexerRules, base_hash_code);
         }
 
         public static void DoWork(object p)

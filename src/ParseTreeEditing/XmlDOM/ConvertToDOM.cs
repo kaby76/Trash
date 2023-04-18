@@ -295,6 +295,12 @@ namespace XmlDOM
             _node_list.Insert(i, node);
         }
 
+        public void Replace(int i, Node node)
+        {
+            _node_list.RemoveAt(i);
+            _node_list.Insert(i, node);
+        }
+
         public void RemoveAt(int i)
         {
             _node_list.RemoveAt(i);
