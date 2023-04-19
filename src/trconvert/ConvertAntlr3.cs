@@ -89,7 +89,7 @@ namespace LanguageServer
                 var nodes = engine.parseExpression(
                         @"//rule_/optionsSpec
                             /option
-                                [id
+                                [id_
                                     /(TOKEN_REF | RULE_REF)
                                         [text() = 'output'
                                         or text() = 'backtrack'
