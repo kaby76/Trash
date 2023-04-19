@@ -76,12 +76,21 @@ namespace Trash
                     _ => throw new Exception("Unknown file extension, cannot load in a built-in parser.")
                 };
 
-                Dictionary<string, string> res = null;
-                //if (parser_type == "antlr3")
-                //{
-                //    var imp = new LanguageServer.ConvertAntlr3();
-                //    res = imp.Try(trees, parser, fn, "antlr4");
-                //}
+                if (parser_type == "antlr3")
+                {
+                    var imp = new LanguageServer.ConvertAntlr3();
+                    imp.Try(trees, parser, fn, "antlr4");
+                    var tuple = new ParsingResultSet()
+                    {
+                        Text = text,
+                        FileName = fn,
+                        Nodes = trees,
+                        Lexer = lexer,
+                        Parser = parser
+                    };
+                    results.Add(tuple);
+
+                }
                 //else if (parser_type == "antlr2")
                 //{
                 //    var imp = new LanguageServer.ConvertAntlr2();
@@ -102,7 +111,7 @@ namespace Trash
                 //    var imp = new LanguageServer.ConvertLark();
                 //    res = imp.Try(doc.FullPath, doc.Code, out_type);
                 //}
-                //else
+                else
                 {
                     System.Console.WriteLine("Unknown type for conversion.");
                 }

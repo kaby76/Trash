@@ -17,7 +17,7 @@ namespace LanguageServer
         {
         }
 
-        public Dictionary<string, string> Try(ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode[] trees,
+        public void Try(UnvParseTreeNode[] trees,
             Parser parser,
             string ffn,
             string out_type = "antlr4")
@@ -55,7 +55,7 @@ namespace LanguageServer
                 var nodes = engine.parseExpression(
                         @"//grammarDef/optionsSpec
                             /option
-                                [id
+                                [id_
                                     /(TOKEN_REF | RULE_REF)
                                         [text() = 'output'
                                         or text() = 'backtrack'
@@ -74,7 +74,10 @@ namespace LanguageServer
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                 foreach (var os in options)
                 {
-                    if (os.ChildNodes.Length == 3) TreeEdits.Delete(os);
+                    var count = os.Children
+                        .Where(c => c.GetType() == typeof(ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
+                        .Count();
+                    if (count == 3) TreeEdits.Delete(os);
                 }
             }
 
@@ -105,7 +108,10 @@ namespace LanguageServer
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                 foreach (var os in options)
                 {
-                    if (os.ChildNodes.Length == 3) TreeEdits.Delete(os);
+                    var count = os.Children
+                        .Where(c => c.GetType() == typeof(ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
+                        .Count();
+                    if (count == 3) TreeEdits.Delete(os);
                 }
             }
 
@@ -417,15 +423,8 @@ namespace LanguageServer
                     // that isn't a set.
                     // Rewrite lexer rules foobar : ~(a | b | c), a : [...]; b : [...]; c : [...];
                     // Unfold all lexer symbols on RHS inside ~-operator.
-
-                    StringBuilder sb = new StringBuilder();
-                    TreeEdits.Reconstruct(sb, tree);
-                    var new_code = sb.ToString();
-                    results.Add(new_ffn, new_code);
-                    results.Add(ffn.Replace(".g", ".txt"), errors.ToString());
                 }
             }
-            return results;
         }
     }
 }

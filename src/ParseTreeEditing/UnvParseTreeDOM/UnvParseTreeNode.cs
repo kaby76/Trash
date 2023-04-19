@@ -1,4 +1,6 @@
-﻿namespace ParseTreeEditing.UnvParseTreeDOM
+﻿using System.Collections.Generic;
+
+namespace ParseTreeEditing.UnvParseTreeDOM
 {
     using org.w3c.dom;
     using System;
@@ -23,6 +25,13 @@
         public virtual string LocalName { get; set; }
         public virtual Document OwnerDocument { get; set; }
         public virtual NodeList ChildNodes { get; set; } = new UnvParseTreeNodeList();
+        public virtual IEnumerable<Node> Children
+        {
+            get
+            {
+                return (ChildNodes as UnvParseTreeNodeList)._node_list;
+            }
+        }
         public virtual Node NextSibling { get; set; }
         public virtual string BaseURI { get; set; }
         public virtual NamedNodeMap Attributes { get; set; }
