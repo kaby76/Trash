@@ -79,7 +79,7 @@ namespace Trash
                 if (parser_type == "antlr3")
                 {
                     var imp = new LanguageServer.ConvertAntlr3();
-                    imp.Try(trees, parser, fn, "antlr4");
+                    imp.Try(trees, parser, lexer, fn, "antlr4");
                     var tuple = new ParsingResultSet()
                     {
                         Text = text,

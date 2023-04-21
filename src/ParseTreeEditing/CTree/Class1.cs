@@ -26,7 +26,6 @@ namespace CTree
             var ast_lexer = new AstLexer(ast_stream);
             var ast_tokens = new CommonTokenStream(ast_lexer);
             var ast_parser = new AstParserParser(ast_tokens);
-            ast_parser.BuildParseTree = true;
             var listener = new ErrorListener<IToken>();
             ast_parser.AddErrorListener(listener);
             IParseTree ast = ast_parser.ast();
@@ -51,7 +50,9 @@ namespace CTree
             var id = context.ID();
             var id_name = id.GetText().ToLower() + "context";
             var pt = _parser.GetType();
-            var list = pt.GetTypeInfo().DeclaredNestedTypes.Where(t => t.Name.ToLower() == id_name);
+            var list = pt.GetTypeInfo().DeclaredNestedTypes
+                .Where(t => t.Name.ToLower() == id_name)
+                .ToList();
             if (list.Count() != 1)
             {
                 throw new Exception();

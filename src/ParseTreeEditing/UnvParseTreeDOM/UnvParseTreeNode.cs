@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ParseTreeEditing.UnvParseTreeDOM
 {
@@ -25,11 +26,21 @@ namespace ParseTreeEditing.UnvParseTreeDOM
         public virtual string LocalName { get; set; }
         public virtual Document OwnerDocument { get; set; }
         public virtual NodeList ChildNodes { get; set; } = new UnvParseTreeNodeList();
-        public virtual IEnumerable<Node> Children
+        public virtual IEnumerable<Node> AllChildren
         {
             get
             {
                 return (ChildNodes as UnvParseTreeNodeList)._node_list;
+            }
+        }
+        public virtual IEnumerable<ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement> Children
+        {
+            get
+            {
+                return (ChildNodes as UnvParseTreeNodeList)
+                    ._node_list
+                    .Where(c => c.GetType() == typeof(ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
+                    .Select(c => c as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement);
             }
         }
         public virtual Node NextSibling { get; set; }

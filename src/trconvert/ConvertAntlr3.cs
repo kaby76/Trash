@@ -19,6 +19,7 @@ namespace LanguageServer
 
         public void Try(UnvParseTreeNode[] trees,
             Parser parser,
+            Lexer lexer,
             string ffn,
             string out_type = "antlr4")
         {
@@ -74,9 +75,7 @@ namespace LanguageServer
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                 foreach (var os in options)
                 {
-                    var count = os.Children
-                        .Where(c => c.GetType() == typeof(ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
-                        .Count();
+                    var count = os.Children.Count();
                     if (count == 3) TreeEdits.Delete(os);
                 }
             }
@@ -108,9 +107,7 @@ namespace LanguageServer
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                 foreach (var os in options)
                 {
-                    var count = os.Children
-                        .Where(c => c.GetType() == typeof(ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
-                        .Count();
+                    var count = os.Children.Count();
                     if (count == 3) TreeEdits.Delete(os);
                 }
             }
@@ -150,51 +147,59 @@ namespace LanguageServer
                 {
                     var new_lexer_rules = equals.Select(t =>
                     {
-                        var lhs = t.ChildNodes.item(0).LocalName;
-                        var rhs = t.ChildNodes.item(2).LocalName;
+                        var lhsc = t.Children.ElementAt(0);
+                        var lhs = lhsc.GetText();
+                        var rhsc = t.Children.ElementAt(2);
+                        var rhs = rhsc.GetText();
                         return new Tuple<string, string>(lhs, rhs);
                     }).ToList();
                     foreach (var e in equals)
                     {
-                        // Nuke "=".
-                        TreeEdits.Delete((UnvParseTreeNode)e.ChildNodes.item(1));
+                        // Order of delete important because we are using indices.
                         // Nuke "value".
-                        TreeEdits.Delete((UnvParseTreeNode)e.ChildNodes.item(1));
+                        var v = e.Children.ElementAt(2);
+                        TreeEdits.Delete(v);
+                        // Nuke "=".
+                        var z = e.Children.ElementAt(1);
+                        TreeEdits.Delete(z);
                     }
                     // Look for last lexer rule.
-                    //var last_rule = engine.parseExpression(
-                    //      @"//rule_[id/TOKEN_REF]",
-                    //      new StaticContextBuilder()).evaluate(
-                    //      dynamicContext, new object[] { dynamicContext.Document }
-                    //      ).Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).LastOrDefault();
-                    //if (last_rule != null)
-                    //{
-                    //    var par = last_rule.ParentNode;
-                    //    foreach (var p in new_lexer_rules)
-                    //    {
-                    //        var lhs = p.Item1;
-                    //        var rhs = p.Item2;
-                    //        var env = new Dictionary<string, object>();
-                    //        env.Add("lhs", new TerminalNodeImpl(new CommonToken(ANTLRv4Lexer.STRING_LITERAL) { Line = -1, Column = -1, Text = lhs }));
-                    //        text_before[env["lhs"] as TerminalNodeImpl] = System.Environment.NewLine + System.Environment.NewLine;
-                    //        env.Add("colon", new TerminalNodeImpl(new CommonToken(ANTLRv3Lexer.COLON) { Line = -1, Column = -1, Text = ":" }));
-                    //        env.Add("rhs", new TerminalNodeImpl(new CommonToken(ANTLRv4Lexer.STRING_LITERAL) { Line = -1, Column = -1, Text = rhs }));
-                    //        env.Add("semi", new TerminalNodeImpl(new CommonToken(ANTLRv4Lexer.SEMI) { Line = -1, Column = -1, Text = ";" }));
-                    //        var construct = new CTree.Class1(parser, env);
-                    //        var res = construct.CreateTree(
-                    //                "( rule_ {lhs} {colon} " +
-                    //                "   ( altList " +
-                    //                "      ( alternative " +
-                    //                "         ( element " +
-                    //                "            ( elementNoOptionSpec" +
-                    //                "               ( atom " +
-                    //                "                  {rhs} " +
-                    //                "   )  )  )  )  )" +
-                    //                "   {semi} " +
-                    //                ")");
-                    //        par.AddChild(res as RuleContext);
-                    //    }
-                    //}
+                    var last_rule = engine.parseExpression(
+                          @"//rule_[id_/TOKEN_REF]",
+                          new StaticContextBuilder()).evaluate(
+                          dynamicContext, new object[] { dynamicContext.Document }
+                          ).Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).LastOrDefault();
+                    if (last_rule != null)
+                    {
+                        var tolexer = new ANTLRv3Lexer(new AntlrInputStream(""));
+                        var toparser = new ANTLRv3Parser(new CommonTokenStream(tolexer));
+                        var par = last_rule.ParentNode;
+                        foreach (var p in new_lexer_rules)
+                        {
+                            var lhs = p.Item1;
+                            var rhs = p.Item2;
+                            var env = new Dictionary<string, object>();
+                            env.Add("lhs", new TerminalNodeImpl(new CommonToken(ANTLRv4Lexer.STRING_LITERAL) { Line = -1, Column = -1, Text = lhs }));
+                            //text_before[env["lhs"] as TerminalNodeImpl] = System.Environment.NewLine + System.Environment.NewLine;
+                            env.Add("colon", new TerminalNodeImpl(new CommonToken(ANTLRv3Lexer.COLON) { Line = -1, Column = -1, Text = ":" }));
+                            env.Add("rhs", new TerminalNodeImpl(new CommonToken(ANTLRv4Lexer.STRING_LITERAL) { Line = -1, Column = -1, Text = rhs }));
+                            env.Add("semi", new TerminalNodeImpl(new CommonToken(ANTLRv4Lexer.SEMI) { Line = -1, Column = -1, Text = ";" }));
+                            var construct = new CTree.Class1(toparser, env);
+                            var res = construct.CreateTree(
+                                    "( rule_ {lhs} {colon} " +
+                                    "   ( altList " +
+                                    "      ( alternative " +
+                                    "         ( element " +
+                                    "            ( elementNoOptionSpec" +
+                                    "               ( atom " +
+                                    "                  {rhs} " +
+                                    "   )  )  )  )  )" +
+                                    "   {semi} " +
+                                    ")");
+                            var converted_tree = ConvertToDOM.BottomUpConvert(res, null, parser, lexer, null, null);
+                            par.ChildNodes.Add(converted_tree);
+                        }
+                    }
                 }
             }
 
