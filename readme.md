@@ -36,7 +36,7 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 
 ## Install
 ### Requirements
-[Install Dotnet 6.0.x](https://dotnet.microsoft.com/en-us/download)
+[Install Dotnet 7.0.x](https://dotnet.microsoft.com/en-us/download)
 
 ### Linux or Cywin/MSYS2
 Copy this script and execute it in a Bash shell.
