@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "-t Java",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\foo\\grammars-v4\\abb"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\foo\\grammars-v4\\fbx"
     }
   }
 }

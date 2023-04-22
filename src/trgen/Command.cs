@@ -282,7 +282,7 @@ namespace Trash
                         else
                         {
                             genfn = pre1 + autom_name + Suffix(test.target);
-                            genincfn = pre1 + name + ".h";
+                            genincfn = pre1 + autom_name + ".h";
                             if (test.package != null && test.package != "")
                                 antlr_args = GetOSTarget() == OSTarget.Windows
                                     ? "-o " + test.package + " -lib " + test.package +
@@ -498,7 +498,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.14";
+        public static string version = "0.20.15";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
