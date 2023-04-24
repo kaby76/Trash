@@ -4,7 +4,6 @@
     using AntlrJson;
     using ParseTreeEditing.UnvParseTreeDOM;
     using EditableAntlrTree;
-    using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using System;
     using System.Collections.Generic;

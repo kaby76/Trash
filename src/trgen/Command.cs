@@ -1,16 +1,12 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using TrashGlobbing;
-
-namespace Trash
+﻿namespace Trash
 {
     using Algorithms;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using Antlr4.StringTemplate;
     using AntlrJson;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using org.eclipse.wst.xml.xpath2.api;
     using org.eclipse.wst.xml.xpath2.processor.util;
+    using ParseTreeEditing.UnvParseTreeDOM;
     using System;
     using System.Collections.Generic;
     using System.IO;

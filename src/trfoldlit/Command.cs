@@ -5,7 +5,6 @@ namespace Trash
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using AntlrJson;
-    using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using ParseTreeEditing.UnvParseTreeDOM;

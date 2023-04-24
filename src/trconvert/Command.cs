@@ -82,7 +82,7 @@ namespace Trash
                     imp.Try(trees, parser, lexer, fn, "antlr4");
                     var tuple = new ParsingResultSet()
                     {
-                        Text = text,
+                        Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
                         FileName = fn,
                         Nodes = trees,
                         Lexer = lexer,

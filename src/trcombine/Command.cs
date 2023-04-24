@@ -2,7 +2,6 @@
 {
     using AntlrJson;
     using ParseTreeEditing.UnvParseTreeDOM;
-    using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using org.w3c.dom;
     using System;
