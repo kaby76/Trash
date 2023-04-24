@@ -163,7 +163,7 @@
             }
         }
 
-        public static void InsertBefore(Node node, string arbitrary_string)
+        public static Node InsertBefore(Node node, string arbitrary_string)
         {
             var node_to_insert = new UnvParseTreeText();
             node_to_insert.Data = arbitrary_string;
@@ -178,6 +178,7 @@
                     break;
                 }
             }
+            return node_to_insert;
         }
 
         public static void InsertBefore(Node node, Node node_to_insert)
@@ -195,7 +196,7 @@
             }
         }
 
-        public static void InsertAfter(Node node, string arbitrary_string)
+        public static Node InsertAfter(Node node, string arbitrary_string)
         {
             var node_to_insert = new UnvParseTreeText();
             node_to_insert.Data = arbitrary_string;
@@ -210,6 +211,7 @@
                     break;
                 }
             }
+            return node_to_insert;
         }
 
         public static void InsertAfter(Node node, Node node_to_insert)
