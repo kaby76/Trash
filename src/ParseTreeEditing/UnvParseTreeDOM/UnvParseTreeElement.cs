@@ -42,7 +42,7 @@
             throw new NotImplementedException();
         }
 
-        public string Reconstruct(Node tree)
+        public static string Reconstruct(Node tree)
         {
             Stack<Node> stack = new Stack<Node>();
             stack.Push(tree);

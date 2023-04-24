@@ -172,8 +172,6 @@ namespace LanguageServer
                           ).Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).FirstOrDefault();
                     if (last_rule != null)
                     {
-                        var tolexer = new ANTLRv3Lexer(new AntlrInputStream(""));
-                        var toparser = new ANTLRv3Parser(new CommonTokenStream(tolexer));
                         var par = last_rule.ParentNode;
                         Node last = par;
                         last = TreeEdits.InsertBefore(last, Environment.NewLine + Environment.NewLine);
@@ -328,16 +326,26 @@ namespace LanguageServer
                 }
             }
 
-            // Remove unsupported option k=3 (1, 2, 4, 5, ...)
+            // Remove unsupported option k=n (where n=1, 2, 3, ...)
             // Replace "( options { greedy=false; } : a | b | c )*" with
             // "(a | b | c)*?"
             using (var dynamicContext = ate.Try(trees, parser))
             {
-                // k=3 (1, 2, 4, 5, ...)
+                // Find k=n
                 var k = engine.parseExpression(
                         @"//optionsSpec[not(../@id = 'grammarDef')]
                             /option
-                                [id
+                                [id_
+                                    /(TOKEN_REF | RULE_REF)
+                                        [text() = 'k'
+                                        ]]",
+                        new StaticContextBuilder()).evaluate(
+                        dynamicContext, new object[] { dynamicContext.Document })
+                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                var k2 = engine.parseExpression(
+                        @"//optionsSpec
+                            /option
+                                [id_
                                     /(TOKEN_REF | RULE_REF)
                                         [text() = 'k'
                                         ]]",
@@ -348,9 +356,9 @@ namespace LanguageServer
                 var greedy = engine.parseExpression(
                         @"//optionsSpec[not(../@id = 'grammarDef')]
                             /option
-                                [id/(TOKEN_REF | RULE_REF)[text() = 'greedy']
+                                [id_/(TOKEN_REF | RULE_REF)[text() = 'greedy']
                                 and 
-                                optionValue/id/RULE_REF[text() = 'false']]",
+                                optionValue/id_/RULE_REF[text() = 'false']]",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
@@ -375,25 +383,23 @@ namespace LanguageServer
                     });
                     foreach (var os in optionsSpec)
                     {
-                        if (greedyOptionSpec.Contains(os) && os.ParentNode.LocalName == "Block")
+                        var ss = UnvParseTreeElement.Reconstruct(os);
+                        if (greedyOptionSpec.Contains(os) && os.ParentNode.LocalName == "block")
                         {
                             var block = os.ParentNode;
-                            var block_parent = block.ParentNode;
-                            if (block_parent is ANTLRv3Parser.EbnfContext ebnf)
+                            var block_parent = block.ParentNode as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement;
+                            if (block_parent.LocalName == "ebnf")
                             {
-                                while (ebnf.ChildCount > 1)
+                                while (block_parent.Children.Count() > 1)
                                 {
-                                    ebnf.children.RemoveAt(1);
+                                    var l = block_parent.Children.Last();
+                                    TreeEdits.Delete(l);
                                 }
-
-                                ebnf.AddChild(new TerminalNodeImpl(new CommonToken(ANTLRv3Parser.STAR)
-                                    { Line = -1, Column = -1, Text = "*" }));
-                                ebnf.AddChild(new TerminalNodeImpl(new CommonToken(ANTLRv3Parser.QM)
-                                    { Line = -1, Column = -1, Text = "?" }));
+                                TreeEdits.InsertAfter(block_parent.Children.Last(), "*?");
                             }
                         }
 
-                        if (os.ChildNodes.Length == 3)
+                        if (os.Children.Count() == 3)
                         {
                             if (os.ParentNode.LocalName == "Block")
                             {
@@ -403,7 +409,6 @@ namespace LanguageServer
                                         TreeEdits.Delete((UnvParseTreeNode)os.ParentNode.ChildNodes.item(i));
                                 }
                             }
-
                             TreeEdits.Delete(os);
                         }
                     }
