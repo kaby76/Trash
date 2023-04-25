@@ -62,60 +62,34 @@ namespace Trash
                     foreach (var n in trees)
                         System.Console.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
                 }
+
                 // Get original source file extension and derive type.
-                var ext = Path.GetExtension(fn);
-                var parser_type = ext switch
+                switch (parser.GrammarFileName)
                 {
-                    ".g4" => "antlr4",
-                    ".g3" => "antlr3",
-                    ".g2" => "antlr2",
-                    ".gram" => "pegen",
-                    ".lark" => "lark",
-                    ".rex" => "rex",
-                    ".y" => "bison",
-                    _ => throw new Exception("Unknown file extension, cannot load in a built-in parser.")
-                };
+                    case "ANTLRv3Parser.g4":
+                        {
+                            var imp = new LanguageServer.ConvertAntlr3();
+                            imp.Try(trees, parser, lexer, fn, "antlr4");
+                            var tuple = new ParsingResultSet()
+                            {
+                                Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                                FileName = fn,
+                                Nodes = trees,
+                                Lexer = lexer,
+                                Parser = parser
+                            };
+                            results.Add(tuple);
+                        }
+                        break;
 
-                if (parser_type == "antlr3")
-                {
-                    var imp = new LanguageServer.ConvertAntlr3();
-                    imp.Try(trees, parser, lexer, fn, "antlr4");
-                    var tuple = new ParsingResultSet()
-                    {
-                        Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
-                        FileName = fn,
-                        Nodes = trees,
-                        Lexer = lexer,
-                        Parser = parser
-                    };
-                    results.Add(tuple);
-
-                }
-                //else if (parser_type == "antlr2")
-                //{
-                //    var imp = new LanguageServer.ConvertAntlr2();
-                //    res = imp.Try(doc.FullPath, doc.Code, out_type);
-                //}
-                //else if (parser_type == "bison")
-                //{
-                //    var imp = new LanguageServer.ConvertBison();
-                //    res = imp.Try(doc.FullPath, doc.Code, out_type);
-                //}
-                //else if (parser_type == "W3CebnfParser.g4")
-                //{
-                //    var imp = new LanguageServer.ConvertW3Cebnf();
-                //    res = imp.Try(doc.FullPath, doc.Code, out_type);
-                //}
-                //else if (parser_type == "lark")
-                //{
-                //    var imp = new LanguageServer.ConvertLark();
-                //    res = imp.Try(doc.FullPath, doc.Code, out_type);
-                //}
-                else
-                {
-                    System.Console.WriteLine("Unknown type for conversion.");
+                    default:
+                        {
+                            System.Console.WriteLine("Unknown type for conversion.");
+                        }
+                        break;
                 }
             }
+
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);
         }
