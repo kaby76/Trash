@@ -1,52 +1,20 @@
-using org.w3c.dom;
-
-namespace LanguageServer
+namespace Trash
 {
     using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using org.eclipse.wst.xml.xpath2.processor.util;
+    using org.w3c.dom;
     using ParseTreeEditing.UnvParseTreeDOM;
-    using System.Data;
+    using System;
+    using System.Linq;
 
     public class ConvertAntlr3
     {
-        public ConvertAntlr3()
-        {
-        }
-
-        public void Try(UnvParseTreeNode[] trees,
+        public static void ToAntlr4(UnvParseTreeNode[] trees,
             Parser parser,
             Lexer lexer,
-            string ffn,
-            string out_type = "antlr4")
+            string ffn)
         {
-            var error_file_name = ffn;
-            error_file_name = error_file_name.EndsWith(".g3")
-                ? (error_file_name.Substring(0, error_file_name.Length - 3) + ".txt")
-                : error_file_name;
-            error_file_name = error_file_name.EndsWith(".g")
-                ? (error_file_name.Substring(0, error_file_name.Length - 2) + ".txt")
-                : error_file_name;
-
-            var new_ffn = ffn;
-            new_ffn = new_ffn.EndsWith(".g3")
-                ? (new_ffn.Substring(0, new_ffn.Length - 3) + ".g4")
-                : new_ffn;
-            new_ffn = new_ffn.EndsWith(".g")
-                ? (new_ffn.Substring(0, new_ffn.Length - 2) + ".g4")
-                : new_ffn;
-
-            Dictionary<string, string> results = new Dictionary<string, string>();
-            var now = DateTime.Now.ToString();
-            var errors = new StringBuilder();
-
-            // Transforms derived from two sources:
             // https://github.com/senseidb/sensei/pull/23
-            //var (text_before, other) = TreeEdits.TextToLeftOfLeaves(tokens, tree);
 
             // Remove unused options at top of grammar def.
             var engine = new org.eclipse.wst.xml.xpath2.processor.Engine();

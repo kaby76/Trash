@@ -1,10 +1,7 @@
-﻿using ParseTreeEditing.UnvParseTreeDOM;
-
-namespace Trash
+﻿namespace Trash
 {
-    using Antlr4.Runtime.Tree;
     using AntlrJson;
-    using System;
+    using ParseTreeEditing.UnvParseTreeDOM;
     using System.Collections.Generic;
     using System.IO;
     using System.Text.Json;
@@ -67,19 +64,33 @@ namespace Trash
                 switch (parser.GrammarFileName)
                 {
                     case "ANTLRv3Parser.g4":
+                    {
+                        ConvertAntlr3.ToAntlr4(trees, parser, lexer, fn);
+                        var tuple = new ParsingResultSet()
                         {
-                            var imp = new LanguageServer.ConvertAntlr3();
-                            imp.Try(trees, parser, lexer, fn, "antlr4");
-                            var tuple = new ParsingResultSet()
-                            {
-                                Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
-                                FileName = fn,
-                                Nodes = trees,
-                                Lexer = lexer,
-                                Parser = parser
-                            };
-                            results.Add(tuple);
-                        }
+                            Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                            FileName = fn,
+                            Nodes = trees,
+                            Lexer = lexer,
+                            Parser = parser
+                        };
+                        results.Add(tuple);
+                    }
+                        break;
+
+                    case "rexParser.g4":
+                    {
+                        ConvertRex.ToAntlr4(trees, parser, lexer, fn);
+                        var tuple = new ParsingResultSet()
+                        {
+                            Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                            FileName = fn,
+                            Nodes = trees,
+                            Lexer = lexer,
+                            Parser = parser
+                        };
+                        results.Add(tuple);
+                    }
                         break;
 
                     default:

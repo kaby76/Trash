@@ -456,13 +456,11 @@
                 test.fully_qualified_lexer_name =
                     test.tool_grammar_tuples
                         .Where(t => t.GrammarAutomName.EndsWith("Lexer"))
-                        .Where(t => test.grammar_name == null || t.GrammarName == test.grammar_name)
                         .Select(t => t.GrammarAutomName)
                         .First();
                 test.fully_qualified_go_lexer_name =
                     test.tool_grammar_tuples
                         .Where(t => t.GrammarAutomName.EndsWith("Lexer"))
-                        .Where(t => test.grammar_name == null || t.GrammarName == test.grammar_name)
                         .Select(t => t.GrammarGoNewName)
                         .First();
                 var lexer_generated_file_name =
@@ -472,7 +470,6 @@
                 var lexer_src_grammar_file_name =
                     test.tool_grammar_tuples
                         .Where(t => t.GrammarAutomName.EndsWith("Lexer"))
-                        .Where(t => test.grammar_name == null || t.GrammarName == test.grammar_name)
                         .Select(t => t.GrammarFileName)
                         .First();
                 test.tool_src_grammar_files = new HashSet<string>()

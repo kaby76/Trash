@@ -196,6 +196,11 @@
             }
         }
 
+        public static void InsertAfter(IEnumerable<UnvParseTreeNode> trees, string arbitrary_string)
+        {
+            foreach (var tree in trees) InsertAfter(tree, arbitrary_string);
+        }
+
         public static Node InsertAfter(Node node, string arbitrary_string)
         {
             var node_to_insert = new UnvParseTreeText();
@@ -865,7 +870,10 @@
             throw new NotImplementedException();
         }
 
-
+        public static void Replace(IEnumerable<UnvParseTreeNode> trees, string arbitrary_string)
+        {
+            foreach (var tree in trees) Replace(tree, arbitrary_string);
+        }
 
         public static UnvParseTreeNode Replace(UnvParseTreeNode node, string arbitrary_string)
         {

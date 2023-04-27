@@ -3,7 +3,7 @@
     "trconvert": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\antlr3\\examples"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\rex\\examples"
     }
   }
 }
