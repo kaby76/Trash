@@ -8,9 +8,17 @@ namespace ParseTreeEditing.UnvParseTreeDOM
 
     public abstract class UnvParseTreeNode : Node, IAntlrObserver
     {
-        public UnvParseTreeNode() { }
+        private static int generate = 0;
+        public int Number;
+
+        public UnvParseTreeNode()
+        {
+            Number = ++generate;
+        }
+
         public UnvParseTreeNode(UnvParseTreeNode orig)
         {
+            Number = ++generate;
             _NodeType = orig._NodeType;
             LocalName = orig.LocalName;
             NodeValue = orig.NodeValue;

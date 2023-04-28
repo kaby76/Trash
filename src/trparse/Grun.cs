@@ -134,6 +134,19 @@
                         }
                     }
                 }
+                foreach (var d in data)
+                {
+                    foreach (var t1 in d.Nodes)
+                    {
+                        var count = 0;
+                        foreach (var t2 in d.Nodes)
+                        {
+                            if (t1 == t2) count++;
+                            if (count > 1) throw new Exception();
+                        }
+                    }
+                }
+
                 if (config.NoParsingResultSets) return result;
                 if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
                 var serializeOptions = new JsonSerializerOptions();

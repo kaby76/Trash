@@ -1,7 +1,11 @@
-﻿namespace Trash
+﻿using System.Linq;
+
+namespace Trash
 {
     using AntlrJson;
+    using org.eclipse.wst.xml.xpath2.processor.util;
     using ParseTreeEditing.UnvParseTreeDOM;
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text.Json;
@@ -59,7 +63,6 @@
                     foreach (var n in trees)
                         System.Console.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
                 }
-
                 // Get original source file extension and derive type.
                 switch (parser.GrammarFileName)
                 {
