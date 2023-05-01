@@ -1,9 +1,12 @@
-﻿namespace Trash
+﻿using System.Text.RegularExpressions;
+
+namespace Trash
 {
     using AntlrJson;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using org.w3c.dom;
     using ParseTreeEditing.UnvParseTreeDOM;
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -153,6 +156,7 @@
                         var rhs = parent.ChildNodes.item(parent.ChildNodes.Length - 2);
                         var str = this.StrictReconstruct(rhs).Trim();
                         if (str == "") continue;
+                        str = escape(str);
                         // Find string literals on RHS of parser rules that match lexer
                         // string literal.
                         var expr2 = "//parserRuleSpec/ruleBlock//STRING_LITERAL[text() = \"" + str + "\"]";
@@ -183,6 +187,11 @@
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
             System.Console.WriteLine(js1);
+        }
+
+        private string escape(string str)
+        {
+            return new Regex("\"").Replace(str, "\"\"");
         }
     }
 }

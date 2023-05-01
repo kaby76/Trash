@@ -19,4 +19,4 @@ results to file(s).
 
 ## Current version
 
-0.20.16 Add performance testing to templates. Add -force option to trgen to generate a target. Dotnet 7.0 dependency; desc.xml replacement for pom.xml. Add trfoldlit. NB: not all Trash tools supported yet.
+0.20.16 Updates to trfoldlit, trconvert (rex, pegjs, kocmanllk but incomplete, trparse, trstrip. NB: not all Trash tools supported yet.
