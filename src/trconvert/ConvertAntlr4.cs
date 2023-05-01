@@ -117,11 +117,25 @@ namespace Trash
             using (var dynamicContext = ate.Try(trees, parser))
             {
                 var nodes = engine.parseExpression(
+                        @"//ebnfSuffix[STAR and QUESTION]",
+                        new StaticContextBuilder()).evaluate(
+                        dynamicContext, new object[] { dynamicContext.Document })
+                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                foreach (var node in nodes)
+                {
+                    var n = node.Children.Last();
+                    TreeEdits.Delete(n);
+                }
+            }
+            using (var dynamicContext = ate.Try(trees, parser))
+            {
+                var nodes = engine.parseExpression(
                         @"//lexerRuleSpec/lexerRuleBlock/lexerAltList/lexerAlt/lexerCommands/lexerCommand/lexerCommandName/identifier/RULE_REF[text()='skip']",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                bool got_whitespace = false;
+                bool got_intertoken = nodes.Any();
+                List<string> intertoken_rule_names = new List<string>();
                 foreach (var node in nodes)
                 {
                     var rule = node
@@ -137,11 +151,7 @@ namespace Trash
                     var name_node = rule.Children.FirstOrDefault();
                     // Rename only if not whitespace.
                     var name = name_node.GetText();
-                    if (name == "WS" || name == "WHITESPACE" || name == "Whitespace")
-                    {
-                        got_whitespace = true;
-                        TreeEdits.Replace(name_node, "_");
-                    }
+                    intertoken_rule_names.Add(name);
                     var p = node
                             .ParentNode
                             .ParentNode
@@ -151,7 +161,7 @@ namespace Trash
                     var ch_list = p.Children.ToList();
                     foreach (var c in ch_list) TreeEdits.Delete(c);
                 }
-                if (got_whitespace)
+                if (got_intertoken)
                 {
                     var inserts = engine.parseExpression(
                             @"//parserRuleSpec/ruleBlock//TOKEN_REF",
@@ -165,6 +175,21 @@ namespace Trash
                             dynamicContext, new object[] { dynamicContext.Document })
                         .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                     foreach (var i in inserts2) TreeEdits.InsertBefore(i, " _? ");
+                    var last_rule = engine.parseExpression(
+                        @"//lexerRuleSpec/TOKEN_REF",
+                        new StaticContextBuilder()).evaluate(
+                        dynamicContext, new object[] { dynamicContext.Document }
+                    ).Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).FirstOrDefault();
+                    if (last_rule != null)
+                    {
+                        var par = last_rule.ParentNode;
+                        Node last = par;
+                        last = TreeEdits.InsertBefore(last,
+                            Environment.NewLine + Environment.NewLine
+                            + "_ = "
+                            + string.Join(" / ", intertoken_rule_names)
+                            + Environment.NewLine + Environment.NewLine);
+                    }
                 }
             }
             using (var dynamicContext = ate.Try(trees, parser))
