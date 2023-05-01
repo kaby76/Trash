@@ -1,11 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace Trash
 {
     using AntlrJson;
-    using org.eclipse.wst.xml.xpath2.processor.util;
     using ParseTreeEditing.UnvParseTreeDOM;
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text.Json;
@@ -63,10 +62,49 @@ namespace Trash
                     foreach (var n in trees)
                         System.Console.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
                 }
-                // Get original source file extension and derive type.
-                switch (parser.GrammarFileName)
+                var ty = new Regex("Parser$").Replace(Path.GetFileNameWithoutExtension(parser.GrammarFileName), "");
+                switch (ty)
                 {
-                    case "ANTLRv3Parser.g4":
+                    case "ANTLRv4":
+                    {
+                        switch (config.Type)
+                        {
+                            case "KocmanLLK":
+                            {
+                                ConvertAntlr4.ToKocmanLLK(trees, parser, lexer, fn);
+                                var tuple = new ParsingResultSet()
+                                {
+                                    Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                                    FileName = fn,
+                                    Nodes = trees,
+                                    Lexer = lexer,
+                                    Parser = parser
+                                };
+                                results.Add(tuple);
+                                break;
+                            }
+                            case "Pegjs":
+                            {
+                                ConvertAntlr4.ToPegjs(trees, parser, lexer, fn);
+                                var tuple = new ParsingResultSet()
+                                {
+                                    Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                                    FileName = fn,
+                                    Nodes = trees,
+                                    Lexer = lexer,
+                                    Parser = parser
+                                };
+                                results.Add(tuple);
+                                break;
+                            }
+                            default:
+                                System.Console.WriteLine("Unhandled conversion to.");
+                                break;
+                        }
+                    }
+                        break;
+
+                    case "ANTLRv3":
                     {
                         ConvertAntlr3.ToAntlr4(trees, parser, lexer, fn);
                         var tuple = new ParsingResultSet()
@@ -81,7 +119,7 @@ namespace Trash
                     }
                         break;
 
-                    case "rexParser.g4":
+                    case "rex":
                     {
                         ConvertRex.ToAntlr4(trees, parser, lexer, fn);
                         var tuple = new ParsingResultSet()

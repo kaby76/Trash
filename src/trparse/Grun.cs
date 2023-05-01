@@ -186,6 +186,16 @@
             }
             else
             {
+                var subdir = parser_type switch
+                {
+                    "ANTLRv4" => "antlr4",
+                    "ANTLRv3" => "antlr3",
+                    "ANTLRv2" => "antlr2",
+                    "pegen_v3_10" => "pegen",
+                    "rex" => "rex",
+                    "Bison" => "bison",
+                    _ => throw new Exception("Unknown file extension, cannot load in a built-in parser.")
+                };
                 // Get this assembly.
                 System.Reflection.Assembly a = this.GetType().Assembly;
                 string path = a.Location;
@@ -193,10 +203,10 @@
                 path = path.Replace("\\", "/");
                 if (!path.EndsWith("/")) path = path + "/";
                 var full_path = path;
-                var exists = File.Exists(full_path + parser_type + ".dll");
+                var exists = File.Exists(full_path + subdir + ".dll");
                 full_path = Path.GetFullPath(full_path);
                 Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
-                Assembly asm = Assembly.LoadFile(full_path + parser_type + ".dll");
+                Assembly asm = Assembly.LoadFile(full_path + subdir + ".dll");
                 var xxxxxx = asm1.GetTypes();
                 Type[] types = asm.GetTypes();
                 type = asm.GetType("Program");

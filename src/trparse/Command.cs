@@ -94,12 +94,12 @@ namespace Trash
                 var ext = Path.GetExtension(config.Files.First());
                 var parser_type = ext switch
                 {
-                    ".g4" => "antlr4",
-                    ".g3" => "antlr3",
-                    ".g2" => "antlr2",
-                    ".gram" => "pegen",
+                    ".g4" => "ANTLRv4",
+                    ".g3" => "ANTLRv3",
+                    ".g2" => "ANTLRv2",
+                    ".gram" => "pegen_v3_10",
                     ".rex" => "rex",
-                    ".y" => "bison",
+                    ".y" => "Bison",
                     _ => throw new Exception("Unknown file extension, cannot load in a built-in parser.")
                 };
                 config.Type = parser_type;
