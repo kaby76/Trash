@@ -1,25 +1,25 @@
 ﻿using Algorithms;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using Microsoft.Msagl.Core.Geometry;
-using Microsoft.Msagl.Core.Geometry.Curves;
-using Microsoft.Msagl.Drawing;
-using Microsoft.Msagl.Layout.Layered;
-using Microsoft.Msagl.Miscellaneous;
+using ParseTreeEditing.UnvParseTreeDOM;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using org.w3c.dom;
+using static System.Net.Mime.MediaTypeNames;
 
-namespace driver
+namespace trcover
 {
     public class SymbolEdge<T> : DirectedEdge<T>
     {
         public SymbolEdge() { }
 
-        public string _symbol { get; set; }
+        public ITerminalNode _symbol { get; set; }
 
         public override string ToString()
         {
@@ -134,7 +134,7 @@ namespace driver
             var t = "" + gen++;
             g.AddStart(g.AddVertex(f));
             g.AddEnd(g.AddVertex(t));
-            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = "." });
+            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = ct4 });
             return g;
         }
 
@@ -179,7 +179,7 @@ namespace driver
             var t = "" + gen++;
             g.AddStart(g.AddVertex(f));
             g.AddEnd(g.AddVertex(t));
-            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.GetText() });
+            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = /*context.GetText()*/ null });
             return g;
         }
 
@@ -521,7 +521,7 @@ namespace driver
                 var t = "" + gen++;
                 g.AddStart(g.AddVertex(f));
                 g.AddEnd(g.AddVertex(t));
-                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = ct5.GetText() });
+                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = ct5 });
                 return g;
             }
             var ct4 = context.DOT();
@@ -532,7 +532,7 @@ namespace driver
                 var t = "" + gen++;
                 g.AddStart(g.AddVertex(f));
                 g.AddEnd(g.AddVertex(t));
-                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = "." });
+                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = ct4 });
                 return g;
             }
         }
@@ -890,7 +890,7 @@ namespace driver
             g.AddStart(g.AddVertex(f));
             g.AddEnd(g.AddVertex(t));
             if (context.RULE_REF() != null)
-                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.RULE_REF().GetText() });
+                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.RULE_REF() });
             var n = g.AddVertex(context.GetText());
             return g;
         }
@@ -929,7 +929,7 @@ namespace driver
                 var t = "" + gen++;
                 g.AddStart(g.AddVertex(f));
                 g.AddEnd(g.AddVertex(t));
-                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.TOKEN_REF().GetText() });
+                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.TOKEN_REF() });
                 return g;
             }
             else if (context.STRING_LITERAL() != null)
@@ -939,7 +939,7 @@ namespace driver
                 var t = "" + gen++;
                 g.AddStart(g.AddVertex(f));
                 g.AddEnd(g.AddVertex(t));
-                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.STRING_LITERAL().GetText() });
+                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.STRING_LITERAL() });
                 return g;
             }
             else if (context.characterRange() != null)
@@ -954,7 +954,7 @@ namespace driver
                 var t = "" + gen++;
                 g.AddStart(g.AddVertex(f));
                 g.AddEnd(g.AddVertex(t));
-                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.LEXER_CHAR_SET().GetText() });
+                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.LEXER_CHAR_SET() });
                 return g;
             }
             else throw new Exception();
@@ -968,9 +968,9 @@ namespace driver
             g.AddStart(g.AddVertex(f));
             g.AddEnd(g.AddVertex(t));
             if (context.TOKEN_REF() != null)
-                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.TOKEN_REF().GetText() });
+                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.TOKEN_REF() });
             else
-                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.STRING_LITERAL().GetText() });
+                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = context.STRING_LITERAL() });
             return g;
         }
 
@@ -991,20 +991,28 @@ namespace driver
 
     public class Model
     {
-        public static Graph ThompsonsGraph { get; set; } = null;
-        public static Graph PowerSetGraph { get; set; } = null;
-        public static string ThompsonsSvg { get; set; } = null;
-        public static string PowerSetSvg { get; set; } = null;
-
-        public static void ComputeModel(string input)
+        private string _dll_path;
+        public string Grammar;
+        public Model(string dll_path)
         {
-            Digraph<string, SymbolEdge<string>> t = Parse(input);
-            ThompsonsGraph = ToAGL(t);
-            ThompsonsSvg = Model.PrintSvgAsString(ThompsonsGraph);
-            Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> m = ToPowerSet(t);
-            Digraph<string, SymbolEdge<string>> m2 = FlattenStates(m);
-            PowerSetGraph = ToAGL(m2);
-            PowerSetSvg = Model.PrintSvgAsString(PowerSetGraph);
+            _dll_path = dll_path;
+        }
+
+        public void ComputeModel()
+        {
+            // Go up directory, find all *.g4, parse.
+            var path = _dll_path + "\\..\\..\\..";
+            Directory.SetCurrentDirectory(path);
+            path = Directory.GetCurrentDirectory();
+            var grammar_files = new TrashGlobbing.Glob(path)
+                .RegexContents(".*[.]g4")
+                .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
+                .Select(f => f.FullName.Replace('\\', '/'))
+                .ToList();
+            foreach (var gfile in grammar_files)
+            {
+                ParseGrammar(gfile);
+            }
         }
 
         private static Digraph<string, SymbolEdge<string>> FlattenStates(Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> m)
@@ -1060,7 +1068,7 @@ namespace driver
                 {
                     foreach (var e in NFA.SuccessorEdges(x))
                     {
-                        if (!(e._symbol != null && e._symbol != "")) continue;
+                        if (!(e._symbol != null)) continue;
                         var v = e.To;
                         var u = EpsilonClosureOf(NFA, v);
                         Add(unmarked, NFA, DFA, u);
@@ -1083,7 +1091,7 @@ namespace driver
         {
             List<MyHashSet<string>> list = DFA.Vertices.ToList();
 
-       //     if (!FancyContains(list, u))
+            //     if (!FancyContains(list, u))
             if (!DFA.Vertices.Contains(u))
             {
                 unmarked.Add(u);
@@ -1113,122 +1121,25 @@ namespace driver
                 result.Add(v);
                 foreach (var o in graph.SuccessorEdges(v))
                 {
-                    if (!(o._symbol == null || o._symbol == "")) continue;
+                    if (o._symbol != null) continue;
                     s.Push(o.To);
                 }
             }
             return result;
         }
 
-        public static Digraph<string, SymbolEdge<string>> Parse(string input, string type = "antlr4")
+        public void ParseGrammar(string grammar)
         {
-            Graph result = null;
-            switch (type) {
-                case "antlr4":
-                    {
-                        IParseTree pt = null;
-                        byte[] byteArray = Encoding.UTF8.GetBytes(input);
-                        AntlrInputStream ais = new AntlrInputStream(
-                        new StreamReader(
-                            new MemoryStream(byteArray)).ReadToEnd());
-                        ANTLRv4Lexer lexer = new ANTLRv4Lexer(ais);
-                        CommonTokenStream cts = new CommonTokenStream(lexer);
-                        ANTLRv4Parser parser = new ANTLRv4Parser(cts);
-                        lexer.RemoveErrorListeners();
-                        var lexer_error_listener = new ErrorListener<int>(parser, lexer, 5);
-                        lexer.AddErrorListener(lexer_error_listener);
-                        parser.RemoveErrorListeners();
-                        var parser_error_listener = new ErrorListener<IToken>(parser, lexer, 5);
-                        parser.AddErrorListener(parser_error_listener);
-                        BailErrorHandler bail_error_handler = null;
-                        bail_error_handler = new BailErrorHandler();
-                        parser.ErrorHandler = bail_error_handler;
-                        try
-                        {
-                            pt = parser.grammarSpec();
-                        }
-                        catch (Exception)
-                        {
-                            // Parsing error.
-                        }
-                        if (parser_error_listener.had_error || lexer_error_listener.had_error || (bail_error_handler != null && bail_error_handler.had_error))
-                            return null;
-
-                        var ag = new AntlrGraph();
-                        Digraph<string, SymbolEdge<string>> res = ag.Visit(pt);
-                        return res;
-                    }
-                    break;
-            }
-            return null;
-        }
-        
-        private static Graph ToAGL(Digraph<string, SymbolEdge<string>> g)
-        {
-            var graph = new Graph();
-            foreach (var v in g.Vertices)
-            {
-                var n = graph.AddNode(v);
-                n.LabelText = v;
-                if (g.EndVertices.Contains(v))
-                {
-                    n.Attr.FillColor = Microsoft.Msagl.Drawing.Color.PaleVioletRed;
-                }
-                else if (g.StartVertices.Contains(v))
-                {
-                    n.Attr.FillColor = Microsoft.Msagl.Drawing.Color.LightGreen;
-                }
-            }
-            foreach (var e in g.Edges)
-            {
-                var n = e._symbol != null ? e._symbol : "";
-                graph.AddEdge(e.From, n, e.To);
-            }
-            graph.CreateGeometryGraph();
-            foreach (var n in graph.Nodes)
-            {
-                n.GeometryNode.BoundaryCurve = CurveFactory.CreateRectangleWithRoundedCorners(60, 40, 3, 2, new Point(0, 0));
-               // n.GeometryNode.BoundaryCurve = CurveFactory.CreateCircle(60, new Point(0, 0));
-                n.Label.Width = n.Width * 0.6;
-                n.Label.Height = 40;
-            }
-            foreach (var de in graph.Edges)
-            {
-                // again setting the dimensions, that should depend on Drawing.Label and the viewer, blindly
-                if (de.Label != null)
-                {
-                    de.Label.GeometryLabel.Width = 55;
-                    de.Label.GeometryLabel.Height = 33;
-                }
-            }
-            //AssignLabelsDimensions(graph);
-            LayoutHelpers.CalculateLayout(graph.GeometryGraph, new SugiyamaLayoutSettings(), null);
-            return graph;
-        }
-
-        public static string PrintSvgAsString(Graph graph)
-        {
-            var ms = new MemoryStream();
-            var writer = new StreamWriter(ms);
-            var svgWriter = new SvgGraphWriter(writer.BaseStream, graph);
-            svgWriter.Write();
-            ms.Position = 0;
-            var sr = new StreamReader(ms);
-            var result = sr.ReadToEnd();
-            var start = result.IndexOf("<svg");
-            result = result.Substring(start);
-            //result = "<svg viewBox=\"0 0 100 100\" width=\"100%\">" + result + "</svg>";
-            Regex re1 = new Regex(@"width=""([^""]+)""");
-            var vw = re1.Match(result);
-            var v1 = vw.Groups[1].Value;
-            Regex re2 = new Regex(@"height=""([^""]+)""");
-            var vh = re2.Match(result);
-            var v2 = vh.Groups[1].Value;
-            // result = re1.Replace(result, @"viewBox=""0 0 400 400"" width=""100%""", 1);
-            result = re1.Replace(result, "viewBox=\"0 0 " + v1 + " " + v2 + "\"", 1);
-        //    result = re2.Replace(result, @"height=""100%""", 1);
-           
-            return result;
+            System.Console.Error.WriteLine("Parsing grammar " + grammar);
+            var lines = File.ReadAllText(grammar);
+            var lexer = new ANTLRv4Lexer(new AntlrInputStream(lines));
+            var common_token_stream = new CommonTokenStream(lexer);
+            var parser = new ANTLRv4Parser(common_token_stream);
+            ANTLRv4Parser.GrammarSpecContext pt = parser.grammarSpec();
+            var ag = new AntlrGraph();
+            Digraph<string, SymbolEdge<string>> t = ag.VisitGrammarSpec(pt);
+            Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> m = ToPowerSet(t);
+            Digraph<string, SymbolEdge<string>> m2 = FlattenStates(m);
         }
     }
 }
