@@ -16,6 +16,7 @@ using org.w3c.dom;
 using XmlDOM;
 using static System.Net.Mime.MediaTypeNames;
 using System.ComponentModel;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Trash
 {
@@ -170,7 +171,8 @@ namespace Trash
                     var q = token_count.TryGetValue(t, out int v);
                     if (v > 0)
                     {
-                        System.Console.Write("<b style=\"background-color:Tomato;\">");
+                        System.Console.Write("<b style=\"background-color:"
+                        + "rgba(255, 99, 71, " + fun(v) + ");\">");
                     }
                     System.Console.Write(t.Text);
                     if (v > 0)
@@ -186,6 +188,19 @@ namespace Trash
                 result = 1;
             }
             return result;
+        }
+
+        private string fun(int v)
+        {
+            switch (v)
+            {
+                case int n when (n >= 75): return "1.0";
+                case int n when (n < 75 && n >= 50): return "0.75";
+                case int n when (n < 50 && n >= 25): return "0.5";
+                case int n when (n < 25 && n >= 1): return "0.25";
+                default:
+                    return "0";
+            }
         }
 
         int DoParse(Model model, Type type, string txt, string prefix, string input_name, int row_number)
