@@ -2,8 +2,8 @@
   "profiles": {
     "trcover": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/robdata.sys",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\l\\grammars-v4\\abb\\Generated-CSharp"
+      "commandLineArgs": "../examples/AllInOne17.java",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\l\\grammars-v4\\java\\java\\Generated-CSharp"
     }
   }
 }

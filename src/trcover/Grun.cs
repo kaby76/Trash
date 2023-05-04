@@ -324,7 +324,7 @@ namespace Trash
             if (rules.Count() != 1) throw new Exception();
             var rule = rules.First();
             Digraph<string, SymbolEdge<string>> nfa = rule.rhs;
-            List<IParseTree> input = x.children.ToList();
+            List<IParseTree> input = x.children != null ? x.children.ToList() : new List<IParseTree>();
             List<SymbolEdge<string>> parse = null;
             foreach (string state in nfa.StartVertices)
             {
