@@ -18,4 +18,4 @@ Read a parse tree from stdin and write a JSON represenation of it.
 
 ## Current version
 
-0.20.16 Updates to trfoldlit, trconvert (rex, pegjs, kocmanllk but incomplete, trparse, trstrip. NB: not all Trash tools supported yet.
+0.20.17 Updates to trfoldlit, trconvert (rex, pegjs, kocmanllk but incomplete, trparse, trstrip. Add trcover. NB: not all Trash tools supported yet.

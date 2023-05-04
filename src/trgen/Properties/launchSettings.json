@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t CSharp",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\l\\grammars-v4\\verilog\\verilog"
+      "commandLineArgs": "-t Cpp",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\parens\\grammars-v4\\antlr\\antlr4"
     }
   }
 }

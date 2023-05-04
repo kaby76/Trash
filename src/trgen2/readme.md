@@ -19,4 +19,4 @@ The generated parser is placed in the directory <current-directory>/Generated/.
 
 ## Current version
 
-0.20.16 Updates to trfoldlit, trconvert (rex, pegjs, kocmanllk but incomplete, trparse, trstrip. NB: not all Trash tools supported yet.
+0.20.17 Updates to trfoldlit, trconvert (rex, pegjs, kocmanllk but incomplete, trparse, trstrip. Add trcover. NB: not all Trash tools supported yet.

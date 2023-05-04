@@ -491,7 +491,7 @@
             }
         }
 
-        public static string version = "0.20.16";
+        public static string version = "0.20.17";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1592,10 +1592,11 @@
                         + " to "
                         + to);
                     Template t = new Template(content);
+                    var output_dir = config.output_directory + '-' + test.target + "/";
                     var yo1 = test.grammar_directory_source_files
                         .Select(t =>
                             FixedName(t, config, test)
-                            .Substring(config.output_directory.Length))
+                            .Substring(output_dir.Length))
                         .Where(t => t.Contains(Suffix(test.target)))
                         .ToList();
                     t.Add("additional_sources", yo1);
@@ -1689,11 +1690,13 @@
                         + " to "
                         + to);
                     Template t = new Template(content);
-		            var yo1 = test.grammar_directory_source_files
-			              .Select(t => FixedName(t, config, test)
-					         .Substring(config.output_directory.Length))
-			              .Where(t => t.Contains(Suffix(test.target)))
-			              .ToList();
+                    var output_dir = config.output_directory + '-' + test.target + "/";
+                    var yo1 = test.grammar_directory_source_files
+                        .Select(t =>
+                            FixedName(t, config, test)
+                                .Substring(output_dir.Length))
+                        .Where(t => t.Contains(Suffix(test.target)))
+                        .ToList();
                     t.Add("additional_sources", yo1);
                     t.Add("antlr_encoding", test.antlr_encoding);
                     t.Add("antlr_tool_args", config.antlr_tool_args);
@@ -1833,6 +1836,9 @@
 
             if (from.StartsWith(cwd))
                 from = from.Substring(cwd.Length);
+
+            if (from.StartsWith(test.target))
+                from = from.Substring(test.target.Length+1);
 
             // Split the dirname and basename of the path x.
             var dir = Dirname(from);
