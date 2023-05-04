@@ -1,17 +1,11 @@
 ﻿using Algorithms;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using ParseTreeEditing.UnvParseTreeDOM;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using org.w3c.dom;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace trcover
 {
@@ -54,11 +48,25 @@ namespace trcover
         }
     }
 
-    public class AntlrGraph : ANTLRv4ParserBaseVisitor<Digraph<string, SymbolEdge<string>>>
+    public class Model : ANTLRv4ParserBaseVisitor<Digraph<string, SymbolEdge<string>>>
     {
         private int gen = 0;
+        private string _grammar;
+        public Parser _parser;
+        public Lexer _lexer;
+        public ITokenStream _input;
 
-        public Dictionary<string, Digraph<string, SymbolEdge<string>>> Rules { get; set; } = new Dictionary<string, Digraph<string, SymbolEdge<string>>>();
+        public class Rule
+        {
+            public Rule() { }
+            public string grammar;
+            public string lhs;
+            public int lhs_rule_number;
+            public Digraph<string, SymbolEdge<string>> rhs;
+        }
+        public HashSet<Rule> Rules { get; set; } = new HashSet<Rule>();
+
+        public Model() { }
 
         public override Digraph<string, SymbolEdge<string>> VisitActionBlock(ANTLRv4Parser.ActionBlockContext context)
         {
@@ -773,7 +781,6 @@ namespace trcover
         public override Digraph<string, SymbolEdge<string>> VisitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext context)
         {
             var cg = this.VisitLexerRuleBlock(context.lexerRuleBlock());
-            Rules[context.TOKEN_REF().GetText()] = cg;
             return cg;
         }
 
@@ -829,7 +836,12 @@ namespace trcover
         public override Digraph<string, SymbolEdge<string>> VisitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext context)
         {
             var cg = this.VisitRuleBlock(context.ruleBlock());
-            Rules[context.RULE_REF().GetText()] = cg;
+            Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> m = ToPowerSet(cg);
+            Digraph<string, SymbolEdge<string>> m2 = FlattenStates(m);
+            var rule_name = context.RULE_REF().GetText();
+            var rule = new Rule() { grammar = _grammar, lhs = rule_name,
+                lhs_rule_number = _parser.GetRuleIndex(rule_name), rhs = cg };
+            Rules.Add(rule);
             return cg;
         }
 
@@ -987,21 +999,11 @@ namespace trcover
         {
             return null;
         }
-    }
 
-    public class Model
-    {
-        private string _dll_path;
-        public string Grammar;
-        public Model(string dll_path)
-        {
-            _dll_path = dll_path;
-        }
-
-        public void ComputeModel()
+        public void ComputeModel(string dll_path, Antlr4.Runtime.Parser pp, Antlr4.Runtime.Lexer ll, ITokenStream tt)
         {
             // Go up directory, find all *.g4, parse.
-            var path = _dll_path + "\\..\\..\\..";
+            var path = dll_path + "\\..\\..\\..";
             Directory.SetCurrentDirectory(path);
             path = Directory.GetCurrentDirectory();
             var grammar_files = new TrashGlobbing.Glob(path)
@@ -1011,7 +1013,7 @@ namespace trcover
                 .ToList();
             foreach (var gfile in grammar_files)
             {
-                ParseGrammar(gfile);
+                ParseGrammar(gfile, pp, ll, tt);
             }
         }
 
@@ -1128,7 +1130,7 @@ namespace trcover
             return result;
         }
 
-        public void ParseGrammar(string grammar)
+        public void ParseGrammar(string grammar, Antlr4.Runtime.Parser pp, Antlr4.Runtime.Lexer ll, ITokenStream tt)
         {
             System.Console.Error.WriteLine("Parsing grammar " + grammar);
             var lines = File.ReadAllText(grammar);
@@ -1136,10 +1138,14 @@ namespace trcover
             var common_token_stream = new CommonTokenStream(lexer);
             var parser = new ANTLRv4Parser(common_token_stream);
             ANTLRv4Parser.GrammarSpecContext pt = parser.grammarSpec();
-            var ag = new AntlrGraph();
-            Digraph<string, SymbolEdge<string>> t = ag.VisitGrammarSpec(pt);
-            Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> m = ToPowerSet(t);
-            Digraph<string, SymbolEdge<string>> m2 = FlattenStates(m);
+            if (pt.grammarDecl().grammarType().LEXER() == null)
+            {
+                _grammar = grammar;
+                _parser = pp;
+                _lexer = ll;
+                _input = common_token_stream;
+                this.VisitGrammarSpec(pt);
+            }
         }
     }
 }

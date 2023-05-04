@@ -1,7 +1,7 @@
 ﻿/*
 MIT License
 
-Copyright (c) 2021 Ken Domino
+Copyright (c) 2023 Ken Domino
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,19 +25,15 @@ SOFTWARE.
 
 namespace Trash
 {
-    using Antlr4.Runtime.Tree;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-    using System.Text.Json;
-    using System.Linq;
-    using iText.IO.Util;
     using iText.Kernel.Geom;
     using iText.Kernel.Pdf;
     using iText.Kernel.Pdf.Canvas.Parser;
     using iText.Kernel.Pdf.Canvas.Parser.Data;
     using iText.Kernel.Pdf.Canvas.Parser.Listener;
     using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
 
     class Command
     {
