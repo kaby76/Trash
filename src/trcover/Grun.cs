@@ -332,6 +332,80 @@ namespace Trash
             return null;
         }
 
+        private List<SymbolEdge<string>> ParseUsingStack(Model model, Digraph<string, SymbolEdge<string>> nfa,
+            IEnumerable<IParseTree> input, SymbolEdge<string> edge)
+        {
+            var visited = new HashSet<string>();
+            var stack = new Stack<Tuple<List<IParseTree>, SymbolEdge<string>, List<SymbolEdge<string>>>>();
+            stack.Push(
+                new Tuple<List<IParseTree>, SymbolEdge<string>, List<SymbolEdge<string>>>
+                    (input.ToList(), edge, new List<SymbolEdge<string>>()));
+            while (stack.Count > 0)
+            {
+                var current = stack.Pop();
+                var currentInput = current.Item1;
+                var currentEdge = current.Item2;
+                var up_to_now_pat = current.Item3;
+
+                currentInput = currentInput.ToList();
+                IParseTree c = currentInput.FirstOrDefault();
+                if (c == null)
+                {
+                    return new List<SymbolEdge<string>>();
+                }
+                if (visited.Contains(currentEdge.To))
+                {
+                    continue;
+                }
+                visited.Add(currentEdge.To);
+
+                foreach (var t in nfa.Edges.Where(e => e.From == currentEdge.To))
+                {
+                    var ll = t._symbol;
+                    IEnumerable<IParseTree> rest = null;
+                    if (ll == null)
+                    {
+                        rest = currentInput;
+                    }
+                    else
+                    {
+                        if (c is ParserRuleContext cc)
+                        {
+                            var symbol = model._parser.RuleNames[cc.RuleIndex];
+                            if (symbol != ll.GetText())
+                                continue;
+                        }
+                        else if (c is TerminalNodeImpl c2)
+                        {
+                            var ty = c2.Symbol.Type;
+                            var dic = model._lexer.Vocabulary;
+                            var s1 = dic.GetLiteralName(ty);
+                            var s2 = dic.GetSymbolicName(ty);
+                            var s3 = dic.GetDisplayName(ty);
+                            if (!(ll.GetText() == s1 || ll.GetText() == s2 || ll.GetText() == s3))
+                                continue;
+                        }
+                        rest = currentInput.Skip(1);
+                    }
+
+                    var new_list = up_to_now_pat.ToList(); 
+                    new_list.Add(t);
+                    var newTuple = new Tuple<List<IParseTree>, SymbolEdge<string>, List<SymbolEdge<string>>>(
+                        rest.ToList(),
+                        t,
+                        new_list
+                        );
+                    stack.Push(newTuple);
+
+                    if (rest.All(x => x == null))
+                    {
+                        return new_list;
+                    }
+                }
+            }
+            return null;
+        }
+
         private void ParseRHS(Model model, ParserRuleContext x)
         {
             visited = new HashSet<string>();
@@ -345,7 +419,8 @@ namespace Trash
             {
                 foreach (var t in nfa.Edges.Where(e => e.From == state))
                 {
-                    parse = ParseRecurse(model, nfa, input, t);
+                    parse = ParseUsingStack(model, nfa, input, t);
+                    //parse = ParseRecurse(model, nfa, input, t);
                     if (parse != null)
                         break;
                 }

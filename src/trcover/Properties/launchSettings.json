@@ -2,8 +2,8 @@
   "profiles": {
     "trcover": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/AllInOne17.java",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\l\\grammars-v4\\java\\java\\Generated-CSharp"
+      "commandLineArgs": "../examples/ERASABLE_ASSIGNMENTS.agc",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\parens\\other\\agc\\Generated-CSharp"
     }
   }
 }
