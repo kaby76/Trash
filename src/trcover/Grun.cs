@@ -353,10 +353,10 @@ namespace Trash
                 {
                     return new List<SymbolEdge<string>>();
                 }
-                if (visited.Contains(currentEdge.To))
-                {
-                    continue;
-                }
+                //if (visited.Contains(currentEdge.To))
+                //{
+                //    continue;
+                //}
                 visited.Add(currentEdge.To);
 
                 foreach (var t in nfa.Edges.Where(e => e.From == currentEdge.To))
@@ -409,6 +409,8 @@ namespace Trash
         private void ParseRHS(Model model, ParserRuleContext x)
         {
             visited = new HashSet<string>();
+            if (x.Parent == null)
+            {}
             var rules = model.Rules.Where(r => r.lhs_rule_number == x.RuleIndex).ToList();
             if (rules.Count() != 1) throw new Exception();
             var rule = rules.First();
