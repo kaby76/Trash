@@ -181,6 +181,8 @@ namespace Trash
                     }
                 }
                 System.Console.WriteLine("</code></pre>");
+                System.Console.WriteLine("<br><br>");
+                System.Console.WriteLine("Percent rules covered " + 100 * rule_count.Count / 1.0 / model._parser.RuleNames.Length);
             }
             catch (Exception e)
             {
@@ -248,6 +250,9 @@ namespace Trash
             return (bool)res3 ? 1 : 0;
         }
 
+        
+        public Dictionary<int, int> rule_count = new Dictionary<int, int>();
+
         private void ComputeCoverage(Model model, IParseTree tree)
         {
             // Traverse tree and parse each node.
@@ -263,6 +268,8 @@ namespace Trash
                 {
                     var x = n as ParserRuleContext;
                     var y = x.RuleIndex;
+                    rule_count.TryGetValue(x.RuleIndex, out int rc);
+                    rule_count[x.RuleIndex] = rc + 1;
                     var fod = model.Rules.Where(r =>
                     {
                         if (r.lhs_rule_number == y) return true;
@@ -335,7 +342,7 @@ namespace Trash
         private List<SymbolEdge<string>> ParseUsingStack(Model model, Digraph<string, SymbolEdge<string>> nfa,
             IEnumerable<IParseTree> input, SymbolEdge<string> edge)
         {
-            var visited = new HashSet<string>();
+            var visited = new Dictionary<string, int>();
             var stack = new Stack<Tuple<List<IParseTree>, SymbolEdge<string>, List<SymbolEdge<string>>>>();
             stack.Push(
                 new Tuple<List<IParseTree>, SymbolEdge<string>, List<SymbolEdge<string>>>
@@ -348,16 +355,17 @@ namespace Trash
                 var up_to_now_pat = current.Item3;
 
                 currentInput = currentInput.ToList();
+                var current_input_count = currentInput.Count;
                 IParseTree c = currentInput.FirstOrDefault();
                 if (c == null)
                 {
                     return new List<SymbolEdge<string>>();
                 }
-                //if (visited.Contains(currentEdge.To))
-                //{
-                //    continue;
-                //}
-                visited.Add(currentEdge.To);
+                if (visited.TryGetValue(currentEdge.To, out int input_read))
+                {
+                    if (input_read <= current_input_count) continue;
+                }
+                visited[currentEdge.To] = current_input_count;
 
                 foreach (var t in nfa.Edges.Where(e => e.From == currentEdge.To))
                 {
@@ -409,8 +417,6 @@ namespace Trash
         private void ParseRHS(Model model, ParserRuleContext x)
         {
             visited = new HashSet<string>();
-            if (x.Parent == null)
-            {}
             var rules = model.Rules.Where(r => r.lhs_rule_number == x.RuleIndex).ToList();
             if (rules.Count() != 1) throw new Exception();
             var rule = rules.First();
