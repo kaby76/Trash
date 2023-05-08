@@ -44,17 +44,10 @@ Copy this script and execute it in a Bash shell.
 #
 for i in trcombine trconvert trdelete trfoldlit trgen triconv trinsert trjson trparse trperf trrename trreplace trsplit trsponge trstrip trtext trtokens trtree trwdog trxgrep trxml trxml2
 do
-    dotnet tool install -g $i
+    dotnet tool install -g $i --version 0.20.18
 done
 ```
-### Windows or Linux Powershell
-Copy this script and execute it in a Powershell shell.
-```
-$apps = @('tranalyze','trcombine','trconvert','trdelabel','trdelete','trdot','trfirst','trfold','trfoldlit','trformat','trgen','trgroup','triconv','trinsert','tritext','trjson','trkleene','trmove','trparse','trperf','trpiggy','trprint','trrename','trreplace','trrr','trrup','trsort','trsplit','trsponge','trst','trstrip','trtext','trtokens','trtree','trull','trunfold','trungroup','trwdog','trxgrep','trxml','trxml2')
-foreach ($i in $apps) {
-	dotnet tool install -g $i --version 0.20.0
-}
-```
+
 ## Uninstall
 ### Linux or Cywin/MSYS2
 Copy this script and execute it in a Bash shell.
@@ -65,16 +58,9 @@ do
     dotnet tool uninstall -g $i
 done
 ```
-### Windows or Linux Powershell
-Copy this script and execute it in a Powershell shell.
-```
-$apps = @('tranalyze','trcombine','trconvert','trdelabel','trdelete','trdot','trfold','trfoldlit','trformat','trgen','trgroup','triconv','trinsert','tritext','trjson','trkleene','trmove','trparse','trperf','trpiggy','trprint','trrename','trreplace','trrr','trrup','trsort','trsplit','trsponge','trst','trstrip','trtext','trtokens','trtree','trull','trunfold','trungroup','trwdog','trxgrep','trxml','trxml2')
-foreach ($i in $apps) {
-	dotnet tool uninstall -g $i
-}
-```
-## List of commands
 
+## List of commands
+__NB: Out of date__
 1) <a href="src/tranalyze/readme.md">tranalyze</a> -- Analyze a grammar
 1) <a href="src/trcombine/readme.md">trcombine</a> -- Combine a split Antlr4 grammar
 1) <a href="src/trconvert/readme.md">trconvert</a> -- Convert a grammar from one for to another
