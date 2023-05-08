@@ -60,7 +60,7 @@ foreach ($i in $apps) {
 Copy this script and execute it in a Bash shell.
 ```
 #
-for i in tranalyze trcombine trconvert trdelabel trdelete trdot trfirst trfold trfoldlit trformat trgen trgroup triconv trinsert tritext trjson trkleene trmove trparse trperf trpiggy trprint trrename trreplace trrr trrup trsort trsplit trsponge trst trstrip trtext trtokens trtree trull trunfold trungroup trwdog trxgrep trxml trxml2
+for i in trcombine trconvert trdelete trfoldlit trgen triconv trinsert trjson trparse trperf trrename trreplace trsplit trsponge trstrip trtext trtokens trtree trwdog trxgrep trxml trxml2
 do
     dotnet tool uninstall -g $i
 done
