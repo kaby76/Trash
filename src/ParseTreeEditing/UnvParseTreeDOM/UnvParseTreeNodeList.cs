@@ -50,5 +50,10 @@
         {
             this._node_list.RemoveAt(i);
         }
+
+        public IEnumerable<Node> All()
+        {
+            return this._node_list;
+        }
     }
 }

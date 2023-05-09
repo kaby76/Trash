@@ -305,6 +305,11 @@ namespace XmlDOM
         {
             _node_list.RemoveAt(i);
         }
+
+        public IEnumerable<Node> All()
+        {
+            return _node_list;
+        }
     }
 
     public class XmlText : XmlNode, Text

@@ -243,6 +243,12 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.ast
                 throw new NotImplementedException();
             }
 
+            public IEnumerable<Node> All()
+            {
+                if (node == null) return new List<Node>();
+                return new List<Node>() { node };
+            }
+
             public virtual int Length
 			{
 				get

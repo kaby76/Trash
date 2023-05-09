@@ -173,7 +173,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "antlr2", "src\grammars\antl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "abnf", "src\grammars\abnf\Generated-CSharp\abnf.csproj", "{8F7BE540-DCC5-4339-BD46-6A1CCF7B35DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trcover", "src\trcover\trcover.csproj", "{EB7193A1-D970-48B8-BEEC-E48A58DF4A88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trcover", "src\trcover\trcover.csproj", "{EB7193A1-D970-48B8-BEEC-E48A58DF4A88}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trcaret", "src\trcaret\trcaret.csproj", "{3325A532-9EFE-44D9-A814-E50BEC805135}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -475,6 +477,10 @@ Global
 		{EB7193A1-D970-48B8-BEEC-E48A58DF4A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB7193A1-D970-48B8-BEEC-E48A58DF4A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB7193A1-D970-48B8-BEEC-E48A58DF4A88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3325A532-9EFE-44D9-A814-E50BEC805135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3325A532-9EFE-44D9-A814-E50BEC805135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3325A532-9EFE-44D9-A814-E50BEC805135}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3325A532-9EFE-44D9-A814-E50BEC805135}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
