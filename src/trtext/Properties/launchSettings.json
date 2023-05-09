@@ -2,8 +2,8 @@
   "profiles": {
     "trtext": {
       "commandName": "Project",
-      "commandLineArgs": "-f b.pt",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trdelabel"
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\3387\\grammars-v4\\abb"
     }
   }
 }

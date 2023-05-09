@@ -246,7 +246,7 @@
             //if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
             //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
-            var converted_tree = new ConvertToDOM().BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
+            var converted_tree = new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
             var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = input_name, Nodes = new UnvParseTreeNode[] { converted_tree }, Parser = parser, Lexer = lexer };
             data.Add(tuple);
             return (bool)res3 ? 1 : 0;

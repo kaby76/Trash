@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"/*[contains(@Before,'\n')]\"",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\pegen\\Generated-CSharp"
+      "commandLineArgs": "-f o.pt \" for $i in (//lexerRuleBlock) return concat(string($i/@Line), ' ', string($i/@Column))\"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\3387\\grammars-v4\\abb"
     }
   }
 }

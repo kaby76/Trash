@@ -270,7 +270,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                             }
                             else if (a is UnvParseTreeText b1)
                             {
-                                for (int j = 0; i < b1.ChildNodes.Length; ++i)
+                                for (int j = 0; j < b1.ChildNodes.Length; ++j)
                                 {
                                     var c = b1.ChildNodes.item(j) as UnvParseTreeAttr;
                                     if (c != null && (c.Name as string == "Line" || c.Name as string == "Column"))

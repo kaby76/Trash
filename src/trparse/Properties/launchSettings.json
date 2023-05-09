@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "Ada95Parser.g4 Ada95Lexer.g4 --fmt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\parens\\other\\ada\\ada95"
+      "commandLineArgs": "x.g4 -l --fmt",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\3387\\grammars-v4\\abb"
     }
   }
 }
