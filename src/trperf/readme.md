@@ -27,4 +27,4 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.20.18 Updates to trfoldlit, trconvert (rex, pegjs, kocmanllk but incomplete, trparse, trstrip. Add trcover. NB: not all Trash tools supported yet.
+0.20.20 Updates to trfoldlit, trconvert (rex, pegjs, kocmanllk but incomplete, trparse, trstrip. Add trcover. Fix trgen for Java with Java/ files. Parse tree attributes added. NB: not all Trash tools supported yet.

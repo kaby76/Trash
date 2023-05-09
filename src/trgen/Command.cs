@@ -491,7 +491,7 @@
             }
         }
 
-        public static string version = "0.20.18";
+        public static string version = "0.20.20";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1837,7 +1837,7 @@
             if (from.StartsWith(cwd))
                 from = from.Substring(cwd.Length);
 
-            if (from.StartsWith(test.target))
+            if (from.StartsWith(test.target + "/"))
                 from = from.Substring(test.target.Length+1);
 
             // Split the dirname and basename of the path x.
@@ -1985,7 +1985,7 @@
             //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             
-            var converted_tree = ConvertToDOM.BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
+            var converted_tree = new ConvertToDOM().BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
             var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Nodes = new UnvParseTreeNode[] { converted_tree }, Parser = parser, Lexer = lexer };
             data.Add(tuple);
             return (bool)res3 ? 1 : 0;

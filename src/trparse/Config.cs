@@ -29,6 +29,9 @@ namespace Trash
         [Option('g', "encoding", Required = false, HelpText = "Set the encoding for the grammar.")]
         public string Encoding { get; set; }
 
+        [Option('l', "line", Required = false, HelpText = "Include line/column information in tree.")]
+        public bool LineNumbers { get; set; }
+
         [Option('q', "quiet", Required =false, Default = false, HelpText = "Do not output anything; only set error code.")]
         public bool Quiet { get; set; }
 
