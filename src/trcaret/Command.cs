@@ -91,43 +91,32 @@
                 var nodes = obj1.Nodes;
                 var parser = obj1.Parser;
                 var lexer = obj1.Lexer;
-                if (more_than_one_fn)
-                    System.Console.WriteLine(fn + ":");
-                var text = System.IO.File.ReadAllText(fn);
+                var text = System.IO.File.ReadAllLines(fn);
                 var current_line = 1;
                 var current_index = 0;
                 foreach (var node in nodes)
                 {
                     int line = GetLine(node);
                     int col = GetColumn(node);
-                    for (;;)
+                    if (config.Prefix)
                     {
-                        if (current_line <= line)
+                        for (;;)
                         {
-                            for (;;)
+                            if (current_line < line)
                             {
-                                if (current_index >= text.Length) break;
-                                var c = text[current_index];
-                                if (c == '\n')
-                                {
-                                    current_index++;
-                                    current_line++;
-                                    break;
-                                }
-                                else if (c == '\r')
-                                {}
-                                else
-                                {
-                                    System.Console.Write(c);
-                                }
-                                current_index++;
+                                System.Console.WriteLine(text[current_line - 1]);
+                                current_line++;
+                                break;
                             }
-
-                            System.Console.WriteLine();
                         }
-                        else break;
                     }
-                    System.Console.WriteLine(new string(' ', col) + "^");
+                    string file_name = fn + ":";
+                    string line_number = "L" + line.ToString() + ": ";
+                    if (more_than_one_fn)
+                        System.Console.Write(file_name);
+                    System.Console.Write(line_number);
+                    System.Console.WriteLine(text[line - 1].Replace('\t',' '));
+                    System.Console.WriteLine(new string(' ', (more_than_one_fn?file_name.Length:0) + line_number.Length + col) + "^");
                 }
             }
         }

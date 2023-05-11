@@ -3,7 +3,7 @@
     "trtext": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\3387\\grammars-v4\\abb"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\parens\\other\\ada\\ada2005"
     }
   }
 }
