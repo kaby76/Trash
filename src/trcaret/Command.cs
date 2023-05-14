@@ -98,6 +98,7 @@
                 {
                     int line = GetLine(node);
                     int col = GetColumn(node);
+                    if (line <= 0) continue;
                     if (config.Prefix)
                     {
                         for (;;)

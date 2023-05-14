@@ -491,7 +491,7 @@
             }
         }
 
-        public static string version = "0.20.20";
+        public static string version = "0.20.21";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
