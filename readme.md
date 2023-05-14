@@ -65,7 +65,6 @@ dotnet tool install -g trxgrep
 dotnet tool install -g trxml
 dotnet tool install -g trxml2
 
-
 ```
 ### Uninstall
 ```
@@ -92,7 +91,6 @@ dotnet tool uninstall -g trwdog
 dotnet tool uninstall -g trxgrep
 dotnet tool uninstall -g trxml
 dotnet tool uninstall -g trxml2
-
 
 ```
 
