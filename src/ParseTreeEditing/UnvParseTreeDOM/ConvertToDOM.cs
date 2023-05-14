@@ -78,7 +78,6 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                 // itself.
 
                 // Set up copy to first hidden token or terminal token.
-                int stop_token_index;
                 var hidden_tokens = tokstream.GetHiddenTokensToLeft(term_index);
                 int i;
                 if (hidden_tokens != null && hidden_tokens.Count > 0)

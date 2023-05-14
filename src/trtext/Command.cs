@@ -24,7 +24,6 @@
             Stack<Node> stack = new Stack<Node>();
             stack.Push(tree);
             StringBuilder sb = new StringBuilder();
-            int last = -1;
             while (stack.Any())
             {
                 var n = stack.Pop();

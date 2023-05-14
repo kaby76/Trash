@@ -248,7 +248,6 @@ namespace Trash
             // Traverse tree and parse each node.
             Stack<IParseTree> stack = new Stack<IParseTree>();
             stack.Push(tree);
-            int last = -1;
             while (stack.Any())
             {
                 var n = stack.Pop();

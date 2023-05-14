@@ -34,8 +34,8 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.types.builtin
 		private readonly Type implementationClass;
 		private readonly Type nativeType;
 		private readonly BuiltinTypeDefinition baseType;
-		private readonly object/* Method */ constructorMethod;
-		private readonly object/* Method */ constructorFromNativeMethod;
+//		private readonly object/* Method */ constructorMethod;
+		private readonly object/* Method */ constructorFromNativeMethod = null;
 
 		public BuiltinTypeDefinition(QName name, BuiltinTypeDefinition baseType) : this(name, null, null, baseType)
 		{
