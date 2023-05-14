@@ -34,29 +34,64 @@ The code is implemented in C#.
 An application of the toolkit was used to scrape and refactor the Dart2
 grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/blob/master/refactor.sh).
 
-## Install
+## Installation
 ### Requirements
 [Install Dotnet 7.0.x](https://dotnet.microsoft.com/en-us/download)
 
-### Linux or Cywin/MSYS2
-Copy this script and execute it in a Bash shell.
+### Install
+Copy this script and execute it in a command-line prompt.
 ```
-#
-for i in trcombine trconvert trdelete trfoldlit trgen triconv trinsert trjson trparse trperf trrename trreplace trsplit trsponge trstrip trtext trtokens trtree trwdog trxgrep trxml trxml2
-do
-    dotnet tool install -g $i --version 0.20.18
-done
-```
+dotnet tool install -g trcaret
+dotnet tool install -g trcombine
+dotnet tool install -g trconvert
+dotnet tool install -g trdelete
+dotnet tool install -g trfoldlit
+dotnet tool install -g trgen
+dotnet tool install -g triconv
+dotnet tool install -g trinsert
+dotnet tool install -g trjson
+dotnet tool install -g trparse
+dotnet tool install -g trperf
+dotnet tool install -g trrename
+dotnet tool install -g trreplace
+dotnet tool install -g trsplit
+dotnet tool install -g trsponge
+dotnet tool install -g trstrip
+dotnet tool install -g trtext
+dotnet tool install -g trtokens
+dotnet tool install -g trtree
+dotnet tool install -g trwdog
+dotnet tool install -g trxgrep
+dotnet tool install -g trxml
+dotnet tool install -g trxml2
 
-## Uninstall
-### Linux or Cywin/MSYS2
-Copy this script and execute it in a Bash shell.
 ```
-#
-for i in trcombine trconvert trdelete trfoldlit trgen triconv trinsert trjson trparse trperf trrename trreplace trsplit trsponge trstrip trtext trtokens trtree trwdog trxgrep trxml trxml2
-do
-    dotnet tool uninstall -g $i
-done
+### Uninstall
+```
+dotnet tool uninstall -g trcaret
+dotnet tool uninstall -g trcombine
+dotnet tool uninstall -g trconvert
+dotnet tool uninstall -g trdelete
+dotnet tool uninstall -g trfoldlit
+dotnet tool uninstall -g trgen
+dotnet tool uninstall -g triconv
+dotnet tool uninstall -g trinsert
+dotnet tool uninstall -g trjson
+dotnet tool uninstall -g trparse
+dotnet tool uninstall -g trperf
+dotnet tool uninstall -g trrename
+dotnet tool uninstall -g trreplace
+dotnet tool uninstall -g trsplit
+dotnet tool uninstall -g trsponge
+dotnet tool uninstall -g trstrip
+dotnet tool uninstall -g trtext
+dotnet tool uninstall -g trtokens
+dotnet tool uninstall -g trtree
+dotnet tool uninstall -g trwdog
+dotnet tool uninstall -g trxgrep
+dotnet tool uninstall -g trxml
+dotnet tool uninstall -g trxml2
+
 ```
 
 ## List of commands
