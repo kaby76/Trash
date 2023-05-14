@@ -42,6 +42,7 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 Copy this script and execute it in a command-line prompt.
 ```
 #
+dotnet tool install -g trcaret
 dotnet tool install -g trcombine
 dotnet tool install -g trconvert
 dotnet tool install -g trdelete
@@ -67,8 +68,9 @@ dotnet tool install -g trxml2
 ```
 ### Uninstall
 ```
-dotnet tool install -g trcombine
-dotnet tool install -g trconvert
+dotnet tool uninstall -g trcaret
+dotnet tool uninstall -g trcombine
+dotnet tool uninstall -g trconvert
 dotnet tool uninstall -g trdelete
 dotnet tool uninstall -g trfoldlit
 dotnet tool uninstall -g trgen
