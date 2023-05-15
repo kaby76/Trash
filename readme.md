@@ -44,6 +44,7 @@ Copy this script and execute it in a command-line prompt.
 dotnet tool install -g trcaret
 dotnet tool install -g trcombine
 dotnet tool install -g trconvert
+dotnet tool install -g trcover
 dotnet tool install -g trdelete
 dotnet tool install -g trfoldlit
 dotnet tool install -g trgen
@@ -71,6 +72,7 @@ dotnet tool install -g trxml2
 dotnet tool uninstall -g trcaret
 dotnet tool uninstall -g trcombine
 dotnet tool uninstall -g trconvert
+dotnet tool uninstall -g trcover
 dotnet tool uninstall -g trdelete
 dotnet tool uninstall -g trfoldlit
 dotnet tool uninstall -g trgen
