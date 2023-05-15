@@ -92,7 +92,6 @@
                 var lexer = obj1.Lexer;
                 var text = System.IO.File.ReadAllLines(fn);
                 var current_line = 1;
-                var current_index = 0;
                 foreach (var node in nodes)
                 {
                     int line = GetLine(node);

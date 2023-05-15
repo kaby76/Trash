@@ -25,9 +25,7 @@ namespace Trash
 
         public void Execute(Config config)
         {
-            int exit_code = 0;
-
-            // There are two ways to do this. One is a
+	    // There are two ways to do this. One is a
             // bootstrapped method using LanguageServer, the
             // other is by using the generated code, with the loading
             // and running of the parser. We need to determine which way.

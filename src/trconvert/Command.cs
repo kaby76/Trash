@@ -110,7 +110,7 @@ namespace Trash
                         var tuple = new ParsingResultSet()
                         {
                             Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
-                            FileName = fn,
+                            FileName = new Regex("[^.]+$").Replace(fn, "g4"),
                             Nodes = trees,
                             Lexer = lexer,
                             Parser = parser

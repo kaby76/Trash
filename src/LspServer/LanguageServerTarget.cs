@@ -1,26 +1,21 @@
-﻿using System.Reflection;
-using System.Reflection.Metadata;
-//using Microsoft.VisualStudio.LanguageServer.Protocol;
-using System.Collections.Generic;
+﻿using Antlr4.Runtime.Tree;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
-//using ParseTreeEditing.UnvParseTreeDOM;
-//using LanguageServer;
 using LoggerNs;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using LspTypes;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
+using org.eclipse.wst.xml.xpath2.processor.util;
+using ParseTreeEditing.AntlrDOM;
 using StreamJsonRpc;
-using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Reflection;
 using System.Threading;
-using ParseTreeEditing.AntlrDOM;
-using org.eclipse.wst.xml.xpath2.processor.@internal.ast;
-
-using org.eclipse.wst.xml.xpath2.processor.util;
-using System.Collections;
+using System;
 
 namespace Server
 {

@@ -23,8 +23,7 @@ namespace Trash
             {
                 // Allow language, tokenVocab, TokenLabelType, superClass
                 var nodes = engine.parseExpression(
-                        @"//grammarDef/optionsSpec
-                            /option
+                        @"//grammarDef/optionsSpec/option
                                 [id_
                                     /(TOKEN_REF | RULE_REF)
                                         [text() = 'output'
@@ -37,16 +36,12 @@ namespace Trash
                         dynamicContext, new object[] { dynamicContext.Document })
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                 TreeEdits.Delete(nodes);
-                var options = engine.parseExpression(
-                        @"//grammarDef/optionsSpec",
+                var optionsSpec = engine.parseExpression(
+                        @"//grammarDef/optionsSpec[not(./option)]",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                foreach (var os in options)
-                {
-                    var count = os.Children.Count();
-                    if (count == 3) TreeEdits.Delete(os);
-                }
+                TreeEdits.Delete(optionsSpec);
             }
 
             // Fix options in the beginning of rules.
@@ -69,16 +64,12 @@ namespace Trash
                         dynamicContext, new object[] { dynamicContext.Document })
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                 TreeEdits.Delete(nodes);
-                var options = engine.parseExpression(
-                        @"//rule_/optionsSpec",
+                var optionsSpec = engine.parseExpression(
+                        @"//grammarDef/optionsSpec[not(./option)]",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                foreach (var os in options)
-                {
-                    var count = os.Children.Count();
-                    if (count == 3) TreeEdits.Delete(os);
-                }
+                TreeEdits.Delete(optionsSpec);
             }
 
             // Use new tokens {} syntax
@@ -301,7 +292,7 @@ namespace Trash
             {
                 // Find k=n
                 var k = engine.parseExpression(
-                        @"//optionsSpec[not(../@id = 'grammarDef')]
+                        @"//optionsSpec[../../block]
                             /option
                                 [id_
                                     /(TOKEN_REF | RULE_REF)
@@ -310,19 +301,10 @@ namespace Trash
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                var k2 = engine.parseExpression(
-                        @"//optionsSpec
-                            /option
-                                [id_
-                                    /(TOKEN_REF | RULE_REF)
-                                        [text() = 'k'
-                                        ]]",
-                        new StaticContextBuilder()).evaluate(
-                        dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                // greedy=false.
-                var greedy = engine.parseExpression(
-                        @"//optionsSpec[not(../@id = 'grammarDef')]
+                TreeEdits.Delete(k);
+                // Find greedy=false.
+                var greedy_option = engine.parseExpression(
+                        @"//optionsSpec[../../block]
                             /option
                                 [id_/(TOKEN_REF | RULE_REF)[text() = 'greedy']
                                 and 
@@ -330,66 +312,72 @@ namespace Trash
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                var greedyOptionSpec = greedy.Select(t => t.ParentNode).ToList();
+
+                // Convert any greedy=false to *? or +?.
+                foreach (var os in greedy_option)
+                {
+                    var star_plus = engine.parseExpression(
+                            @"./../../../(PLUS | STAR)",
+                            new StaticContextBuilder()).evaluate(
+                            dynamicContext, new object[] { os })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).FirstOrDefault();
+                    TreeEdits.Replace(star_plus, star_plus.GetText() + "?");
+                }
+
+                //    if (greedyOptionSpec.Contains(os) && os.ParentNode.LocalName == "block")
+                //    {
+                //        var block = os.ParentNode;
+                //        var block_parent = block.ParentNode as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement;
+                //        if (block_parent.LocalName == "ebnf")
+                //        {
+                //            while (block_parent.Children.Count() > 1)
+                //            {
+                //                var l = block_parent.Children.Last();
+                //                TreeEdits.Delete(l);
+                //            }
+                //            TreeEdits.InsertAfter(block_parent.Children.Last(), "*?");
+                //        }
+                //    }
+                TreeEdits.Delete(greedy_option);
+
+
+                // Nuke options.
                 var optionsSpec = engine.parseExpression(
-                        @"//optionsSpec[not(../@id = 'grammarDef')]",
+                        @"//optionsSpec[not(./option)]",
                         new StaticContextBuilder()).evaluate(
                         dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement));
-                // Nuke options.
-                foreach (var tree in trees)
-                {
-                    TreeEdits.Delete(tree, (in UnvParseTreeNode n, out bool c) =>
-                    {
-                        c = true;
-                        if (k.Contains(n) || greedy.Contains(n))
-                        {
-                            return n;
-                        }
+                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                TreeEdits.Delete(optionsSpec);
+                // Nuke naked colon.
+                var naked_colon = engine.parseExpression(
+                        @"//block/COLON[not(../../block/optionsSpec)]",
+                        new StaticContextBuilder()).evaluate(
+                        dynamicContext, new object[] { dynamicContext.Document })
+                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                TreeEdits.Delete(naked_colon);
+                // Nuke block with emtpy contents, and any suffix.
+                var empty_block = engine.parseExpression(
+                        @"//block[not(./alternative) or not(./alternative/*)]/../elementNoOptionSpec/(id_ | EQUAL | PEQ | block | ebnfSuffix)",
+                        new StaticContextBuilder()).evaluate(
+                        dynamicContext, new object[] { dynamicContext.Document })
+                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                TreeEdits.Delete(empty_block);
+                var empty_block2 = engine.parseExpression(
+                        @"//block[not(./alternative) or not(./alternative/*)]/../../ebnf/(block | QM | STAR | PLUS | SEMPREDOP)",
+                        new StaticContextBuilder()).evaluate(
+                        dynamicContext, new object[] { dynamicContext.Document })
+                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                TreeEdits.Delete(empty_block2);
+                
 
-                        return null;
-                    });
-                    foreach (var os in optionsSpec)
-                    {
-                        var ss = UnvParseTreeElement.Reconstruct(os);
-                        if (greedyOptionSpec.Contains(os) && os.ParentNode.LocalName == "block")
-                        {
-                            var block = os.ParentNode;
-                            var block_parent = block.ParentNode as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement;
-                            if (block_parent.LocalName == "ebnf")
-                            {
-                                while (block_parent.Children.Count() > 1)
-                                {
-                                    var l = block_parent.Children.Last();
-                                    TreeEdits.Delete(l);
-                                }
-                                TreeEdits.InsertAfter(block_parent.Children.Last(), "*?");
-                            }
-                        }
+                // Rewrite remaining action blocks that contain input, etc.
+                // input was renamed to _input in ANTLR 4.
+                // Use the channel lexer command.
 
-                        if (os.Children.Count() == 3)
-                        {
-                            if (os.ParentNode.LocalName == "Block")
-                            {
-                                for (int i = 0; i < os.ParentNode.ChildNodes.Length; i++)
-                                {
-                                    if (os.ParentNode.ChildNodes.item(i).LocalName == "COLON")
-                                        TreeEdits.Delete((UnvParseTreeNode)os.ParentNode.ChildNodes.item(i));
-                                }
-                            }
-                            TreeEdits.Delete(os);
-                        }
-                    }
-
-                    // Rewrite remaining action blocks that contain input, etc.
-                    // input was renamed to _input in ANTLR 4.
-                    // Use the channel lexer command.
-
-                    // Antlr4 cannot perform '~' of a lexer alt list or a lexer symbol
-                    // that isn't a set.
-                    // Rewrite lexer rules foobar : ~(a | b | c), a : [...]; b : [...]; c : [...];
-                    // Unfold all lexer symbols on RHS inside ~-operator.
-                }
+                // Antlr4 cannot perform '~' of a lexer alt list or a lexer symbol
+                // that isn't a set.
+                // Rewrite lexer rules foobar : ~(a | b | c), a : [...]; b : [...]; c : [...];
+                // Unfold all lexer symbols on RHS inside ~-operator.
             }
         }
     }
