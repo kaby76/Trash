@@ -54,7 +54,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                         "( intertoken"
                         + " text:'" + PerformEscapes(a.StringValue) + "'"
                         + " tt:" + a.TokenType);
-                    if (a.Channel >= 0)
+                    if (a.Channel >= 0 && a.Channel < lexer.ChannelNames.Length)
                         sb.Append(" chnl:" + lexer.ChannelNames[a.Channel]);
                 }
                 sb.AppendLine();
