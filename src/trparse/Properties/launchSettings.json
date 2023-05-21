@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "x.g4 -l --fmt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\3387\\grammars-v4\\abb"
+      "commandLineArgs": "t1.g4 -l -t ANTLRv4",
+      "workingDirectory": "c:\\msys64\\home\\Kenne"
     }
   }
 }
