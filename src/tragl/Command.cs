@@ -60,7 +60,7 @@ namespace Trash
             if (node != null)
             {
                 node.LabelText = tree.LocalName;
-                var ruleFailedAndMatchedNothing = false;
+                //var ruleFailedAndMatchedNothing = false;
                 //if (tree is ParserRuleContext context)
                 //{
                 //    ruleFailedAndMatchedNothing =

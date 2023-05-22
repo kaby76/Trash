@@ -28,7 +28,6 @@ namespace Server
         private Dictionary<string, string> workspace = new Dictionary<string, string>();
         private static readonly object _object = new object();
         private readonly Dictionary<string, bool> ignore_next_change = new Dictionary<string, bool>();
-        private int current_version;
         private Dictionary<string, ParsingResultSet> data = new Dictionary<string, ParsingResultSet>();
         
         public LanguageServerTarget(LSPServer server)
@@ -1693,7 +1692,7 @@ namespace Server
                         (int, int) lc_start = start;
                         (int, int) lcs = (tai.Line, tai.Column);
                         var len = tbi.StopIndex - tbi.StartIndex + 1;
-                        (int, int) lce = (tbi.Line, tbi.Column + len);
+                        //(int, int) lce = (tbi.Line, tbi.Column + len);
 
                         var diff_l = lcs.Item1 - lc_start.Item1;
                         var diff_c = diff_l != 0 ? lcs.Item2 : lcs.Item2 - lc_start.Item2;

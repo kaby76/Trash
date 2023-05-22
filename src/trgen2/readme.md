@@ -19,4 +19,4 @@ The generated parser is placed in the directory <current-directory>/Generated/.
 
 ## Current version
 
-0.20.22 Fixes to trconvert, trparse, and trtree. NB: not all Trash tools supported yet.
+0.20.23 Fixes to trparse. NB: not all Trash tools supported yet.

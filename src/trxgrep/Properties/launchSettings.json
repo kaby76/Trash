@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \" for $i in (//lexerRuleBlock) return concat(string($i/@Line), ' ', string($i/@Column))\"",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\3387\\grammars-v4\\abb"
+      "commandLineArgs": "-f o.pt \"//parserRuleSpec[not(doc('*')//ruleBlock//RULE_REF/text() = ./RULE_REF/text())\tand not(./ruleBlock//TOKEN_REF/text() = 'EOF')]\"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\parens\\brand-new\\bcpl"
     }
   }
 }

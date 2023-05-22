@@ -154,11 +154,11 @@ namespace Algorithms
          * @param  w the head vertex
          * @throws IllegalArgumentException unless both {@code 0 <= v < V} and {@code 0 <= w < V}
          */
-        public void AddEdge(DirectedEdge<T> e)
+        public override DirectedEdge<T> AddEdge(DirectedEdge<T> e)
         {
             ValidateVertex(e.From);
             ValidateVertex(e.To);
-            base.AddEdge(e);
+            return base.AddEdge(e);
         }
 
         /**
@@ -386,11 +386,11 @@ namespace Algorithms
          * @param  w the head vertex
          * @throws IllegalArgumentException unless both {@code 0 <= v < V} and {@code 0 <= w < V}
          */
-        public void AddEdge(U e)
+        public override U AddEdge(U e)
         {
             ValidateVertex(e.From);
             ValidateVertex(e.To);
-            base.AddEdge(e);
+	    return base.AddEdge(e);
         }
 
         /**

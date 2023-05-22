@@ -31,7 +31,6 @@
         }
 
         public override bool CanConvert(Type typeToConvert) => true;
-        private object _reader = null;
 
         public override ParsingResultSet[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {

@@ -78,7 +78,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                 // itself.
 
                 // Set up copy to first hidden token or terminal token.
-                var hidden_tokens = tokstream.GetHiddenTokensToLeft(term_index);
+                var hidden_tokens = term_index >= 0 ? tokstream.GetHiddenTokensToLeft(term_index) : new List<IToken>();
                 int i;
                 if (hidden_tokens != null && hidden_tokens.Count > 0)
                 {
@@ -91,16 +91,16 @@ namespace ParseTreeEditing.UnvParseTreeDOM
 
                 // Start at the current token and create a new attribute for
                 // intertoken channel text.
-                int start_cs;
-                int stop_cs;
-                int channel;
+                int start_cs = 0;
+                int stop_cs = 0;
+                int channel = 0;
                 int tt;
                 if (i == 0)
                 {
                     start_cs = 0;
                     stop_cs = tokstream.Get(i).StartIndex;
                 }
-                else
+                else if (i > 0)
                 {
                     start_cs = tokstream.Get(i-1).StopIndex + 1;
                     stop_cs = tokstream.Get(i).StartIndex;
@@ -191,8 +191,8 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                 var child = new UnvParseTreeText();
                 child.NodeType = NodeConstants.TEXT_NODE;
                 //                child.Data = new xpath.org.eclipse.wst.xml.xpath2.processor.@internal.OutputParseTree().PerformEscapes(/*"'" + */ tree.GetText() /*+ "'"*/);
-                channel = tokstream.Get(i).Channel;
-                tt = tokstream.Get(i).Type;
+                channel = i >= 0 ? tokstream.Get(i).Channel : 0;
+                tt = i >= 0 ? tokstream.Get(i).Type : 0;
                 child.Data = tt < 0 ? "" : tree.GetText();
                 child.ParentNode = new_node;
                 new_node.ChildNodes.Add(child);

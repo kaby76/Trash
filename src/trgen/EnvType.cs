@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using System;
+
+namespace Trash
 {
     public enum OSTarget
     {
@@ -16,6 +18,7 @@
                 OSTarget.Unix => "Linux",
                 OSTarget.Windows => "Windows",
                 OSTarget.Mac => "MacOS",
+                _ => throw new Exception("Unhandled OS type."),
             };
             return s;
         }
@@ -29,6 +32,7 @@
                 "Windows" => OSTarget.Windows,
                 "MacOS" => OSTarget.Mac,
                 "Mac" => OSTarget.Mac,
+                _ => throw new Exception("Unhandled OS type."),
             };
             return s;
         }

@@ -106,13 +106,13 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal
 				return null;
 			}
 			List<Document> result = new List<Document>();
-			foreach (var x in rs)
-            {
-				var r = (DocType)x;
-				var d = r.value();
-				result.Add(d);
-            }
-			return result;
+			//foreach (var x in rs)
+            //{
+			//	var r = (DocType)x;
+			//	var d = r.value();
+			//	result.Add(d);
+			//}
+            throw new NotImplementedException();
 		}
 
 		public virtual IDictionary<string, IList<Document>> Collections

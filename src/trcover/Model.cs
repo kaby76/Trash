@@ -258,7 +258,6 @@ namespace trcover
                     }
                 default:
                     throw new Exception();
-                    break;
             }
             return g;
         }
