@@ -1265,9 +1265,9 @@ namespace xpath.org.eclipse.wst.xml.xpath2.processor.@internal
             {
                 QName attribNameOrWildcard = (QName)VisitAttribnameorwildcard(ctx.attribnameorwildcard());
                 bool wildcard = attribNameOrWildcard == null;
-                if (ctx.typename() != null)
+                if (ctx.typename_() != null)
                 {
-                    return new AttributeTest(attribNameOrWildcard, wildcard, (QName)VisitTypename(ctx.typename()));
+                    return new AttributeTest(attribNameOrWildcard, wildcard, (QName)VisitTypename_(ctx.typename_()));
                 }
                 else
                 {
@@ -1312,9 +1312,9 @@ namespace xpath.org.eclipse.wst.xml.xpath2.processor.@internal
             {
                 QName elementNameOrWildcard = (QName)VisitElementnameorwildcard(ctx.elementnameorwildcard());
                 bool wildcard = elementNameOrWildcard == null;
-                if (ctx.typename() != null)
+                if (ctx.typename_() != null)
                 {
-                    QName typeName = (QName)VisitTypename(ctx.typename());
+                    QName typeName = (QName)VisitTypename_(ctx.typename_());
                     if (ctx.QM() != null)
                     {
                         return new ElementTest(elementNameOrWildcard, wildcard, typeName, true);
@@ -1375,11 +1375,11 @@ namespace xpath.org.eclipse.wst.xml.xpath2.processor.@internal
         // [100]
         public override /* QName */ object VisitSimpletypename(XPath31Parser.SimpletypenameContext ctx)
         {
-            return VisitTypename(ctx.typename());
+            return VisitTypename_(ctx.typename_());
         }
 
         // [101]
-        public override object /* QName */ VisitTypename(XPath31Parser.TypenameContext ctx)
+        public override object /* QName */ VisitTypename_(XPath31Parser.Typename_Context ctx)
         {
             return VisitEqname(ctx.eqname());
         }

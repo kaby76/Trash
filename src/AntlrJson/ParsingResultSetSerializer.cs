@@ -31,7 +31,6 @@
         }
 
         public override bool CanConvert(Type typeToConvert) => true;
-        private object _reader = null;
 
         public override ParsingResultSet[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -259,6 +258,8 @@
                     {
                         var attr = new UnvParseTreeAttr();
                         attr.Name = reader.GetString();
+                        if (attr.Name as string != "Before")
+                        {}
                         reader.Read();
                         attr.StringValue = reader.GetString();
                         attr.LocalName = attr.Name as string;

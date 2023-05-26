@@ -1,0 +1,6 @@
+
+DIGIT = %x30-39
+HEXDIG = DIGIT / "A" / "B" / "C"
+h16 = 1*4HEXDIG
+message-body = *OCTET
+RWS = 1*( SP / HTAB )

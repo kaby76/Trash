@@ -1,13 +1,24 @@
-﻿namespace ParseTreeEditing.UnvParseTreeDOM
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace ParseTreeEditing.UnvParseTreeDOM
 {
     using org.w3c.dom;
     using System;
 
     public abstract class UnvParseTreeNode : Node, IAntlrObserver
     {
-        public UnvParseTreeNode() { }
+        private static int generate = 0;
+        public int Number;
+
+        public UnvParseTreeNode()
+        {
+            Number = ++generate;
+        }
+
         public UnvParseTreeNode(UnvParseTreeNode orig)
         {
+            Number = ++generate;
             _NodeType = orig._NodeType;
             LocalName = orig.LocalName;
             NodeValue = orig.NodeValue;
@@ -23,6 +34,23 @@
         public virtual string LocalName { get; set; }
         public virtual Document OwnerDocument { get; set; }
         public virtual NodeList ChildNodes { get; set; } = new UnvParseTreeNodeList();
+        public virtual IEnumerable<Node> AllChildren
+        {
+            get
+            {
+                return (ChildNodes as UnvParseTreeNodeList)._node_list;
+            }
+        }
+        public virtual IEnumerable<ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement> Children
+        {
+            get
+            {
+                return (ChildNodes as UnvParseTreeNodeList)
+                    ._node_list
+                    .Where(c => c.GetType() == typeof(ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
+                    .Select(c => c as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement);
+            }
+        }
         public virtual Node NextSibling { get; set; }
         public virtual string BaseURI { get; set; }
         public virtual NamedNodeMap Attributes { get; set; }

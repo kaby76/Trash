@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trtext": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\l\\x\\z\\fff"
+    }
+  }
+}

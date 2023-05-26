@@ -9,6 +9,7 @@ do
 	cd $d
 	tool=$d
 	dotnet tool uninstall -g $tool $version > /dev/null 2>&1
+	echo dotnet tool install -g $tool $version 
 	dotnet tool install -g $tool $version > /dev/null 2>&1
 	$tool --version
 	cd ..

@@ -7,33 +7,20 @@
     public class Option
     {
         private static string antlr_options_file_name = "";
-        private static readonly string CorpusLocation = s ?? "";
         private static Dictionary<string, object> defaults = new Dictionary<string, object>()
         {
-            {"IncrementalReformat", true },
-            {"RestrictedDirectory", true },
-            {"GenerateVisitorListener", false },
-            {"OverrideAntlrPluggins", true },
-            {"OptInLogging", false },
-            {"CorpusLocation", CorpusLocation },
-            {"SemanticHighlighting", false },
-            {"AntlrNonterminalDef", "type" },
-            {"AntlrNonterminalRef", "symbol definition" },
-            {"AntlrTerminalDef", "type" },
-            {"AntlrTerminalRef", "symbol definition" },
-            {"AntlrComment", "comment" },
-            {"AntlrKeyword", "keyword" },
-            {"AntlrLiteral", "string" },
-            {"AntlrModeDef", "type" },
-            {"AntlrModeRef", "field name" },
-            {"AntlrChannelDef", "type" },
-            {"AntlrChannelRef", "field name" },
-            {"AntlrPunctuation", "field name" },
-            {"AntlrOperator", "field name" },
+            {"CompletionProvider", false },
+            {"HoverProvider", false },
+            {"DefinitionProvider", true },
+            {"ReferencesProvider", true },
+            {"DocumentHighlightProvider", false },
+            {"DocumentSymbolProvider", false },
+            {"RenameProvider", false },
+            {"FoldingRangeProvider", false },
+            {"SemanticTokensProvider", false },
         };
         private static readonly string home = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
         private static bool initialized = false;
-        private static readonly string s = System.Environment.GetEnvironmentVariable("CORPUS_LOCATION");
 
         public static bool GetBoolean(string option)
         {
@@ -117,7 +104,7 @@
         {
             antlr_options_file_name = home
                                       + Path.DirectorySeparatorChar
-                                      + ".antlrvsixrc";
+                                      + ".unilsp";
             if (Path.IsPathRooted(antlr_options_file_name))
             {
                 if (File.Exists(antlr_options_file_name))

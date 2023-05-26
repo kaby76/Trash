@@ -1,11 +1,12 @@
-﻿namespace Trash
+﻿using System.Collections;
+using System.Text.RegularExpressions;
+
+namespace Trash
 {
-    using Antlr4.Runtime.Tree;
     using AntlrJson;
-    using LanguageServer;
+    using ParseTreeEditing.UnvParseTreeDOM;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Text.Json;
 
     class Command
@@ -51,67 +52,96 @@
             List<ParsingResultSet> results = new List<ParsingResultSet>();
             foreach (var parse_info in data)
             {
-                var doc = Docs.Class1.CreateDoc(parse_info);
-                var f = doc.FullPath;
-                var type = parse_info.Parser.GrammarFileName;
-                var out_type = config.Type;
-                Dictionary<string, string> res = null;
-                if (type == "ANTLRv3Parser.g4")
+                var text = parse_info.Text;
+                var fn = parse_info.FileName;
+                var trees = parse_info.Nodes;
+                var parser = parse_info.Parser;
+                var lexer = parse_info.Lexer;
+                if (config.Verbose)
                 {
-                    var imp = new LanguageServer.ConvertAntlr3();
-                    res = imp.Try(doc.FullPath, doc.Code, out_type);
+                    foreach (var n in trees)
+                        System.Console.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
                 }
-                else if (type == "ANTLRv2Parser.g4")
+                var ty = new Regex("Parser$").Replace(Path.GetFileNameWithoutExtension(parser.GrammarFileName), "");
+                switch (ty)
                 {
-                    var imp = new LanguageServer.ConvertAntlr2();
-                    res = imp.Try(doc.FullPath, doc.Code, out_type);
-                }
-                else if (type == "BisonParser.g4")
-                {
-                    var imp = new LanguageServer.ConvertBison();
-                    res = imp.Try(doc.FullPath, doc.Code, out_type);
-                }
-                else if (type == "W3CebnfParser.g4")
-                {
-                    var imp = new LanguageServer.ConvertW3Cebnf();
-                    res = imp.Try(doc.FullPath, doc.Code, out_type);
-                }
-                else if (type == "LarkParser.g4")
-                {
-                    var imp = new LanguageServer.ConvertLark();
-                    res = imp.Try(doc.FullPath, doc.Code, out_type);
-                }
-                else if (type == "ANTLRv4Parser.g4")
-                {
-                    var imp = new LanguageServer.ConvertAntlr4();
-                    res = imp.Try(doc.FullPath, doc.Code, out_type);
-                }
-                else
-                {
-                    System.Console.WriteLine("Unknown type for conversion.");
-                }
-
-                Docs.Class1.EnactEdits(res);
-                foreach (var r in res)
-                {
-                    var new_fn = r.Key;
-                    var new_code = r.Value;
-                    var converted_doc = Docs.Class1.CreateDoc(new_fn, new_code);
-                    var pr = ParsingResultsFactory.Create(converted_doc);
-                    var node_arr = new IParseTree[0];
-                    if (pr != null) node_arr = new IParseTree[] { pr.ParseTree };
-                    var tuple = new ParsingResultSet()
+                    case "ANTLRv4":
                     {
-                        Text = converted_doc.Code,
-                        FileName = converted_doc.FullPath,
-                        Stream = pr != null ? pr.TokStream : null,
-                        Nodes = node_arr,
-                        Lexer = pr != null ? pr.Lexer : null,
-                        Parser = pr != null ? pr.Parser : null
-                    };
-                    results.Add(tuple);
+                        switch (config.Type)
+                        {
+                            case "KocmanLLK":
+                            {
+                                ConvertAntlr4.ToKocmanLLK(trees, parser, lexer, fn);
+                                var tuple = new ParsingResultSet()
+                                {
+                                    Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                                    FileName = fn,
+                                    Nodes = trees,
+                                    Lexer = lexer,
+                                    Parser = parser
+                                };
+                                results.Add(tuple);
+                                break;
+                            }
+                            case "Pegjs":
+                            {
+                                ConvertAntlr4.ToPegjs(trees, parser, lexer, fn);
+                                var tuple = new ParsingResultSet()
+                                {
+                                    Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                                    FileName = fn,
+                                    Nodes = trees,
+                                    Lexer = lexer,
+                                    Parser = parser
+                                };
+                                results.Add(tuple);
+                                break;
+                            }
+                            default:
+                                System.Console.WriteLine("Unhandled conversion to.");
+                                break;
+                        }
+                    }
+                        break;
+
+                    case "ANTLRv3":
+                    {
+                        ConvertAntlr3.ToAntlr4(trees, parser, lexer, fn);
+                        var tuple = new ParsingResultSet()
+                        {
+                            Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                            FileName = new Regex("[^.]+$").Replace(fn, "g4"),
+                            Nodes = trees,
+                            Lexer = lexer,
+                            Parser = parser
+                        };
+                        results.Add(tuple);
+                    }
+                        break;
+
+                    case "rex":
+                    {
+                        ConvertRex.ToAntlr4(trees, parser, lexer, fn);
+                        var tuple = new ParsingResultSet()
+                        {
+                            Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                            FileName = fn,
+                            Nodes = trees,
+                            Lexer = lexer,
+                            Parser = parser
+                        };
+                        results.Add(tuple);
+                    }
+                        break;
+
+                    default:
+                        {
+                            System.Console.WriteLine("Unknown type for conversion.");
+                        }
+                        break;
                 }
             }
+
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);
         }

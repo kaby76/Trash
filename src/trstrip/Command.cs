@@ -1,10 +1,11 @@
 ﻿namespace Trash
 {
-    using Antlr4.Runtime.Tree;
     using AntlrJson;
-    using LanguageServer;
+    using org.eclipse.wst.xml.xpath2.processor.util;
+    using ParseTreeEditing.UnvParseTreeDOM;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text.Json;
 
     class Command
@@ -50,22 +51,155 @@
             var results = new List<ParsingResultSet>();
             foreach (var parse_info in data)
             {
-                var doc = Docs.Class1.CreateDoc(parse_info);
-                var res = Transform.Strip(doc);
-                Docs.Class1.EnactEdits(res);
+                var text = parse_info.Text;
+                var fn = parse_info.FileName;
+                var trees = parse_info.Nodes;
+                var parser = parse_info.Parser;
+                var lexer = parse_info.Lexer;
 
-                var pr = ParsingResultsFactory.Create(doc);
-                IParseTree pt = pr.ParseTree;
+                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//DOC_COMMENT",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//labeledAlt/(POUND | identifier/(RULE_REF|TOKEN_REF))",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//labeledLexerElement/(identifier/(RULE_REF|TOKEN_REF) | ASSIGN | PLUS_ASSIGN)",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//labeledElement/(identifier/(RULE_REF|TOKEN_REF) | ASSIGN | PLUS_ASSIGN)",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//rulePrequel",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//ruleReturns",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//exceptionGroup",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//throwsSpec",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//prequelConstruct",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//elementOptions",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                            @"//actionBlock",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    foreach (var n in nodes)
+                    {
+                        // Get next sibling.
+                        var sib = n.NextSibling;
+                        if (sib != null && sib.LocalName == "QUESTION")
+                        {
+                            TreeEdits.Delete(sib as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode);
+                        }
+                        TreeEdits.Delete(n);
+                    }
+                }
+                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+                {
+                    var nodes = engine.parseExpression(
+                                @"//argActionBlock",
+                                new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
+                    TreeEdits.Delete(nodes);
+                }
+
                 var tuple = new ParsingResultSet()
                 {
-                    Text = doc.Code,
-                    FileName = doc.FullPath,
-                    Stream = pr.TokStream,
-                    Nodes = new IParseTree[] { pt },
-                    Lexer = pr.Lexer,
-                    Parser = pr.Parser
+                    Text = text,
+                    FileName = fn,
+                    Nodes = trees,
+                    Lexer = lexer,
+                    Parser = parser
                 };
                 results.Add(tuple);
+                if (config.Verbose)
+                {
+                    foreach (var node in trees)
+                        System.Console.Error.WriteLine(TreeOutput.OutputTree(node, lexer, parser).ToString());
+                }
             }
             string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
             System.Console.WriteLine(js1);

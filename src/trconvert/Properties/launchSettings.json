@@ -3,7 +3,7 @@
     "trconvert": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trconvert\\antlr2"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\parens\\x"
     }
   }
 }

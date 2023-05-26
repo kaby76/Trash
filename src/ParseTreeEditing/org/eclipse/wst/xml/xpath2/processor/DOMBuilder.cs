@@ -33,7 +33,7 @@ namespace org.eclipse.wst.xml.xpath2.processor
 	public class DOMBuilder : DOMLoader
 	{
 		internal bool _validating;
-		internal bool _namespace_aware;
+		internal bool _namespace_aware = false;
 
 		/// <summary>
 		/// Constructor for DOM builder.

@@ -25,55 +25,6 @@ namespace ParseTreeEditing.UnvParseTreeDOM
             // but renames it when creating the type in C#. So, remove the prefix,
             // lowercase the first letter, and remove the trailing "Context" part of
             // the name. Saves big time on output!
-            //if (tree is AntlrElement)
-            //{
-            //    Antlr leaf = tree as TerminalNodeImpl;
-            //    IList<IToken> inter = null;
-            //    if (inter != null)
-            //        foreach (var t in inter)
-            //        {
-            //            StartLine(sb, level);
-            //            sb.Append(
-            //                "( interleaf"
-            //                    + " text:" + PerformEscapes(t.Text)
-            //                    + " chnl:" + lexer.ChannelNames[t.Channel]
-            //                    + " l:" + t.Line
-            //                    + " c:" + t.Column
-            //                    + " si:" + t.StartIndex
-            //                    + " ei:" + t.StopIndex
-            //                    + " ti:" + t.TokenIndex
-            //                    );
-            //            //if (lexer is AltAntlr.MyLexer mylexer)
-            //            //{
-            //            //    var ss = mylexer._inputstream;
-            //            //    var s = ss as AltAntlr.MyCharStream;
-            //            //    var st = s.Text.Substring(t.StartIndex, t.StopIndex - t.StartIndex + 1);
-            //            //    sb.Append(" tstext:" + PerformEscapes(st));
-            //            //}
-            //            sb.AppendLine();
-            //        }
-            //    {
-            //        var ty = leaf.Symbol.Type;
-            //        var t = leaf.Symbol;
-            //        var name = lexer.Vocabulary.GetSymbolicName(ty);
-            //        StartLine(sb, level);
-            //        sb.Append(
-            //            "( " + name
-            //            + " text:" + PerformEscapes(leaf.GetText())
-            //            + " tt:" + leaf.Symbol.Type
-            //            + " chnl:" + lexer.ChannelNames[leaf.Symbol.Channel]
-            //            + " text:" + PerformEscapes(t.Text)
-            //            + " chnl:" + lexer.ChannelNames[t.Channel]
-            //            + " l:" + t.Line
-            //            + " c:" + t.Column
-            //            + " si:" + t.StartIndex
-            //            + " ei:" + t.StopIndex
-            //            + " ti:" + t.TokenIndex
-            //            );
-            //        sb.AppendLine();
-            //    }
-            //}
-            //else
             if (tree is UnvParseTreeText t)
             {
                 StartLine(sb, level);
@@ -93,12 +44,19 @@ namespace ParseTreeEditing.UnvParseTreeDOM
             else if (tree is UnvParseTreeAttr a)
             {
                 StartLine(sb, level);
-                sb.Append(
-                    "( intertoken"
-                    + " text:'" + PerformEscapes(a.StringValue) + "'"
-                    + " tt:" + a.TokenType);
-                if (a.Channel >= 0)
-                    sb.Append(" chnl:" + lexer.ChannelNames[a.Channel]);
+                if (a.Name as string == "Line" || a.Name as string == "Column")
+                {
+                    sb.Append("( Attribute " + a.Name as string + " Value " + a.StringValue + ")");
+                }
+                else
+                {
+                    sb.Append(
+                        "( intertoken"
+                        + " text:'" + PerformEscapes(a.StringValue) + "'"
+                        + " tt:" + a.TokenType);
+                    if (a.Channel >= 0 && a.Channel < lexer.ChannelNames.Length)
+                        sb.Append(" chnl:" + lexer.ChannelNames[a.Channel]);
+                }
                 sb.AppendLine();
             }
             else if (tree is UnvParseTreeElement e)

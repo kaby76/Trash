@@ -55,7 +55,7 @@
             System.Console.WriteLine(e.Data);
         }
 
-        public int Run(string parser_type = "")
+        public int Run(string parser_type = null)
         {
             int result = 0;
             try
@@ -134,6 +134,19 @@
                         }
                     }
                 }
+                foreach (var d in data)
+                {
+                    foreach (var t1 in d.Nodes)
+                    {
+                        var count = 0;
+                        foreach (var t2 in d.Nodes)
+                        {
+                            if (t1 == t2) count++;
+                            if (count > 1) throw new Exception();
+                        }
+                    }
+                }
+
                 if (config.NoParsingResultSets) return result;
                 if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
                 var serializeOptions = new JsonSerializerOptions();
@@ -148,9 +161,6 @@
             {
                 System.Console.WriteLine(e.ToString());
                 result = 1;
-            }
-            finally
-            {
             }
             return result;
         }
@@ -176,6 +186,16 @@
             }
             else
             {
+                var subdir = parser_type switch
+                {
+                    "ANTLRv4" => "antlr4",
+                    "ANTLRv3" => "antlr3",
+                    "ANTLRv2" => "antlr2",
+                    "pegen_v3_10" => "pegen",
+                    "rex" => "rex",
+                    "Bison" => "bison",
+                    _ => throw new Exception("Unknown file extension, cannot load in a built-in parser.")
+                };
                 // Get this assembly.
                 System.Reflection.Assembly a = this.GetType().Assembly;
                 string path = a.Location;
@@ -183,10 +203,10 @@
                 path = path.Replace("\\", "/");
                 if (!path.EndsWith("/")) path = path + "/";
                 var full_path = path;
-                var exists = File.Exists(full_path + parser_type + ".dll");
+                var exists = File.Exists(full_path + subdir + ".dll");
                 full_path = Path.GetFullPath(full_path);
                 Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
-                Assembly asm = Assembly.LoadFile(full_path + parser_type + ".dll");
+                Assembly asm = Assembly.LoadFile(full_path + subdir + ".dll");
                 var xxxxxx = asm1.GetTypes();
                 Type[] types = asm.GetTypes();
                 type = asm.GetType("Program");
@@ -226,7 +246,7 @@
             //if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
             //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
-            var converted_tree = ConvertToDOM.BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
+            var converted_tree = new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
             var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = input_name, Nodes = new UnvParseTreeNode[] { converted_tree }, Parser = parser, Lexer = lexer };
             data.Add(tuple);
             return (bool)res3 ? 1 : 0;

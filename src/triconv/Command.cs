@@ -40,7 +40,7 @@ namespace Trash
             try
             {
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }

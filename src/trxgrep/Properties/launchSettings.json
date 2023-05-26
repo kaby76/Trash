@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"/*[contains(@Before,'\n')]\"",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\pegen\\Generated-CSharp"
+      "commandLineArgs": "-f o.pt \"//parserRuleSpec[not(doc('*')//ruleBlock//RULE_REF/text() = ./RULE_REF/text())\tand not(./ruleBlock//TOKEN_REF/text() = 'EOF')]\"",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\parens\\brand-new\\bcpl"
     }
   }
 }

@@ -1,16 +1,12 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using TrashGlobbing;
-
-namespace Trash
+﻿namespace Trash
 {
     using Algorithms;
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using Antlr4.StringTemplate;
     using AntlrJson;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using org.eclipse.wst.xml.xpath2.api;
     using org.eclipse.wst.xml.xpath2.processor.util;
+    using ParseTreeEditing.UnvParseTreeDOM;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -62,22 +58,6 @@ namespace Trash
                 config.start_rule = "file_";
                 test.os_targets = new List<string>() { GetOSTarget().ToString() };
                 test.start_rule = config.start_rule;
-            }
-
-            if (!config.Files.Any())
-            {
-                var list = new List<string>();
-                var tool_grammar_files_pattern = ".+g4$";
-                var list_pp = new TrashGlobbing.Glob()
-                    .RegexContents(tool_grammar_files_pattern, false)
-                    .Where(f => f is FileInfo)
-                    .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
-                    .ToList();
-                foreach (var y in list_pp)
-                {
-                    list.Add(y);
-                }
-                config.Files = list;
             }
 
             // Let's first parse the input grammar files and gather information
@@ -183,27 +163,13 @@ namespace Trash
                     var is_lexer_grammar = is_lex.Count() != 0;
                     var is_combined = !is_parser_grammar && !is_lexer_grammar;
                     var name = name_.First();
+                    string autom_name = name;
+                    name = is_parser_grammar ? new Regex("Parser$").Replace(name, "") : name;
+                    name = is_lexer_grammar ? new Regex("Lexer$").Replace(name, "") : name;
+
                     var start_symbol = ss.FirstOrDefault();
                     string grammar_name = null;
-                    if (is_combined)
-                    {
-                        grammar_name = name;
-                    }
-                    else
-                    {
-                        if (is_parser_grammar)
-                        {
-                            grammar_name = name.LastIndexOf("Parser") < 0
-                                ? name
-                                : name.Substring(0, name.LastIndexOf("Parser"));
-                        }
-                        else if (is_lexer_grammar)
-                        {
-                            grammar_name = name.LastIndexOf("Lexer") < 0
-                                ? name
-                                : name.Substring(0, name.LastIndexOf("Lexer"));
-                        }
-                    }
+                    grammar_name = name;
                     if (start_symbol != null && test.start_rule == null)
                     {
                         if (test.grammar_name == null
@@ -248,11 +214,11 @@ namespace Trash
                         string genfn; // name of the generated parser/lexer file in the output directory.
                         string genincfn; // name of the include file for parser/lexer, for C++.
                         string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                        string autom_name; // The name of the parser or lexer function, fully qualified with package.
+                        string qual_autom_name; // The name of the parser or lexer function, fully qualified with package.
                         string goname; // The name of the parser or lexer functionj for Go.
                         if (test.target == "Go")
                         {
-                            genfn = pre1 + name.Replace("Parser", "_parser").ToLower() + Suffix(test.target);
+                            genfn = pre1 + autom_name.Replace("Parser", "_parser").ToLower() + Suffix(test.target);
                             genincfn = "";
                             if (test.package != null && test.package != "")
                                 antlr_args = GetOSTarget() == OSTarget.Windows
@@ -261,13 +227,13 @@ namespace Trash
                                     : " -package " + test.package;
                             else
                                 antlr_args = "";
-                            autom_name = pre2 + name;
-                            goname = pre2 + "New" + name;
+                            qual_autom_name = pre2 + autom_name;
+                            goname = pre2 + "New" + autom_name;
                         }
                         else
                         {
-                            genfn = pre1 + name + Suffix(test.target);
-                            genincfn = pre1 + name + ".h";
+                            genfn = pre1 + autom_name + Suffix(test.target);
+                            genincfn = pre1 + autom_name + ".h";
                             if (test.package != null && test.package != "")
                                 antlr_args = GetOSTarget() == OSTarget.Windows
                                     ? "-o " + test.package + " -lib " + test.package +
@@ -275,12 +241,12 @@ namespace Trash
                                     : " -package " + test.package;
                             else
                                 antlr_args = "";
-                            autom_name = pre2 + name;
+                            qual_autom_name = pre2 + autom_name;
                             goname = "";
                         }
 
                         var g = new GrammarTuple(GrammarTuple.Type.Parser, sgfn, tgfn, name, genfn, genincfn,
-                            autom_name, goname, antlr_args);
+                            qual_autom_name, goname, antlr_args);
                         test.tool_grammar_tuples.Add(g);
                     }
                     else if (is_lexer_grammar)
@@ -293,11 +259,11 @@ namespace Trash
                         string genfn; // name of the generated parser/lexer file in the output directory.
                         string genincfn; // name of the include file for parser/lexer, for C++.
                         string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                        string autom_name; // The name of the parser or lexer function, fully qualified with package.
+                        string qual_autom_name; // The name of the parser or lexer function, fully qualified with package.
                         string goname; // The name of the parser or lexer functionj for Go.
                         if (test.target == "Go")
                         {
-                            genfn = pre1 + name.Replace("Lexer", "_lexer").ToLower() + Suffix(test.target);
+                            genfn = pre1 + autom_name.Replace("Lexer", "_lexer").ToLower() + Suffix(test.target);
                             genincfn = "";
                             if (test.package != null && test.package != "")
                                 antlr_args = GetOSTarget() == OSTarget.Windows
@@ -306,13 +272,13 @@ namespace Trash
                                     : " -package " + test.package;
                             else
                                 antlr_args = "";
-                            autom_name = pre2 + name;
-                            goname = pre2 + "New" + name;
+                            qual_autom_name = pre2 + autom_name;
+                            goname = pre2 + "New" + autom_name;
                         }
                         else
                         {
-                            genfn = pre1 + name + Suffix(test.target);
-                            genincfn = pre1 + name + ".h";
+                            genfn = pre1 + autom_name + Suffix(test.target);
+                            genincfn = pre1 + autom_name + ".h";
                             if (test.package != null && test.package != "")
                                 antlr_args = GetOSTarget() == OSTarget.Windows
                                     ? "-o " + test.package + " -lib " + test.package +
@@ -320,11 +286,11 @@ namespace Trash
                                     : " -package " + test.package;
                             else
                                 antlr_args = "";
-                            autom_name = pre2 + name;
+                            qual_autom_name = pre2 + autom_name;
                             goname = "";
                         }
 
-                        var g = new GrammarTuple(GrammarTuple.Type.Lexer, sgfn, tgfn, name, genfn, genincfn, autom_name,
+                        var g = new GrammarTuple(GrammarTuple.Type.Lexer, sgfn, tgfn, name, genfn, genincfn, qual_autom_name,
                             goname, antlr_args);
                         test.tool_grammar_tuples.Add(g);
                     }
@@ -339,16 +305,15 @@ namespace Trash
                             string genfn; // name of the generated parser/lexer file in the output directory.
                             string genincfn; // name of the include file for parser/lexer, for C++.
                             string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                            string
-                                autom_name; // The name of the parser or lexer function, fully qualified with package.
+                            string qual_autom_name; // The name of the parser or lexer function, fully qualified with package.
                             string goname; // The name of the parser or lexer functionj for Go.
                             if (test.target == "Go")
                             {
-                                genfn = pre1 + name.ToLower() + "_parser" + Suffix(test.target);
+                                genfn = pre1 + autom_name.ToLower() + "_parser" + Suffix(test.target);
                                 genincfn = "";
-                                autom_name = pre2
-                                             + name
-                                             + "Parser";
+                                qual_autom_name = pre2
+                                                  + name
+                                                  + "Parser";
                                 goname = pre2
                                          + "New" + name
                                          + "Parser";
@@ -364,9 +329,9 @@ namespace Trash
                             {
                                 genfn = pre1 + name + "Parser" + Suffix(test.target);
                                 genincfn = pre1 + name + "Parser.h";
-                                autom_name = pre2
-                                             + name
-                                             + "Parser";
+                                qual_autom_name = pre2
+                                                  + name
+                                                  + "Parser";
                                 goname = "";
                                 if (test.package != null && test.package != "")
                                     antlr_args = GetOSTarget() == OSTarget.Windows
@@ -378,7 +343,7 @@ namespace Trash
                             }
 
                             var g = new GrammarTuple(GrammarTuple.Type.Parser, sgfn, tgfn, name, genfn, genincfn,
-                                autom_name, goname, antlr_args);
+                                qual_autom_name, goname, antlr_args);
                             test.tool_grammar_tuples.Add(g);
                         }
                         {
@@ -390,16 +355,15 @@ namespace Trash
                             string genfn; // name of the generated parser/lexer file in the output directory.
                             string genincfn; // name of the include file for parser/lexer, for C++.
                             string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                            string
-                                autom_name; // The name of the parser or lexer function, fully qualified with package.
+                            string qual_autom_name; // The name of the parser or lexer function, fully qualified with package.
                             string goname; // The name of the parser or lexer functionj for Go.
                             if (test.target == "Go")
                             {
-                                genfn = pre1 + name.ToLower() + "_lexer" + Suffix(test.target);
+                                genfn = pre1 + autom_name.ToLower() + "_lexer" + Suffix(test.target);
                                 genincfn = "";
-                                autom_name = pre2
-                                             + name
-                                             + "Lexer";
+                                qual_autom_name = pre2
+                                                  + name
+                                                  + "Lexer";
                                 goname = pre2
                                          + "New" + name
                                          + "Lexer";
@@ -413,11 +377,11 @@ namespace Trash
                             }
                             else
                             {
-                                genfn = pre1 + name + "Lexer" + Suffix(test.target);
+                                genfn = pre1 + autom_name + "Lexer" + Suffix(test.target);
                                 genincfn = pre1 + name + "Lexer.h";
-                                autom_name = pre2
-                                             + name
-                                             + "Lexer";
+                                qual_autom_name = pre2
+                                                  + name
+                                                  + "Lexer";
                                 goname = "";
                                 if (test.package != null && test.package != "")
                                     antlr_args = GetOSTarget() == OSTarget.Windows
@@ -429,7 +393,7 @@ namespace Trash
                             }
 
                             var g = new GrammarTuple(GrammarTuple.Type.Lexer, sgfn, tgfn, name, genfn, genincfn,
-                                autom_name, goname, antlr_args);
+                                qual_autom_name, goname, antlr_args);
                             test.tool_grammar_tuples.Add(g);
                         }
                     }
@@ -438,7 +402,8 @@ namespace Trash
                 // Pick a damn grammar if none specified. If more than one fuck it.
                 if (test.grammar_name == null)
                 {
-                    var a = test.tool_grammar_tuples.Where(t => t.WhatType == GrammarTuple.Type.Parser)
+                    var a = test.tool_grammar_tuples
+                        .Where(t => t.WhatType == GrammarTuple.Type.Parser)
                         .FirstOrDefault()?.GrammarName;
                     if (a != null) test.grammar_name = a;
                     if (test.grammar_name == null)
@@ -484,24 +449,29 @@ namespace Trash
                     (string)test.fully_qualified_parser_name.Replace('.', '/') + ".h";
                 var parser_src_grammar_file_name =
                     test.tool_grammar_tuples
-                        .Where(t => t.GrammarAutomName.EndsWith("Parser")).Select(t
-                            => t.GrammarFileName).First();
+                        .Where(t => t.GrammarAutomName.EndsWith("Parser"))
+                        .Where(t => test.grammar_name == null || t.GrammarName == test.grammar_name)
+                        .Select(t => t.GrammarFileName)
+                        .First();
                 test.fully_qualified_lexer_name =
                     test.tool_grammar_tuples
                         .Where(t => t.GrammarAutomName.EndsWith("Lexer"))
-                        .Select(t => t.GrammarAutomName).First();
+                        .Select(t => t.GrammarAutomName)
+                        .First();
                 test.fully_qualified_go_lexer_name =
                     test.tool_grammar_tuples
                         .Where(t => t.GrammarAutomName.EndsWith("Lexer"))
-                        .Select(t => t.GrammarGoNewName).First();
+                        .Select(t => t.GrammarGoNewName)
+                        .First();
                 var lexer_generated_file_name =
                     test.fully_qualified_lexer_name.Replace('.', '/') + Suffix(test.target);
                 var lexer_generated_include_file_name =
                     test.fully_qualified_lexer_name.Replace('.', '/') + ".h";
                 var lexer_src_grammar_file_name =
                     test.tool_grammar_tuples
-                        .Where(t => t.GrammarAutomName.EndsWith("Lexer")).Select(t
-                            => t.GrammarFileName).First();
+                        .Where(t => t.GrammarAutomName.EndsWith("Lexer"))
+                        .Select(t => t.GrammarFileName)
+                        .First();
                 test.tool_src_grammar_files = new HashSet<string>()
                 {
                     lexer_src_grammar_file_name,
@@ -521,7 +491,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.20.13";
+        public static string version = "0.20.23";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -786,6 +756,21 @@ namespace Trash
                     test.target = target;
                     test.grammar_name = config.grammar_name;
                     test.start_rule = config.start_rule;
+                    if (!config.Files.Any())
+                    {
+                        var list = new List<string>();
+                        var tool_grammar_files_pattern = ".+g4$";
+                        var list_pp = new TrashGlobbing.Glob()
+                            .RegexContents(tool_grammar_files_pattern, false)
+                            .Where(f => f is FileInfo)
+                            .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                            .ToList();
+                        foreach (var y in list_pp)
+                        {
+                            list.Add(y);
+                        }
+                        config.Files = list;
+                    }
                     test.tool_grammar_files = config.Files.ToList();
                     test.package = test.target == "Go" ? "parser" : test.package;
                     test.package = test.target == "Antlr4cs" ? "Test" : test.package;
@@ -840,6 +825,52 @@ namespace Trash
                         test_targets = xtargets.First().Split(';').ToList();
                     }
 
+                    List<string> tool_grammar_files = null;
+                    var xgrammars = xmltest
+                        .Select("grammar-files", nsmgr)
+                        .Cast<XPathNavigator>()
+                        .Select(t => t.Value)
+                        .ToList();
+                    if (xgrammars.Count > 1)
+                        throw new Exception("Too many <grammar-files> elements, there should be only one.");
+                    if (xgrammars.Count == 1)
+                    {
+                        var grammars = xgrammars.First().Split(';');
+                        var merged_list = new List<string>();
+                        foreach (var x in grammars)
+                        {
+                            var xx = x.Trim().Replace("\\", "/");
+
+                            // Split the dirname and basename of the path x.
+                            var dir = Dirname(xx);
+                            var bn = Basename(xx);
+
+                            // Add the dirname to the current directory.
+                            if (dir == ".") dir = ""; // erase.
+                            if (dir != "" && !dir.EndsWith("/")) dir += "/";
+                            var cwd = Environment.CurrentDirectory.Replace("\\", "/");
+                            if (!cwd.EndsWith("/")) cwd += "/";
+                            cwd = cwd + dir;
+
+                            // Set the pattern to be the full path name.
+                            var fp = cwd + bn;
+                            var pp = TrashGlobbing.Glob.GlobToRegex(fp);
+
+                            var list_pp = new TrashGlobbing.Glob(cwd)
+                                .RegexContents(pp, false)
+                                .Where(f => f is FileInfo)
+                                .Select(f => f.FullName
+                                    .Replace('\\', '/')
+                                    .Replace(cwd, ""))
+                                .ToList();
+                            foreach (var y in list_pp)
+                            {
+                                merged_list.Add(dir + y);
+                            }
+                        }
+                        tool_grammar_files = merged_list;
+                    }
+
                     var spec_source_directory = xmltest
                         .Select("source-directory", nsmgr)
                         .Cast<XPathNavigator>()
@@ -882,6 +913,29 @@ namespace Trash
                         test.os_targets = new List<string>() { GetOSTarget().ToString() };
                         test.package = test.target == "Go" ? "parser" : test.package;
                         test.package = test.target == "Antlr4cs" ? "Test" : test.package;
+                        if (tool_grammar_files != null)
+                        {
+                            test.tool_grammar_files = tool_grammar_files;
+                        }
+                        else
+                        {
+                            if (!config.Files.Any())
+                            {
+                                var list = new List<string>();
+                                var tool_grammar_files_pattern = ".+g4$";
+                                var list_pp = new TrashGlobbing.Glob()
+                                    .RegexContents(tool_grammar_files_pattern, false)
+                                    .Where(f => f is FileInfo)
+                                    .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                                    .ToList();
+                                foreach (var y in list_pp)
+                                {
+                                    list.Add(y);
+                                }
+                                test.tool_grammar_files = list;
+                            }
+                            else test.tool_grammar_files = config.Files.ToList();
+                        }
                         if (spec_grammar_name != null)
                         {
                             test.grammar_name = spec_grammar_name.Trim();
@@ -915,7 +969,6 @@ namespace Trash
                             test.package = spec_package_name;
                         }
 
-                        test.tool_grammar_files = config.Files.ToList();
                         if (spec_source_directory != null)
                         {
                             test.current_directory = spec_source_directory
@@ -1539,10 +1592,11 @@ namespace Trash
                         + " to "
                         + to);
                     Template t = new Template(content);
+                    var output_dir = config.output_directory + '-' + test.target + "/";
                     var yo1 = test.grammar_directory_source_files
                         .Select(t =>
                             FixedName(t, config, test)
-                            .Substring(config.output_directory.Length))
+                            .Substring(output_dir.Length))
                         .Where(t => t.Contains(Suffix(test.target)))
                         .ToList();
                     t.Add("additional_sources", yo1);
@@ -1636,11 +1690,13 @@ namespace Trash
                         + " to "
                         + to);
                     Template t = new Template(content);
-		            var yo1 = test.grammar_directory_source_files
-			              .Select(t => FixedName(t, config, test)
-					         .Substring(config.output_directory.Length))
-			              .Where(t => t.Contains(Suffix(test.target)))
-			              .ToList();
+                    var output_dir = config.output_directory + '-' + test.target + "/";
+                    var yo1 = test.grammar_directory_source_files
+                        .Select(t =>
+                            FixedName(t, config, test)
+                                .Substring(output_dir.Length))
+                        .Where(t => t.Contains(Suffix(test.target)))
+                        .ToList();
                     t.Add("additional_sources", yo1);
                     t.Add("antlr_encoding", test.antlr_encoding);
                     t.Add("antlr_tool_args", config.antlr_tool_args);
@@ -1780,6 +1836,9 @@ namespace Trash
 
             if (from.StartsWith(cwd))
                 from = from.Substring(cwd.Length);
+
+            if (from.StartsWith(test.target + "/"))
+                from = from.Substring(test.target.Length+1);
 
             // Split the dirname and basename of the path x.
             var dir = Dirname(from);
@@ -1926,7 +1985,7 @@ namespace Trash
             //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             
-            var converted_tree = ConvertToDOM.BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
+            var converted_tree = new ConvertToDOM().BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
             var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Nodes = new UnvParseTreeNode[] { converted_tree }, Parser = parser, Lexer = lexer };
             data.Add(tuple);
             return (bool)res3 ? 1 : 0;

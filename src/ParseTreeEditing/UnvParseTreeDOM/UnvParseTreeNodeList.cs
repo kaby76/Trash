@@ -40,9 +40,20 @@
             this._node_list.Insert(i, node);
         }
 
+        public void Replace(int i, Node node)
+        {
+            this._node_list.RemoveAt(i);
+            this._node_list.Insert(i, node);
+        }
+
         public void RemoveAt(int i)
         {
             this._node_list.RemoveAt(i);
+        }
+
+        public IEnumerable<Node> All()
+        {
+            return this._node_list;
         }
     }
 }

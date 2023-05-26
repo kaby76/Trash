@@ -1,4 +1,4 @@
-﻿namespace LanguageServer
+﻿namespace ParseTreeEditing.UnvParseTreeDOM
 {
     using EditableAntlrTree;
     using Antlr4.Runtime;
@@ -7,7 +7,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using ParseTreeEditing.UnvParseTreeDOM;
     using org.w3c.dom;
     using XmlDOM;
     using System.Xml.Linq;
@@ -64,7 +63,10 @@
                         }
                     }
                 }
-                if (!@continue) { }
+
+                if (!@continue)
+                {
+                }
                 else
                 {
                     for (int i = n.ChildNodes.Length - 1; i >= 0; --i)
@@ -114,7 +116,10 @@
                 var found = find(n, out bool @continue);
                 if (found != null)
                     yield return found;
-                if (!@continue) { }
+                if (!@continue)
+                {
+                }
+
                 for (int i = 0; i < n.ChildNodes.Length; ++i)
                 {
                     var c = n.ChildNodes.item(i);
@@ -142,8 +147,10 @@
                             break;
                         }
                     }
+
                     if (term) yield return n as UnvParseTreeNode;
                 }
+
                 if (!(n is UnvParseTreeNode))
                     continue;
                 if (n.ChildNodes == null) continue;
@@ -156,7 +163,7 @@
             }
         }
 
-        public static void InsertBefore(Node node, string arbitrary_string)
+        public static Node InsertBefore(Node node, string arbitrary_string)
         {
             var node_to_insert = new UnvParseTreeText();
             node_to_insert.Data = arbitrary_string;
@@ -171,6 +178,7 @@
                     break;
                 }
             }
+            return node_to_insert;
         }
 
         public static void InsertBefore(Node node, Node node_to_insert)
@@ -188,7 +196,12 @@
             }
         }
 
-        public static void InsertAfter(Node node, string arbitrary_string)
+        public static void InsertAfter(IEnumerable<UnvParseTreeNode> trees, string arbitrary_string)
+        {
+            foreach (var tree in trees) InsertAfter(tree, arbitrary_string);
+        }
+
+        public static Node InsertAfter(Node node, string arbitrary_string)
         {
             var node_to_insert = new UnvParseTreeText();
             node_to_insert.Data = arbitrary_string;
@@ -203,6 +216,7 @@
                     break;
                 }
             }
+            return node_to_insert;
         }
 
         public static void InsertAfter(Node node, Node node_to_insert)
@@ -292,6 +306,7 @@
                 if (lmt != null)
                     return lmt;
             }
+
             return null;
         }
 
@@ -307,6 +322,7 @@
                 if (lmt != null)
                     return lmt;
             }
+
             return null;
         }
 
@@ -327,6 +343,7 @@
                         break;
                     }
                 }
+
                 if (start < 0) continue;
                 for (; start < p.ChildNodes.Length; ++start)
                 {
@@ -335,6 +352,7 @@
                         return found;
                 }
             }
+
             return null;
         }
 
@@ -347,10 +365,12 @@
             {
                 sb.Append(l.Text);
             }
+
             return sb.ToString();
         }
 
-        public static (Dictionary<UnvParseTreeNode, string>, List<string>) TextToLeftOfLeaves(BufferedTokenStream stream, IParseTree tree)
+        public static (Dictionary<UnvParseTreeNode, string>, List<string>) TextToLeftOfLeaves(
+            BufferedTokenStream stream, IParseTree tree)
         {
             throw new NotImplementedException();
             //var result = new Dictionary<TerminalNodeImpl, string>();
@@ -394,7 +414,8 @@
             //return (result, result2);
         }
 
-        public static (Dictionary<UnvParseTreeNode, string>, List<string>) TextToLeftOfLeaves(BufferedTokenStream stream, IEnumerable<IParseTree> trees)
+        public static (Dictionary<UnvParseTreeNode, string>, List<string>) TextToLeftOfLeaves(
+            BufferedTokenStream stream, IEnumerable<IParseTree> trees)
         {
             throw new NotImplementedException();
             //var result = new Dictionary<TerminalNodeImpl, string>();
@@ -441,7 +462,8 @@
             //return (result, result2);
         }
 
-        public static UnvParseTreeNode CopyTreeRecursive(UnvParseTreeNode original, IParseTree parent, Dictionary<TerminalNodeImpl, string> text_to_left)
+        public static UnvParseTreeNode CopyTreeRecursive(UnvParseTreeNode original, IParseTree parent,
+            Dictionary<TerminalNodeImpl, string> text_to_left)
         {
             throw new NotImplementedException();
             //if (original == null) return null;
@@ -552,35 +574,45 @@
             //return (copy, ncs, nts);
         }
 
-        public static void Reconstruct(StringBuilder sb, IEnumerable<UnvParseTreeNode> trees, Dictionary<TerminalNodeImpl, string> text_to_left)
+        public static string Reconstruct(IEnumerable<UnvParseTreeNode> trees)
         {
-            throw new NotImplementedException();
-            //foreach (var tree in trees)
-            //{
-            //    if (tree as TerminalNodeImpl != null)
-            //    {
-            //        TerminalNodeImpl tok = tree as TerminalNodeImpl;
-            //        text_to_left.TryGetValue(tok, out string inter);
-            //        if (inter == null)
-            //            sb.Append(" ");
-            //        else
-            //            sb.Append(inter);
-            //        if (tok.Symbol.Type == TokenConstants.EOF)
-            //            return;
-            //        sb.Append(tok.GetText());
-            //    }
-            //    else
-            //    {
-            //        for (int i = 0; i < tree.ChildCount; ++i)
-            //        {
-            //            var c = tree.GetChild(i);
-            //            Reconstruct(sb, c, text_to_left);
-            //        }
-            //    }
-            //}
+            // Go up tree find root.
+            var root = trees.First();
+            while (root.ParentNode != null && root.ParentNode is UnvParseTreeNode)
+            {
+                root = (UnvParseTreeNode)root.ParentNode;
+            }
+            return Reconstruct(root);
         }
 
-        public static void Reconstruct(StringBuilder sb, UnvParseTreeNode tree, Dictionary<TerminalNodeImpl, string> text_to_left)
+        public static string Reconstruct(UnvParseTreeNode tree)
+        {
+            Stack<Node> stack = new Stack<Node>();
+            stack.Push(tree);
+            StringBuilder sb = new StringBuilder();
+            while (stack.Any())
+            {
+                var n = stack.Pop();
+                if (n is UnvParseTreeAttr a)
+                {
+                    sb.Append(a.StringValue);
+                }
+                else if (n is UnvParseTreeText t)
+                {
+                    sb.Append(t.NodeValue);
+                }
+                else if (n is UnvParseTreeElement e)
+                {
+                    for (int i = n.ChildNodes.Length - 1; i >= 0; i--)
+                    {
+                        stack.Push(n.ChildNodes.item(i));
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static void Reconstruct(StringBuilder sb, UnvParseTreeNode tree)
         {
             throw new NotImplementedException();
             //if (tree as TerminalNodeImpl != null)
@@ -837,7 +869,10 @@
             throw new NotImplementedException();
         }
 
-
+        public static void Replace(IEnumerable<UnvParseTreeNode> trees, string arbitrary_string)
+        {
+            foreach (var tree in trees) Replace(tree, arbitrary_string);
+        }
 
         public static UnvParseTreeNode Replace(UnvParseTreeNode node, string arbitrary_string)
         {
@@ -859,66 +894,59 @@
             return node_to_insert;
         }
 
+        public static void Replace(IEnumerable<UnvParseTreeNode> trees, Fun find)
+        {
+            foreach (var tree in trees) Replace(tree, find);
+        }
+
         public static void Replace(UnvParseTreeNode tree, Fun find)
         {
-            throw new NotImplementedException();
-            //if (tree == null) return;
-            //Stack<IParseTree> stack = new Stack<IParseTree>();
-            //stack.Push(tree);
-            //while (stack.Any())
-            //{
-            //    var n = stack.Pop();
-            //    var found = find(n, out bool @continue);
-            //    if (found != null)
-            //    {
-            //        IParseTree parent = n.Parent;
-            //        var c = parent as ParserRuleContext;
-            //        if (c != null)
-            //        {
-            //            for (int i = 0; i < c.ChildCount; ++i)
-            //            {
-            //                var child = c.children[i];
-            //                if (child == n)
-            //                {
-            //                    var temp = c.children[i];
-            //                    if (temp is TerminalNodeImpl)
-            //                    {
-            //                        var t = temp as TerminalNodeImpl;
-            //                        t.Parent = null;
-            //                        c.children[i] = found;
-            //                        var rt = found as TerminalNodeImpl;
-            //                        if (rt != null) rt.Parent = c;
-            //                        var rp = found as ParserRuleContext;
-            //                        if (rp != null) rp.Parent = c;
-            //                    }
-            //                    else if (temp is ParserRuleContext)
-            //                    {
-            //                        var t = temp as ParserRuleContext;
-            //                        t.Parent = null;
-            //                        c.children[i] = found;
-            //                        var rt = found as TerminalNodeImpl;
-            //                        if (rt != null) rt.Parent = c;
-            //                        var rp = found as ParserRuleContext;
-            //                        if (rp != null) rp.Parent = c;
-            //                    }
-            //                    else
-            //                        throw new Exception("Tree contains something other than TerminalNodeImpl or ParserRuleContext");
-            //                    break;
-            //                }
-            //            }
-            //        }
-            //    }
-            //    if (!@continue) { }
-            //    else if (n as TerminalNodeImpl != null) { }
-            //    else
-            //    {
-            //        for (int i = n.ChildCount - 1; i >= 0; --i)
-            //        {
-            //            var c = n.GetChild(i);
-            //            stack.Push(c);
-            //        }
-            //    }
-            //}
+            if (tree == null) return;
+            Stack<UnvParseTreeNode> stack = new Stack<UnvParseTreeNode>();
+            stack.Push(tree);
+            while (stack.Any())
+            {
+                var n = stack.Pop();
+                var found = find(n, out bool @continue);
+                if (found != null)
+                {
+                    Node parent = n.ParentNode;
+                    var c = parent as UnvParseTreeNode;
+                    if (c != null)
+                    {
+                        for (int i = 0; i < c.ChildNodes.Length; ++i)
+                        {
+                            var child = c.ChildNodes.item(i);
+                            if (child == n)
+                            {
+                                var temp = c.ChildNodes.item(i);
+                                if (temp is UnvParseTreeNode)
+                                {
+                                    var t = temp as UnvParseTreeNode;
+                                    t.ParentNode = null;
+                                    c.ChildNodes.Replace(i, found);
+                                    var rt = found as UnvParseTreeNode;
+                                    if (rt != null) rt.ParentNode = c;
+                                    var rp = found as UnvParseTreeNode;
+                                    if (rp != null) rp.ParentNode = c;
+                                }
+                                else
+                                    throw new Exception("Tree contains something other than TerminalNodeImpl or ParserRuleContext");
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (!@continue) { }
+                else
+                {
+                    for (int i = n.ChildNodes.Length - 1; i >= 0; --i)
+                    {
+                        var c = n.ChildNodes.item(i);
+                        if (c is UnvParseTreeNode x) stack.Push(x);
+                    }
+                }
+            }
         }
 
         public static void Replace(UnvParseTreeNode replace_this, UnvParseTreeNode with_this)

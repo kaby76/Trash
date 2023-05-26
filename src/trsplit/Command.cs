@@ -2,7 +2,6 @@
 {
     using AntlrJson;
     using ParseTreeEditing.UnvParseTreeDOM;
-    using LanguageServer;
     using org.eclipse.wst.xml.xpath2.processor.util;
     using org.w3c.dom;
     using System;
@@ -138,7 +137,6 @@
             Stack<Node> stack = new Stack<Node>();
             stack.Push(tree);
             StringBuilder sb = new StringBuilder();
-            int last = -1;
             while (stack.Any())
             {
                 var n = stack.Pop();

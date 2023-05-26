@@ -7,10 +7,7 @@
 
 parser grammar XPath31Parser;
 
-options {
-    tokenVocab = XPath31Lexer;
-}
-
+options { tokenVocab=XPath31Lexer; }
 
 // [1]
 xpath : expr EOF ;
@@ -55,21 +52,21 @@ valuecomp : KW_EQ | KW_NE | KW_LT | KW_LE | KW_GT | KW_GE ;
 nodecomp : KW_IS | LL | GG ;
 // [35]
 simplemapexpr : pathexpr ( BANG pathexpr)* ;
-pathexpr : ( SLASH relativepathexpr?) | ( SS relativepathexpr) | relativepathexpr ;
+pathexpr : SLASH relativepathexpr? | SS relativepathexpr | relativepathexpr ;
 relativepathexpr : stepexpr (( SLASH | SS) stepexpr)* ;
 stepexpr : postfixexpr | axisstep ;
 axisstep : (reversestep | forwardstep) predicatelist ;
 // [40]
-forwardstep : (forwardaxis nodetest) | abbrevforwardstep ;
-forwardaxis : ( KW_CHILD COLONCOLON) | ( KW_DESCENDANT COLONCOLON) | ( KW_ATTRIBUTE COLONCOLON) | ( KW_SELF COLONCOLON) | ( KW_DESCENDANT_OR_SELF COLONCOLON) | ( KW_FOLLOWING_SIBLING COLONCOLON) | ( KW_FOLLOWING COLONCOLON) | ( KW_NAMESPACE COLONCOLON) ;
+forwardstep : forwardaxis nodetest | abbrevforwardstep ;
+forwardaxis : KW_CHILD COLONCOLON | KW_DESCENDANT COLONCOLON | KW_ATTRIBUTE COLONCOLON | KW_SELF COLONCOLON | KW_DESCENDANT_OR_SELF COLONCOLON | KW_FOLLOWING_SIBLING COLONCOLON | KW_FOLLOWING COLONCOLON | KW_NAMESPACE COLONCOLON ;
 abbrevforwardstep : AT? nodetest ;
-reversestep : (reverseaxis nodetest) | abbrevreversestep ;
-reverseaxis : ( KW_PARENT COLONCOLON) | ( KW_ANCESTOR COLONCOLON) | ( KW_PRECEDING_SIBLING COLONCOLON) | ( KW_PRECEDING COLONCOLON) | ( KW_ANCESTOR_OR_SELF COLONCOLON) ;
+reversestep : reverseaxis nodetest | abbrevreversestep ;
+reverseaxis : KW_PARENT COLONCOLON | KW_ANCESTOR COLONCOLON | KW_PRECEDING_SIBLING COLONCOLON | KW_PRECEDING COLONCOLON | KW_ANCESTOR_OR_SELF COLONCOLON ;
 // [45]
 abbrevreversestep : DD ;
 nodetest : kindtest | nametest ;
 nametest : eqname | wildcard ;
-wildcard : STAR | (NCName CS) | ( SC NCName) | (BracedURILiteral STAR) ;
+wildcard : STAR | NCName CS | SC NCName | BracedURILiteral STAR ;
 postfixexpr : primaryexpr (predicate | argumentlist | lookup)* ;
 // [50]
 argumentlist : OP (argument ( COMMA argument)*)? CP ;
@@ -126,10 +123,10 @@ curlyarrayconstructor : KW_ARRAY enclosedexpr ;
 unarylookup : QM keyspecifier ;
 singletype : simpletypename QM? ;
 typedeclaration : KW_AS sequencetype ;
-sequencetype : ( KW_EMPTY_SEQUENCE OP CP) | (itemtype occurrenceindicator?) ;
+sequencetype : KW_EMPTY_SEQUENCE OP CP | itemtype occurrenceindicator? ;
 // [80]
 occurrenceindicator : QM | STAR | PLUS ;
-itemtype : kindtest | ( KW_ITEM OP CP) | functiontest | maptest | arraytest | atomicoruniontype | parenthesizeditemtype ;
+itemtype : kindtest | KW_ITEM OP CP | functiontest | maptest | arraytest | atomicoruniontype | parenthesizeditemtype ;
 atomicoruniontype : eqname ;
 kindtest : documenttest | elementtest | attributetest | schemaelementtest | schemaattributetest | pitest | commenttest | texttest | namespacenodetest | anykindtest ;
 anykindtest : KW_NODE OP CP ;
@@ -140,11 +137,11 @@ commenttest : KW_COMMENT OP CP ;
 namespacenodetest : KW_NAMESPACE_NODE OP CP ;
 pitest : KW_PROCESSING_INSTRUCTION OP (NCName | StringLiteral)? CP ;
 // [90]
-attributetest : KW_ATTRIBUTE OP (attribnameorwildcard ( COMMA typename)?)? CP ;
+attributetest : KW_ATTRIBUTE OP (attribnameorwildcard ( COMMA typename_)?)? CP ;
 attribnameorwildcard : attributename | STAR ;
 schemaattributetest : KW_SCHEMA_ATTRIBUTE OP attributedeclaration CP ;
 attributedeclaration : attributename ;
-elementtest : KW_ELEMENT OP (elementnameorwildcard ( COMMA typename QM?)?)? CP ;
+elementtest : KW_ELEMENT OP (elementnameorwildcard ( COMMA typename_ QM?)?)? CP ;
 // [95]
 elementnameorwildcard : elementname | STAR ;
 schemaelementtest : KW_SCHEMA_ELEMENT OP elementdeclaration CP ;
@@ -152,8 +149,8 @@ elementdeclaration : elementname ;
 attributename : eqname ;
 elementname : eqname ;
 // [100]
-simpletypename : typename ;
-typename : eqname ;
+simpletypename : typename_ ;
+typename_ : eqname ;
 functiontest : anyfunctiontest | typedfunctiontest ;
 anyfunctiontest : KW_FUNCTION OP STAR CP ;
 typedfunctiontest : KW_FUNCTION OP (sequencetype ( COMMA sequencetype)*)? CP KW_AS sequencetype ;
@@ -229,4 +226,5 @@ eqname : QName | URIQualifiedName
  | KW_UNION
  ;
 
+// Not per spec. Specified for testing.
 auxilary : (expr SEMI )+ EOF;

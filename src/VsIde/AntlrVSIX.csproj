@@ -76,7 +76,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.VisualStudio.Editor" Version="17.1.68" />
+		<PackageReference Include="Microsoft.VisualStudio.Editor" Version="17.1.386" />
 		<PackageReference Include="Microsoft.VisualStudio.LanguageServer.Client" Version="17.1.68" />
 		<PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol" Version="17.1.8" />
 		<PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.1.4054">

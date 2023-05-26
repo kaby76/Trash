@@ -114,9 +114,9 @@ KW_UNION : 'union' ;
 // Keywords and symbols are terminals.
 
 IntegerLiteral : FragDigits ;
-DecimalLiteral : ('.' FragDigits) | (FragDigits '.' [0-9]*) ;
-DoubleLiteral : (('.' FragDigits) | (FragDigits ('.' [0-9]*)?)) [eE] [+-]? FragDigits ;
-StringLiteral : ('"' (~["] | FragEscapeQuot)* '"') | ('\'' (~['] | FragEscapeApos)* '\'') ;
+DecimalLiteral : '.' FragDigits | FragDigits '.' [0-9]* ;
+DoubleLiteral : ('.' FragDigits | FragDigits ('.' [0-9]*)?) [eE] [+-]? FragDigits ;
+StringLiteral : '"' (~["] | FragEscapeQuot)* '"' | '\'' (~['] | FragEscapeApos)* '\'' ;
 URIQualifiedName : BracedURILiteral NCName ;
 BracedURILiteral : 'Q' '{' [^{}]* '}' ;
 // Error in spec: EscapeQuot and EscapeApos are not terminals!
@@ -168,6 +168,7 @@ fragment FragChar : '\u0009' | '\u000a' | '\u000d'
   | '\u{10000}'..'\u{10ffff}'
  ;
 
+// https://github.com/antlr/grammars-v4/blob/17d3db3fd6a8fc319a12176e0bb735b066ec0616/xpath/xpath31/XPath31.g4#L389
 Whitespace :  ('\u000d' | '\u000a' | '\u0020' | '\u0009')+ -> skip ;
 
 // Not per spec. Specified for testing.

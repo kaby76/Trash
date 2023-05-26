@@ -3,7 +3,7 @@
     "trtree": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\pegen\\Generated-CSharp"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\parens\\brand-new/bcpl/Generated-CSharp"
     }
   }
 }

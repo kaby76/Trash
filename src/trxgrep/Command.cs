@@ -34,7 +34,6 @@
             Lexer lexer;
             string text;
             string fn;
-            ITokenStream tokstream;
             string lines = null;
             if (!(config.File != null && config.File != ""))
             {

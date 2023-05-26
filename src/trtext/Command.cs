@@ -24,13 +24,13 @@
             Stack<Node> stack = new Stack<Node>();
             stack.Push(tree);
             StringBuilder sb = new StringBuilder();
-            int last = -1;
             while (stack.Any())
             {
                 var n = stack.Pop();
                 if (n is UnvParseTreeAttr a)
                 {
-                    sb.Append(a.StringValue);
+                    if (a.Name as string == "Before")
+                        sb.Append(a.StringValue);
                 }
                 else if (n is UnvParseTreeText t)
                 {
