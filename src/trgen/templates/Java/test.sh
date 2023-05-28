@@ -24,7 +24,7 @@ files2=`find ../<example_files_unix> -type f | grep -v '.errors$' | grep -v '.tr
 files=()
 for f in $files2
 do
-    triconv -f utf-8 $f > /dev/null 2>&1
+    dotnet triconv -- -f utf-8 $f > /dev/null 2>&1
     if [ "$?" = "0" ]
     then
         files+=( $f )
@@ -32,14 +32,15 @@ do
 done
 
 # Parse all input files.
-JAR="<antlr_tool_path>"
+version=4.13.0
+JAR=`python -c "import os; from pathlib import Path; print(os.path.join(Path.home() , '.m2',  'repository', 'org', 'antlr', 'antlr4', '$version', 'antlr4-$version-complete.jar'))"`
 CLASSPATH="$JAR<if(path_sep_semi)>\;<else>:<endif>."
 <if(individual_parsing)>
 # Individual parsing.
 rm -f parse.txt
 for f in ${files[*]}
 do
-    trwdog java -classpath "$CLASSPATH" Test -q -tee -tree $f >> parse.txt 2>&1
+    dotnet trwdog -- java -classpath "$CLASSPATH" Test -q -tee -tree $f >> parse.txt 2>&1
     xxx="$?"
     if [ "$xxx" -ne 0 ]
     then
@@ -48,7 +49,7 @@ do
 done
 <else>
 # Group parsing.
-echo "${files[*]}" | trwdog java -classpath "$CLASSPATH" Test -q -x -tee -tree > parse.txt 2>&1
+echo "${files[*]}" | dotnet trwdog -- java -classpath "$CLASSPATH" Test -q -x -tee -tree > parse.txt 2>&1
 status=$?
 <endif>
 

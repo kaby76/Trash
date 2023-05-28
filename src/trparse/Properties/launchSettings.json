@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\parens\\brand-new\\bcpl"
+      "commandLineArgs": "../examples/class.scala",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3260\\fix-for-scala\\scala\\Generated-CSharp"
     }
   }
 }

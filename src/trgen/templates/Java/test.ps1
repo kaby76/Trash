@@ -32,7 +32,7 @@ foreach ($item in Get-ChildItem $TestDirectory -Recurse) {
     } elseif ($ext -eq ".tree") {
         continue
     } else {
-        $(& triconv -f utf-8 $file ; $last = $LASTEXITCODE ) | Out-Null
+        $(& dotnet triconv -- -f utf-8 $file ; $last = $LASTEXITCODE ) | Out-Null
         if ($last -ne 0)
         {
             continue
@@ -50,12 +50,15 @@ if (-not(Test-Path -Path "tests.txt" -PathType Leaf)) {
 }
 
 # Parse all input files.
+$version = "4.13.0"
+$homePath = [System.Environment]::GetFolderPath("UserProfile")
+$JAR = Join-Path -Path $homePath -ChildPath ".m2/repository/org/antlr/antlr4/$version/antlr4-$version-complete.jar"
 <if(individual_parsing)>
 # Individual parsing.
-Get-Content "tests.txt" | ForEach-Object { trwdog java -cp "<antlr_tool_path><if(path_sep_semi)>;<else>:<endif>." Test -q -tee -tree *>> parse.txt }
+Get-Content "tests.txt" | ForEach-Object { dotnet trwdog -- java -cp "$JAR<if(path_sep_semi)>;<else>:<endif>." Test -q -tee -tree *>> parse.txt }
 <else>
 # Group parsing.
-get-content "tests.txt" | trwdog java -cp "<antlr_tool_path><if(path_sep_semi)>;<else>:<endif>." Test -q -x -tee -tree *> parse.txt
+get-content "tests.txt" | dotnet trwdog -- java -cp "${JAR}<if(path_sep_semi)>;<else>:<endif>." Test -q -x -tee -tree *> parse.txt
 $status = $LASTEXITCODE
 <endif>
 
