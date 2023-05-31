@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t JavaScript --template-sources-directory ../_scripts/templates/",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-new-javascript-package-json\\abb"
+      "commandLineArgs": "-t CSharp --template-sources-directory ../_scripts/templates/",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3480\\abb"
     }
   }
 }

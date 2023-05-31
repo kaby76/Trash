@@ -1679,11 +1679,21 @@
                     {
                         continue;
                     }
+                    if (file.EndsWith(".meta")) continue;
+
                     var from = file;
                     var e = file.Substring(prefix_to_remove.Length);
                     var to = FixedTemplatedFileName(e, config, test);
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
+
+                    if (template_directory_files_to_copy.Contains(file + ".meta"))
+                    {
+                        // Copy as is for now.
+                        this.CopyFile(from, to);
+                        continue;
+                    }
+
                     string content = File.ReadAllText(from);
                     System.Console.Error.WriteLine("Rendering template file from "
                         + from

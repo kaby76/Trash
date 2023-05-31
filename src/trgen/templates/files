@@ -41,6 +41,8 @@
 ./CSharp/Encodings.cs
 ./CSharp/ErrorListener.cs
 ./CSharp/makefile
+./CSharp/Other.csproj
+./CSharp/Other.csproj.meta
 ./CSharp/perf.sh
 ./CSharp/run.ps1
 ./CSharp/run.sh
