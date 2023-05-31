@@ -65,4 +65,4 @@ _Output_
 
 ## Current version
 
-0.20.23 Fixes to trparse. NB: not all Trash tools supported yet.
+0.20.23 Added trgen StringTemplate meta data file processing. NB: not all Trash tools supported yet.

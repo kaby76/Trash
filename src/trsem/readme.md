@@ -18,4 +18,4 @@ Read a static semantics spec file and generate code.
 
 ## Current version
 
-0.20.23 Fixes to trparse. NB: not all Trash tools supported yet.
+0.20.23 Added trgen StringTemplate meta data file processing. NB: not all Trash tools supported yet.
