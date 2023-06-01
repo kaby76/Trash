@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Collections;
+using org.eclipse.wst.xml.xpath2.processor.@internal.types;
 
 /// <summary>
 ///*****************************************************************************
@@ -86,13 +87,18 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.function
 				{
 					rs.add(at);
 				}
-				else if (at is NodeType)
-				{
-					NodeType nt = (NodeType) at;
-					rs.concat(nt.typed_value());
-				}
+                else if (at is TextType)
+                {
+                    XSString st = new XSString(at.StringValue);
+                    rs.concat(st);
+                }
+                else if (at is NodeType)
+                {
+                    NodeType nt = (NodeType)at;
+                    rs.concat(nt.typed_value());
+                }
 				else
-				{
+                {
 					Debug.Assert(false);
 				}
 			}

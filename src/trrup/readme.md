@@ -42,4 +42,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.20.23 Added trgen StringTemplate meta data file processing. NB: not all Trash tools supported yet.
+0.20.24 Updates to XPath engine. NB: not all Trash tools supported yet.
