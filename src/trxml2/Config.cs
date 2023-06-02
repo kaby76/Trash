@@ -5,7 +5,7 @@ namespace Trash
 {
     public class Config
     {
-        [Option('f', "file", Required = false)]
+        [Option('f', "file", Required = false, HelpText = "Read from file instead of stdin.")]
         public string File { get; set; }
 
         [Option('v', "verbose", Required = false)]

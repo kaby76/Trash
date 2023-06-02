@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <PackAsTool>true</PackAsTool>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <AssemblyName>trperf</AssemblyName>
     <PackageId>trperf</PackageId>
@@ -18,7 +19,7 @@ This program is part of the Trash toolkit.]]>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>0.20.24</Version>
+    <Version>0.20.25</Version>
     <RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/src/trperf</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
@@ -36,6 +37,9 @@ This program is part of the Trash toolkit.]]>
 	  <ProjectReference Include="../Logger/Logger.csproj" />
 	  <ProjectReference Include="../grammars/antlr4/Generated-CSharp/antlr4.csproj" />
   </ItemGroup>
+	<ItemGroup>
+		<None Include="readme.md" Pack="true" PackagePath=""/>
+	</ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>

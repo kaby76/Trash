@@ -78,8 +78,8 @@ namespace Trash
 
             // We have a pre-build grammar, but we need to get the grammar text
             // itself. Go to the dll, and work up to find the .g4's.
-            // Then, we parse that Antlr4 parser grammar to create NFAs that
-            // we can execute.
+            // Then, parse the Antlr4 parser grammar to create NFAs that
+            // model the regular expression on the RHS of each rule.
             // First, get grammars, parse, computing dfa's per rule per grammar file.
             var model = new Model();
             model.ComputeModel(full_path, parser, lexer, token_stream);

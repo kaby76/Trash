@@ -63,4 +63,4 @@ The output will be:
 
 ## Current version
 
-0.20.24 Updates to XPath engine. NB: not all Trash tools supported yet.
+0.20.25 Updates to XPath engine. NB: not all Trash tools supported yet.

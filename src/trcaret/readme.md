@@ -1,22 +1,21 @@
-# trtext
+# trcaret
 
 ## Summary
 
-Print a parse tree with a specific interval
+Print a line with caret underneath for beginning of tree.
 
 ## Description
 
-Reads a tree from stdin and prints the source text. If 'line-number' is
-specified, the line number range for the tree is printed.
+Reads a tree from stdin and prints lines and caret marks.
 
 ## Usage
 
-    trtext line-number?
+    trcaret [options]
 
 ## Examples
 
-    trxgrep //lexerRuleSpec | trtext
+    trxgrep //lexerRuleSpec | trcaret -H
 
 ## Current version
 
-0.20.24 Updates to XPath engine. NB: not all Trash tools supported yet.
+0.20.25 Updates to XPath engine. NB: not all Trash tools supported yet.

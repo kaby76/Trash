@@ -5,7 +5,7 @@ namespace Trash
 {
     public class Config
     {
-        [Option('f', "file", Required = false)]
+        [Option('f', "file", Required = false, HelpText = "Read parse tree data from file instead of stdin.")]
         public string File { get; set; }
 
         [Option('t', "target", Required = false, HelpText = "The target language for the project.")]

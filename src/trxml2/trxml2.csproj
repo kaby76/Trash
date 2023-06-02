@@ -1,40 +1,44 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <PackAsTool>true</PackAsTool>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <AssemblyName>trxml2</AssemblyName>
-    <PackageId>trxml2</PackageId>
-    <Description>
-      <![CDATA[Read an xml file and enumerate all paths to elements in xpath syntax.
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<PackAsTool>true</PackAsTool>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<AssemblyName>trxml2</AssemblyName>
+		<PackageId>trxml2</PackageId>
+		<Description>
+			<![CDATA[Read an xml file and enumerate all paths to elements in xpath syntax.
 This program is part of the Trash toolkit.]]>
-    </Description>
-    <ToolCommandName>trxml2</ToolCommandName>
-    <RootNamespace>trxml2</RootNamespace>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>0.20.24</Version>
-    <RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/src/trxml2</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.9.1" />
-  </ItemGroup>
-  <PropertyGroup>
-    <PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
-  </PropertyGroup>
-  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
-    <ReadLinesFromFile File="readme.md">
-      <Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
-    </ReadLinesFromFile>
-    <PropertyGroup>
-      <PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
-    </PropertyGroup>
-  </Target>
-  <ItemGroup>
-    <EmbeddedResource Include="readme.md" />
-  </ItemGroup>
+		</Description>
+		<ToolCommandName>trxml2</ToolCommandName>
+		<RootNamespace>trxml2</RootNamespace>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Version>0.20.25</Version>
+		<RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/src/trxml2</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="CommandLineParser" Version="2.9.1" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="readme.md" Pack="true" PackagePath=""/>
+	</ItemGroup>
+	<PropertyGroup>
+		<PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
+	</PropertyGroup>
+	<Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+		<ReadLinesFromFile File="readme.md">
+			<Output TaskParameter="Lines" ItemName="ReleaseNoteLines" />
+		</ReadLinesFromFile>
+		<PropertyGroup>
+			<PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+		</PropertyGroup>
+	</Target>
+	<ItemGroup>
+		<EmbeddedResource Include="readme.md" />
+	</ItemGroup>
 </Project>

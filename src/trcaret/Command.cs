@@ -111,11 +111,11 @@
                     }
                     string file_name = fn + ":";
                     string line_number = "L" + line.ToString() + ": ";
-                    if (more_than_one_fn)
+                    if (config.WithFileName || more_than_one_fn)
                         System.Console.Write(file_name);
                     System.Console.Write(line_number);
                     System.Console.WriteLine(text[line - 1].Replace('\t',' '));
-                    System.Console.WriteLine(new string(' ', (more_than_one_fn?file_name.Length:0) + line_number.Length + col) + "^");
+                    System.Console.WriteLine(new string(' ', (config.WithFileName || more_than_one_fn ? file_name.Length:0) + line_number.Length + col) + "^");
                 }
             }
         }

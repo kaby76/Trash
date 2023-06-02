@@ -5,7 +5,7 @@ namespace Trash
 {
     public class Config
     {
-        [Option('f', "file", Required = false)]
+        [Option('f', "file", Required = false, HelpText = "Read parse tree data from file instead of stdin.")]
         public string File { get; set; }
 
         [Option('v', "verbose", Required = false)]
@@ -21,7 +21,7 @@ namespace Trash
         [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
         public string output_directory { get; set; }
 
-	    [Option('s', "templates", Required = false)]
+        [Option('s', "templates", Required = false)]
         public string templates { get; set; }
 
         [Option('t', "target", Required = true, HelpText = "The template to instantiate.")]

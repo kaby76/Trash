@@ -1,96 +1,27 @@
-# trconvert
+# trcover
 
 ## Summary
 
-Convert a grammar from one for to another
+Analyse a grammar for test coverage of parser rules.
 
 ## Description
 
-Reads a grammar from stdin and converts the grammar to/from Antlr version 4
-syntax. The original grammar must be for a supported type (Antlr2, Antlr3,
-Bison, W3C EBNF, Lark). The input and output are Parse Tree Data.
+Given a trgen-generated driver program, and inputs, parse
+the input and find how the rules were covered in the grammar.
+Generate a "cover.html" file that contains the analysis for
+display in a browser.
 
 ## Usage
 
-    trconvert [-t <type>]
+    trcover (<string> | <options>)*
 
 ## Details
 
-This command converts a grammar from one type to another. Most
-conversions will handle only simple syntax differences. More complicated
-scenarios are supported depending on the source and target grammar types.
-For example, Bison is converted to Antlr4, but the reverse is not
-implemented yet.
-
-`trconvert` takes an option target type. If it is not used, the default
-is to convert the input of whatever type to Antlr4 syntax. The output
-of `trconvert` is a parse tree containing the converted grammar.
+This command is useful for analyzing the inputs used to test
+a grammar.
 
 ## Examples
 
-_Conversion of Antlr4 Abnf to Lark Abnf_
-
-    grammar Abnf;
-
-    rulelist : rule_* EOF ;
-    rule_ : ID '=' '/'? elements ;
-    elements : alternation ;
-    alternation : concatenation ( '/' concatenation )* ;
-    concatenation : repetition + ;
-    repetition : repeat_? element ;
-    repeat_ : INT | ( INT? '*' INT? ) ;
-    element : ID | group | option | STRING | NumberValue | ProseValue ;
-    group : '(' alternation ')' ;
-    option : '[' alternation ']' ;
-    NumberValue : '%' ( BinaryValue | DecimalValue | HexValue ) ;
-    fragment BinaryValue : 'b' BIT+ ( ( '.' BIT+ )+ | ( '-' BIT+ ) )? ;
-    fragment DecimalValue : 'd' DIGIT+ ( ( '.' DIGIT+ )+ | ( '-' DIGIT+ ) )? ;
-    fragment HexValue : 'x' HEX_DIGIT+ ( ( '.' HEX_DIGIT+ )+ | ( '-' HEX_DIGIT+ ) )? ;
-    ProseValue : '<' ( ~ '>' )* '>' ;
-    ID : LETTER ( LETTER | DIGIT | '-' )* ;
-    INT : '0' .. '9'+ ;
-    COMMENT : ';' ~ ( '\n' | '\r' )* '\r'? '\n' -> channel ( HIDDEN ) ;
-    WS : ( ' ' | '\t' | '\r' | '\n' ) -> channel ( HIDDEN ) ;
-    STRING : ( '%s' | '%i' )? '"' ( ~ '"' )* '"' ;
-    fragment LETTER : 'a' .. 'z' | 'A' .. 'Z' ;
-    fragment BIT : '0' .. '1' ;
-    fragment DIGIT : '0' .. '9' ;
-    fragment HEX_DIGIT : ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ;
-
-_Command_
-
-    trparse Abnf.g4 | trconvert -t lark | trprint > Abnf.lark
-
-_Output_
-
-    rulelist :  rule_ * EOF 
-    rule_ :  ID "=" "/" ? elements 
-    elements :  alternation 
-    alternation :  concatenation ( "/" concatenation ) * 
-    concatenation :  repetition + 
-    repetition :  repeat_ ? element 
-    repeat_ :  INT | ( INT ? "*" INT ? ) 
-    element :  ID | group | option | STRING | NUMBERVALUE | PROSEVALUE 
-    group :  "(" alternation ")" 
-    option :  "[" alternation "]" 
-    NUMBERVALUE :  "%" ( BINARYVALUE | DECIMALVALUE | HEXVALUE ) 
-    BINARYVALUE :  "b" BIT + ( ( "." BIT + ) + | ( "-" BIT + ) ) ? 
-    DECIMALVALUE :  "d" DIGIT + ( ( "." DIGIT + ) + | ( "-" DIGIT + ) ) ? 
-    HEXVALUE :  "x" HEX_DIGIT + ( ( "." HEX_DIGIT + ) + | ( "-" HEX_DIGIT + ) ) ? 
-    PROSEVALUE :  "<" ( /(?!>)/ ) * ">" 
-    ID :  LETTER ( LETTER | DIGIT | "-" ) * 
-    INT :  "0" .. "9" + 
-    COMMENT :  ";" /(?!\n|\r)/ * "\r" ? "\n" 
-    WS :  ( " " | "\t" | "\r" | "\n" ) 
-    STRING :  ( "%s" | "%i" ) ? "\"" ( /(?!")/ ) * "\"" 
-    LETTER :  "a" .. "z" | "A" .. "Z" 
-    BIT :  "0" .. "1" 
-    DIGIT :  "0" .. "9" 
-    HEX_DIGIT :  ( "0" .. "9" | "a" .. "f" | "A" .. "F" ) 
-
-    %ignore COMMENT
-    %ignore WS
-
 ## Current version
 
-0.20.24 Updates to XPath engine. NB: not all Trash tools supported yet.
+0.20.25 Updates to XPath engine. NB: not all Trash tools supported yet.

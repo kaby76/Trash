@@ -8,7 +8,7 @@ namespace Trash
         [Value(0)]
         public IEnumerable<string> Files { get; set; }
 
-        [Option('f', "file", Required = false)]
+        [Option('f', "file", Required = false, HelpText = "Read parse tree data from file instead of stdin.")]
         public string File { get; set; }
 
         [Option('i', "input", Required = false)]
