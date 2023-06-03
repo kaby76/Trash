@@ -59,7 +59,34 @@
             {
                 var data = new List<AntlrJson.ParsingResultSet>();
                 string txt = config.Input;
-                if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
+                if (config.ReadFileNameStdin)
+                {
+                    List<string> inputs = new List<string>();
+                    for (; ; )
+                    {
+                        var line = System.Console.In.ReadLine();
+                        line = line?.Trim();
+                        if (line == null || line == "")
+                        {
+                            break;
+                        }
+                        inputs.Add(line);
+                    }
+                    DateTime before = DateTime.Now;
+                    for (int f = 0; f < inputs.Count(); ++f)
+                    {
+                        try
+                        {
+                            txt = File.ReadAllText(inputs[f]);
+                        }
+                        catch
+                        {
+                            txt = inputs[f];
+                        }
+                        Doit(txt);
+                    }
+                }
+                else if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
                 {
                     string lines = null;
                     for (; ; )

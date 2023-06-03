@@ -10,7 +10,7 @@ namespace Trash
         [Option("fmt", Required = false, HelpText = "Output formatted parsing results set.")]
         public bool Format { get; set; }
 
-        [Option('t', "type", Required = false, Default = "ANTLRv4")]
+        [Option('t', "type", Required = false, Default = "ANTLRv4", HelpText = "Override type of result.")]
         public string Type { get; set; }
 
         [Option('v', "verbose", Required = false)]

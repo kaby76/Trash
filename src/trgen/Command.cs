@@ -618,8 +618,14 @@
         private void ModifyWithDesc(Config config)
         {
             System.Console.Error.WriteLine(Environment.CurrentDirectory);
-            XmlTextReader reader =
-                new XmlTextReader(Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"desc.xml");
+            string file_name = Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"desc.xml";
+            if (!File.Exists(file_name))
+            {
+                DoNonPomDirectedGenerate(config);
+                return;
+            }
+
+            XmlTextReader reader = new XmlTextReader(file_name);
             reader.Namespaces = false;
             XPathDocument document = new XPathDocument(reader);
             XPathNavigator navigator = document.CreateNavigator();
@@ -1332,6 +1338,39 @@
 
         public void DoNonPomDirectedGenerate(Config config)
         {
+            {
+                var all = "CSharp;Cpp;Dart;Go;Java;JavaScript;PHP;Python3;TypeScript".Split(';').ToList();
+                if (config.targets != null && config.targets.Count() > 0) all = config.targets.ToList();
+                foreach (var target in all)
+                {
+                    var test = new Test();
+                    test.os_targets = new List<string>() { GetOSTarget().ToString() };
+                    test.target = target;
+                    test.grammar_name = config.grammar_name;
+                    test.start_rule = config.start_rule;
+                    if (!config.Files.Any())
+                    {
+                        var list = new List<string>();
+                        var tool_grammar_files_pattern = ".+g4$";
+                        var list_pp = new TrashGlobbing.Glob()
+                            .RegexContents(tool_grammar_files_pattern, false)
+                            .Where(f => f is FileInfo)
+                            .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                            .ToList();
+                        foreach (var y in list_pp)
+                        {
+                            list.Add(y);
+                        }
+                        config.Files = list;
+                    }
+                    test.tool_grammar_files = config.Files.ToList();
+                    test.package = test.target == "Go" ? "parser" : test.package;
+                    test.package = test.target == "Antlr4cs" ? "Test" : test.package;
+                    if (test.parsing_type == null) test.parsing_type = config.parsing_type;
+                    if (test.parsing_type == null) test.parsing_type = "group";
+                    config.Tests.Add(test);
+                }
+            }
             foreach (var test in config.Tests)
             {
                 test.current_directory = config.root_directory;
@@ -1583,14 +1622,26 @@
                     {
                         continue;
                     }
+
+                    if (file.EndsWith(".meta")) continue;
+
                     var to = FixedTemplatedFileName(from, config, test);
                     var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
                     Directory.CreateDirectory(q);
+
                     string content = ReadAllResource(a, prefix + from.Replace('/','.'));
                     System.Console.Error.WriteLine("Rendering template file from "
                         + from
                         + " to "
                         + to);
+
+                    if (template_directory_files_to_copy.Contains(file + ".meta"))
+                    {
+                        // Copy as is.
+                        File.WriteAllText(to, content);
+                        continue;
+                    }
+
                     Template t = new Template(content);
                     var output_dir = config.output_directory + '-' + test.target + "/";
                     var yo1 = test.grammar_directory_source_files
@@ -1679,6 +1730,7 @@
                     {
                         continue;
                     }
+
                     if (file.EndsWith(".meta")) continue;
 
                     var from = file;
