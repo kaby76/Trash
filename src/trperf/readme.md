@@ -27,4 +27,4 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.20.25 Updates to XPath engine. NB: not all Trash tools supported yet.
+0.20.25 Updates to trgen. NB: not all Trash tools supported yet.
