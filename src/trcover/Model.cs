@@ -840,8 +840,35 @@ namespace trcover
             var rule_name = context.RULE_REF().GetText();
             var rule = new Rule() { grammar = _grammar, lhs = rule_name,
                 lhs_rule_number = _parser.GetRuleIndex(rule_name), rhs = cg };
+            rule = Minimize(rule);
             Rules.Add(rule);
             return cg;
+        }
+
+        private Rule Minimize(Rule rule)
+        {
+            // Eliminate epsilon transitions if possible by merging states.     
+            var rhs = rule.rhs;
+            foreach (var n in rhs.Vertices)
+            {
+                var n_out = rhs.Edges.Where(e => e.From == n);
+                var count = n_out.Count();
+                if (count == 1 && n_out.First()._symbol == null)
+                {
+                    // Empty transition, remove To state and move edges out from To state to here.
+                    var d = n_out.First();
+                    d.From = "";
+                    var to = d.To;
+                    d.To = "";
+                    // Edge "d" is now unconnected to anything.
+                    var to_out = rhs.Edges.Where(e => e.From == to);
+                    foreach (var o in to_out)
+                    {
+                        o.From = n;
+                    }
+                }
+            }
+            return rule;
         }
 
         public override Digraph<string, SymbolEdge<string>> VisitPrequelConstruct(ANTLRv4Parser.PrequelConstructContext context)
@@ -1002,7 +1029,9 @@ namespace trcover
         public void ComputeModel(string dll_path, Antlr4.Runtime.Parser pp, Antlr4.Runtime.Lexer ll, ITokenStream tt)
         {
             // Go up directory, find all *.g4, parse.
-            var path = dll_path + "\\..\\..\\..";
+            if (! dll_path.EndsWith("/")) dll_path += "/";
+            var path = dll_path + "../../..";
+            path = Path.GetFullPath(path);
             Directory.SetCurrentDirectory(path);
             path = Directory.GetCurrentDirectory();
             var grammar_files = new TrashGlobbing.Glob(path)

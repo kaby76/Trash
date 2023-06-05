@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using trcover;
 
 namespace Trash
@@ -151,8 +152,8 @@ namespace Trash
                         result = result == 0 ? r : result;
                     }
                 }
-
-                System.Console.Write("<pre><code>");
+                StringBuilder b = new StringBuilder();
+                b.AppendLine("<pre><code>");
                 for (int i = 0;; ++i)
                 {
                     var t = model._input.Get(i);
@@ -161,18 +162,19 @@ namespace Trash
                     var q = token_count.TryGetValue(t, out int v);
                     if (v > 0)
                     {
-                        System.Console.Write("<b style=\"background-color:"
+                        b.Append("<b style=\"background-color:"
                         + "rgba(255, 99, 71, " + fun(v) + ");\">");
                     }
-                    System.Console.Write(t.Text);
+                    b.Append(t.Text);
                     if (v > 0)
                     {
-                        System.Console.Write("</b>");
+                        b.Append("</b>");
                     }
                 }
-                System.Console.WriteLine("</code></pre>");
-                System.Console.WriteLine("<br><br>");
-                System.Console.WriteLine("Percent rules covered " + 100 * rule_count.Count / 1.0 / model._parser.RuleNames.Length);
+                b.AppendLine("</code></pre>");
+                b.AppendLine("<br><br>");
+                b.AppendLine("Percent rules covered " + 100 * rule_count.Count / 1.0 / model._parser.RuleNames.Length);
+                File.WriteAllText("cover.html", b.ToString());
             }
             catch (Exception e)
             {

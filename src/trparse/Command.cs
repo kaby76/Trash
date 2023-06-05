@@ -35,18 +35,21 @@ namespace Trash
                 // Hack for now.
                 // Take suffix of first file, get type of parser,
                 // then use that to determine parse.
-                var ext = Path.GetExtension(config.Files.First());
-                var parser_type = ext switch
+                if (config.Files != null && config.Files.Any())
                 {
-                    ".g4" => "ANTLRv4",
-                    ".g3" => "ANTLRv3",
-                    ".g2" => "ANTLRv2",
-                    ".gram" => "pegen_v3_10",
-                    ".rex" => "rex",
-                    ".y" => "Bison",
-                    _ => null
-                };
-                config.Type = parser_type;
+                    var ext = Path.GetExtension(config.Files.First());
+                    var parser_type = ext switch
+                    {
+                        ".g4" => "ANTLRv4",
+                        ".g3" => "ANTLRv3",
+                        ".g2" => "ANTLRv2",
+                        ".gram" => "pegen_v3_10",
+                        ".rex" => "rex",
+                        ".y" => "Bison",
+                        _ => null
+                    };
+                    config.Type = parser_type;
+                }
             }
 
             if (config.Type == null)

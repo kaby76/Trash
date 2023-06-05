@@ -3,7 +3,7 @@
     "trcover": {
       "commandName": "Project",
       "commandLineArgs": "../examples/ERASABLE_ASSIGNMENTS.agc",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\parens\\other\\agc\\Generated-CSharp"
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3509\\agc\\Generated-CSharp"
     }
   }
 }
