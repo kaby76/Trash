@@ -26,7 +26,7 @@ This program is part of the Trash toolkit.]]>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.12.0" />
     <PackageReference Include="cs-codebuff" Version="4.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Domemtech.Symtab" Version="0.0.1" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
   </ItemGroup>
