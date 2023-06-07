@@ -65,4 +65,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.20.26 Updates to trparse. NB: not all Trash tools supported yet.
+0.20.27 Updates to trparse. NB: not all Trash tools supported yet.

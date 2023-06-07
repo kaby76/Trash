@@ -237,7 +237,10 @@ namespace Trash
             
             // Compute coverage.
             System.Console.Error.WriteLine("Analyzing...");
+            DateTime before2 = DateTime.Now;
             ComputeCoverage(model, tree);
+            DateTime after2 = DateTime.Now;
+            System.Console.Error.WriteLine(prefix + "Analysis " + row_number + " " + input_name + " " + (after2 - before2).TotalSeconds);
 
             return (bool)res3 ? 1 : 0;
         }

@@ -19,4 +19,4 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Current version
 
-0.20.26 Updates to trparse. NB: not all Trash tools supported yet.
+0.20.27 Updates to trparse. NB: not all Trash tools supported yet.
