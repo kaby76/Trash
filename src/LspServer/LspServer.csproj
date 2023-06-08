@@ -9,7 +9,6 @@
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.0" />
 		<PackageReference Include="StreamJsonRpc" Version="2.15.29" />
 		<PackageReference Include="System.IO.Pipes" Version="4.3.0" />
-		<PackageReference Include="System.IO.Pipes.AccessControl" Version="5.0.0" />
 		<!--<PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol" Version="17.2.8" /> -->
 		<!--<PackageReference Include="LspTypes" Version="3.16.6" />-->
 		<PackageReference Include="LspTypes" Version="3.16.6" />
