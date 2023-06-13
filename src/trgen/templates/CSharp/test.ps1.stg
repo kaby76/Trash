@@ -1,3 +1,4 @@
+start() ::= <<
 # Generated from trgen <version>
 
 $TestDirectory = "<if(os_win)>../<example_files_win><else>../<example_files_unix><endif>"
@@ -52,7 +53,7 @@ if (-not(Test-Path -Path "tests.txt" -PathType Leaf)) {
 # Parse all input files.
 <if(individual_parsing)>
 # Individual parsing.
-Get-Content "tests.txt" | ForEach-Object { dotnet trwdog -- ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $_ *>> parse.txt }
+Get-Content "tests.txt" | ForEach-Object { dotnet trwdog -- ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $_ *\>\> parse.txt }
 <else>
 # Group parsing.
 get-content "tests.txt" | dotnet trwdog -- ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -q -x -tee -tree *> parse.txt
@@ -89,7 +90,7 @@ foreach ($item in Get-ChildItem . -Recurse) {
     $file = $item.fullname
     $ext = $item.Extension
     if ($ext -eq ".errors") {
-        git diff --exit-code $file *>> $old/updated.txt
+        git diff --exit-code $file *\>\> $old/updated.txt
 	$st = $LASTEXITCODE
         if ($st -ne 0) {
             $updated = $st
@@ -100,7 +101,7 @@ foreach ($item in Get-ChildItem . -Recurse) {
     $file = $item.fullname
     $ext = $item.Extension
     if ($ext -eq ".tree") {
-        git diff --exit-code $file *>> $old/updated.txt
+        git diff --exit-code $file *\>\> $old/updated.txt
 	$st = $LASTEXITCODE
         if ($st -ne 0) {
             $updated = $st
@@ -190,3 +191,5 @@ Remove-Item -Force -Path $old/updated.txt -errorAction ignore 2>&1 | Out-Null
 Remove-Item -Force -Path $old/new_errors2.txt -errorAction ignore 2>&1 | Out-Null
 Remove-Item -Force -Path $old/new_errors.txt -errorAction ignore 2>&1 | Out-Null
 exit 0
+
+>>

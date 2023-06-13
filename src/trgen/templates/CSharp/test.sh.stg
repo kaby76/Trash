@@ -1,3 +1,4 @@
+start() ::= <<
 # Generated from trgen <version>
 
 # People often specify a test file directory, but sometimes no
@@ -37,7 +38,7 @@ done
 rm -f parse.txt
 for f in ${files[*]}
 do
-    dotnet trwdog -- ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f >> parse.txt 2>&1
+    dotnet trwdog -- ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f \>\> parse.txt 2>&1
     xxx="$?"
     if [ "$xxx" -ne 0 ]
     then
@@ -99,7 +100,7 @@ rm -f $old/updated.txt
 updated=0
 for f in `find . -name '*.errors'`
 do
-    git diff --exit-code $f >> $old/updated.txt 2>&1
+    git diff --exit-code $f \>\> $old/updated.txt 2>&1
     xxx=$?
     if [ "$xxx" -ne 0 ]
     then
@@ -108,7 +109,7 @@ do
 done
 for f in `find . -name '*.tree'`
 do
-    git diff --exit-code $f >> $old/updated.txt 2>&1
+    git diff --exit-code $f \>\> $old/updated.txt 2>&1
     xxx=$?
     if [ "$xxx" -ne 0 ]
     then
@@ -132,8 +133,8 @@ do
     then  
         if [ -s $f ]
         then
-            echo $f >> $old/new_errors.txt
-            cat $f >> $old/new_errors.txt
+            echo $f \>\> $old/new_errors.txt
+            cat $f \>\> $old/new_errors.txt
         fi
     fi
 done
@@ -181,3 +182,5 @@ fi
 echo "Test succeeded."
 rm -f $old/updated.txt $old/new_errors2.txt $old/new_errors.txt
 exit 0
+
+>>

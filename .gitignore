@@ -69,3 +69,4 @@ src/VsCode/node_modules/
 src/VsCode/out/
 *.vsix
 src/VsCode/package-lock.json
+src/trgen/foobar.zip

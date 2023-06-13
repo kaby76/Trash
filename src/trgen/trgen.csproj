@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
@@ -24,11 +24,15 @@ This program is part of the Trash toolkit.]]>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Remove="templates\**" />
-		<EmbeddedResource Include="templates\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="foobar.zip" />
+	</ItemGroup>
+	<ItemGroup>
 		<None Include="templates\**\*.*"></None>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
+		<PackageReference Include="Domemtech.StringTemplate4" Version="4.3.0" />
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.0" />
 		<PackageReference Include="cs-codebuff" Version="4.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -57,7 +61,10 @@ This program is part of the Trash toolkit.]]>
 			<PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
 		</PropertyGroup>
 	</Target>
-	<ItemGroup>
-		<EmbeddedResource Include="readme.md" />
-	</ItemGroup>
+	<Target Name="rm" BeforeTargets="BeforeBuild">
+		<Delete Files="foobar.zip" ContinueOnError="WarnAndContinue"/>
+	</Target>
+	<Target Name="zippy" BeforeTargets="BeforeBuild">
+		<Exec Command="pwsh.exe -command Compress-Archive 'templates/**' foobar.zip" />
+	</Target>
 </Project>
