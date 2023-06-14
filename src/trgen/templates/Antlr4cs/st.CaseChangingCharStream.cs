@@ -1,5 +1,4 @@
-﻿start() ::= <<
-// Generated from trgen <version>
+﻿// Generated from trgen <version>
 
 /* Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
  * Use of this file is governed by the BSD 3-clause license that
@@ -107,5 +106,3 @@ namespace Antlr4.Runtime
         }
     }
 }
-
->>

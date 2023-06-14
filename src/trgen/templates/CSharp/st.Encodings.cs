@@ -1,4 +1,3 @@
-start() ::= <<
 // Generated from trgen <version>
 
 using Antlr4.Runtime;
@@ -129,4 +128,3 @@ public class TwoByteCharStream : BaseInputCharStream
     }
 }
 
->>

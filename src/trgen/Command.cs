@@ -1667,13 +1667,13 @@
                     // StringTemplateGroup, StringTemplate, and Plain.
                     if (base_name.StartsWith("stg-"))
                     {
-                        to = Dirname(to) + Basename(to).Substring("stg-".Length);
+                        to = Dirname(to) + "/" + Basename(to).Substring("stg-".Length);
                         TemplateGroupString tg = new TemplateGroupString(content);
                         t = tg.GetInstanceOf("start");
                     }
                     else if (base_name.StartsWith("stg."))
                     {
-                        to = Dirname(to) + Basename(to).Substring("stg.".Length);
+                        to = Dirname(to) + "/" + Basename(to).Substring("stg.".Length);
                         TemplateGroupString tg = new TemplateGroupString(content);
                         t = tg.GetInstanceOf("start");
                     }
@@ -1685,12 +1685,12 @@
                     }
                     else if (base_name.StartsWith("st-"))
                     {
-                        to = Dirname(to) + Basename(to).Substring("st-".Length);
+                        to = Dirname(to) + "/" + Basename(to).Substring("st-".Length);
                         t = new Template(content);
                     }
                     else if (base_name.StartsWith("st."))
                     {
-                        to = Dirname(to) + Basename(to).Substring("st.".Length);
+                        to = Dirname(to) + "/" + Basename(to).Substring("st.".Length);
                         t = new Template(content);
                     }
                     else if (base_name.EndsWith(".st"))

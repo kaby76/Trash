@@ -1,4 +1,3 @@
-start() ::= <<
 // Generated from trgen <version>
 
 using Antlr4.Runtime;
@@ -39,5 +38,3 @@ public class ErrorListener\<S> : IAntlrErrorListener\< S>
     }
 }
 <if(has_name_space)>}<endif>
-
->>

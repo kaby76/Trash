@@ -1,11 +1,8 @@
-start() ::= <<
 # Generated from trgen <version>
-build: FORCE
+build:
 	bash build.sh
-clean: FORCE
+clean:
 	bash clean.sh
+FORCE: ;
 test: FORCE
 	bash test.sh
-FORCE: ;
-
->>
