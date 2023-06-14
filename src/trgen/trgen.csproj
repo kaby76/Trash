@@ -65,6 +65,6 @@ This program is part of the Trash toolkit.]]>
 		<Delete Files="foobar.zip" ContinueOnError="WarnAndContinue"/>
 	</Target>
 	<Target Name="zippy" BeforeTargets="BeforeBuild">
-		<Exec Command="pwsh.exe -command Compress-Archive 'templates/**' foobar.zip" />
+		<Exec Command="pwsh -command Compress-Archive 'templates/**' foobar.zip" />
 	</Target>
 </Project>
