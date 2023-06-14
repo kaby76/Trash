@@ -30,7 +30,7 @@ This program is part of the Trash toolkit.]]>
 	<ItemGroup>
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 		<ProjectReference Include="../Globbing/TrashGlobbing.csproj" />
-		<PackageReference Include="Domemtech.StringTemplate4" Version="4.2.0" />
+		<PackageReference Include="Domemtech.StringTemplate4" Version="4.3.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="readme.md" Pack="true" PackagePath=""/>
