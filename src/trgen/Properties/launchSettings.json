@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t CSharp --force",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\barfoo"
+      "commandLineArgs": "--help",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\barfoo\\arden\\abb"
     }
   }
 }

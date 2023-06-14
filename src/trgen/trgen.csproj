@@ -27,6 +27,7 @@ This program is part of the Trash toolkit.]]>
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="foobar.zip" />
+		<EmbeddedResource Include="readme.md" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="templates\**\*.*"></None>
