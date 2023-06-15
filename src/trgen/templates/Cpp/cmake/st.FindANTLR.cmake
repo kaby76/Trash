@@ -98,6 +98,7 @@ find_package(Java QUIET COMPONENTS Runtime)
     add_custom_command(
         OUTPUT ${ANTLR_${Name}_OUTPUTS}
         COMMAND antlr4<if(os_win)>.exe<else><endif>
+                -v ${ANTLR4_TAG}
                 ${InputFile}
                 -o ${ANTLR_${Name}_OUTPUT_DIR}
                 -no-listener

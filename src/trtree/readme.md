@@ -18,4 +18,4 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 ## Current version
 
-0.20.27 Updates to trparse. NB: not all Trash tools supported yet.
+0.20.27 Major change to trgen templates and processing of STG, ST, and plain files. NB: not all Trash tools supported yet.
