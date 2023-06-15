@@ -1603,6 +1603,9 @@
         private void GenFromTemplates(Command p, Config config, Test test)
         {
             var append_namespace = (!(test.target == "CSharp" || test.target == "Antlr4cs"));
+            List<string> template_directory_files_to_copy;
+            ZipArchive za = null;
+            string prefix_to_remove = "";
             if (config.template_sources_directory == null)
             {
                 System.Reflection.Assembly a = this.GetType().Assembly;
@@ -1611,45 +1614,80 @@
                 // shell.
                 var zip = ReadBytesResource(a, "trgen.foobar.zip");
                 MemoryStream stream = new MemoryStream(zip);
-                List<string> template_directory_files_to_copy;
                 var regex_string = "^(?!.*(" + AllButTargetName(test.target) + "/)).*$";
                 var regex = new Regex(regex_string);
-                var za = new ZipArchive(stream);
+                za = new ZipArchive(stream);
                 template_directory_files_to_copy = za.Entries.Where(f =>
                 {
                     var fn = f.FullName;
-                    if (test.fully_qualified_parser_name != "ArithmeticParser" && fn == "Arithmetic.g4.stg") return false;
+                    if (test.fully_qualified_parser_name != "ArithmeticParser" && fn == "Arithmetic.g4.stg")
+                        return false;
                     if (fn == "files") return false;
                     var v = regex.IsMatch(fn);
                     return v;
                 }).Select(f => f.FullName).ToList();
+            }
+            else
+            {
+                prefix_to_remove = config.template_sources_directory + '/';
+                prefix_to_remove = prefix_to_remove.Replace("\\", "/");
+                prefix_to_remove = prefix_to_remove.Replace("//", "/");
 
-
-                var set = new HashSet<string>();
-                foreach (var file in template_directory_files_to_copy)
-                {
-                    var from = file;
-
-                    // copy the file straight up if it doesn't begin
-                    // with target directory name. Otherwise,
-                    // remove the target dir name.
-                    if (file.Contains("Arithmetic.g4")
-                        && test.grammar_name != "Arithmetic"
-                        && test.tool_src_grammar_files.Any())
+                var regex_string = "^(?!.*(files|" + AllButTargetName(test.target) + "/)).*$";
+                template_directory_files_to_copy = new TrashGlobbing.Glob(config.template_sources_directory)
+                    .RegexContents(regex_string)
+                    .Where(f =>
                     {
-                        continue;
-                    }
+                        if (f.Attributes.HasFlag(FileAttributes.Directory)) return false;
+                        if (f is DirectoryInfo) return false;
+                        return true;
+                    })
+                    .Select(f => f.FullName.Replace('\\', '/'))
+                    .Where(f =>
+                    {
+                        if (test.fully_qualified_parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
+                        if (f == "./files") return false;
+                        return true;
+                    })
+                    .Select(f =>
+                        f.Substring(prefix_to_remove.Length))
+                    .ToList();
+            }
 
-                    var base_name = Basename(from);
-                    var dir_name = Dirname(from);
+            var set = new HashSet<string>();
+            foreach (var file in template_directory_files_to_copy)
+            {
+                var from = file;
 
-                    Template t;
+                // copy the file straight up if it doesn't begin
+                // with target directory name. Otherwise,
+                // remove the target dir name.
+                if (file.Contains("Arithmetic.g4")
+                    && test.grammar_name != "Arithmetic"
+                    && test.tool_src_grammar_files.Any())
+                {
+                    continue;
+                }
 
-                    string to = FixedTemplatedFileName(from, config, test);
-                    var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
+                var base_name = Basename(from);
+                var dir_name = Dirname(from);
 
-                    Directory.CreateDirectory(q);
-                    string content = za.Entries.Where(x => x.FullName == file).Select(x =>
+                Template t;
+
+                //if (config.template_sources_directory == null)
+                //{
+                //    var e = file.Substring(prefix_to_remove.Length);
+                //    var to = FixedTemplatedFileName(e, config, test);
+                //}
+
+                string to = FixedTemplatedFileName(from, config, test);
+                var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
+
+                Directory.CreateDirectory(q);
+                string content;
+                if (config.template_sources_directory == null)
+                {
+                    content = za.Entries.Where(x => x.FullName == file).Select(x =>
                     {
                         using (var r = new StreamReader(x.Open()))
                         {
@@ -1657,211 +1695,115 @@
                             return ss;
                         }
                     }).FirstOrDefault();
+                }
+                else
+                {
+                    content = File.ReadAllText(prefix_to_remove + from);
+                }
 
-                    System.Console.Error.WriteLine("Rendering template file from "
-                                                   + from
-                                                   + " to "
-                                                   + to);
+                System.Console.Error.WriteLine("Rendering template file from "
+                                               + from
+                                               + " to "
+                                               + to);
 
-                    // There are three types of files in template area:
-                    // StringTemplateGroup, StringTemplate, and Plain.
-                    if (base_name.StartsWith("stg-"))
-                    {
-                        to = Dirname(to) + "/" + Basename(to).Substring("stg-".Length);
-                        TemplateGroupString tg = new TemplateGroupString(content);
-                        t = tg.GetInstanceOf("start");
-                    }
-                    else if (base_name.StartsWith("stg."))
-                    {
-                        to = Dirname(to) + "/" + Basename(to).Substring("stg.".Length);
-                        TemplateGroupString tg = new TemplateGroupString(content);
-                        t = tg.GetInstanceOf("start");
-                    }
-                    else if (base_name.EndsWith(".stg"))
-                    {
-                        to = to.Substring(0, to.Length - ".stg".Length);
-                        TemplateGroupString tg = new TemplateGroupString(content);
-                        t = tg.GetInstanceOf("start");
-                    }
-                    else if (base_name.StartsWith("st-"))
-                    {
-                        to = Dirname(to) + "/" + Basename(to).Substring("st-".Length);
-                        t = new Template(content);
-                    }
-                    else if (base_name.StartsWith("st."))
-                    {
-                        to = Dirname(to) + "/" + Basename(to).Substring("st.".Length);
-                        t = new Template(content);
-                    }
-                    else if (base_name.EndsWith(".st"))
-                    {
-                        to = to.Substring(0, to.Length - ".st".Length);
-                        t = new Template(content);
-                    }
-                    else
-                    {
-                        // Copy as is.
-                        File.WriteAllText(to, content);
-                        continue;
-                    }
-                    var output_dir = config.output_directory + '-' + test.target + "/";
-                    var yo1 = test.grammar_directory_source_files
-                        .Select(t =>
-                            FixedName(t, config, test)
-                                .Substring(output_dir.Length))
-                        .Where(t => t.Contains(Suffix(test.target)))
-                        .ToList();
-                    t.Add("additional_sources", yo1);
-                    t.Add("additional_targets", test.all_target_files.Where(xx =>
+                // There are three types of files in template area:
+                // StringTemplateGroup, StringTemplate, and Plain.
+                if (base_name.StartsWith("stg-"))
+                {
+                    to = Dirname(to) + "/" + Basename(to).Substring("stg-".Length);
+                    TemplateGroupString tg = new TemplateGroupString(content);
+                    t = tg.GetInstanceOf("start");
+                }
+                else if (base_name.StartsWith("stg."))
+                {
+                    to = Dirname(to) + "/" + Basename(to).Substring("stg.".Length);
+                    TemplateGroupString tg = new TemplateGroupString(content);
+                    t = tg.GetInstanceOf("start");
+                }
+                else if (base_name.EndsWith(".stg"))
+                {
+                    to = to.Substring(0, to.Length - ".stg".Length);
+                    TemplateGroupString tg = new TemplateGroupString(content);
+                    t = tg.GetInstanceOf("start");
+                }
+                else if (base_name.StartsWith("st-"))
+                {
+                    to = Dirname(to) + "/" + Basename(to).Substring("st-".Length);
+                    t = new Template(content);
+                }
+                else if (base_name.StartsWith("st."))
+                {
+                    to = Dirname(to) + "/" + Basename(to).Substring("st.".Length);
+                    t = new Template(content);
+                }
+                else if (base_name.EndsWith(".st"))
+                {
+                    to = to.Substring(0, to.Length - ".st".Length);
+                    t = new Template(content);
+                }
+                else
+                {
+                    // Copy as is.
+                    File.WriteAllText(to, content);
+                    continue;
+                }
+
+                var output_dir = config.output_directory + '-' + test.target + "/";
+                var yo1 = test.grammar_directory_source_files
+                    .Select(t =>
+                        FixedName(t, config, test)
+                            .Substring(output_dir.Length))
+                    .Where(t => t.Contains(Suffix(test.target)))
+                    .ToList();
+                t.Add("additional_sources", yo1);
+                t.Add("additional_targets", test.all_target_files.Where(xx =>
                     {
                         var ext = Path.GetExtension(xx);
                         return Suffix(test.target).Contains(ext);
                     })
-                          .Select(t => t.Substring(config.output_directory.Length))
-                            .ToList());
-                    t.Add("antlr_encoding", test.antlr_encoding);
-                    t.Add("antlr_tool_args", config.antlr_tool_args);
-                    t.Add("antlr_tool_path", config.antlr_tool_path);
-                    t.Add("cap_start_symbol", Cap(test.start_rule));
-                    t.Add("case_insensitive_type", test.case_insensitive_type);
-                    t.Add("cli_bash", test.os_targets.Contains(OSTarget.Unix.ToString()));
-                    t.Add("cli_cmd", GetOSTarget() == OSTarget.Windows);
-                    t.Add("cmake_target", GetOSTarget() == OSTarget.Windows
-                        ? "-G \"Visual Studio 17 2022\" -A x64" : "");
-                    t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
-                    t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
-                    t.Add("exec_name", GetOSTarget() == OSTarget.Windows ?
-                        "Test.exe" : "Test");
-                    t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
-                    t.Add("go_parser_name", test.fully_qualified_go_parser_name);
-                    t.Add("grammar_file", test.tool_grammar_files.First());
-                    t.Add("grammar_name", test.grammar_name);
-                    t.Add("has_name_space", test.package != null && test.package != "");
-                    t.Add("is_combined_grammar", test.tool_grammar_files.Count() == 1);
-                    t.Add("lexer_grammar_file", test.lexer_grammar_file_name);
-                    t.Add("lexer_name", test.fully_qualified_lexer_name);
-                    t.Add("name_space", test.package.Replace("/", "."));
-                    t.Add("package_name", test.package.Replace(".", "/"));
-                    t.Add("group_parsing", test.parsing_type == "group");
-                    t.Add("individual_parsing", test.parsing_type == "individual");
-                    t.Add("os_type", config.os_targets.First().ToString());
-                    t.Add("os_win", GetOSTarget() == OSTarget.Windows);
-                    t.Add("parser_name", test.fully_qualified_parser_name);
-                    t.Add("parser_grammar_file", test.parser_grammar_file_name);
-                    t.Add("path_sep_colon", config.path_sep == PathSepType.Colon);
-                    t.Add("path_sep_semi", config.path_sep == PathSepType.Semi);
-                    t.Add("start_symbol", test.start_rule);
-                    t.Add("temp_dir", GetOSTarget() == OSTarget.Windows
-                        ? "c:/temp" : "/tmp");
-                    t.Add("tool_grammar_files", test.tool_grammar_files);
-                    t.Add("tool_grammar_tuples", test.tool_grammar_tuples);
-                    t.Add("version", Command.version);
-                    var o = t.Render();
-                    File.WriteAllText(to, o);
-                }
+                    .Select(t => t.Substring(config.output_directory.Length))
+                    .ToList());
+                t.Add("antlr_encoding", test.antlr_encoding);
+                t.Add("antlr_tool_args", config.antlr_tool_args);
+                t.Add("antlr_tool_path", config.antlr_tool_path);
+                t.Add("cap_start_symbol", Cap(test.start_rule));
+                t.Add("case_insensitive_type", test.case_insensitive_type);
+                t.Add("cli_bash", test.os_targets.Contains(OSTarget.Unix.ToString()));
+                t.Add("cli_cmd", GetOSTarget() == OSTarget.Windows);
+                t.Add("cmake_target", GetOSTarget() == OSTarget.Windows
+                    ? "-G \"Visual Studio 17 2022\" -A x64"
+                    : "");
+                t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
+                t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
+                t.Add("exec_name", GetOSTarget() == OSTarget.Windows ? "Test.exe" : "Test");
+                t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
+                t.Add("go_parser_name", test.fully_qualified_go_parser_name);
+                t.Add("grammar_file", test.tool_grammar_files.First());
+                t.Add("grammar_name", test.grammar_name);
+                t.Add("has_name_space", test.package != null && test.package != "");
+                t.Add("is_combined_grammar", test.tool_grammar_files.Count() == 1);
+                t.Add("lexer_grammar_file", test.lexer_grammar_file_name);
+                t.Add("lexer_name", test.fully_qualified_lexer_name);
+                t.Add("name_space", test.package.Replace("/", "."));
+                t.Add("package_name", test.package.Replace(".", "/"));
+                t.Add("group_parsing", test.parsing_type == "group");
+                t.Add("individual_parsing", test.parsing_type == "individual");
+                t.Add("os_type", config.os_targets.First().ToString());
+                t.Add("os_win", GetOSTarget() == OSTarget.Windows);
+                t.Add("parser_name", test.fully_qualified_parser_name);
+                t.Add("parser_grammar_file", test.parser_grammar_file_name);
+                t.Add("path_sep_colon", config.path_sep == PathSepType.Colon);
+                t.Add("path_sep_semi", config.path_sep == PathSepType.Semi);
+                t.Add("start_symbol", test.start_rule);
+                t.Add("temp_dir", GetOSTarget() == OSTarget.Windows
+                    ? "c:/temp"
+                    : "/tmp");
+                t.Add("tool_grammar_files", test.tool_grammar_files);
+                t.Add("tool_grammar_tuples", test.tool_grammar_tuples);
+                t.Add("version", Command.version);
+                var o = t.Render();
+                File.WriteAllText(to, o);
             }
-            //else
-            //{
-            //    var regex_string = "^(?!.*(files|" + AllButTargetName(test.target) + "/)).*$";
-            //    var template_directory_files_to_copy = new TrashGlobbing.Glob(config.template_sources_directory)
-            //        .RegexContents(regex_string)
-            //        .Where(f =>
-            //        {
-            //            if (f.Attributes.HasFlag(FileAttributes.Directory)) return false;
-            //            if (f is DirectoryInfo) return false;
-            //            return true;
-            //        })
-            //        .Select(f => f.FullName.Replace('\\', '/'))
-            //        .Where(f =>
-            //        {
-            //            if (test.fully_qualified_parser_name != "ArithmeticParser" && f == "./Arithmetic.g4") return false;
-            //            if (f == "./files") return false;
-            //            return true;
-            //        }).ToList();
-            //    var prefix_to_remove = config.template_sources_directory + '/';
-            //    prefix_to_remove = prefix_to_remove.Replace("\\", "/");
-            //    prefix_to_remove = prefix_to_remove.Replace("//", "/");
-            //    System.Console.Error.WriteLine("Prefix to remove " + prefix_to_remove);
-            //    var set = new HashSet<string>();
-            //    foreach (var file in template_directory_files_to_copy)
-            //    {
-            //        if (file.EndsWith("Arithmetic.g4")
-            //            && test.grammar_name != "Arithmetic"
-            //            && test.tool_src_grammar_files.Any())
-            //        {
-            //            continue;
-            //        }
-
-            //        if (file.EndsWith(".meta")) continue;
-
-            //        var from = file;
-            //        var e = file.Substring(prefix_to_remove.Length);
-            //        var to = FixedTemplatedFileName(e, config, test);
-            //        var q = Path.GetDirectoryName(to).ToString().Replace('\\', '/');
-            //        Directory.CreateDirectory(q);
-
-            //        if (template_directory_files_to_copy.Contains(file + ".meta"))
-            //        {
-            //            // Copy as is for now.
-            //            this.CopyFile(from, to);
-            //            continue;
-            //        }
-
-            //        string content = File.ReadAllText(from);
-            //        System.Console.Error.WriteLine("Rendering template file from "
-            //            + from
-            //            + " to "
-            //            + to);
-            //        Template t = new Template(content);
-            //        var output_dir = config.output_directory + '-' + test.target + "/";
-            //        var yo1 = test.grammar_directory_source_files
-            //            .Select(t =>
-            //                FixedName(t, config, test)
-            //                    .Substring(output_dir.Length))
-            //            .Where(t => t.Contains(Suffix(test.target)))
-            //            .ToList();
-            //        t.Add("additional_sources", yo1);
-            //        t.Add("antlr_encoding", test.antlr_encoding);
-            //        t.Add("antlr_tool_args", config.antlr_tool_args);
-            //        t.Add("antlr_tool_path", config.antlr_tool_path);
-            //        t.Add("cap_start_symbol", Cap(test.start_rule));
-            //        t.Add("case_insensitive_type", test.case_insensitive_type);
-            //        t.Add("cli_bash", test.os_targets.Contains(OSTarget.Unix.ToString()));
-            //        t.Add("cli_cmd", GetOSTarget() == OSTarget.Windows);
-            //        t.Add("cmake_target", GetOSTarget() == OSTarget.Windows
-            //            ? "-G \"Visual Studio 17 2022\" -A x64" : "");
-            //        t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
-            //        t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
-            //        t.Add("exec_name", GetOSTarget() == OSTarget.Windows ?
-            //          "Test.exe" : "Test");
-            //        t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
-            //        t.Add("go_parser_name", test.fully_qualified_go_parser_name);
-            //        t.Add("grammar_file", test.tool_grammar_files.First());
-            //        t.Add("grammar_name", test.grammar_name);
-            //        t.Add("group_parsing", test.parsing_type == "group");
-            //        t.Add("individual_parsing", test.parsing_type == "individual");
-            //        t.Add("has_name_space", test.package != null && test.package != "");
-            //        t.Add("is_combined_grammar", test.tool_grammar_files.Count() == 1);
-            //        t.Add("lexer_grammar_file", test.lexer_grammar_file_name);
-		          //  t.Add("lexer_name", test.fully_qualified_lexer_name);
-            //        t.Add("name_space", test.package.Replace("/", "."));
-            //        t.Add("package_name", test.package.Replace(".", "/"));
-            //        t.Add("os_type", config.os_targets.First().ToString());
-            //        t.Add("os_win", GetOSTarget() == OSTarget.Windows);
-            //        t.Add("parser_name", test.fully_qualified_parser_name);
-            //        t.Add("parser_grammar_file", test.parser_grammar_file_name);
-            //        t.Add("path_sep_colon", config.path_sep == PathSepType.Colon);
-            //        t.Add("path_sep_semi", config.path_sep == PathSepType.Semi);
-            //        t.Add("start_symbol", test.start_rule);
-            //        t.Add("temp_dir", GetOSTarget() == OSTarget.Windows
-            //            ? "c:/temp" : "/tmp");
-            //        t.Add("tool_grammar_files", test.tool_grammar_files);
-            //        t.Add("tool_grammar_tuples", test.tool_grammar_tuples);
-            //        t.Add("version", Command.version);
-            //        var o = t.Render();
-            //        File.WriteAllText(to, o);
-            //    }
-            //}
         }
 
         static string RemoveTrailingSlash(string str)

@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "--help",
+      "commandLineArgs": "-t CSharp --template-sources-directory ../_scripts/templates",
       "workingDirectory": "c:\\msys64\\home\\Kenne\\barfoo\\arden\\abb"
     }
   }
