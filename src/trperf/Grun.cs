@@ -168,6 +168,7 @@
                    + "\t" + "Fallback"
                    + "\t" + "Ambiguities"
                    + "\t" + "Errors"
+                   + "\t" + "Transitions"
                    );
                 var di = parser.ParseInfo.getDecisionInfo();
                 for (int i = 0; i < di.Length; i++)
@@ -188,6 +189,7 @@
                         + "\t" + maxLook
                         + "\t" + r.LL_Fallback
                         + "\t" + r.ambiguities.Count
+                        + "\t" + r.errors.Count
                         + "\t" + (r.SLL_ATNTransitions + r.LL_ATNTransitions)
                         );
                 }

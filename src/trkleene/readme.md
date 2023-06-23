@@ -38,4 +38,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.20.27 Major change to trgen templates and processing of STG, ST, and plain files. NB: not all Trash tools supported yet.
+0.20.28 Update run.sh in templates. NB: not all Trash tools supported yet.

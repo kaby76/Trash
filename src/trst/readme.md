@@ -18,4 +18,4 @@ Output tree using the Antlr runtime ToStringTree().
 
 ## Current version
 
-0.20.27 Major change to trgen templates and processing of STG, ST, and plain files. NB: not all Trash tools supported yet.
+0.20.28 Update run.sh in templates. NB: not all Trash tools supported yet.
