@@ -16,6 +16,8 @@ This program is part of the Trash toolkit.]]>
 		<RootNamespace>trformat</RootNamespace>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>true</DebugSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Version>0.21.1</Version>
 		<RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/src/trformat</RepositoryUrl>
