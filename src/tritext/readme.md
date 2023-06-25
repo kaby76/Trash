@@ -18,4 +18,4 @@ Get strings from a PDF file using IText.
 
 ## Current version
 
-0.21.0 Fixes to trgen for Cpp target. Update run.sh in templates.
+0.21.1 Fixes to trgen for Cpp target. Update run.sh in templates.
