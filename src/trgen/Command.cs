@@ -492,7 +492,7 @@
             }
         }
 
-        public static string version = "0.20.28";
+        public static string version = "0.21.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1748,7 +1748,17 @@
                     continue;
                 }
 
-                var output_dir = config.output_directory + '-' + test.target + "/";
+                string output_dir = to;
+                for (;;)
+                {
+                    var d = Dirname(output_dir);
+                    if (d != null && d != "" && d != ".")
+                    {
+                        output_dir = d;
+                    }
+                    else break;
+                }
+                output_dir = output_dir + "/";
                 var yo1 = test.grammar_directory_source_files
                     .Select(t =>
                         FixedName(t, config, test)

@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t CSharp --template-sources-directory ../_scripts/templates",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\barfoo\\arden\\abb"
+      "commandLineArgs": "-t Cpp",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3539\\python\\python3"
     }
   }
 }

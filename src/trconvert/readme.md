@@ -93,4 +93,4 @@ _Output_
 
 ## Current version
 
-0.20.28 Update run.sh in templates. NB: not all Trash tools supported yet.
+0.21.0 Fixes to trgen for Cpp target. Update run.sh in templates.
