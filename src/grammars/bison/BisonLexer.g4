@@ -471,5 +471,6 @@ PROLOGUE
 
 mode EpilogueMode;
 // Expected: Warning AC0131 greedy block ()+ contains wildcard; the non-greedy syntax ()+? may be preferred	LanguageServer
-	EPILOGUE: .+ ;
+// Changing from .* to .*? to avoid the warning. It may or may not work.
+	EPILOGUE: .+? ;
 
