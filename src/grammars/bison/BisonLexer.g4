@@ -4,9 +4,7 @@
 
 lexer grammar BisonLexer;
 
-options {
-	superClass = BisonLexerAdaptor ;
-}
+options { superClass = BisonLexerBase; }
 
 channels {
 	OFF_CHANNEL		// non-default channel for whitespace and comments
@@ -186,24 +184,8 @@ fragment Eqopt
 	: (Sp [=])?
 	;
 
-PercentPercent:   '%%'
-		{
-			++percent_percent_count;
-			if (percent_percent_count == 1)
-			{
-				//this.PushMode(BisonLexer.RuleMode);
-				return;
-			} else if (percent_percent_count == 2)
-			{
-				this.PushMode(BisonLexer.EpilogueMode);
-				return;
-			} else
-			{
-				this.Type = BisonLexer.PERCENT_PERCENT;
-				return;
-			}
-		}
-		;
+PercentPercent:   '%%' { this.NextMode(); }
+	;
 
   /*----------------------------.
   | Scanning Bison directives.  |

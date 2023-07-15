@@ -1,4 +1,4 @@
-<!-- Generated from trgen 0.20.14 -->
+<!-- Generated from trgen 0.21.0 -->
 <Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -7,18 +7,11 @@
   </PropertyGroup>
   <ItemGroup>
    <Antlr4 Include="BisonLexer.g4">
-<Package></Package>
-<!-- AntlrRuntime>C:/Users/Kenne/.m2/antlr4-4.12.0-complete.jar</AntlrRuntime -->
-</Antlr4>
+<Package></Package></Antlr4>
    <Antlr4 Include="BisonParser.g4">
-<Package></Package>
-<!-- AntlrRuntime>C:/Users/Kenne/.m2/antlr4-4.12.0-complete.jar</AntlrRuntime -->
-</Antlr4>
+<Package></Package></Antlr4>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version ="4.13.0" />
-    <PackageReference Include="Antlr4BuildTasks" Version="12.2" PrivateAssets="all" />
-  </ItemGroup>
+  <Import Project="Other.csproj"></Import>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>

@@ -1,4 +1,4 @@
-# Generated from trgen 0.20.14
+# Generated from trgen 0.21.0
 
 $TestDirectory = "../examples"
 Write-Host "Test cases here: $TestDirectory"
@@ -32,7 +32,7 @@ foreach ($item in Get-ChildItem $TestDirectory -Recurse) {
     } elseif ($ext -eq ".tree") {
         continue
     } else {
-        $(& triconv -f utf-8 $file ; $last = $LASTEXITCODE ) | Out-Null
+        $(& dotnet triconv -- -f utf-8 $file ; $last = $LASTEXITCODE ) | Out-Null
         if ($last -ne 0)
         {
             continue
@@ -51,7 +51,7 @@ if (-not(Test-Path -Path "tests.txt" -PathType Leaf)) {
 
 # Parse all input files.
 # Group parsing.
-get-content "tests.txt" | trwdog dotnet run -q -x -tee -tree *> parse.txt
+get-content "tests.txt" | dotnet trwdog -- ./bin/Debug/net7.0/Test.exe -q -x -tee -tree *> parse.txt
 $status = $LASTEXITCODE
 
 # trwdog returns 255 if it cannot spawn the process. This could happen

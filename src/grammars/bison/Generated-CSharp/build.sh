@@ -1,6 +1,6 @@
-# Generated from trgen 0.20.14
+# Generated from trgen 0.21.0
 set -e
 if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
-dotnet restore
-dotnet build
+dotnet restore bison.csproj
+dotnet build bison.csproj
 exit 0

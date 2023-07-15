@@ -1,4 +1,4 @@
-# Generated from trgen 0.20.14
+# Generated from trgen 0.21.0
 
 # People often specify a test file directory, but sometimes no
 # tests are provided. Git won't check in an empty directory.
@@ -24,7 +24,7 @@ files2=`find ../examples -type f | grep -v '.errors$' | grep -v '.tree$'`
 files=()
 for f in $files2
 do
-    triconv -f utf-8 $f > /dev/null 2>&1
+    dotnet triconv -- -f utf-8 $f > /dev/null 2>&1
     if [ "$?" = "0" ]
     then
         files+=( $f )
@@ -33,7 +33,7 @@ done
 
 # Parse all input files.
 # Group parsing.
-echo "${files[*]}" | trwdog ./bin/Debug/net7.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
+echo "${files[*]}" | dotnet trwdog -- ./bin/Debug/net7.0/bison.exe -q -x -tee -tree > parse.txt 2>&1
 status=$?
 
 # trwdog returns 255 if it cannot spawn the process. This could happen
