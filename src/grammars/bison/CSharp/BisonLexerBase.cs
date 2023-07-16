@@ -16,20 +16,16 @@ public abstract class BisonLexerBase : Lexer
 
     public void NextMode()
     {
-	    ++percent_percent_count;
-	    if (percent_percent_count == 1)
-	    {
-				//this.PushMode(BisonLexer.RuleMode);
-		    return;
-	    } else if (percent_percent_count == 2)
-	    {
-		    this.PushMode(BisonLexer.EpilogueMode);
-		    return;
-	    } else
-	    {
-		    this.Type = BisonLexer.PERCENT_PERCENT;
-		    return;
-	    }
+        ++percent_percent_count;
+        if (percent_percent_count == 1) {
+            //this.PushMode(BisonLexer.RuleMode);
+            return;
+        } else if (percent_percent_count == 2) {
+            this.PushMode(BisonLexer.EpilogueMode);
+            return;
+        } else {
+            this.Type = BisonLexer.PERCENT_PERCENT;
+            return;
+        }
     }
 }
-
