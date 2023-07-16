@@ -39,8 +39,7 @@ input
 `------------------------------------*/
 
 prologue_declarations
-    :
-    | prologue_declarations prologue_declaration
+    : prologue_declaration*
     ;
 
 prologue_declaration
@@ -260,20 +259,19 @@ rules
     ;
 
 rhses_1
-    : rhs ( PIPE rhs )* SEMICOLON
+    : rhs ('|' rhs)* SEMICOLON
     ;
 
 rhs
-    :
-    | rhs symbol named_ref_opt
-    | rhs tag_opt actionBlock named_ref_opt
-    | rhs BRACED_PREDICATE
-    | rhs EMPTY_RULE
-    | rhs PERCENT_PREC symbol
-    | rhs DPREC INT
-    | rhs MERGE TAG
-    | rhs EXPECT INT
-    | rhs EXPECT_RR INT
+    : ( symbol named_ref_opt
+        | tag_opt actionBlock named_ref_opt
+        | BRACED_PREDICATE
+        | EMPTY_RULE
+        | PERCENT_PREC symbol
+        | DPREC INT
+        | MERGE TAG
+        | EXPECT INT
+        | EXPECT_RR INT)*
     ;
 
 named_ref_opt
