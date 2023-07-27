@@ -458,11 +458,11 @@ UnicodeEscape
     :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
     ;
 
-WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
+WS  :  (' '|'\r'|'\t'|'\u000C'|'\n')
     ;
 
 COMMENT
-    :   '/*' ( . ) * ? '*/'
+    :   '/*' (  . )*? '*/'
     ;
 
 LINE_COMMENT

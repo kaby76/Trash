@@ -19,7 +19,7 @@ public class Program
     public static ITokenStream TokenStream { get; set; }
     public static ICharStream CharStream { get; set; }
     public static IParseTree Tree { get; set; }
-    public static string StartSymbol { get; set; } = "input";
+    public static string StartSymbol { get; set; } = "input_";
     public static string Input { get; set; }
     public static void SetupParse2(string input, bool quiet = false)
     {
@@ -43,7 +43,7 @@ public class Program
 
     public static IParseTree Parse2()
     {
-        var tree = Parser.input();
+        var tree = Parser.input_();
         Input = Lexer.InputStream.ToString();
         TokenStream = Parser.TokenStream;
         Tree = tree;
@@ -71,7 +71,7 @@ public class Program
         parser.RemoveErrorListeners();
         lexer.AddErrorListener(listener_lexer);
         parser.AddErrorListener(listener_parser);
-        var tree = parser.input();
+        var tree = parser.input_();
         Input = lexer.InputStream.ToString();
         TokenStream = parser.TokenStream;
         Tree = tree;
@@ -256,7 +256,7 @@ public class Program
 //            ParserATNSimulator.trace_atn_sim = true;
         }
         DateTime before = DateTime.Now;
-        var tree = parser.input();
+        var tree = parser.input_();
         DateTime after = DateTime.Now;
         var result = "";
         if (listener_lexer.had_error || listener_parser.had_error)

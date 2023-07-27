@@ -215,9 +215,6 @@ This lexer rule for comments handles multiline, nested comments
 */
 COMMENT_CONTENTS
         :       '(:'
-                {
-                        $channel=98;
-                }
                 (       ~('('|':')
                         | '('
                         | ':'
@@ -228,7 +225,7 @@ COMMENT_CONTENTS
 
 
 WS		
-	: (' '|'\r'|'\t'|'\u000C'|'\n')+ {$channel = HIDDEN;}
+	: (' '|'\r'|'\t'|'\u000C'|'\n')+
 	;
 
 

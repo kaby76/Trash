@@ -956,7 +956,7 @@ NUMBER	:	DIGIT+;
 
 //WORD : UPPER+;
 		
-WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
+WS  :  (' '|'\r'|'\t'|'\u000C'|'\n')
     ;
 
 
@@ -964,7 +964,7 @@ fragment
 Exponent : ('e'|'E') ('+'|'-')? NUMBER ;
 
 LINE_COMMENT
-	: '--' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+	: '--' ~('\n'|'\r')* '\r'? '\n'
 	;
 
 

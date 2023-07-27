@@ -6,19 +6,6 @@ options {
 
 }
 
-@lexer::members {
-  override
-      public void EmitErrorMessage(String s) {
-        throw new Exception(s);
-      }
-}
-
-@rulecatch{
-	catch(RecognitionException e){
-		throw e;
-	}
-}
-
 /*------------------------------------------------------------------
  * PARSER RULES
  *------------------------------------------------------------------*/
@@ -116,8 +103,8 @@ NUMERICALVALUE	: DIGIT DIGITS*;
  * Diese Zeichen allein sind noch keine Token
  *------------------------------------------------------------------*/
 
-WS 				: (' ' | '\t' | '\n' | '\r' | '\f')+  			{$channel=HIDDEN;};
-LINE_COMMENT	: ('*' | '$') ~('\n'|'\r')* '\r'? '\n' 			{$channel=HIDDEN;};
+WS 				: (' ' | '\t' | '\n' | '\r' | '\f')+;
+LINE_COMMENT	: ('*' | '$') ~('\n'|'\r')* '\r'? '\n';
 fragment ZEICHEN: (LETTER | DIGIT) ;			//Ein Zeichen ist noch kein Token, besteht aber aus ein einem Buchstaben oder einer Zahl
 fragment LETTER	: ('a'..'z' | 'A'..'Z' | '_' | '/' | '#' | '@' | '(' | ')');//Ein Buchstabe ist noch kein Token
 fragment DIGIT	: '0'..'9' | '-' | '+' | '.' | ',' ;	//Eine Ziffer ist noch kein Token

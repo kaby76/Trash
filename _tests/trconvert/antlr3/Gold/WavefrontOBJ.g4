@@ -15,21 +15,17 @@ comment	:	COMMENT
 face	:	FACE (INTEGER)+ 
 	;
 	
-vertex	:	GEOMETRIC_VERTEX x=DECIMAL y=DECIMAL z=DECIMAL
+vertex	:	GEOMETRIC_VERTEXDECIMALDECIMALDECIMAL
 	;
 	
-mtllib	:	MATERIAL_LIBRARY a=NAME '.mtl'
-		{
-			System.out.println($a.text);
-			System.out.println($NAME.text);
-		}
+mtllib	:	MATERIAL_LIBRARYNAME '.mtl'
 	;
 	
-object	:	OBJECT_NAME a=NAME
+object	:	OBJECT_NAMENAME
 	;
 	
 use_material
-	:	MATERIAL_NAME a=NAME
+	:	MATERIAL_NAMENAME
 	;
 
 group	:	SMOOTHING_GROUP ('on' | 'off' )
@@ -169,11 +165,11 @@ INTEGER	:	'-'? (DIGIT)+;
 
 DECIMAL: INTEGER ('.' DIGIT*)?;
 
-COMMENT	: '#' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+COMMENT	: '#' ~('\n'|'\r')* '\r'? '\n'
 	;
 	
 NAME	:	( 'A'..'Z' | 'a'..'z' | '0'..'9' | '-' | '_' | '~'| '(' | ')' )+
 	;
 	
-WS: (' ' | '\t')+ {$channel = HIDDEN;}
+WS: (' ' | '\t')+
 ;

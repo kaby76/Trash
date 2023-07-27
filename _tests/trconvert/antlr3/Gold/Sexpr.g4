@@ -35,8 +35,14 @@ RPAREN,
 DOT
 }
 
-@package {com.arcanearcade.antlr}
-@lexer::package {com.arcanearcade.antlr}
+// Token string literals converted to explicit lexer rules.
+// Reorder these rules accordingly.
+
+LPAREN: '(';
+RPAREN: ')';
+//
+
+
 
 
 sexpr
@@ -58,14 +64,13 @@ STRING
 	:'"' ( '\\' . | ~('\\'|'"') )* '"'
 	;
 WHITESPACE
-	: (' ' | '\n' | '\t' | '\r')+ 
-		{skip();}
+	: (' ' | '\n' | '\t' | '\r')+
 	;
 NUMBER
 	: ('+' | '-')? (DIGIT)+ ('.' (DIGIT)+)?
 	;
 SYMBOL
-	: SYMBOL_START (SYMBOL_START | DIGIT)*  {if ($text == '.')  $type = DOT;}
+	: SYMBOL_START (SYMBOL_START | DIGIT)*
 	;
 
 fragment
@@ -78,7 +83,3 @@ fragment
 DIGIT
 	: ('0'..'9')
 	;
-
-LPAREN : '(' ;
-
-RPAREN : ')' ;

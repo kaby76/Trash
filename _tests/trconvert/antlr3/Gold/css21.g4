@@ -486,11 +486,7 @@ fragment    Z   :   ('z'|'Z') ('\r'|'\n'|'\t'|'\f'|' ')*
 //              COMMENTS are hidden from the parser which simplifies the parser 
 //              grammar a lot.
 //
-COMMENT         : '/*' ( .*) * ? '*/'
-    
-                    {
-                        $channel = 2;   // Comments on channel 2 in case we want to find them
-                    }
+COMMENT         : '/*' (  .*) '*/'
                 ;
 
 // ---------------------
@@ -500,10 +496,6 @@ COMMENT         : '/*' ( .*) * ? '*/'
 //                      it from the ANLTR parser.
 //
 CDO             : '<!--'
-
-                    {
-                        $channel = 3;   // CDO on channel 3 in case we want it later
-                    }
                 ;
     
 // ---------------------            
@@ -513,10 +505,6 @@ CDO             : '<!--'
 //                      it from the ANLTR parser.
 //
 CDC             : '-->'
-
-                    {
-                        $channel = 4;   // CDC on channel 4 in case we want it later
-                    }
                 ;
                 
 INCLUDES        : '~='      ;
@@ -546,13 +534,13 @@ fragment    INVALID :;
 STRING          : '\'' ( ~('\n'|'\r'|'\f'|'\'') )* 
                     (
                           '\''
-                        | { $type = INVALID; }
+                        |
                     )
                     
                 | '"' ( ~('\n'|'\r'|'\f'|'"') )*
                     (
                           '"'
-                        | { $type = INVALID; }
+                        |
                     )
                 ;
 
@@ -600,8 +588,8 @@ NUMBER
         (
                 E
                 (
-                      M     { $type = EMS;          }
-                    | X     { $type = EXS;          }
+                      M
+                    | X
                 )
             |
                 P
@@ -609,33 +597,32 @@ NUMBER
                       X     
                     | T
                     | C
-                )
-                            { $type = LENGTH;       }   
+                )   
             |
-                C M         { $type = LENGTH;       }
+                C M
             | 
                 M
                 (
-                      M     { $type = LENGTH;       }
+                      M
             
-                    | S     { $type = TIME;         }
+                    | S
                 )
             |
-                I N         { $type = LENGTH;       }
+                I N
             
             |
-                D E G       { $type = ANGLE;        }
+                D E G
             |
-                R A D       { $type = ANGLE;        }
+                R A D
             
-            |S        { $type = TIME;         }
+            |S
                 
             |
-                K? H    Z   { $type = FREQ;         }
+                K? H    Z
             
-            | IDENT         { $type = DIMENSION;    }
+            | IDENT
             
-            | '%'           { $type = PERCENTAGE;   }
+            | '%'
             
             | // Just a number
         )
@@ -655,8 +642,8 @@ URI :   U R L
 //              that process the whitespace within the parser, ANTLR does not
 //              need to deal with the whitespace directly in the parser.
 //
-WS      : (' '|'\t')+           { $channel = HIDDEN;    }   ;
-NL      : ('\r' '\n'? | '\n')   { $channel = HIDDEN;    }   ;
+WS      : (' '|'\t')+   ;
+NL      : ('\r' '\n'? | '\n')   ;
 
 
 // -------------

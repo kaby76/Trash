@@ -31,32 +31,13 @@ Terence Parr
 July 2006
 */
 grammar C;
-
-scope Symbols {
-	Set types; // only track types in order to get parser working
+options {
+    k=2;
 }
 
-@header {
-import java.util.Set;
-import java.util.HashSet;
-}
+scope Symbols
 
-@members {
-	boolean isTypeName(String name) {
-		for (int i = Symbols_stack.size()-1; i>=0; i--) {
-			Symbols_scope scope = (Symbols_scope)Symbols_stack.get(i);
-			if ( scope.types.contains(name) ) {
-				return true;
-			}
-		}
-		return false;
-	}
-}
-
-translation_unit // entire file is a scope
-@init {
-  $Symbols::types = new HashSet();
-}
+translation_unit
 	: external_declaration+
 	;
 
@@ -75,14 +56,12 @@ translation_unit // entire file is a scope
  *  I'll have to optimize that in the future.
  */
 external_declaration
+options {k=1;}
 	: function_definition
 	| declaration
 	;
 
-function_definition // put parameters and locals into same scope for now
-@init {
-  $Symbols::types = new HashSet();
-}
+function_definition
 	:	declaration_specifiers? declarator
 		(	declaration+ compound_statement	// K&R style
 		|	compound_statement				// ANSI style
@@ -90,10 +69,7 @@ function_definition // put parameters and locals into same scope for now
 	;
 
 declaration
-@init {
-  $declaration::isTypedef = false;
-}
-	: 'typedef' declaration_specifiers? {$declaration::isTypedef=true;}
+	: 'typedef' declaration_specifiers?
 	  init_declarator_list ';' // special case, looking for typedef	
 	| declaration_specifiers init_declarator_list? ';'
 	;
@@ -136,14 +112,12 @@ type_specifier
 	;
 
 type_id
-    :   {isTypeName(input.LT(1).getText())}? IDENTIFIER
+    : IDENTIFIER
 //    	{System.out.println($IDENTIFIER.text+" is a type");}
     ;
 
-struct_or_union_specifier // structs are scopes
-@init {
-  $Symbols::types = new HashSet();
-}
+struct_or_union_specifier
+options {k=3;}
 	: struct_or_union IDENTIFIER? '{' struct_declaration_list '}'
 	| struct_or_union IDENTIFIER
 	;
@@ -175,6 +149,7 @@ struct_declarator
 	;
 
 enum_specifier
+options {k=3;}
 	: 'enum' '{' enumerator_list '}'
 	| 'enum' IDENTIFIER '{' enumerator_list '}'
 	| 'enum' IDENTIFIER
@@ -200,12 +175,6 @@ declarator
 
 direct_declarator
 	:   (	IDENTIFIER
-			{
-			if ($declaration.size()>0&&$declaration::isTypedef) {
-				$Symbols::types.add($IDENTIFIER.text);
-				System.out.println("define type "+$IDENTIFIER.text);
-			}
-			}
 		|	'(' declarator ')'
 		)
         declarator_suffix*
@@ -419,10 +388,7 @@ labeled_statement
 	| 'default' ':' statement
 	;
 
-compound_statement // blocks have a scope of symbols
-@init {
-  $Symbols::types = new HashSet();
-}
+compound_statement
 	: '{' declaration* statement_list? '}'
 	;
 
@@ -520,18 +486,18 @@ UnicodeEscape
     :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
     ;
 
-WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
+WS  :  (' '|'\r'|'\t'|'\u000C'|'\n')
     ;
 
 COMMENT
-    :   '/*' ( . ) * ? '*/' {$channel=HIDDEN;}
+    :   '/*' (  . )*? '*/'
     ;
 
 LINE_COMMENT
-    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+    : '//' ~('\n'|'\r')* '\r'? '\n'
     ;
 
 // ignore #line info for now
 LINE_COMMAND 
-    : '#' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+    : '#' ~('\n'|'\r')* '\r'? '\n'
     ;

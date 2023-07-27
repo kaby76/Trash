@@ -1,26 +1,22 @@
 grammar SimpleCalc;
  
 tokens {
-    PLUS ,
-    MINUS ,
-    MULT ,
-    DIV
+    PLUS      ,
+    MINUS     ,
+    MULT      ,
+    DIV   
 }
- 
-@members {
-    public static void main(String[] args) throws Exception {
-        SimpleCalcLexer lex = new SimpleCalcLexer(new ANTLRFileStream(args[0]));
-        CommonTokenStream tokens = new CommonTokenStream(lex);
- 
-        SimpleCalcParser parser = new SimpleCalcParser(tokens);
- 
-        try {
-            parser.expr();
-        } catch (RecognitionException e)  {
-            e.printStackTrace();
-        }
-    }
-}
+
+// Token string literals converted to explicit lexer rules.
+// Reorder these rules accordingly.
+
+PLUS: '+';
+MINUS: '-';
+MULT: '*';
+DIV: '/';
+//
+
+
  
 /*------------------------------------------------------------------
  * PARSER RULES
@@ -39,15 +35,7 @@ factor  : NUMBER ;
  
 NUMBER  : (DIGIT)+ ;
  
-WHITESPACE : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+    { $channel = HIDDEN; } ;
+WHITESPACE : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+ ;
  
 fragment DIGIT  : '0'..'9' ;
-
-PLUS : '+' ;
-
-MINUS : '-' ;
-
-MULT : '*' ;
-
-DIV : '/' ;
 

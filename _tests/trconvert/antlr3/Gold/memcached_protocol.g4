@@ -170,5 +170,5 @@ fragment PRINTABLE_CHAR
 	:	'!'..'~';
 
 WHITESPACE
-	:	(' ' | '\t' | '\r' | '\n' | '\u000C')+ {$channel = HIDDEN;}
+	:	(' ' | '\t' | '\r' | '\n' | '\u000C')+
 	;

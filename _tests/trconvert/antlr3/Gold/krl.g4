@@ -203,7 +203,7 @@ parameterWithType
     ;
 
 parameterCallType
-	: ':' { input.LT(1).getText().toLowerCase().matches("in|out") }? IDENTIFIER
+	: ':' IDENTIFIER
 	;
 
     
@@ -248,7 +248,7 @@ statementList
 statement 
     :   CONTINUE NEWLINE
     |	EXIT NEWLINE
-    |	FOR IDENTIFIER '=' expression TO expression ({ input.LT(1).getText().equalsIgnoreCase("step") }? IDENTIFIER expression)? NEWLINE
+    |	FOR IDENTIFIER '=' expression TO expression ( IDENTIFIER expression)? NEWLINE
     	  statementList
     	ENDFOR
     |	GOTO IDENTIFIER NEWLINE
@@ -273,32 +273,32 @@ statement
           statementList
         ENDWHILE NEWLINE
     |   RETURN (assignmentExpression )? NEWLINE
-    |   BRAKE ({ input.LT(1).getText().equalsIgnoreCase("f") }? IDENTIFIER)? NEWLINE
+    |   BRAKE ( IDENTIFIER)? NEWLINE
     |   assignmentExpression NEWLINE
     |   IDENTIFIER ':' NEWLINE
     |	NEWLINE
     |	GLOBAL? INTERRUPT DECL primary WHEN expression DO assignmentExpression NEWLINE
-    |	INTERRUPT { input.LT(1).getText().toLowerCase().matches("on|off|disable|enable") }? IDENTIFIER primary? NEWLINE
+    |	INTERRUPT IDENTIFIER primary? NEWLINE
     |	(PTP|PTP_REL) geometricExpression ( C_PTP ( C_DIS | C_ORI | C_VEL )? )? NEWLINE
     |	LIN geometricExpression ( C_DIS | C_ORI | C_VEL )? NEWLINE
     |	LIN_REL geometricExpression ( C_DIS | C_ORI | C_VEL )? enumElement? NEWLINE
-    |	(CIRC|CIRC_REL) geometricExpression ',' geometricExpression (',' { input.LT(1).getText().equalsIgnoreCase("ca") }? IDENTIFIER primary)? ( C_DIS | C_ORI | C_VEL )? NEWLINE
-    |	TRIGGER WHEN ({ input.LT(1).getText().equalsIgnoreCase("distance") }? IDENTIFIER) '=' expression DELAY '=' expression DO assignmentExpression ( PRIO '=' expression )? NEWLINE
+    |	(CIRC|CIRC_REL) geometricExpression ',' geometricExpression (',' IDENTIFIER primary)? ( C_DIS | C_ORI | C_VEL )? NEWLINE
+    |	TRIGGER WHEN ( IDENTIFIER) '=' expression DELAY '=' expression DO assignmentExpression ( PRIO '=' expression )? NEWLINE
     |	analogInputStatement NEWLINE
     |	analogOutputStatement NEWLINE
     ;
 
 analogOutputStatement
 	: ANOUT 
-	( { input.LT(1).getText().equalsIgnoreCase("on") }? IDENTIFIER assignmentExpression ({ input.LT(1).getText().toLowerCase().matches("delay|minimum|maximum") }? IDENTIFIER '=' literal)*
-	| { input.LT(1).getText().equalsIgnoreCase("off") }? IDENTIFIER IDENTIFIER
+	( IDENTIFIER assignmentExpression ( IDENTIFIER '=' literal)*
+	| IDENTIFIER IDENTIFIER
 	)
 	;
 
 analogInputStatement
 	: ANIN
-	( { input.LT(1).getText().equalsIgnoreCase("on") }? IDENTIFIER assignmentExpression
-	| { input.LT(1).getText().equalsIgnoreCase("off") }? IDENTIFIER IDENTIFIER
+	( IDENTIFIER assignmentExpression
+	| IDENTIFIER IDENTIFIER
 	)
 	;
 
@@ -558,10 +558,7 @@ fragment Y:('y'|'Y');
 fragment Z:('z'|'Z');
 
 HEADERLINE
-	:	'&' ~('\n'|'\r')*  ('\r\n' | '\r' | '\n' | EOF) 
-            {
-                skip();
-            }
+	:	'&' ~('\n'|'\r')*  ('\r\n' | '\r' | '\n' | EOF)
     ;
     
 WS  
@@ -569,19 +566,13 @@ WS
              ' '
         |    '\t'
         |    '\u000C'
-        ) 
-            {
-                skip();
-            }          
+        )          
     ;
 
 NEWLINE : '\r'?  '\n' ;
 
 LINE_COMMENT
     :   ';' ~('\n' | '\r')*
-            {
-                skip();
-            }
     ;   
 
 CHARLITERAL

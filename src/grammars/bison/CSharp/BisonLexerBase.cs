@@ -17,15 +17,24 @@ public abstract class BisonLexerBase : Lexer
     public void NextMode()
     {
         ++percent_percent_count;
-        if (percent_percent_count == 1) {
-            //this.PushMode(BisonLexer.RuleMode);
+        if (percent_percent_count == 1)
+        {
             return;
-        } else if (percent_percent_count == 2) {
+        } else if (percent_percent_count == 2)
+        {
             this.PushMode(BisonLexer.EpilogueMode);
             return;
-        } else {
-            this.Type = BisonLexer.PERCENT_PERCENT;
+        } else
+        {
+            this.Type = BisonLexer.PercentPercent;
             return;
         }
     }
+
+    public override void Reset()
+    {
+	    percent_percent_count = 0;
+	    base.Reset();
+    }
 }
+

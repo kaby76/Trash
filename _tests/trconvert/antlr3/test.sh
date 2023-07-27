@@ -10,9 +10,8 @@ do
 	extension="${i##*.}"
 	filename="${i%.*}"
 	echo "converting $i"
-	trparse $i -t antlr3 | trconvert | trsponge -c -o "$where/Generated"
+	trparse $i -t ANTLRv3 | trconvert | trsponge -c -o "$where/Generated"
 done
-exit 0
 rm -f "$where"/Generated/*.txt3
 diff -r "$where/Gold" "$where/Generated"
 if [ "$?" != "0" ]

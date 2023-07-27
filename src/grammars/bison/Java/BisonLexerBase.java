@@ -13,13 +13,12 @@ public abstract class BisonLexerBase extends Lexer {
     {
         ++percent_percent_count;
         if (percent_percent_count == 1) {
-            //this.PushMode(BisonLexer.RuleMode);
             return;
         } else if (percent_percent_count == 2) {
             this.pushMode(BisonLexer.EpilogueMode);
             return;
         } else {
-            this.setType(BisonLexer.PERCENT_PERCENT);
+            this.setType(BisonLexer.PercentPercent);
             return;
         }
     }

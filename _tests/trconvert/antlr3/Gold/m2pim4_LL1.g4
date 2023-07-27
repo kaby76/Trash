@@ -8,53 +8,101 @@ grammar m2pim4_LL1; // Modula-2 PIM 4 standard
 // strict LL(1)
 
 options {
+	k = 1;
 	buildAST=true;
 }
 
 // Reserved Words
 
 tokens {
-	AND,
-	ARRAY,
-	BEGIN,
-	BY,
-	CASE,
-	CONST,
-	DEFINITION,
-	DIV,
-	DO,
-	ELSE,
-	ELSIF,
-	END,
-	EXIT,
-	EXPORT,
-	FOR,
-	FROM,
-	IF,
-	IMPLEMENTATION,
-	IMPORT,
-	IN,
-	LOOP,
-	MOD,
-	MODULE,
-	NOT,
-	OF,
-	OR,
-	POINTER,
-	PROCEDURE,
-	QUALIFIED,
-	RECORD,
-	REPEAT,
-	RETURN,
-	SET,
-	THEN,
-	TO,
-	TYPE,
-	UNTIL,
-	VAR,
-	WHILE,
-	WITH
+	AND             ,
+	ARRAY           ,
+	BEGIN           ,
+	BY              ,
+	CASE            ,
+	CONST           ,
+	DEFINITION      ,
+	DIV             ,
+	DO              ,
+	ELSE            ,
+	ELSIF           ,
+	END             ,
+	EXIT            ,
+	EXPORT          ,
+	FOR             ,
+	FROM            ,
+	IF              ,
+	IMPLEMENTATION  ,
+	IMPORT          ,
+	IN              ,
+	LOOP            ,
+	MOD             ,
+	MODULE          ,
+	NOT             ,
+	OF              ,
+	OR              ,
+	POINTER         ,
+	PROCEDURE       ,
+	QUALIFIED       ,
+	RECORD          ,
+	REPEAT          ,
+	RETURN          ,
+	SET             ,
+	THEN            ,
+	TO              ,
+	TYPE            ,
+	UNTIL           ,
+	VAR             ,
+	WHILE           ,
+	WITH            
 }
+
+// Token string literals converted to explicit lexer rules.
+// Reorder these rules accordingly.
+
+AND: 'AND';
+ARRAY: 'ARRAY';
+BEGIN: 'BEGIN';
+BY: 'BY';
+CASE: 'CASE';
+CONST: 'CONST';
+DEFINITION: 'DEFINITION';
+DIV: 'DIV';
+DO: 'DO';
+ELSE: 'ELSE';
+ELSIF: 'ELSIF';
+END: 'END';
+EXIT: 'EXIT';
+EXPORT: 'EXPORT';
+FOR: 'FOR';
+FROM: 'FROM';
+IF: 'IF';
+IMPLEMENTATION: 'IMPLEMENTATION';
+IMPORT: 'IMPORT';
+IN: 'IN';
+LOOP: 'LOOP';
+MOD: 'MOD';
+MODULE: 'MODULE';
+NOT: 'NOT';
+OF: 'OF';
+OR: 'OR';
+POINTER: 'POINTER';
+PROCEDURE: 'PROCEDURE';
+QUALIFIED: 'QUALIFIED';
+RECORD: 'RECORD';
+REPEAT: 'REPEAT';
+RETURN: 'RETURN';
+SET: 'SET';
+THEN: 'THEN';
+TO: 'TO';
+TYPE: 'TYPE';
+UNTIL: 'UNTIL';
+VAR: 'VAR';
+WHILE: 'WHILE';
+WITH: 'WITH';
+//
+
+
 
 // ---------------------------------------------------------------------------
 // L E X E R   G R A M M A R
@@ -70,7 +118,7 @@ IDENT :
 
 INTEGER :
 	DIGIT+ |
-	OCTAL_DIGIT+  ( 'B' | 'C' {}) |
+	OCTAL_DIGIT+  ( 'B' | 'C') |
 	DIGIT ( HEX_DIGIT )* 'H'
 	;
 
@@ -194,20 +242,19 @@ constExpression :
 // ***** PIM 4 Appendix 1 line 14 *****
 
 relation :
-	'=' | '#' | '<>' | '<' | '<=' | '>' | '>=' | 'IN' {}
+	'=' | '#' | '<>' | '<' | '<=' | '>' | '>=' | 'IN'
 	;
 
 // ***** PIM 4 Appendix 1 line 15 *****
 
 simpleConstExpr :
-	( '+' | '-' {})? constTerm ( addOperator constTerm )*
+	( '+' | '-')? constTerm ( addOperator constTerm )*
 	;
 
 // ***** PIM 4 Appendix 1 line 16 *****
 
 addOperator :
-	'+' | '-' | OR
-	{} // make ANTLRworks display separate branches
+	'+' | '-' | OR // make ANTLRworks display separate branches
 	;
 
 // ***** PIM 4 Appendix 1 line 17 *****
@@ -219,8 +266,7 @@ constTerm :
 // ***** PIM 4 Appendix 1 line 18 *****
 
 mulOperator :
-	'*' | '/' | DIV | MOD | AND | '&'
-	{} // make ANTLRworks display separate branches
+	'*' | '/' | DIV | MOD | AND | '&' // make ANTLRworks display separate branches
 	;
 
 // ***** PIM 4 Appendix 1 lines 19-20 *****
@@ -231,7 +277,7 @@ mulOperator :
 //       but the grammar does not actually show it
 constFactor :
 	number | string | setOrQualident |
-	'(' constExpression ')' | ( NOT | '~' {}) constFactor
+	'(' constExpression ')' | ( NOT | '~') constFactor
 	;
 
 // new for LL(1)
@@ -312,7 +358,7 @@ fieldListSequence :
 // refactored for LL(1)
 fieldList :
 	( identList ':' type |
-	  CASE ident ( ( ':' | '.' {}) qualident )? OF variant ( '|' variant )*
+	  CASE ident ( ( ':' | '.') qualident )? OF variant ( '|' variant )*
 	  ( ELSE fieldListSequence )?
 	  END )?
 	;
@@ -393,7 +439,7 @@ expression :
 // ***** PIM 4 Appendix 1 line 48 *****
 
 simpleExpression :
-	( '+' | '-' {})? term ( addOperator term )*
+	( '+' | '-')? term ( addOperator term )*
 	;
 
 // ***** PIM 4 Appendix 1 line 49 *****
@@ -412,7 +458,7 @@ factor :
 	number |
 	string |
 	setOrDesignatorOrProcCall |
-	'(' expression ')' | ( NOT | '~' {}) factor
+	'(' expression ')' | ( NOT | '~') factor
 	;
 
 // new for LL(1)
@@ -613,83 +659,3 @@ programModule :
 compilationUnit :	
 	definitionModule | IMPLEMENTATION? programModule
 	;
-
-AND : 'AND' ;
-
-ARRAY : 'ARRAY' ;
-
-BEGIN : 'BEGIN' ;
-
-BY : 'BY' ;
-
-CASE : 'CASE' ;
-
-CONST : 'CONST' ;
-
-DEFINITION : 'DEFINITION' ;
-
-DIV : 'DIV' ;
-
-DO : 'DO' ;
-
-ELSE : 'ELSE' ;
-
-ELSIF : 'ELSIF' ;
-
-END : 'END' ;
-
-EXIT : 'EXIT' ;
-
-EXPORT : 'EXPORT' ;
-
-FOR : 'FOR' ;
-
-FROM : 'FROM' ;
-
-IF : 'IF' ;
-
-IMPLEMENTATION : 'IMPLEMENTATION' ;
-
-IMPORT : 'IMPORT' ;
-
-IN : 'IN' ;
-
-LOOP : 'LOOP' ;
-
-MOD : 'MOD' ;
-
-MODULE : 'MODULE' ;
-
-NOT : 'NOT' ;
-
-OF : 'OF' ;
-
-OR : 'OR' ;
-
-POINTER : 'POINTER' ;
-
-PROCEDURE : 'PROCEDURE' ;
-
-QUALIFIED : 'QUALIFIED' ;
-
-RECORD : 'RECORD' ;
-
-REPEAT : 'REPEAT' ;
-
-RETURN : 'RETURN' ;
-
-SET : 'SET' ;
-
-THEN : 'THEN' ;
-
-TO : 'TO' ;
-
-TYPE : 'TYPE' ;
-
-UNTIL : 'UNTIL' ;
-
-VAR : 'VAR' ;
-
-WHILE : 'WHILE' ;
-
-WITH : 'WITH' ;

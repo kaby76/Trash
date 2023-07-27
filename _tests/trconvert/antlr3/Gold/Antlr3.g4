@@ -107,380 +107,45 @@ tokens
     REWRITES
 }
 
-@lexer::header {
-package org.antlr.grammar.v3;
-import org.antlr.tool.ErrorManager;
-import org.antlr.tool.Grammar;
-}
+// Token string literals converted to explicit lexer rules.
+// Reorder these rules accordingly.
 
-@parser::header {
-package org.antlr.grammar.v3;
-import org.antlr.tool.ErrorManager;
-import org.antlr.tool.Grammar;
-import org.antlr.tool.GrammarAST;
-import org.antlr.misc.IntSet;
-import org.antlr.tool.Rule;
-}
+LEXER: 'lexer';
+PARSER: 'parser';
+CATCH: 'catch';
+FINALLY: 'finally';
+GRAMMAR: 'grammar';
+PRIVATE: 'private';
+PROTECTED: 'protected';
+PUBLIC: 'public';
+RETURNS: 'returns';
+THROWS: 'throws';
+TREE: 'tree';
+SCOPE: 'scope';
+IMPORT: 'import';
+FRAGMENT: 'fragment';
+//
 
-@lexer::members {
-public boolean hasASTOperator = false;
-private String fileName;
 
-public String getFileName() {
-    return fileName;
-}
 
-public void setFileName(String value) {
-    fileName = value;
-}
 
-@Override
-public Token nextToken() {
-    Token token = super.nextToken();
-    while (token.getType() == STRAY_BRACKET) {
-        ErrorManager.syntaxError(
-            ErrorManager.MSG_SYNTAX_ERROR,
-            null,
-            token,
-            "antlr: dangling ']'? make sure to escape with \\]",
-            null);
-
-        // skip this token
-        token = super.nextToken();
-    }
-
-    return token;
-}
-}
-
-@parser::members {
-protected String currentRuleName = null;
-protected GrammarAST currentBlockAST = null;
-protected boolean atTreeRoot; // are we matching a tree root in tree grammar?
-
-public static ANTLRParser createParser(TokenStream input) {
-    ANTLRParser parser = new ANTLRParser(input);
-    parser.adaptor = new grammar_Adaptor(parser);
-    return parser;
-}
-
-private static class GrammarASTErrorNode extends GrammarAST {
-    public IntStream input;
-    public Token start;
-    public Token stop;
-    public RecognitionException trappedException;
-
-    public GrammarASTErrorNode(TokenStream input, Token start, Token stop, RecognitionException e) {
-        super(stop);
-        //Console.Out.WriteLine( "start: " + start + ", stop: " + stop );
-        if ( stop == null ||
-             ( stop.getTokenIndex() < start.getTokenIndex() &&
-              stop.getType() != Token.EOF) ) {
-            // sometimes resync does not consume a token (when LT(1) is
-            // in follow set.  So, stop will be 1 to left to start. adjust.
-            // Also handle case where start is the first token and no token
-            // is consumed during recovery; LT(-1) will return null.
-            stop = start;
-        }
-        this.input = input;
-        this.start = start;
-        this.stop = stop;
-        this.trappedException = e;
-    }
-
-    @Override
-    public boolean isNil() { return false; }
-
-    @Override
-    public String getText() {
-        String badText = null;
-        if (start != null) {
-            int i = start.getTokenIndex();
-            int j = stop.getTokenIndex();
-            if (stop.getType() == Token.EOF) {
-                j = input.size();
-            }
-            badText = ((TokenStream)input).toString(i, j);
-        } else {
-            // people should subclass if they alter the tree type so this
-            // next one is for sure correct.
-            badText = "<unknown>";
-        }
-        return badText;
-    }
-
-    @Override
-    public void setText(String value) { }
-
-    @Override
-    public int getType() { return Token.INVALID_TOKEN_TYPE; }
-
-    @Override
-    public void setType(int value) { }
-
-    @Override
-    public String toString()
-    {
-        if (trappedException instanceof MissingTokenException)
-        {
-            return "<missing type: " +
-                   ( (MissingTokenException)trappedException ).getMissingType() +
-                   ">";
-        } else if (trappedException instanceof UnwantedTokenException) {
-            return "<extraneous: " +
-                   ( (UnwantedTokenException)trappedException ).getUnexpectedToken() +
-                   ", resync=" + getText() + ">";
-        } else if (trappedException instanceof MismatchedTokenException) {
-            return "<mismatched token: " + trappedException.token + ", resync=" + getText() + ">";
-        } else if (trappedException instanceof NoViableAltException) {
-            return "<unexpected: " + trappedException.token +
-                   ", resync=" + getText() + ">";
-        }
-        return "<error: " + getText() + ">";
-    }
-}
-
-static class grammar_Adaptor extends CommonTreeAdaptor {
-    ANTLRParser _outer;
-
-    public grammar_Adaptor(ANTLRParser outer) {
-        _outer = outer;
-    }
-
-    @Override
-    public Object create(Token payload) {
-        GrammarAST t = new GrammarAST( payload );
-        if (_outer != null)
-            t.enclosingRuleName = _outer.currentRuleName;
-        return t;
-    }
-
-    @Override
-    public Object errorNode(TokenStream input, Token start, Token stop, RecognitionException e) {
-        GrammarAST t = new GrammarASTErrorNode(input, start, stop, e);
-        if (_outer != null)
-            t.enclosingRuleName = _outer.currentRuleName;
-        return t;
-    }
-}
-
-private Grammar grammar;
-private int grammarType;
-private String fileName;
-
-public Grammar getGrammar() {
-    return grammar;
-}
-
-public void setGrammar(Grammar value) {
-    grammar = value;
-}
-
-public int getGrammarType() {
-    return grammarType;
-}
-
-public void setGrammarType(int value) {
-    grammarType = value;
-}
-
-public String getFileName() {
-    return fileName;
-}
-
-public void setFileName(String value) {
-    fileName = value;
-}
-
-private final int LA(int i) { return input.LA( i ); }
-
-private final Token LT(int k) { return input.LT( k ); }
-
-/*partial void createTreeAdaptor(ref ITreeAdaptor adaptor)
-{
-    adaptor = new grammar_Adaptor(this);
-}*/
-
-protected GrammarAST setToBlockWithSet(GrammarAST b) {
-    /*
-     * alt = ^(ALT["ALT"] {b} EOA["EOA"])
-     * prefixWithSynpred( alt )
-     * return ^(BLOCK["BLOCK"] {alt} EOB["<end-of-block>"])
-     */
-    GrammarAST alt = (GrammarAST)adaptor.create(ALT, "ALT");
-    adaptor.addChild(alt, b);
-    adaptor.addChild(alt, adaptor.create(EOA, "<end-of-alt>"));
-
-    prefixWithSynPred(alt);
-
-    GrammarAST block = (GrammarAST)adaptor.create(BLOCK, b.getToken(), "BLOCK");
-    adaptor.addChild(block, alt);
-    adaptor.addChild(alt, adaptor.create(EOB, "<end-of-block>"));
-
-    return block;
-}
-
-/** Create a copy of the alt and make it into a BLOCK; all actions,
- *  labels, tree operators, rewrites are removed.
- */
-protected GrammarAST createBlockFromDupAlt(GrammarAST alt) {
-    /*
-     * ^(BLOCK["BLOCK"] {GrammarAST.dupTreeNoActions(alt)} EOB["<end-of-block>"])
-     */
-    GrammarAST nalt = GrammarAST.dupTreeNoActions(alt, null);
-
-    GrammarAST block = (GrammarAST)adaptor.create(BLOCK, alt.getToken(), "BLOCK");
-    adaptor.addChild( block, nalt );
-    adaptor.addChild( block, adaptor.create( EOB, "<end-of-block>" ) );
-
-    return block;
-}
-
-/** Rewrite alt to have a synpred as first element;
- *  (xxx)=&gt;xxx
- *  but only if they didn't specify one manually.
- */
-protected void prefixWithSynPred( GrammarAST alt ) {
-    // if they want backtracking and it's not a lexer rule in combined grammar
-    String autoBacktrack = (String)grammar.getBlockOption( currentBlockAST, "backtrack" );
-    if ( autoBacktrack == null )
-    {
-        autoBacktrack = (String)grammar.getOption( "backtrack" );
-    }
-    if ( autoBacktrack != null && autoBacktrack.equals( "true" ) &&
-         !( grammarType == Grammar.COMBINED &&
-         Rule.getRuleType(currentRuleName) == Grammar.LEXER) &&
-         alt.getChild( 0 ).getType() != SYN_SEMPRED )
-    {
-        // duplicate alt and make a synpred block around that dup'd alt
-        GrammarAST synpredBlockAST = createBlockFromDupAlt( alt );
-
-        // Create a BACKTRACK_SEMPRED node as if user had typed this in
-        // Effectively we replace (xxx)=>xxx with {synpredxxx}? xxx
-        GrammarAST synpredAST = createSynSemPredFromBlock( synpredBlockAST,
-                                                          BACKTRACK_SEMPRED );
-
-        // insert BACKTRACK_SEMPRED as first element of alt
-        //synpredAST.getLastSibling().setNextSibling( alt.getFirstChild() );
-        //synpredAST.addChild( alt.getFirstChild() );
-        //alt.setFirstChild( synpredAST );
-        GrammarAST[] children = alt.getChildrenAsArray();
-        adaptor.setChild( alt, 0, synpredAST );
-        for ( int i = 0; i < children.length; i++ )
-        {
-            if ( i < children.length - 1 )
-                adaptor.setChild( alt, i + 1, children[i] );
-            else
-                adaptor.addChild( alt, children[i] );
-        }
-    }
-}
-
-protected GrammarAST createSynSemPredFromBlock( GrammarAST synpredBlockAST, int synpredTokenType ) {
-    // add grammar fragment to a list so we can make fake rules for them later.
-    String predName = grammar.defineSyntacticPredicate( synpredBlockAST, currentRuleName );
-    // convert (alpha)=> into {synpredN}? where N is some pred count
-    // during code gen we convert to function call with templates
-    String synpredinvoke = predName;
-    GrammarAST p = (GrammarAST)adaptor.create( synpredTokenType, synpredinvoke );
-    // track how many decisions have synpreds
-    grammar.blocksWithSynPreds.add( currentBlockAST );
-    return p;
-}
-
-public static GrammarAST createSimpleRuleAST( String name, GrammarAST block, boolean fragment ) {
-    TreeAdaptor adaptor = new grammar_Adaptor(null);
-
-    GrammarAST modifier = null;
-    if ( fragment )
-    {
-        modifier = (GrammarAST)adaptor.create( FRAGMENT, "fragment" );
-    }
-
-    /*
-     * EOBAST = block.getLastChild()
-     * ^(RULE[block,"rule"] ID["name"] {modifier} ARG["ARG"] RET["RET"] SCOPE["scope"] {block} EOR[EOBAST,"<end-of-rule>"])
-     */
-    GrammarAST rule = (GrammarAST)adaptor.create( RULE, block.getToken(), "rule" );
-
-    adaptor.addChild( rule, adaptor.create( ID, name ) );
-    if ( modifier != null )
-        adaptor.addChild( rule, modifier );
-    adaptor.addChild( rule, adaptor.create( ARG, "ARG" ) );
-    adaptor.addChild( rule, adaptor.create( RET, "RET" ) );
-    adaptor.addChild( rule, adaptor.create( SCOPE, "scope" ) );
-    adaptor.addChild( rule, block );
-    adaptor.addChild( rule, adaptor.create( EOR, block.getLastChild().getToken(), "<end-of-rule>" ) );
-
-    return rule;
-}
-
-@Override
-public void reportError(RecognitionException ex)
-{
-    //Token token = null;
-    //try
-    //{
-    //    token = LT( 1 );
-    //}
-    //catch ( TokenStreamException tse )
-    //{
-    //    ErrorManager.internalError( "can't get token???", tse );
-    //}
-    Token token = ex.token;
-    ErrorManager.syntaxError(
-        ErrorManager.MSG_SYNTAX_ERROR,
-        grammar,
-        token,
-        "antlr: " + ex.toString(),
-        ex );
-}
-
-public void cleanup( GrammarAST root )
-{
-    if ( grammarType == Grammar.LEXER )
-    {
-        String filter = (String)grammar.getOption( "filter" );
-        GrammarAST tokensRuleAST =
-            grammar.addArtificialMatchTokensRule(
-                root,
-                grammar.lexerRuleNamesInCombined,
-                grammar.getDelegateNames(),
-                filter != null && filter.equals( "true" ) );
-    }
-}
-}
-
-public
-grammar_[Grammar g]
-@init
-{
-    this.grammar = g;
-    Map<String, Object> opts;
-}
-@after
-{
-    cleanup( $tree );
-}
+grammar_
     :   //hdr:headerSpec
         ( ACTION )?
-        ( cmt=DOC_COMMENT  )?
-        gr=grammarType gid=id {grammar.setName($gid.text);} SEMI
-        (   optionsSpec {opts = $optionsSpec.opts; grammar.setOptions(opts, $optionsSpec.start);}
+        (DOC_COMMENT  )?grammarTypeid SEMI
+        (   optionsSpec
         )?
-        (ig=delegateGrammars)?
-        (ts=tokensSpec)?
-        scopes=attrScopes
-        (a=actions)?
-        r=rules
+        (delegateGrammars)?
+        (tokensSpec)?attrScopes
+        (actions)?rules
         EOF
     ;
 
 grammarType
-    :   (   'lexer'  gr='grammar' {grammarType=Grammar.LEXER; grammar.type = Grammar.LEXER;}
-        |   'parser' gr='grammar' {grammarType=Grammar.PARSER; grammar.type = Grammar.PARSER;}
-        |   'tree'   gr='grammar' {grammarType=Grammar.TREE_PARSER; grammar.type = Grammar.TREE_PARSER;}
-        |            gr='grammar' {grammarType=Grammar.COMBINED; grammar.type = Grammar.COMBINED;}
+    :   (   'lexer''grammar'
+        |   'parser''grammar'
+        |   'tree''grammar'
+        |'grammar'
         )
     ;
 
@@ -498,31 +163,24 @@ action
  */
 actionScopeName
     :   id
-    |   l='lexer'
-    |   p='parser'
+    |'lexer'
+    |'parser'
     ;
 
-optionsSpec returns [Map<String, Object> opts=new HashMap<String, Object>()]
-    :   OPTIONS (option[$opts] SEMI)+ RCURLY
+optionsSpec returns
+    :   OPTIONS (option SEMI)+ RCURLY
     ;
 
-option[Map<String, Object> opts]
+option
     :   id ASSIGN optionValue
-        {
-            $opts.put($id.text, $optionValue.value);
-        }
     ;
 
-optionValue returns [Object value = null]
-    :   x=id             {$value = $x.text;}
-    |   s=STRING_LITERAL {String vs = $s.text;
-                          // remove the quotes:
-                          $value=vs.substring(1,vs.length()-1);}
-    |   c=CHAR_LITERAL   {String vs = $c.text;
-                          // remove the quotes:
-                          $value=vs.substring(1,vs.length()-1);}
-    |   i=INT            {$value = Integer.parseInt($i.text);}
-    |   ss=STAR          {$value = "*";}
+optionValue returns
+    :id
+    |STRING_LITERAL
+    |CHAR_LITERAL
+    |INT
+    |STAR
 //  |   cs:charSet       {value = #cs;} // return set AST in this case
     ;
 
@@ -531,8 +189,8 @@ delegateGrammars
     ;
 
 delegateGrammar
-    :   lab=id ASSIGN g=id {grammar.importGrammar($g.tree, $lab.text);}
-    |   g2=id               {grammar.importGrammar($g2.tree,null);}
+    :id ASSIGNid
+    |id
     ;
 
 tokensSpec
@@ -558,44 +216,27 @@ rules
         )+
     ;
 
-public
+
 rule
-@init
-{
-    GrammarAST eob=null;
-    CommonToken start = (CommonToken)LT(1);
-    int startLine = LT(1).getLine();
-}
     :
-    (   (   d=DOC_COMMENT
+    (   (DOC_COMMENT
         )?
-        (   p1='protected'  //{modifier=$p1.tree;}
-        |   p2='public'     //{modifier=$p2.tree;}
-        |   p3='private'    //{modifier=$p3.tree;}
-        |   p4='fragment'   //{modifier=$p4.tree;}
-        )?
-        ruleName=id
-        {
-            currentRuleName=$ruleName.text;
-            if ( grammarType==Grammar.LEXER && $p4==null )
-                grammar.lexerRuleNamesInCombined.add(currentRuleName);
-        }
+        ('protected'  //{modifier=$p1.tree;}
+        |'public'     //{modifier=$p2.tree;}
+        |'private'    //{modifier=$p3.tree;}
+        |'fragment'   //{modifier=$p4.tree;}
+        )?id
         ( BANG )?
-        ( aa=ARG_ACTION )?
-        ( 'returns' rt=ARG_ACTION  )?
+        (ARG_ACTION )?
+        ( 'returns'ARG_ACTION  )?
         ( throwsSpec )?
-        ( optionsSpec )?
-        scopes=ruleScopeSpec
+        ( optionsSpec )?ruleScopeSpec
         (ruleActions)?
         COLON
-        ruleAltList[$optionsSpec.opts]
+        ruleAltList
         SEMI
-        ( ex=exceptionGroup )?
+        (exceptionGroup )?
     )
-    {
-        $tree.setTreeEnclosingRuleNameDeeply(currentRuleName);
-        ((GrammarAST)$tree.getChild(0)).setBlockOptions($optionsSpec.opts);
-    }
     ;
 
 ruleActions
@@ -616,65 +257,34 @@ ruleScopeSpec
         ( 'scope' idList SEMI )*
     ;
 
-ruleAltList[Map<String, Object> opts]
-@init
-{
-    GrammarAST blkRoot = null;
-    GrammarAST save = currentBlockAST;
-}
-    :   ( )
-        {
-            blkRoot = (GrammarAST)$tree.getChild(0);
-            blkRoot.setBlockOptions($opts);
-            currentBlockAST = blkRoot;
-        }
-        (   a1=alternative r1=rewrite
-            {if (LA(1)==OR||(LA(2)==QUESTION||LA(2)==PLUS||LA(2)==STAR)) prefixWithSynPred($a1.tree);}
+ruleAltList
+    :
+        (alternativerewrite
         )
-        (   (   OR a2=alternative r2=rewrite
-                {if (LA(1)==OR||(LA(2)==QUESTION||LA(2)==PLUS||LA(2)==STAR)) prefixWithSynPred($a2.tree);}
+        (   (   ORalternativerewrite
             )+
         |
         )
     ;
-finally { currentBlockAST = save; }
+finally
 
 /** Build #(BLOCK ( #(ALT ...) EOB )+ ) */
 block
-@init
-{
-    GrammarAST save = currentBlockAST;
-}
-    :   (   lp=LPAREN
+    :   (LPAREN
         )
-        {currentBlockAST = (GrammarAST)$tree.getChild(0);}
         (
             // 2nd alt and optional branch ambig due to
             // linear approx LL(2) issue.  COLON ACTION
             // matched correctly in 2nd alt.
-            (optionsSpec {((GrammarAST)$tree.getChild(0)).setOptions(grammar,$optionsSpec.opts);})?
+            (optionsSpec)?
             ( ruleActions )?
             COLON
         |   ACTION COLON
-        )?
-
-        a=alternative r=rewrite
-        {
-            stream_alternative.add( $r.tree );
-            if ( LA(1)==OR || (LA(2)==QUESTION||LA(2)==PLUS||LA(2)==STAR) )
-                prefixWithSynPred($a.tree);
-        }
-        (   OR a=alternative r=rewrite
-            {
-                stream_alternative.add( $r.tree );
-                if (LA(1)==OR||(LA(2)==QUESTION||LA(2)==PLUS||LA(2)==STAR))
-                    prefixWithSynPred($a.tree);
-            }
-        )*
-
-        rp=RPAREN
+        )?alternativerewrite
+        (   ORalternativerewrite
+        )*RPAREN
     ;
-finally { currentBlockAST = save; }
+finally
 
 // ALT and EOA have indexes tracking start/stop of entire alt
 alternative
@@ -700,32 +310,25 @@ element
     ;
 
 elementNoOptionSpec
-@init
-{
-    IntSet elements=null;
-}
     :   (   id (ASSIGN|PLUS_ASSIGN)
-            (   atom (sub=ebnfSuffix[root_0,false] {root_0 = $sub.tree;})?
+            (   atom (ebnfSuffix)?
             |   ebnf
             )
-        |   a=atom
-            (   sub2=ebnfSuffix[$a.tree,false] {root_0=$sub2.tree;}
+        |atom
+            (ebnfSuffix
             )?
         |   ebnf
         |   FORCED_ACTION
         |   ACTION
-        |   p=SEMPRED ( IMPLIES {$p.setType(GATED_SEMPRED);} )?
-            {
-            grammar.blocksWithSemPreds.add(currentBlockAST);
-            }
-        |   t3=tree_
+        |SEMPRED ( IMPLIES )?
+        |tree_
         )
     ;
 
 atom
     :   range (ROOT|BANG)?
     |   (
-            id w=WILDCARD (terminal|ruleref) {$w.setType(DOT);}
+            idWILDCARD (terminal|ruleref)
         |   terminal
         |   ruleref
         )
@@ -744,8 +347,6 @@ notSet
     ;
 
 treeRoot
-@init{atTreeRoot=true;}
-@after{atTreeRoot=false;}
     :   id (ASSIGN|PLUS_ASSIGN) (atom|block)
     |   atom
     |   block
@@ -771,85 +372,49 @@ ebnf
     ;
 
 range
-    :   {Rule.getRuleType(currentRuleName) == Grammar.LEXER}?
-        c1=CHAR_LITERAL RANGE c2=CHAR_LITERAL
+    : CHAR_LITERAL RANGECHAR_LITERAL
     |   // range elsewhere is an error
-        (   t=TOKEN_REF r=RANGE TOKEN_REF
-        |   t=STRING_LITERAL r=RANGE STRING_LITERAL
-        |   t=CHAR_LITERAL r=RANGE CHAR_LITERAL
-        )
-        {
-        ErrorManager.syntaxError(
-            ErrorManager.MSG_RANGE_OP_ILLEGAL,grammar,$r,null,null);
-        } // have to generate something for surrounding code, just return first token
+        (TOKEN_REFRANGE TOKEN_REF
+        |STRING_LITERALRANGE STRING_LITERAL
+        |CHAR_LITERALRANGE CHAR_LITERAL
+        ) // have to generate something for surrounding code, just return first token
     ;
 
 terminal
-    :   cl=CHAR_LITERAL ( elementOptions[$cl.tree] )? (ROOT|BANG)?
+    :CHAR_LITERAL ( elementOptions )? (ROOT|BANG)?
 
-    |   tr=TOKEN_REF
-        ( elementOptions[$tr.tree] )?
+    |TOKEN_REF
+        ( elementOptions )?
         ( ARG_ACTION )? // Args are only valid for lexer rules
         (ROOT|BANG)?
 
-    |   sl=STRING_LITERAL ( elementOptions[$sl.tree] )? (ROOT|BANG)?
+    |STRING_LITERAL ( elementOptions )? (ROOT|BANG)?
 
-    |   wi=WILDCARD (ROOT|BANG)?
-        {
-            if ( atTreeRoot )
-            {
-                ErrorManager.syntaxError(
-                    ErrorManager.MSG_WILDCARD_AS_ROOT,grammar,$wi,null,null);
-            }
-        }
+    |WILDCARD (ROOT|BANG)?
     ;
 
-elementOptions[GrammarAST terminalAST]
-    :   OPEN_ELEMENT_OPTION defaultNodeOption[terminalAST] CLOSE_ELEMENT_OPTION
-    |   OPEN_ELEMENT_OPTION elementOption[terminalAST] (SEMI elementOption[terminalAST])* CLOSE_ELEMENT_OPTION
+elementOptions
+    :   OPEN_ELEMENT_OPTION defaultNodeOption CLOSE_ELEMENT_OPTION
+    |   OPEN_ELEMENT_OPTION elementOption (SEMI elementOption)* CLOSE_ELEMENT_OPTION
     ;
 
-defaultNodeOption[GrammarAST terminalAST]
+defaultNodeOption
     :   elementOptionId
-        {terminalAST.setTerminalOption(grammar,Grammar.defaultTokenOption,$elementOptionId.qid);}
     ;
 
-elementOption[GrammarAST terminalAST]
+elementOption
     :   id ASSIGN
         (   elementOptionId
-            {terminalAST.setTerminalOption(grammar,$id.text,$elementOptionId.qid);}
-        |   (t=STRING_LITERAL|t=DOUBLE_QUOTE_STRING_LITERAL|t=DOUBLE_ANGLE_STRING_LITERAL)
-            {terminalAST.setTerminalOption(grammar,$id.text,$t.text);}
+        |   (STRING_LITERAL|DOUBLE_QUOTE_STRING_LITERAL|DOUBLE_ANGLE_STRING_LITERAL)
         )
     ;
 
-elementOptionId returns [String qid]
-@init{StringBuffer buf = new StringBuffer();}
-    :   i=id {buf.append($i.text);} ('.' i=id {buf.append("." + $i.text);})*
-        {$qid = buf.toString();}
+elementOptionId returns
+    :id ('.'id)*
     ;
 
-ebnfSuffix[GrammarAST elemAST, boolean inRewrite]
-@init
-{
-GrammarAST blkRoot=null;
-GrammarAST alt=null;
-GrammarAST save = currentBlockAST;
-}
-@after
-{
-currentBlockAST = save;
-}
-    :   (
-        )
-        { blkRoot = (GrammarAST)$tree.getChild(0); currentBlockAST = blkRoot; }
-        (
-        )
-        {
-            alt = (GrammarAST)$tree.getChild(0);
-            if ( !inRewrite )
-                prefixWithSynPred(alt);
-        }
+ebnfSuffix
+    :
         (   QUESTION
         |   STAR
         |   PLUS
@@ -890,31 +455,32 @@ rewrite_block
     ;
 
 rewrite_alternative
-    :   {grammar.buildTemplate()}? rewrite_template
+options{k=1;}
+    :  rewrite_template
 
-    |   {grammar.buildAST()}? ( rewrite_element )+
+    |  ( rewrite_element )+
 
     |
-    |   {grammar.buildAST()}? ETC
+    | ETC
     ;
 
 rewrite_element
-    :   (   t=rewrite_atom
+    :   (rewrite_atom
         )
-        (   subrule=ebnfSuffix[$t.tree,true]
+        (ebnfSuffix
         )?
     |   rewrite_ebnf
-    |   (   tr=rewrite_tree
+    |   (rewrite_tree
         )
-        (   subrule=ebnfSuffix[$tr.tree,true]
+        (ebnfSuffix
         )?
     ;
 
 rewrite_atom
-    :   tr=TOKEN_REF elementOptions[$tr.tree]? ARG_ACTION? // for imaginary nodes
+    :TOKEN_REF elementOptions? ARG_ACTION? // for imaginary nodes
     |   RULE_REF
-    |   cl=CHAR_LITERAL elementOptions[$cl.tree]?
-    |   sl=STRING_LITERAL elementOptions[$sl.tree]?
+    |CHAR_LITERAL elementOptions?
+    |STRING_LITERAL elementOptions?
     |   DOLLAR label // reference to a label in a rewrite rule
     |   ACTION
     ;
@@ -925,7 +491,7 @@ label
     ;
 
 rewrite_ebnf
-    :   b=rewrite_block
+    :rewrite_block
         (   QUESTION
         |   STAR
         |   PLUS
@@ -949,14 +515,13 @@ rewrite_tree
     -> {%{$ID.text}} // create literal template from string (done in ActionTranslator)
     -> {st-expr} // st-expr evaluates to ST
  */
-public
+
 rewrite_template
-    :   // -> template(a={...},...) "..."
-        {LT(1).getText().equals("template")}? // inline
+options{k=1;}
+    :  // inline
         (   rewrite_template_head
         )
-        ( st=DOUBLE_QUOTE_STRING_LITERAL | st=DOUBLE_ANGLE_STRING_LITERAL )
-        { adaptor.addChild( $tree.getChild(0), adaptor.create($st) ); }
+        (DOUBLE_QUOTE_STRING_LITERAL |DOUBLE_ANGLE_STRING_LITERAL )
 
     |   // -> foo(a={...}, ...)
         rewrite_template_head
@@ -970,14 +535,14 @@ rewrite_template
 
 /** -> foo(a={...}, ...) */
 rewrite_template_head
-    :   id lp=LPAREN
+    :   idLPAREN
         rewrite_template_args
         RPAREN
     ;
 
 /** -> ({expr})(a={...}, ...) */
 rewrite_indirect_template_head
-    :   lp=LPAREN
+    :LPAREN
         ACTION
         RPAREN
         LPAREN rewrite_template_args RPAREN
@@ -989,7 +554,7 @@ rewrite_template_args
     ;
 
 rewrite_template_arg
-    :   id a=ASSIGN ACTION
+    :   idASSIGN ACTION
     ;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1008,16 +573,10 @@ WS
         |   '\t'
         |   ('\r')? '\n'
         )
-        { $channel = HIDDEN; }
     ;
 
 COMMENT
-@init{List<Integer> type = new ArrayList<Integer>() {{ add(0); }};}
-    :   ( SL_COMMENT | ML_COMMENT[type] {$type = type.get(0);} )
-        {
-            if ( $type != DOC_COMMENT )
-                $channel = HIDDEN;
-        }
+    :   ( SL_COMMENT | ML_COMMENT )
     ;
 
 fragment
@@ -1029,7 +588,7 @@ SL_COMMENT
     ;
 
 fragment
-ML_COMMENT[List<Integer> type]
+ML_COMMENT
     :   '/*'
         .*
         '*/'
@@ -1071,9 +630,9 @@ REWRITE : '->' ;
 
 SEMI:   ';' ;
 
-ROOT : '^' {hasASTOperator=true;} ;
+ROOT : '^' ;
 
-BANG : '!' {hasASTOperator=true;} ;
+BANG : '!' ;
 
 OR  :   '|' ;
 
@@ -1099,29 +658,15 @@ CHAR_LITERAL
         |   ~('\\'|'\'')
         )*
         '\''
-        {
-            StringBuffer s = Grammar.getUnescapedStringFromGrammarStringLiteral($text);
-            if ( s.length() > 1 )
-            {
-                $type = STRING_LITERAL;
-            }
-        }
     ;
 
 DOUBLE_QUOTE_STRING_LITERAL
-@init
-{
-    StringBuilder builder = new StringBuilder();
-}
-    :   '"'                         {builder.append('"');}
-        ( '\\' '"'    {builder.append('"');}
-        |   '\\'~'"'             {builder.append("\\" + (char)$c);}
-        |~('\\'|'"')           {builder.append((char)$c);}
+    :   '"'
+        ( '\\' '"'
+        |   '\\'~'"'
+        |~('\\'|'"')
         )*
-        '"'                         {builder.append('"');}
-        {
-            setText(builder.toString());
-        }
+        '"'
     ;
 
 DOUBLE_ANGLE_STRING_LITERAL
@@ -1163,21 +708,13 @@ INT
     ;
 
 ARG_ACTION
-@init {
-    List<String> text = new ArrayList<String>() {{ add(null); }};
-}
     :   '['
-        NESTED_ARG_ACTION[text]
+        NESTED_ARG_ACTION
         ']'
-        {setText(text.get(0));}
     ;
 
 fragment
-NESTED_ARG_ACTION[List<String> text]
-@init {
-    $text.set(0, "");
-    StringBuilder builder = new StringBuilder();
-}
+NESTED_ARG_ACTION
     :   ( '\\' ']'
         |   '\\'~(']')
         |   ACTION_STRING_LITERAL
@@ -1187,24 +724,8 @@ NESTED_ARG_ACTION[List<String> text]
     ;
 
 ACTION
-@init
-{
-    int actionLine = getLine();
-    int actionColumn = getCharPositionInLine();
-}
     :   NESTED_ACTION
-        ('?' {$type = SEMPRED;})?
-        {
-            String action = $text;
-            int n = 1; // num delimiter chars
-            if ( action.startsWith("{{") && action.endsWith("}}") )
-            {
-                $type = FORCED_ACTION;
-                n = 2;
-            }
-            action = action.substring(n,action.length()-n - ($type==SEMPRED ? 1 : 0));
-            setText(action);
-        }
+        ('?')?
     ;
 
 fragment
@@ -1261,10 +782,6 @@ OPTIONS
 
 // we get a warning here when looking for options '{', but it works right
 RULE_REF
-@init
-{
-    int t=0;
-}
     :   'a'..'z' ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*
     ;
 
@@ -1288,31 +805,3 @@ fragment
 SRC
     :   'src' ' 'ACTION_STRING_LITERAL ' 'INT
     ;
-
-LEXER : 'lexer' ;
-
-PARSER : 'parser' ;
-
-CATCH : 'catch' ;
-
-FINALLY : 'finally' ;
-
-GRAMMAR : 'grammar' ;
-
-PRIVATE : 'private' ;
-
-PROTECTED : 'protected' ;
-
-PUBLIC : 'public' ;
-
-RETURNS : 'returns' ;
-
-THROWS : 'throws' ;
-
-TREE : 'tree' ;
-
-SCOPE : 'scope' ;
-
-IMPORT : 'import' ;
-
-FRAGMENT : 'fragment' ;

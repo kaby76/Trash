@@ -2,7 +2,10 @@ grammar Verilog3;
 
 options
 	{
-	language= C;                  // 3 characters of lookahead
+	language= C;
+	//tokenVocab = Verilog;  //call the vocabulary 'Verilog'
+    //testLiterals = false;  don't automatically test for literals
+    k = 3;                  // 3 characters of lookahead
 	}
 
 
@@ -112,9 +115,7 @@ udp_initial_statement :
 init_val :
         '1\'b0' |
         '1\'b1' |
-        '1\'bx' |
-	n=NUMBER
-	{ $n.text=="0" || $n.text=="1"}?
+        '1\'bx' |NUMBER
 	;
 
 table_definition :
@@ -532,7 +533,7 @@ non_blocking_assignment :
 	  // so suppress warning.
 conditional_statement :
         'if' LPAREN expression RPAREN statement_or_null
-        ( : 'else' statement_or_null)?
+        (  'else' statement_or_null)?
         ;
 
 case_statement :
@@ -732,12 +733,8 @@ edge_control_specifier :
    // thus avoiding a lexical conflict.
 edge_descriptor :
 	'0x' | '1x'
-      |
-	n=NUMBER
-	{ $n.text=="01" || $n.text=="10"}?
-      |
-	i=IDENTIFIER
-	{ $i.text=="x1" || $i.text=="x0"}?
+      |NUMBER
+      |IDENTIFIER
 	;
 
 timing_check_condition :
@@ -1132,13 +1129,12 @@ fragment SPACE_OR_TAB
 
 WS
 	:	SPACE_OR_TAB+
-		{$channel=HIDDEN;}
 	;
     
 ML_COMMENT
-    :   '/*' ( . ) * ? '*/' {$channel=HIDDEN;}
+    :   '/*' (  . )*? '*/'
     ;
 
 SL_COMMENT
-    : '//'  ( . ) * ?  '\r'? '\n' {$channel=HIDDEN;}
+    : '//'  (  . )*?  '\r'? '\n'
     ;

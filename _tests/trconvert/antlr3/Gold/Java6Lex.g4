@@ -85,7 +85,7 @@ NonIntegerNumber
     |   ('0' .. '9')+
     |
         HexPrefix (HexDigit )*
-        (    ()
+        (
         |    ('.' (HexDigit )* )
         )
         ( 'p' | 'P' )
@@ -160,41 +160,17 @@ WS
         |    '\u000C'
         |    '\n'
         )
-            {
-                skip();
-            }
     ;
 
 COMMENT
-         @init{
-            boolean isJavaDoc = false;
-        }
     :   '/*'
-            {
-                if((char)input.LA(1) == '*'){
-                    isJavaDoc = true;
-                }
-            }
-        ( . ) * ?
+        (  . )*?
         '*/'
-            {
-                if(isJavaDoc==true){
-                    $channel=HIDDEN;
-                }else{
-                    skip();
-                }
-            }
     ;
 
 LINE_COMMENT
     :   '//' ~('\n'|'\r')*  ('\r\n' | '\r' | '\n')
-            {
-                skip();
-            }
-    |   '//' ~('\n'|'\r')*     // a line comment could appear at the end of the file without CR/LF
-            {
-                skip();
-            }
+    |   '//' ~('\n'|'\r')*
     ;
 
 ABSTRACT

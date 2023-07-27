@@ -401,7 +401,7 @@ namespace Trash
                             new StaticContextBuilder()).evaluate(
                             dynamicContext, new object[] { os })
                         .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).FirstOrDefault();
-                    TreeEdits.Replace(star_plus, star_plus.GetText() + "?");
+                    if (star_plus != null) TreeEdits.Replace(star_plus, star_plus.GetText() + "?");
                 }
 
                 //    if (greedyOptionSpec.Contains(os) && os.ParentNode.LocalName == "block")

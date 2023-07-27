@@ -19,7 +19,21 @@ UNKNOWN_SOURCE,
 INIT
 }
 
-@rulecatch { } /** Message will catch anything */
+// Token string literals converted to explicit lexer rules.
+// Reorder these rules accordingly.
+
+DOT: '.';
+AT: 'at';
+CAUSED_BY: 'Caused by:';
+MORE: 'more';
+ELLIPSIS: '...';
+COLON: ':';
+NATIVE_METHOD: 'Native Method';
+UNKNOWN_SOURCE: 'Unknown Source';
+INIT: '<init>';
+//
+
+ /** Message will catch anything */
 
 startRule
     : stackTrace EOF;
@@ -76,7 +90,7 @@ className  : JavaWord;
 
 identifier : JavaWord;
 
-message : COLON ( .) * ?;
+message : COLON ( .)*?;
     
 Number	:	Digit+
 	;
@@ -101,23 +115,5 @@ fragment Symbol	:	'_'
 
 fragment Digit    :    '0'..'9';
 
-WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;}
+WS  :  (' '|'\r'|'\t'|'\u000C'|'\n')
     ;
-
-DOT : '.' ;
-
-AT : 'at' ;
-
-CAUSED_BY : 'Caused by:' ;
-
-MORE : 'more' ;
-
-ELLIPSIS : '...' ;
-
-COLON : ':' ;
-
-NATIVE_METHOD : 'Native Method' ;
-
-UNKNOWN_SOURCE : 'Unknown Source' ;
-
-INIT : '<init>' ;
