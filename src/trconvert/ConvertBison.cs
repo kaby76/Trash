@@ -1,18 +1,18 @@
-namespace Trash
-{
-    using Antlr4.Runtime;
-    using org.eclipse.wst.xml.xpath2.processor.util;
-    using org.w3c.dom;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using System;
-    using System.Linq;
+﻿using Antlr4.Runtime;
+using org.eclipse.wst.xml.xpath2.processor.util;
+using org.w3c.dom;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System;
+using System.Linq;
 
-    public class ConvertAntlr3
+namespace trconvert
+{
+    internal class ConvertBison
     {
         public static void ToAntlr4(UnvParseTreeNode[] trees,
-            Parser parser,
-            Lexer lexer,
-            string ffn)
+           Parser parser,
+           Lexer lexer,
+           string ffn)
         {
             // https://github.com/senseidb/sensei/pull/23
 
@@ -43,87 +43,7 @@ namespace Trash
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                 TreeEdits.Delete(optionsSpec);
             }
-            using (var dynamicContext = ate.Try(trees, parser))
-            {
-                var nodes = engine.parseExpression(
-                        @"//action",
-                        new StaticContextBuilder()).evaluate(
-                        dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                TreeEdits.Delete(nodes);
-            }
 
-            using (var dynamicContext = ate.Try(trees, parser))
-            {
-                var nodes = engine.parseExpression(
-                        @"//ruleAction",
-                        new StaticContextBuilder()).evaluate(
-                        dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                TreeEdits.Delete(nodes);
-            }
-
-            using (var dynamicContext = ate.Try(trees, parser))
-            {
-                // Allow language, tokenVocab, TokenLabelType, superClass
-                var nodes = engine.parseExpression(
-                        @"//actionBlock/(. | ./following-sibling::QM | ../SEMPREDOP)",
-                        new StaticContextBuilder()).evaluate(
-                        dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                TreeEdits.Delete(nodes);
-            }
-
-            using (var dynamicContext = ate.Try(trees, parser))
-            {
-                var nodes = engine.parseExpression(
-                        @"//throwsSpec",
-                        new StaticContextBuilder()).evaluate(
-                        dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                TreeEdits.Delete(nodes);
-            }
-
-            using (var dynamicContext = ate.Try(trees, parser))
-            {
-                var nodes = engine.parseExpression(
-                        @"//argActionBlock",
-                        new StaticContextBuilder()).evaluate(
-                        dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                TreeEdits.Delete(nodes);
-            }
-
-            using (var dynamicContext = ate.Try(trees, parser))
-            {
-                var nodes = engine.parseExpression(
-                        @"//rule_/(PROTECTED | PUBLIC | PRIVATE)",
-                        new StaticContextBuilder()).evaluate(
-                        dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                TreeEdits.Delete(nodes);
-            }
-
-            using (var dynamicContext = ate.Try(trees, parser))
-            {
-                var nodes = engine.parseExpression(
-                        @"//elementOption/(id_[following-sibling::EQUAL] | EQUAL[preceding-sibling::id_])",
-                        new StaticContextBuilder()).evaluate(
-                        dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                TreeEdits.Delete(nodes);
-            }
-
-            using (var dynamicContext = ate.Try(trees, parser))
-            {
-                var nodes = engine.parseExpression(
-                        @"//elementNoOptionSpec/(id_[following-sibling::EQUAL] | EQUAL[preceding-sibling::id_])",
-                        new StaticContextBuilder()).evaluate(
-                        dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                TreeEdits.Delete(nodes);
-            }
-            
             // Fix options in the beginning of rules.
             // See https://theantlrguy.atlassian.net/wiki/spaces/ANTLR3/pages/2687029/Rule+and+subrule+options
             using (var dynamicContext = ate.Try(trees, parser))
@@ -448,7 +368,7 @@ namespace Trash
                         dynamicContext, new object[] { dynamicContext.Document })
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                 TreeEdits.Delete(empty_block2);
-                
+
 
                 // Rewrite remaining action blocks that contain input, etc.
                 // input was renamed to _input in ANTLR 4.

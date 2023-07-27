@@ -101,8 +101,8 @@ namespace Trash
                                 System.Console.WriteLine("Unhandled conversion to.");
                                 break;
                         }
-                    }
                         break;
+                    }
 
                     case "ANTLRv3":
                     {
@@ -116,8 +116,13 @@ namespace Trash
                             Parser = parser
                         };
                         results.Add(tuple);
-                    }
                         break;
+                    }
+
+                    case "Bison":
+                    {
+                        break;
+                    }
 
                     case "rex":
                     {
@@ -131,14 +136,14 @@ namespace Trash
                             Parser = parser
                         };
                         results.Add(tuple);
-                    }
                         break;
+                    }
 
                     default:
                         {
                             System.Console.WriteLine("Unknown type for conversion.");
+                            break;
                         }
-                        break;
                 }
             }
 
