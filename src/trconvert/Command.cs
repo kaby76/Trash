@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Text.RegularExpressions;
+using trconvert;
 
 namespace Trash
 {
@@ -121,6 +122,16 @@ namespace Trash
 
                     case "Bison":
                     {
+                        ConvertBison.ToAntlr4(trees, parser, lexer, fn);
+                        var tuple = new ParsingResultSet()
+                        {
+                            Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                            FileName = new Regex("[^.]+$").Replace(fn, "g4"),
+                            Nodes = trees,
+                            Lexer = lexer,
+                            Parser = parser
+                        };
+                        results.Add(tuple);
                         break;
                     }
 

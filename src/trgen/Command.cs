@@ -1452,7 +1452,7 @@
                     .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                     .Select(f => f.FullName.Replace('\\', '/'))
                     .ToList();
-                GenFromTemplates(this, config, test);
+                GenFromTemplates(config, test);
                 AddSource(config, test);
             }
         }
@@ -1600,7 +1600,7 @@
             }
         }
      
-        private void GenFromTemplates(Command p, Config config, Test test)
+        private void GenFromTemplates(Config config, Test test)
         {
             var append_namespace = (!(test.target == "CSharp" || test.target == "Antlr4cs"));
             List<string> template_directory_files_to_copy;
@@ -1765,6 +1765,7 @@
                             .Substring(output_dir.Length))
                     .Where(t => t.Contains(Suffix(test.target)))
                     .ToList();
+		        t.Add("target", test.target);
                 t.Add("additional_sources", yo1);
                 t.Add("additional_targets", test.all_target_files.Where(xx =>
                     {
