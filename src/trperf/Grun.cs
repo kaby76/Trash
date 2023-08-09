@@ -106,14 +106,7 @@
                 {
                     foreach (var file in config.Files)
                     {
-                        try
-                        {
-                            txt = File.ReadAllText(file);
-                        }
-                        catch
-                        {
-                            txt = file;
-                        }
+                        txt = File.ReadAllText(file);
                         Doit(txt);
                     }
                 }

@@ -2,8 +2,8 @@
   "profiles": {
     "trperf": {
       "commandName": "Project",
-      "commandLineArgs": "examples/Test.kt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3539\\kotlin\\kotlin\\Generated-CSharp"
+      "commandLineArgs": "xxx",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-2589\\sql\\plsql\\Generated-CSharp"
     }
   }
 }
