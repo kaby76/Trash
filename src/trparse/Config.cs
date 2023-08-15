@@ -40,5 +40,8 @@ namespace Trash
 
         [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
         public bool ReadFileNameStdin { get; set; }
+
+        [Option("xf", Required = false, HelpText = "Read input file names from file provided on command line.")]
+        public string ReadFileNameFile { get; set; }
     }
 }

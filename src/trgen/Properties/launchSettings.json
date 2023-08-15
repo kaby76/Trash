@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t CSharp",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\targ-agn-expr"
+      "commandLineArgs": "-t Java",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3656\\java\\java20"
     }
   }
 }

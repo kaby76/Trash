@@ -92,6 +92,27 @@
                     DateTime after = DateTime.Now;
                     System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
                 }
+                else if (config.ReadFileNameFile != null)
+                {
+                    List<string> inputs = new List<string>();
+                    inputs = File.ReadAllLines(config.ReadFileNameFile).ToList();
+                    DateTime before = DateTime.Now;
+                    for (int f = 0; f < inputs.Count(); ++f)
+                    {
+                        try
+                        {
+                            txt = File.ReadAllText(inputs[f]);
+                        }
+                        catch
+                        {
+                            txt = inputs[f];
+                        }
+                        var r = DoParse(parser_type, txt, "", inputs[f], f, data);
+                        result = result == 0 ? r : result;
+                    }
+                    DateTime after = DateTime.Now;
+                    System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
+                }
                 else if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
                 {
                     string lines = null;

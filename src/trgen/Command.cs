@@ -1777,7 +1777,8 @@
                 t.Add("antlr_encoding", test.antlr_encoding);
                 t.Add("antlr_tool_args", config.antlr_tool_args);
                 t.Add("antlr_tool_path", config.antlr_tool_path);
-                t.Add("cap_start_symbol", Cap(test.start_rule));
+                if (test.start_rule == null) t.Add("cap_start_symbol", Cap("no_start_rule_declared"));
+                else t.Add("cap_start_symbol", Cap(test.start_rule));
                 t.Add("case_insensitive_type", test.case_insensitive_type);
                 t.Add("cli_bash", test.os_targets.Contains(OSTarget.Unix.ToString()));
                 t.Add("cli_cmd", GetOSTarget() == OSTarget.Windows);
