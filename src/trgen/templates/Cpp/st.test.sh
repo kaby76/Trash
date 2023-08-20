@@ -1,5 +1,8 @@
 # Generated from trgen <version>
 
+# comment for local dotnet tools.
+global=1
+
 # People often specify a test file directory, but sometimes no
 # tests are provided. Git won't check in an empty directory.
 # Test if the test file directory does not exist, or it is just
@@ -24,7 +27,12 @@ files2=`find ../<example_files_unix> -type f | grep -v '.errors$' | grep -v '.tr
 files=()
 for f in $files2
 do
-    dotnet triconv -- -f utf-8 $f > /dev/null 2>&1
+    if [ "$global" == "" ]
+    then
+        dotnet triconv -- -f utf-8 $f > /dev/null 2>&1
+    else
+        triconv -f utf-8 $f > /dev/null 2>&1
+    fi
     if [ "$?" = "0" ]
     then
         files+=( $f )
@@ -37,7 +45,12 @@ done
 rm -f parse.txt
 for f in ${files[*]}
 do
-    dotnet trwdog -- ./build/<if(os_win)>Release/<endif><exec_name> -q -tee -tree $f >> parse.txt
+    if [ "$global" == "" ]
+    then
+        dotnet trwdog -- ./build/<if(os_win)>Release/<endif><exec_name> -q -tee -tree $f >> parse.txt
+    else
+        trwdog ./build/<if(os_win)>Release/<endif><exec_name> -q -tee -tree $f >> parse.txt
+    fi
     xxx="$?"
     if [ "$xxx" -ne 0 ]
     then
@@ -46,8 +59,13 @@ do
 done
 <else>
 # Group parsing.
-echo "${files[*]}" | dotnet trwdog -- ./build/<if(os_win)>Release/<endif><exec_name> -q -x -tee -tree > parse.txt 2>&1
-status=$?
+if [ "$global" == "" ]
+then
+    echo "${files[*]}" | dotnet trwdog -- ./build/<if(os_win)>Release/<endif><exec_name> -q -x -tee -tree > parse.txt 2>&1
+else
+    echo "${files[*]}" | trwdog ./build/<if(os_win)>Release/<endif><exec_name> -q -x -tee -tree > parse.txt 2>&1
+fi
+status="$?"
 <endif>
 
 # trwdog returns 255 if it cannot spawn the process. This could happen

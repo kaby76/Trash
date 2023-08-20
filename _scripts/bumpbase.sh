@@ -3,9 +3,9 @@
 version_framework="net7.0"
 version_base="4.5.0"
 version_tree="5.2.0"
-version_antlr4buildtasks="12.0"
+version_antlr4buildtasks="12.20"
 version_stringtemplate="4.2.0"
-version_antlrruntime="4.11.1"
+version_antlrruntime="4.13.0"
 
 files=`find . -name '*.csproj'`
 subset=`grep -l -e Antlr4.Runtime.Standard $files`
