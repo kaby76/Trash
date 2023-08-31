@@ -1,4 +1,4 @@
-// Generated from trgen 0.20.14
+// Generated from trgen 0.21.2
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
@@ -83,6 +83,7 @@ public class Program
     static bool show_tree = false;
     static bool show_tokens = false;
     static bool show_trace = false;
+    static bool show_diagnostic = false;
     static bool old = false;
     static bool two_byte = false;
     static int exit_code = 0;
@@ -97,7 +98,11 @@ public class Program
         List<string> inputs = new List<string>();
         for (int i = 0; i < args.Length; ++i)
         {
-            if (args[i] == "-profile")
+            if (args[i] == "-d")
+            {
+                show_diagnostic = true;
+            }
+            else if (args[i] == "-profile")
             {
                 show_profile = true;
             }
@@ -246,6 +251,10 @@ public class Program
         parser.RemoveErrorListeners();
         lexer.AddErrorListener(listener_lexer);
         parser.AddErrorListener(listener_parser);
+	if (show_diagnostic)
+        {
+            parser.AddErrorListener(new MyDiagnosticErrorListener());
+        }
         if (show_profile)
         {
             parser.Profile = true;

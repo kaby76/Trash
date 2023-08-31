@@ -479,7 +479,7 @@ namespace Server
                                 }
                             }
                             {
-                                var expr = "//(lexerRuleSpec/lexerRuleBlock//terminal/TOKEN_REF | parserRuleSpec/ruleBlock//(ruleref/RULE_REF | terminal/TOKEN_REF))";
+                                var expr = "//(lexerRuleSpec/lexerRuleBlock//(ruleref/RULE_REF | terminal/TOKEN_REF) | parserRuleSpec/ruleBlock//(ruleref/RULE_REF | terminal/TOKEN_REF))";
                                 var nodes = engine.parseExpression(expr,
                                         new StaticContextBuilder()).evaluate(dynamicContext,
                                         new object[] { dynamicContext.Document })

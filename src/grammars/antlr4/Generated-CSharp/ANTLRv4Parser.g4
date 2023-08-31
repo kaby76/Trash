@@ -2,6 +2,7 @@ parser grammar ANTLRv4Parser;
 
 options
 {
+    superClass = ANTLRv4ParserBase;
 	tokenVocab = ANTLRv4Lexer;
 }
 
@@ -276,6 +277,7 @@ ebnfSuffix
 lexerAtom
    : characterRange
    | terminal
+   | { this.AllowParserRules() }? ruleref
    | notSet
    | LEXER_CHAR_SET
    | DOT elementOptions?

@@ -24,41 +24,26 @@ files2=`find ../examples -type f | grep -v '.errors$' | grep -v '.tree$'`
 files=()
 for f in $files2
 do
-    triconv -f utf-8 $f > /dev/null 2>&1
+    dotnet triconv -- -f utf-8 $f > /dev/null 2>&1
     if [ "$?" = "0" ]
     then
         files+=( $f )
     fi
 done
 
-n=10
-
 # Parse all input files.
-# Individual parsing.
-rm -f parse.txt
-for f in ${files[*]}
-do
-    # Loop from 1 to n and execute the body of the loop each time
-    for ((i=1; i<=n; i++))
-    do
-        trwdog ./bin/Debug/net7.0/Test.exe -prefix individual $f >> parse.txt 2>&1
-        xxx="$?"
-        if [ "$xxx" -ne 0 ]
-        then
-            status="$xxx"
-        fi
-    done
-done
 # Group parsing.
-# Loop from 1 to n and execute the body of the loop each time
-for ((i=1; i<=n; i++))
-do
-    echo "${files[*]}" | trwdog ./bin/Debug/net7.0/Test.exe -x -prefix group >> parse.txt 2>&1
-    xxx="$?"
-    if [ "$xxx" -ne 0 ]
-    then
-        status="$xxx"
-    fi
-done
+echo "${files[*]}" | dotnet trwdog -- dotnet trcover -- -x
+status=$?
 
+# trwdog returns 255 if it cannot spawn the process. This could happen
+# if the environment for running the program does not exist, or the
+# program did not build.
+if [ "$status" = "255" ]
+then
+    echo "Test failed."
+    exit 1
+fi
+
+rm -f $old/updated.txt $old/new_errors2.txt $old/new_errors.txt
 exit 0
