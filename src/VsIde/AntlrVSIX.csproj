@@ -69,17 +69,17 @@
 	<ItemGroup>
 		<PackageReference Include="AntlrTreeEditing" Version="5.1.0" />
 		<PackageReference Include="Domemtech.TrashBase" Version="4.4.0" />
-		<PackageReference Include="StreamJsonRpc" Version="2.15.29" />
+		<PackageReference Include="StreamJsonRpc" Version="2.16.36" />
 		<PackageReference Include="SharpZipLib">
 			<Version>1.4.2</Version>
 		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.VisualStudio.Editor" Version="17.6.268" />
-		<PackageReference Include="Microsoft.VisualStudio.LanguageServer.Client" Version="17.6.42" />
+		<PackageReference Include="Microsoft.VisualStudio.Editor" Version="17.7.188" />
+		<PackageReference Include="Microsoft.VisualStudio.LanguageServer.Client" Version="17.7.20" />
 		<PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol" Version="17.2.8" />
-		<PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.6.2164">
+		<PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.7.2196">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
