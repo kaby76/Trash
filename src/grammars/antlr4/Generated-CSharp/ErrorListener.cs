@@ -40,6 +40,7 @@ public class ErrorListener<S> : IAntlrErrorListener< S>
     }
 }
 
+/*
 public class MyDiagnosticErrorListener : DiagnosticErrorListener
 {
     public override void ReportAmbiguity​(Parser recognizer, DFA dfa, int startIndex, int stopIndex,
@@ -109,3 +110,4 @@ public class MyDiagnosticErrorListener : DiagnosticErrorListener
         return "";
     }
 }
+*/

@@ -253,7 +253,7 @@ public class Program
         parser.AddErrorListener(listener_parser);
 	if (show_diagnostic)
         {
-            parser.AddErrorListener(new MyDiagnosticErrorListener());
+            //parser.AddErrorListener(new MyDiagnosticErrorListener());
         }
         if (show_profile)
         {
