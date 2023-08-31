@@ -189,7 +189,6 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                 parent.ChildNodes.Add(new_node);
 
                 var child = new UnvParseTreeText();
-                child.NodeType = NodeConstants.TEXT_NODE;
                 //                child.Data = new xpath.org.eclipse.wst.xml.xpath2.processor.@internal.OutputParseTree().PerformEscapes(/*"'" + */ tree.GetText() /*+ "'"*/);
                 channel = i >= 0 ? tokstream.Get(i).Channel : 0;
                 tt = i >= 0 ? tokstream.Get(i).Type : 0;
@@ -205,8 +204,8 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                     line.Name = "Line";
                     line.LocalName = "Line";
                     line.StringValue = v.ToString();
-                    line.ParentNode = child;
-                    child.ChildNodes.Add(line);
+                    line.ParentNode = new_node;
+                    new_node.ChildNodes.Add(line);
                     map.Add(line);
                 }
                 if (_include_line_column)
@@ -218,8 +217,8 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                     column.Name = "Column";
                     column.LocalName = "Column";
                     column.StringValue = v.ToString();
-                    column.ParentNode = child;
-                    child.ChildNodes.Add(column);
+                    column.ParentNode = new_node;
+                    new_node.ChildNodes.Add(column);
                     map.Add(column);
                 }
 

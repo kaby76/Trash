@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/class.scala",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\issue-3260\\fix-for-scala\\scala\\Generated-CSharp"
+      "commandLineArgs": "XQuery31.g4 -l",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3636\\xquery\\3.1\\Generated-CSharp"
     }
   }
 }
