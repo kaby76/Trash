@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
-    <ProjectReference Include="../LanguageServer/LanguageServer.csproj" />
     <ProjectReference Include="../Workspaces/Workspaces.csproj" />
   </ItemGroup>
   <ItemGroup>

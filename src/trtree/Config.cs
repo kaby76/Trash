@@ -10,5 +10,8 @@ namespace Trash
 
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
+
+        [Option('a', "antlr-style", Required = false, HelpText = "Output tree as Antlr ToStringTree() style.")]
+        public bool AntlrStyle { get; set; }
     }
 }

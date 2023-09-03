@@ -10,6 +10,7 @@
     using org.w3c.dom;
     using XmlDOM;
     using System.Xml.Linq;
+    using org.eclipse.wst.xml.xpath2.processor.@internal.function;
 
     // Class to offer Antlr tree edits, both in-place and out-of-place,
     // and tree copying.
@@ -507,71 +508,59 @@
 
         public static UnvParseTreeNode CopyTreeRecursiveAux(UnvParseTreeNode original, UnvParseTreeNode parent)
         {
-            throw new NotImplementedException();
-            //if (original == null) return null;
-            //else if (original is AntlrAttr a)
-            //{
-            //    var o = a;
-            //    var c = new AntlrAttr(a);
-            //    var t = a.Value as MyToken;
-            //    var tt = new MyToken() { Type = t.Type, Text = t.Text, Channel = t.Channel, StartIndex = t.StartIndex, StopIndex = t.StopIndex, TokenIndex = t.TokenIndex, InputStream = ncs };
-            //    var oo = new MyTerminalNodeImpl(tt);
-            //    oo.TokenStream = nts;
-            //    oo.InputStream = ncs;
-            //    if (parent != null)
-            //    {
-            //        var parent_rule_context = (ParserRuleContext)parent;
-            //        oo.Parent = parent_rule_context;
-            //        parent_rule_context.AddChild(oo);
-            //    }
-            //    return oo;
-            //}
-            //else if (original is MyParserTreeNode b)
-            //{
-            //    var p = parent as MyParserTreeNode;
-            //    var new_node = new MyParserRuleContext(p, 0);
-            //    new_node.TokenStream = nts;
-            //    new_node.InputStream = ncs;
-            //    new_node._ruleIndex = b.RuleIndex;
-            //    if (p != null)
-            //    {
-            //        var parent_rule_context = p;
-            //        new_node.Parent = parent_rule_context;
-            //        parent_rule_context.AddChild(new_node);
-            //    }
-            //    new_node.Start = b.Start;
-            //    new_node.Stop = b.Stop;
-            //    int child_count = original.ChildCount;
-            //    for (int i = 0; i < child_count; ++i)
-            //    {
-            //        var child = original.GetChild(i);
-            //        CopyTreeRecursiveAux(child, new_node, nts, ncs);
-            //    }
-            //    return new_node;
-            //}
-            //else return null;
+            UnvParseTreeNode result = null;
+            if (original == null) return null;
+            else if (original is UnvParseTreeText t)
+            {
+                var copy = new UnvParseTreeText()
+                {
+                    Data = t.Data,
+                    TokenType = t.TokenType,
+                    NodeValue = t.NodeValue,
+                    Channel = t.Channel,
+
+                };
+                result = copy;
+            }
+            else if (original is UnvParseTreeAttr a)
+            {
+                var copy = new UnvParseTreeAttr()
+                {
+                    NodeType = a.NodeType,
+                    Prefix = a.Prefix,
+                    TokenType = a.TokenType,
+                    NodeValue = a.NodeValue,
+                    StringValue = a.StringValue,
+                    Name = a.Name,
+                    Channel = a.Channel,
+                };
+                result = copy;
+            }
+            else if (original is UnvParseTreeElement e)
+            {
+                var copy = new UnvParseTreeElement()
+                {
+                    NodeType = e.NodeType,
+                    Prefix = e.Prefix,
+                    NodeValue = e.NodeValue,
+                    LocalName = e.LocalName,
+                };
+                result = copy;
+            } else
+            { }
+            if (parent != null) parent.ChildNodes.Add(result);
+            for (int i = 0; original.ChildNodes != null && i < original.ChildNodes.Length; ++i)
+            {
+                var c = original.ChildNodes.item(i);
+                CopyTreeRecursiveAux(c as UnvParseTreeNode, result);
+            }
+            return result;
         }
 
         public static UnvParseTreeNode CopyTreeRecursive(UnvParseTreeNode original)
         {
-            throw new NotImplementedException();
-            //if (original == null) return (null, null, null);
-            //// Make a copy of the token stream and char streams and attach them to this new tree.
-            //var ncs = new MyCharStream();
-            //var nts = new MyTokenStream();
-            //if (original is MyParserTreeNode o_)
-            //{
-            //    var orig_ts = o_.TokenStream;
-            //    nts = new MyTokenStream(orig_ts);
-            //    var t = TreeEdits.LeftMostToken(o_);
-            //    var ti = t.Payload.TokenSource;
-            //    var ts = o_.TokenStream;
-            //    var cs = ts._charstream;
-            //    ncs.Text = String.Copy(cs.Text);
-            //}
-            //var copy = CopyTreeRecursiveAux(original, parent, nts, ncs);
-
-            //return (copy, ncs, nts);
+            var copy = CopyTreeRecursiveAux(original, null);
+            return copy;
         }
 
         public static string Reconstruct(IEnumerable<UnvParseTreeNode> trees)

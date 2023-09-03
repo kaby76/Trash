@@ -1,14 +1,13 @@
-﻿using System.Collections;
+﻿using AntlrJson;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using trconvert;
 
 namespace Trash
 {
-    using AntlrJson;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text.Json;
 
     class Command
     {

@@ -1,16 +1,15 @@
-﻿namespace Trash
-{
-    using Antlr4.Runtime;
-    using AntlrJson;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using org.eclipse.wst.xml.xpath2.processor.util;
-    using org.w3c.dom;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using System.Text.Json;
+﻿using Antlr4.Runtime;
+using AntlrJson;
+using org.eclipse.wst.xml.xpath2.processor.util;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 
+namespace Trash
+{
     class Command
     {
         public string Help()

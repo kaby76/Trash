@@ -8,7 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Algorithms\Algorithms.csproj" />
     <ProjectReference Include="..\ParseTreeEditing\ParseTreeEditing.csproj" />
-    <ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
     <ProjectReference Include="..\Workspaces\Workspaces.csproj" />
   </ItemGroup>
 

@@ -34,10 +34,9 @@ This program is part of the Trash toolkit.
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
-		<ProjectReference Include="..\LanguageServer\LanguageServer.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="readme.md" Pack="true" PackagePath=""/>
+		<None Include="readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
