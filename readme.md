@@ -88,6 +88,7 @@ dotnet tool uninstall -g trstrip
 dotnet tool uninstall -g trtext
 dotnet tool uninstall -g trtokens
 dotnet tool uninstall -g trtree
+dotnet tool uninstall -g trunfold
 dotnet tool uninstall -g trwdog
 dotnet tool uninstall -g trxgrep
 dotnet tool uninstall -g trxml
