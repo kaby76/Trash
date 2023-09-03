@@ -43,6 +43,7 @@ dotnet tool install -g trcombine
 dotnet tool install -g trconvert
 dotnet tool install -g trcover
 dotnet tool install -g trdelete
+dotnet tool install -g trdeltree
 dotnet tool install -g trfoldlit
 dotnet tool install -g trgen
 dotnet tool install -g triconv
@@ -58,6 +59,7 @@ dotnet tool install -g trstrip
 dotnet tool install -g trtext
 dotnet tool install -g trtokens
 dotnet tool install -g trtree
+dotnet tool install -g trunfold
 dotnet tool install -g trwdog
 dotnet tool install -g trxgrep
 dotnet tool install -g trxml
