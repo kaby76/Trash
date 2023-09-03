@@ -69,7 +69,7 @@ public class MyDiagnosticErrorListener : DiagnosticErrorListener
         }
         catch (RecognitionException e)
         {
-            System.Console.WriteLine("catch");
+            System.Console.WriteLine("catch " + e);
         }
     }
 
