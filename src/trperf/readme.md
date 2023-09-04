@@ -27,4 +27,4 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.21.2 Fix to trconvert for Bison. Add trquery. Fixes to trperf, trparse.
+0.21.2 Add trunfold. Various fixes.
