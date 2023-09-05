@@ -442,6 +442,9 @@ namespace Server
                         using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
                                ate.Try(prs.Nodes, prs.Parser))
                         {
+                            prs.ParserDefs.Clear();
+                            prs.LexerDefs.Clear();
+                            prs.Refs.Clear();
                             {
                                 var expr = "//parserRuleSpec/RULE_REF";
                                 var nodes = engine.parseExpression(expr,
@@ -1667,10 +1670,24 @@ namespace Server
                     List<object> symbols = new List<object>();
                     List<uint> d = new List<uint>();
                     SortedList<int, IParseTree> sorted_symbols = new SortedList<int, IParseTree>();
-                    foreach (var n in prs.ParserDefs) sorted_symbols.Add(prs.Parser.TokenStream.Get(n.SourceInterval.a).StartIndex, n);
-                    foreach (var n in prs.LexerDefs) sorted_symbols.Add(prs.Parser.TokenStream.Get(n.SourceInterval.a).StartIndex, n);
-                    foreach (var n in prs.Refs) sorted_symbols.Add(prs.Parser.TokenStream.Get(n.SourceInterval.a).StartIndex, n);
-
+                    foreach (var n in prs.Refs)
+                    {
+                        try
+                        {
+                            var a = n.SourceInterval.a;
+                            var t = prs.Parser.TokenStream.Get(n.SourceInterval.a);
+                            var si = t.StartIndex;
+                            Logger.Log.WriteLine("loop " + n.ToString());
+                            Logger.Log.WriteLine("a " + a);
+                            Logger.Log.WriteLine("t " + t);
+                            Logger.Log.WriteLine("si + " + si);
+                            sorted_symbols.Add(si, n);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Log.WriteLine("catch e " + e);
+                        }
+                    }
                     (int,int) start = (1, 0);
 
                     foreach (var pair in sorted_symbols)
