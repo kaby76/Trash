@@ -2,8 +2,8 @@
   "profiles": {
     "trcover": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/ERASABLE_ASSIGNMENTS.agc",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3509\\agc\\Generated-CSharp"
+      "commandLineArgs": "../examples-sql-script/package_with_cursor.sql",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3702\\sql\\plsql\\Generated-CSharp-script"
     }
   }
 }

@@ -459,23 +459,21 @@ namespace Algorithms
         /**
          * Returns a string representation of the graph.
          *
-         * @return the number of vertices <em>V</em>, followed by the number of edges <em>E</em>,  
-         *         followed by the <em>V</em> adjacency lists
+         * @return a Dot graph representation of the graph.
          */
         public override string ToString()
         {
             StringBuilder s = new StringBuilder();
-            s.Append(V.ToString() + " vertices, " + E + " edges " + System.Environment.NewLine);
-            foreach (T v in Vertices)
+            HashSet<T> verts = new HashSet<T>();
+            s.AppendLine("digraph G {");
+            foreach (DirectedEdge<T> e in Edges)
             {
-                s.Append(string.Format("{0}: ", v));
-		foreach (var e in SuccessorEdges(v))
-		{
-			var w = e.ToString();
-			s.Append(string.Format("{0} ", w));
-		}
-		s.Append(System.Environment.NewLine);
+    	        var w = e.ToString();
+			    s.AppendLine(w);
+                verts.Add(e.From);
+                verts.Add(e.To);
             }
+            s.AppendLine("}");
             return s.ToString();
         }
 

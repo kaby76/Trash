@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Antlr4.Runtime.Atn;
 
 namespace trcover
 {
@@ -58,22 +60,29 @@ namespace trcover
 
         public class Rule
         {
-            public Rule() { }
+            public Rule()
+            {
+            }
+
             public string grammar;
             public string lhs;
             public int lhs_rule_number;
             public Digraph<string, SymbolEdge<string>> rhs;
         }
+
         public HashSet<Rule> Rules { get; set; } = new HashSet<Rule>();
 
-        public Model() { }
+        public Model()
+        {
+        }
 
         public override Digraph<string, SymbolEdge<string>> VisitActionBlock(ANTLRv4Parser.ActionBlockContext context)
         {
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitActionScopeName(ANTLRv4Parser.ActionScopeNameContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitActionScopeName(
+            ANTLRv4Parser.ActionScopeNameContext context)
         {
             return null;
         }
@@ -116,13 +125,24 @@ namespace trcover
                 var cg = this.VisitAlternative(c);
                 foreach (var v in cg.Vertices) g.AddVertex(v);
                 foreach (var e in cg.Edges) g.AddEdge(e);
-                foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
+                foreach (var v in cg.StartVertices)
+                {
+                    var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                    g.AddEdge(e);
+                }
+
+                foreach (var v in cg.EndVertices)
+                {
+                    var e = new SymbolEdge<string>() { From = v, To = t, _symbol = null };
+                    g.AddEdge(e);
+                }
             }
+
             return g;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitArgActionBlock(ANTLRv4Parser.ArgActionBlockContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitArgActionBlock(
+            ANTLRv4Parser.ArgActionBlockContext context)
         {
             return null;
         }
@@ -142,7 +162,8 @@ namespace trcover
             var t = "" + gen++;
             g.AddStart(g.AddVertex(f));
             g.AddEnd(g.AddVertex(t));
-            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = ct4 });
+            var e = new SymbolEdge<string>() { From = f, To = t, _symbol = ct4 };
+            g.AddEdge(e);
             return g;
         }
 
@@ -164,9 +185,19 @@ namespace trcover
                 var cg = this.VisitSetElement(c);
                 foreach (var v in cg.Vertices) g.AddVertex(v);
                 foreach (var e in cg.Edges) g.AddEdge(e);
-                foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
+                foreach (var v in cg.StartVertices)
+                {
+                    var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                    g.AddEdge(e);
+                }
+
+                foreach (var v in cg.EndVertices)
+                {
+                    var e = new SymbolEdge<string>() { From = v, To = t, _symbol = null };
+                    g.AddEdge(e);
+                }
             }
+
             return g;
         }
 
@@ -180,14 +211,16 @@ namespace trcover
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitCharacterRange(ANTLRv4Parser.CharacterRangeContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitCharacterRange(
+            ANTLRv4Parser.CharacterRangeContext context)
         {
             var g = new Digraph<string, SymbolEdge<string>>();
             var f = "" + gen++;
             var t = "" + gen++;
             g.AddStart(g.AddVertex(f));
             g.AddEnd(g.AddVertex(t));
-            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = /*context.GetText()*/ null });
+            var e = new SymbolEdge<string>() { From = f, To = t, _symbol = /*context.GetText()*/ null };
+            g.AddEdge(e);
             return g;
         }
 
@@ -195,12 +228,14 @@ namespace trcover
         //{
         //}
 
-        public override Digraph<string, SymbolEdge<string>> VisitDelegateGrammar(ANTLRv4Parser.DelegateGrammarContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitDelegateGrammar(
+            ANTLRv4Parser.DelegateGrammarContext context)
         {
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitDelegateGrammars(ANTLRv4Parser.DelegateGrammarsContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitDelegateGrammars(
+            ANTLRv4Parser.DelegateGrammarsContext context)
         {
             return null;
         }
@@ -214,51 +249,88 @@ namespace trcover
             {
                 case "+":
                 case "+?":
+                {
+                    var f = "" + gen++;
+                    var t = "" + gen++;
+                    g.AddStart(g.AddVertex(f));
+                    g.AddEnd(g.AddVertex(t));
+                    foreach (var v in cg.Vertices) g.AddVertex(v);
+                    foreach (var e in cg.Edges) g.AddEdge(e);
+                    foreach (var v in cg.StartVertices)
                     {
-                        var f = "" + gen++;
-                        var t = "" + gen++;
-                        g.AddStart(g.AddVertex(f));
-                        g.AddEnd(g.AddVertex(t));
-                        foreach (var v in cg.Vertices) g.AddVertex(v);
-                        foreach (var e in cg.Edges) g.AddEdge(e);
-                        foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                        foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                        g.AddEdge(new SymbolEdge<string>() { From = t, To = f, _symbol = null });
-                        break;
+                        var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                        g.AddEdge(e);
                     }
+
+                    foreach (var v in cg.EndVertices)
+                    {
+                        var e = new SymbolEdge<string>() { From = v, To = t, _symbol = null };
+                        g.AddEdge(e);
+                    }
+
+                    {
+                        var e = new SymbolEdge<string>() { From = t, To = f, _symbol = null };
+                        g.AddEdge(e);
+                    }
+                    break;
+                }
                 case "*":
                 case "*?":
+                {
+                    var f = "" + gen++;
+                    g.AddStart(g.AddVertex(f));
+                    g.AddEnd(g.AddVertex(f));
+                    foreach (var v in cg.Vertices) g.AddVertex(v);
+                    foreach (var e in cg.Edges) g.AddEdge(e);
+                    foreach (var v in cg.StartVertices)
                     {
-                        var f = "" + gen++;
-                        g.AddStart(g.AddVertex(f));
-                        g.AddEnd(g.AddVertex(f));
-                        foreach (var v in cg.Vertices) g.AddVertex(v);
-                        foreach (var e in cg.Edges) g.AddEdge(e);
-                        foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                        foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = f, _symbol = null });
-                        break;
+                        var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                        g.AddEdge(e);
                     }
+
+                    foreach (var v in cg.EndVertices)
+                    {
+                        var e = new SymbolEdge<string>() { From = v, To = f, _symbol = null };
+                        g.AddEdge(e);
+                    }
+
+                    break;
+                }
                 case "?":
                 case "??":
+                {
+                    var f = "" + gen++;
+                    var t = "" + gen++;
+                    g.AddStart(g.AddVertex(f));
+                    g.AddEnd(g.AddVertex(t));
+                    foreach (var v in cg.Vertices) g.AddVertex(v);
+                    foreach (var e in cg.Edges) g.AddEdge(e);
+                    foreach (var v in cg.StartVertices)
                     {
-                        var f = "" + gen++;
-                        var t = "" + gen++;
-                        g.AddStart(g.AddVertex(f));
-                        g.AddEnd(g.AddVertex(t));
-                        foreach (var v in cg.Vertices) g.AddVertex(v);
-                        foreach (var e in cg.Edges) g.AddEdge(e);
-                        foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                        foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                        g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
-                        break;
+                        var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                        g.AddEdge(e);
                     }
+
+                    foreach (var v in cg.EndVertices)
+                    {
+                        var e = new SymbolEdge<string>() { From = v, To = t, _symbol = null };
+                        g.AddEdge(e);
+                    }
+
+                    {
+                        var e = new SymbolEdge<string>() { From = f, To = t, _symbol = null };
+                        g.AddEdge(e);
+                    }
+                    break;
+                }
                 case null:
-                    {
-                        return cg;
-                    }
+                {
+                    return cg;
+                }
                 default:
                     throw new Exception();
             }
+
             return g;
         }
 
@@ -277,49 +349,85 @@ namespace trcover
                 switch (suffix)
                 {
                     case null:
-                        {
-                            return cg;
-                        }
+                    {
+                        return cg;
+                    }
                     case "+":
                     case "+?":
+                    {
+                        var f = "" + gen++;
+                        var t = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(t));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
                         {
-                            var f = "" + gen++;
-                            var t = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(t));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                            g.AddEdge(new SymbolEdge<string>() { From = t, To = f, _symbol = null });
-                            return g;
+                            var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                            g.AddEdge(e);
                         }
+
+                        foreach (var v in cg.EndVertices)
+                        {
+                            var e = new SymbolEdge<string>() { From = v, To = t, _symbol = null };
+                            g.AddEdge(e);
+                        }
+
+                        {
+                            var e = new SymbolEdge<string>() { From = t, To = f, _symbol = null };
+                            g.AddEdge(e);
+                        }
+                        return g;
+                    }
                     case "*":
                     case "*?":
+                    {
+                        var f = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(f));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
                         {
-                            var f = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(f));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = f, _symbol = null });
-                            return g;
+                            var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                            g.AddEdge(e);
                         }
+
+                        foreach (var v in cg.EndVertices)
+                        {
+                            var e = new SymbolEdge<string>() { From = v, To = f, _symbol = null };
+                            g.AddEdge(e);
+                        }
+
+                        return g;
+                    }
                     case "?":
                     case "??":
+                    {
+                        var f = "" + gen++;
+                        var t = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(t));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
                         {
-                            var f = "" + gen++;
-                            var t = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(t));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
-                            return g;
+                            var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                            g.AddEdge(e);
                         }
+
+                        foreach (var v in cg.EndVertices)
+                        {
+                            var e = new SymbolEdge<string>() { From = v, To = t, _symbol = null };
+                            g.AddEdge(e);
+                        }
+
+                        {
+                            var e = new SymbolEdge<string>() { From = f, To = t, _symbol = null };
+                            g.AddEdge(e);
+                        }
+                        return g;
+                    }
                     default:
                         throw new Exception();
                 }
@@ -332,49 +440,85 @@ namespace trcover
                 switch (suffix)
                 {
                     case null:
-                        {
-                            return cg;
-                        }
+                    {
+                        return cg;
+                    }
                     case "+":
                     case "+?":
+                    {
+                        var f = "" + gen++;
+                        var t = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(t));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
                         {
-                            var f = "" + gen++;
-                            var t = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(t));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                            g.AddEdge(new SymbolEdge<string>() { From = t, To = f, _symbol = null });
-                            return g;
+                            var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                            g.AddEdge(e);
                         }
+
+                        foreach (var v in cg.EndVertices)
+                        {
+                            var e = new SymbolEdge<string>() { From = v, To = t, _symbol = null };
+                            g.AddEdge(e);
+                        }
+
+                        {
+                            var e = new SymbolEdge<string>() { From = t, To = f, _symbol = null };
+                            g.AddEdge(e);
+                        }
+                        return g;
+                    }
                     case "*":
                     case "*?":
+                    {
+                        var f = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(f));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
                         {
-                            var f = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(f));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = f, _symbol = null });
-                            return g;
+                            var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                            g.AddEdge(e);
                         }
+
+                        foreach (var v in cg.EndVertices)
+                        {
+                            var e = new SymbolEdge<string>() { From = v, To = f, _symbol = null };
+                            g.AddEdge(e);
+                        }
+
+                        return g;
+                    }
                     case "?":
                     case "??":
+                    {
+                        var f = "" + gen++;
+                        var t = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(t));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
                         {
-                            var f = "" + gen++;
-                            var t = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(t));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
-                            return g;
+                            var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                            g.AddEdge(e);
                         }
+
+                        foreach (var v in cg.EndVertices)
+                        {
+                            var e = new SymbolEdge<string>() { From = v, To = t, _symbol = null };
+                            g.AddEdge(e);
+                        }
+
+                        {
+                            var e = new SymbolEdge<string>() { From = f, To = t, _symbol = null };
+                            g.AddEdge(e);
+                        }
+                        return g;
+                    }
                     default:
                         throw new Exception();
                 }
@@ -391,18 +535,21 @@ namespace trcover
                 var g = new Digraph<string, SymbolEdge<string>>();
                 g.AddStart(g.AddVertex(f));
                 g.AddEnd(g.AddVertex(t));
-                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
+                var e = new SymbolEdge<string>() { From = f, To = t, _symbol = null };
+                g.AddEdge(e);
                 return g;
             }
             else throw new Exception();
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitElementOption(ANTLRv4Parser.ElementOptionContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitElementOption(
+            ANTLRv4Parser.ElementOptionContext context)
         {
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitElementOptions(ANTLRv4Parser.ElementOptionsContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitElementOptions(
+            ANTLRv4Parser.ElementOptionsContext context)
         {
             return null;
         }
@@ -412,17 +559,20 @@ namespace trcover
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitExceptionGroup(ANTLRv4Parser.ExceptionGroupContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitExceptionGroup(
+            ANTLRv4Parser.ExceptionGroupContext context)
         {
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitExceptionHandler(ANTLRv4Parser.ExceptionHandlerContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitExceptionHandler(
+            ANTLRv4Parser.ExceptionHandlerContext context)
         {
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitFinallyClause(ANTLRv4Parser.FinallyClauseContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitFinallyClause(
+            ANTLRv4Parser.FinallyClauseContext context)
         {
             return null;
         }
@@ -458,7 +608,8 @@ namespace trcover
             return cg;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitLabeledElement(ANTLRv4Parser.LabeledElementContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitLabeledElement(
+            ANTLRv4Parser.LabeledElementContext context)
         {
             if (context.block() != null)
             {
@@ -473,7 +624,8 @@ namespace trcover
             else throw new Exception();
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitLabeledLexerElement(ANTLRv4Parser.LabeledLexerElementContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitLabeledLexerElement(
+            ANTLRv4Parser.LabeledLexerElementContext context)
         {
             if (context.lexerBlock() != null)
             {
@@ -506,9 +658,19 @@ namespace trcover
                 var cg = this.VisitLexerAlt(c);
                 foreach (var v in cg.Vertices) g.AddVertex(v);
                 foreach (var e in cg.Edges) g.AddEdge(e);
-                foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
+                foreach (var v in cg.StartVertices)
+                {
+                    var e = new SymbolEdge<string>() { From = f, To = v, _symbol = null };
+                    g.AddEdge(e);
+                }
+
+                foreach (var v in cg.EndVertices)
+                {
+                    var e = new SymbolEdge<string>() { From = v, To = t, _symbol = null };
+                    g.AddEdge(e);
+                }
             }
+
             return g;
         }
 
@@ -531,6 +693,7 @@ namespace trcover
                 g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = ct5 });
                 return g;
             }
+
             var ct4 = context.DOT();
             if (ct4 == null) throw new Exception();
             {
@@ -555,17 +718,20 @@ namespace trcover
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitLexerCommandExpr(ANTLRv4Parser.LexerCommandExprContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitLexerCommandExpr(
+            ANTLRv4Parser.LexerCommandExprContext context)
         {
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitLexerCommandName(ANTLRv4Parser.LexerCommandNameContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitLexerCommandName(
+            ANTLRv4Parser.LexerCommandNameContext context)
         {
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitLexerCommands(ANTLRv4Parser.LexerCommandsContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitLexerCommands(
+            ANTLRv4Parser.LexerCommandsContext context)
         {
             return null;
         }
@@ -580,49 +746,55 @@ namespace trcover
                 switch (suffix)
                 {
                     case null:
-                        {
-                            return cg;
-                        }
+                    {
+                        return cg;
+                    }
                     case "+":
                     case "+?":
-                        {
-                            var f = "" + gen++;
-                            var t = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(t));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                            g.AddEdge(new SymbolEdge<string>() { From = t, To = f, _symbol = null });
-                            return g;
-                        }
+                    {
+                        var f = "" + gen++;
+                        var t = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(t));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
+                        foreach (var v in cg.EndVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
+                        g.AddEdge(new SymbolEdge<string>() { From = t, To = f, _symbol = null });
+                        return g;
+                    }
                     case "*":
                     case "*?":
-                        {
-                            var f = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(f));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = f, _symbol = null });
-                            return g;
-                        }
+                    {
+                        var f = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(f));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
+                        foreach (var v in cg.EndVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = v, To = f, _symbol = null });
+                        return g;
+                    }
                     case "?":
                     case "??":
-                        {
-                            var f = "" + gen++;
-                            var t = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(t));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
-                            return g;
-                        }
+                    {
+                        var f = "" + gen++;
+                        var t = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(t));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
+                        foreach (var v in cg.EndVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
+                        g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
+                        return g;
+                    }
                     default:
                         throw new Exception();
                 }
@@ -635,49 +807,55 @@ namespace trcover
                 switch (suffix)
                 {
                     case null:
-                        {
-                            return cg;
-                        }
+                    {
+                        return cg;
+                    }
                     case "+":
                     case "+?":
-                        {
-                            var f = "" + gen++;
-                            var t = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(t));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                            g.AddEdge(new SymbolEdge<string>() { From = t, To = f, _symbol = null });
-                            return g;
-                        }
+                    {
+                        var f = "" + gen++;
+                        var t = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(t));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
+                        foreach (var v in cg.EndVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
+                        g.AddEdge(new SymbolEdge<string>() { From = t, To = f, _symbol = null });
+                        return g;
+                    }
                     case "*":
                     case "*?":
-                        {
-                            var f = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(f));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = f, _symbol = null });
-                            return g;
-                        }
+                    {
+                        var f = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(f));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
+                        foreach (var v in cg.EndVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = v, To = f, _symbol = null });
+                        return g;
+                    }
                     case "?":
                     case "??":
-                        {
-                            var f = "" + gen++;
-                            var t = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(t));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
-                            return g;
-                        }
+                    {
+                        var f = "" + gen++;
+                        var t = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(t));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
+                        foreach (var v in cg.EndVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
+                        g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
+                        return g;
+                    }
                     default:
                         throw new Exception();
                 }
@@ -690,49 +868,55 @@ namespace trcover
                 switch (suffix)
                 {
                     case null:
-                        {
-                            return cg;
-                        }
+                    {
+                        return cg;
+                    }
                     case "+":
                     case "+?":
-                        {
-                            var f = "" + gen++;
-                            var t = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(t));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                            g.AddEdge(new SymbolEdge<string>() { From = t, To = f, _symbol = null });
-                            return g;
-                        }
+                    {
+                        var f = "" + gen++;
+                        var t = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(t));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
+                        foreach (var v in cg.EndVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
+                        g.AddEdge(new SymbolEdge<string>() { From = t, To = f, _symbol = null });
+                        return g;
+                    }
                     case "*":
                     case "*?":
-                        {
-                            var f = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(f));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = f, _symbol = null });
-                            return g;
-                        }
+                    {
+                        var f = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(f));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
+                        foreach (var v in cg.EndVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = v, To = f, _symbol = null });
+                        return g;
+                    }
                     case "?":
                     case "??":
-                        {
-                            var f = "" + gen++;
-                            var t = "" + gen++;
-                            g.AddStart(g.AddVertex(f));
-                            g.AddEnd(g.AddVertex(t));
-                            foreach (var v in cg.Vertices) g.AddVertex(v);
-                            foreach (var e in cg.Edges) g.AddEdge(e);
-                            foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                            foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                            g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
-                            return g;
-                        }
+                    {
+                        var f = "" + gen++;
+                        var t = "" + gen++;
+                        g.AddStart(g.AddVertex(f));
+                        g.AddEnd(g.AddVertex(t));
+                        foreach (var v in cg.Vertices) g.AddVertex(v);
+                        foreach (var e in cg.Edges) g.AddEdge(e);
+                        foreach (var v in cg.StartVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
+                        foreach (var v in cg.EndVertices)
+                            g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
+                        g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
+                        return g;
+                    }
                     default:
                         throw new Exception();
                 }
@@ -750,7 +934,8 @@ namespace trcover
             else throw new Exception();
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitLexerElements(ANTLRv4Parser.LexerElementsContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitLexerElements(
+            ANTLRv4Parser.LexerElementsContext context)
         {
             var g = new Digraph<string, SymbolEdge<string>>();
             var f = "" + gen++;
@@ -763,21 +948,24 @@ namespace trcover
                 foreach (var v in cg.Vertices) g.AddVertex(v);
                 foreach (var e in cg.Edges) g.AddEdge(e);
                 foreach (var v in cg.StartVertices)
-                    foreach (var l in last)
-                        g.AddEdge(new SymbolEdge<string>() { From = l, To = v, _symbol = null });
+                foreach (var l in last)
+                    g.AddEdge(new SymbolEdge<string>() { From = l, To = v, _symbol = null });
                 last = new List<string>(cg.EndVertices);
             }
+
             foreach (var l in last) g.AddEdge(new SymbolEdge<string>() { From = l, To = t, _symbol = null });
             return g;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitLexerRuleBlock(ANTLRv4Parser.LexerRuleBlockContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitLexerRuleBlock(
+            ANTLRv4Parser.LexerRuleBlockContext context)
         {
             var cg = this.VisitLexerAltList(context.lexerAltList());
             return cg;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitLexerRuleSpec(
+            ANTLRv4Parser.LexerRuleSpecContext context)
         {
             var cg = this.VisitLexerRuleBlock(context.lexerRuleBlock());
             return cg;
@@ -799,6 +987,7 @@ namespace trcover
                 foreach (var v in cg.StartVertices) g.AddStart(v);
                 foreach (var v in cg.EndVertices) g.AddEnd(v);
             }
+
             return g;
         }
 
@@ -832,46 +1021,24 @@ namespace trcover
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitParserRuleSpec(
+            ANTLRv4Parser.ParserRuleSpecContext context)
         {
-            var cg = this.VisitRuleBlock(context.ruleBlock());
-            Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> m = ToPowerSet(cg);
-            Digraph<string, SymbolEdge<string>> m2 = FlattenStates(m);
             var rule_name = context.RULE_REF().GetText();
-            var rule = new Rule() { grammar = _grammar, lhs = rule_name,
-                lhs_rule_number = _parser.GetRuleIndex(rule_name), rhs = cg };
-            rule = Minimize(rule);
+            var cg = this.VisitRuleBlock(context.ruleBlock());
+            Digraph<string, SymbolEdge<string>> m = ToPowerSet(cg);
+            //Digraph<string, SymbolEdge<string>> m2 = FlattenStates(m);
+            var rule = new Rule()
+            {
+                grammar = _grammar, lhs = rule_name,
+                lhs_rule_number = _parser.GetRuleIndex(rule_name), rhs = m
+            };
             Rules.Add(rule);
             return cg;
         }
 
-        private Rule Minimize(Rule rule)
-        {
-            // Eliminate epsilon transitions if possible by merging states.     
-            var rhs = rule.rhs;
-            foreach (var n in rhs.Vertices)
-            {
-                var n_out = rhs.Edges.Where(e => e.From == n);
-                var count = n_out.Count();
-                if (count == 1 && n_out.First()._symbol == null)
-                {
-                    // Empty transition, remove To state and move edges out from To state to here.
-                    var d = n_out.First();
-                    d.From = "";
-                    var to = d.To;
-                    d.To = "";
-                    // Edge "d" is now unconnected to anything.
-                    var to_out = rhs.Edges.Where(e => e.From == to);
-                    foreach (var o in to_out)
-                    {
-                        o.From = n;
-                    }
-                }
-            }
-            return rule;
-        }
-
-        public override Digraph<string, SymbolEdge<string>> VisitPrequelConstruct(ANTLRv4Parser.PrequelConstructContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitPrequelConstruct(
+            ANTLRv4Parser.PrequelConstructContext context)
         {
             return null;
         }
@@ -893,9 +1060,12 @@ namespace trcover
                 var cg = this.VisitLabeledAlt(c);
                 foreach (var v in cg.Vertices) g.AddVertex(v);
                 foreach (var e in cg.Edges) g.AddEdge(e);
-                foreach (var v in cg.StartVertices) g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                foreach (var v in cg.EndVertices) g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
+                foreach (var v in cg.StartVertices)
+                    g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
+                foreach (var v in cg.EndVertices)
+                    g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
             }
+
             return g;
         }
 
@@ -910,7 +1080,8 @@ namespace trcover
             return null;
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitRuleModifiers(ANTLRv4Parser.RuleModifiersContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitRuleModifiers(
+            ANTLRv4Parser.RuleModifiersContext context)
         {
             return null;
         }
@@ -949,6 +1120,7 @@ namespace trcover
                 foreach (var v in cg.StartVertices) g.AddStart(v);
                 foreach (var v in cg.EndVertices) g.AddEnd(v);
             }
+
             return g;
         }
 
@@ -1029,7 +1201,7 @@ namespace trcover
         public void ComputeModel(string dll_path, Antlr4.Runtime.Parser pp, Antlr4.Runtime.Lexer ll, ITokenStream tt)
         {
             // Go up directory, find all *.g4, parse.
-            if (! dll_path.EndsWith("/")) dll_path += "/";
+            if (!dll_path.EndsWith("/")) dll_path += "/";
             var path = dll_path + "../../..";
             path = Path.GetFullPath(path);
             Directory.SetCurrentDirectory(path);
@@ -1045,94 +1217,93 @@ namespace trcover
             }
         }
 
-        private static Digraph<string, SymbolEdge<string>> FlattenStates(Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> m)
+        public static Digraph<string, SymbolEdge<string>> ToPowerSet(Digraph<string, SymbolEdge<string>> NFA)
         {
-            var redo = new Digraph<string, SymbolEdge<string>>();
-            var rename = new Dictionary<MyHashSet<string>, string>();
-            int s = 0;
-            foreach (var v in m.Vertices)
+            Digraph<string, SymbolEdge<string>> DFA = new Digraph<string, SymbolEdge<string>>();
+            Dictionary<MyHashSet<string>, string> nfas_to_dfa_state = new Dictionary<MyHashSet<string>, string>();
+            Dictionary<string, MyHashSet<string>> dfa_state_to_nfas = new Dictionary<string, MyHashSet<string>>();
+            Dictionary<string, MyHashSet<string>> nfa_closure = new Dictionary<string, MyHashSet<string>>();
+            int number = 0;
+            Stack<string> stack = new Stack<string>();
+            // Precompute closures and dfa states for start.
+            foreach (var s in NFA.Vertices)
             {
-                //string n = String.Join(',', v.Select(x => x)) ;
-                string n = s++.ToString();
-                rename[v] = n;
-                redo.AddVertex(n);
-                if (m.StartVertices.Contains(v))
+                MyHashSet<string> closure = EpsilonClosureOf(NFA, s);
+                nfa_closure[s] = closure;
+                if (NFA.StartVertices.Contains(s))
                 {
-                    redo.AddStart(n);
-                }
-                else if (m.EndVertices.Contains(v))
-                {
-                    redo.AddEnd(n);
-                }
-            }
-            foreach (var e in m.Edges)
-            {
-                redo.AddEdge(new SymbolEdge<string>() { From = rename[e.From], To = rename[e.To], _symbol = e._symbol });
-            }
-            return redo;
-        }
-
-        public static Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> ToPowerSet(Digraph<string, SymbolEdge<string>> NFA)
-        {
-            Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> DFA = new Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>>();
-            MyHashSet<MyHashSet<string>> marked = new MyHashSet<MyHashSet<string>>();
-            MyHashSet<MyHashSet<string>> unmarked = new MyHashSet<MyHashSet<string>>();
-            foreach (var s in NFA.StartVertices)
-            {
-                var startingState = new MyHashSet<string>(new List<string> { s });
-                var new_dfa_state = EpsilonClosureOf(NFA, s);
-                DFA.AddVertex(new_dfa_state);
-                var hs = new MyHashSet<string>();
-                for (int i = new_dfa_state.Count - 1; i >= 0; --i) hs.Add(new_dfa_state.ElementAt(i));
-                DFA.AddVertex(hs);
-                unmarked.Add(new_dfa_state);
-                DFA.AddStart(new_dfa_state);
-            }
-            while (unmarked.Any())
-            {
-                MyHashSet<string> tttt = unmarked.First();
-                unmarked.Remove(tttt);
-                marked.Add(tttt);
-                HashSet<string> alphabetReach = new HashSet<string>();
-                foreach (string x in tttt)
-                {
-                    foreach (var e in NFA.SuccessorEdges(x))
+                    if (!nfas_to_dfa_state.TryGetValue(closure, out string dfa_name))
                     {
-                        if (!(e._symbol != null)) continue;
-                        var v = e.To;
-                        var u = EpsilonClosureOf(NFA, v);
-                        Add(unmarked, NFA, DFA, u);
-                        if (!(DFA.Edges
-                            .Where(prev =>
-                            {
-                                var test1 = prev.From.Equals(tttt);
-                                var test2 = prev.To.Equals(u);
-                                var test3 = prev._symbol.Equals(e._symbol);
-                                return test1 && test2 && test3;
-                            }).Any()))
-                            DFA.AddEdge(new SymbolEdge<MyHashSet<string>>() { From = tttt, To = u, _symbol = e._symbol });
+                        // Create a new state name
+                        dfa_name = "d" + number++;
+                        nfas_to_dfa_state.Add(closure, dfa_name);
+                        dfa_state_to_nfas.Add(dfa_name, closure);
+                        DFA.AddVertex(dfa_name);
+                        DFA.AddStart(dfa_name);
+                        stack.Push(dfa_name);
                     }
+                }
+            }
+            while (stack.Count() > 0)
+            {
+                var dfa_state = stack.Pop();
+                var x = new Dictionary<ITerminalNode, MyHashSet<string>>();
+                var nfas = dfa_state_to_nfas[dfa_state];
+                foreach (var nfa_state in nfas)
+                {
+                    foreach (var e in NFA.SuccessorEdges(nfa_state))
+                    {
+                        if (e._symbol == null) continue;
+                        var v = e.To;
+                        if (!x.TryGetValue(e._symbol, out MyHashSet<string> to_state))
+                        {
+                            to_state = new MyHashSet<string>();
+                            x[e._symbol] = to_state;
+                        }
+                        var u = nfa_closure[v];
+                        to_state.UnionWith(u);
+                    }
+                }
+                foreach (var pair in x)
+                {
+                    ITerminalNode k = pair.Key;
+                    MyHashSet<string> v = pair.Value;
+                    nfas_to_dfa_state.TryGetValue(v, out string new_dfa_state);
+                    if (new_dfa_state == null)
+                    {
+                        // Create a new state name
+                        new_dfa_state = "d" + number++;
+                        nfas_to_dfa_state.Add(v, new_dfa_state);
+                        dfa_state_to_nfas.Add(new_dfa_state, v);
+                        DFA.AddVertex(new_dfa_state);
+                        stack.Push(new_dfa_state);
+                    }
+                    if (!(DFA.Edges.Where(prev =>
+                        {
+                            var test1 = prev.From.Equals(dfa_state);
+                            var test2 = prev.To.Equals(new_dfa_state);
+                            var test3 = prev._symbol.Equals(k);
+                            return test1 && test2 && test3;
+                        }).Any()))
+                        DFA.AddEdge(new SymbolEdge<string>() { From = dfa_state, To = new_dfa_state, _symbol = k });
                 }
             }
             return DFA;
         }
 
-        private static void Add(MyHashSet<MyHashSet<string>> unmarked, Digraph<string, SymbolEdge<string>> NFA, Digraph<MyHashSet<string>, SymbolEdge<MyHashSet<string>>> DFA, MyHashSet<string> u)
+        private static void Add(MyHashSet<string> unmarked, Digraph<string, SymbolEdge<string>> NFA,
+            Digraph<string, SymbolEdge<string>> DFA, string u)
         {
-            List<MyHashSet<string>> list = DFA.Vertices.ToList();
+            List<string> list = DFA.Vertices.ToList();
 
             //     if (!FancyContains(list, u))
             if (!DFA.Vertices.Contains(u))
             {
                 unmarked.Add(u);
                 DFA.AddVertex(u);
-                foreach (var x in u)
+                if (NFA.EndVertices.Contains(u))
                 {
-                    if (NFA.EndVertices.Contains(x))
-                    {
-                        DFA.AddEnd(u);
-                        break;
-                    }
+                    DFA.AddEnd(u);
                 }
             }
         }
