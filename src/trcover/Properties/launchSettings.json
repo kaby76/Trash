@@ -2,8 +2,8 @@
   "profiles": {
     "trcover": {
       "commandName": "Project",
-      "commandLineArgs": "../examples-sql-script/package_with_cursor.sql",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3702\\sql\\plsql\\Generated-CSharp-script"
+      "commandLineArgs": "../examples/fun.compute_20.ptx",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3702\\asm\\ptx\\ptx-isa-2.1\\Generated-CSharp-large"
     }
   }
 }

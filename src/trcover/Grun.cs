@@ -264,11 +264,7 @@ namespace Trash
                     var y = x.RuleIndex;
                     rule_count.TryGetValue(x.RuleIndex, out int rc);
                     rule_count[x.RuleIndex] = rc + 1;
-                    var fod = model.Rules.Where(r =>
-                    {
-                        if (r.lhs_rule_number == y) return true;
-                        return false;
-                    }).FirstOrDefault();
+                    var fod = model.Rules[y];
                     if (fod != null)
                     {
                         ParseRHS(model, x);
@@ -411,9 +407,7 @@ namespace Trash
         private void ParseRHS(Model model, ParserRuleContext x)
         {
             visited = new HashSet<string>();
-            var rules = model.Rules.Where(r => r.lhs_rule_number == x.RuleIndex).ToList();
-            if (rules.Count() != 1) throw new Exception();
-            var rule = rules.First();
+            var rule = model.Rules[x.RuleIndex];
             Digraph<string, SymbolEdge<string>> nfa = rule.rhs;
             List<IParseTree> input = x.children != null ? x.children.ToList() : new List<IParseTree>();
             List<SymbolEdge<string>> parse = null;

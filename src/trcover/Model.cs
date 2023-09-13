@@ -70,7 +70,7 @@ namespace trcover
             public Digraph<string, SymbolEdge<string>> rhs;
         }
 
-        public HashSet<Rule> Rules { get; set; } = new HashSet<Rule>();
+        public Rule[] Rules = new Rule[0];
 
         public Model()
         {
@@ -1033,7 +1033,12 @@ namespace trcover
                 grammar = _grammar, lhs = rule_name,
                 lhs_rule_number = _parser.GetRuleIndex(rule_name), rhs = m
             };
-            Rules.Add(rule);
+
+            if (Rules.Length <= rule.lhs_rule_number)
+            {
+                Array.Resize(ref Rules, rule.lhs_rule_number + 1);
+            }
+            Rules[rule.lhs_rule_number] = rule;
             return cg;
         }
 
