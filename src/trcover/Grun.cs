@@ -333,28 +333,19 @@ namespace Trash
         {
             foreach (string ss in nfa.StartVertices)
             {
-                var visited = new Dictionary<string, int>();
-                var stack = new Stack<Tuple<string, List<IParseTree>, List<SymbolEdge<string>>>>();
-                stack.Push(new Tuple<string, List<IParseTree>, List<SymbolEdge<string>>>(ss, input.ToList(), new List<SymbolEdge<string>>()));
+                var stack = new Stack<Tuple<string, IEnumerable<IParseTree>, List<SymbolEdge<string>>>>();
+                stack.Push(new Tuple<string, IEnumerable<IParseTree>, List<SymbolEdge<string>>>(ss, input, new List<SymbolEdge<string>>()));
                 while (stack.Count > 0)
                 {
                     var current = stack.Pop();
                     var currentState = current.Item1;
                     var currentInput = current.Item2;
                     var up_to_now_pat = current.Item3;
-                    var current_input_count = currentInput.Count;
                     IParseTree c = currentInput.FirstOrDefault();
                     if (c == null)
                     {
                         return new List<SymbolEdge<string>>();
                     }
-
-                    if (visited.TryGetValue(currentState, out int input_read))
-                    {
-                        if (input_read <= current_input_count) continue;
-                    }
-
-                    visited[currentState] = current_input_count;
 
                     foreach (var t in nfa.Edges.Where(e => e.From == currentState))
                     {
@@ -388,8 +379,9 @@ namespace Trash
 
                         var new_list = up_to_now_pat.ToList();
                         new_list.Add(t);
-                        var newTuple = new Tuple<string, List<IParseTree>, List<SymbolEdge<string>>>(
-                            t.To, rest.ToList(),
+                        var newTuple = new Tuple<string, IEnumerable<IParseTree>, List<SymbolEdge<string>>>(
+                            t.To,
+                            rest,
                             new_list
                         );
                         stack.Push(newTuple);
@@ -409,7 +401,7 @@ namespace Trash
             visited = new HashSet<string>();
             var rule = model.Rules[x.RuleIndex];
             Digraph<string, SymbolEdge<string>> nfa = rule.rhs;
-            List<IParseTree> input = x.children != null ? x.children.ToList() : new List<IParseTree>();
+            IEnumerable<IParseTree> input = x.children != null ? x.children : new List<IParseTree>();
             List<SymbolEdge<string>> parse = null;
             parse = ParseUsingStack(model, nfa, input);
             if (parse != null)
