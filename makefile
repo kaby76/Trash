@@ -1,7 +1,7 @@
 build:
 	rm -rf src/*/bin src/*/obj
 	dotnet restore --ignore-failed-sources
-	dotnet build
+	dotnet build -c Release
 
 install:
 	-bash _scripts/setup.sh

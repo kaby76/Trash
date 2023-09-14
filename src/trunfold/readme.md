@@ -51,5 +51,5 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.21.2 Add trunfold. Various fixes.
+0.21.3 Add trunfold. Various fixes.
 

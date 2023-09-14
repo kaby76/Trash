@@ -155,7 +155,30 @@ namespace Server
                     Logger.Log.WriteLine(arg.ToString());
                 }
 
-                var init_params = arg.ToObject<InitializeParams>();
+                bool semantic_tokens = true;
+                InitializeParams init_params = arg.ToObject<InitializeParams>();
+                var jTokenProperties = arg.Children().OfType<JProperty>();
+                foreach (JProperty property in jTokenProperties)
+                {
+                    string key = property.Name;
+                    JToken value = property.Value;
+                    if (key == "capabilities")
+                    {
+                        var jp2 = value.Children().OfType<JProperty>();
+                        foreach (JProperty p2 in jp2)
+                        {
+                            string k2 = p2.Name;
+                            JToken v2 = p2.Value;
+                            if (k2 == "_vs_supportsVisualStudioExtensions")
+                            {
+                                semantic_tokens = false;
+                                Logger.Log.WriteLine("semantic tokens off because this is VS2022");
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
 
                 ServerCapabilities capabilities = new LspTypes.ServerCapabilities
                 {
@@ -223,9 +246,10 @@ namespace Server
                     // SelectionRangeProvider not supported.
 
                     WorkspaceSymbolProvider = false,
-                    //SemanticTokensProvider = false
-
-                    SemanticTokensProvider = 
+                };
+                if (semantic_tokens)
+                {
+                    capabilities.SemanticTokensProvider =
                     new SemanticTokensOptions()
                     {
                         Full = true,
@@ -249,8 +273,9 @@ namespace Server
                                 "documentation",
                             }
                         }
-                    },
-                };
+                    };
+                    Logger.Log.WriteLine("semantic tokens on");
+                }
 
                 InitializeResult result = new InitializeResult
                 {
@@ -442,6 +467,9 @@ namespace Server
                         using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext =
                                ate.Try(prs.Nodes, prs.Parser))
                         {
+                            prs.ParserDefs.Clear();
+                            prs.LexerDefs.Clear();
+                            prs.Refs.Clear();
                             {
                                 var expr = "//parserRuleSpec/RULE_REF";
                                 var nodes = engine.parseExpression(expr,
@@ -1667,10 +1695,24 @@ namespace Server
                     List<object> symbols = new List<object>();
                     List<uint> d = new List<uint>();
                     SortedList<int, IParseTree> sorted_symbols = new SortedList<int, IParseTree>();
-                    foreach (var n in prs.ParserDefs) sorted_symbols.Add(prs.Parser.TokenStream.Get(n.SourceInterval.a).StartIndex, n);
-                    foreach (var n in prs.LexerDefs) sorted_symbols.Add(prs.Parser.TokenStream.Get(n.SourceInterval.a).StartIndex, n);
-                    foreach (var n in prs.Refs) sorted_symbols.Add(prs.Parser.TokenStream.Get(n.SourceInterval.a).StartIndex, n);
-
+                    foreach (var n in prs.Refs)
+                    {
+                        try
+                        {
+                            var a = n.SourceInterval.a;
+                            var t = prs.Parser.TokenStream.Get(n.SourceInterval.a);
+                            var si = t.StartIndex;
+                            //Logger.Log.WriteLine("loop " + n.ToString());
+                            //Logger.Log.WriteLine("a " + a);
+                            //Logger.Log.WriteLine("t " + t);
+                            //Logger.Log.WriteLine("si + " + si);
+                            sorted_symbols.Add(si, n);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Log.WriteLine("catch e " + e);
+                        }
+                    }
                     (int,int) start = (1, 0);
 
                     foreach (var pair in sorted_symbols)

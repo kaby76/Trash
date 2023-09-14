@@ -264,11 +264,7 @@ namespace Trash
                     var y = x.RuleIndex;
                     rule_count.TryGetValue(x.RuleIndex, out int rc);
                     rule_count[x.RuleIndex] = rc + 1;
-                    var fod = model.Rules.Where(r =>
-                    {
-                        if (r.lhs_rule_number == y) return true;
-                        return false;
-                    }).FirstOrDefault();
+                    var fod = model.Rules[y];
                     if (fod != null)
                     {
                         ParseRHS(model, x);
@@ -333,75 +329,67 @@ namespace Trash
             return null;
         }
 
-        private List<SymbolEdge<string>> ParseUsingStack(Model model, Digraph<string, SymbolEdge<string>> nfa,
-            IEnumerable<IParseTree> input, SymbolEdge<string> edge)
+        private List<SymbolEdge<string>> ParseUsingStack(Model model, Digraph<string, SymbolEdge<string>> nfa, IEnumerable<IParseTree> input)
         {
-            var visited = new Dictionary<string, int>();
-            var stack = new Stack<Tuple<List<IParseTree>, SymbolEdge<string>, List<SymbolEdge<string>>>>();
-            stack.Push(
-                new Tuple<List<IParseTree>, SymbolEdge<string>, List<SymbolEdge<string>>>
-                    (input.ToList(), edge, new List<SymbolEdge<string>>()));
-            while (stack.Count > 0)
+            foreach (string ss in nfa.StartVertices)
             {
-                var current = stack.Pop();
-                var currentInput = current.Item1;
-                var currentEdge = current.Item2;
-                var up_to_now_pat = current.Item3;
-
-                currentInput = currentInput.ToList();
-                var current_input_count = currentInput.Count;
-                IParseTree c = currentInput.FirstOrDefault();
-                if (c == null)
+                var stack = new Stack<Tuple<string, IEnumerable<IParseTree>, List<SymbolEdge<string>>>>();
+                stack.Push(new Tuple<string, IEnumerable<IParseTree>, List<SymbolEdge<string>>>(ss, input, new List<SymbolEdge<string>>()));
+                while (stack.Count > 0)
                 {
-                    return new List<SymbolEdge<string>>();
-                }
-                if (visited.TryGetValue(currentEdge.To, out int input_read))
-                {
-                    if (input_read <= current_input_count) continue;
-                }
-                visited[currentEdge.To] = current_input_count;
-
-                foreach (var t in nfa.Edges.Where(e => e.From == currentEdge.To))
-                {
-                    var ll = t._symbol;
-                    IEnumerable<IParseTree> rest = null;
-                    if (ll == null)
+                    var current = stack.Pop();
+                    var currentState = current.Item1;
+                    var currentInput = current.Item2;
+                    var up_to_now_pat = current.Item3;
+                    IParseTree c = currentInput.FirstOrDefault();
+                    if (c == null)
                     {
-                        rest = currentInput;
-                    }
-                    else
-                    {
-                        if (c is ParserRuleContext cc)
-                        {
-                            var symbol = model._parser.RuleNames[cc.RuleIndex];
-                            if (symbol != ll.GetText())
-                                continue;
-                        }
-                        else if (c is TerminalNodeImpl c2)
-                        {
-                            var ty = c2.Symbol.Type;
-                            var dic = model._lexer.Vocabulary;
-                            var s1 = dic.GetLiteralName(ty);
-                            var s2 = dic.GetSymbolicName(ty);
-                            var s3 = dic.GetDisplayName(ty);
-                            if (!(ll.GetText() == s1 || ll.GetText() == s2 || ll.GetText() == s3))
-                                continue;
-                        }
-                        rest = currentInput.Skip(1);
+                        return new List<SymbolEdge<string>>();
                     }
 
-                    var new_list = up_to_now_pat.ToList(); 
-                    new_list.Add(t);
-                    var newTuple = new Tuple<List<IParseTree>, SymbolEdge<string>, List<SymbolEdge<string>>>(
-                        rest.ToList(),
-                        t,
-                        new_list
+                    foreach (var t in nfa.Edges.Where(e => e.From == currentState))
+                    {
+                        var ll = t._symbol;
+                        IEnumerable<IParseTree> rest = null;
+                        if (ll == null)
+                        {
+                            rest = currentInput;
+                        }
+                        else
+                        {
+                            if (c is ParserRuleContext cc)
+                            {
+                                var symbol = model._parser.RuleNames[cc.RuleIndex];
+                                if (symbol != ll.GetText())
+                                    continue;
+                            }
+                            else if (c is TerminalNodeImpl c2)
+                            {
+                                var ty = c2.Symbol.Type;
+                                var dic = model._lexer.Vocabulary;
+                                var s1 = dic.GetLiteralName(ty);
+                                var s2 = dic.GetSymbolicName(ty);
+                                var s3 = dic.GetDisplayName(ty);
+                                if (!(ll.GetText() == s1 || ll.GetText() == s2 || ll.GetText() == s3))
+                                    continue;
+                            }
+
+                            rest = currentInput.Skip(1);
+                        }
+
+                        var new_list = up_to_now_pat.ToList();
+                        new_list.Add(t);
+                        var newTuple = new Tuple<string, IEnumerable<IParseTree>, List<SymbolEdge<string>>>(
+                            t.To,
+                            rest,
+                            new_list
                         );
-                    stack.Push(newTuple);
+                        stack.Push(newTuple);
 
-                    if (rest.All(x => x == null))
-                    {
-                        return new_list;
+                        if (rest.All(x => x == null))
+                        {
+                            return new_list;
+                        }
                     }
                 }
             }
@@ -411,25 +399,11 @@ namespace Trash
         private void ParseRHS(Model model, ParserRuleContext x)
         {
             visited = new HashSet<string>();
-            var rules = model.Rules.Where(r => r.lhs_rule_number == x.RuleIndex).ToList();
-            if (rules.Count() != 1) throw new Exception();
-            var rule = rules.First();
+            var rule = model.Rules[x.RuleIndex];
             Digraph<string, SymbolEdge<string>> nfa = rule.rhs;
-            List<IParseTree> input = x.children != null ? x.children.ToList() : new List<IParseTree>();
+            IEnumerable<IParseTree> input = x.children != null ? x.children : new List<IParseTree>();
             List<SymbolEdge<string>> parse = null;
-            foreach (string state in nfa.StartVertices)
-            {
-                foreach (var t in nfa.Edges.Where(e => e.From == state))
-                {
-                    parse = ParseUsingStack(model, nfa, input, t);
-                    //parse = ParseRecurse(model, nfa, input, t);
-                    if (parse != null)
-                        break;
-                }
-                if (parse != null)
-                    break;
-            }
-
+            parse = ParseUsingStack(model, nfa, input);
             if (parse != null)
             {
                 foreach (var e in parse)

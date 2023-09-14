@@ -14,12 +14,13 @@ then
 else
     cwd=`pwd`
 fi
+CONFIG=Release
 echo "$machine"
 echo "$cwd"
 tools=`find . -name 'tr*.exe' | grep -v publish | awk -F '/' '{print $3}'`
 echo $tools
 for i in $tools
 do
-	dotnet nuget add source $cwd/src/$i/bin/Debug/ --name trtool-$i > /dev/null 2>&1
+	dotnet nuget add source $cwd/src/$i/bin/$CONFIG/ --name trtool-$i > /dev/null 2>&1
 done
 dotnet nuget list source
