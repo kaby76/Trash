@@ -18,4 +18,4 @@ Get strings from a PDF file using IText.
 
 ## Current version
 
-0.21.3 Add trunfold. Various fixes.
+0.21.3 Fix trcover.

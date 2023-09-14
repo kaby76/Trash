@@ -18,4 +18,4 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 ## Current version
 
-0.21.3 Add trunfold. Various fixes.
+0.21.3 Fix trcover.

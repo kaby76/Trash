@@ -19,4 +19,4 @@ The generated parser is placed in the directory <current-directory>/Generated/.
 
 ## Current version
 
-0.21.3 Add trunfold. Various fixes.
+0.21.3 Fix trcover.

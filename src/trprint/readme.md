@@ -18,4 +18,4 @@ Read stdin and print out the text for the tree.
 
 ## Current version
 
-0.21.3 Add trunfold. Various fixes.
+0.21.3 Fix trcover.

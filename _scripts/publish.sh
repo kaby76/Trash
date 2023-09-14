@@ -7,7 +7,7 @@ do
 	d=`echo $i | awk -F '/' '{print $2}'`
 	echo $d
 	tool=$d
-	pushd $d/bin/Debug
+	pushd $d/bin/Release
 	dotnet nuget push $tool.$version.nupkg --api-key $trashkey --source https://api.nuget.org/v3/index.json
 	popd
 done

@@ -27,4 +27,4 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.21.3 Add trunfold. Various fixes.
+0.21.3 Fix trcover.
