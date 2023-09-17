@@ -93,4 +93,4 @@ _Output_
 
 ## Current version
 
-0.21.3 Fix trcover.
+0.21.4 Fix trquery.

@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using Antlr4.Runtime.Misc;
+
+namespace Trash
 {
     using Antlr4.Runtime;
     using AntlrJson;
@@ -23,26 +25,16 @@
 
         public void Execute(Config config)
         {
-            var file_name = config.Query.FirstOrDefault();
-            string inp = null;
-            ICharStream str = null;
-            if (file_name == null && config.Input != null)
+            var query = config.Query;
+            string input = null;
+            if (query.Any())
             {
-                inp = config.Input;
-                str = CharStreams.fromString(inp);
+                input = String.Join(" ", query);
             }
-            else if (file_name != null)
-            {
-                FileStream fs = new FileStream(file_name, FileMode.Open);
-                str = new Antlr4.Runtime.AntlrInputStream(fs);
-            }
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("Query = >>>" + file_name + "<<<");
-            }
-            var slexer = new ParseTreeScriptLexer(str);
+            var cs = CharStreams.fromString(input);
+            var slexer = new QueryLexer(cs);
             var stokens = new CommonTokenStream(slexer);
-            var sparser = new ParseTreeScriptParser(stokens);
+            var sparser = new QueryParser(stokens);
             var stree = sparser.commands();
 
             string lines = null;
@@ -94,9 +86,15 @@
                     foreach (var scommand in stree.command())
                     {
                         var command = scommand.GetChild(0).GetText();
-                        if (command == "inserta")
+                        if (command == "insert")
                         {
-                            var expr = RemoveQuotes(scommand.GetChild(1).GetText());
+                            var expr_tree = scommand.expr();
+                            var si = expr_tree.SourceInterval;
+                            var start = stokens.Get(si.a);
+                            var bi = start.StartIndex;
+                            var stop = stokens.Get(si.b);
+                            var ei = stop.StopIndex;
+                            var expr = cs.GetText(new Interval(bi, ei));
                             var value = RemoveQuotes(scommand.GetChild(2).GetText());
                             var nodes = engine.parseExpression(expr,
                                     new StaticContextBuilder()).evaluate(dynamicContext,
@@ -128,7 +126,13 @@
                         }
                         else if (command == "replace")
                         {
-                            var expr = RemoveQuotes(scommand.GetChild(1).GetText());
+                            var expr_tree = scommand.expr();
+                            var si = expr_tree.SourceInterval;
+                            var start = stokens.Get(si.a);
+                            var bi = start.StartIndex;
+                            var stop = stokens.Get(si.b);
+                            var ei = stop.StopIndex;
+                            var expr = cs.GetText(new Interval(bi, ei));
                             var value = RemoveQuotes(scommand.GetChild(2).GetText());
                             var nodes = engine.parseExpression(expr,
                                     new StaticContextBuilder()).evaluate(dynamicContext,
@@ -144,7 +148,13 @@
                         }
                         else if (command == "delete")
                         {
-                            var expr = RemoveQuotes(scommand.GetChild(1).GetText());
+                            var expr_tree = scommand.expr();
+                            var si = expr_tree.SourceInterval;
+                            var start = stokens.Get(si.a);
+                            var bi = start.StartIndex;
+                            var stop = stokens.Get(si.b);
+                            var ei = stop.StopIndex;
+                            var expr = cs.GetText(new Interval(bi, ei));
                             var nodes = engine.parseExpression(expr,
                                     new StaticContextBuilder()).evaluate(dynamicContext,
                                     new object[] { dynamicContext.Document })

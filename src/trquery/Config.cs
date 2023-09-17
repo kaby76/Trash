@@ -11,9 +11,6 @@ namespace Trash
         [Option("fmt", Required = false, HelpText = "Output formatted parsing results set.")]
         public bool Format { get; set; }
 
-        [Option('i', "input", Required = false, HelpText = "Query as input string.")]
-        public string Input { get; set; }
-
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
 

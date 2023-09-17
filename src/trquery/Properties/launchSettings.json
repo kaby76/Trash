@@ -2,8 +2,8 @@
   "profiles": {
     "trscript": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt  --input \"delete '//EQ';\"",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3634\\arithmetic\\Generated-CSharp"
+      "commandLineArgs": "-f o.pt delete //rule_[rulename/name/NAME[contains(text(),\"invalid_\") or contains(text(),\"expression_without_invalid\")]]",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-pegen\\pegen\\Generated-CSharp"
     }
   }
 }

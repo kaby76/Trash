@@ -6,14 +6,8 @@
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 </PropertyGroup>
   <ItemGroup>
-   <Antlr4 Include="pegen_v3_10Lexer.g4">
-<Package></Package>
-<!-- AntlrRuntime>C:/Users/Kenne/.m2/antlr4-4.11.1-complete.jar</AntlrRuntime -->
-</Antlr4>
-   <Antlr4 Include="pegen_v3_10Parser.g4">
-<Package></Package>
-<!-- AntlrRuntime>C:/Users/Kenne/.m2/antlr4-4.11.1-complete.jar</AntlrRuntime -->
-</Antlr4>
+   <Antlr4 Include="pegen_v3_10Lexer.g4" />
+   <Antlr4 Include="pegen_v3_10Parser.g4" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />

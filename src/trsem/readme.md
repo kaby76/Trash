@@ -18,4 +18,4 @@ Read a static semantics spec file and generate code.
 
 ## Current version
 
-0.21.3 Fix trcover.
+0.21.4 Fix trquery.
