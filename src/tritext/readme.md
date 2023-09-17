@@ -18,4 +18,4 @@ Get strings from a PDF file using IText.
 
 ## Current version
 
-0.21.4 Fix trcover.
+0.21.4 Fix trquery.

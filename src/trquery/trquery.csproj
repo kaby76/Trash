@@ -27,7 +27,10 @@ This program is part of the Trash toolkit.]]>
 	  <None Remove="ParseTreeScript.g4" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Antlr4 Include="ParseTreeScript.g4">
+	  <Antlr4 Include="QueryLexer.g4">
+	    <Package>Trash</Package>
+	  </Antlr4>
+	  <Antlr4 Include="QueryParser.g4">
 	    <Package>Trash</Package>
 	  </Antlr4>
 	</ItemGroup>

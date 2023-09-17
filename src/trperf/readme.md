@@ -27,4 +27,4 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.21.4 Fix trcover.
+0.21.4 Fix trquery.

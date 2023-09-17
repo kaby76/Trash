@@ -49,4 +49,4 @@ the `--type` command-line option:
 
 ## Current version
 
-0.21.4 Fix trcover.
+0.21.4 Fix trquery.

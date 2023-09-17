@@ -27,4 +27,4 @@ make sure to enclose the argument as it contains semi-colons.
 
 ## Current version
 
-0.21.4 Fix trcover.
+0.21.4 Fix trquery.
