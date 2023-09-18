@@ -79,28 +79,41 @@ namespace Trash
                     foreach (var n in trees)
                         LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
                 }
-                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
-                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(trees, parser))
+
+                foreach (var scommand in stree.command())
                 {
-                    foreach (var scommand in stree.command())
+                    org.eclipse.wst.xml.xpath2.processor.Engine engine =
+                        new org.eclipse.wst.xml.xpath2.processor.Engine();
+                    var command = scommand.GetChild(0).GetText();
+                    if (command == "insert")
                     {
-                        var command = scommand.GetChild(0).GetText();
-                        if (command == "insert")
+                        var expr_tree = scommand.expr();
+                        var si = expr_tree.SourceInterval;
+                        var start = stokens.Get(si.a);
+                        var bi = start.StartIndex;
+                        var stop = stokens.Get(si.b);
+                        var ei = stop.StopIndex;
+                        var expr = cs.GetText(new Interval(bi, ei));
+                        if (config.Verbose)
+                            LoggerNs.TimedStderrOutput.WriteLine("insert expr " + expr);
+                        var value = RemoveQuotes(scommand.GetChild(2).GetText());
+                        var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+                        using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
+                               ate.Try(trees, parser))
                         {
-                            var expr_tree = scommand.expr();
-                            var si = expr_tree.SourceInterval;
-                            var start = stokens.Get(si.a);
-                            var bi = start.StartIndex;
-                            var stop = stokens.Get(si.b);
-                            var ei = stop.StopIndex;
-                            var expr = cs.GetText(new Interval(bi, ei));
-                            var value = RemoveQuotes(scommand.GetChild(2).GetText());
                             var nodes = engine.parseExpression(expr,
                                     new StaticContextBuilder()).evaluate(dynamicContext,
                                     new object[] { dynamicContext.Document })
                                 .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
                                 .ToList();
+                            if (config.Verbose)
+                            {
+                                LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
+                                foreach (var n in trees)
+                                    LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
+                                        .ToString());
+                            }
+
                             if (config.Verbose)
                                 LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                             foreach (var node in nodes)
@@ -108,37 +121,36 @@ namespace Trash
                                 TreeEdits.InsertAfter(node, value);
                             }
                         }
-                        else if (command == "insertb")
+                    }
+                    else if (command == "replace")
+                    {
+                        var expr_tree = scommand.expr();
+                        var si = expr_tree.SourceInterval;
+                        var start = stokens.Get(si.a);
+                        var bi = start.StartIndex;
+                        var stop = stokens.Get(si.b);
+                        var ei = stop.StopIndex;
+                        var expr = cs.GetText(new Interval(bi, ei));
+                        if (config.Verbose)
+                            LoggerNs.TimedStderrOutput.WriteLine("replace expr " + expr);
+                        var value = RemoveQuotes(scommand.GetChild(2).GetText());
+                        var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+                        using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
+                               ate.Try(trees, parser))
                         {
-                            var expr = RemoveQuotes(scommand.GetChild(1).GetText());
-                            var value = RemoveQuotes(scommand.GetChild(2).GetText());
                             var nodes = engine.parseExpression(expr,
                                     new StaticContextBuilder()).evaluate(dynamicContext,
                                     new object[] { dynamicContext.Document })
                                 .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
                                 .ToList();
                             if (config.Verbose)
-                                LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
-                            foreach (var node in nodes)
                             {
-                                TreeEdits.InsertBefore(node, value);
+                                LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
+                                foreach (var n in trees)
+                                    LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
+                                        .ToString());
                             }
-                        }
-                        else if (command == "replace")
-                        {
-                            var expr_tree = scommand.expr();
-                            var si = expr_tree.SourceInterval;
-                            var start = stokens.Get(si.a);
-                            var bi = start.StartIndex;
-                            var stop = stokens.Get(si.b);
-                            var ei = stop.StopIndex;
-                            var expr = cs.GetText(new Interval(bi, ei));
-                            var value = RemoveQuotes(scommand.GetChild(2).GetText());
-                            var nodes = engine.parseExpression(expr,
-                                    new StaticContextBuilder()).evaluate(dynamicContext,
-                                    new object[] { dynamicContext.Document })
-                                .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
-                                .ToList();
+
                             if (config.Verbose)
                                 LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                             foreach (var node in nodes)
@@ -146,38 +158,60 @@ namespace Trash
                                 TreeEdits.Replace(node, value);
                             }
                         }
-                        else if (command == "delete")
+                    }
+                    else if (command == "delete")
+                    {
+                        var expr_tree = scommand.expr();
+                        var si = expr_tree.SourceInterval;
+                        var start = stokens.Get(si.a);
+                        var bi = start.StartIndex;
+                        var stop = stokens.Get(si.b);
+                        var ei = stop.StopIndex;
+                        var expr = cs.GetText(new Interval(bi, ei));
+                        if (config.Verbose)
+                            LoggerNs.TimedStderrOutput.WriteLine("delete expr " + expr);
+                        var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+                        using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
+                               ate.Try(trees, parser))
                         {
-                            var expr_tree = scommand.expr();
-                            var si = expr_tree.SourceInterval;
-                            var start = stokens.Get(si.a);
-                            var bi = start.StartIndex;
-                            var stop = stokens.Get(si.b);
-                            var ei = stop.StopIndex;
-                            var expr = cs.GetText(new Interval(bi, ei));
                             var nodes = engine.parseExpression(expr,
                                     new StaticContextBuilder()).evaluate(dynamicContext,
                                     new object[] { dynamicContext.Document })
                                 .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
                                 .ToList();
+                            if (config.Verbose)
+                                LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
+                            if (config.Verbose)
+                            {
+                                LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
+                                foreach (var n in trees)
+                                    LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
+                                        .ToString());
+                            }
                             TreeEdits.Delete(nodes);
+                            if (config.Verbose)
+                            {
+                                LoggerNs.TimedStderrOutput.WriteLine("Resulted in this:");
+                                foreach (var n in trees)
+                                    LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
+                                        .ToString());
+                            }
                         }
                     }
-
-                    var tuple = new ParsingResultSet()
-                    {
-                        Text = text,
-                        FileName = fn,
-                        Nodes = trees,
-                        Lexer = lexer,
-                        Parser = parser
-                    };
-                    results.Add(tuple);
-                    if (config.Verbose)
-                    {
-                        foreach (var node in trees)
-                            System.Console.Error.WriteLine(TreeOutput.OutputTree(node, lexer, parser).ToString());
-                    }
+                }
+                var tuple = new ParsingResultSet()
+                {
+                    Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
+                    FileName = fn,
+                    Nodes = trees,
+                    Lexer = lexer,
+                    Parser = parser
+                };
+                results.Add(tuple);
+                if (config.Verbose)
+                {
+                    foreach (var node in trees)
+                        System.Console.Error.WriteLine(TreeOutput.OutputTree(node, lexer, parser).ToString());
                 }
             }
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
