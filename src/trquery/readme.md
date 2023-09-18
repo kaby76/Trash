@@ -6,16 +6,23 @@ Execute a simple query of tree modifications.
 
 ## Description
 
-Reads a parse tree from stdin, and a query file via options,
-then execute the query, which modifies the parse tree,
+Reads a parse tree from stdin, executes a list
+of queries (insert, delete, or replace), 
 and write the modified tree
 to stdout. The input and output are Parse Tree Data.
 
 ## Usage
 
-trquery <file-name>
+trquery insert xpath-expr string (; additional commands...)*
+trquery delete xpath-expr (; additional commands...)*
+trquery replace xpath-expr string (; additional commands...)*
 
 ## Details
+
+For all commands, an XPath expression defines where an operation occurs.
+Commands are executed in order as they appear. The advantage of this
+command is that the parse tree does not have be re-read or written after
+each operation as with trinsert, trdelete, or trreplace.
 
 ## Example
 
