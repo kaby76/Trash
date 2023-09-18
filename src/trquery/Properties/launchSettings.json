@@ -2,8 +2,8 @@
   "profiles": {
     "trscript": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt delete //rule_[rulename/name/NAME[contains(text(),\"invalid_\") or contains(text(),\"expression_without_invalid\")]]",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-pegen\\pegen\\Generated-CSharp"
+      "commandLineArgs": "-v -f o.pt delete  //alt[.//NAME/text()='star_expressions']; delete //rule_/more_alts/alts/VBAR[not(following-sibling::*)]",
+      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\pegen\\examples"
     }
   }
 }

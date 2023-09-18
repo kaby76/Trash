@@ -92,10 +92,16 @@
                     var child = c.ChildNodes.item(i);
                     if (child == n)
                     {
+                        // Remove i'th node.
                         var temp = c.ChildNodes.item(i);
                         var t = temp;
                         t.ParentNode = null;
                         c.ChildNodes.RemoveAt(i);
+                        // Make sure previous and next sibling links are updated.
+                        var prev = t.PreviousSibling;
+                        var next = t.NextSibling;
+                        if (prev != null) prev.NextSibling = next;
+                        if (next  != null) next.PreviousSibling = prev;
                         break;
                     }
                 }
