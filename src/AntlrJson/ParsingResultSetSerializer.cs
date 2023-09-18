@@ -258,8 +258,6 @@
                     {
                         var attr = new UnvParseTreeAttr();
                         attr.Name = reader.GetString();
-                        if (attr.Name as string != "Before")
-                        {}
                         reader.Read();
                         attr.StringValue = reader.GetString();
                         attr.LocalName = attr.Name as string;
