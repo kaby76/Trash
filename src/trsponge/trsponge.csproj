@@ -17,7 +17,7 @@ This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>0.21.6</Version>
+		<Version>0.21.7</Version>
 		<RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/src/trsponge</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>

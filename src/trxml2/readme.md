@@ -18,4 +18,4 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-0.21.6 Fix trquery.
+0.21.7 Fix trquery.

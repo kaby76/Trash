@@ -43,4 +43,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.21.6 Fix trquery.
+0.21.7 Fix trquery.
