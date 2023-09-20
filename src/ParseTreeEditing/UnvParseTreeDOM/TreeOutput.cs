@@ -44,19 +44,9 @@ namespace ParseTreeEditing.UnvParseTreeDOM
             else if (tree is UnvParseTreeAttr a)
             {
                 StartLine(sb, level);
-                if (a.Name as string == "Line" || a.Name as string == "Column")
-                {
-                    sb.Append("( Attribute " + a.Name as string + " Value " + a.StringValue + ")");
-                }
-                else
-                {
-                    sb.Append(
-                        "( intertoken"
-                        + " text:'" + PerformEscapes(a.StringValue) + "'"
-                        + " tt:" + a.TokenType);
-                    if (a.Channel >= 0 && a.Channel < lexer.ChannelNames.Length)
-                        sb.Append(" chnl:" + lexer.ChannelNames[a.Channel]);
-                }
+                sb.Append("( Attribute " + a.Name as string + " Value '" + PerformEscapes(a.StringValue) + "')");
+                if (a.Channel >= 0 && a.Channel < lexer.ChannelNames.Length)
+                    sb.Append(" chnl:" + lexer.ChannelNames[a.Channel]);
                 sb.AppendLine();
             }
             else if (tree is UnvParseTreeElement e)

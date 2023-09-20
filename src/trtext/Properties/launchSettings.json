@@ -2,8 +2,8 @@
   "profiles": {
     "trtext": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\3387\\grammars-v4\\abb"
+      "commandLineArgs": "-f o2.pt",
+      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\pegen\\examples"
     }
   }
 }

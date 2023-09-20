@@ -990,7 +990,7 @@
             //}
         }
 
-        public static void DeleteAndReattachChildren(UnvParseTreeElement node)
+        public static void DeleteAndReattachChildren(UnvParseTreeNode node)
         {
             if (node == null) return;
             var n = node;

@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "XQuery31.g4 -l",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3636\\xquery\\3.1\\Generated-CSharp"
+      "commandLineArgs": " python-11.gram -v -q",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-pegen\\pegen\\examples"
     }
   }
 }

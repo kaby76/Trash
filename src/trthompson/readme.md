@@ -12,4 +12,4 @@
 
 ## Current version
 
-0.21.5 Fix trquery.
+0.21.6 Fix trquery.
