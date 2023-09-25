@@ -905,7 +905,7 @@
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    var spec_example_directory = xmltest
+                    var spec_examplesy = xmltest
                         .Select("inputs", nsmgr)
                         .Cast<XPathNavigator>()
                         .Where(t => t.Value != "")
@@ -951,19 +951,13 @@
                             test.grammar_name = config.grammar_name.Trim();
                         }
 
-                        if (spec_example_directory != null)
+                        if (spec_examplesy != null)
                         {
-                            test.example_files = spec_example_directory;
+                            test.example_files = spec_examplesy;
                         }
                         else
                         {
                             test.example_files = "examples";
-                        }
-                        if (!Directory.Exists(test.example_files))
-                        {
-                            System.Console.Error.WriteLine("Examples directory doesn't exist " +
-                                                           spec_example_directory);
-                            test.example_files = "";
                         }
 
                         if (spec_antlr_tool_args.Contains("-package"))
@@ -1550,20 +1544,6 @@
                   + to);
                 test.all_target_files.Add(to);
                 this.CopyFile(from, to);
-            }
-            // Copy examples directory.
-            {
-                var from = test.example_files;
-                if (!string.IsNullOrEmpty(from) && Directory.Exists(from))
-                {
-                    var to = config.output_directory
-                             + "-"
-                             + test.target
-                             + (test.test_name != null ? ("-" + test.test_name) : "")
-                             + "/"
-                             + test.example_files;
-                    CopyDirectory(from, to, true);
-                }
             }
         }
 
