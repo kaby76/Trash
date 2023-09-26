@@ -110,7 +110,7 @@ then
     fi
 fi
 
-old=`pwd`old
+old=`pwd`
 cd ..
 
 # Check if any files in the test files directory have changed.
