@@ -63,4 +63,4 @@ The output will be:
 
 ## Current version
 
-0.21.7 Fix trgen globstar testing, Python3 target.
+0.21.8 Fix trgen globstar testing, Python3 target.

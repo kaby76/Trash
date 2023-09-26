@@ -59,6 +59,8 @@ namespace Trash
         public int? watchdog_timeout { get; set; }
         public string SetupFfn = ".trgen.rc";
         public string root_directory;
+        public string example_files { get; set; }
+
 
         public List<Test> Tests;
 
