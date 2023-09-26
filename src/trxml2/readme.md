@@ -18,4 +18,4 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-0.21.8 Fix trgen globstar testing, Python3 target.
+0.21.9 Fix trgen globstar testing, Python3 target.
