@@ -19,4 +19,4 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Current version
 
-0.21.7 Fix trquery.
+0.21.7 Fix trgen globstar testing, Python3 target.
