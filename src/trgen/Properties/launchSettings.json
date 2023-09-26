@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Java",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3656\\java\\java20"
+      "commandLineArgs": "",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-3587\\dart2"
     }
   }
 }
