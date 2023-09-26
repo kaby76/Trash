@@ -492,7 +492,7 @@
             }
         }
 
-        public static string version = "0.21.7";
+        public static string version = "0.21.8";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -719,6 +719,17 @@
                 }
             }
             {
+                var spec_examplesy = navigator
+                    .Select("/desc/inputs", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .FirstOrDefault();
+                if (config.example_files == null && spec_examplesy != null)
+                {
+                    config.example_files = spec_examplesy;
+                }
+            }
+            {
                 var spec_entry_point = navigator
                     .Select("/desc/entry-point", nsmgr)
                     .Cast<XPathNavigator>()
@@ -763,6 +774,7 @@
                     test.target = target;
                     test.grammar_name = config.grammar_name;
                     test.start_rule = config.start_rule;
+                    test.example_files = config.example_files;
                     if (!config.Files.Any())
                     {
                         var list = new List<string>();
@@ -954,6 +966,9 @@
                         if (spec_examplesy != null)
                         {
                             test.example_files = spec_examplesy;
+                        } else if (config.example_files != null)
+                        {
+                            test.example_files = config.example_files.Trim();
                         }
                         else
                         {
