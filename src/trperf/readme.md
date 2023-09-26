@@ -27,4 +27,4 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.21.7 Fix trquery.
+0.21.7 Fix trgen globstar testing, Python3 target.
