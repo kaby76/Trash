@@ -775,6 +775,10 @@
                     test.grammar_name = config.grammar_name;
                     test.start_rule = config.start_rule;
                     test.example_files = config.example_files;
+                    if (test.example_files == null)
+                    {
+                        test.example_files = "examples";
+                    }
                     if (!config.Files.Any())
                     {
                         var list = new List<string>();
