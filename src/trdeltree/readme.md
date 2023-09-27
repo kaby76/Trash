@@ -65,4 +65,4 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.21.9 Fix trgen globstar testing, Python3 target.
+0.21.10 Fix trgen globstar testing, Python3 target.
