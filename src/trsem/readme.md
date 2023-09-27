@@ -18,4 +18,4 @@ Read a static semantics spec file and generate code.
 
 ## Current version
 
-0.21.8 Fix trgen globstar testing, Python3 target.
+0.21.9 Fix trgen globstar testing, Python3 target.
