@@ -18,4 +18,4 @@ Format of grammar using machine learning.
 
 ## Current version
 
-0.21.10 Fix trgen globstar testing, Python3 target.
+0.21.11 Fix trrename.

@@ -27,4 +27,4 @@ make sure to enclose the argument as it contains semi-colons.
 
 ## Current version
 
-0.21.10 Fix trgen globstar testing, Python3 target.
+0.21.11 Fix trrename.

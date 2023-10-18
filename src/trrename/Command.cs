@@ -47,7 +47,7 @@
                 lines = File.ReadAllText(config.File);
             }
             Dictionary<string, string> rename_map = new Dictionary<string, string>();
-            if (config.RenameMap != null)
+            if (config.RenameMap != null && config.RenameMap.Any())
             {
                 foreach (var s in config.RenameMap)
                 {
