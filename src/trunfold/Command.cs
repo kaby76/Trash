@@ -80,7 +80,7 @@
                     {
                         // Find parser or lexer rule.
                         var name = node.GetText();
-                        var exp = " //(parserRuleSpec[RULE_REF/text()='" + name + "']/ruleBlock | lexerRuleSpec[TOKEN_REF/text()='" + name + "']/lexerRuleBlock)";
+                        var exp = " doc('*')//(parserRuleSpec[RULE_REF/text()='" + name + "']/ruleBlock | lexerRuleSpec[TOKEN_REF/text()='" + name + "']/lexerRuleBlock)";
                         var defs = engine.parseExpression(exp,
                             new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
@@ -101,7 +101,7 @@
                     }
                     var tuple = new ParsingResultSet()
                     {
-                        Text = text,
+                        Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
                         FileName = fn,
                         Nodes = trees,
                         Lexer = lexer,
