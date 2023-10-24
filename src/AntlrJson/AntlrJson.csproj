@@ -17,7 +17,7 @@
     <ProjectReference Include="..\ParseTreeEditing\ParseTreeEditing.csproj" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
     <NoWarn>3021;1701;1702</NoWarn>
   </PropertyGroup>
 </Project>

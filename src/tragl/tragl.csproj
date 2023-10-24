@@ -41,7 +41,7 @@ This program is part of the Trash toolkit.]]>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	<PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
 		<NoWarn>1701;1702;3021</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup>
