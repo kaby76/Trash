@@ -24,4 +24,4 @@ a grammar.
 
 ## Current version
 
-0.21.9 Fix trgen globstar testing, Python3 target.
+0.21.11 Fix trparse, trcover, trperf, trtree.

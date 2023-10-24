@@ -2,8 +2,8 @@
   "profiles": {
     "trunfold": {
       "commandName": "Project",
-      "commandLineArgs": "-v -f o.pt \"//parserRuleSpec[RULE_REF/text()='atom']//RULE_REF[text()='shared_atom']\" ",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-2589-before\\pcre\\Generated-CSharp"
+      "commandLineArgs": "-v -f o.pt \"//parserRuleSpec/ruleBlock//TOKEN_REF[text()='PLUS_SIGN']\" ",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-unicode-names\\abb"
     }
   }
 }

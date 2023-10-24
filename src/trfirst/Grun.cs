@@ -81,9 +81,13 @@
                 : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
             path = path.Replace("\\", "/");
             if (!path.EndsWith("/")) path = path + "/";
-            var full_path = path + "Generated/bin/Debug/net7.0/";
+            var full_path = path + "Generated-CSharp/bin/Debug/net7.0/";
             var exists = File.Exists(full_path + "Test.dll");
             if (!exists) full_path = path + "bin/Debug/net7.0/";
+            exists = File.Exists(full_path + "Test.dll");
+            if (!exists) full_path = path + "Generated-CSharp/bin/Release/net7.0/";
+            exists = File.Exists(full_path + "Test.dll");
+            if (!exists) full_path = path + "bin/Release/net7.0/";
             full_path = Path.GetFullPath(full_path);
             Assembly asm1 = Assembly.LoadFile(full_path + "Antlr4.Runtime.Standard.dll");
             Assembly asm = Assembly.LoadFile(full_path + "Test.dll");
