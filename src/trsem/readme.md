@@ -18,4 +18,4 @@ Read a static semantics spec file and generate code.
 
 ## Current version
 
-0.21.11 Fix trrename.
+0.21.11 Fix trparse, trcover, trperf, trtree.

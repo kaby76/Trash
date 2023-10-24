@@ -41,7 +41,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Fix trrename.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Fix trparse, trcover, trperf, trtree.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
@@ -78,7 +78,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Fix trrename.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Fix trparse, trcover, trperf, trtree.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done

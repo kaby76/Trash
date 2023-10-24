@@ -12,4 +12,4 @@
 
 ## Current version
 
-0.21.11 Fix trrename.
+0.21.11 Fix trparse, trcover, trperf, trtree.

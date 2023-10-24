@@ -19,4 +19,4 @@ specified, the line number range for the tree is printed.
 
 ## Current version
 
-0.21.11 Fix trrename.
+0.21.11 Fix trparse, trcover, trperf, trtree.

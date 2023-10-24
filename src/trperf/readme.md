@@ -27,4 +27,4 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.21.11 Fix trrename.
+0.21.11 Fix trparse, trcover, trperf, trtree.
