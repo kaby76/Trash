@@ -29,8 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxgrep", "src\trxgrep\trxg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trstrip", "src\trstrip\trstrip.csproj", "{6946E15D-8A2A-48C6-ADC4-B5F2ABC17065}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Docs", "src\Docs\Docs.csproj", "{D9E29308-8162-4806-85C1-7808D41A3F27}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trkleene", "src\trkleene\trkleene.csproj", "{5257C48E-6465-4458-B3D6-E5E28FB50674}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trfold", "src\trfold\trfold.csproj", "{5F6937C0-CEC8-4B29-8690-097FA6FB465A}"
@@ -94,8 +92,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trmove", "src\trmove\trmove.csproj", "{480EE365-2BE8-4FD4-8B24-97F5FC1E50D3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trull", "src\trull\trull.csproj", "{8A875F76-D1CF-4F31-BF8B-E483507538D0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgen2", "src\trgen2\trgen2.csproj", "{0CD827AB-5266-4FE4-A662-EC15802CA07C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tritext", "src\tritext\tritext.csproj", "{442F9D45-76FD-4334-B92D-24FB9D8C37C6}"
 EndProject

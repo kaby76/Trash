@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "dotnet-antlr": {
-      "commandName": "Project",
-      "commandLineArgs": "-f o.xml -t dfs -s c:\\msys64\\home\\Kenne\\transform\\templates",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\transform\\x"
-    }
-  }
-}
