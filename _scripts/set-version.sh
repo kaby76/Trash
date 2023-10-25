@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-version="0.21.11"
+version="0.21.12"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
@@ -83,7 +83,7 @@ do
 	cd ..
 done
 
-for i in trgen trgen2
+for i in trgen
 do
     pushd $i
 	rm -f asdfasdf
