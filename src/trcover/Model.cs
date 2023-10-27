@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Antlr4.Runtime.Atn;
 
 namespace trcover

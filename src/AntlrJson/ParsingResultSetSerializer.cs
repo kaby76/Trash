@@ -10,7 +10,6 @@
     using EditableAntlrTree;
     using org.w3c.dom;
     using Antlr4.Runtime;
-    using SharpCompress.Writers;
     using static System.Net.Mime.MediaTypeNames;
     using System.Net.Http;
 

@@ -18,4 +18,4 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-0.21.11 Fix trparse, trcover, trperf, trtree.
+0.21.12 Removed Antlr 4.10 dependencies, clean up.

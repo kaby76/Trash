@@ -67,12 +67,8 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AntlrTreeEditing" Version="5.1.0" />
-		<PackageReference Include="Domemtech.TrashBase" Version="4.4.0" />
 		<PackageReference Include="StreamJsonRpc" Version="2.16.36" />
-		<PackageReference Include="SharpZipLib">
-			<Version>1.4.2</Version>
-		</PackageReference>
+		<PackageReference Include="SharpZipLib" Version="1.4.2" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -7,7 +7,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
-        <PackageReference Include="Antlr4BuildTasks" Version="12.3.0" />
+        <PackageReference Include="Antlr4BuildTasks" Version="12.3.0" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ParseTreeEditing\ParseTreeEditing.csproj" />

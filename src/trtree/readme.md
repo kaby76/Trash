@@ -18,4 +18,4 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 ## Current version
 
-0.21.11 Fix trparse, trcover, trperf, trtree.
+0.21.12 Removed Antlr 4.10 dependencies, clean up.
