@@ -19,4 +19,4 @@ of all comments, labels, and action blocks.
 
 ## Current version
 
-0.21.12 Fix trparse, trcover, trperf, trtree.
+0.21.12 Removed Antlr 4.10 dependencies, clean up.
