@@ -26,7 +26,7 @@ This program is part of the Trash toolkit.
 		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
-		<PackageReference Include="itext7" Version="8.0.1" />
+		<PackageReference Include="itext7" Version="8.0.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
