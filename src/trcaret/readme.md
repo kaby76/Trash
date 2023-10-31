@@ -18,4 +18,4 @@ Reads a tree from stdin and prints lines and caret marks.
 
 ## Current version
 
-0.21.12 Removed Antlr 4.10 dependencies, clean up.
+0.21.13 Removed Antlr 4.10 dependencies, clean up.

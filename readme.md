@@ -405,6 +405,10 @@ You must have the NET SDK installed to build and run.
 
 # Current release
 
+## 0.21.12
+
+# Prior Releases
+
 ## 0.18.1 -- Nov 12, 2022
 
 Re-adding CI tests and stabilizing the tools.
@@ -422,7 +426,6 @@ Re-adding CI tests and stabilizing the tools.
 * Add --quiet option to trparse to just get exit code.
 * Change trgen templates to remove -file option, make file name parsing the default.
 
-# Prior Releases
 
 # Roadmap/Goals
 
