@@ -116,6 +116,7 @@ precedence_declarator
     : PERCENT_LEFT
     | PERCENT_RIGHT
     | PERCENT_NONASSOC
+    | PERCENT_BINARY
     | PRECEDENCE
     ;
 
