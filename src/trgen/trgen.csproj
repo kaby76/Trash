@@ -34,7 +34,6 @@ This program is part of the Trash toolkit.]]>
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Domemtech.StringTemplate4" Version="4.3.0" />
-		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 	</ItemGroup>

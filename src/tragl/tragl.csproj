@@ -24,9 +24,6 @@ This program is part of the Trash toolkit.]]>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
-	</ItemGroup>
-	<ItemGroup>
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 		<PackageReference Include="Domemtech.AutomaticGraphLayout" Version="1.1.4" />
 		<PackageReference Include="Domemtech.AutomaticGraphLayout.Drawing" Version="1.1.4" />

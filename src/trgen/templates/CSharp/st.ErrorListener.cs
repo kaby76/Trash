@@ -41,7 +41,7 @@ public class ErrorListener\<S> : IAntlrErrorListener\< S>
         }
     }
 }
-/*
+
 public class MyDiagnosticErrorListener : DiagnosticErrorListener
 {
     public override void ReportAmbiguity​(Parser recognizer, DFA dfa, int startIndex, int stopIndex,
@@ -64,7 +64,7 @@ public class MyDiagnosticErrorListener : DiagnosticErrorListener
             {
                 ATNState s = e.state;
                 PredictionContext c = e.context;
-                System.Console.WriteLine(OutIt(recognizer, c));
+                System.Console.WriteLine(OutIt(recognizer, e, c));
             }
         }
         catch (RecognitionException e)
@@ -93,10 +93,10 @@ public class MyDiagnosticErrorListener : DiagnosticErrorListener
         NewMethod(recognizer, dfa, startIndex, stopIndex, configs);
     }
 
-    string OutIt(Parser recognizer, PredictionContext p)
+    string OutIt(Parser recognizer, ATNConfig c, PredictionContext p)
     {
         if (p == null) return "";
-        var str = OutIt(recognizer, p.GetParent(0));
+        var str = OutIt(recognizer, null, p.GetParent(0));
         int rs = p.GetReturnState(0);
         if (rs != PredictionContext.EMPTY_RETURN_STATE)
         {
@@ -106,10 +106,16 @@ public class MyDiagnosticErrorListener : DiagnosticErrorListener
             if (riss \< 0) return "";
             var rnss = recognizer.RuleNames[riss];
             if (str != "") str = str + " -> ";
-            return str + rnss;
+            str = str + rnss;
+            if (c != null)
+            {
+                var k = c.state.ruleIndex;
+                str = str + " -> " + recognizer.RuleNames[k];
+            }
+            return str;
         }
         return "";
     }
 }
-*/
+
 <if(has_name_space)>}<endif>
