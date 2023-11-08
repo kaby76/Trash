@@ -27,8 +27,10 @@
             var regex = new StringBuilder();
             var characterClass = false;
             regex.Append("^");
-            foreach (var c in glob)
+            int ptr = 0;
+            for ( ; ptr < glob.Length; ++ptr)
             {
+                var c = glob[ptr];
                 if (characterClass)
                 {
                     if (c == ']') characterClass = false;
@@ -38,7 +40,10 @@
                 switch (c)
                 {
                     case '*':
-                        regex.Append(".*");
+                        if (glob.Length > ptr+1 && glob[ptr + 1] == '*')
+                            regex.Append(@".*");
+                        else
+                            regex.Append(@"[^/\\]*");
                         break;
                     case '?':
                         regex.Append(".");
@@ -213,10 +218,15 @@
                 throw new Exception("Regex expression cannot be null.");
             var closure = Closure(recursive);
             var cwd = _current_directory.Replace('\\', '/') + "/";
-            foreach (var i in closure)
+            foreach (FileSystemInfo i in closure)
             {
+                string k = i.ToString();
+                if (k.Length < cwd.Length) continue;
+                k = k.Replace('\\', '/');
+                string j = k.Substring(0, cwd.Length);
+                if (j == cwd) j = k.Substring(cwd.Length);
                 var regex = new PathRegex(expr);
-                if (regex.IsMatch(i))
+                if (regex.IsMatch(j))
                     result.Add(i);
             }
             return result;
@@ -266,6 +276,10 @@
                 var fp = fsi.FullName.Replace('\\', '/');
                 return re.IsMatch(fp);
             }
+        }
+        public bool IsMatch(string str)
+        {
+            return re.IsMatch(str);
         }
     }
 }
