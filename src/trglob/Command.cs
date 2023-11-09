@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using System;
+
+namespace Trash
 {
     using System.Collections.Generic;
     using System.IO;
@@ -18,9 +20,18 @@
         public int Execute(Config config)
         {
             List<string> merged_list = new List<string>();
-            foreach (var z in config.Files)
+            foreach (var p in config.Files)
             {
                 var glob = new TrashGlobbing.Glob();
+                // Every globstar pattern must be converted to absolute paths
+                // before running through Trash Globbing.
+                var z = p;
+                if (!Path.IsPathRooted(z))
+                {
+                    var cwd = Environment.CurrentDirectory.Replace('\\', '/');
+                    if (!cwd.EndsWith("\\")) { cwd += "/"; }
+                    z = cwd + z;
+                }
                 var list_pp = glob
                     .RegexContents(TrashGlobbing.Glob.GlobToRegex(z), true)
                     .Where(f => f is FileInfo)

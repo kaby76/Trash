@@ -40,8 +40,23 @@
                 switch (c)
                 {
                     case '*':
-                        if (glob.Length > ptr+1 && glob[ptr + 1] == '*')
-                            regex.Append(@".*");
+                        if (glob.Length > ptr + 1 && glob[ptr + 1] == '*')
+                        {
+                            if (glob.Length > ptr + 2 && glob[ptr + 2] == '/')
+                            {
+                                // For '**/*.lua', we allow also ./*.lua as well as
+                                // ./..../*.lua.
+                                // Skip past '**/'
+                                ptr += 2;
+                                regex.Append(@".*");
+                            }
+                            else
+                            {
+                                // Skip past '**'
+                                ptr += 1;
+                                regex.Append(@".*");
+                            }
+                        }
                         else
                             regex.Append(@"[^/\\]*");
                         break;
@@ -216,17 +231,12 @@
             var result = new List<FileSystemInfo>();
             if (expr == null)
                 throw new Exception("Regex expression cannot be null.");
+            // The expr must be a pattern for an absolute file name.
             var closure = Closure(recursive);
-            var cwd = _current_directory.Replace('\\', '/') + "/";
             foreach (FileSystemInfo i in closure)
             {
-                string k = i.ToString();
-                if (k.Length < cwd.Length) continue;
-                k = k.Replace('\\', '/');
-                string j = k.Substring(0, cwd.Length);
-                if (j == cwd) j = k.Substring(cwd.Length);
                 var regex = new PathRegex(expr);
-                if (regex.IsMatch(j))
+                if (regex.IsMatch(i))
                     result.Add(i);
             }
             return result;

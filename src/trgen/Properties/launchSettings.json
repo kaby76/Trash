@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Cpp",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-3728\\javascript\\javascript"
+      "commandLineArgs": "-t CSharp",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\current-grammars\\caql"
     }
   }
 }
