@@ -29,7 +29,6 @@ namespace Trash
                 if (!Path.IsPathRooted(z))
                 {
                     var cwd = Environment.CurrentDirectory.Replace('\\', '/');
-                    if (!cwd.EndsWith("\\")) { cwd += "/"; }
                     z = cwd + z;
                 }
                 var list_pp = glob

@@ -2,8 +2,8 @@
   "profiles": {
     "trglob": {
       "commandName": "Project",
-      "commandLineArgs": "**/*.lua",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\current-grammars\\lua\\examples"
+      "commandLineArgs": "../examples/*.dart",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-3587\\dart2\\Generated-TypeScript-quick"
     }
   }
 }

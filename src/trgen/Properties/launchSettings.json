@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t CSharp",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\current-grammars\\caql"
+      "commandLineArgs": "-t Antlr4ng --force",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\current-grammars\\abb"
     }
   }
 }
