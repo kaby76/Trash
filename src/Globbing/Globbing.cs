@@ -241,6 +241,101 @@
             }
             return result;
         }
+
+        public List<FileSystemInfo> GlobContents(DirectoryInfo cd, string glob, bool recursive = false)
+        {
+            var result = new List<FileSystemInfo>();
+            // Get current files and directories for directory "cd".
+            // Peel off pattern to next slash.
+            var index_slash = glob.IndexOf('/');
+            string pattern;
+            string rest;
+            if (index_slash >= 0)
+            {
+                var expr = glob.Substring(0, index_slash);
+                rest = glob.Substring(glob.IndexOf('/') + 1);
+                if (expr == "..")
+                {
+                    var where_to = cd.ToString().Replace('\\', '/');
+                    if (!where_to.EndsWith('/')) where_to = where_to + '/';
+                    where_to = where_to + expr;
+                    var new_cd = new DirectoryInfo(where_to).FullName.Replace('\\', '/');
+                    var new_cd_str = new DirectoryInfo(new_cd);
+                    return this.GlobContents(new_cd_str, rest, recursive);
+                } else if (expr == ".")
+                {
+                    var where_to = cd.ToString().Replace('\\', '/');
+                    if (!where_to.EndsWith('/')) where_to = where_to + '/';
+                    var new_cd = new DirectoryInfo(where_to).FullName.Replace('\\', '/');
+                    var new_cd_str = new DirectoryInfo(new_cd);
+                    return this.GlobContents(new_cd_str, rest, recursive);
+                }
+                pattern = Glob.GlobToRegex(expr);
+            }
+            else
+            {
+                rest = "";
+                var expr = glob;
+                if (expr == "..")
+                {
+                    var where_to = cd.ToString().Replace('\\', '/');
+                    if (!where_to.EndsWith('/')) where_to = where_to + '/';
+                    where_to = where_to + expr;
+                    var new_cd = new DirectoryInfo(where_to).FullName.Replace('\\', '/');
+                    var new_cd_str = new DirectoryInfo(new_cd);
+                    return this.GlobContents(new_cd_str, rest, recursive);
+                }
+                else if (expr == ".")
+                {
+                    var where_to = cd.ToString().Replace('\\', '/');
+                    if (!where_to.EndsWith('/')) where_to = where_to + '/';
+                    var new_cd = new DirectoryInfo(where_to).FullName.Replace('\\','/');
+                    var new_cd_str = new DirectoryInfo(new_cd);
+                    return this.GlobContents(new_cd_str, rest, recursive);
+                } else if (expr == "")
+                {
+                    pattern = ".*";
+                    result.Add(cd);
+                }
+                else
+                {
+                    pattern = Glob.GlobToRegex(glob);
+                }
+            }
+            var regex = new PathRegex(pattern);
+            foreach (DirectoryInfo i in cd.GetDirectories())
+            {
+                try
+                {
+                    if (!i.Exists) continue;
+                    if (!regex.IsMatch(i.Name)) continue;
+                    result.Add(i);
+                    // call recursively.
+                    if (rest != "")
+                    {
+                        var more = GlobContents(i, rest, recursive);
+                        foreach (var m in more) result.Add(m);
+                    }
+                }
+                catch { }
+            }
+            foreach (FileInfo i in cd.GetFiles())
+            {
+                try
+                {
+                    if (!i.Exists) continue;
+                    if (!regex.IsMatch(i.Name)) continue;
+                    result.Add(i);
+                }
+                catch { }
+            }
+            return result;
+        }
+
+        private bool match(FileSystemInfo d2, string pattern)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public static class HelperGlobbing

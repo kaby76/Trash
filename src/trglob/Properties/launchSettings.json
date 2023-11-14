@@ -2,7 +2,7 @@
   "profiles": {
     "trglob": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/*.dart",
+      "commandLineArgs": ".",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-3587\\dart2\\Generated-TypeScript-quick"
     }
   }
