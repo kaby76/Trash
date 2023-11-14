@@ -486,13 +486,13 @@
                 test.tool_grammar_files = test.tool_grammar_tuples
                     .Select(t => t.GrammarFileName).ToHashSet().ToList();
                 test.parser_grammar_file_name = parser_src_grammar_file_name;
-                test.generated_files = test.tool_grammar_tuples.Select(t => t.GeneratedFileName)
-                    .ToHashSet().ToList();
+                //test.generated_files = test.tool_grammar_tuples.Select(t => t.GeneratedFileName)
+                //    .ToHashSet().ToList();
                 test.lexer_grammar_file_name = lexer_src_grammar_file_name;
             }
         }
 
-        public static string version = "0.21.12";
+        public static string version = "0.21.13";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -513,6 +513,7 @@
                 "Python3" => ".py",
                 "Swift" => ".swift",
                 "TypeScript" => ".ts",
+                "Antlr4ng" => ".ts",
                 _ => throw new NotImplementedException(),
             };
         }
@@ -578,22 +579,23 @@
 
         public static string TargetName(string target)
         {
-            return target switch
-            {
-                "Antlr4cs" => "Antlr4cs",
-                "Cpp" => "Cpp",
-                "CSharp" => "CSharp",
-                "Dart" => "Dart",
-                "Go" => "Go",
-                "Java" => "Java",
-                "JavaScript" => "JavaScript",
-                "PHP" => "PHP",
-                "Python2" => "Python2",
-                "Python3" => "Python3",
-                "Swift" => "Swift",
-                "TypeScript" => "TypeScript",
-                _ => throw new NotImplementedException(),
-            };
+            return target;
+            //return target switch
+            //{
+            //    "Antlr4cs" => "Antlr4cs",
+            //    "Cpp" => "Cpp",
+            //    "CSharp" => "CSharp",
+            //    "Dart" => "Dart",
+            //    "Go" => "Go",
+            //    "Java" => "Java",
+            //    "JavaScript" => "JavaScript",
+            //    "PHP" => "PHP",
+            //    "Python2" => "Python2",
+            //    "Python3" => "Python3",
+            //    "Swift" => "Swift",
+            //    "TypeScript" => "TypeScript",
+            //    _ => throw new NotImplementedException(),
+            //};
         }
 
         public static string AllButTargetName(string target)

@@ -27,8 +27,10 @@
             var regex = new StringBuilder();
             var characterClass = false;
             regex.Append("^");
-            foreach (var c in glob)
+            int ptr = 0;
+            for ( ; ptr < glob.Length; ++ptr)
             {
+                var c = glob[ptr];
                 if (characterClass)
                 {
                     if (c == ']') characterClass = false;
@@ -38,7 +40,25 @@
                 switch (c)
                 {
                     case '*':
-                        regex.Append(".*");
+                        if (glob.Length > ptr + 1 && glob[ptr + 1] == '*')
+                        {
+                            if (glob.Length > ptr + 2 && glob[ptr + 2] == '/')
+                            {
+                                // For '**/*.lua', we allow also ./*.lua as well as
+                                // ./..../*.lua.
+                                // Skip past '**/'
+                                ptr += 2;
+                                regex.Append(@".*");
+                            }
+                            else
+                            {
+                                // Skip past '**'
+                                ptr += 1;
+                                regex.Append(@".*");
+                            }
+                        }
+                        else
+                            regex.Append(@"[^/\\]*");
                         break;
                     case '?':
                         regex.Append(".");
@@ -211,15 +231,180 @@
             var result = new List<FileSystemInfo>();
             if (expr == null)
                 throw new Exception("Regex expression cannot be null.");
+            // The expr must be a pattern for an absolute file name.
             var closure = Closure(recursive);
-            var cwd = _current_directory.Replace('\\', '/') + "/";
-            foreach (var i in closure)
+            foreach (FileSystemInfo i in closure)
             {
                 var regex = new PathRegex(expr);
                 if (regex.IsMatch(i))
                     result.Add(i);
             }
             return result;
+        }
+
+        public List<FileSystemInfo> GlobContents(DirectoryInfo cd, string glob, bool recursive = false)
+        {
+            var result = new List<FileSystemInfo>();
+            // Get current files and directories for directory "cd".
+            // Peel off pattern to next slash.
+            var index_slash = glob.IndexOf('/');
+            string pattern;
+            string rest;
+            if (index_slash >= 0)
+            {
+                var expr = glob.Substring(0, index_slash);
+                rest = glob.Substring(glob.IndexOf('/') + 1);
+                if (expr == "..")
+                {
+                    var where_to = cd.ToString().Replace('\\', '/');
+                    if (!where_to.EndsWith('/')) where_to = where_to + '/';
+                    where_to = where_to + expr;
+                    var new_cd = new DirectoryInfo(where_to).FullName.Replace('\\', '/');
+                    var new_cd_str = new DirectoryInfo(new_cd);
+                    return this.GlobContents(new_cd_str, rest, recursive);
+                } else if (expr == ".")
+                {
+                    var where_to = cd.ToString().Replace('\\', '/');
+                    if (!where_to.EndsWith('/')) where_to = where_to + '/';
+                    var new_cd = new DirectoryInfo(where_to).FullName.Replace('\\', '/');
+                    var new_cd_str = new DirectoryInfo(new_cd);
+                    return this.GlobContents(new_cd_str, rest, recursive);
+                } else if (expr == "**")
+                {
+                    foreach (DirectoryInfo i in cd.GetDirectories())
+                    {
+                        try
+                        {
+                            if (!i.Exists) continue;
+                            if (rest == "")
+                            {
+                                result.Add(i);
+                            }
+                            else
+                            {
+                                var more = GlobContents(i, glob, recursive);
+                                foreach (var m in more) result.Add(m);
+                            }
+                        }
+                        catch { }
+                    }
+                    var regex = new PathRegex(Glob.GlobToRegex(rest));
+                    foreach (FileInfo i in cd.GetFiles())
+                    {
+                        try
+                        {
+                            if (!i.Exists) continue;
+                            if (!regex.IsMatch(i.Name)) continue;
+                            result.Add(i);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    return result;
+                }
+                else
+                {
+                    pattern = Glob.GlobToRegex(expr);
+                }
+            }
+            else /* index_slash < 0 */
+            {
+                rest = "";
+                var expr = glob;
+                if (expr == "..")
+                {
+                    var where_to = cd.ToString().Replace('\\', '/');
+                    if (!where_to.EndsWith('/')) where_to = where_to + '/';
+                    where_to = where_to + expr;
+                    var new_cd = new DirectoryInfo(where_to).FullName.Replace('\\', '/');
+                    var new_cd_str = new DirectoryInfo(new_cd);
+                    return this.GlobContents(new_cd_str, rest, recursive);
+                }
+                else if (expr == ".")
+                {
+                    var where_to = cd.ToString().Replace('\\', '/');
+                    if (!where_to.EndsWith('/')) where_to = where_to + '/';
+                    var new_cd = new DirectoryInfo(where_to).FullName.Replace('\\','/');
+                    var new_cd_str = new DirectoryInfo(new_cd);
+                    return this.GlobContents(new_cd_str, rest, recursive);
+                }
+                else if (expr == "**")
+                {
+                    foreach (DirectoryInfo i in cd.GetDirectories())
+                    {
+                        try
+                        {
+                            if (!i.Exists) continue; 
+                            result.Add(i);
+                            var more = GlobContents(i, glob, recursive);
+                            foreach (var m in more) result.Add(m);
+                        }
+                        catch { }
+                    }
+                    foreach (FileInfo i in cd.GetFiles())
+                    {
+                        try
+                        {
+                            if (!i.Exists) continue;
+                            result.Add(i);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    return result;
+                } else if (expr == "")
+                {
+                    pattern = ".*";
+                    result.Add(cd);
+                }
+                else
+                {
+                    pattern = Glob.GlobToRegex(glob);
+                }
+            }
+            {
+                var regex = new PathRegex(pattern);
+                foreach (DirectoryInfo i in cd.GetDirectories())
+                {
+                    try
+                    {
+                        if (!i.Exists) continue;
+                        if (!regex.IsMatch(i.Name)) continue;
+                        if (rest == "")
+                        {
+                            result.Add(i);
+                        }
+                        if (recursive)
+                        {
+                            var more = GlobContents(i, rest, recursive);
+                            foreach (var m in more) result.Add(m);
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+                foreach (FileInfo i in cd.GetFiles())
+                {
+                    try
+                    {
+                        if (!i.Exists) continue;
+                        if (!regex.IsMatch(i.Name)) continue;
+                        result.Add(i);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            return result;
+        }
+
+        private bool match(FileSystemInfo d2, string pattern)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -266,6 +451,10 @@
                 var fp = fsi.FullName.Replace('\\', '/');
                 return re.IsMatch(fp);
             }
+        }
+        public bool IsMatch(string str)
+        {
+            return re.IsMatch(str);
         }
     }
 }

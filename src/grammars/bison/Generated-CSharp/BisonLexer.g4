@@ -195,7 +195,7 @@ PercentPercent:   '%%' { this.NextMode(); }
      option name, with a single string argument.  Otherwise, add exceptions
      to ../build-aux/cross-options.pl.  */
 
-NONASSOC
+PERCENT_BINARY
     : '%binary'
     ;
 
