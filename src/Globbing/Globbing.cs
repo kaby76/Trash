@@ -308,7 +308,7 @@
                     pattern = Glob.GlobToRegex(expr);
                 }
             }
-            else
+            else /* index_slash < 0 */
             {
                 rest = "";
                 var expr = glob;
@@ -328,6 +328,32 @@
                     var new_cd = new DirectoryInfo(where_to).FullName.Replace('\\','/');
                     var new_cd_str = new DirectoryInfo(new_cd);
                     return this.GlobContents(new_cd_str, rest, recursive);
+                }
+                else if (expr == "**")
+                {
+                    foreach (DirectoryInfo i in cd.GetDirectories())
+                    {
+                        try
+                        {
+                            if (!i.Exists) continue; 
+                            result.Add(i);
+                            var more = GlobContents(i, glob, recursive);
+                            foreach (var m in more) result.Add(m);
+                        }
+                        catch { }
+                    }
+                    foreach (FileInfo i in cd.GetFiles())
+                    {
+                        try
+                        {
+                            if (!i.Exists) continue;
+                            result.Add(i);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    return result;
                 } else if (expr == "")
                 {
                     pattern = ".*";
@@ -360,7 +386,6 @@
                     {
                     }
                 }
-
                 foreach (FileInfo i in cd.GetFiles())
                 {
                     try

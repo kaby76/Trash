@@ -2,7 +2,7 @@
   "profiles": {
     "trglob": {
       "commandName": "Project",
-      "commandLineArgs": "./**/*.sh",
+      "commandLineArgs": "**",
       "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash"
     }
   }
