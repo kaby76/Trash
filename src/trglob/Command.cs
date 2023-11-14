@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Trash
 {
@@ -20,6 +21,8 @@ namespace Trash
         public int Execute(Config config)
         {
             string cwd = System.Environment.CurrentDirectory;
+            cwd = cwd.Replace("\\", "/");
+            if (!cwd.EndsWith("\\")) cwd += "/";
             DirectoryInfo cwdi = new DirectoryInfo(cwd);
             List<string> merged_list = new List<string>();
             foreach (var p in config.Files)
@@ -28,8 +31,15 @@ namespace Trash
                 var z = p;
                 var list_pp = glob
                     .GlobContents(cwdi, p, true)
-                    .Select(f => f.FullName.Replace('\\', '/'))
-	                .ToList();
+                    .Select(f =>
+                    {
+                        var n = f.FullName.Replace('\\', '/');
+                        var re = new Regex("^" + cwd);
+                        var r = re.Replace(n,"");
+                        if (r == "") return ".";
+                        return r;
+                    })
+                    .ToList();
                 foreach (var y in list_pp)
                 {
                     merged_list.Add(y);

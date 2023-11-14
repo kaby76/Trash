@@ -309,10 +309,10 @@
                 {
                     if (!i.Exists) continue;
                     if (!regex.IsMatch(i.Name)) continue;
-                    result.Add(i);
-                    // call recursively.
-                    if (rest != "")
+                    if (rest == "")
                     {
+                        result.Add(i);
+                    } else {
                         var more = GlobContents(i, rest, recursive);
                         foreach (var m in more) result.Add(m);
                     }
