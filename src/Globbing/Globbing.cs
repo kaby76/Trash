@@ -376,7 +376,7 @@
                         {
                             result.Add(i);
                         }
-                        else
+                        if (recursive)
                         {
                             var more = GlobContents(i, rest, recursive);
                             foreach (var m in more) result.Add(m);

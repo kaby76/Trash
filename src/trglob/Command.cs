@@ -24,7 +24,6 @@ namespace Trash
             cwd = cwd.Replace("\\", "/");
             if (!cwd.EndsWith("\\")) cwd += "/";
             DirectoryInfo cwdi = new DirectoryInfo(cwd);
-            List<string> merged_list = new List<string>();
             foreach (var p in config.Files)
             {
                 var glob = new TrashGlobbing.Glob();
@@ -40,14 +39,12 @@ namespace Trash
                         return r;
                     })
                     .ToList();
+                list_pp.Sort();
+                list_pp = list_pp.Distinct().ToList();
                 foreach (var y in list_pp)
                 {
-                    merged_list.Add(y);
+                    System.Console.WriteLine(y);
                 }
-            }
-            foreach (var z in merged_list)
-            {
-                System.Console.WriteLine(z);
             }
             return 0;
         }
