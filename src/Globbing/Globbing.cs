@@ -269,8 +269,44 @@
                     var new_cd = new DirectoryInfo(where_to).FullName.Replace('\\', '/');
                     var new_cd_str = new DirectoryInfo(new_cd);
                     return this.GlobContents(new_cd_str, rest, recursive);
+                } else if (expr == "**")
+                {
+                    foreach (DirectoryInfo i in cd.GetDirectories())
+                    {
+                        try
+                        {
+                            if (!i.Exists) continue;
+                            if (rest == "")
+                            {
+                                result.Add(i);
+                            }
+                            else
+                            {
+                                var more = GlobContents(i, glob, recursive);
+                                foreach (var m in more) result.Add(m);
+                            }
+                        }
+                        catch { }
+                    }
+                    var regex = new PathRegex(Glob.GlobToRegex(rest));
+                    foreach (FileInfo i in cd.GetFiles())
+                    {
+                        try
+                        {
+                            if (!i.Exists) continue;
+                            if (!regex.IsMatch(i.Name)) continue;
+                            result.Add(i);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    return result;
                 }
-                pattern = Glob.GlobToRegex(expr);
+                else
+                {
+                    pattern = Glob.GlobToRegex(expr);
+                }
             }
             else
             {
@@ -302,32 +338,41 @@
                     pattern = Glob.GlobToRegex(glob);
                 }
             }
-            var regex = new PathRegex(pattern);
-            foreach (DirectoryInfo i in cd.GetDirectories())
             {
-                try
+                var regex = new PathRegex(pattern);
+                foreach (DirectoryInfo i in cd.GetDirectories())
                 {
-                    if (!i.Exists) continue;
-                    if (!regex.IsMatch(i.Name)) continue;
-                    if (rest == "")
+                    try
                     {
-                        result.Add(i);
-                    } else {
-                        var more = GlobContents(i, rest, recursive);
-                        foreach (var m in more) result.Add(m);
+                        if (!i.Exists) continue;
+                        if (!regex.IsMatch(i.Name)) continue;
+                        if (rest == "")
+                        {
+                            result.Add(i);
+                        }
+                        else
+                        {
+                            var more = GlobContents(i, rest, recursive);
+                            foreach (var m in more) result.Add(m);
+                        }
+                    }
+                    catch
+                    {
                     }
                 }
-                catch { }
-            }
-            foreach (FileInfo i in cd.GetFiles())
-            {
-                try
+
+                foreach (FileInfo i in cd.GetFiles())
                 {
-                    if (!i.Exists) continue;
-                    if (!regex.IsMatch(i.Name)) continue;
-                    result.Add(i);
+                    try
+                    {
+                        if (!i.Exists) continue;
+                        if (!regex.IsMatch(i.Name)) continue;
+                        result.Add(i);
+                    }
+                    catch
+                    {
+                    }
                 }
-                catch { }
             }
             return result;
         }
