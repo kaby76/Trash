@@ -27,9 +27,9 @@ namespace Trash
             foreach (var p in config.Files)
             {
                 var glob = new TrashGlobbing.Glob();
-                var z = p;
+                var z = p.Replace("\\", "/");
                 var list_pp = glob
-                    .GlobContents(cwdi, p, true)
+                    .GlobContents(cwdi, z, true)
                     .Select(f =>
                     {
                         var n = f.FullName.Replace('\\', '/');
