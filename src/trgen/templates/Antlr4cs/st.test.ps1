@@ -10,9 +10,9 @@ if (Test-Path -Path "tests.txt" -PathType Leaf) {
     Remove-Item "tests.txt"
 }
 $files = New-Object System.Collections.Generic.List[string]
-foreach ($item in Get-ChildItem $Tests -Recurse) {
-    $file = $item.fullname
-    $ext = $item.Extension
+$allFiles = $(& dotnet trglob -- '$Tests' ; $last = $LASTEXITCODE ) | Out-Null
+foreach ($file in $allFiles) {
+    $ext = $file | Split-Path -Extension
     if (Test-Path $file -PathType Container) {
         continue
     } elseif ($ext -eq ".errors") {
@@ -20,13 +20,13 @@ foreach ($item in Get-ChildItem $Tests -Recurse) {
     } elseif ($ext -eq ".tree") {
         continue
     } else {
-        $(& triconv -f utf-8 $file ; $last = $LASTEXITCODE ) | Out-Null
+        $(& dotnet triconv -- -f utf-8 $file ; $last = $LASTEXITCODE ) | Out-Null
         if ($last -ne 0)
         {
             continue
         }
-        $files.Add($item)
-        Write-Host "Test case: $item"
+        $files.Add($file)
+        Write-Host "Test case: $file"
     }
 }
 foreach ($file in $files) {
