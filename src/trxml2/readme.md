@@ -18,4 +18,4 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-0.21.13 Add trglob for platform-independent "find" for testing. Add Antlr4ng target, a new Antlr4 tool and TypeScript runtime.
+0.21.14 Add trglob for platform-independent "find" for testing. Add Antlr4ng target, a new Antlr4 tool and TypeScript runtime.
