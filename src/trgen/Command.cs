@@ -602,6 +602,7 @@
         {
             var all_but = new List<string>() {
                 "Antlr4cs",
+                "Antlr4ng",
                 "Cpp",
                 "CSharp",
                 "Dart",
@@ -609,7 +610,6 @@
                 "Java",
                 "JavaScript",
                 "PHP",
-                "Python2",
                 "Python3",
                 "Swift",
                 "TypeScript",
