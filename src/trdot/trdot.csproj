@@ -18,7 +18,7 @@ This program is part of the Trash toolkit.
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>0.21.15</Version>
+		<Version>0.21.16</Version>
 		<RepositoryUrl>https://github.com/kaby76/Domemtech.Trash/tree/main/src/trdot</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
