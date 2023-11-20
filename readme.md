@@ -5,8 +5,9 @@
 **Status: The toolset is undergoing a large rewrite due to the way parse trees are represented.
 Some tools are have not been rewritten yet. For more information, see my [blog](http://codinggorilla.com/blog/2022/12/13/antlr-parse-trees.html).** 
 
-**A companion repo has been set up that contains Bash scripts that use Trash to check
-or gather properties about Antlr grammars and parse trees.**
+**The repo [g4-scripts](https://github.com/kaby76/g4-scripts) contains a collections of
+Bash scripts. which use Trash. to check
+or find properties about Antlr grammars and parse trees.**
 
 Trash is a collection of ~40 command-line tools to analyze and transform
 Antlr parse trees and grammars. The toolkit can: generate a parser
