@@ -3,7 +3,7 @@
 [![Build](https://github.com/kaby76/Domemtech.Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Domemtech.Trash/actions?query=workflow%3ACI)
 
 **Status: The toolset is undergoing a large rewrite due to the way parse trees are represented.
-Some tools are have not been rewritten yet. For more information, see my [blog](http://codinggorilla.com/blog/2022/12/13/antlr-parse-trees.html).** 
+Some tools are have not been rewritten yet.** 
 
 **The repo [g4-scripts](https://github.com/kaby76/g4-scripts) contains a collections of
 Bash scripts. which use Trash. to check
