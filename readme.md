@@ -51,6 +51,7 @@ dotnet tool install -g trdelete
 dotnet tool install -g trdeltree
 dotnet tool install -g trfoldlit
 dotnet tool install -g trgen
+dotnet tool install -g trglob
 dotnet tool install -g triconv
 dotnet tool install -g trinsert
 dotnet tool install -g trjson
