@@ -75,7 +75,7 @@
 		<PackageReference Include="Microsoft.VisualStudio.Editor" Version="17.8.222" />
 		<PackageReference Include="Microsoft.VisualStudio.LanguageServer.Client" Version="17.8.36" />
 		<PackageReference Include="Microsoft.VisualStudio.LanguageServer.Protocol" Version="17.2.8" />
-		<PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.7.2196">
+		<PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.8.2365">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
