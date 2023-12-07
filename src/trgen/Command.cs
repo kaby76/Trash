@@ -57,7 +57,6 @@
                 config.Tests.Add(test);
                 config.Files = new List<string>() { "Arithmetic.g4" };
                 config.start_rule = "file_";
-                test.os_targets = new List<string>() { GetOSTarget().ToString() };
                 test.start_rule = config.start_rule;
             }
 
@@ -222,7 +221,7 @@
                             genfn = pre1 + autom_name.Replace("Parser", "_parser").ToLower() + Suffix(test.target);
                             genincfn = "";
                             if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == OSTarget.Windows
+                                antlr_args = GetOSTarget() == "Windows"
                                     ? "-o " + test.package + " -lib " + test.package +
                                       " -package " + test.package
                                     : " -package " + test.package;
@@ -236,7 +235,7 @@
                             genfn = pre1 + autom_name + Suffix(test.target);
                             genincfn = pre1 + autom_name + ".h";
                             if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == OSTarget.Windows
+                                antlr_args = GetOSTarget() == "Windows"
                                     ? "-o " + test.package + " -lib " + test.package +
                                       " -package " + test.package
                                     : " -package " + test.package;
@@ -267,7 +266,7 @@
                             genfn = pre1 + autom_name.Replace("Lexer", "_lexer").ToLower() + Suffix(test.target);
                             genincfn = "";
                             if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == OSTarget.Windows
+                                antlr_args = GetOSTarget() == "Windows"
                                     ? "-o " + test.package + " -lib " + test.package +
                                       " -package " + test.package
                                     : " -package " + test.package;
@@ -281,7 +280,7 @@
                             genfn = pre1 + autom_name + Suffix(test.target);
                             genincfn = pre1 + autom_name + ".h";
                             if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == OSTarget.Windows
+                                antlr_args = GetOSTarget() == "Windows"
                                     ? "-o " + test.package + " -lib " + test.package +
                                       " -package " + test.package
                                     : " -package " + test.package;
@@ -319,7 +318,7 @@
                                          + "New" + name
                                          + "Parser";
                                 if (test.package != null && test.package != "")
-                                    antlr_args = GetOSTarget() == OSTarget.Windows
+                                    antlr_args = GetOSTarget() == "Windows"
                                         ? "-o " + test.package + " -lib " + test.package +
                                           " -package " + test.package
                                         : " -package " + test.package;
@@ -335,7 +334,7 @@
                                                   + "Parser";
                                 goname = "";
                                 if (test.package != null && test.package != "")
-                                    antlr_args = GetOSTarget() == OSTarget.Windows
+                                    antlr_args = GetOSTarget() == "Windows"
                                         ? "-o " + test.package + " -lib " + test.package +
                                           " -package " + test.package
                                         : " -package " + test.package;
@@ -369,7 +368,7 @@
                                          + "New" + name
                                          + "Lexer";
                                 if (test.package != null && test.package != "")
-                                    antlr_args = GetOSTarget() == OSTarget.Windows
+                                    antlr_args = GetOSTarget() == "Windows"
                                         ? "-o " + test.package + " -lib " + test.package +
                                           " -package " + test.package
                                         : " -package " + test.package;
@@ -385,7 +384,7 @@
                                                   + "Lexer";
                                 goname = "";
                                 if (test.package != null && test.package != "")
-                                    antlr_args = GetOSTarget() == OSTarget.Windows
+                                    antlr_args = GetOSTarget() == "Windows"
                                         ? "-o " + test.package + " -lib " + test.package +
                                           " -package " + test.package
                                         : " -package " + test.package;
@@ -492,7 +491,7 @@
             }
         }
 
-        public static string version = "0.21.17";
+        public static string version = "0.22.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -537,19 +536,19 @@
             throw new Exception("Cannot determine operating system!");
         }
 
-        public static OSTarget GetOSTarget()
+        public static string GetOSTarget()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return OSTarget.Unix;
+                return "Linux";
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return OSTarget.Windows;
+                return "Windows";
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return OSTarget.Mac;
+                return "OSX";
             }
             throw new Exception("Cannot determine operating system!");
         }
@@ -768,40 +767,43 @@
             if (!xtests.Any())
             {
                 var all = config.force ? config.targets : test_targets.Intersect(config.targets);
-                foreach (var target in all)
+                foreach (var os_target in config.os_targets)
                 {
-                    if (!test_ostargets.Contains(GetOSTarget().ToString())) continue;
-                    var test = new Test();
-                    test.os_targets = new List<string>() { GetOSTarget().ToString() };
-                    test.target = target;
-                    test.grammar_name = config.grammar_name;
-                    test.start_rule = config.start_rule;
-                    test.example_files = config.example_files;
-                    if (test.example_files == null)
+                    foreach (var target in all)
                     {
-                        test.example_files = "examples";
-                    }
-                    if (!config.Files.Any())
-                    {
-                        var list = new List<string>();
-                        var tool_grammar_files_pattern = ".+g4$";
-                        var list_pp = new TrashGlobbing.Glob()
-                            .RegexContents(tool_grammar_files_pattern, false)
-                            .Where(f => f is FileInfo)
-                            .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
-                            .ToList();
-                        foreach (var y in list_pp)
+                        if (!test_ostargets.Contains(os_target)) continue;
+                        var test = new Test();
+                        test.os_target = os_target;
+                        test.target = target;
+                        test.grammar_name = config.grammar_name;
+                        test.start_rule = config.start_rule;
+                        test.example_files = config.example_files;
+                        if (test.example_files == null)
                         {
-                            list.Add(y);
+                            test.example_files = "examples";
                         }
-                        config.Files = list;
+                        if (!config.Files.Any())
+                        {
+                            var list = new List<string>();
+                            var tool_grammar_files_pattern = ".+g4$";
+                            var list_pp = new TrashGlobbing.Glob()
+                                .RegexContents(tool_grammar_files_pattern, false)
+                                .Where(f => f is FileInfo)
+                                .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                                .ToList();
+                            foreach (var y in list_pp)
+                            {
+                                list.Add(y);
+                            }
+                            config.Files = list;
+                        }
+                        test.tool_grammar_files = config.Files.ToList();
+                        test.package = test.target == "Go" ? "parser" : test.package;
+                        test.package = test.target == "Antlr4cs" ? "Test" : test.package;
+                        if (test.parsing_type == null) test.parsing_type = config.parsing_type;
+                        if (test.parsing_type == null) test.parsing_type = "group";
+                        config.Tests.Add(test);
                     }
-                    test.tool_grammar_files = config.Files.ToList();
-                    test.package = test.target == "Go" ? "parser" : test.package;
-                    test.package = test.target == "Antlr4cs" ? "Test" : test.package;
-                    if (test.parsing_type == null) test.parsing_type = config.parsing_type;
-                    if (test.parsing_type == null) test.parsing_type = "group";
-                    config.Tests.Add(test);
                 }
             }
             else
@@ -928,129 +930,132 @@
                         .Cast<XPathNavigator>()
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
-			            .FirstOrDefault();
+                        .FirstOrDefault();
                     var all = config.force ? config.targets : test_targets.Intersect(config.targets);
-                    foreach (var target in all)
+                    foreach (var os_target in config.os_targets)
                     {
-                        if (!test_ostargets.Contains(GetOSTarget().ToString())) continue;
-                        var test = new Test();
-                        test.target = target;
-                        test.os_targets = new List<string>() { GetOSTarget().ToString() };
-                        test.package = test.target == "Go" ? "parser" : test.package;
-                        test.package = test.target == "Antlr4cs" ? "Test" : test.package;
-                        if (tool_grammar_files != null)
+                        foreach (var target in all)
                         {
-                            test.tool_grammar_files = tool_grammar_files;
-                        }
-                        else
-                        {
-                            if (!config.Files.Any())
+                            if (!test_ostargets.Contains(os_target)) continue;
+                            var test = new Test();
+                            test.target = target;
+                            test.os_target = os_target;
+                            test.package = test.target == "Go" ? "parser" : test.package;
+                            test.package = test.target == "Antlr4cs" ? "Test" : test.package;
+                            if (tool_grammar_files != null)
                             {
-                                var list = new List<string>();
-                                var tool_grammar_files_pattern = ".+g4$";
-                                var list_pp = new TrashGlobbing.Glob()
-                                    .RegexContents(tool_grammar_files_pattern, false)
-                                    .Where(f => f is FileInfo)
-                                    .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
-                                    .ToList();
-                                foreach (var y in list_pp)
+                                test.tool_grammar_files = tool_grammar_files;
+                            }
+                            else
+                            {
+                                if (!config.Files.Any())
                                 {
-                                    list.Add(y);
+                                    var list = new List<string>();
+                                    var tool_grammar_files_pattern = ".+g4$";
+                                    var list_pp = new TrashGlobbing.Glob()
+                                        .RegexContents(tool_grammar_files_pattern, false)
+                                        .Where(f => f is FileInfo)
+                                        .Select(f => f.Name.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
+                                        .ToList();
+                                    foreach (var y in list_pp)
+                                    {
+                                        list.Add(y);
+                                    }
+                                    test.tool_grammar_files = list;
                                 }
-                                test.tool_grammar_files = list;
+                                else test.tool_grammar_files = config.Files.ToList();
                             }
-                            else test.tool_grammar_files = config.Files.ToList();
-                        }
-                        if (spec_grammar_name != null)
-                        {
-                            test.grammar_name = spec_grammar_name.Trim();
-                        } else if (config.grammar_name != null)
-                        {
-                            test.grammar_name = config.grammar_name.Trim();
-                        }
-
-                        if (spec_examplesy != null)
-                        {
-                            test.example_files = spec_examplesy;
-                        } else if (config.example_files != null)
-                        {
-                            test.example_files = config.example_files.Trim();
-                        }
-                        else
-                        {
-                            test.example_files = "examples";
-                        }
-
-                        if (spec_antlr_tool_args.Contains("-package"))
-                        {
-                            var ns = spec_antlr_tool_args[spec_antlr_tool_args.IndexOf("-package") + 1];
-                            test.package = ns;
-                        }
-                        else if (spec_package_name != null)
-                        {
-                            test.package = spec_package_name;
-                        }
-
-                        if (spec_source_directory != null)
-                        {
-                            test.current_directory = spec_source_directory
-                                .Replace("${basedir}", "")
-                                .Trim();
-                            if (test.current_directory.StartsWith('/'))
-                                test.current_directory = test.current_directory.Substring(1);
-                            if (test.current_directory != "" && !test.current_directory.EndsWith("/"))
+                            if (spec_grammar_name != null)
                             {
-                                test.current_directory = test.current_directory + "/";
+                                test.grammar_name = spec_grammar_name.Trim();
+                            } else if (config.grammar_name != null)
+                            {
+                                test.grammar_name = config.grammar_name.Trim();
                             }
-                        }
-                        else
-                        {
-                            test.current_directory = "";
-                        }
 
-                        // Check for existence of .trgen-ignore file.
-                        // If there is one, read and create pattern of what to ignore.
-                        if (File.Exists(ignore_list_of_files))
-                        {
-                            var ignore = new StringBuilder();
-                            var lines = File.ReadAllLines(ignore_list_of_files);
-                            var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
-                            test.ignore_string = string.Join("|", ignore_lines);
-                        }
-                        else test.ignore_string = null;
-
-                        if (!(test.target == "JavaScript" || test.target == "Dart" || test.target == "TypeScript"))
-                        {
-                            List<string> additional = new List<string>();
-                            config.antlr_tool_args = additional;
-                            // On Linux, the flies are automatically place in the package,
-                            // and they cannot be changed!
-                            if (test.package != null && test.package != "")
+                            if (spec_examplesy != null)
                             {
-                                if (GetOSTarget() == OSTarget.Windows)
+                                test.example_files = spec_examplesy;
+                            } else if (config.example_files != null)
+                            {
+                                test.example_files = config.example_files.Trim();
+                            }
+                            else
+                            {
+                                test.example_files = "examples";
+                            }
+
+                            if (spec_antlr_tool_args.Contains("-package"))
+                            {
+                                var ns = spec_antlr_tool_args[spec_antlr_tool_args.IndexOf("-package") + 1];
+                                test.package = ns;
+                            }
+                            else if (spec_package_name != null)
+                            {
+                                test.package = spec_package_name;
+                            }
+
+                            if (spec_source_directory != null)
+                            {
+                                test.current_directory = spec_source_directory
+                                    .Replace("${basedir}", "")
+                                    .Trim();
+                                if (test.current_directory.StartsWith('/'))
+                                    test.current_directory = test.current_directory.Substring(1);
+                                if (test.current_directory != "" && !test.current_directory.EndsWith("/"))
                                 {
-                                    additional.Add("-o");
+                                    test.current_directory = test.current_directory + "/";
+                                }
+                            }
+                            else
+                            {
+                                test.current_directory = "";
+                            }
+
+                            // Check for existence of .trgen-ignore file.
+                            // If there is one, read and create pattern of what to ignore.
+                            if (File.Exists(ignore_list_of_files))
+                            {
+                                var ignore = new StringBuilder();
+                                var lines = File.ReadAllLines(ignore_list_of_files);
+                                var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
+                                test.ignore_string = string.Join("|", ignore_lines);
+                            }
+                            else test.ignore_string = null;
+
+                            if (!(test.target == "JavaScript" || test.target == "Dart" || test.target == "TypeScript"))
+                            {
+                                List<string> additional = new List<string>();
+                                config.antlr_tool_args = additional;
+                                // On Linux, the flies are automatically place in the package,
+                                // and they cannot be changed!
+                                if (test.package != null && test.package != "")
+                                {
+                                    if (GetOSTarget() == "Windows")
+                                    {
+                                        additional.Add("-o");
+                                        additional.Add(test.package.Replace('.', '/'));
+                                    }
+
+                                    additional.Add("-lib");
                                     additional.Add(test.package.Replace('.', '/'));
                                 }
-
-                                additional.Add("-lib");
-                                additional.Add(test.package.Replace('.', '/'));
                             }
-                        }
 
-                        test.package = (spec_package_name != null && spec_package_name.Any()
-                            ? spec_package_name.First() + "/"
-                            : "");
-                        test.package = test.target == "Go" ? "parser" : test.package;
-                        test.package = test.target == "Antlr4cs" ? "Test" : test.package;
-                        test.start_rule = config.start_rule != null && config.start_rule != ""
-                            ? config.start_rule
-                            : spec_entry_point;
-                        test.test_name = test_name ?? (gen++).ToString();
-                        test.parsing_type = parsing_type;
-                        if (test.parsing_type == null) test.parsing_type = config.parsing_type;
-                        if (test.parsing_type == null) test.parsing_type = "group";
-                        config.Tests.Add(test);
+                            test.package = (spec_package_name != null && spec_package_name.Any()
+                                ? spec_package_name.First() + "/"
+                                : "");
+                            test.package = test.target == "Go" ? "parser" : test.package;
+                            test.package = test.target == "Antlr4cs" ? "Test" : test.package;
+                            test.start_rule = config.start_rule != null && config.start_rule != ""
+                                ? config.start_rule
+                                : spec_entry_point;
+                            test.test_name = test_name ?? (gen++).ToString();
+                            test.parsing_type = parsing_type;
+                            if (test.parsing_type == null) test.parsing_type = config.parsing_type;
+                            if (test.parsing_type == null) test.parsing_type = "group";
+                            config.Tests.Add(test);
+                        }
                     }
                 }
                 // Any target that was not created under a <test>, create here if config.targets mentions that target.
@@ -1334,7 +1339,7 @@
                 // and they cannot be changed!
                 if (test.package != null && test.package != "")
                 {
-                    if (GetOSTarget() == OSTarget.Windows)
+                    if (GetOSTarget() == "Windows")
                     {
                         additional.Add("-o");
                         additional.Add(test.package.Replace('.', '/'));
@@ -1349,7 +1354,7 @@
             test.start_rule = config.start_rule != null && config.start_rule != "" ? config.start_rule : pom_entry_point.First();
             if (test.parsing_type == null) test.parsing_type = config.parsing_type;
             if (test.parsing_type == null) test.parsing_type = "group";
-            test.os_targets = new List<string>() { GetOSTarget().ToString() };
+            test.os_target = config.os_targets.First();
         }
 
         public void DoNonPomDirectedGenerate(Config config)
@@ -1360,7 +1365,7 @@
                 foreach (var target in all)
                 {
                     var test = new Test();
-                    test.os_targets = new List<string>() { GetOSTarget().ToString() };
+                    test.os_target = config.os_targets.First();
                     test.target = target;
                     test.grammar_name = config.grammar_name;
                     test.start_rule = config.start_rule;
@@ -1766,7 +1771,8 @@
                             .Substring(output_dir.Length))
                     .Where(t => t.Contains(Suffix(test.target)))
                     .ToList();
-		        t.Add("target", test.target);
+                t.Add("target", test.target);
+                t.Add("test", test);
                 t.Add("additional_sources", yo1);
                 t.Add("additional_targets", test.all_target_files.Where(xx =>
                     {
@@ -1781,14 +1787,14 @@
                 if (test.start_rule == null) t.Add("cap_start_symbol", Cap("no_start_rule_declared"));
                 else t.Add("cap_start_symbol", Cap(test.start_rule));
                 t.Add("case_insensitive_type", test.case_insensitive_type);
-                t.Add("cli_bash", test.os_targets.Contains(OSTarget.Unix.ToString()));
-                t.Add("cli_cmd", GetOSTarget() == OSTarget.Windows);
-                t.Add("cmake_target", GetOSTarget() == OSTarget.Windows
+                t.Add("cli_bash", test.os_target != "Windows");
+                t.Add("cli_cmd", GetOSTarget() == "Windows");
+                t.Add("cmake_target", GetOSTarget() == "Windows"
                     ? "-G \"Visual Studio 17 2022\" -A x64"
                     : "");
                 t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
                 t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
-                t.Add("exec_name", GetOSTarget() == OSTarget.Windows ? "Test.exe" : "Test");
+                t.Add("exec_name", GetOSTarget() == "Windows" ? "Test.exe" : "Test");
                 t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
                 t.Add("go_parser_name", test.fully_qualified_go_parser_name);
                 t.Add("grammar_file", test.tool_grammar_files.First());
@@ -1801,14 +1807,14 @@
                 t.Add("package_name", test.package.Replace(".", "/"));
                 t.Add("group_parsing", test.parsing_type == "group");
                 t.Add("individual_parsing", test.parsing_type == "individual");
-                t.Add("os_type", config.os_targets.First().ToString());
-                t.Add("os_win", GetOSTarget() == OSTarget.Windows);
+				t.Add("os_type", test.os_target);
+                t.Add("os_win", GetOSTarget() == "Windows");
                 t.Add("parser_name", test.fully_qualified_parser_name);
                 t.Add("parser_grammar_file", test.parser_grammar_file_name);
                 t.Add("path_sep_colon", config.path_sep == PathSepType.Colon);
                 t.Add("path_sep_semi", config.path_sep == PathSepType.Semi);
                 t.Add("start_symbol", test.start_rule);
-                t.Add("temp_dir", GetOSTarget() == OSTarget.Windows
+                t.Add("temp_dir", GetOSTarget() == "Windows"
                     ? "c:/temp"
                     : "/tmp");
                 t.Add("tool_grammar_files", test.tool_grammar_files);

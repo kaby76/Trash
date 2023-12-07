@@ -19,4 +19,4 @@ of all comments, labels, and action blocks.
 
 ## Current version
 
-0.21.17 Add trglob for platform-independent "find" for testing. Add Antlr4ng target, a new Antlr4 tool and TypeScript runtime. Update templates.
+0.22.0 Add trglob for platform-independent "find" for testing. Add Antlr4ng target, a new Antlr4 tool and TypeScript runtime. Update templates.

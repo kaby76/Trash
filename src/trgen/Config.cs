@@ -15,6 +15,9 @@ namespace Trash
         [Option("arithmetic", Required = false, HelpText = "Generate arithmetic example from templates.")]
         public bool arithmetic { get; set; }
 
+        [Option('e', "os-targets", Required = false, HelpText = "Set os target type.")]
+        public IEnumerable<string> os_targets { get; set; } = new List<string>() { Command.GetOSTarget() };
+
         [Option("force", Required = false, HelpText = "Force the generation of a target.")]
         public bool force { get; set; }
 
@@ -40,15 +43,13 @@ namespace Trash
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
 
-        [Option('x', "profile", Required = false, HelpText = "Add in Antlr profiling code.")]
+	    [Option('x', "profile", Required = false, HelpText = "Add in Antlr profiling code.")]
         public bool? profile { get; set; }
 
-        [Value(0)]
+	    [Value(0)]
         public IEnumerable<string> Files { get; set; }
 
-
         public IEnumerable<string> antlr_tool_args { get; set; }
-        public IEnumerable<string> os_targets { get; set; }
         public bool? flatten { get; set; }
         public LineTranslationType? line_translation { get; set; }
         public string parsing_type { get; set; }
@@ -60,7 +61,6 @@ namespace Trash
         public string root_directory;
         public string example_files { get; set; }
 
-
         public List<Test> Tests;
 
         public Config()
@@ -68,7 +68,7 @@ namespace Trash
             this.antlr_tool_path = Command.GetAntlrToolPath();
             this.arithmetic = false;
             this.desc = true;
-            this.os_targets = new List<string>() { Command.GetOSTarget().ToString() };
+            this.os_targets = new List<string>() { Command.GetOSTarget() };
             this.Files = new List<string>();
             this.flatten = false;
             this.grammar_name = null; // null means find using parsing and xpath of grammars.

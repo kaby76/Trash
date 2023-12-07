@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//RULE_REF[text() = ('abs')]\"",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\useless-paren-check\\abb"
+      "commandLineArgs": "-f o.pt \"//actionBlock/index-of(../*, .)\"",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-3837\\antlr\\antlr3"
     }
   }
 }

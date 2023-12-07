@@ -1,7 +1,7 @@
 <!-- Template generated code from trgen 0.19.0 -->
 <Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 </PropertyGroup>
@@ -11,7 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
-    <PackageReference Include="Antlr4BuildTasks" Version="12.4.0" PrivateAssets="all" />
+    <PackageReference Include="Antlr4BuildTasks" Version="12.5" PrivateAssets="all" />
   </ItemGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
