@@ -13,7 +13,7 @@ namespace Trash
         public string antlr_tool_path { get; set; }
 
         [Option("arithmetic", Required = false, HelpText = "Generate arithmetic example from templates.")]
-        public bool arithmetic { get; set; }
+        public bool generateArithmeticExample { get; set; }
 
         [Option('e', "os-targets", Required = false, HelpText = "Set os target type.")]
         public IEnumerable<string> os_targets { get; set; } = new List<string>() { Command.GetOSTarget() };
@@ -53,8 +53,8 @@ namespace Trash
         public bool? flatten { get; set; }
         public LineTranslationType? line_translation { get; set; }
         public string parsing_type { get; set; }
-        public bool pom { get; set; }
-        public bool desc { get; set; }
+        public bool hasPOM { get; set; }
+        public bool hasDesc { get; set; }
         public PathSepType? path_sep { get; set; }
         public int? watchdog_timeout { get; set; }
         public string SetupFfn = ".trgen.rc";
@@ -66,8 +66,8 @@ namespace Trash
         public Config()
         {
             this.antlr_tool_path = Command.GetAntlrToolPath();
-            this.arithmetic = false;
-            this.desc = true;
+            this.generateArithmeticExample = false;
+            this.hasDesc = false;
             this.os_targets = new List<string>() { Command.GetOSTarget() };
             this.Files = new List<string>();
             this.flatten = false;
@@ -77,7 +77,7 @@ namespace Trash
             this.output_directory = "Generated";
             this.parsing_type = null;
             this.path_sep = Command.GetPathSep();
-            this.pom = false;
+            this.hasPOM = false;
             this.root_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             this.start_rule = null; // means find using parsing and xpath of grammars.
             this.targets = null;

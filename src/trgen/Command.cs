@@ -32,9 +32,9 @@
 
         public int Execute(Config config)
         {
-            if (config.pom)
+            if (config.hasPOM)
                 ModifyWithPom(config);
-            else if (config.desc)
+            else if (config.hasDesc)
                 ModifyWithDesc(config);
             else
                 DoNonPomDirectedGenerate(config);
@@ -51,14 +51,6 @@
 
         private void ModifyWithGrammarParse(Config config)
         {
-            if (config.arithmetic)
-            {
-                var test = new Test();
-                config.Tests.Add(test);
-                config.Files = new List<string>() { "Arithmetic.g4" };
-                config.start_rule = "file_";
-                test.start_rule = config.start_rule;
-            }
 
             // Let's first parse the input grammar files and gather information
             // about them. Note, people pump in all sorts of bullshit, so
@@ -80,7 +72,7 @@
                     var pre = p == "" ? "" : p + "/";
                     if (test.target == "Antlr4cs" || test.target == "CSharp") pre = ""; // Erase. Packages don't need to be placed in a directory named for the package.
                     List<ParsingResultSet> pr = new List<ParsingResultSet>();
-                    if (f == "Arithmetic.g4")
+                    if (f == "st.Arithmetic.g4")
                     {
                         sgfn = f;
                         tgfn = pre + f;
@@ -88,7 +80,19 @@
                         if (config.template_sources_directory == null)
                         {
                             System.Reflection.Assembly a = this.GetType().Assembly;
-                            code = ReadAllResource(a, "trgen.templates." + f);
+                            var zip = ReadBytesResource(a, "trgen.foobar.zip");
+                            MemoryStream stream = new MemoryStream(zip);
+                            var regex_string = "^(?!.*(" + AllButTargetName(test.target) + "/)).*$";
+                            var regex = new Regex(regex_string);
+                            var za = new ZipArchive(stream);
+                            code = za.Entries.Where(x => x.FullName == f).Select(x =>
+                            {
+                                using (var r = new StreamReader(x.Open()))
+                                {
+                                    var ss = r.ReadToEnd();
+                                    return ss;
+                                }
+                            }).FirstOrDefault();
                         }
                         else
                         {
@@ -573,7 +577,7 @@
         public static string GetAntlrToolPath()
         {
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return (home + "/.m2/antlr4-4.12.0-complete.jar").Replace('\\', '/');
+            return (home + "/.m2/antlr4-4.13.1-complete.jar").Replace('\\', '/');
         }
 
         public static string TargetName(string target)
@@ -1382,7 +1386,14 @@
                         {
                             list.Add(y);
                         }
-                        config.Files = list;
+                        if (config.generateArithmeticExample)
+                        {
+                            config.Files = new List<string>() { "st.Arithmetic.g4" };
+                        }
+                        else
+                        {
+                            config.Files = list;
+                        }
                     }
                     test.tool_grammar_files = config.Files.ToList();
                     test.package = test.target == "Go" ? "parser" : test.package;
@@ -1626,7 +1637,7 @@
                 template_directory_files_to_copy = za.Entries.Where(f =>
                 {
                     var fn = f.FullName;
-                    if (test.fully_qualified_parser_name != "ArithmeticParser" && fn == "Arithmetic.g4.stg")
+                    if (test.fully_qualified_parser_name != "ArithmeticParser" && fn == "st.Arithmetic.g4")
                         return false;
                     if (fn == "files") return false;
                     var v = regex.IsMatch(fn);
@@ -1764,6 +1775,14 @@
                     }
                     else break;
                 }
+
+                test.tool_grammar_files = test.tool_grammar_files.Select(s => s.Replace("st.", "")).ToList();
+                test.lexer_grammar_file_name = test.lexer_grammar_file_name.Replace("st.", "");
+                test.parser_grammar_file_name = test.parser_grammar_file_name.Replace("st.", "");
+                foreach (var tu in test.tool_grammar_tuples)
+                {
+                    tu.GrammarFileName = tu.GrammarFileName.Replace("st.","");
+                }
                 output_dir = output_dir + "/";
                 var yo1 = test.grammar_directory_source_files
                     .Select(t =>
@@ -1801,7 +1820,7 @@
                 t.Add("grammar_name", test.grammar_name);
                 t.Add("has_name_space", test.package != null && test.package != "");
                 t.Add("is_combined_grammar", test.tool_grammar_files.Count() == 1);
-                t.Add("lexer_grammar_file", test.lexer_grammar_file_name);
+                t.Add("lexer_grammar_file", test.lexer_grammar_file_name.Replace("st.",""));
                 t.Add("lexer_name", test.fully_qualified_lexer_name);
                 t.Add("name_space", test.package.Replace("/", "."));
                 t.Add("package_name", test.package.Replace(".", "/"));
@@ -1810,14 +1829,14 @@
 				t.Add("os_type", test.os_target);
                 t.Add("os_win", GetOSTarget() == "Windows");
                 t.Add("parser_name", test.fully_qualified_parser_name);
-                t.Add("parser_grammar_file", test.parser_grammar_file_name);
+                t.Add("parser_grammar_file", test.parser_grammar_file_name.Replace("st.", ""));
                 t.Add("path_sep_colon", config.path_sep == PathSepType.Colon);
                 t.Add("path_sep_semi", config.path_sep == PathSepType.Semi);
                 t.Add("start_symbol", test.start_rule);
                 t.Add("temp_dir", GetOSTarget() == "Windows"
                     ? "c:/temp"
                     : "/tmp");
-                t.Add("tool_grammar_files", test.tool_grammar_files);
+                t.Add("tool_grammar_files", test.tool_grammar_files.Select(s=>s.Replace("st.","")));
                 t.Add("tool_grammar_tuples", test.tool_grammar_tuples);
                 t.Add("version", Command.version);
                 var o = t.Render();
