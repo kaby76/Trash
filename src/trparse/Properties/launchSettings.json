@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": " python-11.gram -v -q",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-pegen\\pegen\\examples"
+      "commandLineArgs": " -t antlr4 x",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-3951\\scotty"
     }
   }
 }

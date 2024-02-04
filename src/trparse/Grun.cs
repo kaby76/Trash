@@ -209,6 +209,8 @@
             }
             else
             {
+                System.Console.Error.WriteLine("Using built-in parser.");
+
                 var subdir = parser_type switch
                 {
                     "ANTLRv4" => "antlr4",
@@ -217,7 +219,7 @@
                     "pegen_v3_10" => "pegen",
                     "rex" => "rex",
                     "Bison" => "bison",
-                    _ => throw new Exception("Unknown file extension, cannot load in a built-in parser.")
+                    _ => throw new Exception("Unknown built-in parser type, should be one of ANTLRv4, ANTLRv3, ANTLRv2, pegen_v3_10, rex, Bison.")
                 };
                 // Get this assembly.
                 System.Reflection.Assembly a = this.GetType().Assembly;
