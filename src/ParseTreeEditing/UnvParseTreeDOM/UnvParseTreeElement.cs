@@ -73,5 +73,18 @@
         {
             return Reconstruct(this);
         }
+
+        public bool IsTerminal()
+        {
+            for (int i = 0; i < this.ChildNodes.Length; ++i)
+            {
+                if (this.ChildNodes.item(i) is UnvParseTreeText) continue;
+                if (this.ChildNodes.item(i) is UnvParseTreeAttr) continue;
+                if (this.ChildNodes.item(i) is UnvParseTreeElement) return false;
+                if (this.ChildNodes.item(i) is UnvParseTreeDocument) return false;
+                throw new NotImplementedException();
+            }
+            return true;
+        }
     }
 }
