@@ -67,7 +67,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="StreamJsonRpc" Version="2.17.8" />
+		<PackageReference Include="StreamJsonRpc" Version="2.17.11" />
 		<PackageReference Include="SharpZipLib" Version="1.4.2" />
 	</ItemGroup>
 
