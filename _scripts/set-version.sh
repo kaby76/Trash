@@ -41,7 +41,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Add trglob for platform-independent "find" for testing. Add Antlr4ng target, a new Antlr4 tool and TypeScript runtime. Update templates.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Add trdot. Update to Antlr 4.13.1 and Dotnet 8.0.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
@@ -78,7 +78,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Add trglob for platform-independent "find" for testing. Add Antlr4ng target, a new Antlr4 tool and TypeScript runtime. Update templates.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Add trdot. Update to Antlr 4.13.1 and Dotnet 8.0.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
