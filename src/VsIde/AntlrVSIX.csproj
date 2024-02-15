@@ -79,7 +79,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="17.8.37221" />
+		<PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="17.9.37000" />
 		<Reference Include="System.Design" />
 	</ItemGroup>
 
