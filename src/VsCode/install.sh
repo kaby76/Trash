@@ -1,10 +1,15 @@
 #!/bin/sh
+
 set -x
 set -e
 
 pushd ..
 dotnet build
 popd
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+        brew install vsce
+fi
 
 npm i vscode-jsonrpc@6.0.0-next.5
 npm i vscode-languageclient@7.0.0-next.9

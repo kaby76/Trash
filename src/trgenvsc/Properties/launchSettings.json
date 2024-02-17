@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "dotnet-antlr": {
+      "commandName": "Project",
+      "commandLineArgs": "-t CSharp --arithmetic",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\test"
+    }
+  }
+}
