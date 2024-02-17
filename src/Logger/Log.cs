@@ -10,7 +10,10 @@
     public class LogTextWriter : TextWriter
     {
         public override Encoding Encoding => throw new NotImplementedException();
-        private static readonly string home = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+
+        private static readonly string home =
+            System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+
         private static readonly ReaderWriterLockSlim cacheLock = new ReaderWriterLockSlim();
         private static bool done = false;
 
@@ -21,8 +24,8 @@
             if (done) return;
             done = true;
             var log = home
-               + System.IO.Path.DirectorySeparatorChar
-               + ".antlrlog";
+                      + System.IO.Path.DirectorySeparatorChar
+                      + ".antlrlog";
             cacheLock.EnterWriteLock();
             try
             {
@@ -30,7 +33,7 @@
                 using (StreamWriter w = File.AppendText(log))
                 {
                     w.WriteLine("Logging for Antlrvsix started "
-                        + DateTime.Now.ToString());
+                                + DateTime.Now.ToString());
                 }
             }
             finally
@@ -42,8 +45,8 @@
         public override void Write(string message)
         {
             var log = home
-               + System.IO.Path.DirectorySeparatorChar
-               + ".antlrlog";
+                      + System.IO.Path.DirectorySeparatorChar
+                      + ".antlrlog";
             cacheLock.EnterWriteLock();
             try
             {
@@ -61,8 +64,8 @@
         public override void WriteLine(string message)
         {
             var log = home
-               + System.IO.Path.DirectorySeparatorChar
-               + ".antlrlog";
+                      + System.IO.Path.DirectorySeparatorChar
+                      + ".antlrlog";
             cacheLock.EnterWriteLock();
             try
             {
@@ -79,21 +82,21 @@
 
         public override void WriteLine()
         {
-                var log = home
-                          + System.IO.Path.DirectorySeparatorChar
-                          + ".antlrlog";
-                cacheLock.EnterWriteLock();
-                try
+            var log = home
+                      + System.IO.Path.DirectorySeparatorChar
+                      + ".antlrlog";
+            cacheLock.EnterWriteLock();
+            try
+            {
+                using (StreamWriter w = File.AppendText(log))
                 {
-                        using (StreamWriter w = File.AppendText(log))
-                        {
-                                w.WriteLine();
-                        }
+                    w.WriteLine();
                 }
-                finally
-                {
-                        cacheLock.ExitWriteLock();
-                }
+            }
+            finally
+            {
+                cacheLock.ExitWriteLock();
+            }
         }
 
         public void Notify(string message)
@@ -119,6 +122,7 @@
             {
                 _before = dateTime;
             }
+
             string time = String.Format("{0,-20}", (dateTime - _before));
             System.Console.Error.WriteLine(time + str);
         }

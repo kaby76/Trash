@@ -1,8 +1,5 @@
-﻿//using Microsoft.VisualStudio.LanguageServer.Protocol;
-
-namespace Server
+﻿namespace Server
 {
-    //using LanguageServer;
     using Newtonsoft.Json.Linq;
     using LspTypes;
     using StreamJsonRpc;
@@ -23,7 +20,6 @@ namespace Server
         private Dictionary<string, DiagnosticSeverity> diagnostics;
         private bool isDisposed;
         private int counter = 100;
-        public Config config;
 
         public LSPServer(Stream sender, Stream reader)
         {
@@ -57,67 +53,66 @@ namespace Server
         {
         }
 
-        //public void SendDiagnostics(List<DiagnosticInfo> list)
-        //{
-        //    var files = list.Select(l => l.Document).OrderBy(q => q).Distinct().ToList();
-        //    // If the computed set is empty it has to push the empty array to clear former diagnostics. 
-        //    foreach (var file in files)
-        //    {
-        //        PublishDiagnosticParams parameter = new PublishDiagnosticParams
-        //        {
-        //            Uri = file,
-        //            Diagnostics = Array.Empty<Diagnostic>()
-        //        };
-        //        _ = rpc.NotifyWithParameterObjectAsync(Methods.TextDocumentPublishDiagnosticsName, parameter);
-        //    }
-        //    foreach (var file in files)
-        //    {
-        //        List<Diagnostic> diagnostics = new List<Diagnostic>();
-        //        foreach (var info in list)
-        //        {
-        //            DiagnosticSeverity severity = default;
-        //            switch (info.Severify)
-        //            {
-        //                case DiagnosticInfo.Severity.Info:
-        //                    severity = DiagnosticSeverity.Information;
-        //                    break;
-        //                case DiagnosticInfo.Severity.Warning:
-        //                    severity = DiagnosticSeverity.Warning;
-        //                    break;
-        //                case DiagnosticInfo.Severity.Error:
-        //                    severity = DiagnosticSeverity.Error;
-        //                    break;
-        //            }
-        //            var document = target.CheckDoc(info.Document);
+        public void SendDiagnostics(List<DiagnosticInfo> list)
+        {
+            var files = list.Select(l => l.Document).OrderBy(q => q).Distinct().ToList();
+            // If the computed set is empty it has to push the empty array to clear former diagnostics. 
+            foreach (var file in files)
+            {
+                PublishDiagnosticParams parameter = new PublishDiagnosticParams
+                {
+                    Uri = file,
+                    Diagnostics = Array.Empty<Diagnostic>()
+                };
+                _ = rpc.NotifyWithParameterObjectAsync(Methods.TextDocumentPublishDiagnosticsName, parameter);
+            }
+            foreach (var file in files)
+            {
+                List<Diagnostic> diagnostics = new List<Diagnostic>();
+                foreach (var info in list)
+                {
+                    DiagnosticSeverity severity = default;
+                    switch (info.Severify)
+                    {
+                        case DiagnosticInfo.Severity.Info:
+                            severity = DiagnosticSeverity.Information;
+                            break;
+                        case DiagnosticInfo.Severity.Warning:
+                            severity = DiagnosticSeverity.Warning;
+                            break;
+                        case DiagnosticInfo.Severity.Error:
+                            severity = DiagnosticSeverity.Error;
+                            break;
+                    }
+                    var document = target.CheckDoc(info.Document);
+                    (int, int) bs = new Module().GetLineColumn(info.Start, document);
+                    (int, int) be = new Module().GetLineColumn(info.End, document);
+                    Diagnostic diagnostic = new Diagnostic
+                    {
+                        Message = info.Message,
+                        Severity = severity,
+                        Range = new LspTypes.Range
+                        {
+                            Start = new Position((uint)bs.Item1, (uint)bs.Item2),
+                            End = new Position((uint)be.Item1, (uint)be.Item2)
+                        },
+                        Code = "Test" + Enum.GetName(typeof(DiagnosticSeverity), severity)
+                    };
+                    diagnostics.Add(diagnostic);
+                }
 
-        //            (int, int) bs = new LanguageServer.Module().GetLineColumn(info.Start, document);
-        //            (int, int) be = new LanguageServer.Module().GetLineColumn(info.End, document);
-        //            Diagnostic diagnostic = new Diagnostic
-        //            {
-        //                Message = info.Message,
-        //                Severity = severity,
-        //                Range = new Microsoft.VisualStudio.LanguageServer.Protocol.Range
-        //                {
-        //                    Start = new Position(bs.Item1, bs.Item2),
-        //                    End = new Position(be.Item1, be.Item2)
-        //                },
-        //                Code = "Test" + Enum.GetName(typeof(DiagnosticSeverity), severity)
-        //            };
-        //            diagnostics.Add(diagnostic);
-        //        }
-
-        //        PublishDiagnosticParams parameter = new PublishDiagnosticParams
-        //        {
-        //            Uri = file,
-        //            Diagnostics = diagnostics.ToArray()
-        //        };
-        //        if (maxProblems > -1)
-        //        {
-        //            parameter.Diagnostics = parameter.Diagnostics.Take(maxProblems).ToArray();
-        //        }
-        //        _ = rpc.NotifyWithParameterObjectAsync(Methods.TextDocumentPublishDiagnosticsName, parameter);
-        //    }
-        //}
+                PublishDiagnosticParams parameter = new PublishDiagnosticParams
+                {
+                    Uri = file,
+                    Diagnostics = diagnostics.ToArray()
+                };
+                if (maxProblems > -1)
+                {
+                    parameter.Diagnostics = parameter.Diagnostics.Take(maxProblems).ToArray();
+                }
+                _ = rpc.NotifyWithParameterObjectAsync(Methods.TextDocumentPublishDiagnosticsName, parameter);
+            }
+        }
 
         public void LogMessage(object arg)
         {
@@ -141,7 +136,7 @@ namespace Server
 #pragma warning restore VSTHRD110
         }
 
-        public bool ApplyEdit(string transaction_name, Dictionary<string, TextEdit[]> changes)
+        public bool ApplyEdit(string transaction_name, Dictionary<string, LspTypes.TextEdit[]> changes)
         {
             WorkspaceEdit edit = new WorkspaceEdit()
             {
@@ -170,10 +165,10 @@ namespace Server
 
         public async Task<MessageActionItem> ShowMessageRequestAsync(string message, MessageType messageType, string[] actionItems)
         {
-            ShowMessageRequestParams parameter = new ShowMessageRequestParams()
+            ShowMessageRequestParams parameter = new ShowMessageRequestParams
             {
                 Message = message,
-                //MessageType = messageType,
+                Type = (int)messageType,
                 Actions = actionItems.Select(a => new MessageActionItem { Title = a }).ToArray()
             };
             JToken response = await rpc.InvokeWithParameterObjectAsync<JToken>(Methods.WindowShowMessageRequestName, parameter).ConfigureAwait(false); ;
@@ -209,14 +204,15 @@ namespace Server
         {
             if (line.Contains(wordToMatch))
             {
-                var range = new LspTypes.Range();
-                range.Start = new Position(0, 0);
-                range.End = new Position(0, 10);
                 Diagnostic diagnostic = new Diagnostic
                 {
                     Message = "This is an " + Enum.GetName(typeof(DiagnosticSeverity), severity),
                     Severity = severity,
-                    Range = range, 
+                    Range = new LspTypes.Range
+                    {
+                        Start = new Position(0, 0),
+                        End = new Position(0, 10)
+                    },
                     Code = "Test" + Enum.GetName(typeof(DiagnosticSeverity), severity)
                 };
                 characterOffset += 100;

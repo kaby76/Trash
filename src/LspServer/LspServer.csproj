@@ -20,6 +20,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="../Logger/Logger.csproj" />
+		<ProjectReference Include="../Options/Options.csproj" />
 		<ProjectReference Include="../LspHelpers/LspHelpers.csproj" />
 		<!-- <ProjectReference Include="../AntlrJson/AntlrJson.csproj" /> -->
 		<ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />

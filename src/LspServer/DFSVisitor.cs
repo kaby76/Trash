@@ -1,40 +1,38 @@
-﻿namespace Server
+﻿using org.w3c.dom;
+
+namespace Server
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using System.Collections.Generic;
+    using ParseTreeEditing.UnvParseTreeDOM;
 
     internal class DFSVisitor
     {
-        public static IEnumerable<IParseTree> DFS(IParseTree root)
+        public static IEnumerable<UnvParseTreeElement> DFS(UnvParseTreeElement root)
         {
             if (root == null) yield break;
-            Stack<IParseTree> toVisit = new Stack<IParseTree>();
-            Stack<IParseTree> visitedAncestors = new Stack<IParseTree>();
+            Stack<UnvParseTreeElement> toVisit = new Stack<UnvParseTreeElement>();
+            Stack<UnvParseTreeElement> visitedAncestors = new Stack<UnvParseTreeElement>();
             toVisit.Push(root);
             while (toVisit.Count > 0)
             {
-                IParseTree node = toVisit.Peek();
-                if (node.ChildCount > 0)
+                UnvParseTreeElement node = toVisit.Peek();
+                if (node.ChildNodes.Length > 0)
                 {
                     if (visitedAncestors.PeekOrDefault() != node)
                     {
                         visitedAncestors.Push(node);
 
-                        if (node as TerminalNodeImpl != null)
+                        int child_count = node.ChildNodes.Length;
+                        for (int i = child_count - 1; i >= 0; --i)
                         {
+                            Node o = node.ChildNodes.item(i);
+                            var n = o as UnvParseTreeElement;
+                            if (n == null) continue;
+                            toVisit.Push(n);
                         }
-                        else
-                        {
-                            ParserRuleContext internal_node = node as ParserRuleContext;
-                            int child_count = internal_node.children.Count;
-                            for (int i = child_count - 1; i >= 0; --i)
-                            {
-                                IParseTree o = internal_node.children[i];
-                                toVisit.Push(o);
-                            }
-                            continue;
-                        }
+                        continue;
                     }
                     visitedAncestors.Pop();
                 }
@@ -46,7 +44,7 @@
 
     internal static class StackHelper
     {
-        public static IParseTree PeekOrDefault(this Stack<IParseTree> s)
+        public static UnvParseTreeElement PeekOrDefault(this Stack<UnvParseTreeElement> s)
         {
             return s.Count == 0 ? null : s.Peek();
         }

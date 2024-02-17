@@ -1,10 +1,10 @@
-﻿//namespace Server
-//{
-//    using Workspaces;
+﻿namespace Server
+{
+    using Workspaces;
 
-//    public class Location
-//    {
-//        public Document Uri;
-//        public Range Range;
-//    }
-//}
+    public class Location
+    {
+        public Document Uri;
+        public Range Range;
+    }
+}

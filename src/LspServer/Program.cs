@@ -1,14 +1,15 @@
-﻿using System.Threading;
-//using Microsoft.VisualStudio.LanguageServer.Protocol;
-using LspTypes;
-
-
-namespace Server
+﻿namespace Server
 {
+    using LspTypes;
     using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using StreamJsonRpc;
+    using System.IO;
+    using System.Text;
+    using System.Text.Json;
 
     internal partial class Program : IDisposable
     {
@@ -22,9 +23,27 @@ namespace Server
 
         public static void Main(string[] args)
         {
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var fn = ".uni-vscode.rc";
+            var ffn = home + Path.DirectorySeparatorChar + fn;
+            if (!System.IO.File.Exists(ffn))
+	        {
+		        throw new Exception("You do not have a .uni-vscode.rc file in " + home);
+	        }
+	        var jsonString = File.ReadAllText(home + Path.DirectorySeparatorChar + fn);
+	        var os = JsonSerializer.Deserialize<List<Options>>(jsonString);
+            Module._all_grammars = new List<Grammar>();
+            foreach (Options o in os)
+            {
+                var g = new Grammar();
+                g.Options = o;
+                g.LanguageId = o.LanguageId;
+                Module._all_grammars.Add(g);
+            }
+
             TimeSpan delay = new TimeSpan(0, 0, 0, 20);
             Console.Error.WriteLine("Waiting " + delay + " seconds...");
-            //Thread.Sleep((int)delay.TotalMilliseconds);
+            System.Threading.Thread.Sleep((int)delay.TotalMilliseconds);
             LoggerNs.Logger.Log.WriteLine("Starting");
             Program program = new Program();
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
@@ -38,8 +57,8 @@ namespace Server
 #pragma warning restore CA1801
 #pragma warning restore IDE0060 // Remove unused parameter
         {
-            System.IO.Stream stdin = Console.OpenStandardInput();
-            System.IO.Stream stdout = Console.OpenStandardOutput();
+            Stream stdin = Console.OpenStandardInput();
+            Stream stdout = Console.OpenStandardOutput();
             stdin = new LspTools.LspHelpers.EchoStream(stdin, new Dup("editor"),
                     LspTools.LspHelpers.EchoStream.StreamOwnership.OwnNone);
             stdout = new LspTools.LspHelpers.EchoStream(stdout, new Dup("server"),

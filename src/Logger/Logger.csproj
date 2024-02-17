@@ -1,16 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../Options/Options.csproj" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<PackageReference Include="System.Net.Http" Version="4.3.4" />
+	</ItemGroup>
 </Project>
