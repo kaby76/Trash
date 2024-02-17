@@ -1,81 +1,36 @@
 {
-  "name": "Antlrvsix-vscode",
+  "name": "uni-vscode",
   "author": "Ken Domino",
   "bugs": {
-    "url": "https://github.com/kaby76/AntlrVSIX/issues"
+    "url": "https://github.com/kaby76/uni-vscode/issues"
   },
   "categories": [],
-  "description": "Language server for Antlr2, 3, 4, Bison, ISO 14977, LBNF, W3C EBNF",
-  "homepage": "https://github.com/kaby76/AntlrVSIX/blob/master/README.md",
-  "icon": "AntlrVSIX_large.png",
+  "description": "Universal Language Server",
+  "homepage": "https://github.com/kaby76/uni-vscode/blob/master/README.md",
+  "icon": "uni_large.png",
   "keywords": [
-    "antlr",
-    "bison",
-    "ebnf"
+    "antlr"
   ],
   "license": "MIT",
   "publisher": "KenDomino",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kaby76/AntlrVSIX"
+    "url": "https://github.com/kaby76/uni-vscode"
   },
-  "version": "2.0.0",
+  "version": "1.0.0",
   "engines": {
-    "vscode": "^1.76.0"
+    "vscode": "^1.48.0"
   },
   "activationEvents": [
-    "onLanguage:antlr2",
-    "onLanguage:antlr3",
-    "onLanguage:antlr4",
-    "onLanguage:bison",
-    "onLanguage:ebnf",
-    "onLanguage:iso14977",
-    "onLanguage:lbnf"
+    "onLanguage:any"
   ],
   "main": "./out/extension",
   "contributes": {
     "languages": [
       {
-        "id": "antlr2",
+        "id": "any",
         "extensions": [
-          ".g2"
-        ]
-      },
-      {
-        "id": "antlr3",
-        "extensions": [
-          ".g3"
-        ]
-      },
-      {
-        "id": "antlr4",
-        "extensions": [
-          ".g4"
-        ]
-      },
-      {
-        "id": "bison",
-        "extensions": [
-          ".y"
-        ]
-      },
-      {
-        "id": "ebnf",
-        "extensions": [
-          ".ebnf"
-        ]
-      },
-      {
-        "id": "iso14977",
-        "extensions": [
-          ".iso",
-          ".iso14977"
-        ]
-      },
-      {
-        "id": "lbnf",
-        "extensions": [
-          ".cf"
+          ".txt"
         ]
       }
     ],
@@ -110,24 +65,23 @@
   "dependencies": {
     "abort-controller": "3.0.0",
     "jsonc-parser": "2.3.0",
-    "vscode-jsonrpc": "^8.1.0",
-    "vscode-languageclient": "^8.1.0",
-    "vscode-languageserver": "^8.1.0",
-    "vscode-languageserver-protocol": "^3.17.3",
-    "vscode-languageserver-types": "^3.17.3"
+    "vscode-jsonrpc": "^6.0.0-next.5",
+    "vscode-languageclient": "^7.0.0-next.9",
+    "vscode-languageserver": "^7.0.0-next.7",
+    "vscode-languageserver-protocol": "^3.16.0-next.7",
+    "vscode-languageserver-types": "^3.16.0-next.3"
   },
   "devDependencies": {
-    "@types/glob": "^8.1.0",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "16.x",
-    "@types/vscode": "^1.76.0",
-    "@typescript-eslint/eslint-plugin": "^5.53.0",
-    "@typescript-eslint/parser": "^5.53.0",
-    "@vscode/test-electron": "^2.2.3",
-    "eslint": "^8.34.0",
-    "glob": "^8.1.0",
+    "@types/glob": "^7.1.3",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^14.6.2",
+    "@types/vscode": "1.48.0",
+    "@vscode/vsce": "^2.23.0",
+    "glob": "^7.1.4",
     "mocha": "^10.2.0",
-    "typescript": "^4.9.5"
+    "tslint": "^5.16.0",
+    "typescript": "^3.8.3",
+    "vscode-test": "^1.3.0"
   },
   "configuration": {
     "type": "object",

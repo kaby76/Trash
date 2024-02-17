@@ -10,13 +10,14 @@ import * as vscodelc from 'vscode-languageclient/node';
  */
 function getConfig<T>(option: string, defaultValue?: any): T
 {
-    const config = vscode.workspace.getConfiguration('antlr');
+    const config = vscode.workspace.getConfiguration('uni-vscode');
     return config.get<T>(option, defaultValue);
 }
 
 namespace SwitchSourceHeaderRequest
 {
-    export const type = new vscodelc.RequestType<vscodelc.TextDocumentIdentifier, string|undefined, void>('textDocument/switchSourceHeader');
+    export const type = new vscodelc.RequestType<vscodelc.TextDocumentIdentifier, string|undefined,
+                             void, void>('textDocument/switchSourceHeader');
 }
 
 class FileStatus
@@ -41,7 +42,7 @@ class FileStatus
             this.statusBarItem.hide();
             return;
         }
-        this.statusBarItem.text = `antlr: ` + status.state;
+        this.statusBarItem.text = `uni-vscode: ` + status.state;
         this.statusBarItem.show();
     }
 
@@ -61,12 +62,18 @@ let client: vscodelc.LanguageClient;
 
 export function activate(context: vscode.ExtensionContext)
 {
-    var fn = __dirname + '/../Server/bin/Debug/net7.0/LspServer.exe';
+    var fn = "dotnet";
+    
+    var isWin = process.platform === "win32";
+    var ag = __dirname + '/../Server/net7.0/Server.dll';
+    if (! isWin) {
+        ag = __dirname + '/../server/net7.0/Server.dll';
+    }
 
     const server: vscodelc.Executable =
     {
         command: fn,
-        args: [],
+        args: [ag],
         options: { shell: false, detached: false }
     };
 
@@ -76,21 +83,15 @@ export function activate(context: vscode.ExtensionContext)
     {
         // Register the server for plain text documents
         documentSelector: [
-            {scheme: 'file', language: 'antlr2'},
-            {scheme: 'file', language: 'antlr3'},
-            {scheme: 'file', language: 'antlr4'},
-            {scheme: 'file', language: 'bison'},
-            {scheme: 'file', language: 'ebnf'},
-            {scheme: 'file', language: 'iso14977'},
-            {scheme: 'file', language: 'lbnf'},
+            {scheme: 'file', language: 'any'},
         ]
     };
 
-    client = new vscodelc.LanguageClient('Antlr Language Server', serverOptions, clientOptions);
+    client = new vscodelc.LanguageClient('Universal Language Server', serverOptions, clientOptions);
     
     client.registerProposedFeatures();
     
-    console.log('Antlr Language Server is now active!');
+    console.log('Universal Language Server is now active!');
     client.start();
 }
 

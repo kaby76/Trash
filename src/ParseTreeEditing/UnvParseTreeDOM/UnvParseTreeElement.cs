@@ -52,7 +52,9 @@
                 var n = stack.Pop();
                 if (n is UnvParseTreeAttr a)
                 {
-                    sb.Append(a.StringValue);
+                    if (a.LocalName == "Line") continue;
+                    else if (a.LocalName == "Column") continue;
+                    else sb.Append(a.StringValue);
                 }
                 else if (n is UnvParseTreeText t)
                 {
@@ -78,13 +80,49 @@
         {
             for (int i = 0; i < this.ChildNodes.Length; ++i)
             {
-                if (this.ChildNodes.item(i) is UnvParseTreeText) continue;
+                if (this.ChildNodes.item(i) is UnvParseTreeText) return true;
                 if (this.ChildNodes.item(i) is UnvParseTreeAttr) continue;
                 if (this.ChildNodes.item(i) is UnvParseTreeElement) return false;
                 if (this.ChildNodes.item(i) is UnvParseTreeDocument) return false;
                 throw new NotImplementedException();
             }
-            return true;
+            return false;
+        }
+
+        public int GetLine()
+        {
+            if (!this.AllChildren.Any()) return -1;
+            var line = this.AllChildren.Where(c =>
+            {
+                var a = c as UnvParseTreeAttr;
+                if (a == null) return false;
+                var o = a.Name as string;
+                if (o == null) return false;
+                return o == "Line";
+            }).Select(c =>
+            {
+                var t = (c as UnvParseTreeAttr).Value as string;
+                return Int32.Parse(t);
+            }).First();
+            return line;
+        }
+
+        public int GetColumn()
+        {
+            if (!this.AllChildren.Any()) return -1;
+            var col = this.AllChildren.Where(c =>
+            {
+                var a = c as UnvParseTreeAttr;
+                if (a == null) return false;
+                var o = a.Name as string;
+                if (o == null) return false;
+                return o == "Column";
+            }).Select(c =>
+            {
+                var t = (c as UnvParseTreeAttr).Value as string;
+                return Int32.Parse(t);
+            }).First();
+            return col;
         }
     }
 }

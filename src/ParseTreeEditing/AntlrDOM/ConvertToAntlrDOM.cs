@@ -1,4 +1,6 @@
-﻿namespace ParseTreeEditing.AntlrDOM
+﻿using ParseTreeEditing.UnvParseTreeDOM;
+
+namespace ParseTreeEditing.AntlrDOM
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Misc;
@@ -84,6 +86,17 @@
             return result;
         }
 
+        public AntlrDynamicContext MakeDynamicContext(UnvParseTreeElement e)
+        {
+            var document = new AntlrDocument(null);
+            document.NodeType = NodeConstants.DOCUMENT_NODE;
+            AntlrNodeList nl = new AntlrNodeList();
+            nl.Add(e);
+            document.ChildNodes = nl;
+            AntlrDynamicContext result = new AntlrDynamicContext(document);
+            result.Document = document;
+            return result;
+        }
         private AntlrNode BottomUpConvert(IParseTree tree, Parser parser)
         {
             if (tree is TerminalNodeImpl)

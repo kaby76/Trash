@@ -1,14 +1,18 @@
 #!/bin/sh
+set -x
 set -e
-npm i vscode-jsonrpc@8.1.0
-npm i vscode-languageclient@8.1.0
-npm i vscode-languageserver@8.1.0
-npm i vscode-languageserver-protocol@3.17.3
-npm i vscode-languageserver-types@3.17.3
-rm -rf Server
-mkdir Server
-cp -r ../LspServer/bin ./Server
+
+pushd ..
+dotnet build
+popd
+
+npm i vscode-jsonrpc@6.0.0-next.5
+npm i vscode-languageclient@7.0.0-next.9
+npm i vscode-languageserver@7.0.0-next.7
+npm i vscode-languageserver-protocol@3.16.0-next.7
+npm i vscode-languageserver-types@3.16.0-next.3
+
+cp -r ../Server/bin/Debug/net7.0 ./server
 npm install
 npm run compile
 vsce package
-code .
