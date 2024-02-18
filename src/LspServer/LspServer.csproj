@@ -25,6 +25,7 @@
 		<!-- <ProjectReference Include="../AntlrJson/AntlrJson.csproj" /> -->
 		<ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />
 		<ProjectReference Include="../Globbing/TrashGlobbing.csproj" />
+		<ProjectReference Include="../Workspaces/Workspaces.csproj" />
 		<ProjectReference Include="../Algorithms/Algorithms.csproj" />
 		<ProjectReference Include="../grammars/antlr4/Generated-CSharp/antlr4.csproj" />
 	</ItemGroup>

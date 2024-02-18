@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    public class Options
+    public class Opt
     {
         public string LanguageId { get; set; }
         public string ParserLocation { get; set; }

@@ -31,9 +31,9 @@
 		        throw new Exception("You do not have a .uni-vscode.rc file in " + home);
 	        }
 	        var jsonString = File.ReadAllText(home + Path.DirectorySeparatorChar + fn);
-	        var os = JsonSerializer.Deserialize<List<Options>>(jsonString);
+	        var os = JsonSerializer.Deserialize<List<Opt>>(jsonString);
             Module._all_grammars = new List<Grammar>();
-            foreach (Options o in os)
+            foreach (Opt o in os)
             {
                 var g = new Grammar();
                 g.Options = o;

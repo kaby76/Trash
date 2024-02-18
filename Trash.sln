@@ -175,6 +175,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trquery", "src\trquery\trqu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trglob", "src\trglob\trglob.csproj", "{4A7CB9F5-817C-4B87-A7B9-D1CDBA278306}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgenvsc", "src\trgenvsc\trgenvsc.csproj", "{46E6DEC9-E0B7-4951-AA7B-AE5FF0758400}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -343,6 +345,7 @@ Global
 		{36A849B8-7D7E-45A6-990C-1A8809EECE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36A849B8-7D7E-45A6-990C-1A8809EECE84}.Release|Any CPU.Build.0 = Release|Any CPU
 		{248B9C0A-4B9B-437E-9BDA-8EF3E7D7218A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{248B9C0A-4B9B-437E-9BDA-8EF3E7D7218A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{248B9C0A-4B9B-437E-9BDA-8EF3E7D7218A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C9D25DA-15A3-4313-966A-78B2537680D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0C9D25DA-15A3-4313-966A-78B2537680D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -452,6 +455,10 @@ Global
 		{4A7CB9F5-817C-4B87-A7B9-D1CDBA278306}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A7CB9F5-817C-4B87-A7B9-D1CDBA278306}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A7CB9F5-817C-4B87-A7B9-D1CDBA278306}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46E6DEC9-E0B7-4951-AA7B-AE5FF0758400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46E6DEC9-E0B7-4951-AA7B-AE5FF0758400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46E6DEC9-E0B7-4951-AA7B-AE5FF0758400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46E6DEC9-E0B7-4951-AA7B-AE5FF0758400}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

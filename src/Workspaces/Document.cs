@@ -52,8 +52,10 @@
             get;
             set;
         }
+        public string FullPath { get; private set; }
         public string Encoding { get; set; }
         public int[] Indices { get; set; }
+        public string LanguageId { get; set; }
         public string ParseAs { get; set; }
         public Dictionary<TerminalNodeImpl, int> Refs
         {
@@ -90,6 +92,11 @@
                 return this;
             }
 
+            return null;
+        }
+
+        public IParseTree GetParseTree()
+        {
             return null;
         }
 
