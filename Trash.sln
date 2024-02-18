@@ -131,10 +131,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdeltree", "src\trdeltree\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "triconv", "src\triconv\triconv.csproj", "{1A999C2F-36DD-43FD-8B8D-940531872D96}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LspServer", "src\LspServer\LspServer.csproj", "{BBECDBF5-8FE8-48E2-81D4-17EFABE1A155}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LspHelpers", "src\LspHelpers\LspHelpers.csproj", "{E9E42BB9-2473-4C5F-A504-AF95FFEE4E60}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrVSIX", "src\VsIde\AntlrVSIX.csproj", "{29235F0E-091B-4D17-921B-1E1679A36990}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xtext", "src\grammars\xtext\Generated-CSharp\xtext.csproj", "{249DE1E5-2E41-4110-AB5D-A9D1F6594B8E}"
