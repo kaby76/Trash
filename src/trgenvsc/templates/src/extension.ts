@@ -65,10 +65,7 @@ export function activate(context: vscode.ExtensionContext)
     var fn = "dotnet";
     
     var isWin = process.platform === "win32";
-    var ag = __dirname + '/../Server/net7.0/Server.dll';
-    if (! isWin) {
-        ag = __dirname + '/../server/net7.0/Server.dll';
-    }
+    var ag = __dirname + '/server/LspServer/net8.0/Server.dll';
 
     const server: vscodelc.Executable =
     {

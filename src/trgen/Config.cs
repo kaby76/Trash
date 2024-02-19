@@ -74,7 +74,7 @@ namespace Trash
             this.grammar_name = null; // null means find using parsing and xpath of grammars.
             this.line_translation = Command.GetLineTranslationType();
             this.name_space = null;
-            this.output_directory = "Generated";
+            this.output_directory = "./";
             this.parsing_type = null;
             this.path_sep = Command.GetPathSep();
             this.hasPOM = false;

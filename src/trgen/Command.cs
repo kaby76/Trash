@@ -32,6 +32,7 @@
 
         public int Execute(Config config)
         {
+            if (!config.output_directory.EndsWith('/')) config.output_directory += '/';
             if (config.hasPOM)
                 ModifyWithPom(config);
             else if (config.hasDesc)
@@ -1458,7 +1459,9 @@
                 try
                 {
                     // Create a directory containing target build files.
-                    Directory.CreateDirectory((string)config.output_directory
+                    Directory.CreateDirectory(
+                        (string)config.output_directory
+                        + "Generated"
                         + '-'
                         + test.target
                         + (test.test_name != null ? ('-' + test.test_name) : ""));
@@ -1541,6 +1544,7 @@
                 if (test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileName).Any())
                 {
                     to = config.output_directory
+                         + "Generated"
                          + "-"
                          + test.target
                          + (test.test_name != null ? ("-" + test.test_name) : "")
@@ -1553,6 +1557,7 @@
                     if (test.target == "Go" && f.EndsWith(".go"))
                     {
                         to = config.output_directory
+                             + "Generated"
                              + "-"
                              + test.target
                              + (test.test_name != null ? ("-" + test.test_name) : "")
@@ -1798,7 +1803,9 @@
                         var ext = Path.GetExtension(xx);
                         return Suffix(test.target).Contains(ext);
                     })
-                    .Select(t => t.Substring(config.output_directory.Length))
+                    .Select(t => t.Substring(
+                        (config.output_directory + "Generated").Length
+                        ))
                     .ToList());
                 t.Add("antlr_encoding", test.antlr_encoding);
                 t.Add("antlr_tool_args", config.antlr_tool_args);
@@ -1956,6 +1963,7 @@
             to = dir + bn;
 
             to = config.output_directory
+                 + "Generated"
                  + "-"
                  + test.target
                  + (test.test_name != null ? ("-" + test.test_name) : "")
@@ -1985,6 +1993,7 @@
             to = dir + bn;
 
             to = config.output_directory
+                 + "Generated"
                  + "-"
                  + test.target
                  + (test.test_name != null ? ("-" + test.test_name) : "")

@@ -8,7 +8,7 @@
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<AssemblyName>trgenvsc</AssemblyName>
-		<PackageId>trgen</PackageId>
+		<PackageId>trgenvsc</PackageId>
 		<Description>
 			<![CDATA[Generate a VSCode extension with LSP server from an Antlr4 grammar.
 This program is part of the Trash toolkit.]]>
@@ -44,7 +44,7 @@ This program is part of the Trash toolkit.]]>
 		<ProjectReference Include="../grammars/antlr4/Generated-CSharp/antlr4.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="readme.md" Pack="true" PackagePath=""/>
+		<None Include="readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -59,7 +59,7 @@ This program is part of the Trash toolkit.]]>
 		</PropertyGroup>
 	</Target>
 	<Target Name="rm" BeforeTargets="BeforeBuild">
-		<Delete Files="foobar.zip" ContinueOnError="WarnAndContinue"/>
+		<Delete Files="foobar.zip" ContinueOnError="WarnAndContinue" />
 	</Target>
 	<Target Name="zippy" BeforeTargets="BeforeBuild">
 		<Exec Command="pwsh -command Compress-Archive 'templates/**' foobar.zip" />
