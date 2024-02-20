@@ -22,16 +22,15 @@
         private bool isDisposed;
 
         public static void Main(string[] args)
-        {
-            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var fn = ".uni-vscode.rc";
-            var ffn = home + Path.DirectorySeparatorChar + fn;
-            if (!System.IO.File.Exists(ffn))
-	        {
-		        throw new Exception("You do not have a .uni-vscode.rc file in " + home);
-	        }
-	        var jsonString = File.ReadAllText(home + Path.DirectorySeparatorChar + fn);
-	        var os = JsonSerializer.Deserialize<List<Opt>>(jsonString);
+	{
+            LoggerNs.Logger.Log.WriteLine("Server started.");
+            var location = Assembly.GetEntryAssembly().Location;
+            location = System.IO.Path.GetDirectoryName(location);
+            location = location + "/../../../../../";
+            location = System.IO.Path.GetDirectoryName(location);
+            location = Path.GetFullPath(location);
+            var jsonString = File.ReadAllText(location + "/settings.rc");
+            var os = JsonSerializer.Deserialize<List<Opt>>(jsonString);
             Module._all_grammars = new List<Grammar>();
             foreach (Opt o in os)
             {
@@ -49,6 +48,7 @@
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
             program.MainAsync(args).GetAwaiter().GetResult();
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+	    LoggerNs.Logger.Log.WriteLine("Server ended.");
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
