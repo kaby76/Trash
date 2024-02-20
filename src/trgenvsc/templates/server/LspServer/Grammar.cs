@@ -11,9 +11,7 @@ namespace Server
 
     public class Grammar
     {
-        public Grammar()
-        {
-        }
+        public Grammar() { }
 
         public Parser Parser { get; set; }
         public Lexer Lexer { get; set; }
@@ -41,9 +39,14 @@ namespace Server
         {
             string input = document.Code;
             var dll = Options.ParserLocation;
-            var full_path = Path.GetDirectoryName(dll);
+            var location = Assembly.GetEntryAssembly().Location;
+            location = System.IO.Path.GetDirectoryName(location);
+            location = location + "/../../../../../";
+            location = System.IO.Path.GetDirectoryName(location);
+            location = Path.GetFullPath(location) + "/";
+            var full_path = Path.GetDirectoryName(location + dll);
             Assembly asm1 = Assembly.LoadFile(full_path + Path.DirectorySeparatorChar + "Antlr4.Runtime.Standard.dll");
-            Assembly asm = Assembly.LoadFile(dll);
+            Assembly asm = Assembly.LoadFile(location + dll);
             //var xxxxxx = asm1.GetTypes();
             Type[] types = asm.GetTypes();
             Type type = asm.GetType("Program");
