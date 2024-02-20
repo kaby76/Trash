@@ -42,9 +42,9 @@ namespace Server
                 Module._all_grammars.Add(g);
             }
 
-            TimeSpan delay = new TimeSpan(0, 0, 0, 20);
-            Console.Error.WriteLine("Waiting " + delay + " seconds...");
-            System.Threading.Thread.Sleep((int)delay.TotalMilliseconds);
+            //TimeSpan delay = new TimeSpan(0, 0, 0, 20);
+            //Console.Error.WriteLine("Waiting " + delay + " seconds...");
+            //System.Threading.Thread.Sleep((int)delay.TotalMilliseconds);
             LoggerNs.Logger.Log.WriteLine("Starting");
             Program program = new Program();
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
