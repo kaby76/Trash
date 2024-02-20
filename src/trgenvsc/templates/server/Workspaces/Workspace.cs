@@ -1,8 +1,9 @@
-﻿namespace Workspaces
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Workspaces
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
 
     public class Workspace : Container
     {

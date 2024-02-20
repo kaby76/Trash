@@ -1,6 +1,7 @@
-﻿namespace Workspaces
+﻿using System;
+
+namespace Workspaces
 {
-    using System;
 
     /// <summary>Represent a range has start and end indexes.</summary>
     /// <remarks>

@@ -1,11 +1,9 @@
 ﻿using org.w3c.dom;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System.Collections.Generic;
 
 namespace Server
 {
-    using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
-    using System.Collections.Generic;
-    using ParseTreeEditing.UnvParseTreeDOM;
 
     internal class DFSVisitor
     {

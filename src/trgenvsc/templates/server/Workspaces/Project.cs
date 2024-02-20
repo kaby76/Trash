@@ -1,6 +1,7 @@
-﻿namespace Workspaces
+﻿using System.Collections.Generic;
+
+namespace Workspaces
 {
-    using System.Collections.Generic;
 
     public class Project : Container
     {

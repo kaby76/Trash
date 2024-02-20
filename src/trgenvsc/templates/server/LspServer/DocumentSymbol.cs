@@ -1,6 +1,7 @@
-﻿namespace Server
+﻿using System;
+
+namespace Server
 {
-    using System;
 
     public class DocumentSymbol
     {

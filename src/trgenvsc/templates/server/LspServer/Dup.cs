@@ -1,8 +1,9 @@
-﻿namespace Server
+﻿using System;
+using System.IO;
+using System.Text;
+
+namespace Server
 {
-    using System;
-    using System.IO;
-    using System.Text;
 
     internal partial class Program
     {

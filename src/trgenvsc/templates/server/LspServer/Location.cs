@@ -1,6 +1,7 @@
-﻿namespace Server
+﻿using Workspaces;
+
+namespace Server
 {
-    using Workspaces;
 
     public class Location
     {

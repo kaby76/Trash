@@ -1,16 +1,17 @@
-﻿namespace Server
+﻿using LoggerNs;
+using LspTypes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using StreamJsonRpc;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using Workspaces;
+
+namespace Server
 {
-    using LoggerNs;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using LspTypes;
-    using StreamJsonRpc;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading;
-    using Workspaces;
 
     public class LanguageServerTarget
     {

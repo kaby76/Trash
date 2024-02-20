@@ -1,14 +1,12 @@
-﻿using System.Reflection;
-using LspTypes;
+﻿using LspTypes;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using StreamJsonRpc;
 using System.IO;
-using System.Text;
+using System.Reflection;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Server
 {

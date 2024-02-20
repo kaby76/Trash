@@ -1,15 +1,16 @@
-﻿namespace Server
+﻿using LspTypes;
+using Newtonsoft.Json.Linq;
+using StreamJsonRpc;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Server
 {
-    using Newtonsoft.Json.Linq;
-    using LspTypes;
-    using StreamJsonRpc;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.IO;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     public class LSPServer : INotifyPropertyChanged, IDisposable
     {
