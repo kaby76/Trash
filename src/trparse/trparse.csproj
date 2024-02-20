@@ -72,6 +72,6 @@ This program is part of the Trash toolkit.]]>
 	<ItemGroup>
 		<Content Include="$(SolutionDir)grammars\antlr4\bin\Debug\**\*.*"
 			CopyToOutputDirectory="Always"
-			TargetPath="bin\Debug\net7.0\foo\%(Filename)%(Extension)" />
+			TargetPath="bin\Debug\net8.0\foo\%(Filename)%(Extension)" />
 	</ItemGroup>
 </Project>

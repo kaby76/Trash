@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleApp13": {
       "commandName": "Project",
-      "commandLineArgs": "./bin/Debug/net7.0/Test.exe -file ../examples/AllInOne8.java",
+      "commandLineArgs": "./bin/Debug/net8.0/Test.exe -file ../examples/AllInOne8.java",
       "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\grammars-v4-new\\java\\java9\\Generated"
     }
   }

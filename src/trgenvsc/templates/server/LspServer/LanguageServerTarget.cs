@@ -200,20 +200,19 @@
 
                     WorkspaceSymbolProvider = false,
 
-/*		    SemanticTokensProvider = new SemanticTokensOptions()
+                    SemanticTokensProvider = new SemanticTokensOptions()
                     {
                         Full = true,
                         Range = false,
                         Legend = new SemanticTokensLegend()
                         {
-                            tokenTypes = Grammar.AllClasses().ToArray(),
+                            tokenTypes = Module._all_grammars.First().AllClasses().ToArray(),
                             tokenModifiers = new string[] {
                                 "declaration",
                                 "documentation",
                             }
                         }
                     },
-                    */
                 };
 
                 InitializeResult result = new InitializeResult

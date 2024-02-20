@@ -51,7 +51,7 @@ if (-not(Test-Path -Path "tests.txt" -PathType Leaf)) {
 
 # Parse all input files.
 # Group parsing.
-get-content "tests.txt" | dotnet trwdog -- ./bin/Debug/net7.0/Test.exe -q -x -tee -tree *> parse.txt
+get-content "tests.txt" | dotnet trwdog -- ./bin/Debug/net8.0/Test.exe -q -x -tee -tree *> parse.txt
 $status = $LASTEXITCODE
 
 # trwdog returns 255 if it cannot spawn the process. This could happen

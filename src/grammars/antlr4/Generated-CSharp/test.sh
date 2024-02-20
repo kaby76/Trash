@@ -43,9 +43,9 @@ done
 # Group parsing.
 if [ "$global" == "" ]
 then
-    echo "${files[*]}" | dotnet trwdog -- ./bin/Debug/net7.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
+    echo "${files[*]}" | dotnet trwdog -- ./bin/Debug/net8.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
 else
-    echo "${files[*]}" | trwdog ./bin/Debug/net7.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
+    echo "${files[*]}" | trwdog ./bin/Debug/net8.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
 fi
 status=$?
 

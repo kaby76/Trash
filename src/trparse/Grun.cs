@@ -195,13 +195,13 @@
                     : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
                 path = path.Replace("\\", "/");
                 if (!path.EndsWith("/")) path = path + "/";
-                var full_path = path + "Generated-CSharp/bin/Debug/net7.0/";
+                var full_path = path + "Generated-CSharp/bin/Debug/net8.0/";
                 var exists = File.Exists(full_path + "Test.dll");
-                if (!exists) full_path = path + "bin/Debug/net7.0/";
+                if (!exists) full_path = path + "bin/Debug/net8.0/";
                 exists = File.Exists(full_path + "Test.dll");
-                if (!exists) full_path = path + "Generated-CSharp/bin/Release/net7.0/";
+                if (!exists) full_path = path + "Generated-CSharp/bin/Release/net8.0/";
                 exists = File.Exists(full_path + "Test.dll");
-                if (!exists) full_path = path + "bin/Release/net7.0/";
+                if (!exists) full_path = path + "bin/Release/net8.0/";
                 full_path = Path.GetFullPath(full_path);
                 Assembly asm = Assembly.LoadFile(full_path + config.Dll + ".dll");
                 Type[] types = asm.GetTypes();

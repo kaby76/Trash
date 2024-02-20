@@ -36,7 +36,7 @@ done
 rm -f parse.txt
 for f in ${files[*]}
 do
-    trwdog ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -prefix individual $f >> parse.txt 2>&1
+    trwdog ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -prefix individual $f >> parse.txt 2>&1
     xxx="$?"
     if [ "$xxx" -ne 0 ]
     then
@@ -44,7 +44,7 @@ do
     fi
 done
 # Group parsing.
-echo "${files[*]}" | trwdog ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -x -prefix group >> parse.txt 2>&1
+echo "${files[*]}" | trwdog ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -x -prefix group >> parse.txt 2>&1
 status=$?
 
 exit 0
