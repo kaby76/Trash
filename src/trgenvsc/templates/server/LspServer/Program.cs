@@ -1,15 +1,17 @@
-﻿namespace Server
+﻿using System.Reflection;
+using LspTypes;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using StreamJsonRpc;
+using System.IO;
+using System.Text;
+using System.Text.Json;
+
+namespace Server
 {
-    using LspTypes;
-    using System;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Threading.Tasks;
-    using System.Collections.Generic;
-    using StreamJsonRpc;
-    using System.IO;
-    using System.Text;
-    using System.Text.Json;
 
     internal partial class Program : IDisposable
     {
@@ -22,7 +24,7 @@
         private bool isDisposed;
 
         public static void Main(string[] args)
-	{
+        {
             LoggerNs.Logger.Log.WriteLine("Server started.");
             var location = Assembly.GetEntryAssembly().Location;
             location = System.IO.Path.GetDirectoryName(location);
@@ -48,7 +50,7 @@
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
             program.MainAsync(args).GetAwaiter().GetResult();
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
-	    LoggerNs.Logger.Log.WriteLine("Server ended.");
+            LoggerNs.Logger.Log.WriteLine("Server ended.");
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
