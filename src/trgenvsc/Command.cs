@@ -201,12 +201,12 @@ namespace Trash
             Process p = new Process();
             p.StartInfo.FileName = "trgen";
             p.StartInfo.WorkingDirectory = ".";
-            p.StartInfo.Arguments = "-t CSharp -o vsc/parser/";
+            p.StartInfo.Arguments = "-t CSharp -o Generated-vsc/parser/";
             p.Start();
             p.WaitForExit();
 
             // cd to generated directory.
-            var output_dir = "vsc/";
+            var output_dir = "Generated-vsc/";
             var cwd = System.Environment.CurrentDirectory.Replace("\\", "/");
             if (cwd != "" && !cwd.EndsWith("/")) cwd = cwd + "/";
             System.Environment.CurrentDirectory = output_dir;

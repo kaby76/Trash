@@ -297,7 +297,7 @@ namespace Server
                         var c = p.GetColumn();
                         var ind = GetIndex(l, c, doc);
                         var st = ind;
-                        var en = ind + p.GetText().Length + 1;
+                        var en = ind + p.GetText().Length;
                         if (end < st) continue;
                         if (en < start) continue;
                         int s1 = st > start ? st : start;
@@ -343,7 +343,7 @@ namespace Server
                         var c = p.GetColumn();
                         var ind = GetIndex(l, c, doc);
                         var st = ind;
-                        var en = ind + p.GetText().Length + 1;
+                        var en = ind + p.GetText().Length;
                         int s1 = st;
                         int s2 = en;
                         // Create multiple "info" for multiline tokens.
