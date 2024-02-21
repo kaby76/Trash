@@ -1,25 +1,23 @@
-# trgen
+# trgenvsc
 
 ## Summary
 
-Generate an Antlr4 parser for a given target language
+Generate a VSCode extension and LSP server for an Antlr4 grammar.
 
 ## Description
 
-Generate a parser application using the Antlr tool and application templates.
-The generated parser is placed in the directory <current-directory>/Generated/.
-If there is a `pom.xml` file in the current directory, `trgen` will read
-it for information on the grammar. If there is no `pom.xml` file, the start
-rule must be provided. If the current directory is empty, `trgen` will
-create a parser for the Arithmetic.g4 grammar.
+Generates a Visual Studio Code extension from an Antlr4 grammar. A CSharp
+target must be available for the grammar. In addition, you will need to
+supply a settings.rc file containing the classes of symbols for the editor.
+A basic settings.rc file is supplied for you to edit.
 
 ## Usage
 
-    trgen <options>* 
+    trgenvsc <options>* 
 
 ## Examples
 
-    trgen
+    trgenvsc
 
 ## Current version
 
