@@ -1,7 +1,4 @@
 ﻿using CommandLine;
-using System;
-using System.IO;
-using System.Text.Json;
 
 namespace Trash
 {
@@ -9,9 +6,7 @@ namespace Trash
     {
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
-        public Config()
-        {
-        }
+        public Config() { }
 
         public Config(Config copy)
         {

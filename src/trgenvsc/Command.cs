@@ -1,26 +1,15 @@
-﻿using System.Diagnostics;
+﻿using Antlr4.StringTemplate;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Trash
 {
-    using Algorithms;
-    using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
-    using Antlr4.StringTemplate;
-    using AntlrJson;
-    using org.eclipse.wst.xml.xpath2.processor.util;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.IO.Compression;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Xml;
-    using System.Xml.XPath;
-
     class Command
     {
         public string Help()
@@ -34,43 +23,12 @@ namespace Trash
 
         public int Execute(Config config)
         {
-            GenerateViaConfig(config);
-            if (failed_modules.Any())
-            {
-                System.Console.WriteLine(String.Join(" ", failed_modules));
-                return 1;
-            }
-            return 0;
+            return GenerateViaConfig(config);
         }
 
-
-        public static string version = "0.22.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
-
-        public string Suffix(string target)
-        {
-            return target switch
-            {
-                "Antlr4cs" => ".cs",
-                "Cpp" => ".cpp",
-                "CSharp" => ".cs",
-                "Dart" => ".dart",
-                "Go" => ".go",
-                "Java" => ".java",
-                "JavaScript" => ".js",
-                "PHP" => ".php",
-                "Python2" => ".py",
-                "Python3" => ".py",
-                "Swift" => ".swift",
-                "TypeScript" => ".ts",
-                "Antlr4ng" => ".ts",
-                _ => throw new NotImplementedException(),
-            };
-        }
-
-        public string ignore_list_of_files = ".trgen-ignore";
 
         public static LineTranslationType GetLineTranslationType()
         {
@@ -123,53 +81,6 @@ namespace Trash
             throw new Exception("Cannot determine operating system!");
         }
 
-        public static string GetAntlrToolPath()
-        {
-            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return (home + "/.m2/antlr4-4.13.1-complete.jar").Replace('\\', '/');
-        }
-
-        public static string TargetName(string target)
-        {
-            return target;
-            //return target switch
-            //{
-            //    "Antlr4cs" => "Antlr4cs",
-            //    "Cpp" => "Cpp",
-            //    "CSharp" => "CSharp",
-            //    "Dart" => "Dart",
-            //    "Go" => "Go",
-            //    "Java" => "Java",
-            //    "JavaScript" => "JavaScript",
-            //    "PHP" => "PHP",
-            //    "Python2" => "Python2",
-            //    "Python3" => "Python3",
-            //    "Swift" => "Swift",
-            //    "TypeScript" => "TypeScript",
-            //    _ => throw new NotImplementedException(),
-            //};
-        }
-
-        public static string AllButTargetName(string target)
-        {
-            var all_but = new List<string>() {
-                "Antlr4cs",
-                "Antlr4ng",
-                "Cpp",
-                "CSharp",
-                "Dart",
-                "Go",
-                "Java",
-                "JavaScript",
-                "PHP",
-                "Python3",
-                "Swift",
-                "TypeScript",
-            };
-            var filter = String.Join("/|", all_but.Where(t => t != TargetName(target)));
-            return filter;
-        }
-
         static string Dirname(string path)
         {
             // Split the path into parts separated by '/'
@@ -185,7 +96,6 @@ namespace Trash
             return string.Join("/", parts.Take(parts.Length - 1));
         }
 
-        // Returns the base name (i.e., the file name) of a given path
         static string Basename(string path)
         {
             // Split the path into parts separated by '/'
@@ -195,7 +105,7 @@ namespace Trash
             return parts.LastOrDefault();
         }
 
-        public void GenerateViaConfig(Config config)
+        public int GenerateViaConfig(Config config)
         {
             // Run trgen -c CSharp first.
             Process p = new Process();
@@ -204,13 +114,29 @@ namespace Trash
             p.StartInfo.Arguments = "-t CSharp -o Generated-vsc/parser/";
             p.Start();
             p.WaitForExit();
+            if (p.ExitCode != 0)
+            {
+                System.Console.Error.WriteLine("trgen failed to generate parser for the grammar.");
+                return p.ExitCode;
+            }
 
             // cd to generated directory.
             var output_dir = "Generated-vsc/";
             var cwd = System.Environment.CurrentDirectory.Replace("\\", "/");
             if (cwd != "" && !cwd.EndsWith("/")) cwd = cwd + "/";
             System.Environment.CurrentDirectory = output_dir;
+
+            // Generate the rest of the code for the client and server.
             GenFromTemplates(config);
+
+            // Generate settings.rc from desc.xml
+            GenSettings(config);
+
+            return 0;
+        }
+
+        private void GenSettings(Config config)
+        {
         }
 
         IEnumerable<string> EnumerateLines(TextReader reader)
