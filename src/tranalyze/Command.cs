@@ -1,8 +1,11 @@
 ﻿namespace Trash
 {
-    using LanguageServer;
-    using System.Collections;
+    using AntlrJson;
+    using org.eclipse.wst.xml.xpath2.processor.util;
+    using ParseTreeEditing.UnvParseTreeDOM;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text.Json;
 
     class Command
@@ -25,11 +28,13 @@
                 {
                     System.Console.Error.WriteLine("reading from stdin");
                 }
-                for (; ; )
+
+                for (;;)
                 {
                     lines = System.Console.In.ReadToEnd();
                     if (lines != null && lines != "") break;
                 }
+
                 lines = lines.Trim();
             }
             else
@@ -38,35 +43,39 @@
                 {
                     System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
                 }
+
                 lines = File.ReadAllText(config.File);
             }
+
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
             serializeOptions.WriteIndented = config.Format;
             serializeOptions.MaxDepth = 10000;
-            AntlrJson.ParsingResultSet[] data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            AntlrJson.ParsingResultSet[] data =
+                JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             foreach (AntlrJson.ParsingResultSet parse_info in data)
             {
-                var doc = Docs.Class1.CreateDoc(parse_info);
-                var f = doc.FullPath;
-                doc.ParseTree = null;
-                doc.Changed = true;
-                ParsingResults ref_pd = ParsingResultsFactory.Create(doc);
-                ref_pd.ParseTree = null;
-                _ = new Module().GetQuickInfo(0, doc);
-                AnalyzeDoc(doc, config.start_rules);
+                if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
+                var results = new List<ParsingResultSet>();
+                var text = parse_info.Text;
+                var fn = parse_info.FileName;
+                var trees = parse_info.Nodes;
+                var parser = parse_info.Parser;
+                var lexer = parse_info.Lexer;
+                if (config.Verbose)
+                {
+                    foreach (var n in trees)
+                        System.Console.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
+                }
+                AnalyzeDoc();
             }
         }
 
-        public void AnalyzeDoc(Workspaces.Document document, System.Collections.Generic.IEnumerable<string> start_rules)
+
+        public void AnalyzeDoc()
         {
-            _ = ParsingResultsFactory.Create(document);
-            var results = LanguageServer.Analysis.PerformAnalysis(document, start_rules);
-            foreach (var r in results)
-            {
-                System.Console.Write((r.Start != 0 ? r.Start + " " : "") + r.Message);
-                System.Console.WriteLine();
-            }
+            // Find p : a q* r b where q =>* r or
+            //      p : a q+ r b where q =>* r
         }
     }
 }

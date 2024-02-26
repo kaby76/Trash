@@ -1,0 +1,462 @@
+        public static Dictionary<string, string> ConvertRecursionToKleeneOperator(Document document, List<IParseTree> nodes = null)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            // Check if initial file is a grammar.
+            if (!(ParsingResultsFactory.Create(document) is ParsingResults pd_parser))
+                throw new LanguageServerException("A grammar file is not selected. Please select one first.");
+            ExtractGrammarType egt = new ExtractGrammarType();
+            ParseTreeWalker.Default.Walk(egt, pd_parser.ParseTree);
+            bool is_grammar = egt.Type == ExtractGrammarType.GrammarType.Parser
+                || egt.Type == ExtractGrammarType.GrammarType.Combined
+                || egt.Type == ExtractGrammarType.GrammarType.Lexer;
+            if (!is_grammar)
+            {
+                throw new LanguageServerException("A grammar file is not selected. Please select one first.");
+            }
+
+            if (nodes != null)
+            {
+                var updated = new HashSet<IParseTree>();
+                foreach (var node in nodes)
+                {
+                    bool got = false;
+                    // Make sure the node points to somewhere in a rule, and replace it 
+                    // with the node in the LHS of the rule, if not already point to that node.
+                    for (var p = node; p != null; p = p.Parent)
+                    {
+                        if (p is ANTLRv4Parser.ParserRuleSpecContext prsc)
+                        {
+                            updated.Add(prsc.RULE_REF());
+                            got = true;
+                            break;
+                        }
+                        else if (p is ANTLRv4Parser.LexerRuleSpecContext lrsc)
+                        {
+                            updated.Add(lrsc.TOKEN_REF());
+                            got = true;
+                            break;
+                        }
+                    }
+                    if (!got)
+                    {
+                        throw new LanguageServerException("XPath spec yielded a 'node' that doesn't point do a parser or lexer rule.");
+                    }
+                }
+                nodes = updated.ToList();
+            }
+            else
+            {
+                var pr = ParsingResultsFactory.Create(document);
+                var aparser = pr.Parser;
+                var atree = pr.ParseTree;
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
+                {
+                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                    nodes = engine.parseExpression(
+                        @"(//parserRuleSpec/RULE_REF | //lexerRuleSpec/TOKEN_REF)",
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
+                }
+            }
+
+            // Get all intertoken text immediately for source reconstruction.
+            var (text_before, other) = TreeEdits.TextToLeftOfLeaves(pd_parser.TokStream, pd_parser.ParseTree);
+
+            for (int i = 0; i < nodes.Count(); ++i)
+            {
+                var node = nodes[i];
+                if (!(node is TerminalNodeImpl && (node.Parent is ANTLRv4Parser.ParserRuleSpecContext || node.Parent is ANTLRv4Parser.LexerRuleSpecContext)))
+                    throw new LanguageServerException("Node for Kleene EBNF transform must be the LHS symbol.");
+
+                for (; node != null; node = node.Parent)
+                {
+                    if ((node is ANTLRv4Parser.ParserRuleSpecContext || node is ANTLRv4Parser.LexerRuleSpecContext))
+                        break;
+                }
+                if (node == null)
+                    throw new LanguageServerException("A rule is not selected. Please select one first.");
+
+                // We are now at the rule that the user identified to eliminate direct
+                // left recursion.
+                // Check if the rule has direct left recursion.
+
+                bool has_direct_left_recursion = HasDirectLeftRecursion(node);
+                bool has_direct_right_recursion = HasDirectRightRecursion(node);
+                if (!(has_direct_left_recursion || has_direct_right_recursion))
+                {
+                    continue;
+                }
+                else if (has_direct_left_recursion && has_direct_right_recursion)
+                {
+                    continue;
+                }
+
+                // Has direct recursion.
+                node = ReplaceWithKleeneRules(pd_parser.Parser, has_direct_left_recursion, has_direct_right_recursion, node, text_before);
+                if (node != null)
+                {
+                    TreeEdits.Replace(pd_parser.ParseTree,
+                        (in IParseTree x, out bool c) =>
+                        {
+                            if (x is ANTLRv4Parser.ParserRuleSpecContext)
+                            {
+                                var y = x as ANTLRv4Parser.ParserRuleSpecContext;
+                                var name = y.RULE_REF()?.GetText();
+                                if (name == Lhs(node).GetText())
+                                {
+                                    var leaf = TreeEdits.Frontier(y).First();
+                                    var leaf_replace = TreeEdits.Frontier(node).First();
+                                    text_before[leaf_replace] = text_before[leaf];
+                                    c = false;
+                                    return node;
+                                }
+                            }
+                            else if (x is ANTLRv4Parser.LexerRuleSpecContext)
+                            {
+                                var y = x as ANTLRv4Parser.LexerRuleSpecContext;
+                                var name = y.TOKEN_REF()?.GetText();
+                                if (name == Lhs(node).GetText())
+                                {
+                                    var leaf = TreeEdits.Frontier(y).First();
+                                    var leaf_replace = TreeEdits.Frontier(node).First();
+                                    text_before[leaf_replace] = text_before[leaf];
+                                    c = false;
+                                    return node;
+                                }
+                            }
+                            c = true;
+                            return null;
+                        });
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+            TreeEdits.Reconstruct(sb, pd_parser.ParseTree, text_before);
+            var new_code = sb.ToString();
+            if (new_code != pd_parser.Code)
+            {
+                result.Add(document.FullPath, new_code);
+            }
+
+            return result;
+        }
+
+
+        private static IParseTree ReplaceWithKleeneRules(Parser parser, bool has_direct_left_recursion, bool has_direct_right_recursion, IParseTree rule, Dictionary<TerminalNodeImpl, string> text_before)
+        {
+            // Left recursion:
+            // A -> A b1 | A b2 | ... | a1 | a2 | ... ;
+            // => A ->  (a1 | a2 | ... ) (b1 | b2 | ...)*;
+            // Note, A on RHS cannot have any postfix operators.
+            //
+            // A -> A? b1 | A? b2 | ... | a1 | a2 | ...;
+            // A -> A b1 | b1 | A b2 | b2 | ... | a1 | a2 | ...;
+            // A -> b1 | b2 | ... | a1 | a2 | ... | A b1 | a b2 | ...; 
+            // A -> ( a1 | a2 | ... | b1 | b2 | ... ) (b1 | b2 | ...)* ;
+            // A on RHS must only be "A?".
+            //
+            // Right recursion:
+            // Convert A -> b1 A | b2 A | ... | a1 | a2 | ... ;
+            // into A ->   (b1 | b2 | ...)* (a1 | a2 | ... )
+            //
+            // A -> a1 | a2 | ... | b1 A? | b2 A? | ...;
+            // A -> (b1 | b2 | ...)* (a1 | a2 | ... | b1 | b2 | ...)
+            // A on RHS must only be "A?".
+            //
+            // First, set up the new rule, less the RHS rewrite.
+            var new_a_rule = new ANTLRv4Parser.ParserRuleSpecContext(null, 0);
+            string lhs = "";
+            IParseTree colon;
+            if (rule is ANTLRv4Parser.ParserRuleSpecContext r)
+            {
+                //parserRuleSpec: ruleModifiers? RULE_REF argActionBlock? ruleReturns? throwsSpec? localsSpec? rulePrequel* COLON ruleBlock SEMI exceptionGroup;
+                if (r.ruleModifiers() != null) TreeEdits.CopyTreeRecursive(r.ruleModifiers(), new_a_rule, text_before);
+                TreeEdits.CopyTreeRecursive(r.RULE_REF(), new_a_rule, text_before);
+                lhs = r.RULE_REF()?.GetText();
+                if (r.argActionBlock() != null) TreeEdits.CopyTreeRecursive(r.argActionBlock(), new_a_rule, text_before);
+                if (r.ruleReturns() != null) TreeEdits.CopyTreeRecursive(r.ruleReturns(), new_a_rule, text_before);
+                if (r.throwsSpec() != null) TreeEdits.CopyTreeRecursive(r.throwsSpec(), new_a_rule, text_before);
+                if (r.localsSpec() != null) TreeEdits.CopyTreeRecursive(r.localsSpec(), new_a_rule, text_before);
+                foreach (var rp in r.rulePrequel()) TreeEdits.CopyTreeRecursive(rp, new_a_rule, text_before);
+                colon = TreeEdits.CopyTreeRecursive(r.COLON(), new_a_rule, text_before);
+                TreeEdits.CopyTreeRecursive(r.SEMI(), new_a_rule, text_before);
+                if (r.exceptionGroup() != null) TreeEdits.CopyTreeRecursive(r.exceptionGroup(), new_a_rule, text_before);
+            }
+            else if (rule is ANTLRv4Parser.LexerRuleSpecContext lr)
+            {
+                if (lr.FRAGMENT() != null) TreeEdits.CopyTreeRecursive(lr.FRAGMENT(), new_a_rule, text_before);
+                TreeEdits.CopyTreeRecursive(lr.TOKEN_REF(), new_a_rule, text_before);
+                lhs = lr.TOKEN_REF()?.GetText();
+                colon = TreeEdits.CopyTreeRecursive(lr.COLON(), new_a_rule, text_before);
+                TreeEdits.CopyTreeRecursive(lr.SEMI(), new_a_rule, text_before);
+            }
+            else throw new Exception();
+
+            // Partition the alts into two collections, one
+            // contains the "alphas" and the other the "betas", which I
+            // describe above.
+            List<IParseTree> alphas = new List<IParseTree>();
+            List<IParseTree> betas = new List<IParseTree>();
+            bool q_operator = false;
+            foreach (ANTLRv4Parser.AlternativeContext alt in EnumeratorOfAlts(rule))
+            {
+                ANTLRv4Parser.ElementContext e = null;
+                if (has_direct_left_recursion && !has_direct_right_recursion)
+                {
+                    e = EnumeratorOfRHS(alt)?.FirstOrDefault();
+                }
+                else
+                {
+                    e = EnumeratorOfRHS(alt)?.LastOrDefault();
+                }
+                if (lhs == e?.GetText())
+                {
+                    TreeEdits.Delete(e);
+                    betas.Add(alt);
+                }
+                else if (lhs == e?.atom().GetText())
+                {
+                    if (e?.ebnfSuffix()?.GetText() != "?")
+                        return null;
+                    TreeEdits.Delete(e);
+                    betas.Add(alt);
+                    q_operator = true;
+                }
+                else
+                {
+                    alphas.Add(alt);
+                }
+            }
+            // Determine if alpha list equals beta list.
+            bool equal_alpha_beta = true;
+            if (alphas.Count == betas.Count)
+            {
+                for (int jj = 0; jj < alphas.Count; ++jj)
+                {
+                    var r1 = alphas[jj]?.GetText()?.Trim();
+                    var r2 = betas[jj]?.GetText()?.Trim();
+                    if (r1 != r2)
+                    {
+                        equal_alpha_beta = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                equal_alpha_beta = false;
+            }
+            // Finish up RHS
+            if (equal_alpha_beta)
+            {
+                var container = Make("+", alphas, text_before, parser);
+                TreeEdits.InsertAfter(colon, container);
+            }
+            else
+            {
+                if (has_direct_left_recursion && !has_direct_right_recursion)
+                {
+                    var a_container = q_operator
+                            ? Make("", alphas.Concat(betas).ToList(), text_before, parser)
+                            : Make("", alphas, text_before, parser);
+                    var b_container = Make("*", betas, text_before, parser);
+                    TreeEdits.InsertAfter(colon, b_container);
+                    TreeEdits.InsertAfter(colon, a_container);
+                }
+                else
+                {
+                    var a_container = q_operator
+                      ? Make("", alphas.Concat(betas).ToList(), text_before, parser)
+                      : Make("", alphas, text_before, parser);
+                    var b_container = Make("*", betas, text_before, parser);
+                    TreeEdits.InsertAfter(colon, a_container);
+                    TreeEdits.InsertAfter(colon, b_container);
+                }
+            }
+            return (IParseTree)new_a_rule;
+        }
+
+        private static IParseTree Make(string closure_op, List<IParseTree> syms, Dictionary<TerminalNodeImpl, string> text_before, Parser parser)
+        {
+            var container = new ANTLRv4Parser.BlockContext(null, 0);
+            bool first = true;
+            bool parens = RequiresParens(syms, parser);
+            var lp = new TerminalNodeImpl(new CommonToken(ANTLRv4Parser.LPAREN) { Line = -1, Column = -1, Text = "(" });
+            var rp = new TerminalNodeImpl(new CommonToken(ANTLRv4Parser.RPAREN) { Line = -1, Column = -1, Text = ")" });
+            var bar = new TerminalNodeImpl(new CommonToken(ANTLRv4Parser.OR) { Line = -1, Column = -1, Text = "|" });
+            if (parens) TreeEdits.CopyTreeRecursive(lp, container, text_before);
+            IParseTree last = null;
+            for (int jj = 0; jj < syms.Count; ++jj)
+            {
+                if (!first)
+                {
+                    TreeEdits.CopyTreeRecursive(bar, container, text_before);
+                    last = TreeEdits.CopyTreeRecursive(syms[jj], container, text_before);
+                }
+                else
+                {
+                    last = TreeEdits.CopyTreeRecursive(syms[jj], container, text_before);
+                    first = false;
+                }
+            }
+            if (parens) last = TreeEdits.CopyTreeRecursive(rp, container, text_before);
+            var a1 = TreeEdits.InsertAfter(last, closure_op);
+            text_before[a1] = "";
+            return container;
+        }
+
+        private static bool RequiresParens(List<IParseTree> alphas, Parser p)
+        {
+            if (alphas.Count == 0) return false;
+            if (alphas.Count > 1) return true;
+            var v = alphas.First();
+            var s = v.ToStringTree(p);
+            if (v is ANTLRv4Parser.AlternativeContext && v.ChildCount > 1)
+                return true;
+            return false;
+        }
+
+        public static Dictionary<string, string> ConvertRecursionToKleeneOperator(Document document, List<IParseTree> nodes = null)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            // Check if initial file is a grammar.
+            if (!(ParsingResultsFactory.Create(document) is ParsingResults pd_parser))
+                throw new LanguageServerException("A grammar file is not selected. Please select one first.");
+            ExtractGrammarType egt = new ExtractGrammarType();
+            ParseTreeWalker.Default.Walk(egt, pd_parser.ParseTree);
+            bool is_grammar = egt.Type == ExtractGrammarType.GrammarType.Parser
+                || egt.Type == ExtractGrammarType.GrammarType.Combined
+                || egt.Type == ExtractGrammarType.GrammarType.Lexer;
+            if (!is_grammar)
+            {
+                throw new LanguageServerException("A grammar file is not selected. Please select one first.");
+            }
+
+            if (nodes != null)
+            {
+                var updated = new HashSet<IParseTree>();
+                foreach (var node in nodes)
+                {
+                    bool got = false;
+                    // Make sure the node points to somewhere in a rule, and replace it 
+                    // with the node in the LHS of the rule, if not already point to that node.
+                    for (var p = node; p != null; p = p.Parent)
+                    {
+                        if (p is ANTLRv4Parser.ParserRuleSpecContext prsc)
+                        {
+                            updated.Add(prsc.RULE_REF());
+                            got = true;
+                            break;
+                        }
+                        else if (p is ANTLRv4Parser.LexerRuleSpecContext lrsc)
+                        {
+                            updated.Add(lrsc.TOKEN_REF());
+                            got = true;
+                            break;
+                        }
+                    }
+                    if (!got)
+                    {
+                        throw new LanguageServerException("XPath spec yielded a 'node' that doesn't point do a parser or lexer rule.");
+                    }
+                }
+                nodes = updated.ToList();
+            }
+            else
+            {
+                var pr = ParsingResultsFactory.Create(document);
+                var aparser = pr.Parser;
+                var atree = pr.ParseTree;
+                using (ParseTreeEditing.AntlrDOM.AntlrDynamicContext dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
+                {
+                    org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+                    nodes = engine.parseExpression(
+                        @"(//parserRuleSpec/RULE_REF | //lexerRuleSpec/TOKEN_REF)",
+                            new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
+                        .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.UnvParseTreeElement).AntlrIParseTree).ToList();
+                }
+            }
+
+            // Get all intertoken text immediately for source reconstruction.
+            var (text_before, other) = TreeEdits.TextToLeftOfLeaves(pd_parser.TokStream, pd_parser.ParseTree);
+
+            for (int i = 0; i < nodes.Count(); ++i)
+            {
+                var node = nodes[i];
+                if (!(node is TerminalNodeImpl && (node.Parent is ANTLRv4Parser.ParserRuleSpecContext || node.Parent is ANTLRv4Parser.LexerRuleSpecContext)))
+                    throw new LanguageServerException("Node for Kleene EBNF transform must be the LHS symbol.");
+
+                for (; node != null; node = node.Parent)
+                {
+                    if ((node is ANTLRv4Parser.ParserRuleSpecContext || node is ANTLRv4Parser.LexerRuleSpecContext))
+                        break;
+                }
+                if (node == null)
+                    throw new LanguageServerException("A rule is not selected. Please select one first.");
+
+                // We are now at the rule that the user identified to eliminate direct
+                // left recursion.
+                // Check if the rule has direct left recursion.
+
+                bool has_direct_left_recursion = HasDirectLeftRecursion(node);
+                bool has_direct_right_recursion = HasDirectRightRecursion(node);
+                if (!(has_direct_left_recursion || has_direct_right_recursion))
+                {
+                    continue;
+                }
+                else if (has_direct_left_recursion && has_direct_right_recursion)
+                {
+                    continue;
+                }
+
+                // Has direct recursion.
+                node = ReplaceWithKleeneRules(pd_parser.Parser, has_direct_left_recursion, has_direct_right_recursion, node, text_before);
+                if (node != null)
+                {
+                    TreeEdits.Replace(pd_parser.ParseTree,
+                        (in IParseTree x, out bool c) =>
+                        {
+                            if (x is ANTLRv4Parser.ParserRuleSpecContext)
+                            {
+                                var y = x as ANTLRv4Parser.ParserRuleSpecContext;
+                                var name = y.RULE_REF()?.GetText();
+                                if (name == Lhs(node).GetText())
+                                {
+                                    var leaf = TreeEdits.Frontier(y).First();
+                                    var leaf_replace = TreeEdits.Frontier(node).First();
+                                    text_before[leaf_replace] = text_before[leaf];
+                                    c = false;
+                                    return node;
+                                }
+                            }
+                            else if (x is ANTLRv4Parser.LexerRuleSpecContext)
+                            {
+                                var y = x as ANTLRv4Parser.LexerRuleSpecContext;
+                                var name = y.TOKEN_REF()?.GetText();
+                                if (name == Lhs(node).GetText())
+                                {
+                                    var leaf = TreeEdits.Frontier(y).First();
+                                    var leaf_replace = TreeEdits.Frontier(node).First();
+                                    text_before[leaf_replace] = text_before[leaf];
+                                    c = false;
+                                    return node;
+                                }
+                            }
+                            c = true;
+                            return null;
+                        });
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+            TreeEdits.Reconstruct(sb, pd_parser.ParseTree, text_before);
+            var new_code = sb.ToString();
+            if (new_code != pd_parser.Code)
+            {
+                result.Add(document.FullPath, new_code);
+            }
+
+            return result;
+        }

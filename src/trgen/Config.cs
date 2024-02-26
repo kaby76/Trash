@@ -13,7 +13,10 @@ namespace Trash
         public string antlr_tool_path { get; set; }
 
         [Option("arithmetic", Required = false, HelpText = "Generate arithmetic example from templates.")]
-        public bool arithmetic { get; set; }
+        public bool generateArithmeticExample { get; set; }
+
+        [Option('e', "os-targets", Required = false, HelpText = "Set os target type.")]
+        public IEnumerable<string> os_targets { get; set; } = new List<string>() { Command.GetOSTarget() };
 
         [Option("force", Required = false, HelpText = "Force the generation of a target.")]
         public bool force { get; set; }
@@ -40,44 +43,42 @@ namespace Trash
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
 
-        [Option('x', "profile", Required = false, HelpText = "Add in Antlr profiling code.")]
+	    [Option('x', "profile", Required = false, HelpText = "Add in Antlr profiling code.")]
         public bool? profile { get; set; }
 
-        [Value(0)]
+	    [Value(0)]
         public IEnumerable<string> Files { get; set; }
 
-
         public IEnumerable<string> antlr_tool_args { get; set; }
-        public IEnumerable<string> os_targets { get; set; }
         public bool? flatten { get; set; }
         public LineTranslationType? line_translation { get; set; }
         public string parsing_type { get; set; }
-        public bool pom { get; set; }
-        public bool desc { get; set; }
+        public bool hasPOM { get; set; }
+        public bool hasDesc { get; set; }
         public PathSepType? path_sep { get; set; }
         public int? watchdog_timeout { get; set; }
         public string SetupFfn = ".trgen.rc";
         public string root_directory;
         public string example_files { get; set; }
 
-
         public List<Test> Tests;
 
         public Config()
         {
             this.antlr_tool_path = Command.GetAntlrToolPath();
-            this.arithmetic = false;
-            this.desc = true;
-            this.os_targets = new List<string>() { Command.GetOSTarget().ToString() };
+            this.generateArithmeticExample = false;
+            string file_name = Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"desc.xml";
+            this.hasDesc = File.Exists(file_name);
+            this.os_targets = new List<string>() { Command.GetOSTarget() };
             this.Files = new List<string>();
             this.flatten = false;
             this.grammar_name = null; // null means find using parsing and xpath of grammars.
             this.line_translation = Command.GetLineTranslationType();
             this.name_space = null;
-            this.output_directory = "Generated";
+            this.output_directory = "./";
             this.parsing_type = null;
             this.path_sep = Command.GetPathSep();
-            this.pom = false;
+            this.hasPOM = false;
             this.root_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             this.start_rule = null; // means find using parsing and xpath of grammars.
             this.targets = null;

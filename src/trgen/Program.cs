@@ -58,7 +58,7 @@ namespace Trash
 
         public void MainInternal(string[] args)
         {
-            Config config = null;
+            Config config = new Config();
             var cgen = new Command();
             // Parse options, stop if we see a bogus option, or something like --help.
             var result = new CommandLine.Parser().ParseArguments<Config>(args);
@@ -72,13 +72,18 @@ namespace Trash
             if (stop) return;
             result.WithParsed(o =>
             {
-                config = o;
                 // Overwrite the defaults with what was passed on the command line.
                 var ty = typeof(Config);
                 foreach (var prop in ty.GetProperties())
                 {
                     if (prop.GetValue(o, null) != null)
                     {
+                        var v = prop.GetValue(o, null);
+                        if (v is IEnumerable<object>)
+                        {
+                            var l = ((IEnumerable<object>)v).ToList();
+                            if (!l.Any()) continue;
+                        }
                         prop.SetValue(config, prop.GetValue(o, null));
                     }
                 }

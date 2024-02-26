@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "dotnet-antlr": {
+      "commandName": "Project",
+      "commandLineArgs": "--help",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-3976\\eiffel"
+    }
+  }
+}

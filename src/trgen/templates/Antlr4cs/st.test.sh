@@ -47,9 +47,9 @@ for f in ${files[*]}
 do
     if [ "$global" == "" ]
     then
-        dotnet trwdog -- ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f >> parse.txt 2>&1
+        dotnet trwdog -- ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f >> parse.txt 2>&1
     else
-        trwdog ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f >> parse.txt 2>&1
+        trwdog ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f >> parse.txt 2>&1
     fi
     xxx="$?"
     if [ "$xxx" -ne 0 ]
@@ -61,9 +61,9 @@ done
 # Group parsing.
 if [ "$global" == "" ]
 then
-    echo "${files[*]}" | dotnet trwdog -- ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -q -x -tee -tree > parse.txt 2>&1
+    echo "${files[*]}" | dotnet trwdog -- ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -x -tee -tree > parse.txt 2>&1
 else
-    echo "${files[*]}" | trwdog ./bin/Debug/net7.0/<if(os_win)>Test.exe<else>Test<endif> -q -x -tee -tree > parse.txt 2>&1
+    echo "${files[*]}" | trwdog ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -x -tee -tree > parse.txt 2>&1
 fi
 status="$?"
 <endif>
