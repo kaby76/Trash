@@ -38,7 +38,7 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 
 ## Installation
 ### Requirements
-[Install Dotnet 7.0.x](https://dotnet.microsoft.com/en-us/download)
+[Install Dotnet 8.0.x](https://dotnet.microsoft.com/en-us/download)
 
 ### Install
 Copy this script and execute it in a command-line prompt.
