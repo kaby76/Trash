@@ -27,7 +27,7 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.22.0 Add trdot. Update to Antlr 4.13.1 and Dotnet 8.0.
+0.22.1 Synchronized Antlr4 grammar with grammars-v4.
 
 ## License
 

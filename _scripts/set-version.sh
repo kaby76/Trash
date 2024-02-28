@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-version="0.22.0"
+version="0.22.1"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
@@ -41,7 +41,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Add trdot. Update to Antlr 4.13.1 and Dotnet 8.0.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Synchronized Antlr4 grammar with grammars-v4.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
@@ -78,7 +78,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Add trdot. Update to Antlr 4.13.1 and Dotnet 8.0.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Synchronized Antlr4 grammar with grammars-v4.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done

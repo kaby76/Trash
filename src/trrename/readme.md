@@ -27,7 +27,7 @@ make sure to enclose the argument as it contains semi-colons.
 
 ## Current version
 
-0.22.0 Add trdot. Update to Antlr 4.13.1 and Dotnet 8.0.
+0.22.1 Synchronized Antlr4 grammar with grammars-v4.
 
 ## License
 

@@ -65,7 +65,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.22.0 Add trdot. Update to Antlr 4.13.1 and Dotnet 8.0.
+0.22.1 Synchronized Antlr4 grammar with grammars-v4.
 
 ## License
 

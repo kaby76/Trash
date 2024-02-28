@@ -148,7 +148,7 @@ namespace trcover
 
         public override Digraph<string, SymbolEdge<string>> VisitAtom(ANTLRv4Parser.AtomContext context)
         {
-            var ct1 = context.terminal();
+            var ct1 = context.terminalDef();
             if (ct1 != null) return this.Visit(ct1);
             var ct2 = context.ruleref();
             if (ct2 != null) return this.Visit(ct2);
@@ -623,22 +623,6 @@ namespace trcover
             else throw new Exception();
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitLabeledLexerElement(
-            ANTLRv4Parser.LabeledLexerElementContext context)
-        {
-            if (context.lexerBlock() != null)
-            {
-                var cg = this.VisitLexerBlock(context.lexerBlock());
-                return cg;
-            }
-            else if (context.lexerAtom() != null)
-            {
-                var cg = this.VisitLexerAtom(context.lexerAtom());
-                return cg;
-            }
-            else throw new Exception();
-        }
-
         public override Digraph<string, SymbolEdge<string>> VisitLexerAlt(ANTLRv4Parser.LexerAltContext context)
         {
             var cg = this.VisitLexerElements(context.lexerElements());
@@ -675,8 +659,8 @@ namespace trcover
 
         public override Digraph<string, SymbolEdge<string>> VisitLexerAtom(ANTLRv4Parser.LexerAtomContext context)
         {
-            var ct1 = context.terminal();
-            if (ct1 != null) return this.VisitTerminal(ct1);
+            var ct1 = context.terminalDef();
+            if (ct1 != null) return this.VisitTerminalDef(ct1);
             var ct2 = context.characterRange();
             if (ct2 != null) return this.VisitCharacterRange(ct2);
             var ct3 = context.notSet();
@@ -737,68 +721,7 @@ namespace trcover
 
         public override Digraph<string, SymbolEdge<string>> VisitLexerElement(ANTLRv4Parser.LexerElementContext context)
         {
-            if (context.labeledLexerElement() != null)
-            {
-                var cg = this.VisitLabeledLexerElement(context.labeledLexerElement());
-                var g = new Digraph<string, SymbolEdge<string>>();
-                var suffix = context.ebnfSuffix()?.GetText();
-                switch (suffix)
-                {
-                    case null:
-                    {
-                        return cg;
-                    }
-                    case "+":
-                    case "+?":
-                    {
-                        var f = "" + gen++;
-                        var t = "" + gen++;
-                        g.AddStart(g.AddVertex(f));
-                        g.AddEnd(g.AddVertex(t));
-                        foreach (var v in cg.Vertices) g.AddVertex(v);
-                        foreach (var e in cg.Edges) g.AddEdge(e);
-                        foreach (var v in cg.StartVertices)
-                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                        foreach (var v in cg.EndVertices)
-                            g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                        g.AddEdge(new SymbolEdge<string>() { From = t, To = f, _symbol = null });
-                        return g;
-                    }
-                    case "*":
-                    case "*?":
-                    {
-                        var f = "" + gen++;
-                        g.AddStart(g.AddVertex(f));
-                        g.AddEnd(g.AddVertex(f));
-                        foreach (var v in cg.Vertices) g.AddVertex(v);
-                        foreach (var e in cg.Edges) g.AddEdge(e);
-                        foreach (var v in cg.StartVertices)
-                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                        foreach (var v in cg.EndVertices)
-                            g.AddEdge(new SymbolEdge<string>() { From = v, To = f, _symbol = null });
-                        return g;
-                    }
-                    case "?":
-                    case "??":
-                    {
-                        var f = "" + gen++;
-                        var t = "" + gen++;
-                        g.AddStart(g.AddVertex(f));
-                        g.AddEnd(g.AddVertex(t));
-                        foreach (var v in cg.Vertices) g.AddVertex(v);
-                        foreach (var e in cg.Edges) g.AddEdge(e);
-                        foreach (var v in cg.StartVertices)
-                            g.AddEdge(new SymbolEdge<string>() { From = f, To = v, _symbol = null });
-                        foreach (var v in cg.EndVertices)
-                            g.AddEdge(new SymbolEdge<string>() { From = v, To = t, _symbol = null });
-                        g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = null });
-                        return g;
-                    }
-                    default:
-                        throw new Exception();
-                }
-            }
-            else if (context.lexerAtom() != null)
+            if (context.lexerAtom() != null)
             {
                 var cg = this.VisitLexerAtom(context.lexerAtom());
                 var g = new Digraph<string, SymbolEdge<string>>();
@@ -1174,7 +1097,7 @@ namespace trcover
             else throw new Exception();
         }
 
-        public override Digraph<string, SymbolEdge<string>> VisitTerminal(ANTLRv4Parser.TerminalContext context)
+        public override Digraph<string, SymbolEdge<string>> VisitTerminalDef(ANTLRv4Parser.TerminalDefContext context)
         {
             var g = new Digraph<string, SymbolEdge<string>>();
             var f = "" + gen++;
@@ -1188,9 +1111,6 @@ namespace trcover
             return g;
         }
 
-        //public override Digraph<string, SymbolEdge> VisitTerminal(ITerminalNode node)
-        //{
-        //}
 
         public override Digraph<string, SymbolEdge<string>> VisitThrowsSpec(ANTLRv4Parser.ThrowsSpecContext context)
         {
