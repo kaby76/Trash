@@ -121,8 +121,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "src\ConsoleA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1", "_tests\TestProject1\TestProject1.csproj", "{D65FCED2-B935-4D52-894E-D5FC30D74DCF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xalan", "src\xalan\Xalan.csproj", "{F78393B6-A454-4A48-9617-8DC9473C35D9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pegen", "src\grammars\pegen\Generated-CSharp\pegen.csproj", "{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grammars", "grammars", "{44E99C4B-9C50-423F-9953-3D314606ED7D}"
@@ -351,8 +349,6 @@ Global
 		{ABD72A1D-4890-406D-98DD-A46EAA5A0CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D65FCED2-B935-4D52-894E-D5FC30D74DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D65FCED2-B935-4D52-894E-D5FC30D74DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F78393B6-A454-4A48-9617-8DC9473C35D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F78393B6-A454-4A48-9617-8DC9473C35D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
