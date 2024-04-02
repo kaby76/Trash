@@ -8,6 +8,9 @@ namespace Trash
         [Value(0)]
         public IEnumerable<string> Files { get; set; }
 
+        [Option('c', "columns", Required = false, HelpText = "Columns to output.")]
+        public string Columns { get; set; } = "FdriTkmfaet";
+
         [Option('i', "input", Required = false, HelpText = "Parse input string.")]
         public string Input { get; set; }
 
