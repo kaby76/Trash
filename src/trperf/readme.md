@@ -16,6 +16,17 @@ be in a trgen-generated parser directory, or use the -p option.
 ## Usage
     
     trperf (<string> | <options>)*
+    -c. -column      String of characters denoting columnns.
+                     F = File name
+                     d = Decision number
+                     r = Rule name
+                     i = Invocations
+                     T = Time
+                     k = Total k
+                     m = Max k
+                     a = Ambiguities
+                     e = Errors
+                     t = Transitions
     -i, --input      String to parse.
     -s, --start-rule Start rule name.
     -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
