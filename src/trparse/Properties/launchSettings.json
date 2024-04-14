@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": " -t antlr4 x",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-3951\\scotty"
+      "commandLineArgs": " -t ANTLRv4 abbLexer.g4 abbParser.g4",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4047\\abb"
     }
   }
 }

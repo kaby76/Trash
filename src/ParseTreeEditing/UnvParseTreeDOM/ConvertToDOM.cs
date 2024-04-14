@@ -140,7 +140,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                         channel = tok.Channel;
                         tt = tok.Type;
                         var attr = new UnvParseTreeAttr();
-                        attr.Name = "Before";
+                        attr.Name = lexer.Vocabulary.GetSymbolicName(tt);
                         start_cs = tok.StartIndex;
                         stop_cs = tok.StopIndex;
                         attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
