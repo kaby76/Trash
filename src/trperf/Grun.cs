@@ -142,8 +142,8 @@
                 object[] parm = new object[] { txt, false };
                 var res = methodInfo.Invoke(null, parm);
             }
-	        // Set perf.
-	        var r2 = type.GetProperty("Parser").GetValue(null, new object[0]);
+            // Set perf.
+            var r2 = type.GetProperty("Parser").GetValue(null, new object[0]);
             var parser = r2 as Parser;
             parser.Profile = true;
             {
@@ -154,86 +154,89 @@
                 DateTime after = DateTime.Now;
                 System.Console.Error.WriteLine("Time to parse: " + (after - before));
                 bool do_tab = false;
-                for (int c = 0; c < config.Columns.Length; ++c)
+                if (config.HeaderNames)
                 {
-                    if (config.Columns[c] == 'F')
+                    for (int c = 0; c < config.Columns.Length; ++c)
                     {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("File");
-                    }
+                        if (config.Columns[c] == 'F')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("File");
+                        }
 
-                    if (config.Columns[c] == 'd')
-                    {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("Decision");
-                    }
+                        if (config.Columns[c] == 'd')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Decision");
+                        }
 
-                    if (config.Columns[c] == 'r')
-                    {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("Rule");
-                    }
+                        if (config.Columns[c] == 'r')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Rule");
+                        }
 
-                    if (config.Columns[c] == 'i')
-                    {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("Invocations");
-                    }
+                        if (config.Columns[c] == 'i')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Invocations");
+                        }
 
-                    if (config.Columns[c] == 'T')
-                    {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("Time");
-                    }
+                        if (config.Columns[c] == 'T')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Time");
+                        }
 
-                    if (config.Columns[c] == 'k')
-                    {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("Total-k");
-                    }
+                        if (config.Columns[c] == 'k')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Total-k");
+                        }
 
-                    if (config.Columns[c] == 'm')
-                    {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("Max-k");
-                    }
+                        if (config.Columns[c] == 'm')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Max-k");
+                        }
 
-                    if (config.Columns[c] == 'f')
-                    {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("Fallback");
-                    }
+                        if (config.Columns[c] == 'f')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Fallback");
+                        }
 
-                    if (config.Columns[c] == 'a')
-                    {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("Ambiguities");
-                    }
+                        if (config.Columns[c] == 'a')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Ambiguities");
+                        }
 
-                    if (config.Columns[c] == 'e')
-                    {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("Errors");
-                    }
+                        if (config.Columns[c] == 'e')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Errors");
+                        }
 
-                    if (config.Columns[c] == 't')
-                    {
-                        if (do_tab) System.Console.Write("\t");
-                        do_tab = true;
-                        System.Console.Write("Transitions");
+                        if (config.Columns[c] == 't')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Transitions");
+                        }
                     }
+                    System.Console.WriteLine();
                 }
-                System.Console.WriteLine();
                 var di = parser.ParseInfo.getDecisionInfo();
                 for (int i = 0; i < di.Length; i++)
                 {
