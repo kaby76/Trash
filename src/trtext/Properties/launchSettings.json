@@ -2,8 +2,8 @@
   "profiles": {
     "trtext": {
       "commandName": "Project",
-      "commandLineArgs": "-f o2.pt",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\pegen\\examples"
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4049\\vaxscan"
     }
   }
 }

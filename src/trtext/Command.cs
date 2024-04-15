@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using System;
+
+namespace Trash
 {
     using ParseTreeEditing.UnvParseTreeDOM;
     using org.w3c.dom;
@@ -29,8 +31,12 @@
                 var n = stack.Pop();
                 if (n is UnvParseTreeAttr a)
                 {
-                    if (a.Name as string == "Before")
-                        sb.Append(a.StringValue);
+                    var s = a.Name as String;
+                    if (s == null) ;
+                    else if (s == "Line") ;
+                    else if (s == "Column") ;
+                    else if (s == "ChildCount") ;
+                    else sb.Append(a.StringValue);
                 }
                 else if (n is UnvParseTreeText t)
                 {
