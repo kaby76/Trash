@@ -3,7 +3,7 @@
     "trfoldlit": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\l\\grammars-v4\\ada\\ada83\\foobarfoobar"
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4049\\vaxscan"
     }
   }
 }

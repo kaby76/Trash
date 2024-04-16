@@ -80,7 +80,7 @@ namespace Trash
         public void Execute(Config config)
         {
             var expr = config.Expr.FirstOrDefault();
-            if (expr == null) expr = "//lexerRuleSpec/TOKEN_REF";
+            if (expr == null) expr = "//lexerRuleSpec[lexerRuleBlock/lexerAltList[count(*) = 1]/lexerAlt[count(*) = 1]/lexerElements[count(*) = 1]/lexerElement[count(*) = 1]/lexerAtom/terminalDef[count(*) = 1]/STRING_LITERAL]/TOKEN_REF";
             if (config.Verbose)
             {
                 System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
@@ -149,9 +149,20 @@ namespace Trash
                     // Go through lexer LHS symbols.
                     foreach (var node in nodes)
                     {
+                        var lhs = this.StrictReconstruct(node);
                         // Get RHS string literal of the lexer rule.
                         var parent = node.ParentNode;
-                        var rhs = parent.ChildNodes.item(parent.ChildNodes.Length - 2);
+
+                        var expr3 = "../lexerRuleBlock";
+                        var refs3 = engine.parseExpression(expr3,
+                                new StaticContextBuilder()).evaluate(dynamicContext,
+                                new object[] { node })
+                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
+                            .ToList()
+                            .First();
+
+
+                        var rhs = refs3;
                         var str = this.StrictReconstruct(rhs).Trim();
                         if (str == "") continue;
                         str = escape(str);
