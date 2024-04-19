@@ -2,7 +2,7 @@
 version=""
 version="--prerelease"
 cd src
-dirs=`find .  -name net8.0 | grep Release | grep -v Generated | grep '^./tr'`
+dirs=`find .  -name net8.0 | grep Release | grep -v Generated | grep '^./tr' | grep -v publish`
 for i in $dirs
 do
 	d=`echo $i | awk -F '/' '{print $2}'`
