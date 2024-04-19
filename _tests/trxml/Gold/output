@@ -3,18 +3,22 @@
         <expression>
             <atom>
                 <scientific>
-                    <t>1</t>
+                    <SCIENTIFIC_NUMBER>
+                    </SCIENTIFIC_NUMBER>
                 </scientific>
             </atom>
         </expression>
-        <t>+</t>
+        <PLUS>
+        </PLUS>
         <expression>
             <atom>
                 <scientific>
-                    <t>2</t>
+                    <SCIENTIFIC_NUMBER>
+                    </SCIENTIFIC_NUMBER>
                 </scientific>
             </atom>
         </expression>
     </expression>
-    <t><EOF></t>
+    <EOF>
+    </EOF>
 </file_>
