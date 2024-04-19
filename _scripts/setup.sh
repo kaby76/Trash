@@ -39,6 +39,11 @@ do
 		continue
 	fi
 	tool=${i##*/}
+	if [[ ! -f "./bin/Release/net8.0/$tool.dll" ]]
+	then
+		popd
+		continue
+	fi
 	tools="$tools $tool"
 	popd
 done

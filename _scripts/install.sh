@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-set -x
+# set -x
 version=""
 version="--prerelease"
 cd src
