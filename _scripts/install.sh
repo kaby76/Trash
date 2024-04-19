@@ -2,8 +2,8 @@
 version=""
 version="--prerelease"
 cd src
-exes=`find . -name 'tr*.exe' | grep -v publish`
-for i in $exes
+dirs=`find .  -name net8.0 | grep Release | grep -v Generated | grep '^./tr'`
+for i in $dirs
 do
 	d=`echo $i | awk -F '/' '{print $2}'`
 	pushd $d
