@@ -1,16 +1,16 @@
-﻿using Antlr4.Runtime.Misc;
+﻿using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
+using AntlrJson;
+using org.eclipse.wst.xml.xpath2.processor.util;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 
 namespace Trash
 {
-    using Antlr4.Runtime;
-    using AntlrJson;
-    using org.eclipse.wst.xml.xpath2.processor.util;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.Json;
 
     class Command
     {
@@ -25,12 +25,20 @@ namespace Trash
 
         public void Execute(Config config)
         {
-            var query = config.Query;
             string input = null;
-            if (query.Any())
+            if (config.CommandFile != null)
             {
-                input = String.Join(" ", query);
+                input = File.ReadAllText(config.CommandFile);
             }
+            else
+            {
+                var query = config.Query;
+                if (query.Any())
+                {
+                    input = String.Join(" ", query);
+                }
+            }
+
             var cs = CharStreams.fromString(input);
             var slexer = new QueryLexer(cs);
             var stokens = new CommonTokenStream(slexer);
