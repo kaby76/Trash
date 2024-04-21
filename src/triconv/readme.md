@@ -20,7 +20,7 @@ unicode.
 
 ## Current version
 
-0.22.1 Synchronized Antlr4 grammar with grammars-v4.
+0.23.0 Synchronized Antlr4 grammar with grammars-v4. Fix Typescript and Antlr4ng templates. Updates to trperf. Add xpath addressing of off-channel tokens. Update trfoldlit. Fix testing, build scripts. Remove trlabel, trstrip.
 
 ## License
 
