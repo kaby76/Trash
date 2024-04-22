@@ -6,6 +6,7 @@ options {
 
 INSERT: 'insert';
 DELETE: 'delete';
+DELETEREATTACH: 'delete-reattach';
 REPLACE: 'replace';
 BEFORE: 'before';
 AFTER: 'after';

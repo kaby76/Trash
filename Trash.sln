@@ -39,8 +39,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trungroup", "src\trungroup\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trfoldlit", "src\trfoldlit\trfoldlit.csproj", "{2A9DA02F-24D1-406D-9BB7-F03B5A209A3E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdelete", "src\trdelete\trdelete.csproj", "{23034F3C-4445-4F84-A016-5680623E722E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrename", "src\trrename\trrename.csproj", "{662B1475-ED9E-47F2-913A-06D117700FA7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trconvert", "src\trconvert\trconvert.csproj", "{0FB7A65D-868B-4625-BD57-90CE5FE7A99C}"
@@ -120,8 +118,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pegen", "src\grammars\pegen\Generated-CSharp\pegen.csproj", "{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grammars", "grammars", "{44E99C4B-9C50-423F-9953-3D314606ED7D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdeltree", "src\trdeltree\trdeltree.csproj", "{15A6F421-711C-465A-9A8E-6959E3416DC5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "triconv", "src\triconv\triconv.csproj", "{1A999C2F-36DD-43FD-8B8D-940531872D96}"
 EndProject

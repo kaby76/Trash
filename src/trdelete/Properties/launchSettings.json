@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "trdelete": {
-      "commandName": "Project",
-      "commandLineArgs": "-f o.pt //B",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
-    }
-  }
-}
