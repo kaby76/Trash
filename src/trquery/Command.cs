@@ -206,45 +206,45 @@ namespace Trash
                             }
                         }
                     }
-		    else if (command == "delete-reattach")
-		    {
-			    var expr_tree = scommand.expr();
-			    var si = expr_tree.SourceInterval;
-			    var start = stokens.Get(si.a);
-			    var bi = start.StartIndex;
-			    var stop = stokens.Get(si.b);
-			    var ei = stop.StopIndex;
-			    var expr = cs.GetText(new Interval(bi, ei));
-			    if (config.Verbose)
-				    LoggerNs.TimedStderrOutput.WriteLine("delete-reattach expr " + expr);
-			    var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
-			    using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
-				    ate.Try(trees, parser))
-			    {
-				    var nodes = engine.parseExpression(expr,
-					    new StaticContextBuilder()).evaluate(dynamicContext,
-					    new object[] { dynamicContext.Document })
-						.Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode))
-						.ToList();
-				    if (config.Verbose)
-					    LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
-				    if (config.Verbose)
-				    {
-					    LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
-					    foreach (var n in trees)
-							    LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-						    .ToString());
-				    }
-				    TreeEdits.DeleteAndReattachChildren(nodes);
-				    if (config.Verbose)
-				    {
-					    LoggerNs.TimedStderrOutput.WriteLine("Resulted in this:");
-					    foreach (var n in trees)
-							    LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-						    .ToString());
-				    }
-			    }
-		    }
+                    else if (command == "delete-reattach")
+                    {
+                        var expr_tree = scommand.expr();
+                        var si = expr_tree.SourceInterval;
+                        var start = stokens.Get(si.a);
+                        var bi = start.StartIndex;
+                        var stop = stokens.Get(si.b);
+                        var ei = stop.StopIndex;
+                        var expr = cs.GetText(new Interval(bi, ei));
+                        if (config.Verbose)
+                            LoggerNs.TimedStderrOutput.WriteLine("delete-reattach expr " + expr);
+                        var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+                        using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
+                            ate.Try(trees, parser))
+                        {
+                            var nodes = engine.parseExpression(expr,
+                                new StaticContextBuilder()).evaluate(dynamicContext,
+                                new object[] { dynamicContext.Document })
+                                .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode))
+                                .ToList();
+                            if (config.Verbose)
+                                LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
+                            if (config.Verbose)
+                            {
+                                LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
+                                foreach (var n in trees)
+                                        LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
+                                    .ToString());
+                            }
+                            TreeEdits.DeleteAndReattachChildren(nodes);
+                            if (config.Verbose)
+                            {
+                                LoggerNs.TimedStderrOutput.WriteLine("Resulted in this:");
+                                foreach (var n in trees)
+                                        LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
+                                    .ToString());
+                            }
+                        }
+                    }
                 }
                 var tuple = new ParsingResultSet()
                 {
