@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "trinsert": {
-      "commandName": "Project",
-      "commandLineArgs": "-f o.pt //B x",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\z\\Generated-CSharp"
-    }
-  }
-}

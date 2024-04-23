@@ -990,6 +990,11 @@
             //}
         }
 
+        public static void DeleteAndReattachChildren(IEnumerable<UnvParseTreeNode> trees)
+        {
+            foreach (var tree in trees) DeleteAndReattachChildren(tree);
+        }
+
         public static void DeleteAndReattachChildren(UnvParseTreeNode node)
         {
             if (node == null) return;

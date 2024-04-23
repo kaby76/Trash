@@ -63,8 +63,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trthompson", "src\trthompso
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdot", "src\trdot\trdot.csproj", "{0A48EF88-0FB7-4ACC-AC18-CD9A508EAF9D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trinsert", "src\trinsert\trinsert.csproj", "{45E3B1F9-1EC1-4F9A-B996-8E3A618694CE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "driver", "src\web\driver\driver.csproj", "{ADA6CCAB-4E47-45DB-87D1-CB823D6D4E35}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wrap", "src\web\wrap\wrap.csproj", "{EC549FC6-9D4D-4979-BF49-9FF0B2E1D2FB}"
@@ -80,8 +78,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrr", "src\trrr\trrr.csproj", "{87DDFEAD-0E27-4144-9C6E-49F2792C6E4A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsem", "src\trsem\trsem.csproj", "{22C7B6FE-A350-4942-9553-59D2A8180A28}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trreplace", "src\trreplace\trreplace.csproj", "{311AF1A0-4F7C-40C1-82C0-D3A0B9AE7902}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trmove", "src\trmove\trmove.csproj", "{480EE365-2BE8-4FD4-8B24-97F5FC1E50D3}"
 EndProject
@@ -120,8 +116,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grammars", "grammars", "{44E99C4B-9C50-423F-9953-3D314606ED7D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "triconv", "src\triconv\triconv.csproj", "{1A999C2F-36DD-43FD-8B8D-940531872D96}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrVSIX", "src\VsIde\AntlrVSIX.csproj", "{29235F0E-091B-4D17-921B-1E1679A36990}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xtext", "src\grammars\xtext\Generated-CSharp\xtext.csproj", "{249DE1E5-2E41-4110-AB5D-A9D1F6594B8E}"
 EndProject
