@@ -11,6 +11,7 @@
         public UnvParseTreeAttr(UnvParseTreeAttr c)
         {
             this.ParentNode = c.ParentNode;
+            this.OwnerElement = c.OwnerElement;
             this.Prefix= c.Prefix;
             this.LocalName = c.LocalName;
             this.NamespaceURI = c.NamespaceURI;
@@ -18,7 +19,6 @@
             this.Attributes = c.Attributes;
             this.NodeType = c.NodeType;
             this.Name = c.Name;
-            this.OwnerElement = c.OwnerElement;
             this.SchemaTypeInfo = c.SchemaTypeInfo;
         }
         public string Prefix { get; set; }
