@@ -711,13 +711,13 @@
             //}
         }
 
-        public static void MoveBefore(IEnumerable<UnvParseTreeElement> from_list, UnvParseTreeNode to)
+        public static void MoveBefore(IEnumerable<UnvParseTreeNode> what_list, UnvParseTreeNode to)
         {
-            if (from_list == null) return;
+            if (what_list == null) return;
             if (to == null) return;
-            foreach (var from in from_list)
+            foreach (var what in what_list)
             {
-                MoveBefore(from, to);
+                MoveBefore(what, to);
             }
         }
 
@@ -859,9 +859,41 @@
             //}
         }
 
-        private static void MoveBefore(UnvParseTreeElement from, UnvParseTreeNode to)
+        private static void MoveBefore(UnvParseTreeNode what, UnvParseTreeNode to)
         {
-            throw new NotImplementedException();
+            if (what == null) throw new Exception("1st arg to MoveBefore is null");
+            if (to == null) throw new Exception("2nd arg to MoveBefore is null");
+            if (what == to) throw new Exception("MoveBefore given same args: can't move a node to itself.");
+            var parent = to.ParentNode;
+            var old_parent = what.ParentNode;
+            var is_attr = what is UnvParseTreeAttr;
+            var list = parent.ChildNodes as UnvParseTreeNodeList;
+            var oldlist = old_parent.ChildNodes as UnvParseTreeNodeList;
+            for (var i = 0; i < list._node_list.Count; ++i)
+            {
+                if (list._node_list[i] == to)
+                {
+                    list._node_list.Insert(i, what);
+                    what.ParentNode = parent;
+                    for (var j = 0; j < oldlist._node_list.Count; ++j)
+                    {
+                        if (oldlist._node_list[j] == what)
+                        {
+                            oldlist._node_list.RemoveAt(j);
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (!is_attr)
+            {
+            }
+            else
+            {
+                var attr = what as UnvParseTreeAttr;
+                attr.OwnerElement = parent;
+            }
         }
 
         public static void Replace(IEnumerable<UnvParseTreeNode> trees, string arbitrary_string)
