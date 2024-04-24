@@ -12,30 +12,31 @@ for anything other than the standard parser grammars that
 are supported. To specify the grammar, you can either
 be in a trgen-generated parser directory, or use the -p option.
 
-If using positional args on the command line, a file is parse
+If using positional args on the command line, a file is parsed
 depending on the extension of the file name:
 
-* `.g2` for an Antlr2
-* `.g3` for an Antlr3
-* `.g4` for an Antlr4
-* `.y` for a Bison
-* `.ebnf` for ISO EBNF
+* `.g2` for an ANTLRv2 grammar
+* `.g3` for an ANTLRv3 grammar
+* `.g4` for an ANTLRv4 grammar
+* `.y` for a Bison grammar
+* `.rex` for a Rex grammar
+* `.gram` for a pegen grammar
 
 You can force the type of parse with
 the `--type` command-line option:
 
-* `antlr2` for Antlr2
-* `antlr3` for Antlr3
-* `antlr4` for Antlr4
-* `bison` for Bison
-* `ebnf` for ISO EBNF
-* `gen` for the `Generated/` parser
+* `ANTLRv4` for ANTLRv2
+* `ANTLRv3` for ANTLRv3
+* `ANTLRv2` for ANTLRv4
+* `Bison` for Bison
+* `rex` for Rex
+* `pegen_v3_10` for the `Generated/` parser
 
 ## Usage
     
     trparse (<string> | <options>)*
     -i, --input      Parse the given string as input.
-    -t, --type       Specifies type of parse, antlr4, antlr3, antlr2, bison, ebnf, gen 
+    -t, --type       Specifies type of grammar: ANTLRv4, ANTLRv3, ANTLRv2, Bison, rex, pegen_v3_10
     -s, --start-rule Start rule name.
     -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
 
@@ -43,7 +44,7 @@ the `--type` command-line option:
 
     trparse Java.g2
     trparse -i "1+2+3"
-    trparse Foobar.g -t antlr2
+    trparse Foobar.g -t ANTLRv2
     echo "1+2+3" | trparse | trtree
     mkdir out; trparse MyParser.g4 MyLexer.g4 | trkleene | trsponge -o out
 
