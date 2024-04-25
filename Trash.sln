@@ -79,8 +79,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrr", "src\trrr\trrr.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsem", "src\trsem\trsem.csproj", "{22C7B6FE-A350-4942-9553-59D2A8180A28}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trmove", "src\trmove\trmove.csproj", "{480EE365-2BE8-4FD4-8B24-97F5FC1E50D3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trull", "src\trull\trull.csproj", "{8A875F76-D1CF-4F31-BF8B-E483507538D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tritext", "src\tritext\tritext.csproj", "{442F9D45-76FD-4334-B92D-24FB9D8C37C6}"
