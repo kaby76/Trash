@@ -19,6 +19,9 @@ trquery replace xpath-expr string (; additional commands...)*
 
 ## Details
 
+If '-c' option specified, read commands from the file. Otherwise,
+the command line args contain the commands.
+
 For all commands, an XPath expression defines where an operation occurs.
 Commands are executed in order as they appear. The advantage of this
 command is that the parse tree does not have be re-read or written after
@@ -34,7 +37,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.22.0 Add trdot. Update to Antlr 4.13.1 and Dotnet 8.0.
+0.23.0 Major changes to trgen, trparse, trfoldlit, trquery. Removal of trinsert, trdelete, trmove, trdelabel, trstrip.
 
 ## License
 

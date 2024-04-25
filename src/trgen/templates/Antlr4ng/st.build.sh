@@ -3,7 +3,6 @@ set -e
 rm -rf node_modules package-lock.json
 npm install -g typescript ts-node
 npm install
-cp -r ~/antlr4ng/dist/* node_modules/antlr4ng/dist
 
 if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
 

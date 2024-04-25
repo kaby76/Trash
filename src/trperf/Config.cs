@@ -8,8 +8,14 @@ namespace Trash
         [Value(0)]
         public IEnumerable<string> Files { get; set; }
 
+        [Option('c', "columns", Required = false, HelpText = "Columns to output.")]
+        public string Columns { get; set; } = "FdriTkmfaet";
+
         [Option('i', "input", Required = false, HelpText = "Parse input string.")]
         public string Input { get; set; }
+
+        [Option('h', "header-names", Required = false, HelpText = "Output header names.")]
+        public bool HeaderNames { get; set; } = false;
 
         [Option('p', "parser", Required = false, HelpText = "Location of pre-built parser (aka the trgen Generated/ directory)")]
         public string ParserLocation { get; set; }

@@ -17,10 +17,39 @@ fi
 CONFIG=Release
 echo "$machine"
 echo "$cwd"
-tools=`find . -name 'tr*.exe' | grep -v publish | awk -F '/' '{print $3}'`
-echo $tools
+cd src
+directories=`find . -maxdepth 1 -type d -name "tr*"`
+tools=""
+for i in $directories
+do
+	if [ "$i" == "." ]
+	then
+		continue
+	fi
+	pushd $i
+	csproj=`find . -maxdepth 1 -name '*.csproj'`
+	if [[ "$csproj" == "" ]]
+	then
+		popd
+		continue
+	fi
+	if [[ ! -f "$i.csproj" ]]
+	then
+		popd
+		continue
+	fi
+	tool=${i##*/}
+	if [[ ! -f "./bin/Release/net8.0/$tool.dll" ]]
+	then
+		popd
+		continue
+	fi
+	tools="$tools $tool"
+	popd
+done
 for i in $tools
 do
-	dotnet nuget add source $cwd/src/$i/bin/$CONFIG/ --name trtool-$i > /dev/null 2>&1
+    echo dotnet nuget add source $cwd/src/$i/bin/$CONFIG/ --name trtool-$i
+    dotnet nuget add source $cwd/src/$i/bin/$CONFIG/ --name trtool-$i > /dev/null 2>&1
 done
 dotnet nuget list source

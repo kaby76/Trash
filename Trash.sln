@@ -27,8 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtokens", "src\trtokens\tr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxgrep", "src\trxgrep\trxgrep.csproj", "{6B8D3D4B-2014-4A6E-B7A9-95AEB8F668A3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trstrip", "src\trstrip\trstrip.csproj", "{6946E15D-8A2A-48C6-ADC4-B5F2ABC17065}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trkleene", "src\trkleene\trkleene.csproj", "{5257C48E-6465-4458-B3D6-E5E28FB50674}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trfold", "src\trfold\trfold.csproj", "{5F6937C0-CEC8-4B29-8690-097FA6FB465A}"
@@ -40,8 +38,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trungroup", "src\trungroup\trungroup.csproj", "{FC9E166F-20C6-4A38-A605-2ED85C33D894}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trfoldlit", "src\trfoldlit\trfoldlit.csproj", "{2A9DA02F-24D1-406D-9BB7-F03B5A209A3E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdelete", "src\trdelete\trdelete.csproj", "{23034F3C-4445-4F84-A016-5680623E722E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrename", "src\trrename\trrename.csproj", "{662B1475-ED9E-47F2-913A-06D117700FA7}"
 EndProject
@@ -63,13 +59,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsplit", "src\trsplit\trsp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsponge", "src\trsponge\trsponge.csproj", "{CFBBEC3B-1EEB-42CA-A231-8971CBCB93BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdelabel", "src\trdelabel\trdelabel.csproj", "{BEE77854-573F-4088-9B1D-F3B4C12372A6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trthompson", "src\trthompson\trthompson.csproj", "{7664FAF4-2D70-4ECE-83A2-D07EA38C5510}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdot", "src\trdot\trdot.csproj", "{0A48EF88-0FB7-4ACC-AC18-CD9A508EAF9D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trinsert", "src\trinsert\trinsert.csproj", "{45E3B1F9-1EC1-4F9A-B996-8E3A618694CE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "driver", "src\web\driver\driver.csproj", "{ADA6CCAB-4E47-45DB-87D1-CB823D6D4E35}"
 EndProject
@@ -86,10 +78,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trrr", "src\trrr\trrr.csproj", "{87DDFEAD-0E27-4144-9C6E-49F2792C6E4A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trsem", "src\trsem\trsem.csproj", "{22C7B6FE-A350-4942-9553-59D2A8180A28}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trreplace", "src\trreplace\trreplace.csproj", "{311AF1A0-4F7C-40C1-82C0-D3A0B9AE7902}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trmove", "src\trmove\trmove.csproj", "{480EE365-2BE8-4FD4-8B24-97F5FC1E50D3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trull", "src\trull\trull.csproj", "{8A875F76-D1CF-4F31-BF8B-E483507538D0}"
 EndProject
@@ -121,17 +109,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "src\ConsoleA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1", "_tests\TestProject1\TestProject1.csproj", "{D65FCED2-B935-4D52-894E-D5FC30D74DCF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xalan", "src\xalan\Xalan.csproj", "{F78393B6-A454-4A48-9617-8DC9473C35D9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pegen", "src\grammars\pegen\Generated-CSharp\pegen.csproj", "{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grammars", "grammars", "{44E99C4B-9C50-423F-9953-3D314606ED7D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trdeltree", "src\trdeltree\trdeltree.csproj", "{15A6F421-711C-465A-9A8E-6959E3416DC5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "triconv", "src\triconv\triconv.csproj", "{1A999C2F-36DD-43FD-8B8D-940531872D96}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntlrVSIX", "src\VsIde\AntlrVSIX.csproj", "{29235F0E-091B-4D17-921B-1E1679A36990}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xtext", "src\grammars\xtext\Generated-CSharp\xtext.csproj", "{249DE1E5-2E41-4110-AB5D-A9D1F6594B8E}"
 EndProject
@@ -351,8 +333,6 @@ Global
 		{ABD72A1D-4890-406D-98DD-A46EAA5A0CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D65FCED2-B935-4D52-894E-D5FC30D74DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D65FCED2-B935-4D52-894E-D5FC30D74DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F78393B6-A454-4A48-9617-8DC9473C35D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F78393B6-A454-4A48-9617-8DC9473C35D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2E24A2A-E5DA-4F15-ACB0-BE9D7139E6A5}.Release|Any CPU.ActiveCfg = Release|Any CPU

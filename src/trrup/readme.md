@@ -42,7 +42,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.22.0 Add trdot. Update to Antlr 4.13.1 and Dotnet 8.0.
+0.23.0 Major changes to trgen, trparse, trfoldlit, trquery. Removal of trinsert, trdelete, trmove, trdelabel, trstrip.
 
 ## License
 

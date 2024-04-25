@@ -2,7 +2,6 @@
 
 import { ATNSimulator } from 'antlr4ng';
 import { CharStream } from 'antlr4ng';
-import { CharStreams } from 'antlr4ng';
 import { CommonTokenStream } from 'antlr4ng';
 import { ConsoleErrorListener } from 'antlr4ng';
 import { BaseErrorListener } from 'antlr4ng';
@@ -154,18 +153,18 @@ function ParseStdin() {
         sb.Append(ch);
     }
     var input = sb.ToString();
-    var str = CharStreams.fromString(input);
+    var str = CharStream.fromString(input);
     DoParse(str, "stdin", 0);
 }
 
 function ParseString(input: string, row_number: number) {
-    var str = CharStreams.fromString(input);
+    var str = CharStream.fromString(input);
     DoParse(str, "string" + string_instance++, row_number);
 }
 
 function ParseFilename(input: string, row_number: number) {
     var buffer = readFileSync(input, { encoding: enc as BufferEncoding });
-    var str = CharStreams.fromString(buffer);
+    var str = CharStream.fromString(buffer);
     DoParse(str, input, row_number);
 }
 

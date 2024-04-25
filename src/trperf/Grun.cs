@@ -83,7 +83,7 @@
                         {
                             txt = inputs[f];
                         }
-                        Doit(txt);
+                        Doit(inputs[f], txt);
                     }
                 }
                 else if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
@@ -95,19 +95,19 @@
                         if (lines != null && lines != "") break;
                     }
                     txt = lines;
-                    Doit(txt);
+                    Doit("stdin", txt);
                 }
                 else if (config.Input != null)
                 {
                     txt = config.Input;
-                    Doit(txt);
+                    Doit("string", txt);
                 }
                 else if (config.Files != null)
                 {
                     foreach (var file in config.Files)
                     {
                         txt = File.ReadAllText(file);
-                        Doit(txt);
+                        Doit(file, txt);
                     }
                 }
             }
@@ -119,7 +119,7 @@
             return result;
         }
 
-        void Doit(string txt)
+        void Doit(string fn, string txt)
         {
             string path = config.ParserLocation != null ? config.ParserLocation
                 : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
@@ -142,8 +142,8 @@
                 object[] parm = new object[] { txt, false };
                 var res = methodInfo.Invoke(null, parm);
             }
-	        // Set perf.
-	        var r2 = type.GetProperty("Parser").GetValue(null, new object[0]);
+            // Set perf.
+            var r2 = type.GetProperty("Parser").GetValue(null, new object[0]);
             var parser = r2 as Parser;
             parser.Profile = true;
             {
@@ -153,18 +153,90 @@
                 var res = methodInfo.Invoke(null, parm);
                 DateTime after = DateTime.Now;
                 System.Console.Error.WriteLine("Time to parse: " + (after - before));
-                System.Console.WriteLine(
-                   "Decision"
-                   + "\t" + "Rule"
-                   + "\t" + "Invocations"
-                   + "\t" + "Time"
-                   + "\t" + "Total-k"
-                   + "\t" + "Max-k"
-                   + "\t" + "Fallback"
-                   + "\t" + "Ambiguities"
-                   + "\t" + "Errors"
-                   + "\t" + "Transitions"
-                   );
+                bool do_tab = false;
+                if (config.HeaderNames)
+                {
+                    for (int c = 0; c < config.Columns.Length; ++c)
+                    {
+                        if (config.Columns[c] == 'F')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("File");
+                        }
+
+                        if (config.Columns[c] == 'd')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Decision");
+                        }
+
+                        if (config.Columns[c] == 'r')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Rule");
+                        }
+
+                        if (config.Columns[c] == 'i')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Invocations");
+                        }
+
+                        if (config.Columns[c] == 'T')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Time");
+                        }
+
+                        if (config.Columns[c] == 'k')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Total-k");
+                        }
+
+                        if (config.Columns[c] == 'm')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Max-k");
+                        }
+
+                        if (config.Columns[c] == 'f')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Fallback");
+                        }
+
+                        if (config.Columns[c] == 'a')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Ambiguities");
+                        }
+
+                        if (config.Columns[c] == 'e')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Errors");
+                        }
+
+                        if (config.Columns[c] == 't')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write("Transitions");
+                        }
+                    }
+                    System.Console.WriteLine();
+                }
                 var di = parser.ParseInfo.getDecisionInfo();
                 for (int i = 0; i < di.Length; i++)
                 {
@@ -174,19 +246,88 @@
                     var state = atn.decisionToState[decision];
                     var rule_index = state.ruleIndex;
                     var rule_name = parser.RuleNames[rule_index];
-                    var maxLook = Math.Max(r.LL_MaxLook, r.SLL_MaxLook);                    
-                    System.Console.WriteLine(
-                        decision
-                        + "\t" + rule_name
-                        + "\t" + r.invocations
-                        + "\t" + r.timeInPrediction / (1000.0 * 1000.0)
-                        + "\t" + (r.LL_TotalLook + r.SLL_TotalLook)
-                        + "\t" + maxLook
-                        + "\t" + r.LL_Fallback
-                        + "\t" + r.ambiguities.Count
-                        + "\t" + r.errors.Count
-                        + "\t" + (r.SLL_ATNTransitions + r.LL_ATNTransitions)
-                        );
+                    var maxLook = Math.Max(r.LL_MaxLook, r.SLL_MaxLook);
+                    do_tab = false;
+                    for (int c = 0; c < config.Columns.Length; ++c)
+                    {
+                        if (config.Columns[c] == 'F')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write(fn);
+                        }
+
+                        if (config.Columns[c] == 'd')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write(decision);
+                        }
+
+                        if (config.Columns[c] == 'r')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write(rule_name);
+                        }
+
+                        if (config.Columns[c] == 'i')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write(r.invocations);
+                        }
+
+                        if (config.Columns[c] == 'T')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write(r.timeInPrediction / (1000.0 * 1000.0));
+                        }
+
+                        if (config.Columns[c] == 'k')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write((r.LL_TotalLook + r.SLL_TotalLook));
+                        }
+
+                        if (config.Columns[c] == 'm')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write(maxLook);
+                        }
+
+                        if (config.Columns[c] == 'f')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write(r.LL_Fallback);
+                        }
+
+                        if (config.Columns[c] == 'a')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write(r.errors.Count);
+                        }
+
+                        if (config.Columns[c] == 'e')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write(r.errors.Count);
+                        }
+
+                        if (config.Columns[c] == 't')
+                        {
+                            if (do_tab) System.Console.Write("\t");
+                            do_tab = true;
+                            System.Console.Write((r.SLL_ATNTransitions + r.LL_ATNTransitions));
+                        }
+                    }
+                    System.Console.WriteLine();
                 }
             }
         }

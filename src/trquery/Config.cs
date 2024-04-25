@@ -5,6 +5,9 @@ namespace Trash
 {
     public class Config
     {
+        [Option('c', "commands", Required = false, HelpText = "Read xquery commands from file instead of command line arg.")]
+        public string CommandFile { get; set; }
+
         [Option('f', "file", Required = false, HelpText = "Read parse tree data from file instead of stdin.")]
         public string File { get; set; }
 

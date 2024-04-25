@@ -2,8 +2,8 @@
   "profiles": {
     "trscript": {
       "commandName": "Project",
-      "commandLineArgs": "-v -f o.pt delete //EOF/../@Before",
-      "workingDirectory": "c:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\src\\grammars\\pegen\\examples"
+      "commandLineArgs": "-v -f o.pt move //grammarDecl/identifier/@WS ../..",
+      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\delabel"
     }
   }
 }

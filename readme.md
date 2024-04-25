@@ -2,12 +2,11 @@
 
 [![Build](https://github.com/kaby76/Domemtech.Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Domemtech.Trash/actions?query=workflow%3ACI)
 
-**Status: The toolset is undergoing a large rewrite due to the way parse trees are represented.
-Some tools are have not been rewritten yet.** 
+**Status: The toolset is still undergoing a major rewrite. Consider this toolkit as "pre-alpha".**
 
 **The repo [g4-scripts](https://github.com/kaby76/g4-scripts) contains a collections of
-Bash scripts. which use Trash. to check
-or find properties about Antlr grammars and parse trees. It is the best place to see Trash in action. You can also
+Bash which use Trash. The repo also contains XQuery scripts that implement complex
+operations on a parse tree. You can also
 read about Trash details in [my blog](http://codinggorilla.com/).**
 
 Trash is a collection of ~40 command-line tools to analyze and transform
@@ -47,21 +46,17 @@ dotnet tool install -g trcaret
 dotnet tool install -g trcombine
 dotnet tool install -g trconvert
 dotnet tool install -g trcover
-dotnet tool install -g trdelete
-dotnet tool install -g trdeltree
 dotnet tool install -g trfoldlit
 dotnet tool install -g trgen
+dotnet tool install -g trgenvsc
 dotnet tool install -g trglob
 dotnet tool install -g triconv
-dotnet tool install -g trinsert
 dotnet tool install -g trjson
 dotnet tool install -g trparse
 dotnet tool install -g trperf
 dotnet tool install -g trrename
-dotnet tool install -g trreplace
 dotnet tool install -g trsplit
 dotnet tool install -g trsponge
-dotnet tool install -g trstrip
 dotnet tool install -g trtext
 dotnet tool install -g trtokens
 dotnet tool install -g trtree
@@ -78,19 +73,15 @@ dotnet tool uninstall -g trcaret
 dotnet tool uninstall -g trcombine
 dotnet tool uninstall -g trconvert
 dotnet tool uninstall -g trcover
-dotnet tool uninstall -g trdelete
 dotnet tool uninstall -g trfoldlit
 dotnet tool uninstall -g trgen
 dotnet tool uninstall -g triconv
-dotnet tool uninstall -g trinsert
 dotnet tool uninstall -g trjson
 dotnet tool uninstall -g trparse
 dotnet tool uninstall -g trperf
 dotnet tool uninstall -g trrename
-dotnet tool uninstall -g trreplace
 dotnet tool uninstall -g trsplit
 dotnet tool uninstall -g trsponge
-dotnet tool uninstall -g trstrip
 dotnet tool uninstall -g trtext
 dotnet tool uninstall -g trtokens
 dotnet tool uninstall -g trtree
@@ -107,8 +98,6 @@ __NB: Out of date__
 1) <a href="src/tranalyze/readme.md">tranalyze</a> -- Analyze a grammar
 1) <a href="src/trcombine/readme.md">trcombine</a> -- Combine a split Antlr4 grammar
 1) <a href="src/trconvert/readme.md">trconvert</a> -- Convert a grammar from one for to another
-1) <a href="src/trdelabel/readme.md">trdelabel</a> -- Remove labels from an Antlr4 grammar
-1) <a href="src/trdelete/readme.md">trdelete</a> -- Delete nodes in a parse tree
 1) <a href="src/trdot/readme.md">trdot</a> -- Print a parse tree in Graphvis Dot format
 1) <a href="src/trenum/readme.md">trenum</a> -- Not functional, to enumerate strings from grammar.
 1) <a href="src/trfirst/readme.md">trfirst</a> -- Outputs first sets of a grammar
@@ -118,7 +107,6 @@ __NB: Out of date__
 1) <a href="src/trgen/readme.md">trgen</a> -- Generate an Antlr4 parser for a given target language
 1) <a href="src/trgen2/readme.md">trgen2</a> -- Generate files from template and XML doc list.
 1) <a href="src/trgroup/readme.md">trgroup</a> -- Perform a group transform on a grammar
-1) <a href="src/trinsert/readme.md">trinsert</a> -- Insert string into points in a parse tree
 1) <a href="src/tritext/readme.md">tritext</a> -- Get strings from a PDF file
 1) <a href="src/trjson/readme.md">trjson</a> -- Print a parse tree in JSON structured format
 1) <a href="src/trkleene/readme.md">trkleene</a> -- Perform a Kleene transform of a grammar
@@ -128,7 +116,6 @@ __NB: Out of date__
 1) <a href="src/trpiggy/readme.md">trpiggy</a> -- Perform a parse tree rewrite
 1) <a href="src/trprint/readme.md">trprint</a> -- Print a parse tree, including off-token characters
 1) <a href="src/trrename/readme.md">trrename</a> -- Rename symbols in a grammar
-1) <a href="src/trreplace/readme.md">trreplace</a> -- Replace nodes in a parse tree with text
 1) <a href="src/trrr/readme.md">trrr</a> -- (No description.)
 1) <a href="src/trrup/readme.md">trrup</a> -- Remove useless parentheses in a grammar
 1) <a href="src/trsem/readme.md">trsem</a> -- Read static semantics and generate code
@@ -407,31 +394,11 @@ check out my [blog](http://codinggorilla.com).
     cd Domemtech.Trash
     make clean; make; make install
     
-You must have the NET SDK installed to build and run.
+You must have the NET SDK version 8 installed to build and run.
 
 # Current release
 
-## 0.22.0
-Update to .NET 8. Added trdot.
-
-# Prior Releases
-
-## 0.18.1 -- Nov 12, 2022
-
-Re-adding CI tests and stabilizing the tools.
-
-## 0.18.0 -- Nov 7, 2022
-
-* Adding Xalan code.
-* Fix #180.
-* Fix crash in trgen antlr/grammars-v4#2818.
-* Fix #134.
-* Add -e option to trrename.
-* Update Antlr4BuildTasks version.
-* Fix #197, #198.
-* Fix trparse exit code.
-* Add --quiet option to trparse to just get exit code.
-* Change trgen templates to remove -file option, make file name parsing the default.
+## 0.23.0
 
 
 If you have any questions, email me at ken.domino <at> gmail.com

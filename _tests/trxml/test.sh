@@ -3,7 +3,7 @@ export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
 cd "$where"
 rm -rf Generated-CSharp
-trgen
+trgen -t CSharp --arithmetic
 cd Generated-CSharp
 dotnet restore Test.csproj
 dotnet build Test.csproj
@@ -18,4 +18,5 @@ then
 	exit 1
 else
 	echo Test succeeded.
+	exit 0
 fi

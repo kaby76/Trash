@@ -15,6 +15,7 @@ else
 fi
 echo "$machine"
 echo $cwd
+cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 for i in $directories
 do
@@ -22,24 +23,24 @@ do
 	then
 		continue
 	fi
-	cd $i
+	pushd $i
 	csproj=`find . -maxdepth 1 -name '*.csproj'`
 	if [[ "$csproj" == "" ]]
 	then
-		cd ..
+		popd
 		continue
 	fi
 	if [[ ! -f "$i.csproj" ]]
 	then
-		cd ..
+		popd
 		continue
 	fi
 	tool=${i##*/}
-	if [[ -d "$cwd/src/$tool/bin/Debug/" ]]
+	if [[ -d "$cwd/src/$tool/bin/Release/" ]]
 	then
 		echo $i
-		dotnet nuget add source $cwd/$tool/bin/Debug/ --name nuget-$tool > /dev/null 2>&1
+		dotnet nuget add source $cwd/$tool/bin/Release/ --name nuget-$tool > /dev/null 2>&1
 	fi
-	cd ..
+	popd
 done
 dotnet nuget list source

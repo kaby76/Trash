@@ -265,11 +265,11 @@
                         reader.Read();
                         attr.TokenType = reader.GetInt32();
                         reader.Read();
-                        node = attr;
                         if (parent != null)
                         {
-                            parent.ChildNodes.Add(node);
-                            node.ParentNode = parent;
+                            parent.ChildNodes.Add(attr);
+                            attr.ParentNode = parent;
+                            attr.OwnerElement = parent;
                             AntlrNamedNodeMap map;
                             if (parent.Attributes == null)
                             {
@@ -279,6 +279,7 @@
                             map = parent.Attributes as AntlrNamedNodeMap;
                             map.Add(attr);
                         }
+                        node = attr;
                     }
                     break;
                 default:

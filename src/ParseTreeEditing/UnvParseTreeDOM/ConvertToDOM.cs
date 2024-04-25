@@ -127,6 +127,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                         attr.Name = "Before";
                         attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
                         attr.ParentNode = parent;
+                        attr.OwnerElement = parent;
                         attr.TokenType = tt;
                         attr.Channel = channel;
                         parent.ChildNodes.Add(attr);
@@ -140,13 +141,14 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                         channel = tok.Channel;
                         tt = tok.Type;
                         var attr = new UnvParseTreeAttr();
-                        attr.Name = "Before";
+                        attr.Name = lexer.Vocabulary.GetSymbolicName(tt);
                         start_cs = tok.StartIndex;
                         stop_cs = tok.StopIndex;
                         attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
                         attr.TokenType = tt;
                         attr.Channel = channel;
                         attr.ParentNode = parent;
+                        attr.OwnerElement = parent;
                         parent.ChildNodes.Add(attr);
                         map.Add(attr);
                         if (_include_line_column)
@@ -205,6 +207,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                     line.LocalName = "Line";
                     line.StringValue = v.ToString();
                     line.ParentNode = new_node;
+                    line.OwnerElement = new_node;
                     new_node.ChildNodes.Add(line);
                     map.Add(line);
                 }
@@ -263,6 +266,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                                     attr.LocalName = b.LocalName;
                                     attr.StringValue = b.StringValue;
                                     attr.ParentNode = new_node;
+                                    attr.OwnerElement = new_node;
                                     new_node.ChildNodes.Insert(0, attr);
                                 }
                             }
@@ -279,6 +283,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                                         attr.LocalName = c.LocalName;
                                         attr.StringValue = c.StringValue;
                                         attr.ParentNode = new_node;
+                                        attr.OwnerElement = new_node;
                                         new_node.ChildNodes.Insert(0, attr);
                                     }
                                 }
