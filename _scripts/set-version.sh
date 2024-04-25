@@ -41,7 +41,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Synchronized Antlr4 grammar with grammars-v4. Fix Typescript and Antlr4ng templates. Updates to trperf. Add xpath addressing of off-channel tokens. Update trfoldlit. Fix testing, build scripts. Remove trlabel, trstrip.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Major changes to trgen, trparse, trfoldlit, trquery. Removal of trinsert, trdelete, trmove, trdelabel, trstrip.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
@@ -78,7 +78,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Synchronized Antlr4 grammar with grammars-v4. Fix Typescript and Antlr4ng templates. Updates to trperf. Add xpath addressing of off-channel tokens. Update trfoldlit. Fix testing, build scripts. Remove trlabel, trstrip.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Major changes to trgen, trparse, trfoldlit, trquery. Removal of trinsert, trdelete, trmove, trdelabel, trstrip.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
