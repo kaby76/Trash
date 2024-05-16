@@ -407,24 +407,28 @@ namespace Trash
                 foreach (var t in test.tool_grammar_tuples)
                 {
                     if (!t.IsTopLevel) continue;
+                    var p1 = test.package;
+                    var pre1 = p1 == "" ? "" : p1 + "/";
+                    var p2 = test.package.Replace("/", ".");
+                    var pre2 = p2 == "" ? "" : p2 + ".";
                     if (t.WhatType == GrammarTuple.Type.Parser)
                     {
                         test.fully_qualified_parser_name = t.GrammarAutomName;
-                        test.fully_qualified_go_parser_name = "New"+t.GrammarGoNewName;
+                        test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName;
                         parser_src_grammar_file_name = t.GrammarFileName;
                     }
                     if (t.WhatType == GrammarTuple.Type.Lexer)
                     {
                         test.fully_qualified_lexer_name = t.GrammarAutomName;
-                        test.fully_qualified_go_lexer_name = "New"+t.GrammarGoNewName;
+                        test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName;
                         lexer_src_grammar_file_name = t.GrammarFileName;
                     }
                     if (t.WhatType == GrammarTuple.Type.Combined)
                     {
                         test.fully_qualified_parser_name = t.GrammarAutomName + "Parser";
-                        test.fully_qualified_go_parser_name = "New" + t.GrammarGoNewName + "Parser";
+                        test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName + "Parser";
                         test.fully_qualified_lexer_name = t.GrammarAutomName + "Lexer";
-                        test.fully_qualified_go_lexer_name = "New" + t.GrammarGoNewName + "Lexer";
+                        test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName + "Lexer";
                         parser_src_grammar_file_name = test.fully_qualified_parser_name;
                         lexer_src_grammar_file_name = test.fully_qualified_lexer_name;
                     }
