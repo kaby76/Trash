@@ -6,29 +6,29 @@
         ( INT
           (  text:'1' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
       ) ) ) 
-      ( Attribute Before Value ' '
+      ( Attribute Skip Value ' '
       ) 
       ( 
         (  text:'+' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
       ) ) 
       ( e
-        ( Attribute Before Value ' '
+        ( Attribute Skip Value ' '
         ) 
         ( INT
           (  text:'2' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
     ) ) ) ) 
-    ( Attribute Before Value ' '
+    ( Attribute Skip Value ' '
     ) 
     ( 
       (  text:'+' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
     ) ) 
     ( e
-      ( Attribute Before Value ' '
+      ( Attribute Skip Value ' '
       ) 
       ( INT
         (  text:'3' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
   ) ) ) ) 
-  ( Attribute Before Value '\n'
+  ( Attribute Skip Value '\n'
   ) 
   ( EOF
     (  text:'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL

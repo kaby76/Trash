@@ -17,7 +17,7 @@ public class Program
 {
     public static <parser_name> Parser { get; set; }
     public static ErrorListener\<IToken> ParserErrorListener { get; set; }
-    public static Lexer Lexer { get; set; }
+    public static <lexer_name> Lexer { get; set; }
     public static ErrorListener\<int> LexerErrorListener { get; set; }
     public static ITokenStream TokenStream { get; set; }
     public static ICharStream CharStream { get; set; }

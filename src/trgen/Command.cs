@@ -313,7 +313,7 @@ namespace Trash
                                     antlr_args = "";
                             }
 
-                            var g = new GrammarTuple(GrammarTuple.Type.Parser, sgfn, tgfn, name, parsing_result_set,
+                            var g = new GrammarTuple(GrammarTuple.Type.Combined, sgfn, tgfn, name, parsing_result_set,
                                 "", "", "", "", antlr_args);
                             test.tool_grammar_tuples.Add(g);
                         }
@@ -402,18 +402,33 @@ namespace Trash
                 // How to call the parser in the source code. Remember, there are
                 // actually up to two tests in the pom file, one for running the
                 // Antlr tool, and the other to test the generated parser.
-                test.fully_qualified_parser_name =
-                    test.tool_grammar_tuples
-                        .Where(t => t.WhatType == GrammarTuple.Type.Parser &&
-                                    (t.GrammarName == test.grammar_name + "Parser"
-                                     || t.GrammarName == test.grammar_name))
-                        .Select(t => t.GrammarAutomName).First();
-                test.fully_qualified_go_parser_name =
-                    test.tool_grammar_tuples
-                        .Where(t => t.WhatType == GrammarTuple.Type.Parser &&
-                                    (t.GrammarName == test.grammar_name + "Parser"
-                                     || t.GrammarName == test.grammar_name))
-                        .Select(t => t.GrammarGoNewName).First();
+                string parser_src_grammar_file_name = null;
+                string lexer_src_grammar_file_name = null;
+                foreach (var t in test.tool_grammar_tuples)
+                {
+                    if (!t.IsTopLevel) continue;
+                    if (t.WhatType == GrammarTuple.Type.Parser)
+                    {
+                        test.fully_qualified_parser_name = t.GrammarAutomName;
+                        test.fully_qualified_go_parser_name = "New"+t.GrammarGoNewName;
+                        parser_src_grammar_file_name = t.GrammarFileName;
+                    }
+                    if (t.WhatType == GrammarTuple.Type.Lexer)
+                    {
+                        test.fully_qualified_lexer_name = t.GrammarAutomName;
+                        test.fully_qualified_go_lexer_name = "New"+t.GrammarGoNewName;
+                        lexer_src_grammar_file_name = t.GrammarFileName;
+                    }
+                    if (t.WhatType == GrammarTuple.Type.Combined)
+                    {
+                        test.fully_qualified_parser_name = t.GrammarAutomName + "Parser";
+                        test.fully_qualified_go_parser_name = "New" + t.GrammarGoNewName + "Parser";
+                        test.fully_qualified_lexer_name = t.GrammarAutomName + "Lexer";
+                        test.fully_qualified_go_lexer_name = "New" + t.GrammarGoNewName + "Lexer";
+                        parser_src_grammar_file_name = test.fully_qualified_parser_name;
+                        lexer_src_grammar_file_name = test.fully_qualified_lexer_name;
+                    }
+                }
 
                 // Where the parser generated code lives.
                 var parser_generated_file_name =
@@ -421,47 +436,19 @@ namespace Trash
                     + Suffix(test.target);
                 var parser_generated_include_file_name =
                     (string)test.fully_qualified_parser_name.Replace('.', '/') + ".h";
-                var parser_src_grammar_file_name =
-                    test.tool_grammar_tuples
-                        .Where(t => t.GrammarAutomName.EndsWith("Parser"))
-                        .Where(t => test.grammar_name == null || t.GrammarName == test.grammar_name)
-                        .Select(t => t.GrammarFileName)
-                        .First();
-                test.fully_qualified_lexer_name =
-                    test.tool_grammar_tuples
-                        .Where(t => t.IsTopLevel && t.WhatType == GrammarTuple.Type.Lexer)
-                        .Select(t => t.GrammarAutomName)
-                        .First();
-                test.fully_qualified_go_lexer_name =
-                    test.tool_grammar_tuples
-                        .Where(t => t.IsTopLevel && t.WhatType == GrammarTuple.Type.Lexer)
-                        .Select(t => t.GrammarGoNewName)
-                        .First();
                 var lexer_generated_file_name =
                     test.fully_qualified_lexer_name.Replace('.', '/') + Suffix(test.target);
                 var lexer_generated_include_file_name =
                     test.fully_qualified_lexer_name.Replace('.', '/') + ".h";
-                var lexer_src_grammar_file_name =
-                    test.tool_grammar_tuples
-                        .Where(t => t.IsTopLevel && t.WhatType == GrammarTuple.Type.Lexer)
-                        .Select(t => t.GrammarFileName)
-                        .First();
                 test.tool_src_grammar_files = new HashSet<string>()
                 {
                     lexer_src_grammar_file_name,
                     parser_src_grammar_file_name
                 };
-                //per_grammar.tool_grammar_tuples = new List<GrammarTuple>()
-                //    {
-                //        new GrammarTuple(lexer_grammar_file_name, lexer_generated_file_name, lexer_generated_include_file_name, per_grammar.fully_qualified_lexer_name),
-                //        new GrammarTuple(parser_grammar_file_name, parser_generated_file_name, parser_generated_include_file_name, per_grammar.fully_qualified_parser_name),
-                //    };
                 test.tool_grammar_files = test.tool_grammar_tuples
                     .Where(t => t.IsTopLevel)
                     .Select(t => t.GrammarFileName).ToHashSet().ToList();
                 test.parser_grammar_file_name = parser_src_grammar_file_name;
-                //test.generated_files = test.tool_grammar_tuples.Select(t => t.GeneratedFileName)
-                //    .ToHashSet().ToList();
                 test.lexer_grammar_file_name = lexer_src_grammar_file_name;
             }
         }
@@ -1885,6 +1872,13 @@ namespace Trash
         void ComputeSort(Test test)
         {
             Digraph<string> graph = new Digraph<string>();
+            // Add vertices.
+            foreach (var t in test.tool_grammar_tuples)
+            {
+                var v = t.GrammarName;
+                graph.AddVertex(v);
+            }
+            // Add edges.
             foreach (var t in test.tool_grammar_tuples)
             {
                 var v = t.GrammarName;
