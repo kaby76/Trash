@@ -6,7 +6,7 @@ namespace Trash
     public class GrammarTuple
     {
         public enum Type { Parser = 1, Lexer = 2, Combined = 3 }
-        public GrammarTuple(Type type, string source_grammar_file_name, string target_grammar_file_name, string grammar_name, string generated_file_name, string generated_include_file_name, string grammar_autom_name, string grammar_go_new_name, string antlr_args)
+        public GrammarTuple(Type type, string source_grammar_file_name, string target_grammar_file_name, string grammar_name, AntlrJson.ParsingResultSet pr, string generated_file_name, string generated_include_file_name, string grammar_autom_name, string grammar_go_new_name, string antlr_args)
         {
             WhatType = type;
             OriginalSourceFileName = source_grammar_file_name;
@@ -17,6 +17,8 @@ namespace Trash
             GrammarAutomName = grammar_autom_name;
             GrammarGoNewName = grammar_go_new_name;
             AntlrArgs = antlr_args;
+            ParsingResultSet = pr;
+            IsTopLevel = false;
         }
         public string OriginalSourceFileName;
         public Type WhatType { get; set; }
@@ -27,6 +29,8 @@ namespace Trash
         public string GrammarAutomName { get; set; }
         public string GrammarGoNewName { get; set; }
         public string AntlrArgs { get; set; }
+        public AntlrJson.ParsingResultSet ParsingResultSet { get; set; }
+        public bool IsTopLevel { get; set; }
     }
 
 }

@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Java",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-3976\\eiffel"
+      "commandLineArgs": "-t CSharp",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\tsqlparser\\src\\main\\antlr4\\ws\\idle\\parsers\\tsql"
     }
   }
 }
