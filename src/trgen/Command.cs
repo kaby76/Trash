@@ -172,20 +172,9 @@ namespace Trash
                     var is_parser_grammar = is_par.Count() != 0;
                     var is_lexer_grammar = is_lex.Count() != 0;
                     var is_combined = !is_parser_grammar && !is_lexer_grammar;
-                    var name = name_.First();
-
+                    var grammar_name = name_.First();
                     var start_symbol = ss.FirstOrDefault();
-                    string grammar_name = null;
-                    grammar_name = name;
-                    if (start_symbol != null && test.start_rule == null)
-                    {
-                        if (test.grammar_name == null
-                            || test.grammar_name == grammar_name)
-                        {
-                            test.start_rule = start_symbol;
-                            config.start_rule = start_symbol;
-                        }
-                    }
+
                     if (!(is_combined && !is_parser_grammar && !is_lexer_grammar
                           || !is_combined && is_parser_grammar && !is_lexer_grammar
                           || !is_combined && !is_parser_grammar && is_lexer_grammar))
@@ -217,14 +206,13 @@ namespace Trash
                         var p1 = test.package;
                         var pre1 = p1 == "" ? "" : p1 + "/";
                         var p2 = test.package.Replace("/", ".");
-                        var pre2 = p2 == "" ? "" : p2 + ".";
                         string genfn; // name of the generated parser/lexer file in the output directory.
                         string genincfn; // name of the include file for parser/lexer, for C++.
                         string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
                         string goname; // The name of the parser or lexer functionj for Go.
                         if (test.target == "Go")
                         {
-                            genfn = pre1 + name.Replace("Parser", "_parser").ToLower() + Suffix(test.target);
+                            genfn = pre1 + grammar_name.Replace("Parser", "_parser").ToLower() + Suffix(test.target);
                             genincfn = "";
                             if (test.package != null && test.package != "")
                                 antlr_args = GetOSTarget() == "Windows"
@@ -236,7 +224,7 @@ namespace Trash
                         }
                         else
                         {
-                            genfn = pre1 + name + Suffix(test.target);
+                            genfn = pre1 + grammar_name + Suffix(test.target);
                             if (test.package != null && test.package != "")
                                 antlr_args = GetOSTarget() == "Windows"
                                     ? "-o " + test.package + " -lib " + test.package +
@@ -246,17 +234,14 @@ namespace Trash
                                 antlr_args = "";
                         }
 
-                        var g = new GrammarTuple(GrammarTuple.Type.Parser, sgfn, tgfn, name, parsing_result_set,
+                        var g = new GrammarTuple(GrammarTuple.Type.Parser, sgfn, tgfn, grammar_name,
+                            start_symbol,
+                            parsing_result_set,
                             "", "", "", "", antlr_args);
                         test.tool_grammar_tuples.Add(g);
                     }
                     else if (is_lexer_grammar)
                     {
-                        //var genfn = (test.target == "Go" ? name.Replace("Lexer", "") + "/" : "") + name + Suffix(_config);
-                        var p1 = test.package;
-                        var pre1 = p1 == "" ? "" : p1 + "/";
-                        var p2 = test.package.Replace("/", ".");
-                        var pre2 = p2 == "" ? "" : p2 + ".";
                         string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
                         if (test.target == "Go")
                         {
@@ -279,18 +264,14 @@ namespace Trash
                                 antlr_args = "";
                         }
 
-                        var g = new GrammarTuple(GrammarTuple.Type.Lexer, sgfn, tgfn, name, parsing_result_set,
+                        var g = new GrammarTuple(GrammarTuple.Type.Lexer, sgfn, tgfn, grammar_name,
+                            start_symbol, parsing_result_set,
                             "", "", "", "", antlr_args);
                         test.tool_grammar_tuples.Add(g);
                     }
                     else
                     {
                         {
-                            //var genfn = (test.target == "Go" ? name + "/" : "") + name + "Parser" + Suffix(_config);
-                            var p1 = test.package;
-                            var pre1 = p1 == "" ? "" : p1 + "/";
-                            var p2 = test.package.Replace("/", ".");
-                            var pre2 = p2 == "" ? "" : p2 + ".";
                             string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
                             if (test.target == "Go")
                             {
@@ -312,17 +293,12 @@ namespace Trash
                                 else
                                     antlr_args = "";
                             }
-
-                            var g = new GrammarTuple(GrammarTuple.Type.Combined, sgfn, tgfn, name, parsing_result_set,
+                            var g = new GrammarTuple(GrammarTuple.Type.Combined, sgfn, tgfn, grammar_name,
+                                start_symbol, parsing_result_set,
                                 "", "", "", "", antlr_args);
                             test.tool_grammar_tuples.Add(g);
                         }
                         {
-                            //var genfn = (test.target == "Go" ? name + "/" : "") + name + "Lexer" + Suffix(_config);
-                            var p1 = test.package;
-                            var pre1 = p1 == "" ? "" : p1 + "/";
-                            var p2 = test.package.Replace("/", ".");
-                            var pre2 = p2 == "" ? "" : p2 + ".";
                             string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
                             if (test.target == "Go")
                             {
@@ -345,7 +321,8 @@ namespace Trash
                                     antlr_args = "";
                             }
 
-                            var g = new GrammarTuple(GrammarTuple.Type.Lexer, sgfn, tgfn, name, parsing_result_set,
+                            var g = new GrammarTuple(GrammarTuple.Type.Lexer, sgfn, tgfn, grammar_name,
+                                start_symbol, parsing_result_set,
                                 "", "", "", "", antlr_args);
                             test.tool_grammar_tuples.Add(g);
                         }
@@ -372,11 +349,35 @@ namespace Trash
                         if (b != null) test.grammar_name = b;
                     }
                 }
-
                 if (test.grammar_name == null)
                 {
                     throw new Exception("Can't figure out the grammar name.");
                 }
+                if (test.start_rule == null)
+                {
+                    var b = test.tool_grammar_tuples
+                        .Where(t =>
+                        {
+                            if (!t.IsTopLevel) return false;
+                            if (t.WhatType == GrammarTuple.Type.Parser)
+                            {
+                                if (t.GrammarName == test.grammar_name) return true;
+                                if (t.GrammarName == test.grammar_name + "Parser") return true;
+                                return false;
+                            } else if (t.WhatType == GrammarTuple.Type.Combined)
+                            {
+                                if (t.GrammarName == test.grammar_name) return true;
+                                return false;
+                            }
+                            return false;
+                        }).FirstOrDefault()?.StartSymbol;
+                    if (b != null) test.start_rule = b;
+                    else
+                    {
+                        throw new Exception("Can't figure out the start rule.");
+                    }
+                }
+
 
                 // Update top-level automaton names.
                 foreach (var t in test.tool_grammar_tuples)
@@ -407,30 +408,40 @@ namespace Trash
                 foreach (var t in test.tool_grammar_tuples)
                 {
                     if (!t.IsTopLevel) continue;
-                    var p1 = test.package;
-                    var pre1 = p1 == "" ? "" : p1 + "/";
                     var p2 = test.package.Replace("/", ".");
                     var pre2 = p2 == "" ? "" : p2 + ".";
                     if (t.WhatType == GrammarTuple.Type.Parser)
                     {
-                        test.fully_qualified_parser_name = t.GrammarAutomName;
-                        test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName;
-                        parser_src_grammar_file_name = t.GrammarFileName;
+                        if (test.fully_qualified_parser_name == null)
+                        {
+                            test.fully_qualified_parser_name = t.GrammarAutomName;
+                            test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName;
+                            parser_src_grammar_file_name = t.GrammarFileName;
+                        }
                     }
-                    if (t.WhatType == GrammarTuple.Type.Lexer)
+                    else if (t.WhatType == GrammarTuple.Type.Lexer)
                     {
-                        test.fully_qualified_lexer_name = t.GrammarAutomName;
-                        test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName;
-                        lexer_src_grammar_file_name = t.GrammarFileName;
+                        if (test.fully_qualified_lexer_name == null)
+                        {
+                            test.fully_qualified_lexer_name = t.GrammarAutomName;
+                            test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName;
+                            lexer_src_grammar_file_name = t.GrammarFileName;
+                        }
                     }
-                    if (t.WhatType == GrammarTuple.Type.Combined)
+                    else if (t.WhatType == GrammarTuple.Type.Combined)
                     {
-                        test.fully_qualified_parser_name = t.GrammarAutomName + "Parser";
-                        test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName + "Parser";
-                        test.fully_qualified_lexer_name = t.GrammarAutomName + "Lexer";
-                        test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName + "Lexer";
-                        parser_src_grammar_file_name = test.fully_qualified_parser_name;
-                        lexer_src_grammar_file_name = test.fully_qualified_lexer_name;
+                        if (test.fully_qualified_parser_name == null)
+                        {
+                            test.fully_qualified_parser_name = t.GrammarAutomName + "Parser";
+                            test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName + "Parser";
+                            parser_src_grammar_file_name = test.fully_qualified_parser_name;
+                        }
+                        if (test.fully_qualified_lexer_name == null)
+                        {
+                            test.fully_qualified_lexer_name = t.GrammarAutomName + "Lexer";
+                            test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName + "Lexer";
+                            lexer_src_grammar_file_name = test.fully_qualified_lexer_name;
+                        }
                     }
                 }
 
