@@ -1394,8 +1394,8 @@ namespace Trash
 
                 test.start_rule = config.start_rule;
                 test.example_files = "examples";
-                test.fully_qualified_lexer_name = "";
-                test.fully_qualified_parser_name = "";
+                test.fully_qualified_lexer_name = null;
+                test.fully_qualified_parser_name = null;
                 test.package = test.target == "Go" ? "parser" : "";
                 var all_grammars_pattern = "^(?!.*(" +
                                            (test.ignore_string != null
