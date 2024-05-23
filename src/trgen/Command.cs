@@ -446,15 +446,6 @@ namespace Trash
                 }
 
                 // Where the parser generated code lives.
-                var parser_generated_file_name =
-                    (string)test.fully_qualified_parser_name.Replace('.', '/')
-                    + Suffix(test.target);
-                var parser_generated_include_file_name =
-                    (string)test.fully_qualified_parser_name.Replace('.', '/') + ".h";
-                var lexer_generated_file_name =
-                    test.fully_qualified_lexer_name.Replace('.', '/') + Suffix(test.target);
-                var lexer_generated_include_file_name =
-                    test.fully_qualified_lexer_name.Replace('.', '/') + ".h";
                 test.tool_src_grammar_files = new HashSet<string>()
                 {
                     lexer_src_grammar_file_name,
