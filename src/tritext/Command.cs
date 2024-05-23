@@ -46,7 +46,7 @@ namespace Trash
             }
         }
 
-        static string GetTextFromPDF(string src_file_name)
+        static string GetTextFromPDF(string src_file_name, Config config)
         {
             StringBuilder text = new StringBuilder();
             //          string src = @"n4296.pdf";
@@ -55,7 +55,7 @@ namespace Trash
                 for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
                 {
                     var pdfPage = pdfDoc.GetPage(i);
-                    text.Append(PdfTextExtractor.GetTextFromPage(pdfPage, new MySimpleTextExtractionStrategy()));
+                    text.Append(PdfTextExtractor.GetTextFromPage(pdfPage, new MySimpleTextExtractionStrategy(config)));
                 }
             }
             return text.ToString();
@@ -70,7 +70,7 @@ namespace Trash
             }
             foreach (var f in config.Files)
             {
-                System.Console.WriteLine(GetTextFromPDF(f));
+                System.Console.WriteLine(GetTextFromPDF(f, config));
             }
         }
     }
@@ -78,17 +78,70 @@ namespace Trash
     public class MySimpleTextExtractionStrategy : ITextExtractionStrategy
     {
         private Vector lastStart;
-
         private Vector lastEnd;
+        private Config config;
 
-        /// <summary>used to store the resulting String.</summary>
-        private readonly StringBuilder result = new StringBuilder();
+        public MySimpleTextExtractionStrategy(Config c)
+        {
+            config = c;
+        }
+
+    /// <summary>used to store the resulting String.</summary>
+    private readonly StringBuilder result = new StringBuilder();
+        private static string emphasis = "";
 
         public virtual void EventOccurred(IEventData data, EventType type)
         {
             if (type.Equals(EventType.RENDER_TEXT))
             {
                 TextRenderInfo renderInfo = (TextRenderInfo)data;
+                var x = renderInfo.GetText();
+                var f = renderInfo.GetFont();
+                var fp = f.GetFontProgram();
+                var fn = fp.GetFontNames();
+                var italic = false;
+                var bold = false;
+                if (fn != null)
+                {
+                    var y = fn.GetFontName();
+                    if (y != null && y.Contains("italic", StringComparison.OrdinalIgnoreCase))
+                    {
+                        italic = true;
+                    }
+                    else if (y != null && y.Contains("bold", StringComparison.OrdinalIgnoreCase))
+                    {
+                        bold = true;
+                    }
+                }
+                var start_tag = false;
+                if (emphasis == "")
+                {
+                    start_tag = true;
+                }
+                else {
+                    if (italic)
+                    {
+                        if (emphasis != "</i>")
+                        {
+                            if (config.OutputMarkup) AppendTextChunk(emphasis);
+                            start_tag = true;
+                        }
+                    }
+                    else if (bold)
+                    {
+                        if (emphasis != "</b>")
+                        {
+                            if (config.OutputMarkup) AppendTextChunk(emphasis);
+                            start_tag = true;
+                        }
+                    }
+                    else
+                    {
+                        if (config.OutputMarkup) AppendTextChunk(emphasis);
+                        emphasis = "";
+                        start_tag = false;
+                    }
+                }
                 bool firstRender = result.Length == 0;
                 bool hardReturn = false;
                 LineSegment segment = renderInfo.GetBaseline();
@@ -131,7 +184,20 @@ namespace Trash
                     }
                 }
                 //System.Console.WriteLine("Inserting implied space before '" + renderInfo.GetText() + "'");
-                AppendTextChunk(renderInfo.GetText());
+                if (start_tag)
+                {
+                    if (italic)
+                    {
+                        if (config.OutputMarkup) AppendTextChunk("<i>");
+                        emphasis = "</i>";
+                    }
+                    else if (bold)
+                    {
+                        if (config.OutputMarkup) AppendTextChunk("<b>");
+                        emphasis = "</b>";
+                    }
+                }
+                AppendTextChunk(x);
                 lastStart = start;
                 lastEnd = end;
             }
