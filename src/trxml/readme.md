@@ -18,7 +18,7 @@ Read a tree from stdin and write an XML represenation of it.
 
 ## Current version
 
-0.23.1 Major changes to trgen, trparse, trfoldlit, trquery. Removal of trinsert, trdelete, trmove, trdelabel, trstrip.
+0.23.1 Re-add tritext, added -m option.
 
 ## License
 
