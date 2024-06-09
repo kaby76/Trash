@@ -55,6 +55,7 @@ dotnet tool install -g tritext
 dotnet tool install -g trjson
 dotnet tool install -g trparse
 dotnet tool install -g trperf
+dotnet tool install -g trquery
 dotnet tool install -g trrename
 dotnet tool install -g trsplit
 dotnet tool install -g trsponge
@@ -81,6 +82,7 @@ dotnet tool uninstall -g tritext
 dotnet tool uninstall -g trjson
 dotnet tool uninstall -g trparse
 dotnet tool uninstall -g trperf
+dotnet tool uninstall -g trquery
 dotnet tool uninstall -g trrename
 dotnet tool uninstall -g trsplit
 dotnet tool uninstall -g trsponge
