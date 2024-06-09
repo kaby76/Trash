@@ -1933,6 +1933,7 @@ namespace Trash
 
             var sort = new TopologicalSort<string, DirectedEdge<string>>(graph, subset);
             List<string> order = sort.Topological_sort();
+            order.Reverse();
             test.tool_grammar_tuples.Sort(new GrammarOrderCompare(order));
         }
 

@@ -46,16 +46,42 @@ namespace Trash
             }
         }
 
+        static int max = 0;
+        static int key = 0;
+
         static string GetTextFromPDF(string src_file_name, Config config)
         {
+            // Perform two passes on the PDF file. The first pass is to determine
+            // the start of the left-hand side margin. The second pass extracts the
+            // text from the PDF file, using the left-hand side margin to make sure
+            // we have the appropriate number of spaces at the beginning of each line.
+
             StringBuilder text = new StringBuilder();
-            //          string src = @"n4296.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(src_file_name));
             {
-                for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
                 {
-                    var pdfPage = pdfDoc.GetPage(i);
-                    text.Append(PdfTextExtractor.GetTextFromPage(pdfPage, new MySimpleTextExtractionStrategy(config)));
+                    var pdfDoc = new PdfDocument(new PdfReader(src_file_name));
+                    var histogram = new BuildHistogram(config);
+                    for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
+                    {
+                        var pdfPage = pdfDoc.GetPage(i);
+                        PdfTextExtractor.GetTextFromPage(pdfPage, histogram);
+                    }
+                    foreach (var h in histogram.Histogram)
+                    {
+                        if (h.Value > max)
+                        {
+                            max = h.Value;
+                            key = h.Key;
+                        }
+                    }
+                }
+                {
+                    PdfDocument pdfDoc = new PdfDocument(new PdfReader(src_file_name));
+                    for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
+                    {
+                        var pdfPage = pdfDoc.GetPage(i);
+                        text.Append(PdfTextExtractor.GetTextFromPage(pdfPage, new MySimpleTextExtractionStrategy(config, key, max)));
+                    }
                 }
             }
             return text.ToString();
@@ -75,19 +101,58 @@ namespace Trash
         }
     }
 
+    internal class BuildHistogram : ITextExtractionStrategy
+    {
+        private Config config;
+        public SortedDictionary<int, int> Histogram = new SortedDictionary<int, int>();
+        public BuildHistogram(Config c)
+        {
+            config = c;
+        }
+        public virtual void EventOccurred(IEventData data, EventType type)
+        {
+            if (type.Equals(EventType.RENDER_TEXT))
+            {
+                TextRenderInfo renderInfo = (TextRenderInfo)data;
+                LineSegment segment = renderInfo.GetBaseline();
+                Vector start = segment.GetStartPoint();
+                Vector end = segment.GetEndPoint();
+                var l1 = (int)start.Get(0);
+                var l2 = (int)end.Get(1);
+                //var l3 = (int)end.Get(3);
+                var text = renderInfo.GetText();
+                //System.Console.WriteLine("l1 " + l1 + " l2 " + l2 + " text " + text);
+                Histogram[l1] = Histogram.ContainsKey(l1) ? Histogram[l1] + 1 : 1;
+            }
+        }
+
+        public virtual ICollection<EventType> GetSupportedEvents()
+        {
+            return null;
+        }
+
+        public string GetResultantText()
+        {
+            return "";
+        }
+    }
+
     public class MySimpleTextExtractionStrategy : ITextExtractionStrategy
     {
         private Vector lastStart;
         private Vector lastEnd;
         private Config config;
+        private int key_;
+        private int value_;
 
-        public MySimpleTextExtractionStrategy(Config c)
+        public MySimpleTextExtractionStrategy(Config c, int key, int value)
         {
             config = c;
+            key_ = key;
+            value_ = value;
         }
 
-    /// <summary>used to store the resulting String.</summary>
-    private readonly StringBuilder result = new StringBuilder();
+        private readonly StringBuilder result = new StringBuilder();
         private static string emphasis = "";
 
         public virtual void EventOccurred(IEventData data, EventType type)
@@ -114,11 +179,16 @@ namespace Trash
                     }
                 }
                 var start_tag = false;
+                /* If we are not in a bold or italic section, then a start tag must be added. */
                 if (emphasis == "")
                 {
                     start_tag = true;
                 }
                 else {
+                    /* If we are in a bold or italic section, then we need to check
+                     * if we are still in that section. If not, end the section and
+                     * start a new tag section.
+                     */
                     if (italic)
                     {
                         if (emphasis != "</i>")
@@ -137,16 +207,23 @@ namespace Trash
                     }
                     else
                     {
+                        /* If we are not in a bold or italic section anymore,
+                         * end the section. The text that follows is plain text.
+                         */
                         if (config.OutputMarkup) AppendTextChunk(emphasis);
                         emphasis = "";
                         start_tag = false;
                     }
                 }
+
                 bool firstRender = result.Length == 0;
                 bool hardReturn = false;
                 LineSegment segment = renderInfo.GetBaseline();
                 Vector start = segment.GetStartPoint();
                 Vector end = segment.GetEndPoint();
+
+                //System.Console.WriteLine("Start: " + start + " End: " + end + " Text: " + renderInfo.GetText() + " Font: " + f.GetFontProgram().GetFontNames().GetFontName());
+
                 if (!firstRender)
                 {
                     Vector x1 = lastStart;
@@ -167,6 +244,22 @@ namespace Trash
                 {
                     //System.Console.WriteLine("<< Hard Return >>");
                     AppendTextChunk("\n");
+                    var s = start;
+                    var l1 = (int)start.Get(0);
+                    var l2 = (int)end.Get(1);
+                    {
+                        var spacing = (int)((l1 - key_) / renderInfo.GetSingleSpaceWidth() / 2);
+                        if (spacing > 0)
+                        {
+                            AppendTextChunk(new string(' ', spacing));
+                        }
+                    }
+                    //{
+                    //    if (spacing > renderInfo.GetSingleSpaceWidth() / 2f)
+                    //    {
+                    //        AppendTextChunk(new string(' ', (int)spacing));
+                    //    }
+                    //}
                 }
                 else
                 {
@@ -178,7 +271,7 @@ namespace Trash
                             float spacing = lastEnd.Subtract(start).Length();
                             if (spacing > renderInfo.GetSingleSpaceWidth() / 2f)
                             {
-                                AppendTextChunk(" ");
+                                AppendTextChunk(new string(" "));//, (int)spacing));
                             }
                         }
                     }
@@ -208,20 +301,11 @@ namespace Trash
             return null;
         }
 
-        /// <summary>Returns the result so far.</summary>
-        /// <returns>a String with the resulting text.</returns>
         public virtual String GetResultantText()
         {
             return result.ToString();
         }
 
-        /// <summary>Used to actually append text to the text results.</summary>
-        /// <remarks>
-        /// Used to actually append text to the text results.  Subclasses can use this to insert
-        /// text that wouldn't normally be included in text parsing (e.g. result of OCR performed against
-        /// image content)
-        /// </remarks>
-        /// <param name="text">the text to append to the text results accumulated so far</param>
         protected internal void AppendTextChunk(String text)
         {
             result.Append(text);

@@ -2,7 +2,7 @@
   "profiles": {
     "tritext": {
       "commandName": "Project",
-      "commandLineArgs": "ISO_IEC_1539-1_2023(en).pdf",
+      "commandLineArgs": "-m ISO_IEC_1539-1_2023(en).pdf",
       "workingDirectory": "c:\\Users\\Kenne\\Downloads"
     }
   }
