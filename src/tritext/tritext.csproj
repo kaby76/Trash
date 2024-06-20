@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
@@ -23,9 +23,17 @@ This program is part of the Trash toolkit.
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>
+		<Antlr4 Include="Filter.g4">
+			<Package>Trash</Package>
+		</Antlr4>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+		<PackageReference Include="Antlr4BuildTasks" Version="12.8.0" PrivateAssets="all" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 		<PackageReference Include="itext7" Version="8.0.4" />
+		<PackageReference Include="OneOf" Version="3.0.271" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />

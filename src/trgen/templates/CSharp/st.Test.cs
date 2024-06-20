@@ -24,13 +24,20 @@ public class Program
     public static IParseTree Tree { get; set; }
     public static string StartSymbol { get; set; } = "<start_symbol>";
     public static string Input { get; set; }
+    public static bool HeatMap { get; set; } = false;
     public static void SetupParse2(string input, bool quiet = false)
     {
         ICharStream str = new AntlrInputStream(input);
         CharStream = str;
         var lexer = new <lexer_name>(str);
         Lexer = lexer;
-        var tokens = new CommonTokenStream(lexer);
+	    CommonTokenStream tokens = null;
+	    if (HeatMap) {
+		    tokens = new ProfilingCommonTokenStream(lexer);
+	    }
+	    else {
+		    tokens = new CommonTokenStream(lexer);
+	    }
         TokenStream = tokens;
         var parser = new <parser_name>(tokens);
         Parser = parser;
@@ -64,7 +71,13 @@ public class Program
         CharStream = str;
         var lexer = new <lexer_name>(str);
         Lexer = lexer;
-        var tokens = new CommonTokenStream(lexer);
+	    CommonTokenStream tokens = null;
+	    if (show_hit) {
+		    tokens = new ProfilingCommonTokenStream(lexer);
+	    }
+	    else {
+		    tokens = new CommonTokenStream(lexer);
+	    }
         TokenStream = tokens;
         var parser = new <parser_name>(tokens);
         Parser = parser;
@@ -82,11 +95,12 @@ public class Program
     }
 
     static bool tee = false;
+    static bool show_diagnostic = false;
+    static bool show_hit = false;
     static bool show_profile = false;
-    static bool show_tree = false;
     static bool show_tokens = false;
     static bool show_trace = false;
-    static bool show_diagnostic = false;
+    static bool show_tree = false;
     static bool old = false;
     static bool two_byte = false;
     static int exit_code = 0;
@@ -245,7 +259,13 @@ public class Program
             System.Console.Error.WriteLine(new_s.ToString());
             lexer.Reset();
         }
-        var tokens = new CommonTokenStream(lexer);
+	CommonTokenStream tokens = null;
+	if (show_hit) {
+		tokens = new ProfilingCommonTokenStream(lexer);
+	}
+	else {
+		tokens = new CommonTokenStream(lexer);
+	}
         var parser = new <parser_name>(tokens);
         var output = tee ? new StreamWriter(input_name + ".errors") : System.Console.Error;
         var listener_lexer = new ErrorListener\<int>(quiet, tee, output);

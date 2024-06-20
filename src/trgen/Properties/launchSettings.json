@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Python3",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4129\\abb"
+      "commandLineArgs": "-t Cpp",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4137\\vba\\vba_cc"
     }
   }
 }

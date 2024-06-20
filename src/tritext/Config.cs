@@ -13,5 +13,11 @@ namespace Trash
 
         [Option('m', "markup", Required = false)]
         public bool OutputMarkup { get; set; }
+
+        [Option('p', "pre", Required = false)]
+        public bool OutputPreflight { get; set; }
+
+        [Option('f', "filter", Required = false)]
+        public string Filter { get; set; } = "";
     }
 }

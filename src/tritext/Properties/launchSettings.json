@@ -2,8 +2,8 @@
   "profiles": {
     "tritext": {
       "commandName": "Project",
-      "commandLineArgs": "-m ISO_IEC_1539-1_2023(en).pdf",
-      "workingDirectory": "c:\\Users\\Kenne\\Downloads"
+      "commandLineArgs": "18-007r1.pdf -f \"l1<60\"",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\fortran"
     }
   }
 }

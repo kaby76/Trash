@@ -30,6 +30,7 @@ This program is part of the Trash toolkit.]]>
   <ItemGroup>
 	  <ProjectReference Include="../Globbing/TrashGlobbing.csproj" />
 	  <ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+	  <ProjectReference Include="../Algorithms/Algorithms.csproj" />
 	  <ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />
 	  <ProjectReference Include="../Logger/Logger.csproj" />
 	  <ProjectReference Include="../grammars/antlr4/Generated-CSharp/antlr4.csproj" />
