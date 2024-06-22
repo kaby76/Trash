@@ -3,7 +3,7 @@
     "trperf": {
       "commandName": "Project",
       "commandLineArgs": "../examples/PatternTest.on -m",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\one-parser-ci\\Generated-CSharp"
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\be\\Generated-CSharp"
     }
   }
 }

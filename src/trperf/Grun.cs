@@ -1,5 +1,6 @@
 ﻿using Algorithms;
 using Antlr4.Runtime.Misc;
+using Antlr4.Runtime.Tree.Pattern;
 
 namespace Trash
 {
@@ -493,8 +494,8 @@ namespace Trash
                                     {
                                         break;
                                     }
-
                                     output.Add(new SumType<char, IToken>(token));
+                                    i += token.Text.Length - 1;
                                     break;
                                 }
                             }
@@ -515,7 +516,8 @@ namespace Trash
                         {
                             if (token.Text.Contains('\n'))
                             {
-                                b.Append(token.Text);
+                                var s = token.Text.Replace("\n", "<br>");
+                                b.Append(s);
                             }
                             else
                             {
@@ -528,8 +530,8 @@ namespace Trash
                                 b.Append(token.Text);
                                 b.Append("</b>");
                                 b.Append("<span class=\"tooltiptext\">");
-                                b.Append("LA() count = " + count + "<br>" + cs_str + ">");
-                                b.Append("</span></div>");
+                                b.Append("LA() count = " + count + "<br>" + cs_str);
+                                b.Append("<br><br></span></div>");
                             }
                         }
                         else if (o.Value is char c)
@@ -563,7 +565,6 @@ namespace Trash
                         return "0";
                 }
             }
-
         }
     }
 }
