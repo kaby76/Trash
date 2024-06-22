@@ -38,7 +38,7 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.23.1 Re-add tritext, added -m option.
+0.23.1 Added tritext back, added -m option for markup of fonts. Add heat map to trperf. Rewrite grammar analysis in trgen.
 
 ## License
 
