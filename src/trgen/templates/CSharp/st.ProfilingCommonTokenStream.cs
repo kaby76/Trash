@@ -26,9 +26,6 @@ public class ProfilingCommonTokenStream : CommonTokenStream
             return null;
         }
 
-        HitCount.TryGetValue(token.TokenIndex, out int before);
-        HitCount[token.TokenIndex] = before + 1;
-
         return token;
     }
 
@@ -39,9 +36,6 @@ public class ProfilingCommonTokenStream : CommonTokenStream
         {
             return -1;
         }
-
-        HitCount.TryGetValue(token.TokenIndex, out int before);
-        HitCount[token.TokenIndex] = before + 1;
 
         return token.Type;
     }
@@ -55,7 +49,8 @@ public class ProfilingCommonTokenStream : CommonTokenStream
         }
 
         HitCount.TryGetValue(token.TokenIndex, out int before);
-        HitCount[token.TokenIndex] = before + 1;
+        var after = before + 1;
+        HitCount[token.TokenIndex] = after;
 
         // Get call stack and note parser rule context.
         System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
@@ -80,17 +75,9 @@ public class ProfilingCommonTokenStream : CommonTokenStream
         {
             CallStacks[token.TokenIndex] = new Dictionary\<string, int>();
         }
-        CallStacks[token.TokenIndex][call_stack] = 1 + CallStacks[token.TokenIndex].GetValueOrDefault(call_stack, 0);
+
+        CallStacks[token.TokenIndex].TryGetValue(call_stack, out int b);
+        CallStacks[token.TokenIndex][call_stack] = 1 + b;
         return token;
     }
-
-    public void PrintHitCount()
-    {
-        List\<KeyValuePair\<int, int>> list = HitCount.OrderByDescending(x => x.Value).Take(10).ToList();
-        foreach (var item in list)
-        {
-            Console.WriteLine($"TokenIndex: {item.Key}, HitCount: {item.Value}");
-        }
-    }
-
 }
