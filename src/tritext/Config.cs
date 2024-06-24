@@ -10,5 +10,14 @@ namespace Trash
 
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
+
+        [Option('m', "markup", Required = false)]
+        public bool OutputMarkup { get; set; }
+
+        [Option('p', "pre", Required = false)]
+        public bool OutputPreflight { get; set; }
+
+        [Option('f', "filter", Required = false)]
+        public string Filter { get; set; } = "";
     }
 }

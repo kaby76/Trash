@@ -124,7 +124,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                         channel = -1;
                         tt = -1;
                         var attr = new UnvParseTreeAttr();
-                        attr.Name = "Before";
+                        attr.Name = "Skip";
                         attr.StringValue = charstream.GetText(new Interval(start_cs, stop_cs));
                         attr.ParentNode = parent;
                         attr.OwnerElement = parent;

@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-version="0.23.0"
+version="0.23.1"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
@@ -41,7 +41,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Major changes to trgen, trparse, trfoldlit, trquery. Removal of trinsert, trdelete, trmove, trdelabel, trstrip.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Added tritext back, added -m option for markup of fonts. Add heat map to trperf. Rewrite grammar analysis in trgen.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
@@ -78,7 +78,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Major changes to trgen, trparse, trfoldlit, trquery. Removal of trinsert, trdelete, trmove, trdelabel, trstrip.%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Added tritext back, added -m option for markup of fonts. Add heat map to trperf. Rewrite grammar analysis in trgen.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done

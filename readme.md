@@ -51,6 +51,7 @@ dotnet tool install -g trgen
 dotnet tool install -g trgenvsc
 dotnet tool install -g trglob
 dotnet tool install -g triconv
+dotnet tool install -g tritext
 dotnet tool install -g trjson
 dotnet tool install -g trparse
 dotnet tool install -g trperf
@@ -77,6 +78,7 @@ dotnet tool uninstall -g trcover
 dotnet tool uninstall -g trfoldlit
 dotnet tool uninstall -g trgen
 dotnet tool uninstall -g triconv
+dotnet tool uninstall -g tritext
 dotnet tool uninstall -g trjson
 dotnet tool uninstall -g trparse
 dotnet tool uninstall -g trperf
