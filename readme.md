@@ -400,9 +400,8 @@ check out my [blog](http://codinggorilla.com).
     
 You must have the NET SDK version 8 installed to build and run.
 
-# Current release
+# Releases
 
-## 0.23.0
-
+See https://github.com/kaby76/Domemtech.Trash/releases.
 
 If you have any questions, email me at ken.domino <at> gmail.com
