@@ -24,9 +24,12 @@ be in a trgen-generated parser directory, or use the -p option.
                      T = Time
                      k = Total k
                      m = Max k
+                     f = Fallbacks
                      a = Ambiguities
                      e = Errors
                      t = Transitions
+                     c = Input string at max-k
+           Default is "FdriTkmfaetc".
     -i, --input      String to parse.
     -s, --start-rule Start rule name.
     -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
