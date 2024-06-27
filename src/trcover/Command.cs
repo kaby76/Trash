@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections;
+using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using trcover;
 
 namespace Trash
 {
-    using AntlrJson;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text.Json;
-
     class Command
     {
         public string Help()

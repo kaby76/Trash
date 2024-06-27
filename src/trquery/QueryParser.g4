@@ -1,6 +1,10 @@
 parser grammar QueryParser;
 
-options { tokenVocab=QueryLexer; }
+options
+{
+tokenVocab=QueryLexer;
+	package = Trash;
+}
 
 commands : command (';' command)* ';'* EOF;
 command : 'insert' expr string | 'delete' expr | 'delete-reattach' expr | 'replace' expr string

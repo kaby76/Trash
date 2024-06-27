@@ -1,8 +1,4 @@
 using CommandLine;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using Newtonsoft.Json;
-using org.eclipse.wst.xml.xpath2.processor.@internal.function;
 
 namespace Trash
 {

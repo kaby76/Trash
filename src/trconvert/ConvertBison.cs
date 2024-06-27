@@ -1,11 +1,9 @@
 ﻿using Antlr4.Runtime;
 using org.eclipse.wst.xml.xpath2.processor.util;
-using org.w3c.dom;
 using ParseTreeEditing.UnvParseTreeDOM;
-using System;
 using System.Linq;
 
-namespace trconvert
+namespace Trash
 {
     internal class ConvertBison
     {

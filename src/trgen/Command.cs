@@ -1,26 +1,24 @@
-﻿using System.IO.Enumeration;
+﻿using Algorithms;
+using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
+using Antlr4.StringTemplate;
+using AntlrJson;
+using org.eclipse.wst.xml.xpath2.processor.util;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.XPath;
 
 namespace Trash
 {
-    using Algorithms;
-    using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
-    using Antlr4.StringTemplate;
-    using AntlrJson;
-    using org.eclipse.wst.xml.xpath2.processor.util;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.IO.Compression;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Xml;
-    using System.Xml.XPath;
-
     class Command
     {
         public string Help()

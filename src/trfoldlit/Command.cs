@@ -1,18 +1,16 @@
-﻿using System.Text.RegularExpressions;
+﻿using AntlrJson;
+using org.eclipse.wst.xml.xpath2.processor.util;
+using org.w3c.dom;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Trash
 {
-    using AntlrJson;
-    using org.eclipse.wst.xml.xpath2.processor.util;
-    using org.w3c.dom;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Text.Json;
-
     class Command
     {
         public string Help()

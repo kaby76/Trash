@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Trash
 {
 
-	public class Program
+    public class Program
 	{
 
 		public static void Main(string[] args)

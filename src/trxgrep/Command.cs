@@ -8,136 +8,145 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace Trash
+namespace Trash;
+
+class Command
 {
-    class Command
+    public string Help()
     {
-        public string Help()
+        using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trxgrep.readme.md"))
+        using (StreamReader reader = new StreamReader(stream))
         {
-            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trxgrep.readme.md"))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
+            return reader.ReadToEnd();
+        }
+    }
+
+    public void Execute(Config config)
+    {
+        var expr = config.Expr.First();
+        if (config.Verbose)
+        {
+            System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
         }
 
-        public void Execute(Config config)
+        UnvParseTreeNode[] atrees;
+        Parser parser;
+        Lexer lexer;
+        string text;
+        string fn;
+        string lines = null;
+        if (!(config.File != null && config.File != ""))
         {
-            var expr = config.Expr.First();
             if (config.Verbose)
             {
-                System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
+                System.Console.Error.WriteLine("reading from stdin");
             }
-            UnvParseTreeNode[] atrees;
-            Parser parser;
-            Lexer lexer;
-            string text;
-            string fn;
-            string lines = null;
-            if (!(config.File != null && config.File != ""))
+
+            for (;;)
             {
-                if (config.Verbose)
+                lines = System.Console.In.ReadToEnd();
+                if (lines != null && lines != "") break;
+            }
+
+            lines = lines.Trim();
+        }
+        else
+        {
+            if (config.Verbose)
+            {
+                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
+            }
+
+            lines = File.ReadAllText(config.File);
+        }
+
+        var serializeOptions = new JsonSerializerOptions();
+        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
+        serializeOptions.WriteIndented = config.Format;
+        serializeOptions.MaxDepth = 10000;
+        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
+        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
+        var results = new List<ParsingResultSet>();
+        bool do_rs = !config.NoParsingResultSets;
+        List<UnvParseTreeNode> d = new List<UnvParseTreeNode>();
+        List<AntlrDynamicContext> dc = new List<AntlrDynamicContext>();
+        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
+        foreach (var parse_info in data)
+        {
+            text = parse_info.Text;
+            fn = parse_info.FileName;
+            atrees = parse_info.Nodes;
+            parser = parse_info.Parser;
+            lexer = parse_info.Lexer;
+            var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+            ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser);
+            dc.Add(dynamicContext);
+            d.Add(dynamicContext.Document);
+        }
+
+        int i = 0;
+        foreach (var parse_info in data)
+        {
+            var dynamicContext = dc[i++];
+            var a = dynamicContext.Document;
+            text = parse_info.Text;
+            fn = parse_info.FileName;
+            atrees = parse_info.Nodes;
+            parser = parse_info.Parser;
+            lexer = parse_info.Lexer;
+            ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode[] l =
+                new ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode[1] { a };
+            var nodes = engine.parseExpression(expr,
+                    new StaticContextBuilder()).evaluate(dynamicContext, l)
+                .Select(x => (x.NativeValue)).ToArray();
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Length + " nodes.");
+            List<UnvParseTreeNode> res = new List<UnvParseTreeNode>();
+            foreach (var v in nodes)
+            {
+                if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)
                 {
-                    System.Console.Error.WriteLine("reading from stdin");
+                    var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement;
+                    res.Add(q);
                 }
-                for (; ; )
+                else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeText)
                 {
-                    lines = System.Console.In.ReadToEnd();
-                    if (lines != null && lines != "") break;
+                    var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeText;
+                    var s = q.Data;
+                    do_rs = false;
+                    System.Console.WriteLine(s);
                 }
-                lines = lines.Trim();
-            }
-            else
-            {
-                if (config.Verbose)
+                else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeAttr)
                 {
-                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
+                    var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeAttr;
+                    var s = q.StringValue;
+                    do_rs = false;
+                    System.Console.WriteLine(s);
                 }
-                lines = File.ReadAllText(config.File);
-            }
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = config.Format;
-            serializeOptions.MaxDepth = 10000;
-            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
-            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
-            var results = new List<ParsingResultSet>();
-            bool do_rs = !config.NoParsingResultSets;
-            List<UnvParseTreeNode> d = new List<UnvParseTreeNode>();
-            List<AntlrDynamicContext> dc = new List<AntlrDynamicContext>();
-            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-            foreach (var parse_info in data)
-            {
-                text = parse_info.Text;
-                fn = parse_info.FileName;
-                atrees = parse_info.Nodes;
-                parser = parse_info.Parser;
-                lexer = parse_info.Lexer;
-                var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
-                ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser);
-                dc.Add(dynamicContext);
-                d.Add(dynamicContext.Document);
-            }
-            int i = 0;
-            foreach (var parse_info in data)
-            {
-                var dynamicContext = dc[i++];
-                var a = dynamicContext.Document;
-                text = parse_info.Text;
-                fn = parse_info.FileName;
-                atrees = parse_info.Nodes;
-                parser = parse_info.Parser;
-                lexer = parse_info.Lexer;
-                ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode[] l = new ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode[1] { a };
-                var nodes = engine.parseExpression(expr,
-                        new StaticContextBuilder()).evaluate(dynamicContext, l)
-                    .Select(x => (x.NativeValue)).ToArray();
-                if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Length + " nodes.");
-                List<UnvParseTreeNode> res = new List<UnvParseTreeNode>();
-                foreach (var v in nodes)
+                else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeDocument)
                 {
-                    if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)
-                    {
-                        var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement;
-                        res.Add(q);
-                    }
-                    else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeText)
-                    {
-                        var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeText;
-                        var s = q.Data;
-                        do_rs = false;
-                        System.Console.WriteLine(s);
-                    }
-                    else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeAttr)
-                    {
-                        var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeAttr;
-                        var s = q.StringValue;
-                        do_rs = false;
-                        System.Console.WriteLine(s);
-                    }
-                    else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeDocument)
-                    {
-                        var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeDocument;
-                        do_rs = false;
-                        System.Console.WriteLine(v);
-                    }
-                    else
-                    {
-                        do_rs = false;
-                        System.Console.WriteLine(v);
-                    }
+                    var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeDocument;
+                    do_rs = false;
+                    System.Console.WriteLine(v);
                 }
-                var parse_info_out = new AntlrJson.ParsingResultSet() { Text = text, FileName = fn, Lexer = lexer, Parser = parser, Nodes = res.ToArray() };
-                results.Add(parse_info_out);
+                else
+                {
+                    do_rs = false;
+                    System.Console.WriteLine(v);
+                }
             }
-            if (do_rs)
-            {
-                if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
-                string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
-                if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
-                System.Console.WriteLine(js1);
-            }
+
+            var parse_info_out = new AntlrJson.ParsingResultSet()
+                { Text = text, FileName = fn, Lexer = lexer, Parser = parser, Nodes = res.ToArray() };
+            results.Add(parse_info_out);
+        }
+
+        if (do_rs)
+        {
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
+            string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
+            System.Console.WriteLine(js1);
         }
     }
 }

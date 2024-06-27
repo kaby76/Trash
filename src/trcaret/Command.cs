@@ -1,14 +1,14 @@
-﻿namespace Trash
-{
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using org.w3c.dom;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Text.Json;
-    using System;
+﻿using org.w3c.dom;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
 
+namespace Trash
+{
     class Command
     {
         public string Help()
