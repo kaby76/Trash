@@ -1,11 +1,9 @@
 // Template generated code from Antlr4BuildTasks.dotnet-antlr v 0.7.0
 
 using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+
+namespace Trash;
 
 public class ErrorListener<S> : ConsoleErrorListener<S>
 {

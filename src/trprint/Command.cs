@@ -1,57 +1,61 @@
-﻿namespace Trash
-{
-    using System.IO;
-    using System.Text.Json;
+﻿using System.IO;
+using System.Text.Json;
 
-    class Command
+namespace Trash;
+
+
+class Command
+{
+    public string Help()
     {
-        public string Help()
+        using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trprint.readme.md"))
+        using (StreamReader reader = new StreamReader(stream))
         {
-            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trprint.readme.md"))
-            using (StreamReader reader = new StreamReader(stream))
+            return reader.ReadToEnd();
+        }
+    }
+
+    public void Execute(Config config)
+    {
+        string lines = null;
+        if (!(config.File != null && config.File != ""))
+        {
+            if (config.Verbose)
             {
-                return reader.ReadToEnd();
+                System.Console.Error.WriteLine("reading from stdin");
             }
+
+            for (;;)
+            {
+                lines = System.Console.In.ReadToEnd();
+                if (lines != null && lines != "") break;
+            }
+
+            lines = lines.Trim();
+        }
+        else
+        {
+            if (config.Verbose)
+            {
+                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
+            }
+
+            lines = File.ReadAllText(config.File);
         }
 
-        public void Execute(Config config)
+        var serializeOptions = new JsonSerializerOptions();
+        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
+        serializeOptions.WriteIndented = false;
+        serializeOptions.MaxDepth = 10000;
+        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+        foreach (var parse_info in data)
         {
-            string lines = null;
-            if (!(config.File != null && config.File != ""))
-            {
-                if (config.Verbose)
-                {
-                    System.Console.Error.WriteLine("reading from stdin");
-                }
-                for (; ; )
-                {
-                    lines = System.Console.In.ReadToEnd();
-                    if (lines != null && lines != "") break;
-                }
-                lines = lines.Trim();
-            }
-            else
-            {
-                if (config.Verbose)
-                {
-                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-                }
-                lines = File.ReadAllText(config.File);
-            }
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = false;
-            serializeOptions.MaxDepth = 10000;
-            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-            foreach (var parse_info in data)
-            {
-                var nodes = parse_info.Nodes;
-                var parser = parse_info.Parser;
-                var lexer = parse_info.Lexer;
-                var fn = parse_info.FileName;
-                var code = parse_info.Text;
-                System.Console.Write(code);
-            }
+            var nodes = parse_info.Nodes;
+            var parser = parse_info.Parser;
+            var lexer = parse_info.Lexer;
+            var fn = parse_info.FileName;
+            var code = parse_info.Text;
+            System.Console.Write(code);
         }
     }
 }

@@ -1,5 +1,9 @@
 grammar Filter;
 
+options {
+    package=Trash;
+}
+
 start : (expr (';' expr)* | ) EOF;
 expr : expr ('<' | '>' | '<=' | '>=') expr
   | ID
