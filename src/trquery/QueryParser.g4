@@ -6,10 +6,14 @@ options
 }
 
 commands : command (';' command)* ';'* EOF;
-command : 'insert' expr string | 'delete' expr | 'delete-reattach' expr | 'replace' expr string
-   // extensions
-   | 'move' ('before' | 'after')? expr expr
-   ;
+command
+ : 'insert' expr MATCH_REQUIRED? string
+ | 'delete' expr MATCH_REQUIRED? 
+ | 'delete-reattach' expr MATCH_REQUIRED? 
+ | 'replace' expr MATCH_REQUIRED? string   
+ | 'move' ('before' | 'after')? expr MATCH_REQUIRED? expr
+ ;
+
 string : StringLiteral;
 
 // [1]

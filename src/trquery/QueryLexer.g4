@@ -11,6 +11,7 @@ MOVE: 'move';
 REPLACE: 'replace';
 BEFORE: 'before';
 AFTER: 'after';
+MATCH_REQUIRED: 'match-required';
 
 AT : '@' ;
 BANG : '!' ;

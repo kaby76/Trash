@@ -124,9 +124,12 @@ class Command
                                 LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
                                     .ToString());
                         }
-
                         if (config.Verbose)
                             LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
+                        if (scommand.MATCH_REQUIRED() != null)
+                        {
+                            throw new Exception("No match found for XPath expression, where it is required.");
+                        }
                         foreach (UnvParseTreeNode node in nodes)
                         {
                             TreeEdits.InsertBefore(node, value);
@@ -161,9 +164,12 @@ class Command
                                 LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
                                     .ToString());
                         }
-
                         if (config.Verbose)
                             LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
+                        if (scommand.MATCH_REQUIRED() != null)
+                        {
+                            throw new Exception("No match found for XPath expression, where it is required.");
+                        }
                         foreach (UnvParseTreeNode node in nodes)
                         {
                             TreeEdits.InsertAfter(node, value);
@@ -198,9 +204,12 @@ class Command
                                 LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
                                     .ToString());
                         }
-
                         if (config.Verbose)
                             LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
+                        if (scommand.MATCH_REQUIRED() != null)
+                        {
+                            throw new Exception("No match found for XPath expression, where it is required.");
+                        }
                         foreach (UnvParseTreeNode node in nodes)
                         {
                             TreeEdits.Replace(node, value);
@@ -236,7 +245,10 @@ class Command
                                 LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
                                     .ToString());
                         }
-
+                        if (scommand.MATCH_REQUIRED() != null)
+                        {
+                            throw new Exception("No match found for XPath expression, where it is required.");
+                        }
                         TreeEdits.Delete(nodes);
                         if (config.Verbose)
                         {
@@ -276,7 +288,10 @@ class Command
                                 LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
                                     .ToString());
                         }
-
+                        if (scommand.MATCH_REQUIRED() != null)
+                        {
+                            throw new Exception("No match found for XPath expression, where it is required.");
+                        }
                         TreeEdits.DeleteAndReattachChildren(nodes);
                         if (config.Verbose)
                         {
@@ -309,7 +324,6 @@ class Command
                         int ei = stop.StopIndex;
                         expr_to_text = cs.GetText(new Interval(bi, ei));
                     }
-
                     if (config.Verbose)
                         LoggerNs.TimedStderrOutput.WriteLine("move " + expr_from_text + " " + expr_to_text);
                     ConvertToDOM ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
@@ -341,6 +355,10 @@ class Command
                             if (!too.Any() || too.Count > 1)
                                 throw new Exception();
                             var to = too.FirstOrDefault();
+                            if (scommand.MATCH_REQUIRED() != null)
+                            {
+                                throw new Exception("No match found for XPath expression, where it is required.");
+                            }
                             TreeEdits.MoveBefore(new List<UnvParseTreeNode>() { n as UnvParseTreeNode }, to);
                         }
 
