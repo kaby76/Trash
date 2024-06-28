@@ -21,7 +21,7 @@ use an online Dot graph visualizer to make a plot.
 Any parse tree data can be converted to Dot, include a
 parse of a grammar, the parse tree of a simple expression grammar,
 or a list of parse tree nodes obtained via
-[trxgrep](https://github.com/kaby76/Domemtech.Trash/tree/main/trxgrep).
+[trxgrep](https://github.com/kaby76/Trash/tree/main/trxgrep).
 
 ## Examples
 
@@ -63,7 +63,7 @@ The output will be:
 
 ## Current version
 
-0.23.1 Added tritext back, added -m option for markup of fonts. Add heat map to trperf. Rewrite grammar analysis in trgen.
+0.23.2 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
 
 ## License
 

@@ -3,7 +3,7 @@
     "trsem": {
       "commandName": "Project",
       "commandLineArgs": "scope.sem",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.TrashBase\\supported_grammars\\antlr4"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\TrashBase\\supported_grammars\\antlr4"
     }
   }
 }

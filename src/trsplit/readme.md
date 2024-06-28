@@ -10,7 +10,7 @@ The split command splits one grammar into two. The input grammar
 must be a combined lexer/parser grammar implemented in one file.
 The transformation creates a lexer grammar and a parser grammar,
 outputed as parse tree data with the two grammars.
-[trsponge](https://github.com/kaby76/Domemtech.Trash/tree/main/trsponge)
+[trsponge](https://github.com/kaby76/Trash/tree/main/trsponge)
 is used to instantiate the two files in the file system.
 
 ## Usage
@@ -45,7 +45,7 @@ modified.
 
 ## Current version
 
-0.23.1 Added tritext back, added -m option for markup of fonts. Add heat map to trperf. Rewrite grammar analysis in trgen.
+0.23.2 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
 
 ## License
 

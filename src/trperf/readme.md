@@ -24,9 +24,12 @@ be in a trgen-generated parser directory, or use the -p option.
                      T = Time
                      k = Total k
                      m = Max k
+                     f = Fallbacks
                      a = Ambiguities
                      e = Errors
                      t = Transitions
+                     c = Input string at max-k
+           Default is "FdriTkmfaetc".
     -i, --input      String to parse.
     -s, --start-rule Start rule name.
     -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
@@ -38,7 +41,7 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.23.1 Added tritext back, added -m option for markup of fonts. Add heat map to trperf. Rewrite grammar analysis in trgen.
+0.23.2 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
 
 ## License
 

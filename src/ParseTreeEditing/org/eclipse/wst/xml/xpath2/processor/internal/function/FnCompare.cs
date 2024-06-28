@@ -116,7 +116,7 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.function
 			XSString xstr2 = arg2.empty() ? null : (XSString) arg2.first();
 
 			System.Numerics.BigInteger result = compare_string(collationUri, xstr1, xstr2, context);
-			if (result != null)
+			if (result != default)
 			{
 				return ResultSequenceFactory.create_new(new XSInteger(result));
 			}

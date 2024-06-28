@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Trash
 {
 
-	public class Program
+    public class Program
 	{
 
 		public static void Main(string[] args)
@@ -19,8 +19,6 @@ namespace Trash
 			{
 				System.Console.Error.WriteLine(e.ToString());
 				Environment.ExitCode = 1;
-				// Write something to avoid https://github.com/kaby76/Domemtech.Trash/issues/134
-				// and https://github.com/dotnet/runtime/issues/50780
 				System.Console.Out.WriteLine();
 				System.Console.Out.Flush();
 				System.Console.Out.Close();

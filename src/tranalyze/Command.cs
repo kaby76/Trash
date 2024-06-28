@@ -1,13 +1,11 @@
-﻿namespace Trash
-{
-    using AntlrJson;
-    using org.eclipse.wst.xml.xpath2.processor.util;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.Json;
+﻿using AntlrJson;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
+namespace Trash
+{
     class Command
     {
         public string Help()

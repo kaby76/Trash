@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime;
-using Antlr4.Runtime.Atn;
 
-namespace trcover
+namespace Trash
 {
     public class SymbolEdge<T> : DirectedEdge<T>
     {

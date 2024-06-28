@@ -1,17 +1,10 @@
 ﻿using System;
 
-namespace Algorithms
-{
-    public interface IEdge<NODE> : IComparable<IEdge<NODE>>
-    {
-        NODE From
-        {
-            get;
-        }
+namespace Algorithms;
 
-        NODE To
-        {
-            get;
-        }
-    }
+public interface IEdge<NODE> : IComparable<IEdge<NODE>>
+{
+    NODE From { get; }
+
+    NODE To { get; }
 }

@@ -3,7 +3,7 @@
     "trscript": {
       "commandName": "Project",
       "commandLineArgs": "-v -f o.pt move //grammarDecl/identifier/@WS ../..",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\delabel"
+      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\delabel"
     }
   }
 }

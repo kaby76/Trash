@@ -1,140 +1,146 @@
-﻿using System;
+﻿using org.w3c.dom;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
 
-namespace Trash
+namespace Trash;
+
+class Command
 {
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using org.w3c.dom;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Text.Json;
-
-    class Command
+    public string Help()
     {
-        public string Help()
+        using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trtext.readme.md"))
+        using (StreamReader reader = new StreamReader(stream))
         {
-            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trtext.readme.md"))
-            using (StreamReader reader = new StreamReader(stream))
+            return reader.ReadToEnd();
+        }
+    }
+
+    public string Reconstruct(Node tree)
+    {
+        Stack<Node> stack = new Stack<Node>();
+        stack.Push(tree);
+        StringBuilder sb = new StringBuilder();
+        while (stack.Any())
+        {
+            var n = stack.Pop();
+            if (n is UnvParseTreeAttr a)
             {
-                return reader.ReadToEnd();
+                var s = a.Name as String;
+                if (s == null) ;
+                else if (s == "Line") ;
+                else if (s == "Column") ;
+                else if (s == "ChildCount") ;
+                else sb.Append(a.StringValue);
+            }
+            else if (n is UnvParseTreeText t)
+            {
+                sb.Append(t.NodeValue);
+            }
+            else if (n is UnvParseTreeElement e)
+            {
+                for (int i = n.ChildNodes.Length - 1; i >= 0; i--)
+                {
+                    stack.Push(n.ChildNodes.item(i));
+                }
             }
         }
 
-        public string Reconstruct(Node tree)
+        return sb.ToString();
+    }
+
+    public void Execute(Config config)
+    {
+        string lines = null;
+        if (!(config.File != null && config.File != ""))
         {
-            Stack<Node> stack = new Stack<Node>();
-            stack.Push(tree);
-            StringBuilder sb = new StringBuilder();
-            while (stack.Any())
+            if (config.Verbose)
             {
-                var n = stack.Pop();
-                if (n is UnvParseTreeAttr a)
-                {
-                    var s = a.Name as String;
-                    if (s == null) ;
-                    else if (s == "Line") ;
-                    else if (s == "Column") ;
-                    else if (s == "ChildCount") ;
-                    else sb.Append(a.StringValue);
-                }
-                else if (n is UnvParseTreeText t)
-                {
-                    sb.Append(t.NodeValue);
-                }
-                else if (n is UnvParseTreeElement e)
-                {
-                    for (int i = n.ChildNodes.Length - 1; i >= 0; i--)
-                    {
-                        stack.Push(n.ChildNodes.item(i));
-                    }
-                }
+                System.Console.Error.WriteLine("reading from stdin");
             }
-            return sb.ToString();
+
+            for (;;)
+            {
+                lines = System.Console.In.ReadToEnd();
+                if (lines != null && lines != "") break;
+            }
+
+            lines = lines.Trim();
+        }
+        else
+        {
+            if (config.Verbose)
+            {
+                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
+            }
+
+            lines = File.ReadAllText(config.File);
         }
 
-        public void Execute(Config config)
+        var serializeOptions = new JsonSerializerOptions();
+        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
+        serializeOptions.WriteIndented = false;
+        serializeOptions.MaxDepth = 10000;
+        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
+        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
+        bool more_than_one_fn = data.Count() > 1;
+        bool files_with_matches = config.FilesWithMatches;
+        bool files_without_match = config.FilesWithoutMatch;
+        bool line_number = config.LineNumber;
+        bool count = config.Count;
+        foreach (var obj1 in data)
         {
-            string lines = null;
-            if (!(config.File != null && config.File != ""))
+            var fn = obj1.FileName;
+            var nodes = obj1.Nodes;
+            var parser = obj1.Parser;
+            var lexer = obj1.Lexer;
+            if (files_with_matches)
             {
-                if (config.Verbose)
-                {
-                    System.Console.Error.WriteLine("reading from stdin");
-                }
-                for (; ; )
-                {
-                    lines = System.Console.In.ReadToEnd();
-                    if (lines != null && lines != "") break;
-                }
-                lines = lines.Trim();
+                if (nodes.Any()) System.Console.WriteLine(fn);
+                continue;
             }
-            else
+
+            if (files_without_match)
             {
-                if (config.Verbose)
-                {
-                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-                }
-                lines = File.ReadAllText(config.File);
+                if (!nodes.Any()) System.Console.WriteLine(fn);
+                continue;
             }
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = false;
-            serializeOptions.MaxDepth = 10000;
-            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
-            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
-            bool more_than_one_fn = data.Count() > 1;
-            bool files_with_matches = config.FilesWithMatches;
-            bool files_without_match = config.FilesWithoutMatch;
-            bool line_number = config.LineNumber;
-            bool count = config.Count;
-            foreach (var obj1 in data)
+
+            if (count)
             {
-                var fn = obj1.FileName;
-                var nodes = obj1.Nodes;
-                var parser = obj1.Parser;
-                var lexer = obj1.Lexer;
-                if (files_with_matches)
-                {
-                    if (nodes.Any()) System.Console.WriteLine(fn);
-                    continue;
-                }
-                if (files_without_match)
-                {
-                    if (! nodes.Any()) System.Console.WriteLine(fn);
-                    continue;
-                }
-                if (count)
+                if (more_than_one_fn)
+                    System.Console.Write(fn + ":");
+                System.Console.WriteLine(nodes.Count());
+                continue;
+            }
+
+            {
+                foreach (var node in nodes)
                 {
                     if (more_than_one_fn)
                         System.Console.Write(fn + ":");
-                    System.Console.WriteLine(nodes.Count());
-                    continue;
-                }
-                {
-                    foreach (var node in nodes)
-                    {
-                        if (more_than_one_fn)
-                            System.Console.Write(fn + ":");
-                        //if (line_number)
-                        //{
-                        //    var source_interval = node.SourceInterval;
-                        //    int a = source_interval.a;
-                        //    int b = source_interval.b;
-                        //    IToken ta = parser.TokenStream.Get(a);
-                        //    IToken tb = parser.TokenStream.Get(b);
-                        //    var start = ta.StartIndex;
-                        //    var stop = tb.StopIndex + 1;
-                        //    var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
-                        //    var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
-                        //    System.Console.Write(line_a + "," + col_a
-                        //            + "-" + line_b + "," + col_b + ":");
-                        //}
-                        
-                        // WriteLine, remove last newline if you need to.
-                        System.Console.WriteLine(this.Reconstruct(node));
-                    }
+                    //if (line_number)
+                    //{
+                    //    var source_interval = node.SourceInterval;
+                    //    int a = source_interval.a;
+                    //    int b = source_interval.b;
+                    //    IToken ta = parser.TokenStream.Get(a);
+                    //    IToken tb = parser.TokenStream.Get(b);
+                    //    var start = ta.StartIndex;
+                    //    var stop = tb.StopIndex + 1;
+                    //    var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
+                    //    var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
+                    //    System.Console.Write(line_a + "," + col_a
+                    //            + "-" + line_b + "," + col_b + ":");
+                    //}
+
+                    // WriteLine, remove last newline if you need to.
+                    System.Console.WriteLine(this.Reconstruct(node));
                 }
             }
         }

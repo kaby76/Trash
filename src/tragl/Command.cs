@@ -1,16 +1,13 @@
-﻿using System;
+﻿using AntlrJson;
+using Microsoft.Msagl.Drawing;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 
 namespace Trash
 {
-    using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
-    using AntlrJson;
-    using Microsoft.Msagl.Drawing;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.Json;
-
     class Command
     {
         public static Dictionary<int, string> node_names = new Dictionary<int, string>();

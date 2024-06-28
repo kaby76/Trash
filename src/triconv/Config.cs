@@ -1,17 +1,15 @@
-using System.Collections.Generic;
 using CommandLine;
+using System.Collections.Generic;
 
-namespace Trash
+namespace Trash;
+
+public class Config
 {
-    public class Config
-    {
-        [Option('f', "from-code", Required = false)]
-        public string FromCode { get; set; }
+    [Option('f', "from-code", Required = false)]
+    public string FromCode { get; set; }
 
-        [Option('t', "to-code", Required = false)]
-        public string ToCode { get; set; }
+    [Option('t', "to-code", Required = false)]
+    public string ToCode { get; set; }
 
-        [Value(0)]
-        public IEnumerable<string> Files { get; set; }
-    }
+    [Value(0)] public IEnumerable<string> Files { get; set; }
 }

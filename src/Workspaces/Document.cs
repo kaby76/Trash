@@ -52,7 +52,7 @@ namespace Workspaces
             get;
             set;
         }
-        public string FullPath { get; private set; }
+        public new string FullPath { get; private set; }
         public string Encoding { get; set; }
         public int[] Indices { get; set; }
         public string LanguageId { get; set; }

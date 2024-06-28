@@ -1,14 +1,13 @@
-﻿
+﻿using Antlr4.Runtime;
+using org.eclipse.wst.xml.xpath2.processor.util;
+using org.w3c.dom;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Trash
 {
-    using System.Collections.Generic;
-    using Antlr4.Runtime;
-    using org.eclipse.wst.xml.xpath2.processor.util;
-    using org.w3c.dom;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using System;
-    using System.Linq;
-
     internal class ConvertAntlr4
     {
         public static void ToKocmanLLK(UnvParseTreeNode[] trees,

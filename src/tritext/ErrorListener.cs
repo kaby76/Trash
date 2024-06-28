@@ -1,15 +1,9 @@
 // Generated from trgen 0.21.2
 
 using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Antlr4.Runtime.Atn;
-using Antlr4.Runtime.Dfa;
-using Antlr4.Runtime.Sharpen;
+
+namespace Trash;
 
 public class ErrorListener<S> : IAntlrErrorListener< S>
 {

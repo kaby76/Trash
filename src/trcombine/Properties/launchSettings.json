@@ -3,7 +3,7 @@
     "trcombine": {
       "commandName": "Project",
       "commandLineArgs": "ArithmeticLexer.g4 ArithmeticParser.g4",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\combine"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Trash\\_tests\\combine"
     }
   }
 }

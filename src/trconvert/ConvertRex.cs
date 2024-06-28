@@ -1,18 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Antlr4.Runtime;
+using org.eclipse.wst.xml.xpath2.processor.util;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading;
+using System.Linq;
 
 namespace Trash
 {
-    using Antlr4.Runtime;
-    using org.eclipse.wst.xml.xpath2.processor.util;
-    using org.w3c.dom;
-    using ParseTreeEditing.UnvParseTreeDOM;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     public class ConvertRex
     {
         static int Validate(UnvParseTreeNode t)
