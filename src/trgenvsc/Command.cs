@@ -215,7 +215,6 @@ namespace Trash
         {
             List<string> template_directory_files_to_copy;
             ZipArchive za = null;
-            string prefix_to_remove = "";
 
             System.Reflection.Assembly a = this.GetType().Assembly;
             // Load resource file that contains the names of all files in templates/ directory,

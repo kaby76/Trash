@@ -70,7 +70,7 @@ class Command
                         {
                             PdfTextExtractor.GetTextFromPage(pdfPage, histogram);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                         }
                     }

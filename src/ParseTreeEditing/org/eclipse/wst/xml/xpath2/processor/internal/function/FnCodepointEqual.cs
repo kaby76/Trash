@@ -107,7 +107,7 @@ namespace org.eclipse.wst.xml.xpath2.processor.@internal.function
 
 			// This delegates to FnCompare
 			System.Numerics.BigInteger result = FnCompare.compare_string(org.eclipse.wst.xml.xpath2.api.CollationProvider_Fields.CODEPOINT_COLLATION, xstr1, xstr2, dynamicContext);
-			if (result != null)
+			if (result != default)
 			{
 				rs.add(new XSBoolean(System.Numerics.BigInteger.Zero.Equals(result)));
 			}

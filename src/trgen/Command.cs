@@ -200,18 +200,11 @@ namespace Trash
                     // => https://github.com/antlr/antlr4/blob/1b144fa7b40f6d1177c9e4f400a6a04f4103d02e/tool/src/org/antlr/v4/codegen/target/GoTarget.java#L118
                     if (is_parser_grammar)
                     {
-                        //var genfn = (test.target == "Go" ? name.Replace("Parser", "") + "/" : "") + name + Suffix(_config);
                         var p1 = test.package;
                         var pre1 = p1 == "" ? "" : p1 + "/";
-                        var p2 = test.package.Replace("/", ".");
-                        string genfn; // name of the generated parser/lexer file in the output directory.
-                        string genincfn; // name of the include file for parser/lexer, for C++.
                         string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                        string goname; // The name of the parser or lexer functionj for Go.
                         if (test.target == "Go")
                         {
-                            genfn = pre1 + grammar_name.Replace("Parser", "_parser").ToLower() + Suffix(test.target);
-                            genincfn = "";
                             if (test.package != null && test.package != "")
                                 antlr_args = GetOSTarget() == "Windows"
                                     ? "-o " + test.package + " -lib " + test.package +
@@ -222,7 +215,6 @@ namespace Trash
                         }
                         else
                         {
-                            genfn = pre1 + grammar_name + Suffix(test.target);
                             if (test.package != null && test.package != "")
                                 antlr_args = GetOSTarget() == "Windows"
                                     ? "-o " + test.package + " -lib " + test.package +

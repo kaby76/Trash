@@ -2,7 +2,6 @@ lexer grammar QueryLexer;
 
 options {
     superClass = QueryBaseLexer;
-	package = Trash;
 }
 
 INSERT: 'insert';

@@ -2,8 +2,7 @@ parser grammar QueryParser;
 
 options
 {
-tokenVocab=QueryLexer;
-	package = Trash;
+    tokenVocab=QueryLexer;
 }
 
 commands : command (';' command)* ';'* EOF;
