@@ -22,7 +22,7 @@ into one grammar, known as a "combined grammar". This refactoring is
 useful if a simplified grammar grammar is wanted, and if possible if
 the split grammar does not use the "superClass" option in one or the other
 grammars. The opposite refactoring is implemented by
-[trsplit](https://github.com/kaby76/Domemtech.Trash/tree/main/trsplit).
+[trsplit](https://github.com/kaby76/Trash/tree/main/trsplit).
 
 The split refactoring performs several operations:
 

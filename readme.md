@@ -1,6 +1,6 @@
 # Trash
 
-[![Build](https://github.com/kaby76/Domemtech.Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Domemtech.Trash/actions?query=workflow%3ACI)
+[![Build](https://github.com/kaby76/Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Trash/actions?query=workflow%3ACI)
 
 **Status: The toolset is still undergoing a major rewrite. Consider this toolkit as "pre-alpha".**
 
@@ -174,26 +174,26 @@ trparse -i "a == b" | trtree
 ```
 `trtree` is only one of several ways to view parse tree data.
 Other programs for different output are
-[trjson](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trjson) for [JSON output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4.json),
-[trxml](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trxml) for [XML output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4.xml),
-[trst](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trst) for [Antlr runtime ToStringTree output](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4.st),
-[trdot](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trdot),
-[trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trprint) for input text for the parse,
+[trjson](https://github.com/kaby76/Trash/tree/main/src/trjson) for [JSON output](https://github.com/kaby76/Trash/blob/main/_tests/trconvert/antlr2/ada.g4.json),
+[trxml](https://github.com/kaby76/Trash/tree/main/src/trxml) for [XML output](https://github.com/kaby76/Trash/blob/main/_tests/trconvert/antlr2/ada.g4.xml),
+[trst](https://github.com/kaby76/Trash/tree/main/src/trst) for [Antlr runtime ToStringTree output](https://github.com/kaby76/Trash/blob/main/_tests/trconvert/antlr2/ada.g4.st),
+[trdot](https://github.com/kaby76/Trash/tree/main/src/trdot),
+[trprint](https://github.com/kaby76/Trash/tree/main/src/trprint) for input text for the parse,
 and
-[tragl](https://github.com/kaby76/Domemtech.Trash/tree/main/src/tragl).
+[tragl](https://github.com/kaby76/Trash/tree/main/src/tragl).
 
 ### Convert grammars to Antlr4
 ```
 trparse ada.g2 | trconvert | trprint | less
 ```
-This command parses an [old Antlr2 grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g2)
-using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trparse),
+This command parses an [old Antlr2 grammar](https://github.com/kaby76/Trash/blob/main/_tests/trconvert/antlr2/ada.g2)
+using [trparse](https://github.com/kaby76/Trash/tree/main/src/trparse),
 converts the parse tree data to Antlr4 syntax using
- [trconvert](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trconvert)
+ [trconvert](https://github.com/kaby76/Trash/tree/main/src/trconvert)
  and
-finally [prints out the converted parse tree data, ada.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/trconvert/antlr2/ada.g4)
+finally [prints out the converted parse tree data, ada.g4](https://github.com/kaby76/Trash/blob/main/_tests/trconvert/antlr2/ada.g4)
 using
-[trprint](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trprint). Other
+[trprint](https://github.com/kaby76/Trash/tree/main/src/trprint). Other
 grammar that can be converted are Antlr3, Bison, and ISO EBNF. In order to
 use the grammar to parse data, you will need to convert it to an Antlr4 grammar.
 
@@ -203,7 +203,7 @@ mkdir foobar; cd foobar; trgen
 ```
 This command creates a parser application for the C# target.
 If executed in an empty directory, which is done in the example
-shown above, [trgen](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trgen)
+shown above, [trgen](https://github.com/kaby76/Trash/tree/main/src/trgen)
 creates an application using the Arithmetic grammar.
 If executed in a directory containing
 a Antlr Maven plugin (`pom.xml`), `trgen` will create a program according
@@ -236,10 +236,10 @@ with most tools of Trash, is parse tree data.
         trparse -i "1+2+3" | trxgrep " //SCIENTIFIC_NUMBER" | trst
 
 With this command, a directory is created, the Arithmetic grammar generated, build,
-and then run using [trparse](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trparse).
+and then run using [trparse](https://github.com/kaby76/Trash/tree/main/src/trparse).
 The `trparse` tool unifies all parsing, whether it's parsing a grammar or parsing input
 using a generated parser application. The output from the `trparse` tool is a parse
-tree which you can search. [Trxgrep](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trxgrep)
+tree which you can search. [Trxgrep](https://github.com/kaby76/Trash/tree/main/src/trxgrep)
 is the generalized search program for parse trees. `Trxgrep` uses XPath expressions to
 precisely identify nodes in the parse tree.
 
@@ -255,7 +255,7 @@ used more often in compiler construction.
     trparse Arithmetic.g4 | trrename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
 
 In these two examples, the Arithmetic grammar is parsed.
-[trrename](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trrename) reads the parse tree data and
+[trrename](https://github.com/kaby76/Trash/tree/main/src/trrename) reads the parse tree data and
 modifies it by renaming the `expression` symbol two ways: first by XPath expression identifying the LHS terminal
 symbol of the `expression` symbol, and the second by assumption that the tree is an Antlr4 parse tree,
 then renaming a semi-colon-separated list of paired renames. The resulting code is reconstructed and saved.
@@ -290,20 +290,20 @@ when super classes are needed for different targets.
 
     trcombine ArithmeticLexer.g4 ArithmeticParser.g4 | trprint > Arithmetic.g4
 
-This command calls [trcombine](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trcombine)
+This command calls [trcombine](https://github.com/kaby76/Trash/tree/main/src/trcombine)
 which parses two split grammar files
-[ArithmeticLexer.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/combine/ArithmeticLexer.g4)
+[ArithmeticLexer.g4](https://github.com/kaby76/Trash/blob/main/_tests/combine/ArithmeticLexer.g4)
 and
-[ArithmeticParser.g4](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/combine/ArithmeticParser.g4),
-and creates a [combined grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/_tests/combine/Arithmetic.g4)
+[ArithmeticParser.g4](https://github.com/kaby76/Trash/blob/main/_tests/combine/ArithmeticParser.g4),
+and creates a [combined grammar](https://github.com/kaby76/Trash/blob/main/_tests/combine/Arithmetic.g4)
 for the two.
 
     trparse Arithmetic.g4 | trsplit | trsponge -o true
 
-This command calls [trsplit](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trsplit)
+This command calls [trsplit](https://github.com/kaby76/Trash/tree/main/src/trsplit)
 which splits the grammar into two parse tree results, one that defines
 ArithmeticLexer.g4 and the other that defines ArithmeticParser.g4.
-The tool [trsponge](https://github.com/kaby76/Domemtech.Trash/tree/main/src/trsponge)
+The tool [trsponge](https://github.com/kaby76/Trash/tree/main/src/trsponge)
 is similar to the [tee](https://en.wikipedia.org/wiki/Tee_(command)) in
 Linux: the parse tree data is split and placed in files.
 
@@ -335,7 +335,7 @@ Most commands in Trash read and/or write parsing result sets.
 
 ### Recursion
 
-* [Has direct/indirect recursion](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/analysis.md#has-directindirect-recursion)
+* [Has direct/indirect recursion](https://github.com/kaby76/Trash/blob/main/doc/analysis.md#has-directindirect-recursion)
 
 ## Refactoring
 
@@ -350,42 +350,42 @@ The refactorings implemented are:
 
 ### Raw tree editing
 
-* [Delete parse tree node](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#delete-parse-tree-node)
+* [Delete parse tree node](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#delete-parse-tree-node)
 
 ### Reordering
 
-* [Move start rule to top](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#move-start-rule)
-* [Reorder parser rules](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#reorder-parser-rules)
-* [Sort modes](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#sort-modes)
+* [Move start rule to top](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#move-start-rule)
+* [Reorder parser rules](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#reorder-parser-rules)
+* [Sort modes](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#sort-modes)
 
 ### Changing rules
 
-* [Remove useless parentheses](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#remove-useless-parentheses)
-* [Remove useless parser rules](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#remove-useless-productions)
-* [Rename lexer or parser symbol](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#rename)
-* [Unfold](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#Unfold)
-* [Group alts](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#group-alts)
-* [Ungroup alts](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#ungroup-alts)
-* [Upper and lower case string literals](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#upper-and-lower-case-string-literals)
-* [Fold](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#Fold)
+* [Remove useless parentheses](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#remove-useless-parentheses)
+* [Remove useless parser rules](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#remove-useless-productions)
+* [Rename lexer or parser symbol](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#rename)
+* [Unfold](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#Unfold)
+* [Group alts](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#group-alts)
+* [Ungroup alts](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#ungroup-alts)
+* [Upper and lower case string literals](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#upper-and-lower-case-string-literals)
+* [Fold](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#Fold)
 * Replace direct left recursion with right recursion
-* [Replace direct left/right recursion with Kleene operator](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#Kleene)
+* [Replace direct left/right recursion with Kleene operator](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#Kleene)
 * Replace indirect left recursion with right recursion
 * Replace parser rule symbols that conflict with Antlr keywords
-* [Replace string literals in parser with lexer symbols](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#replace-literals-in-parser-with-lexer-token-symbols)
+* [Replace string literals in parser with lexer symbols](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#replace-literals-in-parser-with-lexer-token-symbols)
 * Replace string literals in parser with lexer symbols, with lexer rule create
-* [Delabel removes the annoying and mostly useless labeling in an Antlr grammar](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#delabel)
+* [Delabel removes the annoying and mostly useless labeling in an Antlr grammar](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#delabel)
 
 ### Splitting and combining
 
-* [Split combined grammars](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#splitting-and-combining-grammars)
-* [Combine splitted grammars](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/refactoring.md#splitting-and-combining-grammars)
+* [Split combined grammars](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#splitting-and-combining-grammars)
+* [Combine splitted grammars](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#splitting-and-combining-grammars)
 
 ## Conversion
 
-* [Antlr3 import](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/Import.md#antlr3)
-* [Antlr2 import](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/Import.md#antlr2)
-* [Bison import](https://github.com/kaby76/Domemtech.Trash/blob/main/doc/Import.md#bison)
+* [Antlr3 import](https://github.com/kaby76/Trash/blob/main/doc/Import.md#antlr3)
+* [Antlr2 import](https://github.com/kaby76/Trash/blob/main/doc/Import.md#antlr2)
+* [Bison import](https://github.com/kaby76/Trash/blob/main/doc/Import.md#bison)
 
 ---------
 
@@ -394,14 +394,14 @@ check out my [blog](http://codinggorilla.com).
 
 # Building
 
-    git clone https://github.com/kaby76/Domemtech.Trash
-    cd Domemtech.Trash
+    git clone https://github.com/kaby76/Trash
+    cd Trash
     make clean; make; make install
     
 You must have the NET SDK version 8 installed to build and run.
 
 # Releases
 
-See https://github.com/kaby76/Domemtech.Trash/releases.
+See https://github.com/kaby76/Trash/releases.
 
 If you have any questions, email me at ken.domino <at> gmail.com

@@ -3,7 +3,7 @@
     "trrup": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Domemtech.Trash\\_tests\\trrup"
+      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\Trash\\_tests\\trrup"
     }
   }
 }

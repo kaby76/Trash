@@ -81,7 +81,7 @@ into one grammar, known as a "combined grammar". This refactoring is
 useful if a simplified grammar grammar is wanted, and if possible if
 the split grammar does not use the "superClass" option in one or the other
 grammars. The opposite refactoring is implemented by
-[trsplit](https://github.com/kaby76/Domemtech.Trash/tree/main/trsplit).
+[trsplit](https://github.com/kaby76/Trash/tree/main/trsplit).
 
 The split refactoring performs several operations:
 
@@ -348,7 +348,7 @@ use an online Dot graph visualizer to make a plot.
 Any parse tree data can be converted to Dot, include a
 parse of a grammar, the parse tree of a simple expression grammar,
 or a list of parse tree nodes obtained via
-[trxgrep](https://github.com/kaby76/Domemtech.Trash/tree/main/trxgrep).
+[trxgrep](https://github.com/kaby76/Trash/tree/main/trxgrep).
 
 #### Examples
 
@@ -669,7 +669,7 @@ use an online Dot graph visualizer to make a plot.
 Any parse tree data can be converted to Dot, include a
 parse of a grammar, the parse tree of a simple expression grammar,
 or a list of parse tree nodes obtained via
-[trxgrep](https://github.com/kaby76/Domemtech.Trash/tree/main/trxgrep).
+[trxgrep](https://github.com/kaby76/Trash/tree/main/trxgrep).
 
 #### Examples
 
@@ -1129,7 +1129,7 @@ The split command splits one grammar into two. The input grammar
 must be a combined lexer/parser grammar implemented in one file.
 The transformation creates a lexer grammar and a parser grammar,
 outputed as parse tree data with the two grammars.
-[trsponge](https://github.com/kaby76/Domemtech.Trash/tree/main/trsponge)
+[trsponge](https://github.com/kaby76/Trash/tree/main/trsponge)
 is used to instantiate the two files in the file system.
 
 #### Usage
