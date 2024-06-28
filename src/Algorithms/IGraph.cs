@@ -1,36 +1,29 @@
 ﻿using System.Collections.Generic;
 
-namespace Algorithms
+namespace Algorithms;
+
+public interface IGraph<NODE, EDGE>
+    where EDGE : IEdge<NODE>
 {
-    public interface IGraph<NODE, EDGE>
-        where EDGE : IEdge<NODE>
-    {
-        IEnumerable<NODE> Vertices
-        {
-            get;
-        }
+    IEnumerable<NODE> Vertices { get; }
 
-        IEnumerable<EDGE> Edges
-        {
-            get;
-        }
+    IEnumerable<EDGE> Edges { get; }
 
-        NODE AddVertex(NODE v);
+    NODE AddVertex(NODE v);
 
-        EDGE AddEdge(EDGE e);
+    EDGE AddEdge(EDGE e);
 
-        IEnumerable<NODE> Predecessors(NODE n);
+    IEnumerable<NODE> Predecessors(NODE n);
 
-        IEnumerable<EDGE> PredecessorEdges(NODE n);
+    IEnumerable<EDGE> PredecessorEdges(NODE n);
 
-        IEnumerable<NODE> ReversePredecessors(NODE n);
+    IEnumerable<NODE> ReversePredecessors(NODE n);
 
-        IEnumerable<NODE> Successors(NODE n);
+    IEnumerable<NODE> Successors(NODE n);
 
-        IEnumerable<EDGE> SuccessorEdges(NODE n);
+    IEnumerable<EDGE> SuccessorEdges(NODE n);
 
-        IEnumerable<NODE> ReverseSuccessors(NODE n);
+    IEnumerable<NODE> ReverseSuccessors(NODE n);
 
-        bool IsLeaf(NODE node);
-    }
+    bool IsLeaf(NODE node);
 }

@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Algorithms
+namespace Algorithms;
+
+public interface IVertex : IComparable<IVertex>
 {
-    public interface IVertex : IComparable<IVertex>
-    {
-        // Use ToString() to get ID of node.
-    }
+    // Use ToString() to get ID of node.
 }

@@ -1,7 +1,6 @@
-﻿namespace Algorithms
+﻿namespace Algorithms;
+
+public interface ISumType
 {
-    public interface ISumType
-    {
-        object Value { get; }
-    }
+    object Value { get; }
 }
