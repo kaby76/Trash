@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "ConsoleApp1": {
-      "commandName": "Project",
-      "commandLineArgs": "c:/msys64/home/Kenne/trash/kleene.g4"
-    }
-  }
-}

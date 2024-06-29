@@ -202,7 +202,6 @@
                     Nodes = result.ToArray(),
                     Lexer = lexer,
                     Parser = parser,
-                    Text = text
                 };
                 results.Add(res);
             }
@@ -323,12 +322,6 @@
                 {
                     writer.WritePropertyName("FileName");
                     writer.WriteStringValue(tuple.FileName);
-                }
-
-                if (tuple.Text != null)
-                {
-                    writer.WritePropertyName("Text");
-                    writer.WriteStringValue(tuple.Text);
                 }
 
                 if (tuple.Parser != null && tuple.Parser.GrammarFileName != null)

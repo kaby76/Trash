@@ -81,7 +81,6 @@ class Command
         foreach (ParsingResultSet parse_info in data)
         {
             UnvParseTreeNode[] trees = parse_info.Nodes;
-            string text = parse_info.Text;
             string fn = parse_info.FileName;
             Parser parser = parse_info.Parser;
             Lexer lexer = parse_info.Lexer;
@@ -96,7 +95,50 @@ class Command
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var command = scommand.GetChild(0).GetText();
-                if (command == "insert")
+                if (command == "grep")
+                {
+                    var expr_tree = scommand.expr()[0];
+                    var si = expr_tree.SourceInterval;
+                    IToken start = stokens.Get(si.a);
+                    int bi = start.StartIndex;
+                    IToken stop = stokens.Get(si.b);
+                    int ei = stop.StopIndex;
+                    string expr = cs.GetText(new Interval(bi, ei));
+                    if (config.Verbose)
+                        LoggerNs.TimedStderrOutput.WriteLine("delete expr " + expr);
+                    ConvertToDOM ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+                    using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
+                           ate.Try(trees, parser))
+                    {
+                        List<UnvParseTreeNode> nodes = engine.parseExpression(expr,
+                                new StaticContextBuilder()).evaluate(dynamicContext,
+                                new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode))
+                            .ToList();
+                        if (config.Verbose)
+                            LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
+                        if (config.Verbose)
+                        {
+                            LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
+                            foreach (UnvParseTreeNode n in trees)
+                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
+                                    .ToString());
+                        }
+                        if (scommand.MATCH_REQUIRED() != null)
+                        {
+                            throw new Exception("No match found for XPath expression, where it is required.");
+                        }
+                        trees = nodes.ToArray();
+                        if (config.Verbose)
+                        {
+                            LoggerNs.TimedStderrOutput.WriteLine("Resulted in this:");
+                            foreach (UnvParseTreeNode n in trees)
+                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
+                                    .ToString());
+                        }
+                    }
+                }
+                else if (command == "insert")
                 {
                     var expr_tree = scommand.expr()[0];
                     var si = expr_tree.SourceInterval;
@@ -376,7 +418,6 @@ class Command
 
             ParsingResultSet tuple = new ParsingResultSet()
             {
-                Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
                 FileName = fn,
                 Nodes = trees,
                 Lexer = lexer,

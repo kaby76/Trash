@@ -54,8 +54,6 @@
             var results = new List<ParsingResultSet>();
             foreach (var parse_info in data)
             {
-                var text = parse_info.Text;
-                var fn = parse_info.FileName;
                 var atrees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;

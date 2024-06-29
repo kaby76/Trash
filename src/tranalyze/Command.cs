@@ -54,9 +54,6 @@ namespace Trash
             foreach (AntlrJson.ParsingResultSet parse_info in data)
             {
                 if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
-                var results = new List<ParsingResultSet>();
-                var text = parse_info.Text;
-                var fn = parse_info.FileName;
                 var trees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
