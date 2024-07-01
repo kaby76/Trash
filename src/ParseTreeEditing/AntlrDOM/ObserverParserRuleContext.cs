@@ -1,12 +1,11 @@
-﻿namespace ParseTreeEditing.AntlrDOM
-{
-    using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
-    using org.eclipse.wst.xml.xpath2.processor.@internal.function;
-    using System;
-    using System.Collections.Generic;
+﻿using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
+using System;
+using System.Collections.Generic;
 
-    public class ObserverParserRuleContext : ParserRuleContext, IAntlrObservable
+namespace ParseTreeEditing.AntlrDOM;
+
+public class ObserverParserRuleContext : ParserRuleContext, IAntlrObservable
     {
         private List<IAntlrObserver> observers;
 
@@ -181,57 +180,58 @@
         }
     }
 
-    public class ObserverTerminalNodeImpl : TerminalNodeImpl, IAntlrObservable
+public class ObserverTerminalNodeImpl : TerminalNodeImpl, IAntlrObservable
+{
+    private List<IAntlrObserver> observers;
+
+    public IEnumerable<IAntlrObserver> Observers
     {
-        private List<IAntlrObserver> observers;
+        get { return observers; }
+    }
 
-        public IEnumerable<IAntlrObserver> Observers
+    public ObserverTerminalNodeImpl(IToken token) : base(token)
+    {
+        observers = new List<IAntlrObserver>();
+    }
+
+    public IDisposable Subscribe(IAntlrObserver observer)
+    {
+        if (!observers.Contains(observer))
         {
-            get { return observers; }
+            observers.Add(observer);
         }
 
-        public ObserverTerminalNodeImpl(IToken token) : base(token)
+        return new Unsubscriber(observers, observer);
+    }
+
+    public void Unsubscribe(IAntlrObserver observer)
+    {
+        if (observers.Contains(observer))
         {
-            observers = new List<IAntlrObserver>();
+            observers.Remove(observer);
+        }
+    }
+
+    public IDisposable Subscribe(IObserver<ObserverParserRuleContext> observer)
+    {
+        throw new NotImplementedException();
+    }
+
+    private class Unsubscriber : IDisposable
+    {
+        private List<IAntlrObserver> _observers;
+        private IAntlrObserver _observer;
+
+        public Unsubscriber(List<IAntlrObserver> observers, IAntlrObserver observer)
+        {
+            this._observers = observers;
+            this._observer = observer;
         }
 
-        public IDisposable Subscribe(IAntlrObserver observer)
+        public void Dispose()
         {
-            if (!observers.Contains(observer))
-            {
-                observers.Add(observer);
-            }
-            return new Unsubscriber(observers, observer);
-        }
-
-        public void Unsubscribe(IAntlrObserver observer)
-        {
-            if (observers.Contains(observer))
-            {
-                observers.Remove(observer);
-            }
-        }
-        public IDisposable Subscribe(IObserver<ObserverParserRuleContext> observer)
-        {
-            throw new NotImplementedException();
-        }
-
-        private class Unsubscriber : IDisposable
-        {
-            private List<IAntlrObserver> _observers;
-            private IAntlrObserver _observer;
-
-            public Unsubscriber(List<IAntlrObserver> observers, IAntlrObserver observer)
-            {
-                this._observers = observers;
-                this._observer = observer;
-            }
-
-            public void Dispose()
-            {
-                if (_observer != null && _observers.Contains(_observer))
-                    _observers.Remove(_observer);
-            }
+            if (_observer != null && _observers.Contains(_observer))
+                _observers.Remove(_observer);
         }
     }
 }

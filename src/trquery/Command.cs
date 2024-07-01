@@ -36,6 +36,10 @@ class Command
             {
                 input = String.Join(" ", query);
             }
+            else
+            {
+                throw new Exception("Query required, none supplied on command line.");
+            }
         }
 
         ICharStream cs = CharStreams.fromString(input);
@@ -140,16 +144,29 @@ class Command
                 }
                 else if (command == "insert")
                 {
-                    var expr_tree = scommand.expr()[0];
-                    var si = expr_tree.SourceInterval;
-                    IToken start = stokens.Get(si.a);
-                    int bi = start.StartIndex;
-                    IToken stop = stokens.Get(si.b);
-                    int ei = stop.StopIndex;
-                    string expr = cs.GetText(new Interval(bi, ei));
+                    string expr;
+                    {
+                        var expr_tree = scommand.expr()[0];
+                        var si = expr_tree.SourceInterval;
+                        IToken start = stokens.Get(si.a);
+                        int bi = start.StartIndex;
+                        IToken stop = stokens.Get(si.b);
+                        int ei = stop.StopIndex;
+                        expr = cs.GetText(new Interval(bi, ei));
+                    }
+                    string @string;
+                    {
+                        var string_tree = scommand.@string();
+                        var si = string_tree.SourceInterval;
+                        IToken start = stokens.Get(si.a);
+                        int bi = start.StartIndex;
+                        IToken stop = stokens.Get(si.b);
+                        int ei = stop.StopIndex;
+                        @string = cs.GetText(new Interval(bi, ei));
+                        @string = RemoveQuotes(@string);
+                    }
                     if (config.Verbose)
                         LoggerNs.TimedStderrOutput.WriteLine("insert expr " + expr);
-                    string value = RemoveQuotes(scommand.GetChild(2).GetText());
                     ConvertToDOM ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
                     using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
                            ate.Try(trees, parser))
@@ -174,7 +191,12 @@ class Command
                         }
                         foreach (UnvParseTreeNode node in nodes)
                         {
-                            TreeEdits.InsertBefore(node, value);
+                            if (scommand.BEFORE() != null)
+                                TreeEdits.InsertBefore(node, @string);
+                            else if (scommand.AFTER() != null)
+                                TreeEdits.InsertAfter(node, @string);
+                            else
+                                TreeEdits.InsertBefore(node, @string);
                         }
                     }
                 }

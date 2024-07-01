@@ -2,8 +2,8 @@
   "profiles": {
     "trscript": {
       "commandName": "Project",
-      "commandLineArgs": "-v -f o.pt grep //EQa",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\arithmetic\\Generated-CSharp"
+      "commandLineArgs": "-f o.pt insert before //ANY 'bbb'",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\fortran"
     }
   }
 }

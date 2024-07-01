@@ -8,7 +8,7 @@ options
 commands : command (';' command)* ';'* EOF;
 command
  : 'grep' expr MATCH_REQUIRED?
- | 'insert' expr MATCH_REQUIRED? string
+ | 'insert' ('before' | 'after')? expr MATCH_REQUIRED? string
  | 'delete' expr MATCH_REQUIRED? 
  | 'delete-reattach' expr MATCH_REQUIRED? 
  | 'replace' expr MATCH_REQUIRED? string   

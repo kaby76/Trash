@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "-t CSharp",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\csharp"
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\temp\\grammars-v4\\cpp"
     }
   }
 }

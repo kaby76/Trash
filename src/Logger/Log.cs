@@ -1,13 +1,11 @@
-﻿namespace LoggerNs
-{
-    using System;
-    using System.IO;
-    using System.Net.Http;
-    using System.Text;
-    using System.Threading;
+﻿using System;
+using System.IO;
+using System.Text;
+using System.Threading;
 
+namespace LoggerNs;
 
-    public class LogTextWriter : TextWriter
+public class LogTextWriter : TextWriter
     {
         public override Encoding Encoding => throw new NotImplementedException();
 
@@ -111,20 +109,19 @@
     }
 
 
-    public class TimedStderrOutput
+public class TimedStderrOutput
+{
+    static Nullable<DateTime> _before = null;
+
+    public static void WriteLine(string str)
     {
-        static Nullable<DateTime> _before = null;
-
-        public static void WriteLine(string str)
+        DateTime dateTime = DateTime.Now;
+        if (_before == null)
         {
-            DateTime dateTime = DateTime.Now;
-            if (_before == null)
-            {
-                _before = dateTime;
-            }
-
-            string time = String.Format("{0,-20}", (dateTime - _before));
-            System.Console.Error.WriteLine(time + str);
+            _before = dateTime;
         }
+
+        string time = String.Format("{0,-20}", (dateTime - _before));
+        System.Console.Error.WriteLine(time + str);
     }
 }

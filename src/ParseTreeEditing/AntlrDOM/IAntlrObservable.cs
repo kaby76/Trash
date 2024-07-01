@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ParseTreeEditing.AntlrDOM
+namespace ParseTreeEditing.AntlrDOM;
+
+public interface IAntlrObservable : IObservable<ObserverParserRuleContext>
 {
-    public interface IAntlrObservable : IObservable<ObserverParserRuleContext>
-    {
-    }
 }

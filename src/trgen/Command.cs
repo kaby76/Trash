@@ -353,7 +353,8 @@ namespace Trash
                     var a = test.tool_grammar_tuples
                         .Where(t => t.WhatType == GrammarTuple.Type.Parser)
                         .FirstOrDefault()?.GrammarName;
-                    if (a != null) test.grammar_name = a;
+                    Regex r = new Regex("^(.*)Parser$");
+                    if (a != null) test.grammar_name = r.Replace(a, "$1");
                     if (test.grammar_name == null)
                     {
                         var b = test.tool_grammar_tuples
@@ -497,6 +498,7 @@ namespace Trash
                             test.fully_qualified_parser_name = t.GrammarAutomName;
                             test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName;
                             parser_src_grammar_file_name = t.GrammarFileName;
+                            test.parser_grammar_file_name = parser_src_grammar_file_name;
                         }
                     }
                     else if (t.WhatType == GrammarTuple.Type.Lexer)
@@ -506,6 +508,7 @@ namespace Trash
                             test.fully_qualified_lexer_name = t.GrammarAutomName;
                             test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName;
                             lexer_src_grammar_file_name = t.GrammarFileName;
+                            test.lexer_grammar_file_name = lexer_src_grammar_file_name;
                         }
                     }
                     else if (t.WhatType == GrammarTuple.Type.Combined)
@@ -518,6 +521,8 @@ namespace Trash
                             test.fully_qualified_lexer_name = t.GrammarAutomName + "Lexer";
                             test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName + "Lexer";
                             lexer_src_grammar_file_name = test.fully_qualified_lexer_name;
+                            test.lexer_grammar_file_name = lexer_src_grammar_file_name;
+                            test.parser_grammar_file_name = parser_src_grammar_file_name;
                         }
                     }
                 }
