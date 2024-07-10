@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 namespace Trash;
 
-
 public class Program
 {
 
