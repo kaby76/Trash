@@ -231,7 +231,9 @@ public class ExtractText : ITextExtractionStrategy
 
     public virtual String GetResultantText()
     {
-        return result.ToString();
+        var str = result.ToString();
+        result.Clear();
+        return str;
     }
 
     protected internal void AppendTextChunk(String text)
