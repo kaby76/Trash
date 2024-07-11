@@ -42,6 +42,7 @@ public class ExtractText : ITextExtractionStrategy
     private static string emphasis = "";
     private static int xxxxxxx = 0;
     private static int uuuuuuu = 0;
+    //private static bool firstRender = true;
 
     public virtual void EventOccurred(IEventData data, EventType type)
     {
@@ -51,8 +52,10 @@ public class ExtractText : ITextExtractionStrategy
             LineSegment segment = renderInfo.GetBaseline();
             Vector start = segment.GetStartPoint();
             Vector end = segment.GetEndPoint();
-            var l1 = (int)start.Get(0);
-            var l2 = (int)end.Get(1);
+            var s0 = (int)start.Get(0);
+            var s1 = (int)start.Get(1);
+            var e0 = (int)end.Get(0);
+            var e1 = (int)end.Get(1);
             if (lastStart == null)
             {
                 lastStart = start;
@@ -73,7 +76,7 @@ public class ExtractText : ITextExtractionStrategy
                 xxxxxxx++;
             }
 
-            FilterEvaluator visitor = new FilterEvaluator(l1, l2);
+            FilterEvaluator visitor = new FilterEvaluator(s0, s1, e0, e1);
             var t = tree.Accept(visitor);
             if (t.IsT1)
             {
@@ -152,7 +155,9 @@ public class ExtractText : ITextExtractionStrategy
                 {
                     x1 = start;
                 }
+
                 Vector x2 = lastEnd;
+                
                 // see http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
                 float dist = (x2.Subtract(x1)).Cross((x1.Subtract(start))).LengthSquared() / x2.Subtract(x1)
                     .LengthSquared
@@ -173,7 +178,7 @@ public class ExtractText : ITextExtractionStrategy
                 AppendTextChunk("\n");
                 var s = start;
                 {
-                    var spacing = (int)((l1 - key_) / renderInfo.GetSingleSpaceWidth() / 2);
+                    var spacing = (int)((s0 - key_) / renderInfo.GetSingleSpaceWidth() / 2);
                     if (spacing > 0)
                     {
                         AppendTextChunk(new string(' ', spacing));

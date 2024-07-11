@@ -4,35 +4,36 @@ namespace Trash;
 
 public class FilterEvaluator : FilterBaseVisitor<OneOf.OneOf<object, bool, int>>
 {
-    private int l1_;
-    private int l2_;
+    private int s0_;
+    private int s1_;
+    private int e0_;
+    private int e1_;
 
-    public FilterEvaluator(int l1, int l2)
+    public FilterEvaluator(int s0, int s1, int e0, int e1)
     {
-        l1_ = l1;
-        l2_ = l2;
+        s0_ = s0;
+        s1_ = s1;
+        e0_ = e0;
+        e1_ = e1;
     }
 
     public override OneOf<object, bool, int> VisitStart(FilterParser.StartContext context)
     {
         var result = new OneOf<object, bool, int>();
-        foreach (var e in context.expr())
+        var e = context.expr();
+        if (e == null)
         {
-            var v = Visit(e);
-            if (v.IsT1 && result.IsT0)
-            {
-                result = v;
-            }
-            else if (v.IsT1 && result.IsT1)
-            {
-                result = result.AsT1 || v.AsT1;
-            }
-            else
-            {
-                result = new OneOf<object, bool, int>();
-            }
+            return result;
         }
-
+        var v = Visit(e);
+        if (v.IsT1)
+        {
+            result = v.AsT1;
+        }
+        else
+        {
+            result = new OneOf<object, bool, int>();
+        }
         return result;
     }
 
@@ -42,13 +43,21 @@ public class FilterEvaluator : FilterBaseVisitor<OneOf.OneOf<object, bool, int>>
         {
             return int.Parse(context.NUM().GetText());
         }
-        else if (context.ID() != null && context.ID().GetText().Equals("l1"))
+        else if (context.ID() != null && context.ID().GetText().Equals("s0"))
         {
-            return l1_;
+            return s0_;
         }
-        else if (context.ID() != null && context.ID().GetText().Equals("l2"))
+        else if (context.ID() != null && context.ID().GetText().Equals("s1"))
         {
-            return l2_;
+            return s1_;
+        }
+        else if (context.ID() != null && context.ID().GetText().Equals("e0"))
+        {
+            return e0_;
+        }
+        else if (context.ID() != null && context.ID().GetText().Equals("e1"))
+        {
+            return e1_;
         }
         else if (context.ID() != null)
         {
@@ -70,9 +79,29 @@ public class FilterEvaluator : FilterBaseVisitor<OneOf.OneOf<object, bool, int>>
             {
                 return v1.AsT2 > v2.AsT2;
             }
-            else if (v1.IsT2 && v2.IsT2 && context.LE() != null)
+            else if (v1.IsT2 && v2.IsT2 && context.GE() != null)
             {
                 return v1.AsT2 >= v2.AsT2;
+            }
+            else if (v1.IsT1 && v2.IsT1 && context.AND() != null)
+            {
+                return v1.AsT1 && v2.AsT1;
+            }
+            else if (v1.IsT1 && v2.IsT1 && context.OR() != null)
+            {
+                return v1.AsT1 || v2.AsT1;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else if (context.expr().Length == 1)
+        {
+            var v1 = VisitExpr(context.expr(0));
+            if (v1.IsT1)
+            {
+                return v1.AsT1;
             }
             else
             {

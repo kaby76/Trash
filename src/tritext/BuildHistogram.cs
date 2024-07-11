@@ -39,9 +39,11 @@ internal class BuildHistogram : ITextExtractionStrategy
             LineSegment segment = renderInfo.GetBaseline();
             Vector start = segment.GetStartPoint();
             Vector end = segment.GetEndPoint();
-            var l1 = (int)start.Get(0);
-            var l2 = (int)end.Get(1);
-            FilterEvaluator visitor = new FilterEvaluator(l1, l2);
+            var s0 = (int)start.Get(0);
+            var s1 = (int)start.Get(1);
+            var e0 = (int)end.Get(0);
+            var e1 = (int)end.Get(1);
+            FilterEvaluator visitor = new FilterEvaluator(s0, s1, e0, e1);
             var t = tree.Accept(visitor);
             if (t.IsT1)
             {
@@ -52,8 +54,8 @@ internal class BuildHistogram : ITextExtractionStrategy
             }
 
             var text = renderInfo.GetText();
-            if (config.OutputPreflight) System.Console.WriteLine("l1 " + l1 + " l2 " + l2 + " text " + text);
-            Histogram[l1] = Histogram.ContainsKey(l1) ? Histogram[l1] + 1 : 1;
+            if (config.OutputPreflight) System.Console.WriteLine("s0 " + s0 + " s1 " + s1 + "e0 " + e0 + " e1 " + e1 + " text " + text);
+            Histogram[s0] = Histogram.ContainsKey(s0) ? Histogram[s0] + 1 : 1;
         }
     }
 

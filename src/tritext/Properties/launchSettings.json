@@ -2,7 +2,7 @@
   "profiles": {
     "tritext": {
       "commandName": "Project",
-      "commandLineArgs": "23-007r1.pdf -f \"l1<50;l2>780;l2<60\"  --markup",
+      "commandLineArgs": "23-007r1.pdf -f \"s0<50 || e1>780 || e1<60\"  --markup",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\fortran"
     }
   }
