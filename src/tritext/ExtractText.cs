@@ -40,9 +40,6 @@ public class ExtractText : ITextExtractionStrategy
 
     private readonly StringBuilder result = new StringBuilder();
     private static string emphasis = "";
-    private static int xxxxxxx = 0;
-    private static int uuuuuuu = 0;
-    //private static bool firstRender = true;
 
     public virtual void EventOccurred(IEventData data, EventType type)
     {
@@ -65,16 +62,6 @@ public class ExtractText : ITextExtractionStrategy
                 lastEnd = end;
             }
             var x = renderInfo.GetText();
-            if (x.Contains("R871"))
-            {
-                xxxxxxx++;
-                uuuuuuu++;
-            }
-            if (uuuuuuu >= 104)
-            {
-                //    System.Console.WriteLine(uuuuuuu + " " + xxxxxxx + " " + x + " " + l1 + " " + l2); 
-                xxxxxxx++;
-            }
 
             FilterEvaluator visitor = new FilterEvaluator(s0, s1, e0, e1);
             var t = tree.Accept(visitor);
@@ -143,31 +130,34 @@ public class ExtractText : ITextExtractionStrategy
                 }
             }
 
-            bool firstRender = result.Length == 0;
             bool hardReturn = false;
 
             //System.Console.WriteLine("Start: " + start + " End: " + end + " Text: " + renderInfo.GetText() + " Font: " + f.GetFontProgram().GetFontNames().GetFontName());
 
-            if (!firstRender)
+            // Determine if a new line should be started.
+            // We only care about the up/down coordinates.
+            // "0", used in start.Get(0), is the "X" coordinate, increases from left to right.
+            // "1", used in start.Get(1), is the "Y" coordinate, increases from bottom to top.
+            // The page contents starts from the top of the page, those with highest "Y" coordinate.
+            // There is a basic assumption that text events will proceed in top to bottom,
+            // left to right fashion.
+            Vector x1 = lastStart;
+            if (x1 == null)
             {
-                Vector x1 = lastStart;
-                if (x1 == null)
-                {
-                    x1 = start;
-                }
+                x1 = start;
+            }
 
-                Vector x2 = lastEnd;
-                
-                // see http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
-                float dist = (x2.Subtract(x1)).Cross((x1.Subtract(start))).LengthSquared() / x2.Subtract(x1)
-                    .LengthSquared
-                        ();
-                // we should probably base this on the current font metrics, but 1 pt seems to be sufficient for the time being
-                float sameLineThreshold = 1f;
-                if (dist > sameLineThreshold)
-                {
-                    hardReturn = true;
-                }
+            Vector x2 = lastEnd;
+            
+            // Check diff in Y coordinates.
+            float diff = lastStart.Get(1) - start.Get(1);
+            var dist = diff * diff;
+
+            // we should probably base this on the current font metrics, but 1 pt seems to be sufficient for the time being
+            float sameLineThreshold = 1f;
+            if (dist > sameLineThreshold)
+            {
+                hardReturn = true;
             }
 
             // Note:  Technically, we should check both the start and end positions, in case the angle of the text changed without any displacement
@@ -193,7 +183,7 @@ public class ExtractText : ITextExtractionStrategy
             }
             else
             {
-                if (!firstRender)
+                if (result.Length != 0)
                 {
                     // we only insert a blank space if the trailing character of the previous string wasn't a space, and the leading character of the current string isn't a space
                     if (result[result.Length - 1] != ' ' && renderInfo.GetText().Length > 0 &&
