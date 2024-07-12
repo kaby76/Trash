@@ -108,6 +108,7 @@ public class ExtractText : ITextExtractionStrategy
                     if (emphasis != "</i>")
                     {
                         if (config.OutputMarkup) AppendTextChunk(emphasis);
+                        emphasis = "";
                         start_tag = true;
                     }
                 }
@@ -116,6 +117,7 @@ public class ExtractText : ITextExtractionStrategy
                     if (emphasis != "</b>")
                     {
                         if (config.OutputMarkup) AppendTextChunk(emphasis);
+                        emphasis = "";
                         start_tag = true;
                     }
                 }
@@ -160,8 +162,6 @@ public class ExtractText : ITextExtractionStrategy
                 hardReturn = true;
             }
 
-            // Note:  Technically, we should check both the start and end positions, in case the angle of the text changed without any displacement
-            // but this sort of thing probably doesn't happen much in reality, so we'll leave it alone for now
             if (hardReturn)
             {
                 //System.Console.WriteLine("<< Hard Return >>");
@@ -174,12 +174,6 @@ public class ExtractText : ITextExtractionStrategy
                         AppendTextChunk(new string(' ', spacing));
                     }
                 }
-                //{
-                //    if (spacing > renderInfo.GetSingleSpaceWidth() / 2f)
-                //    {
-                //        AppendTextChunk(new string(' ', (int)spacing));
-                //    }
-                //}
             }
             else
             {
@@ -192,6 +186,9 @@ public class ExtractText : ITextExtractionStrategy
                         float spacing = lastEnd.Subtract(start).Length();
                         if (spacing > renderInfo.GetSingleSpaceWidth() / 2f)
                         {
+                            if (config.OutputMarkup) AppendTextChunk(emphasis);
+                            emphasis = "";
+                            start_tag = true;
                             AppendTextChunk(new string(" ")); //, (int)spacing));
                         }
                     }
