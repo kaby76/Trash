@@ -61,7 +61,7 @@ public class ExtractText : ITextExtractionStrategy
             {
                 lastEnd = end;
             }
-            var x = renderInfo.GetText();
+            var text = renderInfo.GetText();
 
             FilterEvaluator visitor = new FilterEvaluator(s0, s1, e0, e1);
             var t = tree.Accept(visitor);
@@ -213,7 +213,7 @@ public class ExtractText : ITextExtractionStrategy
                 }
             }
 
-            AppendTextChunk(x);
+            AppendTextChunk(text);
             lastStart = start;
             lastEnd = end;
         }
