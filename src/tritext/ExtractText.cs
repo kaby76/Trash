@@ -63,15 +63,11 @@ public class ExtractText : ITextExtractionStrategy
             }
             var text = renderInfo.GetText();
 
-            FilterEvaluator visitor = new FilterEvaluator(s0, s1, e0, e1);
-            var t = tree.Accept(visitor);
-            if (t.IsT1)
-            {
-                if (t.AsT1)
-                {
-                    return;
-                }
-            }
+            if (text.Contains("R759"))
+            {}
+
+            var t = tree.Accept(new FilterEvaluator(s0, s1, e0, e1));
+            if (t.IsT1 && t.AsT1) return;
 
             var f = renderInfo.GetFont();
             var fp = f.GetFontProgram();
@@ -91,6 +87,22 @@ public class ExtractText : ITextExtractionStrategy
                 }
             }
 
+            // Determine if a new line should be started.
+            // We only care about the up/down coordinates.
+            // "0", used in start.Get(0), is the "X" coordinate, increases from left to right.
+            // "1", used in start.Get(1), is the "Y" coordinate, increases from bottom to top.
+            // The page contents starts from the top of the page, those with highest "Y" coordinate.
+            // There is a basic assumption that text events will proceed in top to bottom,
+            // left to right fashion.
+            // Check diff in Y coordinates.
+            bool hardReturn = false;
+            float diff = lastStart.Get(1) - start.Get(1);
+            var dist = diff * diff;
+
+            // we should probably base this on the current font metrics, but 1 pt seems to be sufficient for the time being
+            float sameLineThreshold = 1f;
+            if (dist > sameLineThreshold) hardReturn = true;
+
             var start_tag = false;
             /* If we are not in a bold or italic section, then a start tag must be added. */
             if (emphasis == "")
@@ -105,7 +117,7 @@ public class ExtractText : ITextExtractionStrategy
                  */
                 if (italic)
                 {
-                    if (emphasis != "</i>")
+                    if (emphasis != "</i>" || hardReturn)
                     {
                         if (config.OutputMarkup) AppendTextChunk(emphasis);
                         emphasis = "";
@@ -114,7 +126,7 @@ public class ExtractText : ITextExtractionStrategy
                 }
                 else if (bold)
                 {
-                    if (emphasis != "</b>")
+                    if (emphasis != "</b>" || hardReturn)
                     {
                         if (config.OutputMarkup) AppendTextChunk(emphasis);
                         emphasis = "";
@@ -130,36 +142,6 @@ public class ExtractText : ITextExtractionStrategy
                     emphasis = "";
                     start_tag = false;
                 }
-            }
-
-            bool hardReturn = false;
-
-            //System.Console.WriteLine("Start: " + start + " End: " + end + " Text: " + renderInfo.GetText() + " Font: " + f.GetFontProgram().GetFontNames().GetFontName());
-
-            // Determine if a new line should be started.
-            // We only care about the up/down coordinates.
-            // "0", used in start.Get(0), is the "X" coordinate, increases from left to right.
-            // "1", used in start.Get(1), is the "Y" coordinate, increases from bottom to top.
-            // The page contents starts from the top of the page, those with highest "Y" coordinate.
-            // There is a basic assumption that text events will proceed in top to bottom,
-            // left to right fashion.
-            Vector x1 = lastStart;
-            if (x1 == null)
-            {
-                x1 = start;
-            }
-
-            Vector x2 = lastEnd;
-            
-            // Check diff in Y coordinates.
-            float diff = lastStart.Get(1) - start.Get(1);
-            var dist = diff * diff;
-
-            // we should probably base this on the current font metrics, but 1 pt seems to be sufficient for the time being
-            float sameLineThreshold = 1f;
-            if (dist > sameLineThreshold)
-            {
-                hardReturn = true;
             }
 
             if (hardReturn)
