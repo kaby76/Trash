@@ -109,7 +109,7 @@ class Command
                     int ei = stop.StopIndex;
                     string expr = cs.GetText(new Interval(bi, ei));
                     if (config.Verbose)
-                        LoggerNs.TimedStderrOutput.WriteLine("delete expr " + expr);
+                        LoggerNs.TimedStderrOutput.WriteLine("grep expr " + expr);
                     ConvertToDOM ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
                     using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
                            ate.Try(trees, parser))
@@ -249,9 +249,9 @@ class Command
                     IToken stop = stokens.Get(si.b);
                     int ei = stop.StopIndex;
                     string expr = cs.GetText(new Interval(bi, ei));
-                    if (config.Verbose)
-                        LoggerNs.TimedStderrOutput.WriteLine("replace expr " + expr);
                     string value = RemoveQuotes(scommand.GetChild(2).GetText());
+                    if (config.Verbose)
+                        LoggerNs.TimedStderrOutput.WriteLine("replace expr " + expr + " " + value);
                     ConvertToDOM ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
                     using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
                            ate.Try(trees, parser))
