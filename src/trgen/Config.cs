@@ -61,6 +61,8 @@ namespace Trash
 
         public List<Test> Tests;
 
+        public string ignore_list_of_files = ".trgen-ignore";
+
         public Config()
         {
             this.antlr_tool_path = Command.GetAntlrToolPath();

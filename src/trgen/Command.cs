@@ -567,8 +567,6 @@ namespace Trash
             };
         }
 
-        public string ignore_list_of_files = ".trgen-ignore";
-
         public static LineTranslationType GetLineTranslationType()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -822,7 +820,7 @@ namespace Trash
                     foreach (var target in all)
                     {
                         if (!test_ostargets.Contains(os_target)) continue;
-                        var test = new Test();
+                        var test = new Test(config);
                         test.os_target = os_target;
                         test.target = target;
                         test.grammar_name = config.grammar_name;
@@ -987,7 +985,7 @@ namespace Trash
                         foreach (var target in all)
                         {
                             if (!test_ostargets.Contains(os_target)) continue;
-                            var test = new Test();
+                            var test = new Test(config);
                             test.target = target;
                             test.os_target = os_target;
                             test.package = test.target == "Go" ? "parser" : test.package;
@@ -1061,17 +1059,6 @@ namespace Trash
                             {
                                 test.current_directory = "";
                             }
-
-                            // Check for existence of .trgen-ignore file.
-                            // If there is one, read and create pattern of what to ignore.
-                            if (File.Exists(ignore_list_of_files))
-                            {
-                                var ignore = new StringBuilder();
-                                var lines = File.ReadAllLines(ignore_list_of_files);
-                                var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
-                                test.ignore_string = string.Join("|", ignore_lines);
-                            }
-                            else test.ignore_string = null;
 
                             if (!(test.target == "JavaScript" || test.target == "Dart" || test.target == "TypeScript"))
                             {
@@ -1159,7 +1146,7 @@ namespace Trash
                 if (config.targets != null && config.targets.Count() > 0) all = config.targets.ToList();
                 foreach (var target in all)
                 {
-                    var test = new Test();
+                    var test = new Test(config);
                     test.os_target = config.os_targets.First();
                     test.target = target;
                     test.grammar_name = config.grammar_name;
@@ -1199,16 +1186,6 @@ namespace Trash
                 test.current_directory = config.root_directory;
                 if (test.current_directory != "" && !test.current_directory.EndsWith("/"))
                     test.current_directory = test.current_directory + "/";
-                // Check for existence of .trgen-ignore file.
-                // If there is one, read and create pattern of what to ignore.
-                if (File.Exists(ignore_list_of_files))
-                {
-                    var ignore = new StringBuilder();
-                    var lines = File.ReadAllLines(ignore_list_of_files);
-                    var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
-                    test.ignore_string = string.Join("|", ignore_lines);
-                }
-                else test.ignore_string = null;
 
                 test.start_rule = config.start_rule;
                 test.example_files = "examples";
