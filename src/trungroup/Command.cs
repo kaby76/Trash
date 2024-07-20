@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Antlr4.Runtime;
 
 namespace Trash;
 
@@ -76,6 +77,7 @@ class Command
                     .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
                 if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
 
+                this.Ungroup(nodes, parser, lexer, config, results, fn);
                // var res = LanguageServer.Transform.Ungroup(nodes, doc);
 
                 if (config.Verbose)
@@ -98,5 +100,18 @@ class Command
 
         string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
         System.Console.WriteLine(js1);
+    }
+
+    private void Ungroup(List<UnvParseTreeElement> nodes, Parser parser, Lexer lexer, Config config, List<ParsingResultSet> results, string fn)
+    {
+        /*
+        Ungroup:
+        
+        a b (c | d) -> a b c | a b d
+        a (b | c) d -> a b d | a c d
+	a ( b (c | d) | e ) f -> a ( (b c | b d) | e ) f   ungroup 2nd paren.
+                         or  a b (c | d) f | a e f         ungroup 1st paren.
+         */
+        throw new System.NotImplementedException();
     }
 }
