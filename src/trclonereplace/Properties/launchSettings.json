@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trrename": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt //parserRuleSpec[RULE_REF/text()='numeric_expr']//RULE_REF[text()='expr'] -s '_2'",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\fortran\\Generated-CSharp"
+    }
+  }
+}

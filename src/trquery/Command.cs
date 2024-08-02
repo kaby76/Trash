@@ -200,46 +200,6 @@ class Command
                         }
                     }
                 }
-                else if (command == "insert-after")
-                {
-                    var expr_tree = scommand.expr()[0];
-                    var si = expr_tree.SourceInterval;
-                    IToken start = stokens.Get(si.a);
-                    int bi = start.StartIndex;
-                    IToken stop = stokens.Get(si.b);
-                    int ei = stop.StopIndex;
-                    string expr = cs.GetText(new Interval(bi, ei));
-                    if (config.Verbose)
-                        LoggerNs.TimedStderrOutput.WriteLine("insert expr " + expr);
-                    string value = RemoveQuotes(scommand.GetChild(2).GetText());
-                    ConvertToDOM ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
-                    using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
-                           ate.Try(trees, parser))
-                    {
-                        List<UnvParseTreeNode> nodes = engine.parseExpression(expr,
-                                new StaticContextBuilder()).evaluate(dynamicContext,
-                                new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode))
-                            .ToList();
-                        if (config.Verbose)
-                        {
-                            LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
-                            foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-                                    .ToString());
-                        }
-                        if (config.Verbose)
-                            LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
-                        if (scommand.MATCH_REQUIRED() != null)
-                        {
-                            throw new Exception("No match found for XPath expression, where it is required.");
-                        }
-                        foreach (UnvParseTreeNode node in nodes)
-                        {
-                            TreeEdits.InsertAfter(node, value);
-                        }
-                    }
-                }
                 else if (command == "replace")
                 {
                     var expr_tree = scommand.expr()[0];
