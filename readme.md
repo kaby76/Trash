@@ -2,7 +2,10 @@
 
 [![Build](https://github.com/kaby76/Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Trash/actions?query=workflow%3ACI)
 
-**Status: The toolset is still undergoing a major rewrite. Consider this toolkit as "pre-alpha".**
+**Status: The toolset is still undergoing a major rewrite. Consider this toolkit as "pre-alpha".
+Old tools are being removed, and new ones are being added. Features are being added, while bugs
+are constantly being fixed. The XPath/XQuery engine is still being
+rewritten.**
 
 **The repo [g4-scripts](https://github.com/kaby76/g4-scripts) contains a collections of
 Bash which use Trash. The repo also contains XQuery scripts that implement complex
@@ -43,6 +46,7 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 Copy this script and execute it in a command-line prompt.
 ```
 dotnet tool install -g trcaret
+dotnet tool install -g trclonereplace
 dotnet tool install -g trcombine
 dotnet tool install -g trconvert
 dotnet tool install -g trcover
@@ -57,6 +61,7 @@ dotnet tool install -g trparse
 dotnet tool install -g trperf
 dotnet tool install -g trquery
 dotnet tool install -g trrename
+dotnet tool install -g trsort
 dotnet tool install -g trsplit
 dotnet tool install -g trsponge
 dotnet tool install -g trtext
@@ -71,6 +76,7 @@ dotnet tool install -g trxml2
 ### Uninstall
 ```
 dotnet tool uninstall -g trcaret
+dotnet tool uninstall -g trclonereplace
 dotnet tool uninstall -g trcombine
 dotnet tool uninstall -g trconvert
 dotnet tool uninstall -g trcover
@@ -81,8 +87,8 @@ dotnet tool uninstall -g tritext
 dotnet tool uninstall -g trjson
 dotnet tool uninstall -g trparse
 dotnet tool uninstall -g trperf
-dotnet tool uninstall -g trquery
 dotnet tool uninstall -g trrename
+dotnet tool uninstall -g trsort
 dotnet tool uninstall -g trsplit
 dotnet tool uninstall -g trsponge
 dotnet tool uninstall -g trtext
