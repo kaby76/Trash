@@ -896,6 +896,37 @@
             }
         }
 
+        public static void MoveToFirstChild(UnvParseTreeNode what, UnvParseTreeNode to)
+        {
+            if (what == null) throw new Exception("1st arg to MoveBefore is null");
+            if (to == null) throw new Exception("2nd arg to MoveBefore is null");
+            if (what == to) throw new Exception("MoveBefore given same args: can't move a node to itself.");
+            var parent = to;
+            var old_parent = what.ParentNode;
+            var is_attr = what is UnvParseTreeAttr;
+            var list = parent.ChildNodes as UnvParseTreeNodeList;
+            var oldlist = old_parent.ChildNodes as UnvParseTreeNodeList;
+            int j = 0;
+            for (; j < oldlist._node_list.Count; ++j)
+            {
+                 if (oldlist._node_list[j] == what)
+                 {
+                     oldlist._node_list.RemoveAt(j);
+                     break;
+                 }
+            }
+            list._node_list.Insert(0, what);
+            what.ParentNode = parent;
+            if (!is_attr)
+            {
+            }
+            else
+            {
+                var attr = what as UnvParseTreeAttr;
+                attr.OwnerElement = parent;
+            }
+        }
+
         public static void Replace(IEnumerable<UnvParseTreeNode> trees, string arbitrary_string)
         {
             foreach (var tree in trees) Replace(tree, arbitrary_string);

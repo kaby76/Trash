@@ -91,7 +91,6 @@ class Command
         var results = new List<ParsingResultSet>();
         foreach (var parse_info in data)
         {
-            var text = parse_info.Text;
             var fn = parse_info.FileName;
             var trees = parse_info.Nodes;
             var parser = parse_info.Parser;
@@ -142,7 +141,6 @@ class Command
                 if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Finished editing.");
                 var tuple = new ParsingResultSet()
                 {
-                    Text = text,
                     FileName = fn,
                     Nodes = trees,
                     Lexer = lexer,

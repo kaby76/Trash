@@ -6,19 +6,19 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<AssemblyName>trprint</AssemblyName>
-		<PackageId>trprint</PackageId>
+		<AssemblyName>trclonereplace</AssemblyName>
+		<PackageId>trclonereplace</PackageId>
 		<Description>
-			<![CDATA[Read stdin and print out the text for the tree.
+			<![CDATA[Rename a grammar symbol or symbols.
 This program is part of the Trash toolkit.]]>
 		</Description>
-		<ToolCommandName>trprint</ToolCommandName>
-		<RootNamespace>trprint</RootNamespace>
+		<ToolCommandName>trclonereplace</ToolCommandName>
+		<RootNamespace>trclonereplace</RootNamespace>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>0.23.2</Version>
-		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trprint</RepositoryUrl>
+		<Version>0.23.3</Version>
+		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trclonereplace</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>
@@ -27,6 +27,8 @@ This program is part of the Trash toolkit.]]>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+		<ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />
+		<ProjectReference Include="../Logger/Logger.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="readme.md" Pack="true" PackagePath=""/>
@@ -38,7 +40,6 @@ This program is part of the Trash toolkit.]]>
 		<NoWarn>1701;1702;3021</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup>
-		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 		<PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
 	</PropertyGroup>
 	<Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">

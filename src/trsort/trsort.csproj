@@ -17,7 +17,7 @@ This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>0.23.2</Version>
+		<Version>0.23.3</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trsort</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
@@ -26,7 +26,10 @@ This program is part of the Trash toolkit.]]>
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="../Globbing/TrashGlobbing.csproj" />
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
+		<ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />
+		<ProjectReference Include="../Logger/Logger.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="readme.md" Pack="true" PackagePath=""/>
@@ -38,7 +41,6 @@ This program is part of the Trash toolkit.]]>
 		<NoWarn>1701;1702;3021</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup>
-		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 		<PackageReleaseNotes>(Edit readme.md.)</PackageReleaseNotes>
 	</PropertyGroup>
 	<Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">

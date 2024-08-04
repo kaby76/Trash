@@ -50,7 +50,6 @@ namespace Trash
             List<ParsingResultSet> results = new List<ParsingResultSet>();
             foreach (var parse_info in data)
             {
-                var text = parse_info.Text;
                 var fn = parse_info.FileName;
                 var trees = parse_info.Nodes;
                 var parser = parse_info.Parser;
@@ -72,7 +71,6 @@ namespace Trash
                                 ConvertAntlr4.ToKocmanLLK(trees, parser, lexer, fn);
                                 var tuple = new ParsingResultSet()
                                 {
-                                    Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
                                     FileName = fn,
                                     Nodes = trees,
                                     Lexer = lexer,
@@ -86,7 +84,6 @@ namespace Trash
                                 ConvertAntlr4.ToPegjs(trees, parser, lexer, fn);
                                 var tuple = new ParsingResultSet()
                                 {
-                                    Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
                                     FileName = fn,
                                     Nodes = trees,
                                     Lexer = lexer,
@@ -107,7 +104,6 @@ namespace Trash
                         ConvertAntlr3.ToAntlr4(trees, parser, lexer, fn);
                         var tuple = new ParsingResultSet()
                         {
-                            Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
                             FileName = new Regex("[^.]+$").Replace(fn, "g4"),
                             Nodes = trees,
                             Lexer = lexer,
@@ -122,7 +118,6 @@ namespace Trash
                         ConvertBison.ToAntlr4(trees, parser, lexer, fn);
                         var tuple = new ParsingResultSet()
                         {
-                            Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
                             FileName = new Regex("[^.]+$").Replace(fn, "g4"),
                             Nodes = trees,
                             Lexer = lexer,
@@ -137,7 +132,6 @@ namespace Trash
                         ConvertRex.ToAntlr4(trees, parser, lexer, fn);
                         var tuple = new ParsingResultSet()
                         {
-                            Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
                             FileName = fn,
                             Nodes = trees,
                             Lexer = lexer,

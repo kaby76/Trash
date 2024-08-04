@@ -58,7 +58,6 @@ class Command
         var results = new List<ParsingResultSet>();
         foreach (var parse_info in data)
         {
-            var text = parse_info.Text;
             var fn = parse_info.FileName;
             var atrees = parse_info.Nodes;
             var parser = parse_info.Parser;
@@ -119,7 +118,6 @@ class Command
             TreeEdits.AddChildren(r2, new UnvParseTreeText() { Data = sb_lexer.ToString() });
             var tuple1 = new ParsingResultSet()
             {
-                Text = sb_parser.ToString(),
                 FileName = parser_g4_file_path,
                 Nodes = new UnvParseTreeNode[] { r1 },
                 Lexer = lexer,
@@ -128,7 +126,6 @@ class Command
             results.Add(tuple1);
             var tuple2 = new ParsingResultSet()
             {
-                Text = sb_lexer.ToString(),
                 FileName = lexer_g4_file_path,
                 Nodes = new UnvParseTreeNode[] { r2 },
                 Lexer = lexer,

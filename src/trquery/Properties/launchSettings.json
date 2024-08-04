@@ -2,8 +2,8 @@
   "profiles": {
     "trscript": {
       "commandName": "Project",
-      "commandLineArgs": "-v -f o.pt move //grammarDecl/identifier/@WS ../..",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\delabel"
+      "commandLineArgs": "-f o.pt insert before //ANY 'bbb'",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\fortran"
     }
   }
 }

@@ -117,7 +117,7 @@ cat o.pt \
 	| trtext \
 	> v1.txt
 dos2unix v1.txt
-strings=`cat o.pt | trxgrep ' //STRING/text()' | grep '"'`
+strings=`cat o.pt | trquery 'grep //STRING/text()' | grep '"'`
 for i in $strings
 do
 	echo $i
@@ -146,7 +146,7 @@ rm -f v2.txt
 rm -f o.pt
 
 # find "item" nodes for things like ";".foobar+.
-#  cat orig.pt | trxgrep ' //item/*[position()=1 and name()="atom" and following-sibling::DOT and following-sibling::DOT/following-sibling::atom and following-sibling::DOT/following-sibling::atom/following-sibling::PLUS]/..' | trtree
+#  cat orig.pt | trquery 'grep //item/*[position()=1 and name()="atom" and following-sibling::DOT and following-sibling::DOT/following-sibling::atom and following-sibling::DOT/following-sibling::atom/following-sibling::PLUS]/..' | trtree
 # find '|' on beginning of line.
-#cat orig.pt | trxgrep ' //rule_//more_alts[reverse(preceding-sibling::*)[1]/name()="indent"]' | trtree
+#cat orig.pt | trquery 'grep //rule_//more_alts[reverse(preceding-sibling::*)[1]/name()="indent"]' | trtree
 #	| trdelete '//more_alts[preceding-sibling::indent/preceding-sibling::newline/preceding-sibling::COLON]/VBAR' \

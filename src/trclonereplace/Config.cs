@@ -5,8 +5,8 @@ namespace Trash;
 
 public class Config
 {
-    [Option('e', "no-prs", Required = false, HelpText = "No parsing result sets.")]
-    public bool NoParsingResultSets { get; set; }
+    [Value(0)]
+    public IEnumerable<string> Expr { get; set; }
 
     [Option('f', "file", Required = false, HelpText = "Read parse tree data from file instead of stdin.")]
     public string File { get; set; }
@@ -17,5 +17,6 @@ public class Config
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
-    [Value(0, Min = 1)] public IEnumerable<string> Expr { get; set; }
+    [Option('s', "suffix", Required = false, Default = "")]
+    public string Suffix { get; set; }
 }

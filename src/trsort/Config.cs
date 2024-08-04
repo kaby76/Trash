@@ -28,8 +28,5 @@ namespace Trash
 
         [Option('v', "verbose", Required = false)]
         public bool Verbose { get; set; }
-
-        [Value(0)]
-        public IEnumerable<string> Exprs { get; set; }
     }
 }

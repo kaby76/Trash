@@ -1,29 +1,34 @@
-﻿namespace ParseTreeEditing.AntlrDOM
+﻿using Antlr4.Runtime.Tree;
+using org.w3c.dom;
+using System;
+
+namespace ParseTreeEditing.AntlrDOM;
+
+public class AntlrElement : AntlrNode, Element
 {
-    using Antlr4.Runtime.Tree;
-    using org.w3c.dom;
-    using System;
-
-    public class AntlrElement : AntlrNode, Element
+    private AntlrElement() : base(null)
     {
-        private AntlrElement() : base(null) { }
-        public AntlrElement(IParseTree n) : base(n) { }
+    }
 
-        public object getAttributeNS(string sCHEMA_INSTANCE, string nIL_ATTRIBUTE)
-        {
-            return null;
-        }
+    public AntlrElement(IParseTree n) : base(n)
+    {
+    }
 
-        public string Prefix { get; set; }
-        public TypeInfo SchemaTypeInfo { get; set; }
-        public string lookupNamespaceURI(string prefix)
-        {
-            throw new NotImplementedException();
-        }
+    public object getAttributeNS(string sCHEMA_INSTANCE, string nIL_ATTRIBUTE)
+    {
+        return null;
+    }
 
-        public bool isDefaultNamespace(object elementNamespaceUri)
-        {
-            throw new NotImplementedException();
-        }
+    public string Prefix { get; set; }
+    public TypeInfo SchemaTypeInfo { get; set; }
+
+    public string lookupNamespaceURI(string prefix)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool isDefaultNamespace(object elementNamespaceUri)
+    {
+        throw new NotImplementedException();
     }
 }
