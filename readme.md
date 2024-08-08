@@ -77,6 +77,8 @@ dotnet tool uninstall -g trconvert
 dotnet tool uninstall -g trcover
 dotnet tool uninstall -g trfoldlit
 dotnet tool uninstall -g trgen
+dotnet tool uninstall -g trgenvsc
+dotnet tool uninstall -g trglob
 dotnet tool uninstall -g triconv
 dotnet tool uninstall -g tritext
 dotnet tool uninstall -g trjson
