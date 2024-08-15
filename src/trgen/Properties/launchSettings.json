@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Cpp",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4137\\vba\\vba_cc"
+      "commandLineArgs": "-t CSharp",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\fortran"
     }
   }
 }

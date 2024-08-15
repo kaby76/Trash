@@ -1,15 +1,12 @@
 ﻿using Antlr4.Runtime.Tree;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ParseTreeEditing.AntlrDOM
+namespace ParseTreeEditing.AntlrDOM;
+
+public interface IAntlrObserver : IObserver<ObserverParserRuleContext>, IDisposable
 {
-    public interface IAntlrObserver : IObserver<ObserverParserRuleContext>, IDisposable
-    {
-        void OnParentDisconnect(IParseTree value);
-        void OnParentConnect(IParseTree value);
-        void OnChildDisconnect(IParseTree value);
-        void OnChildConnect(IParseTree value);
-    }
+    void OnParentDisconnect(IParseTree value);
+    void OnParentConnect(IParseTree value);
+    void OnChildDisconnect(IParseTree value);
+    void OnChildConnect(IParseTree value);
 }

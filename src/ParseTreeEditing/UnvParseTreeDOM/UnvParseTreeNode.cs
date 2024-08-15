@@ -168,5 +168,20 @@ namespace ParseTreeEditing.UnvParseTreeDOM
         {
         }
 
+        public virtual void Validate(bool root)
+        {
+            // Parent must not be null.
+            if (!(root || this.ParentNode != null))
+                throw new Exception("Parent must not be null."); 
+            if (ChildNodes != null)
+            {
+                for (int i = 0; i < ChildNodes.Length; ++i)
+                {
+                    Node c = ChildNodes.item(i);
+                    var cc = c as UnvParseTreeNode;
+                    cc.Validate(false);
+                }
+            }  
+        }
     }
 }

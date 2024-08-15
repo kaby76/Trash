@@ -2,7 +2,10 @@
 
 [![Build](https://github.com/kaby76/Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Trash/actions?query=workflow%3ACI)
 
-**Status: The toolset is still undergoing a major rewrite. Consider this toolkit as "pre-alpha".**
+**Status: The toolset is still undergoing a major rewrite. Consider this toolkit as "pre-alpha".
+Old tools are being removed, and new ones are being added. Features are being added, while bugs
+are constantly being fixed. The XPath/XQuery engine is still being
+rewritten.**
 
 **The repo [g4-scripts](https://github.com/kaby76/g4-scripts) contains a collections of
 Bash which use Trash. The repo also contains XQuery scripts that implement complex
@@ -43,6 +46,7 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 Copy this script and execute it in a command-line prompt.
 ```
 dotnet tool install -g trcaret
+dotnet tool install -g trclonereplace
 dotnet tool install -g trcombine
 dotnet tool install -g trconvert
 dotnet tool install -g trcover
@@ -57,6 +61,7 @@ dotnet tool install -g trparse
 dotnet tool install -g trperf
 dotnet tool install -g trquery
 dotnet tool install -g trrename
+dotnet tool install -g trsort
 dotnet tool install -g trsplit
 dotnet tool install -g trsponge
 dotnet tool install -g trtext
@@ -64,7 +69,6 @@ dotnet tool install -g trtokens
 dotnet tool install -g trtree
 dotnet tool install -g trunfold
 dotnet tool install -g trwdog
-dotnet tool install -g trxgrep
 dotnet tool install -g trxml
 dotnet tool install -g trxml2
 
@@ -72,6 +76,7 @@ dotnet tool install -g trxml2
 ### Uninstall
 ```
 dotnet tool uninstall -g trcaret
+dotnet tool uninstall -g trclonereplace
 dotnet tool uninstall -g trcombine
 dotnet tool uninstall -g trconvert
 dotnet tool uninstall -g trcover
@@ -84,8 +89,8 @@ dotnet tool uninstall -g tritext
 dotnet tool uninstall -g trjson
 dotnet tool uninstall -g trparse
 dotnet tool uninstall -g trperf
-dotnet tool uninstall -g trquery
 dotnet tool uninstall -g trrename
+dotnet tool uninstall -g trsort
 dotnet tool uninstall -g trsplit
 dotnet tool uninstall -g trsponge
 dotnet tool uninstall -g trtext
@@ -93,7 +98,6 @@ dotnet tool uninstall -g trtokens
 dotnet tool uninstall -g trtree
 dotnet tool uninstall -g trunfold
 dotnet tool uninstall -g trwdog
-dotnet tool uninstall -g trxgrep
 dotnet tool uninstall -g trxml
 dotnet tool uninstall -g trxml2
 
@@ -138,7 +142,6 @@ __NB: Out of date__
 1) <a href="src/trunfold/readme.md">trunfold</a> -- Perform an unfold transform on a grammar
 1) <a href="src/trungroup/readme.md">trungroup</a> -- Perform an ungroup transform on a grammar
 1) <a href="src/trwdog/readme.md">trwdog</a> -- Kill a program that runs too long
-1) <a href="src/trxgrep/readme.md">trxgrep</a> -- "Grep" for nodes in a parse tree using XPath
 1) <a href="src/trxml/readme.md">trxml</a> -- Print a parse tree in XML structured format
 1) <a href="src/trxml2/readme.md">trxml2</a> -- Print an enumeration of all paths in a parse tree to leaves
 
@@ -148,14 +151,14 @@ __NB: Out of date__
 ```
 git clone https://github.com/antlr/grammars-v4
 cd grammars-v4/python/python
-trparse *.g4 | trxgrep ' //grammarDecl' | trtext
+trparse *.g4 | trquery 'grep //grammarDecl' | trtext
 # Output:
 # PythonLexer.g4:lexer grammar PythonLexer;
 # PythonParser.g4:parser grammar PythonParser;
 trgen
 cd Generated
 dotnet build
-cat - <<EOF | trparse | trxgrep ' //test' | trtext
+cat - <<EOF | trparse | trquery 'grep //test' | trtext
 x == y
 x == y if z == b else a == u
 lambda: a
@@ -235,14 +238,14 @@ with most tools of Trash, is parse tree data.
 ### Find nodes in the parse tree using XPath
 
     mkdir empty; cd empty; trgen; dotnet build Generated/Test.csproj; \
-        trparse -i "1+2+3" | trxgrep " //SCIENTIFIC_NUMBER" | trst
+        trparse -i "1+2+3" | trquery "grep //SCIENTIFIC_NUMBER" | trst
 
 With this command, a directory is created, the Arithmetic grammar generated, build,
 and then run using [trparse](https://github.com/kaby76/Trash/tree/main/src/trparse).
 The `trparse` tool unifies all parsing, whether it's parsing a grammar or parsing input
 using a generated parser application. The output from the `trparse` tool is a parse
-tree which you can search. [Trxgrep](https://github.com/kaby76/Trash/tree/main/src/trxgrep)
-is the generalized search program for parse trees. `Trxgrep` uses XPath expressions to
+tree which you can search. [Trquery](https://github.com/kaby76/Trash/tree/main/src/trquery)
+is the generalized search program for parse trees. `Trquery` uses XPath expressions to
 precisely identify nodes in the parse tree.
 
 XPath was added to Antlr4, but `Trash` takes the idea
@@ -269,11 +272,11 @@ grammar symbols in any support source code (but it could if the tool is extended
     git clone https://github.com/antlr/grammars-v4.git; \
         cd grammars-v4/java/java9; \
         trgen; dotnet build Generated/Test.csproj;\
-        trparse examples/AllInOne8.java | trxgrep " //methodDeclaration" | trst | wc
+        trparse examples/AllInOne8.java | trquery "greap //methodDeclaration" | trst | wc
 
 This command clones the Antlr4 grammars-v4 repo, generates a parser for the Java9 grammar,
 then runs the parser on [examples/AllInOne8.java](https://github.com/antlr/grammars-v4/blob/master/java/java9/examples/AllInOne8.java).
-The parse tree is then piped to `trxgrep` to find all parse tree nodes that are
+The parse tree is then piped to `trquery` to find all parse tree nodes that are
 a `methodDeclaration` type, converts it to a simple string, and counts the result using
 `wc`.
 

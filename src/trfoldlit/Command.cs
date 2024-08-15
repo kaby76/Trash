@@ -115,8 +115,6 @@ namespace Trash
             // First pass: gather all lexer rules.
             foreach (var parse_info in data)
             {
-                var text = parse_info.Text;
-                var fn = parse_info.FileName;
                 var atrees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
@@ -135,7 +133,6 @@ namespace Trash
             // Second pass to replace.
             foreach (var parse_info in data)
             {
-                var text = parse_info.Text;
                 var fn = parse_info.FileName;
                 var atrees = parse_info.Nodes;
                 var parser = parse_info.Parser;
@@ -181,7 +178,6 @@ namespace Trash
                     }
                     var tuple = new ParsingResultSet()
                     {
-                        Text = text,
                         FileName = fn,
                         Nodes = atrees,
                         Lexer = lexer,

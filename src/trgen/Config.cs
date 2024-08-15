@@ -52,7 +52,6 @@ namespace Trash
         public bool? flatten { get; set; }
         public LineTranslationType? line_translation { get; set; }
         public string parsing_type { get; set; }
-        public bool hasPOM { get; set; }
         public bool hasDesc { get; set; }
         public PathSepType? path_sep { get; set; }
         public int? watchdog_timeout { get; set; }
@@ -61,6 +60,8 @@ namespace Trash
         public string example_files { get; set; }
 
         public List<Test> Tests;
+
+        public string ignore_list_of_files = ".trgen-ignore";
 
         public Config()
         {
@@ -77,7 +78,6 @@ namespace Trash
             this.output_directory = "./";
             this.parsing_type = null;
             this.path_sep = Command.GetPathSep();
-            this.hasPOM = false;
             this.root_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             this.start_rule = null; // means find using parsing and xpath of grammars.
             this.targets = null;

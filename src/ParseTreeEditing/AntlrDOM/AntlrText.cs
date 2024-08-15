@@ -1,13 +1,23 @@
-﻿namespace ParseTreeEditing.AntlrDOM
-{
-    using Antlr4.Runtime.Tree;
-    using org.w3c.dom;
+﻿using Antlr4.Runtime.Tree;
+using org.w3c.dom;
 
-    public class AntlrText : AntlrNode, Text
+namespace ParseTreeEditing.AntlrDOM;
+
+public class AntlrText : AntlrNode, Text
+{
+    private AntlrText() : base(null)
     {
-        private AntlrText() : base(null) { }
-        public AntlrText(IParseTree n) : base(n) { }
-        public string Data { get; set; }
-        public override object NodeValue { get { return Data; } set { Data = (string)value; } }
+    }
+
+    public AntlrText(IParseTree n) : base(n)
+    {
+    }
+
+    public string Data { get; set; }
+
+    public override object NodeValue
+    {
+        get { return Data; }
+        set { Data = (string)value; }
     }
 }

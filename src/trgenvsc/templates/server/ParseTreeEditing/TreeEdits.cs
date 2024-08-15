@@ -874,16 +874,19 @@
             var node_to_insert = new UnvParseTreeText();
             node_to_insert.Data = arbitrary_string;
             var parent = node.ParentNode;
-            for (int i = 0; i < parent.ChildNodes.Length; ++i)
+            if (parent != null)
             {
-                var child = parent.ChildNodes.item(i);
-                if (child == node)
+                for (int i = 0; i < parent.ChildNodes.Length; ++i)
                 {
-                    parent.ChildNodes.RemoveAt(i);
-                    parent.ChildNodes.Insert(i, node_to_insert);
-                    node_to_insert.ParentNode = parent;
-                    child.ParentNode = null;
-                    break;
+                    var child = parent.ChildNodes.item(i);
+                    if (child == node)
+                    {
+                        parent.ChildNodes.RemoveAt(i);
+                        parent.ChildNodes.Insert(i, node_to_insert);
+                        node_to_insert.ParentNode = parent;
+                        child.ParentNode = null;
+                        break;
+                    }
                 }
             }
             return node_to_insert;

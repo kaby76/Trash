@@ -13,7 +13,7 @@ rm -rf Generated-CSharp
 trgen -t CSharp
 cd Generated-CSharp
 make
-echo "1 + 2 + 3" | trparse | trxgrep ' //SCIENTIFIC_NUMBER' | trtree > ../output
+echo "1 + 2 + 3" | trparse | trquery grep ' //SCIENTIFIC_NUMBER' | trtree > ../output
 cd ..
 rm -rf Generated-CSharp
 

@@ -51,7 +51,6 @@ class Command
             var nodes = parse_info.Nodes;
             var parser = parse_info.Parser;
             var lexer = parse_info.Lexer;
-            var code = parse_info.Text;
             var fn = parse_info.FileName;
             if (config.OutputDirectory != null)
             {

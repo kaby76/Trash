@@ -33,7 +33,7 @@ public class Program
             helpText = HelpText.AutoBuild(result, h =>
             {
                 h.AdditionalNewLineAfterOption = false;
-                h.Heading = "trprint";
+                h.Heading = "trrename";
                 h.Copyright = "Copyright (c) 2023 Ken Domino"; //change copyright text
                 h.AddPreOptionsText(new Command().Help());
                 return HelpText.DefaultParsingErrorsHandler(result, h);

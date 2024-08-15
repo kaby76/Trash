@@ -74,7 +74,6 @@ class Command
         org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
         foreach (var parse_info in data)
         {
-            text = parse_info.Text;
             fn = parse_info.FileName;
             atrees = parse_info.Nodes;
             parser = parse_info.Parser;
@@ -90,7 +89,6 @@ class Command
         {
             var dynamicContext = dc[i++];
             var a = dynamicContext.Document;
-            text = parse_info.Text;
             fn = parse_info.FileName;
             atrees = parse_info.Nodes;
             parser = parse_info.Parser;
@@ -137,7 +135,7 @@ class Command
             }
 
             var parse_info_out = new AntlrJson.ParsingResultSet()
-                { Text = text, FileName = fn, Lexer = lexer, Parser = parser, Nodes = res.ToArray() };
+                { FileName = fn, Lexer = lexer, Parser = parser, Nodes = res.ToArray() };
             results.Add(parse_info_out);
         }
 

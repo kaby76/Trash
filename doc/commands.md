@@ -348,7 +348,7 @@ use an online Dot graph visualizer to make a plot.
 Any parse tree data can be converted to Dot, include a
 parse of a grammar, the parse tree of a simple expression grammar,
 or a list of parse tree nodes obtained via
-[trxgrep](https://github.com/kaby76/Trash/tree/main/trxgrep).
+[trquery](https://github.com/kaby76/Trash/tree/main/trquery).
 
 #### Examples
 
@@ -669,7 +669,7 @@ use an online Dot graph visualizer to make a plot.
 Any parse tree data can be converted to Dot, include a
 parse of a grammar, the parse tree of a simple expression grammar,
 or a list of parse tree nodes obtained via
-[trxgrep](https://github.com/kaby76/Trash/tree/main/trxgrep).
+[trquery](https://github.com/kaby76/Trash/tree/main/trquery).
 
 #### Examples
 
@@ -1223,7 +1223,7 @@ specified, the line number range for the tree is printed.
 
 #### Examples
 
-    trxgrep //lexerRuleSpec | trtext
+    trquery gre4p //lexerRuleSpec | trtext
 
 #### Current version
 
@@ -1261,7 +1261,7 @@ Input:
 
 Command:
 
-    trparse -i "1 * 2 + 3" | trxgrep " //expression" | trtokens
+    trparse -i "1 * 2 + 3" | trquery grep " //expression" | trtokens
 
 Output:
 
@@ -1452,17 +1452,17 @@ Execute a command with a watchdog timer.
 #### Current version
 
 0.17.0 -- Fixes for all tools (piped data structures), but in particular trparse. Add trperf, trpiggy.
-### trxgrep
+### trquery
 
-Find all sub-trees in a parse tree using the given XPath expression.
+Find/modify all sub-trees in a parse tree using the given XPath expression.
 
 #### Usage
 
-    trxgrep <string>
+    trquery <string>
 
 #### Examples
 
-    trparse A.g4 | trxgrep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+    trparse A.g4 | trquery grep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
 #### Notes
 

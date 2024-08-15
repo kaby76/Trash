@@ -291,7 +291,7 @@ public class Grun
             new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
         var tuple = new AntlrJson.ParsingResultSet()
         {
-            Text = (r5 as string), FileName = input_name, Nodes = new UnvParseTreeNode[] { converted_tree },
+            FileName = input_name, Nodes = new UnvParseTreeNode[] { converted_tree },
             Parser = parser, Lexer = lexer
         };
         data.Add(tuple);

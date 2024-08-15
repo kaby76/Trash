@@ -2,8 +2,8 @@
   "profiles": {
     "tranalyze": {
       "commandName": "Project",
-      "commandLineArgs": "--file o.pt -s parse",
-      "workingDirectory": "C:\\Users\\kenne\\Documents\\GitHub\\i2248\\sql\\sqlite"
+      "commandLineArgs": "--file o.pt",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\abb\\Generated-Java"
     }
   }
 }

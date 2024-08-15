@@ -22,7 +22,7 @@ Input:
 
 Command:
 
-    trparse -i "1 * 2 + 3" | trxgrep " //expression" | trtokens
+    trparse -i "1 * 2 + 3" | trquery "grep //expression" | trtokens
 
 Output:
 
@@ -52,7 +52,7 @@ Output:
 
 ## Current version
 
-0.23.2 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
+0.23.3 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
 
 ## License
 

@@ -1,14 +1,18 @@
 grammar Filter;
 
-start : (expr (';' expr)* | ) EOF;
-expr : expr ('<' | '>' | '<=' | '>=') expr
+start : (expr | ) EOF;
+expr
+  : expr ('<' | '>' | '<=' | '>=') expr
+  | expr ('&&' | '||') expr
   | ID
   | NUM
   ;
-ID : 'l1' | 'l2';
+ID : 's0' | 's1' | 'e0' | 'e1';
 NUM : [0-9]+;
 LT: '<';
 GT: '>';
 LE: '<=';
 GE: '>=';
+AND: '&&';
+OR: '||';
 WS : [ \t\n\r] -> channel(HIDDEN);

@@ -4,6 +4,7 @@ options {
     superClass = QueryBaseLexer;
 }
 
+GREP: 'grep';
 INSERT: 'insert';
 DELETE: 'delete';
 DELETEREATTACH: 'delete-reattach';

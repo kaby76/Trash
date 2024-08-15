@@ -1,24 +1,25 @@
-# trprint
+# trclonereplace
 
 ## Summary
 
-Print a parse tree, including off-token characters
+Clone, rename, and replace symbols in a grammar to optimize full stack fallbacks.
 
 ## Description
 
-Read stdin and print out the text for the tree.
 
 ## Usage
 
-    trprint
+    trclonereplace <xpath-string>
+
+## Details
+
 
 ## Examples
 
-    trparse A.g4 | trprint
 
 ## Current version
 
-0.23.2 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
+0.23.3 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
 
 ## License
 

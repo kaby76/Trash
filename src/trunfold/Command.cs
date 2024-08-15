@@ -63,7 +63,6 @@ class Command
         var results = new List<ParsingResultSet>();
         foreach (var parse_info in data)
         {
-            var text = parse_info.Text;
             var fn = parse_info.FileName;
             var trees = parse_info.Nodes;
             var parser = parse_info.Parser;
@@ -111,7 +110,6 @@ class Command
 
                 var tuple = new ParsingResultSet()
                 {
-                    Text = ParseTreeEditing.UnvParseTreeDOM.TreeEdits.Reconstruct(trees),
                     FileName = fn,
                     Nodes = trees,
                     Lexer = lexer,

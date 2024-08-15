@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,6 +84,18 @@ namespace Trash
             get { return this.target == "TypeScript"; }
         }
 
-        public Test() {}
+        public Test(Config config)
+        {
+            // Check for existence of .trgen-ignore file.
+            // If there is one, read and create pattern of what to ignore.
+            if (File.Exists(config.ignore_list_of_files))
+            {
+                var ignore = new StringBuilder();
+                var lines = File.ReadAllLines(config.ignore_list_of_files);
+                var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
+                this.ignore_string = string.Join("|", ignore_lines);
+            }
+            else this.ignore_string = null;
+        }
     }
 }

@@ -33,8 +33,6 @@ namespace Trash
         public int Execute(Config config)
         {
             if (!config.output_directory.EndsWith('/')) config.output_directory += '/';
-            if (config.hasPOM)
-                ModifyWithPom(config);
             else if (config.hasDesc)
                 ModifyWithDesc(config);
             else
@@ -142,7 +140,7 @@ namespace Trash
                     List<string> name_ = null;
                     List<string> ss = null;
                     using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
-                           ate.Try(pr.First().Nodes.First(), pr.First().Parser))
+                           ate.Try(pr.First().Nodes.First()))
                     {
                         is_par = engine.parseExpression(
                                 @"/grammarSpec/grammarDecl/grammarType/PARSER",
@@ -355,7 +353,8 @@ namespace Trash
                     var a = test.tool_grammar_tuples
                         .Where(t => t.WhatType == GrammarTuple.Type.Parser)
                         .FirstOrDefault()?.GrammarName;
-                    if (a != null) test.grammar_name = a;
+                    Regex r = new Regex("^(.*)Parser$");
+                    if (a != null) test.grammar_name = r.Replace(a, "$1");
                     if (test.grammar_name == null)
                     {
                         var b = test.tool_grammar_tuples
@@ -494,35 +493,36 @@ namespace Trash
                     var pre2 = p2 == "" ? "" : p2 + ".";
                     if (t.WhatType == GrammarTuple.Type.Parser)
                     {
-                        if (test.fully_qualified_parser_name == null)
+                        if (test.grammar_name == t.GrammarName || test.grammar_name + "Parser" == t.GrammarName)
                         {
                             test.fully_qualified_parser_name = t.GrammarAutomName;
                             test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName;
                             parser_src_grammar_file_name = t.GrammarFileName;
+                            test.parser_grammar_file_name = parser_src_grammar_file_name;
                         }
                     }
                     else if (t.WhatType == GrammarTuple.Type.Lexer)
                     {
-                        if (test.fully_qualified_lexer_name == null)
+                        if (test.grammar_name == t.GrammarName || test.grammar_name + "Lexer" == t.GrammarName)
                         {
                             test.fully_qualified_lexer_name = t.GrammarAutomName;
                             test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName;
                             lexer_src_grammar_file_name = t.GrammarFileName;
+                            test.lexer_grammar_file_name = lexer_src_grammar_file_name;
                         }
                     }
                     else if (t.WhatType == GrammarTuple.Type.Combined)
                     {
-                        if (test.fully_qualified_parser_name == null)
+                        if (test.grammar_name == t.GrammarName)
                         {
                             test.fully_qualified_parser_name = t.GrammarAutomName + "Parser";
                             test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName + "Parser";
                             parser_src_grammar_file_name = test.fully_qualified_parser_name;
-                        }
-                        if (test.fully_qualified_lexer_name == null)
-                        {
                             test.fully_qualified_lexer_name = t.GrammarAutomName + "Lexer";
                             test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName + "Lexer";
                             lexer_src_grammar_file_name = test.fully_qualified_lexer_name;
+                            test.lexer_grammar_file_name = lexer_src_grammar_file_name;
+                            test.parser_grammar_file_name = parser_src_grammar_file_name;
                         }
                     }
                 }
@@ -541,7 +541,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.2";
+        public static string version = "0.23.3";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -566,8 +566,6 @@ namespace Trash
                 _ => throw new NotImplementedException(),
             };
         }
-
-        public string ignore_list_of_files = ".trgen-ignore";
 
         public static LineTranslationType GetLineTranslationType()
         {
@@ -822,7 +820,7 @@ namespace Trash
                     foreach (var target in all)
                     {
                         if (!test_ostargets.Contains(os_target)) continue;
-                        var test = new Test();
+                        var test = new Test(config);
                         test.os_target = os_target;
                         test.target = target;
                         test.grammar_name = config.grammar_name;
@@ -987,7 +985,7 @@ namespace Trash
                         foreach (var target in all)
                         {
                             if (!test_ostargets.Contains(os_target)) continue;
-                            var test = new Test();
+                            var test = new Test(config);
                             test.target = target;
                             test.os_target = os_target;
                             test.package = test.target == "Go" ? "parser" : test.package;
@@ -1061,17 +1059,6 @@ namespace Trash
                             {
                                 test.current_directory = "";
                             }
-
-                            // Check for existence of .trgen-ignore file.
-                            // If there is one, read and create pattern of what to ignore.
-                            if (File.Exists(ignore_list_of_files))
-                            {
-                                var ignore = new StringBuilder();
-                                var lines = File.ReadAllLines(ignore_list_of_files);
-                                var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
-                                test.ignore_string = string.Join("|", ignore_lines);
-                            }
-                            else test.ignore_string = null;
 
                             if (!(test.target == "JavaScript" || test.target == "Dart" || test.target == "TypeScript"))
                             {
@@ -1152,261 +1139,6 @@ namespace Trash
             return parts.LastOrDefault();
         }
 
-        public void ModifyWithPom(Config config)
-        {
-            System.Console.Error.WriteLine(Environment.CurrentDirectory);
-            XmlTextReader reader = new XmlTextReader(Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"pom.xml");
-            reader.Namespaces = false;
-            XPathDocument document = new XPathDocument(reader);
-            XPathNavigator navigator = document.CreateNavigator();
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(reader.NameTable);
-            // determine if this pom only directs for subdirectories.
-            var sub_dirs = navigator
-                .Select("//modules/module", nsmgr)
-                .Cast<XPathNavigator>()
-                .Select(t => t.Value)
-                .ToList();
-            if (sub_dirs.Any())
-            {
-                return;
-            }
-            //
-            // Process grammar pom.xml here.
-            //
-            List<string> pom_includes = null;
-            List<string> pom_grammars = null;
-            List<string> pom_antlr_tool_args = null;
-            List<string> pom_source_directory = null;
-            List<XPathNavigator> pom_all_else = null;
-            List<string> pom_grammar_name = null;
-            List<string> pom_lexer_name = null;
-            List<string> pom_entry_point = null;
-            List<string> pom_package_name = null;
-            List<string> pom_case_insensitive_type = null;
-            List<string> pom_example_files = null;
-            var test = new Test();
-            config.Tests.Add(test);
-            pom_includes = navigator
-                .Select("//plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/includes/include", nsmgr)
-                .Cast<XPathNavigator>()
-                .Select(t => t.Value)
-                .ToList();
-            pom_grammars = navigator
-                .Select("//plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/grammars", nsmgr)
-                .Cast<XPathNavigator>()
-                .Select(t => t.Value)
-                .ToList();
-            pom_antlr_tool_args = navigator
-                .Select("//plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/arguments/argument", nsmgr)
-                .Cast<XPathNavigator>()
-                .Where(t => t.Value != "")
-                .Select(t => t.Value)
-                .ToList();
-            pom_source_directory = navigator
-                .Select("//plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/sourceDirectory", nsmgr)
-                .Cast<XPathNavigator>()
-                .Where(t => t.Value != "")
-                .Select(t => t.Value)
-                .ToList();
-            pom_all_else = navigator
-                .Select("//plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/*[not(self::sourceDirectory or self::arguments or self::includes or self::visitor or self::listener)]", nsmgr)
-                .Cast<XPathNavigator>()
-                .ToList();
-            pom_grammar_name = navigator
-                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/grammarName", nsmgr)
-                .Cast<XPathNavigator>()
-                .Select(t => t.Value)
-                .ToList();
-            pom_lexer_name = navigator
-                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/lexerName", nsmgr)
-                .Cast<XPathNavigator>()
-                .Select(t => t.Value)
-                .ToList();
-            pom_entry_point = navigator
-                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/entryPoint", nsmgr)
-                .Cast<XPathNavigator>()
-                .Select(t => t.Value)
-                .ToList();
-            pom_package_name = navigator
-                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/packageName", nsmgr)
-                .Cast<XPathNavigator>()
-                .Where(t => t.Value != "")
-                .Select(t => t.Value)
-                .ToList();
-            pom_case_insensitive_type = navigator
-                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/caseInsensitiveType", nsmgr)
-                .Cast<XPathNavigator>()
-                .Where(t => t.Value != "")
-                .Select(t => t.Value)
-                .ToList();
-            pom_example_files = navigator
-                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/exampleFiles", nsmgr)
-                .Cast<XPathNavigator>()
-                .Where(t => t.Value != "")
-                .Select(t => t.Value)
-                .ToList();
-            var pom_all_test = navigator
-                .Select("//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/*", nsmgr)
-                .Cast<XPathNavigator>()
-                .Select(t => t)
-                .ToList();
-            // Check all other config options in antlr4-maven-plugin configuration.
-            bool pom_all_else_bad = false;
-            foreach (var e in pom_all_else)
-            {
-                System.Console.Error.WriteLine("Invalid element \"//plugins/plugin[artifactId='antlr4-maven-plugin']/configuration/"
-                    + e.Name
-                    + ". Correct the pom.xml!");
-                pom_all_else_bad = true;
-            }
-            if (pom_all_else_bad)
-            {
-                // Disable for now.
-                // throw new Exception();
-            }
-            // Go through all elements under configuration and check if nonsense.
-            bool pom_all_test_bad = false;
-            foreach (var e in pom_all_test)
-            {
-                // straight from https://github.com/antlr/antlr4test-maven-plugin
-                if (e.Name == "grammarName") continue;
-                if (e.Name == "caseInsensitiveType") continue;
-                if (e.Name == "entryPoint") continue;
-                if (e.Name == "binary") continue;
-                if (e.Name == "enabled") continue;
-                if (e.Name == "verbose") continue;
-                if (e.Name == "showTree") continue;
-                if (e.Name == "exampleFiles") continue;
-                if (e.Name == "packageName") continue;
-                if (e.Name == "testFileExtension") continue;
-                if (e.Name == "fileEncoding") continue;
-                if (e.Name == "grammarInitializer") continue;
-                System.Console.Error.WriteLine("Invalid element \"//plugins/plugin[artifactId='antlr4test-maven-plugin']/configuration/"
-                    + e.Name
-                    + ". Correct the pom.xml!");
-                pom_all_test_bad = true;
-            }
-            if (pom_all_test_bad)
-            {
-                // Disable for now.
-                // throw new Exception();
-            }
-            // The grammar name in pom is a mess. That's because
-            // people define multiple parser grammars in the pom includes/grammars,
-            // and a driver (see grammars-v4/r). So, take it on faith.
-            test.grammar_name = pom_grammar_name.First();
-            // Pom is a mess. There are many cases here in computing the namespace/package.
-            // People even add bullshit @headers in the grammar; minds of a planaria.
-            // -package arg specified; source top level
-            //   => keep .g4 at top level, generate to directory
-            //      corresponding to arg.
-            if (pom_antlr_tool_args.Contains("-package"))
-            {
-                var ns = pom_antlr_tool_args[pom_antlr_tool_args.IndexOf("-package") + 1];
-                test.package = ns;
-            }
-            else if (pom_package_name.Any())
-            {
-                test.package = pom_package_name.First();
-            }
-            // Make sure all the grammar files actually existance.
-            // People don't check their bullshit.
-            var merged_list = new HashSet<string>();
-            foreach (var p in pom_includes) merged_list.Add(p);
-            foreach (var p in pom_grammars) merged_list.Add(p);
-            foreach (var x in merged_list.ToList())
-            {
-                if (!new TrashGlobbing.Glob()
-                 .RegexContents(x)
-                 .Where(f => f is FileInfo)
-                 .Select(f => f.FullName.Replace('\\', '/').Replace(Environment.CurrentDirectory, ""))
-                 .Any())
-                {
-                    System.Console.Error.WriteLine("Error in pom.xml: <include>" + x + "</include> is for a file that does not exist.");
-                    throw new Exception();
-                }
-            }
-            // Check existance of example files.
-            if (pom_example_files.Any())
-            {
-                test.example_files = pom_example_files.First();
-                if (!Directory.Exists(pom_example_files.First()))
-                {
-                    System.Console.Error.WriteLine("Examples directory doesn't exist " + pom_example_files.First());
-                }
-            }
-            else
-            {
-                test.example_files = "examples";
-            }
-            if (pom_source_directory.Any())
-            {
-                test.current_directory = pom_source_directory
-                    .First()
-                    .Replace("${basedir}", "")
-                    .Trim();
-                if (test.current_directory.StartsWith('/')) test.current_directory = test.current_directory.Substring(1);
-                if (test.current_directory != "" && !test.current_directory.EndsWith("/"))
-                {
-                    test.current_directory = test.current_directory + "/";
-                }
-            }
-            else
-            {
-                test.current_directory = "";
-            }
-            test.case_insensitive_type = null;
-            if (pom_case_insensitive_type.Any())
-            {
-                if (pom_case_insensitive_type.First().ToUpper() == "UPPER")
-                    test.case_insensitive_type = CaseInsensitiveType.Upper;
-                else if (pom_case_insensitive_type.First().ToUpper() == "LOWER")
-                    test.case_insensitive_type = CaseInsensitiveType.Lower;
-                else
-                {
-                    System.Console.Error.WriteLine("Case fold has invalid value: '"
-                    + pom_case_insensitive_type.First() + "'.");
-                }
-                //else throw new Exception("Case fold has invalid value: '"
-                //    + pom_case_insensitive_type.First() + "'.");
-            }
-            else test.case_insensitive_type = null;
-            // Check for existence of .trgen-ignore file.
-            // If there is one, read and create pattern of what to ignore.
-            if (File.Exists(ignore_list_of_files))
-            {
-                var ignore = new StringBuilder();
-                var lines = File.ReadAllLines(ignore_list_of_files);
-                var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
-                test.ignore_string = string.Join("|", ignore_lines);
-            }
-            else test.ignore_string = null;
-            if (!(test.target == "JavaScript" || test.target == "Dart" || test.target == "TypeScript"))
-            {
-                List<string> additional = new List<string>();
-                config.antlr_tool_args = additional;
-                // On Linux, the flies are automatically place in the package,
-                // and they cannot be changed!
-                if (test.package != null && test.package != "")
-                {
-                    if (GetOSTarget() == "Windows")
-                    {
-                        additional.Add("-o");
-                        additional.Add(test.package.Replace('.', '/'));
-                    }
-                    additional.Add("-lib");
-                    additional.Add(test.package.Replace('.', '/'));
-                }
-            }
-            test.package = test.target == "Go" ? "parser" : test.package;
-            test.package = test.target == "Antlr4cs" ? "Test" : test.package;
-            test.package = (pom_package_name != null && pom_package_name.Any() ? pom_package_name.First() + "/" : "");
-            test.start_rule = config.start_rule != null && config.start_rule != "" ? config.start_rule : pom_entry_point.First();
-            if (test.parsing_type == null) test.parsing_type = config.parsing_type;
-            if (test.parsing_type == null) test.parsing_type = "group";
-            test.os_target = config.os_targets.First();
-        }
-
         public void DoNonPomDirectedGenerate(Config config)
         {
             {
@@ -1414,7 +1146,7 @@ namespace Trash
                 if (config.targets != null && config.targets.Count() > 0) all = config.targets.ToList();
                 foreach (var target in all)
                 {
-                    var test = new Test();
+                    var test = new Test(config);
                     test.os_target = config.os_targets.First();
                     test.target = target;
                     test.grammar_name = config.grammar_name;
@@ -1454,16 +1186,6 @@ namespace Trash
                 test.current_directory = config.root_directory;
                 if (test.current_directory != "" && !test.current_directory.EndsWith("/"))
                     test.current_directory = test.current_directory + "/";
-                // Check for existence of .trgen-ignore file.
-                // If there is one, read and create pattern of what to ignore.
-                if (File.Exists(ignore_list_of_files))
-                {
-                    var ignore = new StringBuilder();
-                    var lines = File.ReadAllLines(ignore_list_of_files);
-                    var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
-                    test.ignore_string = string.Join("|", ignore_lines);
-                }
-                else test.ignore_string = null;
 
                 test.start_rule = config.start_rule;
                 test.example_files = "examples";
@@ -2170,7 +1892,7 @@ namespace Trash
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             
             var converted_tree = new ConvertToDOM().BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
-            var tuple = new AntlrJson.ParsingResultSet() { Text = (r5 as string), FileName = "stdin", Nodes = new UnvParseTreeNode[] { converted_tree }, Parser = parser, Lexer = lexer };
+            var tuple = new AntlrJson.ParsingResultSet() { FileName = "stdin", Nodes = new UnvParseTreeNode[] { converted_tree }, Parser = parser, Lexer = lexer };
             return tuple;
         }
 

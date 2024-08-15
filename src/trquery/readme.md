@@ -27,7 +27,17 @@ Commands are executed in order as they appear. The advantage of this
 command is that the parse tree does not have be re-read or written after
 each operation as with trinsert, trdelete, or trreplace.
 
-## Example
+
+### Commands
+
+grep <xpath> match-required?
+insert (before|after)? <xpath> match-required? <string>
+delete <xpath> match-required?
+delete-reattach <xpath> match-required?
+replace <xpath> match-required <string>
+move (before|after)? <xpath> match-required? <xpath>
+
+## Examples
 
 ## Notes
 
@@ -37,7 +47,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.2 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
+0.23.3 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
 
 ## License
 
