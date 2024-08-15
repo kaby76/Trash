@@ -24,7 +24,7 @@ a grammar.
 
 ## Current version
 
-0.23.3 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
+0.23.3 Code clean up, improvements to tritext, added trsort, trclonerename.
 
 ## License
 
