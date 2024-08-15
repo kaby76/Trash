@@ -1,43 +1,20 @@
-# trquery
+# trxgrep
 
 ## Summary
 
-Execute a simple query of tree modifications.
+"Grep" for nodes in a parse tree using XPath
 
 ## Description
 
-Reads a parse tree from stdin, executes a list
-of queries (insert, delete, or replace), 
-and write the modified tree
-to stdout. The input and output are Parse Tree Data.
+Find all sub-trees in a parse tree using the given XPath expression.
 
 ## Usage
 
-trquery insert xpath-expr string (; additional commands...)*
-trquery delete xpath-expr (; additional commands...)*
-trquery replace xpath-expr string (; additional commands...)*
-
-## Details
-
-If '-c' option specified, read commands from the file. Otherwise,
-the command line args contain the commands.
-
-For all commands, an XPath expression defines where an operation occurs.
-Commands are executed in order as they appear. The advantage of this
-command is that the parse tree does not have be re-read or written after
-each operation as with trinsert, trdelete, or trreplace.
-
-
-### Commands
-
-grep <xpath> match-required?
-insert (before|after)? <xpath> match-required? <string>
-delete <xpath> match-required?
-delete-reattach <xpath> match-required?
-replace <xpath> match-required <string>
-move (before|after)? <xpath> match-required? <xpath>
+    trxgrep <string>
 
 ## Examples
+
+    trparse A.g4 | trxgrep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
 ## Notes
 
@@ -47,7 +24,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.3 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
+0.23.2 Code clean up. Rename Domemtech.Trash to just Trash. Add match-required to trquery.
 
 ## License
 

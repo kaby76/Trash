@@ -632,6 +632,34 @@
             //}
         }
 
+        public static string ReconstructItem(UnvParseTreeNode tree, UnvParseTreeNode dot_pos)
+        {
+            Stack<Node> stack = new Stack<Node>();
+            stack.Push(tree);
+            StringBuilder sb = new StringBuilder();
+            while (stack.Any())
+            {
+                var n = stack.Pop();
+                if (n == dot_pos) sb.Append(" • ");
+                if (n is UnvParseTreeAttr a)
+                {
+                    sb.Append(a.StringValue);
+                }
+                else if (n is UnvParseTreeText t)
+                {
+                    sb.Append(t.NodeValue);
+                }
+                else if (n is UnvParseTreeElement e)
+                {
+                    for (int i = n.ChildNodes.Length - 1; i >= 0; i--)
+                    {
+                        stack.Push(n.ChildNodes.item(i));
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
         public static UnvParseTreeNode Find(IToken token, UnvParseTreeNode tree)
         {
             throw new NotImplementedException();
@@ -901,22 +929,26 @@
             if (what == null) throw new Exception("1st arg to MoveBefore is null");
             if (to == null) throw new Exception("2nd arg to MoveBefore is null");
             if (what == to) throw new Exception("MoveBefore given same args: can't move a node to itself.");
+            var is_attr = what is UnvParseTreeAttr;
             var parent = to;
             var old_parent = what.ParentNode;
-            var is_attr = what is UnvParseTreeAttr;
-            var list = parent.ChildNodes as UnvParseTreeNodeList;
-            var oldlist = old_parent.ChildNodes as UnvParseTreeNodeList;
-            int j = 0;
-            for (; j < oldlist._node_list.Count; ++j)
+            if (old_parent != null)
             {
-                 if (oldlist._node_list[j] == what)
-                 {
-                     oldlist._node_list.RemoveAt(j);
-                     break;
-                 }
+                var list = parent.ChildNodes as UnvParseTreeNodeList;
+                var oldlist = old_parent.ChildNodes as UnvParseTreeNodeList;
+                int j = 0;
+                for (; j < oldlist._node_list.Count; ++j)
+                {
+                    if (oldlist._node_list[j] == what)
+                    {
+                        oldlist._node_list.RemoveAt(j);
+                        break;
+                    }
+                }
+
+                list._node_list.Insert(0, what);
+                what.ParentNode = parent;
             }
-            list._node_list.Insert(0, what);
-            what.ParentNode = parent;
             if (!is_attr)
             {
             }
@@ -937,16 +969,19 @@
             var node_to_insert = new UnvParseTreeText();
             node_to_insert.Data = arbitrary_string;
             var parent = node.ParentNode;
-            for (int i = 0; i < parent.ChildNodes.Length; ++i)
+            if (parent != null)
             {
-                var child = parent.ChildNodes.item(i);
-                if (child == node)
+                for (int i = 0; i < parent.ChildNodes.Length; ++i)
                 {
-                    parent.ChildNodes.RemoveAt(i);
-                    parent.ChildNodes.Insert(i, node_to_insert);
-                    node_to_insert.ParentNode = parent;
-                    child.ParentNode = null;
-                    break;
+                    var child = parent.ChildNodes.item(i);
+                    if (child == node)
+                    {
+                        parent.ChildNodes.RemoveAt(i);
+                        parent.ChildNodes.Insert(i, node_to_insert);
+                        node_to_insert.ParentNode = parent;
+                        child.ParentNode = null;
+                        break;
+                    }
                 }
             }
             return node_to_insert;

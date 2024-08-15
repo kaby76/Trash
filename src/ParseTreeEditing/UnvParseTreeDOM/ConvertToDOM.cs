@@ -33,7 +33,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
             return result;
         }
 
-        public AntlrDynamicContext Try(UnvParseTreeNode tree, Parser parser)
+        public AntlrDynamicContext Try(UnvParseTreeNode tree)
         {
             // Perform bottom up traversal to derive equivalent tree in "dom".
             Stack<UnvParseTreeNode> stack = new Stack<UnvParseTreeNode>();

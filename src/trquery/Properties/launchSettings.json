@@ -2,8 +2,8 @@
   "profiles": {
     "trscript": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt insert before //ANY 'bbb'",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\fortran"
+      "commandLineArgs": "-f o.pt -c zz.qry",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4195\\sql\\starrocks"
     }
   }
 }

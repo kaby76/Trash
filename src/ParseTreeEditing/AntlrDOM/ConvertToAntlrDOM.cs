@@ -105,7 +105,7 @@ public class ConvertToAntlrDOM
         {
             var result = new AntlrElement(tree);
             //result.AntlrIParseTree = tree;
-            TerminalNodeImpl t = tree as TerminalNodeImpl;
+            TerminalNodeImpl t = (TerminalNodeImpl)tree;
             Interval interval = t.SourceInterval;
             result.NodeType = NodeConstants.ELEMENT_NODE;
             var fixed_name = parser.Vocabulary.GetSymbolicName(t.Symbol.Type);
@@ -218,7 +218,7 @@ public class ConvertToAntlrDOM
             result.AntlrIParseTree = tree;
             nodes[tree] = result;
             result.NodeType = NodeConstants.ELEMENT_NODE;
-            var name = parser.RuleNames[(tree as RuleContext).RuleIndex];
+            var name = parser.RuleNames[((RuleContext)tree).RuleIndex];
             result.LocalName = name;
             var nl = new AntlrNodeList();
             result.ChildNodes = nl;

@@ -151,6 +151,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgenvsc", "src\trgenvsc\tr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trclonereplace", "src\trclonereplace\trclonereplace.csproj", "{27F08587-B5B1-4436-80EA-48AB268C75B3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxgrep", "src\trxgrep\trxgrep.csproj", "{04BAC9E6-FAF3-4C27-B76E-1B247C9F9E15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -401,6 +403,10 @@ Global
 		{27F08587-B5B1-4436-80EA-48AB268C75B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27F08587-B5B1-4436-80EA-48AB268C75B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27F08587-B5B1-4436-80EA-48AB268C75B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04BAC9E6-FAF3-4C27-B76E-1B247C9F9E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04BAC9E6-FAF3-4C27-B76E-1B247C9F9E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04BAC9E6-FAF3-4C27-B76E-1B247C9F9E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04BAC9E6-FAF3-4C27-B76E-1B247C9F9E15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

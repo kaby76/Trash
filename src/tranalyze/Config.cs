@@ -1,7 +1,7 @@
 using CommandLine;
 using System.Collections.Generic;
 
-namespace Trash
+namespace tranalyze
 {
     public class Config
     {

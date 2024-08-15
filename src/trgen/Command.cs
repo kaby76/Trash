@@ -140,7 +140,7 @@ namespace Trash
                     List<string> name_ = null;
                     List<string> ss = null;
                     using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
-                           ate.Try(pr.First().Nodes.First(), pr.First().Parser))
+                           ate.Try(pr.First().Nodes.First()))
                     {
                         is_par = engine.parseExpression(
                                 @"/grammarSpec/grammarDecl/grammarType/PARSER",
