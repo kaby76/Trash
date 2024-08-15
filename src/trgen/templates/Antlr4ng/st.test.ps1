@@ -4,8 +4,8 @@ $Tests = "<if(os_win)>../<example_files_win><else>../<example_files_unix><endif>
 Write-Host "Test cases here: $Tests"
 
 # Get a list of test files from the test directory. Do not include any
-# .errors or .ipt files. Pay close attention to remove only file names
-# that end with the suffix .errors or .ipt.
+# .errors or .tree files. Pay close attention to remove only file names
+# that end with the suffix .errors or .tree.
 if (Test-Path -Path "tests.txt" -PathType Leaf) {
     Remove-Item "tests.txt"
 }
@@ -17,7 +17,7 @@ foreach ($file in $allFiles) {
         continue
     } elseif ($ext -eq ".errors") {
         continue
-    } elseif ($ext -eq ".ipt") {
+    } elseif ($ext -eq ".tree") {
         continue
     } else {
         $(& dotnet triconv -- -f utf-8 $file ; $last = $LASTEXITCODE ) | Out-Null
@@ -87,7 +87,7 @@ function func {
 $old = Get-Location
 Set-Location (func("<if(os_win)>../<example_files_win><else>../<example_files_unix><endif>"))
 
-# Check if any .errors/.ipt files have changed. That's not good.
+# Check if any .errors/.tree files have changed. That's not good.
 git config --global pager.diff false
 Remove-Item -Force -Path $old/updated.txt -errorAction ignore 2>&1 | Out-Null
 $updated = 0
@@ -105,7 +105,7 @@ foreach ($item in Get-ChildItem . -Recurse) {
 foreach ($item in Get-ChildItem . -Recurse) {
     $file = $item.fullname
     $ext = $item.Extension
-    if ($ext -eq ".ipt") {
+    if ($ext -eq ".tree") {
         [IO.File]::WriteAllText($file, $([IO.File]::ReadAllText($file) -replace "`r`n", "`n"))
         git diff --exit-code $file *>> $old/updated.txt
 	$st = $LASTEXITCODE

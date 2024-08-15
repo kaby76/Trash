@@ -203,14 +203,14 @@ public class Test {
             {
                 PrintWriter treef = null;
                 try {
-                    treef = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(input_name + ".ipt")), StandardCharsets.UTF_8), true);
-                    //treef = new PrintStream(new File(input_name + ".ipt"));
+                    treef = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(input_name + ".tree")), StandardCharsets.UTF_8), true);
+                    //treef = new PrintStream(new File(input_name + ".tree"));
                 } catch (NullPointerException e) {
                     treef = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);;
                 } catch (FileNotFoundException e2) {
                     treef = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
                 }
-                treef.print(toStringTree(tree, parser));
+                treef.print(tree.toStringTree(parser));
                 treef.close();
             } else
             {

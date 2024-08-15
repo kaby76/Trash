@@ -216,9 +216,9 @@ function DoParse(str: CharStream, input_name: string, row_number: number) {
     var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
     if (show_tree) {
         if (tee) {
-            writeFileSync(input_name + ".ipt", toStringTree(tree, parser));
+            writeFileSync(input_name + ".tree", tree.toStringTree(parser.ruleNames, parser));
         } else {
-            console.error(toStringTree(tree, parser));
+            console.error(tree.toStringTree(parser.ruleNames, parser));
         }
     }
     if (!quiet) {

@@ -304,10 +304,10 @@ public class Program
         {
             if (tee)
             {
-                System.IO.File.WriteAllText(input_name + ".ipt", ToStringTree(tree, parser));
+                System.IO.File.WriteAllText(input_name + ".tree", tree.ToStringTree(parser));
             } else
             {
-                System.Console.Error.WriteLine(ToStringTree(tree, parser));
+                System.Console.Error.WriteLine(tree.ToStringTree(parser));
             }
         }
         if (show_profile)
