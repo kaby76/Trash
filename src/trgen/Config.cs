@@ -23,6 +23,9 @@ namespace Trash
         [Option('g', "grammar-name", Required = false, HelpText = "Grammar for parse.")]
         public string grammar_name { get; set; }
 
+	    [Option('i', "ignore", Required = false, Separator = ',', HelpText = "Ignored files or directories for generating app.")]
+	    public IEnumerable<string> ignore { get; set; } = new List<string>();
+	
         [Option('o', "output-directory", Required = false, HelpText = "The output directory for the project.")]
         public string output_directory { get; set; }
 

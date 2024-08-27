@@ -18,7 +18,7 @@ This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>0.23.3</Version>
+		<Version>0.23.4</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trgenvsc</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
@@ -58,8 +58,31 @@ This program is part of the Trash toolkit.]]>
 			<PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
 		</PropertyGroup>
 	</Target>
+	<Target Name="MyClean" BeforeTargets="BeforeClean">
+		<Message Text="This target will only be built when cleaning the project." />
+		<Delete Files="foobar.zip" ContinueOnError="WarnAndContinue" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/Logger' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/ParseTreeEditing' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/Workspaces' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+	</Target>	
 	<Target Name="rm" BeforeTargets="BeforeBuild">
 		<Delete Files="foobar.zip" ContinueOnError="WarnAndContinue" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/Logger' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/ParseTreeEditing' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/Workspaces' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+	</Target>
+	<Target Name="YoCopyTheseFiles1" BeforeTargets="BeforeBuild">
+		<Exec Command="pwsh -command Copy-Item '../Logger/' 'templates/server/' -Force -Recurse" />
+		<Exec Command="pwsh -command Copy-Item '../ParseTreeEditing/' 'templates/server/' -Force -Recurse" />
+		<Exec Command="pwsh -command Copy-Item '../Workspaces/' 'templates/server/' -Force -Recurse" />
+	</Target>
+	<Target Name="rm2" BeforeTargets="BeforeBuild">
+		<Exec Command="pwsh -command Remove-Item 'templates/server/Logger/bin' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/ParseTreeEditing/bin' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/Workspaces/bin' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/Logger/obj' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/ParseTreeEditing/obj' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
+		<Exec Command="pwsh -command Remove-Item 'templates/server/Workspaces/obj' -Force -Recurse -ErrorAction SilentlyContinue; exit 0" />
 	</Target>
 	<Target Name="zippy" BeforeTargets="BeforeBuild">
 		<Exec Command="pwsh -command Compress-Archive 'templates/**' foobar.zip" />

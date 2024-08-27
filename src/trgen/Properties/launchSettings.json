@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t CSharp",
+      "commandLineArgs": "-i save,comp -t CSharp",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\fortran"
     }
   }
