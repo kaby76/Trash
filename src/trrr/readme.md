@@ -14,7 +14,7 @@
 
 ## Current version
 
-0.23.3 Code clean up, improvements to tritext, added trsort, trclonerename.
+0.23.4 Clean up build of trgenvsc.
 
 ## License
 

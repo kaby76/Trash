@@ -86,6 +86,8 @@ namespace Trash
 
         public Test(Config config)
         {
+            this.ignore_string = null;
+
             // Check for existence of .trgen-ignore file.
             // If there is one, read and create pattern of what to ignore.
             if (File.Exists(config.ignore_list_of_files))
@@ -95,7 +97,19 @@ namespace Trash
                 var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
                 this.ignore_string = string.Join("|", ignore_lines);
             }
-            else this.ignore_string = null;
+            if (config.ignore.Any())
+            {
+                var t = string.Join("|", config.ignore);
+                if (this.ignore_string != null)
+                {
+                    this.ignore_string += "|" + t;
+                }
+                else
+                {
+                    this.ignore_string = t;
+                }
+            }
+            
         }
     }
 }

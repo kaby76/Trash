@@ -21,4 +21,4 @@ npm i vscode-languageserver-protocol@3.16.0-next.7
 npm i vscode-languageserver-types@3.16.0-next.3
 npm install
 npm run compile
-vsce package
+./node_modules/.bin/vsce package

@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Driver": {
-      "commandName": "Project",
-      "workingDirectory": "$(ProjectDir)"
-    }
-  }
-}
