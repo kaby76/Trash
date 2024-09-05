@@ -22,3 +22,12 @@ npm i vscode-languageserver-types@3.16.0-next.3
 npm install
 npm run compile
 ./node_modules/.bin/vsce package
+
+echo "Creating settings.rc file to set up syntactic highlighting for inputs for the grammar."
+echo "From all lexer rules, get all code points from single character string literals."
+python generate-settings.py > settings.rc
+
+echo "Running VSCode. Hit 'F5' in VSCode to start a debug session of VSCode with a LSP server and extension for the grammar."
+echo "After opening a file, change type of file to 'any'."
+echo "The file will have syntactic highlighting."
+code .
