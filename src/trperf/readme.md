@@ -41,7 +41,7 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.23.4 Clean up build of trgenvsc.
+0.23.4 Add scripts for syntactic highlighting as default for trgenvsc.
 
 ## License
 

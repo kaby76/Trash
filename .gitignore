@@ -74,3 +74,6 @@ src/trgenvsc/foobar.zip
 src/trgenvsc/foobar.zip
 _tests/trxml/output
 _tests/delabel/o.pt
+/src/trgenvsc/templates/server/Logger
+/src/trgenvsc/templates/server/ParseTreeEditing
+/src/trgenvsc/templates/server/Workspaces

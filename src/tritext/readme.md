@@ -18,7 +18,7 @@ Get strings from a PDF file using IText.
 
 ## Current version
 
-0.23.4 Clean up build of trgenvsc.
+0.23.4 Add scripts for syntactic highlighting as default for trgenvsc.
 
 ## License
 

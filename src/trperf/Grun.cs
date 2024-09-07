@@ -343,7 +343,7 @@ public class Grun
                     {
                         if (do_tab) System.Console.Write("\t");
                         do_tab = true;
-                        System.Console.Write(r.errors.Count);
+                        System.Console.Write(r.ambiguities.Count);
                     }
 
                     if (config.Columns[c] == 'e')

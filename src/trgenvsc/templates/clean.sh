@@ -1,6 +1,10 @@
 #!/bin/sh
 
-pushd VsCode
+pushd server
+rm -rf Logger ParseTreeEditing Workspaces
+popd
+
+pushd src
 rm -rf node_modules
 rm -f package-lock.json
 rm -rf out
