@@ -7,9 +7,18 @@ Generate a VSCode extension and LSP server for an Antlr4 grammar.
 ## Description
 
 Generates a Visual Studio Code extension from an Antlr4 grammar. A CSharp
-target must be available for the grammar. In addition, you will need to
-supply a settings.rc file containing the classes of symbols for the editor.
-A basic settings.rc file is supplied for you to edit.
+target must be available for the grammar as the LSP server is implemented
+in C#.
+
+After generating the extension/server, proceed to building the extension
+by changing to the "Generated-vsc/" directory, then running "bash install.sh".
+The install.sh script performs the build of the C# server, and the TypeScript
+extension. The script will also create a settings.rc JSON file that describes
+the syntactic highlighting for the grammar. The script calls an auxilary Python
+program to examine the grammar for single-character string literals, and using
+the Unicode category to group these in a common class with a particular color.
+You can modify the settings.rc file to perform semantic highlighting by adjusting
+the XPath patterns to match certain parse trees.
 
 ## Usage
 
