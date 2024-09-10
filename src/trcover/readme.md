@@ -24,7 +24,7 @@ a grammar.
 
 ## Current version
 
-0.23.4 Add scripts for syntactic highlighting as default for trgenvsc.
+0.23.5 Add scripts for syntactic highlighting as default for trgenvsc.
 
 ## License
 
