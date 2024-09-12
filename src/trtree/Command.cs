@@ -71,7 +71,7 @@ class Command
                             lexer,
                             parser).ToString());
                 }
-                else if (config.ParenIndentStyle)
+                if (config.ParenIndentStyle)
                 {
                     sb.AppendLine(
                         TreeOutput.OutputTree(
@@ -79,7 +79,7 @@ class Command
                             lexer,
                             parser).ToString());
                 }
-                else if (config.IndentStyle)
+                if (config.IndentStyle)
                 {
                     sb.AppendLine(
                         TreeOutput.OutputTreeIndentStyle(
