@@ -135,7 +135,7 @@ public class TreeOutput
     {
         if (tree is UnvParseTreeText t)
         {
-            sb.Append(" " + PerformEscapes(t.Data));
+            sb.Append(" \"" + PerformEscapes(t.Data) + "\"");
             return;
         }
         else if (tree is UnvParseTreeAttr a)
@@ -170,10 +170,7 @@ public class TreeOutput
         if (tree is UnvParseTreeText t)
         {
             IndentStartLine(sb, level);
-            sb.Append(
-                ""
-                + "'" + PerformEscapes(t.Data) + "'"
-            );
+			sb.Append("\"" + PerformEscapes(t.Data) + "\"");
             sb.AppendLine();
         }
         else if (tree is UnvParseTreeAttr a)
