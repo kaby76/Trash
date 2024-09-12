@@ -63,11 +63,30 @@ class Command
             foreach (var node in nodes)
             {
                 sb.AppendLine();
-                sb.AppendLine(
-                    TreeOutput.OutputTree(
-                        node,
-                        lexer,
-                        parser).ToString());
+                if (config.AntlrStyle)
+                {
+                    sb.AppendLine(
+                        TreeOutput.OutputTreeAntlrStyle(
+                            node,
+                            lexer,
+                            parser).ToString());
+                }
+                else if (config.ParenIndentStyle)
+                {
+                    sb.AppendLine(
+                        TreeOutput.OutputTree(
+                            node,
+                            lexer,
+                            parser).ToString());
+                }
+                else if (config.IndentStyle)
+                {
+                    sb.AppendLine(
+                        TreeOutput.OutputTreeIndentStyle(
+                            node,
+                            lexer,
+                            parser).ToString());
+                }
             }
 
             System.Console.WriteLine(sb.ToString());
