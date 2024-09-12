@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../wsn.ebnf",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\fix\\grammars-v4\\ebnf\\Generated-CSharp"
+      "commandLineArgs": "-i \"foo();\"",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\temp\\Generated-CSharp"
     }
   }
 }

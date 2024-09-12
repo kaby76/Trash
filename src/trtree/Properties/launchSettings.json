@@ -2,8 +2,8 @@
   "profiles": {
     "trtree": {
       "commandName": "Project",
-      "commandLineArgs": "-f oo.pt",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\useless-paren-check\\abb"
+      "commandLineArgs": "-f o.pt -i",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\temp\\Generated-CSharp"
     }
   }
 }

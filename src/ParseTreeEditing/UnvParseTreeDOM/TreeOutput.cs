@@ -202,7 +202,7 @@ public class TreeOutput
         }
         if (level == 0)
         {
-            sb.AppendLine();
+//            sb.AppendLine();
             changed = 0;
         }
     }
