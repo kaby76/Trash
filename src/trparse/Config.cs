@@ -7,6 +7,9 @@ public class Config
 {
     [Value(0)] public IEnumerable<string> Files { get; set; }
 
+    [Option('a', "ambig", Required = false, HelpText = "Output ambiguous parse trees.")]
+    public bool Ambig { get; set; }
+
     [Option('d', "dll", Required = false, HelpText = "Search for parser in dll with this specified name.")]
     public string Dll { get; set; } = "Test";
 

@@ -62,10 +62,9 @@ class Command
             StringBuilder sb = new StringBuilder();
             foreach (var node in nodes)
             {
-                sb.AppendLine();
                 if (config.AntlrStyle)
                 {
-                    sb.AppendLine(
+                    sb.Append(
                         TreeOutput.OutputTreeAntlrStyle(
                             node,
                             lexer,
@@ -73,7 +72,7 @@ class Command
                 }
                 if (config.ParenIndentStyle)
                 {
-                    sb.AppendLine(
+                    sb.Append(
                         TreeOutput.OutputTree(
                             node,
                             lexer,
@@ -81,7 +80,7 @@ class Command
                 }
                 if (config.IndentStyle)
                 {
-                    sb.AppendLine(
+                    sb.Append(
                         TreeOutput.OutputTreeIndentStyle(
                             node,
                             lexer,

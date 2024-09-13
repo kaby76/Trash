@@ -2,7 +2,7 @@
   "profiles": {
     "trtree": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt -i",
+      "commandLineArgs": "-f o.pt -a",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\temp\\Generated-CSharp"
     }
   }
