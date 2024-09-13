@@ -64,7 +64,7 @@ class Command
             {
                 if (config.AntlrStyle)
                 {
-                    sb.Append(
+                    sb.AppendLine(
                         TreeOutput.OutputTreeAntlrStyle(
                             node,
                             lexer,
@@ -72,7 +72,7 @@ class Command
                 }
                 if (config.ParenIndentStyle)
                 {
-                    sb.Append(
+                    sb.AppendLine(
                         TreeOutput.OutputTree(
                             node,
                             lexer,
@@ -80,7 +80,7 @@ class Command
                 }
                 if (config.IndentStyle)
                 {
-                    sb.Append(
+                    sb.AppendLine(
                         TreeOutput.OutputTreeIndentStyle(
                             node,
                             lexer,
@@ -89,6 +89,7 @@ class Command
             }
 
             System.Console.WriteLine(sb.ToString());
+            System.Console.WriteLine();
         }
     }
 }
