@@ -59,15 +59,16 @@ public class Program
         return tree;
     }
 
-    public static List\<IParseTree> Parse3()
+    public static List\<Tuple\<int, List\<IParseTree>>> Parse3()
     {
         Parser.Profile = true;
         var tree = Parser.<start_symbol>();
-        var am = Parser.ParseInfo.getDecisionInfo().Where(d =>
-            d.ambiguities.Any()).Select(d => d.ambiguities).FirstOrDefault();
-        var trees = new List\<IParseTree>();
-        if (am != null)
+        var decisions = Parser.ParseInfo.getDecisionInfo().Where(d => d.ambiguities.Any()).ToList();
+        var result = new List\<Tuple\<int, List\<IParseTree>>>();
+        foreach (var decision in decisions)
         {
+            var am = decision.ambiguities;
+            var trees = new List\<IParseTree>();
             foreach (AmbiguityInfo ai in am)
             {
                 var parser_decision = ai.decision;
@@ -87,11 +88,11 @@ public class Program
                     parser_startRuleIndex);
                 trees.AddRange(parser_trees);
             }
+            result.Add(new Tuple\<int, List\<IParseTree>>(decision.decision, trees));
         }
         Input = Lexer.InputStream.ToString();
         TokenStream = Parser.TokenStream;
-        Trees = trees;
-        return trees;
+        return result;
     }
 
     public static bool AnyErrors()

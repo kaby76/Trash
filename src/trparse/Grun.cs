@@ -325,24 +325,28 @@ public class Grun
         }
         else
         {
-            var trees = res2 as List<IParseTree>;
+            var tuples = res2 as List<Tuple<int, List<IParseTree>>>;
             var list_of_trees = new List<UnvParseTreeNode>();
-            foreach (var tree in trees)
+            foreach (var tt in tuples)
             {
-                var t2 = tree as ParserRuleContext;
-                var converted_tree =
-                    new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream,
-                        charstream);
-                list_of_trees.Add(converted_tree);
+                foreach (var tree in tt.Item2)
+                {
+                    var t2 = tree as ParserRuleContext;
+                    var converted_tree =
+                        new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream,
+                            charstream);
+                    list_of_trees.Add(converted_tree);
+                }
+
+                var tuple = new AntlrJson.ParsingResultSet()
+                {
+                    FileName = input_name + "." + tt.Item1,
+                    Nodes = list_of_trees.ToArray(),
+                    Parser = parser,
+                    Lexer = lexer
+                };
+                data.Add(tuple);
             }
-            var tuple = new AntlrJson.ParsingResultSet()
-            {
-                FileName = input_name,
-                Nodes = list_of_trees.ToArray(),
-                Parser = parser,
-                Lexer = lexer
-            };
-            data.Add(tuple);
         }
         return (bool)res3 ? 1 : 0;
     }
