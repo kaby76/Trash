@@ -50,8 +50,8 @@ public class MyParser : <parser_name> {
             _ParserInterpreter.Reset();
             _ParserInterpreter.AddDecisionOverride(decision, startIndex, alt);
             ParserRuleContext t = _ParserInterpreter.Parse(startRuleIndex);
-            var ambigSubTree =
-                Trees.GetRootOfSubtreeEnclosingRegion(t, startIndex, stopIndex);
+//            var ambigSubTree =
+//                Trees.GetRootOfSubtreeEnclosingRegion(t, startIndex, stopIndex);
             // Use higher of overridden decision tree or tree enclosing all tokens
 //            if ( Trees.IsAncestorOf(_ParserInterpreter.GetOverrideDecisionRoot(), ambigSubTree) ) {
 //                ambigSubTree = _ParserInterpreter.GetOverrideDecisionRoot();
