@@ -53,9 +53,9 @@ public class MyParser : <parser_name> {
             var ambigSubTree =
                 Trees.GetRootOfSubtreeEnclosingRegion(t, startIndex, stopIndex);
             // Use higher of overridden decision tree or tree enclosing all tokens
-            if ( Trees.IsAncestorOf(_ParserInterpreter.GetOverrideDecisionRoot(), ambigSubTree) ) {
-                ambigSubTree = _ParserInterpreter.GetOverrideDecisionRoot();
-            }
+//            if ( Trees.IsAncestorOf(_ParserInterpreter.GetOverrideDecisionRoot(), ambigSubTree) ) {
+//                ambigSubTree = _ParserInterpreter.GetOverrideDecisionRoot();
+//            }
             trees.Add(t);
             alt = alts.NextSetBit(alt+1);
         }

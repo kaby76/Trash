@@ -41,7 +41,7 @@ public class MyParserInterpreter : Parser
     [NotNull]
     private readonly IVocabulary vocabulary;
 
-    private readonly Stack<Tuple<ParserRuleContext, int>> _parentContextStack = new Stack<Tuple<ParserRuleContext, int>>();
+    private Stack<Tuple<ParserRuleContext, int>> _parentContextStack = new Stack<Tuple<ParserRuleContext, int>>();
 
     /** We need a map from (decision,inputIndex)->forced alt for computing ambiguous
      *  parse trees. For now, we allow exactly one override.
@@ -94,6 +94,12 @@ public class MyParserInterpreter : Parser
         base.Reset();
         overrideDecisionReached = false;
         overrideDecisionRoot = null;
+        overrideDecision = -1;
+        overrideDecisionInputIndex = -1;
+        overrideDecisionAlt = -1;
+        _parentContextStack = new Stack<Tuple<ParserRuleContext, int>>();
+        overrideDecisionRoot = null;
+        rootContext = null;
     }
 
     public override ATN Atn

@@ -136,6 +136,7 @@ public class TreeOutput
         if (tree is UnvParseTreeText t)
         {
             sb.Append((!first_time ? " ": "") + "\"" + PerformEscapes(t.Data) + "\"");
+            first_time = false;
             return;
         }
         else if (tree is UnvParseTreeAttr a)
@@ -147,6 +148,7 @@ public class TreeOutput
             var x = e;
             var name = e.LocalName;
             sb.Append((!first_time ? " " : "") + "(" + name);
+            first_time = false;
         }
         for (int i = 0; tree.ChildNodes != null && i < tree.ChildNodes.Length; ++i)
         {
