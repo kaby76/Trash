@@ -13,9 +13,9 @@ rm -rf Generated-CSharp
 trgen -t CSharp
 cd Generated-CSharp
 make
-echo "1 + 2 + 3" | trparse | trquery grep ' //SCIENTIFIC_NUMBER' | trtree > ../output
+echo "1 + 2 + 3" | trparse | trquery grep ' //INT' | trtree > ../output
 cd ..
-rm -rf Generated-CSharp
+#rm -rf Generated-CSharp
 
 # Diff result.
 for i in output Gold/output
