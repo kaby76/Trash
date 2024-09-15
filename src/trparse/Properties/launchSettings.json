@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "in.java --ambig",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\java\\java20\\Generated-CSharp"
+      "commandLineArgs": "--ambig ../examples/array.php",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\php\\Generated-CSharp"
     }
   }
 }

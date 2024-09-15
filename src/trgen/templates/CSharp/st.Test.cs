@@ -76,7 +76,7 @@ public class Program
                 var parser_startIndex = ai.startIndex;
                 var parser_stopIndex = ai.stopIndex;
                 var p = Parser.RuleNames.Select((value, index) => new { value, index })
-                        .Where(pair => (pair.value == "start_"))
+                        .Where(pair => (pair.value == "<start_symbol>"))
                         .Select(pair => pair.index).First();
                 var parser_startRuleIndex = p;
                 var parser_trees = ((MyParser)Parser).getAllPossibleParseTrees(
