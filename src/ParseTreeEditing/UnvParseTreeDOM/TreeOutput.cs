@@ -1,28 +1,36 @@
 ﻿using Antlr4.Runtime;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection.Emit;
 using System.Text;
 
 namespace ParseTreeEditing.UnvParseTreeDOM;
 
 public class TreeOutput
 {
-    private static int changed = 0;
-    private static bool first_time = true;
+    private int changed = 0;
+    private bool first_time = true;
+    private StringBuilder sb;
+    private Lexer lexer;
+    private Parser parser;
+    private string prefix;
 
-    public static StringBuilder OutputTree(UnvParseTreeNode tree, Lexer lexer, Parser parser)
+    public TreeOutput(Lexer lexer, Parser parser, string prefix = "")
     {
         changed = 0;
         first_time = true;
-        var sb = new StringBuilder();
-        ParenthesizedAST(tree, sb, lexer, parser);
+        sb = new StringBuilder();
+        this.lexer = lexer;
+        this.parser = parser;
+        this.prefix = prefix;
+    }
+
+    public StringBuilder OutputTree(UnvParseTreeNode tree)
+    {
+        ParenthesizedAST(tree);
         return sb;
     }
 
-    private static void ParenthesizedAST(UnvParseTreeNode tree, StringBuilder sb, Lexer lexer, Parser parser, int level = 0)
+    private void ParenthesizedAST(UnvParseTreeNode tree, int level = 0)
     {
         // Antlr always names a non-terminal with first letter lowercase,
         // but renames it when creating the type in C#. So, remove the prefix,
@@ -30,7 +38,7 @@ public class TreeOutput
         // the name. Saves big time on output!
         if (tree is UnvParseTreeText t)
         {
-            StartLine(sb, level);
+            StartLine(level);
             sb.Append(
                 "( "
                 + " text:'" + PerformEscapes(t.Data) + "'"
@@ -46,7 +54,7 @@ public class TreeOutput
         }
         else if (tree is UnvParseTreeAttr a)
         {
-            StartLine(sb, level);
+            StartLine(level);
             sb.Append("( Attribute " + a.Name as string);
             sb.Append(" Value '");
             sb.Append(PerformEscapes(a.StringValue));
@@ -62,7 +70,7 @@ public class TreeOutput
         {
             var x = e;
             var name = e.LocalName;
-            StartLine(sb, level);
+            StartLine(level);
             sb.Append(
                 "( " + name
                 );
@@ -71,7 +79,7 @@ public class TreeOutput
         for (int i = 0; tree.ChildNodes != null && i < tree.ChildNodes.Length; ++i)
         {
             var c = tree.ChildNodes.item(i);
-            ParenthesizedAST(c as UnvParseTreeNode, sb, lexer, parser, level + 1);
+            ParenthesizedAST(c as UnvParseTreeNode, level + 1);
         }
         if (level == 0)
         {
@@ -81,12 +89,13 @@ public class TreeOutput
         }
     }
 
-    private static void StartLine(StringBuilder sb, int level = 0)
+    private void StartLine(int level = 0)
     {
         if (changed - level >= 0)
         {
             if (!first_time)
             {
+                sb.Append(prefix);
                 for (int j = 0; j < level; ++j) sb.Append("  ");
                 for (int k = 0; k < 1 + changed - level; ++k) sb.Append(") ");
                 sb.AppendLine();
@@ -95,6 +104,7 @@ public class TreeOutput
             first_time = false;
         }
         changed = level;
+        sb.Append(prefix);
         for (int j = 0; j < level; ++j) sb.Append("  ");
     }
 
@@ -122,20 +132,18 @@ public class TreeOutput
         return new_s.ToString();
     }
 
-    public static StringBuilder OutputTreeAntlrStyle(UnvParseTreeNode tree, Lexer lexer, Parser parser)
+    public StringBuilder OutputTreeAntlrStyle(UnvParseTreeNode tree)
     {
-        changed = 0;
-        first_time = true;
-        var sb = new StringBuilder();
-        AntlrParenthesizedAST(tree, sb, lexer, parser);
+        sb.Append(prefix);
+        AntlrParenthesizedAST(tree);
         return sb;
     }
 
-    private static void AntlrParenthesizedAST(UnvParseTreeNode tree, StringBuilder sb, Lexer lexer, Parser parser, int level = 0)
+    private void AntlrParenthesizedAST(UnvParseTreeNode tree, int level = 0)
     {
         if (tree is UnvParseTreeText t)
         {
-            sb.Append((!first_time ? " ": "") + "\"" + PerformEscapes(t.Data) + "\"");
+            sb.Append((!first_time ? " " : "") + "\"" + PerformEscapes(t.Data) + "\"");
             first_time = false;
             return;
         }
@@ -153,31 +161,28 @@ public class TreeOutput
         for (int i = 0; tree.ChildNodes != null && i < tree.ChildNodes.Length; ++i)
         {
             var c = tree.ChildNodes.item(i);
-            AntlrParenthesizedAST(c as UnvParseTreeNode, sb, lexer, parser, level + 1);
+            AntlrParenthesizedAST(c as UnvParseTreeNode, level + 1);
         }
         sb.Append(")");
     }
 
-    public static StringBuilder OutputTreeIndentStyle(UnvParseTreeNode tree, Lexer lexer, Parser parser)
+    public StringBuilder OutputTreeIndentStyle(UnvParseTreeNode tree)
     {
-        changed = 0;
-        first_time = true;
-        var sb = new StringBuilder();
-        IndentAST(tree, sb, lexer, parser);
+        IndentAST(tree);
         return sb;
     }
 
-    public static void IndentAST(UnvParseTreeNode tree, StringBuilder sb, Lexer lexer, Parser parser, int level = 0)
+    public void IndentAST(UnvParseTreeNode tree, int level = 0)
     {
         if (tree is UnvParseTreeText t)
         {
-            IndentStartLine(sb, level);
+            IndentStartLine(level);
 			sb.Append("\"" + PerformEscapes(t.Data) + "\"");
             sb.AppendLine();
         }
         else if (tree is UnvParseTreeAttr a)
         {
-            IndentStartLine(sb, level);
+            IndentStartLine(level);
             sb.Append("Attribute " + a.Name as string);
             sb.Append(" Value '");
             sb.Append(PerformEscapes(a.StringValue));
@@ -193,14 +198,14 @@ public class TreeOutput
         {
             var x = e;
             var name = e.LocalName;
-            IndentStartLine(sb, level);
+            IndentStartLine(level);
             sb.Append(name);
             sb.AppendLine();
         }
         for (int i = 0; tree.ChildNodes != null && i < tree.ChildNodes.Length; ++i)
         {
             var c = tree.ChildNodes.item(i);
-            IndentAST(c as UnvParseTreeNode, sb, lexer, parser, level + 1);
+            IndentAST(c as UnvParseTreeNode, level + 1);
         }
         if (level == 0)
         {
@@ -209,7 +214,7 @@ public class TreeOutput
         }
     }
 
-    private static void IndentStartLine(StringBuilder sb, int level = 0)
+    private void IndentStartLine(int level = 0)
     {
         if (changed - level >= 0)
         {
@@ -217,6 +222,7 @@ public class TreeOutput
             first_time = false;
         }
         changed = level;
+        sb.Append(prefix);
         for (int j = 0; j < level; ++j) sb.Append(" ");
     }
 

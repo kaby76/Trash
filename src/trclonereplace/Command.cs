@@ -72,7 +72,7 @@ class Command
             if (config.Verbose)
             {
                 foreach (var n in trees)
-                    System.Console.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
+                    System.Console.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
             }
 
             /* Step 1: Find all parser symbols on the right hand side that match,

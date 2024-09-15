@@ -98,7 +98,7 @@ class Command
             if (config.Verbose)
             {
                 foreach (var n in trees)
-                    System.Console.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
+                    System.Console.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
             }
 
             org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();

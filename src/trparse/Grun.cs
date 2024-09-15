@@ -161,7 +161,7 @@ public class Grun
                     foreach (var t in d.Nodes)
                     {
                         if (config.Verbose)
-                            LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(t, d.Lexer, d.Parser)
+                            LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(d.Lexer, d.Parser).OutputTree(t)
                                 .ToString());
                     }
                 }
@@ -192,8 +192,9 @@ public class Grun
         }
         catch (Exception e)
         {
-            System.Console.WriteLine(e.ToString());
+            System.Console.Error.WriteLine(e.ToString());
             result = 1;
+            System.Console.Out.WriteLine();
         }
 
         return result;

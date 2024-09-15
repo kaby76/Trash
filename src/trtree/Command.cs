@@ -1,5 +1,6 @@
 ﻿using ParseTreeEditing.UnvParseTreeDOM;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 
@@ -54,37 +55,28 @@ class Command
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
         var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
+        bool more_than_one_fn = data.Count() > 1;
         foreach (var in_tuple in data)
         {
             var nodes = in_tuple.Nodes;
             var lexer = in_tuple.Lexer;
             var parser = in_tuple.Parser;
+            var fn = in_tuple.FileName;
+            var prefix = more_than_one_fn ? fn + ": " : "";
             StringBuilder sb = new StringBuilder();
             foreach (var node in nodes)
             {
                 if (config.AntlrStyle)
                 {
-                    sb.AppendLine(
-                        TreeOutput.OutputTreeAntlrStyle(
-                            node,
-                            lexer,
-                            parser).ToString());
+                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeAntlrStyle(node).ToString());
                 }
                 if (config.ParenIndentStyle)
                 {
-                    sb.AppendLine(
-                        TreeOutput.OutputTree(
-                            node,
-                            lexer,
-                            parser).ToString());
+                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTree(node).ToString());
                 }
                 if (config.IndentStyle)
                 {
-                    sb.AppendLine(
-                        TreeOutput.OutputTreeIndentStyle(
-                            node,
-                            lexer,
-                            parser).ToString());
+                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeIndentStyle(node).ToString());
                 }
             }
 
