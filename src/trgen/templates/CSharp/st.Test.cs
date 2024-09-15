@@ -75,11 +75,10 @@ public class Program
                 var parser_alts = ai.ambigAlts;
                 var parser_startIndex = ai.startIndex;
                 var parser_stopIndex = ai.stopIndex;
-                var dfa_state = Parser.Atn.states[parser_decision];
                 var p = Parser.RuleNames.Select((value, index) => new { value, index })
                         .Where(pair => (pair.value == "start_"))
                         .Select(pair => pair.index).First();
-                var parser_startRuleIndex = p; //dfa_state.ruleIndex;
+                var parser_startRuleIndex = p;
                 var parser_trees = ((MyParser)Parser).getAllPossibleParseTrees(
                     parser_decision,
                     parser_alts,
@@ -355,21 +354,25 @@ public class Program
         }
         if (show_ambig)
         {
-            var am = parser.ParseInfo.getDecisionInfo().Where(d =>
-                d.ambiguities.Any()).Select(d => d.ambiguities).FirstOrDefault();
-            if (am != null)
+            var decs = parser.ParseInfo.getDecisionInfo().Where(d =>
+                d.ambiguities.Any()).Select(d => d.ambiguities).ToList();
+            foreach (var decision in decs)
             {
-                foreach (AmbiguityInfo ai in am)
+                foreach (var ai in decision)
                 {
                     var parser_decision = ai.decision;
                     var parser_alts = ai.ambigAlts;
                     var parser_startIndex = ai.startIndex;
                     var parser_stopIndex = ai.stopIndex;
-                    var dfa_state = parser.Atn.states[parser_decision];
+                    var nfa_state = parser.Atn.states.Where(s =>
+                    {
+                        if (s is BasicBlockStartState s2) return s2.decision == parser_decision;
+                        else return false;
+                    }).ToList();
                     var p = parser.RuleNames.Select((value, index) => new { value, index })
                             .Where(pair => (pair.value == "<start_symbol>"))
                             .Select(pair => pair.index).First();
-                    var parser_startRuleIndex = p; //dfa_state.ruleIndex;
+                    var parser_startRuleIndex = p;
                     var parser_trees = parser.getAllPossibleParseTrees(
                         parser_decision,
                         parser_alts,

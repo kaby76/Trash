@@ -327,9 +327,9 @@ public class Grun
         else
         {
             var tuples = res2 as List<Tuple<int, List<IParseTree>>>;
-            var list_of_trees = new List<UnvParseTreeNode>();
             foreach (var tt in tuples)
             {
+                var list_of_trees = new List<UnvParseTreeNode>();
                 foreach (var tree in tt.Item2)
                 {
                     var t2 = tree as ParserRuleContext;

@@ -20,12 +20,6 @@ public class MyParser : <parser_name> {
             input);
     }
 
-    public ParserRuleContext Doit()
-    {
-        _ParserInterpreter.Interpreter.PredictionMode = PredictionMode.LL_EXACT_AMBIG_DETECTION;
-        return _ParserInterpreter.Parse(1);
-    }
-
     public List\<ParserRuleContext> getAllPossibleParseTrees(
         int decision,
         BitSet alts,
@@ -33,6 +27,7 @@ public class MyParser : <parser_name> {
         int stopIndex,
         int startRuleIndex)
     {
+        _ParserInterpreter.Interpreter.PredictionMode = PredictionMode.LL_EXACT_AMBIG_DETECTION;
         var trees = new List\<ParserRuleContext>();
         
         if ( stopIndex>=(_tokens.Size - 1) ) { // if we are pointing at EOF token
@@ -50,12 +45,6 @@ public class MyParser : <parser_name> {
             _ParserInterpreter.Reset();
             _ParserInterpreter.AddDecisionOverride(decision, startIndex, alt);
             ParserRuleContext t = _ParserInterpreter.Parse(startRuleIndex);
-//            var ambigSubTree =
-//                Trees.GetRootOfSubtreeEnclosingRegion(t, startIndex, stopIndex);
-            // Use higher of overridden decision tree or tree enclosing all tokens
-//            if ( Trees.IsAncestorOf(_ParserInterpreter.GetOverrideDecisionRoot(), ambigSubTree) ) {
-//                ambigSubTree = _ParserInterpreter.GetOverrideDecisionRoot();
-//            }
             trees.Add(t);
             alt = alts.NextSetBit(alt+1);
         }
