@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../wsn.ebnf",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\fix\\grammars-v4\\ebnf\\Generated-CSharp"
+      "commandLineArgs": "--ambig ../examples/array.php",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\php\\Generated-CSharp"
     }
   }
 }

@@ -1,4 +1,3 @@
-
 ( grammarSpec
   ( grammarDecl
     ( grammarType
@@ -510,5 +509,6 @@
   ( EOF
     (  text:'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
 ) ) ) 
+
 
 

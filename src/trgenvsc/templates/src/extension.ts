@@ -14,11 +14,13 @@ function getConfig<T>(option: string, defaultValue?: any): T
     return config.get<T>(option, defaultValue);
 }
 
+/*
 namespace SwitchSourceHeaderRequest
 {
     export const type = new vscodelc.RequestType<vscodelc.TextDocumentIdentifier, string|undefined,
                              void, void>('textDocument/switchSourceHeader');
 }
+*/
 
 class FileStatus
 {

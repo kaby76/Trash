@@ -56,6 +56,18 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                 Interval interval = t.SourceInterval;
                 new_node.NodeType = NodeConstants.ELEMENT_NODE;
                 var fixed_name = parser.Vocabulary.GetSymbolicName(t.Symbol.Type);
+                if (fixed_name == null)
+                {
+                    try
+                    {
+                        var xxxxx = lexer.RuleNames[t.Symbol.Type];
+                        fixed_name = xxxxx;
+                    }
+                    catch (System.Exception)
+                    {
+                        fixed_name = "Unknown";
+                    }
+                }
                 new_node.LocalName = fixed_name;
                 var nl = new UnvParseTreeNodeList();
                 new_node.ChildNodes = nl;

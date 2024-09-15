@@ -49,7 +49,7 @@ simplify and eliminate bugs created when adding new grammars.
 
 ## Current version
 
-0.23.4 Add scripts for syntactic highlighting as default for trgenvsc.
+0.23.5 Add --ambig option to trparse. Add file names to trtree. Add new output styles for trtree. Update packages for trgenvsc templates.
 
 ## License
 

@@ -12,4 +12,10 @@ public class Config
 
     [Option('a', "antlr-style", Required = false, HelpText = "Output tree as Antlr ToStringTree() style.")]
     public bool AntlrStyle { get; set; }
+
+    [Option('i', "indent-style", Required = false, HelpText = "Output tree as plain indented style.")]
+    public bool IndentStyle { get; set; }
+
+    [Option("paren-indent-style", Required = false, HelpText = "Output tree as parenthesized indented style.")]
+    public bool ParenIndentStyle { get; set; }
 }

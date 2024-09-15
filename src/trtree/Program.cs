@@ -67,6 +67,7 @@ public class Program
                 }
             }
         });
+        if (!(config.ParenIndentStyle || config.IndentStyle || config.AntlrStyle)) config.ParenIndentStyle = true;
         new Command().Execute(config);
     }
 }

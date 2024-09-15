@@ -161,7 +161,7 @@ public class Grun
                     foreach (var t in d.Nodes)
                     {
                         if (config.Verbose)
-                            LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(t, d.Lexer, d.Parser)
+                            LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(d.Lexer, d.Parser).OutputTree(t)
                                 .ToString());
                     }
                 }
@@ -192,8 +192,9 @@ public class Grun
         }
         catch (Exception e)
         {
-            System.Console.WriteLine(e.ToString());
+            System.Console.Error.WriteLine(e.ToString());
             result = 1;
+            System.Console.Out.WriteLine();
         }
 
         return result;
@@ -255,23 +256,50 @@ public class Grun
         object[] parm1 = new object[] { txt, config.Quiet };
         var res = methodInfo.Invoke(null, parm1);
 
-        MethodInfo methodInfo2 = type.GetMethod("Parse2");
-        object[] parm2 = new object[] { };
-        DateTime before = DateTime.Now;
-        var res2 = methodInfo2.Invoke(null, parm2);
-        DateTime after = DateTime.Now;
-
-        MethodInfo methodInfo3 = type.GetMethod("AnyErrors");
-        object[] parm3 = new object[] { };
-        var res3 = methodInfo3.Invoke(null, parm3);
         var result = "";
-        if ((bool)res3)
+        object res2 = null;
+        object res3 = null;
+        DateTime before = DateTime.Now;
+        DateTime after = DateTime.Now;
+        if (!config.Ambig)
         {
-            result = "fail";
+            MethodInfo methodInfo2 = type.GetMethod("Parse2");
+            object[] parm2 = new object[] { };
+            before = DateTime.Now;
+            res2 = methodInfo2.Invoke(null, parm2);
+            after = DateTime.Now;
+
+            MethodInfo methodInfo3 = type.GetMethod("AnyErrors");
+            object[] parm3 = new object[] { };
+            res3 = methodInfo3.Invoke(null, parm3);
+            if ((bool)res3)
+            {
+                result = "fail";
+            }
+            else
+            {
+                result = "success";
+            }
         }
         else
         {
-            result = "success";
+            MethodInfo methodInfo2 = type.GetMethod("Parse3");
+            object[] parm2 = new object[] { };
+            before = DateTime.Now;
+            res2 = methodInfo2.Invoke(null, parm2);
+            after = DateTime.Now;
+
+            MethodInfo methodInfo3 = type.GetMethod("AnyErrors");
+            object[] parm3 = new object[] { };
+            res3 = methodInfo3.Invoke(null, parm3);
+            if ((bool)res3)
+            {
+                result = "fail";
+            }
+            else
+            {
+                result = "success";
+            }
         }
 
         System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " +
@@ -282,19 +310,45 @@ public class Grun
         var charstream = type.GetProperty("CharStream").GetValue(null, new object[0]) as ICharStream;
         var commontokstream = tokstream as CommonTokenStream;
         var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
-        var tree = res2 as IParseTree;
-        var t2 = tree as ParserRuleContext;
-        //if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
-        //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
-        //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
-        var converted_tree =
-            new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
-        var tuple = new AntlrJson.ParsingResultSet()
+        if (!config.Ambig)
         {
-            FileName = input_name, Nodes = new UnvParseTreeNode[] { converted_tree },
-            Parser = parser, Lexer = lexer
-        };
-        data.Add(tuple);
+            var tree = res2 as IParseTree;
+            var t2 = tree as ParserRuleContext;
+            var converted_tree = new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
+            var tuple = new AntlrJson.ParsingResultSet()
+            {
+                FileName = input_name,
+                Nodes = new UnvParseTreeNode[] { converted_tree },
+                Parser = parser,
+                Lexer = lexer
+            };
+            data.Add(tuple);
+        }
+        else
+        {
+            var tuples = res2 as List<Tuple<int, List<IParseTree>>>;
+            foreach (var tt in tuples)
+            {
+                var list_of_trees = new List<UnvParseTreeNode>();
+                foreach (var tree in tt.Item2)
+                {
+                    var t2 = tree as ParserRuleContext;
+                    var converted_tree =
+                        new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream,
+                            charstream);
+                    list_of_trees.Add(converted_tree);
+                }
+
+                var tuple = new AntlrJson.ParsingResultSet()
+                {
+                    FileName = input_name + "." + tt.Item1,
+                    Nodes = list_of_trees.ToArray(),
+                    Parser = parser,
+                    Lexer = lexer
+                };
+                data.Add(tuple);
+            }
+        }
         return (bool)res3 ? 1 : 0;
     }
 }

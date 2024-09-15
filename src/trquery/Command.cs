@@ -91,7 +91,7 @@ class Command
             if (config.Verbose)
             {
                 foreach (UnvParseTreeNode n in trees)
-                    LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser).ToString());
+                    LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
             }
 
             foreach (var scommand in stree.command())
@@ -125,7 +125,7 @@ class Command
                         {
                             LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
                             foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n)
                                     .ToString());
                         }
                         if (scommand.MATCH_REQUIRED() != null)
@@ -137,8 +137,7 @@ class Command
                         {
                             LoggerNs.TimedStderrOutput.WriteLine("Resulted in this:");
                             foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-                                    .ToString());
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
                         }
                     }
                 }
@@ -180,8 +179,7 @@ class Command
                         {
                             LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
                             foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-                                    .ToString());
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
                         }
                         if (config.Verbose)
                             LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
@@ -225,8 +223,7 @@ class Command
                         {
                             LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
                             foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-                                    .ToString());
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
                         }
                         if (config.Verbose)
                             LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
@@ -266,8 +263,7 @@ class Command
                         {
                             LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
                             foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-                                    .ToString());
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
                         }
                         if (scommand.MATCH_REQUIRED() != null)
                         {
@@ -278,8 +274,7 @@ class Command
                         {
                             LoggerNs.TimedStderrOutput.WriteLine("Resulted in this:");
                             foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-                                    .ToString());
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
                         }
                     }
                 }
@@ -309,8 +304,7 @@ class Command
                         {
                             LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
                             foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-                                    .ToString());
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
                         }
                         if (scommand.MATCH_REQUIRED() != null)
                         {
@@ -321,8 +315,7 @@ class Command
                         {
                             LoggerNs.TimedStderrOutput.WriteLine("Resulted in this:");
                             foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-                                    .ToString());
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
                         }
                     }
                 }
@@ -365,8 +358,7 @@ class Command
                         {
                             LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
                             foreach (UnvParseTreeNode n in nodes)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-                                    .ToString());
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
                         }
 
                         foreach (UnvParseTreeNode n in nodes)
@@ -390,8 +382,7 @@ class Command
                         {
                             LoggerNs.TimedStderrOutput.WriteLine("Resulted in this:");
                             foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(TreeOutput.OutputTree(n, lexer, parser)
-                                    .ToString());
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
                         }
                     }
                 }
@@ -409,7 +400,7 @@ class Command
             if (config.Verbose)
             {
                 foreach (UnvParseTreeNode node in trees)
-                    System.Console.Error.WriteLine(TreeOutput.OutputTree(node, lexer, parser).ToString());
+                    System.Console.Error.WriteLine(new TreeOutput(lexer, parser).OutputTree(node).ToString());
             }
         }
 
