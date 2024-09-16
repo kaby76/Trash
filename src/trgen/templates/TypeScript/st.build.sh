@@ -1,5 +1,5 @@
 # Generated from trgen <version>
-set -x
+set -e
 
 if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
 
@@ -15,6 +15,5 @@ antlr4 -v $version -encoding <antlr_encoding> -Dlanguage=TypeScript <x.AntlrArgs
 
 npm install -g typescript ts-node
 npm install
-set -e
 tsc -p tsconfig.json --pretty
 exit 0
