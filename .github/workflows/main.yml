@@ -69,6 +69,13 @@ jobs:
         run: |
           node --version
 
+      - name: Set up TypeScript
+        run: |
+          npm install -g typescript
+          npm install -g ts-node
+          npm install -D tslib @types/node
+          ts-node --version
+
       - name: Build
         run: |
           make build
