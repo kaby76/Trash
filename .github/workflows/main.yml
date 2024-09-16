@@ -58,20 +58,16 @@ jobs:
         java --version
         javac --version
     - name: Install Dart
-      if: ${{ matrix.language == 'Dart' }}
       uses: dart-lang/setup-dart@v1
     - name: Test Dart
-      if: ${{ matrix.language == 'Dart' }}
       run: |
         dart --version
     - name: Install Go
-      if: ${{ matrix.language == 'Go' }}
       uses: actions/setup-go@v5
       with:
         go-version: '^1.21.0'
         cache: false
     - name: Test Go
-      if: ${{ matrix.language == 'Go' }}
       run: |
         go version
     - name: Install Python
