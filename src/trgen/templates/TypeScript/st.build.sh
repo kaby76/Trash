@@ -1,5 +1,5 @@
 # Generated from trgen <version>
-set -e
+set -x
 
 if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
 
@@ -13,7 +13,14 @@ version=`grep antlr4 package.json | awk '{print $2}' | tr -d '"' | tr -d ',' | t
 antlr4 -v $version -encoding <antlr_encoding> -Dlanguage=TypeScript <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
 } >
 
-npm install -g typescript@5.3.3 ts-node@10.9.2
+npm install -g typescript ts-node
 npm install
+
+ls /opt/hostedtoolcache/node
+ls /opt/hostedtoolcache/node/21.7.3
+ls /opt/hostedtoolcache/node/21.7.3/x64/bin/node_modules/
+ls /opt/hostedtoolcache/node/21.7.3/x64/bin/node_modules/ts-node/dist
+
+set -e
 tsc -p tsconfig.json --pretty
 exit 0
