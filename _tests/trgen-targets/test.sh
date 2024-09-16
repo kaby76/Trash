@@ -8,8 +8,7 @@ where=`pwd`
 cd "$where"
 echo "$where"
 
-# Skip for now Antlr4ng
-for target in CSharp Cpp Dart Java JavaScript Python3 TypeScript Go
+for target in Antlr4ng CSharp Cpp Dart Java JavaScript Python3 TypeScript Go
 do
 	trgen -t $target
 	pushd Generated-$target
