@@ -296,7 +296,7 @@ namespace Trash
                             var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
                                 GrammarFileName = tgfn,
-                                GrammarName = grammar_name,
+                                GrammarName = grammar_name + "Parser",
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
                                 StartSymbol = start_symbol,
@@ -330,7 +330,7 @@ namespace Trash
                             var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
                                 GrammarFileName = tgfn,
-                                GrammarName = grammar_name,
+                                GrammarName = grammar_name + "Lexer",
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
                                 StartSymbol = start_symbol,
@@ -405,14 +405,14 @@ namespace Trash
                         var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
                         if (test.target == "Go")
                         {
-                            t.GrammarAutomName = pre2 + t.GrammarName + "Parser";
-                            t.GeneratedFileName = pre1 + t.GrammarName.ToLower() + "_parser" +  Suffix(test.target);
+                            t.GrammarAutomName = pre2 + t.GrammarName;
+                            t.GeneratedFileName = pre1 + t.GrammarName.ToLower().Replace("parser","") + "_parser" +  Suffix(test.target);
                             t.GeneratedIncludeFileName = "";
-                            t.GrammarGoNewName = pre2 + "New" + t.GrammarName + "Parser";
+                            t.GrammarGoNewName = pre2 + "New" + t.GrammarName;
                         }
                         else
                         {
-                            t.GrammarAutomName = pre2 + t.GrammarName + "Parser";
+                            t.GrammarAutomName = pre2 + t.GrammarName;
                             t.GeneratedFileName = pre1 + t.GrammarAutomName + Suffix(test.target);
                             t.GeneratedIncludeFileName = pre1 + t.GrammarAutomName + ".h";
                             t.GrammarGoNewName = "";
@@ -424,14 +424,14 @@ namespace Trash
                         var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
                         if (test.target == "Go")
                         {
-                            t.GrammarAutomName = pre2 + t.GrammarName + "Lexer";
-                            t.GeneratedFileName = pre1 + t.GrammarName.ToLower() + "_lexer" + Suffix(test.target);
+                            t.GrammarAutomName = pre2 + t.GrammarName;
+                            t.GeneratedFileName = pre1 + t.GrammarName.ToLower().Replace("lexer","") + "_lexer" + Suffix(test.target);
                             t.GeneratedIncludeFileName = "";
-                            t.GrammarGoNewName = pre2 + "New" + t.GrammarName + "Lexer";
+                            t.GrammarGoNewName = pre2 + "New" + t.GrammarName;
                         }
                         else
                         {
-                            t.GrammarAutomName = pre2 + t.GrammarName + "Lexer";
+                            t.GrammarAutomName = pre2 + t.GrammarName;
                             t.GeneratedFileName = pre1 + t.GrammarAutomName + Suffix(test.target);
                             t.GeneratedIncludeFileName = pre1 + t.GrammarAutomName + ".h";
                             t.GrammarGoNewName = "";
@@ -440,22 +440,6 @@ namespace Trash
                     else if (t.WhatType == GrammarTuple.Type.Combined)
                     {
                         throw new Exception("Should not execute!");
-                        var pre1 = test.package == "" ? "" : test.package + "/";
-                        var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
-                        if (test.target == "Go")
-                        {
-                            t.GeneratedFileName = pre1 + t.GrammarName.Replace("Parser", "_parser").ToLower() + Suffix(test.target);
-                            t.GeneratedIncludeFileName = "";
-                            t.GrammarAutomName = pre2 + t.GrammarName;
-                            t.GrammarGoNewName = "New" + t.GrammarName;
-                        }
-                        else
-                        {
-                            t.GeneratedFileName = pre1 + t.GrammarName + Suffix(test.target);
-                            t.GeneratedIncludeFileName = pre1 + t.GrammarName + ".h";
-                            t.GrammarAutomName = pre2 + t.GrammarName;
-                            t.GrammarGoNewName = "";
-                        }
                     }
                 }
 
