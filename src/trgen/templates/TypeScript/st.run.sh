@@ -1,6 +1,6 @@
 # Generated from trgen <version>
 set -e
-# set -x
+set -x
 
 # ts-node is a bash script, so duplicate that code and call node via trwdog.
 tsnode=`which ts-node`
