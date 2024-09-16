@@ -97,11 +97,14 @@ jobs:
     - name: Test JavaScript
       run: |
         node --version
-    - name: ts-node typescript
+    - name: ts-node typescript npx tsx
       run: |
-        npm i -g ts-node typescript
+        npm i -g ts-node typescript tsx
         ts-node --version
         tsc --version
+        sudo npm i -g npx
+        npx -v
+        npx tsx -v
     - name: Build
       run: |
         make build
