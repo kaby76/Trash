@@ -97,8 +97,7 @@ jobs:
       run: |
         npm i -g ts-node typescript
         ts-node --version
-	tsc --version
-
+        tsc --version
     - name: Build
       run: |
         make build
