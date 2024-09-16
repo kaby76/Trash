@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t TypeScript",
+      "commandLineArgs": "-t Go",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\temp4"
     }
   }

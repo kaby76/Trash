@@ -1,6 +1,6 @@
 grammar Expression;
 
-start: (multiply | divide | add | subtract) EOF;
+start_: (multiply | divide | add | subtract) EOF;
 
 expression: '(' expression ')' | number;
 

@@ -405,10 +405,10 @@ namespace Trash
                         var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
                         if (test.target == "Go")
                         {
-                            t.GeneratedFileName = pre1 + t.GrammarName.Replace("Parser", "_parser").ToLower() + Suffix(test.target);
+                            t.GrammarAutomName = pre2 + t.GrammarName + "Parser";
+                            t.GeneratedFileName = pre1 + t.GrammarName.ToLower() + "_parser" +  Suffix(test.target);
                             t.GeneratedIncludeFileName = "";
-                            t.GrammarAutomName = pre2 + t.GrammarName;
-                            t.GrammarGoNewName = "New" + t.GrammarName;
+                            t.GrammarGoNewName = pre2 + "New" + t.GrammarName + "Parser";
                         }
                         else
                         {
@@ -424,10 +424,10 @@ namespace Trash
                         var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
                         if (test.target == "Go")
                         {
-                            t.GeneratedFileName = pre1 + t.GrammarName.Replace("Lexer", "_lexer").ToLower() + Suffix(test.target);
+                            t.GrammarAutomName = pre2 + t.GrammarName + "Lexer";
+                            t.GeneratedFileName = pre1 + t.GrammarName.ToLower() + "_lexer" + Suffix(test.target);
                             t.GeneratedIncludeFileName = "";
-                            t.GrammarAutomName = pre2 + t.GrammarName;
-                            t.GrammarGoNewName = "New" + t.GrammarName;
+                            t.GrammarGoNewName = pre2 + "New" + t.GrammarName + "Lexer";
                         }
                         else
                         {
@@ -459,26 +459,6 @@ namespace Trash
                     }
                 }
 
-                // Update top-level automaton names in grammar tuples GrammarAutomName and GrammarGoNewName
-                // We are only interested in top-level grammars as they appear in some form in the
-                // build files.
-                foreach (var t in test.tool_grammar_tuples)
-                {
-                    if (!t.IsTopLevel) continue;
-                    if (t.WhatType == GrammarTuple.Type.Parser)
-                    {
-                        t.GrammarGoNewName = "New" + t.GrammarAutomName;
-                    }
-                    else if (t.WhatType == GrammarTuple.Type.Lexer)
-                    {
-                        t.GrammarGoNewName = "New" + t.GrammarAutomName;
-                    }
-                    else if (t.WhatType == GrammarTuple.Type.Combined)
-                    {
-                        t.GrammarGoNewName = "New" + t.GrammarAutomName;
-                    }
-                }
-                
                 // How to call the parser in the source code. Remember, there are
                 // actually up to two tests in the pom file, one for running the
                 // Antlr tool, and the other to test the generated parser.
@@ -487,14 +467,12 @@ namespace Trash
                 foreach (var t in test.tool_grammar_tuples)
                 {
                     if (!t.IsTopLevel) continue;
-                    var p2 = test.package.Replace("/", ".");
-                    var pre2 = p2 == "" ? "" : p2 + ".";
                     if (t.WhatType == GrammarTuple.Type.Parser)
                     {
                         if (test.grammar_name == t.GrammarName || test.grammar_name + "Parser" == t.GrammarName)
                         {
                             test.fully_qualified_parser_name = t.GrammarAutomName;
-                            test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName;
+                            test.fully_qualified_go_parser_name = t.GrammarGoNewName;
                             parser_src_grammar_file_name = t.GrammarFileName;
                             test.parser_grammar_file_name = parser_src_grammar_file_name;
                         }
@@ -504,7 +482,7 @@ namespace Trash
                         if (test.grammar_name == t.GrammarName || test.grammar_name + "Lexer" == t.GrammarName)
                         {
                             test.fully_qualified_lexer_name = t.GrammarAutomName;
-                            test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName;
+                            test.fully_qualified_go_lexer_name = t.GrammarGoNewName;
                             lexer_src_grammar_file_name = t.GrammarFileName;
                             test.lexer_grammar_file_name = lexer_src_grammar_file_name;
                         }
@@ -515,10 +493,10 @@ namespace Trash
                         if (test.grammar_name == t.GrammarName)
                         {
                             test.fully_qualified_parser_name = t.GrammarAutomName + "Parser";
-                            test.fully_qualified_go_parser_name = pre2 + t.GrammarGoNewName + "Parser";
+                            test.fully_qualified_go_parser_name = t.GrammarGoNewName + "Parser";
                             parser_src_grammar_file_name = test.fully_qualified_parser_name;
                             test.fully_qualified_lexer_name = t.GrammarAutomName + "Lexer";
-                            test.fully_qualified_go_lexer_name = pre2 + t.GrammarGoNewName + "Lexer";
+                            test.fully_qualified_go_lexer_name = t.GrammarGoNewName + "Lexer";
                             lexer_src_grammar_file_name = test.fully_qualified_lexer_name;
                             test.lexer_grammar_file_name = lexer_src_grammar_file_name;
                             test.parser_grammar_file_name = parser_src_grammar_file_name;
