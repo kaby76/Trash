@@ -95,6 +95,7 @@ jobs:
         npm install -g npm
         npm --version
     - name: Test JavaScript
+      run: |
         node --version
     - name: ts-node typescript
       run: |
