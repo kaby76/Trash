@@ -1,21 +1,20 @@
-# trsponge
+# trxml2
 
 ## Summary
 
-Extract parsing results output of Trash command into files
+Print an enumeration of all paths in a parse tree to leaves
 
 ## Description
 
-Read the parse tree data from stdin and write the
-results to file(s).
+Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Usage
 
-    trsponge <options>
+    trxml2
 
-## Example
+## Examples
 
-    trparse Arithmetic.g4 | trsplit | trsponge
+    cat desc.xml | trxml2
 
 ## Current version
 

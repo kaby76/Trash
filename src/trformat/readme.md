@@ -18,7 +18,7 @@ Format of grammar using machine learning.
 
 ## Current version
 
-0.23.6 Add --ambig option to trparse. Add file names to trtree. Add new output styles for trtree. Update packages for trgenvsc templates.
+0.23.6 Fix trgen for combined grammars. Add regression testing of trgen and all targets
 
 ## License
 
