@@ -2,6 +2,6 @@
 set -e
 set -x
 
-exec npx tsx Test.ts "$@"
+exec npx tsx Test.js "$@"
 
 exit $?

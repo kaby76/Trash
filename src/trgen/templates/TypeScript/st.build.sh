@@ -15,12 +15,6 @@ antlr4 -v $version -encoding <antlr_encoding> -Dlanguage=TypeScript <x.AntlrArgs
 
 npm install -g typescript ts-node
 npm install
-
-ls /opt/hostedtoolcache/node
-ls /opt/hostedtoolcache/node/21.7.3
-ls /opt/hostedtoolcache/node/21.7.3/x64/bin/node_modules/
-ls /opt/hostedtoolcache/node/21.7.3/x64/bin/node_modules/ts-node/dist
-
 set -e
 tsc -p tsconfig.json --pretty
 exit 0
