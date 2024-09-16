@@ -62,9 +62,9 @@ jobs:
           python --version
 
       - name: Install JavaScript
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@v4.0.3
         with:
-          node-version: '16.13.0'
+          node-version: '22.8.0'
       - name: Do not trust JavaScript env
         run: |
           node --version
