@@ -90,8 +90,11 @@ jobs:
       uses: actions/setup-node@v4.0.3
       with:
         node-version: '21.7.3'
-    - name: Test JavaScript
+    - name: Install npm
       run: |
+        npm install -g npm
+        npm --version
+    - name: Test JavaScript
         node --version
     - name: ts-node typescript
       run: |
