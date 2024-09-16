@@ -300,7 +300,7 @@ namespace Trash
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
                                 StartSymbol = start_symbol,
-                                WhatType = GrammarTuple.Type.Combined,
+                                WhatType = GrammarTuple.Type.Parser,
                             };
                             test.tool_grammar_tuples.Add(g);
                         }
@@ -412,9 +412,9 @@ namespace Trash
                         }
                         else
                         {
-                            t.GeneratedFileName = pre1 + t.GrammarName + Suffix(test.target);
-                            t.GeneratedIncludeFileName = pre1 + t.GrammarName + ".h";
-                            t.GrammarAutomName = pre2 + t.GrammarName;
+                            t.GrammarAutomName = pre2 + t.GrammarName + "Parser";
+                            t.GeneratedFileName = pre1 + t.GrammarAutomName + Suffix(test.target);
+                            t.GeneratedIncludeFileName = pre1 + t.GrammarAutomName + ".h";
                             t.GrammarGoNewName = "";
                         }
                     }
@@ -431,14 +431,15 @@ namespace Trash
                         }
                         else
                         {
-                            t.GeneratedFileName = pre1 + t.GrammarName + Suffix(test.target);
-                            t.GeneratedIncludeFileName = pre1 + t.GrammarName + ".h";
-                            t.GrammarAutomName = pre2 + t.GrammarName;
+                            t.GrammarAutomName = pre2 + t.GrammarName + "Lexer";
+                            t.GeneratedFileName = pre1 + t.GrammarAutomName + Suffix(test.target);
+                            t.GeneratedIncludeFileName = pre1 + t.GrammarAutomName + ".h";
                             t.GrammarGoNewName = "";
                         }
                     }
                     else if (t.WhatType == GrammarTuple.Type.Combined)
                     {
+                        throw new Exception("Should not execute!");
                         var pre1 = test.package == "" ? "" : test.package + "/";
                         var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
                         if (test.target == "Go")
@@ -466,17 +467,14 @@ namespace Trash
                     if (!t.IsTopLevel) continue;
                     if (t.WhatType == GrammarTuple.Type.Parser)
                     {
-                        t.GrammarAutomName = t.GrammarName;
                         t.GrammarGoNewName = "New" + t.GrammarAutomName;
                     }
                     else if (t.WhatType == GrammarTuple.Type.Lexer)
                     {
-                        t.GrammarAutomName = t.GrammarName;
                         t.GrammarGoNewName = "New" + t.GrammarAutomName;
                     }
                     else if (t.WhatType == GrammarTuple.Type.Combined)
                     {
-                        t.GrammarAutomName = test.grammar_name;
                         t.GrammarGoNewName = "New" + t.GrammarAutomName;
                     }
                 }
@@ -513,6 +511,7 @@ namespace Trash
                     }
                     else if (t.WhatType == GrammarTuple.Type.Combined)
                     {
+                        throw new Exception("Should not execute!");
                         if (test.grammar_name == t.GrammarName)
                         {
                             test.fully_qualified_parser_name = t.GrammarAutomName + "Parser";
@@ -541,7 +540,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.5";
+        public static string version = "0.23.6";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1731,7 +1730,10 @@ namespace Trash
             {
                 if (!graph.Edges.Any(e => e.To == n))
                 {
-                    test.tool_grammar_tuples.Where(t => t.GrammarName == n).First().IsTopLevel = true;
+                    foreach (var z in test.tool_grammar_tuples.Where(t => t.GrammarName == n))
+                    {
+                        z.IsTopLevel = true;
+                    }
                 }
             }
 

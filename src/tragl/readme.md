@@ -19,7 +19,7 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Current version
 
-0.23.5 Add --ambig option to trparse. Add file names to trtree. Add new output styles for trtree. Update packages for trgenvsc templates.
+0.23.6 Add --ambig option to trparse. Add file names to trtree. Add new output styles for trtree. Update packages for trgenvsc templates.
 
 ## License
 

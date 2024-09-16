@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-i save,comp -t CSharp",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\fortran"
+      "commandLineArgs": "-t TypeScript",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\temp4"
     }
   }
 }
