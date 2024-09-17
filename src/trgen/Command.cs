@@ -1546,8 +1546,8 @@ namespace Trash
                 t.Add("cmake_target", GetOSTarget() == "Windows"
                     ? "-G \"Visual Studio 17 2022\" -A x64"
                     : "");
-                t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
-                t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
+                t.Add("example_files_unix", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('\\', '/'))));
+                t.Add("example_files_win", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('/', '\\'))));
                 t.Add("exec_name", GetOSTarget() == "Windows" ? "Test.exe" : "Test");
                 t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
                 t.Add("go_parser_name", test.fully_qualified_go_parser_name);
@@ -1561,7 +1561,7 @@ namespace Trash
                 t.Add("package_name", test.package.Replace(".", "/"));
                 t.Add("group_parsing", test.parsing_type == "group");
                 t.Add("individual_parsing", test.parsing_type == "individual");
-				t.Add("os_type", test.os_target);
+                t.Add("os_type", test.os_target);
                 t.Add("os_win", GetOSTarget() == "Windows");
                 t.Add("parser_name", test.fully_qualified_parser_name);
                 t.Add("parser_grammar_file", test.parser_grammar_file_name.Replace("st.", ""));
@@ -1577,6 +1577,17 @@ namespace Trash
                 var o = t.Render();
                 File.WriteAllText(to, o);
             }
+        }
+
+        static string RemoveGlobbingPattern(string str)
+        {
+            // Look for first '*', remove from there on.
+            int index = str.IndexOf('*');
+            if (index != -1)
+            {
+                return str.Substring(0, index);
+            }
+            return str;
         }
 
         static string RemoveTrailingSlash(string str)
