@@ -1546,8 +1546,10 @@ namespace Trash
                 t.Add("cmake_target", GetOSTarget() == "Windows"
                     ? "-G \"Visual Studio 17 2022\" -A x64"
                     : "");
-                t.Add("example_files_unix", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('\\', '/'))));
-                t.Add("example_files_win", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('/', '\\'))));
+                t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
+                t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
+				t.Add("example_dir_unix", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('\\', '/'))));
+				t.Add("example_dir_win", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('/', '\\'))));
                 t.Add("exec_name", GetOSTarget() == "Windows" ? "Test.exe" : "Test");
                 t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
                 t.Add("go_parser_name", test.fully_qualified_go_parser_name);

@@ -1,8 +1,5 @@
 # Generated from trgen <version>
 
-# comment for local dotnet tools.
-global=1
-
 # glob patterns
 shopt -s globstar
 
@@ -13,17 +10,11 @@ IFS=$(echo -en "\n\b")
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
 files2=`dotnet trglob -- '../<example_files_unix>' | grep -v '.errors$' | grep -v '.tree$'`
-
 files=()
 for f in $files2
 do
     if [ -d "$f" ]; then continue; fi
-    if [ "$global" == "" ]
-    then
-        dotnet triconv -- -f utf-8 $f > /dev/null 2>&1
-    else
-        triconv -f utf-8 $f > /dev/null 2>&1
-    fi
+    dotnet triconv -- -f utf-8 $f > /dev/null 2>&1
     if [ "$?" = "0" ]
     then
         files+=( $f )
@@ -45,12 +36,7 @@ fi
 rm -f parse.txt
 for f in ${files[*]}
 do
-    if [ "$global" == "" ]
-    then
-        dotnet trwdog -- ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f >> parse.txt 2>&1
-    else
-        trwdog ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f >> parse.txt 2>&1
-    fi
+    dotnet trwdog -- ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f >> parse.txt 2>&1
     xxx="$?"
     if [ "$xxx" -ne 0 ]
     then
@@ -59,12 +45,7 @@ do
 done
 <else>
 # Group parsing.
-if [ "$global" == "" ]
-then
-    echo "${files[*]}" | dotnet trwdog -- ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -x -tee -tree > parse.txt 2>&1
-else
-    echo "${files[*]}" | trwdog ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -x -tee -tree > parse.txt 2>&1
-fi
+echo "${files[*]}" | dotnet trwdog -- ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -x -tee -tree > parse.txt 2>&1
 status="$?"
 <endif>
 
@@ -101,7 +82,7 @@ case "${unameOut}" in
 esac
 if [[ "$machine" == "MinGw" || "$machine" == "Msys" || "$machine" == "Cygwin" || "#machine" == "Linux" ]]
 then
-    gen=`find ../<example_files_unix> -type f -name '*.errors' -o -name '*.tree'`
+    gen=`find ../<example_dir_unix> -type f -name '*.errors' -o -name '*.tree'`
     if [ "$gen" != "" ]
     then
         dos2unix $gen
