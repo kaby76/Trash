@@ -12,6 +12,7 @@ do
 		pushd Generated-$target*
 		make
 		make test
+		pwsh test.ps1
 		popd
 	done
 	popd
