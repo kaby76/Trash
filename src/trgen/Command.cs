@@ -368,7 +368,10 @@ namespace Trash
                 {
                     throw new Exception("Can't figure out the grammar name.");
                 }
-        
+                test.tool_grammar_tuples = test.tool_grammar_tuples
+                    .Where(t => t.GrammarName == test.grammar_name
+                                || t.GrammarName == test.grammar_name + "Parser"
+                                || t.GrammarName == test.grammar_name + "Lexer").ToList();
                 if (test.start_rule == null)
                 {
                     var b = test.tool_grammar_tuples
@@ -1576,7 +1579,7 @@ namespace Trash
                     ? "c:/temp"
                     : "/tmp");
                 t.Add("tool_grammar_files", test.tool_grammar_files.Select(s=>s.Replace("st.","")));
-                t.Add("tool_grammar_tuples", test.tool_grammar_tuples);
+                t.Add("tool_grammar_tuples", test.tool_grammar_tuples.Where(t => t.IsTopLevel).ToList());
                 t.Add("version", Command.version);
                 var o = t.Render();
                 File.WriteAllText(to, o);
