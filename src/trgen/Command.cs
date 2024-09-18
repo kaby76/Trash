@@ -350,17 +350,19 @@ namespace Trash
                 // Pick top-level grammars.
                 if (test.grammar_name == null)
                 {
-                    var a = test.tool_grammar_tuples
-                        .Where(t => t.WhatType == GrammarTuple.Type.Parser)
-                        .FirstOrDefault()?.GrammarName;
-                    Regex r = new Regex("^(.*)Parser$");
-                    if (a != null) test.grammar_name = r.Replace(a, "$1");
-                    if (test.grammar_name == null)
+                    var all = test.tool_grammar_tuples
+                        .Where(t => t.WhatType == GrammarTuple.Type.Parser && t.IsTopLevel).ToList();
+                    if (!all.Any())
                     {
-                        var b = test.tool_grammar_tuples
-                            .Where(t => t.WhatType == GrammarTuple.Type.Combined).FirstOrDefault()?.GrammarName;
-                        if (b != null) test.grammar_name = b;
+                        throw new Exception("Can't figure out the grammar name.");
                     }
+                    if (all.Count > 1)
+                    {
+                        throw new Exception("Can't figure out the grammar name.");
+                    }
+                    Regex r = new Regex("^(.*)Parser$");
+                    var name = all.First().GrammarName;
+                    if (name != null) test.grammar_name = r.Replace(name, "$1");
                 }
                 if (test.grammar_name == null)
                 {
