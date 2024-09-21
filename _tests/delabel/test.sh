@@ -17,7 +17,7 @@ do
 	echo $i
 	extension="${i##*.}"
 	filename="${i%.*}"
-	trparse $i | trquery -c Generated/g4-scripts/delabel.xq | trsponge -c -o "Generated"
+	dotnet trparse -- $i | dotnet trquery -- -c Generated/g4-scripts/delabel.xq | dotnet trsponge -- -c -o "Generated"
 done
 rm -rf Generated/g4-scripts
 diff -r Gold Generated

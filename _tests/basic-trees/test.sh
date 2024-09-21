@@ -12,11 +12,11 @@ echo "$where"
 
 # Test.
 rm -rf Generated-CSharp
-trgen -t CSharp
+dotnet trgen -- -t CSharp
 pushd Generated-CSharp
 make
 popd
-echo "1 + 2 + 3" | trparse | trtree > trparse.tree
+echo "1 + 2 + 3" | dotnet trparse | dotnet trtree > trparse.tree
 rm -rf Generated-CSharp
 
 # Diff result.

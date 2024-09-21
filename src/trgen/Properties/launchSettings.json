@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t TypeScript",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\temp4"
+      "commandLineArgs": "-t Antlr4ng",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\kotlin\\kotlin-formal"
     }
   }
 }

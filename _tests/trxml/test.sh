@@ -3,11 +3,11 @@ export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
 cd "$where"
 rm -rf Generated-CSharp
-trgen -t CSharp --arithmetic
+dotnet trgen -- -t CSharp --arithmetic
 cd Generated-CSharp
 dotnet restore Test.csproj
 dotnet build Test.csproj
-trparse -i "1+2" | trxml > ../output
+dotnet trparse -- -i "1+2" | dotnet trxml > ../output
 cd ..
 rm -rf Generated-CSharp/
 dos2unix output

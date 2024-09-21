@@ -4,8 +4,8 @@ build:
 	dotnet build -c Release
 
 install:
-	-bash _scripts/setup.sh
-	-bash _scripts/install.sh
+	bash _scripts/setup.sh
+	bash _scripts/install-local.sh
 
 clean:
 	-bash _scripts/uninstall.sh 2> /dev/null
