@@ -2,8 +2,8 @@
   "profiles": {
     "trcover": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/fun.compute_20.ptx",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\issues\\g4-3702\\asm\\ptx\\ptx-isa-2.1\\Generated-CSharp-large"
+      "commandLineArgs": "examples/iri.abnf  examples/postal.abnf  examples/rfc5322.abnf",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-abnf-readme\\abnf"
     }
   }
 }

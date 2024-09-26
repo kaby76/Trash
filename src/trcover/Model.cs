@@ -1122,17 +1122,26 @@ namespace Trash
 
         public void ComputeModel(string dll_path, Antlr4.Runtime.Parser pp, Antlr4.Runtime.Lexer ll, ITokenStream tt)
         {
-            // Go up directory, find all *.g4, parse.
+            // Repeatedly, search directory for .g4's.
+            // If there are aren't any, go up one directory and try again.
+            // Once .g4's found, parse them and return.
             if (!dll_path.EndsWith("/")) dll_path += "/";
-            var path = dll_path + "../../..";
+            var path = dll_path;
             path = Path.GetFullPath(path);
-            Directory.SetCurrentDirectory(path);
-            path = Directory.GetCurrentDirectory();
-            var grammar_files = new TrashGlobbing.Glob(path)
-                .RegexContents(".*[.]g4")
-                .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
-                .Select(f => f.FullName.Replace('\\', '/'))
-                .ToList();
+            List<string> grammar_files;
+            for (;;)
+            {
+                var old_path = Directory.GetCurrentDirectory();
+                Directory.SetCurrentDirectory(path);
+                grammar_files = new TrashGlobbing.Glob(path)
+                    .RegexContents(".*[.]g4")
+                    .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
+                    .Select(f => f.FullName.Replace('\\', '/'))
+                    .ToList();
+                Directory.SetCurrentDirectory(old_path);
+                if (grammar_files.Any()) break;
+                path = path + "../";
+            }
             foreach (var gfile in grammar_files)
             {
                 ParseGrammar(gfile, pp, ll, tt);
