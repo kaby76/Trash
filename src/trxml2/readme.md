@@ -18,7 +18,7 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-0.23.6 Add --ambig option to trparse. Add file names to trtree. Add new output styles for trtree. Update packages for trgenvsc templates.
+0.23.7 Fixed trcover when started outside of Generated directory.
 
 ## License
 
