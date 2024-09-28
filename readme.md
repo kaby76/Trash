@@ -74,6 +74,11 @@ dotnet tool install -g trxml2
 
 ```
 ### Uninstall
+If you need to, set up a .config/dotnet-tools.json file.
+```
+dotnet new tool-manifest
+```
+Then, copy and paste this in a shell.
 ```
 dotnet tool uninstall -g trcaret
 dotnet tool uninstall -g trclonereplace
