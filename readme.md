@@ -129,6 +129,7 @@ dotnet tool install trtokens
 dotnet tool install trtree
 dotnet tool install trunfold
 dotnet tool install trwdog
+dotnet tool install trxgrep
 dotnet tool install trxml
 dotnet tool install trxml2
 
