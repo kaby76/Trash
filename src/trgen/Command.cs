@@ -345,10 +345,11 @@ namespace Trash
                 // Note, we can't do that by name because some grammars, like
                 // grammars-v4/r, won't build that way.
                 // Use Trash compiler to get dependencies.
-                ComputeSort(test);
+                var dependency_graph = ComputeSort(test);
 
-                // Pick top-level grammars.
-                if (test.grammar_name == null)
+                // Pick top-level parser grammar.
+                GrammarTuple top_level_parser_grammar = null;
+                if(test.grammar_name == null)
                 {
                     var all = test.tool_grammar_tuples
                         .Where(t => t.WhatType == GrammarTuple.Type.Parser && t.IsTopLevel).ToList();
@@ -360,6 +361,8 @@ namespace Trash
                     {
                         throw new Exception("Can't figure out the grammar name.");
                     }
+
+                    top_level_parser_grammar = all.First();
                     Regex r = new Regex("^(.*)Parser$");
                     var name = all.First().GrammarName;
                     if (name != null) test.grammar_name = r.Replace(name, "$1");
@@ -368,10 +371,36 @@ namespace Trash
                 {
                     throw new Exception("Can't figure out the grammar name.");
                 }
-                test.tool_grammar_tuples = test.tool_grammar_tuples
-                    .Where(t => t.GrammarName == test.grammar_name
-                                || t.GrammarName == test.grammar_name + "Parser"
-                                || t.GrammarName == test.grammar_name + "Lexer").ToList();
+                // Pick top-level lexer grammar.
+                GrammarTuple top_level_lexer_grammar = null;
+                {
+                    var all_lexers =
+                        test.tool_grammar_tuples.Where(
+                            t => t.WhatType == GrammarTuple.Type.Lexer && t.IsTopLevel).ToList();
+                    var all = all_lexers.Where(t =>
+                    {
+                        if (dependency_graph.Edges.Where(
+                                e => e.From == top_level_parser_grammar.GrammarName
+                                     && e.To == t.GrammarName).Any())
+                            return true;
+                        else return false;
+                    }).ToList();
+
+                    if (!all.Any())
+                    {
+                        throw new Exception("Can't figure out the grammar name.");
+                    }
+                    if (all.Count > 1)
+                    {
+                        throw new Exception("Can't figure out the grammar name.");
+                    }
+                    top_level_lexer_grammar = all.First();   
+                }
+                // Pick all top-level grammars, which are passed through Antlr Tool.
+                test.tool_grammar_tuples = new List<GrammarTuple>();
+                if (top_level_lexer_grammar.GrammarName != top_level_parser_grammar.GrammarName)
+                    test.tool_grammar_tuples.Add(top_level_lexer_grammar);
+                test.tool_grammar_tuples.Add(top_level_parser_grammar);
                 if (test.start_rule == null)
                 {
                     var b = test.tool_grammar_tuples
@@ -458,23 +487,17 @@ namespace Trash
                     if (!t.IsTopLevel) continue;
                     if (t.WhatType == GrammarTuple.Type.Parser)
                     {
-                        if (test.grammar_name == t.GrammarName || test.grammar_name + "Parser" == t.GrammarName)
-                        {
                             test.fully_qualified_parser_name = t.GrammarAutomName;
                             test.fully_qualified_go_parser_name = t.GrammarGoNewName;
                             parser_src_grammar_file_name = t.GrammarFileName;
                             test.parser_grammar_file_name = parser_src_grammar_file_name;
-                        }
                     }
                     else if (t.WhatType == GrammarTuple.Type.Lexer)
                     {
-                        if (test.grammar_name == t.GrammarName || test.grammar_name + "Lexer" == t.GrammarName)
-                        {
                             test.fully_qualified_lexer_name = t.GrammarAutomName;
                             test.fully_qualified_go_lexer_name = t.GrammarGoNewName;
                             lexer_src_grammar_file_name = t.GrammarFileName;
                             test.lexer_grammar_file_name = lexer_src_grammar_file_name;
-                        }
                     }
                     else if (t.WhatType == GrammarTuple.Type.Combined)
                     {
@@ -1658,7 +1681,7 @@ namespace Trash
             return code;
         }
 
-        void ComputeSort(Test test)
+        Digraph<string> ComputeSort(Test test)
         {
             Digraph<string> graph = new Digraph<string>();
             // Add vertices.
@@ -1721,6 +1744,7 @@ namespace Trash
             List<string> order = sort.Topological_sort();
             order.Reverse();
             test.tool_grammar_tuples.Sort(new GrammarOrderCompare(order));
+            return graph;
         }
 
         string FixedName(string from, Config config, Test test)

@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Antlr4ng",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\kotlin\\kotlin-formal"
+      "commandLineArgs": "-t Java",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\antlr-parser\\src\\main\\antlr\\files"
     }
   }
 }
