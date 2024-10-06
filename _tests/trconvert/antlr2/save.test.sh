@@ -7,7 +7,7 @@ do
 	echo $i
 	extension="${i##*.}"
 	filename="${i%.*}"
-	dotnet trparse -- $i -t antlr2 | dotnet trconvert | dotnet trsponge -- -c -o "$where/Generated"
+	dotnet trparse $i -t antlr2 | dotnet trconvert | dotnet trsponge -c -o "$where/Generated"
 done
 rm -f "$where"/Generated/*.txt2
 diff -r "$where/Gold" "$where/Generated"

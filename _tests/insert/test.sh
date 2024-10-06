@@ -12,7 +12,7 @@ rm -rf Generated
 mkdir Generated
 
 # Test.
-dotnet trparse -- Expression.g4 | dotnet trquery -- 'insert //lexerRuleSpec/TOKEN_REF[text()="INT"] "fragment "' | dotnet trsponge -- -c -o Generated
+dotnet trparse Expression.g4 | dotnet trquery 'insert //lexerRuleSpec/TOKEN_REF[text()="INT"] "fragment "' | dotnet trsponge -c -o Generated
 
 # Diff.
 for i in "$where/Generated/*"

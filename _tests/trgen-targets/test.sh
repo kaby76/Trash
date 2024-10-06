@@ -10,7 +10,7 @@ echo "$where"
 
 for target in Antlr4ng CSharp Cpp Dart Java JavaScript Python3 TypeScript Go
 do
-	dotnet trgen -- -t $target
+	dotnet trgen -t $target
 	pushd Generated-$target
 	make
 	bash run.sh -input '1+2'

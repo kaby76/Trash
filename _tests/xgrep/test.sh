@@ -10,10 +10,10 @@ cd "$where"
 where=`pwd`
 
 rm -rf Generated-CSharp
-dotnet trgen -- -t CSharp
+dotnet trgen -t CSharp
 cd Generated-CSharp
 make
-echo "1 + 2 + 3" | dotnet trparse | dotnet trquery -- grep ' //INT' | dotnet trtree > ../output
+echo "1 + 2 + 3" | dotnet trparse | dotnet trquery grep ' //INT' | dotnet trtree > ../output
 cd ..
 #rm -rf Generated-CSharp
 

@@ -12,8 +12,8 @@ echo "$where"
 
 # Test.
 rm -rf Generated-CSharp
-dotnet trgen -- --version
-dotnet trgen -- -t CSharp
+dotnet trgen --version
+dotnet trgen -t CSharp
 pushd Generated-CSharp
 make
 popd
