@@ -16,6 +16,6 @@ do
 	pushd $d
 	tool=$d
 	dotnet tool install $tool
-	dotnet $tool -- --version
+	dotnet $tool --version
 	popd
 done
