@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #set +e
-#set -x
+set -x
 export TERM=xterm-mono
 export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
