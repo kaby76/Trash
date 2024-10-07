@@ -1693,6 +1693,7 @@ namespace Trash
             // Add edges.
             foreach (var t in test.tool_grammar_tuples)
             {
+                // Look at grammar file contents to draw dependencies out.
                 var v = t.GrammarName;
                 var parsing_result_set = t.ParsingResultSet;
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
@@ -1701,6 +1702,7 @@ namespace Trash
                 using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
                        ate.Try(parsing_result_set.Nodes, parsing_result_set.Parser))
                 {
+                    // Add an edge from the current grammar to "imported" grammar.
                     var foo = engine.parseExpression(
                             @"//delegateGrammars/delegateGrammar[not(ASSIGN)]/identifier/(RULE_REF | TOKEN_REF)/text()",
                             new StaticContextBuilder()).evaluate(dynamicContext,
@@ -1712,6 +1714,8 @@ namespace Trash
                         DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
                         graph.AddEdge(e);
                     }
+
+                    // Add an edge from the parser to lexer grammar if explicit.
                     var bar = engine.parseExpression(
                             @"//option[identifier/RULE_REF/text() = 'tokenVocab']/optionValue/identifier/(RULE_REF | TOKEN_REF)/text()",
                             new StaticContextBuilder()).evaluate(dynamicContext,
@@ -1725,8 +1729,29 @@ namespace Trash
                         // Make sure to mark lexer grammar as "top level".
                         test.tool_grammar_tuples.Where(t => t.GrammarName == f).First().IsTopLevel = true;
                     }
+
+                    // If there is no explicit "tokenVocab" statement, add in edge
+                    // from this *parser grammar* to *lexer grammar*.
+                    if (t.WhatType == GrammarTuple.Type.Parser)
+                    {
+                        var find = new Regex("Parser$").Replace(t.GrammarName, "Lexer");
+                        var to = test.tool_grammar_tuples.Where(l =>
+                        {
+                            if (l.WhatType == GrammarTuple.Type.Lexer &&
+                                find == l.GrammarName) return true;
+                            return false;
+                        });
+                        foreach (var x in to)
+                        {
+                            DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = x.GrammarName };
+                            graph.AddEdge(e);
+                            // Make sure to mark lexer grammar as "top level".
+                            x.IsTopLevel = true;
+                        }
+                    }
                 }
             }
+
             // Mark all grammars that have no edges "in" are top level.
             var subset = graph.Vertices.ToList();
             foreach (var n in subset)
