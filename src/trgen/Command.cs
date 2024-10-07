@@ -349,6 +349,8 @@ namespace Trash
 
                 // Pick top-level parser grammar.
                 GrammarTuple top_level_parser_grammar = null;
+                
+                
                 if(test.grammar_name == null)
                 {
                     var all = test.tool_grammar_tuples
@@ -361,7 +363,6 @@ namespace Trash
                     {
                         throw new Exception("Can't figure out the grammar name.");
                     }
-
                     top_level_parser_grammar = all.First();
                     Regex r = new Regex("^(.*)Parser$");
                     var name = all.First().GrammarName;
@@ -371,6 +372,26 @@ namespace Trash
                 {
                     throw new Exception("Can't figure out the grammar name.");
                 }
+
+                // Find top-level parser tuple if not set yet.
+                if (top_level_parser_grammar == null)
+                {
+                    var all = test.tool_grammar_tuples
+                        .Where(t => t.WhatType == GrammarTuple.Type.Parser
+                                    && t.IsTopLevel
+                                    && (t.GrammarName == test.grammar_name
+                                       || t.GrammarName == test.grammar_name+"Parser")).ToList();
+                    if (!all.Any())
+                    {
+                        throw new Exception("Can't figure out the grammar name.");
+                    }
+                    if (all.Count > 1)
+                    {
+                        throw new Exception("Can't figure out the grammar name.");
+                    }
+                    top_level_parser_grammar = all.First();
+                }
+
                 // Pick top-level lexer grammar.
                 GrammarTuple top_level_lexer_grammar = null;
                 {
@@ -396,6 +417,7 @@ namespace Trash
                     }
                     top_level_lexer_grammar = all.First();   
                 }
+
                 // Pick all top-level grammars, which are passed through Antlr Tool.
                 test.tool_grammar_tuples = new List<GrammarTuple>();
                 if (top_level_lexer_grammar.GrammarName != top_level_parser_grammar.GrammarName)
