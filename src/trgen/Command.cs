@@ -394,6 +394,7 @@ namespace Trash
 
                 // Pick top-level lexer grammar.
                 GrammarTuple top_level_lexer_grammar = null;
+
                 {
                     var all_lexers =
                         test.tool_grammar_tuples.Where(
@@ -504,39 +505,15 @@ namespace Trash
                 // Antlr tool, and the other to test the generated parser.
                 string parser_src_grammar_file_name = null;
                 string lexer_src_grammar_file_name = null;
-                foreach (var t in test.tool_grammar_tuples)
-                {
-                    if (!t.IsTopLevel) continue;
-                    if (t.WhatType == GrammarTuple.Type.Parser)
-                    {
-                            test.fully_qualified_parser_name = t.GrammarAutomName;
-                            test.fully_qualified_go_parser_name = t.GrammarGoNewName;
-                            parser_src_grammar_file_name = t.GrammarFileName;
-                            test.parser_grammar_file_name = parser_src_grammar_file_name;
-                    }
-                    else if (t.WhatType == GrammarTuple.Type.Lexer)
-                    {
-                            test.fully_qualified_lexer_name = t.GrammarAutomName;
-                            test.fully_qualified_go_lexer_name = t.GrammarGoNewName;
-                            lexer_src_grammar_file_name = t.GrammarFileName;
-                            test.lexer_grammar_file_name = lexer_src_grammar_file_name;
-                    }
-                    else if (t.WhatType == GrammarTuple.Type.Combined)
-                    {
-                        throw new Exception("Should not execute!");
-                        if (test.grammar_name == t.GrammarName)
-                        {
-                            test.fully_qualified_parser_name = t.GrammarAutomName + "Parser";
-                            test.fully_qualified_go_parser_name = t.GrammarGoNewName + "Parser";
-                            parser_src_grammar_file_name = test.fully_qualified_parser_name;
-                            test.fully_qualified_lexer_name = t.GrammarAutomName + "Lexer";
-                            test.fully_qualified_go_lexer_name = t.GrammarGoNewName + "Lexer";
-                            lexer_src_grammar_file_name = test.fully_qualified_lexer_name;
-                            test.lexer_grammar_file_name = lexer_src_grammar_file_name;
-                            test.parser_grammar_file_name = parser_src_grammar_file_name;
-                        }
-                    }
-                }
+
+                test.fully_qualified_parser_name = top_level_parser_grammar.GrammarAutomName;
+                test.fully_qualified_go_parser_name = top_level_parser_grammar.GrammarGoNewName;
+                parser_src_grammar_file_name = top_level_parser_grammar.GrammarFileName;
+                test.parser_grammar_file_name = parser_src_grammar_file_name;
+                test.fully_qualified_lexer_name = top_level_lexer_grammar.GrammarAutomName;
+                test.fully_qualified_go_lexer_name = top_level_lexer_grammar.GrammarGoNewName;
+                lexer_src_grammar_file_name = top_level_lexer_grammar.GrammarFileName;
+                test.lexer_grammar_file_name = lexer_src_grammar_file_name;
 
                 // Where the parser generated code lives.
                 test.tool_src_grammar_files = new HashSet<string>()
