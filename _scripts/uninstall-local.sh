@@ -18,3 +18,4 @@ do
 	dotnet tool uninstall $tool
 	popd
 done
+dotnet nuget locals all --clear
