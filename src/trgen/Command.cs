@@ -418,11 +418,11 @@ namespace Trash
                     top_level_lexer_grammar = all.First();   
                 }
 
-                // Pick all top-level grammars, which are passed through Antlr Tool.
-                test.tool_grammar_tuples = new List<GrammarTuple>();
-                if (top_level_lexer_grammar.GrammarName != top_level_parser_grammar.GrammarName)
-                    test.tool_grammar_tuples.Add(top_level_lexer_grammar);
-                test.tool_grammar_tuples.Add(top_level_parser_grammar);
+                // Pick from all top-level grammars,
+                // the grammars that are tested. Other top level grammars
+                // are still processed by the Antlr Tool but not tested
+                // for parsing, e.g., grammars-v4/csharp.
+
                 if (test.start_rule == null)
                 {
                     var b = test.tool_grammar_tuples
