@@ -42,7 +42,7 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 ### Requirements
 [Install Dotnet 8.0.x](https://dotnet.microsoft.com/en-us/download)
 
-### Install
+### Install Globally
 Copy this script and execute it in a command-line prompt.
 ```
 dotnet tool install -g trcaret
@@ -102,7 +102,38 @@ dotnet tool uninstall -g trxml
 dotnet tool uninstall -g trxml2
 
 ```
+### Install Locally
+```
+dotnet new tool-manifest
+dotnet tool install trcaret
+dotnet tool install trclonereplace
+dotnet tool install trcombine
+dotnet tool install trconvert
+dotnet tool install trcover
+dotnet tool install trfoldlit
+dotnet tool install trgen
+dotnet tool install trgenvsc
+dotnet tool install trglob
+dotnet tool install triconv
+dotnet tool install tritext
+dotnet tool install trjson
+dotnet tool install trparse
+dotnet tool install trperf
+dotnet tool install trquery
+dotnet tool install trrename
+dotnet tool install trsort
+dotnet tool install trsplit
+dotnet tool install trsponge
+dotnet tool install trtext
+dotnet tool install trtokens
+dotnet tool install trtree
+dotnet tool install trunfold
+dotnet tool install trwdog
+dotnet tool install trxgrep
+dotnet tool install trxml
+dotnet tool install trxml2
 
+```
 ## List of commands
 __NB: Out of date__
 1) <a href="src/tranalyze/readme.md">tranalyze</a> -- Analyze a grammar
