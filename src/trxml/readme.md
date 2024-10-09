@@ -18,7 +18,7 @@ Read a tree from stdin and write an XML represenation of it.
 
 ## Current version
 
-0.23.7 Fixed trcover when started outside of Generated directory.
+0.23.7 Fixed trcover when started outside of Generated directory. Fixed analysis of grammars in trgen.
 
 ## License
 

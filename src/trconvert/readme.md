@@ -93,7 +93,7 @@ _Output_
 
 ## Current version
 
-0.23.7 Fixed trcover when started outside of Generated directory.
+0.23.7 Fixed trcover when started outside of Generated directory. Fixed analysis of grammars in trgen.
 
 ## License
 
