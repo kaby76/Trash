@@ -39,6 +39,8 @@ jobs:
         php --version
     - name: Prep Dotnet
       run: |
+        sudo ls -l /usr
+        sudo ls -l /usr/share
         sudo ls -l /usr/share/dotnet
     - name: Install Dotnet
       uses: actions/setup-dotnet@v4.0.1
