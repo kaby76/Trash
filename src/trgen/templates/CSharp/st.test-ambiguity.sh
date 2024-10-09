@@ -28,19 +28,22 @@ then
 fi
 
 # Parse all input files.
-# Individual parsing.
-rm -f parse.txt
-for f in ${files[*]}
-do
-    trwdog sh -c "ts-node Test.js -prefix individual $f" >> parse.txt 2>&1
-    xxx="$?"
-    if [ "$xxx" -ne 0 ]
-    then
-        status="$xxx"
-    fi
-done
+<if(individual_parsing)>
+# Individual parsing: NOT SUPPORTED!
+<else>
 # Group parsing.
-echo "${files[*]}" | trwdog sh -c "ts-node Test.js -x -prefix group" >> parse.txt 2>&1
+echo "${files[*]}" | dotnet trwdog dotnet trperf -x -c ar | grep -v '^0' | awk '{print $2}' | sort -u
 status=$?
+<endif>
 
+# trwdog returns 255 if it cannot spawn the process. This could happen
+# if the environment for running the program does not exist, or the
+# program did not build.
+if [ "$status" = "255" ]
+then
+    echo "Test failed."
+    exit 1
+fi
+
+rm -f $old/updated.txt $old/new_errors2.txt $old/new_errors.txt
 exit 0
