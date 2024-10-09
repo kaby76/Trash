@@ -11,10 +11,10 @@ cd "$where"
 
 # Test.
 rm -rf Generated
-dotnet trparse -- Arithmetic.g4 > o1.pt
+dotnet trparse Arithmetic.g4 > o1.pt
 cat o1.pt | dotnet trsplit > o2.pt
-cat o2.pt | dotnet trsponge -- -c -o Generated
-dotnet trparse -- Generated/* | dotnet trcombine > o3.pt
+cat o2.pt | dotnet trsponge -c -o Generated
+dotnet trparse Generated/* | dotnet trcombine > o3.pt
 cat o3.pt | dotnet trtext > Generated/Arithmetic.g4
 
 # Diff.

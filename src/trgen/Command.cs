@@ -345,10 +345,13 @@ namespace Trash
                 // Note, we can't do that by name because some grammars, like
                 // grammars-v4/r, won't build that way.
                 // Use Trash compiler to get dependencies.
-                ComputeSort(test);
+                var dependency_graph = ComputeSort(test);
 
-                // Pick top-level grammars.
-                if (test.grammar_name == null)
+                // Pick top-level parser grammar.
+                GrammarTuple top_level_parser_grammar = null;
+                
+                
+                if(test.grammar_name == null)
                 {
                     var all = test.tool_grammar_tuples
                         .Where(t => t.WhatType == GrammarTuple.Type.Parser && t.IsTopLevel).ToList();
@@ -360,6 +363,7 @@ namespace Trash
                     {
                         throw new Exception("Can't figure out the grammar name.");
                     }
+                    top_level_parser_grammar = all.First();
                     Regex r = new Regex("^(.*)Parser$");
                     var name = all.First().GrammarName;
                     if (name != null) test.grammar_name = r.Replace(name, "$1");
@@ -368,10 +372,58 @@ namespace Trash
                 {
                     throw new Exception("Can't figure out the grammar name.");
                 }
-                test.tool_grammar_tuples = test.tool_grammar_tuples
-                    .Where(t => t.GrammarName == test.grammar_name
-                                || t.GrammarName == test.grammar_name + "Parser"
-                                || t.GrammarName == test.grammar_name + "Lexer").ToList();
+
+                // Find top-level parser tuple if not set yet.
+                if (top_level_parser_grammar == null)
+                {
+                    var all = test.tool_grammar_tuples
+                        .Where(t => t.WhatType == GrammarTuple.Type.Parser
+                                    && t.IsTopLevel
+                                    && (t.GrammarName == test.grammar_name
+                                       || t.GrammarName == test.grammar_name+"Parser")).ToList();
+                    if (!all.Any())
+                    {
+                        throw new Exception("Can't figure out the grammar name.");
+                    }
+                    if (all.Count > 1)
+                    {
+                        throw new Exception("Can't figure out the grammar name.");
+                    }
+                    top_level_parser_grammar = all.First();
+                }
+
+                // Pick top-level lexer grammar.
+                GrammarTuple top_level_lexer_grammar = null;
+
+                {
+                    var all_lexers =
+                        test.tool_grammar_tuples.Where(
+                            t => t.WhatType == GrammarTuple.Type.Lexer && t.IsTopLevel).ToList();
+                    var all = all_lexers.Where(t =>
+                    {
+                        if (dependency_graph.Edges.Where(
+                                e => e.From == top_level_parser_grammar.GrammarName
+                                     && e.To == t.GrammarName).Any())
+                            return true;
+                        else return false;
+                    }).ToList();
+
+                    if (!all.Any())
+                    {
+                        throw new Exception("Can't figure out the grammar name.");
+                    }
+                    if (all.Count > 1)
+                    {
+                        throw new Exception("Can't figure out the grammar name.");
+                    }
+                    top_level_lexer_grammar = all.First();   
+                }
+
+                // Pick from all top-level grammars,
+                // the grammars that are tested. Other top level grammars
+                // are still processed by the Antlr Tool but not tested
+                // for parsing, e.g., grammars-v4/csharp.
+
                 if (test.start_rule == null)
                 {
                     var b = test.tool_grammar_tuples
@@ -453,45 +505,15 @@ namespace Trash
                 // Antlr tool, and the other to test the generated parser.
                 string parser_src_grammar_file_name = null;
                 string lexer_src_grammar_file_name = null;
-                foreach (var t in test.tool_grammar_tuples)
-                {
-                    if (!t.IsTopLevel) continue;
-                    if (t.WhatType == GrammarTuple.Type.Parser)
-                    {
-                        if (test.grammar_name == t.GrammarName || test.grammar_name + "Parser" == t.GrammarName)
-                        {
-                            test.fully_qualified_parser_name = t.GrammarAutomName;
-                            test.fully_qualified_go_parser_name = t.GrammarGoNewName;
-                            parser_src_grammar_file_name = t.GrammarFileName;
-                            test.parser_grammar_file_name = parser_src_grammar_file_name;
-                        }
-                    }
-                    else if (t.WhatType == GrammarTuple.Type.Lexer)
-                    {
-                        if (test.grammar_name == t.GrammarName || test.grammar_name + "Lexer" == t.GrammarName)
-                        {
-                            test.fully_qualified_lexer_name = t.GrammarAutomName;
-                            test.fully_qualified_go_lexer_name = t.GrammarGoNewName;
-                            lexer_src_grammar_file_name = t.GrammarFileName;
-                            test.lexer_grammar_file_name = lexer_src_grammar_file_name;
-                        }
-                    }
-                    else if (t.WhatType == GrammarTuple.Type.Combined)
-                    {
-                        throw new Exception("Should not execute!");
-                        if (test.grammar_name == t.GrammarName)
-                        {
-                            test.fully_qualified_parser_name = t.GrammarAutomName + "Parser";
-                            test.fully_qualified_go_parser_name = t.GrammarGoNewName + "Parser";
-                            parser_src_grammar_file_name = test.fully_qualified_parser_name;
-                            test.fully_qualified_lexer_name = t.GrammarAutomName + "Lexer";
-                            test.fully_qualified_go_lexer_name = t.GrammarGoNewName + "Lexer";
-                            lexer_src_grammar_file_name = test.fully_qualified_lexer_name;
-                            test.lexer_grammar_file_name = lexer_src_grammar_file_name;
-                            test.parser_grammar_file_name = parser_src_grammar_file_name;
-                        }
-                    }
-                }
+
+                test.fully_qualified_parser_name = top_level_parser_grammar.GrammarAutomName;
+                test.fully_qualified_go_parser_name = top_level_parser_grammar.GrammarGoNewName;
+                parser_src_grammar_file_name = top_level_parser_grammar.GrammarFileName;
+                test.parser_grammar_file_name = parser_src_grammar_file_name;
+                test.fully_qualified_lexer_name = top_level_lexer_grammar.GrammarAutomName;
+                test.fully_qualified_go_lexer_name = top_level_lexer_grammar.GrammarGoNewName;
+                lexer_src_grammar_file_name = top_level_lexer_grammar.GrammarFileName;
+                test.lexer_grammar_file_name = lexer_src_grammar_file_name;
 
                 // Where the parser generated code lives.
                 test.tool_src_grammar_files = new HashSet<string>()
@@ -507,7 +529,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.6";
+        public static string version = "0.23.7";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1658,7 +1680,7 @@ namespace Trash
             return code;
         }
 
-        void ComputeSort(Test test)
+        Digraph<string> ComputeSort(Test test)
         {
             Digraph<string> graph = new Digraph<string>();
             // Add vertices.
@@ -1670,6 +1692,7 @@ namespace Trash
             // Add edges.
             foreach (var t in test.tool_grammar_tuples)
             {
+                // Look at grammar file contents to draw dependencies out.
                 var v = t.GrammarName;
                 var parsing_result_set = t.ParsingResultSet;
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
@@ -1678,6 +1701,7 @@ namespace Trash
                 using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
                        ate.Try(parsing_result_set.Nodes, parsing_result_set.Parser))
                 {
+                    // Add an edge from the current grammar to "imported" grammar.
                     var foo = engine.parseExpression(
                             @"//delegateGrammars/delegateGrammar[not(ASSIGN)]/identifier/(RULE_REF | TOKEN_REF)/text()",
                             new StaticContextBuilder()).evaluate(dynamicContext,
@@ -1689,6 +1713,8 @@ namespace Trash
                         DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
                         graph.AddEdge(e);
                     }
+
+                    // Add an edge from the parser to lexer grammar if explicit.
                     var bar = engine.parseExpression(
                             @"//option[identifier/RULE_REF/text() = 'tokenVocab']/optionValue/identifier/(RULE_REF | TOKEN_REF)/text()",
                             new StaticContextBuilder()).evaluate(dynamicContext,
@@ -1702,8 +1728,29 @@ namespace Trash
                         // Make sure to mark lexer grammar as "top level".
                         test.tool_grammar_tuples.Where(t => t.GrammarName == f).First().IsTopLevel = true;
                     }
+
+                    // If there is no explicit "tokenVocab" statement, add in edge
+                    // from this *parser grammar* to *lexer grammar*.
+                    if (t.WhatType == GrammarTuple.Type.Parser)
+                    {
+                        var find = new Regex("Parser$").Replace(t.GrammarName, "Lexer");
+                        var to = test.tool_grammar_tuples.Where(l =>
+                        {
+                            if (l.WhatType == GrammarTuple.Type.Lexer &&
+                                find == l.GrammarName) return true;
+                            return false;
+                        });
+                        foreach (var x in to)
+                        {
+                            DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = x.GrammarName };
+                            graph.AddEdge(e);
+                            // Make sure to mark lexer grammar as "top level".
+                            x.IsTopLevel = true;
+                        }
+                    }
                 }
             }
+
             // Mark all grammars that have no edges "in" are top level.
             var subset = graph.Vertices.ToList();
             foreach (var n in subset)
@@ -1721,6 +1768,7 @@ namespace Trash
             List<string> order = sort.Topological_sort();
             order.Reverse();
             test.tool_grammar_tuples.Sort(new GrammarOrderCompare(order));
+            return graph;
         }
 
         string FixedName(string from, Config config, Test test)

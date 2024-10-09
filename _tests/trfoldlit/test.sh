@@ -16,7 +16,7 @@ rm -rf Generated
 mkdir Generated
 
 # Test.
-dotnet trparse -- Expression.g4 | dotnet trfoldlit | dotnet trsponge -- -c -o Generated
+dotnet trparse Expression.g4 | dotnet trfoldlit | dotnet trsponge -c -o Generated
 
 # Diff.
 # Diff.

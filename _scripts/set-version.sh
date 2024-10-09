@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-version="0.23.6"
+version="0.23.7"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
@@ -41,7 +41,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Fix trgen for combined grammars. Add regression testing of trgen and all targets%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Fixed trcover when started outside of Generated directory. Fixed analysis of grammars in trgen.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done
@@ -78,7 +78,7 @@ do
 	mv asdfasdf *.csproj	
 	rm -f asdfasdf2
 	touch readme.md
-	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Fix trgen for combined grammars. Add regression testing of trgen and all targets%' > asdfasdf2
+	cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Fixed trcover when started outside of Generated directory. Fixed analysis of grammars in trgen.%' > asdfasdf2
 	mv asdfasdf2 readme.md
 	cd ..
 done

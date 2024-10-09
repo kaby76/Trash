@@ -8,7 +8,7 @@ do
 	pushd $dirname
 	for target in Antlr4ng Cpp CSharp Dart Go Java JavaScript Python3 TypeScript
 	do
-		dotnet trgen -- -t $target
+		dotnet trgen -t $target
 		# If a target is not available, exit code should zero, but Generated directory won't exist.
 		if [ ! -d Generated-$target ]
 		then

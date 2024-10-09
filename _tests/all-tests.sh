@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #set +e
-#set -x
+set -x
 export TERM=xterm-mono
 export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
@@ -10,13 +10,17 @@ echo Tests in Trash: $tests
 failed=()
 for i in $tests
 do
-	bash $i
+	dir=`dirname $i`
+	fn=`basename $i`
+	pushd $dir
+	bash $fn
 	result=$?
 	if [ "$result" != 0 ]
 	then
 		echo Failed $i
 		failed+=( $i )
 	fi
+	popd
 done
 if (( ${#failed[@]} != 0 ))
 then
