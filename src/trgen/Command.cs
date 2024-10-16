@@ -1575,8 +1575,8 @@ namespace Trash
                     : "");
                 t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
                 t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
-				t.Add("example_dir_unix", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('\\', '/'))));
-				t.Add("example_dir_win", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('/', '\\'))));
+                t.Add("example_dir_unix", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('\\', '/'))));
+                t.Add("example_dir_win", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('/', '\\'))));
                 t.Add("exec_name", GetOSTarget() == "Windows" ? "Test.exe" : "Test");
                 t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
                 t.Add("go_parser_name", test.fully_qualified_go_parser_name);
@@ -1909,6 +1909,10 @@ namespace Trash
                 result = "success";
             }
             System.Console.Error.WriteLine("CSharp " + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+            if ((bool)res3)
+            {
+                throw new Exception("Aborting. Correct syntax errors in grammar file " + input_name + " in order to generate driver.");
+            }
             var parser = type.GetProperty("Parser").GetValue(null, new object[0]) as Antlr4.Runtime.Parser;
             var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
             var tokstream = type.GetProperty("TokenStream").GetValue(null, new object[0]) as ITokenStream;
