@@ -30,7 +30,7 @@ the XPath patterns to match certain parse trees.
 
 ## Current version
 
-0.23.7 Fixed trcover when started outside of Generated directory. Fixed analysis of grammars in trgen.
+0.23.8 
 
 ## License
 
