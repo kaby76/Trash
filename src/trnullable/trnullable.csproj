@@ -6,35 +6,23 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<AssemblyName>trquery</AssemblyName>
-		<PackageId>trquery</PackageId>
+		<AssemblyName>trnullable</AssemblyName>
+		<PackageId>trnullable</PackageId>
 		<Description>
-			<![CDATA[Modifies arbitrary text in a parse tree via script.
-This program is part of the Trash toolkit.]]>
+			<![CDATA[Reads a parsing result set for grammars from stdin and outputs the rules that are nullable.
+This program is part of the Trash toolkit.
+]]>
 		</Description>
-		<ToolCommandName>trquery</ToolCommandName>
-		<RootNamespace>trquery</RootNamespace>
+		<ToolCommandName>trnullable</ToolCommandName>
+		<RootNamespace>trnullable</RootNamespace>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<Version>0.23.8</Version>
-		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trquery</RepositoryUrl>
+		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trnullable</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>
-	  <None Remove="ParseTreeScript.g4" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Antlr4 Include="QueryLexer.g4">
-	    <Package>Trash.trquery</Package>
-	  </Antlr4>
-	  <Antlr4 Include="QueryParser.g4">
-	    <Package>Trash.trquery</Package>
-	  </Antlr4>
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
-		<PackageReference Include="Antlr4BuildTasks" Version="12.8.0" PrivateAssets="all" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 	</ItemGroup>
@@ -44,7 +32,7 @@ This program is part of the Trash toolkit.]]>
 		<ProjectReference Include="../Logger/Logger.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="readme.md" Pack="true" PackagePath="" />
+		<None Include="readme.md" Pack="true" PackagePath=""/>
 	</ItemGroup>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>

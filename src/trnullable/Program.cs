@@ -3,10 +3,11 @@ using CommandLine.Text;
 using System;
 using System.Collections.Generic;
 
-namespace Trash.trquery;
+namespace Trash.trnullable;
 
 public class Program
 {
+
     public static void Main(string[] args)
     {
         try
@@ -33,20 +34,18 @@ public class Program
             helpText = HelpText.AutoBuild(result, h =>
             {
                 h.AdditionalNewLineAfterOption = false;
-                h.Heading = "trinsert";
-                h.Copyright = "Copyright (c) 2023 Ken Domino"; //change copyright text
+                h.Heading = "trnullable";
+                h.Copyright = "Copyright (c) 2024 Ken Domino"; //change copyright text
                 h.AddPreOptionsText(new Command().Help());
                 return HelpText.DefaultParsingErrorsHandler(result, h);
             }, e => e);
         }
 
-        Console.Error.WriteLine(helpText);
+        Console.WriteLine(helpText);
     }
 
     public void MainInternal(string[] args)
     {
-        //foreach (var arg in args)
-        //    System.Console.Error.WriteLine("arg " + arg);
         var config = new Config();
         var result = new CommandLine.Parser().ParseArguments<Config>(args);
         bool stop = false;
@@ -67,8 +66,6 @@ public class Program
                     prop.SetValue(config, prop.GetValue(o, null));
                 }
             }
-
-            if (o.Query != null) config.Query = o.Query;
         });
         new Command().Execute(config);
     }
