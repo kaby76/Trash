@@ -41,7 +41,7 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.23.8 
+0.23.8 Fixed #494, #496, #497.
 
 ## License
 

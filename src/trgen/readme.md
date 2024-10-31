@@ -49,7 +49,7 @@ simplify and eliminate bugs created when adding new grammars.
 
 ## Current version
 
-0.23.8 
+0.23.8 Fixed #494, #496, #497.
 
 ## License
 
