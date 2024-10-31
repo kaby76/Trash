@@ -1,8 +1,8 @@
-# trtree
+# trnullable
 
 ## Summary
 
-Print a parse tree in a human-readable format
+Input Antlr grammars and print which rules are nullable.
 
 ## Description
 
@@ -14,7 +14,7 @@ trnullable
 
 ## Examples
 
-trparse A.g4 | trnullable | trcaret
+trparse A.g4 | trnullable
 
 ## Current version
 
