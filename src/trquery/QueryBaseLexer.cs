@@ -1,7 +1,7 @@
 using Antlr4.Runtime;
 using System.IO;
 
-namespace Trash;
+namespace Trash.trquery;
 
 public abstract class QueryBaseLexer : Lexer
 {

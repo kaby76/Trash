@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trnullable": {
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4296\\abb"
+    }
+  }
+}

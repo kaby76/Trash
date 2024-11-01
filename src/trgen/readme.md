@@ -49,7 +49,7 @@ simplify and eliminate bugs created when adding new grammars.
 
 ## Current version
 
-0.23.7 Fixed trcover when started outside of Generated directory. Fixed analysis of grammars in trgen.
+0.23.8 Fixed #494, #496, #497.
 
 ## License
 

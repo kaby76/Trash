@@ -3,7 +3,7 @@ using CommandLine.Text;
 using System;
 using System.Collections.Generic;
 
-namespace Trash;
+namespace Trash.trquery;
 
 public class Program
 {

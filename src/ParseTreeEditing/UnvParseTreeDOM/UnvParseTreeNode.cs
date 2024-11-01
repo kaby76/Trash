@@ -51,6 +51,15 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                     .Select(c => c as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement);
             }
         }
+
+        public virtual IEnumerable<string> GetChildrenText()
+        {
+            return (ChildNodes as UnvParseTreeNodeList)
+                ._node_list
+                .Where(c => c.GetType() == typeof(UnvParseTreeText))
+                .Select(c => c as UnvParseTreeText)
+                .Select(c => c.Data);
+        }
         public virtual Node NextSibling { get; set; }
         public virtual string BaseURI { get; set; }
         public virtual NamedNodeMap Attributes { get; set; }
