@@ -100,6 +100,13 @@
       ],
       "rollForward": false
     },
+    "trnullable": {
+      "version": "0.23.8",
+      "commands": [
+        "trnullable"
+      ],
+      "rollForward": false
+    },
     "trparse": {
       "version": "0.23.8",
       "commands": [
