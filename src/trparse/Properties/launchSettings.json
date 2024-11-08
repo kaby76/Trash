@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "--ambig ../examples/array.php",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\php\\Generated-CSharp"
+      "commandLineArgs": "-t Bison C:\\msys64\\home\\Kenne\\postgres\\src\\backend\\parser\\gram.y",
+      "workingDirectory": ""
     }
   }
 }

@@ -2,8 +2,8 @@
   "profiles": {
     "trperf": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/PatternTest.on -m",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\be\\Generated-CSharp"
+      "commandLineArgs": "in",
+      "workingDirectory": "c:\\msys64\\home\\Kenne\\so\\79161038\\Generated-CSharp"
     }
   }
 }
