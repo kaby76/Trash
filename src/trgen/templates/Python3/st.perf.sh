@@ -32,7 +32,7 @@ then
 fi
 if [[ "$machine" == "CYGWIN" || "$machine" == "MinGw" ]]
 then
-    pwsh -c 'Get-WmiObject -Class Win32_Processor | Select-Object -Property Name' >> parse.txt
+    pwsh -c '(Get-WmiObject -Class Win32_Processor).Name' >> parse.txt
 fi
 
 echo Memory: >> parse.txt
@@ -42,7 +42,7 @@ then
 fi
 if [[ "$machine" == "CYGWIN" || "$machine" == "MinGw" ]]
 then
-    pwsh -c 'Get-WmiObject -Class Win32_PhysicalMemory | Format-Table Capacity' >> parse.txt
+    pwsh -c '(Get-WmiObject -Class Win32_PhysicalMemory).Capacity' >> parse.txt
 fi
 
 # Get a list of test files from the test directory. Do not include any
