@@ -15,7 +15,7 @@ case "${unameOut}" in
     *)          machine="UNKNOWN:${unameOut}"
 esac
 
-echo OS:
+echo OS: >> parse.txt
 if [[ "$machine" == "Linux" ]]
 then
     lsb_release -a >> parse.txt
@@ -25,7 +25,7 @@ then
     systeminfo | grep -E '^OS' >> parse.txt
 fi
 
-echo CPU:
+echo CPU: >> parse.txt
 if [[ "$machine" == "Linux" ]]
 then
     lscpu | grep -e 'Model name' >> parse.txt
@@ -35,7 +35,7 @@ then
     pwsh -c 'Get-WmiObject -Class Win32_Processor | Select-Object -Property Name' >> parse.txt
 fi
 
-echo Memory:
+echo Memory: >> parse.txt
 if [[ "$machine" == "Linux" ]]
 then
     free -h >> parse.txt
