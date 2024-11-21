@@ -18,8 +18,6 @@ do
     fi
 done
 
-n=10
-
 # People often specify a test file directory, but sometimes no
 # tests are provided. Git won't check in an empty directory.
 # Test if there are no test files.
@@ -28,6 +26,8 @@ then
     echo "No test cases provided."
     exit 0
 fi
+
+n=10
 
 # Parse all input files.
 version=`grep "version=" build.sh | awk -F= '{print $2}'`
@@ -48,7 +48,9 @@ do
         fi
     done
 done
+
 # Group parsing.
+# Loop from 1 to n and execute the body of the loop each time
 for ((i=1; i\<=n; i++))
 do
     echo "${files[*]}" | dotnet trwdog java -classpath "$CLASSPATH" Test -x -prefix group >> parse.txt 2>&1

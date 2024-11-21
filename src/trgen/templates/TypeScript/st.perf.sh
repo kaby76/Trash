@@ -27,20 +27,35 @@ then
     exit 0
 fi
 
+n=10
+
 # Parse all input files.
 # Individual parsing.
 rm -f parse.txt
 for f in ${files[*]}
 do
-    dotnet trwdog sh -c "ts-node Test.js -prefix individual $f" >> parse.txt 2>&1
+    # Loop from 1 to n and execute the body of the loop each time
+    for ((i=1; i\<=n; i++))
+    do
+        dotnet trwdog sh -c "ts-node Test.js -prefix individual $f" >> parse.txt 2>&1
+        xxx="$?"
+        if [ "$xxx" -ne 0 ]
+        then
+            status="$xxx"
+        fi
+    done
+done
+
+# Group parsing.
+# Loop from 1 to n and execute the body of the loop each time
+for ((i=1; i\<=n; i++))
+do
+    echo "${files[*]}" | dotnet trwdog sh -c "ts-node Test.js -x -prefix group" >> parse.txt 2>&1
     xxx="$?"
     if [ "$xxx" -ne 0 ]
     then
         status="$xxx"
     fi
 done
-# Group parsing.
-echo "${files[*]}" | dotnet trwdog sh -c "ts-node Test.js -x -prefix group" >> parse.txt 2>&1
-status=$?
 
 exit 0
