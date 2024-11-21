@@ -32,7 +32,7 @@ fi
 rm -f parse.txt
 for f in ${files[*]}
 do
-    trwdog php -d memory_limit=1G Test.php -prefix individual $f >> parse.txt 2>&1
+    dotnet trwdog php -d memory_limit=1G Test.php -prefix individual $f >> parse.txt 2>&1
     xxx="$?"
     if [ "$xxx" -ne 0 ]
     then
@@ -40,7 +40,7 @@ do
     fi
 done
 # Group parsing.
-echo "${files[*]}" | trwdog php -d memory_limit=1G Test.php -x -prefix group >> parse.txt 2>&1
+echo "${files[*]}" | dotnet trwdog php -d memory_limit=1G Test.php -x -prefix group >> parse.txt 2>&1
 status=$?
 
 exit 0

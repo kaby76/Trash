@@ -32,7 +32,7 @@ fi
 rm -f parse.txt
 for f in ${files[*]}
 do
-    trwdog ./Test.exe -prefix individual $f >> parse.txt 2>&1
+    dotnet trwdog ./Test.exe -prefix individual $f >> parse.txt 2>&1
     xxx="$?"
     if [ "$xxx" -ne 0 ]
     then
@@ -40,7 +40,7 @@ do
     fi
 done
 # Group parsing.
-echo "${files[*]}" | trwdog ./Test.exe -x -prefix group >> parse.txt 2>&1
+echo "${files[*]}" | dotnet trwdog ./Test.exe -x -prefix group >> parse.txt 2>&1
 status=$?
 
 exit 0
