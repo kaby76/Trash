@@ -3,6 +3,48 @@
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
 
+rm -f parse.txt
+
+# Output basic information on machine.
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
+
+echo OS:
+if [[ "$machine" != "Linux" ]]
+then
+    lsb_release -a >> parse.txt
+fi
+if [[ "$machine" == "CYGWIN" || "$machine" == "MinGw" ]]
+then
+    systeminfo | grep -E '^OS' >> parse.txt
+fi
+
+echo CPU:
+if [[ "$machine" == "Linux" ]]
+then
+    lscpu | grep -e 'Model name' >> parse.txt
+fi
+if [[ "$machine" == "CYGWIN" || "$machine" == "MinGw" ]]
+then
+    pwsh -c 'Get-WmiObject -Class Win32_Processor | Select-Object -Property Name' >> parse.txt
+fi
+
+echo Memory:
+if [[ "$machine" == "Linux" ]]
+then
+    free -h >> parse.txt
+fi
+if [[ "$machine" == "CYGWIN" || "$machine" == "MinGw" ]]
+then
+    pwsh -c 'Get-WmiObject -Class Win32_PhysicalMemory | Format-Table Capacity' >> parse.txt
+fi
+
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
@@ -31,7 +73,6 @@ n=10
 
 # Parse all input files.
 # Individual parsing.
-rm -f parse.txt
 for f in ${files[*]}
 do
     # Loop from 1 to n and execute the body of the loop each time
