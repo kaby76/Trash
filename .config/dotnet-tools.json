@@ -51,6 +51,13 @@
       ],
       "rollForward": false
     },
+    "trextract": {
+      "version": "0.23.9",
+      "commands": [
+        "trextract"
+      ],
+      "rollForward": false
+    },
     "trfoldlit": {
       "version": "0.23.9",
       "commands": [

@@ -1,9 +1,9 @@
 {
   "profiles": {
     "tragl": {
-      "commandName": "Executable",
-      "executablePath": "C:/Program Files/dotnet/dotnet.exe",
-      "commandLineArgs": "c:/Users/kenne/Documents/GitHub/Trash/src/tragl/bin/Debug/net8.0-windows/tragl.dll -f c:\\\\msys64\\\\home\\\\Kenne\\\\issues\\\\weston\\\\grammars-v4\\\\sql\\\\tsql\\\\Generated-CSharp-0\\\\o.pt"
+      "commandName": "Project",
+      "commandLineArgs": "-f o.pt",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4332\\sql\\postgresql\\Generated-CSharp"
     }
   }
 }
