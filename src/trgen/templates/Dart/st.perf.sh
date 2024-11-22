@@ -24,6 +24,7 @@ if [[ "$machine" == "CYGWIN" || "$machine" == "MinGw" ]]
 then
     systeminfo | grep -E '^OS' >> parse.txt
 fi
+echo "" >> parse.txt
 
 echo CPU: >> parse.txt
 if [[ "$machine" == "Linux" ]]
@@ -34,6 +35,7 @@ if [[ "$machine" == "CYGWIN" || "$machine" == "MinGw" ]]
 then
     pwsh -c '(Get-WmiObject -Class Win32_Processor).Name' >> parse.txt
 fi
+echo "" >> parse.txt
 
 echo Memory: >> parse.txt
 if [[ "$machine" == "Linux" ]]
@@ -44,6 +46,7 @@ if [[ "$machine" == "CYGWIN" || "$machine" == "MinGw" ]]
 then
     pwsh -c '(Get-WmiObject -Class Win32_PhysicalMemory).Capacity' >> parse.txt
 fi
+echo "" >> parse.txt
 
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
@@ -53,7 +56,7 @@ files=()
 for f in $files2
 do
     if [ -d "$f" ]; then continue; fi
-    dotnet triconv -- -f utf-8 $f > /dev/null 2>&1
+    dotnet triconv -f utf-8 $f > /dev/null 2>&1
     if [ "$?" = "0" ]
     then
         files+=( $f )
@@ -69,7 +72,16 @@ then
     exit 0
 fi
 
-n=10
+n=$@
+
+# Perform trperf to find ambiguities for each file.
+echo Ambiguities per file: >> parse.txt
+echo "${files[*]}" \
+    | dotnet trperf -x -c aF \
+    | grep -v '^0' \
+    | awk '{sum[$2] += $1} END {for (key in sum) print sum[key], key}' \
+    | sort -k1 -n >> parse.txt
+echo "" >> parse.txt
 
 # Parse all input files.
 # Individual parsing.
@@ -98,5 +110,7 @@ do
         status="$xxx"
     fi
 done
+
+dos2unix parse.txt
 
 exit 0
