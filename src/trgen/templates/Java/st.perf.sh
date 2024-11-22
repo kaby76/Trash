@@ -5,6 +5,9 @@ IFS=$(echo -en "\n\b")
 
 rm -f parse.txt
 
+date >> parse.txt
+echo "" >> parse.txt
+
 # Output basic information on machine.
 unameOut="$(uname -s)"
 case "${unameOut}" in
