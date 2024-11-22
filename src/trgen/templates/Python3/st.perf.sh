@@ -76,6 +76,8 @@ then
 fi
 
 n=$@
+echo SampleSize=$n >> parse.txt
+echo "" >> parse.txt
 
 # Perform trperf to find ambiguities for each file.
 echo Ambiguities per file: >> parse.txt
