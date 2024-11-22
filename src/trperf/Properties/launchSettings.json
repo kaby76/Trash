@@ -2,8 +2,8 @@
   "profiles": {
     "trperf": {
       "commandName": "Project",
-      "commandLineArgs": "in",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\so\\79161038\\Generated-CSharp"
+      "commandLineArgs": "-x",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-update-antlr4ng\\java\\java\\Generated-Antlr4ng"
     }
   }
 }
