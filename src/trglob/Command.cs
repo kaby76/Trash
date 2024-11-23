@@ -30,9 +30,12 @@ class Command
                 .Select(f =>
                 {
                     var n = f.FullName.Replace('\\', '/');
-                    var re = new Regex("^" + cwd);
-                    var r = re.Replace(n, "");
-                    if (r == "") return ".";
+                    var r = n;
+                    if (!config.Full)
+                    {
+                        r = System.IO.Path.GetRelativePath(cwd, n);
+                        r = r.Replace('\\', '/');
+                    }
                     return r;
                 })
                 .ToList();
