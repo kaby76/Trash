@@ -79,9 +79,8 @@ class Command
                     sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeIndentStyle(node).ToString());
                 }
             }
-
-            System.Console.WriteLine(sb.ToString());
-            System.Console.WriteLine();
-        }
+            System.Console.Write(sb.ToString());
+	}
+	System.Console.WriteLine();
     }
 }

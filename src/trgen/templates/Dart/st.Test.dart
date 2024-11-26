@@ -87,7 +87,7 @@ void main(List\<String> args) async {
         }
         s.stop();
         var et = s.elapsedMilliseconds / 1000.0;
-        if (!quiet) stderr.writeln("Total Time: " + et.toString());
+        if (!quiet) stderr.writeln(prefix + "Total Time: " + et.toString());
     }
     exit(error_code);
 }

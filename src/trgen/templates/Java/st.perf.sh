@@ -5,6 +5,8 @@ IFS=$(echo -en "\n\b")
 
 rm -f parse.txt
 
+echo "Testing for Java" >> parse.txt
+echo "<parser_name>" >> parse.txt
 date >> parse.txt
 echo "" >> parse.txt
 
@@ -75,17 +77,9 @@ then
     exit 0
 fi
 
-n=$@
+n=$1
+type=$2
 echo SampleSize=$n >> parse.txt
-echo "" >> parse.txt
-
-# Perform trperf to find ambiguities for each file.
-echo Ambiguities per file: >> parse.txt
-echo "${files[*]}" \
-    | dotnet trperf -x -c aF \
-    | grep -v '^0' \
-    | awk '{sum[$2] += $1} END {for (key in sum) print sum[key], key}' \
-    | sort -k1 -n >> parse.txt
 echo "" >> parse.txt
 
 # Parse all input files.
@@ -93,31 +87,37 @@ version=`grep "version=" build.sh | awk -F= '{print $2}'`
 JAR=`python -c "import os; from pathlib import Path; print(os.path.join(Path.home() , '.m2',  'repository', 'org', 'antlr', 'antlr4', '$version', 'antlr4-$version-complete.jar'))"`
 CLASSPATH="$JAR<if(path_sep_semi)>\;<else>:<endif>."
 # Individual parsing.
-for f in ${files[*]}
-do
-    # Loop from 1 to n and execute the body of the loop each time
+if [[ "$type" == "individual" ]]
+then
+    for f in ${files[*]}
+    do
+        # Loop from 1 to n and execute the body of the loop each time
+        for ((i=1; i\<=n; i++))
+        do
+            dotnet trwdog java -classpath "$CLASSPATH" Test -prefix individual $f >> parse.txt 2>&1
+            xxx="$?"
+            if [ "$xxx" -ne 0 ]
+            then
+                status="$xxx"
+            fi
+        done
+    done
+fi
+
+# Group parsing.
+# Loop from 1 to n and execute the body of the loop each time
+if [[ "$type" == "group" ]]
+then
     for ((i=1; i\<=n; i++))
     do
-        dotnet trwdog java -classpath "$CLASSPATH" Test -prefix individual $f >> parse.txt 2>&1
+        echo "${files[*]}" | dotnet trwdog java -classpath "$CLASSPATH" Test -x -prefix group >> parse.txt 2>&1
         xxx="$?"
         if [ "$xxx" -ne 0 ]
         then
             status="$xxx"
         fi
     done
-done
-
-# Group parsing.
-# Loop from 1 to n and execute the body of the loop each time
-for ((i=1; i\<=n; i++))
-do
-    echo "${files[*]}" | dotnet trwdog java -classpath "$CLASSPATH" Test -x -prefix group >> parse.txt 2>&1
-    xxx="$?"
-    if [ "$xxx" -ne 0 ]
-    then
-        status="$xxx"
-    fi
-done
+fi
 
 dos2unix parse.txt
 

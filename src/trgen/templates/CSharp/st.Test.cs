@@ -246,7 +246,7 @@ public class Program
                     ParseString(inputs[f], f);
             }
             DateTime after = DateTime.Now;
-            if (!quiet) System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
+            if (!quiet) System.Console.Error.WriteLine(prefix + "Total Time: " + (after - before).TotalSeconds);
         }
         Environment.ExitCode = exit_code;
     }
