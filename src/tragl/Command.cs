@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
+using ParseTreeEditing.UnvParseTreeDOM;
 
 namespace Trash
 {
@@ -60,6 +61,13 @@ namespace Trash
             if (node != null)
             {
                 node.LabelText = tree.LocalName;
+                if (tree.LocalName == null)
+                {
+                    var text_node = tree as UnvParseTreeText;
+                    if (text_node != null)
+                        node.LabelText = text_node.Data as string;
+                    node.LabelText = '"' + node.LabelText + '"';
+                }
                 //var ruleFailedAndMatchedNothing = false;
                 //if (tree is ParserRuleContext context)
                 //{
