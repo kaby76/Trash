@@ -19,7 +19,7 @@ Clone, rename, and replace symbols in a grammar to optimize full stack fallbacks
 
 ## Current version
 
-0.23.9 Fixed #494, #496, #497.
+0.23.9 Fix various problems with tragl, trgen, trparse, trperf, trextract, trtree.
 
 ## License
 

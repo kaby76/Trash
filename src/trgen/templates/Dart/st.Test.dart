@@ -128,11 +128,12 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
         for (int i = 0; ; ++i)
         {
             var token = lexer.nextToken();
+            token.tokenIndex(i);
             stderr.writeln(token.toString());
             if (token.type == -1)
                 break;
         }
-        lexer.reset();
+        lexer.reset(true);
     }
     var tokens = CommonTokenStream(lexer);
     var parser = <parser_name>(tokens);

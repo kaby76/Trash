@@ -24,7 +24,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.9 Fixed #494, #496, #497.
+0.23.9 Fix various problems with tragl, trgen, trparse, trperf, trextract, trtree.
 
 ## License
 

@@ -86,8 +86,7 @@ public class Program
                 parser_startRuleIndex);
                 foreach (var t in parse_trees)
                 {
-                    result.Add(new Tuple\<string, IParseTree>(
-                        "d=" + decision.decision + ".a=" + t.Item1, t.Item2));
+                    result.Add(new Tuple\<string, IParseTree>(t.Item1, t.Item2));
                 }
             }
         }

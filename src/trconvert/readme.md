@@ -93,7 +93,7 @@ _Output_
 
 ## Current version
 
-0.23.9 Fixed #494, #496, #497.
+0.23.9 Fix various problems with tragl, trgen, trparse, trperf, trextract, trtree.
 
 ## License
 
