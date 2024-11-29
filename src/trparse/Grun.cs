@@ -326,27 +326,51 @@ public class Grun
         }
         else
         {
-            var tuples = res2 as List<Tuple<int, List<IParseTree>>>;
-            foreach (var tt in tuples)
-            {
-                var list_of_trees = new List<UnvParseTreeNode>();
-                foreach (var tree in tt.Item2)
+            var tuples = res2 as List<Tuple<string, IParseTree>>;
+            // Each ambiguous parse tree is for an alt.
+            // Two ways to group this:
+            // 1) All trees under one file, one decision.
+            // 2) Or, each tree under one file, one decision, one alt.
+            if (config.GroupBy)
+			{
+				string decision_str = "";
+				var list_of_trees = new List<UnvParseTreeNode>();
+                foreach (var tt in tuples)
                 {
-                    var t2 = tree as ParserRuleContext;
+					var t1 = tt.Item1 as string;
+					decision_str = t1;
+                    var t2 = tt.Item2 as ParserRuleContext;
                     var converted_tree =
                         new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream,
                             charstream);
                     list_of_trees.Add(converted_tree);
                 }
-
                 var tuple = new AntlrJson.ParsingResultSet()
                 {
-                    FileName = input_name + "." + tt.Item1,
+					FileName = input_name + "." + decision_str,
                     Nodes = list_of_trees.ToArray(),
                     Parser = parser,
                     Lexer = lexer
                 };
                 data.Add(tuple);
+            } else {
+                foreach (var tt in tuples)
+                {
+                    var list_of_trees = new List<UnvParseTreeNode>();
+                    var t1 = tt.Item1 as string;
+                    var t2 = tt.Item2 as ParserRuleContext;
+                    var converted_tree =
+                        new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream,
+                            charstream);
+                    var tuple = new AntlrJson.ParsingResultSet()
+                    {
+                        FileName = input_name + "." + tt.Item1,
+                        Nodes = new UnvParseTreeNode[] { converted_tree },
+                        Parser = parser,
+                        Lexer = lexer
+                    };
+                    data.Add(tuple);
+                }
             }
         }
         return (bool)res3 ? 1 : 0;

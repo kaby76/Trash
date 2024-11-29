@@ -22,6 +22,9 @@ public class Config
     [Option('g', "encoding", Required = false, HelpText = "Set the encoding for the grammar.")]
     public string Encoding { get; set; }
 
+    [Option("group", Required = false, HelpText = "Group by file name.")]
+    public bool GroupBy { get; set; }
+
     [Option('i', "input", Required = false, HelpText = "Parse input string.")]
     public string Input { get; set; }
 

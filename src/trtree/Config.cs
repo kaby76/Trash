@@ -4,6 +4,9 @@ namespace Trash;
 
 public class Config
 {
+    [Option('d', "display-source", Required = false, HelpText = "Display the name of the source for the tree so it can be easily identified.")]
+    public bool DisplayName { get; set; }
+    
     [Option('f', "file", Required = false, HelpText = "Read parse tree data from file instead of stdin.")]
     public string File { get; set; }
 

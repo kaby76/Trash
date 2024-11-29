@@ -30,7 +30,7 @@ the XPath patterns to match certain parse trees.
 
 ## Current version
 
-0.23.8 Fixed #494, #496, #497.
+0.23.9 Fix various problems with tragl, trgen, trparse, trperf, trextract, trtree.
 
 ## License
 

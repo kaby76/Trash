@@ -529,7 +529,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.8";
+        public static string version = "0.23.9";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1536,12 +1536,13 @@ namespace Trash
                     else break;
                 }
 
-                test.tool_grammar_files = test.tool_grammar_files.Select(s => s.Replace("st.", "")).ToList();
-                test.lexer_grammar_file_name = test.lexer_grammar_file_name.Replace("st.", "");
-                test.parser_grammar_file_name = test.parser_grammar_file_name.Replace("st.", "");
+                Regex re = new Regex("^st.");
+                test.tool_grammar_files = test.tool_grammar_files.Select(s => re.Replace(s, "")).ToList();
+                test.lexer_grammar_file_name = re.Replace(test.lexer_grammar_file_name, "");
+                test.parser_grammar_file_name = re.Replace(test.parser_grammar_file_name, "");
                 foreach (var tu in test.tool_grammar_tuples)
                 {
-                    tu.GrammarFileName = tu.GrammarFileName.Replace("st.","");
+                    tu.GrammarFileName = re.Replace(tu.GrammarFileName,"");
                 }
                 output_dir = output_dir + "/";
                 var yo1 = test.grammar_directory_source_files
@@ -1584,7 +1585,7 @@ namespace Trash
                 t.Add("grammar_name", test.grammar_name);
                 t.Add("has_name_space", test.package != null && test.package != "");
                 t.Add("is_combined_grammar", test.tool_grammar_files.Count() == 1);
-                t.Add("lexer_grammar_file", test.lexer_grammar_file_name.Replace("st.",""));
+                t.Add("lexer_grammar_file", re.Replace(test.lexer_grammar_file_name,""));
                 t.Add("lexer_name", test.fully_qualified_lexer_name);
                 t.Add("name_space", test.package.Replace("/", "."));
                 t.Add("package_name", test.package.Replace(".", "/"));
@@ -1593,14 +1594,14 @@ namespace Trash
                 t.Add("os_type", test.os_target);
                 t.Add("os_win", GetOSTarget() == "Windows");
                 t.Add("parser_name", test.fully_qualified_parser_name);
-                t.Add("parser_grammar_file", test.parser_grammar_file_name.Replace("st.", ""));
+                t.Add("parser_grammar_file", re.Replace(test.parser_grammar_file_name, ""));
                 t.Add("path_sep_colon", config.path_sep == PathSepType.Colon);
                 t.Add("path_sep_semi", config.path_sep == PathSepType.Semi);
                 t.Add("start_symbol", test.start_rule);
                 t.Add("temp_dir", GetOSTarget() == "Windows"
                     ? "c:/temp"
                     : "/tmp");
-                t.Add("tool_grammar_files", test.tool_grammar_files.Select(s=>s.Replace("st.","")));
+                t.Add("tool_grammar_files", test.tool_grammar_files.Select(s=> re.Replace(s,"")));
                 t.Add("tool_grammar_tuples", test.tool_grammar_tuples.Where(t => t.IsTopLevel).ToList());
                 t.Add("version", Command.version);
                 var o = t.Render();

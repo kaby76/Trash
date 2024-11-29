@@ -111,7 +111,7 @@ func main() {
         }
         elapsed := time.Since(start)
         if ! quiet {
-            fmt.Fprintf(os.Stderr, "Total Time: %.3f s", elapsed.Seconds())
+            fmt.Fprintf(os.Stderr, "%sTotal Time: %.3f", prefix, elapsed.Seconds())
             fmt.Fprintln(os.Stderr)
         }
     }

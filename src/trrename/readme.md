@@ -27,7 +27,7 @@ make sure to enclose the argument as it contains semi-colons.
 
 ## Current version
 
-0.23.8 Fixed #494, #496, #497.
+0.23.9 Fix various problems with tragl, trgen, trparse, trperf, trextract, trtree.
 
 ## License
 

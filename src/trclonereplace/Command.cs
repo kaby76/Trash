@@ -136,9 +136,12 @@ class Command
                             done_rules.Add(rule);
                             done.Add(name);
 
+                            // Just in case, if not a rule, skip.
+                            if (rule == null) continue;
+
                             // Get rhs symbols.
                             var more = engine.parseExpression(
-                                    "./ruleBlock//RULE_REF", new StaticContextBuilder())
+                                    "./ruleBlock//RULE_REF[not(ancestor::option) and not(ancestor::option_value) and not(ancestor::delegate) and not(ancestor::idList) and not(ancestor::action_) and not(ancestor::throwSpec) and not(ancestor::ruleAction) and not(../../self::labeledAlt)]", new StaticContextBuilder())
                                 .evaluate(dynamicContext, new object[] { rule })
                                 .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
                                 .ToList();
@@ -162,7 +165,7 @@ class Command
                     foreach (var r in done_rules)
                     {
                         var new_rule = TreeEdits.CopyTreeRecursive(r);
-
+                        if (new_rule == null) continue;
                         // Modify name and RHS symbol names.
                         {
                             string c = null;

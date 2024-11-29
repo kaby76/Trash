@@ -2,8 +2,8 @@
   "profiles": {
     "trglob": {
       "commandName": "Project",
-      "commandLineArgs": "**/*.sh",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash"
+      "commandLineArgs": "../examples/**",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-update-antlr4ng\\java\\java\\Generated-Antlr4ng"
     }
   }
 }

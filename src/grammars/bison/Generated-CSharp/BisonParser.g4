@@ -71,8 +71,7 @@ prologue_declaration
     ;
 
 params
-    : params actionBlock
-    | actionBlock
+    : actionBlock+
     ;
 
 
@@ -191,9 +190,7 @@ alias
 // FOO and 'foo' as two different symbols instead of aliasing them.
 
 token_decls_for_prec
-    : token_decl_for_prec+
-    | TAG token_decl_for_prec+
-    | token_decls_for_prec TAG token_decl_for_prec+
+    : (token_decl_for_prec+ | TAG token_decl_for_prec+) (TAG token_decl_for_prec+)*
     ;
 
 // One token declaration for precedence declaration.
@@ -211,9 +208,7 @@ token_decl_for_prec
 // A non empty list of typed symbols (for %type).
 
 symbol_decls
-    : symbol+
-    | TAG symbol+
-    | symbol_decls TAG symbol+
+    : (symbol+ | TAG symbol+) (TAG symbol+)*
     ;
 
 /*------------------------------------------.
@@ -221,8 +216,7 @@ symbol_decls
 `------------------------------------------*/
 
 bison_grammar
-    : rules_or_grammar_declaration
-    | bison_grammar rules_or_grammar_declaration
+    : rules_or_grammar_declaration+
     ;
 
 /* As a Bison extension, one can use the grammar declarations in the

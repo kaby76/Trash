@@ -129,7 +129,7 @@ public class Program
             DateTime after = DateTime.Now;
             if (!quiet)
             {
-                System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
+                System.Console.Error.WriteLine(prefix + "Total Time: " + (after - before).TotalSeconds);
             }
         }
         Environment.ExitCode = exit_code;

@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using ParseTreeEditing.UnvParseTreeDOM;
 
 namespace Trash
 {
     class Command
     {
-        public static Dictionary<int, string> node_names = new Dictionary<int, string>();
+        public Dictionary<int, string> node_names = new Dictionary<int, string>();
 
         public string Help()
         {
@@ -21,7 +23,7 @@ namespace Trash
             }
         }
 
-        public static Graph CreateGraph(ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode[] trees, IList<string> parserRules, IList<string> lexerRules)
+        public Graph CreateGraph(ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode[] trees, IList<string> parserRules, IList<string> lexerRules)
         {
             var graph = new Graph();
             foreach (var tree in trees)
@@ -29,7 +31,7 @@ namespace Trash
                 if (tree != null)
                 {
                     var base_hash_code = tree.GetHashCode();
-                    node_names[(base_hash_code + tree.GetHashCode())] = tree.LocalName;
+         //           node_names[(base_hash_code + tree.GetHashCode())] = tree.LocalName;
                     graph.AddNode((base_hash_code + tree.GetHashCode()).ToString());
                     if (tree.ChildNodes.Length != 0)
                         GraphEdges(graph, tree, tree.GetHashCode());
@@ -39,7 +41,7 @@ namespace Trash
             return graph;
         }
 
-        private static void GraphEdges(Graph graph, org.w3c.dom.Node tree, int base_hash_code)
+        private void GraphEdges(Graph graph, org.w3c.dom.Node tree, int base_hash_code)
         {
             for (var i = tree.ChildNodes.Length - 1; i > -1; i--)
             {
@@ -51,12 +53,21 @@ namespace Trash
             }
         }
 
-        private static void FormatNodes(Graph graph, org.w3c.dom.Node tree, IList<string> parserRules, IList<string> lexerRules, int base_hash_code)
+        static public string xxx = "xxx";
+
+        private void FormatNodes(Graph graph, org.w3c.dom.Node tree, IList<string> parserRules, IList<string> lexerRules, int base_hash_code)
         {
             var node = graph.FindNode((base_hash_code + tree.GetHashCode()).ToString());
             if (node != null)
             {
                 node.LabelText = tree.LocalName;
+                if (tree.LocalName == null)
+                {
+                    var text_node = tree as UnvParseTreeText;
+                    if (text_node != null)
+                        node.LabelText = text_node.Data as string;
+                    node.LabelText = '"' + node.LabelText + '"';
+                }
                 //var ruleFailedAndMatchedNothing = false;
                 //if (tree is ParserRuleContext context)
                 //{
@@ -88,19 +99,24 @@ namespace Trash
                 FormatNodes(graph, tree.ChildNodes.item(i), parserRules, lexerRules, base_hash_code);
         }
 
-        public static void DoWork(object p)
+        public void DoWork(object p)
         {
-            var parse_info = (ParsingResultSet)p;
-            var nodes = parse_info.Nodes;
-            System.Windows.Forms.Form form = new System.Windows.Forms.Form();
-            Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-            Microsoft.Msagl.Drawing.Graph graph = CreateGraph(nodes, parse_info.Parser.RuleNames.ToList(), parse_info.Lexer.RuleNames.ToList());
-            graph.LayoutAlgorithmSettings = new Microsoft.Msagl.Layout.Layered.SugiyamaLayoutSettings();
-            viewer.Graph = graph;
-            form.SuspendLayout();
-            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            form.Controls.Add(viewer);
-            form.ResumeLayout();
+            System.Windows.Forms.Form form;
+            lock (xxx)
+            {
+                    var parse_info = (ParsingResultSet)p;
+                    var nodes = parse_info.Nodes;
+                    form = new System.Windows.Forms.Form();
+                    Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+                    Microsoft.Msagl.Drawing.Graph graph = CreateGraph(nodes, parse_info.Parser.RuleNames.ToList(),
+                        parse_info.Lexer.RuleNames.ToList());
+                    graph.LayoutAlgorithmSettings = new Microsoft.Msagl.Layout.Layered.SugiyamaLayoutSettings();
+                    viewer.Graph = graph;
+                    form.SuspendLayout();
+                    viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+                    form.Controls.Add(viewer);
+                    form.ResumeLayout();
+            }
             form.ShowDialog();
         }
 
@@ -135,9 +151,10 @@ namespace Trash
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             foreach (var parse_info in data)
             {
-                // Thread thread1 = new Thread(DoWork);
+                Thread thread1 = new Thread(() => DoWork(parse_info));
+                thread1.Start();
                 // thread1.Start(parse_info);
-                DoWork(parse_info);
+                //                            DoWork(parse_info);
             }
         }
     }

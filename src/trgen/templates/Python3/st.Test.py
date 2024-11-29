@@ -98,7 +98,7 @@ def main(argv):
         diff = end_time - start_time
         diff_time = diff.total_seconds()
         if (not quiet):
-            print(f'Total Time: {diff_time}', file=sys.stderr);
+            print(f'{prefix}Total Time: {diff_time}', file=sys.stderr);
     sys.exit(error_code)
 
 def ParseStdin():
