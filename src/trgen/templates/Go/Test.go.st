@@ -155,10 +155,8 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
         j := 0
         for {
             t := lexer.NextToken()
-            fmt.Fprintf(os.Stderr, "%d ", j)
-            fmt.Fprintf(os.Stderr, " ")
-            // missing fmt.Println(t.String())
-            fmt.Fprintf(os.Stderr, "%d ", t.GetText())
+            t.SetTokenIndex(j)
+            fmt.Fprintf(os.Stderr, "%s\n", t.String())
             if t.GetTokenType() == antlr.TokenEOF {
                 break
             }
