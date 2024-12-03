@@ -151,7 +151,7 @@ def DoParse(str, input_name, row_number):
         while True:
             ro_token = lexer.nextToken()
             token = ro_token
-            # token.TokenIndex = i
+            token.tokenIndex = i
             i = i + 1
             print(token, file=sys.stderr)
             if (token.type == -1):
