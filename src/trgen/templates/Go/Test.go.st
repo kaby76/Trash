@@ -162,7 +162,7 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
             }
             j = j + 1
         }
-        // missing lexer.Reset()
+        lexer.Reset()
     }
     // Requires additional 0??
     var tokens = antlr.NewCommonTokenStream(lexer, 0)

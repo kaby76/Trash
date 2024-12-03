@@ -165,7 +165,7 @@ function DoParse(str, input_name, row_number) {
         for (var i = 0; ; ++i) {
             var ro_token = lexer.nextToken();
             var token = ro_token;
-            token.TokenIndex = i;
+            token.tokenIndex = i;
             console.error(token.toString());
             if (token.type === antlr4.Token.EOF)
                 break;
