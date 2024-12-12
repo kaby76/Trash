@@ -1,36 +1,25 @@
-( s
-  ( e
-    ( e
-      ( e
-        ( INT
-          (  text:'1' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-      ) ) ) 
-      ( Attribute Skip Value ' '
-      ) 
-      ( T__3
-        (  text:'+' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-      ) ) 
-      ( e
-        ( Attribute Skip Value ' '
-        ) 
-        ( INT
-          (  text:'2' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) ) ) 
-    ( Attribute Skip Value ' '
-    ) 
-    ( T__3
-      (  text:'+' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) 
-    ( e
-      ( Attribute Skip Value ' '
-      ) 
-      ( INT
-        (  text:'3' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-  ) ) ) ) 
-  ( Attribute Skip Value '\n'
-  ) 
-  ( EOF
-    (  text:'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-) ) ) 
+s
+├── e
+│   ├── e
+│   │   ├── e
+│   │   │   └── INT
+│   │   │       └── "1"
+│   │   ├── Attribute Skip Value ' '
+│   │   ├── T__3
+│   │   │   └── "+"
+│   │   └── e
+│   │       ├── Attribute Skip Value ' '
+│   │       └── INT
+│   │           └── "2"
+│   ├── Attribute Skip Value ' '
+│   ├── T__3
+│   │   └── "+"
+│   └── e
+│       ├── Attribute Skip Value ' '
+│       └── INT
+│           └── "3"
+├── Attribute Skip Value '\n'
+└── EOF
+    └── ""
 
 
