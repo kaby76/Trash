@@ -226,4 +226,57 @@ public class TreeOutput
         for (int j = 0; j < level; ++j) sb.Append(" ");
     }
 
+    public StringBuilder OutputTreeBlockStyle(UnvParseTreeNode tree)
+    {
+        IndentBlockTree(tree, "", true);
+        return sb;
+    }
+
+    public void IndentBlockTree(UnvParseTreeNode tree, string indent, bool isRoot)
+    {
+        if (isRoot)
+        {
+            // Print the current node.
+            sb.AppendLine(indent + GetName(tree));
+        }
+        for (int i = 0; tree.ChildNodes != null && i < tree.ChildNodes.Length; ++i)
+        {
+            var c = tree.ChildNodes.item(i);
+            if (c.ChildNodes == null || c.ChildNodes.Length == 0)
+            {
+                // "c" is a leaf node.
+                bool isLastLeaf = i == tree.ChildNodes.Length - 1;
+                sb.AppendLine(indent + (isLastLeaf ? @"└── " : @"├── ") + GetName(c as UnvParseTreeNode));
+            }
+            else
+            {
+                bool isLast = i == tree.ChildNodes.Length - 1;
+                sb.AppendLine(indent + (isLast ? @"└── " : @"├── ") + GetName(c as UnvParseTreeNode));
+                IndentBlockTree(c as UnvParseTreeNode, indent + (isLast ? "    " : "│   "), false);
+            }
+        }
+    }
+
+    string GetName(UnvParseTreeNode tree)
+    {
+        if (tree is UnvParseTreeText t)
+        {
+            return "\"" + PerformEscapes(t.Data) + "\"";
+        }
+        else if (tree is UnvParseTreeAttr a)
+        {
+            return "Attribute " + (a.Name as string) 
+                 + " Value '"
+                 + PerformEscapes(a.StringValue)
+                 + "'"
+                 + ((a.Channel >= 0 && a.Channel < lexer.ChannelNames.Length)
+                   ? " chnl:"
+                     + lexer.ChannelNames[a.Channel].ToString() : "");
+        }
+        else if (tree is UnvParseTreeElement e)
+        {
+            return e.LocalName;
+        }
+        else return "";
+    }
 }

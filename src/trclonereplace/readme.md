@@ -19,7 +19,7 @@ Clone, rename, and replace symbols in a grammar to optimize full stack fallbacks
 
 ## Current version
 
-0.23.10 TBD.
+0.23.10 Added block tree output to trtree.
 
 ## License
 

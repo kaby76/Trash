@@ -18,7 +18,7 @@ Read a tree from stdin and write an XML represenation of it.
 
 ## Current version
 
-0.23.10 TBD.
+0.23.10 Added block tree output to trtree.
 
 ## License
 

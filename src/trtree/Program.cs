@@ -67,7 +67,7 @@ public class Program
                 }
             }
         });
-        if (!(config.ParenIndentStyle || config.IndentStyle || config.AntlrStyle)) config.ParenIndentStyle = true;
+        if (!(config.ParenIndentStyle || config.IndentStyle || config.AntlrStyle || config.BlockTreeStyle)) config.BlockTreeStyle = true;
         new Command().Execute(config);
     }
 }

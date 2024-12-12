@@ -38,7 +38,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.10 TBD.
+0.23.10 Added block tree output to trtree.
 
 ## License
 

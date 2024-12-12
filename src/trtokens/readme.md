@@ -52,7 +52,7 @@ Output:
 
 ## Current version
 
-0.23.10 TBD.
+0.23.10 Added block tree output to trtree.
 
 ## License
 
