@@ -1,513 +1,375 @@
-( grammarSpec
-  ( grammarDecl
-    ( grammarType
-      ( GRAMMAR
-        (  text:'grammar' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) ) 
-    ( identifier
-      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-      ) 
-      ( TOKEN_REF
-        (  text:'Expression' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) ) 
-    ( SEMI
-      (  text:';' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-  ) ) ) 
-  ( rules
-    ( ruleSpec
-      ( parserRuleSpec
-        ( Attribute WS Value '\n' chnl:OFF_CHANNEL
-        ) 
-        ( RULE_REF
-          (  text:'e' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( COLON
-          (  text:':' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( ruleBlock
-          ( ruleAltList
-            ( labeledAlt
-              ( alternative
-                ( element
-                  ( atom
-                    ( ruleref
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( RULE_REF
-                        (  text:'e' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                ) ) ) ) ) 
-                ( element
-                  ( ebnf
-                    ( block
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( LPAREN
-                        (  text:'(' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                      ) ) 
-                      ( altList
-                        ( alternative
-                          ( element
-                            ( atom
-                              ( terminalDef
-                                ( STRING_LITERAL
-                                  (  text:''*'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                        ) ) ) ) ) ) 
-                        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                        ) 
-                        ( OR
-                          (  text:'|' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                        ) ) 
-                        ( alternative
-                          ( element
-                            ( atom
-                              ( terminalDef
-                                ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                                ) 
-                                ( STRING_LITERAL
-                                  (  text:''/'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                      ) ) ) ) ) ) ) 
-                      ( RPAREN
-                        (  text:')' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                ) ) ) ) ) 
-                ( element
-                  ( atom
-                    ( ruleref
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( RULE_REF
-                        (  text:'e' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-            ) ) ) ) ) ) ) 
-            ( Attribute WS Value '\n  ' chnl:OFF_CHANNEL
-            ) 
-            ( OR
-              (  text:'|' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-            ) ) 
-            ( labeledAlt
-              ( alternative
-                ( element
-                  ( atom
-                    ( ruleref
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( RULE_REF
-                        (  text:'e' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                ) ) ) ) ) 
-                ( element
-                  ( ebnf
-                    ( block
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( LPAREN
-                        (  text:'(' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                      ) ) 
-                      ( altList
-                        ( alternative
-                          ( element
-                            ( atom
-                              ( terminalDef
-                                ( STRING_LITERAL
-                                  (  text:''+'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                        ) ) ) ) ) ) 
-                        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                        ) 
-                        ( OR
-                          (  text:'|' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                        ) ) 
-                        ( alternative
-                          ( element
-                            ( atom
-                              ( terminalDef
-                                ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                                ) 
-                                ( STRING_LITERAL
-                                  (  text:''-'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                      ) ) ) ) ) ) ) 
-                      ( RPAREN
-                        (  text:')' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                ) ) ) ) ) 
-                ( element
-                  ( atom
-                    ( ruleref
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( RULE_REF
-                        (  text:'e' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-            ) ) ) ) ) ) ) 
-            ( Attribute WS Value '\n  ' chnl:OFF_CHANNEL
-            ) 
-            ( OR
-              (  text:'|' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-            ) ) 
-            ( labeledAlt
-              ( alternative
-                ( element
-                  ( atom
-                    ( terminalDef
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( STRING_LITERAL
-                        (  text:''('' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                ) ) ) ) ) 
-                ( element
-                  ( atom
-                    ( ruleref
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( RULE_REF
-                        (  text:'e' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                ) ) ) ) ) 
-                ( element
-                  ( atom
-                    ( terminalDef
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( STRING_LITERAL
-                        (  text:'')'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-            ) ) ) ) ) ) ) 
-            ( Attribute WS Value '\n  ' chnl:OFF_CHANNEL
-            ) 
-            ( OR
-              (  text:'|' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-            ) ) 
-            ( labeledAlt
-              ( alternative
-                ( element
-                  ( ebnf
-                    ( block
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( LPAREN
-                        (  text:'(' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                      ) ) 
-                      ( altList
-                        ( alternative
-                          ( element
-                            ( atom
-                              ( terminalDef
-                                ( STRING_LITERAL
-                                  (  text:''-'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                        ) ) ) ) ) ) 
-                        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                        ) 
-                        ( OR
-                          (  text:'|' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                        ) ) 
-                        ( alternative
-                          ( element
-                            ( atom
-                              ( terminalDef
-                                ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                                ) 
-                                ( STRING_LITERAL
-                                  (  text:''+'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                      ) ) ) ) ) ) ) 
-                      ( RPAREN
-                        (  text:')' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                    ) ) ) 
-                    ( blockSuffix
-                      ( ebnfSuffix
-                        ( STAR
-                          (  text:'*' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                ) ) ) ) ) ) 
-                ( element
-                  ( atom
-                    ( ruleref
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( RULE_REF
-                        (  text:'a' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) ) ) ) ) ) ) ) 
-        ( Attribute WS Value '\n  ' chnl:OFF_CHANNEL
-        ) 
-        ( SEMI
-          (  text:';' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( exceptionGroup
-    ) ) ) 
-    ( ruleSpec
-    ) 
-    ( ruleSpec
-      ( lexerRuleSpec
-        ( Attribute WS Value '\n' chnl:OFF_CHANNEL
-        ) 
-        ( TOKEN_REF
-          (  text:'INT' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( COLON
-          (  text:':' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( lexerRuleBlock
-          ( lexerAltList
-            ( lexerAlt
-              ( lexerElements
-                ( lexerElement
-                  ( lexerBlock
-                    ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                    ) 
-                    ( LPAREN
-                      (  text:'(' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                    ) ) 
-                    ( lexerAltList
-                      ( lexerAlt
-                        ( lexerElements
-                          ( lexerElement
-                            ( lexerAtom
-                              ( characterRange
-                                ( STRING_LITERAL
-                                  (  text:''0'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                                ) ) 
-                                ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                                ) 
-                                ( RANGE
-                                  (  text:'..' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                                ) ) 
-                                ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                                ) 
-                                ( STRING_LITERAL
-                                  (  text:''9'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                    ) ) ) ) ) ) ) ) 
-                    ( RPAREN
-                      (  text:')' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                  ) ) ) 
-                  ( ebnfSuffix
-                    ( PLUS
-                      (  text:'+' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) ) ) ) ) ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( SEMI
-          (  text:';' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) ) ) 
-    ( ruleSpec
-      ( lexerRuleSpec
-        ( Attribute WS Value '\n' chnl:OFF_CHANNEL
-        ) 
-        ( TOKEN_REF
-          (  text:'MUL' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( COLON
-          (  text:':' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( lexerRuleBlock
-          ( lexerAltList
-            ( lexerAlt
-              ( lexerElements
-                ( lexerElement
-                  ( lexerAtom
-                    ( terminalDef
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( STRING_LITERAL
-                        (  text:''*'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) ) ) ) ) ) ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( SEMI
-          (  text:';' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) ) ) 
-    ( ruleSpec
-      ( lexerRuleSpec
-        ( Attribute WS Value '\n' chnl:OFF_CHANNEL
-        ) 
-        ( TOKEN_REF
-          (  text:'DIV' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( COLON
-          (  text:':' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( lexerRuleBlock
-          ( lexerAltList
-            ( lexerAlt
-              ( lexerElements
-                ( lexerElement
-                  ( lexerAtom
-                    ( terminalDef
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( STRING_LITERAL
-                        (  text:''/'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) ) ) ) ) ) ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( SEMI
-          (  text:';' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) ) ) 
-    ( ruleSpec
-      ( lexerRuleSpec
-        ( Attribute WS Value '\n' chnl:OFF_CHANNEL
-        ) 
-        ( TOKEN_REF
-          (  text:'ADD' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( COLON
-          (  text:':' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( lexerRuleBlock
-          ( lexerAltList
-            ( lexerAlt
-              ( lexerElements
-                ( lexerElement
-                  ( lexerAtom
-                    ( terminalDef
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( STRING_LITERAL
-                        (  text:''+'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) ) ) ) ) ) ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( SEMI
-          (  text:';' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) ) ) 
-    ( ruleSpec
-      ( lexerRuleSpec
-        ( Attribute WS Value '\n' chnl:OFF_CHANNEL
-        ) 
-        ( TOKEN_REF
-          (  text:'SUB' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( COLON
-          (  text:':' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( lexerRuleBlock
-          ( lexerAltList
-            ( lexerAlt
-              ( lexerElements
-                ( lexerElement
-                  ( lexerAtom
-                    ( terminalDef
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( STRING_LITERAL
-                        (  text:''-'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) ) ) ) ) ) ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( SEMI
-          (  text:';' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) ) ) 
-    ( ruleSpec
-      ( lexerRuleSpec
-        ( Attribute WS Value '\n' chnl:OFF_CHANNEL
-        ) 
-        ( TOKEN_REF
-          (  text:'LP' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( COLON
-          (  text:':' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( lexerRuleBlock
-          ( lexerAltList
-            ( lexerAlt
-              ( lexerElements
-                ( lexerElement
-                  ( lexerAtom
-                    ( terminalDef
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( STRING_LITERAL
-                        (  text:''('' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) ) ) ) ) ) ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( SEMI
-          (  text:';' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) ) ) 
-    ( ruleSpec
-      ( lexerRuleSpec
-        ( Attribute WS Value '\n' chnl:OFF_CHANNEL
-        ) 
-        ( TOKEN_REF
-          (  text:'RP' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( COLON
-          (  text:':' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( lexerRuleBlock
-          ( lexerAltList
-            ( lexerAlt
-              ( lexerElements
-                ( lexerElement
-                  ( lexerAtom
-                    ( terminalDef
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( STRING_LITERAL
-                        (  text:'')'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) ) ) ) ) ) ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( SEMI
-          (  text:';' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-    ) ) ) ) 
-    ( ruleSpec
-      ( lexerRuleSpec
-        ( Attribute WS Value '\n' chnl:OFF_CHANNEL
-        ) 
-        ( TOKEN_REF
-          (  text:'WS' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( COLON
-          (  text:':' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) 
-        ( lexerRuleBlock
-          ( lexerAltList
-            ( lexerAlt
-              ( lexerElements
-                ( lexerElement
-                  ( lexerAtom
-                    ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                    ) 
-                    ( LEXER_CHAR_SET
-                      (  text:'[ \\r\\n\\t]' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                  ) ) ) 
-                  ( ebnfSuffix
-                    ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                    ) 
-                    ( PLUS
-                      (  text:'+' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-              ) ) ) ) ) 
-              ( lexerCommands
-                ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                ) 
-                ( RARROW
-                  (  text:'->' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-                ) ) 
-                ( lexerCommand
-                  ( lexerCommandName
-                    ( identifier
-                      ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-                      ) 
-                      ( RULE_REF
-                        (  text:'skip' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-        ) ) ) ) ) ) ) ) ) 
-        ( Attribute WS Value ' ' chnl:OFF_CHANNEL
-        ) 
-        ( SEMI
-          (  text:';' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-  ) ) ) ) ) 
-  ( Attribute WS Value '\n' chnl:OFF_CHANNEL
-  ) 
-  ( EOF
-    (  text:'' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-) ) ) 
+grammarSpec
+├── grammarDecl
+│   ├── grammarType
+│   │   └── GRAMMAR
+│   │       └── "grammar"
+│   ├── identifier
+│   │   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │   └── TOKEN_REF
+│   │       └── "Expression"
+│   └── SEMI
+│       └── ";"
+├── rules
+│   ├── ruleSpec
+│   │   └── parserRuleSpec
+│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── RULE_REF
+│   │       │   └── "e"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       ├── COLON
+│   │       │   └── ":"
+│   │       ├── ruleBlock
+│   │       │   └── ruleAltList
+│   │       │       ├── labeledAlt
+│   │       │       │   └── alternative
+│   │       │       │       ├── element
+│   │       │       │       │   └── atom
+│   │       │       │       │       └── ruleref
+│   │       │       │       │           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │       │           └── RULE_REF
+│   │       │       │       │               └── "e"
+│   │       │       │       ├── element
+│   │       │       │       │   └── ebnf
+│   │       │       │       │       └── block
+│   │       │       │       │           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │       │           ├── LPAREN
+│   │       │       │       │           │   └── "("
+│   │       │       │       │           ├── altList
+│   │       │       │       │           │   ├── alternative
+│   │       │       │       │           │   │   └── element
+│   │       │       │       │           │   │       └── atom
+│   │       │       │       │           │   │           └── terminalDef
+│   │       │       │       │           │   │               └── STRING_LITERAL
+│   │       │       │       │           │   │                   └── "'*'"
+│   │       │       │       │           │   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │       │           │   ├── OR
+│   │       │       │       │           │   │   └── "|"
+│   │       │       │       │           │   └── alternative
+│   │       │       │       │           │       └── element
+│   │       │       │       │           │           └── atom
+│   │       │       │       │           │               └── terminalDef
+│   │       │       │       │           │                   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │       │           │                   └── STRING_LITERAL
+│   │       │       │       │           │                       └── "'/'"
+│   │       │       │       │           └── RPAREN
+│   │       │       │       │               └── ")"
+│   │       │       │       └── element
+│   │       │       │           └── atom
+│   │       │       │               └── ruleref
+│   │       │       │                   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │                   └── RULE_REF
+│   │       │       │                       └── "e"
+│   │       │       ├── Attribute WS Value '\n  ' chnl:OFF_CHANNEL
+│   │       │       ├── OR
+│   │       │       │   └── "|"
+│   │       │       ├── labeledAlt
+│   │       │       │   └── alternative
+│   │       │       │       ├── element
+│   │       │       │       │   └── atom
+│   │       │       │       │       └── ruleref
+│   │       │       │       │           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │       │           └── RULE_REF
+│   │       │       │       │               └── "e"
+│   │       │       │       ├── element
+│   │       │       │       │   └── ebnf
+│   │       │       │       │       └── block
+│   │       │       │       │           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │       │           ├── LPAREN
+│   │       │       │       │           │   └── "("
+│   │       │       │       │           ├── altList
+│   │       │       │       │           │   ├── alternative
+│   │       │       │       │           │   │   └── element
+│   │       │       │       │           │   │       └── atom
+│   │       │       │       │           │   │           └── terminalDef
+│   │       │       │       │           │   │               └── STRING_LITERAL
+│   │       │       │       │           │   │                   └── "'+'"
+│   │       │       │       │           │   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │       │           │   ├── OR
+│   │       │       │       │           │   │   └── "|"
+│   │       │       │       │           │   └── alternative
+│   │       │       │       │           │       └── element
+│   │       │       │       │           │           └── atom
+│   │       │       │       │           │               └── terminalDef
+│   │       │       │       │           │                   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │       │           │                   └── STRING_LITERAL
+│   │       │       │       │           │                       └── "'-'"
+│   │       │       │       │           └── RPAREN
+│   │       │       │       │               └── ")"
+│   │       │       │       └── element
+│   │       │       │           └── atom
+│   │       │       │               └── ruleref
+│   │       │       │                   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │                   └── RULE_REF
+│   │       │       │                       └── "e"
+│   │       │       ├── Attribute WS Value '\n  ' chnl:OFF_CHANNEL
+│   │       │       ├── OR
+│   │       │       │   └── "|"
+│   │       │       ├── labeledAlt
+│   │       │       │   └── alternative
+│   │       │       │       ├── element
+│   │       │       │       │   └── atom
+│   │       │       │       │       └── terminalDef
+│   │       │       │       │           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │       │           └── STRING_LITERAL
+│   │       │       │       │               └── "'('"
+│   │       │       │       ├── element
+│   │       │       │       │   └── atom
+│   │       │       │       │       └── ruleref
+│   │       │       │       │           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │       │           └── RULE_REF
+│   │       │       │       │               └── "e"
+│   │       │       │       └── element
+│   │       │       │           └── atom
+│   │       │       │               └── terminalDef
+│   │       │       │                   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │       │                   └── STRING_LITERAL
+│   │       │       │                       └── "')'"
+│   │       │       ├── Attribute WS Value '\n  ' chnl:OFF_CHANNEL
+│   │       │       ├── OR
+│   │       │       │   └── "|"
+│   │       │       └── labeledAlt
+│   │       │           └── alternative
+│   │       │               ├── element
+│   │       │               │   └── ebnf
+│   │       │               │       ├── block
+│   │       │               │       │   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │               │       │   ├── LPAREN
+│   │       │               │       │   │   └── "("
+│   │       │               │       │   ├── altList
+│   │       │               │       │   │   ├── alternative
+│   │       │               │       │   │   │   └── element
+│   │       │               │       │   │   │       └── atom
+│   │       │               │       │   │   │           └── terminalDef
+│   │       │               │       │   │   │               └── STRING_LITERAL
+│   │       │               │       │   │   │                   └── "'-'"
+│   │       │               │       │   │   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │               │       │   │   ├── OR
+│   │       │               │       │   │   │   └── "|"
+│   │       │               │       │   │   └── alternative
+│   │       │               │       │   │       └── element
+│   │       │               │       │   │           └── atom
+│   │       │               │       │   │               └── terminalDef
+│   │       │               │       │   │                   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │               │       │   │                   └── STRING_LITERAL
+│   │       │               │       │   │                       └── "'+'"
+│   │       │               │       │   └── RPAREN
+│   │       │               │       │       └── ")"
+│   │       │               │       └── blockSuffix
+│   │       │               │           └── ebnfSuffix
+│   │       │               │               └── STAR
+│   │       │               │                   └── "*"
+│   │       │               └── element
+│   │       │                   └── atom
+│   │       │                       └── ruleref
+│   │       │                           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │                           └── RULE_REF
+│   │       │                               └── "a"
+│   │       ├── Attribute WS Value '\n  ' chnl:OFF_CHANNEL
+│   │       ├── SEMI
+│   │       │   └── ";"
+│   │       └── exceptionGroup
+│   ├── ruleSpec
+│   ├── ruleSpec
+│   │   └── lexerRuleSpec
+│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── TOKEN_REF
+│   │       │   └── "INT"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       ├── COLON
+│   │       │   └── ":"
+│   │       ├── lexerRuleBlock
+│   │       │   └── lexerAltList
+│   │       │       └── lexerAlt
+│   │       │           └── lexerElements
+│   │       │               └── lexerElement
+│   │       │                   ├── lexerBlock
+│   │       │                   │   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │                   │   ├── LPAREN
+│   │       │                   │   │   └── "("
+│   │       │                   │   ├── lexerAltList
+│   │       │                   │   │   └── lexerAlt
+│   │       │                   │   │       └── lexerElements
+│   │       │                   │   │           └── lexerElement
+│   │       │                   │   │               └── lexerAtom
+│   │       │                   │   │                   └── characterRange
+│   │       │                   │   │                       ├── STRING_LITERAL
+│   │       │                   │   │                       │   └── "'0'"
+│   │       │                   │   │                       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │                   │   │                       ├── RANGE
+│   │       │                   │   │                       │   └── ".."
+│   │       │                   │   │                       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │                   │   │                       └── STRING_LITERAL
+│   │       │                   │   │                           └── "'9'"
+│   │       │                   │   └── RPAREN
+│   │       │                   │       └── ")"
+│   │       │                   └── ebnfSuffix
+│   │       │                       └── PLUS
+│   │       │                           └── "+"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       └── SEMI
+│   │           └── ";"
+│   ├── ruleSpec
+│   │   └── lexerRuleSpec
+│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── TOKEN_REF
+│   │       │   └── "MUL"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       ├── COLON
+│   │       │   └── ":"
+│   │       ├── lexerRuleBlock
+│   │       │   └── lexerAltList
+│   │       │       └── lexerAlt
+│   │       │           └── lexerElements
+│   │       │               └── lexerElement
+│   │       │                   └── lexerAtom
+│   │       │                       └── terminalDef
+│   │       │                           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │                           └── STRING_LITERAL
+│   │       │                               └── "'*'"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       └── SEMI
+│   │           └── ";"
+│   ├── ruleSpec
+│   │   └── lexerRuleSpec
+│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── TOKEN_REF
+│   │       │   └── "DIV"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       ├── COLON
+│   │       │   └── ":"
+│   │       ├── lexerRuleBlock
+│   │       │   └── lexerAltList
+│   │       │       └── lexerAlt
+│   │       │           └── lexerElements
+│   │       │               └── lexerElement
+│   │       │                   └── lexerAtom
+│   │       │                       └── terminalDef
+│   │       │                           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │                           └── STRING_LITERAL
+│   │       │                               └── "'/'"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       └── SEMI
+│   │           └── ";"
+│   ├── ruleSpec
+│   │   └── lexerRuleSpec
+│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── TOKEN_REF
+│   │       │   └── "ADD"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       ├── COLON
+│   │       │   └── ":"
+│   │       ├── lexerRuleBlock
+│   │       │   └── lexerAltList
+│   │       │       └── lexerAlt
+│   │       │           └── lexerElements
+│   │       │               └── lexerElement
+│   │       │                   └── lexerAtom
+│   │       │                       └── terminalDef
+│   │       │                           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │                           └── STRING_LITERAL
+│   │       │                               └── "'+'"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       └── SEMI
+│   │           └── ";"
+│   ├── ruleSpec
+│   │   └── lexerRuleSpec
+│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── TOKEN_REF
+│   │       │   └── "SUB"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       ├── COLON
+│   │       │   └── ":"
+│   │       ├── lexerRuleBlock
+│   │       │   └── lexerAltList
+│   │       │       └── lexerAlt
+│   │       │           └── lexerElements
+│   │       │               └── lexerElement
+│   │       │                   └── lexerAtom
+│   │       │                       └── terminalDef
+│   │       │                           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │                           └── STRING_LITERAL
+│   │       │                               └── "'-'"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       └── SEMI
+│   │           └── ";"
+│   ├── ruleSpec
+│   │   └── lexerRuleSpec
+│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── TOKEN_REF
+│   │       │   └── "LP"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       ├── COLON
+│   │       │   └── ":"
+│   │       ├── lexerRuleBlock
+│   │       │   └── lexerAltList
+│   │       │       └── lexerAlt
+│   │       │           └── lexerElements
+│   │       │               └── lexerElement
+│   │       │                   └── lexerAtom
+│   │       │                       └── terminalDef
+│   │       │                           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │                           └── STRING_LITERAL
+│   │       │                               └── "'('"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       └── SEMI
+│   │           └── ";"
+│   ├── ruleSpec
+│   │   └── lexerRuleSpec
+│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── TOKEN_REF
+│   │       │   └── "RP"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       ├── COLON
+│   │       │   └── ":"
+│   │       ├── lexerRuleBlock
+│   │       │   └── lexerAltList
+│   │       │       └── lexerAlt
+│   │       │           └── lexerElements
+│   │       │               └── lexerElement
+│   │       │                   └── lexerAtom
+│   │       │                       └── terminalDef
+│   │       │                           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       │                           └── STRING_LITERAL
+│   │       │                               └── "')'"
+│   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│   │       └── SEMI
+│   │           └── ";"
+│   └── ruleSpec
+│       └── lexerRuleSpec
+│           ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│           ├── TOKEN_REF
+│           │   └── "WS"
+│           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│           ├── COLON
+│           │   └── ":"
+│           ├── lexerRuleBlock
+│           │   └── lexerAltList
+│           │       └── lexerAlt
+│           │           ├── lexerElements
+│           │           │   └── lexerElement
+│           │           │       ├── lexerAtom
+│           │           │       │   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│           │           │       │   └── LEXER_CHAR_SET
+│           │           │       │       └── "[ \\r\\n\\t]"
+│           │           │       └── ebnfSuffix
+│           │           │           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│           │           │           └── PLUS
+│           │           │               └── "+"
+│           │           └── lexerCommands
+│           │               ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│           │               ├── RARROW
+│           │               │   └── "->"
+│           │               └── lexerCommand
+│           │                   └── lexerCommandName
+│           │                       └── identifier
+│           │                           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│           │                           └── RULE_REF
+│           │                               └── "skip"
+│           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
+│           └── SEMI
+│               └── ";"
+├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+└── EOF
+    └── ""
 
 
