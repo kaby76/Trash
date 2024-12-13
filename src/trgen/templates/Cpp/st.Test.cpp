@@ -60,6 +60,8 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
         for (int i = 0; ; ++i)
         {
             auto token = lexer->nextToken();
+            auto ctoken = (antlr4::CommonToken*)(token.get());
+            ctoken->setTokenIndex(i);
             std::cerr \<\< token->toString() \<\< std::endl;
             if (token->getType() == antlr4::IntStream::EOF)
                 break;

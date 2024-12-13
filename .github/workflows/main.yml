@@ -37,8 +37,12 @@ jobs:
       run: |
         echo ${{ steps.setup-php.outputs.php-version }}
         php --version
+    - name: Prep Dotnet
+      run: |
+        sudo mkdir /usr/share/dotnet
+        sudo chmod 777 /usr/share/dotnet
     - name: Install Dotnet
-      uses: actions/setup-dotnet@v4.0.1
+      uses: actions/setup-dotnet@v4.1.0
       with:
         dotnet-version: '8.0.x'
     - name: Test Dotnet

@@ -1,4 +1,5 @@
-﻿using ParseTreeEditing.UnvParseTreeDOM;
+﻿using System;
+using ParseTreeEditing.UnvParseTreeDOM;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -52,10 +53,11 @@ class Command
         serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
         serializeOptions.WriteIndented = false;
         serializeOptions.MaxDepth = 10000;
-	if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
+        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
         var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
         bool more_than_one_fn = data.Count() > 1 || config.DisplayName;
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
         foreach (var in_tuple in data)
         {
             var nodes = in_tuple.Nodes;
@@ -70,17 +72,21 @@ class Command
                 {
                     sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeAntlrStyle(node).ToString());
                 }
-                if (config.ParenIndentStyle)
+                else if (config.ParenIndentStyle)
                 {
                     sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTree(node).ToString());
                 }
-                if (config.IndentStyle)
+                else if (config.IndentStyle)
                 {
                     sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeIndentStyle(node).ToString());
                 }
+                else if (config.BlockTreeStyle)
+                {
+                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeBlockStyle(node).ToString());
+                }
             }
             System.Console.Write(sb.ToString());
-	}
-	System.Console.WriteLine();
+        }
+        System.Console.WriteLine();
     }
 }

@@ -18,7 +18,7 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-0.23.9 Fix various problems with tragl, trgen, trparse, trperf, trextract, trtree.
+0.23.10 Added block tree output to trtree.
 
 ## License
 

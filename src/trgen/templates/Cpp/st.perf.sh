@@ -82,15 +82,6 @@ type=$2
 echo SampleSize=$n >> parse.txt
 echo "" >> parse.txt
 
-# Perform trperf to find ambiguities for each file.
-echo Ambiguities per file: >> parse.txt
-echo "${files[*]}" \
-    | dotnet trperf -x -c aF \
-    | grep -v '^0' \
-    | awk '{sum[$2] += $1} END {for (key in sum) print sum[key], key}' \
-    | sort -k1 -n >> parse.txt
-echo "" >> parse.txt
-
 # Parse all input files.
 # Individual parsing.
 if [[ "$type" == "individual" ]]

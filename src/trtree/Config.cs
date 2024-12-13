@@ -21,4 +21,7 @@ public class Config
 
     [Option("paren-indent-style", Required = false, HelpText = "Output tree as parenthesized indented style.")]
     public bool ParenIndentStyle { get; set; }
+
+    [Option('b', "block-style", Required = false, HelpText = "Output tree as block style.")]
+    public bool BlockTreeStyle { get; set; }
 }

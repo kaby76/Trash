@@ -18,7 +18,7 @@ Read a parse tree from stdin and write a JSON represenation of it.
 
 ## Current version
 
-0.23.9 Fix various problems with tragl, trgen, trparse, trperf, trextract, trtree.
+0.23.10 Added block tree output to trtree.
 
 ## License
 
