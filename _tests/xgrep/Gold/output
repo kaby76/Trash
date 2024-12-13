@@ -1,13 +1,10 @@
-( INT
-  (  text:'1' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-) ) 
+INT
+└── "1"
 
-( INT
-  (  text:'2' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-) ) 
+INT
+└── "2"
 
-( INT
-  (  text:'3' tt:0 chnl:DEFAULT_TOKEN_CHANNEL
-) ) 
+INT
+└── "3"
 
 
