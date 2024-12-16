@@ -50,7 +50,7 @@ the `--type` command-line option:
 
 ## Current version
 
-0.23.10 Added block tree output to trtree.
+0.23.11 Fix trgen star.g4 problem.
 
 ## License
 

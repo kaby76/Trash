@@ -19,7 +19,7 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Current version
 
-0.23.10 Added block tree output to trtree.
+0.23.11 Fix trgen star.g4 problem.
 
 ## License
 
