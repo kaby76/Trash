@@ -43,6 +43,7 @@ jobs:
         dotnet --info
         dotnet --list-runtimes
         dotnet --list-sdks
+        whereis dotnet
     - name: Prep Dotnet
       run: |
         sudo mkdir /usr/share/dotnet
