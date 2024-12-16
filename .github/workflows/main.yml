@@ -37,6 +37,12 @@ jobs:
       run: |
         echo ${{ steps.setup-php.outputs.php-version }}
         php --version
+    - name: Test Dotnet before
+      run: |
+        dotnet --version
+        dotnet --info
+        dotnet --list-runtimes
+        dotnet --list-sdks
     - name: Prep Dotnet
       run: |
         sudo mkdir /usr/share/dotnet
