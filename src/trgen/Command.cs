@@ -1536,7 +1536,7 @@ namespace Trash
                     else break;
                 }
 
-                Regex re = new Regex("^st.");
+                Regex re = new Regex("^st[.]");
                 test.tool_grammar_files = test.tool_grammar_files.Select(s => re.Replace(s, "")).ToList();
                 test.lexer_grammar_file_name = re.Replace(test.lexer_grammar_file_name, "");
                 test.parser_grammar_file_name = re.Replace(test.parser_grammar_file_name, "");

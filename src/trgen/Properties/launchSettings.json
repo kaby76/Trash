@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "-t CSharp",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-2976\\sql\\plsql"
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\star"
     }
   }
 }
