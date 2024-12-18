@@ -33,7 +33,7 @@ The outputed files are:
 
 ## Current version
 
-0.23.10 Added block tree output to trtree.
+0.23.11 Fix trgen for st*.g4 grammars. Add template processing for target-specific files in a grammmar.
 
 ## License
 

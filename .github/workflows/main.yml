@@ -100,7 +100,7 @@ jobs:
     - name: Install JavaScript
       uses: actions/setup-node@v4.0.3
       with:
-        node-version: '21.7.3'
+        node-version: '22.12.0'
     - name: Install npm
       run: |
         npm install -g npm
