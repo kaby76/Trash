@@ -1525,6 +1525,8 @@ namespace Trash
             else
             {
                 // Copy as is.
+                var target_dir_name = Dirname(to);
+                Directory.CreateDirectory(target_dir_name);
                 File.WriteAllText(to, content);
                 return;
             }

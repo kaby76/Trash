@@ -2,7 +2,7 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Cpp",
+      "commandLineArgs": "-t Antlr4ng",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-plsql-ports\\sql\\plsql"
     }
   }
