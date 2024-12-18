@@ -51,7 +51,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.11 Fix trgen star.g4 problem.
+0.23.11 Fix trgen for st*.g4 grammars. Add template processing for target-specific files in a grammmar.
 
 ## License
 

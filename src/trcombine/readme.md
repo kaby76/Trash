@@ -103,7 +103,7 @@ The original grammars are left unchanged.
 
 ## Current version
 
-0.23.11 Fix trgen star.g4 problem.
+0.23.11 Fix trgen for st*.g4 grammars. Add template processing for target-specific files in a grammmar.
 
 ## License
 
