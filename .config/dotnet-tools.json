@@ -211,6 +211,20 @@
         "trxgrep"
       ],
       "rollForward": false
+    },
+    "trxml": {
+      "version": "0.23.11",
+      "commands": [
+        "trxml"
+      ],
+      "rollForward": false
+    },
+    "trxml2": {
+      "version": "0.23.11",
+      "commands": [
+        "trxml2"
+      ],
+      "rollForward": false
     }
   }
 }
