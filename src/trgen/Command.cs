@@ -1209,17 +1209,20 @@ namespace Trash
 
         public void GenerateViaConfig(Config config)
         {
+            bool first = true;
             foreach (var test in config.Tests)
             {
                 try
                 {
-                    // Create a directory containing target build files.
-                    Directory.CreateDirectory(
+                    if (test.test_name == "0") test.test_name = null;
+                    test.output_directory =
                         (string)config.output_directory
                         + "Generated"
                         + '-'
                         + test.target
-                        + (test.test_name != null ? ('-' + test.test_name) : ""));
+                        + (test.test_name != null ? ('-' + test.test_name) : "");
+                    // Create a directory containing target build files.
+                    Directory.CreateDirectory(test.output_directory);
                 }
                 catch (Exception)
                 {
@@ -1298,11 +1301,7 @@ namespace Trash
                 string to = null;
                 if (test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileName).Any())
                 {
-                    to = config.output_directory
-                         + "Generated"
-                         + "-"
-                         + test.target
-                         + (test.test_name != null ? ("-" + test.test_name) : "")
+                    to = test.output_directory
                          + "/"
                          + test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileName).First();
                 }
@@ -1311,11 +1310,7 @@ namespace Trash
                     // Now remove target directory.
                     if (test.target == "Go" && f.EndsWith(".go"))
                     {
-                        to = config.output_directory
-                             + "Generated"
-                             + "-"
-                             + test.target
-                             + (test.test_name != null ? ("-" + test.test_name) : "")
+                        to = test.output_directory
                              + "/" + "parser" + f.Substring(test.target.Length);
                     }
                     else {
@@ -1802,11 +1797,7 @@ namespace Trash
 
             to = dir + bn;
 
-            to = config.output_directory
-                 + "Generated"
-                 + "-"
-                 + test.target
-                 + (test.test_name != null ? ("-" + test.test_name) : "")
+            to = test.output_directory
                  + '/'
                  + (test.target == "Go" && test.package != "" && (bn.EndsWith(".g4") || bn.EndsWith(".go")) ? test.package + "/" : "")
                  + to;
@@ -1832,11 +1823,7 @@ namespace Trash
 
             to = dir + bn;
 
-            to = config.output_directory
-                 + "Generated"
-                 + "-"
-                 + test.target
-                 + (test.test_name != null ? ("-" + test.test_name) : "")
+            to = test.output_directory
                  + '/'
                  + to;
             to = to.Replace('\\', '/');

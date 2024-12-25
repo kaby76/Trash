@@ -28,6 +28,7 @@ namespace Trash
         public string parsing_type { get; set; }
         public string start_rule { get; set; }
         public string target { get; set; }
+        public string output_directory { get; set; }
         public string test_name { get; set; } = null;
         public List<string> tool_grammar_files = null;
         public List<GrammarTuple> tool_grammar_tuples = null;
