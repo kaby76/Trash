@@ -12,7 +12,7 @@
 
 ## Current version
 
-0.23.11 Fix trgen for st*.g4 grammars. Add template processing for target-specific files in a grammmar.
+0.23.12 TBD.
 
 ## License
 
