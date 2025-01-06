@@ -44,10 +44,6 @@ jobs:
         dotnet --list-runtimes
         dotnet --list-sdks
         whereis dotnet
-    - name: Prep Dotnet
-      run: |
-        sudo mkdir /usr/share/dotnet
-        sudo chmod 777 /usr/share/dotnet
     - name: Install Dotnet
       uses: actions/setup-dotnet@v4.1.0
       with:
