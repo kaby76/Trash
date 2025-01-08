@@ -44,6 +44,7 @@ jobs:
         dotnet --list-runtimes
         dotnet --list-sdks
         whereis dotnet
+        export
     - name: Install Dotnet
       uses: actions/setup-dotnet@v4.1.0
       with:
