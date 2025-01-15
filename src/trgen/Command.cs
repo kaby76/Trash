@@ -680,7 +680,19 @@ namespace Trash
                     throw new Exception("Too many <targets> elements, there should be only one.");
                 if (xtargets.Count == 0)
                     throw new Exception("A <desc><targets> element is required.");
-                test_targets = xtargets.First().Split(';').ToList();
+                if (xtargets[0] == "*")
+                    test_targets = new List<string>() {
+                        "Cpp",
+                        "CSharp",
+                        "Dart",
+                        "Go",
+                        "Java",
+                        "JavaScript",
+                        "Python3",
+                        "TypeScript",
+                    };
+                else
+                    test_targets = xtargets.First().Split(';').ToList();
                 if (config.targets == null || !config.targets.Any()) config.targets = test_targets;
             }
             List<string> test_ostargets = config.os_targets.ToList();
@@ -1553,6 +1565,8 @@ namespace Trash
                         .Substring(output_dir.Length))
                 .Where(t => t.Contains(Suffix(test.target)))
                 .ToList();
+            t.Add("official_tool", config.generator_name == "official");
+            t.Add("antlrng_tool", config.generator_name == "antlr-ng");
             t.Add("target", test.target);
             t.Add("test", test);
             t.Add("additional_sources", yo1);
