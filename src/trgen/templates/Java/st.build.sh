@@ -16,7 +16,7 @@ npm i antlr-ng
 <if(official_tool)>
 antlr4 -v $version -encoding <antlr_encoding> -Dlanguage=Java <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
 <elseif(antlrng_tool)>
-pwsh node_modules/.bin/antlr4ng.ps1 -encoding <antlr_encoding> -Dlanguage=Java <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
+pwsh node_modules/.bin/antlr-ng.ps1 --encoding <antlr_encoding> -Dlanguage=Java <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
 <endif>
 }>
 

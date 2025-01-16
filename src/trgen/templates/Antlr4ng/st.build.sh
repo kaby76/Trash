@@ -13,7 +13,7 @@ if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
 version=`grep antlr4 package.json | awk '{print $2}' | tr -d '"' | tr -d ',' | tr -d '\r' | tr -d '\n'`
 
 <tool_grammar_tuples:{x |
-pwsh node_modules/.bin/antlr4ng.ps1 -encoding <antlr_encoding> -Dlanguage=TypeScript <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
+pwsh node_modules/.bin/antlr-ng.ps1 --encoding <antlr_encoding> -Dlanguage=TypeScript <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
 } >
 
 tsc -p tsconfig.json --pretty
