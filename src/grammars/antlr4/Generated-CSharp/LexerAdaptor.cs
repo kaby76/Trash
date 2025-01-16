@@ -47,6 +47,7 @@ public abstract class LexerAdaptor : Lexer
          : base(input, Console.Out, Console.Error)
     {
         CurrentRuleType = TokenConstants.InvalidType;
+        _insideOptionsBlock = false;
         stream = input;
     }
 
@@ -54,6 +55,7 @@ public abstract class LexerAdaptor : Lexer
          : base(input, output, errorOutput)
     {
         CurrentRuleType = TokenConstants.InvalidType;
+        _insideOptionsBlock = false;
         stream = input;
     }
 
@@ -70,6 +72,8 @@ public abstract class LexerAdaptor : Lexer
      * can only occur in lexical rules and arg actions cannot occur.
      */
     private int CurrentRuleType { get; set; } = TokenConstants.InvalidType;
+
+    private bool _insideOptionsBlock;
 
     protected void handleBeginArgument()
     {
@@ -171,6 +175,7 @@ public abstract class LexerAdaptor : Lexer
     public override void Reset()
     {
         CurrentRuleType = TokenConstants.InvalidType;
+        _insideOptionsBlock = false;
         base.Reset();
     }
 }

@@ -1,4 +1,4 @@
-# Generated from trgen 0.20.14
-dotnet clean
+# Generated from trgen 0.23.12
+dotnet clean Test.csproj
 rm -rf bin obj
-rm -f GrammophoneParser.cs GrammophoneLexer.cs 
+rm -f GrammophoneLexer.cs GrammophoneParser.cs 

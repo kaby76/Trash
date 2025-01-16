@@ -1,0 +1,15 @@
+
+All rules under:
+	//propertyAssignment/propertyName/identifierName/identifier/Identifier[text()='rules']
+
+LHS of a rule:
+	//propertyAssignment[propertyName/identifierName/identifier/Identifier[text()='rules']]
+		/singleExpression/objectLiteral/propertyAssignment
+			/propertyName/identifierName/identifier/Identifier
+
+RHS of a rule:
+	//propertyAssignment[propertyName/identifierName/identifier/Identifier[text()='rules']]
+                /singleExpression/objectLiteral/propertyAssignment
+                        /singleExpression/anonymousFunction[ARROW]
+				/arrowFunctionBody
+	

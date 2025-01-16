@@ -1,18 +1,4 @@
-# Generated from trgen 0.21.0
-
-# People often specify a test file directory, but sometimes no
-# tests are provided. Git won't check in an empty directory.
-# Test if the test file directory does not exist, or it is just
-# an empty directory.
-if [ ! -d ../examples ]
-then
-    echo "No test cases provided."
-    exit 0
-elif [ ! "$(ls -A ../examples)" ]
-then
-    echo "No test cases provided."
-    exit 0
-fi
+# Generated from trgen 0.23.12
 
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
@@ -20,20 +6,30 @@ IFS=$(echo -en "\n\b")
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
-files2=`find ../examples -type f | grep -v '.errors$' | grep -v '.tree$'`
+files2=`dotnet trglob '../examples' | grep -v '.errors$' | grep -v '.tree$'`
 files=()
 for f in $files2
 do
-    dotnet triconv -- -f utf-8 $f > /dev/null 2>&1
+    if [ -d "$f" ]; then continue; fi
+    dotnet triconv -f utf-8 $f > /dev/null 2>&1
     if [ "$?" = "0" ]
     then
         files+=( $f )
     fi
 done
 
+# People often specify a test file directory, but sometimes no
+# tests are provided. Git won't check in an empty directory.
+# Test if there are no test files.
+if [ ${#files[@]} -eq 0 ]
+then
+    echo "No test cases provided."
+    exit 0
+fi
+
 # Parse all input files.
 # Group parsing.
-echo "${files[*]}" | dotnet trwdog -- dotnet trcover -- -x
+echo "${files[*]}" | dotnet trwdog dotnet trcover -x
 status=$?
 
 # trwdog returns 255 if it cannot spawn the process. This could happen

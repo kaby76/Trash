@@ -1,4 +1,4 @@
-# Generated from trgen 0.21.2
-dotnet clean antlr4.csproj
+# Generated from trgen 0.23.12
+dotnet clean Test.csproj
 rm -rf bin obj
-rm -f ANTLRv4Lexer.cs LexBasic.cs ANTLRv4Parser.cs 
+rm -f ANTLRv4Lexer.cs ANTLRv4Parser.cs 

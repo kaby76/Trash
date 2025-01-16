@@ -1,4 +1,4 @@
-// Generated from trgen 0.21.2
+// Generated from trgen 0.23.12
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
@@ -40,12 +40,15 @@ public class ErrorListener<S> : IAntlrErrorListener< S>
     }
 }
 
-/*
 public class MyDiagnosticErrorListener : DiagnosticErrorListener
 {
     public override void ReportAmbiguity​(Parser recognizer, DFA dfa, int startIndex, int stopIndex,
         bool exact, BitSet ambigAlts, ATNConfigSet configs)
     {
+        string decisionDescription = GetDecisionDescription(recognizer, dfa);
+        string text = ((ITokenStream)recognizer.InputStream).GetText(Interval.Of(startIndex, stopIndex));
+        string msg = $"ReportAmbiguity​ d={decisionDescription}, input='{text}'";
+        System.Console.WriteLine(msg);
         NewMethod(recognizer, dfa, startIndex, stopIndex, configs);
     }
 
@@ -63,12 +66,12 @@ public class MyDiagnosticErrorListener : DiagnosticErrorListener
             {
                 ATNState s = e.state;
                 PredictionContext c = e.context;
-                System.Console.WriteLine(OutIt(recognizer, c));
+                System.Console.WriteLine(OutIt(recognizer, e, c));
             }
         }
         catch (RecognitionException e)
         {
-            System.Console.WriteLine("catch");
+            System.Console.WriteLine("catch " + e);
         }
     }
 
@@ -77,7 +80,7 @@ public class MyDiagnosticErrorListener : DiagnosticErrorListener
     {
         string decisionDescription = GetDecisionDescription(recognizer, dfa);
         string text = ((ITokenStream)recognizer.InputStream).GetText(Interval.Of(startIndex, stopIndex));
-        string msg = $"reportAttemptingFullContext d={decisionDescription}, input='{text}'";
+        string msg = $"ReportAttemptingFullContext d={decisionDescription}, input='{text}'";
         System.Console.WriteLine(msg);
         NewMethod(recognizer, dfa, startIndex, stopIndex, configs);
     }
@@ -87,15 +90,15 @@ public class MyDiagnosticErrorListener : DiagnosticErrorListener
     {
         string decisionDescription = GetDecisionDescription(recognizer, dfa);
         string text = ((ITokenStream)recognizer.InputStream).GetText(Interval.Of(startIndex, stopIndex));
-        string msg = $"reportContextSensitivity d={decisionDescription}, input='{text}'";
+        string msg = $"ReportContextSensitivity d={decisionDescription}, input='{text}'";
         System.Console.WriteLine(msg);
         NewMethod(recognizer, dfa, startIndex, stopIndex, configs);
     }
 
-    string OutIt(Parser recognizer, PredictionContext p)
+    string OutIt(Parser recognizer, ATNConfig c, PredictionContext p)
     {
         if (p == null) return "";
-        var str = OutIt(recognizer, p.GetParent(0));
+        var str = OutIt(recognizer, null, p.GetParent(0));
         int rs = p.GetReturnState(0);
         if (rs != PredictionContext.EMPTY_RETURN_STATE)
         {
@@ -105,9 +108,15 @@ public class MyDiagnosticErrorListener : DiagnosticErrorListener
             if (riss < 0) return "";
             var rnss = recognizer.RuleNames[riss];
             if (str != "") str = str + " -> ";
-            return str + rnss;
+            str = str + rnss;
+            if (c != null)
+            {
+                var k = c.state.ruleIndex;
+                str = str + " -> " + recognizer.RuleNames[k];
+            }
+            return str;
         }
         return "";
     }
 }
-*/
+

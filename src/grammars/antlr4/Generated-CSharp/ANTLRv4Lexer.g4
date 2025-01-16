@@ -304,8 +304,8 @@ ID
 // Whitespace
 
 WS
-   : Ws+ -> channel (OFF_CHANNEL)
-   ;
+    : Ws+ -> channel (OFF_CHANNEL)
+    ;
 
 // -------------------------
 // Illegal Characters

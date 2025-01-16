@@ -1,18 +1,7 @@
-# Generated from trgen 0.20.14
+# Generated from trgen 0.23.12
 
-# People often specify a test file directory, but sometimes no
-# tests are provided. Git won't check in an empty directory.
-# Test if the test file directory does not exist, or it is just
-# an empty directory.
-if [ ! -d ../examples ]
-then
-    echo "No test cases provided."
-    exit 0
-elif [ ! "$(ls -A ../examples)" ]
-then
-    echo "No test cases provided."
-    exit 0
-fi
+# glob patterns
+shopt -s globstar
 
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
@@ -20,20 +9,30 @@ IFS=$(echo -en "\n\b")
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
-files2=`find ../examples -type f | grep -v '.errors$' | grep -v '.tree$'`
+files2=`dotnet trglob '../examples' | grep -v '.errors$' | grep -v '.tree$'`
 files=()
 for f in $files2
 do
-    triconv -f utf-8 $f > /dev/null 2>&1
+    if [ -d "$f" ]; then continue; fi
+    dotnet triconv -f utf-8 $f > /dev/null 2>&1
     if [ "$?" = "0" ]
     then
         files+=( $f )
     fi
 done
 
+# People often specify a test file directory, but sometimes no
+# tests are provided. Git won't check in an empty directory.
+# Test if there are no test files.
+if [ ${#files[@]} -eq 0 ]
+then
+    echo "No test cases provided."
+    exit 0
+fi
+
 # Parse all input files.
 # Group parsing.
-echo "${files[*]}" | trwdog ./bin/Debug/net8.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
+echo "${files[*]}" | dotnet trwdog ./bin/Debug/net8.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
 status=$?
 
 # trwdog returns 255 if it cannot spawn the process. This could happen
@@ -72,12 +71,12 @@ then
     gen=`find ../examples -type f -name '*.errors' -o -name '*.tree'`
     if [ "$gen" != "" ]
     then
-        dos2unix $gen
+        dos2unix -f $gen
     fi
 fi
 
 old=`pwd`
-cd ../examples
+cd ..
 
 # Check if any files in the test files directory have changed.
 git config --global pager.diff false

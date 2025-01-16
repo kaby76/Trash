@@ -1,19 +1,7 @@
-# Generated from trgen 0.21.0
+# Generated from trgen 0.23.12
 
-$TestDirectory = "../examples"
-Write-Host "Test cases here: $TestDirectory"
-
-# People often specify a test file directory, but sometimes no
-# tests are provided. Git won't check in an empty directory.
-# Test if the test file directory does not exist, or it is just
-# an empty directory.
-if (!(Test-Path -Path "$TestDirectory")) {
-    Write-Host "No test cases provided."
-    exit 0
-} elseif (!(Test-Path "$TestDirectory/*")) {
-    Write-Host "No test cases provided."
-    exit 0
-}
+$Tests = "../examples"
+Write-Host "Test cases here: $Tests"
 
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
@@ -22,9 +10,9 @@ if (Test-Path -Path "tests.txt" -PathType Leaf) {
     Remove-Item "tests.txt"
 }
 $files = New-Object System.Collections.Generic.List[string]
-foreach ($item in Get-ChildItem $TestDirectory -Recurse) {
-    $file = $item.fullname
-    $ext = $item.Extension
+$allFiles = $(& dotnet trglob "$Tests" ; $last = $LASTEXITCODE )
+foreach ($file in $allFiles) {
+    $ext = $file | Split-Path -Extension
     if (Test-Path $file -PathType Container) {
         continue
     } elseif ($ext -eq ".errors") {
@@ -32,13 +20,13 @@ foreach ($item in Get-ChildItem $TestDirectory -Recurse) {
     } elseif ($ext -eq ".tree") {
         continue
     } else {
-        $(& dotnet triconv -- -f utf-8 $file ; $last = $LASTEXITCODE ) | Out-Null
+        $(& dotnet triconv -f utf-8 $file ; $last = $LASTEXITCODE ) | Out-Null
         if ($last -ne 0)
         {
             continue
         }
-        $files.Add($item)
-        Write-Host "Test case: $item"
+        $files.Add($file)
+        Write-Host "Test case: $file"
     }
 }
 foreach ($file in $files) {
@@ -51,7 +39,7 @@ if (-not(Test-Path -Path "tests.txt" -PathType Leaf)) {
 
 # Parse all input files.
 # Group parsing.
-get-content "tests.txt" | dotnet trwdog -- ./bin/Debug/net8.0/Test.exe -q -x -tee -tree *> parse.txt
+get-content "tests.txt" | dotnet trwdog ./bin/Debug/net8.0/Test.exe -q -x -tee -tree *> parse.txt
 $status = $LASTEXITCODE
 
 # trwdog returns 255 if it cannot spawn the process. This could happen
@@ -74,7 +62,7 @@ if ( $size -eq 0 ) {
 }
 
 $old = Get-Location
-Set-Location ../examples
+Set-Location "../examples"
 
 # Check if any .errors/.tree files have changed. That's not good.
 git config --global pager.diff false
@@ -95,6 +83,7 @@ foreach ($item in Get-ChildItem . -Recurse) {
     $file = $item.fullname
     $ext = $item.Extension
     if ($ext -eq ".tree") {
+        [IO.File]::WriteAllText($file, $([IO.File]::ReadAllText($file) -replace "`r`n", "`n"))
         git diff --exit-code $file *>> $old/updated.txt
 	$st = $LASTEXITCODE
         if ($st -ne 0) {
