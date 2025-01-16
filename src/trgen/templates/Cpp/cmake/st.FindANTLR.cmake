@@ -105,7 +105,7 @@ find_package(Java QUIET COMPONENTS Runtime)
         COMMAND antlr4<if(os_win)>.exe<else><endif>
                 -v ${ANTLR4_TAG}
 <elseif(antlrng_tool)>
-        COMMAND pwsh<if(os_win)>.exe<else><endif> node_modules/.bin/antlr4ng.ps1
+        COMMAND node node_modules/dist/cli/runner.js
 <endif>
                 ${InputFile}
                 -o ${ANTLR_${Name}_OUTPUT_DIR}
