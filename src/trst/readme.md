@@ -18,7 +18,7 @@ Output tree using the Antlr runtime ToStringTree().
 
 ## Current version
 
-0.23.12 TBD.
+0.23.12 Fixes for #518, #524, #525, #527.
 
 ## License
 

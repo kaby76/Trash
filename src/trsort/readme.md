@@ -37,7 +37,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.12 TBD.
+0.23.12 Fixes for #518, #524, #525, #527.
 
 ## License
 
