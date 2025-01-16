@@ -15,6 +15,7 @@ version=`grep antlr4 package.json | awk '{print $2}' | tr -d '"' | tr -d ',' | t
 
 ls node_modules
 ls node_modules/.bin
+find . -name '*.ps1'
 
 <tool_grammar_tuples:{x |
 pwsh node_modules/.bin/antlr-ng.ps1 --encoding <antlr_encoding> -Dlanguage=TypeScript <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
