@@ -4,7 +4,7 @@ find_package(Java QUIET COMPONENTS Runtime)
 <if(official_tool)>
       COMMAND antlr4<if(os_win)>.exe<else><endif> -v ${ANTLR4_TAG}
 <elseif(antlrng_tool)>
-      COMMAND pwsh<if(os_win)>.exe<else><endif> ../node_modules/.bin/antlr4ng.ps1
+      COMMAND node node_modules/dist/cli/runner.js
 <endif>
       OUTPUT_VARIABLE ANTLR_COMMAND_OUTPUT
       ERROR_VARIABLE ANTLR_COMMAND_ERROR
