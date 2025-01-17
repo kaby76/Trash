@@ -15,14 +15,15 @@ if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
 # Go has no version, just the latest version.
 
 <if(antlrng_tool)>
+npm init -y
 npm i antlr-ng
 <endif>
 
 <tool_grammar_tuples:{x |
 <if(antlrng_tool)>
-node node_modules/antlr-ng/dist/cli/runner.js --encoding <antlr_encoding> -Dlanguage=Go <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
+node node_modules/antlr-ng/dist/cli/runner.js --encoding <antlr_encoding> -Dlanguage=Go  -o parser -lib parser -package parser <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
 <else>
-antlr4 -v $version -encoding <antlr_encoding> -Dlanguage=Go <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
+antlr4 -v $version -encoding <antlr_encoding> -Dlanguage=Go  -o parser -lib parser -package parser  <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileName>
 <endif>
 } >
 

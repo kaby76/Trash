@@ -17,7 +17,7 @@ Expand a glob string into file names.
 
 ## Current version
 
-0.23.12 Fixes for #518, #524, #525, #527.
+0.23.13 Fixes for #518, #524, #525, #527.
 
 ## License
 

@@ -200,28 +200,7 @@ namespace Trash
                     {
                         var p1 = test.package;
                         var pre1 = p1 == "" ? "" : p1 + "/";
-                        string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                        if (test.target == "Go")
-                        {
-                            if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == "Windows"
-                                    ? "-o " + test.package + " -lib " + test.package +
-                                      " -package " + test.package
-                                    : " -package " + test.package;
-                            else
-                                antlr_args = "";
-                        }
-                        else
-                        {
-                            if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == "Windows"
-                                    ? "-o " + test.package + " -lib " + test.package +
-                                      " -package " + test.package
-                                    : " -package " + test.package;
-                            else
-                                antlr_args = "";
-                        }
-
+                        string antlr_args = "";
                         var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
                                 GrammarFileName = tgfn,
@@ -235,28 +214,7 @@ namespace Trash
                     }
                     else if (is_lexer_grammar)
                     {
-                        string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                        if (test.target == "Go")
-                        {
-                            if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == "Windows"
-                                    ? "-o " + test.package + " -lib " + test.package +
-                                      " -package " + test.package
-                                    : " -package " + test.package;
-                            else
-                                antlr_args = "";
-                        }
-                        else
-                        {
-                            if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == "Windows"
-                                    ? "-o " + test.package + " -lib " + test.package +
-                                      " -package " + test.package
-                                    : " -package " + test.package;
-                            else
-                                antlr_args = "";
-                        }
-
+                        string antlr_args = "";
                         var g = new GrammarTuple()
                             {
                                 AntlrArgs = antlr_args,
@@ -272,27 +230,7 @@ namespace Trash
                     else
                     {
                         {
-                            string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                            if (test.target == "Go")
-                            {
-                                if (test.package != null && test.package != "")
-                                    antlr_args = GetOSTarget() == "Windows"
-                                        ? "-o " + test.package + " -lib " + test.package +
-                                          " -package " + test.package
-                                        : " -package " + test.package;
-                                else
-                                    antlr_args = "";
-                            }
-                            else
-                            {
-                                if (test.package != null && test.package != "")
-                                    antlr_args = GetOSTarget() == "Windows"
-                                        ? "-o " + test.package + " -lib " + test.package +
-                                          " -package " + test.package
-                                        : " -package " + test.package;
-                                else
-                                    antlr_args = "";
-                            }
+                            string antlr_args = ""; // Antlr tool arguments, such as -package, -o, -lib.
                             var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
                                 GrammarFileName = tgfn,
@@ -529,7 +467,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.12";
+        public static string version = "0.23.13";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();

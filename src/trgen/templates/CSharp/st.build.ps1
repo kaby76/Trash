@@ -4,10 +4,11 @@ if (Test-Path -Path transformGrammar.py -PathType Leaf) {
 }
 
 <if(antlrng_tool)>
+npm init -y
 npm i antlr-ng
 <endif>
 
-$version = dotnet trxml2 .\Other.csproj `
+$version = dotnet trxml2 Other.csproj `
     | Where-Object { $_ -match 'PackageReference/@Version' } `
     | ForEach-Object {
         ($_ -split '=')[1].Trim()
