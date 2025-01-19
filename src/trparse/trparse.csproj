@@ -18,7 +18,7 @@ This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>0.23.11</Version>
+		<Version>0.23.13</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trparse</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
@@ -40,14 +40,13 @@ This program is part of the Trash toolkit.]]>
 		<ProjectReference Include="../grammars/javacc/Generated-CSharp/javacc.csproj" />
 		<ProjectReference Include="../grammars/lark/Generated-CSharp/lark.csproj" />
 		<ProjectReference Include="../grammars/lbnf/Generated-CSharp/lbnf.csproj" />
-		<ProjectReference Include="../grammars/pegen/Generated-CSharp/pegen.csproj" />
 		<ProjectReference Include="../grammars/princeton/Generated-CSharp/princeton.csproj" />
 		<ProjectReference Include="../grammars/rex/Generated-CSharp/rex.csproj" />
 		<ProjectReference Include="../grammars/w3cebnf/Generated-CSharp/w3cebnf.csproj" />
 		<ProjectReference Include="../grammars/xtext/Generated-CSharp/xtext.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="readme.md" Pack="true" PackagePath=""/>
+		<None Include="readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -70,8 +69,6 @@ This program is part of the Trash toolkit.]]>
 		<EmbeddedResource Include="readme.md" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="$(SolutionDir)grammars\antlr4\bin\Debug\**\*.*"
-			CopyToOutputDirectory="Always"
-			TargetPath="bin\Debug\net8.0\foo\%(Filename)%(Extension)" />
+		<Content Include="$(SolutionDir)grammars\antlr4\bin\Debug\**\*.*" CopyToOutputDirectory="Always" TargetPath="bin\Debug\net8.0\foo\%(Filename)%(Extension)" />
 	</ItemGroup>
 </Project>

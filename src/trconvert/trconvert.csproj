@@ -18,7 +18,7 @@ syntax. This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>0.23.11</Version>
+		<Version>0.23.13</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trconvert</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>

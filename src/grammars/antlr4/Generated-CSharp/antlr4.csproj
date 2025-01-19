@@ -1,4 +1,4 @@
-<!-- Generated from trgen 0.21.2 -->
+<!-- Generated from trgen 0.23.12 -->
 <Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -8,16 +8,15 @@
   <ItemGroup>
    <Antlr4 Include="ANTLRv4Lexer.g4">
 <Package></Package></Antlr4>
-   <Antlr4 Include="LexBasic.g4">
-<Package></Package></Antlr4>
    <Antlr4 Include="ANTLRv4Parser.g4">
-<Package></Package></Antlr4>
+<Package></Package>
+   </Antlr4>
   </ItemGroup>
   <Import Project="Other.csproj"></Import>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'" >
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" >
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
   <PropertyGroup>

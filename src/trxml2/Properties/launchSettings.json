@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trxml2": {
+      "commandName": "Project",
+      "commandLineArgs": "Other.csproj",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\antlr-ng-g4-add\\abnf\\Generated-CSharp"
+    }
+  }
+}

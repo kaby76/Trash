@@ -200,28 +200,7 @@ namespace Trash
                     {
                         var p1 = test.package;
                         var pre1 = p1 == "" ? "" : p1 + "/";
-                        string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                        if (test.target == "Go")
-                        {
-                            if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == "Windows"
-                                    ? "-o " + test.package + " -lib " + test.package +
-                                      " -package " + test.package
-                                    : " -package " + test.package;
-                            else
-                                antlr_args = "";
-                        }
-                        else
-                        {
-                            if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == "Windows"
-                                    ? "-o " + test.package + " -lib " + test.package +
-                                      " -package " + test.package
-                                    : " -package " + test.package;
-                            else
-                                antlr_args = "";
-                        }
-
+                        string antlr_args = "";
                         var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
                                 GrammarFileName = tgfn,
@@ -235,28 +214,7 @@ namespace Trash
                     }
                     else if (is_lexer_grammar)
                     {
-                        string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                        if (test.target == "Go")
-                        {
-                            if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == "Windows"
-                                    ? "-o " + test.package + " -lib " + test.package +
-                                      " -package " + test.package
-                                    : " -package " + test.package;
-                            else
-                                antlr_args = "";
-                        }
-                        else
-                        {
-                            if (test.package != null && test.package != "")
-                                antlr_args = GetOSTarget() == "Windows"
-                                    ? "-o " + test.package + " -lib " + test.package +
-                                      " -package " + test.package
-                                    : " -package " + test.package;
-                            else
-                                antlr_args = "";
-                        }
-
+                        string antlr_args = "";
                         var g = new GrammarTuple()
                             {
                                 AntlrArgs = antlr_args,
@@ -272,27 +230,7 @@ namespace Trash
                     else
                     {
                         {
-                            string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
-                            if (test.target == "Go")
-                            {
-                                if (test.package != null && test.package != "")
-                                    antlr_args = GetOSTarget() == "Windows"
-                                        ? "-o " + test.package + " -lib " + test.package +
-                                          " -package " + test.package
-                                        : " -package " + test.package;
-                                else
-                                    antlr_args = "";
-                            }
-                            else
-                            {
-                                if (test.package != null && test.package != "")
-                                    antlr_args = GetOSTarget() == "Windows"
-                                        ? "-o " + test.package + " -lib " + test.package +
-                                          " -package " + test.package
-                                        : " -package " + test.package;
-                                else
-                                    antlr_args = "";
-                            }
+                            string antlr_args = ""; // Antlr tool arguments, such as -package, -o, -lib.
                             var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
                                 GrammarFileName = tgfn,
@@ -529,7 +467,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.11";
+        public static string version = "0.23.13";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -680,7 +618,19 @@ namespace Trash
                     throw new Exception("Too many <targets> elements, there should be only one.");
                 if (xtargets.Count == 0)
                     throw new Exception("A <desc><targets> element is required.");
-                test_targets = xtargets.First().Split(';').ToList();
+                if (xtargets[0] == "*")
+                    test_targets = new List<string>() {
+                        "Cpp",
+                        "CSharp",
+                        "Dart",
+                        "Go",
+                        "Java",
+                        "JavaScript",
+                        "Python3",
+                        "TypeScript",
+                    };
+                else
+                    test_targets = xtargets.First().Split(';').ToList();
                 if (config.targets == null || !config.targets.Any()) config.targets = test_targets;
             }
             List<string> test_ostargets = config.os_targets.ToList();
@@ -1209,17 +1159,20 @@ namespace Trash
 
         public void GenerateViaConfig(Config config)
         {
+            bool first = true;
             foreach (var test in config.Tests)
             {
                 try
                 {
-                    // Create a directory containing target build files.
-                    Directory.CreateDirectory(
+                    if (test.test_name == "0") test.test_name = null;
+                    test.output_directory =
                         (string)config.output_directory
                         + "Generated"
                         + '-'
                         + test.target
-                        + (test.test_name != null ? ('-' + test.test_name) : ""));
+                        + (test.test_name != null ? ('-' + test.test_name) : "");
+                    // Create a directory containing target build files.
+                    Directory.CreateDirectory(test.output_directory);
                 }
                 catch (Exception)
                 {
@@ -1298,11 +1251,7 @@ namespace Trash
                 string to = null;
                 if (test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileName).Any())
                 {
-                    to = config.output_directory
-                         + "Generated"
-                         + "-"
-                         + test.target
-                         + (test.test_name != null ? ("-" + test.test_name) : "")
+                    to = test.output_directory
                          + "/"
                          + test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileName).First();
                 }
@@ -1311,11 +1260,7 @@ namespace Trash
                     // Now remove target directory.
                     if (test.target == "Go" && f.EndsWith(".go"))
                     {
-                        to = config.output_directory
-                             + "Generated"
-                             + "-"
-                             + test.target
-                             + (test.test_name != null ? ("-" + test.test_name) : "")
+                        to = test.output_directory
                              + "/" + "parser" + f.Substring(test.target.Length);
                     }
                     else {
@@ -1558,6 +1503,8 @@ namespace Trash
                         .Substring(output_dir.Length))
                 .Where(t => t.Contains(Suffix(test.target)))
                 .ToList();
+            t.Add("official_tool", config.generator_name == "official");
+            t.Add("antlrng_tool", config.generator_name == "antlr-ng");
             t.Add("target", test.target);
             t.Add("test", test);
             t.Add("additional_sources", yo1);
@@ -1802,11 +1749,7 @@ namespace Trash
 
             to = dir + bn;
 
-            to = config.output_directory
-                 + "Generated"
-                 + "-"
-                 + test.target
-                 + (test.test_name != null ? ("-" + test.test_name) : "")
+            to = test.output_directory
                  + '/'
                  + (test.target == "Go" && test.package != "" && (bn.EndsWith(".g4") || bn.EndsWith(".go")) ? test.package + "/" : "")
                  + to;
@@ -1832,11 +1775,7 @@ namespace Trash
 
             to = dir + bn;
 
-            to = config.output_directory
-                 + "Generated"
-                 + "-"
-                 + test.target
-                 + (test.test_name != null ? ("-" + test.test_name) : "")
+            to = test.output_directory
                  + '/'
                  + to;
             to = to.Replace('\\', '/');

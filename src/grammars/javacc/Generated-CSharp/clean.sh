@@ -1,4 +1,4 @@
-# Generated from trgen 0.20.14
-dotnet clean
+# Generated from trgen 0.23.12
+dotnet clean Test.csproj
 rm -rf bin obj
-rm -f JavaccParser.cs JavaccLexer.cs 
+rm -f JavaccLexer.cs JavaccParser.cs 

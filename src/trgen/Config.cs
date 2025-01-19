@@ -20,7 +20,10 @@ namespace Trash
         [Option("force", Required = false, HelpText = "Force the generation of a target.")]
         public bool force { get; set; }
 
-        [Option('g', "grammar-name", Required = false, HelpText = "Grammar for parse.")]
+        [Option('g', "generator", Required = false, HelpText = "Name of generator: 'Official', 'Antlr-ng', etc.")]
+        public string generator_name { get; set; }
+
+        [Option("grammar-name", Required = false, HelpText = "Grammar for parse.")]
         public string grammar_name { get; set; }
 
 	    [Option('i', "ignore", Required = false, Separator = ',', HelpText = "Ignored files or directories for generating app.")]
@@ -84,6 +87,7 @@ namespace Trash
             this.root_directory = Environment.CurrentDirectory.Replace('\\', '/') + "/";
             this.start_rule = null; // means find using parsing and xpath of grammars.
             this.targets = null;
+            this.generator_name = "official";
             this.Tests = new List<Test>();
             this.watchdog_timeout = 60;
         }
@@ -118,7 +122,5 @@ namespace Trash
                 }
             }
         }
-
-        public static readonly Config DEFAULT = new Config();
     }
 }
