@@ -36,7 +36,7 @@ namespace Trash
             else if (config.hasDesc)
                 ModifyWithDesc(config);
             else
-                DoNonPomDirectedGenerate(config);
+                GenerateFromGrammarFilesOnly(config);
             ModifyWithGrammarParse(config);
             GenerateViaConfig(config);
 
@@ -438,9 +438,7 @@ namespace Trash
                     }
                 }
 
-                // How to call the parser in the source code. Remember, there are
-                // actually up to two tests in the pom file, one for running the
-                // Antlr tool, and the other to test the generated parser.
+                // Determine how to call the parser in the source code.
                 string parser_src_grammar_file_name = null;
                 string lexer_src_grammar_file_name = null;
 
@@ -467,7 +465,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.13";
+        public static string version = "0.23.14";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -597,7 +595,7 @@ namespace Trash
             string file_name = Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"desc.xml";
             if (!File.Exists(file_name))
             {
-                DoNonPomDirectedGenerate(config);
+                GenerateFromGrammarFilesOnly(config);
                 return;
             }
 
@@ -1077,10 +1075,10 @@ namespace Trash
             return parts.LastOrDefault();
         }
 
-        public void DoNonPomDirectedGenerate(Config config)
+        public void GenerateFromGrammarFilesOnly(Config config)
         {
             {
-                var all = "CSharp;Cpp;Dart;Go;Java;JavaScript;PHP;Python3;TypeScript".Split(';').ToList();
+                var all = "Antlr4ng;CSharp;Cpp;Dart;Go;Java;JavaScript;PHP;Python3;TypeScript".Split(';').ToList();
                 if (config.targets != null && config.targets.Count() > 0) all = config.targets.ToList();
                 foreach (var target in all)
                 {
@@ -1279,11 +1277,8 @@ namespace Trash
                             ); 
                     to = FixedName(f, config, test);
                 }
-                if (from.Contains("pom.xml") && test.target != "Java") continue;
                 var content = File.ReadAllText(from);
                 RefactorThis(config, test, from, to, content);
-                //            test.all_target_files.Add(to);
-                //            this.CopyFile(from, to);
             }
         }
 

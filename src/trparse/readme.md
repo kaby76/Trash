@@ -50,7 +50,7 @@ the `--type` command-line option:
 
 ## Current version
 
-0.23.13 Fixes for #518, #524, #525, #527. Fix Go target trgen.
+0.23.14 TBD.
 
 ## License
 
