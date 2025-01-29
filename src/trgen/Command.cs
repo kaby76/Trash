@@ -246,13 +246,7 @@ namespace Trash
                             string antlr_args; // Antlr tool arguments, such as -package, -o, -lib.
                             if (test.target == "Go")
                             {
-                                if (test.package != null && test.package != "")
-                                    antlr_args = GetOSTarget() == "Windows"
-                                        ? "-o " + test.package + " -lib " + test.package +
-                                          " -package " + test.package
-                                        : " -package " + test.package;
-                                else
-                                    antlr_args = "";
+                                antlr_args = "";
                             }
                             else
                             {
@@ -1004,12 +998,6 @@ namespace Trash
                                 // and they cannot be changed!
                                 if (test.package != null && test.package != "")
                                 {
-                                    if (GetOSTarget() == "Windows")
-                                    {
-                                        additional.Add("-o");
-                                        additional.Add(test.package.Replace('.', '/'));
-                                    }
-
                                     additional.Add("-lib");
                                     additional.Add(test.package.Replace('.', '/'));
                                 }
