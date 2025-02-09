@@ -49,7 +49,7 @@ simplify and eliminate bugs created when adding new grammars.
 
 ## Current version
 
-0.23.14 TBD.
+0.23.14 Updated trgen templates for Antlr-ng.
 
 ## License
 
