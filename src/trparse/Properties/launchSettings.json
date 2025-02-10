@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "--ambig -i \"select interval '0 02:30:00' day to second;\"",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4357\\sql\\plsql\\Generated-CSharp-full"
+      "commandLineArgs": "--ambig y.txt",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\so\\simple\\Generated-CSharp"
     }
   }
 }

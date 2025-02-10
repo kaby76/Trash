@@ -63,7 +63,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.13 Fixes for #518, #524, #525, #527. Fix Go target trgen.
+0.23.14 Updated trgen templates for Antlr-ng.
 
 ## License
 
