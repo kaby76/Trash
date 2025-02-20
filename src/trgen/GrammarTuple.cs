@@ -9,7 +9,6 @@ namespace Trash
 
         public GrammarTuple()
         {
-            IsTopLevel = false;
         }
 
         public GrammarTuple(Type type,

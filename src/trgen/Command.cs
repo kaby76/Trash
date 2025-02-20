@@ -279,6 +279,9 @@ namespace Trash
                 // Use Trash compiler to get dependencies.
                 var dependency_graph = ComputeSort(test);
 
+                System.Console.Error.WriteLine("Dependency graph of grammar:");
+                System.Console.Error.WriteLine(dependency_graph.ToString());
+
                 // Pick top-level parser grammar.
                 GrammarTuple top_level_parser_grammar = null;
                 
@@ -315,11 +318,11 @@ namespace Trash
                                        || t.GrammarName == test.grammar_name+"Parser")).ToList();
                     if (!all.Any())
                     {
-                        throw new Exception("Can't figure out the grammar name.");
+                        throw new Exception("Can't figure out the top-level parser tuple.");
                     }
                     if (all.Count > 1)
                     {
-                        throw new Exception("Can't figure out the grammar name.");
+                        throw new Exception("Can't figure out the top-level parser tuple.");
                     }
                     top_level_parser_grammar = all.First();
                 }
@@ -342,11 +345,11 @@ namespace Trash
 
                     if (!all.Any())
                     {
-                        throw new Exception("Can't figure out the grammar name.");
+                        throw new Exception("Can't figure out the top-level lexer tuple.");
                     }
                     if (all.Count > 1)
                     {
-                        throw new Exception("Can't figure out the grammar name.");
+                        throw new Exception("Can't figure out the top-level lexer tuple.");
                     }
                     top_level_lexer_grammar = all.First();   
                 }
@@ -1408,11 +1411,6 @@ namespace Trash
             var base_name = Basename(from);
             var dir_name = Dirname(from);
 
-            System.Console.Error.WriteLine("Rendering template file from "
-                                           + from
-                                           + " to "
-                                           + to);
-
             Template t;
 
             // There are three types of files in template area:
@@ -1453,11 +1451,20 @@ namespace Trash
             else
             {
                 // Copy as is.
+                System.Console.Error.WriteLine("Copying template file from "
+                                               + from
+                                               + " to "
+                                               + to);
                 var target_dir_name = Dirname(to);
                 Directory.CreateDirectory(target_dir_name);
                 File.WriteAllText(to, content);
                 return;
             }
+
+            System.Console.Error.WriteLine("Rendering template file from "
+                                           + from
+                                           + " to "
+                                           + to);
 
             string output_dir = to;
             for (;;)
@@ -1647,6 +1654,10 @@ namespace Trash
                     foreach (var id in foo)
                     {
                         var f = id;
+                        if (t.WhatType == GrammarTuple.Type.Parser || t.WhatType == GrammarTuple.Type.Combined)
+                            f = f + "Parser";
+                        else if (t.WhatType == GrammarTuple.Type.Lexer || t.WhatType == GrammarTuple.Type.Combined)
+                            f = f + "Lexer";
                         DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
                         graph.AddEdge(e);
                     }
