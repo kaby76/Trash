@@ -103,7 +103,7 @@ The original grammars are left unchanged.
 
 ## Current version
 
-0.23.14 Updated trgen templates for Antlr-ng.
+0.23.15 Updated trgen grammar dependency analysis.
 
 ## License
 
