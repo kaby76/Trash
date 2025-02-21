@@ -431,7 +431,7 @@ namespace Trash
                     }
                     else if (t.WhatType == GrammarTuple.Type.Combined)
                     {
-                        throw new Exception("Should not execute!");
+                        throw new Exception("We should not have 'combined' at this point.");
                     }
                 }
 
@@ -1627,6 +1627,13 @@ namespace Trash
         Digraph<string> ComputeSort(Test test)
         {
             Digraph<string> graph = new Digraph<string>();
+            foreach (var t in test.tool_grammar_tuples)
+            {
+                if (t.WhatType == GrammarTuple.Type.Combined)
+                {
+                    throw new Exception("Combined grammars not expected at this point. Internal error.");
+                }
+            }
             // Add vertices.
             foreach (var t in test.tool_grammar_tuples)
             {
@@ -1653,13 +1660,17 @@ namespace Trash
                             .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
                     foreach (var id in foo)
                     {
-                        var f = id;
-                        if (t.WhatType == GrammarTuple.Type.Parser || t.WhatType == GrammarTuple.Type.Combined)
-                            f = f + "Parser";
-                        else if (t.WhatType == GrammarTuple.Type.Lexer || t.WhatType == GrammarTuple.Type.Combined)
-                            f = f + "Lexer";
-                        DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
-                        graph.AddEdge(e);
+                        // Search for the grammar name in grammar tuples.
+                        // Search for the grammar file name since that's what import does.
+                        var files = test.tool_grammar_tuples.Where(t => t.GrammarFileName == id + ".g4").ToList();
+                        if (!files.Any()) throw new Exception("Cannot find imported file " + id + ".g4");
+                        // Add an edge from the current grammar to grammars that are imported.
+                        foreach (var f in files)
+                        {
+                            if (graph.Edges.Any(e2 => e2.From == v && e2.To == f.GrammarName)) continue;
+                            DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f.GrammarName };
+                            graph.AddEdge(e);
+                        }
                     }
 
                     // Add an edge from the parser to lexer grammar if explicit.
@@ -1671,10 +1682,11 @@ namespace Trash
                     foreach (var id in bar)
                     {
                         var f = id;
-                        DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
-                        graph.AddEdge(e);
                         // Make sure to mark lexer grammar as "top level".
                         test.tool_grammar_tuples.Where(t => t.GrammarName == f).First().IsTopLevel = true;
+                        if (graph.Edges.Any(e2 => e2.From == v && e2.To == f)) continue;
+                        DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
+                        graph.AddEdge(e);
                     }
 
                     // If there is no explicit "tokenVocab" statement, add in edge
@@ -1690,6 +1702,7 @@ namespace Trash
                         });
                         foreach (var x in to)
                         {
+                            if (graph.Edges.Any(e2 => e2.From == v && e2.To == x.GrammarName)) continue;
                             DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = x.GrammarName };
                             graph.AddEdge(e);
                             // Make sure to mark lexer grammar as "top level".
