@@ -642,7 +642,7 @@ namespace Trash
                     test_ostargets = xtargets.First().Split(';').ToList();
                 }
             }
-            {
+            /*{
                 var xgrammars = navigator
                     .Select("/desc/grammar-files", nsmgr)
                     .Cast<XPathNavigator>()
@@ -688,6 +688,19 @@ namespace Trash
 
                     config.Files = merged_list;
                 }
+            }*/
+            {
+                // Add the dirname to the current directory.
+                var cwd = Environment.CurrentDirectory.Replace("\\", "/");
+                if (!cwd.EndsWith("/")) cwd += "/";
+                var list_pp = new TrashGlobbing.Glob(cwd)
+                    .RegexContents(".*g4$", false)
+                    .Where(f => f is FileInfo)
+                    .Select(f => f.FullName
+                        .Replace('\\', '/')
+                        .Replace(cwd, ""))
+                    .ToList();
+                config.Files = list_pp;
             }
             {
                 var spec_grammar_name = navigator
@@ -1681,12 +1694,21 @@ namespace Trash
                         .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
                     foreach (var id in bar)
                     {
-                        var f = id;
                         // Make sure to mark lexer grammar as "top level".
-                        test.tool_grammar_tuples.Where(t => t.GrammarName == f).First().IsTopLevel = true;
-                        if (graph.Edges.Any(e2 => e2.From == v && e2.To == f)) continue;
-                        DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
-                        graph.AddEdge(e);
+                        // "id" is a grammar file name. So, we look
+                        // for grammars with that file name (append .g4), and
+                        // pick off the lexer name.
+                        foreach (var tup in test.tool_grammar_tuples)
+                        {
+                            if (tup.GrammarFileName == id + ".g4" &&
+                                tup.WhatType == GrammarTuple.Type.Lexer)
+                            {
+                                tup.IsTopLevel = true;
+                                if (graph.Edges.Any(e2 => e2.From == v && e2.To == tup.GrammarName)) continue;
+                                DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = tup.GrammarName };
+                                graph.AddEdge(e);
+                            }
+                        }
                     }
 
                     // If there is no explicit "tokenVocab" statement, add in edge

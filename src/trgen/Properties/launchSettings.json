@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "-t Java",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\grammars-v4\\b"
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\antlr-ng-g4-add\\r"
     }
   }
 }
