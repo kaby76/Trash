@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Go",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\antlr-ng-g4-add\\abnf"
+      "commandLineArgs": "-t Java",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\antlr-ng-g4-add\\oncrpc"
     }
   }
 }

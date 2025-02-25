@@ -279,6 +279,9 @@ namespace Trash
                 // Use Trash compiler to get dependencies.
                 var dependency_graph = ComputeSort(test);
 
+                System.Console.Error.WriteLine("Dependency graph of grammar:");
+                System.Console.Error.WriteLine(dependency_graph.ToString());
+
                 // Pick top-level parser grammar.
                 GrammarTuple top_level_parser_grammar = null;
                 
@@ -315,11 +318,11 @@ namespace Trash
                                        || t.GrammarName == test.grammar_name+"Parser")).ToList();
                     if (!all.Any())
                     {
-                        throw new Exception("Can't figure out the grammar name.");
+                        throw new Exception("Can't figure out the top-level parser tuple.");
                     }
                     if (all.Count > 1)
                     {
-                        throw new Exception("Can't figure out the grammar name.");
+                        throw new Exception("Can't figure out the top-level parser tuple.");
                     }
                     top_level_parser_grammar = all.First();
                 }
@@ -342,11 +345,11 @@ namespace Trash
 
                     if (!all.Any())
                     {
-                        throw new Exception("Can't figure out the grammar name.");
+                        throw new Exception("Can't figure out the top-level lexer tuple.");
                     }
                     if (all.Count > 1)
                     {
-                        throw new Exception("Can't figure out the grammar name.");
+                        throw new Exception("Can't figure out the top-level lexer tuple.");
                     }
                     top_level_lexer_grammar = all.First();   
                 }
@@ -428,7 +431,7 @@ namespace Trash
                     }
                     else if (t.WhatType == GrammarTuple.Type.Combined)
                     {
-                        throw new Exception("Should not execute!");
+                        throw new Exception("We should not have 'combined' at this point.");
                     }
                 }
 
@@ -459,7 +462,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.14";
+        public static string version = "0.23.15";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -639,7 +642,7 @@ namespace Trash
                     test_ostargets = xtargets.First().Split(';').ToList();
                 }
             }
-            {
+            /*{
                 var xgrammars = navigator
                     .Select("/desc/grammar-files", nsmgr)
                     .Cast<XPathNavigator>()
@@ -685,6 +688,19 @@ namespace Trash
 
                     config.Files = merged_list;
                 }
+            }*/
+            {
+                // Add the dirname to the current directory.
+                var cwd = Environment.CurrentDirectory.Replace("\\", "/");
+                if (!cwd.EndsWith("/")) cwd += "/";
+                var list_pp = new TrashGlobbing.Glob(cwd)
+                    .RegexContents(".*g4$", false)
+                    .Where(f => f is FileInfo)
+                    .Select(f => f.FullName
+                        .Replace('\\', '/')
+                        .Replace(cwd, ""))
+                    .ToList();
+                config.Files = list_pp;
             }
             {
                 var spec_grammar_name = navigator
@@ -1408,11 +1424,6 @@ namespace Trash
             var base_name = Basename(from);
             var dir_name = Dirname(from);
 
-            System.Console.Error.WriteLine("Rendering template file from "
-                                           + from
-                                           + " to "
-                                           + to);
-
             Template t;
 
             // There are three types of files in template area:
@@ -1453,11 +1464,20 @@ namespace Trash
             else
             {
                 // Copy as is.
+                System.Console.Error.WriteLine("Copying template file from "
+                                               + from
+                                               + " to "
+                                               + to);
                 var target_dir_name = Dirname(to);
                 Directory.CreateDirectory(target_dir_name);
                 File.WriteAllText(to, content);
                 return;
             }
+
+            System.Console.Error.WriteLine("Rendering template file from "
+                                           + from
+                                           + " to "
+                                           + to);
 
             string output_dir = to;
             for (;;)
@@ -1620,6 +1640,13 @@ namespace Trash
         Digraph<string> ComputeSort(Test test)
         {
             Digraph<string> graph = new Digraph<string>();
+            foreach (var t in test.tool_grammar_tuples)
+            {
+                if (t.WhatType == GrammarTuple.Type.Combined)
+                {
+                    throw new Exception("Combined grammars not expected at this point. Internal error.");
+                }
+            }
             // Add vertices.
             foreach (var t in test.tool_grammar_tuples)
             {
@@ -1639,6 +1666,8 @@ namespace Trash
                        ate.Try(parsing_result_set.Nodes, parsing_result_set.Parser))
                 {
                     // Add an edge from the current grammar to "imported" grammar.
+                    // Note, we never include parser to lexer grammar depends.
+                    // That will be added--with extreme care--later on.
                     var foo = engine.parseExpression(
                             @"//delegateGrammars/delegateGrammar[not(ASSIGN)]/identifier/(RULE_REF | TOKEN_REF)/text()",
                             new StaticContextBuilder()).evaluate(dynamicContext,
@@ -1646,9 +1675,19 @@ namespace Trash
                             .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
                     foreach (var id in foo)
                     {
-                        var f = id;
-                        DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
-                        graph.AddEdge(e);
+                        // Search for the grammar name in grammar tuples.
+                        // Search for the grammar file name since that's what import does.
+                        var files = test.tool_grammar_tuples.Where(t => t.GrammarFileName == id + ".g4").ToList();
+                        if (!files.Any()) throw new Exception("Cannot find imported file " + id + ".g4");
+                        // Add an edge from the current grammar to grammars that are imported.
+                        foreach (var f in files)
+                        {
+                            if (graph.Edges.Any(e2 => e2.From == v && e2.To == f.GrammarName)) continue;
+                            if (t.WhatType == GrammarTuple.Type.Parser && f.WhatType == GrammarTuple.Type.Lexer) continue;
+                            if (t.WhatType == GrammarTuple.Type.Lexer && f.WhatType == GrammarTuple.Type.Parser) continue;
+                            DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f.GrammarName };
+                            graph.AddEdge(e);
+                        }
                     }
 
                     // Add an edge from the parser to lexer grammar if explicit.
@@ -1659,11 +1698,21 @@ namespace Trash
                         .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
                     foreach (var id in bar)
                     {
-                        var f = id;
-                        DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f };
-                        graph.AddEdge(e);
                         // Make sure to mark lexer grammar as "top level".
-                        test.tool_grammar_tuples.Where(t => t.GrammarName == f).First().IsTopLevel = true;
+                        // "id" is a grammar file name. So, we look
+                        // for grammars with that file name (append .g4), and
+                        // pick off the lexer name.
+                        foreach (var tup in test.tool_grammar_tuples)
+                        {
+                            if (tup.GrammarFileName == id + ".g4" &&
+                                tup.WhatType == GrammarTuple.Type.Lexer)
+                            {
+                                tup.IsTopLevel = true;
+                                if (graph.Edges.Any(e2 => e2.From == v && e2.To == tup.GrammarName)) continue;
+                                DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = tup.GrammarName };
+                                graph.AddEdge(e);
+                            }
+                        }
                     }
 
                     // If there is no explicit "tokenVocab" statement, add in edge
@@ -1679,6 +1728,7 @@ namespace Trash
                         });
                         foreach (var x in to)
                         {
+                            if (graph.Edges.Any(e2 => e2.From == v && e2.To == x.GrammarName)) continue;
                             DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = x.GrammarName };
                             graph.AddEdge(e);
                             // Make sure to mark lexer grammar as "top level".
