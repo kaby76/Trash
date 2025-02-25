@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "-t Java",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\antlr-ng-g4-add\\r"
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\antlr-ng-g4-add\\oncrpc"
     }
   }
 }

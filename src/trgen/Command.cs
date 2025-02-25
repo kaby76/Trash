@@ -1666,6 +1666,8 @@ namespace Trash
                        ate.Try(parsing_result_set.Nodes, parsing_result_set.Parser))
                 {
                     // Add an edge from the current grammar to "imported" grammar.
+                    // Note, we never include parser to lexer grammar depends.
+                    // That will be added--with extreme care--later on.
                     var foo = engine.parseExpression(
                             @"//delegateGrammars/delegateGrammar[not(ASSIGN)]/identifier/(RULE_REF | TOKEN_REF)/text()",
                             new StaticContextBuilder()).evaluate(dynamicContext,
@@ -1681,6 +1683,8 @@ namespace Trash
                         foreach (var f in files)
                         {
                             if (graph.Edges.Any(e2 => e2.From == v && e2.To == f.GrammarName)) continue;
+                            if (t.WhatType == GrammarTuple.Type.Parser && f.WhatType == GrammarTuple.Type.Lexer) continue;
+                            if (t.WhatType == GrammarTuple.Type.Lexer && f.WhatType == GrammarTuple.Type.Parser) continue;
                             DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = f.GrammarName };
                             graph.AddEdge(e);
                         }
