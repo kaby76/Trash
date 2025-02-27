@@ -93,7 +93,7 @@ _Output_
 
 ## Current version
 
-0.23.15 Updated trgen grammar dependency analysis.
+0.23.16 Updated trgen grammar dependency analysis.
 
 ## License
 
