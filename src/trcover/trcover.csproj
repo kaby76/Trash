@@ -18,7 +18,7 @@ for the entire grammar. This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>0.23.14</Version>
+		<Version>0.23.16</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trcover</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>

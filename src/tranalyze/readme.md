@@ -65,7 +65,7 @@ _Output_
 
 ## Current version
 
-0.23.14 Updated trgen templates for Antlr-ng.
+0.23.16 Updated trgen grammar dependency analysis.
 
 ## License
 
