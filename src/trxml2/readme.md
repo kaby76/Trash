@@ -18,7 +18,7 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-0.23.15 Updated trgen grammar dependency analysis.
+0.23.16 Updated trgen grammar dependency analysis.
 
 ## License
 
