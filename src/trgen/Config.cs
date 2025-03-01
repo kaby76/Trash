@@ -68,6 +68,7 @@ namespace Trash
         public List<Test> Tests;
 
         public string ignore_list_of_files = ".trgen-ignore";
+        public List<string> imports { get; set; }
 
         public Config()
         {

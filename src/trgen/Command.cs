@@ -12,7 +12,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
@@ -203,7 +202,8 @@ namespace Trash
                         string antlr_args = "";
                         var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
-                                GrammarFileName = tgfn,
+                                GrammarFileNameTarget = tgfn,
+                                GrammarFileNameSource = sgfn,
                                 GrammarName = grammar_name,
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
@@ -218,7 +218,8 @@ namespace Trash
                         var g = new GrammarTuple()
                             {
                                 AntlrArgs = antlr_args,
-                                GrammarFileName = tgfn,
+                                GrammarFileNameTarget = tgfn,
+                                GrammarFileNameSource = sgfn,
                                 GrammarName = grammar_name,
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
@@ -233,7 +234,8 @@ namespace Trash
                             string antlr_args = ""; // Antlr tool arguments, such as -package, -o, -lib.
                             var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
-                                GrammarFileName = tgfn,
+                                GrammarFileNameTarget = tgfn,
+                                GrammarFileNameSource = sgfn,
                                 GrammarName = grammar_name + "Parser",
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
@@ -261,7 +263,8 @@ namespace Trash
 
                             var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
-                                GrammarFileName = tgfn,
+                                GrammarFileNameTarget = tgfn,
+                                GrammarFileNameSource = sgfn,
                                 GrammarName = grammar_name + "Lexer",
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
@@ -441,11 +444,11 @@ namespace Trash
 
                 test.fully_qualified_parser_name = top_level_parser_grammar.GrammarAutomName;
                 test.fully_qualified_go_parser_name = top_level_parser_grammar.GrammarGoNewName;
-                parser_src_grammar_file_name = top_level_parser_grammar.GrammarFileName;
+                parser_src_grammar_file_name = top_level_parser_grammar.GrammarFileNameTarget;
                 test.parser_grammar_file_name = parser_src_grammar_file_name;
                 test.fully_qualified_lexer_name = top_level_lexer_grammar.GrammarAutomName;
                 test.fully_qualified_go_lexer_name = top_level_lexer_grammar.GrammarGoNewName;
-                lexer_src_grammar_file_name = top_level_lexer_grammar.GrammarFileName;
+                lexer_src_grammar_file_name = top_level_lexer_grammar.GrammarFileNameTarget;
                 test.lexer_grammar_file_name = lexer_src_grammar_file_name;
 
                 // Where the parser generated code lives.
@@ -456,7 +459,7 @@ namespace Trash
                 };
                 test.tool_grammar_files = test.tool_grammar_tuples
                     .Where(t => t.IsTopLevel)
-                    .Select(t => t.GrammarFileName).ToHashSet().ToList();
+                    .Select(t => t.GrammarFileNameTarget).ToHashSet().ToList();
                 test.parser_grammar_file_name = parser_src_grammar_file_name;
                 test.lexer_grammar_file_name = lexer_src_grammar_file_name;
             }
@@ -689,18 +692,53 @@ namespace Trash
                     config.Files = merged_list;
                 }
             }*/
+            //{
+            //    // Add the dirname to the current directory.
+            //    var cwd = Environment.CurrentDirectory.Replace("\\", "/");
+            //    if (!cwd.EndsWith("/")) cwd += "/";
+            //    var list_pp = new TrashGlobbing.Glob(cwd)
+            //        .RegexContents(".*g4$", false)
+            //        .Where(f => f is FileInfo)
+            //        .Select(f => f.FullName
+            //            .Replace('\\', '/')
+            //            .Replace(cwd, ""))
+            //        .ToList();
+            //    config.Files = list_pp;
+            //}
             {
-                // Add the dirname to the current directory.
-                var cwd = Environment.CurrentDirectory.Replace("\\", "/");
-                if (!cwd.EndsWith("/")) cwd += "/";
-                var list_pp = new TrashGlobbing.Glob(cwd)
-                    .RegexContents(".*g4$", false)
-                    .Where(f => f is FileInfo)
-                    .Select(f => f.FullName
-                        .Replace('\\', '/')
-                        .Replace(cwd, ""))
+                // Add any .g4's from each of the import directories.
+                var imports = navigator
+                    .Select("/desc/imports", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
                     .ToList();
-                config.Files = list_pp;
+                if (imports.Count > 1)
+                    throw new Exception("Too many <os-targets> elements, there should be only one.");
+                if (imports.Count != 0)
+                {
+                    var test_imports = imports.First().Split(';').ToList();
+                    test_imports.Insert(0, ".");
+                    config.imports = test_imports;
+                }
+                else config.imports = new List<string>() { "." };
+                foreach (var i in config.imports)
+                {
+                    var cwd = Environment.CurrentDirectory.Replace("\\", "/");
+                    if (!cwd.EndsWith("/")) cwd += "/";
+                    cwd += i;
+                    if (!cwd.EndsWith("/")) cwd += "/";
+                    var list_pp = new TrashGlobbing.Glob(cwd)
+                        .RegexContents(".*g4$", false)
+                        .Where(f => f is FileInfo)
+                        .Select(f => f.FullName
+                            .Replace('\\', '/')
+                            .Replace(cwd, ""))
+                        .ToList();
+                    var l = new List<string>();
+                    l.AddRange(config.Files);
+                    l.AddRange(list_pp);
+                    config.Files = l;
+                }
             }
             {
                 var spec_grammar_name = navigator
@@ -1181,23 +1219,78 @@ namespace Trash
                     throw;
                 }
 
-                // Find all source files.
+                // Find all source files, including imported grammars.
                 test.all_target_files = new List<string>();
-                var all_source_pattern = "^(?!.*(" +
-                                         (test.ignore_string != null
-                                             ? test.ignore_string + "|"
-                                             : "")
-                                         + "ignore/|Generated/|Generated-[^/]*/|target/|examples/|.git/|.gitignore|"
-                                         + Command.AllButTargetName(test.target)
-                                         + "/)).+"
-                                         + "$";
-                test.grammar_directory_source_files = new TrashGlobbing.Glob()
-                    .RegexContents(all_source_pattern)
-                    .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
-                    .Select(f => f.FullName.Replace('\\', '/'))
-                    .ToList();
                 GenFromTemplates(config, test);
-                AddSource(config, test);
+                foreach (var dir in config.imports)
+                {
+                    var cwd = Environment.CurrentDirectory.Replace("\\", "/");
+                    if (!cwd.EndsWith("/")) cwd += "/";
+                    cwd += dir;
+                    if (!cwd.EndsWith("/")) cwd += "/";
+
+                    // Convert to directory path.
+                    var ddd = Path.GetFullPath(cwd);
+                    ddd = ddd.Replace("\\", "/");
+                    if (!ddd.EndsWith("/")) ddd += "/";
+
+                    var all_source_pattern = "^(?!.*(" +
+                                             (test.ignore_string != null
+                                                 ? test.ignore_string + "|"
+                                                 : "")
+                                             + "ignore/|Generated/|Generated-[^/]*/|target/|examples/|.git/|.gitignore|"
+                                             + Command.AllButTargetName(test.target)
+                                             + "/)).+"
+                                             + "$";
+                    test.grammar_directory_source_files = new TrashGlobbing.Glob(cwd)
+                        .RegexContents(all_source_pattern)
+                        .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
+                        .Select(f => f.FullName.Replace('\\', '/'))
+                        .ToList();
+                    var cd = Environment.CurrentDirectory + "/";
+                    cd = cd.Replace('\\', '/');
+                    var set = new HashSet<string>();
+                    foreach (var path in test.grammar_directory_source_files)
+                    {
+                        // Construct proper starting directory based on namespace.
+                        var from = path;
+                        var f = from.Substring(ddd.Length); ;
+                        string to = null;
+                        if (test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileNameTarget).Any())
+                        {
+                            to = test.output_directory
+                                 + "/"
+                                 + test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileNameTarget).First();
+                        }
+                        else
+                        {
+                            // Now remove target directory.
+                            if (test.target == "Go" && f.EndsWith(".go"))
+                            {
+                                to = test.output_directory
+                                     + "/" + "parser" + f.Substring(test.target.Length);
+                            }
+                            else
+                            {
+                                f = (
+                                    f.StartsWith(
+                                        Command.TargetName(test.target) + '/')
+                                    ? f.Substring((Command.TargetName(test.target) + '/').Length)
+                                    : f
+                                    );
+                            }
+                            // Remove "src/main/java", a royal hangover from the Maven plugin.
+                            f = (
+                                    f.StartsWith("src/main/java/")
+                                    ? f.Substring("src/main/java".Length)
+                                    : f
+                                    );
+                            to = FixedName(f, config, test);
+                        }
+                        var content = File.ReadAllText(from);
+                        RefactorThis(config, test, from, to, content);
+                    }
+                }
             }
         }
 
@@ -1242,48 +1335,6 @@ namespace Trash
 
         public void AddSource(Config config, Test test)
         {
-            var cd = Environment.CurrentDirectory + "/";
-            cd = cd.Replace('\\', '/');
-            var set = new HashSet<string>();
-            foreach (var path in test.grammar_directory_source_files)
-            {
-                // Construct proper starting directory based on namespace.
-                var from = path;
-                var f = from.Substring(cd.Length);
-                string to = null;
-                if (test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileName).Any())
-                {
-                    to = test.output_directory
-                         + "/"
-                         + test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileName).First();
-                }
-                else
-                {
-                    // Now remove target directory.
-                    if (test.target == "Go" && f.EndsWith(".go"))
-                    {
-                        to = test.output_directory
-                             + "/" + "parser" + f.Substring(test.target.Length);
-                    }
-                    else {
-                        f = (
-                            f.StartsWith(
-                                Command.TargetName(test.target) + '/')
-                            ? f.Substring((Command.TargetName(test.target) + '/').Length)
-                            : f
-                            );
-                    }
-                    // Remove "src/main/java", a royal hangover from the Maven plugin.
-                    f = (
-                            f.StartsWith("src/main/java/")
-                            ? f.Substring("src/main/java".Length)
-                            : f
-                            ); 
-                    to = FixedName(f, config, test);
-                }
-                var content = File.ReadAllText(from);
-                RefactorThis(config, test, from, to, content);
-            }
         }
 
         static void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
@@ -1496,12 +1547,12 @@ namespace Trash
             test.parser_grammar_file_name = re.Replace(test.parser_grammar_file_name, "");
             foreach (var tu in test.tool_grammar_tuples)
             {
-                tu.GrammarFileName = re.Replace(tu.GrammarFileName, "");
+                tu.GrammarFileNameTarget = re.Replace(tu.GrammarFileNameTarget, "");
             }
 
             output_dir = output_dir + "/";
             var yo1 = test.grammar_directory_source_files
-                .Select(t =>
+                ?.Select(t =>
                     FixedName(t, config, test)
                         .Substring(output_dir.Length))
                 .Where(t => t.Contains(Suffix(test.target)))
@@ -1677,7 +1728,7 @@ namespace Trash
                     {
                         // Search for the grammar name in grammar tuples.
                         // Search for the grammar file name since that's what import does.
-                        var files = test.tool_grammar_tuples.Where(t => t.GrammarFileName == id + ".g4").ToList();
+                        var files = test.tool_grammar_tuples.Where(t => t.GrammarFileNameSource.EndsWith(id + ".g4")).ToList();
                         if (!files.Any()) throw new Exception("Cannot find imported file " + id + ".g4");
                         // Add an edge from the current grammar to grammars that are imported.
                         foreach (var f in files)
@@ -1704,7 +1755,7 @@ namespace Trash
                         // pick off the lexer name.
                         foreach (var tup in test.tool_grammar_tuples)
                         {
-                            if (tup.GrammarFileName == id + ".g4" &&
+                            if (tup.GrammarFileNameTarget == id + ".g4" &&
                                 tup.WhatType == GrammarTuple.Type.Lexer)
                             {
                                 tup.IsTopLevel = true;
