@@ -1728,7 +1728,7 @@ namespace Trash
                     {
                         // Search for the grammar name in grammar tuples.
                         // Search for the grammar file name since that's what import does.
-                        var files = test.tool_grammar_tuples.Where(t => t.GrammarFileNameSource.EndsWith(id + ".g4")).ToList();
+                        var files = test.tool_grammar_tuples.Where(t => t.GrammarFileNameSource.EndsWith("/" + id + ".g4")).ToList();
                         if (!files.Any()) throw new Exception("Cannot find imported file " + id + ".g4");
                         // Add an edge from the current grammar to grammars that are imported.
                         foreach (var f in files)
