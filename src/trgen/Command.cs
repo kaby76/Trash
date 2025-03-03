@@ -67,6 +67,12 @@ namespace Trash
                     string sgfn; // Where the grammar is.
                     string tgfn; // Where the grammar existed in the generated output parser directory.
                     var p = test.package.Replace(".", "/");
+
+                    var cwd = Environment.CurrentDirectory.Replace("\\", "/");
+                    cwd = cwd.Replace("\\", "/");
+                    if (!cwd.EndsWith("/")) cwd += "/";
+                    var v = f.Replace(cwd, "");
+
                     ParsingResultSet parsing_result_set;
                     var pre = p == "" ? "" : p + "/";
                     if (test.target == "Antlr4cs" || test.target == "CSharp") pre = ""; // Erase. Packages don't need to be placed in a directory named for the package.
@@ -74,7 +80,7 @@ namespace Trash
                     if (f == "st.Arithmetic.g4")
                     {
                         sgfn = f;
-                        tgfn = pre + f;
+                        tgfn = pre + v;
                         string code = null;
                         if (config.template_sources_directory == null)
                         {
@@ -107,17 +113,17 @@ namespace Trash
                         {
                             sgfn = f;
                             //tgfn = per_grammar.package.Replace(".", "/") + (test.target == "Go" ? per_grammar.grammar_name + "/" : "") + f;
-                            tgfn = pre + f;
+                            tgfn = pre + v;
                         }
                         else if (File.Exists(test.current_directory + f))
                         {
                             sgfn = test.current_directory + f;
-                            tgfn = pre + f;
+                            tgfn = pre + v;
                         }
                         else if (File.Exists(test.target + "/" + f))
                         {
                             sgfn = test.target + "/" + f;
-                            tgfn = pre + f;
+                            tgfn = pre + v;
                         }
                         else
                         {
@@ -285,9 +291,22 @@ namespace Trash
                 System.Console.Error.WriteLine("Dependency graph of grammar:");
                 System.Console.Error.WriteLine(dependency_graph.ToString());
 
+
+                // Mark all grammars that have no edges "in" are top level.
+                var subset = dependency_graph.Vertices.ToList();
+                foreach (var n in subset)
+                {
+                    if (!dependency_graph.Edges.Any(e => e.To == n))
+                    {
+                        foreach (var z in test.tool_grammar_tuples.Where(t => t.GrammarName == n))
+                        {
+                            z.IsTopLevel = true;
+                        }
+                    }
+                }
+
                 // Pick top-level parser grammar.
                 GrammarTuple top_level_parser_grammar = null;
-                
                 
                 if(test.grammar_name == null)
                 {
@@ -336,7 +355,7 @@ namespace Trash
                 {
                     var all_lexers =
                         test.tool_grammar_tuples.Where(
-                            t => t.WhatType == GrammarTuple.Type.Lexer && t.IsTopLevel).ToList();
+                            t => t.WhatType == GrammarTuple.Type.Lexer).ToList();
                     var all = all_lexers.Where(t =>
                     {
                         if (dependency_graph.Edges.Where(
@@ -345,7 +364,6 @@ namespace Trash
                             return true;
                         else return false;
                     }).ToList();
-
                     if (!all.Any())
                     {
                         throw new Exception("Can't figure out the top-level lexer tuple.");
@@ -354,8 +372,16 @@ namespace Trash
                     {
                         throw new Exception("Can't figure out the top-level lexer tuple.");
                     }
-                    top_level_lexer_grammar = all.First();   
+                    top_level_lexer_grammar = all.First();
+                    
+                    // Make sure to mark top level lexer grammar as
+                    // top leve.
+                    all.First().IsTopLevel = true;
                 }
+
+                System.Console.Error.WriteLine("Top-level grammars "
+                                               + String.Join(" ", test.tool_grammar_tuples.Where(t => t.IsTopLevel)
+                                                   .Select(t => t.GrammarName)));
 
                 // Pick from all top-level grammars,
                 // the grammars that are tested. Other top level grammars
@@ -387,54 +413,47 @@ namespace Trash
                     }
                 }
 
+                System.Console.Error.WriteLine("Start rule " + test.start_rule);
+
 
                 // Update top-level automaton names in grammar tuples GrammarAutomName and GrammarGoNewName
                 // We are only interested in top-level grammars as they appear in some form in the
                 // build files.
-                foreach (var t in test.tool_grammar_tuples)
                 {
-                    if (!t.IsTopLevel) continue;
-                    if (t.WhatType == GrammarTuple.Type.Parser)
+                    var pre1 = test.package == "" ? "" : test.package + "/";
+                    var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
+                    if (test.target == "Go")
                     {
-                        var pre1 = test.package == "" ? "" : test.package + "/";
-                        var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
-                        if (test.target == "Go")
-                        {
-                            t.GrammarAutomName = pre2 + t.GrammarName;
-                            t.GeneratedFileName = pre1 + t.GrammarName.ToLower().Replace("parser","") + "_parser" +  Suffix(test.target);
-                            t.GeneratedIncludeFileName = "";
-                            t.GrammarGoNewName = pre2 + "New" + t.GrammarName;
-                        }
-                        else
-                        {
-                            t.GrammarAutomName = pre2 + t.GrammarName;
-                            t.GeneratedFileName = pre1 + t.GrammarAutomName + Suffix(test.target);
-                            t.GeneratedIncludeFileName = pre1 + t.GrammarAutomName + ".h";
-                            t.GrammarGoNewName = "";
-                        }
+                        top_level_parser_grammar.GrammarAutomName = pre2 + top_level_parser_grammar.GrammarName;
+                        top_level_parser_grammar.GeneratedFileName = pre1 + top_level_parser_grammar.GrammarName.ToLower().Replace("parser","") + "_parser" +  Suffix(test.target);
+                        top_level_parser_grammar.GeneratedIncludeFileName = "";
+                        top_level_parser_grammar.GrammarGoNewName = pre2 + "New" + top_level_parser_grammar.GrammarName;
                     }
-                    else if (t.WhatType == GrammarTuple.Type.Lexer)
+                    else
                     {
-                        var pre1 = test.package == "" ? "" : test.package + "/";
-                        var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
-                        if (test.target == "Go")
-                        {
-                            t.GrammarAutomName = pre2 + t.GrammarName;
-                            t.GeneratedFileName = pre1 + t.GrammarName.ToLower().Replace("lexer","") + "_lexer" + Suffix(test.target);
-                            t.GeneratedIncludeFileName = "";
-                            t.GrammarGoNewName = pre2 + "New" + t.GrammarName;
-                        }
-                        else
-                        {
-                            t.GrammarAutomName = pre2 + t.GrammarName;
-                            t.GeneratedFileName = pre1 + t.GrammarAutomName + Suffix(test.target);
-                            t.GeneratedIncludeFileName = pre1 + t.GrammarAutomName + ".h";
-                            t.GrammarGoNewName = "";
-                        }
+                        top_level_parser_grammar.GrammarAutomName = pre2 + top_level_parser_grammar.GrammarName;
+                        top_level_parser_grammar.GeneratedFileName = pre1 + top_level_parser_grammar.GrammarAutomName + Suffix(test.target);
+                        top_level_parser_grammar.GeneratedIncludeFileName = pre1 + top_level_parser_grammar.GrammarAutomName + ".h";
+                        top_level_parser_grammar.GrammarGoNewName = "";
                     }
-                    else if (t.WhatType == GrammarTuple.Type.Combined)
+                }
+
+                {
+                    var pre1 = test.package == "" ? "" : test.package + "/";
+                    var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
+                    if (test.target == "Go")
                     {
-                        throw new Exception("We should not have 'combined' at this point.");
+                        top_level_lexer_grammar.GrammarAutomName = pre2 + top_level_lexer_grammar.GrammarName;
+                        top_level_lexer_grammar.GeneratedFileName = pre1 + top_level_lexer_grammar.GrammarName.ToLower().Replace("lexer","") + "_lexer" + Suffix(test.target);
+                        top_level_lexer_grammar.GeneratedIncludeFileName = "";
+                        top_level_lexer_grammar.GrammarGoNewName = pre2 + "New" + top_level_lexer_grammar.GrammarName;
+                    }
+                    else
+                    {
+                        top_level_lexer_grammar.GrammarAutomName = pre2 + top_level_lexer_grammar.GrammarName;
+                        top_level_lexer_grammar.GeneratedFileName = pre1 + top_level_lexer_grammar.GrammarAutomName + Suffix(test.target);
+                        top_level_lexer_grammar.GeneratedIncludeFileName = pre1 + top_level_lexer_grammar.GrammarAutomName + ".h";
+                        top_level_lexer_grammar.GrammarGoNewName = "";
                     }
                 }
 
@@ -1758,7 +1777,6 @@ namespace Trash
                             if (tup.GrammarFileNameTarget == id + ".g4" &&
                                 tup.WhatType == GrammarTuple.Type.Lexer)
                             {
-                                tup.IsTopLevel = true;
                                 if (graph.Edges.Any(e2 => e2.From == v && e2.To == tup.GrammarName)) continue;
                                 DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = tup.GrammarName };
                                 graph.AddEdge(e);
@@ -1782,27 +1800,12 @@ namespace Trash
                             if (graph.Edges.Any(e2 => e2.From == v && e2.To == x.GrammarName)) continue;
                             DirectedEdge<string> e = new DirectedEdge<string>() { From = v, To = x.GrammarName };
                             graph.AddEdge(e);
-                            // Make sure to mark lexer grammar as "top level".
-                            x.IsTopLevel = true;
                         }
                     }
                 }
             }
 
-            // Mark all grammars that have no edges "in" are top level.
-            var subset = graph.Vertices.ToList();
-            foreach (var n in subset)
-            {
-                if (!graph.Edges.Any(e => e.To == n))
-                {
-                    foreach (var z in test.tool_grammar_tuples.Where(t => t.GrammarName == n))
-                    {
-                        z.IsTopLevel = true;
-                    }
-                }
-            }
-
-            var sort = new TopologicalSort<string, DirectedEdge<string>>(graph, subset);
+            var sort = new TopologicalSort<string, DirectedEdge<string>>(graph, graph.Vertices.ToList());
             List<string> order = sort.Topological_sort();
             order.Reverse();
             test.tool_grammar_tuples.Sort(new GrammarOrderCompare(order));
