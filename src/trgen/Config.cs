@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace Trash
@@ -68,7 +69,7 @@ namespace Trash
         public List<Test> Tests;
 
         public string ignore_list_of_files = ".trgen-ignore";
-        public List<string> imports { get; set; }
+        public List<string> imports { get; set; } = new List<string>();
 
         public Config()
         {
