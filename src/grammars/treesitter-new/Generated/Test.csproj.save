@@ -11,7 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
-    <PackageReference Include="Antlr4BuildTasks" Version="12.5" PrivateAssets="all" />
+    <PackageReference Include="Antlr4BuildTasks" Version="12.10" PrivateAssets="all" />
     <PackageReference Include="AntlrTreeEditing" Version="4.1.0" />
   </ItemGroup>
 	<ItemGroup>
