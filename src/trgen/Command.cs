@@ -1139,6 +1139,7 @@ namespace Trash
         public void GenerateFromGrammarFilesOnly(Config config)
         {
             {
+                config.imports = new List<string>() { "." };
                 var all = "Antlr4ng;CSharp;Cpp;Dart;Go;Java;JavaScript;PHP;Python3;TypeScript".Split(';').ToList();
                 if (config.targets != null && config.targets.Count() > 0) all = config.targets.ToList();
                 foreach (var target in all)
