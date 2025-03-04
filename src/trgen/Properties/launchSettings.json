@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t CSharp",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\basic-trees"
+      "commandLineArgs": "-t Antlr4ng",
+      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\grammars-v4\\glsl"
     }
   }
 }

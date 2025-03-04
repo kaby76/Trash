@@ -203,9 +203,9 @@ namespace Trash
                     // => https://github.com/antlr/antlr4/blob/1b144fa7b40f6d1177c9e4f400a6a04f4103d02e/tool/src/org/antlr/v4/codegen/target/GoTarget.java#L118
                     if (is_parser_grammar)
                     {
-                        var p1 = test.package;
-                        var pre1 = p1 == "" ? "" : p1 + "/";
                         string antlr_args = "";
+                        var pre1 = test.package == "" ? "" : test.package + "/";
+                        var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
                         var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
                                 GrammarFileNameTarget = tgfn,
@@ -216,6 +216,20 @@ namespace Trash
                                 StartSymbol = start_symbol,
                                 WhatType = GrammarTuple.Type.Parser,
                             };
+                        if (test.target == "Go")
+                        {
+                            g.GrammarAutomName = pre2 + g.GrammarName;
+                            g.GeneratedFileName = pre1 + g.GrammarName.ToLower().Replace("parser", "") + "_parser" + Suffix(test.target);
+                            g.GeneratedIncludeFileName = "";
+                            g.GrammarGoNewName = pre2 + "New" + g.GrammarName;
+                        }
+                        else
+                        {
+                            g.GrammarAutomName = pre2 + g.GrammarName;
+                            g.GeneratedFileName = pre1 + g.GrammarAutomName + Suffix(test.target);
+                            g.GeneratedIncludeFileName = pre1 + g.GrammarAutomName + ".h";
+                            g.GrammarGoNewName = "";
+                        }
                         test.tool_grammar_tuples.Add(g);
                     }
                     else if (is_lexer_grammar)
@@ -232,6 +246,22 @@ namespace Trash
                                 StartSymbol = start_symbol,
                                 WhatType = GrammarTuple.Type.Lexer,
                             };
+                        var pre1 = test.package == "" ? "" : test.package + "/";
+                        var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
+                        if (test.target == "Go")
+                        {
+                            g.GrammarAutomName = pre2 + g.GrammarName;
+                            g.GeneratedFileName = pre1 + g.GrammarName.ToLower().Replace("parser", "") + "_parser" + Suffix(test.target);
+                            g.GeneratedIncludeFileName = "";
+                            g.GrammarGoNewName = pre2 + "New" + g.GrammarName;
+                        }
+                        else
+                        {
+                            g.GrammarAutomName = pre2 + g.GrammarName;
+                            g.GeneratedFileName = pre1 + g.GrammarAutomName + Suffix(test.target);
+                            g.GeneratedIncludeFileName = pre1 + g.GrammarAutomName + ".h";
+                            g.GrammarGoNewName = "";
+                        }
                         test.tool_grammar_tuples.Add(g);
                     }
                     else
@@ -248,6 +278,22 @@ namespace Trash
                                 StartSymbol = start_symbol,
                                 WhatType = GrammarTuple.Type.Parser,
                             };
+                            var pre1 = test.package == "" ? "" : test.package + "/";
+                            var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
+                            if (test.target == "Go")
+                            {
+                                g.GrammarAutomName = pre2 + g.GrammarName;
+                                g.GeneratedFileName = pre1 + g.GrammarName.ToLower().Replace("parser", "") + "_parser" + Suffix(test.target);
+                                g.GeneratedIncludeFileName = "";
+                                g.GrammarGoNewName = pre2 + "New" + g.GrammarName;
+                            }
+                            else
+                            {
+                                g.GrammarAutomName = pre2 + g.GrammarName;
+                                g.GeneratedFileName = pre1 + g.GrammarAutomName + Suffix(test.target);
+                                g.GeneratedIncludeFileName = pre1 + g.GrammarAutomName + ".h";
+                                g.GrammarGoNewName = "";
+                            }
                             test.tool_grammar_tuples.Add(g);
                         }
                         {
@@ -266,7 +312,8 @@ namespace Trash
                                 else
                                     antlr_args = "";
                             }
-
+                            var pre1 = test.package == "" ? "" : test.package + "/";
+                            var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
                             var g = new GrammarTuple() {
                                 AntlrArgs = antlr_args,
                                 GrammarFileNameTarget = tgfn,
@@ -277,6 +324,20 @@ namespace Trash
                                 StartSymbol = start_symbol,
                                 WhatType = GrammarTuple.Type.Lexer,
                             };
+                            if (test.target == "Go")
+                            {
+                                g.GrammarAutomName = pre2 + g.GrammarName;
+                                g.GeneratedFileName = pre1 + g.GrammarName.ToLower().Replace("parser", "") + "_parser" + Suffix(test.target);
+                                g.GeneratedIncludeFileName = "";
+                                g.GrammarGoNewName = pre2 + "New" + g.GrammarName;
+                            }
+                            else
+                            {
+                                g.GrammarAutomName = pre2 + g.GrammarName;
+                                g.GeneratedFileName = pre1 + g.GrammarAutomName + Suffix(test.target);
+                                g.GeneratedIncludeFileName = pre1 + g.GrammarAutomName + ".h";
+                                g.GrammarGoNewName = "";
+                            }
                             test.tool_grammar_tuples.Add(g);
                         }
                     }
