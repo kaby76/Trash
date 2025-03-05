@@ -15,7 +15,8 @@ namespace Trash
         public string GeneratedFileName { get; set; }
         public string GeneratedIncludeFileName { get; set; }
         public string GrammarAutomName { get; set; }
-        public string GrammarFileName { get; set; }
+        public string GrammarFileNameTarget { get; set; }
+        public string GrammarFileNameSource { get; set; }
         public string GrammarGoNewName { get; set; }
         public string GrammarName { get; set; }
         public bool IsTopLevel { get; set; }
