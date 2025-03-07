@@ -545,7 +545,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.16";
+        public static string version = "0.23.17";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1302,7 +1302,7 @@ namespace Trash
 
                 // Find all source files, including imported grammars.
                 test.all_target_files = new List<string>();
-                GenFromTemplates(config, test);
+                test.grammar_directory_source_files = new List<string>();
                 foreach (var dir in config.imports)
                 {
                     var cwd = Environment.CurrentDirectory.Replace("\\", "/");
@@ -1323,16 +1323,31 @@ namespace Trash
                                              + Command.AllButTargetName(test.target)
                                              + "/)).+"
                                              + "$";
-                    test.grammar_directory_source_files = new TrashGlobbing.Glob(cwd)
+                    var l = new TrashGlobbing.Glob(cwd)
                         .RegexContents(all_source_pattern)
                         .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                         .Select(f => f.FullName.Replace('\\', '/'))
                         .ToList();
+                    test.grammar_directory_source_files.AddRange(l);
+                }
+                GenFromTemplates(config, test);
+                foreach (var dir in config.imports)
+                {
                     var cd = Environment.CurrentDirectory + "/";
                     cd = cd.Replace('\\', '/');
                     var set = new HashSet<string>();
                     foreach (var path in test.grammar_directory_source_files)
                     {
+                        var cwd = Environment.CurrentDirectory.Replace("\\", "/");
+                        if (!cwd.EndsWith("/")) cwd += "/";
+                        cwd += dir;
+                        if (!cwd.EndsWith("/")) cwd += "/";
+
+                        // Convert to directory path.
+                        var ddd = Path.GetFullPath(cwd);
+                        ddd = ddd.Replace("\\", "/");
+                        if (!ddd.EndsWith("/")) ddd += "/";
+                        
                         // Construct proper starting directory based on namespace.
                         var from = path;
                         var f = from.Substring(ddd.Length); ;
@@ -1633,7 +1648,7 @@ namespace Trash
 
             output_dir = output_dir + "/";
             var yo1 = test.grammar_directory_source_files
-                ?.Select(t =>
+                .Select(t =>
                     FixedName(t, config, test)
                         .Substring(output_dir.Length))
                 .Where(t => t.Contains(Suffix(test.target)))

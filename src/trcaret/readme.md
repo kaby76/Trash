@@ -18,7 +18,7 @@ Reads a tree from stdin and prints lines and caret marks.
 
 ## Current version
 
-0.23.16 Updated trgen grammar dependency analysis.
+0.23.17 Fix trgen Cpp target.
 
 ## License
 
