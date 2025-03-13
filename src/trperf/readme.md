@@ -41,7 +41,7 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.23.17 Fix trgen Cpp target.
+0.23.18 Remove old trst.
 
 ## License
 

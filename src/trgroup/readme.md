@@ -56,7 +56,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.17 Fix trgen Cpp target.
+0.23.18 Remove old trst.
 
 ## License
 

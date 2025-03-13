@@ -18,7 +18,7 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-0.23.17 Fix trgen Cpp target.
+0.23.18 Remove old trst.
 
 ## License
 
