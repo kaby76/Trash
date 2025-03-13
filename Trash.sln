@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtree", "src\trtree\trtree
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trtext", "src\trtext\trtext.csproj", "{35315780-A2B9-46DC-A19F-8F479A52FA0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trst", "src\trst\trst.csproj", "{215AA501-DF63-42D6-B5F3-964365B591B9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxml", "src\trxml\trxml.csproj", "{24D91B9C-5107-4847-BA52-C46ED91B4222}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trjson", "src\trjson\trjson.csproj", "{44488488-568F-4E0F-A721-BA0B9A15FF3F}"
@@ -185,8 +183,6 @@ Global
 		{35315780-A2B9-46DC-A19F-8F479A52FA0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35315780-A2B9-46DC-A19F-8F479A52FA0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35315780-A2B9-46DC-A19F-8F479A52FA0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{215AA501-DF63-42D6-B5F3-964365B591B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{215AA501-DF63-42D6-B5F3-964365B591B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24D91B9C-5107-4847-BA52-C46ED91B4222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{24D91B9C-5107-4847-BA52-C46ED91B4222}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24D91B9C-5107-4847-BA52-C46ED91B4222}.Release|Any CPU.ActiveCfg = Release|Any CPU
