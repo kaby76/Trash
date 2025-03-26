@@ -45,18 +45,18 @@ class Command
         ICharStream cs = CharStreams.fromString(input);
         var slexer = new QueryLexer(cs);
         CommonTokenStream stokens = new CommonTokenStream(slexer);
-	var sparser = new QueryParser(stokens);
-	var listener_lexer = new ErrorListener<int>(false, false, System.Console.Error);
-	var listener_parser = new ErrorListener<IToken>(false, false, System.Console.Error);
-	slexer.RemoveErrorListeners();
-	sparser.RemoveErrorListeners();
-	slexer.AddErrorListener(listener_lexer);
-	sparser.AddErrorListener(listener_parser);
+	    var sparser = new QueryParser(stokens);
+	    var listener_lexer = new ErrorListener<int>(false, false, System.Console.Error);
+	    var listener_parser = new ErrorListener<IToken>(false, false, System.Console.Error);
+	    slexer.RemoveErrorListeners();
+	    sparser.RemoveErrorListeners();
+	    slexer.AddErrorListener(listener_lexer);
+	    sparser.AddErrorListener(listener_parser);
         var stree = sparser.commands();
-	if (listener_parser.had_error || listener_lexer.had_error)
-	{
-		throw new Exception("Bad query. " + input);
-	}
+	    if (listener_parser.had_error || listener_lexer.had_error)
+	    {
+		    throw new Exception("Bad query. " + input);
+	    }
 
         string lines = null;
         if (!(config.File != null && config.File != ""))

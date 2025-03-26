@@ -39,6 +39,9 @@ be in a trgen-generated parser directory, or use the -p option.
     # print out performance data for a parse, ignore the header line, sort on "Max k", and output in a formatted table.
     trperf aggregate01.sql | tail -n +2 | sort -k6 -n -r | column -t
 
+    # print out performance with header, sorting on ambiguity.
+    trperf x.go -h -c aFdriTkmfaet | ( head -n 1 && tail -n +2 | sort -k1 -n -r ) | head | column -t
+
 ## Current version
 
 0.23.18 Remove old trst.

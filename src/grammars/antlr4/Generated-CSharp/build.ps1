@@ -1,9 +1,9 @@
-# Generated from trgen 0.23.12
+# Generated from trgen 0.23.18
 if (Test-Path -Path transformGrammar.py -PathType Leaf) {
     $(& python3 transformGrammar.py ) 2>&1 | Write-Host
 }
 
-$version = dotnet trxml2 .\Other.csproj `
+$version = dotnet trxml2 Other.csproj `
     | Where-Object { $_ -match 'PackageReference/@Version' } `
     | ForEach-Object {
         ($_ -split '=')[1].Trim()

@@ -1,4 +1,4 @@
-# Generated from trgen 0.23.12
+# Generated from trgen 0.23.18
 
 # glob patterns
 shopt -s globstar
@@ -9,7 +9,7 @@ IFS=$(echo -en "\n\b")
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
-files2=`dotnet trglob '../examples' | grep -v '.errors$' | grep -v '.tree$'`
+files2=`dotnet trglob '../examples/**/*.g4' | grep -v '.errors$' | grep -v '.tree$'`
 files=()
 for f in $files2
 do
@@ -54,7 +54,7 @@ then
     exit 1
 fi
 
-# rm -rf `find ../examples -type f -name '*.errors' -o -name '*.tree' -size 0`
+# rm -rf `find ../examples/**/*.g4 -type f -name '*.errors' -o -name '*.tree' -size 0`
 
 # For Unix environments, convert the newline in the .errors and .trees
 # to Unix style.
@@ -68,7 +68,7 @@ case "${unameOut}" in
 esac
 if [[ "$machine" == "MinGw" || "$machine" == "Msys" || "$machine" == "Cygwin" || "#machine" == "Linux" ]]
 then
-    gen=`find ../examples -type f -name '*.errors' -o -name '*.tree'`
+    gen=`find ../examples/**/*.g4 -type f -name '*.errors' -o -name '*.tree'`
     if [ "$gen" != "" ]
     then
         dos2unix -f $gen

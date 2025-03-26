@@ -581,6 +581,16 @@ public interface IANTLRv4ParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAtom([NotNull] ANTLRv4Parser.AtomContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ANTLRv4Parser.wildcard"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterWildcard([NotNull] ANTLRv4Parser.WildcardContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ANTLRv4Parser.wildcard"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitWildcard([NotNull] ANTLRv4Parser.WildcardContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ANTLRv4Parser.notSet"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -680,4 +690,14 @@ public interface IANTLRv4ParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitIdentifier([NotNull] ANTLRv4Parser.IdentifierContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ANTLRv4Parser.qualifiedIdentifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterQualifiedIdentifier([NotNull] ANTLRv4Parser.QualifiedIdentifierContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ANTLRv4Parser.qualifiedIdentifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitQualifiedIdentifier([NotNull] ANTLRv4Parser.QualifiedIdentifierContext context);
 }

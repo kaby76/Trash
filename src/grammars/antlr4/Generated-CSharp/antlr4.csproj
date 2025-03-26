@@ -1,4 +1,4 @@
-<!-- Generated from trgen 0.23.12 -->
+<!-- Generated from trgen 0.23.18 -->
 <Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,8 +9,7 @@
    <Antlr4 Include="ANTLRv4Lexer.g4">
 <Package></Package></Antlr4>
    <Antlr4 Include="ANTLRv4Parser.g4">
-<Package></Package>
-   </Antlr4>
+<Package></Package></Antlr4>
   </ItemGroup>
   <Import Project="Other.csproj"></Import>
   <PropertyGroup>
@@ -26,7 +25,7 @@
     -->
     <MyTester><![CDATA[
 set ERR=0
-for %%G in (..\examples\*) do (
+for %%G in (..\examples\**\*.g4\*) do (
   setlocal EnableDelayedExpansion
   set FILE=%%G
   set X1=%%~xG
