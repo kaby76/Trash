@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/grammars-v4/sql/mysql/Oracle/MySQLParser.g4",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-changes-from-antlr-ng\\antlr\\antlr4\\Generated-CSharp"
+      "commandLineArgs": "--ambig X.go",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4449-part-3\\golang\\Generated-CSharp"
     }
   }
 }

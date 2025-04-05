@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 
 namespace Trash;
@@ -15,8 +16,7 @@ public class Config
     [Option("arithmetic", Required = false, HelpText = "Generate arithmetic example from templates.")]
     public bool generateArithmeticExample { get; set; }
 
-    [Option('e', "os-targets", Required = false, HelpText = "Set os target type.")]
-    public IEnumerable<string> os_targets { get; set; } = new List<string>() { Command.GetOSTarget() };
+    public List<OSPlatform> os_targets { get; set; } = new List<OSPlatform>() { Command.GetOSTarget() };
 
     [Option("force", Required = false, HelpText = "Force the generation of a target.")]
     public bool force { get; set; }
@@ -82,7 +82,7 @@ public class Config
         this.generateArithmeticExample = false;
         string file_name = Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"desc.xml";
         this.hasDesc = File.Exists(file_name);
-        this.os_targets = new List<string>() { Command.GetOSTarget() };
+        this.os_targets = new List<OSPlatform>();
         this.Files = new List<string>();
         this.flatten = false;
         this.grammar_name = null; // null means find using parsing and xpath of grammars.
