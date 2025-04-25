@@ -82,7 +82,7 @@ public class Config
         this.generateArithmeticExample = false;
         string file_name = Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"desc.xml";
         this.hasDesc = File.Exists(file_name);
-        this.os_targets = new List<OSPlatform>();
+        this.os_targets = new List<OSPlatform>() { Command.GetOSTarget() };
         this.Files = new List<string>();
         this.flatten = false;
         this.grammar_name = null; // null means find using parsing and xpath of grammars.
