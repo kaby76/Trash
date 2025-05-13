@@ -27,7 +27,7 @@ make sure to enclose the argument as it contains semi-colons.
 
 ## Current version
 
-0.23.18 Remove old trst.
+0.23.18 General clean up and bug fixes.
 
 ## License
 

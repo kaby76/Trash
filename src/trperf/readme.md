@@ -44,7 +44,7 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.23.18 Remove old trst.
+0.23.18 General clean up and bug fixes.
 
 ## License
 

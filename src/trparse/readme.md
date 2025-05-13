@@ -50,7 +50,7 @@ the `--type` command-line option:
 
 ## Current version
 
-0.23.18 Remove old trst.
+0.23.18 General clean up and bug fixes.
 
 ## License
 

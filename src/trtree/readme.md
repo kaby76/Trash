@@ -18,7 +18,7 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 ## Current version
 
-0.23.18 Remove old trst.
+0.23.18 General clean up and bug fixes.
 
 ## License
 
