@@ -14,7 +14,7 @@
 
 ## Current version
 
-0.23.17 Fix trgen Cpp target.
+0.23.18 General clean up and bug fixes.
 
 ## License
 

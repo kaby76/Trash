@@ -362,6 +362,12 @@ public interface IANTLRv4ParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitAtom([NotNull] ANTLRv4Parser.AtomContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ANTLRv4Parser.wildcard"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitWildcard([NotNull] ANTLRv4Parser.WildcardContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ANTLRv4Parser.notSet"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -421,4 +427,10 @@ public interface IANTLRv4ParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitIdentifier([NotNull] ANTLRv4Parser.IdentifierContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ANTLRv4Parser.qualifiedIdentifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitQualifiedIdentifier([NotNull] ANTLRv4Parser.QualifiedIdentifierContext context);
 }

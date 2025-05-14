@@ -1,6 +1,6 @@
-# Generated from trgen 0.23.12
+# Generated from trgen 0.23.18
 
-$Tests = "../examples"
+$Tests = "../examples\**\*.g4"
 Write-Host "Test cases here: $Tests"
 
 # Get a list of test files from the test directory. Do not include any

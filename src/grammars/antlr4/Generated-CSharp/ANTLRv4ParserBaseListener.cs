@@ -696,6 +696,18 @@ public partial class ANTLRv4ParserBaseListener : IANTLRv4ParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAtom([NotNull] ANTLRv4Parser.AtomContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ANTLRv4Parser.wildcard"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterWildcard([NotNull] ANTLRv4Parser.WildcardContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ANTLRv4Parser.wildcard"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitWildcard([NotNull] ANTLRv4Parser.WildcardContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ANTLRv4Parser.notSet"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -815,6 +827,18 @@ public partial class ANTLRv4ParserBaseListener : IANTLRv4ParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitIdentifier([NotNull] ANTLRv4Parser.IdentifierContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ANTLRv4Parser.qualifiedIdentifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterQualifiedIdentifier([NotNull] ANTLRv4Parser.QualifiedIdentifierContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ANTLRv4Parser.qualifiedIdentifier"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitQualifiedIdentifier([NotNull] ANTLRv4Parser.QualifiedIdentifierContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Cpp",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4434\\antlr\\antlr4"
+      "commandLineArgs": "-t Java",
+      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\grammars-v4\\b"
     }
   }
 }

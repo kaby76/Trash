@@ -206,27 +206,73 @@ public class Grun
         Type type = null;
         if (parser_type == null || parser_type == "")
         {
-            string path = config.ParserLocation != null
-                ? config.ParserLocation
-                : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
-            path = path.Replace("\\", "/");
-            if (!path.EndsWith("/")) path = path + "/";
-            var full_path = path + "Generated-CSharp/bin/Debug/net8.0/";
-            var exists = File.Exists(full_path + "Test.dll");
-            if (!exists) full_path = path + "bin/Debug/net8.0/";
-            exists = File.Exists(full_path + "Test.dll");
-            if (!exists) full_path = path + "Generated-CSharp/bin/Release/net8.0/";
-            exists = File.Exists(full_path + "Test.dll");
-            if (!exists) full_path = path + "bin/Release/net8.0/";
-            full_path = Path.GetFullPath(full_path);
-            Assembly asm = Assembly.LoadFile(full_path + config.Dll + ".dll");
-            Type[] types = asm.GetTypes();
-            type = asm.GetType("Program");
+            var extension = Path.GetExtension(input_name);
+            // There are two choices:
+            // If a Generated-CSharp directory exists, use that.
+            // If the directory does not exist, pick based on
+            // file extension.
+            parser_type = extension switch
+            {
+                ".g4" => "ANTLRv4",
+                ".g3" => "ANTLRv3",
+                ".g2" => "ANTLRv2",
+                ".peg" => "pegen_v3_10",
+                ".rex" => "rex",
+                ".y" => "Bison",
+                _ => null
+            };
+            var subdir = parser_type switch
+            {
+                "ANTLRv4" => "antlr4",
+                "ANTLRv3" => "antlr3",
+                "ANTLRv2" => "antlr2",
+                "pegen_v3_10" => "pegen",
+                "rex" => "rex",
+                "Bison" => "bison",
+                _ => null
+            };
+            if (subdir != null)
+            {
+                // Get this assembly.
+                System.Reflection.Assembly a = this.GetType().Assembly;
+                string path = a.Location;
+                path = Path.GetDirectoryName(path);
+                path = path.Replace("\\", "/");
+                if (!path.EndsWith("/")) path = path + "/";
+                var full_path = path;
+                var exists = File.Exists(full_path + subdir + ".dll");
+                full_path = Path.GetFullPath(full_path);
+                Assembly asm = Assembly.LoadFile(full_path + subdir + ".dll");
+                Type[] types = asm.GetTypes();
+                type = asm.GetType("Program");
+            }
+            else
+            {
+                string path = config.ParserLocation != null
+                    ? config.ParserLocation
+                    : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
+                path = path.Replace("\\", "/");
+                if (!path.EndsWith("/")) path = path + "/";
+                var full_path = path + "Generated-CSharp/bin/Debug/net8.0/";
+                var exists = File.Exists(full_path + "Test.dll");
+                if (!exists) full_path = path + "bin/Debug/net8.0/";
+                exists = File.Exists(full_path + "Test.dll");
+                if (!exists) full_path = path + "Generated-CSharp/bin/Release/net8.0/";
+                exists = File.Exists(full_path + "Test.dll");
+                if (!exists) full_path = path + "bin/Release/net8.0/";
+                exists = File.Exists(full_path + "Test.dll");
+                if (exists)
+                {
+                    full_path = Path.GetFullPath(full_path);
+                    Assembly asm = Assembly.LoadFile(full_path + config.Dll + ".dll");
+                    Type[] types = asm.GetTypes();
+                    type = asm.GetType("Program");
+                }
+            }
         }
         else
         {
             System.Console.Error.WriteLine("Using built-in parser.");
-
             var subdir = parser_type switch
             {
                 "ANTLRv4" => "antlr4",

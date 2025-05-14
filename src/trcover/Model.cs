@@ -152,14 +152,14 @@ namespace Trash
             if (ct2 != null) return this.Visit(ct2);
             var ct3 = context.notSet();
             if (ct3 != null) return this.Visit(ct3);
-            var ct4 = context.DOT();
-            if (ct4 == null) throw new Exception();
+            var ct4 = context.wildcard();
+            if (ct4 == null) return this.Visit(ct4);
             var g = new Digraph<string, SymbolEdge<string>>();
             var f = "" + gen++;
             var t = "" + gen++;
             g.AddStart(g.AddVertex(f));
             g.AddEnd(g.AddVertex(t));
-            var e = new SymbolEdge<string>() { From = f, To = t, _symbol = ct4 };
+            var e = new SymbolEdge<string>() { From = f, To = t, _symbol = ct4.DOT() };
             g.AddEdge(e);
             return g;
         }
@@ -675,7 +675,7 @@ namespace Trash
                 return g;
             }
 
-            var ct4 = context.DOT();
+            var ct4 = context.wildcard();
             if (ct4 == null) throw new Exception();
             {
                 var g = new Digraph<string, SymbolEdge<string>>();
@@ -683,7 +683,7 @@ namespace Trash
                 var t = "" + gen++;
                 g.AddStart(g.AddVertex(f));
                 g.AddEnd(g.AddVertex(t));
-                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = ct4 });
+                g.AddEdge(new SymbolEdge<string>() { From = f, To = t, _symbol = ct4.DOT() });
                 return g;
             }
         }

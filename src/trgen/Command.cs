@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -305,7 +306,7 @@ namespace Trash
                             else
                             {
                                 if (test.package != null && test.package != "")
-                                    antlr_args = GetOSTarget() == "Windows"
+                                    antlr_args = GetOSTarget() == OSPlatform.Windows
                                         ? "-o " + test.package + " -lib " + test.package +
                                           " -package " + test.package
                                         : " -package " + test.package;
@@ -545,7 +546,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.17";
+        public static string version = "0.23.18";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -588,19 +589,42 @@ namespace Trash
             throw new Exception("Cannot determine operating system!");
         }
 
-        public static string GetOSTarget()
+
+        public static string GetOSName(OSPlatform platform)
+        {
+            if (platform == OSPlatform.Linux)
+                return "Linux";
+            if (platform == OSPlatform.Windows)
+                return "Windows";
+            if (platform == OSPlatform.OSX)
+                return "OSX";
+            throw new Exception("Cannot determine operating system!");
+        }
+
+        public static OSPlatform GetOSPlatformFromName(string name)
+        {
+            if (name == "Linux")
+                return OSPlatform.Linux;
+            if (name == "Windows")
+                return OSPlatform.Windows;
+            if (name == "OSX")
+                return OSPlatform.OSX;
+            throw new Exception("Cannot determine operating system!");
+        }
+
+        public static OSPlatform GetOSTarget()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return "Linux";
+                return OSPlatform.Linux;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return "Windows";
+                return OSPlatform.Windows;
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return "OSX";
+                return OSPlatform.OSX;
             }
             throw new Exception("Cannot determine operating system!");
         }
@@ -685,7 +709,7 @@ namespace Trash
             XPathNavigator navigator = document.CreateNavigator();
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(reader.NameTable);
             int gen = 0;
-            List<string> test_targets = config.targets.ToList();
+            List<string> test_targets = new List<string>();
             {
                 var xtargets = navigator
                     .Select("/desc/targets", nsmgr)
@@ -711,7 +735,7 @@ namespace Trash
                     test_targets = xtargets.First().Split(';').ToList();
                 if (config.targets == null || !config.targets.Any()) config.targets = test_targets;
             }
-            List<string> test_ostargets = config.os_targets.ToList();
+            List<OSPlatform> test_ostargets = new List<OSPlatform>() { GetOSTarget() };
             {
                 var xtargets = navigator
                     .Select("/desc/os-targets", nsmgr)
@@ -722,7 +746,8 @@ namespace Trash
                     throw new Exception("Too many <os-targets> elements, there should be only one.");
                 if (xtargets.Count != 0)
                 {
-                    test_ostargets = xtargets.First().Split(';').ToList();
+                    var z = xtargets.First().Split(';').ToList();
+                    if (!z.Any()) test_ostargets = z.Select(t => GetOSPlatformFromName(t)).ToList();
                 }
             }
             /*{
@@ -881,11 +906,11 @@ namespace Trash
                 var all = config.force ? config.targets : test_targets.Intersect(config.targets);
                 foreach (var os_target in config.os_targets)
                 {
+                    if (os_target != GetOSTarget()) continue;
                     foreach (var target in all)
                     {
-                        if (!test_ostargets.Contains(os_target)) continue;
                         var test = new Test(config);
-                        test.os_target = os_target;
+                        test.os_target = GetOSName(os_target);
                         test.target = target;
                         test.grammar_name = config.grammar_name;
                         test.start_rule = config.start_rule;
@@ -930,6 +955,7 @@ namespace Trash
                         .Select(t => t.Value)
                         .ToList()
                         .FirstOrDefault();
+
                     {
                         var xostargets = xmltest
                             .Select("os-targets", nsmgr)
@@ -940,9 +966,12 @@ namespace Trash
                             throw new Exception("Too many <os-targets> elements, there should be only one.");
                         if (xostargets.Count != 0)
                         {
-                            test_ostargets = xostargets.First().Split(';').ToList();
-                        } 
+                            test_ostargets = xostargets.First().Split(';')
+                                .Select(t=>GetOSPlatformFromName(t)).ToList();
+                        }
+                        else test_ostargets = new List<OSPlatform>() { GetOSTarget() };
                     }
+
                     var parsing_type = xmltest
                         .Select("parsing-type", nsmgr)
                         .Cast<XPathNavigator>()
@@ -1044,14 +1073,15 @@ namespace Trash
                         .Select(t => t.Value)
                         .FirstOrDefault();
                     var all = config.force ? config.targets : test_targets.Intersect(config.targets);
-                    foreach (var os_target in config.os_targets)
+                    foreach (var os_target in test_ostargets)
                     {
+                        if (os_target != GetOSTarget()) continue;
                         foreach (var target in all)
                         {
                             if (!test_ostargets.Contains(os_target)) continue;
                             var test = new Test(config);
                             test.target = target;
-                            test.os_target = os_target;
+                            test.os_target = GetOSName(os_target);
                             test.package = test.target == "Go" ? "parser" : test.package;
                             test.package = test.target == "Antlr4cs" ? "Test" : test.package;
                             if (tool_grammar_files != null)
@@ -1206,7 +1236,7 @@ namespace Trash
                 foreach (var target in all)
                 {
                     var test = new Test(config);
-                    test.os_target = config.os_targets.First();
+                    test.os_target = GetOSName(GetOSTarget());
                     test.target = target;
                     test.grammar_name = config.grammar_name;
                     test.start_rule = config.start_rule;
@@ -1674,15 +1704,15 @@ namespace Trash
             else t.Add("cap_start_symbol", Cap(test.start_rule));
             t.Add("case_insensitive_type", test.case_insensitive_type);
             t.Add("cli_bash", test.os_target != "Windows");
-            t.Add("cli_cmd", GetOSTarget() == "Windows");
-            t.Add("cmake_target", GetOSTarget() == "Windows"
+            t.Add("cli_cmd", GetOSTarget() == OSPlatform.Windows);
+            t.Add("cmake_target", GetOSTarget() == OSPlatform.Windows
                 ? "-G \"Visual Studio 17 2022\" -A x64"
                 : "");
             t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
             t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
             t.Add("example_dir_unix", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('\\', '/'))));
             t.Add("example_dir_win", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('/', '\\'))));
-            t.Add("exec_name", GetOSTarget() == "Windows" ? "Test.exe" : "Test");
+            t.Add("exec_name", GetOSTarget() == OSPlatform.Windows ? "Test.exe" : "Test");
             t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
             t.Add("go_parser_name", test.fully_qualified_go_parser_name);
             t.Add("grammar_file", test.tool_grammar_files.First());
@@ -1696,13 +1726,13 @@ namespace Trash
             t.Add("group_parsing", test.parsing_type == "group");
             t.Add("individual_parsing", test.parsing_type == "individual");
             t.Add("os_type", test.os_target);
-            t.Add("os_win", GetOSTarget() == "Windows");
+            t.Add("os_win", GetOSTarget() == OSPlatform.Windows);
             t.Add("parser_name", test.fully_qualified_parser_name);
             t.Add("parser_grammar_file", re.Replace(test.parser_grammar_file_name, ""));
             t.Add("path_sep_colon", config.path_sep == PathSepType.Colon);
             t.Add("path_sep_semi", config.path_sep == PathSepType.Semi);
             t.Add("start_symbol", test.start_rule);
-            t.Add("temp_dir", GetOSTarget() == "Windows"
+            t.Add("temp_dir", GetOSTarget() == OSPlatform.Windows
                 ? "c:/temp"
                 : "/tmp");
             t.Add("tool_grammar_files", test.tool_grammar_files.Select(s => re.Replace(s, "")));
@@ -1824,6 +1854,7 @@ namespace Trash
                     {
                         // Search for the grammar name in grammar tuples.
                         // Search for the grammar file name since that's what import does.
+                        // Fix basic case of "import" for lexers, in https://stackoverflow.com/questions/79590155/how-to-extract-raw-contents-including-comments-within-braces-in-specific-situa
                         var files = test.tool_grammar_tuples.Where(t => t.GrammarFileNameSource.EndsWith("/" + id + ".g4")).ToList();
                         if (!files.Any()) throw new Exception("Cannot find imported file " + id + ".g4");
                         // Add an edge from the current grammar to grammars that are imported.
