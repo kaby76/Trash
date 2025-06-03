@@ -63,6 +63,45 @@ if ( $size -eq 0 ) {
     exit 1
 }
 
+# Validate parse trees via trquery assertions.
+# Execute trquery parse tree validation.
+Write-Host "Checking any trquery parse tree assertions..."
+assertions_err = 0
+foreach ($item in Get-ChildItem . -Recurse) {
+    $file = $item.fullname
+    $ext = $item.Extension
+    if (Test-Path $file -PathType Container) {
+        continue
+    } elseif ($ext -ne ".trq") {
+        continue
+    } else {
+        # Get the input file corresponding to the .trq file.
+        $trq = $file
+        in = "bad_file_name"
+        foreach ($fileb in $allFiles) {
+            $ext = $file | Split-Path -Extension
+            if (Test-Path $file -PathType Container) {
+                continue
+            } elseif ($ext -eq ".errors") {
+                continue
+            } elseif ($ext -eq ".tree") {
+                continue
+            } elseif ($ext -eq ".trq") {
+                continue
+            } else {
+                $in = $fileb
+                break
+            }
+        }
+        Write-Host "Assert test case: $thefile"
+        dotnet trparse $in | dotnet trquery -c $trq
+        $xxx = $LASTEXITCODE
+        if ( $xxx -ne 0 ) {
+            $assertions_err = $xxx
+        }
+    }
+}
+
 $old = Get-Location
 Set-Location "<if(os_win)>../<example_dir_win><else>../<example_dir_unix><endif>"
 
@@ -75,7 +114,7 @@ foreach ($item in Get-ChildItem . -Recurse) {
     $ext = $item.Extension
     if ($ext -eq ".errors") {
         git diff --exit-code $file *>> $old/updated.txt
-	$st = $LASTEXITCODE
+        $st = $LASTEXITCODE
         if ($st -ne 0) {
             $updated = $st
         }
@@ -87,7 +126,7 @@ foreach ($item in Get-ChildItem . -Recurse) {
     if ($ext -eq ".tree") {
         [IO.File]::WriteAllText($file, $([IO.File]::ReadAllText($file) -replace "`r`n", "`n"))
         git diff --exit-code $file *>> $old/updated.txt
-	$st = $LASTEXITCODE
+        $st = $LASTEXITCODE
         if ($st -ne 0) {
             $updated = $st
         }
@@ -164,6 +203,15 @@ if ( $updated -eq 1 ) {
 if ( $new_errors_txt.Count -gt 0 ) {
     Write-Host "New errors in output."
     Get-Content "$old/new_errors.txt" | Write-Host
+    Write-Host "Test failed."
+    Remove-Item -Force -Path $old/updated.txt -errorAction ignore 2>&1 | Out-Null
+    Remove-Item -Force -Path $old/new_errors2.txt -errorAction ignore 2>&1 | Out-Null
+    Remove-Item -Force -Path $old/new_errors.txt -errorAction ignore 2>&1 | Out-Null
+    exit 1
+}
+
+# Test assertions errors.
+if ( "$assertions_err" -ne 0 ) {
     Write-Host "Test failed."
     Remove-Item -Force -Path $old/updated.txt -errorAction ignore 2>&1 | Out-Null
     Remove-Item -Force -Path $old/new_errors2.txt -errorAction ignore 2>&1 | Out-Null

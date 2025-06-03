@@ -90,10 +90,10 @@ fi
 # Execute trquery parse tree validation.
 echo "Checking any trquery parse tree assertions..."
 assertions_err=0
-for trq in `find ../examples -type f -name '*.trq'`
+for trq in `find ../<example_files_unix> -type f -name '*.trq'`
 do
     tbase="${trq%.*}"
-    in=`find ../examples -type f | fgrep $tbase | grep -v '.trq$' | grep -v '.errors$' | grep -v '.tree$'`
+    in=`find ../<example_files_unix> -type f | fgrep $tbase | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
     dotnet trparse $in | dotnet trquery -c $trq
     xxx=$?
     if [ "$xxx" -ne 0 ]
