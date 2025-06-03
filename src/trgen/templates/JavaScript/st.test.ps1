@@ -19,6 +19,8 @@ foreach ($file in $allFiles) {
         continue
     } elseif ($ext -eq ".tree") {
         continue
+    } elseif ($ext -eq ".trq") {
+        continue
     } else {
         $files.Add($file)
         Write-Host "Test case: $file"
