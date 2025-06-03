@@ -89,6 +89,7 @@ fi
 # Validate parse trees via trquery assertions.
 # Execute trquery parse tree validation.
 echo "Checking any trquery parse tree assertions..."
+assertions_err=0
 for trq in `find ../examples -type f -name '*.trq'`
 do
     tbase="${trq%.*}"
@@ -97,7 +98,7 @@ do
     xxx=$?
     if [ "$xxx" -ne 0 ]
     then
-        status=$xxx
+        assertions_err=$xxx
     fi
 done
 
@@ -189,7 +190,8 @@ then
     exit 1
 fi
 
-if [ "$status" -ne 0 ]
+# Test assertions errors.
+if [ "$assertions_err" -ne 0 ]
 then
     echo "Test failed."
     exit 1
