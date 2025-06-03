@@ -154,7 +154,7 @@ done
 if [ "$updated" = "129" ]
 then
     echo "Grammar outside a git repository. Assuming parse exit code."
-    if [ "$status" = 0 ]
+    if [ "$status" -eq 0 ]
     then
         echo "Test succeeded."
     else
