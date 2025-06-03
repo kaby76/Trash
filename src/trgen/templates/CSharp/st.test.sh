@@ -9,16 +9,12 @@ IFS=$(echo -en "\n\b")
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
-files2=`dotnet trglob '../<example_files_unix>' | grep -v '.errors$' | grep -v '.tree$'`
+files2=`dotnet trglob '../<example_files_unix>' | grep -v '.errors$' | grep -v '.tree$' | grep -v '.trq$'`
 files=()
 for f in $files2
 do
     if [ -d "$f" ]; then continue; fi
-    dotnet triconv -f utf-8 $f > /dev/null 2>&1
-    if [ "$?" = "0" ]
-    then
         files+=( $f )
-    fi
 done
 
 # People often specify a test file directory, but sometimes no
@@ -88,6 +84,21 @@ then
         dos2unix -f $gen
     fi
 fi
+
+# Validate parse trees via trquery assertions.
+# Execute trquery parse tree validation.
+echo "Checking any trquery parse tree assertions..."
+for trq in `find ../examples -type f -name '*.trq'`
+do
+    tbase="${trq%.*}"
+    in=`find ../examples -type f | fgrep $tbase | grep -v '.trq$' | grep -v '.errors$' | grep -v '.tree$'`
+    dotnet trparse $in | dotnet trquery -c $trq
+    xxx=$?
+    if [ "$xxx" -ne 0 ]
+    then
+        status=$xxx
+    fi
+done
 
 old=`pwd`
 cd ..
@@ -174,6 +185,12 @@ then
     cat $old/new_errors.txt
     echo "Test failed."
     rm -f $old/updated.txt $old/new_errors2.txt $old/new_errors.txt
+    exit 1
+fi
+
+if [ "$status" -ne 0 ]
+then
+    echo "Test failed."
     exit 1
 fi
 

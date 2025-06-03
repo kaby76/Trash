@@ -2,8 +2,8 @@
   "profiles": {
     "trscript": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt -c zz.qry",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4195\\sql\\starrocks"
+      "commandLineArgs": "-c ../examples/stats.trsh -f o.pt",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-add-predicates\\lua\\Generated-CSharp"
     }
   }
 }

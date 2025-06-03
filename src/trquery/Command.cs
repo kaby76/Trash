@@ -42,6 +42,7 @@ class Command
             }
         }
 
+        bool do_rs = !config.NoParsingResultSets;
         ICharStream cs = CharStreams.fromString(input);
         var slexer = new QueryLexer(cs);
         CommonTokenStream stokens = new CommonTokenStream(slexer);
@@ -109,25 +110,27 @@ class Command
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
                     new org.eclipse.wst.xml.xpath2.processor.Engine();
                 var command = scommand.GetChild(0).GetText();
-                if (command == "grep")
+                if (command == "assert")
                 {
                     var expr_tree = scommand.expr()[0];
+                    var message = scommand.@string().GetText();
                     var si = expr_tree.SourceInterval;
                     IToken start = stokens.Get(si.a);
                     int bi = start.StartIndex;
                     IToken stop = stokens.Get(si.b);
                     int ei = stop.StopIndex;
                     string expr = cs.GetText(new Interval(bi, ei));
+                    message = RemoveQuotes(message);
                     if (config.Verbose)
                         LoggerNs.TimedStderrOutput.WriteLine("grep expr " + expr);
                     ConvertToDOM ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
                     using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
                            ate.Try(trees, parser))
                     {
-                        List<UnvParseTreeNode> nodes = engine.parseExpression(expr,
+                        var nodes = engine.parseExpression(expr,
                                 new StaticContextBuilder()).evaluate(dynamicContext,
                                 new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode))
+                            .Select(x => (x.NativeValue))
                             .ToList();
                         if (config.Verbose)
                             LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
@@ -142,12 +145,129 @@ class Command
                         {
                             throw new Exception("No match found for XPath expression, where it is required.");
                         }
-                        trees = nodes.ToArray();
+                        List<UnvParseTreeNode> res = new List<UnvParseTreeNode>();
+                        foreach (var v in nodes)
+                        {
+                            if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)
+                            {
+                                var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement;
+                            }
+                            else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeText)
+                            {
+                                var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeText;
+                                var s = q.Data;
+                            }
+                            else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeAttr)
+                            {
+                                var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeAttr;
+                                var s = q.StringValue;
+                            }
+                            else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeDocument)
+                            {
+                                var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeDocument;
+                            }
+                            else
+                            {
+                                bool b = false;
+                                try
+                                {
+                                    b = (bool)v;
+                                    if (b != true)
+                                    {
+                                        System.Console.WriteLine(v);
+                                    }
+                                }
+                                catch (InvalidCastException)
+                                {
+                                    System.Console.WriteLine("Invalid result; not a boolean.");
+                                }
+                                if (!b)
+                                    throw new Exception("failed assertion: " + message);
+                            }
+                        }
+                    }
+                    return;
+                }
+                else if (command == "grep")
+                {
+                    var expr_tree = scommand.expr()[0];
+                    var si = expr_tree.SourceInterval;
+                    IToken start = stokens.Get(si.a);
+                    int bi = start.StartIndex;
+                    IToken stop = stokens.Get(si.b);
+                    int ei = stop.StopIndex;
+                    string expr = cs.GetText(new Interval(bi, ei));
+                    // Remove leading and trailing quotes.
+                    expr = RemoveQuotes(expr);
+                    if (config.Verbose)
+                        LoggerNs.TimedStderrOutput.WriteLine("grep expr " + expr);
+                    ConvertToDOM ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+                    using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
+                           ate.Try(trees, parser))
+                    {
+                        var nodes = engine.parseExpression(expr,
+                                new StaticContextBuilder()).evaluate(dynamicContext,
+                                new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue))
+                            .ToList();
+                        if (config.Verbose)
+                            LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
                         if (config.Verbose)
                         {
-                            LoggerNs.TimedStderrOutput.WriteLine("Resulted in this:");
+                            LoggerNs.TimedStderrOutput.WriteLine("Operating on this:");
                             foreach (UnvParseTreeNode n in trees)
-                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
+                                LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n)
+                                    .ToString());
+                        }
+                        if (scommand.MATCH_REQUIRED() != null)
+                        {
+                            throw new Exception("No match found for XPath expression, where it is required.");
+                        }
+                        List<UnvParseTreeNode> res = new List<UnvParseTreeNode>();
+                        foreach (var v in nodes)
+                        {
+                            if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)
+                            {
+                                var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement;
+                                res.Add(q);
+                            }
+                            else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeText)
+                            {
+                                var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeText;
+                                var s = q.Data;
+                                do_rs = false;
+                                System.Console.WriteLine(s);
+                            }
+                            else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeAttr)
+                            {
+                                var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeAttr;
+                                var s = q.StringValue;
+                                do_rs = false;
+                                System.Console.WriteLine(s);
+                            }
+                            else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeDocument)
+                            {
+                                var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeDocument;
+                                do_rs = false;
+                                System.Console.WriteLine(v);
+                            }
+                            else
+                            {
+                                do_rs = false;
+                                System.Console.WriteLine(v);
+                            }
+                        }
+
+                        if (do_rs)
+                        {
+                            trees = res.ToArray();
+                            if (config.Verbose)
+                            {
+                                LoggerNs.TimedStderrOutput.WriteLine("Resulted in this:");
+                                foreach (UnvParseTreeNode n in trees)
+                                    LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n)
+                                        .ToString());
+                            }
                         }
                     }
                 }
@@ -414,16 +534,26 @@ class Command
             }
         }
 
-        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
-        string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
-        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
-        System.Console.WriteLine(js1);
+        if (do_rs)
+        {
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
+            string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
+            System.Console.WriteLine(js1);
+        }
     }
 
-    private string RemoveQuotes(string v)
+    private string RemoveQuotes(string input)
     {
-        var v2 = v.Substring(1);
-        var v3 = v2.Substring(0, v2.Length - 1);
-        return v3;
+        if (string.IsNullOrEmpty(input))
+            return input;
+
+        if ((input.StartsWith("\"") && input.EndsWith("\"")) ||
+            (input.StartsWith("'") && input.EndsWith("'")))
+        {
+            return input.Substring(1, input.Length - 2);
+        }
+
+        return input;
     }
 }
