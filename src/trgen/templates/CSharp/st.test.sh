@@ -1,5 +1,7 @@
 # Generated from trgen <version>
-set -x
+
+# Uncomment for debugging.
+#set -x
 
 # glob patterns
 shopt -s globstar
