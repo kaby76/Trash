@@ -66,7 +66,7 @@ if ( $size -eq 0 ) {
 # Validate parse trees via trquery assertions.
 # Execute trquery parse tree validation.
 Write-Host "Checking any trquery parse tree assertions..."
-assertions_err = 0
+$assertions_err = 0
 foreach ($item in Get-ChildItem . -Recurse) {
     $file = $item.fullname
     $ext = $item.Extension
