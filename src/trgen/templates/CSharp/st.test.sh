@@ -1,4 +1,5 @@
 # Generated from trgen <version>
+set -x
 
 # glob patterns
 shopt -s globstar
