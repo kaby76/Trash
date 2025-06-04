@@ -63,7 +63,7 @@ The output will be:
 
 ## Current version
 
-0.23.18 General clean up and bug fixes.
+0.23.19 Updated trgen templates to remove iconv call. Added assert command to trquery for parse tree validations.
 
 ## License
 
