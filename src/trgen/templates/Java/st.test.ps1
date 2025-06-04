@@ -38,6 +38,11 @@ if (-not(Test-Path -Path "tests.txt" -PathType Leaf)) {
     Write-Host "No test cases provided."
     exit 0
 }
+$size = (Get-Item -Path "tests.txt").Length
+if ( $size -eq 0 ) {
+    Write-Host "No test cases provided."
+    exit 0
+}
 
 # Parse all input files.
 $version = Select-String -Path "build.sh" -Pattern "version=" | ForEach-Object { $_.Line -split "=" | Select-Object -Last 1 }
