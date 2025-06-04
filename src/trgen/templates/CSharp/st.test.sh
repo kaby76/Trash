@@ -95,7 +95,7 @@ do
     trq=$file.trq
     if [ -f "$trq" ]
     then
-        dotnet trparse $in | dotnet trquery -c $trq
+        dotnet trparse $file | dotnet trquery -c $trq
         xxx=$?
         if [ "$xxx" -ne 0 ]
         then
