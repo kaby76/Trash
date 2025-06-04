@@ -67,8 +67,6 @@ then
     exit 1
 fi
 
-# rm -rf `find ../<example_files_unix> -type f -name '*.errors' -o -name '*.tree' -size 0`
-
 # For Unix environments, convert the newline in the .errors and .trees
 # to Unix style.
 unameOut="$(uname -s)"
@@ -81,7 +79,7 @@ case "${unameOut}" in
 esac
 if [[ "$machine" == "MinGw" || "$machine" == "Msys" || "$machine" == "Cygwin" || "#machine" == "Linux" ]]
 then
-    gen=`find ../<example_files_unix> -type f -name '*.errors' -o -name '*.tree'`
+    gen=`find ../<example_dir_unix> -type f -name '*.errors' -o -name '*.tree'`
     if [ "$gen" != "" ]
     then
         dos2unix -f $gen
@@ -92,17 +90,20 @@ fi
 # Execute trquery parse tree validation.
 echo "Checking any trquery parse tree assertions..."
 assertions_err=0
-for trq in `find ../<example_files_unix> -type f -name '*.trq'`
+for file in `dotnet trglob '../<example_files_unix>' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
 do
-    tbase="${trq%.*}"
-    in=`find ../<example_files_unix> -type f | fgrep $tbase | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
-    dotnet trparse $in | dotnet trquery -c $trq
-    xxx=$?
-    if [ "$xxx" -ne 0 ]
+    trq=$file.trq
+    if [ -f "$trq" ]
     then
-        assertions_err=$xxx
+        dotnet trparse $in | dotnet trquery -c $trq
+        xxx=$?
+        if [ "$xxx" -ne 0 ]
+        then
+            assertions_err=$xxx
+        fi
     fi
 done
+echo "Finished checking parse tree assertions."
 
 old=`pwd`
 cd ..

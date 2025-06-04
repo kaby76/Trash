@@ -10,7 +10,7 @@ if (Test-Path -Path "tests.txt" -PathType Leaf) {
     Remove-Item "tests.txt"
 }
 $files = New-Object System.Collections.Generic.List[string]
-$allFiles = $(& dotnet trglob "$Tests" ; $last = $LASTEXITCODE )
+$allFiles = $(& dotnet trglob '$Tests' ; $last = $LASTEXITCODE )
 foreach ($file in $allFiles) {
     $ext = $file | Split-Path -Extension
     if (Test-Path $file -PathType Container) {
@@ -26,9 +26,14 @@ foreach ($file in $allFiles) {
         Write-Host "Test case: $file"
     }
 }
+
+$filePath = "tests.txt"
+$writer = New-Object System.IO.StreamWriter($filePath, $true) # $true for append
 foreach ($file in $files) {
-    Add-Content "tests.txt" $file
+    $writer.WriteLine($file)
 }
+$writer.Dispose()
+
 if (-not(Test-Path -Path "tests.txt" -PathType Leaf)) {
     Write-Host "No test cases provided."
     exit 0
@@ -67,40 +72,18 @@ if ( $size -eq 0 ) {
 # Execute trquery parse tree validation.
 Write-Host "Checking any trquery parse tree assertions..."
 $assertions_err = 0
-foreach ($item in Get-ChildItem . -Recurse) {
-    $file = $item.fullname
-    $ext = $item.Extension
-    if (Test-Path $file -PathType Container) {
-        continue
-    } elseif ($ext -ne ".trq") {
-        continue
-    } else {
-        # Get the input file corresponding to the .trq file.
-        $trq = $file
-        in = "bad_file_name"
-        foreach ($fileb in $allFiles) {
-            $ext = $file | Split-Path -Extension
-            if (Test-Path $file -PathType Container) {
-                continue
-            } elseif ($ext -eq ".errors") {
-                continue
-            } elseif ($ext -eq ".tree") {
-                continue
-            } elseif ($ext -eq ".trq") {
-                continue
-            } else {
-                $in = $fileb
-                break
-            }
-        }
-        Write-Host "Assert test case: $thefile"
-        dotnet trparse $in | dotnet trquery -c $trq
+foreach ($file in $files) {
+    $trq = "$file.trq"
+    if (Test-Path $trq -PathType Leaf) {
+        Write-Host "Assert test case: $trq"
+        dotnet trparse $file | dotnet trquery -c $trq
         $xxx = $LASTEXITCODE
         if ( $xxx -ne 0 ) {
             $assertions_err = $xxx
         }
     }
 }
+Write-Host "Finished checking parse tree assertions."
 
 $old = Get-Location
 Set-Location "<if(os_win)>../<example_dir_win><else>../<example_dir_unix><endif>"
