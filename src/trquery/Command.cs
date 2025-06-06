@@ -85,6 +85,8 @@ class Command
             lines = File.ReadAllText(config.File);
         }
 
+        int exit_code = 0;
+
         JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
         serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
         serializeOptions.WriteIndented = config.Format;
@@ -104,7 +106,6 @@ class Command
                 foreach (UnvParseTreeNode n in trees)
                     LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
             }
-
             foreach (var scommand in stree.command())
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
@@ -168,25 +169,26 @@ class Command
                             }
                             else
                             {
+                                do_rs = false;
                                 bool b = false;
                                 try
                                 {
                                     b = (bool)v;
-                                    if (b != true)
-                                    {
-                                        System.Console.WriteLine(v);
-                                    }
                                 }
                                 catch (InvalidCastException)
                                 {
                                     System.Console.WriteLine("Invalid result; not a boolean.");
+                                    b = false;
                                 }
+
                                 if (!b)
-                                    throw new Exception("failed assertion: " + message);
+                                {
+                                    System.Console.WriteLine("failed assertion: " + message);
+                                    exit_code = 1;
+                                }
                             }
                         }
                     }
-                    return;
                 }
                 else if (command == "grep")
                 {
@@ -541,6 +543,8 @@ class Command
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
             System.Console.WriteLine(js1);
         }
+
+        System.Environment.Exit(exit_code);
     }
 
     private string RemoveQuotes(string input)

@@ -2,8 +2,8 @@
   "profiles": {
     "trscript": {
       "commandName": "Project",
-      "commandLineArgs": "-c ../examples/stats.trsh -f o.pt",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-add-predicates\\lua\\Generated-CSharp"
+      "commandLineArgs": "-c ../examples/3885-example1.lua.trq -f o.pt",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-fix-stat-problem\\lua\\Generated-CSharp"
     }
   }
 }
