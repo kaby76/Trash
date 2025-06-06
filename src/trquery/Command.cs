@@ -105,6 +105,7 @@ class Command
                     LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
             }
 
+            int exit_code = 0;
             foreach (var scommand in stree.command())
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
@@ -181,12 +182,15 @@ class Command
                                 {
                                     System.Console.WriteLine("Invalid result; not a boolean.");
                                 }
+
                                 if (!b)
-                                    throw new Exception("failed assertion: " + message);
+                                {
+                                    System.Console.WriteLine("failed assertion: " + message);
+                                    exit_code = 1;
+                                }
                             }
                         }
                     }
-                    return;
                 }
                 else if (command == "grep")
                 {
