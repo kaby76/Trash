@@ -42,7 +42,7 @@ class Command
             }
         }
 
-        bool do_rs = config.NoParsingResultSets;
+        bool do_rs = !config.NoParsingResultSets;
         ICharStream cs = CharStreams.fromString(input);
         var slexer = new QueryLexer(cs);
         CommonTokenStream stokens = new CommonTokenStream(slexer);
@@ -169,6 +169,7 @@ class Command
                             }
                             else
                             {
+                                do_rs = false;
                                 bool b = false;
                                 try
                                 {
