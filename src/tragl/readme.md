@@ -19,7 +19,7 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Current version
 
-0.23.20 Updated trgen templates to remove iconv call. Added assert command to trquery for parse tree validations.
+0.23.21 Updated trgen templates to remove iconv call. Added assert command to trquery for parse tree validations.
 
 ## License
 
