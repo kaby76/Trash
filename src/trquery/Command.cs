@@ -42,7 +42,7 @@ class Command
             }
         }
 
-        bool do_rs = !config.NoParsingResultSets;
+        bool do_rs = config.NoParsingResultSets;
         ICharStream cs = CharStreams.fromString(input);
         var slexer = new QueryLexer(cs);
         CommonTokenStream stokens = new CommonTokenStream(slexer);
@@ -85,6 +85,8 @@ class Command
             lines = File.ReadAllText(config.File);
         }
 
+        int exit_code = 0;
+
         JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
         serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
         serializeOptions.WriteIndented = config.Format;
@@ -104,8 +106,6 @@ class Command
                 foreach (UnvParseTreeNode n in trees)
                     LoggerNs.TimedStderrOutput.WriteLine(new TreeOutput(lexer, parser).OutputTree(n).ToString());
             }
-
-            int exit_code = 0;
             foreach (var scommand in stree.command())
             {
                 org.eclipse.wst.xml.xpath2.processor.Engine engine =
@@ -173,14 +173,11 @@ class Command
                                 try
                                 {
                                     b = (bool)v;
-                                    if (b != true)
-                                    {
-                                        System.Console.WriteLine(v);
-                                    }
                                 }
                                 catch (InvalidCastException)
                                 {
                                     System.Console.WriteLine("Invalid result; not a boolean.");
+                                    b = false;
                                 }
 
                                 if (!b)
@@ -545,6 +542,8 @@ class Command
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
             System.Console.WriteLine(js1);
         }
+
+        System.Environment.Exit(exit_code);
     }
 
     private string RemoveQuotes(string input)
