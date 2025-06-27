@@ -50,7 +50,7 @@ the `--type` command-line option:
 
 ## Current version
 
-0.23.22 Add Rust trgen templates.
+0.23.22 (Updates to trgen templates.)
 
 ## License
 

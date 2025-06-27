@@ -35,6 +35,9 @@ namespace Trash
         public HashSet<string> tool_src_grammar_files = null;
         public string os_target { get; set; }
 
+        public string file_encoding = null;
+        public bool? binary = null;
+
         public bool IsWindows
         {
             get { return this.os_target == "Windows"; }

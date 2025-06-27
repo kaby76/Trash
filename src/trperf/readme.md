@@ -44,7 +44,7 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.23.22 Add Rust trgen templates.
+0.23.22 (Updates to trgen templates.)
 
 ## License
 

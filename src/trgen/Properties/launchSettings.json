@@ -3,7 +3,7 @@
     "dotnet-antlr": {
       "commandName": "Project",
       "commandLineArgs": "-t Java",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\grammars-v4\\b"
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4521\\tcpheader"
     }
   }
 }
