@@ -19,7 +19,7 @@ specified, the line number range for the tree is printed.
 
 ## Current version
 
-0.23.22 (Updates to trgen templates.)
+0.23.23 (Updates to trgen templates.)
 
 ## License
 

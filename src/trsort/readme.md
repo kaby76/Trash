@@ -37,7 +37,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.22 (Updates to trgen templates.)
+0.23.23 (Updates to trgen templates.)
 
 ## License
 

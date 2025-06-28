@@ -17,7 +17,7 @@ Expand a glob string into file names.
 
 ## Current version
 
-0.23.22 (Updates to trgen templates.)
+0.23.23 (Updates to trgen templates.)
 
 ## License
 
