@@ -1402,24 +1402,30 @@ namespace Trash
                 GenFromTemplates(config, test);
                 foreach (var dir in config.imports)
                 {
-                    var cd = Environment.CurrentDirectory + "/";
-                    cd = cd.Replace('\\', '/');
                     var set = new HashSet<string>();
                     foreach (var path in test.grammar_directory_source_files)
                     {
-                        var cwd = Environment.CurrentDirectory.Replace("\\", "/");
-                        if (!cwd.EndsWith("/")) cwd += "/";
-                        cwd += dir;
-                        if (!cwd.EndsWith("/")) cwd += "/";
+                        var import_dir = Environment.CurrentDirectory.Replace("\\", "/");
+                        if (!import_dir.EndsWith("/")) import_dir += "/";
+                        import_dir += dir;
+                        if (!import_dir.EndsWith("/")) import_dir += "/";
 
-                        // Convert to directory path.
-                        var ddd = Path.GetFullPath(cwd);
-                        ddd = ddd.Replace("\\", "/");
-                        if (!ddd.EndsWith("/")) ddd += "/";
+                        // Get directory of imported files.
+                        import_dir = Path.GetFullPath(import_dir);
+                        import_dir = import_dir.Replace("\\", "/");
+                        if (!import_dir.EndsWith("/")) import_dir += "/";
                         
-                        // Construct proper starting directory based on namespace.
+                        // Get base directory for file to copy.
                         var from = path;
-                        var f = from.Substring(ddd.Length); ;
+                        var base_dir = Path.GetDirectoryName(path);
+                        base_dir = base_dir.Replace("\\", "/");
+                        if (!base_dir.EndsWith("/")) base_dir += "/";
+
+                        // If base directory of file isn't the same as import dir, then skip.
+                        if (!base_dir.StartsWith(import_dir))
+                            continue;
+
+                        var f = from.Substring(import_dir.Length); ;
                         string to = null;
                         if (test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileNameTarget).Any())
                         {

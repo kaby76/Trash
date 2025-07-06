@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Java",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4521\\tcpheader"
+      "commandLineArgs": "-t CSharp",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4521\\trapc"
     }
   }
 }
