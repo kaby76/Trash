@@ -76,6 +76,9 @@ public class Config
     public string ignore_list_of_files = ".trgen-ignore";
     public List<string> imports { get; set; } = new List<string>();
 
+    public string file_encoding = null;
+    public bool? binary = null;
+
     public Config()
     {
         this.antlr_tool_path = Command.GetAntlrToolPath();

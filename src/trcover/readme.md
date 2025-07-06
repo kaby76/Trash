@@ -24,7 +24,7 @@ a grammar.
 
 ## Current version
 
-0.23.21 Updated trgen templates to remove iconv call. Added assert command to trquery for parse tree validations.
+0.23.23 (Updates to trgen templates.)
 
 ## License
 

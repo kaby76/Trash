@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -546,7 +545,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.21";
+        public static string version = "0.23.23";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -897,6 +896,30 @@ namespace Trash
                     config.grammar_name = spec_grammar_name.Trim();
                 }
             }
+            {
+                var opt = navigator
+                    .Select("/desc/file-encoding", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .FirstOrDefault();
+                if (config.file_encoding == null && opt != null)
+                {
+                    config.file_encoding = opt.Trim();
+                }
+            }
+            {
+                var opt = navigator
+                    .Select("/desc/binary", nsmgr)
+                    .Cast<XPathNavigator>()
+                    .Select(t => t.Value)
+                    .FirstOrDefault();
+                if (config.binary == null && opt != null)
+                {
+                    if (opt == "true" || opt == "")
+                        config.binary = true;
+                }
+            }
+
             var xtests = navigator
                 .Select("/desc/test", nsmgr)
                 .Cast<XPathNavigator>()
@@ -955,6 +978,20 @@ namespace Trash
                         .Select(t => t.Value)
                         .ToList()
                         .FirstOrDefault();
+
+		    var test_binary = xmltest
+		        .Select("binary", nsmgr)
+                        .Cast<XPathNavigator>()
+			.Select(t => t.Value)
+			.ToList()
+			.FirstOrDefault();
+
+		    var test_file_encoding = xmltest
+			.Select("file-encoding", nsmgr)
+                        .Cast<XPathNavigator>()
+			.Select(t => t.Value)
+			.ToList()
+			.FirstOrDefault();
 
                     {
                         var xostargets = xmltest
@@ -1178,7 +1215,9 @@ namespace Trash
                             test.test_name = test_name ?? (gen++).ToString();
                             test.parsing_type = parsing_type;
                             if (test.parsing_type == null) test.parsing_type = config.parsing_type;
-                            if (test.parsing_type == null) test.parsing_type = "group";
+			    if (test.parsing_type == null) test.parsing_type = "group";
+			    test.file_encoding = (test_file_encoding != null && test_file_encoding != "") ? test_file_encoding : config.file_encoding;
+			    test.binary = (test_binary != null) ? true : config.binary;
                             config.Tests.Add(test);
                         }
                     }
@@ -1363,24 +1402,30 @@ namespace Trash
                 GenFromTemplates(config, test);
                 foreach (var dir in config.imports)
                 {
-                    var cd = Environment.CurrentDirectory + "/";
-                    cd = cd.Replace('\\', '/');
                     var set = new HashSet<string>();
                     foreach (var path in test.grammar_directory_source_files)
                     {
-                        var cwd = Environment.CurrentDirectory.Replace("\\", "/");
-                        if (!cwd.EndsWith("/")) cwd += "/";
-                        cwd += dir;
-                        if (!cwd.EndsWith("/")) cwd += "/";
+                        var import_dir = Environment.CurrentDirectory.Replace("\\", "/");
+                        if (!import_dir.EndsWith("/")) import_dir += "/";
+                        import_dir += dir;
+                        if (!import_dir.EndsWith("/")) import_dir += "/";
 
-                        // Convert to directory path.
-                        var ddd = Path.GetFullPath(cwd);
-                        ddd = ddd.Replace("\\", "/");
-                        if (!ddd.EndsWith("/")) ddd += "/";
+                        // Get directory of imported files.
+                        import_dir = Path.GetFullPath(import_dir);
+                        import_dir = import_dir.Replace("\\", "/");
+                        if (!import_dir.EndsWith("/")) import_dir += "/";
                         
-                        // Construct proper starting directory based on namespace.
+                        // Get base directory for file to copy.
                         var from = path;
-                        var f = from.Substring(ddd.Length); ;
+                        var base_dir = Path.GetDirectoryName(path);
+                        base_dir = base_dir.Replace("\\", "/");
+                        if (!base_dir.EndsWith("/")) base_dir += "/";
+
+                        // If base directory of file isn't the same as import dir, then skip.
+                        if (!base_dir.StartsWith(import_dir))
+                            continue;
+
+                        var f = from.Substring(import_dir.Length); ;
                         string to = null;
                         if (test.tool_grammar_tuples.Where(t => f == t.OriginalSourceFileName).Select(t => t.GrammarFileNameTarget).Any())
                         {
@@ -1414,7 +1459,7 @@ namespace Trash
                             to = FixedName(f, config, test);
                         }
                         var content = File.ReadAllText(from);
-                        RefactorThis(config, test, from, to, content);
+                        InstantiateTemplateFile(config, test, from, to, content);
                     }
                 }
             }
@@ -1592,11 +1637,11 @@ namespace Trash
                     content = File.ReadAllText(prefix_to_remove + from);
                 }
 
-                RefactorThis(config, test, from, to, content);
+                InstantiateTemplateFile(config, test, from, to, content);
             }
         }
 
-        private void RefactorThis(Config config, Test test, string from, string to, string content)
+        private void InstantiateTemplateFile(Config config, Test test, string from, string to, string content)
         {
             var base_name = Basename(from);
             var dir_name = Dirname(from);
@@ -1699,7 +1744,9 @@ namespace Trash
                 .ToList());
             t.Add("antlr_encoding", test.antlr_encoding);
             t.Add("antlr_tool_args", config.antlr_tool_args);
-            t.Add("antlr_tool_path", config.antlr_tool_path);
+	    t.Add("antlr_tool_path", config.antlr_tool_path);
+	    t.Add("binary", test.binary == null ? false : true);
+	    t.Add("file_encoding", test.file_encoding == null ? "" : test.file_encoding);
             if (test.start_rule == null) t.Add("cap_start_symbol", Cap("no_start_rule_declared"));
             else t.Add("cap_start_symbol", Cap(test.start_rule));
             t.Add("case_insensitive_type", test.case_insensitive_type);
