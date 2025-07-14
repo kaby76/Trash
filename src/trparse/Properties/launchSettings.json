@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "GoParser.g4",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\golang"
+      "commandLineArgs": "--ambig ../examples/helloworldreserved.proto",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4535\\protobuf\\protobuf3\\Generated-CSharp"
     }
   }
 }

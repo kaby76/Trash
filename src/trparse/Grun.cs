@@ -200,7 +200,11 @@ public class Grun
         return result;
     }
 
-    int DoParse(string parser_type, string txt, string prefix, string input_name, int row_number,
+    int DoParse(string parser_type,
+        string txt,
+        string prefix,
+        string input_name,
+        int row_number,
         List<AntlrJson.ParsingResultSet> data)
     {
         Type type = null;

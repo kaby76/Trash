@@ -18,7 +18,7 @@ Read a parse tree from stdin and write a JSON represenation of it.
 
 ## Current version
 
-0.23.23 (Updates to trgen templates.)
+0.23.24 (Updates to trgen templates.)
 
 ## License
 
