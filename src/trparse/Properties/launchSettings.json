@@ -2,7 +2,7 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "--ambig ../examples/helloworldreserved.proto",
+      "commandLineArgs": "../examples/6r.proto",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4535\\protobuf\\protobuf3\\Generated-CSharp"
     }
   }

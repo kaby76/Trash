@@ -303,7 +303,7 @@ public class Grun
         }
 
         MethodInfo methodInfo = type.GetMethod("SetupParse2");
-        object[] parm1 = new object[] { txt, config.Quiet };
+        object[] parm1 = new object[] { txt, input_name, config.Quiet };
         var res = methodInfo.Invoke(null, parm1);
 
         var result = "";
