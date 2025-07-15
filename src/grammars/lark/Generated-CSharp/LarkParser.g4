@@ -2,7 +2,6 @@ parser grammar LarkParser;
 
 options {
     tokenVocab = LarkLexer;
-//    contextSuperClass=AttributedParseTreeNode;
 }
 
 start: (item? NL)* item? EOF ;

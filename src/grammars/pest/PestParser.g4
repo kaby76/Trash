@@ -3,7 +3,6 @@ parser grammar PestParser;
 options
 {
     tokenVocab = PestLexer;
-//    contextSuperClass=AttributedParseTreeNode;
 }
 
 grammar_rules : grammar_rule+ EOF ;

@@ -119,6 +119,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitStart(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -206,6 +212,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitItem(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitItem(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -282,6 +294,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitRule_(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRule_(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -350,6 +368,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitToken(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitToken(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -416,6 +440,12 @@ public partial class LarkParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitRule_params(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRule_params(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -496,6 +526,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitToken_params(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitToken_params(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -567,6 +603,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitPriority(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPriority(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -631,6 +673,12 @@ public partial class LarkParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitStatement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -753,6 +801,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitImport_path(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitImport_path(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -832,6 +886,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitName_list(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitName_list(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -903,6 +963,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitExpansions(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpansions(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -965,6 +1031,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitAlias(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAlias(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1023,6 +1095,12 @@ public partial class LarkParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitExpansion(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpansion(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1086,6 +1164,12 @@ public partial class LarkParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitExpr(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpr(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1183,6 +1267,12 @@ public partial class LarkParser : Parser {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitAtom(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAtom(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1276,6 +1366,12 @@ public partial class LarkParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitValue(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitValue(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1379,6 +1475,12 @@ public partial class LarkParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			ILarkParserListener typedListener = listener as ILarkParserListener;
 			if (typedListener != null) typedListener.ExitName(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			ILarkParserVisitor<TResult> typedVisitor = visitor as ILarkParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitName(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 

@@ -108,6 +108,12 @@ public partial class W3CebnfParser : Parser {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitGrammar_(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGrammar_(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -168,6 +174,12 @@ public partial class W3CebnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitProduction(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitProduction(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -245,6 +257,12 @@ public partial class W3CebnfParser : Parser {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitChoice(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitChoice(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -308,6 +326,12 @@ public partial class W3CebnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitSequence_or_difference(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSequence_or_difference(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -414,6 +438,12 @@ public partial class W3CebnfParser : Parser {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitItem(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitItem(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -484,6 +514,12 @@ public partial class W3CebnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitPrimary(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 

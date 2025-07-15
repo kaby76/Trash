@@ -30,7 +30,6 @@ parser grammar ANTLRv2Parser;
 options
 {
     tokenVocab = ANTLRv2Lexer;
-//    contextSuperClass=LanguageServer.AttributedParseTreeNode;
 }
 
 grammar_

@@ -545,7 +545,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.23";
+        public static string version = "0.23.24";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -2075,7 +2075,7 @@ namespace Trash
             Type type = asm.GetType("Program");
 
             MethodInfo methodInfo = type.GetMethod("SetupParse2");
-            object[] parm1 = new object[] { txt, false };
+            object[] parm1 = new object[] { txt, input_name, false };
             var res = methodInfo.Invoke(null, parm1);
 
             MethodInfo methodInfo2 = type.GetMethod("Parse2");

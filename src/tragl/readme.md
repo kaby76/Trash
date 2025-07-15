@@ -19,7 +19,7 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Current version
 
-0.23.23 (Updates to trgen templates.)
+0.23.24 Fix problem with file names for input streams using trparse.
 
 ## License
 

@@ -7,7 +7,6 @@ parser grammar Iso14977Parser;
 options
 {
     tokenVocab = Iso14977Lexer;
-    contextSuperClass=AttributedParseTreeNode;
 }
 
 /*

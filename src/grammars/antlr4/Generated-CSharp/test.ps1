@@ -1,4 +1,7 @@
-# Generated from trgen 0.23.18
+# Generated from trgen 0.23.23
+
+$workingDirectory = Get-Location
+$filePath = "$workingDirectory/tests.txt"
 
 $Tests = "../examples\**\*.g4"
 Write-Host "Test cases here: $Tests"
@@ -6,9 +9,10 @@ Write-Host "Test cases here: $Tests"
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
-if (Test-Path -Path "tests.txt" -PathType Leaf) {
-    Remove-Item "tests.txt"
+if (Test-Path -Path "$filePath" -PathType Leaf) {
+    Remove-Item "$filePath"
 }
+
 $files = New-Object System.Collections.Generic.List[string]
 $allFiles = $(& dotnet trglob "$Tests" ; $last = $LASTEXITCODE )
 foreach ($file in $allFiles) {
@@ -19,27 +23,33 @@ foreach ($file in $allFiles) {
         continue
     } elseif ($ext -eq ".tree") {
         continue
+    } elseif ($ext -eq ".trq") {
+        continue
     } else {
-        $(& dotnet triconv -f utf-8 $file ; $last = $LASTEXITCODE ) | Out-Null
-        if ($last -ne 0)
-        {
-            continue
-        }
         $files.Add($file)
         Write-Host "Test case: $file"
     }
 }
+
+$writer = New-Object System.IO.StreamWriter($filePath, $true) # $true for append
 foreach ($file in $files) {
-    Add-Content "tests.txt" $file
+    $writer.WriteLine($file)
 }
-if (-not(Test-Path -Path "tests.txt" -PathType Leaf)) {
+$writer.Dispose()
+
+if (-not(Test-Path -Path "$filePath" -PathType Leaf)) {
     Write-Host "No test cases provided."
+    exit 0
+}
+$size = (Get-Item -Path "$filePath").Length
+if ( $size -eq 0 ) {
+    Write-Host "Test cases file empty."
     exit 0
 }
 
 # Parse all input files.
 # Group parsing.
-get-content "tests.txt" | dotnet trwdog ./bin/Debug/net8.0/Test.exe -q -x -tee -tree *> parse.txt
+get-content "$filePath" | dotnet trwdog ./bin/Debug/net8.0/Test.exe -q -x -tee -tree *> parse.txt
 $status = $LASTEXITCODE
 
 # trwdog returns 255 if it cannot spawn the process. This could happen
@@ -61,6 +71,23 @@ if ( $size -eq 0 ) {
     exit 1
 }
 
+# Validate parse trees via trquery assertions.
+# Execute trquery parse tree validation.
+Write-Host "Checking any trquery parse tree assertions..."
+$assertions_err = 0
+foreach ($file in $files) {
+    $trq = "$file.trq"
+    if (Test-Path $trq -PathType Leaf) {
+        Write-Host "Assert test case: $trq"
+        dotnet trparse $file | dotnet trquery -c $trq
+        $xxx = $LASTEXITCODE
+        if ( $xxx -ne 0 ) {
+            $assertions_err = $xxx
+        }
+    }
+}
+Write-Host "Finished checking parse tree assertions."
+
 $old = Get-Location
 Set-Location "../examples"
 
@@ -73,7 +100,7 @@ foreach ($item in Get-ChildItem . -Recurse) {
     $ext = $item.Extension
     if ($ext -eq ".errors") {
         git diff --exit-code $file *>> $old/updated.txt
-	$st = $LASTEXITCODE
+        $st = $LASTEXITCODE
         if ($st -ne 0) {
             $updated = $st
         }
@@ -85,7 +112,7 @@ foreach ($item in Get-ChildItem . -Recurse) {
     if ($ext -eq ".tree") {
         [IO.File]::WriteAllText($file, $([IO.File]::ReadAllText($file) -replace "`r`n", "`n"))
         git diff --exit-code $file *>> $old/updated.txt
-	$st = $LASTEXITCODE
+        $st = $LASTEXITCODE
         if ($st -ne 0) {
             $updated = $st
         }
@@ -162,6 +189,15 @@ if ( $updated -eq 1 ) {
 if ( $new_errors_txt.Count -gt 0 ) {
     Write-Host "New errors in output."
     Get-Content "$old/new_errors.txt" | Write-Host
+    Write-Host "Test failed."
+    Remove-Item -Force -Path $old/updated.txt -errorAction ignore 2>&1 | Out-Null
+    Remove-Item -Force -Path $old/new_errors2.txt -errorAction ignore 2>&1 | Out-Null
+    Remove-Item -Force -Path $old/new_errors.txt -errorAction ignore 2>&1 | Out-Null
+    exit 1
+}
+
+# Test assertions errors.
+if ( "$assertions_err" -ne 0 ) {
     Write-Host "Test failed."
     Remove-Item -Force -Path $old/updated.txt -errorAction ignore 2>&1 | Out-Null
     Remove-Item -Force -Path $old/new_errors2.txt -errorAction ignore 2>&1 | Out-Null

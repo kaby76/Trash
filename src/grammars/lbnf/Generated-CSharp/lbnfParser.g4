@@ -4,7 +4,6 @@ parser grammar lbnfParser;
 options
 {
     tokenVocab = lbnfLexer;
-//    contextSuperClass=LanguageServer.AttributedParseTreeNode;
 }
 
 start_LGrammar : lGrammar EOF ;

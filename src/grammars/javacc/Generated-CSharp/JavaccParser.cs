@@ -242,6 +242,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitRunsignedshift(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRunsignedshift(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -289,6 +295,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitRsignedshift(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRsignedshift(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -360,6 +372,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitJavacc_input(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitJavacc_input(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -444,6 +462,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitJavacc_options(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitJavacc_options(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -530,6 +554,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitOption_binding(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitOption_binding(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -626,6 +656,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitStringList(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStringList(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -701,6 +737,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitProduction(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitProduction(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -821,6 +863,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitJavacode_production(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitJavacode_production(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -935,6 +983,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitCppcode_production(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCppcode_production(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1046,6 +1100,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitBnf_production(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBnf_production(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1142,6 +1202,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitAccessModifier(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAccessModifier(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1227,6 +1293,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitRegular_expr_production(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRegular_expr_production(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1352,6 +1424,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitToken_manager_decls(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitToken_manager_decls(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1409,6 +1487,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitRegexpr_kind(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRegexpr_kind(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1464,6 +1548,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitRegexpr_spec(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRegexpr_spec(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1537,6 +1627,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitExpansion_choices(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpansion_choices(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1612,6 +1708,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitExpansion(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpansion(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1713,6 +1815,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitLocal_lookahead(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLocal_lookahead(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1875,6 +1983,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitExpansion_unit(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpansion_unit(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2105,6 +2219,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitRegular_expression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRegular_expression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2217,6 +2337,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitComplex_regular_expression_choices(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitComplex_regular_expression_choices(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2279,6 +2405,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitComplex_regular_expression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitComplex_regular_expression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2360,6 +2492,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitComplex_regular_expression_unit(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitComplex_regular_expression_unit(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2516,6 +2654,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitCharacter_list(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCharacter_list(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2602,6 +2746,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitCharacter_descriptor(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCharacter_descriptor(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2656,6 +2806,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitIdentifier(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIdentifier(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2703,6 +2859,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitNode_descriptor(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNode_descriptor(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2785,6 +2947,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitNode_descriptor_expression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNode_descriptor_expression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3024,6 +3192,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitJavaIdentifier(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitJavaIdentifier(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3086,6 +3260,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitCompilationUnit(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCompilationUnit(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3172,6 +3352,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitPackageDeclaration(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPackageDeclaration(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3225,6 +3411,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitImportDeclaration(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitImportDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3342,6 +3534,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitModifiers(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitModifiers(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3487,6 +3685,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitTypeDeclaration(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeDeclaration(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3598,6 +3802,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitClassOrInterfaceDeclaration(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassOrInterfaceDeclaration(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3691,6 +3901,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitExtendsList(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExtendsList(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3761,6 +3977,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitImplementsList(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitImplementsList(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3829,6 +4051,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitEnumDeclaration(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnumDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3903,6 +4131,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitEnumBody(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnumBody(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4022,6 +4256,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitEnumConstant(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnumConstant(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4097,6 +4337,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitTypeParameters(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeParameters(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4164,6 +4410,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitTypeParameter(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeParameter(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4225,6 +4477,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitTypeBound(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeBound(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4292,6 +4550,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitClassOrInterfaceBody(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassOrInterfaceBody(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4371,6 +4635,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitClassOrInterfaceBodyDeclaration(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassOrInterfaceBodyDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4480,6 +4750,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitFieldDeclaration(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFieldDeclaration(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4548,6 +4824,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitVariableDeclarator(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVariableDeclarator(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4612,6 +4894,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitVariableDeclaratorId(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVariableDeclaratorId(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4674,6 +4962,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitVariableInitializer(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVariableInitializer(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4788,6 +5082,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitArrayInitializer(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArrayInitializer(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4887,6 +5187,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitMethodDeclaration(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodDeclaration(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4984,6 +5290,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitMethodDeclarator(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodDeclarator(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -5054,6 +5366,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitFormalParameters(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFormalParameters(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5134,6 +5452,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitFormalParameter(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFormalParameter(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5250,6 +5574,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitConstructorDeclaration(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConstructorDeclaration(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -5353,6 +5683,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitExplicitConstructorInvocation(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExplicitConstructorInvocation(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -5430,6 +5766,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitInitializer(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInitializer(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -5486,6 +5828,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitType(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5556,6 +5904,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitReferenceType(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReferenceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5688,6 +6042,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitTemplate(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTemplate(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -5755,6 +6115,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitTemplateBase(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTemplateBase(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -5809,6 +6175,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitTemplatePack(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTemplatePack(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5875,6 +6247,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitClassOrInterfaceType(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassOrInterfaceType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -5985,6 +6363,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitTypeArguments(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeArguments(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6071,6 +6455,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitTypeArgument(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeArgument(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6152,6 +6542,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitWildcardBounds(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitWildcardBounds(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6219,6 +6615,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitPrimitiveType(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimitiveType(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6273,6 +6675,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitResultType(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitResultType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6389,6 +6797,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitName(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitName(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6458,6 +6872,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitNameList(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNameList(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6524,6 +6944,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6585,6 +7011,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitAssignmentOperator(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAssignmentOperator(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6643,6 +7075,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitConditionalExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConditionalExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6711,6 +7149,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitConditionalOrExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConditionalOrExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6777,6 +7221,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitConditionalAndExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConditionalAndExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -6845,6 +7295,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitInclusiveOrExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInclusiveOrExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6912,6 +7368,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitExclusiveOrExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExclusiveOrExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -6978,6 +7440,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitAndExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAndExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7050,6 +7518,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitEqualityExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEqualityExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -7120,6 +7594,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitInstanceOfExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInstanceOfExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7195,6 +7675,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitRelationalExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRelationalExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7277,6 +7763,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitShiftExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitShiftExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7371,6 +7863,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitAdditiveExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAdditiveExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -7453,6 +7951,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitMultiplicativeExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMultiplicativeExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -7530,6 +8034,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitUnaryExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnaryExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7657,6 +8167,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitPreIncrementExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPreIncrementExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -7702,6 +8218,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitPreDecrementExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPreDecrementExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7755,6 +8277,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitUnaryExpressionNotPlusMinus(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnaryExpressionNotPlusMinus(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -7849,6 +8377,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitCastLookahead(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCastLookahead(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8005,6 +8539,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitPostfixExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPostfixExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -8073,6 +8613,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitCastExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCastExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8148,6 +8694,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitPrimaryExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -8211,6 +8763,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitMemberSelector(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMemberSelector(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8279,6 +8837,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitPrimaryPrefix(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryPrefix(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8399,6 +8963,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitPrimarySuffix(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimarySuffix(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -8500,6 +9070,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitLiteral(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLiteral(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -8585,6 +9161,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitIntegerLiteral(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIntegerLiteral(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -8626,6 +9208,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitBooleanLiteral(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBooleanLiteral(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8676,6 +9264,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitStringLiteral(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStringLiteral(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -8716,6 +9310,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitNullLiteral(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNullLiteral(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8761,6 +9361,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitArguments(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArguments(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8824,6 +9430,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitArgumentList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArgumentList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -8900,6 +9512,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitAllocationExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAllocationExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9015,6 +9633,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitArrayDimsAndInits(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArrayDimsAndInits(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9175,6 +9799,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitStatement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9338,6 +9968,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitAssertStatement(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAssertStatement(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -9402,6 +10038,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitLabeledStatement(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLabeledStatement(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -9453,6 +10095,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitBlock(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBlock(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9520,6 +10168,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitBlockStatement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBlockStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9599,6 +10253,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitLocalVariableDeclaration(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLocalVariableDeclaration(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -9661,6 +10321,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitEmptyStatement(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEmptyStatement(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -9717,6 +10383,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitStatementExpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStatementExpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -9881,6 +10553,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitSwitchStatement(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSwitchStatement(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -9966,6 +10644,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitSwitchLabel(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSwitchLabel(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -10040,6 +10724,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitIfStatement(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIfStatement(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -10109,6 +10799,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitWhileStatement(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitWhileStatement(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -10167,6 +10863,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitDoStatement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDoStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10248,6 +10950,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitForStatement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitForStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10358,6 +11066,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitForInit(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitForInit(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -10421,6 +11135,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitStatementExpressionList(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStatementExpressionList(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -10481,6 +11201,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitForUpdate(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitForUpdate(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -10525,6 +11251,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitBreakStatement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBreakStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10584,6 +11316,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitContinueStatement(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitContinueStatement(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -10641,6 +11379,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitReturnStatement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReturnStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10700,6 +11444,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitThrowStatement(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitThrowStatement(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -10752,6 +11502,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitSynchronizedStatement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSynchronizedStatement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10810,6 +11566,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitResourceDeclaration(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitResourceDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -10874,6 +11636,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitCatchParameter(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCatchParameter(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11019,6 +11787,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitTryStatement(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTryStatement(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -11148,6 +11922,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitAnnotation(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAnnotation(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -11216,6 +11996,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitNormalAnnotation(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNormalAnnotation(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -11276,6 +12062,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitMarkerAnnotation(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMarkerAnnotation(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -11325,6 +12117,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitSingleMemberAnnotation(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSingleMemberAnnotation(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11383,6 +12181,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitMemberValuePairs(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMemberValuePairs(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11448,6 +12252,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitMemberValuePair(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMemberValuePair(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -11500,6 +12310,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitMemberValue(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMemberValue(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11621,6 +12437,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitMemberValueArrayInitializer(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMemberValueArrayInitializer(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -11702,6 +12524,12 @@ public partial class JavaccParser : Parser {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitAnnotationTypeDeclaration(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAnnotationTypeDeclaration(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -11755,6 +12583,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitAnnotationTypeBody(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAnnotationTypeBody(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11839,6 +12673,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitAnnotationTypeMemberDeclaration(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAnnotationTypeMemberDeclaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -11976,6 +12816,12 @@ public partial class JavaccParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IJavaccListener typedListener = listener as IJavaccListener;
 			if (typedListener != null) typedListener.ExitDefaultValue(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IJavaccVisitor<TResult> typedVisitor = visitor as IJavaccVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDefaultValue(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 

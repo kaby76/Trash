@@ -153,7 +153,7 @@ public class Grun
 
         {
             MethodInfo methodInfo = program.GetMethod("SetupParse2");
-            object[] parm = new object[] { txt, false };
+            object[] parm = new object[] { txt, fn, false };
             var res = methodInfo.Invoke(null, parm);
         }
         // Set perf.

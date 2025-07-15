@@ -141,7 +141,7 @@ public partial class Iso14977Parser : Parser {
 		Interpreter = new ParserATNSimulator(this, _ATN, decisionToDFA, sharedContextCache);
 	}
 
-	public partial class LetterContext : AttributedParseTreeNode {
+	public partial class LetterContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Al() { return GetToken(Iso14977Parser.Al, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Bl() { return GetToken(Iso14977Parser.Bl, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Cl() { return GetToken(Iso14977Parser.Cl, 0); }
@@ -208,6 +208,12 @@ public partial class Iso14977Parser : Parser {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitLetter(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLetter(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -240,7 +246,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Decimal_digitContext : AttributedParseTreeNode {
+	public partial class Decimal_digitContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode N0() { return GetToken(Iso14977Parser.N0, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode N1() { return GetToken(Iso14977Parser.N1, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode N2() { return GetToken(Iso14977Parser.N2, 0); }
@@ -265,6 +271,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitDecimal_digit(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDecimal_digit(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -298,7 +310,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Concatenate_symbolContext : AttributedParseTreeNode {
+	public partial class Concatenate_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA() { return GetToken(Iso14977Parser.COMMA, 0); }
 		public Concatenate_symbolContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -314,6 +326,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitConcatenate_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConcatenate_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -339,7 +357,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Defining_symbolContext : AttributedParseTreeNode {
+	public partial class Defining_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode EQUAL() { return GetToken(Iso14977Parser.EQUAL, 0); }
 		public Defining_symbolContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -355,6 +373,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitDefining_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDefining_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -380,7 +404,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Definition_separator_symbolContext : AttributedParseTreeNode {
+	public partial class Definition_separator_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode VBAR() { return GetToken(Iso14977Parser.VBAR, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FSLASH() { return GetToken(Iso14977Parser.FSLASH, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode EXCL() { return GetToken(Iso14977Parser.EXCL, 0); }
@@ -398,6 +422,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitDefinition_separator_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDefinition_separator_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -431,7 +461,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class End_comment_symbolContext : AttributedParseTreeNode {
+	public partial class End_comment_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STARCP() { return GetToken(Iso14977Parser.STARCP, 0); }
 		public End_comment_symbolContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -447,6 +477,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitEnd_comment_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnd_comment_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -472,7 +508,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class End_group_symbolContext : AttributedParseTreeNode {
+	public partial class End_group_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CP() { return GetToken(Iso14977Parser.CP, 0); }
 		public End_group_symbolContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -488,6 +524,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitEnd_group_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnd_group_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -513,7 +555,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class End_option_symbolContext : AttributedParseTreeNode {
+	public partial class End_option_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CB() { return GetToken(Iso14977Parser.CB, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FSLASH_CP() { return GetToken(Iso14977Parser.FSLASH_CP, 0); }
 		public End_option_symbolContext(ParserRuleContext parent, int invokingState)
@@ -530,6 +572,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitEnd_option_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnd_option_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -563,7 +611,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class End_repeat_symbolContext : AttributedParseTreeNode {
+	public partial class End_repeat_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CC() { return GetToken(Iso14977Parser.CC, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLONCP() { return GetToken(Iso14977Parser.COLONCP, 0); }
 		public End_repeat_symbolContext(ParserRuleContext parent, int invokingState)
@@ -580,6 +628,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitEnd_repeat_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEnd_repeat_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -613,7 +667,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Except_symbolContext : AttributedParseTreeNode {
+	public partial class Except_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode HYPHEN() { return GetToken(Iso14977Parser.HYPHEN, 0); }
 		public Except_symbolContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -629,6 +683,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitExcept_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExcept_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -654,7 +714,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class First_quote_symbolContext : AttributedParseTreeNode {
+	public partial class First_quote_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SQ() { return GetToken(Iso14977Parser.SQ, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FSQ() { return GetToken(Iso14977Parser.FSQ, 0); }
 		public First_quote_symbolContext(ParserRuleContext parent, int invokingState)
@@ -671,6 +731,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitFirst_quote_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFirst_quote_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -704,7 +770,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Repetition_symbolContext : AttributedParseTreeNode {
+	public partial class Repetition_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STAR() { return GetToken(Iso14977Parser.STAR, 0); }
 		public Repetition_symbolContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -720,6 +786,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitRepetition_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRepetition_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -745,7 +817,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Second_quote_symbolContext : AttributedParseTreeNode {
+	public partial class Second_quote_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DQ() { return GetToken(Iso14977Parser.DQ, 0); }
 		public Second_quote_symbolContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -761,6 +833,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSecond_quote_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSecond_quote_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -786,7 +864,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Special_sequence_symbolContext : AttributedParseTreeNode {
+	public partial class Special_sequence_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode QM() { return GetToken(Iso14977Parser.QM, 0); }
 		public Special_sequence_symbolContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -802,6 +880,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSpecial_sequence_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSpecial_sequence_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -827,7 +911,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Start_comment_symbolContext : AttributedParseTreeNode {
+	public partial class Start_comment_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OPSTAR() { return GetToken(Iso14977Parser.OPSTAR, 0); }
 		public Start_comment_symbolContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -843,6 +927,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitStart_comment_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_comment_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -868,7 +958,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Start_group_symbolContext : AttributedParseTreeNode {
+	public partial class Start_group_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OP() { return GetToken(Iso14977Parser.OP, 0); }
 		public Start_group_symbolContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -884,6 +974,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitStart_group_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_group_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -909,7 +1005,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Start_option_symbolContext : AttributedParseTreeNode {
+	public partial class Start_option_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OB() { return GetToken(Iso14977Parser.OB, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CPSLASH() { return GetToken(Iso14977Parser.CPSLASH, 0); }
 		public Start_option_symbolContext(ParserRuleContext parent, int invokingState)
@@ -926,6 +1022,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitStart_option_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_option_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -959,7 +1061,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Start_repeat_symbolContext : AttributedParseTreeNode {
+	public partial class Start_repeat_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OC() { return GetToken(Iso14977Parser.OC, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OPCOLON() { return GetToken(Iso14977Parser.OPCOLON, 0); }
 		public Start_repeat_symbolContext(ParserRuleContext parent, int invokingState)
@@ -976,6 +1078,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitStart_repeat_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_repeat_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1009,7 +1117,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Terminator_symbolContext : AttributedParseTreeNode {
+	public partial class Terminator_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMI() { return GetToken(Iso14977Parser.SEMI, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DOT() { return GetToken(Iso14977Parser.DOT, 0); }
 		public Terminator_symbolContext(ParserRuleContext parent, int invokingState)
@@ -1026,6 +1134,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitTerminator_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTerminator_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1059,7 +1173,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Other_characterContext : AttributedParseTreeNode {
+	public partial class Other_characterContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SPACE() { return GetToken(Iso14977Parser.SPACE, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLON() { return GetToken(Iso14977Parser.COLON, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode PLUS() { return GetToken(Iso14977Parser.PLUS, 0); }
@@ -1089,6 +1203,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitOther_character(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitOther_character(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1122,7 +1242,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Space_characterContext : AttributedParseTreeNode {
+	public partial class Space_characterContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SPACE() { return GetToken(Iso14977Parser.SPACE, 0); }
 		public Space_characterContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -1138,6 +1258,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSpace_character(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSpace_character(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1163,7 +1289,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Horizontal_tabulation_characterContext : AttributedParseTreeNode {
+	public partial class Horizontal_tabulation_characterContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode TAB() { return GetToken(Iso14977Parser.TAB, 0); }
 		public Horizontal_tabulation_characterContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -1179,6 +1305,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitHorizontal_tabulation_character(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitHorizontal_tabulation_character(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1204,7 +1336,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class New_lineContext : AttributedParseTreeNode {
+	public partial class New_lineContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] NL() { return GetTokens(Iso14977Parser.NL); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NL(int i) {
 			return GetToken(Iso14977Parser.NL, i);
@@ -1227,6 +1359,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitNew_line(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNew_line(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1279,7 +1417,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Vertical_tabulation_characterContext : AttributedParseTreeNode {
+	public partial class Vertical_tabulation_characterContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LF() { return GetToken(Iso14977Parser.LF, 0); }
 		public Vertical_tabulation_characterContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -1295,6 +1433,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitVertical_tabulation_character(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVertical_tabulation_character(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1320,7 +1464,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Form_feedContext : AttributedParseTreeNode {
+	public partial class Form_feedContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NL() { return GetToken(Iso14977Parser.NL, 0); }
 		public Form_feedContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -1336,6 +1480,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitForm_feed(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitForm_feed(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1361,7 +1511,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Terminal_characterContext : AttributedParseTreeNode {
+	public partial class Terminal_characterContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public LetterContext letter() {
 			return GetRuleContext<LetterContext>(0);
 		}
@@ -1436,6 +1586,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitTerminal_character(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTerminal_character(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1683,7 +1839,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Gap_free_symbolContext : AttributedParseTreeNode {
+	public partial class Gap_free_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Terminal_characterContext terminal_character() {
 			return GetRuleContext<Terminal_characterContext>(0);
 		}
@@ -1704,6 +1860,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitGap_free_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGap_free_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1748,7 +1910,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Terminal_stringContext : AttributedParseTreeNode {
+	public partial class Terminal_stringContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public First_quote_symbolContext[] first_quote_symbol() {
 			return GetRuleContexts<First_quote_symbolContext>();
 		}
@@ -1787,6 +1949,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitTerminal_string(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTerminal_string(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1873,7 +2041,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class First_terminal_characterContext : AttributedParseTreeNode {
+	public partial class First_terminal_characterContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Terminal_characterContext terminal_character() {
 			return GetRuleContext<Terminal_characterContext>(0);
 		}
@@ -1891,6 +2059,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitFirst_terminal_character(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFirst_terminal_character(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1921,7 +2095,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Second_terminal_characterContext : AttributedParseTreeNode {
+	public partial class Second_terminal_characterContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Terminal_characterContext terminal_character() {
 			return GetRuleContext<Terminal_characterContext>(0);
 		}
@@ -1939,6 +2113,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSecond_terminal_character(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSecond_terminal_character(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1968,7 +2148,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Gap_separatorContext : AttributedParseTreeNode {
+	public partial class Gap_separatorContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Space_characterContext space_character() {
 			return GetRuleContext<Space_characterContext>(0);
 		}
@@ -1998,6 +2178,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitGap_separator(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGap_separator(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2057,7 +2243,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Syntax1Context : AttributedParseTreeNode {
+	public partial class Syntax1Context : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Eof() { return GetToken(Iso14977Parser.Eof, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public Gap_separatorContext[] gap_separator() {
 			return GetRuleContexts<Gap_separatorContext>();
@@ -2085,6 +2271,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSyntax1(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSyntax1(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2163,7 +2355,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Commentless_symbolContext : AttributedParseTreeNode {
+	public partial class Commentless_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Terminal_characterContext terminal_character() {
 			return GetRuleContext<Terminal_characterContext>(0);
 		}
@@ -2193,6 +2385,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitCommentless_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCommentless_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2285,7 +2483,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class IntegerContext : AttributedParseTreeNode {
+	public partial class IntegerContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Decimal_digitContext[] decimal_digit() {
 			return GetRuleContexts<Decimal_digitContext>();
 		}
@@ -2306,6 +2504,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitInteger(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInteger(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2348,7 +2552,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Meta_identifierContext : AttributedParseTreeNode {
+	public partial class Meta_identifierContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public LetterContext letter() {
 			return GetRuleContext<LetterContext>(0);
 		}
@@ -2372,6 +2576,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitMeta_identifier(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMeta_identifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2414,7 +2624,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Meta_identifier_characterContext : AttributedParseTreeNode {
+	public partial class Meta_identifier_characterContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public LetterContext letter() {
 			return GetRuleContext<LetterContext>(0);
 		}
@@ -2438,6 +2648,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitMeta_identifier_character(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMeta_identifier_character(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2544,7 +2760,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Special_sequenceContext : AttributedParseTreeNode {
+	public partial class Special_sequenceContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Special_sequence_symbolContext[] special_sequence_symbol() {
 			return GetRuleContexts<Special_sequence_symbolContext>();
 		}
@@ -2571,6 +2787,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSpecial_sequence(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSpecial_sequence(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2615,7 +2837,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Special_sequence_characterContext : AttributedParseTreeNode {
+	public partial class Special_sequence_characterContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Terminal_characterContext terminal_character() {
 			return GetRuleContext<Terminal_characterContext>(0);
 		}
@@ -2633,6 +2855,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSpecial_sequence_character(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSpecial_sequence_character(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2662,7 +2890,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Comment_symbolContext : AttributedParseTreeNode {
+	public partial class Comment_symbolContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Bracketed_textual_commentContext bracketed_textual_comment() {
 			return GetRuleContext<Bracketed_textual_commentContext>(0);
 		}
@@ -2686,6 +2914,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitComment_symbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitComment_symbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2731,7 +2965,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Bracketed_textual_commentContext : AttributedParseTreeNode {
+	public partial class Bracketed_textual_commentContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Start_comment_symbolContext start_comment_symbol() {
 			return GetRuleContext<Start_comment_symbolContext>(0);
 		}
@@ -2758,6 +2992,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitBracketed_textual_comment(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBracketed_textual_comment(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2802,7 +3042,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Syntax2Context : AttributedParseTreeNode {
+	public partial class Syntax2Context : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Commentless_symbolContext[] commentless_symbol() {
 			return GetRuleContexts<Commentless_symbolContext>();
 		}
@@ -2830,6 +3070,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSyntax2(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSyntax2(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2922,7 +3168,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Syntax3Context : AttributedParseTreeNode {
+	public partial class Syntax3Context : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Syntax_ruleContext[] syntax_rule() {
 			return GetRuleContexts<Syntax_ruleContext>();
 		}
@@ -2944,6 +3190,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSyntax3(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSyntax3(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2986,7 +3238,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Syntax_ruleContext : AttributedParseTreeNode {
+	public partial class Syntax_ruleContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Meta_identifierContext meta_identifier() {
 			return GetRuleContext<Meta_identifierContext>(0);
 		}
@@ -3013,6 +3265,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSyntax_rule(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSyntax_rule(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3044,7 +3302,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Definitions_listContext : AttributedParseTreeNode {
+	public partial class Definitions_listContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Single_definitionContext[] single_definition() {
 			return GetRuleContexts<Single_definitionContext>();
 		}
@@ -3071,6 +3329,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitDefinitions_list(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDefinitions_list(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3113,7 +3377,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Single_definitionContext : AttributedParseTreeNode {
+	public partial class Single_definitionContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Syntactic_termContext[] syntactic_term() {
 			return GetRuleContexts<Syntactic_termContext>();
 		}
@@ -3140,6 +3404,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSingle_definition(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSingle_definition(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3182,7 +3452,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Syntactic_termContext : AttributedParseTreeNode {
+	public partial class Syntactic_termContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Syntactic_factorContext syntactic_factor() {
 			return GetRuleContext<Syntactic_factorContext>(0);
 		}
@@ -3206,6 +3476,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSyntactic_term(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSyntactic_term(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3244,7 +3520,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Syntactic_exceptionContext : AttributedParseTreeNode {
+	public partial class Syntactic_exceptionContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Syntactic_factorContext syntactic_factor() {
 			return GetRuleContext<Syntactic_factorContext>(0);
 		}
@@ -3262,6 +3538,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSyntactic_exception(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSyntactic_exception(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3287,7 +3569,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Syntactic_factorContext : AttributedParseTreeNode {
+	public partial class Syntactic_factorContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Syntactic_primaryContext syntactic_primary() {
 			return GetRuleContext<Syntactic_primaryContext>(0);
 		}
@@ -3311,6 +3593,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSyntactic_factor(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSyntactic_factor(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3349,7 +3637,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Syntactic_primaryContext : AttributedParseTreeNode {
+	public partial class Syntactic_primaryContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Optional_sequenceContext optional_sequence() {
 			return GetRuleContext<Optional_sequenceContext>(0);
 		}
@@ -3385,6 +3673,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitSyntactic_primary(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSyntactic_primary(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3525,7 +3819,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Optional_sequenceContext : AttributedParseTreeNode {
+	public partial class Optional_sequenceContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Start_option_symbolContext start_option_symbol() {
 			return GetRuleContext<Start_option_symbolContext>(0);
 		}
@@ -3549,6 +3843,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitOptional_sequence(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitOptional_sequence(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3578,7 +3878,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Repeated_sequenceContext : AttributedParseTreeNode {
+	public partial class Repeated_sequenceContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Start_repeat_symbolContext start_repeat_symbol() {
 			return GetRuleContext<Start_repeat_symbolContext>(0);
 		}
@@ -3602,6 +3902,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitRepeated_sequence(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRepeated_sequence(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3631,7 +3937,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Grouped_sequenceContext : AttributedParseTreeNode {
+	public partial class Grouped_sequenceContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public Start_group_symbolContext start_group_symbol() {
 			return GetRuleContext<Start_group_symbolContext>(0);
 		}
@@ -3655,6 +3961,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitGrouped_sequence(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGrouped_sequence(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3684,7 +3996,7 @@ public partial class Iso14977Parser : Parser {
 		return _localctx;
 	}
 
-	public partial class Empty_sequenceContext : AttributedParseTreeNode {
+	public partial class Empty_sequenceContext : ParserRuleContext {
 		public Empty_sequenceContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -3699,6 +4011,12 @@ public partial class Iso14977Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IIso14977ParserListener typedListener = listener as IIso14977ParserListener;
 			if (typedListener != null) typedListener.ExitEmpty_sequence(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IIso14977ParserVisitor<TResult> typedVisitor = visitor as IIso14977ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEmpty_sequence(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 

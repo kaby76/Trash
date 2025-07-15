@@ -200,7 +200,11 @@ public class Grun
         return result;
     }
 
-    int DoParse(string parser_type, string txt, string prefix, string input_name, int row_number,
+    int DoParse(string parser_type,
+        string txt,
+        string prefix,
+        string input_name,
+        int row_number,
         List<AntlrJson.ParsingResultSet> data)
     {
         Type type = null;
@@ -299,7 +303,7 @@ public class Grun
         }
 
         MethodInfo methodInfo = type.GetMethod("SetupParse2");
-        object[] parm1 = new object[] { txt, config.Quiet };
+        object[] parm1 = new object[] { txt, input_name, config.Quiet };
         var res = methodInfo.Invoke(null, parm1);
 
         var result = "";
