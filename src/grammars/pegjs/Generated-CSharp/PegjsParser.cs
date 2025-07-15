@@ -123,6 +123,12 @@ public partial class PegjsParser : Parser {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitGrammar_(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGrammar_(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -192,6 +198,12 @@ public partial class PegjsParser : Parser {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitInitializer(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInitializer(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -233,6 +245,12 @@ public partial class PegjsParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitEos(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEos(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -298,6 +316,12 @@ public partial class PegjsParser : Parser {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitRule(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRule(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -358,6 +382,12 @@ public partial class PegjsParser : Parser {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitExpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -403,6 +433,12 @@ public partial class PegjsParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitChoiceexpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitChoiceexpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -465,6 +501,12 @@ public partial class PegjsParser : Parser {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitActionexpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitActionexpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -521,6 +563,12 @@ public partial class PegjsParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitSequenceexpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSequenceexpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -584,6 +632,12 @@ public partial class PegjsParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitLabeledexpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLabeledexpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -662,6 +716,12 @@ public partial class PegjsParser : Parser {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitLabelidentifier(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLabelidentifier(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -709,6 +769,12 @@ public partial class PegjsParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitPrefixedexpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrefixedexpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -765,6 +831,12 @@ public partial class PegjsParser : Parser {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitPrefixedoperator(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrefixedoperator(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -818,6 +890,12 @@ public partial class PegjsParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitSuffixedexpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSuffixedexpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -873,6 +951,12 @@ public partial class PegjsParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitSuffixedoperator(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSuffixedoperator(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -935,6 +1019,12 @@ public partial class PegjsParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitPrimaryexpression(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrimaryexpression(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1027,6 +1117,12 @@ public partial class PegjsParser : Parser {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitRulereferenceexpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRulereferenceexpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1071,6 +1167,12 @@ public partial class PegjsParser : Parser {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitSemanticpredicateexpression(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSemanticpredicateexpression(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1112,6 +1214,12 @@ public partial class PegjsParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitSemanticpredicateoperator(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSemanticpredicateoperator(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1162,6 +1270,12 @@ public partial class PegjsParser : Parser {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitIdentifier(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIdentifier(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1202,6 +1316,12 @@ public partial class PegjsParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
 			if (typedListener != null) typedListener.ExitLiteralMatcher(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IPegjsVisitor<TResult> typedVisitor = visitor as IPegjsVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLiteralMatcher(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 

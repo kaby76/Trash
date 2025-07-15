@@ -163,6 +163,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_LGrammar(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_LGrammar(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -208,6 +214,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_LDef(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_LDef(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -255,6 +267,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListLDef(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListLDef(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -300,6 +318,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListIdentifier(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListIdentifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -347,6 +371,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Grammar(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Grammar(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -392,6 +422,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListDef(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListDef(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -439,6 +475,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Def(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Def(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -484,6 +526,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Item(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Item(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -531,6 +579,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListItem(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListItem(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -576,6 +630,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Cat(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Cat(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -623,6 +683,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Label(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Label(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -668,6 +734,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_LabelId(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_LabelId(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -715,6 +787,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ProfItem(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ProfItem(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -760,6 +838,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_IntList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_IntList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -807,6 +891,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListInteger(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListInteger(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -852,6 +942,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListIntList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListIntList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -899,6 +995,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListProfItem(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListProfItem(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -944,6 +1046,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Arg(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Arg(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -991,6 +1099,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListArg(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListArg(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1036,6 +1150,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Separation(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Separation(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1083,6 +1203,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListString(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListString(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1128,6 +1254,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Exp(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Exp(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1175,6 +1307,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Exp1(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Exp1(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1220,6 +1358,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Exp2(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Exp2(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1267,6 +1411,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListExp(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListExp(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1312,6 +1462,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListExp2(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListExp2(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1359,6 +1515,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_RHS(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_RHS(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1404,6 +1566,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_ListRHS(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_ListRHS(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1451,6 +1619,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_MinimumSize(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_MinimumSize(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1496,6 +1670,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Reg(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Reg(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1543,6 +1723,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Reg1(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Reg1(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1588,6 +1774,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Reg2(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Reg2(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1635,6 +1827,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitStart_Reg3(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStart_Reg3(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1679,6 +1877,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitLGrammar(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLGrammar(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1727,6 +1931,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitLDef(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLDef(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1800,6 +2010,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListLDef(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListLDef(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1877,6 +2093,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListIdentifier(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListIdentifier(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1937,6 +2159,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitGrammar_(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGrammar_(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1983,6 +2211,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListDef(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListDef(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2110,6 +2344,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitDef(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDef(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2350,6 +2590,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitItem(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitItem(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2411,6 +2657,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListItem(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListItem(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2491,6 +2743,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitCat(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCat(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2558,6 +2816,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitLabel(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLabel(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2640,6 +2904,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitLabelId(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLabelId(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2746,6 +3016,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitProfItem(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitProfItem(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2807,6 +3083,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitIntList(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIntList(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2855,6 +3137,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListInteger(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListInteger(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2925,6 +3213,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListIntList(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListIntList(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2993,6 +3287,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListProfItem(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListProfItem(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3049,6 +3349,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitArg(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArg(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3094,6 +3400,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListArg(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListArg(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3171,6 +3483,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitSeparation(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSeparation(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3242,6 +3560,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListString(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListString(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3306,6 +3630,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitExp(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExp(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3369,6 +3699,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitExp1(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExp1(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3439,6 +3775,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitExp2(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExp2(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3545,6 +3887,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListExp(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListExp(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3613,6 +3961,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListExp2(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListExp2(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3671,6 +4025,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitRHS(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRHS(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3717,6 +4077,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitListRHS(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitListRHS(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3775,6 +4141,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitMinimumSize(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMinimumSize(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3838,6 +4210,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitReg(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReg(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3923,6 +4301,12 @@ public partial class lbnfParser : Parser {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitReg1(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReg1(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4005,6 +4389,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitReg2(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReg2(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4103,6 +4493,12 @@ public partial class lbnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IlbnfParserListener typedListener = listener as IlbnfParserListener;
 			if (typedListener != null) typedListener.ExitReg3(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IlbnfParserVisitor<TResult> typedVisitor = visitor as IlbnfParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReg3(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 

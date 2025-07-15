@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "Test": {
-      "commandName": "Project",
-      "commandLineArgs": "Test.g4",
-      "workingDirectory": "c:\\msys64\\home\\Kenne\\ml-grammars\\save-grammarinator\\y"
-    }
-  }
-}

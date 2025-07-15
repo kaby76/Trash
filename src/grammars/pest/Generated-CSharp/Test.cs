@@ -1,4 +1,4 @@
-// Generated from trgen 0.23.12
+// Generated from trgen 0.23.23
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
@@ -21,7 +21,7 @@ public class Program
     public static string StartSymbol { get; set; } = "grammar_rules";
     public static string Input { get; set; }
     public static bool HeatMap { get; set; } = false;
-    public static void SetupParse2(string input, bool quiet = false)
+    public static void SetupParse2(string input, string fn, bool quiet = false)
     {
         ICharStream str = new AntlrInputStream(input);
         CharStream = str;
@@ -35,6 +35,8 @@ public class Program
             tokens = new CommonTokenStream(lexer);
         }
         TokenStream = tokens;
+        ((AntlrInputStream)(lexer.InputStream)).name = fn;
+        ((AntlrInputStream)(lexer.InputStream)).name = fn;
         var parser = new MyParser(tokens);
         Parser = parser;
         var listener_lexer = new ErrorListener<int>(false, false, System.Console.Error);
@@ -137,7 +139,8 @@ public class Program
     static bool old = false;
     static bool two_byte = false;
     static int exit_code = 0;
-    static Encoding encoding = null;
+    static string file_encoding = "";
+    static bool binary = false;
     static int string_instance = 0;
     static string prefix = "";
     static bool quiet = false;
@@ -192,12 +195,7 @@ public class Program
             else if (args[i] == "-encoding")
             {
                 ++i;
-                encoding = Encoding.GetEncoding(
-                    args[i],
-                    new EncoderReplacementFallback("(unknown)"),
-                    new DecoderReplacementFallback("(error)"));
-                if (encoding == null)
-                    throw new Exception(@"Unknown encoding. Must be an Internet Assigned Numbers Authority (IANA) code page name. https://www.iana.org/assignments/character-sets/character-sets.xhtml");
+                file_encoding = args[i];
             }
             else if (args[i] == "-x")
             {
@@ -271,15 +269,23 @@ public class Program
             FileStream fs = new FileStream(input, FileMode.Open);
             str = new Antlr4.Runtime.AntlrInputStream(fs);
         }
-        else if (encoding == null)
+        else if (file_encoding == null || file_encoding == "")
             str = CharStreams.fromPath(input);
-        else
+        else {
+            var encoding = Encoding.GetEncoding(
+                file_encoding,
+                new EncoderReplacementFallback("(unknown)"),
+                new DecoderReplacementFallback("(error)"));
+            if (encoding == null)
+                throw new Exception(@"Unknown encoding. Must be an Internet Assigned Numbers Authority (IANA) code page name. https://www.iana.org/assignments/character-sets/character-sets.xhtml");
             str = CharStreams.fromPath(input, encoding);
+        }
         DoParse(str, input, row_number);
     }
 
     static void DoParse(ICharStream str, string input_name, int row_number)
     {
+        if (binary) str = new BinaryCharStream(str);
         var lexer = new PestLexer(str);
         if (show_tokens)
         {

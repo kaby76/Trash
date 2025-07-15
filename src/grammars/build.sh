@@ -1,33 +1,14 @@
 #!/bin/sh
-
-cwd=`pwd`
-for i in *
+set -e
+for i in [a-z]*
 do
-    if [[ -f $i ]]
-    then
-        continue
-    fi
-    echo $i
-    cd $cwd/$i
-    rm -rf Generated
-    if [ -f "pom.xml" ]
-    then
-        trgen --template-sources-directory ../templates > /dev/null 2>&1
-	if [ $? != 0 ]
+	if [ ! -d $i ]
 	then
-	    echo "Failed trgen of $i"
-            rm -rf Generated
-	    continue;
+		continue
 	fi
-	dotnet build Generated/*.csproj > /dev/null 2>&1
-	if [ $? != 0 ]
-	then
-	    echo "Failed build of $i"
-            rm -rf Generated
-	    continue;
-	fi
-    else
-        echo "No pom.xml in $i"
-    fi
-    rm -rf Generated
+	pushd $i > /dev/null 2>&1
+	cd Generated-*
+	pwd
+	make
+	popd > /dev/null 2>&1
 done

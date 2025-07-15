@@ -159,6 +159,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitInput_(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInput_(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -212,6 +218,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitPrologue_declarations(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrologue_declarations(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -311,6 +323,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitPrologue_declaration(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrologue_declaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -596,6 +614,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitParams(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitParams(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -672,6 +696,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitGrammar_declaration(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGrammar_declaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -786,6 +816,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitCode_props_type(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCode_props_type(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -834,6 +870,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitUnion_name(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUnion_name(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -905,6 +947,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitSymbol_declaration(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSymbol_declaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -992,6 +1040,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitPrecedence_declarator(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrecedence_declarator(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1040,6 +1094,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitTag_opt(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTag_opt(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1100,6 +1160,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitGeneric_symlist(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGeneric_symlist(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1158,6 +1224,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitGeneric_symlist_item(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGeneric_symlist_item(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1221,6 +1293,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitTag(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTag(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1272,6 +1350,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitNterm_decls(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNterm_decls(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1321,6 +1405,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitToken_decls(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitToken_decls(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1434,6 +1524,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitToken_decl(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitToken_decl(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1501,6 +1597,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitInt_opt(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitInt_opt(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1602,6 +1704,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitAlias(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAlias(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1709,6 +1817,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitToken_decls_for_prec(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitToken_decls_for_prec(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1832,6 +1946,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitToken_decl_for_prec(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitToken_decl_for_prec(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1899,6 +2019,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitSymbol_decls(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSymbol_decls(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2019,6 +2145,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitBison_grammar(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBison_grammar(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2078,6 +2210,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitRules_or_grammar_declaration(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRules_or_grammar_declaration(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2161,6 +2299,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitRules(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRules(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2217,6 +2361,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitRhses_1(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRhses_1(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2336,6 +2486,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitRhs(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRhs(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2466,6 +2622,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitNamed_ref_opt(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNamed_ref_opt(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2534,6 +2696,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitVariable(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVariable(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2578,6 +2746,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitValue(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitValue(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2689,6 +2863,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitId(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitId(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2742,6 +2922,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitSymbol(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSymbol(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2800,6 +2986,12 @@ public partial class BisonParser : Parser {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitString_as_id(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitString_as_id(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2841,6 +3033,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitEpilogue_opt(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEpilogue_opt(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2906,6 +3104,12 @@ public partial class BisonParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IBisonParserListener typedListener = listener as IBisonParserListener;
 			if (typedListener != null) typedListener.ExitActionBlock(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IBisonParserVisitor<TResult> typedVisitor = visitor as IBisonParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitActionBlock(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
