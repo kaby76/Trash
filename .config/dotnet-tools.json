@@ -72,13 +72,6 @@
       ],
       "rollForward": false
     },
-    "trgenvsc": {
-      "version": "0.23.24",
-      "commands": [
-        "trgenvsc"
-      ],
-      "rollForward": false
-    },
     "trglob": {
       "version": "0.23.24",
       "commands": [
