@@ -63,7 +63,7 @@ Output:
 
 ## Current version
 
-0.23.24 Fix problem with file names for input streams using trparse.
+0.23.25 Fix trcover.
 
 ## License
 

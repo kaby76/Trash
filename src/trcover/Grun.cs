@@ -70,7 +70,7 @@ namespace Trash
                 type = asm.GetType("Program");
             }
             MethodInfo methodInfo = type.GetMethod("SetupParse2");
-            object[] parm1 = new object[] { "", config.Quiet };
+            object[] parm1 = new object[] { "", "", config.Quiet };
             var res = methodInfo.Invoke(null, parm1);
             parser = type.GetProperty("Parser").GetValue(null, new object[0]) as Antlr4.Runtime.Parser;
             lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
@@ -199,7 +199,7 @@ namespace Trash
         int DoParse(Model model, Type type, string txt, string prefix, string input_name, int row_number)
         {
             MethodInfo methodInfo = type.GetMethod("SetupParse2");
-            object[] parm1 = new object[] { txt, config.Quiet };
+            object[] parm1 = new object[] { txt, input_name, config.Quiet };
             var res = methodInfo.Invoke(null, parm1);
 
             MethodInfo methodInfo2 = type.GetMethod("Parse2");
