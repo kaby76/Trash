@@ -30,7 +30,7 @@ the XPath patterns to match certain parse trees.
 
 ## Current version
 
-0.23.25 Fix trcover.
+0.23.26 Fix trcover.
 
 ## License
 

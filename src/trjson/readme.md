@@ -18,7 +18,7 @@ Read a parse tree from stdin and write a JSON represenation of it.
 
 ## Current version
 
-0.23.25 Fix trcover.
+0.23.26 Fix trcover.
 
 ## License
 

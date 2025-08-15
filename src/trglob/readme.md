@@ -17,7 +17,7 @@ Expand a glob string into file names.
 
 ## Current version
 
-0.23.25 Fix trcover.
+0.23.26 Fix trcover.
 
 ## License
 
