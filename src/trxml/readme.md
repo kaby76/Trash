@@ -18,7 +18,7 @@ Read a tree from stdin and write an XML represenation of it.
 
 ## Current version
 
-0.23.25 Fix trcover.
+0.23.26 Fix trcover.
 
 ## License
 
