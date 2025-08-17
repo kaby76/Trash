@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "trunfold": {
+      "commandName": "Project",
+      "commandLineArgs": "-v -f o.pt",
+      "workingDirectory": "C:\\msys64\\home\\Kenne"
+    }
+  }
+}

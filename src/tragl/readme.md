@@ -19,7 +19,7 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Current version
 
-0.23.26 Fix trcover.
+0.23.26 Added trunfoldlit.
 
 ## License
 

@@ -63,7 +63,7 @@ The output will be:
 
 ## Current version
 
-0.23.26 Fix trcover.
+0.23.26 Added trunfoldlit.
 
 ## License
 

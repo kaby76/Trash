@@ -184,6 +184,13 @@
       ],
       "rollForward": false
     },
+    "trunfoldlit": {
+      "version": "0.23.26",
+      "commands": [
+        "trunfoldlit"
+      ],
+      "rollForward": false
+    },
     "trungroup": {
       "version": "0.23.26",
       "commands": [
