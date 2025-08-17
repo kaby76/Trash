@@ -1,20 +1,53 @@
-# trjson
+# trunfoldlit
 
 ## Summary
 
-Print a parse tree in JSON structured format
+Perform an unfold transform for all string literal lexer rules on a grammar
 
 ## Description
 
-Read a parse tree from stdin and write a JSON represenation of it.
+The unfoldlit command applies the unfold transform to a collection of terminal nodes
+for string literal lexer rules in a grammar. An unfold operation substitutes
+the right-hand side of a parser or lexer rule into a reference of the rule name that
+occurs at the specified node. In this app, all lexer rules that have a string literal
+on the right-hand side of the rule are identified as the symbols to unfold in parser
+rules.
 
 ## Usage
 
-    trjson
+    trunfoldlit
 
 ## Examples
 
-    trparse A.g4 | trjson | less
+Before:
+
+	grammar Expression;
+	s : ( e '*' e | INT ) ;
+	e : e '*' e           # Mult
+		| INT               # primary
+		;
+	INT : [0-9]+ ;
+	WS : [ \t\n]+ -> skip ;
+
+Command:
+
+    trparse Expression.g4 | trunfoldlit | trsponge -c
+
+After:
+
+	grammar Expresion;
+	s : e ;
+	e : e '*' e       # Mult
+	    | INT           # primary
+	    ;
+	INT : [0-9]+ ;
+	WS : [ \t\n]+ -> skip ;
+
+## Notes
+
+If you are running MSYS2 on Windows, you may notice that XPaths are not being
+processed by this command correctly. To avoid the Bash shell from altering
+XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
@@ -24,7 +57,7 @@ Read a parse tree from stdin and write a JSON represenation of it.
 
 The MIT License
 
-Copyright (c) 2024 Ken Domino
+Copyright (c) 2025 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

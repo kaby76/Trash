@@ -18,7 +18,7 @@ Get strings from a PDF file using IText.
 
 ## Current version
 
-0.23.25 Fix trcover.
+0.23.26 Added trunfoldlit.
 
 ## License
 

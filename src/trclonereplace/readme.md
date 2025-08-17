@@ -19,7 +19,7 @@ Clone, rename, and replace symbols in a grammar to optimize full stack fallbacks
 
 ## Current version
 
-0.23.25 Fix trcover.
+0.23.26 Added trunfoldlit.
 
 ## License
 
