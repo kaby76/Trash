@@ -141,7 +141,7 @@ __NB: Out of date__
 1) <a href="src/trconvert/readme.md">trconvert</a> -- Convert a grammar from one for to another
 1) <a href="src/trdot/readme.md">trdot</a> -- Print a parse tree in Graphvis Dot format
 1) <a href="src/trenum/readme.md">trenum</a> -- Not functional, to enumerate strings from grammar.
-1) <a href="src/trfirst/readme.md">trfirst</a> -- Outputs first sets of a grammar
+1) <a href="src/trff/readme.md">trff</a> -- Outputs FIRST and FOLLOW sets of a grammar
 1) <a href="src/trfold/readme.md">trfold</a> -- Perform fold transform on a grammar
 1) <a href="src/trfoldlit/readme.md">trfoldlit</a> -- Perform fold transform on grammar with literals
 1) <a href="src/trformat/readme.md">trformat</a> -- Format a grammar
