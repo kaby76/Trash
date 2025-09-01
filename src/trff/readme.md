@@ -1,16 +1,14 @@
-# trfirst
+# trff
 
 ## Summary
 
-Outputs first sets of a grammar
+Outputs FIRST and FOLLOW sets of a grammar.
 
 ## Description
 
-Outputs first sets of a grammar.
-
 ## Usage
 
-trfirst k
+trff (assumes CSharp-targeted parser generated and compiled)
 
 ## Details
 
@@ -24,13 +22,13 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.26 Added trunfoldlit.
+0.23.27 Added trff.
 
 ## License
 
 The MIT License
 
-Copyright (c) 2024 Ken Domino
+Copyright (c) 2025 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 
