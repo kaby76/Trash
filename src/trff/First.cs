@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace trfirst
+namespace trff
 {
     internal class First
     {
@@ -107,11 +107,12 @@ namespace trfirst
                             var firstNoEps = new IntervalSet(next);
                             firstNoEps.Remove(EPSILON);
 
-                            if (next.Contains(EOF))
-                            {
-                                // Special case. Add in FOLLOW of caller rule into callee.
-                                UnionInto(firstNoEps, _followSets[callerRule]);
-                            }
+// NB: Originally, I thought 
+//                            if (next.Contains(EOF))
+//                            {
+//                                // Special case. Add in FOLLOW of caller rule into callee.
+//                                UnionInto(firstNoEps, _followSets[callerRule]);
+//                            }
 
                             // FOLLOW(callee) += FIRST(after) \ {ε}
                             if (UnionInto(_followSets[calleeRule], firstNoEps))

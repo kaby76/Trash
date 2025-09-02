@@ -58,6 +58,13 @@
       ],
       "rollForward": false
     },
+    "trff": {
+      "version": "0.23.27",
+      "commands": [
+        "trff"
+      ],
+      "rollForward": false
+    },
     "trfoldlit": {
       "version": "0.23.27",
       "commands": [

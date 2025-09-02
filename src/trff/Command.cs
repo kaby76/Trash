@@ -14,7 +14,7 @@
     {
         public string Help()
         {
-            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trfirst.readme.md"))
+            using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trff.readme.md"))
             using (StreamReader reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
