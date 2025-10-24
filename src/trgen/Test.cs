@@ -16,6 +16,7 @@ namespace Trash
         public string current_directory;
         public string example_files { get; set; } = "examples/";
         public string fully_qualified_lexer_name { get; set; }
+        public string fully_qualified_listener_name { get; set; }
         public string fully_qualified_parser_name { get; set; }
         public string fully_qualified_go_parser_name { get; set; }
         public string fully_qualified_go_lexer_name { get; set; }

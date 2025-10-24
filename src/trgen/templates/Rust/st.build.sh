@@ -1,0 +1,13 @@
+# Generated from trgen <version>
+
+set -e
+
+if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
+
+JAR='c:/Users/Kenne/Downloads/antlr4-4.13.3-SNAPSHOT-complete.jar'
+
+<tool_grammar_tuples:{x |
+java -jar $JAR -encoding <antlr_encoding> -Dlanguage=Rust -o src/gen  <x.AntlrArgs> <antlr_tool_args:{y | <y> } > <x.GrammarFileNameTarget>
+} >
+
+cargo b

@@ -1,0 +1,1 @@
+./target/debug/test.exe "$@"
