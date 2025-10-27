@@ -172,15 +172,15 @@ fn main() {
             process::exit(1);
     } else {
         let mut error_code = 0;
+        let start_all = Instant::now();
         for (idx, input) in flags.inputs.iter().enumerate() {
             let is_fn = flags.is_fns[idx];
-	    let start_all = Instant::now();
 	    parse_input(input, true, idx as i32, &flags);
-	    let elapsed = start_all.elapsed();
-	    if !flags.quiet {
-		eprintln!("{}Total Time: {:.3}", flags.prefix, elapsed.as_secs_f64());
-	    }
         }
+        let elapsed = start_all.elapsed();
+	if !flags.quiet {
+	    eprintln!("{}Total Time: {:.3}", flags.prefix, elapsed.as_secs_f64());
+	}
         process::exit(error_code  as i32);
     }
 }

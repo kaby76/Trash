@@ -526,8 +526,11 @@ namespace Trash
                 test.fully_qualified_go_parser_name = top_level_parser_grammar.GrammarGoNewName;
                 parser_src_grammar_file_name = top_level_parser_grammar.GrammarFileNameTarget;
                 test.parser_grammar_file_name = parser_src_grammar_file_name;
-                test.fully_qualified_lexer_name = top_level_lexer_grammar.GrammarAutomName;
-                test.fully_qualified_listener_name = test.grammar_name + "Listener";
+		test.fully_qualified_lexer_name = top_level_lexer_grammar.GrammarAutomName;
+		if (test.tool_grammar_files.Count == 1)
+			test.fully_qualified_listener_name = test.grammar_name + "Listener";
+		else
+			test.fully_qualified_listener_name = test.grammar_name + "ParserListener";
                 test.fully_qualified_go_lexer_name = top_level_lexer_grammar.GrammarGoNewName;
                 lexer_src_grammar_file_name = top_level_lexer_grammar.GrammarFileNameTarget;
                 test.lexer_grammar_file_name = lexer_src_grammar_file_name;
