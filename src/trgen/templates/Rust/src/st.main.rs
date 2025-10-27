@@ -94,7 +94,7 @@ fn parse_input(
 	let tree_str = tree.to_string_tree(&*parser);
         if flags.tee {
             let mut f = File::create(format!("{}.tree", input_name)).unwrap();
-            writeln!(f, "{}", tree_str).ok();
+            write!(f, "{}", tree_str).ok();
         } else {
 	    eprintln!("{}", tree_str);
         }
