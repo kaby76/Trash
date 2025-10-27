@@ -1,1 +1,1 @@
-./target/debug/test.exe "$@"
+./target/release/test.exe "$@"
