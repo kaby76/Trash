@@ -1,4 +1,6 @@
-﻿namespace Trash
+﻿using trff;
+
+namespace Trash
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
@@ -10,8 +12,6 @@
     using System.Reflection;
     using System.Text;
     using System.Text.Json;
-    using Document = Workspaces.Document;
-    using Workspace = Workspaces.Workspace;
 
     public class Grun
     {
@@ -21,12 +21,6 @@
         {
             config = co;
         }
-
-        public List<Document> Grammars { get; set; }
-
-        public List<Document> ImportGrammars { get; set; }
-
-        public List<Document> SupportCode { get; set; }
 
         private static string JoinArguments(IEnumerable<string> arguments)
         {
@@ -62,13 +56,6 @@
             System.Console.WriteLine(e.Data);
         }
 
-        public void ReadWorkspace(string csproj)
-        {
-        }
-
-        public void CreateMsbuildWorkspace(Workspace workspace)
-        {
-        }
 
         public void Run()
         {
@@ -96,7 +83,7 @@
             Type type = asm.GetType("Program");
             var methods = type.GetMethods();
             MethodInfo methodInfo = type.GetMethod("SetupParse2");
-            object[] parm = new object[] { "", true };
+            object[] parm = new object[] { "", "", true };
             DateTime before = DateTime.Now;
             var res = methodInfo.Invoke(null, parm);
             DateTime after = DateTime.Now;
@@ -107,12 +94,14 @@
             var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
             var n_rules = parser.RuleNames.Count();
             var vocab = parser.Vocabulary;
+            var start_rule_name = type.GetProperty("StartSymbol").GetValue(null, new object[0]) as string;
+            var start_rule = Array.IndexOf(parser.RuleNames, start_rule_name);
+
+            var first = new First(parser, start_rule);
+            System.Console.Out.WriteLine("FIRST:");
             for (int r = 0; r < n_rules; ++r)
             {
-                var ss = parser.Atn.ruleToStartState[r];
-                parser.State = ss.stateNumber;
-                parser.Context = null;
-                Antlr4.Runtime.Misc.IntervalSet tokens = parser.GetExpectedTokens();
+                Antlr4.Runtime.Misc.IntervalSet tokens = first.FIRST(r);
                 System.Console.Out.Write(parser.RuleNames[r]);
                 var list = new List<string>();
                 foreach (int x in tokens.ToIntegerList())
@@ -134,6 +123,34 @@
                 list.Sort();
                 System.Console.Out.WriteLine("\t" + String.Join(" ", list));
             }
+
+            System.Console.Out.WriteLine();
+            System.Console.Out.WriteLine("FOLLOW:");
+            for (int r = 0; r < n_rules; ++r)
+            {
+                Antlr4.Runtime.Misc.IntervalSet tokens = first.FOLLOW(r);
+                System.Console.Out.Write(parser.RuleNames[r]);
+                var list = new List<string>();
+                foreach (int x in tokens.ToIntegerList())
+                {
+                    if (x == -1) list.Add("EOF");
+                    else
+                    {
+                        string name = null;
+                        var lname = vocab.GetLiteralName(x);
+                        if (name == null && lname != null) name = lname;
+                        var dname = vocab.GetDisplayName(x);
+                        if (name == null && dname != null) name = dname;
+                        var sname = vocab.GetSymbolicName(x);
+                        if (name == null && sname != null) name = sname;
+                        if (name == null) name = "(" + x + ")";
+                        list.Add(name);
+                    }
+                }
+                list.Sort();
+                System.Console.Out.WriteLine("\t" + String.Join(" ", list));
+            }
+
         }
     }
 }

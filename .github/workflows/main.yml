@@ -47,8 +47,7 @@ jobs:
         export
     - name: Prep Dotnet
       run: |
-        sudo mkdir /usr/share/dotnet
-        sudo chmod 777 /usr/share/dotnet
+        if [ ! -d  /usr/share/dotnet ]; then sudo mkdir /usr/share/dotnet; sudo chmod 777 /usr/share/dotnet; fi
     - name: Install Dotnet
       uses: actions/setup-dotnet@v4.1.0
       with:

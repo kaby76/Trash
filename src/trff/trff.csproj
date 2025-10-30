@@ -6,19 +6,19 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<AssemblyName>trfirst</AssemblyName>
-		<PackageId>trfirst</PackageId>
+		<AssemblyName>trff</AssemblyName>
+		<PackageId>trff</PackageId>
 		<Description>
 			<![CDATA[Reads an Antlr4 grammar from stdin and outputs the first sets in the grammar.
 This program is part of the Trash toolkit.]]>
 		</Description>
-		<ToolCommandName>trfirst</ToolCommandName>
-		<RootNamespace>trfirst</RootNamespace>
+		<ToolCommandName>trff</ToolCommandName>
+		<RootNamespace>trff</RootNamespace>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>0.23.26</Version>
-		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trfirst</RepositoryUrl>
+		<Version>0.23.27</Version>
+		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trff</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>

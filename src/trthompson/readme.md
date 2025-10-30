@@ -12,13 +12,13 @@
 
 ## Current version
 
-0.23.26 Added trunfoldlit.
+0.23.27 Add new analysis tool, add Rust templates.
 
 ## License
 
 The MIT License
 
-Copyright (c) 2024 Ken Domino
+Copyright (c) 2025 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 
