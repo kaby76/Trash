@@ -3,10 +3,13 @@
 // in this directory, then you haven't run the Antlr tool.
 
 pub mod <rust_lexer_name>;
+#[allow(unused)]
 pub use <rust_lexer_name>::*;
 
 pub mod <rust_parser_name>;
+#[allow(unused)]
 pub use <rust_parser_name>::*;
 
 pub mod <rust_listener_name>;
+#[allow(unused)]
 pub use <rust_listener_name>::*;
