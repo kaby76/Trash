@@ -22,7 +22,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.27 Added trff.
+0.23.27 Add new analysis tool, add Rust templates.
 
 ## License
 

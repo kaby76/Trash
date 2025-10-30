@@ -17,7 +17,7 @@ Expand a glob string into file names.
 
 ## Current version
 
-0.23.27 Added trff.
+0.23.27 Add new analysis tool, add Rust templates.
 
 ## License
 

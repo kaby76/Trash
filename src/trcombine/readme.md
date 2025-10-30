@@ -103,7 +103,7 @@ The original grammars are left unchanged.
 
 ## Current version
 
-0.23.27 Added trff.
+0.23.27 Add new analysis tool, add Rust templates.
 
 ## License
 

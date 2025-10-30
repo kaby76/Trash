@@ -18,7 +18,7 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-0.23.27 Added trff.
+0.23.27 Add new analysis tool, add Rust templates.
 
 ## License
 
