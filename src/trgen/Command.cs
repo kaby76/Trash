@@ -384,7 +384,7 @@ namespace Trash
                             x == t.GrammarName && t.WhatType == GrammarTuple.Type.Lexer);
                         if (l.Any()) return l.First();
                         return null;
-                    });
+                    }).Where(t => t != null).ToList();
                     foreach (var t in tll) t.IsTopLevel = true;
                 }
 
