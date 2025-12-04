@@ -366,6 +366,28 @@ namespace Trash
                     }
                 }
 
+                // Mark all lexer grammars that have an edge to from a parser
+                // grammar as also top-level.
+                foreach (var n in subset)
+                {
+                    // Get a candidate top-level parser grammar.
+                    var p = test.tool_grammar_tuples.Where(t => t.GrammarName == n).FirstOrDefault();
+                    if (p == null) continue;
+                    if (!p.IsTopLevel) continue;
+                    if (p.WhatType != GrammarTuple.Type.Parser) continue;
+
+                    // Get top-level lexer grammar for that parser grammar.
+                    IEnumerable<string> ls = dependency_graph.Edges.Where(e => e.From == n).Select(e => e.To);
+                    var tll = ls.Select(x =>
+                    {
+                        var l = test.tool_grammar_tuples.Where(t =>
+                            x == t.GrammarName && t.WhatType == GrammarTuple.Type.Lexer);
+                        if (l.Any()) return l.First();
+                        return null;
+                    }).Where(t => t != null).ToList();
+                    foreach (var t in tll) t.IsTopLevel = true;
+                }
+
                 // Pick top-level parser grammar.
                 GrammarTuple top_level_parser_grammar = null;
                 

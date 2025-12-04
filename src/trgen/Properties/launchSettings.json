@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t Rust --force",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\abnf"
+      "commandLineArgs": "-t Java",
+      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\grammars-v4\\b"
     }
   }
 }
