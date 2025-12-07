@@ -47,8 +47,9 @@ namespace ParseTreeEditing.UnvParseTreeDOM
             return result;
         }
 
-        public UnvParseTreeElement BottomUpConvert(IParseTree tree, UnvParseTreeElement parent, Parser parser, Lexer lexer, CommonTokenStream tokstream, ICharStream charstream)
+        public UnvParseTreeElement BottomUpConvert(IParseTree tree, UnvParseTreeElement parent, Parser parser, Lexer lexer, CommonTokenStream tokstream)
         {
+            ICharStream charstream = (ICharStream)lexer.InputStream;
             if (tree is TerminalNodeImpl)
             {
                 TerminalNodeImpl t = tree as TerminalNodeImpl;
@@ -257,7 +258,7 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                 for (int i = 0; i < tree.ChildCount; ++i)
                 {
                     var child = tree.GetChild(i);
-                    BottomUpConvert(child, new_node, parser, lexer, tokstream, charstream);
+                    BottomUpConvert(child, new_node, parser, lexer, tokstream);
                 }
                 //                Node prev = null;
                 if (_include_line_column)

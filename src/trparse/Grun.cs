@@ -364,7 +364,7 @@ public class Grun
         {
             var tree = res2 as IParseTree;
             var t2 = tree as ParserRuleContext;
-            var converted_tree = new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
+            var converted_tree = new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream);
             var tuple = new AntlrJson.ParsingResultSet()
             {
                 FileName = input_name,
@@ -391,8 +391,7 @@ public class Grun
 					decision_str = t1;
                     var t2 = tt.Item2 as ParserRuleContext;
                     var converted_tree =
-                        new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream,
-                            charstream);
+                        new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream);
                     list_of_trees.Add(converted_tree);
                 }
                 var tuple = new AntlrJson.ParsingResultSet()
@@ -410,8 +409,7 @@ public class Grun
                     var t1 = tt.Item1 as string;
                     var t2 = tt.Item2 as ParserRuleContext;
                     var converted_tree =
-                        new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream,
-                            charstream);
+                        new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream);
                     var tuple = new AntlrJson.ParsingResultSet()
                     {
                         FileName = input_name + "." + tt.Item1,

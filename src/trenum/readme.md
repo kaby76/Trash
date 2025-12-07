@@ -8,7 +8,7 @@
 
 ## Current version
 
-0.23.28 Updated trgen grammar analysis, for https://github.com/antlr/grammars-v4/pull/4695. Add new analysis tool, add Rust templates.
+0.23.29 Updated trgen grammar analysis, for https://github.com/antlr/grammars-v4/pull/4695.
 
 ## License
 
