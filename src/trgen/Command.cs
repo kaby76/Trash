@@ -571,7 +571,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.28";
+        public static string version = "0.23.29";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1379,7 +1379,6 @@ namespace Trash
 
         public void GenerateViaConfig(Config config)
         {
-            bool first = true;
             foreach (var test in config.Tests)
             {
                 try
@@ -2146,7 +2145,7 @@ namespace Trash
             //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
             
-            var converted_tree = new ConvertToDOM().BottomUpConvert(t2, null, parser, lexer, commontokstream, charstream);
+            var converted_tree = new ConvertToDOM().BottomUpConvert(t2, null, parser, lexer, commontokstream);
             var tuple = new AntlrJson.ParsingResultSet() { FileName = "stdin", Nodes = new UnvParseTreeNode[] { converted_tree }, Parser = parser, Lexer = lexer };
             return tuple;
         }

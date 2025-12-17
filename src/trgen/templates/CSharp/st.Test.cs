@@ -221,12 +221,12 @@ public class Program
             else if (args[i] == "-trace")
             {
                 show_trace = true;
-	    }
-	    else if (args[i] == "-earley")
-	    {
-		    earley = true;
-		    show_tree = false;
-	    }
+            }
+            else if (args[i] == "-earley")
+            {
+                earley = true;
+                show_tree = false;
+            }
             else
             {
                  inputs.Add(args[i]);
@@ -404,23 +404,23 @@ public class Program
             System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
         }
 
-	if (earley) {
-		var epsilon_remover = new EpsilonRemover(parser);
-		var new_atn = epsilon_remover.Convert_ENFA_to_NFA();
+        if (earley) {
+            var epsilon_remover = new EpsilonRemover(parser);
+            var new_atn = epsilon_remover.Convert_ENFA_to_NFA();
 
-		lexer.Reset();
-		parser.Reset();
+            lexer.Reset();
+            parser.Reset();
 
-		int start = parser.RuleNames.Select((value, index) => new { value, index })
-			    .Where(pair => (pair.value == StartSymbol))
-			    .Select(pair => pair.index).First();
+            int start = parser.RuleNames.Select((value, index) => new { value, index })
+                .Where(pair => (pair.value == StartSymbol))
+                .Select(pair => pair.index).First();
 
-		MyATN atn = new_atn;
-		DateTime ebefore = DateTime.Now;
-		var accepted = EarleyATN.EarleyAtnRecognizer.ParseToTree(parser, new_atn, parser.TokenStream, start);
-		DateTime eafter = DateTime.Now;
-		Console.Error.WriteLine((accepted ? "ACCEPT" : "REJECT") + " " + (eafter - ebefore).TotalSeconds);
-	}
+            MyATN atn = new_atn;
+            DateTime ebefore = DateTime.Now;
+            var accepted = EarleyATN.EarleyAtnRecognizer.ParseToTree(parser, new_atn, parser.TokenStream, start);
+            DateTime eafter = DateTime.Now;
+            Console.Error.WriteLine((accepted ? "ACCEPT" : "REJECT") + " " + (eafter - ebefore).TotalSeconds);
+        }
 
         if (tee) output.Close();
     }
