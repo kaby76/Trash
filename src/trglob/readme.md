@@ -17,7 +17,7 @@ Expand a glob string into file names.
 
 ## Current version
 
-0.23.29 Updated trgen grammar analysis, for https://github.com/antlr/grammars-v4/pull/4695.
+0.23.29 Updated trgen, trparse to handle grammars with a preprocessor step.
 
 ## License
 
