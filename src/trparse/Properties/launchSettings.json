@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/add.c",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4676\\c\\Generated-CSharp"
+      "commandLineArgs": "in",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\temp\\a\\Generated-CSharp"
     }
   }
 }
