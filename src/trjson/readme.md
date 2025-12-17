@@ -18,7 +18,7 @@ Read a parse tree from stdin and write a JSON represenation of it.
 
 ## Current version
 
-0.23.29 Updated trgen, trparse to handle grammars with a preprocessor step.
+0.23.30 Updated trgen, trparse to handle grammars with a preprocessor step.
 
 ## License
 

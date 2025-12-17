@@ -18,7 +18,7 @@ Get strings from a PDF file using IText.
 
 ## Current version
 
-0.23.29 Updated trgen, trparse to handle grammars with a preprocessor step.
+0.23.30 Updated trgen, trparse to handle grammars with a preprocessor step.
 
 ## License
 
