@@ -271,6 +271,7 @@ namespace TrashGlobbing
                     return this.GlobContents(new_cd_str, rest, recursive);
                 } else if (expr == "**")
                 {
+                    // Recurse down the directories.
                     foreach (DirectoryInfo i in cd.GetDirectories())
                     {
                         try
@@ -283,6 +284,24 @@ namespace TrashGlobbing
                             else
                             {
                                 var more = GlobContents(i, glob, recursive);
+                                foreach (var m in more) result.Add(m);
+                            }
+                        }
+                        catch { }
+                    }
+                    // Check directory if it matches.
+                    foreach (DirectoryInfo i in cd.GetDirectories())
+                    {
+                        try
+                        {
+                            if (!i.Exists) continue;
+                            if (rest == "")
+                            {
+                                result.Add(i);
+                            }
+                            else
+                            {
+                                var more = GlobContents(i, rest, recursive);
                                 foreach (var m in more) result.Add(m);
                             }
                         }
