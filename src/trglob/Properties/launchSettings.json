@@ -2,8 +2,8 @@
   "profiles": {
     "trglob": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/**",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-update-antlr4ng\\java\\java\\Generated-Antlr4ng"
+      "commandLineArgs": "../examples/writing-a-c-compiler-tests/**/valid/**/*.c",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4676\\c\\Generated-CSharp-2"
     }
   }
 }

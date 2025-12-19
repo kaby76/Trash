@@ -20,7 +20,7 @@ unicode.
 
 ## Current version
 
-0.23.30 Updated trgen, trparse to handle grammars with a preprocessor step.
+0.23.31 Fixed trglob pattern matching.
 
 ## License
 
