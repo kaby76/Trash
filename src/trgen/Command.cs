@@ -571,7 +571,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.31";
+        public static string version = "0.23.32";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1786,8 +1786,8 @@ namespace Trash
                 : "");
             t.Add("example_files_unix", RemoveTrailingSlash(test.example_files.Replace('\\', '/')));
             t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
-            t.Add("example_dir_unix", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('\\', '/'))));
-            t.Add("example_dir_win", RemoveTrailingSlash(RemoveGlobbingPattern(test.example_files.Replace('/', '\\'))));
+            t.Add("example_dir_unix", RemoveTrailingSlash(GetBaseDir(test.example_files.Replace('\\', '/'))));
+            t.Add("example_dir_win", RemoveTrailingSlash(GetBaseDir(test.example_files.Replace('/', '\\'))));
             t.Add("exec_name", GetOSTarget() == OSPlatform.Windows ? "Test.exe" : "Test");
             t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
             t.Add("go_parser_name", test.fully_qualified_go_parser_name);
@@ -1821,15 +1821,45 @@ namespace Trash
             File.WriteAllText(to, o);
         }
 
-        static string RemoveGlobbingPattern(string str)
+        // As a first approximation, get the first directory from a
+        // globbing pattern.
+        static string GetBaseDir(string str)
         {
-            // Look for first '*', remove from there on.
-            int index = str.IndexOf('*');
-            if (index != -1)
+            if (string.IsNullOrEmpty(str)) return str;
+
+            // normalize separators to simplify processing
+            var s = str.Replace('\\', '/');
+
+            // Expect strings starting with "../" per your contract.
+            if (!s.StartsWith("../"))
             {
-                return str.Substring(0, index);
+                // Fallback: return up to first wildcard or first path separator
+                int wildcardIdx = s.IndexOfAny(new char[] { '*', '?', '[' });
+                int slashIdx = s.IndexOf('/');
+                int end = -1;
+                if (slashIdx != -1) end = slashIdx;
+                if (wildcardIdx != -1 && (end == -1 || wildcardIdx < end)) end = wildcardIdx;
+                if (end == -1) return s;
+                return s.Substring(0, end);
             }
-            return str;
+
+            // Find first path segment after the leading "../"
+            int afterParent = 3; // index after "../"
+            int nextSlash = s.IndexOf('/', afterParent);
+            int wildcardPos = s.IndexOfAny(new char[] { '*', '?', '[' }, afterParent);
+
+            int endIndex;
+            if (nextSlash != -1 && wildcardPos != -1) endIndex = Math.Min(nextSlash, wildcardPos);
+            else if (nextSlash != -1) endIndex = nextSlash;
+            else if (wildcardPos != -1) endIndex = wildcardPos;
+            else endIndex = s.Length;
+
+            var segment = s.Substring(afterParent, Math.Max(0, endIndex - afterParent));
+
+            if (string.IsNullOrEmpty(segment))
+                return ".."; // nothing after "../", return parent reference
+
+            return "../" + segment;
         }
 
         static string RemoveTrailingSlash(string str)

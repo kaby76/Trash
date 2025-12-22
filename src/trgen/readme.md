@@ -49,7 +49,7 @@ simplify and eliminate bugs created when adding new grammars.
 
 ## Current version
 
-0.23.31 Fixed trglob pattern matching.
+0.23.32 Fixed problem in trgen with globbing patterns.
 
 ## License
 
