@@ -19,7 +19,7 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Current version
 
-0.23.31 Fixed trglob pattern matching.
+0.23.32 Fixed problem in trgen with globbing patterns.
 
 ## License
 
