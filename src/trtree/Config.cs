@@ -24,4 +24,7 @@ public class Config
 
     [Option('b', "block-style", Required = false, HelpText = "Output tree as block style.")]
     public bool BlockTreeStyle { get; set; }
+
+    [Option("version", Required = false)]
+    public string Version { get; set; } = "0.23.32";
 }

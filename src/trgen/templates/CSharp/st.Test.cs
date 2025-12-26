@@ -24,10 +24,11 @@ public class Program
     public static string StartSymbol { get; set; } = "<start_symbol>";
     public static string Input { get; set; }
     public static bool HeatMap { get; set; } = false;
-    public static void SetupParse2(string input, string fn, bool quiet = false)
+    public static void SetupParse2(string[] args, string input, string fn, bool quiet = false)
     {
         ICharStream str = new CodePointCharStream(input);
         CharStream = str;
+        <lexer_name>._args = args; // Must be done before creating the lexer because constructore may do funky stuff.
         var lexer = new <lexer_name>(str);
         Lexer = lexer;
         CommonTokenStream tokens = null;
@@ -39,6 +40,7 @@ public class Program
         }
         TokenStream = tokens;
         ((CodePointCharStream)(lexer.InputStream)).name = fn;
+        MyParser._args = args;
         var parser = new MyParser(tokens);
         Parser = parser;
         var listener_lexer = new ErrorListener\<int>(false, false, System.Console.Error);
@@ -147,7 +149,7 @@ public class Program
     static string prefix = "";
     static bool quiet = false;
     static bool earley = false;
-    static List<string> _args;
+    static List\<string> _args;
 
     static void Main(string[] args)
     {

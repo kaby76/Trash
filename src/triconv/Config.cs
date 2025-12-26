@@ -11,5 +11,8 @@ public class Config
     [Option('t', "to-code", Required = false)]
     public string ToCode { get; set; }
 
+    [Option("version", Required = false)]
+    public string Version { get; set; } = "0.23.32";
+
     [Value(0)] public IEnumerable<string> Files { get; set; }
 }
