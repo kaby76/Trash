@@ -49,7 +49,7 @@ if ( $size -eq 0 ) {
 
 # Parse all input files.
 # Group parsing.
-get-content "$filePath" | dotnet trwdog ./bin/Debug/net8.0/Test.exe -q -x -tee -tree *> parse.txt
+get-content "$filePath" | dotnet trwdog ./bin/Debug/net10.0/Test.exe -q -x -tee -tree *> parse.txt
 $status = $LASTEXITCODE
 
 # trwdog returns 255 if it cannot spawn the process. This could happen

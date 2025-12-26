@@ -39,7 +39,7 @@ do
 		continue
 	fi
 	tool=${i##*/}
-	if [[ ! -f "./bin/Release/net8.0/$tool.dll" ]]
+	if [[ ! -f "./bin/Release/net10.0/$tool.dll" ]]
 	then
 		popd
 		continue
