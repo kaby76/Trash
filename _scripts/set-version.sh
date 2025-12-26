@@ -1,6 +1,6 @@
 #!/usr/bin/bash
-set -e
-set -x
+#set -e
+#set -x
 version="0.23.33"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
