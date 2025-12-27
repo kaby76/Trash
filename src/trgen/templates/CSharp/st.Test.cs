@@ -24,7 +24,7 @@ public class Program
     public static string StartSymbol { get; set; } = "<start_symbol>";
     public static string Input { get; set; }
     public static bool HeatMap { get; set; } = false;
-    public static void SetupParse2(string[] args, string input, string fn, bool quiet = false)
+    public static void SetupParse2(string input, string fn, bool quiet = false)
     {
         ICharStream str = new CodePointCharStream(input);
         CharStream = str;
