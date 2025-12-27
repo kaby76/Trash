@@ -2,7 +2,7 @@
   "profiles": {
     "trglob": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/writing-a-c-compiler-tests/**/valid/**/*.c",
+      "commandLineArgs": "--version",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4676\\c\\Generated-CSharp-2"
     }
   }

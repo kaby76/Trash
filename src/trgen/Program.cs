@@ -64,7 +64,18 @@ namespace Trash
             result.WithNotParsed(
                 errs =>
                 {
-                    DisplayHelp(result, errs);
+                    if (errs.Any(x => x.GetType() == typeof(VersionRequestedError)))
+                    {
+                        System.Console.Out.WriteLine(config.Version);
+                    }
+                    else if (errs.Any(x => x.GetType() == typeof(HelpRequestedError)))
+                    {
+                        DisplayHelp(result, errs);
+                    }
+                    else
+                    {
+                        System.Console.Error.WriteLine("Error parsing command line: " + errs);
+                    }
                     stop = true;
                 });
             if (stop) return;

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version_framework="net8.0"
+version_framework="net10.0"
 version_antlrruntime="4.13.1"
 
 files=`find . -name '*.csproj'`

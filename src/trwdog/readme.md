@@ -18,7 +18,7 @@ Execute a command with a watchdog timer.
 
 ## Current version
 
-0.23.32 Fixed problem in trgen with globbing patterns.
+0.23.33 Upgrade from net8 to net10. Update trgen applications to pass argv.
 
 ## License
 

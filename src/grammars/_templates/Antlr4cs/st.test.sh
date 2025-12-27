@@ -32,7 +32,7 @@ fi
 rm -f parse.txt
 for f in ${files[*]}
 do
-    dotnet trwdog -- ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f >> parse.txt 2>&1
+    dotnet trwdog -- ./bin/Debug/net10.0/<if(os_win)>Test.exe<else>Test<endif> -q -tee -tree $f >> parse.txt 2>&1
     xxx="$?"
     if [ "$xxx" -ne 0 ]
     then
@@ -41,7 +41,7 @@ do
 done
 <else>
 # Group parsing.
-echo "${files[*]}" | dotnet trwdog -- ./bin/Debug/net8.0/<if(os_win)>Test.exe<else>Test<endif> -q -x -tee -tree > parse.txt 2>&1
+echo "${files[*]}" | dotnet trwdog -- ./bin/Debug/net10.0/<if(os_win)>Test.exe<else>Test<endif> -q -x -tee -tree > parse.txt 2>&1
 status="$?"
 <endif>
 

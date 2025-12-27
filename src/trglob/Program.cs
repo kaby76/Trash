@@ -2,6 +2,7 @@
 using CommandLine.Text;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Trash;
 
@@ -54,7 +55,7 @@ public partial class Program
 
     public void MainInternal(string[] args)
     {
-        Config config = null;
+        Config config = new Config();
         var cgen = new Command();
         // Parse options, stop if we see a bogus option, or something like --help.
         var result = new CommandLine.Parser().ParseArguments<Config>(args);
@@ -62,7 +63,18 @@ public partial class Program
         result.WithNotParsed(
             errs =>
             {
-                DisplayHelp(result, errs);
+                if (errs.Any(x => x.GetType() == typeof(VersionRequestedError)))
+                {
+                    System.Console.Out.WriteLine(config.Version);
+                }
+                else if (errs.Any(x => x.GetType() == typeof(HelpRequestedError)))
+                {
+                    DisplayHelp(result, errs);
+                }
+                else
+                {
+                    System.Console.Error.WriteLine("Error parsing command line: " + errs);
+                }
                 stop = true;
             });
         if (stop) return;

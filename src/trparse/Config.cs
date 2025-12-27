@@ -44,6 +44,9 @@ public class Config
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
+    [Option("version", Required = false)]
+    public string Version { get; set; } = "0.23.33";
+
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
 

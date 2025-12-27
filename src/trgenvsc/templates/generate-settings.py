@@ -161,7 +161,7 @@ print('''
 [{
  "Suffix":".g4",
  "LanguageId":"any",
- "ParserLocation":"parser/Generated-CSharp/bin/Debug/net8.0/Test.dll",
+ "ParserLocation":"parser/Generated-CSharp/bin/Debug/net10.0/Test.dll",
  "ClassesAndClassifiers":[
 ''')
 

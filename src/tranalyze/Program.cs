@@ -2,6 +2,7 @@ using CommandLine;
 using CommandLine.Text;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace tranalyze;
 
@@ -51,7 +52,18 @@ public class Program
         result.WithNotParsed(
             errs =>
             {
-                DisplayHelp(result, errs);
+                if (errs.Any(x => x.GetType() == typeof(VersionRequestedError)))
+                {
+                    System.Console.Out.WriteLine(config.Version);
+                }
+                else if (errs.Any(x => x.GetType() == typeof(HelpRequestedError)))
+                {
+                    DisplayHelp(result, errs);
+                }
+                else
+                {
+                    System.Console.Error.WriteLine("Error parsing command line: " + errs);
+                }
                 stop = true;
             });
         if (stop) return;

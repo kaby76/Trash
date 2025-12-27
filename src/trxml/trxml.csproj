@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<PackAsTool>true</PackAsTool>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
@@ -17,7 +17,7 @@ This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>0.23.32</Version>
+		<Version>0.23.33</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trxml</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>

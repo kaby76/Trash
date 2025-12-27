@@ -2,14 +2,17 @@ using CommandLine;
 using CommandLine.Text;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Trash;
 
 public class Program
 {
+    public static string[] args;
 
     public static void Main(string[] args)
     {
+        Program.args = args;
         try
         {
             new Program().MainInternal(args);
@@ -52,8 +55,16 @@ public class Program
         result.WithNotParsed(
             errs =>
             {
-                DisplayHelp(result, errs);
-                stop = true;
+                if (errs.Any(x => x.GetType() == typeof(VersionRequestedError)))
+                {
+                    System.Console.Out.WriteLine(config.Version);
+                    stop = true;
+                }
+                else if (errs.Any(x => x.GetType() == typeof(HelpRequestedError)))
+                {
+                    DisplayHelp(result, errs);
+                    stop = true;                   
+                }
             });
         if (stop) return;
         result.WithParsed(o =>

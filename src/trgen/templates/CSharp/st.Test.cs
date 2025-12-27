@@ -227,6 +227,10 @@ public class Program
                 earley = true;
                 show_tree = false;
             }
+            else if (args[i][0] == '-')
+            {
+                // Ignore unknown option.
+            }
             else
             {
                  inputs.Add(args[i]);

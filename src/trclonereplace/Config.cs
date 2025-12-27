@@ -19,4 +19,7 @@ public class Config
 
     [Option('s', "suffix", Required = false, Default = "")]
     public string Suffix { get; set; }
+
+    [Option("version", Required = false)]
+    public string Version { get; set; } = "0.23.33";
 }

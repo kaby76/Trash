@@ -31,7 +31,7 @@ fi
 
 # Parse all input files.
 # Group parsing.
-echo "${files[*]}" | dotnet trwdog ./bin/Debug/net8.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
+echo "${files[*]}" | dotnet trwdog ./bin/Debug/net10.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
 status=$?
 
 # trwdog returns 255 if it cannot spawn the process. This could happen
