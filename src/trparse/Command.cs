@@ -15,7 +15,7 @@ class Command
         }
     }
 
-    public void Execute(Config config, string[] args)
+    public void Execute(Config config)
     {
         // There are two ways to do this. One is a
         // bootstrapped method using LanguageServer, the
@@ -118,6 +118,6 @@ class Command
         }
 
         var grun = new Grun(config);
-        Environment.ExitCode = grun.Run(config.Type, args);
+        Environment.ExitCode = grun.Run(config.Type);
     }
 }

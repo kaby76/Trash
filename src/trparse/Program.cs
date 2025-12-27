@@ -8,9 +8,11 @@ namespace Trash;
 
 public class Program
 {
+    public static string[] args;
 
     public static void Main(string[] args)
     {
+        Program.args = args;
         try
         {
             new Program().MainInternal(args);
@@ -76,6 +78,6 @@ public class Program
                 }
             }
         });
-        new Command().Execute(config, args);
+        new Command().Execute(config);
     }
 }

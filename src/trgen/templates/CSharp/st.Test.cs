@@ -28,7 +28,6 @@ public class Program
     {
         ICharStream str = new CodePointCharStream(input);
         CharStream = str;
-        <lexer_name>._args = args; // Must be done before creating the lexer because constructore may do funky stuff.
         var lexer = new <lexer_name>(str);
         Lexer = lexer;
         CommonTokenStream tokens = null;
@@ -40,7 +39,6 @@ public class Program
         }
         TokenStream = tokens;
         ((CodePointCharStream)(lexer.InputStream)).name = fn;
-        MyParser._args = args;
         var parser = new MyParser(tokens);
         Parser = parser;
         var listener_lexer = new ErrorListener\<int>(false, false, System.Console.Error);
@@ -149,13 +147,11 @@ public class Program
     static string prefix = "";
     static bool quiet = false;
     static bool earley = false;
-    static List\<string> _args;
 
     static void Main(string[] args)
     {
         List\<bool> is_fns = new List\<bool>();
         List\<string> inputs = new List\<string>();
-        _args = args.ToList();
         for (int i = 0; i \< args.Length; ++i)
         {
             if (args[i] == "-d")
@@ -302,7 +298,6 @@ public class Program
     static void DoParse(ICharStream str, string input_name, int row_number)
     {
         if (binary) str = new BinaryCharStream(str);
-        CLexer._args = _args; // Must be done before creating the lexer because constructore may do funky stuff.
         var lexer = new <lexer_name>(str);
         if (show_tokens)
         {
@@ -327,7 +322,6 @@ public class Program
             tokens = new CommonTokenStream(lexer);
         }
         var parser = new MyParser(tokens);
-        parser._args = _args;
         var output = tee ? new StreamWriter(input_name + ".errors") : System.Console.Error;
         var listener_lexer = new ErrorListener\<int>(quiet, tee, output);
         var listener_parser = new ErrorListener\<IToken>(quiet, tee, output);

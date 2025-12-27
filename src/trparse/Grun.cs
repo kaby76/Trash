@@ -55,7 +55,7 @@ public class Grun
         System.Console.WriteLine(e.Data);
     }
 
-    public int Run(string parser_type, string[] args)
+    public int Run(string parser_type)
     {
         int result = 0;
         try
@@ -89,7 +89,7 @@ public class Grun
                         txt = inputs[f];
                     }
 
-                    var r = DoParse(parser_type, txt, "", inputs[f], f, data, args);
+                    var r = DoParse(parser_type, txt, "", inputs[f], f, data);
                     result = result == 0 ? r : result;
                 }
 
@@ -112,7 +112,7 @@ public class Grun
                         txt = inputs[f];
                     }
 
-                    var r = DoParse(parser_type, txt, "", inputs[f], f, data, args);
+                    var r = DoParse(parser_type, txt, "", inputs[f], f, data);
                     result = result == 0 ? r : result;
                 }
 
@@ -129,12 +129,12 @@ public class Grun
                 }
 
                 txt = lines;
-                result = DoParse(parser_type, txt, "", "stdin", 0, data, args);
+                result = DoParse(parser_type, txt, "", "stdin", 0, data);
             }
             else if (config.Input != null)
             {
                 txt = config.Input;
-                result = DoParse(parser_type, txt, "", "string", 0, data, args);
+                result = DoParse(parser_type, txt, "", "string", 0, data);
             }
             else if (config.Files != null)
             {
@@ -149,7 +149,7 @@ public class Grun
                         txt = file;
                     }
 
-                    var r = DoParse(parser_type, txt, "", file, 0, data, args);
+                    var r = DoParse(parser_type, txt, "", file, 0, data);
                     result = result == 0 ? r : result;
                 }
             }
@@ -205,8 +205,7 @@ public class Grun
         string prefix,
         string input_name,
         int row_number,
-        List<AntlrJson.ParsingResultSet> data,
-        string[] args)
+        List<AntlrJson.ParsingResultSet> data)
     {
         Type type = null;
         if (parser_type == null || parser_type == "")
@@ -304,7 +303,7 @@ public class Grun
         }
 
         MethodInfo methodInfo = type.GetMethod("SetupParse2");
-        object[] parm1 = new object[] { args, txt, input_name, config.Quiet };
+        object[] parm1 = new object[] { txt, input_name, config.Quiet };
         var res = methodInfo.Invoke(null, parm1);
 
         var result = "";
