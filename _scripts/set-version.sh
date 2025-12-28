@@ -80,10 +80,7 @@ do
         rm -f asdfasdf
         cat *.csproj | sed -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" > asdfasdf
         mv asdfasdf *.csproj    
-        rm -f asdfasdf2
-        touch readme.md
         sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Upgrade from net8 to net10. Update trparse to not process unknown args.%' readme.md
-        mv asdfasdf2 readme.md
         cd ..
 done
 
