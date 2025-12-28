@@ -42,7 +42,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-0.23.33 Upgrade from net8 to net10. Update trgen applications to pass argv.
+0.23.33 Upgrade from net8 to net10. Update trparse to not process unknown args.
 
 ## License
 

@@ -42,7 +42,7 @@ do
 	do
 		sed -i -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" $csproj
 	done
-        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Upgrade from net8 to net10. Update trgen applications to pass argv.%' readme.md
+        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Upgrade from net8 to net10. Update trparse to not process unknown args.%' readme.md
 	for cs in *.cs
 	do
 		sed -i -e "s%public string Version { get; set; } = \"0[.][0-9]*[.][0-9]*\";%public string Version { get; set; } = \"$version\";%" $cs
@@ -82,7 +82,7 @@ do
         mv asdfasdf *.csproj    
         rm -f asdfasdf2
         touch readme.md
-        cat readme.md | sed -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Upgrade from net8 to net10. Update trgen applications to pass argv.%' > asdfasdf2
+        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Upgrade from net8 to net10. Update trparse to not process unknown args.%' readme.md
         mv asdfasdf2 readme.md
         cd ..
 done
