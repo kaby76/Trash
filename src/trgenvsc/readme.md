@@ -30,7 +30,7 @@ the XPath patterns to match certain parse trees.
 
 ## Current version
 
-0.23.33 Upgrade from net8 to net10. Update trgen applications to pass argv.
+0.23.33 Upgrade from net8 to net10. Update trparse to not process unknown args.
 
 ## License
 
