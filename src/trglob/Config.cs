@@ -11,6 +11,9 @@ public class Config
     [Option("full", Required = false)]
     public bool Full { get; set; }
 
+    [Option("version", Required = false)]
+    public string Version { get; set; } = "0.23.33";
+
     [Value(0)] public IEnumerable<string> Files { get; set; }
 
     public Config()

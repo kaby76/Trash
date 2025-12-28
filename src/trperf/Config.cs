@@ -31,4 +31,7 @@ public class Config
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
+
+    [Option("version", Required = false)]
+    public string Version { get; set; } = "0.23.33";
 }

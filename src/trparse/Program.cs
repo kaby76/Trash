@@ -2,14 +2,17 @@ using CommandLine;
 using CommandLine.Text;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Trash;
 
 public class Program
 {
+    public static string[] args;
 
     public static void Main(string[] args)
     {
+        Program.args = args;
         try
         {
             new Program().MainInternal(args);
@@ -47,13 +50,22 @@ public class Program
     public void MainInternal(string[] args)
     {
         var config = new Config();
-        var result = new CommandLine.Parser().ParseArguments<Config>(args);
+        var clp = new CommandLine.Parser(settings => settings.IgnoreUnknownArguments = true);
+        var result = clp.ParseArguments<Config>(args);
         bool stop = false;
         result.WithNotParsed(
             errs =>
             {
-                DisplayHelp(result, errs);
-                stop = true;
+                if (errs.Any(x => x.GetType() == typeof(VersionRequestedError)))
+                {
+                    System.Console.Out.WriteLine(config.Version);
+                    stop = true;
+                }
+                else if (errs.Any(x => x.GetType() == typeof(HelpRequestedError)))
+                {
+                    DisplayHelp(result, errs);
+                    stop = true;                   
+                }
             });
         if (stop) return;
         result.WithParsed(o =>
@@ -63,7 +75,8 @@ public class Program
             {
                 if (prop.GetValue(o, null) != null)
                 {
-                    prop.SetValue(config, prop.GetValue(o, null));
+                    var value = prop.GetValue(o, null);
+                    prop.SetValue(config, value);
                 }
             }
         });

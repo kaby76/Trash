@@ -132,4 +132,7 @@ public class Config
             }
         }
     }
+
+    [Option("version", Required = false)]
+    public string Version { get; set; } = "0.23.33";
 }

@@ -1,7 +1,7 @@
 [{
  "Suffix":".g4",
  "LanguageId":"any",
- "ParserLocation":"parser/Generated-CSharp/bin/Debug/net8.0/Test.dll",
+ "ParserLocation":"parser/Generated-CSharp/bin/Debug/net10.0/Test.dll",
  "ClassesAndClassifiers":[
     {"Item1":"class","Item2":"//parserRuleSpec/RULE_REF"},
     {"Item1":"property","Item2":"//lexerRuleSpec/TOKEN_REF"}

@@ -13,7 +13,7 @@ public class Config
     [Option('d', "dll", Required = false, HelpText = "Search for parser in dll with this specified name.")]
     public string Dll { get; set; } = "Test";
 
-    [Option('e', "no-prs", Required = false, HelpText = "Output parse errors only. No parsing result sets.")]
+    [Option("no-prs", Required = false, HelpText = "Output parse errors only. No parsing result sets.")]
     public bool NoParsingResultSets { get; set; }
 
     [Option("fmt", Required = false, HelpText = "Output formatted parsing results set.")]
@@ -43,6 +43,9 @@ public class Config
 
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
+
+    [Option("version", Required = false)]
+    public string Version { get; set; } = "0.23.33";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }

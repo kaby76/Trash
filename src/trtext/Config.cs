@@ -22,4 +22,7 @@ public class Config
 
     [Option('c', "count", Required = false, HelpText = "print only a count of selected lines per FILE")]
     public bool Count { get; set; }
+
+    [Option("version", Required = false)]
+    public string Version { get; set; } = "0.23.33";
 }
