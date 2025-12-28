@@ -50,7 +50,8 @@ public class Program
     public void MainInternal(string[] args)
     {
         var config = new Config();
-        var result = new CommandLine.Parser().ParseArguments<Config>(args);
+        var clp = new CommandLine.Parser(settings => settings.IgnoreUnknownArguments = true);
+        var result = clp.ParseArguments<Config>(args);
         bool stop = false;
         result.WithNotParsed(
             errs =>
@@ -74,7 +75,8 @@ public class Program
             {
                 if (prop.GetValue(o, null) != null)
                 {
-                    prop.SetValue(config, prop.GetValue(o, null));
+                    var value = prop.GetValue(o, null);
+                    prop.SetValue(config, value);
                 }
             }
         });
