@@ -27,6 +27,7 @@ public class Program
     public static void SetupParse2(string input, string fn, bool quiet = false)
     {
         ICharStream str = new CodePointCharStream(input);
+        str.name = fn;
         CharStream = str;
         var lexer = new <lexer_name>(str);
         Lexer = lexer;
