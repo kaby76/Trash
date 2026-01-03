@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #set -e
 #set -x
-version="0.23.33"
+version="0.23.34"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
@@ -42,7 +42,7 @@ do
 	do
 		sed -i -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" $csproj
 	done
-        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Upgrade from net8 to net10. Update trparse to not process unknown args.%' readme.md
+        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Upgrade from net8 to net10. Update trparse to not process unknown args. Fixes to trgen templates.%' readme.md
 	for cs in *.cs
 	do
 		sed -i -e "s%public string Version { get; set; } = \"0[.][0-9]*[.][0-9]*\";%public string Version { get; set; } = \"$version\";%" $cs
@@ -80,7 +80,7 @@ do
         rm -f asdfasdf
         cat *.csproj | sed -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" > asdfasdf
         mv asdfasdf *.csproj    
-        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Upgrade from net8 to net10. Update trparse to not process unknown args.%' readme.md
+        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Upgrade from net8 to net10. Update trparse to not process unknown args. Fixes to trgen templates.%' readme.md
         cd ..
 done
 

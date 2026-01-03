@@ -19,7 +19,7 @@ results to file(s).
 
 ## Current version
 
-0.23.33 Upgrade from net8 to net10. Update trparse to not process unknown args.
+0.23.34 Upgrade from net8 to net10. Update trparse to not process unknown args. Fixes to trgen templates.
 
 ## License
 
