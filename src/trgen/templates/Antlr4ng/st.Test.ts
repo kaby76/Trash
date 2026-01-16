@@ -25,6 +25,7 @@ import { closeSync } from 'fs';
 import { readFile } from 'fs/promises'
 import { isToken } from 'antlr4ng';
 import { BinaryCharStream } from './BinaryCharStream.js';
+import { ErrorListener } from './ErrorListener.js';
 
 <tool_grammar_tuples: {x | import { <x.GrammarAutomName> \} from './<x.GrammarAutomName>.js';
 } >
@@ -43,32 +44,6 @@ function getChar() {
         return '';
     }
     return buffer.toString('utf8');
-}
-
-
-class MyErrorListener\<T  extends ATNSimulator> extends ConsoleErrorListener {
-    _quiet: boolean;
-    _tee: boolean;
-    _output: any;
-    had_error: boolean;
-
-    constructor(quiet: boolean, tee: boolean, output: any) {
-        super();
-        this._quiet = quiet;
-        this._tee = tee;
-        this._output = output;
-        this.had_error = false;
-    }
-
-    syntaxError\<T extends ATNSimulator>(recognizer: Recognizer\<T> | null, offendingSymbol: unknown, line: number, column: number, msg: string | null, e: RecognitionException | null): void {
-        this.had_error = true;
-        if (this._tee) {
-            writeSync(this._output, `line ${line}:${column} ${msg}\n`);
-        }
-        if (!this._quiet) {
-            console.error(`line ${line}:${column} ${msg}`);
-        }
-    }
 }
 
 var tee = false;
@@ -190,8 +165,8 @@ function DoParse(str: CharStream, input_name: string, row_number: number) {
     lexer.removeErrorListeners();
     parser.removeErrorListeners();
     var output = tee ? openSync(input_name + ".errors", 'w') : 1;
-    var listener_parser = new MyErrorListener(quiet, tee, output);
-    var listener_lexer = new MyErrorListener(quiet, tee, output);
+    var listener_parser = new ErrorListener(quiet, tee, output);
+    var listener_lexer = new ErrorListener(quiet, tee, output);
     parser.addErrorListener(listener_parser);
     lexer.addErrorListener(listener_lexer);
     if (show_tokens) {

@@ -2,7 +2,7 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/writing-a-c-compiler-tests/tests/chapter_18/valid/extra_credit/other_features/label_tag_member_namespace.c",
+      "commandLineArgs": "../examples/FunctionPointer.c --ambig --debug",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4676\\c\\Generated-CSharp"
     }
   }
