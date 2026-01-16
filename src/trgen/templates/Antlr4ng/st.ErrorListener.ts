@@ -23,10 +23,10 @@ export class ErrorListener extends BaseErrorListener {
     ): void {
         this.had_error = true;
         if (this._tee && this._out !== null) {
-            this._out.write(fileName + " line " + line + ":" + column + " " + msg + "\n");
+            this._out.write("line " + line + ":" + column + " " + msg + "\n");
         }
         if (!this._quiet) {
-            console.error(fileName + " line " + line + ":" + column + " " + msg);
+            console.error("line " + line + ":" + column + " " + msg);
         }
     }
 }
