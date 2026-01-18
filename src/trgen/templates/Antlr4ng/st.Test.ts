@@ -106,9 +106,11 @@ function main() {
                 show_trace = true;
                 break;
             default:
-                inputs.push(process.argv[i]);
-                is_fns.push(true);
                 break;
+        }
+        if (process.argv[i][0] !== '-') {
+            inputs.push(process.argv[i]);
+            is_fns.push(true);
         }
     }
     if (inputs.length == 0) {
