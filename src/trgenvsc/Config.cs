@@ -23,6 +23,6 @@ namespace Trash
         public static readonly Config DEFAULT = new Config();
 
 	[Option("version", Required = false)]
-	public string Version { get; set; } = "0.23.35";
+	public string Version { get; set; } = "0.23.36";
     }
 }
