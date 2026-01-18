@@ -18,7 +18,7 @@ Read a static semantics spec file and generate code.
 
 ## Current version
 
-0.23.35 Fixes to trgen templates.
+0.23.36 Fixes to trgen templates.
 
 ## License
 
