@@ -44,7 +44,7 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-0.23.36 Fixes to trgen templates.
+0.23.37 Fixes to trgen templates.
 
 ## License
 
