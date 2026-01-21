@@ -18,7 +18,7 @@ Execute a command with a watchdog timer.
 
 ## Current version
 
-0.23.37 Fixes to trgen templates.
+0.23.38 Fixes to trgen templates.
 
 ## License
 
