@@ -24,5 +24,5 @@ public class Config
     public bool Count { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "0.23.37";
+    public string Version { get; set; } = "0.23.38";
 }

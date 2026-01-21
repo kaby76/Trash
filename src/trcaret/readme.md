@@ -18,7 +18,7 @@ Reads a tree from stdin and prints lines and caret marks.
 
 ## Current version
 
-0.23.37 Fixes to trgen templates.
+0.23.38 Fixes to trgen templates.
 
 ## License
 
