@@ -33,7 +33,7 @@ The outputed files are:
 
 ## Current version
 
-0.23.38 Fixes to trgen templates.
+0.23.39 Fixes to trgen templates.
 
 ## License
 
