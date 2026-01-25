@@ -49,7 +49,7 @@ simplify and eliminate bugs created when adding new grammars.
 
 ## Current version
 
-0.23.40 Fixes to trgen templates.
+0.23.41 Fixes to trgen templates.
 
 ## License
 
