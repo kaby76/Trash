@@ -18,7 +18,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "0.23.39";
+    public string Version { get; set; } = "0.23.40";
 
     [Value(0, Min = 1)] public IEnumerable<string> Expr { get; set; }
 }

@@ -27,7 +27,7 @@ make sure to enclose the argument as it contains semi-colons.
 
 ## Current version
 
-0.23.39 Fixes to trgen templates.
+0.23.40 Fixes to trgen templates.
 
 ## License
 
