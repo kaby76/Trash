@@ -63,7 +63,7 @@ Output:
 
 ## Current version
 
-0.23.40 Fixes to trgen templates.
+0.23.41 Fixes to trgen templates.
 
 ## License
 

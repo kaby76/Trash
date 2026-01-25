@@ -15,5 +15,5 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "0.23.40";
+    public string Version { get; set; } = "0.23.41";
 }
