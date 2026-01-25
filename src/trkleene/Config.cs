@@ -15,7 +15,7 @@ namespace Trash
         public bool Verbose { get; set; }
 
 	[Option("version", Required = false)]
-	public string Version { get; set; } = "0.23.39";
+	public string Version { get; set; } = "0.23.40";
 
         [Value(0)]
         public IEnumerable<string> Expr { get; set; }

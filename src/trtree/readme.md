@@ -18,7 +18,7 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 ## Current version
 
-0.23.39 Fixes to trgen templates.
+0.23.40 Fixes to trgen templates.
 
 ## License
 
