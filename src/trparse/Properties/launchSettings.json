@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/FunctionPointer.c --ambig --debug",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4676\\c\\Generated-CSharp"
+      "commandLineArgs": "-i \"void (*(*f[])())();\"",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4733\\c\\Generated-CSharp"
     }
   }
 }

@@ -18,7 +18,7 @@ Get strings from a PDF file using IText.
 
 ## Current version
 
-0.23.41 Fixes to trgen templates.
+0.23.42 Fixes to trgen templates.
 
 ## License
 

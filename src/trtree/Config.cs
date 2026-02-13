@@ -26,5 +26,5 @@ public class Config
     public bool BlockTreeStyle { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "0.23.41";
+    public string Version { get; set; } = "0.23.42";
 }
