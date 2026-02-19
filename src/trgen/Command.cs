@@ -37,6 +37,14 @@ namespace Trash
             else
                 GenerateFromGrammarFilesOnly(config);
             ModifyWithGrammarParse(config);
+            if (config.deps)
+            {
+                var seen = new HashSet<string>();
+                foreach (var test in config.Tests)
+                    if (test.dependency_graph_string != null && seen.Add(test.dependency_graph_string))
+                        System.Console.WriteLine(test.dependency_graph_string);
+                return 0;
+            }
             GenerateViaConfig(config);
 
             if (failed_modules.Any())
@@ -348,10 +356,9 @@ namespace Trash
                 // grammars-v4/r, won't build that way.
                 // Use Trash compiler to get dependencies.
                 var dependency_graph = ComputeSort(test);
+                test.dependency_graph_string = dependency_graph.ToString();
 
-                System.Console.Error.WriteLine("Dependency graph of grammar:");
-                System.Console.Error.WriteLine(dependency_graph.ToString());
-
+                if (config.deps) continue;
 
                 // Mark all grammars that have no edges "in" are top level.
                 var subset = dependency_graph.Vertices.ToList();
@@ -2158,7 +2165,7 @@ namespace Trash
             {
                 result = "success";
             }
-            System.Console.Error.WriteLine("CSharp " + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+            if (result == "fail") System.Console.Error.WriteLine("CSharp " + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
             if ((bool)res3)
             {
                 throw new Exception("Aborting. Correct syntax errors in grammar file " + input_name + " in order to generate driver.");
