@@ -219,10 +219,12 @@ namespace Trash
                                 GrammarFileNameTarget = tgfn,
                                 GrammarFileNameSource = sgfn,
                                 GrammarName = grammar_name,
+                                GrammarNameOriginating = grammar_name,
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
                                 StartSymbol = start_symbol,
                                 WhatType = GrammarTuple.Type.Parser,
+                                WhatTypeOriginating = GrammarTuple.Type.Parser,
                             };
                         if (test.target == "Go")
                         {
@@ -249,10 +251,12 @@ namespace Trash
                                 GrammarFileNameTarget = tgfn,
                                 GrammarFileNameSource = sgfn,
                                 GrammarName = grammar_name,
+                                GrammarNameOriginating = grammar_name,
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
                                 StartSymbol = start_symbol,
                                 WhatType = GrammarTuple.Type.Lexer,
+                                WhatTypeOriginating = GrammarTuple.Type.Lexer,
                             };
                         var pre1 = test.package == "" ? "" : test.package + "/";
                         var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
@@ -281,10 +285,12 @@ namespace Trash
                                 GrammarFileNameTarget = tgfn,
                                 GrammarFileNameSource = sgfn,
                                 GrammarName = grammar_name + "Parser",
+                                GrammarNameOriginating = grammar_name,
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
                                 StartSymbol = start_symbol,
                                 WhatType = GrammarTuple.Type.Parser,
+                                WhatTypeOriginating = GrammarTuple.Type.Combined,
                             };
                             var pre1 = test.package == "" ? "" : test.package + "/";
                             var pre2 = test.package.Replace("/", ".") == "" ? "" : test.package.Replace("/", ".") + ".";
@@ -327,10 +333,12 @@ namespace Trash
                                 GrammarFileNameTarget = tgfn,
                                 GrammarFileNameSource = sgfn,
                                 GrammarName = grammar_name + "Lexer",
+                                GrammarNameOriginating = grammar_name,
                                 OriginalSourceFileName = sgfn,
                                 ParsingResultSet = parsing_result_set,
                                 StartSymbol = start_symbol,
                                 WhatType = GrammarTuple.Type.Lexer,
+                                WhatTypeOriginating = GrammarTuple.Type.Combined,
                             };
                             if (test.target == "Go")
                             {
@@ -601,7 +609,7 @@ namespace Trash
                 "Swift" => ".swift",
                 "TypeScript" => ".ts",
                 "Antlr4ng" => ".ts",
-                _ => throw new NotImplementedException(),
+                _ => ".unknown",
             };
         }
 
@@ -1961,17 +1969,47 @@ namespace Trash
                     // Add an edge from the current grammar to "imported" grammar.
                     // Note, we never include parser to lexer grammar depends.
                     // That will be added--with extreme care--later on.
-                    var foo = engine.parseExpression(
+                    var importedGrammarNames = engine.parseExpression(
                             @"//delegateGrammars/delegateGrammar[not(ASSIGN)]/identifier/(RULE_REF | TOKEN_REF)/text()",
                             new StaticContextBuilder()).evaluate(dynamicContext,
                             new object[] { dynamicContext.Document })
                             .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
-                    foreach (var id in foo)
+                    var grammarTypeKeyword = engine.parseExpression(
+                            @"//grammarDecl/grammarType/(LEXER | PARSER)/text()",
+                            new StaticContextBuilder()).evaluate(dynamicContext,
+                            new object[] { dynamicContext.Document })
+                            .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string)
+                            .FirstOrDefault(); // "lexer", "parser", or null (combined)
+                    var expectedKeyword = t.WhatTypeOriginating switch
+                    {
+                        GrammarTuple.Type.Lexer => "lexer",
+                        GrammarTuple.Type.Parser => "parser",
+                        GrammarTuple.Type.Combined => null,
+                        _ => throw new Exception("Unknown grammar type.")
+                    };
+                    if (grammarTypeKeyword != expectedKeyword)
+                        throw new Exception($"Grammar type mismatch: XPath says '{grammarTypeKeyword}' but WhatTypeOriginating is '{t.WhatTypeOriginating}' for grammar '{v}'.");
+
+                    foreach (var id in importedGrammarNames)
                     {
                         // Search for the grammar name in grammar tuples.
                         // Search for the grammar file name since that's what import does.
                         // Fix basic case of "import" for lexers, in https://stackoverflow.com/questions/79590155/how-to-extract-raw-contents-including-comments-within-braces-in-specific-situa
-                        var files = test.tool_grammar_tuples.Where(t => t.GrammarFileNameSource.EndsWith("/" + id + ".g4")).ToList();
+                        var files = test.tool_grammar_tuples.Where(t =>
+                        {
+                            if (t.GrammarNameOriginating == id) return true;
+                            if (grammarTypeKeyword == null)
+                            {
+                                // Grammar is a combined grammar. Import can include
+                                // lexer, parser, combined grammar, or both.
+                                // "import 'C';", where "C" is a split grammar, import
+                                // both.
+                                if (t.GrammarNameOriginating == id + "Lexer" || t.GrammarNameOriginating == id + "Parser")
+                                    return true;
+                            }
+                            return false;
+                        }).ToList();
+//                        var files = test.tool_grammar_tuples.Where(t => t.GrammarFileNameSource.EndsWith("/" + id + ".g4")).ToList();
                         if (!files.Any()) throw new Exception("Cannot find imported file " + id + ".g4");
                         // Add an edge from the current grammar to grammars that are imported.
                         foreach (var f in files)

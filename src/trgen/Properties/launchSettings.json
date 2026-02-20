@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "--template-sources-directory ../_scripts/templates/ -t Antlr4ng",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4733\\c"
+      "commandLineArgs": "--deps",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\trapc"
     }
   }
 }
