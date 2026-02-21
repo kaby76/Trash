@@ -22,6 +22,7 @@ namespace Trash
         public string fully_qualified_go_lexer_name { get; set; }
         public string grammar_name { get; set; }
         //public List<string> generated_files = null;
+        public string dependency_graph_string = null;
         public string ignore_string = null;
         public string lexer_grammar_file_name = null;
         public string package { get; set; } = "";

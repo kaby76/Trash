@@ -133,6 +133,9 @@ public class Config
         }
     }
 
+    [Option("deps", Required = false, HelpText = "Output grammar dependencies instead of generating files.")]
+    public bool deps { get; set; }
+
     [Option("version", Required = false)]
-    public string Version { get; set; } = "0.23.41";
+    public string Version { get; set; } = "0.23.42";
 }
