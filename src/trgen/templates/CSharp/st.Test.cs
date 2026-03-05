@@ -152,6 +152,7 @@ public class Program
 
     static void Main(string[] args)
     {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         List\<bool> is_fns = new List\<bool>();
         List\<string> inputs = new List\<string>();
         for (int i = 0; i \< args.Length; ++i)
