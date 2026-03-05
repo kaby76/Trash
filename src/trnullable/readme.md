@@ -18,7 +18,7 @@ trparse A.g4 | trnullable
 
 ## Current version
 
-0.23.42 Fixes to trgen templates.
+0.23.43 Fixes to trgen templates.
 
 ## License
 
