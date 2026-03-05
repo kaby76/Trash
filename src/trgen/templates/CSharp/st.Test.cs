@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using UtfUnknown;
 <if(has_name_space)>namespace <name_space>
 {<endif>
 
@@ -285,7 +286,11 @@ public class Program
             str = new Antlr4.Runtime.AntlrInputStream(fs);
         }
         else if (file_encoding == null || file_encoding == "")
-            str = CharStreams.fromPath(input);
+        {
+            var detected = CharsetDetector.DetectFromFile(input);
+            var enc = detected.Detected?.Encoding ?? Encoding.UTF8;
+            str = CharStreams.fromPath(input, enc);
+        }
         else {
             var encoding = Encoding.GetEncoding(
                 file_encoding,
