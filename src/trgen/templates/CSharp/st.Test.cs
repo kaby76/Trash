@@ -79,7 +79,7 @@ public class Program
 
         if (ambig) {
             Parser.Profile = true;
-            var tree = Parser.prog();
+            var tree = Parser.<start_symbol>();
             var decisions = Parser.ParseInfo.getDecisionInfo().Where(d => d.ambiguities.Any()).ToList();
             foreach (var decision in decisions)
             {
@@ -115,7 +115,7 @@ public class Program
             Input = Lexer.InputStream.ToString();
             TokenStream = Parser.TokenStream;
         } else {
-            var tree = Parser.prog();
+            var tree = Parser.<start_symbol>();
             Input = Lexer.InputStream.ToString();
             TokenStream = Parser.TokenStream;
             result.Add(new Tuple\<string, IParseTree>(null, tree));
