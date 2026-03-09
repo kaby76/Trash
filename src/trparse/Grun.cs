@@ -308,10 +308,8 @@ public class Grun
 
         var result = "";
         object res2 = null;
-        object res3 = null;
         DateTime before = DateTime.Now;
         DateTime after = DateTime.Now;
-        if (!config.Ambig)
         {
             MethodInfo methodInfo2 = type.GetMethod("Parse2");
             object[] parm2 = new object[] { };
@@ -321,27 +319,7 @@ public class Grun
 
             MethodInfo methodInfo3 = type.GetMethod("AnyErrors");
             object[] parm3 = new object[] { };
-            res3 = methodInfo3.Invoke(null, parm3);
-            if ((bool)res3)
-            {
-                result = "fail";
-            }
-            else
-            {
-                result = "success";
-            }
-        }
-        else
-        {
-            MethodInfo methodInfo2 = type.GetMethod("Parse3");
-            object[] parm2 = new object[] { };
-            before = DateTime.Now;
-            res2 = methodInfo2.Invoke(null, parm2);
-            after = DateTime.Now;
-
-            MethodInfo methodInfo3 = type.GetMethod("AnyErrors");
-            object[] parm3 = new object[] { };
-            res3 = methodInfo3.Invoke(null, parm3);
+            var res3 = methodInfo3.Invoke(null, parm3);
             if ((bool)res3)
             {
                 result = "fail";
@@ -360,21 +338,6 @@ public class Grun
         var charstream = type.GetProperty("CharStream").GetValue(null, new object[0]) as ICharStream;
         var commontokstream = tokstream as CommonTokenStream;
         var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
-        if (!config.Ambig)
-        {
-            var tree = res2 as IParseTree;
-            var t2 = tree as ParserRuleContext;
-            var converted_tree = new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream);
-            var tuple = new AntlrJson.ParsingResultSet()
-            {
-                FileName = input_name,
-                Nodes = new UnvParseTreeNode[] { converted_tree },
-                Parser = parser,
-                Lexer = lexer
-            };
-            data.Add(tuple);
-        }
-        else
         {
             var tuples = res2 as List<Tuple<string, IParseTree>>;
             // Each ambiguous parse tree is for an alt.
@@ -421,6 +384,6 @@ public class Grun
                 }
             }
         }
-        return (bool)res3 ? 1 : 0;
+        return result == "success" ? 1 : 0;
     }
 }
