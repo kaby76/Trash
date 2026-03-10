@@ -1,4 +1,4 @@
-// Generated from trgen 0.23.23
+// Generated from trgen 0.23.43
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using UtfUnknown;
 public class Program
 {
     public static ANTLRv2Parser Parser { get; set; }
@@ -23,7 +24,9 @@ public class Program
     public static bool HeatMap { get; set; } = false;
     public static void SetupParse2(string input, string fn, bool quiet = false)
     {
-        ICharStream str = new AntlrInputStream(input);
+        var code_point_stream = new CodePointCharStream(input);
+        code_point_stream.name = fn;
+        ICharStream str = code_point_stream;
         CharStream = str;
         var lexer = new ANTLRv2Lexer(str);
         Lexer = lexer;
@@ -35,8 +38,7 @@ public class Program
             tokens = new CommonTokenStream(lexer);
         }
         TokenStream = tokens;
-        ((AntlrInputStream)(lexer.InputStream)).name = fn;
-        ((AntlrInputStream)(lexer.InputStream)).name = fn;
+        ((CodePointCharStream)(lexer.InputStream)).name = fn;
         var parser = new MyParser(tokens);
         Parser = parser;
         var listener_lexer = new ErrorListener<int>(false, false, System.Console.Error);
@@ -49,48 +51,72 @@ public class Program
         parser.AddErrorListener(listener_parser);
     }
 
-    public static IParseTree Parse2()
+    public static List<Tuple<string, IParseTree>> Parse2()
     {
-        var tree = Parser.grammar_();
-        Input = Lexer.InputStream.ToString();
-        TokenStream = Parser.TokenStream;
-        Tree = tree;
-        return tree;
-    }
-
-    public static List<Tuple<string, IParseTree>> Parse3()
-    {
-        Parser.Profile = true;
-        var tree = Parser.grammar_();
-        var decisions = Parser.ParseInfo.getDecisionInfo().Where(d => d.ambiguities.Any()).ToList();
-        var result = new List<Tuple<string, IParseTree>>();
-        foreach (var decision in decisions)
+        var args = Environment.GetCommandLineArgs().ToList();
+        int ambig_index = args?.FindIndex(a => a.IndexOf("-ambig", StringComparison.OrdinalIgnoreCase) >= 0) ?? -1;
+        bool ambig = args?.Where(a => a.IndexOf("-ambig", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
+        if (ambig_index >= 0 && (args[ambig_index].StartsWith("--ambig=") || args[ambig_index].StartsWith("-ambig=")))
         {
-            var am = decision.ambiguities;
-            foreach (AmbiguityInfo ai in am)
-            {
-                var parser_decision = ai.decision;
-                var parser_alts = ai.ambigAlts;
-                var parser_startIndex = ai.startIndex;
-                var parser_stopIndex = ai.stopIndex;
-                var p = Parser.RuleNames.Select((value, index) => new { value, index })
-                        .Where(pair => (pair.value == "grammar_"))
-                        .Select(pair => pair.index).First();
-                var parser_startRuleIndex = p;
-                var parse_trees = ((MyParser)Parser).getAllPossibleParseTrees(
-                    parser_decision,
-                    parser_alts,
-                    parser_startIndex,
-                    parser_stopIndex,
-                parser_startRuleIndex);
-                foreach (var t in parse_trees)
-                {
-                    result.Add(new Tuple<string, IParseTree>(t.Item1, t.Item2));
-                }
-            }
+            ambig_decisions = new HashSet<int>();
+            int prefix_len = args[ambig_index].StartsWith("--ambig=") ? 8 : 7;
+            foreach (var part in args[ambig_index].Substring(prefix_len).Split(','))
+                if (int.TryParse(part.Trim(), out int d))
+                    ambig_decisions.Add(d);
         }
-        Input = Lexer.InputStream.ToString();
-        TokenStream = Parser.TokenStream;
+        int limit_index = args?.FindIndex(a => a == "--limit" || a.StartsWith("--limit=")) ?? -1;
+        if (limit_index >= 0)
+        {
+            if (args[limit_index].StartsWith("--limit="))
+                int.TryParse(args[limit_index].Substring(8), out limit);
+            else if (limit_index + 1 < args.Count)
+                int.TryParse(args[limit_index + 1], out limit);
+        }
+        var result = new List<Tuple<string, IParseTree>>();
+
+        if (ambig) {
+            Parser.Profile = true;
+            var tree = Parser.grammar_();
+            var decisions = Parser.ParseInfo.getDecisionInfo().Where(d => d.ambiguities.Any()).ToList();
+            foreach (var decision in decisions)
+            {
+                var am = decision.ambiguities;
+                foreach (AmbiguityInfo ai in am)
+                {
+                    var parser_decision = ai.decision;
+                    if (ambig_decisions != null && !ambig_decisions.Contains(parser_decision))
+                        continue;
+                    var parser_alts = ai.ambigAlts;
+                    var parser_startIndex = ai.startIndex;
+                    var parser_stopIndex = ai.stopIndex;
+                    var p = Parser.RuleNames.Select((value, index) => new { value, index })
+                        .Where(pair => (pair.value == "prog"))
+                        .Select(pair => pair.index).First();
+                    var parser_startRuleIndex = p;
+                    var parse_trees = ((MyParser)Parser).getAllPossibleParseTrees(
+                        parser_decision,
+                        parser_alts,
+                        parser_startIndex,
+                        parser_stopIndex,
+                        parser_startRuleIndex,
+                        limit > 0 ? Math.Max(0, limit - result.Count) : 0);
+                    foreach (var t in parse_trees)
+                    {
+                        result.Add(new Tuple<string, IParseTree>(t.Item1, t.Item2));
+                        if (limit > 0 && result.Count >= limit) break;
+                    }
+                    if (limit > 0 && result.Count >= limit) break;
+                }
+                if (limit > 0 && result.Count >= limit) break;
+            }
+            Input = Lexer.InputStream.ToString();
+            TokenStream = Parser.TokenStream;
+        } else {
+            var tree = Parser.grammar_();
+            Input = Lexer.InputStream.ToString();
+            TokenStream = Parser.TokenStream;
+            result.Add(new Tuple<string, IParseTree>(null, tree));
+        }
         return result;
     }
 
@@ -132,8 +158,11 @@ public class Program
     static bool show_diagnostic = false;
     static bool show_hit = false;
     static bool show_ambig = false;
+    static HashSet<int> ambig_decisions = null; // null = all decisions
     static bool show_profile = false;
     static bool show_tokens = false;
+    static bool show_token_count = false;
+    static long total_count = 0;
     static bool show_trace = false;
     static bool show_tree = false;
     static bool old = false;
@@ -144,9 +173,12 @@ public class Program
     static int string_instance = 0;
     static string prefix = "";
     static bool quiet = false;
+    static bool earley = false;
+    static int limit = 0; // 0 = unlimited
 
     static void Main(string[] args)
     {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         List<bool> is_fns = new List<bool>();
         List<string> inputs = new List<string>();
         for (int i = 0; i < args.Length; ++i)
@@ -155,9 +187,16 @@ public class Program
             {
                 show_diagnostic = true;
             }
-            else if (args[i] == "-ambig")
+            else if (args[i] == "-ambig" || args[i].StartsWith("-ambig="))
             {
                 show_ambig = true;
+                if (args[i].StartsWith("-ambig="))
+                {
+                    ambig_decisions = new HashSet<int>();
+                    foreach (var part in args[i].Substring(7).Split(','))
+                        if (int.TryParse(part.Trim(), out int d))
+                            ambig_decisions.Add(d);
+                }
             }
             else if (args[i] == "-profile")
             {
@@ -166,6 +205,10 @@ public class Program
             else if (args[i] == "-tokens")
             {
                 show_tokens = true;
+            }
+            else if (args[i] == "-tc")
+            {
+                show_token_count = true;
             }
             else if (args[i] == "-two-byte")
             {
@@ -219,6 +262,26 @@ public class Program
             {
                 show_trace = true;
             }
+            else if (args[i] == "-earley")
+            {
+                earley = true;
+                show_tree = false;
+            }
+            else if (args[i] == "--limit" || args[i].StartsWith("--limit="))
+            {
+                if (args[i].StartsWith("--limit="))
+                {
+                    int.TryParse(args[i].Substring(8), out limit);
+                }
+                else if (i + 1 < args.Length)
+                {
+                    int.TryParse(args[++i], out limit);
+                }
+            }
+            else if (args[i][0] == '-')
+            {
+                // Ignore unknown option.
+            }
             else
             {
                  inputs.Add(args[i]);
@@ -241,6 +304,7 @@ public class Program
             }
             DateTime after = DateTime.Now;
             if (!quiet) System.Console.Error.WriteLine(prefix + "Total Time: " + (after - before).TotalSeconds);
+            if (show_token_count) System.Console.Error.WriteLine("TC: " + total_count);
         }
         Environment.ExitCode = exit_code;
     }
@@ -270,7 +334,11 @@ public class Program
             str = new Antlr4.Runtime.AntlrInputStream(fs);
         }
         else if (file_encoding == null || file_encoding == "")
-            str = CharStreams.fromPath(input);
+        {
+            var detected = CharsetDetector.DetectFromFile(input);
+            var enc = detected.Detected?.Encoding ?? Encoding.UTF8;
+            str = CharStreams.fromPath(input, enc);
+        }
         else {
             var encoding = Encoding.GetEncoding(
                 file_encoding,
@@ -287,20 +355,26 @@ public class Program
     {
         if (binary) str = new BinaryCharStream(str);
         var lexer = new ANTLRv2Lexer(str);
-        if (show_tokens)
+        if (show_tokens || show_token_count)
         {
             StringBuilder new_s = new StringBuilder();
-            for (int i = 0; ; ++i)
+            int i = 0;
+            for (i = 0; ; ++i)
             {
                 var ro_token = lexer.NextToken();
                 var token = (CommonToken)ro_token;
                 token.TokenIndex = i;
-                new_s.AppendLine(token.ToString());
+                if (show_tokens) new_s.AppendLine(token.ToString());
                 if (token.Type == Antlr4.Runtime.TokenConstants.EOF)
                     break;
             }
-            System.Console.Error.WriteLine(new_s.ToString());
+            if (show_tokens) System.Console.Error.WriteLine(new_s.ToString());
+            total_count += i;
+            if (show_tokens) System.Console.Error.WriteLine(new_s.ToString());
             lexer.Reset();
+        }
+        if (show_token_count) {
+            return;
         }
         CommonTokenStream tokens = null;
         if (show_hit) {
@@ -365,6 +439,8 @@ public class Program
                 foreach (var ai in decision)
                 {
                     var parser_decision = ai.decision;
+                    if (ambig_decisions != null && !ambig_decisions.Contains(parser_decision))
+                        continue;
                     var parser_alts = ai.ambigAlts;
                     var parser_startIndex = ai.startIndex;
                     var parser_stopIndex = ai.stopIndex;
@@ -395,6 +471,25 @@ public class Program
         {
             System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
         }
+
+        if (earley) {
+            var epsilon_remover = new EpsilonRemover(parser);
+            var new_atn = epsilon_remover.Convert_ENFA_to_NFA();
+
+            lexer.Reset();
+            parser.Reset();
+
+            int start = parser.RuleNames.Select((value, index) => new { value, index })
+                .Where(pair => (pair.value == StartSymbol))
+                .Select(pair => pair.index).First();
+
+            MyATN atn = new_atn;
+            DateTime ebefore = DateTime.Now;
+            var accepted = EarleyATN.EarleyAtnRecognizer.ParseToTree(parser, new_atn, parser.TokenStream, start);
+            DateTime eafter = DateTime.Now;
+            Console.Error.WriteLine((accepted ? "ACCEPT" : "REJECT") + " " + (eafter - ebefore).TotalSeconds);
+        }
+
         if (tee) output.Close();
     }
 

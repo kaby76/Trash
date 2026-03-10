@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "--ambig=22 --limit=3 CSharpLexer.cs",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\temp\\g\\csharp-parser\\Generated-CSharp"
+      "commandLineArgs": "Expression.g4",
+      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\insert"
     }
   }
 }
