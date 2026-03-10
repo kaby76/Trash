@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 set -e
-templates=`pwd`/_templates
+templates=`pwd`/../trgen/templates
 for i in [a-z]*
 do
 	if [ ! -d $i ]
@@ -18,5 +18,6 @@ do
 	cd Generated-*
 	mv Test.csproj $i.csproj
 	sed -i -e "s/Test.csproj/$i.csproj/g" build.sh
+	sed -i -e 's/^antlr4/antlr4 -visitor/g' build.sh
 	popd > /dev/null 2>&1
 done

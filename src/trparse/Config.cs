@@ -7,9 +7,6 @@ public class Config
 {
     [Value(0)] public IEnumerable<string> Files { get; set; }
 
-    [Option('a', "ambig", Required = false, HelpText = "Output ambiguous parse trees.")]
-    public bool Ambig { get; set; }
-
     [Option('d', "dll", Required = false, HelpText = "Search for parser in dll with this specified name.")]
     public string Dll { get; set; } = "Test";
 
@@ -45,7 +42,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "0.23.42";
+    public string Version { get; set; } = "0.23.43";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }

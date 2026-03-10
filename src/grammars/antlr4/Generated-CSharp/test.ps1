@@ -1,4 +1,4 @@
-# Generated from trgen 0.23.23
+# Generated from trgen 0.23.43
 
 $workingDirectory = Get-Location
 $filePath = "$workingDirectory/tests.txt"
@@ -46,6 +46,10 @@ if ( $size -eq 0 ) {
     Write-Host "Test cases file empty."
     exit 0
 }
+
+# Before anything, clean out the testsuite directory of any previous
+# run.
+git clean -f ..\examples
 
 # Parse all input files.
 # Group parsing.
