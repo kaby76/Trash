@@ -2214,8 +2214,8 @@ namespace Trash
             var charstream = type.GetProperty("CharStream").GetValue(null, new object[0]) as ICharStream;
             var commontokstream = tokstream as CommonTokenStream;
             var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
-            var tree = res2 as IParseTree;
-            var t2 = tree as ParserRuleContext;
+            var tree = res2 as List<Tuple<string, IParseTree>>;
+            var t2 = tree[0].Item2 as ParserRuleContext;
             //if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
             //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
             //if (!config.Quiet && config.Verbose) System.Console.Error.WriteLine(LanguageServer.TreeOutput.OutputTree(tree, lexer, parser, commontokstream));
