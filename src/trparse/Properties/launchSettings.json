@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "Expression.g4",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\insert"
+      "commandLineArgs": "--ambig z.txt",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\csharp\\v8-spec\\Generated-CSharp"
     }
   }
 }
