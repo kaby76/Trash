@@ -42,7 +42,10 @@ be in a trgen-generated parser directory, or use the -p option.
     # print out performance with header, sorting on ambiguity.
     trperf x.go -h -c aFdriTkmfaet | ( head -n 1 && tail -n +2 | sort -k1 -n -r ) | head | column -t
 
-    dotnet trperf ../examples/AllInOneNoPreprocessor.cs -h -c aFdriTkmfaetc     | ( head -n 1 && tail -n +2 | sort -k1 -n -r ) \
+    # print out performance with header, sorting on ambiguity,
+    # compress text column.
+    dotnet trperf ../examples/AllInOneNoPreprocessor.cs -h -c aFdriTkmfaetc \
+      | ( head -n 1 && tail -n +2 | sort -k1 -n -r ) \
       | head | awk '
       {
         tmp = $0
