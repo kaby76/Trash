@@ -20,6 +20,14 @@ do
 	dotnet trparse $i | dotnet trquery -c Generated/g4-scripts/delabel.xq | dotnet trsponge -c -o "Generated"
 done
 rm -rf Generated/g4-scripts
+
+echo ======
+ls -l Gold
+echo ==+===
+ls -l Generated
+echo ======
+
+
 diff -r Gold Generated
 if [ "$?" != "0" ]
 then
