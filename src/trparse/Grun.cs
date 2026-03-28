@@ -384,6 +384,6 @@ public class Grun
                 }
             }
         }
-        return result == "success" ? 1 : 0;
+        return result == "success" ? 0 : 1;
     }
 }
