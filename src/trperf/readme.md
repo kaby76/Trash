@@ -42,9 +42,32 @@ be in a trgen-generated parser directory, or use the -p option.
     # print out performance with header, sorting on ambiguity.
     trperf x.go -h -c aFdriTkmfaet | ( head -n 1 && tail -n +2 | sort -k1 -n -r ) | head | column -t
 
+    # print out performance with header, sorting on ambiguity,
+    # compress text column.
+    dotnet trperf ../examples/AllInOneNoPreprocessor.cs -h -c aFdriTkmfaetc \
+      | ( head -n 1 && tail -n +2 | sort -k1 -n -r ) \
+      | head | awk '
+      {
+        tmp = $0
+        for(i=1; i<=12; i++) sub(/^[ \t]*[^ \t]+/, "", tmp)
+        sub(/^[ \t]+/, "", tmp)
+        gsub(/[ \t][ \t]+/, " ", tmp)
+        lasts[NR] = tmp
+        lines[NR] = $0
+        for(i=1; i<=12; i++) if(length($i) > w[i]) w[i] = length($i)
+      }
+      END {
+        for(r=1; r<=NR; r++) {
+          split(lines[r], f)
+          for(i=1; i<=12; i++) printf "%-*s  ", w[i], f[i]
+          print lasts[r]
+        }
+      }
+    '
+
 ## Current version
 
-0.23.42 Fixes to trgen templates.
+0.23.43 Fixes to trgen templates.
 
 ## License
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -x
 trap 'LAST_COMMAND=$CURRENT_COMMAND; CURRENT_COMMAND=$BASH_COMMAND' DEBUG
 trap 'ERROR_CODE=$?; FAILED_COMMAND=$LAST_COMMAND; tput setaf 1; echo "ERROR: command \"$FAILED_COMMAND\" failed with exit code $ERROR_CODE"; put sgr0;' ERR INT TERM
 export MSYS2_ARG_CONV_EXCL="*"
@@ -20,6 +20,14 @@ do
 	dotnet trparse $i | dotnet trquery -c Generated/g4-scripts/delabel.xq | dotnet trsponge -c -o "Generated"
 done
 rm -rf Generated/g4-scripts
+
+echo ======
+ls -l Gold
+echo ==+===
+ls -l Generated
+echo ======
+
+
 diff -r Gold Generated
 if [ "$?" != "0" ]
 then

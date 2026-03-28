@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "--deps",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\trapc"
+      "commandLineArgs": "-t CSharp",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\abb"
     }
   }
 }

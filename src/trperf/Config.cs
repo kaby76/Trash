@@ -33,5 +33,5 @@ public class Config
     public bool ReadFileNameStdin { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "0.23.42";
+    public string Version { get; set; } = "0.23.43";
 }

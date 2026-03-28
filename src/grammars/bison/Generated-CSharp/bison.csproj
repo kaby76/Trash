@@ -1,4 +1,4 @@
-<!-- Generated from trgen 0.23.23 -->
+<!-- Generated from trgen 0.23.43 -->
 <Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -10,6 +10,9 @@
 <Package></Package></Antlr4>
    <Antlr4 Include="BisonParser.g4">
 <Package></Package></Antlr4>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="UTF.Unknown" Version="2.6.0" />
   </ItemGroup>
   <Import Project="Other.csproj"></Import>
   <PropertyGroup>

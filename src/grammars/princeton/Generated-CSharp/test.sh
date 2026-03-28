@@ -1,4 +1,4 @@
-# Generated from trgen 0.23.23
+# Generated from trgen 0.23.43
 
 # Uncomment for debugging.
 #set -x
@@ -8,6 +8,16 @@ shopt -s globstar
 
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
+
+# Get environment.
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
 
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
@@ -28,6 +38,10 @@ then
     echo "No test cases provided."
     exit 0
 fi
+
+# Before anything, clean out the testsuite directory of any previous
+# run.
+git clean -f ../examples
 
 # Parse all input files.
 # Group parsing.
@@ -55,14 +69,6 @@ fi
 
 # For Unix environments, convert the newline in the .errors and .trees
 # to Unix style.
-unameOut="$(uname -s)"
-case "${unameOut}" in
-    Linux*)     machine=Linux;;
-    Darwin*)    machine=Mac;;
-    CYGWIN*)    machine=Cygwin;;
-    MINGW*)     machine=MinGw;;
-    *)          machine="UNKNOWN:${unameOut}"
-esac
 if [[ "$machine" == "MinGw" || "$machine" == "Msys" || "$machine" == "Cygwin" || "#machine" == "Linux" ]]
 then
     gen=`find ../examples -type f -name '*.errors' -o -name '*.tree'`
