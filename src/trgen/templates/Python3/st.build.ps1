@@ -1,5 +1,5 @@
 # Generated from trgen <version>
-Get-Content build.ps1 | Write-Host
+# Get-Content build.ps1 | Write-Host
 
 if (Test-Path -Path transformGrammar.py -PathType Leaf) {
     $(& python3 transformGrammar.py ) 2>&1 | Write-Host
