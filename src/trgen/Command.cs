@@ -586,7 +586,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.43";
+        public static string version = "0.23.44";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1369,7 +1369,7 @@ namespace Trash
                                            (test.ignore_string != null
                                                ? test.ignore_string + "|"
                                                : "")
-                                           + "/ignore/|/Generated/|/Generated-[^/]*/|/target/|/examples/|/.git/|/.gitignore/|/.ignore/|"
+                                           + "/ignore/|/Generated/|/Generated-[^/]*/|/target/|/examples/|/.claude/|/.git/|/.gitignore/|/.ignore/|"
                                            + Command.AllButTargetName(test.target)
                                            + "/)).+[.]g4"
                                            + "$";

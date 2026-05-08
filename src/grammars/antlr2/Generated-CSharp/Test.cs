@@ -1,4 +1,4 @@
-// Generated from trgen 0.23.43
+// Generated from trgen 0.23.44
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
@@ -54,13 +54,22 @@ public class Program
     public static List<Tuple<string, IParseTree>> Parse2()
     {
         var args = Environment.GetCommandLineArgs().ToList();
-        int ambig_index = args?.FindIndex(a => a.IndexOf("-ambig", StringComparison.OrdinalIgnoreCase) >= 0) ?? -1;
-        bool ambig = args?.Where(a => a.IndexOf("-ambig", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
-        if (ambig_index >= 0 && (args[ambig_index].StartsWith("--ambig=") || args[ambig_index].StartsWith("-ambig=")))
+        int s_ambig_index = args.FindIndex(a => a.StartsWith("-ambig"));
+        int d_ambig_index = args.FindIndex(a => a.StartsWith("--ambig"));
+        bool ambig = s_ambig_index >= 0 || d_ambig_index >= 0;
+        if (s_ambig_index >= 0 && (args[s_ambig_index].StartsWith("-ambig=")))
         {
             ambig_decisions = new HashSet<int>();
-            int prefix_len = args[ambig_index].StartsWith("--ambig=") ? 8 : 7;
-            foreach (var part in args[ambig_index].Substring(prefix_len).Split(','))
+            int prefix_len = 7;
+            foreach (var part in args[s_ambig_index].Substring(prefix_len).Split(','))
+                if (int.TryParse(part.Trim(), out int d))
+                    ambig_decisions.Add(d);
+        }
+        else if (d_ambig_index >= 0 && (args[d_ambig_index].StartsWith("-ambig=")))
+        {
+            ambig_decisions = new HashSet<int>();
+            int prefix_len = 8;
+            foreach (var part in args[d_ambig_index].Substring(prefix_len).Split(','))
                 if (int.TryParse(part.Trim(), out int d))
                     ambig_decisions.Add(d);
         }
@@ -102,7 +111,8 @@ public class Program
                         limit > 0 ? Math.Max(0, limit - result.Count) : 0);
                     foreach (var t in parse_trees)
                     {
-                        result.Add(new Tuple<string, IParseTree>(t.Item1, t.Item2));
+                        var n = (ambig_decisions == null || !ambig_decisions.Any()) ? t.Item1 : null;
+                        result.Add(new Tuple<string, IParseTree>(n, t.Item2));
                         if (limit > 0 && result.Count >= limit) break;
                     }
                     if (limit > 0 && result.Count >= limit) break;
@@ -187,15 +197,27 @@ public class Program
             {
                 show_diagnostic = true;
             }
-            else if (args[i] == "-ambig" || args[i].StartsWith("-ambig="))
+            else if (args[i] == "-ambig" || args[i].StartsWith("--ambig"))
             {
                 show_ambig = true;
-                if (args[i].StartsWith("-ambig="))
+                if (args[i].StartsWith("-ambig=") || args[i].StartsWith("--ambig="))
                 {
                     ambig_decisions = new HashSet<int>();
-                    foreach (var part in args[i].Substring(7).Split(','))
-                        if (int.TryParse(part.Trim(), out int d))
+                    var equal_p = args[i].Split('=');
+                    if (equal_p.Count() > 2) throw new Exception("more than one '='-sign in 'ambig' option");
+                    var comma_i = equal_p[1].IndexOf(',');
+                    if (comma_i > 1) {
+                        var comma_p = equal_p[1].Split(',');
+                        foreach (var part in comma_p)
+                        {
+                            if (int.TryParse(part.Trim(), out int d))
                             ambig_decisions.Add(d);
+                        }
+                }
+                else {
+                    if (int.TryParse(equal_p[1].Trim(), out int d))
+                        ambig_decisions.Add(d);
+                    }
                 }
             }
             else if (args[i] == "-profile")
@@ -461,8 +483,7 @@ public class Program
                         parser_startRuleIndex);
                     foreach (var tuple in parse_trees)
                     {
-                        System.Console.WriteLine(tuple.Item1 + " " + tuple.Item2.ToStringTree(parser));
-                        System.Console.WriteLine();
+                        System.Console.WriteLine((ambig_decisions == null || ambig_decisions.Count() > 1 ? (tuple.Item1 + " ") : "") + tuple.Item2.ToStringTree(parser));
                     }
                 }
             }

@@ -3,6 +3,9 @@
 # Uncomment for debugging.
 #set -x
 
+# Activate venv if present so that 'python3' resolves to the venv interpreter.
+if [ -f .venv/bin/activate ]; then source .venv/bin/activate; fi
+
 # glob patterns
 shopt -s globstar
 
@@ -22,7 +25,7 @@ esac
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
-files2=`dotnet trglob '../<example_files_unix>' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
+files2=`dotnet trglob '../<example_files_unix>' | tr -d '\r' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
 files=()
 for f in $files2
 do
