@@ -37,15 +37,15 @@ be in a trgen-generated parser directory, or use the -p option.
 ## Examples
 
     # print out performance data for a parse, ignore the header line, sort on "Max k", and output in a formatted table.
-    trperf aggregate01.sql | tail -n +2 | sort -k6 -n -r | column -t
+    trperf aggregate01.sql | tail -n +2 | sort -k6 -g -r | column -t
 
     # print out performance with header, sorting on ambiguity.
-    trperf x.go -h -c aFdriTkmfaet | ( head -n 1 && tail -n +2 | sort -k1 -n -r ) | head | column -t
+    trperf x.go -h -c aFdriTkmfaet | ( head -n 1 && tail -n +2 | sort -k1 -g -r ) | head | column -t
 
     # print out performance with header, sorting on ambiguity,
     # compress text column.
     dotnet trperf ../examples/AllInOneNoPreprocessor.cs -h -c aFdriTkmfaetc \
-      | ( head -n 1 && tail -n +2 | sort -k1 -n -r ) \
+      | ( head -n 1 && tail -n +2 | sort -k1 -g -r ) \
       | head | awk '
       {
         tmp = $0

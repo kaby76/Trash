@@ -2,7 +2,7 @@
   "profiles": {
     "trperf": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/AllInOneNoPreprocessor.cs",
+      "commandLineArgs": "../examples/CSharp8SwitchExpressions.cs --help",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\csharp\\v8-spec\\Generated-CSharp"
     }
   }

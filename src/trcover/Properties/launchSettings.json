@@ -2,8 +2,8 @@
   "profiles": {
     "trcover": {
       "commandName": "Project",
-      "commandLineArgs": "examples/iri.abnf  examples/postal.abnf  examples/rfc5322.abnf",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-abnf-readme\\abnf"
+      "commandLineArgs": "../examples/01_hello_world.scala ../examples/02_basic_class.scala ../examples/03_case_class.scala ../examples/04_traits.scala ../examples/05_enum.scala ../examples/06_given_using.scala ../examples/07_extension_methods.scala ../examples/08_union_types.scala ../examples/09_opaque_types.scala ../examples/10_pattern_matching.scala ../examples/11_for_comprehension.scala ../examples/12_generics.scala ../examples/13_higher_order.scala ../examples/14_variance.scala ../examples/15_type_classes.scala ../examples/16_collections.scala ../examples/17_error_handling.scala ../examples/18_match_types.scala ../examples/19_inline.scala ../examples/20_context_functions.scala ../examples/21_package_and_imports.scala ../examples/22_object_companion.scala",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-4835\\scala\\scala3\\Generated-CSharp"
     }
   }
 }

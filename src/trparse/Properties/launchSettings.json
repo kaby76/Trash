@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "Arithmetic.g4",
-      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\trcombine"
+      "commandLineArgs": "--ambig=31 ../examples/CSharp8TuplePositionalPatterns.cs",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-v8-continue\\csharp\\v8-spec\\Generated-CSharp"
     }
   }
 }

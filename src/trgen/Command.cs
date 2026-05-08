@@ -1369,7 +1369,7 @@ namespace Trash
                                            (test.ignore_string != null
                                                ? test.ignore_string + "|"
                                                : "")
-                                           + "/ignore/|/Generated/|/Generated-[^/]*/|/target/|/examples/|/.git/|/.gitignore/|/.ignore/|"
+                                           + "/ignore/|/Generated/|/Generated-[^/]*/|/target/|/examples/|/.claude/|/.git/|/.gitignore/|/.ignore/|"
                                            + Command.AllButTargetName(test.target)
                                            + "/)).+[.]g4"
                                            + "$";
