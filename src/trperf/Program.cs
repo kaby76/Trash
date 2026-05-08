@@ -50,7 +50,7 @@ public class Program
         var config = new Config();
         var result = new CommandLine.Parser().ParseArguments<Config>(args);
         bool stop = false;
-        result.WithNotParsed(
+        var foo = result.WithNotParsed(
             errs =>
             {
                 if (errs.Any(x => x.GetType() == typeof(VersionRequestedError)))

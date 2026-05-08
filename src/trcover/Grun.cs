@@ -227,8 +227,8 @@ namespace Trash
             var tokstream = type.GetProperty("TokenStream").GetValue(null, new object[0]) as ITokenStream;
             var charstream = type.GetProperty("CharStream").GetValue(null, new object[0]) as ICharStream;
             var commontokstream = tokstream as CommonTokenStream;
-            var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
-            var tree = res2 as IParseTree;
+	    var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
+            var tuples = res2 as List<Tuple<string, IParseTree>>;
 
             //if (!config.Quiet) System.Console.Error.WriteLine("Time to parse: " + (after - before));
             //if (!config.Quiet) System.Console.Error.WriteLine("# tokens per sec = " + tokstream.Size / (after - before).TotalSeconds);
@@ -237,8 +237,13 @@ namespace Trash
             // Compute coverage.
             System.Console.Error.WriteLine("Analyzing...");
             DateTime before2 = DateTime.Now;
-            ComputeCoverage(model, tree);
-            DateTime after2 = DateTime.Now;
+			foreach (var tt in tuples)
+			{
+				var t1 = tt.Item1 as string;
+				var tree = tt.Item2 as ParserRuleContext;
+				ComputeCoverage(model, tree);
+			}
+		    DateTime after2 = DateTime.Now;
             System.Console.Error.WriteLine(prefix + "Analysis " + row_number + " " + input_name + " " + (after2 - before2).TotalSeconds);
 
             return (bool)res3 ? 1 : 0;

@@ -345,13 +345,13 @@ public class Grun
             // 1) All trees under one file, one decision.
             // 2) Or, each tree under one file, one decision, one alt.
             if (config.GroupBy)
-			{
-				string decision_str = "";
-				var list_of_trees = new List<UnvParseTreeNode>();
+            {
+                string decision_str = "";
+                var list_of_trees = new List<UnvParseTreeNode>();
                 foreach (var tt in tuples)
                 {
-					var t1 = tt.Item1 as string;
-					decision_str = t1;
+                    var t1 = tt.Item1 as string;
+                    decision_str = t1;
                     var t2 = tt.Item2 as ParserRuleContext;
                     var converted_tree =
                         new ConvertToDOM(config.LineNumbers).BottomUpConvert(t2, null, parser, lexer, commontokstream);
@@ -359,7 +359,7 @@ public class Grun
                 }
                 var tuple = new AntlrJson.ParsingResultSet()
                 {
-					FileName = input_name + "." + decision_str,
+                    FileName = input_name + "." + decision_str,
                     Nodes = list_of_trees.ToArray(),
                     Parser = parser,
                     Lexer = lexer
