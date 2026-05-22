@@ -1,6 +1,6 @@
 # Generated from trgen <version>
 
-version="4.13.1"
+version="<antlr_version>"
 export GO111MODULE=on
 for i in {1..5}; do go get github.com/antlr4-go/antlr/v4@v$version; if [ "$?" = "0" ]; then break; fi; done; if [ "$?" != "0" ]; then exit 1; fi
 for i in {1..5}; do go get golang.org/x/text@v0.26.0; if [ "$?" = "0" ]; then break; fi; done; if [ "$?" != "0" ]; then exit 1; fi

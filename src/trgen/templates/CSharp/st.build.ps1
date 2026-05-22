@@ -16,7 +16,7 @@ if (-not $trxml2_output -or ($trxml2_output -match '^\s*$')) {
 $version = $trxml2_output | Select-String 'PackageReference/@Version' | ForEach-Object { ($_ -split '=')[1].Trim() }
 if (-not $version -or $version -eq '') {
     Write-Host "version is empty, defaulting to 4.13.1"
-    $version = "4.13.1"
+    $version = "<antlr_version>"
 }
 Write-Host "trxml2 output"
 dotnet trxml2 Other.csproj | Write-Host

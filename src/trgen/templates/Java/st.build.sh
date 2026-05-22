@@ -6,7 +6,7 @@ if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
 # to manually look at the version in pubspec.yaml and extract the
 # version number. We can then use this with antlr4 to generate the
 # parser and lexer.
-version=4.13.1
+version=<antlr_version>
 
 <if(antlrng_tool)>
 npm init -y

@@ -13,6 +13,9 @@ public class Config
     [Option("antlr-tool-path", Required = false)]
     public string antlr_tool_path { get; set; }
 
+    [Option("antlr-version", Required = false, HelpText = "ANTLR4 tool and runtime version (default: 4.13.1).")]
+    public string antlr_version { get; set; } = "4.13.1";
+
     [Option("arithmetic", Required = false, HelpText = "Generate arithmetic example from templates.")]
     public bool generateArithmeticExample { get; set; }
 

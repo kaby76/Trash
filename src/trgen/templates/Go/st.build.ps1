@@ -1,6 +1,6 @@
 # Generated from trgen <version>
 
-$version="4.13.1"
+$version="<antlr_version>"
 $env:GO111MODULE = "on"
 For ($i=0; $i -le 5; $i++) {
 	$(& go get github.com/antlr4-go/antlr/v4@v$version ; $compile_exit_code = $LASTEXITCODE) | Write-Host

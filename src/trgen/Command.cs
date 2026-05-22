@@ -1831,6 +1831,7 @@ namespace Trash
                 : "/tmp");
             t.Add("tool_grammar_files", test.tool_grammar_files.Select(s => re.Replace(s, "")));
             t.Add("tool_grammar_tuples", test.tool_grammar_tuples.Where(t => t.IsTopLevel).ToList());
+            t.Add("antlr_version", config.antlr_version);
             t.Add("version", Command.version);
             var o = t.Render();
             File.WriteAllText(to, o);
