@@ -1,5 +1,9 @@
 #!/usr/bin/bash
+<<<<<<< Updated upstream
 version=0.23.43
+=======
+version=0.23.44
+>>>>>>> Stashed changes
 cd src
 exes=`find . -name 'tr*.exe' | grep -v publish`
 for i in $exes
