@@ -1,2 +1,2 @@
-antlr4-python3-runtime==<antlr_version>
+<if(antlr_is_dev)>antlr4-python3-runtime<else>antlr4-python3-runtime==<antlr_version><endif>
 readchar
