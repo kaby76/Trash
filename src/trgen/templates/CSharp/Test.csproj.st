@@ -11,8 +11,9 @@
 } >  \</ItemGroup>
   \<ItemGroup>
     \<PackageReference Include="UTF.Unknown" Version="2.6.0" />
+    \<PackageReference Include="Antlr4.Runtime.Standard" Version="<antlr_version>" />
+	  \<!--PackageReference Include="Antlr4BuildTasks" Version="12.10" PrivateAssets="all" -->
   \</ItemGroup>
-  \<Import Project="Other.csproj">\</Import>
   \<PropertyGroup>
     \<RestoreProjectStyle>PackageReference\</RestoreProjectStyle>
   \</PropertyGroup>

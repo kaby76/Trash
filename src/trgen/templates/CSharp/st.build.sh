@@ -7,7 +7,7 @@ npm init -y
 npm i antlr-ng
 <endif>
 
-version=`dotnet trxml2 Other.csproj | fgrep 'PackageReference/@Version' | awk -F= '{print $2}'`
+version=<antlr_version>
 
 <tool_grammar_tuples:{x |
 <if(antlrng_tool)>
