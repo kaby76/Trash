@@ -586,7 +586,7 @@ namespace Trash
             }
         }
 
-        public static string version = "0.23.44";
+        public static string version = "0.23.45";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1831,6 +1831,13 @@ namespace Trash
                 : "/tmp");
             t.Add("tool_grammar_files", test.tool_grammar_files.Select(s => re.Replace(s, "")));
             t.Add("tool_grammar_tuples", test.tool_grammar_tuples.Where(t => t.IsTopLevel).ToList());
+            t.Add("antlr_version", config.antlr_version);
+            var antlr_v = System.Version.TryParse(config.antlr_version, out var parsed_antlr_v)
+                ? parsed_antlr_v : new System.Version(4, 13, 1);
+            t.Add("antlr_has_diagnostic_overrides", antlr_v >= new System.Version(4, 12, 0));
+            bool antlr_is_dev = config.antlr_version == "dev";
+            t.Add("antlr_is_dev", antlr_is_dev);
+            t.Add("antlr_dev_dir", config.antlr_dev_dir.Replace("\\", "/"));
             t.Add("version", Command.version);
             var o = t.Render();
             File.WriteAllText(to, o);

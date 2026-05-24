@@ -2,8 +2,8 @@
   "profiles": {
     "dotnet-antlr": {
       "commandName": "Project",
-      "commandLineArgs": "-t CSharp --template-sources-directory C:\\msys64\\home\\Kenne\\issues\\g4-v8-spec-ambiguity\\_scripts\\templates\\",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-v8-spec-ambiguity\\csharp\\v8-spec"
+      "commandLineArgs": "-t CSharp",
+      "workingDirectory": "C:\\Users\\Kenne\\Documents\\GitHub\\Trash\\_tests\\basic-trees"
     }
   }
 }

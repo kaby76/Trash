@@ -1,4 +1,4 @@
-﻿using CommandLine;
+using CommandLine;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +12,12 @@ public class Config
 {
     [Option("antlr-tool-path", Required = false)]
     public string antlr_tool_path { get; set; }
+
+    [Option("antlr-version", Required = false, HelpText = "ANTLR4 tool and runtime version, or \"dev\" to build from the dev branch (default: 4.13.1).")]
+    public string antlr_version { get; set; } = "4.13.1";
+
+    [Option("antlr-dev-dir", Required = false, HelpText = "Directory for ANTLR4 dev branch clone (default: ~/.antlr4-dev).")]
+    public string antlr_dev_dir { get; set; }
 
     [Option("arithmetic", Required = false, HelpText = "Generate arithmetic example from templates.")]
     public bool generateArithmeticExample { get; set; }
@@ -82,6 +88,9 @@ public class Config
     public Config()
     {
         this.antlr_tool_path = Command.GetAntlrToolPath();
+        this.antlr_dev_dir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            ".antlr4-dev").Replace("\\", "/");
         this.generateArithmeticExample = false;
         string file_name = Environment.CurrentDirectory + Path.DirectorySeparatorChar + @"desc.xml";
         this.hasDesc = File.Exists(file_name);
@@ -137,5 +146,5 @@ public class Config
     public bool deps { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "0.23.44";
+    public string Version { get; set; } = "0.23.45";
 }
