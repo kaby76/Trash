@@ -18,32 +18,13 @@ CONFIG=Release
 echo "$machine"
 echo "$cwd"
 cd src
-directories=`find . -maxdepth 1 -type d -name "tr*"`
+exes=`find . -name 'tr*.exe' | grep -v publish`
 tools=""
-for i in $directories
+for i in $exes
 do
-	if [ "$i" == "." ]
-	then
-		continue
-	fi
-	pushd $i
-	csproj=`find . -maxdepth 1 -name '*.csproj'`
-	if [[ "$csproj" == "" ]]
-	then
-		popd
-		continue
-	fi
-	if [[ ! -f "$i.csproj" ]]
-	then
-		popd
-		continue
-	fi
-	tool=${i##*/}
-	if [[ ! -f "./bin/Release/net10.0/$tool.dll" ]]
-	then
-		popd
-		continue
-	fi
+	d=`echo $i | awk -F '/' '{print $2}'`
+	pushd $d
+	tool=${d##*/}
 	tools="$tools $tool"
 	popd
 done
