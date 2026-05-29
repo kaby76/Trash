@@ -32,7 +32,7 @@ fi
 # Individual parsing: NOT SUPPORTED!
 <else>
 # Group parsing.
-echo "${files[*]}" | dotnet trash wdog dotnet trcover -x
+echo "${files[*]}" | dotnet trash wdog dotnet trash cover -x
 status=$?
 <endif>
 
