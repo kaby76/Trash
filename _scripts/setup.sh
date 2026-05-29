@@ -17,20 +17,6 @@ fi
 CONFIG=Release
 echo "$machine"
 echo "$cwd"
-cd src
-exes=`find . -name 'tr*.exe' | grep -v publish`
-tools=""
-for i in $exes
-do
-	d=`echo $i | awk -F '/' '{print $2}'`
-	pushd $d
-	tool=${d##*/}
-	tools="$tools $tool"
-	popd
-done
-for i in $tools
-do
-    echo dotnet nuget add source $cwd/src/$i/bin/$CONFIG/ --name trtool-$i
-    dotnet nuget add source $cwd/src/$i/bin/$CONFIG/ --name trtool-$i > /dev/null 2>&1
-done
+echo dotnet nuget add source $cwd/src/trash/bin/$CONFIG/ --name trtool-trash
+dotnet nuget add source $cwd/src/trash/bin/$CONFIG/ --name trtool-trash > /dev/null 2>&1
 dotnet nuget list source
