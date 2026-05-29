@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
+		<UseAppHost>false</UseAppHost>
 		<TargetFramework>net10.0-windows</TargetFramework>
 		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<!--    <PackAsTool>true</PackAsTool> -->
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<AssemblyName>tragl</AssemblyName>
 		<PackageId>tragl</PackageId>

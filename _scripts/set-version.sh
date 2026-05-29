@@ -92,3 +92,12 @@ do
         mv asdfasdf Command.cs
         popd
 done
+
+for i in trash
+do
+    pushd $i
+        sed -i -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version>$version</Version>%" $i.csproj
+        sed -i -e 's%private const string Version = "[^"]*";%private const string Version = "'$version'";%' Program.cs
+        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Unified dispatcher for the Trash toolkit.%' readme.md
+        popd
+done
