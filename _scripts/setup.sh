@@ -17,39 +17,6 @@ fi
 CONFIG=Release
 echo "$machine"
 echo "$cwd"
-cd src
-directories=`find . -maxdepth 1 -type d -name "tr*"`
-tools=""
-for i in $directories
-do
-	if [ "$i" == "." ]
-	then
-		continue
-	fi
-	pushd $i
-	csproj=`find . -maxdepth 1 -name '*.csproj'`
-	if [[ "$csproj" == "" ]]
-	then
-		popd
-		continue
-	fi
-	if [[ ! -f "$i.csproj" ]]
-	then
-		popd
-		continue
-	fi
-	tool=${i##*/}
-	if [[ ! -f "./bin/Release/net10.0/$tool.dll" ]]
-	then
-		popd
-		continue
-	fi
-	tools="$tools $tool"
-	popd
-done
-for i in $tools
-do
-    echo dotnet nuget add source $cwd/src/$i/bin/$CONFIG/ --name trtool-$i
-    dotnet nuget add source $cwd/src/$i/bin/$CONFIG/ --name trtool-$i > /dev/null 2>&1
-done
+echo dotnet nuget add source $cwd/src/trash/bin/$CONFIG/ --name trtool-trash
+dotnet nuget add source $cwd/src/trash/bin/$CONFIG/ --name trtool-trash > /dev/null 2>&1
 dotnet nuget list source

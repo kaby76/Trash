@@ -6,7 +6,7 @@ if (Test-Path -Path transformGrammar.py -PathType Leaf) {
 <if(antlr_is_dev)>
 $ANTLR4_DEV_DIR = "<antlr_dev_dir>/antlr4"
 if (-not (Test-Path "$ANTLR4_DEV_DIR/.git")) {
-    git clone https://github.com/antlr/antlr4.git "$ANTLR4_DEV_DIR"
+    git clone --quiet https://github.com/antlr/antlr4.git "$ANTLR4_DEV_DIR"
 }
 Push-Location "$ANTLR4_DEV_DIR"
 git checkout dev
@@ -15,7 +15,7 @@ mvn -DskipTests install
 Pop-Location
 $JAR = (Get-ChildItem "$ANTLR4_DEV_DIR/tool/target/antlr4-*-complete.jar" | Select-Object -Last 1).FullName
 <else>
-$version = Select-String -Path "build.sh" -Pattern "version=" | ForEach-Object { $_.Line -split "=" | Select-Object -Last 1 }
+$version = "<antlr_version>"
 $JAR = python -c "import os; from pathlib import Path; print(os.path.join(Path.home(), '.m2', 'repository', 'org', 'antlr', 'antlr4', '$version', ('antlr4-' + '$version' + '-complete.jar')))"
 <endif>
 

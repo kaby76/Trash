@@ -19,7 +19,7 @@ results to file(s).
 
 ## Current version
 
-0.23.45 Parameterized ANTLR version via a new --antlr-version CLI option.
+1.0.0 Unified dispatcher for the Trash toolkit.
 
 ## License
 

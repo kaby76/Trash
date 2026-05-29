@@ -12,9 +12,9 @@ rm -rf Generated
 mkdir Generated
 
 # Test.
-dotnet trparse Expression.g4 | dotnet trquery delete '//parserRuleSpec[RULE_REF/text()="a"]' > o.pt
-cat o.pt | dotnet trsponge -c -o Generated
-cat o.pt | dotnet trtree > Generated/delete.tree
+dotnet trash parse Expression.g4 | dotnet trash query delete '//parserRuleSpec[RULE_REF/text()="a"]' > o.pt
+cat o.pt | dotnet trash sponge -c -o Generated
+cat o.pt | dotnet trash tree > Generated/delete.tree
 rm o.pt
 
 # Diff.

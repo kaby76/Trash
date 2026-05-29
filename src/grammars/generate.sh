@@ -9,7 +9,7 @@ do
 	fi
 	pushd $i > /dev/null 2>&1
 	rm -rf Generated-*
-	dotnet trgen -t CSharp --template-sources-directory $templates > /dev/null 2>&1
+	dotnet trash gen -t CSharp --template-sources-directory $templates > /dev/null 2>&1
 	if [ $? -ne 0 ]
 	then
 		echo Grammar `pwd` failed.

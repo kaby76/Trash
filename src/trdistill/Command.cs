@@ -98,6 +98,6 @@ class Command
             var reformat = new Reformat();
 
         }
-
+        throw new NotImplementedException();
     }
 }

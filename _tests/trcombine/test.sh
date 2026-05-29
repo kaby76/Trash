@@ -9,15 +9,15 @@ where=`dirname -- "$0"`
 cd "$where"
 where=`pwd`
 cd "$where"
-dotnet trparse --version
+dotnet trash parse --version
 
 # Test.
 rm -rf Generated
-dotnet trparse Arithmetic.g4 > o1.pt
-cat o1.pt | dotnet trsplit > o2.pt
-cat o2.pt | dotnet trsponge -c -o Generated
-dotnet trparse Generated/* | dotnet trcombine > o3.pt
-cat o3.pt | dotnet trtext > Generated/Arithmetic.g4
+dotnet trash parse Arithmetic.g4 > o1.pt
+cat o1.pt | dotnet trash split > o2.pt
+cat o2.pt | dotnet trash sponge -c -o Generated
+dotnet trash parse Generated/* | dotnet trash combine > o3.pt
+cat o3.pt | dotnet trash text > Generated/Arithmetic.g4
 
 # Diff.
 for i in "$where/Generated/*"
