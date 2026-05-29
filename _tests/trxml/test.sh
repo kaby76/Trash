@@ -5,10 +5,10 @@ export MSYS2_ARG_CONV_EXCL="*"
 where=`dirname -- "$0"`
 cd "$where"
 rm -rf Generated-CSharp
-dotnet trgen -t CSharp --arithmetic
+dotnet trash gen -t CSharp --arithmetic
 cd Generated-CSharp
 make
-dotnet trparse -i "1+2" | dotnet trxml > ../output
+dotnet trash parse -i "1+2" | dotnet trash xml > ../output
 cd ..
 rm -rf Generated-CSharp/
 dos2unix output

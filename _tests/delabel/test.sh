@@ -17,7 +17,7 @@ do
 	echo $i
 	extension="${i##*.}"
 	filename="${i%.*}"
-	dotnet trparse $i | dotnet trquery -c Generated/g4-scripts/delabel.xq | dotnet trsponge -c -o "Generated"
+	dotnet trash parse $i | dotnet trash query -c Generated/g4-scripts/delabel.xq | dotnet trash sponge -c -o "Generated"
 done
 rm -rf Generated/g4-scripts
 

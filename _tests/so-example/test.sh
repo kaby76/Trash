@@ -10,6 +10,6 @@ where=`pwd`
 cd "$where"
 echo "$where"
 rm -rf `find . -name 'Generated-*' -type d`
-dotnet trgen -t CSharp
+dotnet trash gen -t CSharp
 pushd Generated-CSharp
 make
