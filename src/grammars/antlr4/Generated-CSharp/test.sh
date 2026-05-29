@@ -22,7 +22,7 @@ esac
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
-files2=`dotnet trglob '../examples/**/*.g4' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
+files2=`dotnet trash glob '../examples/**/*.g4' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
 files=()
 for f in $files2
 do
@@ -45,7 +45,7 @@ git clean -f ../examples
 
 # Parse all input files.
 # Group parsing.
-echo "${files[*]}" | dotnet trwdog ./bin/Debug/net10.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
+echo "${files[*]}" | dotnet trash wdog ./bin/Debug/net10.0/Test.exe -q -x -tee -tree > parse.txt 2>&1
 status=$?
 
 # trwdog returns 255 if it cannot spawn the process. This could happen
@@ -82,12 +82,12 @@ fi
 # Execute trquery parse tree validation.
 echo "Checking any trquery parse tree assertions..."
 assertions_err=0
-for file in `dotnet trglob '../examples/**/*.g4' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
+for file in `dotnet trash glob '../examples/**/*.g4' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
 do
     trq=$file.trq
     if [ -f "$trq" ]
     then
-        dotnet trparse $file | dotnet trquery -c $trq
+        dotnet trash parse $file | dotnet trash query -c $trq
         xxx=$?
         if [ "$xxx" -ne 0 ]
         then

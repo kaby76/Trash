@@ -2,7 +2,7 @@
 set -e
 if [ -f transformGrammar.py ]; then python3 transformGrammar.py ; fi
 
-version=`dotnet trxml2 Other.csproj | fgrep 'PackageReference/@Version' | awk -F= '{print $2}'`
+version=`dotnet trash xml2 Other.csproj | fgrep 'PackageReference/@Version' | awk -F= '{print $2}'`
 
 antlr4 -visitor -v $version -encoding utf-8 -Dlanguage=CSharp   PestLexer.g4
 antlr4 -visitor -v $version -encoding utf-8 -Dlanguage=CSharp   PestParser.g4

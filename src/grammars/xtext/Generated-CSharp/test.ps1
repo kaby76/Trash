@@ -14,7 +14,7 @@ if (Test-Path -Path "$filePath" -PathType Leaf) {
 }
 
 $files = New-Object System.Collections.Generic.List[string]
-$allFiles = $(& dotnet trglob "$Tests" ; $last = $LASTEXITCODE )
+$allFiles = $(& dotnet trash glob "$Tests" ; $last = $LASTEXITCODE )
 foreach ($file in $allFiles) {
     $ext = $file | Split-Path -Extension
     if (Test-Path $file -PathType Container) {
@@ -53,7 +53,7 @@ git clean -f ..\examples
 
 # Parse all input files.
 # Group parsing.
-get-content "$filePath" | dotnet trwdog ./bin/Debug/net10.0/Test.exe -q -x -tee -tree *> parse.txt
+get-content "$filePath" | dotnet trash wdog ./bin/Debug/net10.0/Test.exe -q -x -tee -tree *> parse.txt
 $status = $LASTEXITCODE
 
 # trwdog returns 255 if it cannot spawn the process. This could happen
@@ -83,7 +83,7 @@ foreach ($file in $files) {
     $trq = "$file.trq"
     if (Test-Path $trq -PathType Leaf) {
         Write-Host "Assert test case: $trq"
-        dotnet trparse $file | dotnet trquery -c $trq
+        dotnet trash parse $file | dotnet trash query -c $trq
         $xxx = $LASTEXITCODE
         if ( $xxx -ne 0 ) {
             $assertions_err = $xxx

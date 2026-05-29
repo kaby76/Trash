@@ -6,12 +6,12 @@ IFS=$(echo -en "\n\b")
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
-files2=`dotnet trglob '../examples/**/*.g4' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
+files2=`dotnet trash glob '../examples/**/*.g4' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
 files=()
 for f in $files2
 do
     if [ -d "$f" ]; then continue; fi
-    dotnet triconv -f utf-8 $f > /dev/null 2>&1
+    dotnet trash iconv -f utf-8 $f > /dev/null 2>&1
     if [ "$?" = "0" ]
     then
         files+=( $f )
@@ -29,7 +29,7 @@ fi
 
 # Parse all input files.
 # Group parsing.
-echo "${files[*]}" | dotnet trwdog dotnet trcover -x
+echo "${files[*]}" | dotnet trash wdog dotnet trash cover -x
 status=$?
 
 # trwdog returns 255 if it cannot spawn the process. This could happen
