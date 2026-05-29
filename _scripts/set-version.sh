@@ -1,11 +1,11 @@
 #!/usr/bin/bash
 #set -e
 #set -x
-version="0.23.45"
+version="1.0.0"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
-dotnet tool install -g trxml2
+dotnet tool install -g trash
 for i in $directories
 do
         echo $i
@@ -28,7 +28,7 @@ do
         then
                 continue
         fi
-        trxml2 "$i.csproj" | grep -i PackAsTool 2> /dev/null 1> /dev/null
+        dotnet trash xml2 "$i.csproj" | grep -i PackAsTool 2> /dev/null 1> /dev/null
         if [[ "$?" != "0" ]]
         then
                 continue
@@ -42,7 +42,7 @@ do
 	do
 		sed -i -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" $csproj
 	done
-        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Parameterized ANTLR version via a new --antlr-version CLI option.%' readme.md
+        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Unified dispatcher for the Trash toolkit.%' readme.md
 	for cs in *.cs
 	do
 		sed -i -e "s%public string Version { get; set; } = \"0[.][0-9]*[.][0-9]*\";%public string Version { get; set; } = \"$version\";%" $cs
@@ -80,7 +80,7 @@ do
         rm -f asdfasdf
         cat *.csproj | sed -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" > asdfasdf
         mv asdfasdf *.csproj    
-        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Parameterized ANTLR version via a new --antlr-version CLI option.%' readme.md
+        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Unified dispatcher for the Trash toolkit.%' readme.md
         cd ..
 done
 
@@ -90,14 +90,5 @@ do
         rm -f asdfasdf
         cat Command.cs | sed -e 's%public static string version = "[^"]*";%public static string version = "'$version'";%' > asdfasdf
         mv asdfasdf Command.cs
-        popd
-done
-
-for i in trash
-do
-    pushd $i
-        sed -i -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version>$version</Version>%" $i.csproj
-        sed -i -e 's%private const string Version = "[^"]*";%private const string Version = "'$version'";%' Program.cs
-        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Unified dispatcher for the Trash toolkit.%' readme.md
         popd
 done
