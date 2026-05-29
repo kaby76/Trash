@@ -23,39 +23,39 @@ TOOLS=(
     trcombine
     trconvert
     trcover
-    trdistill
+#   trdistill
     trdot
-    trenum
+#   trenum
     trextract
     trff
-    trfold
+#   trfold
     trfoldlit
-    trformat
+#   trformat
     trgen
     trgenvsc
     trglob
-    trgroup
+#   trgroup
     triconv
     tritext
     trjson
-    trkleene
+#   trkleene
     trnullable
     trparse
     trperf
-    trpiggy
+#   trpiggy
     trquery
     trrename
-    trrr
-    trrup
-    trsem
+#    trrr
+#    trrup
+#    trsem
     trsort
     trsplit
     trsponge
     trtext
-    trthompson
+#    trthompson
     trtokens
     trtree
-    trull
+#    trull
     trunfold
     trunfoldlit
     trungroup
