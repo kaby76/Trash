@@ -40,141 +40,56 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 
 ## Installation
 ### Requirements
-[Install Dotnet 8.0.x](https://dotnet.microsoft.com/en-us/download)
+[Install Dotnet 10.0.x](https://dotnet.microsoft.com/en-us/download)
 
 ### Install Globally
-Copy this script and execute it in a command-line prompt.
-```
-dotnet tool install -g trcaret
-dotnet tool install -g trclonereplace
-dotnet tool install -g trcombine
-dotnet tool install -g trconvert
-dotnet tool install -g trcover
-dotnet tool install -g trfoldlit
-dotnet tool install -g trgen
-dotnet tool install -g trgenvsc
-dotnet tool install -g trglob
-dotnet tool install -g triconv
-dotnet tool install -g tritext
-dotnet tool install -g trjson
-dotnet tool install -g trparse
-dotnet tool install -g trperf
-dotnet tool install -g trquery
-dotnet tool install -g trrename
-dotnet tool install -g trsort
-dotnet tool install -g trsplit
-dotnet tool install -g trsponge
-dotnet tool install -g trtext
-dotnet tool install -g trtokens
-dotnet tool install -g trtree
-dotnet tool install -g trunfold
-dotnet tool install -g trwdog
-dotnet tool install -g trxml
-dotnet tool install -g trxml2
 
-```
+    dotnet tool install -g trash
+
 ### Uninstall
-```
-dotnet tool uninstall -g trcaret
-dotnet tool uninstall -g trclonereplace
-dotnet tool uninstall -g trcombine
-dotnet tool uninstall -g trconvert
-dotnet tool uninstall -g trcover
-dotnet tool uninstall -g trfoldlit
-dotnet tool uninstall -g trgen
-dotnet tool uninstall -g trgenvsc
-dotnet tool uninstall -g trglob
-dotnet tool uninstall -g triconv
-dotnet tool uninstall -g tritext
-dotnet tool uninstall -g trjson
-dotnet tool uninstall -g trparse
-dotnet tool uninstall -g trperf
-dotnet tool uninstall -g trrename
-dotnet tool uninstall -g trsort
-dotnet tool uninstall -g trsplit
-dotnet tool uninstall -g trsponge
-dotnet tool uninstall -g trtext
-dotnet tool uninstall -g trtokens
-dotnet tool uninstall -g trtree
-dotnet tool uninstall -g trunfold
-dotnet tool uninstall -g trwdog
-dotnet tool uninstall -g trxml
-dotnet tool uninstall -g trxml2
 
-```
+    dotnet tool uninstall -g trash
+
 ### Install Locally
-```
-dotnet new tool-manifest
-dotnet tool install trcaret
-dotnet tool install trclonereplace
-dotnet tool install trcombine
-dotnet tool install trconvert
-dotnet tool install trcover
-dotnet tool install trfoldlit
-dotnet tool install trgen
-dotnet tool install trgenvsc
-dotnet tool install trglob
-dotnet tool install triconv
-dotnet tool install tritext
-dotnet tool install trjson
-dotnet tool install trparse
-dotnet tool install trperf
-dotnet tool install trquery
-dotnet tool install trrename
-dotnet tool install trsort
-dotnet tool install trsplit
-dotnet tool install trsponge
-dotnet tool install trtext
-dotnet tool install trtokens
-dotnet tool install trtree
-dotnet tool install trunfold
-dotnet tool install trwdog
-dotnet tool install trxgrep
-dotnet tool install trxml
-dotnet tool install trxml2
 
-```
+    dotnet new tool-manifest
+    dotnet tool install trash
+
 ## List of commands
-__NB: Out of date__
-1) <a href="src/tranalyze/readme.md">tranalyze</a> -- Analyze a grammar
-1) <a href="src/trcombine/readme.md">trcombine</a> -- Combine a split Antlr4 grammar
-1) <a href="src/trconvert/readme.md">trconvert</a> -- Convert a grammar from one for to another
-1) <a href="src/trdot/readme.md">trdot</a> -- Print a parse tree in Graphvis Dot format
-1) <a href="src/trenum/readme.md">trenum</a> -- Not functional, to enumerate strings from grammar.
-1) <a href="src/trff/readme.md">trff</a> -- Outputs FIRST and FOLLOW sets of a grammar
-1) <a href="src/trfold/readme.md">trfold</a> -- Perform fold transform on a grammar
-1) <a href="src/trfoldlit/readme.md">trfoldlit</a> -- Perform fold transform on grammar with literals
-1) <a href="src/trformat/readme.md">trformat</a> -- Format a grammar
-1) <a href="src/trgen/readme.md">trgen</a> -- Generate an Antlr4 parser for a given target language
-1) <a href="src/trgen2/readme.md">trgen2</a> -- Generate files from template and XML doc list.
-1) <a href="src/trgroup/readme.md">trgroup</a> -- Perform a group transform on a grammar
-1) <a href="src/tritext/readme.md">tritext</a> -- Get strings from a PDF file
-1) <a href="src/trjson/readme.md">trjson</a> -- Print a parse tree in JSON structured format
-1) <a href="src/trkleene/readme.md">trkleene</a> -- Perform a Kleene transform of a grammar
-1) <a href="src/trmove/readme.md">trmove</a> -- Move nodes in a parse tree
-1) <a href="src/trparse/readme.md">trparse</a> -- Parse a grammar or use generated parse to parse input
-1) <a href="src/trperf/readme.md">trperf</a> -- Perform performance analysis of an Antlr grammar parse
-1) <a href="src/trpiggy/readme.md">trpiggy</a> -- Perform a parse tree rewrite
-1) <a href="src/trprint/readme.md">trprint</a> -- Print a parse tree, including off-token characters
-1) <a href="src/trrename/readme.md">trrename</a> -- Rename symbols in a grammar
-1) <a href="src/trrr/readme.md">trrr</a> -- (No description.)
-1) <a href="src/trrup/readme.md">trrup</a> -- Remove useless parentheses in a grammar
-1) <a href="src/trsem/readme.md">trsem</a> -- Read static semantics and generate code
-1) <a href="src/trsort/readme.md">trsort</a> -- Sort rules in a grammar
-1) <a href="src/trsplit/readme.md">trsplit</a> -- Split a combined Antlr4 grammar
-1) <a href="src/trsponge/readme.md">trsponge</a> -- Extract parsing results output of Trash command into files
-1) <a href="src/trst/readme.md">trst</a> -- Print a parse tree in Antlr4 ToStringTree()
-1) <a href="src/trstrip/readme.md">trstrip</a> -- Strip a grammar of all actions, labels, etc.
-1) <a href="src/trtext/readme.md">trtext</a> -- Print a parse tree with a specific interval
-1) <a href="src/trthompson/readme.md">trthompson</a> -- (No description.)
-1) <a href="src/trtokens/readme.md">trtokens</a> -- Print tokens in a parse tree
-1) <a href="src/trtree/readme.md">trtree</a> -- Print a parse tree in a human-readable format
-1) <a href="src/trull/readme.md">trull</a> -- Transform a grammar with upper- and lowercase string literals
-1) <a href="src/trunfold/readme.md">trunfold</a> -- Perform an unfold transform on a grammar
-1) <a href="src/trungroup/readme.md">trungroup</a> -- Perform an ungroup transform on a grammar
-1) <a href="src/trwdog/readme.md">trwdog</a> -- Kill a program that runs too long
-1) <a href="src/trxml/readme.md">trxml</a> -- Print a parse tree in XML structured format
-1) <a href="src/trxml2/readme.md">trxml2</a> -- Print an enumeration of all paths in a parse tree to leaves
+1) <a href="src/tranalyze/readme.md">dotnet trash analyze</a> -- Analyze a grammar
+1) <a href="src/trcaret/readme.md">dotnet trash caret</a> -- Caret operations on a parse tree
+1) <a href="src/trclonereplace/readme.md">dotnet trash clonereplace</a> -- Clone and replace in a grammar
+1) <a href="src/trcombine/readme.md">dotnet trash combine</a> -- Combine a split Antlr4 grammar
+1) <a href="src/trconvert/readme.md">dotnet trash convert</a> -- Convert a grammar from one form to another
+1) <a href="src/trcover/readme.md">dotnet trash cover</a> -- Code coverage analysis
+1) <a href="src/trdot/readme.md">dotnet trash dot</a> -- Print a parse tree in Graphviz Dot format
+1) <a href="src/trextract/readme.md">dotnet trash extract</a> -- Extract from a parse tree
+1) <a href="src/trff/readme.md">dotnet trash ff</a> -- Outputs FIRST and FOLLOW sets of a grammar
+1) <a href="src/trfoldlit/readme.md">dotnet trash foldlit</a> -- Perform fold transform on grammar with literals
+1) <a href="src/trgen/readme.md">dotnet trash gen</a> -- Generate an Antlr4 parser for a given target language
+1) <a href="src/trgenvsc/readme.md">dotnet trash genvsc</a> -- Generate VS Code extension files
+1) <a href="src/trglob/readme.md">dotnet trash glob</a> -- Glob file patterns
+1) <a href="src/triconv/readme.md">dotnet trash iconv</a> -- Convert file encoding
+1) <a href="src/tritext/readme.md">dotnet trash itext</a> -- Get strings from a PDF file
+1) <a href="src/trjson/readme.md">dotnet trash json</a> -- Print a parse tree in JSON structured format
+1) <a href="src/trnullable/readme.md">dotnet trash nullable</a> -- Nullable analysis of a grammar
+1) <a href="src/trparse/readme.md">dotnet trash parse</a> -- Parse a grammar or use a generated parser to parse input
+1) <a href="src/trperf/readme.md">dotnet trash perf</a> -- Perform performance analysis of an Antlr grammar parse
+1) <a href="src/trquery/readme.md">dotnet trash query</a> -- Query parse trees using XPath
+1) <a href="src/trrename/readme.md">dotnet trash rename</a> -- Rename symbols in a grammar
+1) <a href="src/trsort/readme.md">dotnet trash sort</a> -- Sort rules in a grammar
+1) <a href="src/trsplit/readme.md">dotnet trash split</a> -- Split a combined Antlr4 grammar
+1) <a href="src/trsponge/readme.md">dotnet trash sponge</a> -- Extract parsing results of a Trash command into files
+1) <a href="src/trtext/readme.md">dotnet trash text</a> -- Print a parse tree with a specific interval
+1) <a href="src/trtokens/readme.md">dotnet trash tokens</a> -- Print tokens in a parse tree
+1) <a href="src/trtree/readme.md">dotnet trash tree</a> -- Print a parse tree in a human-readable format
+1) <a href="src/trunfold/readme.md">dotnet trash unfold</a> -- Perform an unfold transform on a grammar
+1) <a href="src/trunfoldlit/readme.md">dotnet trash unfoldlit</a> -- Perform unfold transform with literals on a grammar
+1) <a href="src/trungroup/readme.md">dotnet trash ungroup</a> -- Perform an ungroup transform on a grammar
+1) <a href="src/trwdog/readme.md">dotnet trash wdog</a> -- Kill a program that runs too long
+1) <a href="src/trxgrep/readme.md">dotnet trash xgrep</a> -- Search using XPath in parse trees
+1) <a href="src/trxml/readme.md">dotnet trash xml</a> -- Print a parse tree in XML structured format
+1) <a href="src/trxml2/readme.md">dotnet trash xml2</a> -- Print an enumeration of all paths in a parse tree to leaves
 
 ## Examples
 
@@ -182,14 +97,14 @@ __NB: Out of date__
 ```
 git clone https://github.com/antlr/grammars-v4
 cd grammars-v4/python/python
-trparse *.g4 | trquery 'grep //grammarDecl' | trtext
+dotnet trash parse *.g4 | dotnet trash query 'grep //grammarDecl' | dotnet trash text
 # Output:
 # PythonLexer.g4:lexer grammar PythonLexer;
 # PythonParser.g4:parser grammar PythonParser;
-trgen
+dotnet trash gen
 cd Generated
 dotnet build
-cat - <<EOF | trparse | trquery 'grep //test' | trtext
+cat - <<EOF | dotnet trash parse | dotnet trash query 'grep //test' | dotnet trash text
 x == y
 x == y if z == b else a == u
 lambda: a
@@ -206,7 +121,7 @@ EOF
 ```
 ### Display parse tree
 ```
-trparse -i "a == b" | trtree
+dotnet trash parse -i "a == b" | dotnet trash tree
 ```
 `trtree` is only one of several ways to view parse tree data.
 Other programs for different output are
@@ -220,7 +135,7 @@ and
 
 ### Convert grammars to Antlr4
 ```
-trparse ada.g2 | trconvert | trprint | less
+dotnet trash parse ada.g2 | dotnet trash convert | trprint | less
 ```
 This command parses an [old Antlr2 grammar](https://github.com/kaby76/Trash/blob/main/_tests/trconvert/antlr2/ada.g2)
 using [trparse](https://github.com/kaby76/Trash/tree/main/src/trparse),
@@ -235,7 +150,7 @@ use the grammar to parse data, you will need to convert it to an Antlr4 grammar.
 
 ### Generate an Arithmetic parser application
 ```
-mkdir foobar; cd foobar; trgen
+mkdir foobar; cd foobar; dotnet trash gen
 ```
 This command creates a parser application for the C# target.
 If executed in an empty directory, which is done in the example
@@ -256,7 +171,7 @@ In order to use the generate parser application, you must first build it:
 
 ### Run the generated parser application
 
-    trparse -i "1+2+3" | trtree
+    dotnet trash parse -i "1+2+3" | dotnet trash tree
 
 After using `trgen` to generate a parser program in C#, shown previously,
 and after building the program, you can run the parser using `trparse`. This program 
@@ -268,8 +183,8 @@ with most tools of Trash, is parse tree data.
 
 ### Find nodes in the parse tree using XPath
 
-    mkdir empty; cd empty; trgen; dotnet build Generated/Test.csproj; \
-        trparse -i "1+2+3" | trquery "grep //SCIENTIFIC_NUMBER" | trst
+    mkdir empty; cd empty; dotnet trash gen; dotnet build Generated/Test.csproj; \
+        dotnet trash parse -i "1+2+3" | dotnet trash query "grep //SCIENTIFIC_NUMBER" | trst
 
 With this command, a directory is created, the Arithmetic grammar generated, build,
 and then run using [trparse](https://github.com/kaby76/Trash/tree/main/src/trparse).
@@ -287,8 +202,8 @@ used more often in compiler construction.
 
 ### Rename a symbol in a grammar, generate a parser for new grammar
 
-    trparse Arithmetic.g4 | trrename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'expression']" "xxx" | trtext > new-source.g4
-    trparse Arithmetic.g4 | trrename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
+    dotnet trash parse Arithmetic.g4 | dotnet trash rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'expression']" "xxx" | dotnet trash text > new-source.g4
+    dotnet trash parse Arithmetic.g4 | dotnet trash rename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
 
 In these two examples, the Arithmetic grammar is parsed.
 [trrename](https://github.com/kaby76/Trash/tree/main/src/trrename) reads the parse tree data and
@@ -302,8 +217,8 @@ grammar symbols in any support source code (but it could if the tool is extended
 
     git clone https://github.com/antlr/grammars-v4.git; \
         cd grammars-v4/java/java9; \
-        trgen; dotnet build Generated/Test.csproj;\
-        trparse examples/AllInOne8.java | trquery "greap //methodDeclaration" | trst | wc
+        dotnet trash gen; dotnet build Generated/Test.csproj;\
+        dotnet trash parse examples/AllInOne8.java | dotnet trash query "greap //methodDeclaration" | trst | wc
 
 This command clones the Antlr4 grammars-v4 repo, generates a parser for the Java9 grammar,
 then runs the parser on [examples/AllInOne8.java](https://github.com/antlr/grammars-v4/blob/master/java/java9/examples/AllInOne8.java).
@@ -313,7 +228,7 @@ a `methodDeclaration` type, converts it to a simple string, and counts the resul
 
 ### Strip a grammar of all non-essential CFG
 
-    trparse Java9.g4 | trstrip | trtext > Essential-Java9.g4
+    dotnet trash parse Java9.g4 | trstrip | dotnet trash text > Essential-Java9.g4
 
 ### Split a grammar
 
@@ -324,7 +239,7 @@ a grammar, it's tedious. For automating transformations, it's
 necessary because Antlr4 requires the grammars to be split
 when super classes are needed for different targets.
 
-    trcombine ArithmeticLexer.g4 ArithmeticParser.g4 | trprint > Arithmetic.g4
+    dotnet trash combine ArithmeticLexer.g4 ArithmeticParser.g4 | trprint > Arithmetic.g4
 
 This command calls [trcombine](https://github.com/kaby76/Trash/tree/main/src/trcombine)
 which parses two split grammar files
@@ -334,7 +249,7 @@ and
 and creates a [combined grammar](https://github.com/kaby76/Trash/blob/main/_tests/combine/Arithmetic.g4)
 for the two.
 
-    trparse Arithmetic.g4 | trsplit | trsponge -o true
+    dotnet trash parse Arithmetic.g4 | dotnet trash split | dotnet trash sponge -o true
 
 This command calls [trsplit](https://github.com/kaby76/Trash/tree/main/src/trsplit)
 which splits the grammar into two parse tree results, one that defines
@@ -434,7 +349,7 @@ check out my [blog](http://codinggorilla.com).
     cd Trash
     make clean; make; make install
     
-You must have the NET SDK version 8 installed to build and run.
+You must have the NET SDK version 10 installed to build and run.
 
 # Releases
 
