@@ -8,7 +8,7 @@ namespace Trash;
 
 public class Program
 {
-    private const string Version = "0.23.45";
+    private const string Version = "1.1.0";
 
     // Maps both full names (e.g. "trgen") and short aliases (e.g. "gen") to the
     // sub-tool directory name that lives next to trash.dll in the package.
