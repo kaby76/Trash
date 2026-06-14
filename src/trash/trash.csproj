@@ -19,7 +19,7 @@ Usage: trash <command> [options]  (e.g. trash trgen, trash gen, trash trparse)]]
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>1.0.0</Version>
+		<Version>1.1.0</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trash</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
