@@ -53,6 +53,7 @@ int string_instance = 0;
 std::string prefix;
 bool quiet = false;
 std::string file_encoding = "<file_encoding>";
+long total_tokens = 0;
 
 void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
 {
@@ -89,6 +90,7 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
     auto before = std::chrono::steady_clock::now();
     auto* tree = parser-><start_symbol>();
     auto after = std::chrono::steady_clock::now();
+    total_tokens += (long)tokens->size();
     auto duration = std::chrono::duration_cast\<std::chrono::microseconds>(after - before);
     std::string result;
     if (listener_parser->had_error || listener_lexer->had_error)
@@ -241,7 +243,7 @@ int TryParse(std::vector\<std::string>& args)
         }
         auto after = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast\<std::chrono::microseconds>(after - before);
-        if (! quiet) std::cerr \<\< prefix \<\< "Total Time: " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
+        if (! quiet) std::cerr \<\< prefix \<\< "Total Time: " \<\< formatDurationSeconds(duration.count()) \<\< " Tokens per second: " \<\< (long)(total_tokens / (duration.count() / 1000000.0)) \<\< std::endl;
     }
     return error_code;
 }

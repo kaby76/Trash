@@ -60,6 +60,7 @@ var error_code = 0;
 var string_instance = 0;
 var prefix = "";
 var quiet = false;
+var total_tokens = 0;
 
 void main(List\<String> args) async {
     // Set command-line args before anything else.
@@ -136,7 +137,7 @@ void main(List\<String> args) async {
         }
         s.stop();
         var et = s.elapsedMilliseconds / 1000.0;
-        if (!quiet) stderr.writeln(prefix + "Total Time: " + et.toString());
+        if (!quiet) stderr.writeln(prefix + "Total Time: " + et.toString() + " Tokens per second: " + (et > 0 ? (total_tokens / et).round().toString() : "0"));
     }
     exit(error_code);
 }
@@ -220,6 +221,7 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     s.start();
     var tree = parser.<start_symbol>();
     s.stop();
+    total_tokens += tokens.size;
     var et = s.elapsedMilliseconds / 1000.0;
     var result = "";
     if (parser.numberOfSyntaxErrors > 0)

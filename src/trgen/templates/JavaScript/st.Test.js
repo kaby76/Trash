@@ -57,6 +57,7 @@ var enc = '<file_encoding>';
 var binary = <binary>;
 var string_instance = 0;
 var prefix = '';
+var total_tokens = 0;
 var inputs = [];
 var is_fns = [];
 
@@ -128,7 +129,7 @@ function main() {
         }
         timer.stop();
         var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
-        if (!quiet) console.error(prefix + 'Total Time: ' + t);
+        if (!quiet) console.error(prefix + 'Total Time: ' + t + ' Tokens per second: ' + Math.round(total_tokens / t));
     }
     process.exitCode = error_code;
 }
@@ -188,6 +189,7 @@ function DoParse(str, input_name, row_number) {
     timer.start();
     const tree = parser.<start_symbol>();
     timer.stop();
+    total_tokens += tokens.size;
     var result = "";
     if (listener_parser.had_error || listener_lexer.had_error) {
         result = 'fail';

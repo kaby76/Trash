@@ -34,6 +34,7 @@ public class Test {
     static int string_instance = 0;
     static String prefix = "";
     static boolean quiet = false;
+    static long total_tokens = 0;
 
     public static void main(String[] args) throws  FileNotFoundException, IOException
     {
@@ -122,7 +123,7 @@ public class Test {
             }
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(start, finish).toMillis();
-            if (!quiet) System.err.println(prefix + "Total Time: " + (timeElapsed * 1.0) / 1000.0);
+            if (!quiet) System.err.println(prefix + "Total Time: " + (timeElapsed * 1.0) / 1000.0 + " Tokens per second: " + (long)(total_tokens / ((timeElapsed * 1.0) / 1000.0)));
         }
         java.lang.System.exit(error_code);
     }
@@ -197,6 +198,7 @@ public class Test {
         ParseTree tree = parser.<start_symbol>();
         Instant finish = Instant.now();
         long timeElapsed = Duration.between(start, finish).toMillis();
+        total_tokens += tokens.size();
         String result = "";
         if (listener_parser.had_error || listener_lexer.had_error)
         {

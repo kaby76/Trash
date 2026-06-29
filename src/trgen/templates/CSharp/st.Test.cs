@@ -176,6 +176,7 @@ public class Program
     static bool show_tokens = false;
     static bool show_token_count = false;
     static long total_count = 0;
+    static long total_tokens = 0;
     static bool show_trace = false;
     static bool show_tree = false;
     static bool old = false;
@@ -328,7 +329,7 @@ public class Program
                     ParseString(inputs[f], f);
             }
             DateTime after = DateTime.Now;
-            if (!quiet) System.Console.Error.WriteLine(prefix + "Total Time: " + (after - before).TotalSeconds);
+            if (!quiet) System.Console.Error.WriteLine(prefix + "Total Time: " + (after - before).TotalSeconds + " Tokens per second: " + (long)(total_tokens / (after - before).TotalSeconds));
             if (show_token_count) System.Console.Error.WriteLine("TC: " + total_count);
         }
         Environment.ExitCode = exit_code;
@@ -359,6 +360,8 @@ public class Program
             str = new Antlr4.Runtime.AntlrInputStream(fs);
         }
         else if (file_encoding == null || file_encoding == "")
+            str = CharStreams.fromPath(input);
+        else if (file_encoding == "detect")
         {
             var detected = CharsetDetector.DetectFromFile(input);
             var enc = detected.Detected?.Encoding ?? Encoding.UTF8;
@@ -431,6 +434,7 @@ public class Program
         DateTime before = DateTime.Now;
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;
+        total_tokens += tokens.Size;
         var result = "";
         if (listener_lexer.had_error || listener_parser.had_error)
         {
