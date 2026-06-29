@@ -221,7 +221,8 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     s.start();
     var tree = parser.<start_symbol>();
     s.stop();
-    total_tokens += tokens.size;
+    var token_count = tokens.size;
+    total_tokens += token_count;
     var et = s.elapsedMilliseconds / 1000.0;
     var result = "";
     if (parser.numberOfSyntaxErrors > 0)
@@ -251,7 +252,7 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     }
     if (!quiet)
     {
-        stderr.writeln(prefix + "Dart " + row_number.toString() + " " + input_name + " " + result + " " + et.toString());
+        stderr.writeln(prefix + "Dart " + row_number.toString() + " " + input_name + " " + result + " " + et.toString() + " s " + (et > 0 ? (token_count / et).round().toString() : "0") + " tps");
     }
     if (tee)
     {

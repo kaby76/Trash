@@ -90,7 +90,8 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
     auto before = std::chrono::steady_clock::now();
     auto* tree = parser-><start_symbol>();
     auto after = std::chrono::steady_clock::now();
-    total_tokens += (long)tokens->size();
+    long token_count = (long)tokens->size();
+    total_tokens += token_count;
     auto duration = std::chrono::duration_cast\<std::chrono::microseconds>(after - before);
     std::string result;
     if (listener_parser->had_error || listener_lexer->had_error)
@@ -122,7 +123,7 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
     }
     if (!quiet)
     {
-        std::cerr \<\< prefix \<\< "Cpp " \<\< row_number \<\< " " \<\< input_name \<\< " " \<\< result \<\< " " \<\< formatDurationSeconds(duration.count()) \<\< std::endl;
+        std::cerr \<\< prefix \<\< "Cpp " \<\< row_number \<\< " " \<\< input_name \<\< " " \<\< result \<\< " " \<\< formatDurationSeconds(duration.count()) \<\< " s " \<\< (long)(token_count / (duration.count() / 1000000.0)) \<\< " tps" \<\< std::endl;
     }
     if (tee)
     {

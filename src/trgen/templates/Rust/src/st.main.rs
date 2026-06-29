@@ -95,10 +95,11 @@ fn parse_input(
     }
 
     if !flags.quiet {
-        eprint!("{}Rust {} {} {} {:.3}\n",
+        eprint!("{}Rust {} {} {} {:.3} s {:.0} tps\n",
             flags.prefix, idx, input_name,
             if error_cnt > 0 { "fail" } else { "success" },
-            elapsed.as_secs_f64()
+            elapsed.as_secs_f64(),
+            token_count as f64 / elapsed.as_secs_f64()
         );
     }
 

@@ -434,7 +434,8 @@ public class Program
         DateTime before = DateTime.Now;
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;
-        total_tokens += tokens.Size;
+        var token_count = tokens.Size;
+        total_tokens += token_count;
         var result = "";
         if (listener_lexer.had_error || listener_parser.had_error)
         {
@@ -496,7 +497,7 @@ public class Program
         }
         if (!quiet)
         {
-            System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+            System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds + " s " + (long)(token_count / (after - before).TotalSeconds) + " tps");
         }
 
         if (earley) {

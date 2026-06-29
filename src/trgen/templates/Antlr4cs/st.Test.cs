@@ -201,7 +201,8 @@ public class Program
         DateTime before = DateTime.Now;
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;
-        total_tokens += tokens.Size;
+        var token_count = tokens.Size;
+        total_tokens += token_count;
         var result = "";
         if (parser.NumberOfSyntaxErrors > 0)
         {
@@ -224,7 +225,7 @@ public class Program
         }
         if (!quiet)
         {
-            System.Console.Error.WriteLine(prefix + "Antlr4cs " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+            System.Console.Error.WriteLine(prefix + "Antlr4cs " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds + " s " + (long)(token_count / (after - before).TotalSeconds) + " tps");
         }
         if (tee) output.Close();
     }

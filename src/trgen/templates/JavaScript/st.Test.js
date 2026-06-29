@@ -189,7 +189,8 @@ function DoParse(str, input_name, row_number) {
     timer.start();
     const tree = parser.<start_symbol>();
     timer.stop();
-    total_tokens += tokens.size;
+    var token_count = tokens.size;
+    total_tokens += token_count;
     var result = "";
     if (listener_parser.had_error || listener_lexer.had_error) {
         result = 'fail';
@@ -207,7 +208,7 @@ function DoParse(str, input_name, row_number) {
         }
     }
     if (! quiet) {
-        console.error(prefix + 'JavaScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t);
+        console.error(prefix + 'JavaScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t + ' s ' + Math.round(token_count / t) + ' tps');
     }
     if (tee) {
         fs.closeSync(output);

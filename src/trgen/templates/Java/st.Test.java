@@ -198,7 +198,8 @@ public class Test {
         ParseTree tree = parser.<start_symbol>();
         Instant finish = Instant.now();
         long timeElapsed = Duration.between(start, finish).toMillis();
-        total_tokens += tokens.size();
+        long token_count = tokens.size();
+        total_tokens += token_count;
         String result = "";
         if (listener_parser.had_error || listener_lexer.had_error)
         {
@@ -229,7 +230,7 @@ public class Test {
         }
         if (!quiet)
         {
-            System.err.println(prefix + "Java " + row_number + " " + input_name + " " + result + " " + (timeElapsed * 1.0) / 1000.0);
+            System.err.println(prefix + "Java " + row_number + " " + input_name + " " + result + " " + (timeElapsed * 1.0) / 1000.0 + " s " + (long)(token_count / ((timeElapsed * 1.0) / 1000.0)) + " tps");
         }
         if (tee) output.close();
     }

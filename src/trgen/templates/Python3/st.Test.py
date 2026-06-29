@@ -173,7 +173,8 @@ def DoParse(str, input_name, row_number):
     start_time = datetime.now()
     tree = parser.<start_symbol>()
     end_time = datetime.now()
-    total_tokens += len(tokens.tokens)
+    token_count = len(tokens.tokens)
+    total_tokens += token_count
     diff = end_time - start_time
     diff_time = diff.total_seconds()
     result = ''
@@ -199,7 +200,9 @@ def DoParse(str, input_name, row_number):
         sys.stderr.write(result)
         sys.stderr.write(' ')
         sys.stderr.write(f'{diff_time}')
-        sys.stderr.write('\n')
+        sys.stderr.write(' s ')
+        sys.stderr.write(f'{int(token_count / diff_time) if diff_time > 0 else 0}')
+        sys.stderr.write(' tps\n')
     if (tee):
         output.close()
 

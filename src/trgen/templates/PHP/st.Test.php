@@ -203,7 +203,8 @@ function DoParse($str, $input_name, $row_number) {
     $timer2->start();
     $tree = $parser-><start_symbol>();
     $duration = $timer2->stop();
-    $total_tokens += $tokens->count();
+    $token_count = $tokens->count();
+    $total_tokens += $token_count;
     $result = "";
     if ($parserErrorListener->had_error || $lexerErrorListener->had_error) {
         $result = "fail";
@@ -222,7 +223,7 @@ function DoParse($str, $input_name, $row_number) {
         }
     }
     if ( ! $quiet ) {
-        fwrite(STDERR, $prefix . "PHP " . $row_number . " " . $input_name . " " . $result . " " . $duration->asSeconds() . "\n");
+        fwrite(STDERR, $prefix . "PHP " . $row_number . " " . $input_name . " " . $result . " " . $duration->asSeconds() . " s " . (int)($token_count / $duration->asSeconds()) . " tps\n");
     }
     if ( $tee ) {
         fclose($output);
