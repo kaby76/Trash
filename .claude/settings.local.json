@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh issue:*)",
+      "WebFetch(domain:chatgpt.com)",
+      "WebFetch(domain:www.nuget.org)",
+      "Bash(dotnet sln:*)",
+      "Bash(dotnet build:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(dotnet pack:*)",
+      "Bash(dotnet tool:*)",
+      "Bash(bash:*)",
+      "Bash(do:*)",
+      "Bash(dotnet trash:*)",
+      "Bash(unzip:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(sed:*)",
+      "Bash(sed s|.*:||:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}

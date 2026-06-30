@@ -73,6 +73,7 @@ $error_code = 0;
 $string_instance = 0;
 $prefix = "";
 $quiet = false;
+$total_tokens = 0;
 
 function main($argv) : void {
     global $tee;
@@ -85,6 +86,7 @@ function main($argv) : void {
     global $error_code;
     global $prefix;
     global $quiet;
+    global $total_tokens;
     for ($i = 1; $i \< count($argv); $i++) {
         if ($argv[$i] == "-tokens") {
             $show_tokens = true;
@@ -128,7 +130,7 @@ function main($argv) : void {
         }
         $duration = $timer->stop();
         if (! $quiet) {
-            fwrite(STDERR, $prefix . "Total Time: " . $duration->asSeconds() . "\n");
+            fwrite(STDERR, $prefix . "Total Time: " . $duration->asSeconds() . " Tokens per second: " . (int)($total_tokens / $duration->asSeconds()) . "\n");
         }
     }
     exit($error_code);
@@ -166,6 +168,7 @@ function DoParse($str, $input_name, $row_number) {
     global $error_code;
     global $prefix;
     global $quiet;
+    global $total_tokens;
     $lexer = new <lexer_name>($str);
     if ($show_tokens) {
         for ($i=0;  ; $i++) {
@@ -200,6 +203,8 @@ function DoParse($str, $input_name, $row_number) {
     $timer2->start();
     $tree = $parser-><start_symbol>();
     $duration = $timer2->stop();
+    $token_count = $tokens->count();
+    $total_tokens += $token_count;
     $result = "";
     if ($parserErrorListener->had_error || $lexerErrorListener->had_error) {
         $result = "fail";
@@ -218,7 +223,7 @@ function DoParse($str, $input_name, $row_number) {
         }
     }
     if ( ! $quiet ) {
-        fwrite(STDERR, $prefix . "PHP " . $row_number . " " . $input_name . " " . $result . " " . $duration->asSeconds() . "\n");
+        fwrite(STDERR, $prefix . "PHP " . $row_number . " " . $input_name . " " . $result . " " . $duration->asSeconds() . " s " . (int)($token_count / $duration->asSeconds()) . " tps\n");
     }
     if ( $tee ) {
         fclose($output);

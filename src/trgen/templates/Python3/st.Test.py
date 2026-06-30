@@ -40,6 +40,7 @@ string_instance = 0
 prefix = ""
 quiet = False
 noop = False
+total_tokens = 0
 
 def main(argv):
     global tee
@@ -102,7 +103,7 @@ def main(argv):
         diff = end_time - start_time
         diff_time = diff.total_seconds()
         if (not quiet):
-            print(f'{prefix}Total Time: {diff_time}', file=sys.stderr);
+            print(f'{prefix}Total Time: {diff_time} Tokens per second: {int(total_tokens / diff_time) if diff_time > 0 else 0}', file=sys.stderr);
     sys.exit(error_code)
 
 def ParseStdin():
@@ -138,6 +139,7 @@ def DoParse(str, input_name, row_number):
     global prefix
     global quiet
     global error_code
+    global total_tokens
 
     lexer = <lexer_name>(str)
     lexer.removeErrorListeners()
@@ -171,6 +173,8 @@ def DoParse(str, input_name, row_number):
     start_time = datetime.now()
     tree = parser.<start_symbol>()
     end_time = datetime.now()
+    token_count = len(tokens.tokens)
+    total_tokens += token_count
     diff = end_time - start_time
     diff_time = diff.total_seconds()
     result = ''
@@ -196,7 +200,9 @@ def DoParse(str, input_name, row_number):
         sys.stderr.write(result)
         sys.stderr.write(' ')
         sys.stderr.write(f'{diff_time}')
-        sys.stderr.write('\n')
+        sys.stderr.write(' s ')
+        sys.stderr.write(f'{int(token_count / diff_time) if diff_time > 0 else 0}')
+        sys.stderr.write(' tps\n')
     if (tee):
         output.close()
 

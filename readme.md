@@ -171,7 +171,7 @@ In order to use the generate parser application, you must first build it:
 
 ### Run the generated parser application
 
-    dotnet trash parse -i "1+2+3" | dotnet trash tree
+    trash parse -i "1+2+3" | trash tree
 
 After using `trgen` to generate a parser program in C#, shown previously,
 and after building the program, you can run the parser using `trparse`. This program 
@@ -183,14 +183,14 @@ with most tools of Trash, is parse tree data.
 
 ### Find nodes in the parse tree using XPath
 
-    mkdir empty; cd empty; dotnet trash gen; dotnet build Generated/Test.csproj; \
-        dotnet trash parse -i "1+2+3" | dotnet trash query "grep //SCIENTIFIC_NUMBER" | trst
+    mkdir empty; cd empty; trash gen; dotnet build Generated/Test.csproj; \
+        trash parse -i "1+2+3" | trash query "grep //SCIENTIFIC_NUMBER"
 
 With this command, a directory is created, the Arithmetic grammar generated, build,
-and then run using [trparse](https://github.com/kaby76/Trash/tree/main/src/trparse).
-The `trparse` tool unifies all parsing, whether it's parsing a grammar or parsing input
+and then run using [parse](https://github.com/kaby76/Trash/tree/main/src/trparse).
+The `trash parse` tool unifies all parsing, whether it's parsing a grammar or parsing input
 using a generated parser application. The output from the `trparse` tool is a parse
-tree which you can search. [Trquery](https://github.com/kaby76/Trash/tree/main/src/trquery)
+tree which you can search. [query](https://github.com/kaby76/Trash/tree/main/src/trquery)
 is the generalized search program for parse trees. `Trquery` uses XPath expressions to
 precisely identify nodes in the parse tree.
 
@@ -202,8 +202,8 @@ used more often in compiler construction.
 
 ### Rename a symbol in a grammar, generate a parser for new grammar
 
-    dotnet trash parse Arithmetic.g4 | dotnet trash rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'expression']" "xxx" | dotnet trash text > new-source.g4
-    dotnet trash parse Arithmetic.g4 | dotnet trash rename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
+    trash parse Arithmetic.g4 | trash rename "//parserRuleSpec//labeledAlt//RULE_REF[text() = 'expression']" "xxx" | dotnet trash text > new-source.g4
+    trash parse Arithmetic.g4 | trash rename -r "expression,expression_;atom,atom_;scientific,scientific_" | trprint
 
 In these two examples, the Arithmetic grammar is parsed.
 [trrename](https://github.com/kaby76/Trash/tree/main/src/trrename) reads the parse tree data and
@@ -217,8 +217,8 @@ grammar symbols in any support source code (but it could if the tool is extended
 
     git clone https://github.com/antlr/grammars-v4.git; \
         cd grammars-v4/java/java9; \
-        dotnet trash gen; dotnet build Generated/Test.csproj;\
-        dotnet trash parse examples/AllInOne8.java | dotnet trash query "greap //methodDeclaration" | trst | wc
+        trash gen; dotnet build Generated/Test.csproj;\
+        trash parse examples/AllInOne8.java | trash query "greap //methodDeclaration" | trst | wc
 
 This command clones the Antlr4 grammars-v4 repo, generates a parser for the Java9 grammar,
 then runs the parser on [examples/AllInOne8.java](https://github.com/antlr/grammars-v4/blob/master/java/java9/examples/AllInOne8.java).
@@ -228,7 +228,7 @@ a `methodDeclaration` type, converts it to a simple string, and counts the resul
 
 ### Strip a grammar of all non-essential CFG
 
-    dotnet trash parse Java9.g4 | trstrip | dotnet trash text > Essential-Java9.g4
+    trash parse Java9.g4 | trash strip | trash text > Essential-Java9.g4
 
 ### Split a grammar
 
@@ -239,7 +239,7 @@ a grammar, it's tedious. For automating transformations, it's
 necessary because Antlr4 requires the grammars to be split
 when super classes are needed for different targets.
 
-    dotnet trash combine ArithmeticLexer.g4 ArithmeticParser.g4 | trprint > Arithmetic.g4
+    trash combine ArithmeticLexer.g4 ArithmeticParser.g4 | trash text > Arithmetic.g4
 
 This command calls [trcombine](https://github.com/kaby76/Trash/tree/main/src/trcombine)
 which parses two split grammar files
@@ -249,7 +249,7 @@ and
 and creates a [combined grammar](https://github.com/kaby76/Trash/blob/main/_tests/combine/Arithmetic.g4)
 for the two.
 
-    dotnet trash parse Arithmetic.g4 | dotnet trash split | dotnet trash sponge -o true
+    trash parse Arithmetic.g4 | trash split | trash sponge -o true
 
 This command calls [trsplit](https://github.com/kaby76/Trash/tree/main/src/trsplit)
 which splits the grammar into two parse tree results, one that defines

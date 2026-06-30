@@ -57,6 +57,7 @@ var enc = '<file_encoding>';
 var binary = <binary>;
 var string_instance = 0;
 var prefix = '';
+var total_tokens = 0;
 var inputs: string[] = [];
 var is_fns: boolean[] = [];
 
@@ -128,7 +129,7 @@ function main() {
         }
         timer.stop();
         var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
-        if (!quiet) console.error(prefix + 'Total Time: ' + t);
+        if (!quiet) console.error(prefix + 'Total Time: ' + t + ' Tokens per second: ' + Math.round(total_tokens / t));
     }
     process.exitCode = error_code;
 }
@@ -189,6 +190,8 @@ function DoParse(str: CharStream, input_name: string, row_number: number) {
     timer.start();
     const tree = parser.<start_symbol>();
     timer.stop();
+    var token_count = tokens.size;
+    total_tokens += token_count;
     var result = "";
     if (listener_parser.had_error || listener_lexer.had_error) {
         result = 'fail';
@@ -206,7 +209,7 @@ function DoParse(str: CharStream, input_name: string, row_number: number) {
         }
     }
     if (!quiet) {
-        console.error(prefix + 'TypeScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t);
+        console.error(prefix + 'TypeScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t + ' s ' + Math.round(token_count / t) + ' tps');
     }
     if (tee) {
         closeSync(output);

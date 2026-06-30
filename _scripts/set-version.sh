@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #set -e
 #set -x
-version="1.0.0"
+version="1.1.0"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
@@ -42,10 +42,10 @@ do
 	do
 		sed -i -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" $csproj
 	done
-        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Unified dispatcher for the Trash toolkit.%' readme.md
+        sed -i -e 's%^[0-9]*[.][0-9]*[.][0-9]*.*$'"%$version"' Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement.%' readme.md
 	for cs in *.cs
 	do
-		sed -i -e "s%public string Version { get; set; } = \"0[.][0-9]*[.][0-9]*\";%public string Version { get; set; } = \"$version\";%" $cs
+		sed -i -e "s%public string Version { get; set; } = \"[0-9][.][0-9]*[.][0-9]*\";%public string Version { get; set; } = \"$version\";%" $cs
 	done
         cd ..
 done
@@ -80,7 +80,7 @@ do
         rm -f asdfasdf
         cat *.csproj | sed -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" > asdfasdf
         mv asdfasdf *.csproj    
-        sed -i -e 's%^0[.][0-9]*[.][0-9]*.*$'"%$version"' Unified dispatcher for the Trash toolkit.%' readme.md
+        sed -i -e 's%^[0-9]*[.][0-9]*[.][0-9]*.*$'"%$version"' Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement.%' readme.md
         cd ..
 done
 

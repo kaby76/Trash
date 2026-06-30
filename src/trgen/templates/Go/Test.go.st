@@ -67,6 +67,7 @@ var prefix = ""
 var quiet = false
 var tee = false
 var binary = <binary>
+var total_tokens int64 = 0
 
 func main() {
     for i := 1; i \< len(os.Args); i = i + 1 {
@@ -114,7 +115,7 @@ func main() {
         }
         elapsed := time.Since(start)
         if ! quiet {
-            fmt.Fprintf(os.Stderr, "%sTotal Time: %.3f", prefix, elapsed.Seconds())
+            fmt.Fprintf(os.Stderr, "%sTotal Time: %.3f Tokens per second: %.0f", prefix, elapsed.Seconds(), float64(total_tokens)/elapsed.Seconds())
             fmt.Fprintln(os.Stderr)
         }
     }
@@ -202,6 +203,8 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
     start := time.Now()
     var tree = parser.<cap_start_symbol>()
     elapsed := time.Since(start)
+    token_count := int64(len(tokens.GetAllTokens()))
+    total_tokens += token_count
     var result = ""
     if parserErrors.errors > 0 || lexerErrors.errors > 0 {
         result = "fail"
@@ -228,7 +231,7 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
         fmt.Fprintf(os.Stderr, "%d ", row_number)
         fmt.Fprintf(os.Stderr, "%s ", input_name)
         fmt.Fprintf(os.Stderr, "%s ", result)
-        fmt.Fprintf(os.Stderr, "%.3f", elapsed.Seconds())
+        fmt.Fprintf(os.Stderr, "%.3f s %.0f tps", elapsed.Seconds(), float64(token_count)/elapsed.Seconds())
         fmt.Fprintln(os.Stderr)
     }
 }

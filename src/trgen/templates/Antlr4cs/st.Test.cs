@@ -35,6 +35,7 @@ public class Program
     static int string_instance = 0;
     static string prefix = "";
     static bool quiet = false;
+    static long total_tokens = 0;
 
     static void Main(string[] args)
     {
@@ -125,7 +126,7 @@ public class Program
             DateTime after = DateTime.Now;
             if (!quiet)
             {
-                System.Console.Error.WriteLine(prefix + "Total Time: " + (after - before).TotalSeconds);
+                System.Console.Error.WriteLine(prefix + "Total Time: " + (after - before).TotalSeconds + " Tokens per second: " + (long)(total_tokens / (after - before).TotalSeconds));
             }
         }
         Environment.ExitCode = exit_code;
@@ -200,6 +201,8 @@ public class Program
         DateTime before = DateTime.Now;
         var tree = parser.<start_symbol>();
         DateTime after = DateTime.Now;
+        var token_count = tokens.Size;
+        total_tokens += token_count;
         var result = "";
         if (parser.NumberOfSyntaxErrors > 0)
         {
@@ -222,7 +225,7 @@ public class Program
         }
         if (!quiet)
         {
-            System.Console.Error.WriteLine(prefix + "Antlr4cs " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds);
+            System.Console.Error.WriteLine(prefix + "Antlr4cs " + row_number + " " + input_name + " " + result + " " + (after - before).TotalSeconds + " s " + (long)(token_count / (after - before).TotalSeconds) + " tps");
         }
         if (tee) output.Close();
     }

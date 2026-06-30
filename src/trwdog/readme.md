@@ -18,7 +18,7 @@ Execute a command with a watchdog timer.
 
 ## Current version
 
-1.0.0 Unified dispatcher for the Trash toolkit.
+1.1.0 Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement.
 
 ## License
 
