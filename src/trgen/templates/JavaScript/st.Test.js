@@ -58,6 +58,9 @@ var binary = <binary>;
 var string_instance = 0;
 var prefix = '';
 var total_tokens = 0;
+var total_parse_seconds = 0;
+var first_file_tokens = 0;
+var first_file_parse_seconds = 0;
 var inputs = [];
 var is_fns = [];
 
@@ -129,7 +132,23 @@ function main() {
         }
         timer.stop();
         var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
-        if (!quiet) console.error(prefix + 'Total Time: ' + t + ' Tokens per second: ' + Math.round(total_tokens / t));
+        if (!quiet) {
+            var warm_tokens = total_tokens - first_file_tokens;
+            var warm_seconds = total_parse_seconds - first_file_parse_seconds;
+            var warm_tps = (inputs.length > 1 && warm_seconds > 0)
+                ? Math.round(warm_tokens / warm_seconds).toString()
+                : 'n.a.';
+            var first_tps = first_file_parse_seconds > 0 ? (first_file_tokens / first_file_parse_seconds) : 0;
+            var speedup = (inputs.length > 1 && warm_seconds > 0 && first_tps > 0)
+                ? ((warm_tokens / warm_seconds) / first_tps).toFixed(2)
+                : 'n.a.';
+            console.error(prefix + 'PT: ' + total_parse_seconds);
+            console.error(prefix + 'OT: ' + (t - total_parse_seconds));
+            console.error(prefix + 'TT: ' + t);
+            console.error(prefix + 'TPS: ' + Math.round(total_tokens / total_parse_seconds));
+            console.error(prefix + 'Post-warmup TPS: ' + warm_tps);
+            console.error(prefix + 'Post-warmup speed up: ' + speedup);
+        }
     }
     process.exitCode = error_code;
 }
@@ -200,6 +219,11 @@ function DoParse(str, input_name, row_number) {
         result = 'success';
     }
     var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
+    total_parse_seconds += t;
+    if (row_number == 0) {
+        first_file_tokens = token_count;
+        first_file_parse_seconds = t;
+    }
     if (show_tree) {
         if (tee) {
             fs.writeFileSync(input_name + ".tree", tree.toStringTree(parser.ruleNames));
@@ -208,7 +232,7 @@ function DoParse(str, input_name, row_number) {
         }
     }
     if (! quiet) {
-        console.error(prefix + 'JavaScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t + ' s ' + Math.round(token_count / t) + ' tps');
+        console.error(prefix + 'JavaScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t + ' s ' + token_count + ' tokens ' + Math.round(token_count / t) + ' tps');
     }
     if (tee) {
         fs.closeSync(output);
