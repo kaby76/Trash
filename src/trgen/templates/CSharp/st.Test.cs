@@ -344,8 +344,9 @@ public class Program
                 var speedup = (inputs.Count() > 1 && warm_seconds > 0 && first_tps > 0)
                     ? ((warm_tokens / warm_seconds) / first_tps).ToString("F2")
                     : "n.a.";
-                System.Console.Error.WriteLine(prefix + "T: " + overall_seconds);
+                System.Console.Error.WriteLine(prefix + "PT: " + total_parse_seconds);
                 System.Console.Error.WriteLine(prefix + "OT: " + (overall_seconds - total_parse_seconds));
+                System.Console.Error.WriteLine(prefix + "TT: " + overall_seconds);
                 System.Console.Error.WriteLine(prefix + "TPS: " + (long)(total_tokens / total_parse_seconds));
                 System.Console.Error.WriteLine(prefix + "Post-warmup TPS: " + warm_tps);
                 System.Console.Error.WriteLine(prefix + "Post-warmup speed up: " + speedup);
