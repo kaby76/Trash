@@ -61,6 +61,9 @@ var string_instance = 0;
 var prefix = "";
 var quiet = false;
 var total_tokens = 0;
+var total_parse_seconds = 0.0;
+var first_file_tokens = 0;
+var first_file_parse_seconds = 0.0;
 
 void main(List\<String> args) async {
     // Set command-line args before anything else.
@@ -137,7 +140,23 @@ void main(List\<String> args) async {
         }
         s.stop();
         var et = s.elapsedMilliseconds / 1000.0;
-        if (!quiet) stderr.writeln(prefix + "Total Time: " + et.toString() + " Tokens per second: " + (et > 0 ? (total_tokens / et).round().toString() : "0"));
+        if (!quiet) {
+            var warm_tokens = total_tokens - first_file_tokens;
+            var warm_seconds = total_parse_seconds - first_file_parse_seconds;
+            var warm_tps = (inputs.length > 1 && warm_seconds > 0)
+                ? (warm_tokens / warm_seconds).round().toString()
+                : "n.a.";
+            var first_tps = first_file_parse_seconds > 0 ? (first_file_tokens / first_file_parse_seconds) : 0.0;
+            var speedup = (inputs.length > 1 && warm_seconds > 0 && first_tps > 0)
+                ? ((warm_tokens / warm_seconds) / first_tps).toStringAsFixed(2)
+                : "n.a.";
+            stderr.writeln(prefix + "PT: " + total_parse_seconds.toString());
+            stderr.writeln(prefix + "OT: " + (et - total_parse_seconds).toString());
+            stderr.writeln(prefix + "TT: " + et.toString());
+            stderr.writeln(prefix + "TPS: " + (total_parse_seconds > 0 ? (total_tokens / total_parse_seconds).round().toString() : "0"));
+            stderr.writeln(prefix + "Post-warmup TPS: " + warm_tps);
+            stderr.writeln(prefix + "Post-warmup speed up: " + speedup);
+        }
     }
     exit(error_code);
 }
@@ -224,6 +243,11 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     var token_count = tokens.size;
     total_tokens += token_count;
     var et = s.elapsedMilliseconds / 1000.0;
+    total_parse_seconds += et;
+    if (row_number == 0) {
+        first_file_tokens = token_count;
+        first_file_parse_seconds = et;
+    }
     var result = "";
     if (parser.numberOfSyntaxErrors > 0)
     {
@@ -252,7 +276,7 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     }
     if (!quiet)
     {
-        stderr.writeln(prefix + "Dart " + row_number.toString() + " " + input_name + " " + result + " " + et.toString() + " s " + (et > 0 ? (token_count / et).round().toString() : "0") + " tps");
+        stderr.writeln(prefix + "Dart " + row_number.toString() + " " + input_name + " " + result + " " + et.toString() + " s " + token_count.toString() + " tokens " + (et > 0 ? (token_count / et).round().toString() : "0") + " tps");
     }
     if (tee)
     {
