@@ -1,0 +1,14 @@
+token literal names:
+null
+'a'
+
+token symbolic names:
+null
+null
+
+rule names:
+s
+
+
+atn:
+[4, 1, 1, 6, 2, 0, 7, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 4, 0, 2, 1, 0, 0, 0, 2, 3, 5, 1, 0, 0, 3, 4, 5, 0, 0, 1, 4, 1, 1, 0, 0, 0, 0]
