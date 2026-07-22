@@ -1,0 +1,10 @@
+digraph c {
+rankdir=LR;
+s4[fontsize=11,label="4", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s5[fontsize=11, label="5", shape=doublecircle, fixedsize=true, width=.6];
+s12[fontsize=11,label="12", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s13[fontsize=11,label="13", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s4 -> s12 [fontname="Times-Italic", label="&epsilon;"];
+s12 -> s13 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'c'", arrowhead = normal];
+s13 -> s5 [fontname="Times-Italic", label="&epsilon;"];
+}
