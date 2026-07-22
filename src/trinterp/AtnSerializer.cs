@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Antlr4.Runtime.Atn;
-using Antlr4.Runtime.Misc;
 
 namespace trinterp;
 
@@ -74,14 +72,15 @@ public static class AtnSerializer
                 nonGreedyStates.Add(IdxS(s));
 
             // Extra words for states that reference another state.
-            switch (s)
+            // Note: endState/loopBackState are only emitted when set (null → no word emitted),
+            // matching antlr-ng's serialization where TokensStartState has no endState word.
+            if (s is LoopEndState le2)
             {
-                case LoopEndState le:
-                    result.Add(le.loopBackState != null ? IdxS(le.loopBackState) : 0);
-                    break;
-                case BlockStartState bs:
-                    result.Add(bs.endState != null ? IdxS(bs.endState) : 0);
-                    break;
+                if (le2.loopBackState != null) result.Add(IdxS(le2.loopBackState));
+            }
+            else if (s is BlockStartState bs2)
+            {
+                if (bs2.endState != null) result.Add(IdxS(bs2.endState));
             }
         }
 
@@ -147,7 +146,7 @@ public static class AtnSerializer
         foreach (var set in setList)
         {
             var intervals = set.GetIntervals();
-            bool containsEof = set.Contains(Antlr4.Runtime.TokenConstants.EOF);
+            bool containsEof = set.Contains(TokenConstants.EOF);
 
             int intervalCount = 0;
             foreach (var iv in intervals)

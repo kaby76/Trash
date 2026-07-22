@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Antlr4.Runtime.Atn;
 
 namespace trinterp;
 
@@ -84,15 +83,17 @@ public static class InterpFormatter
         if (!grammar.IsLexer)
             sb.AppendLine();
         sb.AppendLine("atn:");
-        sb.AppendLine(AtnSerializer.Serialize(atn));
+        sb.Append(AtnSerializer.Serialize(atn));
 
         // ---- optional actions/predicates ----
         if (actionsInInterp)
         {
+            sb.AppendLine();
             FormatActions(sb, grammar);
         }
 
-        return sb.ToString();
+        // Normalise to LF line endings (matches antlr-ng output on all platforms).
+        return sb.ToString().Replace("\r\n", "\n");
     }
 
     private static void FormatActions(StringBuilder sb, GrammarModel grammar)

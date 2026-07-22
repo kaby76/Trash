@@ -50,7 +50,7 @@ public class SemPredInfo
 public class LexerActionInfo
 {
     public int ActionIndex; // global across all lexer rules
-    public Antlr4.Runtime.Atn.LexerActionType ActionType;
+    public LexerActionType ActionType;
     public int Data1;
     public int Data2;
     public string Text; // for custom actions

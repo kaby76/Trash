@@ -75,7 +75,7 @@ public class Command
             ? new LexerAtnFactory(grammar)
             : new ParserAtnFactory(grammar);
 
-        Antlr4.Runtime.Atn.ATN atn;
+        ATN atn;
         try
         {
             atn = factory.CreateATN();
