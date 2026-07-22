@@ -1,0 +1,14 @@
+digraph s {
+rankdir=LR;
+	s0 [fontsize=11,label="0\nstart",shape=circle];
+	s1 [fontsize=11,label="1\nstop",shape=doublecircle];
+	s2 [fontsize=11,label="2\nbasic",shape=circle];
+	s4 [fontsize=11,label="4\nbasic",shape=circle];
+	s5 [fontsize=11,label="5\nbasic",shape=circle];
+	s6 [fontsize=11,label="6\nbasic",shape=circle];
+	s0 -> s2 [fontsize=11,label="ε"];
+	s1 -> s6 [fontsize=11,label="\<EOF\>"];
+	s2 -> s4 [fontsize=11,label="'a'"];
+	s4 -> s5 [fontsize=11,label="\<EOF\>"];
+	s5 -> s1 [fontsize=11,label="ε"];
+}

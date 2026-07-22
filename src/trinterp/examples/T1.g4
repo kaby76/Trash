@@ -1,2 +1,2 @@
-grammar T1;
+grammar T2;
 s : 'a' EOF;

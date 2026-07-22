@@ -108,10 +108,20 @@ public class Command
         File.WriteAllText(interpPath, interpContent);
         File.WriteAllText(tokensPath, tokensContent);
 
+        if (config.Atn)
+            AtnDotWriter.WritePerRule(grammar, atn, outDir);
+        if (config.AtnCombined)
+            AtnDotWriter.WriteCombined(grammar, atn, outDir);
+
         if (config.Verbose)
         {
             Console.Error.WriteLine($"[trinterp] Wrote {interpPath}");
             Console.Error.WriteLine($"[trinterp] Wrote {tokensPath}");
+            if (config.Atn)
+                foreach (var rule in grammar.Rules)
+                    Console.Error.WriteLine($"[trinterp] Wrote {Path.Combine(outDir, rule.Name + ".dot")}");
+            if (config.AtnCombined)
+                Console.Error.WriteLine($"[trinterp] Wrote {Path.Combine(outDir, grammar.Name + ".atn.dot")}");
         }
     }
 }
