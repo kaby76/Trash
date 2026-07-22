@@ -41,4 +41,7 @@
   <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
     <NoWarn>3021;1701;1702</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
+  </PropertyGroup>
 </Project>
