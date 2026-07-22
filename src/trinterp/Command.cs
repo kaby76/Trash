@@ -38,6 +38,11 @@ public class Command
         var outDir = config.OutputDirectory ?? ".";
         Directory.CreateDirectory(outDir);
 
+        var optimizeNames = new List<string>(config.Optimize ?? Array.Empty<string>());
+        var optimize = optimizeNames.Count > 0
+            ? OptimizeOptions.FromNames(optimizeNames)
+            : OptimizeOptions.All;
+
         foreach (var set in sets)
         {
             if (set.Nodes == null || set.Nodes.Length == 0) continue;
@@ -61,19 +66,19 @@ public class Command
             }
 
             // ---- Emit for lexer/combined and parser halves ----
-            EmitGrammar(model, config, outDir);
+            EmitGrammar(model, config, outDir, optimize);
 
             if (model.ImplicitLexer != null)
-                EmitGrammar(model.ImplicitLexer, config, outDir);
+                EmitGrammar(model.ImplicitLexer, config, outDir, optimize);
         }
     }
 
-    private static void EmitGrammar(GrammarModel grammar, Config config, string outDir)
+    private static void EmitGrammar(GrammarModel grammar, Config config, string outDir, OptimizeOptions optimize)
     {
         // ---- Build ATN ----
         ParserAtnFactory factory = grammar.IsLexer
-            ? new LexerAtnFactory(grammar)
-            : new ParserAtnFactory(grammar);
+            ? new LexerAtnFactory(grammar, optimize)
+            : new ParserAtnFactory(grammar, optimize);
 
         ATN atn;
         try
