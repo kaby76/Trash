@@ -64,10 +64,10 @@ public static class AtnDotWriter
         states.Add(stop); // always include even if unreachable in edge cases
 
         var sb = new StringBuilder();
-        sb.AppendLine($"digraph {DotId(ruleName)} {{");
+        sb.AppendLine("digraph ATN {");
         sb.AppendLine("rankdir=LR;");
         AppendNodes(sb, Sorted(states), decisionNumbers);
-        AppendEdges(sb, Sorted(states), states, grammar, ruleTransitionToFollow: true);
+        AppendEdges(sb, Sorted(states), states, grammar, decisionNumbers, ruleTransitionToFollow: true);
         sb.Append('}');
         return sb.ToString();
     }
@@ -90,7 +90,7 @@ public static class AtnDotWriter
         AppendNodes(sb, allStates, decisionNumbers);
         // In the combined view show the actual RuleTransition target (rule start),
         // not the followState — the return arc is already an epsilon from the stop state.
-        AppendEdges(sb, allStates, allSet, grammar, ruleTransitionToFollow: false);
+        AppendEdges(sb, allStates, allSet, grammar, decisionNumbers, ruleTransitionToFollow: false);
         sb.Append('}');
         return sb.ToString();
     }
@@ -103,8 +103,27 @@ public static class AtnDotWriter
         foreach (var s in states)
         {
             string nodeId = $"s{s.stateNumber}";
+            // StarBlockStartState and PlusBlockStartState are always circles even when
+            // they appear in decisionToState (multi-alt case); check them before the
+            // generic DecisionState branch below.
+            if (s is StarBlockStartState)
+            {
+                string label = $"&rarr;\\n{s.stateNumber}*";
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                continue;
+            }
+            if (s is PlusBlockStartState)
+            {
+                string label = $"&rarr;\\n{s.stateNumber}+";
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                continue;
+            }
+
             if (s is DecisionState ds && decisionNumbers.TryGetValue(ds, out int d))
             {
+                // Actual decision point: record shape with ports.
+                // BasicBlockStart/TokensStart: {→\nN\nd=D|{ports}}
+                // StarLoopEntry: {N*\nd=D|{ports}}, PlusLoopback: {N+\nd=D|{ports}}
                 int n = s.NumberOfTransitions;
                 var ports = new StringBuilder();
                 for (int pi = 0; pi < n; pi++)
@@ -112,13 +131,31 @@ public static class AtnDotWriter
                     if (pi > 0) ports.Append('|');
                     ports.Append($"<p{pi}>");
                 }
-                string label = $"{{&rarr;\\n{s.stateNumber}\\nd={d}|{{{ports}}}}}";
+                string label;
+                if (s is BasicBlockStartState || s is TokensStartState)
+                    label = $"{{&rarr;\\n{s.stateNumber}\\nd={d}|{{{ports}}}}}";
+                else if (s is StarLoopEntryState)
+                    label = $"{{{s.stateNumber}*\\nd={d}|{{{ports}}}}}";
+                else if (s is PlusLoopbackState)
+                    label = $"{{{s.stateNumber}+\\nd={d}|{{{ports}}}}}";
+                else
+                    label = $"{{{s.stateNumber}\\nd={d}|{{{ports}}}}}";
                 sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1];");
             }
-            else if (s is BlockEndState || s is LoopEndState)
+            else if (s is StarLoopbackState)
+            {
+                string label = $"{s.stateNumber}*";
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+            }
+            else if (s is BlockEndState)
             {
                 string label = $"&larr;\\n{s.stateNumber}";
                 sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+            }
+            else if (s is LoopEndState)
+            {
+                // LoopEnd is a plain circle — no '←' prefix.
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
             }
             else if (s is RuleStopState)
             {
@@ -133,6 +170,7 @@ public static class AtnDotWriter
 
     private static void AppendEdges(StringBuilder sb, IEnumerable<ATNState> states,
                                     HashSet<ATNState> included, GrammarModel grammar,
+                                    Dictionary<DecisionState, int> decisionNumbers,
                                     bool ruleTransitionToFollow)
     {
         foreach (var s in states)
@@ -156,10 +194,18 @@ public static class AtnDotWriter
 
                 if (!included.Contains(target)) continue;
                 bool isEpsilon = tr is EpsilonTransition;
+                // Dashed style for loopback edges.
+                bool isDashed = s is StarLoopbackState ||
+                                (s is PlusLoopbackState && target.stateNumber < s.stateNumber);
                 string edgeAttrs = isEpsilon
-                    ? "fontname=\"Times-Italic\", label=\"&epsilon;\""
+                    ? "fontname=\"Times-Italic\", label=\"&epsilon;\"" + (isDashed ? ", style=\"dashed\"" : "")
                     : $"fontsize=11, fontname=\"Courier\", arrowsize=.7, label = \"{EscapeLabel(label)}\", arrowhead = normal";
-                string fromPort = (s is DecisionState) ? $":p{i}" : "";
+                // Port notation only for states rendered as decision records
+                // (excludes StarBlockStartState / PlusBlockStartState, which are always circles).
+                bool isDecision = s is DecisionState ds2
+                    && s is not StarBlockStartState && s is not PlusBlockStartState
+                    && decisionNumbers.ContainsKey(ds2);
+                string fromPort = isDecision ? $":p{i}" : "";
                 sb.AppendLine($"s{s.stateNumber}{fromPort} -> s{target.stateNumber} [{edgeAttrs}];");
             }
         }
@@ -198,7 +244,7 @@ public static class AtnDotWriter
 
     private static string TokenLabel(int token, GrammarModel grammar)
     {
-        if (token == TokenConstants.EOF) return "<EOF>";
+        if (token == TokenConstants.EOF) return "EOF";
         if (grammar.IsLexer)
         {
             if (token >= 32 && token < 127 && token != '\'' && token != '\\')
@@ -219,10 +265,12 @@ public static class AtnDotWriter
         bool first = true;
         foreach (var iv in set.GetIntervals())
         {
-            if (!first) sb.Append(',');
-            first = false;
-            if (iv.a == iv.b) sb.Append(TokenLabel(iv.a, grammar));
-            else { sb.Append(TokenLabel(iv.a, grammar)); sb.Append(".."); sb.Append(TokenLabel(iv.b, grammar)); }
+            for (int el = iv.a; el <= iv.b; el++)
+            {
+                if (!first) sb.Append(", ");
+                first = false;
+                sb.Append(TokenLabel(el, grammar));
+            }
         }
         sb.Append('}');
         return sb.ToString();
