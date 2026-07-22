@@ -73,6 +73,7 @@ public class LexerAtnFactory : ParserAtnFactory
         // Expose the collected lexer actions.
         _atn.lexerActions = _lexerActions.ToArray();
 
+        AtnOptimizer.OptimizeStates(_atn);
         return _atn;
     }
 

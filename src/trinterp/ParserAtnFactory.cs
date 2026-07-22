@@ -42,6 +42,7 @@ public class ParserAtnFactory
             BuildRule(rule);
         AddRuleFollowLinks();
         AddEOFTransitionToStartRules();
+        AtnOptimizer.OptimizeStates(_atn);
         return _atn;
     }
 
@@ -386,6 +387,7 @@ public class ParserAtnFactory
         {
             AddEpsilon(start, alt.Left);
             AddEpsilon(alt.Right, end);
+            new TailEpsilonRemover(_atn).Visit(alt.Left);
         }
         _preventEpsilonClosureBlocks.Add((_currentRule, start, end));
         return new AtnHandle(start, end);
