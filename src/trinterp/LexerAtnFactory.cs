@@ -178,7 +178,7 @@ public class LexerAtnFactory : ParserAtnFactory
 
         var suffix = Children(lexerElement).FirstOrDefault(c => c.LocalName == "ebnfSuffix");
         if (h != null && suffix != null)
-            h = ApplySuffix(lexerElement, suffix, WrapInBlock(h));
+            h = ApplySuffix(lexerElement, suffix, WrapInBlock(h, GetText(suffix).Trim()));
 
         return h ?? MakeEpsilonHandle();
     }

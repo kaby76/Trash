@@ -187,16 +187,21 @@ public class ParserAtnFactory
         suffix = Children(element).FirstOrDefault(c => c.LocalName == "ebnfSuffix");
 
         if (h != null && suffix != null)
-            h = ApplySuffix(element, suffix, WrapInBlock(h));
+            h = ApplySuffix(element, suffix, WrapInBlock(h, GetText(suffix).Trim()));
 
         return h ?? MakeEpsilonHandle();
     }
 
-    protected AtnHandle WrapInBlock(AtnHandle h)
+    protected AtnHandle WrapInBlock(AtnHandle h, string suffixText = null)
     {
-        // Wrap a handle in a BasicBlockStartState / BlockEndState pair
-        // so that optional/star/plus have the right structure.
-        var start = NewState<BasicBlockStartState>();
+        // Create the correct BlockStartState subtype based on the ebnf suffix so that
+        // MakeStar / MakePlus receive the expected concrete type.
+        BlockStartState start = suffixText switch
+        {
+            string s when s.StartsWith("*") => NewState<StarBlockStartState>(),
+            string s when s.StartsWith("+") => NewState<PlusBlockStartState>(),
+            _                               => NewState<BasicBlockStartState>(),
+        };
         var end = NewState<BlockEndState>();
         start.endState = end;
         end.startState = start;
