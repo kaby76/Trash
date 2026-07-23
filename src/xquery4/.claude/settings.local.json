@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:qt4cg.org)",
+      "WebSearch",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet clean:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial commit: XQuery 4.0 and XPath 4.0 interpreter implementation\n\nComplete implementation including:\n- XDM 4.0 data model \\(XdmItem, XdmNode, XdmSequence, XdmMap, XdmArray, etc.\\)\n- XPath 4.0 parser with full expression support\n- XPath evaluator with function library\n- XQuery evaluator with update facility \\(insert, delete, replace, rename, transform\\)\n- IO handlers for XML, JSON, and YAML\n- Serializers for multiple output formats\n- Comprehensive test suite \\(230 tests passing\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)"
+    ]
+  }
+}
