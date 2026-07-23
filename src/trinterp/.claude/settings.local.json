@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build:*)",
+      "Bash(dotnet trash:*)",
+      "Bash(echo \"exit: $?\")",
+      "Read(//tmp/**)",
+      "Bash(ls:*)",
+      "Bash(xargs grep:*)",
+      "Bash(dotnet:*)",
+      "Bash(python:*)",
+      "Bash(bash:*)",
+      "Bash(python3:*)",
+      "Bash(echo:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(do:*)",
+      "Bash(git:*)",
+      "Bash(trparse:*)",
+      "Read(//c/Users/Kenne/.dotnet/tools/**)",
+      "Read(//c/Users/Kenne/**)",
+      "Bash(grep =1$\\\\|=2$:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}
