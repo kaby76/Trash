@@ -7,9 +7,8 @@ Antlr4 grammars and parse trees. The toolkit can: generate a parser
 application for an Antlr4 grammar for any target and any OS; analyze the
 grammar for common problems; automate changes applied to a grammar scraped
 from a specification; transform parse trees for transpiling
-and preprocessing source code. With the [Antlr toolkit](https://www.antlr.org/)
-and the [collection of Antlr grammars](https://github.com/antlr/grammars-v4),
-one can write programming language tools quickly and easily.
+and preprocessing source code. With the [collection of Antlr grammars](https://github.com/antlr/grammars-v4),
+one can write applications that parse popular programming languages quickly and easily.
 
 Unlike tools that center around Antlr4 parsing, visitors and listeners, this toolkit does not support visitor and
 listener applications because it is too primitive and target-language dependent. Instead, the toolkit operates around
