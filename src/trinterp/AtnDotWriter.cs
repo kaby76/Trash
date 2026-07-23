@@ -238,6 +238,9 @@ public static class AtnDotWriter
         WildcardTransition                => ".",
         AtomTransition at                 => TokenLabel(at.token, grammar),
         RangeTransition rt                => $"{TokenLabel(rt.from, grammar)}..{TokenLabel(rt.to, grammar)}",
+        NotSetTransition st when st.set.GetIntervals().Count == 1
+                                       && st.set.GetIntervals()[0].a == st.set.GetIntervals()[0].b
+                                          => "~" + TokenLabel(st.set.GetIntervals()[0].a, grammar),
         NotSetTransition st               => "~" + SetLabel(st.set, grammar),
         SetTransition st                  => SetLabel(st.set, grammar),
         ActionTransition                  => "{action}",
@@ -251,7 +254,20 @@ public static class AtnDotWriter
         if (token == TokenConstants.EOF) return "EOF";
         if (grammar.IsLexer)
         {
-            if (token >= 32 && token < 127 && token != '\'' && token != '\\')
+            // Special characters that need explicit handling to match ANTLR4's DOT output.
+            // EscapeLabel doubles any backslashes, so one backslash here → two in the DOT file.
+            // Note: ANTLR4 itself uses an extra level of escaping for atom transitions vs set
+            // elements; we target the set-element level (which appears more often).
+            switch (token)
+            {
+                case '\t': return "'\t'";    // literal tab
+                case '\n': return "'\\n'";   // backslash + n → EscapeLabel → two backslashes + n
+                case '\r': return "''";      // CR: ANTLR4 emits empty char literal
+                case '"':  return "'\"'";    // quote → EscapeLabel escapes " to \"
+                case '\'': return "'''";     // three single-quotes
+                case '\\': return "'\\'"    ;// one backslash → EscapeLabel → two backslashes
+            }
+            if (token >= 32 && token < 127)
                 return $"'{(char)token}'";
             return token.ToString();
         }
@@ -269,11 +285,22 @@ public static class AtnDotWriter
         bool first = true;
         foreach (var iv in set.GetIntervals())
         {
-            for (int el = iv.a; el <= iv.b; el++)
+            // Range notation (a..b) is only meaningful for lexer character sets.
+            // Parser token-type intervals contain unrelated token names and must be expanded.
+            if (grammar.IsLexer && iv.a != iv.b)
             {
                 if (!first) sb.Append(", ");
                 first = false;
-                sb.Append(TokenLabel(el, grammar));
+                sb.Append($"{TokenLabel(iv.a, grammar)}..{TokenLabel(iv.b, grammar)}");
+            }
+            else
+            {
+                for (int el = iv.a; el <= iv.b; el++)
+                {
+                    if (!first) sb.Append(", ");
+                    first = false;
+                    sb.Append(TokenLabel(el, grammar));
+                }
             }
         }
         sb.Append('}');
