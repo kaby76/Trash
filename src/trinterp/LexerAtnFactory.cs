@@ -191,7 +191,7 @@ public class LexerAtnFactory : ParserAtnFactory
         //           | referenceModifier? ruleref  (fragment reference)
         //           | notSet
         //           | LEXER_CHAR_SET
-        //           | DOT elementOptions?
+        //           | wildcard   (wildcard : DOT elementOptions?)
 
         var charRange = Child(lexerAtom, "characterRange");
         if (charRange != null) return WalkCharacterRange(charRange);
@@ -208,9 +208,9 @@ public class LexerAtnFactory : ParserAtnFactory
         var charSetTerm = ChildTerminal(lexerAtom, "LEXER_CHAR_SET");
         if (charSetTerm != null) return WalkCharSetLiteral(GetText(charSetTerm).Trim());
 
-        // DOT = wildcard
-        var dot = Children(lexerAtom).FirstOrDefault(c => IsTerminal(c) && GetText(c).Trim() == ".");
-        if (dot != null) return MakeWildcard();
+        // wildcard : DOT elementOptions?  (the DOT is nested inside a wildcard subelement)
+        var wildcard = Child(lexerAtom, "wildcard");
+        if (wildcard != null) return MakeWildcard();
 
         return MakeEpsilonHandle();
     }
