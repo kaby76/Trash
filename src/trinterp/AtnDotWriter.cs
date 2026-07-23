@@ -17,13 +17,14 @@ public static class AtnDotWriter
     /// <summary>Writes one &lt;ruleName&gt;.dot per rule to outDir.</summary>
     public static void WritePerRule(GrammarModel grammar, ATN atn, string outDir)
     {
-        var decisionNumbers = BuildDecisionNumbers(atn);
+        var decisionNumbers    = BuildDecisionNumbers(atn);
+        var leftRecursiveRules = FindLeftRecursiveRules(atn);
         for (int i = 0; i < grammar.Rules.Count; i++)
         {
             var rule = grammar.Rules[i];
             var start = atn.ruleToStartState[i];
             var stop  = atn.ruleToStopState[i];
-            var dot   = RuleToDot(rule.Name, start, stop, grammar, decisionNumbers);
+            var dot   = RuleToDot(rule.Name, start, stop, grammar, decisionNumbers, leftRecursiveRules);
             var path  = Path.Combine(outDir, grammar.Name + "." + rule.Name + ".dot");
             File.WriteAllText(path, dot);
         }
@@ -40,7 +41,8 @@ public static class AtnDotWriter
     // ---- per-rule digraph ---------------------------------------------------
 
     private static string RuleToDot(string ruleName, RuleStartState start, RuleStopState stop,
-                                    GrammarModel grammar, Dictionary<DecisionState, int> decisionNumbers)
+                                    GrammarModel grammar, Dictionary<DecisionState, int> decisionNumbers,
+                                    HashSet<int> leftRecursiveRules)
     {
         // Collect states reachable from the rule start, scoped to this rule:
         //  - For RuleTransitions follow followState (skip called-rule interior)
@@ -67,7 +69,7 @@ public static class AtnDotWriter
         sb.AppendLine("digraph ATN {");
         sb.AppendLine("rankdir=LR;");
         AppendNodes(sb, Sorted(states), decisionNumbers);
-        AppendEdges(sb, Sorted(states), states, grammar, decisionNumbers, ruleTransitionToFollow: true);
+        AppendEdges(sb, Sorted(states), states, grammar, decisionNumbers, ruleTransitionToFollow: true, leftRecursiveRules);
         sb.AppendLine("}");
         return sb.ToString();
     }
@@ -76,7 +78,8 @@ public static class AtnDotWriter
 
     private static string CombinedToDot(GrammarModel grammar, ATN atn)
     {
-        var decisionNumbers = BuildDecisionNumbers(atn);
+        var decisionNumbers    = BuildDecisionNumbers(atn);
+        var leftRecursiveRules = FindLeftRecursiveRules(atn);
         var sb = new StringBuilder();
         sb.AppendLine($"digraph {DotId(grammar.Name)} {{");
         sb.AppendLine("rankdir=LR;");
@@ -90,7 +93,7 @@ public static class AtnDotWriter
         AppendNodes(sb, allStates, decisionNumbers);
         // In the combined view show the actual RuleTransition target (rule start),
         // not the followState — the return arc is already an epsilon from the stop state.
-        AppendEdges(sb, allStates, allSet, grammar, decisionNumbers, ruleTransitionToFollow: false);
+        AppendEdges(sb, allStates, allSet, grammar, decisionNumbers, ruleTransitionToFollow: false, leftRecursiveRules);
         sb.AppendLine("}");
         return sb.ToString();
     }
@@ -178,7 +181,8 @@ public static class AtnDotWriter
     private static void AppendEdges(StringBuilder sb, IEnumerable<ATNState> states,
                                     HashSet<ATNState> included, GrammarModel grammar,
                                     Dictionary<DecisionState, int> decisionNumbers,
-                                    bool ruleTransitionToFollow)
+                                    bool ruleTransitionToFollow,
+                                    HashSet<int> leftRecursiveRules)
     {
         foreach (var s in states)
         {
@@ -195,7 +199,10 @@ public static class AtnDotWriter
                 if (tr is RuleTransition rt)
                 {
                     target = ruleTransitionToFollow ? rt.followState : rt.target;
-                    label  = "<" + RuleName(rt.target, grammar) + ">";
+                    var name = RuleName(rt.target, grammar);
+                    label = leftRecursiveRules.Contains(rt.target.ruleIndex)
+                        ? $"<{name}[{rt.precedence}]>"
+                        : $"<{name}>";
                 }
                 else
                 {
@@ -329,4 +336,36 @@ public static class AtnDotWriter
 
     private static string EscapeLabel(string s)
         => s.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n");
+
+    /// <summary>
+    /// Returns the set of rule indices that are directly left-recursive: the rule's
+    /// start state can reach a RuleTransition back to itself via epsilon-only paths.
+    /// ANTLR4 appends [precedence] to call-site labels for such rules.
+    /// </summary>
+    private static HashSet<int> FindLeftRecursiveRules(ATN atn)
+    {
+        var result = new HashSet<int>();
+        if (atn.ruleToStartState == null) return result;
+        for (int ri = 0; ri < atn.ruleToStartState.Length; ri++)
+        {
+            var start = atn.ruleToStartState[ri];
+            if (start == null) continue;
+            if (CanReachSelfRuleTransition(start, ri, new HashSet<int>()))
+                result.Add(ri);
+        }
+        return result;
+    }
+
+    private static bool CanReachSelfRuleTransition(ATNState s, int ruleIndex, HashSet<int> visited)
+    {
+        if (!visited.Add(s.stateNumber)) return false;
+        for (int i = 0; i < s.NumberOfTransitions; i++)
+        {
+            var tr = s.Transition(i);
+            if (tr is RuleTransition rt && rt.ruleIndex == ruleIndex) return true;
+            if (tr is EpsilonTransition && CanReachSelfRuleTransition(tr.target, ruleIndex, visited))
+                return true;
+        }
+        return false;
+    }
 }
