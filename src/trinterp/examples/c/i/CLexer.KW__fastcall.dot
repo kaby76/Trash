@@ -1,0 +1,28 @@
+digraph ATN {
+rankdir=LR;
+s23[fontsize=11,label="23", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s24[fontsize=11, label="24", shape=doublecircle, fixedsize=true, width=.6];
+s554[fontsize=11,label="554", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s555[fontsize=11,label="555", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s556[fontsize=11,label="556", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s557[fontsize=11,label="557", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s558[fontsize=11,label="558", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s559[fontsize=11,label="559", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s560[fontsize=11,label="560", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s561[fontsize=11,label="561", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s562[fontsize=11,label="562", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s563[fontsize=11,label="563", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s564[fontsize=11,label="564", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s23 -> s554 [fontname="Times-Italic", label="&epsilon;"];
+s554 -> s555 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'_'", arrowhead = normal];
+s555 -> s556 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'_'", arrowhead = normal];
+s556 -> s557 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'f'", arrowhead = normal];
+s557 -> s558 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'a'", arrowhead = normal];
+s558 -> s559 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'s'", arrowhead = normal];
+s559 -> s560 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'t'", arrowhead = normal];
+s560 -> s561 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'c'", arrowhead = normal];
+s561 -> s562 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'a'", arrowhead = normal];
+s562 -> s563 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'l'", arrowhead = normal];
+s563 -> s564 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'l'", arrowhead = normal];
+s564 -> s24 [fontname="Times-Italic", label="&epsilon;"];
+}

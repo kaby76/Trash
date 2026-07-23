@@ -1,0 +1,21 @@
+digraph ATN {
+rankdir=LR;
+s283[fontsize=11,label="283", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s284[fontsize=11, label="284", shape=doublecircle, fixedsize=true, width=.6];
+s1484[fontsize=11,label="1484", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1485[fontsize=11,label="1485", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1486[fontsize=11,label="&rarr;\n1486*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1487[fontsize=11,label="&larr;\n1487", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1488[fontsize=11,label="{1488*\nd=19|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1489[fontsize=11,label="1489", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1490[fontsize=11,label="1490*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s283 -> s1484 [fontname="Times-Italic", label="&epsilon;"];
+s1484 -> s1488 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<NonzeroDigit>", arrowhead = normal];
+s1485 -> s1487 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<Digit>", arrowhead = normal];
+s1486 -> s1485 [fontname="Times-Italic", label="&epsilon;"];
+s1487 -> s1490 [fontname="Times-Italic", label="&epsilon;"];
+s1488:p0 -> s1486 [fontname="Times-Italic", label="&epsilon;"];
+s1488:p1 -> s1489 [fontname="Times-Italic", label="&epsilon;"];
+s1489 -> s284 [fontname="Times-Italic", label="&epsilon;"];
+s1490 -> s1488 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+}

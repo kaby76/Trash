@@ -1,0 +1,29 @@
+digraph ATN {
+rankdir=LR;
+s361[fontsize=11,label="361", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s362[fontsize=11, label="362", shape=doublecircle, fixedsize=true, width=.6];
+s1841[fontsize=11,label="1841", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1842[fontsize=11,label="1842", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1843[fontsize=11,label="1843", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1844[fontsize=11,label="1844", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1845[fontsize=11,label="&rarr;\n1845*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1846[fontsize=11,label="&larr;\n1846", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1847[fontsize=11,label="{1847*\nd=74|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1848[fontsize=11,label="1848", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1849[fontsize=11,label="1849*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1850[fontsize=11,label="1850", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1851[fontsize=11,label="1851", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s361 -> s1841 [fontname="Times-Italic", label="&epsilon;"];
+s1841 -> s1842 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'/'", arrowhead = normal];
+s1842 -> s1843 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'/'", arrowhead = normal];
+s1843 -> s1847 [fontname="Times-Italic", label="&epsilon;"];
+s1844 -> s1846 [fontsize=11, fontname="Courier", arrowsize=.7, label = "~{10, 13}", arrowhead = normal];
+s1845 -> s1844 [fontname="Times-Italic", label="&epsilon;"];
+s1846 -> s1849 [fontname="Times-Italic", label="&epsilon;"];
+s1847:p0 -> s1845 [fontname="Times-Italic", label="&epsilon;"];
+s1847:p1 -> s1848 [fontname="Times-Italic", label="&epsilon;"];
+s1848 -> s1850 [fontname="Times-Italic", label="&epsilon;"];
+s1849 -> s1847 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+s1850 -> s1851 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{action}", arrowhead = normal];
+s1851 -> s362 [fontname="Times-Italic", label="&epsilon;"];
+}

@@ -1,0 +1,38 @@
+digraph ATN {
+rankdir=LR;
+s76[fontsize=11,label="76", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s77[fontsize=11, label="77", shape=doublecircle, fixedsize=true, width=.6];
+s656[fontsize=11,label="656", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s657[fontsize=11,label="{&rarr;\n657\nd=45|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s658[fontsize=11,label="&larr;\n658", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s659[fontsize=11,label="659", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s660[fontsize=11,label="660", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s661[fontsize=11,label="{&rarr;\n661\nd=46|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s662[fontsize=11,label="&larr;\n662", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s663[fontsize=11,label="663", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s664[fontsize=11,label="664", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s665[fontsize=11,label="665", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s666[fontsize=11,label="666", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s667[fontsize=11,label="667", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s668[fontsize=11,label="{&rarr;\n668\nd=47|{<p0>|<p1>|<p2>}}", shape=record, fixedsize=false, peripheries=1];
+s669[fontsize=11,label="&larr;\n669", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s76 -> s668 [fontname="Times-Italic", label="&epsilon;"];
+s656 -> s658 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<attributeSpecifierSequence>", arrowhead = normal];
+s657:p0 -> s656 [fontname="Times-Italic", label="&epsilon;"];
+s657:p1 -> s658 [fontname="Times-Italic", label="&epsilon;"];
+s658 -> s659 [fontname="Times-Italic", label="&epsilon;"];
+s659 -> s661 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<specifierQualifierList>", arrowhead = normal];
+s660 -> s662 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<memberDeclaratorList>", arrowhead = normal];
+s661:p0 -> s660 [fontname="Times-Italic", label="&epsilon;"];
+s661:p1 -> s662 [fontname="Times-Italic", label="&epsilon;"];
+s662 -> s663 [fontname="Times-Italic", label="&epsilon;"];
+s663 -> s664 [fontsize=11, fontname="Courier", arrowsize=.7, label = "';'", arrowhead = normal];
+s664 -> s669 [fontname="Times-Italic", label="&epsilon;"];
+s665 -> s669 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<staticAssertDeclaration>", arrowhead = normal];
+s666 -> s667 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'__extension__'", arrowhead = normal];
+s667 -> s669 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<memberDeclaration>", arrowhead = normal];
+s668:p0 -> s657 [fontname="Times-Italic", label="&epsilon;"];
+s668:p1 -> s665 [fontname="Times-Italic", label="&epsilon;"];
+s668:p2 -> s666 [fontname="Times-Italic", label="&epsilon;"];
+s669 -> s77 [fontname="Times-Italic", label="&epsilon;"];
+}

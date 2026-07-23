@@ -1,0 +1,17 @@
+digraph ATN {
+rankdir=LR;
+s62[fontsize=11,label="62", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s63[fontsize=11, label="63", shape=doublecircle, fixedsize=true, width=.6];
+s592[fontsize=11,label="592", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s593[fontsize=11,label="593", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s594[fontsize=11,label="594", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s595[fontsize=11,label="{&rarr;\n595\nd=36|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s596[fontsize=11,label="&larr;\n596", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s62 -> s592 [fontname="Times-Italic", label="&epsilon;"];
+s592 -> s595 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<declarator>", arrowhead = normal];
+s593 -> s594 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'='", arrowhead = normal];
+s594 -> s596 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<initializer>", arrowhead = normal];
+s595:p0 -> s593 [fontname="Times-Italic", label="&epsilon;"];
+s595:p1 -> s596 [fontname="Times-Italic", label="&epsilon;"];
+s596 -> s63 [fontname="Times-Italic", label="&epsilon;"];
+}

@@ -1,0 +1,20 @@
+digraph ATN {
+rankdir=LR;
+s222[fontsize=11,label="222", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s223[fontsize=11, label="223", shape=doublecircle, fixedsize=true, width=.6];
+s1464[fontsize=11,label="1464", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1465[fontsize=11,label="1465", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1466[fontsize=11,label="1466", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1467[fontsize=11,label="1467", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1468[fontsize=11,label="1468", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1469[fontsize=11,label="1469", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1470[fontsize=11,label="1470", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s222 -> s1464 [fontname="Times-Italic", label="&epsilon;"];
+s1464 -> s1465 [fontsize=11, fontname="Courier", arrowsize=.7, label = "Attribute", arrowhead = normal];
+s1465 -> s1466 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'('", arrowhead = normal];
+s1466 -> s1467 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'('", arrowhead = normal];
+s1467 -> s1468 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<gnuAttributeList>", arrowhead = normal];
+s1468 -> s1469 [fontsize=11, fontname="Courier", arrowsize=.7, label = "')'", arrowhead = normal];
+s1469 -> s1470 [fontsize=11, fontname="Courier", arrowsize=.7, label = "')'", arrowhead = normal];
+s1470 -> s223 [fontname="Times-Italic", label="&epsilon;"];
+}

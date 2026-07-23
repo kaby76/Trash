@@ -1,0 +1,23 @@
+digraph ATN {
+rankdir=LR;
+s30[fontsize=11,label="30", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s31[fontsize=11, label="31", shape=doublecircle, fixedsize=true, width=.6];
+s467[fontsize=11,label="467", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s468[fontsize=11,label="468", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s469[fontsize=11,label="469", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s470[fontsize=11,label="&rarr;\n470*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s471[fontsize=11,label="&larr;\n471", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s472[fontsize=11,label="{472*\nd=20|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s473[fontsize=11,label="473", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s474[fontsize=11,label="474*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s30 -> s467 [fontname="Times-Italic", label="&epsilon;"];
+s467 -> s472 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<additiveExpression>", arrowhead = normal];
+s468 -> s469 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{'<<', '>>'}", arrowhead = normal];
+s469 -> s471 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<additiveExpression>", arrowhead = normal];
+s470 -> s468 [fontname="Times-Italic", label="&epsilon;"];
+s471 -> s474 [fontname="Times-Italic", label="&epsilon;"];
+s472:p0 -> s470 [fontname="Times-Italic", label="&epsilon;"];
+s472:p1 -> s473 [fontname="Times-Italic", label="&epsilon;"];
+s473 -> s31 [fontname="Times-Italic", label="&epsilon;"];
+s474 -> s472 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+}

@@ -1,0 +1,23 @@
+digraph ATN {
+rankdir=LR;
+s88[fontsize=11,label="88", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s89[fontsize=11, label="89", shape=doublecircle, fixedsize=true, width=.6];
+s739[fontsize=11,label="739", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s740[fontsize=11,label="740", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s741[fontsize=11,label="741", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s742[fontsize=11,label="&rarr;\n742*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s743[fontsize=11,label="&larr;\n743", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s744[fontsize=11,label="{744*\nd=65|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s745[fontsize=11,label="745", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s746[fontsize=11,label="746*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s88 -> s739 [fontname="Times-Italic", label="&epsilon;"];
+s739 -> s744 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<enumerator>", arrowhead = normal];
+s740 -> s741 [fontsize=11, fontname="Courier", arrowsize=.7, label = "','", arrowhead = normal];
+s741 -> s743 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<enumerator>", arrowhead = normal];
+s742 -> s740 [fontname="Times-Italic", label="&epsilon;"];
+s743 -> s746 [fontname="Times-Italic", label="&epsilon;"];
+s744:p0 -> s742 [fontname="Times-Italic", label="&epsilon;"];
+s744:p1 -> s745 [fontname="Times-Italic", label="&epsilon;"];
+s745 -> s89 [fontname="Times-Italic", label="&epsilon;"];
+s746 -> s744 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+}

@@ -1,0 +1,23 @@
+digraph ATN {
+rankdir=LR;
+s20[fontsize=11,label="20", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s21[fontsize=11, label="21", shape=doublecircle, fixedsize=true, width=.6];
+s383[fontsize=11,label="383", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s384[fontsize=11,label="384", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s385[fontsize=11,label="385", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s386[fontsize=11,label="&rarr;\n386*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s387[fontsize=11,label="&larr;\n387", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s388[fontsize=11,label="{388*\nd=15|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s389[fontsize=11,label="389", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s390[fontsize=11,label="390*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s20 -> s383 [fontname="Times-Italic", label="&epsilon;"];
+s383 -> s388 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<assignmentExpression>", arrowhead = normal];
+s384 -> s385 [fontsize=11, fontname="Courier", arrowsize=.7, label = "','", arrowhead = normal];
+s385 -> s387 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<assignmentExpression>", arrowhead = normal];
+s386 -> s384 [fontname="Times-Italic", label="&epsilon;"];
+s387 -> s390 [fontname="Times-Italic", label="&epsilon;"];
+s388:p0 -> s386 [fontname="Times-Italic", label="&epsilon;"];
+s388:p1 -> s389 [fontname="Times-Italic", label="&epsilon;"];
+s389 -> s21 [fontname="Times-Italic", label="&epsilon;"];
+s390 -> s388 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+}

@@ -175,6 +175,10 @@ public static class AtnDotWriter
     {
         foreach (var s in states)
         {
+            // In the per-rule view the rule stop state is a sink: follow-link epsilons
+            // added by AddRuleFollowLinks point into callers' ATNs and must not appear.
+            if (ruleTransitionToFollow && s is RuleStopState) continue;
+
             for (int i = 0; i < s.NumberOfTransitions; i++)
             {
                 var tr = s.Transition(i);
