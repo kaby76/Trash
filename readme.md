@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/kaby76/Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Trash/actions?query=workflow%3ACI)
 
-**Status: The toolset is still undergoing a major rewrite. Consider this toolkit as "pre-alpha" before using.**
+**Status: Consider this toolkit as "pre-alpha" before using.**
 
 Trash is a collection of command-line tools to analyze and transform
 Antlr4 grammars and parse trees. The toolkit can: generate a parser
