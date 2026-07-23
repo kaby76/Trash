@@ -11,9 +11,10 @@ and preprocessing source code. With the [Antlr toolkit](https://www.antlr.org/)
 and the [collection of Antlr grammars](https://github.com/antlr/grammars-v4),
 one can write programming language tools quickly and easily.
 
-Unlike Antlr4 visitors and listeners, this toolkit does not support any of that because
-it is too primitive and target-language dependent. Instead, the toolkit operates around
-parse trees and XQuery scripts.
+Unlike tools that center around Antlr4 parsing, visitors and listeners, this toolkit does not support visitor and
+listener applications because it is too primitive and target-language dependent. Instead, the toolkit operates around
+XQuery scripts that operate directly on parse trees. Also, Antlr4 parse trees do not contain attributes line line/column information,
+intertoken content (e.g., comments), and so on. Trash parse trees contain a multitude of information.
 
 In addition, instead of Antlr and all other parser generators, this toolkit works around
 composable commands with Bash, Powershell, Python, Lua, etc. as the glue. Complex refactorings can be
