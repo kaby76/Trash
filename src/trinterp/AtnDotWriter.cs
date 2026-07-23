@@ -249,8 +249,8 @@ public static class AtnDotWriter
                                           => "~" + TokenLabel(st.set.GetIntervals()[0].a, grammar),
         NotSetTransition st               => "~" + SetLabel(st.set, grammar),
         SetTransition st                  => SetLabel(st.set, grammar),
-        ActionTransition                  => "{action}",
-        PredicateTransition               => "{pred}?",
+        ActionTransition at2              => $"action_{at2.ruleIndex}:{at2.actionIndex}",
+        PredicateTransition pt            => $"pred_{pt.ruleIndex}:{pt.predIndex}?",
         PrecedencePredicateTransition ppt => $"{ppt.precedence}>=p",
         _                                 => "?"
     };
