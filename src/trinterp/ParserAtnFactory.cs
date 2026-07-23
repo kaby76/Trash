@@ -596,7 +596,8 @@ public class ParserAtnFactory
             ? text[1..^1].Trim() : text;
 
         var ruleIndex = _currentRule?.Index ?? -1;
-        var actionIndex = _currentRule?.Actions.Count ?? 0;
+        // ANTLR4 uses -1 for all inline rule actions (unnamed/non-indexed).
+        const int actionIndex = -1;
 
         var info = new ActionInfo { RuleIndex = ruleIndex, ActionIndex = actionIndex, Text = text };
         _currentRule?.Actions.Add(info);
