@@ -106,16 +106,23 @@ public static class AtnDotWriter
             // StarBlockStartState and PlusBlockStartState are always circles even when
             // they appear in decisionToState (multi-alt case); check them before the
             // generic DecisionState branch below.
-            if (s is StarBlockStartState)
+            if (s is StarBlockStartState || s is PlusBlockStartState)
             {
-                string label = $"&rarr;\\n{s.stateNumber}*";
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
-                continue;
-            }
-            if (s is PlusBlockStartState)
-            {
-                string label = $"&rarr;\\n{s.stateNumber}+";
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                char symbol = s is PlusBlockStartState ? '+' : '*';
+                if (decisionNumbers.TryGetValue((DecisionState)s, out int dLoop))
+                {
+                    // Multi-alternative block start: render as decision record (ANTLR4 style).
+                    int n = s.NumberOfTransitions;
+                    var ports = new StringBuilder();
+                    for (int pi = 0; pi < n; pi++) { if (pi > 0) ports.Append('|'); ports.Append($"<p{pi}>"); }
+                    string label = $"{{&rarr;\\n{s.stateNumber}{symbol}\\nd={dLoop}|{{{ports}}}}}";
+                    sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1];");
+                }
+                else
+                {
+                    string label = $"&rarr;\\n{s.stateNumber}{symbol}";
+                    sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                }
                 continue;
             }
 
@@ -204,10 +211,9 @@ public static class AtnDotWriter
                 string edgeAttrs = isEpsilon
                     ? "fontname=\"Times-Italic\", label=\"&epsilon;\"" + (isDashed ? ", style=\"dashed\"" : "")
                     : $"fontsize=11, fontname=\"Courier\", arrowsize=.7, label = \"{EscapeLabel(label)}\", arrowhead = normal";
-                // Port notation only for states rendered as decision records
-                // (excludes StarBlockStartState / PlusBlockStartState, which are always circles).
+                // Port notation for all states rendered as decision records
+                // (StarBlockStartState / PlusBlockStartState use ports when they are decisions).
                 bool isDecision = s is DecisionState ds2
-                    && s is not StarBlockStartState && s is not PlusBlockStartState
                     && decisionNumbers.ContainsKey(ds2);
                 string fromPort = isDecision ? $":p{i}" : "";
                 sb.AppendLine($"s{s.stateNumber}{fromPort} -> s{target.stateNumber} [{edgeAttrs}];");

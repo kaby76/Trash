@@ -172,12 +172,16 @@ public class LexerAtnFactory : ParserAtnFactory
             lexerBlock = Child(labeledLexerElement, "lexerBlock");
         }
 
+        var suffix = Children(lexerElement).FirstOrDefault(c => c.LocalName == "ebnfSuffix");
+
         if (lexerAtom != null)
             h = WalkLexerAtom(lexerAtom);
         else if (lexerBlock != null)
-            h = WalkLexerBlock(lexerBlock);
+            // Pass the suffix directly into MakeBlock so it creates StarBlockStartState /
+            // PlusBlockStartState as the inner block start (matching ANTLR4's block() method),
+            // instead of wrapping in an extra outer StarBlockStartState via WrapInBlock.
+            return WalkLexerBlock(lexerBlock, suffix) ?? MakeEpsilonHandle();
 
-        var suffix = Children(lexerElement).FirstOrDefault(c => c.LocalName == "ebnfSuffix");
         if (h != null && suffix != null)
             h = ApplySuffix(lexerElement, suffix, WrapInBlock(h, GetText(suffix).Trim()));
 
@@ -233,7 +237,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return MakeEpsilonHandle();
     }
 
-    private AtnHandle WalkLexerBlock(UnvParseTreeElement lexerBlock)
+    private AtnHandle WalkLexerBlock(UnvParseTreeElement lexerBlock, UnvParseTreeElement ebnfSuffix = null)
     {
         // lexerBlock : LPAREN lexerAltList RPAREN
         var altList = Child(lexerBlock, "lexerAltList");
@@ -249,7 +253,7 @@ public class LexerAtnFactory : ParserAtnFactory
             var h = WalkLexerAlt(child);
             if (h != null) alts.Add(h);
         }
-        return MakeBlock(lexerBlock, alts, null);
+        return MakeBlock(lexerBlock, alts, ebnfSuffix);
     }
 
     private AtnHandle WalkCharacterRange(UnvParseTreeElement characterRange)
