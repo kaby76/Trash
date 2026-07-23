@@ -13,15 +13,19 @@ and preprocessing source code. With the [Antlr toolkit](https://www.antlr.org/)
 and the [collection of Antlr grammars](https://github.com/antlr/grammars-v4),
 one can write programming language tools quickly and easily.
 
-The toolkit is designed around a JSON representation of
-parse trees and command-line tools that read, modify, and write
-those trees via standard input and output. Complex refactorings can be
+Unlike Antlr4 visitors and listeners, this toolkit does not support any of that because
+it is too primitive and target-language dependent. Instead, the toolkit operates around
+parse trees and XQuery scripts.
+
+In addition, instead of Antlr and all other parser generators, this toolkit works around
+composable commands with Bash, Powershell, Python, Lua, etc. as the glue. Complex refactorings can be
 achieved by chaining different commands together.
 
-Each app in `Trash` is implemented as a [Dotnet Tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) console application, and can be used on Windows, Linux, or Mac.
+Each app in `Trash` is implemented as a sub-packaged [Dotnet Tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) console application, and can be used on Windows, Linux, or Mac.
 No prerequisites are required other than installing the
 [NET SDK](https://dotnet.microsoft.com/), and the toolchains
-for any other targets you want to use.
+for any other targets you want to use. All commands are executed through the top-level Dotnet application
+"trash", e.g., "dotnet trash parse --help".
 
 The toolkit uses [Antlr](https://www.antlr.org/) and
 [XPath2](https://en.wikipedia.org/wiki/XPath).
