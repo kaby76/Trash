@@ -2,28 +2,20 @@
 
 [![Build](https://github.com/kaby76/Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Trash/actions?query=workflow%3ACI)
 
-**Status: The toolset is still undergoing a major rewrite. Consider this toolkit as "pre-alpha".
-Old tools are being removed, and new ones are being added. Features are being added, while bugs
-are constantly being fixed. The XPath/XQuery engine is still being
-rewritten.**
+**Status: The toolset is still undergoing a major rewrite. Consider this toolkit as "pre-alpha" before using.**
 
-**The repo [g4-scripts](https://github.com/kaby76/g4-scripts) contains a collections of
-Bash which use Trash. The repo also contains XQuery scripts that implement complex
-operations on a parse tree. You can also
-read about Trash details in [my blog](http://codinggorilla.com/).**
-
-Trash is a collection of ~40 command-line tools to analyze and transform
-Antlr parse trees and grammars. The toolkit can: generate a parser
+Trash is a collection of command-line tools to analyze and transform
+Antlr4 grammars and parse trees. The toolkit can: generate a parser
 application for an Antlr4 grammar for any target and any OS; analyze the
 grammar for common problems; automate changes applied to a grammar scraped
-from a specification; transform parse trees for transpilating
-and proprocessing source code. With the [Antlr toolkit](https://www.antlr.org/)
+from a specification; transform parse trees for transpiling
+and preprocessing source code. With the [Antlr toolkit](https://www.antlr.org/)
 and the [collection of Antlr grammars](https://github.com/antlr/grammars-v4),
 one can write programming language tools quickly and easily.
 
 The toolkit is designed around a JSON representation of
 parse trees and command-line tools that read, modify, and write
-those tree via standard input and output. Complex refactorings can be
+those trees via standard input and output. Complex refactorings can be
 achieved by chaining different commands together.
 
 Each app in `Trash` is implemented as a [Dotnet Tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) console application, and can be used on Windows, Linux, or Mac.
