@@ -254,16 +254,15 @@ def main():
 
     if '-r' in args:
         args = [a for a in args if a != '-r']
-        if len(args) != 2:
-            print('Usage: compare-atn.py -r dir_a dir_b', file=sys.stderr)
-            sys.exit(2)
-        ok = compare_dirs(args[0], args[1], quiet=quiet)
-        sys.exit(0 if ok else 1)
 
     if len(args) != 2:
         print('Usage: compare-atn.py [-q] a.dot b.dot', file=sys.stderr)
-        print('       compare-atn.py [-q] -r dir_a dir_b', file=sys.stderr)
+        print('       compare-atn.py [-q] [-r] dir_a dir_b', file=sys.stderr)
         sys.exit(2)
+
+    if os.path.isdir(args[0]) and os.path.isdir(args[1]):
+        ok = compare_dirs(args[0], args[1], quiet=quiet)
+        sys.exit(0 if ok else 1)
 
     diffs = compare_files(args[0], args[1])
     if diffs:
