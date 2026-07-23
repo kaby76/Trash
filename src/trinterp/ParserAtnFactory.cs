@@ -14,6 +14,7 @@ public class ParserAtnFactory
 {
     protected readonly GrammarModel _grammar;
     protected readonly ATN _atn;
+    protected readonly OptimizeOptions _optimize;
     protected RuleModel _currentRule;
     protected int _currentOuterAlt;
 
@@ -24,9 +25,10 @@ public class ParserAtnFactory
     // Global sempred counter (incremented as predicates are encountered).
     protected int _nextPredIndex;
 
-    public ParserAtnFactory(GrammarModel grammar)
+    public ParserAtnFactory(GrammarModel grammar, OptimizeOptions optimize = null)
     {
-        _grammar = grammar;
+        _grammar  = grammar;
+        _optimize = optimize ?? OptimizeOptions.All;
         var atnType = grammar.IsLexer ? ATNType.Lexer : ATNType.Parser;
         _atn = new ATN(atnType, grammar.GetMaxTokenType());
     }
@@ -42,7 +44,9 @@ public class ParserAtnFactory
             BuildRule(rule);
         AddRuleFollowLinks();
         AddEOFTransitionToStartRules();
-        AtnOptimizer.OptimizeStates(_atn);
+        // antlr4 does not apply OptimizeSets to parser grammars or parser rules;
+        // parser codegen does not support SetTransition. Only LexerAtnFactory calls it.
+        if (_optimize.Any)         AtnOptimizer.OptimizeStates(_atn);
         return _atn;
     }
 
@@ -207,6 +211,8 @@ public class ParserAtnFactory
         end.startState = start;
         AddEpsilon(start, h.Left);
         AddEpsilon(h.Right, end);
+        if (_optimize.TailEpsilon)
+            new TailEpsilonRemover(_atn).Visit(h.Left);
         return new AtnHandle(start, end);
     }
 
@@ -338,6 +344,16 @@ public class ParserAtnFactory
     {
         if (alts.Count == 0) return MakeEpsilonHandle();
 
+        // antlr4's BlockSetTransformer pre-processes the grammar AST to collapse
+        // blocks where every alternative is a single atom/range/set into one SET
+        // transition. Implement the equivalent here at construction time so we
+        // never create a BasicBlockStartState / BlockEndState for such blocks.
+        if (alts.Count > 1)
+        {
+            var reduced = TryReduceAltsToSet(alts);
+            if (reduced != null) alts = new List<AtnHandle> { reduced };
+        }
+
         if (ebnfSuffix == null)
         {
             if (alts.Count == 1) return alts[0];
@@ -372,6 +388,39 @@ public class ParserAtnFactory
         return alts.Count == 1 ? alts[0] : ConnectBlock(NewState<BasicBlockStartState>(), alts);
     }
 
+    /// <summary>
+    /// If every alt is a single-atom handle (BasicState –Atom/Range/Set→ BasicState)
+    /// with no intervening epsilon or rule call, collapse all of them into one
+    /// MakeSet handle and remove the per-alt states.
+    /// Returns null if the block is not eligible.
+    /// </summary>
+    private AtnHandle TryReduceAltsToSet(List<AtnHandle> alts)
+    {
+        var matchSet = new IntervalSet();
+        foreach (var alt in alts)
+        {
+            if (alt.Left.StateType  != StateType.Basic) return null;
+            if (alt.Right == null)                       return null;
+            if (alt.Right.StateType != StateType.Basic)  return null;
+            if (alt.Left.NumberOfTransitions != 1)       return null;
+            var tr = alt.Left.Transition(0);
+            if (tr.target != alt.Right)                  return null;
+            if      (tr is AtomTransition at)  matchSet.Add(at.token);
+            else if (tr is RangeTransition rt) matchSet.Add(rt.from, rt.to);
+            else if (tr is SetTransition  st)  matchSet.AddAll(st.set);
+            else return null; // epsilon, rule, wildcard, not-set, action, pred, etc.
+        }
+
+        // All alts are simple atoms — remove the per-alt states and return a
+        // single MakeSet handle.
+        foreach (var alt in alts)
+        {
+            _atn.RemoveState(alt.Left);
+            _atn.RemoveState(alt.Right);
+        }
+        return MakeSet(matchSet);
+    }
+
     protected AtnHandle ApplySuffix(UnvParseTreeElement ctx, UnvParseTreeElement suffix, AtnHandle blk)
     {
         var suffixText = GetText(suffix).Trim();
@@ -392,7 +441,8 @@ public class ParserAtnFactory
         {
             AddEpsilon(start, alt.Left);
             AddEpsilon(alt.Right, end);
-            new TailEpsilonRemover(_atn).Visit(alt.Left);
+            if (_optimize.TailEpsilon)
+                new TailEpsilonRemover(_atn).Visit(alt.Left);
         }
         _preventEpsilonClosureBlocks.Add((_currentRule, start, end));
         return new AtnHandle(start, end);
@@ -515,20 +565,10 @@ public class ParserAtnFactory
 
     protected AtnHandle MakeSet(IntervalSet set)
     {
+        // antlr4's ParserATNFactory.set() always creates SetTransition regardless of set size.
         var left = NewState<BasicState>();
         var right = NewState<BasicState>();
-        if (set.Count == 1)
-        {
-            var interval = set.GetIntervals()[0];
-            if (interval.a == interval.b)
-                left.AddTransition(new AtomTransition(right, interval.a));
-            else
-                left.AddTransition(new RangeTransition(right, interval.a, interval.b));
-        }
-        else
-        {
-            left.AddTransition(new SetTransition(right, set));
-        }
+        left.AddTransition(new SetTransition(right, set));
         return new AtnHandle(left, right);
     }
 

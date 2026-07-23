@@ -343,6 +343,20 @@ public class GrammarParser
         for (int i = 0; i < lexer.Rules.Count; i++)
             lexer.Rules[i].Index = i;
 
+        // For combined grammars, populate the parser model's StringLiteralToType with
+        // reverse mappings from simple single-literal lexer rules (e.g., A:'a' → 'a'→1).
+        // This lets TokenLabel return the literal form ('a') instead of the token name (A)
+        // when rendering ATN transitions, matching antlr4's vocabulary display behaviour.
+        foreach (var rule in lexerRules)
+        {
+            if (rule.IsFragment || rule.BodyNode == null) continue;
+            var lits = new System.Collections.Generic.List<string>();
+            var seen = new System.Collections.Generic.HashSet<string>();
+            CollectStringLiterals(rule.BodyNode, seen, lits);
+            if (lits.Count == 1 && !model.StringLiteralToType.ContainsKey(lits[0]))
+                model.StringLiteralToType[lits[0]] = rule.TokenType;
+        }
+
         // Update the main (parser) model to contain only parser rules.
         model.Rules = parserRules;
         model.ImplicitLexer = lexer;

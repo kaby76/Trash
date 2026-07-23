@@ -70,7 +70,28 @@ public class IntervalSet
 
     public IList<Interval> GetIntervals() => _intervals;
 
+    /// <summary>Total number of integer elements (sum of interval widths).</summary>
+    public int ElementCount
+    {
+        get
+        {
+            int n = 0;
+            foreach (var iv in _intervals) n += iv.b - iv.a + 1;
+            return n;
+        }
+    }
+
+    /// <summary>Number of intervals (not total elements).</summary>
     public int Count => _intervals.Count;
+
+    /// <summary>Smallest element across all intervals, or -1 if empty.</summary>
+    public int MinElement => _intervals.Count == 0 ? -1 : _intervals[0].a;
+
+    public void AddAll(IntervalSet other)
+    {
+        foreach (var iv in other._intervals)
+            Add(iv.a, iv.b);
+    }
 
     public IntervalSet Complement(IntervalSet vocabulary)
     {

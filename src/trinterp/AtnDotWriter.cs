@@ -68,7 +68,7 @@ public static class AtnDotWriter
         sb.AppendLine("rankdir=LR;");
         AppendNodes(sb, Sorted(states), decisionNumbers);
         AppendEdges(sb, Sorted(states), states, grammar, decisionNumbers, ruleTransitionToFollow: true);
-        sb.Append('}');
+        sb.AppendLine("}");
         return sb.ToString();
     }
 
@@ -91,7 +91,7 @@ public static class AtnDotWriter
         // In the combined view show the actual RuleTransition target (rule start),
         // not the followState — the return arc is already an epsilon from the stop state.
         AppendEdges(sb, allStates, allSet, grammar, decisionNumbers, ruleTransitionToFollow: false);
-        sb.Append('}');
+        sb.AppendLine("}");
         return sb.ToString();
     }
 

@@ -19,7 +19,7 @@ public class LexerAtnFactory : ParserAtnFactory
     // Map from action identity string → index in _lexerActions.
     private readonly Dictionary<string, int> _lexerActionIndex = new();
 
-    public LexerAtnFactory(GrammarModel grammar) : base(grammar) { }
+    public LexerAtnFactory(GrammarModel grammar, OptimizeOptions optimize = null) : base(grammar, optimize) { }
 
     // =========================================================================
     // ATN creation override
@@ -73,7 +73,8 @@ public class LexerAtnFactory : ParserAtnFactory
         // Expose the collected lexer actions.
         _atn.lexerActions = _lexerActions.ToArray();
 
-        AtnOptimizer.OptimizeStates(_atn);
+        if (_optimize.MergeSets)   AtnOptimizer.OptimizeSets(_atn);
+        if (_optimize.Any)         AtnOptimizer.OptimizeStates(_atn);
         return _atn;
     }
 

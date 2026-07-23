@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CommandLine;
 
 namespace trinterp;
@@ -18,6 +19,10 @@ public class Config
 
     [Option("atn-combined", Required = false, HelpText = "Write a single Graphviz .dot file (<grammarName>.atn.dot) containing all rules.")]
     public bool AtnCombined { get; set; }
+
+    [Option("optimize", Separator = ',', Required = false,
+        HelpText = "Comma-separated ATN optimizations to apply: tail-epsilon, merge-sets, none. Default: tail-epsilon,merge-sets.")]
+    public IEnumerable<string> Optimize { get; set; } = new[] { "tail-epsilon", "merge-sets" };
 
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }

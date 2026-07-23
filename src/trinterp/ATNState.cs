@@ -13,6 +13,8 @@ public abstract class ATNState
     public Transition Transition(int i) => _transitions[i];
     public void AddTransition(Transition t) => _transitions.Add(t);
     public void AddTransition(int index, Transition t) => _transitions.Insert(index, t);
+    public void SetTransition(int i, Transition t) => _transitions[i] = t;
+    public void RemoveTransition(int index) => _transitions.RemoveAt(index);
 }
 
 public sealed class BasicState : ATNState
@@ -34,6 +36,7 @@ public sealed class RuleStopState : ATNState
 public abstract class DecisionState : ATNState
 {
     public bool nonGreedy;
+    public int decision = -1;
 }
 
 public abstract class BlockStartState : DecisionState
