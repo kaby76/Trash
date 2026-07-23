@@ -249,8 +249,8 @@ public static class AtnDotWriter
     {
         EpsilonTransition                 => "ε",
         WildcardTransition                => ".",
-        AtomTransition at                 => TokenLabel(at.token, grammar),
-        RangeTransition rt                => $"{TokenLabel(rt.from, grammar)}..{TokenLabel(rt.to, grammar)}",
+        AtomTransition at                 => TokenLabel(at.token, grammar, atomLevel: true),
+        RangeTransition rt                => $"{TokenLabel(rt.from, grammar, atomLevel: true)}..{TokenLabel(rt.to, grammar, atomLevel: true)}",
         NotSetTransition st when st.set.GetIntervals().Count == 1
                                        && st.set.GetIntervals()[0].a == st.set.GetIntervals()[0].b
                                           => "~" + TokenLabel(st.set.GetIntervals()[0].a, grammar),
@@ -262,23 +262,27 @@ public static class AtnDotWriter
         _                                 => "?"
     };
 
-    private static string TokenLabel(int token, GrammarModel grammar)
+    private static string TokenLabel(int token, GrammarModel grammar, bool atomLevel = false)
     {
         if (token == TokenConstants.EOF) return "EOF";
         if (grammar.IsLexer)
         {
-            // Special characters that need explicit handling to match ANTLR4's DOT output.
-            // EscapeLabel doubles any backslashes, so one backslash here → two in the DOT file.
-            // Note: ANTLR4 itself uses an extra level of escaping for atom transitions vs set
-            // elements; we target the set-element level (which appears more often).
+            // Special characters need explicit handling to match ANTLR4's DOT output.
+            // ANTLR4 uses one extra level of backslash escaping for atom/range transitions
+            // compared to set-element labels. The atomLevel flag selects the right level:
+            //   atomLevel=true:  two backslashes before EscapeLabel → four in DOT file → renders as \\
+            //   atomLevel=false: one backslash before EscapeLabel → two in DOT file → renders as \
+            // EscapeLabel also adds a leading \ before ", so:
+            //   atomLevel=true  '"' : one backslash + " before EscapeLabel → \\\" in DOT → renders as \"
+            //   atomLevel=false '"' : no backslash (EscapeLabel adds \) → \" in DOT → renders as "
             switch (token)
             {
-                case '\t': return "'\t'";    // literal tab
-                case '\n': return "'\\n'";   // backslash + n → EscapeLabel → two backslashes + n
-                case '\r': return "''";      // CR: ANTLR4 emits empty char literal
-                case '"':  return "'\"'";    // quote → EscapeLabel escapes " to \"
-                case '\'': return "'''";     // three single-quotes
-                case '\\': return "'\\'"    ;// one backslash → EscapeLabel → two backslashes
+                case '\t': return "'\t'";
+                case '\n': return atomLevel ? "'\\\\n'" : "'\\n'";
+                case '\r': return "''";
+                case '"':  return atomLevel ? "'\\\"'" : "'\"'";
+                case '\'': return "'''";
+                case '\\': return atomLevel ? "'\\\\'" : "'\\'";
             }
             if (token >= 32 && token < 127)
                 return $"'{(char)token}'";
