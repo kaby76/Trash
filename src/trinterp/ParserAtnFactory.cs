@@ -209,6 +209,14 @@ public class ParserAtnFactory
         var end = NewState<BlockEndState>();
         start.endState = end;
         end.startState = start;
+
+        // For '?' the caller (MakeOptional) will add a bypass epsilon from start to end,
+        // giving start 2 outgoing transitions — making it a genuine decision point.
+        // Register it now so the decision index is set before transitions are added,
+        // matching antlr4's ParserATNFactory behaviour for single-element optional blocks.
+        if (suffixText != null && suffixText.StartsWith("?"))
+            _atn.DefineDecisionState(start);
+
         AddEpsilon(start, h.Left);
         AddEpsilon(h.Right, end);
         if (_optimize.TailEpsilon)
