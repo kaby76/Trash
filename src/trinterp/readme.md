@@ -33,7 +33,7 @@ consume them without needing the generated target-language source.
 
 ## Current version
 
-1.0.0 Initial implementation.
+2.0 Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement. Added more perf measurements to templates.
 
 ## License
 

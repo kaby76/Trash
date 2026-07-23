@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #set -e
 #set -x
-version="1.1.2"
+version="2.0"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
