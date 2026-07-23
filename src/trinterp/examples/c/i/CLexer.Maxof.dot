@@ -1,0 +1,20 @@
+digraph ATN {
+rankdir=LR;
+s51[fontsize=11,label="51", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s52[fontsize=11, label="52", shape=doublecircle, fixedsize=true, width=.6];
+s736[fontsize=11,label="736", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s737[fontsize=11,label="737", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s738[fontsize=11,label="738", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s739[fontsize=11,label="739", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s740[fontsize=11,label="740", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s741[fontsize=11,label="741", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s742[fontsize=11,label="742", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s51 -> s736 [fontname="Times-Italic", label="&epsilon;"];
+s736 -> s737 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'_'", arrowhead = normal];
+s737 -> s738 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'M'", arrowhead = normal];
+s738 -> s739 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'a'", arrowhead = normal];
+s739 -> s740 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'x'", arrowhead = normal];
+s740 -> s741 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'o'", arrowhead = normal];
+s741 -> s742 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'f'", arrowhead = normal];
+s742 -> s52 [fontname="Times-Italic", label="&epsilon;"];
+}

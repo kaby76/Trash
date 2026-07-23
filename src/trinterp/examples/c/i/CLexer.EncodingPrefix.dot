@@ -1,0 +1,17 @@
+digraph ATN {
+rankdir=LR;
+s343[fontsize=11,label="343", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s344[fontsize=11, label="344", shape=doublecircle, fixedsize=true, width=.6];
+s1721[fontsize=11,label="1721", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1722[fontsize=11,label="1722", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1723[fontsize=11,label="1723", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1724[fontsize=11,label="{&rarr;\n1724\nd=56|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1725[fontsize=11,label="&larr;\n1725", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s343 -> s1724 [fontname="Times-Italic", label="&epsilon;"];
+s1721 -> s1722 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'u'", arrowhead = normal];
+s1722 -> s1725 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'8'", arrowhead = normal];
+s1723 -> s1725 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{'L', 'U', 'u'}", arrowhead = normal];
+s1724:p0 -> s1721 [fontname="Times-Italic", label="&epsilon;"];
+s1724:p1 -> s1723 [fontname="Times-Italic", label="&epsilon;"];
+s1725 -> s344 [fontname="Times-Italic", label="&epsilon;"];
+}

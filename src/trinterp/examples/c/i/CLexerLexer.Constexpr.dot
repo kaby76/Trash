@@ -1,0 +1,26 @@
+digraph ATN {
+rankdir=LR;
+s75[fontsize=11,label="75", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s76[fontsize=11, label="76", shape=doublecircle, fixedsize=true, width=.6];
+s1069[fontsize=11,label="1069", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1070[fontsize=11,label="1070", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1071[fontsize=11,label="1071", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1072[fontsize=11,label="1072", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1073[fontsize=11,label="1073", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1074[fontsize=11,label="1074", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1075[fontsize=11,label="1075", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1076[fontsize=11,label="1076", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1077[fontsize=11,label="1077", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1078[fontsize=11,label="1078", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s75 -> s1069 [fontname="Times-Italic", label="&epsilon;"];
+s1069 -> s1070 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'c'", arrowhead = normal];
+s1070 -> s1071 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'o'", arrowhead = normal];
+s1071 -> s1072 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'n'", arrowhead = normal];
+s1072 -> s1073 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'s'", arrowhead = normal];
+s1073 -> s1074 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'t'", arrowhead = normal];
+s1074 -> s1075 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'e'", arrowhead = normal];
+s1075 -> s1076 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'x'", arrowhead = normal];
+s1076 -> s1077 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'p'", arrowhead = normal];
+s1077 -> s1078 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'r'", arrowhead = normal];
+s1078 -> s76 [fontname="Times-Italic", label="&epsilon;"];
+}

@@ -1,0 +1,19 @@
+digraph ATN {
+rankdir=LR;
+s164[fontsize=11,label="164", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s165[fontsize=11, label="165", shape=doublecircle, fixedsize=true, width=.6];
+s1209[fontsize=11,label="1209", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1210[fontsize=11,label="1210", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1211[fontsize=11,label="1211", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1212[fontsize=11,label="1212", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1213[fontsize=11,label="{&rarr;\n1213\nd=141|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1214[fontsize=11,label="&larr;\n1214", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s164 -> s1213 [fontname="Times-Italic", label="&epsilon;"];
+s1209 -> s1210 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{pred}?", arrowhead = normal];
+s1210 -> s1214 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<statement>", arrowhead = normal];
+s1211 -> s1212 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{pred}?", arrowhead = normal];
+s1212 -> s1214 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<declaration>", arrowhead = normal];
+s1213:p0 -> s1209 [fontname="Times-Italic", label="&epsilon;"];
+s1213:p1 -> s1211 [fontname="Times-Italic", label="&epsilon;"];
+s1214 -> s165 [fontname="Times-Italic", label="&epsilon;"];
+}

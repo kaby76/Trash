@@ -1,0 +1,28 @@
+digraph ATN {
+rankdir=LR;
+s311[fontsize=11,label="311", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s312[fontsize=11, label="312", shape=doublecircle, fixedsize=true, width=.6];
+s1821[fontsize=11,label="1821", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1822[fontsize=11,label="{&rarr;\n1822\nd=34|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1823[fontsize=11,label="&larr;\n1823", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1824[fontsize=11,label="1824", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1825[fontsize=11,label="1825", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1826[fontsize=11,label="1826", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1827[fontsize=11,label="1827", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1828[fontsize=11,label="1828", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1829[fontsize=11,label="{&rarr;\n1829\nd=35|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1830[fontsize=11,label="&larr;\n1830", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s311 -> s1829 [fontname="Times-Italic", label="&epsilon;"];
+s1821 -> s1823 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<DigitSequence>", arrowhead = normal];
+s1822:p0 -> s1821 [fontname="Times-Italic", label="&epsilon;"];
+s1822:p1 -> s1823 [fontname="Times-Italic", label="&epsilon;"];
+s1823 -> s1824 [fontname="Times-Italic", label="&epsilon;"];
+s1824 -> s1825 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'.'", arrowhead = normal];
+s1825 -> s1830 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<DigitSequence>", arrowhead = normal];
+s1826 -> s1827 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<DigitSequence>", arrowhead = normal];
+s1827 -> s1828 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'.'", arrowhead = normal];
+s1828 -> s1830 [fontname="Times-Italic", label="&epsilon;"];
+s1829:p0 -> s1822 [fontname="Times-Italic", label="&epsilon;"];
+s1829:p1 -> s1826 [fontname="Times-Italic", label="&epsilon;"];
+s1830 -> s312 [fontname="Times-Italic", label="&epsilon;"];
+}

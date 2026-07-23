@@ -1,0 +1,17 @@
+digraph ATN {
+rankdir=LR;
+s345[fontsize=11,label="345", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s346[fontsize=11, label="346", shape=doublecircle, fixedsize=true, width=.6];
+s1980[fontsize=11,label="1980", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1981[fontsize=11,label="&rarr;\n1981+", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1982[fontsize=11,label="&larr;\n1982", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1983[fontsize=11,label="{1983+\nd=57|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1984[fontsize=11,label="1984", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s345 -> s1981 [fontname="Times-Italic", label="&epsilon;"];
+s1980 -> s1982 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<SChar>", arrowhead = normal];
+s1981 -> s1980 [fontname="Times-Italic", label="&epsilon;"];
+s1982 -> s1983 [fontname="Times-Italic", label="&epsilon;"];
+s1983:p0 -> s1981 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+s1983:p1 -> s1984 [fontname="Times-Italic", label="&epsilon;"];
+s1984 -> s346 [fontname="Times-Italic", label="&epsilon;"];
+}

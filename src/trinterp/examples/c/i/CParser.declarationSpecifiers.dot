@@ -1,0 +1,19 @@
+digraph ATN {
+rankdir=LR;
+s56[fontsize=11,label="56", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s57[fontsize=11, label="57", shape=doublecircle, fixedsize=true, width=.6];
+s571[fontsize=11,label="571", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s572[fontsize=11,label="572", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s573[fontsize=11,label="&rarr;\n573+", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s574[fontsize=11,label="&larr;\n574", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s575[fontsize=11,label="{575+\nd=33|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s576[fontsize=11,label="576", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s56 -> s573 [fontname="Times-Italic", label="&epsilon;"];
+s571 -> s572 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{pred}?", arrowhead = normal];
+s572 -> s574 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<declarationSpecifier>", arrowhead = normal];
+s573 -> s571 [fontname="Times-Italic", label="&epsilon;"];
+s574 -> s575 [fontname="Times-Italic", label="&epsilon;"];
+s575:p0 -> s573 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+s575:p1 -> s576 [fontname="Times-Italic", label="&epsilon;"];
+s576 -> s57 [fontname="Times-Italic", label="&epsilon;"];
+}

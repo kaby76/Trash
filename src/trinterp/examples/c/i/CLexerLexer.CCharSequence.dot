@@ -1,0 +1,17 @@
+digraph ATN {
+rankdir=LR;
+s329[fontsize=11,label="329", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s330[fontsize=11, label="330", shape=doublecircle, fixedsize=true, width=.6];
+s1915[fontsize=11,label="1915", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1916[fontsize=11,label="&rarr;\n1916+", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1917[fontsize=11,label="&larr;\n1917", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1918[fontsize=11,label="{1918+\nd=44|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1919[fontsize=11,label="1919", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s329 -> s1916 [fontname="Times-Italic", label="&epsilon;"];
+s1915 -> s1917 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<CChar>", arrowhead = normal];
+s1916 -> s1915 [fontname="Times-Italic", label="&epsilon;"];
+s1917 -> s1918 [fontname="Times-Italic", label="&epsilon;"];
+s1918:p0 -> s1916 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+s1918:p1 -> s1919 [fontname="Times-Italic", label="&epsilon;"];
+s1919 -> s330 [fontname="Times-Italic", label="&epsilon;"];
+}

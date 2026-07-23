@@ -1,0 +1,19 @@
+digraph ATN {
+rankdir=LR;
+s321[fontsize=11,label="321", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s322[fontsize=11, label="322", shape=doublecircle, fixedsize=true, width=.6];
+s1854[fontsize=11,label="1854", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1855[fontsize=11,label="1855", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1856[fontsize=11,label="{&rarr;\n1856\nd=40|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1857[fontsize=11,label="&larr;\n1857", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1858[fontsize=11,label="1858", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1859[fontsize=11,label="1859", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s321 -> s1854 [fontname="Times-Italic", label="&epsilon;"];
+s1854 -> s1856 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{'P', 'p'}", arrowhead = normal];
+s1855 -> s1857 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<Sign>", arrowhead = normal];
+s1856:p0 -> s1855 [fontname="Times-Italic", label="&epsilon;"];
+s1856:p1 -> s1857 [fontname="Times-Italic", label="&epsilon;"];
+s1857 -> s1858 [fontname="Times-Italic", label="&epsilon;"];
+s1858 -> s1859 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<DigitSequence>", arrowhead = normal];
+s1859 -> s322 [fontname="Times-Italic", label="&epsilon;"];
+}

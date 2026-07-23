@@ -43,33 +43,65 @@ public class Command
             ? OptimizeOptions.FromNames(optimizeNames)
             : OptimizeOptions.All;
 
+        // Pass 1: parse all grammar models.
+        var models = new List<GrammarModel>();
         foreach (var set in sets)
         {
             if (set.Nodes == null || set.Nodes.Length == 0) continue;
-
-            // The root of the parse tree is the first node cast as an element.
             var root = set.Nodes[0] as UnvParseTreeElement;
             if (root == null) continue;
-
             var fileName = set.FileName ?? "grammar";
-
-            // ---- Parse grammar model ----
             GrammarModel model;
-            try
-            {
-                model = new GrammarParser().Parse(root, fileName);
-            }
+            try { model = new GrammarParser().Parse(root, fileName); }
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"[trinterp] Failed to parse grammar model for {fileName}: {ex.Message}");
                 continue;
             }
+            models.Add(model);
+            if (model.ImplicitLexer != null) models.Add(model.ImplicitLexer);
+        }
 
-            // ---- Emit for lexer/combined and parser halves ----
+        // Collect the string-literal vocabulary from every lexer model in this batch.
+        // When a parser grammar is paired with a separate lexer grammar (e.g. CParser +
+        // CLexer), the parser has no StringLiteralToType of its own; merging the lexer's
+        // vocabulary lets TokenLabel show 'while' instead of While.
+        var batchLiterals = new Dictionary<string, int>();
+        foreach (var m in models)
+            if (m.IsLexer)
+                foreach (var kv in m.StringLiteralToType)
+                    if (!batchLiterals.ContainsKey(kv.Key))
+                        batchLiterals[kv.Key] = kv.Value;
+
+        // Collect the token name→type vocabulary from every lexer model in this batch.
+        var batchTokenNames = new Dictionary<string, int>();
+        foreach (var m in models)
+            if (m.IsLexer)
+                foreach (var kv in m.TokenNameToType)
+                    if (!batchTokenNames.ContainsKey(kv.Key) || batchTokenNames[kv.Key] == 0)
+                        batchTokenNames[kv.Key] = kv.Value;
+
+        // Pass 2: apply shared vocabulary to parser models then emit.
+        foreach (var model in models)
+        {
+            if (!model.IsLexer)
+            {
+                // Merge string literal vocabulary (for display labels).
+                if (batchLiterals.Count > 0)
+                    foreach (var kv in batchLiterals)
+                        if (!model.StringLiteralToType.ContainsKey(kv.Key))
+                            model.StringLiteralToType[kv.Key] = kv.Value;
+
+                // Merge token name→type so ResolveTokenType returns correct types
+                // (parser grammar uses 0 as placeholder until lexer vocab is available).
+                if (batchTokenNames.Count > 0)
+                    foreach (var kv in batchTokenNames)
+                        if (!model.TokenNameToType.ContainsKey(kv.Key) ||
+                            model.TokenNameToType[kv.Key] == 0)
+                            model.TokenNameToType[kv.Key] = kv.Value;
+            }
+
             EmitGrammar(model, config, outDir, optimize);
-
-            if (model.ImplicitLexer != null)
-                EmitGrammar(model.ImplicitLexer, config, outDir, optimize);
         }
     }
 

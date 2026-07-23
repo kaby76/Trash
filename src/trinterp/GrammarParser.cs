@@ -267,6 +267,24 @@ public class GrammarParser
                     if (!model.StringLiteralToType.ContainsKey(lit))
                         model.StringLiteralToType[lit] = nextType++;
             }
+
+            // Populate StringLiteralToType from simple single-literal lexer rules
+            // (e.g. While:'while' → 'while'→N).  This lets ATN DOT rendering show
+            // the string literal form rather than the symbolic token name, matching
+            // antlr4's vocabulary display behaviour.
+            // Require exactly one STRING_LITERAL occurrence (not just one unique value)
+            // so that rules like StringLiteral:...'"'...'"'... are not mis-classified.
+            foreach (var rule in model.Rules)
+            {
+                if (rule.IsFragment || rule.BodyNode == null || rule.TokenType == 0) continue;
+                var lits = new System.Collections.Generic.List<string>();
+                var seen = new System.Collections.Generic.HashSet<string>();
+                CollectStringLiterals(rule.BodyNode, seen, lits);
+                if (lits.Count == 1
+                    && CountStringLiteralOccurrences(rule.BodyNode) == 1
+                    && !model.StringLiteralToType.ContainsKey(lits[0]))
+                    model.StringLiteralToType[lits[0]] = rule.TokenType;
+            }
         }
         else
         {
@@ -353,7 +371,9 @@ public class GrammarParser
             var lits = new System.Collections.Generic.List<string>();
             var seen = new System.Collections.Generic.HashSet<string>();
             CollectStringLiterals(rule.BodyNode, seen, lits);
-            if (lits.Count == 1 && !model.StringLiteralToType.ContainsKey(lits[0]))
+            if (lits.Count == 1
+                && CountStringLiteralOccurrences(rule.BodyNode) == 1
+                && !model.StringLiteralToType.ContainsKey(lits[0]))
                 model.StringLiteralToType[lits[0]] = rule.TokenType;
         }
 
@@ -368,9 +388,15 @@ public class GrammarParser
 
     private static GrammarKind ParseKind(UnvParseTreeElement grammarType)
     {
-        var text = GetText(grammarType).Trim();
-        if (text.StartsWith("lexer", StringComparison.OrdinalIgnoreCase)) return GrammarKind.Lexer;
-        if (text.StartsWith("parser", StringComparison.OrdinalIgnoreCase)) return GrammarKind.Parser;
+        // Look at terminal children by token-type name to avoid including
+        // hidden-channel tokens (block comments) that appear before the
+        // grammar modifier keyword in the parse tree.
+        foreach (var child in Children(grammarType))
+            if (IsTerminal(child))
+            {
+                if (child.LocalName == "LEXER") return GrammarKind.Lexer;
+                if (child.LocalName == "PARSER") return GrammarKind.Parser;
+            }
         return GrammarKind.Combined;
     }
 
@@ -389,6 +415,26 @@ public class GrammarParser
                 CollectStringLiterals(child, seen, ordered);
             }
         }
+    }
+
+    /// <summary>
+    /// Counts the total number of STRING_LITERAL terminal occurrences (including duplicates).
+    /// Used to distinguish true single-literal rules (e.g. While:'while') from rules that
+    /// happen to have only one unique literal but use it multiple times (e.g.
+    /// StringLiteral : ... '"' ... '"' ...).
+    /// </summary>
+    private static int CountStringLiteralOccurrences(UnvParseTreeElement node)
+    {
+        if (node == null) return 0;
+        int count = 0;
+        foreach (var child in Children(node))
+        {
+            if (IsTerminal(child) && child.LocalName == "STRING_LITERAL")
+                count++;
+            else
+                count += CountStringLiteralOccurrences(child);
+        }
+        return count;
     }
 
     public static string GetText(UnvParseTreeElement node) => node?.GetText() ?? "";

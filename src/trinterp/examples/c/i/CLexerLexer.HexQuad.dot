@@ -1,0 +1,16 @@
+digraph ATN {
+rankdir=LR;
+s277[fontsize=11,label="277", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s278[fontsize=11, label="278", shape=doublecircle, fixedsize=true, width=.6];
+s1711[fontsize=11,label="1711", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1712[fontsize=11,label="1712", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1713[fontsize=11,label="1713", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1714[fontsize=11,label="1714", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1715[fontsize=11,label="1715", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s277 -> s1711 [fontname="Times-Italic", label="&epsilon;"];
+s1711 -> s1712 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<HexadecimalDigit>", arrowhead = normal];
+s1712 -> s1713 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<HexadecimalDigit>", arrowhead = normal];
+s1713 -> s1714 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<HexadecimalDigit>", arrowhead = normal];
+s1714 -> s1715 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<HexadecimalDigit>", arrowhead = normal];
+s1715 -> s278 [fontname="Times-Italic", label="&epsilon;"];
+}

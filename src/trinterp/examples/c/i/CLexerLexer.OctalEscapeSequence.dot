@@ -1,0 +1,24 @@
+digraph ATN {
+rankdir=LR;
+s337[fontsize=11,label="337", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s338[fontsize=11, label="338", shape=doublecircle, fixedsize=true, width=.6];
+s1933[fontsize=11,label="1933", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1934[fontsize=11,label="1934", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1935[fontsize=11,label="1935", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1936[fontsize=11,label="{&rarr;\n1936\nd=47|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1937[fontsize=11,label="&larr;\n1937", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1938[fontsize=11,label="1938", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1939[fontsize=11,label="{&rarr;\n1939\nd=48|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1940[fontsize=11,label="&larr;\n1940", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s337 -> s1933 [fontname="Times-Italic", label="&epsilon;"];
+s1933 -> s1934 [fontsize=11, fontname="Courier", arrowsize=.7, label = "92", arrowhead = normal];
+s1934 -> s1936 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<OctalDigit>", arrowhead = normal];
+s1935 -> s1937 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<OctalDigit>", arrowhead = normal];
+s1936:p0 -> s1935 [fontname="Times-Italic", label="&epsilon;"];
+s1936:p1 -> s1937 [fontname="Times-Italic", label="&epsilon;"];
+s1937 -> s1939 [fontname="Times-Italic", label="&epsilon;"];
+s1938 -> s1940 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<OctalDigit>", arrowhead = normal];
+s1939:p0 -> s1938 [fontname="Times-Italic", label="&epsilon;"];
+s1939:p1 -> s1940 [fontname="Times-Italic", label="&epsilon;"];
+s1940 -> s338 [fontname="Times-Italic", label="&epsilon;"];
+}

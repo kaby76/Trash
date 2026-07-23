@@ -1,0 +1,31 @@
+digraph ATN {
+rankdir=LR;
+s275[fontsize=11,label="275", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s276[fontsize=11, label="276", shape=doublecircle, fixedsize=true, width=.6];
+s1445[fontsize=11,label="1445", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1446[fontsize=11,label="1446", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1447[fontsize=11,label="1447", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1448[fontsize=11,label="1448", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1449[fontsize=11,label="1449", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1450[fontsize=11,label="1450", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1451[fontsize=11,label="1451", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1452[fontsize=11,label="1452", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1453[fontsize=11,label="1453", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1454[fontsize=11,label="1454", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1455[fontsize=11,label="{&rarr;\n1455\nd=13|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1456[fontsize=11,label="&larr;\n1456", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s275 -> s1455 [fontname="Times-Italic", label="&epsilon;"];
+s1445 -> s1446 [fontsize=11, fontname="Courier", arrowsize=.7, label = "92", arrowhead = normal];
+s1446 -> s1447 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'u'", arrowhead = normal];
+s1447 -> s1448 [fontname="Times-Italic", label="&epsilon;"];
+s1448 -> s1456 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<HexQuad>", arrowhead = normal];
+s1449 -> s1450 [fontsize=11, fontname="Courier", arrowsize=.7, label = "92", arrowhead = normal];
+s1450 -> s1451 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'U'", arrowhead = normal];
+s1451 -> s1452 [fontname="Times-Italic", label="&epsilon;"];
+s1452 -> s1453 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<HexQuad>", arrowhead = normal];
+s1453 -> s1454 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<HexQuad>", arrowhead = normal];
+s1454 -> s1456 [fontname="Times-Italic", label="&epsilon;"];
+s1455:p0 -> s1445 [fontname="Times-Italic", label="&epsilon;"];
+s1455:p1 -> s1449 [fontname="Times-Italic", label="&epsilon;"];
+s1456 -> s276 [fontname="Times-Italic", label="&epsilon;"];
+}

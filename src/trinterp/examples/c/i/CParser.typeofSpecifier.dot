@@ -1,0 +1,16 @@
+digraph ATN {
+rankdir=LR;
+s96[fontsize=11,label="96", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s97[fontsize=11, label="97", shape=doublecircle, fixedsize=true, width=.6];
+s765[fontsize=11,label="765", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s766[fontsize=11,label="766", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s767[fontsize=11,label="767", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s768[fontsize=11,label="768", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s769[fontsize=11,label="769", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s96 -> s765 [fontname="Times-Italic", label="&epsilon;"];
+s765 -> s766 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{Typeof, Typeof_unqual}", arrowhead = normal];
+s766 -> s767 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'('", arrowhead = normal];
+s767 -> s768 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<typeofSpecifierArgument>", arrowhead = normal];
+s768 -> s769 [fontsize=11, fontname="Courier", arrowsize=.7, label = "')'", arrowhead = normal];
+s769 -> s97 [fontname="Times-Italic", label="&epsilon;"];
+}

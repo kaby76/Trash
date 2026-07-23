@@ -1,0 +1,17 @@
+digraph ATN {
+rankdir=LR;
+s317[fontsize=11,label="317", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s318[fontsize=11, label="318", shape=doublecircle, fixedsize=true, width=.6];
+s1839[fontsize=11,label="1839", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1840[fontsize=11,label="&rarr;\n1840+", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1841[fontsize=11,label="&larr;\n1841", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1842[fontsize=11,label="{1842+\nd=37|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1843[fontsize=11,label="1843", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s317 -> s1840 [fontname="Times-Italic", label="&epsilon;"];
+s1839 -> s1841 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<Digit>", arrowhead = normal];
+s1840 -> s1839 [fontname="Times-Italic", label="&epsilon;"];
+s1841 -> s1842 [fontname="Times-Italic", label="&epsilon;"];
+s1842:p0 -> s1840 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+s1842:p1 -> s1843 [fontname="Times-Italic", label="&epsilon;"];
+s1843 -> s318 [fontname="Times-Italic", label="&epsilon;"];
+}

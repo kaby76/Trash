@@ -1,0 +1,35 @@
+digraph ATN {
+rankdir=LR;
+s359[fontsize=11,label="359", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s360[fontsize=11, label="360", shape=doublecircle, fixedsize=true, width=.6];
+s2081[fontsize=11,label="2081", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2082[fontsize=11,label="2082", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2083[fontsize=11,label="2083", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2084[fontsize=11,label="2084", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2085[fontsize=11,label="&rarr;\n2085*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2086[fontsize=11,label="&larr;\n2086", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2087[fontsize=11,label="{2087*\nd=73|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s2088[fontsize=11,label="2088", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2089[fontsize=11,label="2089*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2090[fontsize=11,label="2090", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2091[fontsize=11,label="2091", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2092[fontsize=11,label="2092", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2093[fontsize=11,label="2093", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s2094[fontsize=11,label="2094", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s359 -> s2081 [fontname="Times-Italic", label="&epsilon;"];
+s2081 -> s2082 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'/'", arrowhead = normal];
+s2082 -> s2083 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'*'", arrowhead = normal];
+s2083 -> s2087 [fontname="Times-Italic", label="&epsilon;"];
+s2084 -> s2086 [fontname="Times-Italic", label="&epsilon;"];
+s2085 -> s2084 [fontname="Times-Italic", label="&epsilon;"];
+s2086 -> s2089 [fontname="Times-Italic", label="&epsilon;"];
+s2087:p0 -> s2088 [fontname="Times-Italic", label="&epsilon;"];
+s2087:p1 -> s2085 [fontname="Times-Italic", label="&epsilon;"];
+s2088 -> s2090 [fontname="Times-Italic", label="&epsilon;"];
+s2089 -> s2087 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+s2090 -> s2091 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'*'", arrowhead = normal];
+s2091 -> s2092 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'/'", arrowhead = normal];
+s2092 -> s2093 [fontname="Times-Italic", label="&epsilon;"];
+s2093 -> s2094 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{action}", arrowhead = normal];
+s2094 -> s360 [fontname="Times-Italic", label="&epsilon;"];
+}

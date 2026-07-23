@@ -1,0 +1,36 @@
+digraph ATN {
+rankdir=LR;
+s118[fontsize=11,label="118", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s119[fontsize=11, label="119", shape=doublecircle, fixedsize=true, width=.6];
+s931[fontsize=11,label="931", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s932[fontsize=11,label="{&rarr;\n932\nd=98|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s933[fontsize=11,label="&larr;\n933", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s934[fontsize=11,label="934", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s935[fontsize=11,label="935", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s936[fontsize=11,label="936", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s937[fontsize=11,label="{&rarr;\n937\nd=99|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s938[fontsize=11,label="&larr;\n938", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s939[fontsize=11,label="939", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s940[fontsize=11,label="940", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s941[fontsize=11,label="941", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s942[fontsize=11,label="{&rarr;\n942\nd=100|{<p0>|<p1>|<p2>}}", shape=record, fixedsize=false, peripheries=1];
+s943[fontsize=11,label="&larr;\n943", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s118 -> s932 [fontname="Times-Italic", label="&epsilon;"];
+s931 -> s933 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<attributeSpecifierSequence>", arrowhead = normal];
+s932:p0 -> s931 [fontname="Times-Italic", label="&epsilon;"];
+s932:p1 -> s933 [fontname="Times-Italic", label="&epsilon;"];
+s933 -> s937 [fontname="Times-Italic", label="&epsilon;"];
+s934 -> s935 [fontsize=11, fontname="Courier", arrowsize=.7, label = "{pred}?", arrowhead = normal];
+s935 -> s938 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<declarationSpecifiers>", arrowhead = normal];
+s936 -> s938 [fontname="Times-Italic", label="&epsilon;"];
+s937:p0 -> s934 [fontname="Times-Italic", label="&epsilon;"];
+s937:p1 -> s936 [fontname="Times-Italic", label="&epsilon;"];
+s938 -> s942 [fontname="Times-Italic", label="&epsilon;"];
+s939 -> s943 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<declarator>", arrowhead = normal];
+s940 -> s943 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<abstractDeclarator>", arrowhead = normal];
+s941 -> s943 [fontname="Times-Italic", label="&epsilon;"];
+s942:p0 -> s939 [fontname="Times-Italic", label="&epsilon;"];
+s942:p1 -> s940 [fontname="Times-Italic", label="&epsilon;"];
+s942:p2 -> s941 [fontname="Times-Italic", label="&epsilon;"];
+s943 -> s119 [fontname="Times-Italic", label="&epsilon;"];
+}

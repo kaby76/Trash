@@ -1,0 +1,21 @@
+digraph ATN {
+rankdir=LR;
+s285[fontsize=11,label="285", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s286[fontsize=11, label="286", shape=doublecircle, fixedsize=true, width=.6];
+s1491[fontsize=11,label="1491", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1492[fontsize=11,label="1492", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1493[fontsize=11,label="&rarr;\n1493*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1494[fontsize=11,label="&larr;\n1494", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1495[fontsize=11,label="{1495*\nd=20|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1496[fontsize=11,label="1496", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1497[fontsize=11,label="1497*", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s285 -> s1491 [fontname="Times-Italic", label="&epsilon;"];
+s1491 -> s1495 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'0'", arrowhead = normal];
+s1492 -> s1494 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<OctalDigit>", arrowhead = normal];
+s1493 -> s1492 [fontname="Times-Italic", label="&epsilon;"];
+s1494 -> s1497 [fontname="Times-Italic", label="&epsilon;"];
+s1495:p0 -> s1493 [fontname="Times-Italic", label="&epsilon;"];
+s1495:p1 -> s1496 [fontname="Times-Italic", label="&epsilon;"];
+s1496 -> s286 [fontname="Times-Italic", label="&epsilon;"];
+s1497 -> s1495 [fontname="Times-Italic", label="&epsilon;", style="dashed"];
+}

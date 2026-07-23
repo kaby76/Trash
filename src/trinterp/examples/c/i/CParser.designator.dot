@@ -1,0 +1,17 @@
+digraph ATN {
+rankdir=LR;
+s136[fontsize=11,label="136", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s137[fontsize=11, label="137", shape=doublecircle, fixedsize=true, width=.6];
+s1096[fontsize=11,label="1096", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1097[fontsize=11,label="1097", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1098[fontsize=11,label="1098", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1099[fontsize=11,label="{&rarr;\n1099\nd=124|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1100[fontsize=11,label="&larr;\n1100", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s136 -> s1099 [fontname="Times-Italic", label="&epsilon;"];
+s1096 -> s1100 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<gnuArrayDesignator>", arrowhead = normal];
+s1097 -> s1098 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'.'", arrowhead = normal];
+s1098 -> s1100 [fontsize=11, fontname="Courier", arrowsize=.7, label = "Identifier", arrowhead = normal];
+s1099:p0 -> s1096 [fontname="Times-Italic", label="&epsilon;"];
+s1099:p1 -> s1097 [fontname="Times-Italic", label="&epsilon;"];
+s1100 -> s137 [fontname="Times-Italic", label="&epsilon;"];
+}

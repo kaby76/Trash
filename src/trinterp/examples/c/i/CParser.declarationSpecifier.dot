@@ -1,0 +1,24 @@
+digraph ATN {
+rankdir=LR;
+s58[fontsize=11,label="58", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s59[fontsize=11, label="59", shape=doublecircle, fixedsize=true, width=.6];
+s577[fontsize=11,label="577", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s578[fontsize=11,label="578", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s579[fontsize=11,label="579", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s580[fontsize=11,label="580", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s581[fontsize=11,label="581", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s582[fontsize=11,label="{&rarr;\n582\nd=34|{<p0>|<p1>|<p2>|<p3>|<p4>}}", shape=record, fixedsize=false, peripheries=1];
+s583[fontsize=11,label="&larr;\n583", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s58 -> s582 [fontname="Times-Italic", label="&epsilon;"];
+s577 -> s583 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<storageClassSpecifier>", arrowhead = normal];
+s578 -> s583 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<typeSpecifier>", arrowhead = normal];
+s579 -> s583 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<typeQualifier>", arrowhead = normal];
+s580 -> s583 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<functionSpecifier>", arrowhead = normal];
+s581 -> s583 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<alignmentSpecifier>", arrowhead = normal];
+s582:p0 -> s577 [fontname="Times-Italic", label="&epsilon;"];
+s582:p1 -> s578 [fontname="Times-Italic", label="&epsilon;"];
+s582:p2 -> s579 [fontname="Times-Italic", label="&epsilon;"];
+s582:p3 -> s580 [fontname="Times-Italic", label="&epsilon;"];
+s582:p4 -> s581 [fontname="Times-Italic", label="&epsilon;"];
+s583 -> s59 [fontname="Times-Italic", label="&epsilon;"];
+}

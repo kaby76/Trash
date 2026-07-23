@@ -1,0 +1,19 @@
+digraph ATN {
+rankdir=LR;
+s150[fontsize=11,label="150", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s151[fontsize=11, label="151", shape=doublecircle, fixedsize=true, width=.6];
+s1141[fontsize=11,label="1141", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1142[fontsize=11,label="1142", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1143[fontsize=11,label="{&rarr;\n1143\nd=130|{<p0>|<p1>}}", shape=record, fixedsize=false, peripheries=1];
+s1144[fontsize=11,label="&larr;\n1144", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1145[fontsize=11,label="1145", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s1146[fontsize=11,label="1146", shape=circle, fixedsize=true, width=.55, peripheries=1];
+s150 -> s1141 [fontname="Times-Italic", label="&epsilon;"];
+s1141 -> s1143 [fontsize=11, fontname="Courier", arrowsize=.7, label = "'('", arrowhead = normal];
+s1142 -> s1144 [fontsize=11, fontname="Courier", arrowsize=.7, label = "<balancedTokenSequence>", arrowhead = normal];
+s1143:p0 -> s1142 [fontname="Times-Italic", label="&epsilon;"];
+s1143:p1 -> s1144 [fontname="Times-Italic", label="&epsilon;"];
+s1144 -> s1145 [fontname="Times-Italic", label="&epsilon;"];
+s1145 -> s1146 [fontsize=11, fontname="Courier", arrowsize=.7, label = "')'", arrowhead = normal];
+s1146 -> s151 [fontname="Times-Italic", label="&epsilon;"];
+}
