@@ -15,6 +15,10 @@ public class RuleModel
     public string ModeName;     // lexer only: which mode the rule lives in
     public UnvParseTreeElement BodyNode; // parse tree node of the rule body
     public string ImplicitLiteral; // for T__N rules created from string literals in combined grammars
+    // Per-rule caseInsensitive option: null = inherit from grammar, true/false = explicit override.
+    public bool? PerRuleCaseInsensitive;
+    // True when the rule has a per-rule optionsSpec (affects StringLiteralToType aliasing).
+    public bool HasRuleOptions;
 
     // Actions/predicates collected during first pass (for actions-in-interp output)
     public List<ActionInfo> Actions = new(); // non-predicate actions, ordered

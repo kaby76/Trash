@@ -209,6 +209,21 @@ public class GrammarParser
         var name = GetText(nameNode).Trim();
 
         var lexerRuleBlock = Child(lexerRuleSpec, "lexerRuleBlock");
+        // Parse per-rule options (optionsSpec sits between TOKEN_REF and COLON in lexerRuleSpec).
+        bool? perRuleCaseInsensitive = null;
+        var ruleOptions = Child(lexerRuleSpec, "optionsSpec");
+        bool hasRuleOptions = ruleOptions != null;
+        if (ruleOptions != null)
+        {
+            foreach (var opt in Children(ruleOptions, "option"))
+            {
+                var oid = Child(opt, "identifier");
+                var oval = Child(opt, "optionValue");
+                if (oid == null || oval == null) continue;
+                if (GetText(oid).Trim() == "caseInsensitive")
+                    perRuleCaseInsensitive = GetText(oval).Trim().ToLowerInvariant() == "true";
+            }
+        }
         var rule = new RuleModel
         {
             Name = name,
@@ -216,7 +231,9 @@ public class GrammarParser
             IsFragment = isFragment,
             TokenType = 0, // assigned later
             ModeName = modeName ?? "DEFAULT_MODE",
-            BodyNode = lexerRuleBlock
+            BodyNode = lexerRuleBlock,
+            PerRuleCaseInsensitive = perRuleCaseInsensitive,
+            HasRuleOptions = hasRuleOptions,
         };
         model.Rules.Add(rule);
     }
@@ -251,11 +268,13 @@ public class GrammarParser
             // (they will reuse that rule's type, assigned below).
             if (model.Kind == GrammarKind.Combined)
             {
-                // Build set of literals covered by named single-literal lexer rules.
+                // Build set of literals covered by named single-literal lexer rules
+                // (excluding rules with per-rule options, which don't get literal aliases).
                 var namedBodyLiterals = new System.Collections.Generic.HashSet<string>();
                 foreach (var rule in model.Rules)
                 {
                     if (rule.IsFragment || !IsUpperFirst(rule.Name) || rule.BodyNode == null) continue;
+                    if (rule.HasRuleOptions) continue;
                     var l2 = new System.Collections.Generic.List<string>();
                     var s2 = new System.Collections.Generic.HashSet<string>();
                     CollectStringLiterals(rule.BodyNode, s2, l2);
@@ -287,9 +306,12 @@ public class GrammarParser
             // Populate StringLiteralToType from simple single-literal lexer rules
             // (e.g. While:'while' → 'while'→N, COLON:':' → ':'→COLON.type).
             // This lets ATN DOT rendering show the literal form rather than token name.
+            // Exclude rules with per-rule options (e.g. caseInsensitive=false override):
+            // ANTLR4 doesn't add such rules as literal aliases.
             foreach (var rule in model.Rules)
             {
                 if (rule.IsFragment || rule.BodyNode == null || rule.TokenType == 0) continue;
+                if (rule.HasRuleOptions) continue; // per-rule options → no literal alias
                 var lits = new System.Collections.Generic.List<string>();
                 var seen = new System.Collections.Generic.HashSet<string>();
                 CollectStringLiterals(rule.BodyNode, seen, lits);
@@ -386,7 +408,7 @@ public class GrammarParser
         // when rendering ATN transitions, matching antlr4's vocabulary display behaviour.
         foreach (var rule in lexerRules)
         {
-            if (rule.IsFragment || rule.BodyNode == null) continue;
+            if (rule.IsFragment || rule.BodyNode == null || rule.HasRuleOptions) continue;
             var lits = new System.Collections.Generic.List<string>();
             var seen = new System.Collections.Generic.HashSet<string>();
             CollectStringLiterals(rule.BodyNode, seen, lits);

@@ -78,6 +78,11 @@ public class LexerAtnFactory : ParserAtnFactory
         return _atn;
     }
 
+    // Returns the effective caseInsensitive setting for the current rule:
+    // per-rule override if present, otherwise grammar-level setting.
+    private bool CurrentCaseInsensitive =>
+        _currentRule?.PerRuleCaseInsensitive ?? _grammar.IsCaseInsensitive;
+
     // =========================================================================
     // Rule body: lexerRuleBlock → lexerAltList
     // =========================================================================
@@ -270,7 +275,7 @@ public class LexerAtnFactory : ParserAtnFactory
 
         var set = new IntervalSet();
         set.Add(fromChar, toChar);
-        if (_grammar.IsCaseInsensitive) set = CaseExpandSet(set);
+        if (CurrentCaseInsensitive) set = CaseExpandSet(set);
         var left = NewState<BasicState>();
         var right = NewState<BasicState>();
         left.AddTransition(MakeIntervalSetTransition(right, set));
@@ -307,7 +312,7 @@ public class LexerAtnFactory : ParserAtnFactory
                 var b = CharValue(GetText(literals[1]).Trim());
                 if (a >= 0 && b >= 0)
                 {
-                    if (_grammar.IsCaseInsensitive)
+                    if (CurrentCaseInsensitive)
                         set.AddAll(CaseExpandSet(IntervalSet.Of(a, b)));
                     else
                         set.Add(a, b);
@@ -331,7 +336,7 @@ public class LexerAtnFactory : ParserAtnFactory
             var c = CharValue(GetText(strLit).Trim());
             if (c >= 0)
             {
-                if (_grammar.IsCaseInsensitive)
+                if (CurrentCaseInsensitive)
                     set.AddAll(CaseExpandSet(IntervalSet.Of(c, c)));
                 else
                     set.Add(c);
@@ -478,7 +483,7 @@ public class LexerAtnFactory : ParserAtnFactory
         for (int j = 0; j < chars.Count; j++)
         {
             int c = chars[j];
-            if (_grammar.IsCaseInsensitive)
+            if (CurrentCaseInsensitive)
             {
                 int lo = char.ToLowerInvariant((char)c);
                 int hi = char.ToUpperInvariant((char)c);
@@ -556,7 +561,7 @@ public class LexerAtnFactory : ParserAtnFactory
             set.Add(c);
         }
 
-        if (_grammar.IsCaseInsensitive) set = CaseExpandSet(set);
+        if (CurrentCaseInsensitive) set = CaseExpandSet(set);
         if (negate)
         {
             var complement = set.Complement(IntervalSet.Of(0, 0xFFFF));
