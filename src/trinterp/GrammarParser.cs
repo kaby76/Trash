@@ -335,8 +335,10 @@ public class GrammarParser
             lexer.ModeNames.Insert(0, "DEFAULT_MODE");
 
         // Create implicit T__N lexer rules for each string literal used in parser rules.
+        // ANTLR4 inserts these BEFORE the explicit lexer rules, so we prepend them.
         // String literals are already in model.StringLiteralToType (assigned in AssignTokenTypes).
         int tIdx = 0;
+        var tImplicit = new List<RuleModel>();
         foreach (var kv in model.StringLiteralToType.OrderBy(x => x.Value))
         {
             var name = "T__" + tIdx++;
@@ -346,18 +348,18 @@ public class GrammarParser
             // Ensure lexer has the literal type too (may already be copied).
             lexer.StringLiteralToType[kv.Key] = kv.Value;
 
-            var implicitRule = new RuleModel
+            tImplicit.Add(new RuleModel
             {
                 Name = name,
-                Index = lexer.Rules.Count,
                 IsFragment = false,
                 TokenType = kv.Value,
                 ModeName = "DEFAULT_MODE",
                 ImplicitLiteral = kv.Key,
                 BodyNode = null
-            };
-            lexer.Rules.Add(implicitRule);
+            });
         }
+        // Prepend T__ rules so explicit lexer rules get higher indices (matching ANTLR4).
+        lexer.Rules.InsertRange(0, tImplicit);
 
         // Re-index lexer rules (including any newly added implicit rules).
         for (int i = 0; i < lexer.Rules.Count; i++)
@@ -374,7 +376,7 @@ public class GrammarParser
             var seen = new System.Collections.Generic.HashSet<string>();
             CollectStringLiterals(rule.BodyNode, seen, lits);
             if (lits.Count == 1
-                && CountStringLiteralOccurrences(rule.BodyNode) == 1
+                && IsExactlySingleLiteralBody(rule.BodyNode)
                 && !model.StringLiteralToType.ContainsKey(lits[0]))
                 model.StringLiteralToType[lits[0]] = rule.TokenType;
         }
