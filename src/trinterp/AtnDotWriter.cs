@@ -277,16 +277,17 @@ public static class AtnDotWriter
             //   atomLevel=false '"' : no backslash (EscapeLabel adds \) → \" in DOT → renders as "
             switch (token)
             {
-                case '\t': return "'\t'";
                 case '\n': return atomLevel ? "'\\\\n'" : "'\\n'";
-                case '\r': return "''";
+                case '\r': return "''";  // ANTLR4 strips \r from labels via replaceAll("\r",""), leaving ''
                 case '"':  return atomLevel ? "'\\\"'" : "'\"'";
                 case '\'': return "'''";
                 case '\\': return atomLevel ? "'\\\\'" : "'\\'";
             }
-            if (token >= 32 && token < 127)
+            // Chars 0-127: embed the raw byte (matches ANTLR4's DOT output).
+            // Chars >= 128 (surrogates, etc.): use '?' (Java can't encode lone surrogates as UTF-8).
+            if (token < 128)
                 return $"'{(char)token}'";
-            return token.ToString();
+            return "'?'";
         }
         // Parser: resolve to string literal or token name.
         foreach (var kv in grammar.StringLiteralToType)
