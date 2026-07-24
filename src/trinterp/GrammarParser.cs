@@ -256,26 +256,13 @@ public class GrammarParser
                 }
             }
 
-            // For combined grammars: pre-assign types to string literals used in parser rules.
-            // These become implicit T__N lexer rules. Do this here so maxTokenType is correct
-            // before ATN construction begins.
-            if (model.Kind == GrammarKind.Combined)
-            {
-                var seenLits = new System.Collections.Generic.HashSet<string>();
-                var orderedLits = new System.Collections.Generic.List<string>();
-                foreach (var rule in model.Rules.Where(r => !IsUpperFirst(r.Name)))
-                    CollectStringLiterals(rule.BodyNode, seenLits, orderedLits);
-                foreach (var lit in orderedLits)
-                    if (!model.StringLiteralToType.ContainsKey(lit))
-                        model.StringLiteralToType[lit] = nextType++;
-            }
-
             // Populate StringLiteralToType from simple single-literal lexer rules
             // (e.g. While:'while' → 'while'→N).  This lets ATN DOT rendering show
             // the string literal form rather than the symbolic token name, matching
             // antlr4's vocabulary display behaviour.
-            // Require exactly one STRING_LITERAL occurrence (not just one unique value)
-            // so that rules like StringLiteral:...'"'...'"'... are not mis-classified.
+            // Do this BEFORE the T__ pass so that parser-rule literals which already
+            // have a named lexer rule reuse that rule's token type instead of getting
+            // a fresh T__N type (matching ANTLR4 behaviour).
             foreach (var rule in model.Rules)
             {
                 if (rule.IsFragment || rule.BodyNode == null || rule.TokenType == 0) continue;
@@ -286,6 +273,20 @@ public class GrammarParser
                     && IsExactlySingleLiteralBody(rule.BodyNode)
                     && !model.StringLiteralToType.ContainsKey(lits[0]))
                     model.StringLiteralToType[lits[0]] = rule.TokenType;
+            }
+
+            // For combined grammars: pre-assign types to string literals used in parser rules.
+            // If the literal already has a named lexer rule (e.g. DOT:'.'), reuse that type.
+            // Otherwise assign a fresh type — these become T__N implicit lexer rules.
+            if (model.Kind == GrammarKind.Combined)
+            {
+                var seenLits = new System.Collections.Generic.HashSet<string>();
+                var orderedLits = new System.Collections.Generic.List<string>();
+                foreach (var rule in model.Rules.Where(r => !IsUpperFirst(r.Name)))
+                    CollectStringLiterals(rule.BodyNode, seenLits, orderedLits);
+                foreach (var lit in orderedLits)
+                    if (!model.StringLiteralToType.ContainsKey(lit))
+                        model.StringLiteralToType[lit] = nextType++; // truly unnamed → T__
             }
         }
         else
@@ -319,6 +320,7 @@ public class GrammarParser
             Name = model.Name + "Lexer",
             Kind = GrammarKind.Lexer,
             FileName = model.FileName,
+            IsCaseInsensitive = model.IsCaseInsensitive,
             TokenNameToType = new Dictionary<string, int>(model.TokenNameToType),
             StringLiteralToType = new Dictionary<string, int>(model.StringLiteralToType),
             ExtraChannelNames = model.ExtraChannelNames,
@@ -334,13 +336,16 @@ public class GrammarParser
         if (!lexer.ModeNames.Contains("DEFAULT_MODE"))
             lexer.ModeNames.Insert(0, "DEFAULT_MODE");
 
-        // Create implicit T__N lexer rules for each string literal used in parser rules.
-        // ANTLR4 inserts these BEFORE the explicit lexer rules, so we prepend them.
-        // String literals are already in model.StringLiteralToType (assigned in AssignTokenTypes).
+        // Create implicit T__N lexer rules for string literals used in parser rules that
+        // have NO corresponding named single-literal lexer rule (those reuse the named type).
+        // ANTLR4 inserts T__ rules BEFORE the explicit lexer rules, so we prepend them.
+        var namedLexerRuleTypes = new HashSet<int>(
+            lexerRules.Where(r => !r.IsFragment && r.TokenType != 0).Select(r => r.TokenType));
         int tIdx = 0;
         var tImplicit = new List<RuleModel>();
         foreach (var kv in model.StringLiteralToType.OrderBy(x => x.Value))
         {
+            if (namedLexerRuleTypes.Contains(kv.Value)) continue; // named rule covers this literal
             var name = "T__" + tIdx++;
             // Add to both models' TokenNameToType (for .tokens file output).
             lexer.TokenNameToType[name] = kv.Value;
