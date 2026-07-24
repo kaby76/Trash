@@ -17,7 +17,7 @@ Expand a glob string into file names.
 
 ## Current version
 
-1.1.1 Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement. Added more perf measurements to templates.
+2.0 Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement. Added more perf measurements to templates.
 
 ## License
 

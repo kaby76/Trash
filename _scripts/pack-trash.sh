@@ -36,6 +36,7 @@ TOOLS=(
     trglob
 #   trgroup
     triconv
+    trinterp
     tritext
     trjson
 #   trkleene
