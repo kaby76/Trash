@@ -245,7 +245,35 @@ public class GrammarParser
                     model.TokenNameToType[t] = nextType++;
             }
 
-            // Each non-fragment TOKEN_REF rule gets a type.
+            // For combined grammars: assign T__ types FIRST (before named lexer rules),
+            // matching ANTLR4's type-numbering order so set elements sort correctly.
+            // Literals that already have a named single-literal lexer rule are skipped
+            // (they will reuse that rule's type, assigned below).
+            if (model.Kind == GrammarKind.Combined)
+            {
+                // Build set of literals covered by named single-literal lexer rules.
+                var namedBodyLiterals = new System.Collections.Generic.HashSet<string>();
+                foreach (var rule in model.Rules)
+                {
+                    if (rule.IsFragment || !IsUpperFirst(rule.Name) || rule.BodyNode == null) continue;
+                    var l2 = new System.Collections.Generic.List<string>();
+                    var s2 = new System.Collections.Generic.HashSet<string>();
+                    CollectStringLiterals(rule.BodyNode, s2, l2);
+                    if (l2.Count == 1 && IsExactlySingleLiteralBody(rule.BodyNode))
+                        namedBodyLiterals.Add(l2[0]);
+                }
+                // Assign T__ types to unnamed parser-rule literals (in appearance order).
+                var seenLits = new System.Collections.Generic.HashSet<string>();
+                var orderedLits = new System.Collections.Generic.List<string>();
+                foreach (var rule in model.Rules.Where(r => !IsUpperFirst(r.Name)))
+                    CollectStringLiterals(rule.BodyNode, seenLits, orderedLits);
+                foreach (var lit in orderedLits)
+                    if (!namedBodyLiterals.Contains(lit) && !model.StringLiteralToType.ContainsKey(lit))
+                        model.StringLiteralToType[lit] = nextType++;
+            }
+
+            // Each non-fragment TOKEN_REF rule gets a type (after T__ types for combined grammars,
+            // matching ANTLR4's numbering where T__N types are lower than named rule types).
             foreach (var rule in model.Rules)
             {
                 if (!rule.IsFragment && IsUpperFirst(rule.Name))
@@ -257,12 +285,8 @@ public class GrammarParser
             }
 
             // Populate StringLiteralToType from simple single-literal lexer rules
-            // (e.g. While:'while' → 'while'→N).  This lets ATN DOT rendering show
-            // the string literal form rather than the symbolic token name, matching
-            // antlr4's vocabulary display behaviour.
-            // Do this BEFORE the T__ pass so that parser-rule literals which already
-            // have a named lexer rule reuse that rule's token type instead of getting
-            // a fresh T__N type (matching ANTLR4 behaviour).
+            // (e.g. While:'while' → 'while'→N, COLON:':' → ':'→COLON.type).
+            // This lets ATN DOT rendering show the literal form rather than token name.
             foreach (var rule in model.Rules)
             {
                 if (rule.IsFragment || rule.BodyNode == null || rule.TokenType == 0) continue;
@@ -273,20 +297,6 @@ public class GrammarParser
                     && IsExactlySingleLiteralBody(rule.BodyNode)
                     && !model.StringLiteralToType.ContainsKey(lits[0]))
                     model.StringLiteralToType[lits[0]] = rule.TokenType;
-            }
-
-            // For combined grammars: pre-assign types to string literals used in parser rules.
-            // If the literal already has a named lexer rule (e.g. DOT:'.'), reuse that type.
-            // Otherwise assign a fresh type — these become T__N implicit lexer rules.
-            if (model.Kind == GrammarKind.Combined)
-            {
-                var seenLits = new System.Collections.Generic.HashSet<string>();
-                var orderedLits = new System.Collections.Generic.List<string>();
-                foreach (var rule in model.Rules.Where(r => !IsUpperFirst(r.Name)))
-                    CollectStringLiterals(rule.BodyNode, seenLits, orderedLits);
-                foreach (var lit in orderedLits)
-                    if (!model.StringLiteralToType.ContainsKey(lit))
-                        model.StringLiteralToType[lit] = nextType++; // truly unnamed → T__
             }
         }
         else
