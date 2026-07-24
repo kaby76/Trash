@@ -76,50 +76,298 @@ public class ParserAtnFactory
 
         if (rule.BodyNode == null && rule.ImplicitLiteral == null) return;
 
+        if (IsImmediatelyLeftRecursive(rule))
+        {
+            BuildLeftRecursiveRule(rule);
+            return;
+        }
+
         // ruleBlock -> ruleAltList  (parser)
         // lexerRuleBlock -> lexerAltList  (lexer, handled in subclass)
         var blk = WalkRuleBody(rule.BodyNode);
         if (blk == null) return;
-
         ConnectRuleBody(rule, blk);
+    }
 
-        // ANTLR4 rewrites left-recursive rules using precedence climbing and allocates one
-        // PrecedencePredicateTransition (= one sempred index) per recursive alternative.
-        // Reserve those indices so that predicates in later rules match ANTLR4's numbering.
-        _nextPredIndex += CountRecursiveAlternatives(rule);
+    // =========================================================================
+    // Left-recursive rule detection and transformation
+    // =========================================================================
+
+    /// <summary>
+    /// True if any outer alt of rule has a direct self-reference as its first element.
+    /// </summary>
+    private bool IsImmediatelyLeftRecursive(RuleModel rule)
+    {
+        if (rule.BodyNode == null) return false;
+        var altList = Child(rule.BodyNode, "ruleAltList") ?? Child(rule.BodyNode, "altList");
+        if (altList == null) return false;
+        foreach (var child in Children(altList))
+        {
+            if (IsTerminal(child)) continue;
+            var elements = GetAltElementNodes(child);
+            if (elements.Count > 0 && IsDirectSelfRef(elements[0], rule.Name))
+                return true;
+        }
+        return false;
     }
 
     /// <summary>
-    /// Returns the number of directly left-recursive alternatives in <paramref name="rule"/>:
-    /// alternatives whose first element is an atom-ruleref back to the same rule.
+    /// Returns the top-level element nodes for a labeledAlt or alternative node.
     /// </summary>
-    private int CountRecursiveAlternatives(RuleModel rule)
+    private static List<UnvParseTreeElement> GetAltElementNodes(UnvParseTreeElement altOrLabeled)
     {
-        if (rule.BodyNode == null) return 0;
-        var altList = Child(rule.BodyNode, "ruleAltList") ?? Child(rule.BodyNode, "altList");
-        if (altList == null) return 0;
+        var altNode = altOrLabeled.LocalName == "labeledAlt"
+            ? Child(altOrLabeled, "alternative")
+            : altOrLabeled;
+        if (altNode == null) return new List<UnvParseTreeElement>();
+        return Children(altNode)
+            .Where(c => !IsTerminal(c) && c.LocalName == "element")
+            .ToList();
+    }
 
-        int count = 0;
+    /// <summary>
+    /// True if element is a direct (possibly labeled) atom ruleref to ruleName,
+    /// without any ebnfSuffix on the element.
+    /// </summary>
+    private static bool IsDirectSelfRef(UnvParseTreeElement element, string ruleName)
+    {
+        // Reject ebnfSuffix (name*, name+, name?)
+        if (Children(element).Any(c => !IsTerminal(c) && c.LocalName == "ebnfSuffix"))
+            return false;
+        // Reject ebnf block or action/predicate
+        if (Child(element, "ebnf") != null) return false;
+        if (Child(element, "actionBlock") != null) return false;
+
+        var labeled = Child(element, "labeledElement");
+        var atom = labeled != null ? Child(labeled, "atom") : Child(element, "atom");
+        if (atom == null) return false;
+
+        var ruleref = Child(atom, "ruleref");
+        if (ruleref == null) return false;
+
+        var nameNode = ChildTerminal(ruleref, "RULE_REF");
+        return nameNode != null && GetText(nameNode).Trim() == ruleName;
+    }
+
+    /// <summary>
+    /// True if the last non-epsilon top-level element (excluding the first element)
+    /// is also a direct self-reference — the ANTLR4 "binary" pattern.
+    /// </summary>
+    private static bool IsBinaryAlt(List<UnvParseTreeElement> allElements, string ruleName)
+    {
+        for (int i = allElements.Count - 1; i >= 1; i--)
+        {
+            if (IsEpsilonElement(allElements[i])) continue;
+            return IsDirectSelfRef(allElements[i], ruleName);
+        }
+        return false;
+    }
+
+    /// <summary>Element is epsilon-like (action or sempred).</summary>
+    private static bool IsEpsilonElement(UnvParseTreeElement element)
+        => Child(element, "actionBlock") != null;
+
+    /// <summary>True if the alt carries assoc=right in its elementOptions.</summary>
+    private static bool IsAltRightAssoc(UnvParseTreeElement altOrLabeled)
+    {
+        var altNode = altOrLabeled.LocalName == "labeledAlt"
+            ? Child(altOrLabeled, "alternative")
+            : altOrLabeled;
+        if (altNode == null) return false;
+        var opts = Child(altNode, "elementOptions");
+        if (opts == null) return false;
+        foreach (var opt in Children(opts))
+        {
+            if (IsTerminal(opt)) continue;
+            // Look for assign nodes: children should be ID(assoc) and ID(right)
+            var ids = Children(opt).Where(c => IsTerminal(c)).Select(c => GetText(c).Trim()).ToList();
+            if (ids.Count >= 2 && ids[0] == "assoc" && ids[1] == "right")
+                return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Builds the precedence-climbing ATN for a directly left-recursive rule,
+    /// matching ANTLR4's LeftRecursiveRuleTransformer output.
+    ///
+    /// Transformed structure:
+    ///   ( {} primary1 | primary2 | ... )
+    ///   ( {prec_n >= _p}?  op_n_body | ... )*
+    /// </summary>
+    private void BuildLeftRecursiveRule(RuleModel rule)
+    {
+        _atn.ruleToStartState[rule.Index].isLeftRecursiveRule = true;
+
+        var altList = Child(rule.BodyNode, "ruleAltList") ?? Child(rule.BodyNode, "altList");
+        if (altList == null) return;
+
+        // Collect outer alts with their 1-based original indices.
+        var allAlts = new List<(UnvParseTreeElement node, int origIndex)>();
+        int idx = 1;
         foreach (var child in Children(altList))
         {
-            if (IsTerminal(child)) continue; // skip OR tokens
-            var altNode = child.LocalName == "labeledAlt" ? Child(child, "alternative")
-                        : child.LocalName == "alternative" ? child
-                        : null;
-            if (altNode == null) continue;
-
-            // First element must be a plain atom → ruleref → RULE_REF matching this rule.
-            var firstElement = Children(altNode).FirstOrDefault(c => c.LocalName == "element");
-            if (firstElement == null) continue;
-            var atom = Child(firstElement, "atom");
-            if (atom == null) continue;
-            var ruleref = Child(atom, "ruleref");
-            if (ruleref == null) continue;
-            var nameTerminal = ChildTerminal(ruleref, "RULE_REF");
-            if (nameTerminal != null && GetText(nameTerminal).Trim() == rule.Name)
-                count++;
+            if (IsTerminal(child)) continue;
+            if (child.LocalName is "labeledAlt" or "alternative")
+                allAlts.Add((child, idx++));
         }
-        return count;
+        int numAlts = allAlts.Count;
+
+        // Classify: primary (non-LR) vs operator (LR).
+        var primaryAlts  = new List<(UnvParseTreeElement node, int origIndex)>();
+        var operatorAlts = new List<(UnvParseTreeElement node, int origIndex)>();
+        foreach (var alt in allAlts)
+        {
+            var elems = GetAltElementNodes(alt.node);
+            if (elems.Count > 0 && IsDirectSelfRef(elems[0], rule.Name))
+                operatorAlts.Add(alt);
+            else
+                primaryAlts.Add(alt);
+        }
+
+        // ── 1. Build primary alt handles ──────────────────────────────────────
+        // Walk primary alts first so any explicit predicates consume pred indices
+        // before the wasted prec-pred indices are reserved.
+        var primaryHandles = new List<AtnHandle>();
+        for (int i = 0; i < primaryAlts.Count; i++)
+        {
+            _currentOuterAlt = primaryAlts[i].origIndex - 1;
+            var an = primaryAlts[i].node;
+            AtnHandle h = an.LocalName == "labeledAlt" ? WalkLabeledAlt(an) : WalkAlternative(an);
+            if (i == 0)
+            {
+                // ANTLR4 prepends an empty {} action to the first primary alt.
+                var actionH = MakeLrEmptyAction();
+                h = ElemList(new List<AtnHandle> { actionH, h });
+            }
+            primaryHandles.Add(h);
+        }
+
+        // Build primary block. Single-alt case: no BasicBlockStartState (matches ANTLR4).
+        AtnHandle primaryBlock;
+        if (primaryHandles.Count == 1)
+        {
+            primaryBlock = primaryHandles[0];
+        }
+        else
+        {
+            var ps = NewState<BasicBlockStartState>();
+            _atn.DefineDecisionState(ps);
+            primaryBlock = ConnectBlock(ps, primaryHandles);
+        }
+
+        // ── 2. Build operator alt handles ─────────────────────────────────────
+        // For each operator alt: reserve a pred index (ANTLR4 allocates one for the
+        // prec sempred even though it becomes a PrecedencePredicateTransition),
+        // then walk the body (inner decisions like (',' x)* happen here).
+        var opHandles = new List<AtnHandle>();
+        foreach (var (an, origIndex) in operatorAlts)
+        {
+            _currentOuterAlt = origIndex - 1;
+            int prec = numAlts - origIndex + 1;
+            var elems = GetAltElementNodes(an);
+            bool isBinary      = IsBinaryAlt(elems, rule.Name);
+            bool isRightAssoc  = IsAltRightAssoc(an);
+            int  nextPrec      = isRightAssoc ? prec : prec + 1;
+
+            // Reserve the pred index ANTLR4 wastes on the prec sempred.
+            _nextPredIndex++;
+
+            var predH  = MakePrecedencePredicate(prec);
+            var bodyH  = WalkLrOperatorBody(elems.Skip(1).ToList(), rule.Name, isBinary, nextPrec);
+            AtnHandle altH = bodyH != null
+                ? ElemList(new List<AtnHandle> { predH, bodyH })
+                : predH;
+            opHandles.Add(altH);
+        }
+
+        // ── 3. Operator star block ────────────────────────────────────────────
+        // Decision is defined AFTER all op alt bodies are walked (inner decisions first).
+        var starBlockStart = NewState<StarBlockStartState>();
+        if (opHandles.Count > 1) _atn.DefineDecisionState(starBlockStart);
+        var starBlock = ConnectBlock(starBlockStart, opHandles);
+
+        // ── 4. Star loop (StarLoopEntry gets its decision last) ───────────────
+        var starLoop = MakeStar(null, starBlock, nonGreedy: false);
+
+        // ── 5. Wire up: rule-start → primaryBlock → starLoop → rule-stop ──────
+        ConnectRuleBody(rule, ElemList(new List<AtnHandle> { primaryBlock, starLoop }));
+    }
+
+    /// <summary>Empty {} action that ANTLR4 prepends to the first primary alt.</summary>
+    private AtnHandle MakeLrEmptyAction()
+    {
+        var ruleIndex = _currentRule?.Index ?? -1;
+        var left  = NewState<BasicState>();
+        var right = NewState<BasicState>();
+        left.AddTransition(new ActionTransition(right, ruleIndex, -1, false));
+        return new AtnHandle(left, right);
+    }
+
+    private AtnHandle MakePrecedencePredicate(int prec)
+    {
+        var left  = NewState<BasicState>();
+        var right = NewState<BasicState>();
+        left.AddTransition(new PrecedencePredicateTransition(right, prec));
+        return new AtnHandle(left, right);
+    }
+
+    /// <summary>
+    /// Walks the elements that follow the stripped leading self-ref in an operator alt.
+    /// In binary alts the rightmost direct self-ref gets precedence nextPrec;
+    /// all other rule refs to the same rule get precedence 0 (via normal MakeRuleRef).
+    /// </summary>
+    private AtnHandle WalkLrOperatorBody(
+        List<UnvParseTreeElement> elements, string ruleName, bool isBinary, int nextPrec)
+    {
+        if (elements.Count == 0) return null;
+
+        // Find rightmost direct self-ref for binary alts.
+        int rightmostIdx = -1;
+        if (isBinary)
+        {
+            for (int i = elements.Count - 1; i >= 0; i--)
+            {
+                if (!IsEpsilonElement(elements[i]) && IsDirectSelfRef(elements[i], ruleName))
+                { rightmostIdx = i; break; }
+            }
+        }
+
+        var handles = new List<AtnHandle>();
+        for (int i = 0; i < elements.Count; i++)
+        {
+            AtnHandle h = (i == rightmostIdx)
+                ? WalkSelfRefWithPrec(elements[i], nextPrec)
+                : WalkElement(elements[i]);
+            if (h != null) handles.Add(h);
+        }
+
+        if (handles.Count == 0) return null;
+        if (handles.Count == 1) return handles[0];
+        return ElemList(handles);
+    }
+
+    /// <summary>
+    /// Builds a RuleTransition to the self-ref rule with the given precedence,
+    /// bypassing the default prec=0 in MakeRuleRef.
+    /// </summary>
+    private AtnHandle WalkSelfRefWithPrec(UnvParseTreeElement element, int prec)
+    {
+        var labeled    = Child(element, "labeledElement");
+        var atom       = labeled != null ? Child(labeled, "atom") : Child(element, "atom");
+        var ruleref    = atom != null ? Child(atom, "ruleref") : null;
+        var nameNode   = ruleref != null ? ChildTerminal(ruleref, "RULE_REF") : null;
+        if (nameNode == null) return WalkElement(element);
+
+        var name = GetText(nameNode).Trim();
+        var r    = _grammar.GetRule(name);
+        if (r == null) return MakeEpsilonHandle();
+
+        var ruleStart = _atn.ruleToStartState[r.Index];
+        var left  = NewState<BasicState>();
+        var right = NewState<BasicState>();
+        left.AddTransition(new RuleTransition(ruleStart, r.Index, prec, right));
+        return new AtnHandle(left, right);
     }
 
     protected void ConnectRuleBody(RuleModel rule, AtnHandle blk)

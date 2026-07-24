@@ -258,7 +258,7 @@ public static class AtnDotWriter
         SetTransition st                  => SetLabel(st.set, grammar),
         ActionTransition at2              => $"action_{at2.ruleIndex}:{at2.actionIndex}",
         PredicateTransition pt            => $"pred_{pt.ruleIndex}:{pt.predIndex}",
-        PrecedencePredicateTransition ppt => $"{ppt.precedence}>=p",
+        PrecedencePredicateTransition ppt => $"{ppt.precedence} >= _p",
         _                                 => "?"
     };
 
@@ -355,7 +355,9 @@ public static class AtnDotWriter
         {
             var start = atn.ruleToStartState[ri];
             if (start == null) continue;
-            if (CanReachSelfRuleTransition(start, ri, new HashSet<int>()))
+            // isLeftRecursiveRule is set when BuildLeftRecursiveRule runs;
+            // fall back to epsilon-traversal for grammars built without that path.
+            if (start.isLeftRecursiveRule || CanReachSelfRuleTransition(start, ri, new HashSet<int>()))
                 result.Add(ri);
         }
         return result;

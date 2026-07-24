@@ -25,6 +25,7 @@ public sealed class BasicState : ATNState
 public sealed class RuleStartState : ATNState
 {
     public RuleStopState stopState;
+    public bool isLeftRecursiveRule;
     public override StateType StateType => StateType.RuleStart;
 }
 
