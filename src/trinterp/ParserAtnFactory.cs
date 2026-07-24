@@ -82,6 +82,44 @@ public class ParserAtnFactory
         if (blk == null) return;
 
         ConnectRuleBody(rule, blk);
+
+        // ANTLR4 rewrites left-recursive rules using precedence climbing and allocates one
+        // PrecedencePredicateTransition (= one sempred index) per recursive alternative.
+        // Reserve those indices so that predicates in later rules match ANTLR4's numbering.
+        _nextPredIndex += CountRecursiveAlternatives(rule);
+    }
+
+    /// <summary>
+    /// Returns the number of directly left-recursive alternatives in <paramref name="rule"/>:
+    /// alternatives whose first element is an atom-ruleref back to the same rule.
+    /// </summary>
+    private int CountRecursiveAlternatives(RuleModel rule)
+    {
+        if (rule.BodyNode == null) return 0;
+        var altList = Child(rule.BodyNode, "ruleAltList") ?? Child(rule.BodyNode, "altList");
+        if (altList == null) return 0;
+
+        int count = 0;
+        foreach (var child in Children(altList))
+        {
+            if (IsTerminal(child)) continue; // skip OR tokens
+            var altNode = child.LocalName == "labeledAlt" ? Child(child, "alternative")
+                        : child.LocalName == "alternative" ? child
+                        : null;
+            if (altNode == null) continue;
+
+            // First element must be a plain atom → ruleref → RULE_REF matching this rule.
+            var firstElement = Children(altNode).FirstOrDefault(c => c.LocalName == "element");
+            if (firstElement == null) continue;
+            var atom = Child(firstElement, "atom");
+            if (atom == null) continue;
+            var ruleref = Child(atom, "ruleref");
+            if (ruleref == null) continue;
+            var nameTerminal = ChildTerminal(ruleref, "RULE_REF");
+            if (nameTerminal != null && GetText(nameTerminal).Trim() == rule.Name)
+                count++;
+        }
+        return count;
     }
 
     protected void ConnectRuleBody(RuleModel rule, AtnHandle blk)
