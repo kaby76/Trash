@@ -281,7 +281,7 @@ public class GrammarParser
                 var seen = new System.Collections.Generic.HashSet<string>();
                 CollectStringLiterals(rule.BodyNode, seen, lits);
                 if (lits.Count == 1
-                    && CountStringLiteralOccurrences(rule.BodyNode) == 1
+                    && IsExactlySingleLiteralBody(rule.BodyNode)
                     && !model.StringLiteralToType.ContainsKey(lits[0]))
                     model.StringLiteralToType[lits[0]] = rule.TokenType;
             }
@@ -398,6 +398,56 @@ public class GrammarParser
                 if (child.LocalName == "PARSER") return GrammarKind.Parser;
             }
         return GrammarKind.Combined;
+    }
+
+    /// <summary>
+    /// Returns true when the lexer rule body is exactly one alternative containing
+    /// a single bare string-literal atom with no EBNF suffix.
+    /// E.g.  While : 'while' ;  → true
+    ///       HexLiteral : '0' [xX] ... ;  → false (multiple atoms)
+    /// This matches ANTLR4's criterion for assigning a literal alias to a token.
+    /// </summary>
+    private static bool IsExactlySingleLiteralBody(UnvParseTreeElement bodyNode)
+    {
+        if (bodyNode == null) return false;
+
+        // Lexer rule body: lexerRuleBlock → lexerAltList → lexerAlt → lexerElements → lexerElement → lexerAtom → terminalDef
+        var lexerAltList = Child(bodyNode, "lexerAltList");
+        if (lexerAltList != null)
+        {
+            var lexerAlts = Children(lexerAltList).Where(c => c.LocalName == "lexerAlt").ToList();
+            if (lexerAlts.Count != 1) return false;
+            var lexerElements = Child(lexerAlts[0], "lexerElements");
+            if (lexerElements == null) return false;
+            var lexerElems = Children(lexerElements).Where(c => c.LocalName == "lexerElement").ToList();
+            if (lexerElems.Count != 1) return false;
+            var elem = lexerElems[0];
+            if (Child(elem, "ebnfSuffix") != null) return false;
+            var lexerAtom = Child(elem, "lexerAtom");
+            if (lexerAtom == null) return false;
+            var terminalDef = Child(lexerAtom, "terminalDef");
+            if (terminalDef == null) return false;
+            return ChildTerminal(terminalDef, "STRING_LITERAL") != null;
+        }
+
+        // Parser rule body: ruleBlock → ruleAltList → labeledAlt/alternative → element → atom → terminalDef
+        var altList = Child(bodyNode, "ruleAltList") ?? Child(bodyNode, "altList");
+        if (altList == null) return false;
+        var nonTerms = Children(altList).Where(c => !IsTerminal(c)).ToList();
+        if (nonTerms.Count != 1) return false;
+        var altNode = nonTerms[0].LocalName == "labeledAlt"
+            ? Child(nonTerms[0], "alternative")
+            : nonTerms[0].LocalName == "alternative" ? nonTerms[0] : null;
+        if (altNode == null) return false;
+        var elements = Children(altNode).Where(c => c.LocalName == "element").ToList();
+        if (elements.Count != 1) return false;
+        var pElem = elements[0];
+        if (Child(pElem, "ebnfSuffix") != null) return false;
+        var atom = Child(pElem, "atom");
+        if (atom == null) return false;
+        var pTerminalDef = Child(atom, "terminalDef");
+        if (pTerminalDef == null) return false;
+        return ChildTerminal(pTerminalDef, "STRING_LITERAL") != null;
     }
 
     private static void CollectStringLiterals(UnvParseTreeElement node, System.Collections.Generic.HashSet<string> seen, System.Collections.Generic.List<string> ordered)
