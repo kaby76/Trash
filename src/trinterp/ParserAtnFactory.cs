@@ -458,13 +458,24 @@ public class ParserAtnFactory
         }
 
         // All alts are simple atoms — remove the per-alt states and return a
-        // single MakeSet handle.
+        // single handle using the most specific transition type.
         foreach (var alt in alts)
         {
             _atn.RemoveState(alt.Left);
             _atn.RemoveState(alt.Right);
         }
-        return MakeSet(matchSet);
+        var setLeft = NewState<BasicState>();
+        var setRight = NewState<BasicState>();
+        var ivs = matchSet.GetIntervals();
+        Transition setTr;
+        if (matchSet.ElementCount == 1)
+            setTr = new AtomTransition(setRight, matchSet.MinElement);
+        else if (ivs.Count == 1 && _grammar.IsLexer)
+            setTr = new RangeTransition(setRight, ivs[0].a, ivs[0].b);
+        else
+            setTr = new SetTransition(setRight, matchSet);
+        setLeft.AddTransition(setTr);
+        return new AtnHandle(setLeft, setRight);
     }
 
     protected AtnHandle ApplySuffix(UnvParseTreeElement ctx, UnvParseTreeElement suffix, AtnHandle blk)

@@ -89,7 +89,9 @@ public class GrammarParser
             if (id == null || val == null) continue;
             var key = GetText(id).Trim();
             var value = GetText(val).Trim();
-            if (key == "tokenVocab")
+            if (key == "caseInsensitive" && value.ToLowerInvariant() == "true")
+                model.IsCaseInsensitive = true;
+            else if (key == "tokenVocab")
                 model.TokenVocab = value;
             // Other options (superClass, etc.) are ignored for ATN purposes.
         }

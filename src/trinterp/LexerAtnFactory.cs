@@ -268,9 +268,12 @@ public class LexerAtnFactory : ParserAtnFactory
         var toChar = CharValue(GetText(literals[1]).Trim());
         if (fromChar < 0 || toChar < 0) return MakeEpsilonHandle();
 
+        var set = new IntervalSet();
+        set.Add(fromChar, toChar);
+        if (_grammar.IsCaseInsensitive) set = CaseExpandSet(set);
         var left = NewState<BasicState>();
         var right = NewState<BasicState>();
-        left.AddTransition(new RangeTransition(right, fromChar, toChar));
+        left.AddTransition(MakeIntervalSetTransition(right, set));
         return new AtnHandle(left, right);
     }
 
@@ -302,7 +305,13 @@ public class LexerAtnFactory : ParserAtnFactory
             {
                 var a = CharValue(GetText(literals[0]).Trim());
                 var b = CharValue(GetText(literals[1]).Trim());
-                if (a >= 0 && b >= 0) set.Add(a, b);
+                if (a >= 0 && b >= 0)
+                {
+                    if (_grammar.IsCaseInsensitive)
+                        set.AddAll(CaseExpandSet(IntervalSet.Of(a, b)));
+                    else
+                        set.Add(a, b);
+                }
             }
             return;
         }
@@ -320,7 +329,13 @@ public class LexerAtnFactory : ParserAtnFactory
         if (strLit != null)
         {
             var c = CharValue(GetText(strLit).Trim());
-            if (c >= 0) set.Add(c);
+            if (c >= 0)
+            {
+                if (_grammar.IsCaseInsensitive)
+                    set.AddAll(CaseExpandSet(IntervalSet.Of(c, c)));
+                else
+                    set.Add(c);
+            }
             return;
         }
 
@@ -461,7 +476,22 @@ public class LexerAtnFactory : ParserAtnFactory
             states.Add(NewState<BasicState>());
 
         for (int j = 0; j < chars.Count; j++)
-            states[j].AddTransition(new AtomTransition(states[j + 1], chars[j]));
+        {
+            int c = chars[j];
+            if (_grammar.IsCaseInsensitive)
+            {
+                int lo = char.ToLowerInvariant((char)c);
+                int hi = char.ToUpperInvariant((char)c);
+                if (lo != hi)
+                {
+                    var cs = new IntervalSet();
+                    cs.Add(lo); cs.Add(hi);
+                    states[j].AddTransition(new SetTransition(states[j + 1], cs));
+                    continue;
+                }
+            }
+            states[j].AddTransition(new AtomTransition(states[j + 1], c));
+        }
 
         return new AtnHandle(states[0], states[^1]);
     }
@@ -526,6 +556,7 @@ public class LexerAtnFactory : ParserAtnFactory
             set.Add(c);
         }
 
+        if (_grammar.IsCaseInsensitive) set = CaseExpandSet(set);
         if (negate)
         {
             var complement = set.Complement(IntervalSet.Of(0, 0xFFFF));
@@ -610,4 +641,43 @@ public class LexerAtnFactory : ParserAtnFactory
         "HIDDEN" => 1,
         _ => 2 + (_grammar.ExtraChannelNames.IndexOf(channelName) is int i && i >= 0 ? i : 0)
     };
+    // =========================================================================
+    // Case-insensitive helpers
+    // =========================================================================
+
+    /// <summary>
+    /// Expands every character in <paramref name="set"/> to include both its
+    /// lower-case and upper-case form (using invariant culture), matching
+    /// ANTLR4's caseInsensitive grammar option behaviour.
+    /// </summary>
+    private static IntervalSet CaseExpandSet(IntervalSet set)
+    {
+        var expanded = new IntervalSet();
+        foreach (var iv in set.GetIntervals())
+            for (int c = iv.a; c <= iv.b; c++)
+            {
+                expanded.Add(char.ToLowerInvariant((char)c));
+                expanded.Add(char.ToUpperInvariant((char)c));
+            }
+        return expanded;
+    }
+
+    /// <summary>
+    /// Creates the most specific transition type for the given interval set:
+    /// AtomTransition for a single-element set, RangeTransition for a
+    /// single two-endpoint interval, SetTransition otherwise.
+    /// </summary>
+    private static Transition MakeIntervalSetTransition(ATNState target, IntervalSet set)
+    {
+        var intervals = set.GetIntervals();
+        if (intervals.Count == 1)
+        {
+            var iv = intervals[0];
+            if (iv.a == iv.b) return new AtomTransition(target, iv.a);
+            return new RangeTransition(target, iv.a, iv.b);
+        }
+        return new SetTransition(target, set);
+    }
+
+
 }

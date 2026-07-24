@@ -82,10 +82,15 @@ public static class AtnOptimizer
                     else if (t is SetTransition   st) matchSet.AddAll(st.set);
                 }
 
-                // Build new transition: single atom if possible, set otherwise.
-                Transition newTrans = matchSet.ElementCount == 1
-                    ? (Transition)new AtomTransition(blockEnd, matchSet.MinElement)
-                    : new SetTransition(blockEnd, matchSet);
+                // Build new transition: most specific type (atom / range / set).
+                var matchIvs = matchSet.GetIntervals();
+                Transition newTrans;
+                if (matchSet.ElementCount == 1)
+                    newTrans = new AtomTransition(blockEnd, matchSet.MinElement);
+                else if (matchIvs.Count == 1)
+                    newTrans = new RangeTransition(blockEnd, matchIvs[0].a, matchIvs[0].b);
+                else
+                    newTrans = new SetTransition(blockEnd, matchSet);
 
                 // Replace the first alt state's transition with the merged one.
                 decision.Transition(runStart).target.SetTransition(0, newTrans);

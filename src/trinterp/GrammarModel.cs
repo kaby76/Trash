@@ -77,6 +77,9 @@ public class GrammarModel
     // tokenVocab option value (parser grammars only).
     public string TokenVocab;
 
+    // caseInsensitive option: when true, every char literal/range is expanded to both cases.
+    public bool IsCaseInsensitive;
+
     // Channel names beyond DEFAULT_TOKEN_CHANNEL and HIDDEN.
     public List<string> ExtraChannelNames = new();
 
