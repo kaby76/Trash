@@ -23,7 +23,10 @@
       "Bash(grep:*)",
       "Bash(cmd:*)",
       "Bash(mkdir:*)",
-      "Bash(/tmp/check_labels.py:*)"
+      "Bash(/tmp/check_labels.py:*)",
+      "Bash(xxd:*)",
+      "Bash(dotnet $INTERP:*)",
+      "Bash(rm:*)"
     ]
   }
 }

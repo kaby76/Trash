@@ -78,3 +78,7 @@ _tests/delabel/o.pt
 /src/trgenvsc/templates/server/Logger
 /src/trgenvsc/templates/server/ParseTreeEditing
 /src/trgenvsc/templates/server/Workspaces
+
+src/trinterp/examples/*/a
+src/trinterp/examples/*/n
+src/trinterp/examples/*/i

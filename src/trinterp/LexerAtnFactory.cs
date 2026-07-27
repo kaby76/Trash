@@ -128,10 +128,14 @@ public class LexerAtnFactory : ParserAtnFactory
             var commandHandles = WalkLexerCommands(commands);
             if (commandHandles.Count > 0)
             {
-                // Sequence: append command action handles after the element handles.
-                var seq = new List<AtnHandle> { h };
-                seq.AddRange(commandHandles);
-                h = ElemList(seq);
+                // Mirror ANTLR4's lexerAltCommands: add a plain epsilon from the body's
+                // right state to the first command, keeping the body.Right state intact.
+                // Using ElemList here would fold that state away (one fewer state than ANTLR4).
+                var cmds = commandHandles.Count == 1
+                    ? commandHandles[0]
+                    : ElemList(commandHandles);
+                AddEpsilon(h.Right, cmds.Left);
+                h = new AtnHandle(h.Left, cmds.Right);
             }
         }
 
