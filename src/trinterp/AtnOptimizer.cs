@@ -103,6 +103,9 @@ public static class AtnOptimizer
                 }
             }
 
+            // If all alts were merged into one set, this is no longer a decision.
+            if (decision.NumberOfTransitions == 1)
+                atn.decisionToState.Remove(decision);
         }
 
         // Rebuild the decision-index field on every remaining decision state.
