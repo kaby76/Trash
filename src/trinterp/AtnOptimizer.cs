@@ -41,7 +41,6 @@ public static class AtnOptimizer
     {
         // Snapshot the list; we may remove entries during iteration.
         var decisions = new List<DecisionState>(atn.decisionToState);
-        var toRemove  = new List<DecisionState>();
 
         foreach (var decision in decisions)
         {
@@ -104,13 +103,7 @@ public static class AtnOptimizer
                 }
             }
 
-            // If the block now has only one alternative it is no longer a decision.
-            if (decision.NumberOfTransitions == 1)
-                toRemove.Add(decision);
         }
-
-        foreach (var d in toRemove)
-            atn.decisionToState.Remove(d);
 
         // Rebuild the decision-index field on every remaining decision state.
         for (int i = 0; i < atn.decisionToState.Count; i++)

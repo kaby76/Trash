@@ -143,7 +143,17 @@ public static class AtnDotWriter
                 }
                 string label;
                 if (s is BasicBlockStartState || s is TokensStartState)
+                {
+                    if (n == 1)
+                    {
+                        // Single remaining alt after set-optimisation: ANTLR4 keeps this in
+                        // decisionToState but renders it as a plain circle, not a record.
+                        label = $"&rarr;\\n{s.stateNumber}\\nd={d}";
+                        sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                        continue;
+                    }
                     label = $"{{&rarr;\\n{s.stateNumber}\\nd={d}|{{{ports}}}}}";
+                }
                 else if (s is StarLoopEntryState)
                     label = $"{{{s.stateNumber}*\\nd={d}|{{{ports}}}}}";
                 else if (s is PlusLoopbackState)
@@ -284,10 +294,16 @@ public static class AtnDotWriter
                 case '\\': return atomLevel ? "'\\\\'" : "'\\'";
             }
             // Chars 0-127: embed the raw byte (matches ANTLR4's DOT output).
-            // Chars >= 128 (surrogates, etc.): use '?' (Java can't encode lone surrogates as UTF-8).
             if (token < 128)
                 return $"'{(char)token}'";
-            return "'?'";
+            // Lone surrogates (0xD800-0xDFFF) are not valid Unicode scalar values.
+            if (token is >= 0xD800 and <= 0xDFFF)
+                return "'?'";
+            // BMP non-surrogate: embed the character directly.
+            if (token <= 0xFFFF)
+                return $"'{(char)token}'";
+            // Supplementary plane: encode as UTF-16 surrogate pair.
+            return $"'{char.ConvertFromUtf32(token)}'";
         }
         // Parser: resolve to string literal or token name.
         foreach (var kv in grammar.StringLiteralToType)

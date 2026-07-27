@@ -102,6 +102,12 @@ public class LexerAtnFactory : ParserAtnFactory
 
     private AtnHandle WalkLexerAltList(UnvParseTreeElement altListNode)
     {
+        // Mirror ANTLR4's BlockSetTransformer: if every alternative is a single
+        // characterRange or STRING_LITERAL atom (no LEXER_CHAR_SET, no ruleref,
+        // no commands), collapse them into one set transition without a block.
+        var blockSet = TryBuildBlockSet(altListNode);
+        if (blockSet != null) return blockSet;
+
         var alts = new List<AtnHandle>();
         int altIdx = 0;
         foreach (var child in Children(altListNode))
@@ -113,6 +119,81 @@ public class LexerAtnFactory : ParserAtnFactory
             if (h != null) alts.Add(h);
         }
         return MakeBlock(altListNode, alts, null);
+    }
+
+    /// <summary>
+    /// If there are 2+ alts and every alt is a collapsible single-atom
+    /// (characterRange or a single-char terminalDef STRING_LITERAL, no LEXER_CHAR_SET,
+    /// no commands, no suffix), merges them into one set handle (matching ANTLR4's
+    /// BlockSetTransformer). Returns null if fewer than 2 alts or any alt is not eligible.
+    /// </summary>
+    private AtnHandle TryBuildBlockSet(UnvParseTreeElement altListNode)
+    {
+        var altChildren = Children(altListNode).Where(c => !IsTerminal(c) && c.LocalName == "lexerAlt").ToList();
+        // BlockSetTransformer only collapses blocks with 2+ alternatives.
+        if (altChildren.Count < 2) return null;
+
+        var matchSet = new IntervalSet();
+        foreach (var alt in altChildren)
+        {
+            // No lexer commands allowed.
+            if (Child(alt, "lexerCommands") != null) return null;
+
+            var elements = Child(alt, "lexerElements");
+            if (elements == null) return null;
+
+            // Exactly one lexerElement, no ebnfSuffix, no action.
+            var elementList = Children(elements).Where(c => c.LocalName == "lexerElement").ToList();
+            if (elementList.Count != 1) return null;
+            var lexerElement = elementList[0];
+            if (Child(lexerElement, "actionBlock") != null) return null;
+            if (Children(lexerElement).Any(c => c.LocalName == "ebnfSuffix")) return null;
+
+            var lexerAtom = Child(lexerElement, "lexerAtom");
+            if (lexerAtom == null) return null;
+
+            // characterRange: 'a'..'z'
+            var charRange = Child(lexerAtom, "characterRange");
+            if (charRange != null)
+            {
+                var lits = Children(charRange)
+                    .Where(c => IsTerminal(c) && c.LocalName == "STRING_LITERAL").ToList();
+                if (lits.Count < 2) return null;
+                int a = CharValue(GetText(lits[0]).Trim());
+                int b = CharValue(GetText(lits[1]).Trim());
+                if (a < 0 || b < 0) return null;
+                matchSet.Add(a, b);
+                continue;
+            }
+
+            // terminalDef: single-char STRING_LITERAL only (not TOKEN_REF, not multi-char).
+            var terminalDef = Child(lexerAtom, "terminalDef");
+            if (terminalDef != null)
+            {
+                var strLit = ChildTerminal(terminalDef, "STRING_LITERAL");
+                if (strLit == null) return null; // TOKEN_REF not eligible
+                var litText = GetText(strLit).Trim();
+                // Strip surrounding single quotes.
+                var content = litText;
+                if (content.Length >= 2 && content[0] == '\'') content = content[1..];
+                if (content.Length >= 1 && content[^1] == '\'') content = content[..^1];
+                // Must be exactly one effective character (not a multi-char string like 'abort').
+                var (ch, clen) = NextCharInSequence(content, 0);
+                if (clen == 0 || clen != content.Length) return null;
+                matchSet.Add(ch);
+                continue;
+            }
+
+            // LEXER_CHAR_SET, ruleref, notSet, wildcard → not eligible.
+            return null;
+        }
+
+        if (CurrentCaseInsensitive) matchSet = CaseExpandSet(matchSet);
+        // Use the most specific transition type (Atom/Range/Set) to match ANTLR4's output.
+        var setLeft = NewState<BasicState>();
+        var setRight = NewState<BasicState>();
+        setLeft.AddTransition(MakeIntervalSetTransition(setRight, matchSet));
+        return new AtnHandle(setLeft, setRight);
     }
 
     private AtnHandle WalkLexerAlt(UnvParseTreeElement lexerAlt)
@@ -251,6 +332,13 @@ public class LexerAtnFactory : ParserAtnFactory
         // lexerBlock : LPAREN lexerAltList RPAREN
         var altList = Child(lexerBlock, "lexerAltList");
         if (altList == null) return MakeEpsilonHandle();
+
+        // For suffix-free blocks, try the same BlockSetTransformer collapse as for rule-level alts.
+        if (ebnfSuffix == null)
+        {
+            var blockSet = TryBuildBlockSet(altList);
+            if (blockSet != null) return blockSet;
+        }
 
         var alts = new List<AtnHandle>();
         int altIdx = 0;

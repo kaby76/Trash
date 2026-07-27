@@ -699,10 +699,11 @@ public class ParserAtnFactory
             if (alt.Left.NumberOfTransitions != 1)       return null;
             var tr = alt.Left.Transition(0);
             if (tr.target != alt.Right)                  return null;
-            if      (tr is AtomTransition at)  matchSet.Add(at.token);
-            else if (tr is RangeTransition rt) matchSet.Add(rt.from, rt.to);
-            else if (tr is SetTransition  st)  matchSet.AddAll(st.set);
-            else return null; // epsilon, rule, wildcard, not-set, action, pred, etc.
+            // Only pure single-token atoms are eligible; range/set alts are left
+            // for ATNOptimizer.OptimizeSets to merge post-construction (matching
+            // ANTLR4's BlockSetTransformer which only considers atom alts).
+            if (tr is AtomTransition at)  matchSet.Add(at.token);
+            else return null;
         }
 
         // All alts are simple atoms — remove the per-alt states and return a

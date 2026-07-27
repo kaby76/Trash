@@ -26,7 +26,12 @@
       "Bash(/tmp/check_labels.py:*)",
       "Bash(xxd:*)",
       "Bash(dotnet $INTERP:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(__NEW_LINE_7d8bbcbeeecd2c54__ dotnet:*)",
+      "Bash(__NEW_LINE_8241912f4da090eb__:*)",
+      "Bash(__NEW_LINE_a34a6d1f61497121__:*)",
+      "Bash(__NEW_LINE_1b83fe92b3b00c82__:*)",
+      "Bash(__NEW_LINE_2aa0c8990428dc20__:*)"
     ]
   }
 }
