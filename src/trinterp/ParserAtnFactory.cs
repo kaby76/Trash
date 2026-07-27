@@ -180,7 +180,9 @@ public class ParserAtnFactory
         {
             if (IsTerminal(opt)) continue;
             // Look for assign nodes: children should be ID(assoc) and ID(right)
-            var ids = Children(opt).Where(c => IsTerminal(c)).Select(c => GetText(c).Trim()).ToList();
+            // elementOption children: id (non-terminal), '=' (terminal), id (non-terminal)
+            // Filter for non-terminals to get the id texts "assoc" and "right".
+            var ids = Children(opt).Where(c => !IsTerminal(c)).Select(c => GetText(c).Trim()).ToList();
             if (ids.Count >= 2 && ids[0] == "assoc" && ids[1] == "right")
                 return true;
         }
@@ -257,16 +259,22 @@ public class ParserAtnFactory
         }
 
         // ── 2. Build operator alt handles ─────────────────────────────────────
-        // For each operator alt: reserve a pred index (ANTLR4 allocates one for the
-        // prec sempred even though it becomes a PrecedencePredicateTransition),
-        // then walk the body (inner decisions like (',' x)* happen here).
+        // ANTLR4 orders: binary alts first (in grammar order), then suffix alts.
+        // Binary = last top-level non-epsilon element is a direct self-reference.
+        var opInfos = operatorAlts.Select(a =>
+        {
+            var elems = GetAltElementNodes(a.node);
+            return (a.node, a.origIndex, elems, isBinary: IsBinaryAlt(elems, rule.Name));
+        }).ToList();
+        var orderedOps = opInfos.Where(x => x.isBinary)
+                                .Concat(opInfos.Where(x => !x.isBinary))
+                                .ToList();
+
         var opHandles = new List<AtnHandle>();
-        foreach (var (an, origIndex) in operatorAlts)
+        foreach (var (an, origIndex, elems, isBinary) in orderedOps)
         {
             _currentOuterAlt = origIndex - 1;
             int prec = numAlts - origIndex + 1;
-            var elems = GetAltElementNodes(an);
-            bool isBinary      = IsBinaryAlt(elems, rule.Name);
             bool isRightAssoc  = IsAltRightAssoc(an);
             int  nextPrec      = isRightAssoc ? prec : prec + 1;
 
