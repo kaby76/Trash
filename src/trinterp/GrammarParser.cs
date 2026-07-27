@@ -458,6 +458,7 @@ public class GrammarParser
         {
             var lexerAlts = Children(lexerAltList).Where(c => c.LocalName == "lexerAlt").ToList();
             if (lexerAlts.Count != 1) return false;
+            if (Child(lexerAlts[0], "lexerCommands") != null) return false; // -> channel/mode/skip → not an inline literal alias
             var lexerElements = Child(lexerAlts[0], "lexerElements");
             if (lexerElements == null) return false;
             var lexerElems = Children(lexerElements).Where(c => c.LocalName == "lexerElement").ToList();
