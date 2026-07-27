@@ -25,6 +25,12 @@ public class ParserAtnFactory
     // Global sempred counter (incremented as predicates are encountered).
     protected int _nextPredIndex;
 
+    // When walking a primary alt of a left-recursive rule, holds the reversed prec
+    // (= numAlts - origIndex + 1) of that alt.  MakeRuleRef uses this so that self-refs
+    // inside primary alts (e.g. the `expression` in `'!' expression`) get the correct
+    // minimum-precedence argument instead of 0.  Reset to 0 outside primary alt walking.
+    private int _lrPrimaryPrec;
+
     public ParserAtnFactory(GrammarModel grammar, OptimizeOptions optimize = null)
     {
         _grammar  = grammar;
@@ -234,8 +240,11 @@ public class ParserAtnFactory
         for (int i = 0; i < primaryAlts.Count; i++)
         {
             _currentOuterAlt = primaryAlts[i].origIndex - 1;
+            // ANTLR4: self-refs inside primary alts use expression[reversedPrec] not expression[0].
+            _lrPrimaryPrec = numAlts - primaryAlts[i].origIndex + 1;
             var an = primaryAlts[i].node;
             AtnHandle h = an.LocalName == "labeledAlt" ? WalkLabeledAlt(an) : WalkAlternative(an);
+            _lrPrimaryPrec = 0;
             if (i == 0)
             {
                 // ANTLR4 prepends an empty {} action to the first primary alt.
@@ -854,10 +863,13 @@ public class ParserAtnFactory
     {
         var rule = _grammar.GetRule(name);
         if (rule == null) return MakeEpsilonHandle();
+        // When inside a primary alt of an LR rule, self-refs use the alt's reversed prec.
+        int prec = (_lrPrimaryPrec > 0 && _currentRule != null && rule.Name == _currentRule.Name)
+            ? _lrPrimaryPrec : 0;
         var ruleStart = _atn.ruleToStartState[rule.Index];
         var left = NewState<BasicState>();
         var right = NewState<BasicState>();
-        left.AddTransition(new RuleTransition(ruleStart, rule.Index, 0, right));
+        left.AddTransition(new RuleTransition(ruleStart, rule.Index, prec, right));
         return new AtnHandle(left, right);
     }
 
