@@ -25,11 +25,6 @@ public class ParserAtnFactory
     // Global sempred counter (incremented as predicates are encountered).
     protected int _nextPredIndex;
 
-    // When walking a primary alt of a left-recursive rule, holds the reversed prec
-    // (= numAlts - origIndex + 1) of that alt.  MakeRuleRef uses this so that self-refs
-    // inside primary alts (e.g. the `expression` in `'!' expression`) get the correct
-    // minimum-precedence argument instead of 0.  Reset to 0 outside primary alt walking.
-    private int _lrPrimaryPrec;
 
     public ParserAtnFactory(GrammarModel grammar, OptimizeOptions optimize = null)
     {
@@ -169,6 +164,47 @@ public class ParserAtnFactory
         return false;
     }
 
+    /// <summary>
+    /// True if the last non-epsilon element of a primary (non-LR) alt is a direct self-ref.
+    /// E.g. `'!' expression` → true; `'{' zelist '}'` → false.
+    /// </summary>
+    private static bool PrimaryAltEndsWithSelfRef(List<UnvParseTreeElement> elements, string ruleName)
+    {
+        for (int i = elements.Count - 1; i >= 0; i--)
+        {
+            if (IsEpsilonElement(elements[i])) continue;
+            return IsDirectSelfRef(elements[i], ruleName);
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Walks a primary alt whose last element is a direct self-ref.
+    /// All elements except the rightmost self-ref use WalkElement (prec=0);
+    /// the rightmost self-ref uses WalkSelfRefWithPrec(trailingPrec).
+    /// </summary>
+    private AtnHandle WalkPrimaryAltTrailingSelfRef(
+        List<UnvParseTreeElement> elements, string ruleName, int trailingPrec)
+    {
+        int rightmostIdx = -1;
+        for (int i = elements.Count - 1; i >= 0; i--)
+        {
+            if (!IsEpsilonElement(elements[i]) && IsDirectSelfRef(elements[i], ruleName))
+            { rightmostIdx = i; break; }
+        }
+        var handles = new List<AtnHandle>();
+        for (int i = 0; i < elements.Count; i++)
+        {
+            AtnHandle h = (i == rightmostIdx)
+                ? WalkSelfRefWithPrec(elements[i], trailingPrec)
+                : WalkElement(elements[i]);
+            if (h != null) handles.Add(h);
+        }
+        if (handles.Count == 0) return null;
+        if (handles.Count == 1) return handles[0];
+        return ElemList(handles);
+    }
+
     /// <summary>Element is epsilon-like (action or sempred).</summary>
     private static bool IsEpsilonElement(UnvParseTreeElement element)
         => Child(element, "actionBlock") != null;
@@ -240,11 +276,16 @@ public class ParserAtnFactory
         for (int i = 0; i < primaryAlts.Count; i++)
         {
             _currentOuterAlt = primaryAlts[i].origIndex - 1;
-            // ANTLR4: self-refs inside primary alts use expression[reversedPrec] not expression[0].
-            _lrPrimaryPrec = numAlts - primaryAlts[i].origIndex + 1;
             var an = primaryAlts[i].node;
-            AtnHandle h = an.LocalName == "labeledAlt" ? WalkLabeledAlt(an) : WalkAlternative(an);
-            _lrPrimaryPrec = 0;
+            // ANTLR4: when a primary alt's LAST element is a direct self-ref,
+            // that call uses the alt's reversed prec instead of 0
+            // (e.g. `'!' expression` → expression[reversedPrec]).
+            // Alts where self-refs are in the middle (e.g. `'{' zelist '}'`) use 0.
+            var elems = GetAltElementNodes(an);
+            int prec = numAlts - primaryAlts[i].origIndex + 1;
+            AtnHandle h = PrimaryAltEndsWithSelfRef(elems, rule.Name)
+                ? WalkPrimaryAltTrailingSelfRef(elems, rule.Name, prec)
+                : (an.LocalName == "labeledAlt" ? WalkLabeledAlt(an) : WalkAlternative(an));
             if (i == 0)
             {
                 // ANTLR4 prepends an empty {} action to the first primary alt.
@@ -863,13 +904,10 @@ public class ParserAtnFactory
     {
         var rule = _grammar.GetRule(name);
         if (rule == null) return MakeEpsilonHandle();
-        // When inside a primary alt of an LR rule, self-refs use the alt's reversed prec.
-        int prec = (_lrPrimaryPrec > 0 && _currentRule != null && rule.Name == _currentRule.Name)
-            ? _lrPrimaryPrec : 0;
         var ruleStart = _atn.ruleToStartState[rule.Index];
         var left = NewState<BasicState>();
         var right = NewState<BasicState>();
-        left.AddTransition(new RuleTransition(ruleStart, rule.Index, prec, right));
+        left.AddTransition(new RuleTransition(ruleStart, rule.Index, 0, right));
         return new AtnHandle(left, right);
     }
 

@@ -143,17 +143,7 @@ public static class AtnDotWriter
                 }
                 string label;
                 if (s is BasicBlockStartState || s is TokensStartState)
-                {
-                    if (n == 1)
-                    {
-                        // Single remaining alt after set-optimisation: ANTLR4 keeps this in
-                        // decisionToState but renders it as a plain circle, not a record.
-                        label = $"&rarr;\\n{s.stateNumber}\\nd={d}";
-                        sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
-                        continue;
-                    }
                     label = $"{{&rarr;\\n{s.stateNumber}\\nd={d}|{{{ports}}}}}";
-                }
                 else if (s is StarLoopEntryState)
                     label = $"{{{s.stateNumber}*\\nd={d}|{{{ports}}}}}";
                 else if (s is PlusLoopbackState)
@@ -161,6 +151,12 @@ public static class AtnDotWriter
                 else
                     label = $"{{{s.stateNumber}\\nd={d}|{{{ports}}}}}";
                 sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1];");
+            }
+            else if (s is BasicBlockStartState || s is TokensStartState)
+            {
+                // Block start collapsed to a single alt by OptimizeSets and removed from
+                // decisionToState: render as BLOCK_START circle (→\nN, no decision ports).
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"&rarr;\\n{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
             }
             else if (s is StarLoopbackState)
             {
