@@ -170,7 +170,11 @@ def DoParse(str, input_name, row_number):
 
     if output_dir is not None:
         abs_name = os.path.abspath(input_name)
-        rootless = os.path.splitdrive(abs_name)[1].lstrip('/\\')
+        # Use os.sep to strip leading separators without backslash literals
+        # (StringTemplate would collapse \\ to \ in generated source).
+        rootless = os.path.splitdrive(abs_name)[1]
+        while rootless and rootless[0] in ('/', os.sep):
+            rootless = rootless[1:]
         out_name = os.path.join(output_dir, rootless)
         os.makedirs(os.path.dirname(out_name) or '.', exist_ok=True)
     else:

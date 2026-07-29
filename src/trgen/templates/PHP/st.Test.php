@@ -203,7 +203,12 @@ function DoParse($str, $input_name, $row_number) {
     if ($output_dir != "") {
         $abs_path = realpath($input_name);
         if ($abs_path === false) $abs_path = $input_name;
-        $rootless = ltrim(preg_replace('/^[A-Za-z]:/', '', $abs_path), '/\\');
+        // Strip drive letter then leading separators using ord() to avoid
+        // backslash literals (StringTemplate collapses \\ to \ in output).
+        $rootless = preg_replace('/^[A-Za-z]:/', '', $abs_path);
+        while (strlen($rootless) > 0 && (ord($rootless[0]) == 47 || ord($rootless[0]) == 92)) {
+            $rootless = substr($rootless, 1);
+        }
         $out_name = $output_dir . '/' . $rootless;
         $dir = dirname($out_name);
         if (!is_dir($dir)) mkdir($dir, 0755, true);

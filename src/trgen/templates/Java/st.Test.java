@@ -200,8 +200,12 @@ public class Test {
         String out_name = input_name;
         if (output_dir != null) {
             String absPath = new File(input_name).getAbsolutePath();
-            // Strip drive letter (Windows) and leading slashes
-            String rootless = absPath.replaceAll("^[A-Za-z]:[/\\\\]+", "").replaceAll("^[/\\\\]+", "");
+            // Strip drive letter (Windows, e.g. "C:") then leading separators.
+            // Avoid backslash literals to prevent StringTemplate escaping issues.
+            int si = 0;
+            if (absPath.length() >= 2 && absPath.charAt(1) == ':') si = 2;
+            while (si < absPath.length() && (absPath.charAt(si) == '/' || absPath.charAt(si) == File.separatorChar)) si++;
+            String rootless = absPath.substring(si);
             out_name = new File(output_dir, rootless).getPath();
             new File(out_name).getParentFile().mkdirs();
         }
