@@ -190,8 +190,10 @@ func ParseFilename(input string, row_number int) {
 func DoParse(str antlr.CharStream, input_name string, row_number int) {
     out_name := input_name
     if output_dir != "" {
-        rel := strings.TrimLeft(input_name, "/\\")
-        out_name = filepath.Join(output_dir, rel)
+        absPath, _ := filepath.Abs(input_name)
+        vol := filepath.VolumeName(absPath)
+        rootless := strings.TrimLeft(absPath[len(vol):], "/\\")
+        out_name = filepath.Join(output_dir, rootless)
         os.MkdirAll(filepath.Dir(out_name), 0755)
     }
     if binary {

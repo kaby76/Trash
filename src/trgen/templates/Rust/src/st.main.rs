@@ -29,8 +29,14 @@ fn parse_input(
     flags: &Flags,
 ) -> (usize, usize, f64) {
     let out_name: String = if let Some(ref odir) = flags.output_dir {
-        let rel = input_name.trim_start_matches(|c| c == '/' || c == '\\');
-        let p = std::path::Path::new(odir).join(rel);
+        let abs = std::fs::canonicalize(input_name)
+            .unwrap_or_else(|_| std::env::current_dir().unwrap_or_default().join(input_name));
+        let rootless: std::path::PathBuf = abs.components()
+            .filter(|c| !matches!(c,
+                std::path::Component::Prefix(_) |
+                std::path::Component::RootDir))
+            .collect();
+        let p = std::path::Path::new(odir).join(rootless);
         if let Some(parent) = p.parent() {
             std::fs::create_dir_all(parent).ok();
         }

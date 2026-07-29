@@ -205,8 +205,9 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
 {
     String out_name = input_name;
     if (output_dir != "") {
-        String rel = input_name.replaceFirst(RegExp(r'^[/\\]+'), '');
-        out_name = output_dir + '/' + rel;
+        String absPath = File(input_name).absolute.path;
+        String rootless = absPath.replaceFirst(RegExp(r'^[A-Za-z]:[/\\]+|^[/\\]+'), '');
+        out_name = output_dir + '/' + rootless;
         await Directory(File(out_name).parent.path).create(recursive: true);
     }
     if (binary) str = new BinaryCharStream(str);

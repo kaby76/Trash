@@ -197,11 +197,14 @@ public class Test {
         }
         var tokens = new CommonTokenStream(lexer);
         <parser_name> parser = new <parser_name>(tokens);
-        String out_name = (output_dir != null)
-            ? new File(output_dir, input_name.replaceAll("^[\\\\/]+", "")).getPath()
-            : input_name;
-        if (output_dir != null)
+        String out_name = input_name;
+        if (output_dir != null) {
+            String absPath = new File(input_name).getAbsolutePath();
+            // Strip drive letter (Windows) and leading slashes
+            String rootless = absPath.replaceAll("^[A-Za-z]:[/\\\\]+", "").replaceAll("^[/\\\\]+", "");
+            out_name = new File(output_dir, rootless).getPath();
             new File(out_name).getParentFile().mkdirs();
+        }
         PrintStream output = null;
         try {
             output = tee ? new PrintStream(new File(out_name + ".errors")) : System.out;

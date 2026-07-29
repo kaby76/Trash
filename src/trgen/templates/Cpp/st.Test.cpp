@@ -64,9 +64,10 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
 {
     std::string out_name = input_name;
     if (!output_dir.empty()) {
-        std::string rel = input_name;
-        while (!rel.empty() && (rel[0] == '/' || rel[0] == '\\')) rel = rel.substr(1);
-        out_name = (std::filesystem::path(output_dir) / rel).string();
+        auto abs = std::filesystem::absolute(input_name);
+        auto root = abs.root_path();
+        auto rootless = std::filesystem::relative(abs, root);
+        out_name = (std::filesystem::path(output_dir) / rootless).string();
         std::filesystem::create_directories(std::filesystem::path(out_name).parent_path());
     }
     antlr4::Lexer* lexer = new <lexer_name>(str);

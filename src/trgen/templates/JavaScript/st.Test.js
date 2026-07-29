@@ -184,8 +184,13 @@ function ParseFilename(input, row_number) {
 }
 
 function DoParse(str, input_name, row_number) {
-    var out_name = output_dir ? path.join(output_dir, input_name.replace(/^[\\/]+/, '')) : input_name;
-    if (output_dir) fs.mkdirsSync(path.dirname(out_name));
+    var out_name = input_name;
+    if (output_dir) {
+        const absPath = path.resolve(input_name);
+        const rootless = absPath.slice(path.parse(absPath).root.length);
+        out_name = path.join(output_dir, rootless);
+        fs.mkdirsSync(path.dirname(out_name));
+    }
     if (binary) str = new BinaryCharStream(str);
     const lexer = new <lexer_name>(str);
     const tokens = new antlr4.CommonTokenStream(lexer);

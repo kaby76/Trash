@@ -15,7 +15,7 @@ import { readSync } from 'fs';
 import { writeSync } from 'fs';
 import { closeSync } from 'fs';
 import { readFile } from 'fs/promises'
-import { join as pathJoin, dirname as pathDirname } from 'path';
+import { join as pathJoin, dirname as pathDirname, resolve as pathResolve, parse as pathParse } from 'path';
 import { BinaryCharStream } from './BinaryCharStream.js';
 import { ErrorListener } from './ErrorListener.js';
 
@@ -175,8 +175,13 @@ function ParseFilename(input: string, row_number: number) {
 }
 
 function DoParse(str: CharStream, input_name: string, row_number: number) {
-    const out_name = output_dir ? pathJoin(output_dir, input_name.replace(/^[\\/]+/, '')) : input_name;
-    if (output_dir) mkdirSync(pathDirname(out_name), { recursive: true });
+    let out_name = input_name;
+    if (output_dir) {
+        const absPath = pathResolve(input_name);
+        const rootless = absPath.slice(pathParse(absPath).root.length);
+        out_name = pathJoin(output_dir, rootless);
+        mkdirSync(pathDirname(out_name), { recursive: true });
+    }
     if (binary) str = new BinaryCharStream(str);
     const lexer = new <lexer_name>(str);
     const tokens = new CommonTokenStream(lexer);

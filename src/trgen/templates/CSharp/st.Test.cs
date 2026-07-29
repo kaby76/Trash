@@ -445,11 +445,16 @@ public class Program
             tokens = new CommonTokenStream(lexer);
         }
         var parser = new MyParser(tokens);
-        var out_name = output_dir != null
-            ? System.IO.Path.Combine(output_dir, input_name.TrimStart(System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar))
-            : input_name;
-        if (output_dir != null)
+        string out_name;
+        if (output_dir != null) {
+            var abs = System.IO.Path.GetFullPath(input_name);
+            var root = System.IO.Path.GetPathRoot(abs) ?? "";
+            var rootless = abs.Substring(root.Length);
+            out_name = System.IO.Path.Combine(output_dir, rootless);
             System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(out_name) ?? output_dir);
+        } else {
+            out_name = input_name;
+        }
         var output = tee ? new StreamWriter(out_name + ".errors") : System.Console.Error;
         var listener_lexer = new ErrorListener\<int>(quiet, tee, output);
         var listener_parser = new ErrorListener\<IToken>(quiet, tee, output);

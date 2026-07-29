@@ -201,8 +201,10 @@ function DoParse($str, $input_name, $row_number) {
     global $first_file_parse_seconds;
     $out_name = $input_name;
     if ($output_dir != "") {
-        $rel = ltrim($input_name, '/\\');
-        $out_name = $output_dir . '/' . $rel;
+        $abs_path = realpath($input_name);
+        if ($abs_path === false) $abs_path = $input_name;
+        $rootless = ltrim(preg_replace('/^[A-Za-z]:/', '', $abs_path), '/\\');
+        $out_name = $output_dir . '/' . $rootless;
         $dir = dirname($out_name);
         if (!is_dir($dir)) mkdir($dir, 0755, true);
     }
