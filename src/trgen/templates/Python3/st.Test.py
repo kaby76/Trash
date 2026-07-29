@@ -1,5 +1,6 @@
 # Generated from trgen <version>
 
+import os
 import sys
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
@@ -31,6 +32,7 @@ class MyErrorListener(ErrorListener):
             print(f"line {line}:{column} {msg}", file=sys.stderr);
 
 tee = False
+output_dir = None
 show_tokens = False
 show_tree = False
 show_trace = False
@@ -47,6 +49,7 @@ first_file_parse_seconds = 0
 
 def main(argv):
     global tee
+    global output_dir
     global show_tokens
     global show_tree
     global show_trace
@@ -79,6 +82,10 @@ def main(argv):
             i = i + 1
             encoding = argv[i]
         elif arg == "-tee":
+            tee = True
+        elif arg == "-o":
+            i = i + 1
+            output_dir = argv[i]
             tee = True
         elif arg == "-x":
             while f := sys.stdin.readline():
@@ -148,6 +155,7 @@ def ParseFilename(input, row_number):
 
 def DoParse(str, input_name, row_number):
     global tee
+    global output_dir
     global show_tokens
     global show_tree
     global show_trace
@@ -160,10 +168,15 @@ def DoParse(str, input_name, row_number):
     global first_file_tokens
     global first_file_parse_seconds
 
+    if output_dir is not None:
+        out_name = os.path.join(output_dir, input_name.lstrip('/\\'))
+        os.makedirs(os.path.dirname(out_name) or '.', exist_ok=True)
+    else:
+        out_name = input_name
     lexer = <lexer_name>(str)
     lexer.removeErrorListeners()
     if (tee):
-        output = open(input_name + ".errors", "w")
+        output = open(out_name + ".errors", "w")
     else:
         output = sys.stderr
     listener_lexer = MyErrorListener(quiet, tee, output)
@@ -208,7 +221,7 @@ def DoParse(str, input_name, row_number):
         result = 'success'
     if (show_tree):
         if (tee):
-            f = open(input_name + '.tree', 'w', encoding='utf-8')
+            f = open(out_name + '.tree', 'w', encoding='utf-8')
             f.write(tree.toStringTree(recog=parser))
             f.close()
         else:

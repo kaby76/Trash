@@ -56,6 +56,7 @@ struct Flags {
     show_trace: bool,
     tee: bool,
     quiet: bool,
+    output_dir: Option\<String>,
 }
 
 fn parse_input(
@@ -63,6 +64,16 @@ fn parse_input(
     idx: i32,
     flags: &Flags,
 ) -> (usize, usize, f64) {
+    let out_name: String = if let Some(ref odir) = flags.output_dir {
+        let rel = input_name.trim_start_matches(|c| c == '/' || c == '\\');
+        let p = std::path::Path::new(odir).join(rel);
+        if let Some(parent) = p.parent() {
+            std::fs::create_dir_all(parent).ok();
+        }
+        p.to_string_lossy().into_owned()
+    } else {
+        input_name.to_string()
+    };
     let lex_state = Arc::new(Mutex::new(ListenerState {
         error_count: 0,
         messages: Vec::new(),
@@ -126,7 +137,7 @@ fn parse_input(
     // so baselines can be committed and diffed by the test harness).
     if let Some(ref ts) = tree_str {
         if flags.tee {
-            let mut f = File::create(format!("{}.tree", input_name)).unwrap();
+            let mut f = File::create(format!("{}.tree", out_name)).unwrap();
             write!(f, "{}", ts).ok();
         } else {
             eprintln!("{}", ts);
@@ -138,7 +149,7 @@ fn parse_input(
     if flags.tee && error_count > 0 {
         let lex_msgs = lex_state.lock().unwrap().messages.clone();
         let parse_msgs = parse_state.lock().unwrap().messages.clone();
-        let mut f = File::create(format!("{}.errors", input_name)).unwrap();
+        let mut f = File::create(format!("{}.errors", out_name)).unwrap();
         for msg in lex_msgs.iter().chain(parse_msgs.iter()) {
             writeln!(f, "{}", msg).ok();
         }
@@ -170,6 +181,7 @@ fn main() {
         show_trace: false,
         tee: false,
         quiet: false,
+        output_dir: None,
     };
 
     let args: Vec\<String> = env::args().collect();
@@ -188,6 +200,11 @@ fn main() {
                 flags.is_fns.push(false);
             }
             "-tee" => flags.tee = true,
+            "-o" => {
+                i += 1;
+                flags.output_dir = Some(args[i].clone());
+                flags.tee = true;
+            }
             "-q" => flags.quiet = true,
             "-trace" => flags.show_trace = true,
             "-x" => {

@@ -35,6 +35,7 @@ public class Program
     static int string_instance = 0;
     static string prefix = "";
     static bool quiet = false;
+    static string output_dir = null;
     static long total_tokens = 0;
     static double total_parse_seconds = 0;
     static long first_file_tokens = 0;
@@ -77,6 +78,11 @@ public class Program
             }
             else if (args[i].Equals("-tee"))
             {
+                tee = true;
+            }
+            else if (args[i].Equals("-o"))
+            {
+                output_dir = args[++i];
                 tee = true;
             }
             else if (args[i].Equals("-encoding"))
@@ -204,7 +210,12 @@ public class Program
         }
         var tokens = new CommonTokenStream(lexer);
         var parser = new <parser_name>(tokens);
-        var output = tee ? new StreamWriter(input_name + ".errors") : System.Console.Error;
+        var out_name = output_dir != null
+            ? System.IO.Path.Combine(output_dir, input_name.TrimStart(System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar))
+            : input_name;
+        if (output_dir != null)
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(out_name) ?? output_dir);
+        var output = tee ? new StreamWriter(out_name + ".errors") : System.Console.Error;
         var listener_lexer = new ErrorListener\<int>(quiet, tee, output);
         var listener_parser = new ErrorListener\<IToken>(quiet, tee, output);
         lexer.RemoveErrorListeners();
@@ -242,7 +253,7 @@ public class Program
         {
             if (tee)
             {
-                System.IO.File.WriteAllText(input_name + ".tree", tree.ToStringTree(parser));
+                System.IO.File.WriteAllText(out_name + ".tree", tree.ToStringTree(parser));
             } else
             {
                 System.Console.Error.WriteLine(tree.ToStringTree(parser));
