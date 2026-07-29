@@ -204,7 +204,7 @@ public class Test {
             // Avoid backslash literals to prevent StringTemplate escaping issues.
             int si = 0;
             if (absPath.length() >= 2 && absPath.charAt(1) == ':') si = 2;
-            while (si < absPath.length() && (absPath.charAt(si) == '/' || absPath.charAt(si) == File.separatorChar)) si++;
+            while (si \< absPath.length() && (absPath.charAt(si) == '/' || absPath.charAt(si) == File.separatorChar)) si++;
             String rootless = absPath.substring(si);
             out_name = new File(output_dir, rootless).getPath();
             new File(out_name).getParentFile().mkdirs();

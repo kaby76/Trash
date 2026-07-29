@@ -210,7 +210,7 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
         // Use char codes to avoid backslash literals in the template.
         int si = 0;
         if (absPath.length >= 2 && absPath.codeUnitAt(1) == 58) si = 2; // 58 = ':'
-        while (si < absPath.length && (absPath.codeUnitAt(si) == 47 || absPath.codeUnitAt(si) == 92)) si++; // 47='/' 92='\'
+        while (si \< absPath.length && (absPath.codeUnitAt(si) == 47 || absPath.codeUnitAt(si) == 92)) si++; // 47='/' 92='\'
         String rootless = absPath.substring(si);
         out_name = output_dir + '/' + rootless;
         await Directory(File(out_name).parent.path).create(recursive: true);
