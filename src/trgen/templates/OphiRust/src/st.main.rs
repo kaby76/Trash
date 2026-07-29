@@ -118,7 +118,7 @@ fn parse_input(
     });
 
     let start = Instant::now();
-    let tree = parser.<start_symbol>().expect("parser initialization failed");
+    let tree = parser.<ophirust_start_symbol>().expect("parser initialization failed");
     let elapsed = start.elapsed();
     let parse_seconds = elapsed.as_secs_f64();
 

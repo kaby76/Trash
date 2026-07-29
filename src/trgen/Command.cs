@@ -1831,6 +1831,7 @@ namespace Trash
 	    t.Add("rust_parser_name", test.fully_qualified_parser_name.ToLower());
 	    t.Add("ophirust_parser_name", ophirust_parser_name);
 	    t.Add("ophirust_parser_module", ToSnakeCase(ophirust_parser_name));
+	    t.Add("ophirust_start_symbol", test.start_rule.TrimEnd('_'));
             t.Add("name_space", test.package.Replace("/", "."));
             t.Add("package_name", test.package.Replace(".", "/"));
             t.Add("group_parsing", test.parsing_type == "group");
