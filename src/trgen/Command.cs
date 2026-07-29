@@ -95,7 +95,7 @@ namespace Trash
                             System.Reflection.Assembly a = this.GetType().Assembly;
                             var zip = ReadBytesResource(a, "trgen.foobar.zip");
                             MemoryStream stream = new MemoryStream(zip);
-                            var regex_string = "^(?!.*(" + AllButTargetName(test.target) + "/)).*$";
+                            var regex_string = "^(?!.*(" + AllButTargetName(test.target) + ")).*$";
                             var regex = new Regex(regex_string);
                             var za = new ZipArchive(stream);
                             code = za.Entries.Where(x => x.FullName == f).Select(x =>
@@ -600,12 +600,13 @@ namespace Trash
                 "CSharp" => ".cs",
                 "Dart" => ".dart",
                 "Go" => ".go",
-                "Java" => ".java",
+		"Java" => ".java",
                 "JavaScript" => ".js",
                 "PHP" => ".php",
                 "Python2" => ".py",
                 "Python3" => ".py",
-                "Rust" => ".rs",
+		"OphiRust" => ".rs",
+		"Rust" => ".rs",
                 "Swift" => ".swift",
                 "TypeScript" => ".ts",
                 "Antlr4ng" => ".ts",
@@ -727,11 +728,14 @@ namespace Trash
                 "JavaScript",
                 "PHP",
                 "Python3",
-                "Rust",
+		        "OphiRust",
+		        "Rust",
                 "Swift",
                 "TypeScript",
             };
-            var filter = String.Join("/|", all_but.Where(t => t != TargetName(target)));
+            var filter = String.Join("|", all_but
+                .Where(t => t != TargetName(target))
+                .Select(t => $"/{t}/"));
             return filter;
         }
 
@@ -772,6 +776,7 @@ namespace Trash
                         "Java",
                         "JavaScript",
                         "Python3",
+			"OphiRust",
                         "Rust",
                         "TypeScript",
                     };
@@ -1371,7 +1376,7 @@ namespace Trash
                                                : "")
                                            + "/ignore/|/Generated/|/Generated-[^/]*/|/target/|/examples/|/.claude/|/.git/|/.gitignore/|/.ignore/|"
                                            + Command.AllButTargetName(test.target)
-                                           + "/)).+[.]g4"
+                                           + ")).+[.]g4"
                                            + "$";
                 var grammar_list = new TrashGlobbing.Glob(test.current_directory)
                     .RegexContents(all_grammars_pattern)
@@ -1434,7 +1439,7 @@ namespace Trash
                                                  : "")
                                              + "ignore/|Generated/|Generated-[^/]*/|target/|examples/|.git/|.gitignore|"
                                              + Command.AllButTargetName(test.target)
-                                             + "/)).+"
+                                             + ")).+"
                                              + "$";
                     var l = new TrashGlobbing.Glob(cwd)
                         .RegexContents(all_source_pattern)
@@ -1599,7 +1604,7 @@ namespace Trash
                 // shell.
                 var zip = ReadBytesResource(a, "trgen.foobar.zip");
                 MemoryStream stream = new MemoryStream(zip);
-                var regex_string = "^(?!.*(" + AllButTargetName(test.target) + "/)).*$";
+                var regex_string = "^(?!.*(" + AllButTargetName(test.target) + ")).*$";
                 var regex = new Regex(regex_string);
                 za = new ZipArchive(stream);
                 template_directory_files_to_copy = za.Entries.Where(f =>
@@ -1608,7 +1613,7 @@ namespace Trash
                     if (test.fully_qualified_parser_name != "ArithmeticParser" && fn == "st.Arithmetic.g4")
                         return false;
                     if (fn == "files") return false;
-                    var v = regex.IsMatch(fn);
+                    var v = regex.IsMatch("./" + fn);
                     return v;
                 }).Select(f => f.FullName).ToList();
             }
@@ -1618,9 +1623,14 @@ namespace Trash
                 prefix_to_remove = prefix_to_remove.Replace("\\", "/");
                 prefix_to_remove = prefix_to_remove.Replace("//", "/");
 
-                var regex_string = "^(?!.*(files|" + AllButTargetName(test.target) + "/)).*$";
-                template_directory_files_to_copy = new TrashGlobbing.Glob(config.template_sources_directory)
+                var regex_string = "^(?!.*(" + AllButTargetName(test.target) + ")).*$";
+                var z1 = new TrashGlobbing.Glob(config.template_sources_directory)
+                    .RegexContents(".*")
+                    .ToList();
+                var zz = new TrashGlobbing.Glob(config.template_sources_directory)
                     .RegexContents(regex_string)
+                    .ToList();
+                template_directory_files_to_copy = zz
                     .Where(f =>
                     {
                         if (f.Attributes.HasFlag(FileAttributes.Directory)) return false;
@@ -1812,9 +1822,15 @@ namespace Trash
             t.Add("is_combined_grammar", test.tool_grammar_files.Count() == 1);
             t.Add("lexer_grammar_file", re.Replace(test.lexer_grammar_file_name, ""));
             t.Add("lexer_name", test.fully_qualified_lexer_name);
-            t.Add("rust_lexer_name", test.fully_qualified_lexer_name.ToLower());
+	    t.Add("rust_lexer_name", test.fully_qualified_lexer_name.ToLower());
+	    var ophirust_lexer_name = ToOphiRustTypeName(test.fully_qualified_lexer_name);
+	    var ophirust_parser_name = ToOphiRustTypeName(test.fully_qualified_parser_name);
+	    t.Add("ophirust_lexer_name", ophirust_lexer_name);
+	    t.Add("ophirust_lexer_module", ToSnakeCase(ophirust_lexer_name));
             t.Add("rust_listener_name", test.fully_qualified_listener_name.ToLower());
-            t.Add("rust_parser_name", test.fully_qualified_parser_name.ToLower());
+	    t.Add("rust_parser_name", test.fully_qualified_parser_name.ToLower());
+	    t.Add("ophirust_parser_name", ophirust_parser_name);
+	    t.Add("ophirust_parser_module", ToSnakeCase(ophirust_parser_name));
             t.Add("name_space", test.package.Replace("/", "."));
             t.Add("package_name", test.package.Replace(".", "/"));
             t.Add("group_parsing", test.parsing_type == "group");
@@ -1905,6 +1921,87 @@ namespace Trash
                 return char.ToUpper(str[0]).ToString();
             else
                 return char.ToUpper(str[0]) + str.Substring(1);
+        }
+
+        // Split an identifier into words using the same rules as antlr4-rust-gen's
+        // rust_names::split_identifier_words:
+        //   - non-alphanumeric characters are separators (consumed)
+        //   - lowercase/digit → uppercase is a boundary (e.g. "camelCase" → ["camel","Case"])
+        //   - uppercase run → uppercase + lowercase is a boundary (e.g. "JSONLexer" → ["JSON","Lexer"])
+        static List<string> SplitWords(string name)
+        {
+            var words = new List<string>();
+            var current = new System.Text.StringBuilder();
+            for (int i = 0; i < name.Length; i++)
+            {
+                char c = name[i];
+                if (!char.IsLetterOrDigit(c))
+                {
+                    if (current.Length > 0) { words.Add(current.ToString()); current.Clear(); }
+                    continue;
+                }
+                if (i > 0 && char.IsUpper(c))
+                {
+                    char prev = name[i - 1];
+                    // lowercase or digit → uppercase
+                    if (char.IsLower(prev) || char.IsDigit(prev))
+                    {
+                        words.Add(current.ToString());
+                        current.Clear();
+                    }
+                    // uppercase run ending: e.g. "JSON|Lexer"
+                    else if (char.IsUpper(prev) && i + 1 < name.Length && char.IsLower(name[i + 1]))
+                    {
+                        words.Add(current.ToString());
+                        current.Clear();
+                    }
+                }
+                current.Append(c);
+            }
+            if (current.Length > 0) words.Add(current.ToString());
+            return words;
+        }
+
+        // Convert a grammar identifier (e.g. "JSONLexer") to the UpperCamelCase form
+        // that antlr4-rust-gen uses for struct names (e.g. "JsonLexer").
+        // All-caps acronyms are lowercased except for their leading letter.
+        static string ToOphiRustTypeName(string name)
+        {
+            var sb = new System.Text.StringBuilder();
+            foreach (var word in SplitWords(name))
+            {
+                if (word.Length == 0) continue;
+                sb.Append(char.ToUpperInvariant(word[0]));
+                sb.Append(word.Substring(1).ToLowerInvariant());
+            }
+            return sb.ToString();
+        }
+
+        // Convert a PascalCase name (e.g. "JsonLexer") to snake_case (e.g. "json_lexer"),
+        // matching the file-name convention used by antlr4-rust-gen.
+        static string ToSnakeCase(string name)
+        {
+            var sb = new System.Text.StringBuilder();
+            for (int i = 0; i < name.Length; i++)
+            {
+                char c = name[i];
+                if (char.IsUpper(c))
+                {
+                    if (i > 0)
+                    {
+                        bool prevLowerOrDigit = char.IsLower(name[i - 1]) || char.IsDigit(name[i - 1]);
+                        bool prevUpperNextLower = char.IsUpper(name[i - 1]) && i + 1 < name.Length && char.IsLower(name[i + 1]);
+                        if (prevLowerOrDigit || prevUpperNextLower)
+                            sb.Append('_');
+                    }
+                    sb.Append(char.ToLowerInvariant(c));
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
         }
 
         public void CopyFile(string from, string to)

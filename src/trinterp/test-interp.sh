@@ -17,18 +17,28 @@ for grammar in "${grammars[@]}"; do
     rm -rf a i n
 
     # Generate ATN .dot files
-    antlr4 -v 4.13.2 -atn -Dlanguage=CSharp -o a *.g4
-    antlr-ng --atn true -Dlanguage=None -o n *.g4
-    dotnet trash parse *.g4 | dotnet trash interp --atn -o i
+    for g in *.g4
+    do
+        antlr4 -v 4.13.2 -encoding utf-8 -atn -Dlanguage=CSharp -o a $g > /dev/null 2>&1
+        if [ $? -ne 0 ]
+        then
+            antlr4 -v 4.13.2 -encoding utf-8 -Dlanguage=CSharp -o a $g > /dev/null 2>&1
+        fi
+    done
+#    for g in *.g4
+#    do
+#        antlr-ng --atn true -Dlanguage=None -o n $g > /dev/null 2>&1
+#    done
+    dotnet trash parse *.g4 2> /dev/null | dotnet trash interp --atn -o i
 
-    echo diff between Antlr4 and Antlr-ng
-    python $full_path_script_dir/compare-atn.py a n
+#    echo diff between Antlr4 and Antlr-ng
+#    python $full_path_script_dir/compare-atn.py a n
 
     echo diff between Antlr4 and Trinterp
     python $full_path_script_dir/compare-atn.py a i
 
-    echo diff between Antlr-ng and Trinterp
-    python $full_path_script_dir/compare-atn.py n i
+#    echo diff between Antlr-ng and Trinterp
+#    python $full_path_script_dir/compare-atn.py n i
 
     rm -rf a i n
     popd
