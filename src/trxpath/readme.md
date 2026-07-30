@@ -1,4 +1,4 @@
-# trxgrep
+# trxpath
 
 ## Summary
 
@@ -10,11 +10,11 @@ Find all sub-trees in a parse tree using the given XPath expression.
 
 ## Usage
 
-    trxgrep <string>
+    trxpath <string>
 
 ## Examples
 
-    trparse A.g4 | trxgrep "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+    trparse A.g4 | trxpath "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
 ## Notes
 

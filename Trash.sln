@@ -145,7 +145,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trgenvsc", "src\trgenvsc\tr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trclonereplace", "src\trclonereplace\trclonereplace.csproj", "{27F08587-B5B1-4436-80EA-48AB268C75B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxgrep", "src\trxgrep\trxgrep.csproj", "{04BAC9E6-FAF3-4C27-B76E-1B247C9F9E15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxpath", "src\trxpath\trxpath.csproj", "{04BAC9E6-FAF3-4C27-B76E-1B247C9F9E15}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trnullable", "src\trnullable\trnullable.csproj", "{C4DFE702-B085-4298-8AB3-91057D1D9D2A}"
 EndProject

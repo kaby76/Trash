@@ -7,20 +7,20 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<AssemblyName>trxgrep</AssemblyName>
-		<PackageId>trxgrep</PackageId>
+		<AssemblyName>trxpath</AssemblyName>
+		<PackageId>trxpath</PackageId>
 		<Description>
 			<![CDATA[Find all sub-trees in a parse tree using the given XPath expression.
 This program is part of the Trash toolkit.
 ]]>
 		</Description>
-		<ToolCommandName>trxgrep</ToolCommandName>
-		<RootNamespace>trxgrep</RootNamespace>
+		<ToolCommandName>trxpath</ToolCommandName>
+		<RootNamespace>trxpath</RootNamespace>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<Version>2.0</Version>
-		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trxgrep</RepositoryUrl>
+		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trxpath</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>

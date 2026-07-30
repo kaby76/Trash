@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "trxgrep": {
+    "trxpath": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt --query ../1.xq",
       "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\java\\java\\Generated-CSharp"

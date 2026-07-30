@@ -14,7 +14,7 @@ class Command
 {
     public string Help()
     {
-        using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trxgrep.readme.md"))
+        using (Stream stream = this.GetType().Assembly.GetManifestResourceStream("trxpath.readme.md"))
         using (StreamReader reader = new StreamReader(stream))
         {
             return reader.ReadToEnd();

@@ -81,7 +81,7 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 1) <a href="src/trunfoldlit/readme.md">dotnet trash unfoldlit</a> -- Perform unfold transform with literals on a grammar
 1) <a href="src/trungroup/readme.md">dotnet trash ungroup</a> -- Perform an ungroup transform on a grammar
 1) <a href="src/trwdog/readme.md">dotnet trash wdog</a> -- Kill a program that runs too long
-1) <a href="src/trxgrep/readme.md">dotnet trash xgrep</a> -- Search using XPath in parse trees
+1) <a href="src/trxpath/readme.md">dotnet trash xpath</a> -- Search using XPath in parse trees
 1) <a href="src/trxml/readme.md">dotnet trash xml</a> -- Print a parse tree in XML structured format
 1) <a href="src/trxml2/readme.md">dotnet trash xml2</a> -- Print an enumeration of all paths in a parse tree to leaves
 

@@ -66,7 +66,7 @@ Both the full command name and a short alias (without the `tr` prefix) are accep
 | trunfoldlit    | unfoldlit   |
 | trungroup      | ungroup     |
 | trwdog         | wdog        |
-| trxgrep        | xgrep       |
+| trxpath        | xpath       |
 | trxml          | xml         |
 | trxml2         | xml2        |
 
