@@ -2,8 +2,8 @@
   "profiles": {
     "trxgrep": {
       "commandName": "Project",
-      "commandLineArgs": "-f o.pt \"//actionBlock\"",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\antlr\\antlr4\\examples"
+      "commandLineArgs": "-f o.pt --query ../1.xq",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-current\\java\\java\\Generated-CSharp"
     }
   }
 }

@@ -23,5 +23,5 @@ public class Config
     [Option("version", Required = false)]
     public string Version { get; set; } = "2.0";
 
-    [Value(0, Min = 0)] public IEnumerable<string> Expr { get; set; }
+    [Value(0)] public IEnumerable<string> Expr { get; set; }
 }
