@@ -1,11 +1,12 @@
-﻿using Antlr4.Runtime;
+using Antlr4.Runtime;
 using AntlrJson;
-using org.eclipse.wst.xml.xpath2.processor.util;
 using ParseTreeEditing.UnvParseTreeDOM;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using XQuery.Engine;
+using XPathParser = XQuery.Parser.XPathParser;
 
 namespace Trash;
 
@@ -22,7 +23,21 @@ class Command
 
     public void Execute(Config config)
     {
-        var expr = config.Expr.First();
+        string expr;
+        if (config.QueryFile != null && config.QueryFile != "")
+        {
+            expr = System.IO.File.ReadAllText(config.QueryFile).Trim();
+        }
+        else if (config.Expr != null && config.Expr.Any())
+        {
+            expr = config.Expr.First();
+        }
+        else
+        {
+            System.Console.Error.WriteLine("Error: provide an XPath expression as an argument or via --query <file>.");
+            return;
+        }
+
         if (config.Verbose)
         {
             System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
@@ -31,7 +46,6 @@ class Command
         UnvParseTreeNode[] atrees;
         Parser parser;
         Lexer lexer;
-        string text;
         string fn;
         string lines = null;
         if (!(config.File != null && config.File != ""))
@@ -66,70 +80,51 @@ class Command
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
         var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
+
+        var exprNode = new XPathParser(expr).Parse();
+        var evaluator = new XPathEvaluator();
+
         var results = new List<ParsingResultSet>();
         bool do_rs = !config.NoParsingResultSets;
-        List<UnvParseTreeNode> d = new List<UnvParseTreeNode>();
-        List<AntlrDynamicContext> dc = new List<AntlrDynamicContext>();
-        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-        foreach (var parse_info in data)
-        {
-            fn = parse_info.FileName;
-            atrees = parse_info.Nodes;
-            parser = parse_info.Parser;
-            lexer = parse_info.Lexer;
-            var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
-            ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser);
-            dc.Add(dynamicContext);
-            d.Add(dynamicContext.Document);
-        }
 
-        int i = 0;
         foreach (var parse_info in data)
         {
-            var dynamicContext = dc[i++];
-            var a = dynamicContext.Document;
             fn = parse_info.FileName;
             atrees = parse_info.Nodes;
             parser = parse_info.Parser;
             lexer = parse_info.Lexer;
-            ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode[] l =
-                new ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeNode[1] { a };
-            var nodes = engine.parseExpression(expr,
-                    new StaticContextBuilder()).evaluate(dynamicContext, l)
-                .Select(x => (x.NativeValue)).ToArray();
-            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Length + " nodes.");
+
+            var adapterDoc = AdapterDocument.Build(atrees);
+            var xdmResults = evaluator.Evaluate(exprNode, adapterDoc);
+
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + xdmResults.Count + " nodes.");
+
             List<UnvParseTreeNode> res = new List<UnvParseTreeNode>();
-            foreach (var v in nodes)
+            foreach (var item in xdmResults)
             {
-                if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)
+                if (item is AdapterElement ae)
                 {
-                    var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement;
-                    res.Add(q);
+                    res.Add(ae.Source);
                 }
-                else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeText)
+                else if (item is AdapterText at)
                 {
-                    var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeText;
-                    var s = q.Data;
                     do_rs = false;
-                    System.Console.WriteLine(s);
+                    System.Console.WriteLine(at.Source.Data);
                 }
-                else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeAttr)
+                else if (item is AdapterAttribute aa)
                 {
-                    var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeAttr;
-                    var s = q.StringValue;
                     do_rs = false;
-                    System.Console.WriteLine(s);
+                    System.Console.WriteLine(aa.Source.StringValue);
                 }
-                else if (v is ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeDocument)
+                else if (item is AdapterDocument)
                 {
-                    var q = v as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeDocument;
                     do_rs = false;
-                    System.Console.WriteLine(v);
+                    System.Console.WriteLine(item);
                 }
                 else
                 {
                     do_rs = false;
-                    System.Console.WriteLine(v);
+                    System.Console.WriteLine(item.StringValue);
                 }
             }
 

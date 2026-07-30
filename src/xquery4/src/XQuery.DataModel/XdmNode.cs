@@ -40,7 +40,7 @@ public abstract class XdmNode : XdmItem
     /// <summary>
     /// Gets or sets the parent of this node.
     /// </summary>
-    public XdmNode? Parent { get; internal set; }
+    public XdmNode? Parent { get; set; }
 
     /// <summary>
     /// Gets the children of this node.
