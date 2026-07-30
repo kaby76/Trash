@@ -1,25 +1,22 @@
+using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using XQuery.DataModel;
 using XQuery.Parser.Ast;
 
 namespace XQuery.Parser;
 
 /// <summary>
-/// Parser for XPath 4.0 expressions.
-/// Uses recursive descent parsing.
+/// XPath 4.0 parser using the ANTLR4-generated recognizer.
+/// Keeps the same public API as the old hand-written parser.
 /// </summary>
 public class XPathParser
 {
-    protected readonly List<Token> _tokens;
-    protected int _position;
-    protected readonly Dictionary<string, string> _namespaces = new();
+    private readonly string _input;
+    private readonly Dictionary<string, string> _namespaces = new();
 
     public XPathParser(string input)
     {
-        var lexer = new Lexer(input);
-        _tokens = lexer.Tokenize();
-        _position = 0;
-
-        // Default namespaces
+        _input = input;
         _namespaces["xs"] = XdmQName.XsNamespace;
         _namespaces["fn"] = XdmQName.FnNamespace;
         _namespaces["map"] = XdmQName.MapNamespace;
@@ -35,1965 +32,984 @@ public class XPathParser
 
     public ExprNode Parse()
     {
-        var expr = ParseExpr();
-        Expect(TokenType.Eof);
-        return expr;
+        var stream = new AntlrInputStream(_input);
+        var lexer = new XPath4Lexer(stream);
+        var tokens = new CommonTokenStream(lexer);
+        var parser = new XPath4Parser(tokens);
+
+        var errors = new List<string>();
+        lexer.RemoveErrorListeners();
+        lexer.AddErrorListener(new LexerErrorCollector(errors));
+        parser.RemoveErrorListeners();
+        parser.AddErrorListener(new SyntaxErrorCollector(errors));
+
+        var tree = parser.xpath();
+
+        if (errors.Count > 0)
+            throw new XPathParseException(errors[0]);
+
+        return new AstBuilder(_namespaces).Build(tree);
     }
 
-    #region Expression Parsing
-
-    // Expr ::= ExprSingle ("," ExprSingle)*
-    protected virtual ExprNode ParseExpr()
+    // Parser error listener (offending symbol = IToken)
+    private sealed class SyntaxErrorCollector : BaseErrorListener
     {
-        var first = ParseExprSingle();
+        private readonly List<string> _errors;
+        public SyntaxErrorCollector(List<string> errors) => _errors = errors;
+        public override void SyntaxError(System.IO.TextWriter output, IRecognizer recognizer,
+            IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
+            => _errors.Add($"Line {line}:{charPositionInLine} {msg}");
+    }
 
-        if (!Check(TokenType.Comma))
-            return first;
+    // Lexer error listener (offending symbol = int token type)
+    private sealed class LexerErrorCollector : IAntlrErrorListener<int>
+    {
+        private readonly List<string> _errors;
+        public LexerErrorCollector(List<string> errors) => _errors = errors;
+        public void SyntaxError(System.IO.TextWriter output, IRecognizer recognizer,
+            int offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
+            => _errors.Add($"Line {line}:{charPositionInLine} {msg}");
+    }
 
-        var items = new List<ExprNode> { first };
+    private sealed class AstBuilder
+    {
+        private readonly Dictionary<string, string> _ns;
 
-        while (Match(TokenType.Comma))
+        public AstBuilder(Dictionary<string, string> namespaces) => _ns = namespaces;
+
+        public ExprNode Build(XPath4Parser.XpathContext ctx) => BuildExpr(ctx.expr());
+
+        // ── Expr ─────────────────────────────────────────────────────────
+
+        private ExprNode BuildExpr(XPath4Parser.ExprContext ctx)
         {
-            items.Add(ParseExprSingle());
-        }
-
-        return new SequenceExpr { Items = items, Line = first.Line, Column = first.Column };
-    }
-
-    // ExprSingle ::= ForExpr | LetExpr | QuantifiedExpr | IfExpr | SwitchExpr | TryCatchExpr | OrExpr
-    protected virtual ExprNode ParseExprSingle()
-    {
-        if (Check(TokenType.For))
-            return ParseFlworExpr();
-        if (Check(TokenType.Let))
-            return ParseFlworExpr();
-        if (Check(TokenType.Some) || Check(TokenType.Every))
-            return ParseQuantifiedExpr();
-        if (Check(TokenType.If))
-            return ParseIfExpr();
-        if (Check(TokenType.Switch))
-            return ParseSwitchExpr();
-        if (Check(TokenType.Try))
-            return ParseTryCatchExpr();
-
-        return ParseOrExpr();
-    }
-
-    // OrExpr ::= AndExpr ("or" AndExpr)*
-    protected ExprNode ParseOrExpr()
-    {
-        var left = ParseAndExpr();
-
-        while (Match(TokenType.Or))
-        {
-            var right = ParseAndExpr();
-            left = new BinaryExpr
+            var singles = ctx.exprsingle();
+            if (singles.Length == 1)
+                return BuildExprSingle(singles[0]);
+            return new SequenceExpr
             {
-                Left = left,
-                Operator = BinaryOperator.Or,
-                Right = right,
-                Line = left.Line,
-                Column = left.Column
+                Items = singles.Select(BuildExprSingle).ToList(),
+                Line = ctx.Start.Line, Column = ctx.Start.Column
             };
         }
 
-        return left;
-    }
-
-    // AndExpr ::= ComparisonExpr ("and" ComparisonExpr)*
-    protected ExprNode ParseAndExpr()
-    {
-        var left = ParseComparisonExpr();
-
-        while (Match(TokenType.And))
+        private ExprNode BuildExprSingle(XPath4Parser.ExprsingleContext ctx)
         {
-            var right = ParseComparisonExpr();
-            left = new BinaryExpr
+            if (ctx.forexpr()       is { } fe) return BuildForExpr(fe);
+            if (ctx.letexpr()       is { } le) return BuildLetExpr(le);
+            if (ctx.quantifiedexpr() is { } qe) return BuildQuantifiedExpr(qe);
+            if (ctx.ifexpr()        is { } ie) return BuildIfExpr(ie);
+            return BuildOrExpr(ctx.orexpr()!);
+        }
+
+        // ── FLWOR ────────────────────────────────────────────────────────
+
+        private ExprNode BuildForExpr(XPath4Parser.ForexprContext ctx)
+        {
+            var clauses = new List<FlworClause>();
+            BuildForClause(ctx.forclause(), clauses);
+            var ret = BuildForLetReturn(ctx.forletreturn(), clauses);
+            return new FlworExpr { Clauses = clauses, Return = ret, Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private void BuildForClause(XPath4Parser.ForclauseContext ctx, List<FlworClause> clauses)
+        {
+            var binding = ctx.forbinding();
+            if (binding.foritembinding() is { } fb)
             {
-                Left = left,
-                Operator = BinaryOperator.And,
-                Right = right,
-                Line = left.Line,
-                Column = left.Column
-            };
-        }
-
-        return left;
-    }
-
-    // ComparisonExpr ::= OtherwiseExpr ((ValueComp | GeneralComp | NodeComp) OtherwiseExpr)?
-    protected ExprNode ParseComparisonExpr()
-    {
-        var left = ParseOtherwiseExpr();
-
-        var op = TryParseComparisonOperator();
-        if (op.HasValue)
-        {
-            var right = ParseOtherwiseExpr();
-            return new ComparisonExpr
-            {
-                Left = left,
-                Operator = op.Value,
-                Right = right,
-                Line = left.Line,
-                Column = left.Column
-            };
-        }
-
-        return left;
-    }
-
-    private ComparisonOperator? TryParseComparisonOperator()
-    {
-        // Value comparison
-        if (Match(TokenType.Eq)) return ComparisonOperator.Eq;
-        if (Match(TokenType.Ne)) return ComparisonOperator.Ne;
-        if (Match(TokenType.Lt)) return ComparisonOperator.Lt;
-        if (Match(TokenType.Le)) return ComparisonOperator.Le;
-        if (Match(TokenType.Gt)) return ComparisonOperator.Gt;
-        if (Match(TokenType.Ge)) return ComparisonOperator.Ge;
-
-        // General comparison
-        if (Match(TokenType.Equal)) return ComparisonOperator.Equal;
-        if (Match(TokenType.NotEqual)) return ComparisonOperator.NotEqual;
-        if (Match(TokenType.LessThan)) return ComparisonOperator.LessThan;
-        if (Match(TokenType.LessOrEqual)) return ComparisonOperator.LessOrEqual;
-        if (Match(TokenType.GreaterThan)) return ComparisonOperator.GreaterThan;
-        if (Match(TokenType.GreaterOrEqual)) return ComparisonOperator.GreaterOrEqual;
-
-        // Node comparison
-        if (Match(TokenType.Is)) return ComparisonOperator.Is;
-        if (Match(TokenType.Precedes)) return ComparisonOperator.Precedes;
-        if (Match(TokenType.Follows)) return ComparisonOperator.Follows;
-
-        return null;
-    }
-
-    // OtherwiseExpr ::= StringConcatExpr ("otherwise" StringConcatExpr)*
-    protected ExprNode ParseOtherwiseExpr()
-    {
-        var left = ParseStringConcatExpr();
-
-        while (Match(TokenType.Otherwise))
-        {
-            var right = ParseStringConcatExpr();
-            left = new OtherwiseExpr
-            {
-                Left = left,
-                Right = right,
-                Line = left.Line,
-                Column = left.Column
-            };
-        }
-
-        return left;
-    }
-
-    // StringConcatExpr ::= RangeExpr ("||" RangeExpr)*
-    protected ExprNode ParseStringConcatExpr()
-    {
-        var left = ParseRangeExpr();
-
-        while (Match(TokenType.Concat))
-        {
-            var right = ParseRangeExpr();
-            left = new ConcatExpr
-            {
-                Left = left,
-                Right = right,
-                Line = left.Line,
-                Column = left.Column
-            };
-        }
-
-        return left;
-    }
-
-    // RangeExpr ::= AdditiveExpr ("to" AdditiveExpr)?
-    protected ExprNode ParseRangeExpr()
-    {
-        var left = ParseAdditiveExpr();
-
-        if (Match(TokenType.To))
-        {
-            var right = ParseAdditiveExpr();
-            return new RangeExpr
-            {
-                Start = left,
-                End = right,
-                Line = left.Line,
-                Column = left.Column
-            };
-        }
-
-        return left;
-    }
-
-    // AdditiveExpr ::= MultiplicativeExpr (("+" | "-") MultiplicativeExpr)*
-    protected ExprNode ParseAdditiveExpr()
-    {
-        var left = ParseMultiplicativeExpr();
-
-        while (Check(TokenType.Plus) || Check(TokenType.Minus))
-        {
-            var op = Match(TokenType.Plus) ? BinaryOperator.Add : BinaryOperator.Subtract;
-            if (op == BinaryOperator.Subtract) Advance();
-            var right = ParseMultiplicativeExpr();
-            left = new BinaryExpr
-            {
-                Left = left,
-                Operator = op,
-                Right = right,
-                Line = left.Line,
-                Column = left.Column
-            };
-        }
-
-        return left;
-    }
-
-    // MultiplicativeExpr ::= UnionExpr (("*" | "div" | "idiv" | "mod") UnionExpr)*
-    protected ExprNode ParseMultiplicativeExpr()
-    {
-        var left = ParseUnionExpr();
-
-        while (true)
-        {
-            BinaryOperator op;
-            if (Match(TokenType.Asterisk)) op = BinaryOperator.Multiply;
-            else if (Match(TokenType.Div)) op = BinaryOperator.Divide;
-            else if (Match(TokenType.IDiv)) op = BinaryOperator.IntegerDivide;
-            else if (Match(TokenType.Mod)) op = BinaryOperator.Modulo;
-            else break;
-
-            var right = ParseUnionExpr();
-            left = new BinaryExpr
-            {
-                Left = left,
-                Operator = op,
-                Right = right,
-                Line = left.Line,
-                Column = left.Column
-            };
-        }
-
-        return left;
-    }
-
-    // UnionExpr ::= IntersectExceptExpr (("union" | "|") IntersectExceptExpr)*
-    protected ExprNode ParseUnionExpr()
-    {
-        var first = ParseIntersectExceptExpr();
-
-        if (!Check(TokenType.Union) && !Check(TokenType.Pipe))
-            return first;
-
-        var operands = new List<ExprNode> { first };
-
-        while (Match(TokenType.Union) || Match(TokenType.Pipe))
-        {
-            operands.Add(ParseIntersectExceptExpr());
-        }
-
-        return new UnionExpr { Operands = operands, Line = first.Line, Column = first.Column };
-    }
-
-    // IntersectExceptExpr ::= InstanceOfExpr (("intersect" | "except") InstanceOfExpr)*
-    protected ExprNode ParseIntersectExceptExpr()
-    {
-        var left = ParseInstanceOfExpr();
-
-        while (Check(TokenType.Intersect) || Check(TokenType.Except))
-        {
-            bool isIntersect = Match(TokenType.Intersect);
-            if (!isIntersect) Advance();
-
-            var right = ParseInstanceOfExpr();
-            left = new IntersectExceptExpr
-            {
-                Left = left,
-                IsIntersect = isIntersect,
-                Right = right,
-                Line = left.Line,
-                Column = left.Column
-            };
-        }
-
-        return left;
-    }
-
-    // InstanceOfExpr ::= TreatExpr ("instance" "of" SequenceType)?
-    protected ExprNode ParseInstanceOfExpr()
-    {
-        var expr = ParseTreatExpr();
-
-        if (Match(TokenType.Instance))
-        {
-            Expect(TokenType.Of);
-            var type = ParseSequenceType();
-            return new InstanceOfExpr
-            {
-                Expression = expr,
-                Type = type,
-                Line = expr.Line,
-                Column = expr.Column
-            };
-        }
-
-        return expr;
-    }
-
-    // TreatExpr ::= CastableExpr ("treat" "as" SequenceType)?
-    protected ExprNode ParseTreatExpr()
-    {
-        var expr = ParseCastableExpr();
-
-        if (Match(TokenType.Treat))
-        {
-            Expect(TokenType.As);
-            var type = ParseSequenceType();
-            return new TreatExpr
-            {
-                Expression = expr,
-                Type = type,
-                Line = expr.Line,
-                Column = expr.Column
-            };
-        }
-
-        return expr;
-    }
-
-    // CastableExpr ::= CastExpr ("castable" "as" SingleType)?
-    protected ExprNode ParseCastableExpr()
-    {
-        var expr = ParseCastExpr();
-
-        if (Match(TokenType.Castable))
-        {
-            Expect(TokenType.As);
-            var (typeName, allowEmpty) = ParseSingleType();
-            return new CastableExpr
-            {
-                Expression = expr,
-                TargetType = typeName,
-                AllowEmpty = allowEmpty,
-                Line = expr.Line,
-                Column = expr.Column
-            };
-        }
-
-        return expr;
-    }
-
-    // CastExpr ::= ArrowExpr ("cast" "as" SingleType)?
-    protected ExprNode ParseCastExpr()
-    {
-        var expr = ParseArrowExpr();
-
-        if (Match(TokenType.Cast))
-        {
-            Expect(TokenType.As);
-            var (typeName, allowEmpty) = ParseSingleType();
-            return new CastExpr
-            {
-                Expression = expr,
-                TargetType = typeName,
-                AllowEmpty = allowEmpty,
-                Line = expr.Line,
-                Column = expr.Column
-            };
-        }
-
-        return expr;
-    }
-
-    // ArrowExpr ::= UnaryExpr (("=>" | "->") ArrowFunctionSpecifier ArgumentList)*
-    protected ExprNode ParseArrowExpr()
-    {
-        var expr = ParseUnaryExpr();
-
-        while (Check(TokenType.Arrow) || Check(TokenType.ThinArrow))
-        {
-            bool isThinArrow = Check(TokenType.ThinArrow);
-            Advance();
-
-            var funcSpec = ParsePrimaryExpr();
-            var args = new List<ExprNode>();
-
-            if (Check(TokenType.LeftParen))
-            {
-                args = ParseArgumentList();
-            }
-
-            expr = new ArrowExpr
-            {
-                Argument = expr,
-                Function = funcSpec,
-                AdditionalArguments = args,
-                IsThinArrow = isThinArrow,
-                Line = expr.Line,
-                Column = expr.Column
-            };
-        }
-
-        return expr;
-    }
-
-    // UnaryExpr ::= ("-" | "+")* SimpleMapExpr
-    protected ExprNode ParseUnaryExpr()
-    {
-        var ops = new List<UnaryOperator>();
-
-        while (Check(TokenType.Minus) || Check(TokenType.Plus))
-        {
-            ops.Add(Check(TokenType.Minus) ? UnaryOperator.Minus : UnaryOperator.Plus);
-            Advance();
-        }
-
-        var expr = ParseSimpleMapExpr();
-
-        // Apply unary operators in reverse order
-        for (int i = ops.Count - 1; i >= 0; i--)
-        {
-            expr = new UnaryExpr
-            {
-                Operator = ops[i],
-                Operand = expr,
-                Line = expr.Line,
-                Column = expr.Column
-            };
-        }
-
-        return expr;
-    }
-
-    // SimpleMapExpr ::= PathExpr ("!" PathExpr)*
-    protected ExprNode ParseSimpleMapExpr()
-    {
-        var first = ParsePathExpr();
-
-        if (!Check(TokenType.Exclamation))
-            return first;
-
-        var steps = new List<ExprNode> { first };
-
-        while (Match(TokenType.Exclamation))
-        {
-            steps.Add(ParsePathExpr());
-        }
-
-        return new SimpleMapExpr { Steps = steps, Line = first.Line, Column = first.Column };
-    }
-
-    // PathExpr ::= ("/" RelativePathExpr?) | ("//" RelativePathExpr) | RelativePathExpr
-    protected ExprNode ParsePathExpr()
-    {
-        var token = Current();
-
-        if (Match(TokenType.Slash))
-        {
-            if (IsRelativePathStart())
-            {
-                var steps = ParseRelativePathExpr();
-                return new PathExpr
+                var (name, _, seqType) = GetVarNameAndType(fb.varnameandtype());
+                var posVar = fb.positionalvar()?.eqname()?.GetText();
+                clauses.Add(new ForClause
                 {
-                    IsAbsolute = true,
-                    Steps = steps,
-                    Line = token.Line,
-                    Column = token.Column
+                    Variable = name, PositionalVariable = posVar, Type = seqType,
+                    Expression = BuildExprSingle(fb.exprsingle()),
+                    Line = ctx.Start.Line, Column = ctx.Start.Column
+                });
+            }
+            else if (binding.formemberbinding() is { } mb)
+            {
+                var (name, _, seqType) = GetVarNameAndType(mb.varnameandtype());
+                clauses.Add(new ForClause
+                {
+                    Variable = name, Type = seqType,
+                    Expression = BuildExprSingle(mb.exprsingle()),
+                    Line = ctx.Start.Line, Column = ctx.Start.Column
+                });
+            }
+            else if (binding.forentrybinding() is { } eb)
+            {
+                var valVnt = eb.forentryvaluebinding()?.varnameandtype();
+                var (name, _, seqType) = valVnt != null ? GetVarNameAndType(valVnt) : ("_", null, null);
+                clauses.Add(new ForClause
+                {
+                    Variable = name, Type = seqType,
+                    Expression = BuildExprSingle(eb.exprsingle()),
+                    Line = ctx.Start.Line, Column = ctx.Start.Column
+                });
+            }
+        }
+
+        private ExprNode BuildForLetReturn(XPath4Parser.ForletreturnContext ctx, List<FlworClause> clauses)
+        {
+            if (ctx.forclause() is { } fc)
+            {
+                BuildForClause(fc, clauses);
+                return BuildForLetReturn(ctx.forletreturn()!, clauses);
+            }
+            if (ctx.letclause() is { } lc)
+            {
+                BuildLetClause(lc, clauses);
+                return BuildForLetReturn(ctx.forletreturn()!, clauses);
+            }
+            return BuildExprSingle(ctx.exprsingle()!);
+        }
+
+        private ExprNode BuildLetExpr(XPath4Parser.LetexprContext ctx)
+        {
+            var clauses = new List<FlworClause>();
+            BuildLetClause(ctx.letclause(), clauses);
+            var ret = BuildForLetReturn(ctx.forletreturn(), clauses);
+            return new FlworExpr { Clauses = clauses, Return = ret, Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private void BuildLetClause(XPath4Parser.LetclauseContext ctx, List<FlworClause> clauses)
+        {
+            var binding = ctx.letbinding();
+            if (binding.letvaluebinding() is { } lvb)
+            {
+                var (name, _, seqType) = GetVarNameAndType(lvb.varnameandtype());
+                clauses.Add(new LetClause
+                {
+                    Variable = name, Type = seqType,
+                    Expression = BuildExprSingle(lvb.exprsingle()),
+                    Line = ctx.Start.Line, Column = ctx.Start.Column
+                });
+                return;
+            }
+            throw new XPathParseException(
+                $"Destructuring let bindings are not supported (line {ctx.Start.Line})");
+        }
+
+        // ── Quantified ───────────────────────────────────────────────────
+
+        private ExprNode BuildQuantifiedExpr(XPath4Parser.QuantifiedexprContext ctx)
+        {
+            bool isSome = ctx.KW_SOME() != null;
+            var bindings = ctx.quantifierbinding().Select(qb =>
+            {
+                var (name, _, seqType) = GetVarNameAndType(qb.varnameandtype());
+                return new QuantifiedBinding
+                {
+                    Variable = name, Type = seqType,
+                    Expression = BuildExprSingle(qb.exprsingle())
                 };
-            }
-            return new PathExpr
+            }).ToList();
+            return new QuantifiedExpr
             {
-                IsAbsolute = true,
-                IsRootOnly = true,
-                Line = token.Line,
-                Column = token.Column
+                IsSome = isSome, Bindings = bindings,
+                Satisfies = BuildExprSingle(ctx.exprsingle()),
+                Line = ctx.Start.Line, Column = ctx.Start.Column
             };
         }
 
-        if (Match(TokenType.SlashSlash))
+        // ── If ───────────────────────────────────────────────────────────
+
+        private ExprNode BuildIfExpr(XPath4Parser.IfexprContext ctx)
         {
-            var steps = ParseRelativePathExpr();
-            steps.Insert(0, CreateDescendantOrSelfStep(token));
-            return new PathExpr
+            var cond = BuildExpr(ctx.expr());
+            ExprNode then, else_;
+            if (ctx.unbracedactions() is { } ub)
             {
-                IsAbsolute = true,
-                Steps = steps,
-                Line = token.Line,
-                Column = token.Column
-            };
-        }
-
-        return ParseRelativePathExprOrPrimary();
-    }
-
-    private bool IsRelativePathStart()
-    {
-        return Check(TokenType.NCName) || Check(TokenType.QName) ||
-               Check(TokenType.Asterisk) || Check(TokenType.At) ||
-               Check(TokenType.Dot) || Check(TokenType.DotDot) ||
-               Check(TokenType.LeftParen) || Check(TokenType.Dollar) ||
-               IsNodeKindTest() || IsAxisName();
-    }
-
-    private ExprNode ParseRelativePathExprOrPrimary()
-    {
-        var first = ParseStepExpr();
-
-        if (!Check(TokenType.Slash) && !Check(TokenType.SlashSlash))
-            return first;
-
-        var steps = new List<ExprNode> { first };
-
-        while (true)
-        {
-            if (Match(TokenType.SlashSlash))
-            {
-                steps.Add(CreateDescendantOrSelfStep(Current()));
-                steps.Add(ParseStepExpr());
-            }
-            else if (Match(TokenType.Slash))
-            {
-                steps.Add(ParseStepExpr());
+                var singles = ub.exprsingle();
+                then  = BuildExprSingle(singles[0]);
+                else_ = BuildExprSingle(singles[1]);
             }
             else
             {
-                break;
+                var inner = ctx.bracedaction()!.enclosedexpr().expr();
+                then  = inner != null ? BuildExpr(inner) : new SequenceExpr { Items = [] };
+                else_ = new SequenceExpr { Items = [] };
             }
+            return new IfExpr { Condition = cond, Then = then, Else = else_, Line = ctx.Start.Line, Column = ctx.Start.Column };
         }
 
-        return new PathExpr
-        {
-            IsAbsolute = false,
-            Steps = steps,
-            Line = first.Line,
-            Column = first.Column
-        };
-    }
+        // ── Boolean operators ─────────────────────────────────────────────
 
-    private List<ExprNode> ParseRelativePathExpr()
-    {
-        var steps = new List<ExprNode>();
-        steps.Add(ParseStepExpr());
-
-        while (true)
+        private ExprNode BuildOrExpr(XPath4Parser.OrexprContext ctx)
         {
-            if (Match(TokenType.SlashSlash))
+            var ops = ctx.andexpr();
+            var left = BuildAndExpr(ops[0]);
+            for (int i = 1; i < ops.Length; i++)
             {
-                steps.Add(CreateDescendantOrSelfStep(Current()));
-                steps.Add(ParseStepExpr());
+                var right = BuildAndExpr(ops[i]);
+                left = new BinaryExpr { Left = left, Operator = BinaryOperator.Or, Right = right, Line = left.Line, Column = left.Column };
             }
-            else if (Match(TokenType.Slash))
-            {
-                steps.Add(ParseStepExpr());
-            }
-            else
-            {
-                break;
-            }
+            return left;
         }
 
-        return steps;
-    }
-
-    private AxisStepExpr CreateDescendantOrSelfStep(Token token)
-    {
-        return new AxisStepExpr
+        private ExprNode BuildAndExpr(XPath4Parser.AndexprContext ctx)
         {
-            Axis = Axis.DescendantOrSelf,
-            NodeTest = new KindTestExpr { Kind = XdmNodeKind.Element },
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    // StepExpr ::= PostfixExpr | AxisStep
-    protected ExprNode ParseStepExpr()
-    {
-        if (IsAxisStep())
-            return ParseAxisStep();
-
-        return ParsePostfixExpr();
-    }
-
-    private bool IsAxisStep()
-    {
-        // Abbreviated steps
-        if (Check(TokenType.DotDot)) return true;
-        if (Check(TokenType.At)) return true;
-
-        // Axis names followed by ::
-        if (IsAxisName() && Peek(1).Type == TokenType.ColonColon)
-            return true;
-
-        // Node tests (might be function calls, need lookahead)
-        if (IsNodeKindTest())
-            return true;
-
-        // Name test (could be element test or function call)
-        if (IsNameToken() || Check(TokenType.Asterisk))
-        {
-            // If followed by ::, it's an axis
-            if (Peek(1).Type == TokenType.ColonColon)
-                return true;
-
-            // If followed by (, it's a function call (but not if it's a node kind test)
-            if (Peek(1).Type == TokenType.LeftParen && !IsNodeKindTest())
-                return false;
-
-            // If map/array followed by {, it's a constructor, not a name test
-            if ((Check(TokenType.Map) || Check(TokenType.Array)) && Peek(1).Type == TokenType.LeftBrace)
-                return false;
-
-            // Otherwise it's a name test
-            return true;
+            var ops = ctx.comparisonexpr();
+            var left = BuildComparisonExpr(ops[0]);
+            for (int i = 1; i < ops.Length; i++)
+            {
+                var right = BuildComparisonExpr(ops[i]);
+                left = new BinaryExpr { Left = left, Operator = BinaryOperator.And, Right = right, Line = left.Line, Column = left.Column };
+            }
+            return left;
         }
 
-        return false;
-    }
-
-    private bool IsAxisName()
-    {
-        return Current().Type is TokenType.Ancestor or TokenType.AncestorOrSelf or
-            TokenType.Child or TokenType.Descendant or TokenType.DescendantOrSelf or
-            TokenType.Following or TokenType.FollowingSibling or TokenType.Parent or
-            TokenType.Preceding or TokenType.PrecedingSibling or TokenType.Self or
-            TokenType.Attribute or TokenType.Namespace;
-    }
-
-    private bool IsNodeKindTest()
-    {
-        return Current().Type is TokenType.Node or TokenType.Text or
-            TokenType.Comment or TokenType.ProcessingInstruction or
-            TokenType.Document or TokenType.Element or TokenType.Attribute or
-            TokenType.SchemaElement or TokenType.SchemaAttribute or
-            TokenType.NamespaceNode;
-    }
-
-    // AxisStep ::= (ReverseStep | ForwardStep) PredicateList
-    protected ExprNode ParseAxisStep()
-    {
-        var token = Current();
-        Axis axis;
-        ExprNode nodeTest;
-
-        // Abbreviated steps
-        if (Match(TokenType.DotDot))
+        private ExprNode BuildComparisonExpr(XPath4Parser.ComparisonexprContext ctx)
         {
-            return new AxisStepExpr
+            var ops = ctx.otherwiseexpr();
+            var left = BuildOtherwiseExpr(ops[0]);
+            if (ops.Length == 1) return left;
+            var right = BuildOtherwiseExpr(ops[1]);
+            ComparisonOperator op;
+            if      (ctx.valuecomp()   is { } vc) op = GetValueCompOp(vc);
+            else if (ctx.generalcomp() is { } gc) op = GetGeneralCompOp(gc);
+            else                                  op = GetNodeCompOp(ctx.nodecomp()!);
+            return new ComparisonExpr { Left = left, Operator = op, Right = right, Line = left.Line, Column = left.Column };
+        }
+
+        // ── Otherwise / string-concat / range ────────────────────────────
+
+        private ExprNode BuildOtherwiseExpr(XPath4Parser.OtherwiseexprContext ctx)
+        {
+            var ops = ctx.stringconcatexpr();
+            var left = BuildStringConcatExpr(ops[0]);
+            for (int i = 1; i < ops.Length; i++)
             {
-                Axis = Axis.Parent,
-                NodeTest = new KindTestExpr { Kind = XdmNodeKind.Element },
-                Predicates = ParsePredicateList(),
-                Line = token.Line,
-                Column = token.Column
+                var right = BuildStringConcatExpr(ops[i]);
+                left = new OtherwiseExpr { Left = left, Right = right, Line = left.Line, Column = left.Column };
+            }
+            return left;
+        }
+
+        private ExprNode BuildStringConcatExpr(XPath4Parser.StringconcatexprContext ctx)
+        {
+            var ops = ctx.rangeexpr();
+            var left = BuildRangeExpr(ops[0]);
+            for (int i = 1; i < ops.Length; i++)
+            {
+                var right = BuildRangeExpr(ops[i]);
+                left = new ConcatExpr { Left = left, Right = right, Line = left.Line, Column = left.Column };
+            }
+            return left;
+        }
+
+        private ExprNode BuildRangeExpr(XPath4Parser.RangeexprContext ctx)
+        {
+            var ops = ctx.additiveexpr();
+            var left = BuildAdditiveExpr(ops[0]);
+            if (ops.Length == 1) return left;
+            return new RangeExpr { Start = left, End = BuildAdditiveExpr(ops[1]), Line = left.Line, Column = left.Column };
+        }
+
+        // ── Arithmetic ────────────────────────────────────────────────────
+
+        private ExprNode BuildAdditiveExpr(XPath4Parser.AdditiveexprContext ctx)
+        {
+            var operands = ctx.multiplicativeexpr();
+            var left = BuildMultiplicativeExpr(operands[0]);
+            for (int i = 1; i < operands.Length; i++)
+            {
+                var opToken = ctx.GetChild(2 * i - 1) as ITerminalNode;
+                var right = BuildMultiplicativeExpr(operands[i]);
+                var op = opToken?.Symbol.Type == XPath4Lexer.PLUS ? BinaryOperator.Add : BinaryOperator.Subtract;
+                left = new BinaryExpr { Left = left, Operator = op, Right = right, Line = left.Line, Column = left.Column };
+            }
+            return left;
+        }
+
+        private ExprNode BuildMultiplicativeExpr(XPath4Parser.MultiplicativeexprContext ctx)
+        {
+            var operands = ctx.unionexpr();
+            var left = BuildUnionExpr(operands[0]);
+            for (int i = 1; i < operands.Length; i++)
+            {
+                var opToken = ctx.GetChild(2 * i - 1) as ITerminalNode;
+                var right = BuildUnionExpr(operands[i]);
+                int tt = opToken?.Symbol.Type ?? -1;
+                BinaryOperator op =
+                    tt == XPath4Lexer.STAR       || tt == XPath4Lexer.TIMES_SIGN ? BinaryOperator.Multiply :
+                    tt == XPath4Lexer.KW_DIV     || tt == XPath4Lexer.DIV_SIGN   ? BinaryOperator.Divide :
+                    tt == XPath4Lexer.KW_IDIV                                    ? BinaryOperator.IntegerDivide :
+                                                                                    BinaryOperator.Modulo;
+                left = new BinaryExpr { Left = left, Operator = op, Right = right, Line = left.Line, Column = left.Column };
+            }
+            return left;
+        }
+
+        // ── Union / intersect / except ────────────────────────────────────
+
+        private ExprNode BuildUnionExpr(XPath4Parser.UnionexprContext ctx)
+        {
+            var ops = ctx.intersectexceptexpr();
+            if (ops.Length == 1) return BuildIntersectExceptExpr(ops[0]);
+            return new UnionExpr
+            {
+                Operands = ops.Select(BuildIntersectExceptExpr).ToList(),
+                Line = ctx.Start.Line, Column = ctx.Start.Column
             };
         }
 
-        if (Match(TokenType.At))
+        private ExprNode BuildIntersectExceptExpr(XPath4Parser.IntersectexceptexprContext ctx)
         {
-            axis = Axis.Attribute;
-            nodeTest = ParseNodeTest();
-        }
-        else if (IsAxisName() && Peek(1).Type == TokenType.ColonColon)
-        {
-            axis = ParseAxisSpecifier();
-            Expect(TokenType.ColonColon);
-            nodeTest = ParseNodeTest();
-        }
-        else
-        {
-            axis = Axis.Child;
-            nodeTest = ParseNodeTest();
-        }
-
-        var predicates = ParsePredicateList();
-
-        return new AxisStepExpr
-        {
-            Axis = axis,
-            NodeTest = nodeTest,
-            Predicates = predicates,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    private Axis ParseAxisSpecifier()
-    {
-        var token = Current();
-        Advance();
-
-        return token.Type switch
-        {
-            TokenType.Ancestor => Axis.Ancestor,
-            TokenType.AncestorOrSelf => Axis.AncestorOrSelf,
-            TokenType.Child => Axis.Child,
-            TokenType.Descendant => Axis.Descendant,
-            TokenType.DescendantOrSelf => Axis.DescendantOrSelf,
-            TokenType.Following => Axis.Following,
-            TokenType.FollowingSibling => Axis.FollowingSibling,
-            TokenType.Parent => Axis.Parent,
-            TokenType.Preceding => Axis.Preceding,
-            TokenType.PrecedingSibling => Axis.PrecedingSibling,
-            TokenType.Self => Axis.Self,
-            TokenType.Attribute => Axis.Attribute,
-            TokenType.Namespace => Axis.Namespace,
-            _ => throw ParseError($"Expected axis name, got {token.Type}")
-        };
-    }
-
-    // NodeTest ::= KindTest | NameTest
-    protected ExprNode ParseNodeTest()
-    {
-        if (IsNodeKindTest() && Peek(1).Type == TokenType.LeftParen)
-            return ParseKindTest();
-
-        return ParseNameTest();
-    }
-
-    protected ExprNode ParseNameTest()
-    {
-        var token = Current();
-
-        // Wildcard
-        if (Match(TokenType.Asterisk))
-        {
-            return new NameTestExpr
+            var operands = ctx.recordputexpr();
+            var left = BuildRecordPutExpr(operands[0]);
+            for (int i = 1; i < operands.Length; i++)
             {
-                IsWildcard = true,
-                Line = token.Line,
-                Column = token.Column
-            };
+                var opToken = ctx.GetChild(2 * i - 1) as ITerminalNode;
+                var right   = BuildRecordPutExpr(operands[i]);
+                bool isIntersect = opToken?.Symbol.Type == XPath4Lexer.KW_INTERSECT;
+                left = new IntersectExceptExpr { Left = left, IsIntersect = isIntersect, Right = right, Line = left.Line, Column = left.Column };
+            }
+            return left;
         }
 
-        // NCName:* or prefix:localname or keyword used as name
-        if (IsNameToken())
+        private ExprNode BuildRecordPutExpr(XPath4Parser.RecordputexprContext ctx)
         {
-            var name = Current().Value;
-            Advance();
+            var ops = ctx.instanceofexpr();
+            if (ops.Length > 1)
+                throw new XPathParseException($"Record-put operator (+:=) is not supported (line {ctx.Start.Line})");
+            return BuildInstanceOfExpr(ops[0]);
+        }
 
-            // Check for :*
-            if (Check(TokenType.Colon) && Peek(1).Type == TokenType.Asterisk)
+        // ── Type expressions ─────────────────────────────────────────────
+
+        private ExprNode BuildInstanceOfExpr(XPath4Parser.InstanceofexprContext ctx)
+        {
+            var expr = BuildTreatExpr(ctx.treatexpr());
+            if (ctx.sequencetype() is { } st)
+                return new InstanceOfExpr { Expression = expr, Type = BuildSequenceType(st), Line = ctx.Start.Line, Column = ctx.Start.Column };
+            return expr;
+        }
+
+        private ExprNode BuildTreatExpr(XPath4Parser.TreatexprContext ctx)
+        {
+            var expr = BuildCastableExpr(ctx.castableexpr());
+            if (ctx.sequencetype() is { } st)
+                return new TreatExpr { Expression = expr, Type = BuildSequenceType(st), Line = ctx.Start.Line, Column = ctx.Start.Column };
+            return expr;
+        }
+
+        private ExprNode BuildCastableExpr(XPath4Parser.CastableexprContext ctx)
+        {
+            var expr = BuildCastExpr(ctx.castexpr());
+            if (ctx.casttarget() is { } ct)
             {
-                Advance(); // :
-                Advance(); // *
-                return new NameTestExpr
+                var (qname, allowEmpty) = BuildCastTarget(ct, ctx.occurrenceindicator());
+                return new CastableExpr { Expression = expr, TargetType = qname, AllowEmpty = allowEmpty, Line = ctx.Start.Line, Column = ctx.Start.Column };
+            }
+            return expr;
+        }
+
+        private ExprNode BuildCastExpr(XPath4Parser.CastexprContext ctx)
+        {
+            var expr = BuildArrowExpr(ctx.pipelineexpr().arrowexpr());
+            if (ctx.casttarget() is { } ct)
+            {
+                var (qname, allowEmpty) = BuildCastTarget(ct, ctx.occurrenceindicator());
+                return new CastExpr { Expression = expr, TargetType = qname, AllowEmpty = allowEmpty, Line = ctx.Start.Line, Column = ctx.Start.Column };
+            }
+            return expr;
+        }
+
+        private (XdmQName qname, bool allowEmpty) BuildCastTarget(
+            XPath4Parser.CasttargetContext ctx, XPath4Parser.OccurrenceindicatorContext? occ)
+        {
+            if (ctx.typename_() is { } tn)
+                return (ResolveEqName(tn.eqname()), occ?.QM() != null);
+            throw new XPathParseException($"Complex cast targets are not supported (line {ctx.Start.Line})");
+        }
+
+        // ── Arrow expression ──────────────────────────────────────────────
+
+        private ExprNode BuildArrowExpr(XPath4Parser.ArrowexprContext ctx)
+        {
+            var result = BuildUnaryExpr(ctx.unaryexpr());
+            foreach (var child in ctx.children)
+            {
+                if (child is XPath4Parser.SequencearrowtargetContext sat)
+                    result = BuildArrowTarget(sat.arrowtarget(), result, isThinArrow: false);
+                else if (child is XPath4Parser.MappingarrowtargetContext mat)
+                    result = BuildArrowTarget(mat.arrowtarget(), result, isThinArrow: true);
+            }
+            return result;
+        }
+
+        private ExprNode BuildArrowTarget(XPath4Parser.ArrowtargetContext ctx, ExprNode arg, bool isThinArrow)
+        {
+            if (ctx.functioncall() is { } fc)
+            {
+                var qname = ResolveEqName(fc.eqname());
+                var addlArgs = BuildArgumentListPositional(fc.argumentlist());
+                var funcNode = new FunctionCallExpr
                 {
-                    Prefix = name,
-                    IsLocalWildcard = true,
-                    NamespaceUri = _namespaces.GetValueOrDefault(name),
-                    Line = token.Line,
-                    Column = token.Column
+                    Name = qname.LocalName, Prefix = qname.Prefix, NamespaceUri = qname.NamespaceUri,
+                    Arguments = [],
+                    Line = ctx.Start.Line, Column = ctx.Start.Column
+                };
+                return new ArrowExpr
+                {
+                    Argument = arg, Function = funcNode, AdditionalArguments = addlArgs,
+                    IsThinArrow = isThinArrow,
+                    Line = ctx.Start.Line, Column = ctx.Start.Column
                 };
             }
-
-            // QName
-            if (name.Contains(':'))
-            {
-                var parts = name.Split(':', 2);
-                return new NameTestExpr
-                {
-                    Prefix = parts[0],
-                    LocalName = parts[1],
-                    NamespaceUri = _namespaces.GetValueOrDefault(parts[0]),
-                    Line = token.Line,
-                    Column = token.Column
-                };
-            }
-
-            return new NameTestExpr
-            {
-                LocalName = name,
-                Line = token.Line,
-                Column = token.Column
-            };
+            throw new XPathParseException($"Dynamic arrow calls are not supported (line {ctx.Start.Line})");
         }
 
-        throw ParseError($"Expected name test, got {Current().Type}");
-    }
+        // ── Unary / simple-map / path ─────────────────────────────────────
 
-    protected ExprNode ParseKindTest()
-    {
-        var token = Current();
-        XdmNodeKind kind;
-
-        switch (token.Type)
+        private ExprNode BuildUnaryExpr(XPath4Parser.UnaryexprContext ctx)
         {
-            case TokenType.Node:
-                kind = XdmNodeKind.Element; // node() matches all nodes
-                break;
-            case TokenType.Text:
-                kind = XdmNodeKind.Text;
-                break;
-            case TokenType.Comment:
-                kind = XdmNodeKind.Comment;
-                break;
-            case TokenType.ProcessingInstruction:
-                kind = XdmNodeKind.ProcessingInstruction;
-                break;
-            case TokenType.Document:
-                kind = XdmNodeKind.Document;
-                break;
-            case TokenType.Element:
-                kind = XdmNodeKind.Element;
-                break;
-            case TokenType.Attribute:
-                kind = XdmNodeKind.Attribute;
-                break;
-            case TokenType.NamespaceNode:
-                kind = XdmNodeKind.Namespace;
-                break;
-            default:
-                throw ParseError($"Expected kind test, got {token.Type}");
-        }
-
-        Advance();
-        Expect(TokenType.LeftParen);
-
-        XdmQName? name = null;
-        XdmQName? typeName = null;
-
-        // Optional element/attribute name
-        if (!Check(TokenType.RightParen))
-        {
-            if (Check(TokenType.NCName) || Check(TokenType.QName))
+            var expr = BuildSimpleMapExpr(ctx.valueexpr().simplemapexpr());
+            int minusCount = 0;
+            bool hasPlus = false;
+            foreach (var child in ctx.children)
             {
-                name = ParseQName();
-
-                // Optional type name
-                if (Match(TokenType.Comma))
+                if (child is ITerminalNode tn)
                 {
-                    typeName = ParseQName();
+                    if (tn.Symbol.Type == XPath4Lexer.MINUS) minusCount++;
+                    else if (tn.Symbol.Type == XPath4Lexer.PLUS) hasPlus = true;
                 }
             }
+            if (minusCount % 2 == 1)
+                return new UnaryExpr { Operator = UnaryOperator.Minus, Operand = expr, Line = ctx.Start.Line, Column = ctx.Start.Column };
+            if (hasPlus && minusCount == 0)
+                return new UnaryExpr { Operator = UnaryOperator.Plus, Operand = expr, Line = ctx.Start.Line, Column = ctx.Start.Column };
+            return expr;
         }
 
-        Expect(TokenType.RightParen);
-
-        var kindTest = new KindTestExpr
+        private ExprNode BuildSimpleMapExpr(XPath4Parser.SimplemapexprContext ctx)
         {
-            Kind = kind,
-            Name = name,
-            TypeName = typeName,
-            Line = token.Line,
-            Column = token.Column
-        };
-
-        // Special case for node() which matches all node kinds
-        if (token.Type == TokenType.Node)
-        {
-            // We'll handle this in the evaluator
+            var ops = ctx.pathexpr();
+            if (ops.Length == 1) return BuildPathExpr(ops[0]);
+            return new SimpleMapExpr { Steps = ops.Select(BuildPathExpr).ToList(), Line = ctx.Start.Line, Column = ctx.Start.Column };
         }
 
-        return kindTest;
-    }
-
-    // PostfixExpr ::= PrimaryExpr (Predicate | ArgumentList | Lookup)*
-    protected ExprNode ParsePostfixExpr()
-    {
-        var expr = ParsePrimaryExpr();
-        var predicates = new List<ExprNode>();
-
-        while (true)
+        private ExprNode BuildPathExpr(XPath4Parser.PathexprContext ctx)
         {
-            if (Check(TokenType.LeftBracket))
+            if (ctx.absolutepathexpr() is { } ape) return BuildAbsolutePathExpr(ape);
+            return BuildRelativePathExpr(ctx.relativepathexpr()!);
+        }
+
+        private static readonly KindTestExpr AnyNodeTest = new() { Kind = XdmNodeKind.Element };
+
+        private ExprNode BuildAbsolutePathExpr(XPath4Parser.AbsolutepathexprContext ctx)
+        {
+            var rel = ctx.relativepathexpr();
+            if (rel == null)
+                return new PathExpr { IsAbsolute = true, IsRootOnly = true, Steps = [], Line = ctx.Start.Line, Column = ctx.Start.Column };
+
+            var inner = BuildRelativePathExprSteps(rel);
+            bool isDescendant = ctx.SS() != null;
+            if (isDescendant)
+                inner.Insert(0, new AxisStepExpr { Axis = Axis.DescendantOrSelf, NodeTest = AnyNodeTest, Line = ctx.Start.Line, Column = ctx.Start.Column });
+            return new PathExpr { IsAbsolute = true, Steps = inner, Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private ExprNode BuildRelativePathExpr(XPath4Parser.RelativepathexprContext ctx)
+        {
+            var steps = BuildRelativePathExprSteps(ctx);
+            if (steps.Count == 1) return steps[0];
+            return new PathExpr { Steps = steps, Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private List<ExprNode> BuildRelativePathExprSteps(XPath4Parser.RelativepathexprContext ctx)
+        {
+            var result = new List<ExprNode>();
+            foreach (var child in ctx.children)
             {
-                predicates.AddRange(ParsePredicateList());
+                if (child is XPath4Parser.StepexprContext se)
+                    result.Add(BuildStepExpr(se));
+                else if (child is ITerminalNode tn && tn.Symbol.Type == XPath4Lexer.SS)
+                    result.Add(new AxisStepExpr { Axis = Axis.DescendantOrSelf, NodeTest = AnyNodeTest, Line = tn.Symbol.Line, Column = tn.Symbol.Column });
             }
-            else if (Check(TokenType.LeftParen) && expr is not FunctionCallExpr)
+            return result;
+        }
+
+        private ExprNode BuildStepExpr(XPath4Parser.StepexprContext ctx)
+        {
+            if (ctx.axisstep()   is { } as_) return BuildAxisStep(as_);
+            return BuildPostfixExpr(ctx.postfixexpr()!);
+        }
+
+        // ── Axis step ─────────────────────────────────────────────────────
+
+        private ExprNode BuildAxisStep(XPath4Parser.AxisstepContext ctx)
+        {
+            Axis axis;
+            ExprNode nodeTest;
+
+            if (ctx.abbreviatedstep() is { } abr)
             {
-                // Dynamic function call
-                var args = ParseArgumentList();
-                expr = new FunctionCallExpr
+                if (abr.DD() != null)
                 {
-                    Name = "__dynamic__",
-                    Arguments = new List<ExprNode> { expr }.Concat(args).ToList(),
-                    Line = expr.Line,
-                    Column = expr.Column
-                };
-            }
-            else if (Check(TokenType.QuestionMark))
-            {
-                // Lookup
-                expr = ParsePostfixLookup(expr);
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        if (predicates.Count > 0)
-        {
-            return new FilterExpr
-            {
-                Primary = expr,
-                Predicates = predicates,
-                Line = expr.Line,
-                Column = expr.Column
-            };
-        }
-
-        return expr;
-    }
-
-    private ExprNode ParsePostfixLookup(ExprNode baseExpr)
-    {
-        Expect(TokenType.QuestionMark);
-
-        if (Match(TokenType.Asterisk))
-        {
-            return new PostfixLookupExpr
-            {
-                Base = baseExpr,
-                IsWildcard = true,
-                Line = baseExpr.Line,
-                Column = baseExpr.Column
-            };
-        }
-
-        ExprNode? keyExpr = null;
-
-        if (Check(TokenType.IntegerLiteral))
-        {
-            keyExpr = new IntegerLiteralExpr { Value = long.Parse(Current().Value) };
-            Advance();
-        }
-        else if (Check(TokenType.NCName))
-        {
-            keyExpr = new StringLiteralExpr { Value = Current().Value };
-            Advance();
-        }
-        else if (Check(TokenType.LeftParen))
-        {
-            Advance();
-            keyExpr = ParseExpr();
-            Expect(TokenType.RightParen);
-        }
-
-        return new PostfixLookupExpr
-        {
-            Base = baseExpr,
-            KeyExpr = keyExpr,
-            Line = baseExpr.Line,
-            Column = baseExpr.Column
-        };
-    }
-
-    private List<ExprNode> ParsePredicateList()
-    {
-        var predicates = new List<ExprNode>();
-
-        while (Match(TokenType.LeftBracket))
-        {
-            predicates.Add(ParseExpr());
-            Expect(TokenType.RightBracket);
-        }
-
-        return predicates;
-    }
-
-    // PrimaryExpr ::= Literal | VarRef | ParenthesizedExpr | ContextItemExpr |
-    //                 FunctionCall | FunctionItemExpr | MapConstructor | ArrayConstructor |
-    //                 UnaryLookup
-    protected ExprNode ParsePrimaryExpr()
-    {
-        var token = Current();
-
-        // Literals
-        if (Check(TokenType.IntegerLiteral))
-        {
-            var value = long.Parse(Current().Value);
-            Advance();
-            return new IntegerLiteralExpr { Value = value, Line = token.Line, Column = token.Column };
-        }
-
-        if (Check(TokenType.DecimalLiteral))
-        {
-            var value = decimal.Parse(Current().Value, System.Globalization.CultureInfo.InvariantCulture);
-            Advance();
-            return new DecimalLiteralExpr { Value = value, Line = token.Line, Column = token.Column };
-        }
-
-        if (Check(TokenType.DoubleLiteral))
-        {
-            var value = double.Parse(Current().Value, System.Globalization.CultureInfo.InvariantCulture);
-            Advance();
-            return new DoubleLiteralExpr { Value = value, Line = token.Line, Column = token.Column };
-        }
-
-        if (Check(TokenType.StringLiteral))
-        {
-            var value = Current().Value;
-            Advance();
-            return new StringLiteralExpr { Value = value, Line = token.Line, Column = token.Column };
-        }
-
-        // Variable reference
-        if (Match(TokenType.Dollar))
-        {
-            var name = ParseVarName();
-            return new VariableRefExpr
-            {
-                Name = name.LocalName,
-                Prefix = name.Prefix,
-                NamespaceUri = name.NamespaceUri,
-                Line = token.Line,
-                Column = token.Column
-            };
-        }
-
-        // Context item
-        if (Match(TokenType.Dot))
-        {
-            return new ContextItemExpr { Line = token.Line, Column = token.Column };
-        }
-
-        // Parenthesized expression or empty sequence
-        if (Match(TokenType.LeftParen))
-        {
-            if (Match(TokenType.RightParen))
-            {
-                return new SequenceExpr { Items = new List<ExprNode>(), Line = token.Line, Column = token.Column };
-            }
-
-            var inner = ParseExpr();
-            Expect(TokenType.RightParen);
-            return new ParenthesizedExpr { Inner = inner, Line = token.Line, Column = token.Column };
-        }
-
-        // Map constructor
-        if (Match(TokenType.Map))
-        {
-            return ParseMapConstructor(token);
-        }
-
-        // Array constructor
-        if (Match(TokenType.Array))
-        {
-            return ParseArrayConstructor(token, true);
-        }
-
-        if (Match(TokenType.LeftBracket))
-        {
-            return ParseArrayConstructor(token, false);
-        }
-
-        // Inline function
-        if (Check(TokenType.Function) && Peek(1).Type == TokenType.LeftParen)
-        {
-            return ParseInlineFunction();
-        }
-
-        // Function call or named function reference
-        // Keywords can also be function names (e.g., count, string, concat)
-        if (IsNameToken() || IsNodeKindTest())
-        {
-            return ParseFunctionCallOrRef();
-        }
-
-        // Unary lookup
-        if (Match(TokenType.QuestionMark))
-        {
-            return ParseUnaryLookup(token);
-        }
-
-        throw ParseError($"Unexpected token in primary expression: {token.Type}");
-    }
-
-    private ExprNode ParseMapConstructor(Token token)
-    {
-        Expect(TokenType.LeftBrace);
-
-        var entries = new List<MapEntry>();
-
-        if (!Check(TokenType.RightBrace))
-        {
-            do
-            {
-                var key = ParseExprSingle();
-                Expect(TokenType.Colon);
-                var value = ParseExprSingle();
-                entries.Add(new MapEntry { Key = key, Value = value });
-            } while (Match(TokenType.Comma));
-        }
-
-        Expect(TokenType.RightBrace);
-
-        return new MapConstructorExpr { Entries = entries, Line = token.Line, Column = token.Column };
-    }
-
-    private ExprNode ParseArrayConstructor(Token token, bool isCurly)
-    {
-        if (isCurly)
-        {
-            Expect(TokenType.LeftBrace);
-
-            ExprNode? content = null;
-            if (!Check(TokenType.RightBrace))
-            {
-                content = ParseExpr();
-            }
-
-            Expect(TokenType.RightBrace);
-
-            return new ArrayConstructorExpr
-            {
-                Members = content != null ? new List<ExprNode> { content } : new List<ExprNode>(),
-                IsCurly = true,
-                Line = token.Line,
-                Column = token.Column
-            };
-        }
-        else
-        {
-            // Square bracket array
-            var members = new List<ExprNode>();
-
-            if (!Check(TokenType.RightBracket))
-            {
-                do
-                {
-                    members.Add(ParseExprSingle());
-                } while (Match(TokenType.Comma));
-            }
-
-            Expect(TokenType.RightBracket);
-
-            return new ArrayConstructorExpr
-            {
-                Members = members,
-                IsCurly = false,
-                Line = token.Line,
-                Column = token.Column
-            };
-        }
-    }
-
-    private ExprNode ParseInlineFunction()
-    {
-        var token = Current();
-        Advance(); // function
-        Expect(TokenType.LeftParen);
-
-        var parameters = new List<ParameterNode>();
-
-        if (!Check(TokenType.RightParen))
-        {
-            do
-            {
-                Expect(TokenType.Dollar);
-                var name = ParseNCName();
-                SequenceTypeNode? type = null;
-
-                if (Match(TokenType.As))
-                {
-                    type = ParseSequenceType();
+                    axis = Axis.Parent;
+                    nodeTest = AnyNodeTest;
                 }
-
-                parameters.Add(new ParameterNode { Name = name, Type = type });
-            } while (Match(TokenType.Comma));
-        }
-
-        Expect(TokenType.RightParen);
-
-        SequenceTypeNode? returnType = null;
-        if (Match(TokenType.As))
-        {
-            returnType = ParseSequenceType();
-        }
-
-        Expect(TokenType.LeftBrace);
-        var body = ParseExpr();
-        Expect(TokenType.RightBrace);
-
-        return new InlineFunctionExpr
-        {
-            Parameters = parameters,
-            ReturnType = returnType,
-            Body = body,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    private ExprNode ParseFunctionCallOrRef()
-    {
-        var token = Current();
-        var qname = ParseQName();
-
-        // Named function reference: name#arity
-        if (Match(TokenType.Hash))
-        {
-            var arityToken = Current();
-            if (!Check(TokenType.IntegerLiteral))
-                throw ParseError("Expected arity after #");
-
-            var arity = int.Parse(arityToken.Value);
-            Advance();
-
-            return new NamedFunctionRefExpr
-            {
-                Name = qname.LocalName,
-                Prefix = qname.Prefix,
-                NamespaceUri = qname.NamespaceUri,
-                Arity = arity,
-                Line = token.Line,
-                Column = token.Column
-            };
-        }
-
-        // Function call
-        var args = ParseArgumentList();
-
-        return new FunctionCallExpr
-        {
-            Name = qname.LocalName,
-            Prefix = qname.Prefix,
-            NamespaceUri = qname.NamespaceUri,
-            Arguments = args,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    private List<ExprNode> ParseArgumentList()
-    {
-        Expect(TokenType.LeftParen);
-
-        var args = new List<ExprNode>();
-
-        if (!Check(TokenType.RightParen))
-        {
-            do
-            {
-                if (Check(TokenType.QuestionMark))
+                else if (abr.AT() != null)
                 {
-                    // Placeholder for partial application
-                    Advance();
-                    args.Add(new ContextItemExpr()); // Placeholder marker
+                    axis = Axis.Attribute;
+                    nodeTest = BuildSimpleNodeTest(abr.simplenodetest()!);
                 }
                 else
                 {
-                    args.Add(ParseExprSingle());
+                    axis = Axis.Child;
+                    nodeTest = BuildSimpleNodeTest(abr.simplenodetest()!);
                 }
-            } while (Match(TokenType.Comma));
-        }
-
-        Expect(TokenType.RightParen);
-        return args;
-    }
-
-    private ExprNode ParseUnaryLookup(Token token)
-    {
-        if (Match(TokenType.Asterisk))
-        {
-            return new LookupExpr { IsWildcard = true, Line = token.Line, Column = token.Column };
-        }
-
-        ExprNode? keyExpr = null;
-
-        if (Check(TokenType.IntegerLiteral))
-        {
-            keyExpr = new IntegerLiteralExpr { Value = long.Parse(Current().Value) };
-            Advance();
-        }
-        else if (Check(TokenType.NCName))
-        {
-            keyExpr = new StringLiteralExpr { Value = Current().Value };
-            Advance();
-        }
-        else if (Check(TokenType.LeftParen))
-        {
-            Advance();
-            keyExpr = ParseExpr();
-            Expect(TokenType.RightParen);
-        }
-
-        return new LookupExpr { KeyExpr = keyExpr, Line = token.Line, Column = token.Column };
-    }
-
-    #endregion
-
-    #region Control Flow Expressions
-
-    protected ExprNode ParseIfExpr()
-    {
-        var token = Current();
-        Expect(TokenType.If);
-        Expect(TokenType.LeftParen);
-        var condition = ParseExpr();
-        Expect(TokenType.RightParen);
-        Expect(TokenType.Then);
-        var thenExpr = ParseExprSingle();
-        Expect(TokenType.Else);
-        var elseExpr = ParseExprSingle();
-
-        return new IfExpr
-        {
-            Condition = condition,
-            Then = thenExpr,
-            Else = elseExpr,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    protected ExprNode ParseSwitchExpr()
-    {
-        var token = Current();
-        Expect(TokenType.Switch);
-        Expect(TokenType.LeftParen);
-        var operand = ParseExpr();
-        Expect(TokenType.RightParen);
-
-        var cases = new List<SwitchCaseClause>();
-
-        while (Check(TokenType.Case))
-        {
-            Advance();
-            var values = new List<ExprNode>();
-
-            do
-            {
-                values.Add(ParseExprSingle());
-            } while (Match(TokenType.Case));
-
-            Expect(TokenType.Return);
-            var result = ParseExprSingle();
-
-            cases.Add(new SwitchCaseClause { Values = values, Result = result });
-        }
-
-        Expect(TokenType.Default);
-        Expect(TokenType.Return);
-        var defaultResult = ParseExprSingle();
-
-        return new SwitchExpr
-        {
-            Operand = operand,
-            Cases = cases,
-            Default = defaultResult,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    protected ExprNode ParseQuantifiedExpr()
-    {
-        var token = Current();
-        bool isSome = Check(TokenType.Some);
-        Advance();
-
-        var bindings = new List<QuantifiedBinding>();
-
-        do
-        {
-            Expect(TokenType.Dollar);
-            var varName = ParseNCName();
-
-            SequenceTypeNode? type = null;
-            if (Match(TokenType.As))
-            {
-                type = ParseSequenceType();
             }
-
-            Expect(TokenType.In);
-            var expr = ParseExprSingle();
-
-            bindings.Add(new QuantifiedBinding
-            {
-                Variable = varName,
-                Type = type,
-                Expression = expr
-            });
-        } while (Match(TokenType.Comma));
-
-        Expect(TokenType.Satisfies);
-        var satisfies = ParseExprSingle();
-
-        return new QuantifiedExpr
-        {
-            IsSome = isSome,
-            Bindings = bindings,
-            Satisfies = satisfies,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    protected virtual ExprNode ParseFlworExpr()
-    {
-        var token = Current();
-        var clauses = new List<FlworClause>();
-
-        // Initial for/let clause
-        if (Check(TokenType.For))
-            clauses.Add(ParseForClause());
-        else
-            clauses.Add(ParseLetClause());
-
-        // Additional clauses
-        while (true)
-        {
-            if (Check(TokenType.For))
-                clauses.Add(ParseForClause());
-            else if (Check(TokenType.Let))
-                clauses.Add(ParseLetClause());
-            else if (Check(TokenType.Where))
-                clauses.Add(ParseWhereClause());
-            else if (Check(TokenType.OrderBy) || (Check(TokenType.NCName) && Current().Value == "stable"))
-                clauses.Add(ParseOrderByClause());
-            else if (Check(TokenType.Group))
-                clauses.Add(ParseGroupByClause());
-            else if (Check(TokenType.Count))
-                clauses.Add(ParseCountClause());
             else
-                break;
-        }
-
-        Expect(TokenType.Return);
-        var returnExpr = ParseExprSingle();
-
-        return new FlworExpr
-        {
-            Clauses = clauses,
-            Return = returnExpr,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    private ForClause ParseForClause()
-    {
-        var token = Current();
-        Expect(TokenType.For);
-        Expect(TokenType.Dollar);
-        var varName = ParseNCName();
-
-        SequenceTypeNode? type = null;
-        if (Match(TokenType.As))
-        {
-            type = ParseSequenceType();
-        }
-
-        bool allowingEmpty = false;
-        if (Match(TokenType.Allowing))
-        {
-            Expect(TokenType.Empty);
-            allowingEmpty = true;
-        }
-
-        string? posVar = null;
-        if (Match(TokenType.At_KW))
-        {
-            Expect(TokenType.Dollar);
-            posVar = ParseNCName();
-        }
-
-        Expect(TokenType.In);
-        var expr = ParseExprSingle();
-
-        return new ForClause
-        {
-            Variable = varName,
-            Type = type,
-            AllowingEmpty = allowingEmpty,
-            PositionalVariable = posVar,
-            Expression = expr,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    private LetClause ParseLetClause()
-    {
-        var token = Current();
-        Expect(TokenType.Let);
-        Expect(TokenType.Dollar);
-        var varName = ParseNCName();
-
-        SequenceTypeNode? type = null;
-        if (Match(TokenType.As))
-        {
-            type = ParseSequenceType();
-        }
-
-        Expect(TokenType.Assign);
-        var expr = ParseExprSingle();
-
-        return new LetClause
-        {
-            Variable = varName,
-            Type = type,
-            Expression = expr,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    private WhereClause ParseWhereClause()
-    {
-        var token = Current();
-        Expect(TokenType.Where);
-        var condition = ParseExprSingle();
-
-        return new WhereClause
-        {
-            Condition = condition,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    private OrderByClause ParseOrderByClause()
-    {
-        var token = Current();
-        bool stable = false;
-
-        if (Check(TokenType.NCName) && Current().Value == "stable")
-        {
-            Advance();
-            stable = true;
-        }
-
-        // "order by" might be lexed as a single token or two
-        if (Check(TokenType.OrderBy))
-        {
-            Advance();
-        }
-        else if (Check(TokenType.NCName) && Current().Value == "order")
-        {
-            Advance();
-            Expect(TokenType.By);
-        }
-
-        var specs = new List<OrderSpec>();
-
-        do
-        {
-            var expr = ParseExprSingle();
-            bool descending = false;
-            bool emptyGreatest = false;
-            string? collation = null;
-
-            if (Match(TokenType.Ascending))
-                descending = false;
-            else if (Match(TokenType.Descending))
-                descending = true;
-
-            if (Match(TokenType.Empty))
             {
-                if (Match(TokenType.NCName) && Previous().Value == "greatest")
-                    emptyGreatest = true;
+                var full = ctx.fullstep()!;
+                axis = BuildAxis(full.axis());
+                nodeTest = BuildNodeTest(full.nodetest());
             }
 
-            if (Match(TokenType.Collation))
-            {
-                if (Check(TokenType.StringLiteral))
-                {
-                    collation = Current().Value;
-                    Advance();
-                }
-            }
-
-            specs.Add(new OrderSpec
-            {
-                Expression = expr,
-                Descending = descending,
-                EmptyGreatest = emptyGreatest,
-                Collation = collation
-            });
-        } while (Match(TokenType.Comma));
-
-        return new OrderByClause
-        {
-            Stable = stable,
-            Specs = specs,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    private GroupByClause ParseGroupByClause()
-    {
-        var token = Current();
-        Expect(TokenType.Group);
-        Expect(TokenType.By);
-
-        var specs = new List<GroupSpec>();
-
-        do
-        {
-            Expect(TokenType.Dollar);
-            var varName = ParseNCName();
-
-            SequenceTypeNode? type = null;
-            if (Match(TokenType.As))
-            {
-                type = ParseSequenceType();
-            }
-
-            ExprNode? expr = null;
-            if (Match(TokenType.Assign))
-            {
-                expr = ParseExprSingle();
-            }
-
-            string? collation = null;
-            if (Match(TokenType.Collation))
-            {
-                if (Check(TokenType.StringLiteral))
-                {
-                    collation = Current().Value;
-                    Advance();
-                }
-            }
-
-            specs.Add(new GroupSpec
-            {
-                Variable = varName,
-                Type = type,
-                Expression = expr,
-                Collation = collation
-            });
-        } while (Match(TokenType.Comma));
-
-        return new GroupByClause
-        {
-            Specs = specs,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    private CountClause ParseCountClause()
-    {
-        var token = Current();
-        Expect(TokenType.Count);
-        Expect(TokenType.Dollar);
-        var varName = ParseNCName();
-
-        return new CountClause
-        {
-            Variable = varName,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    protected ExprNode ParseTryCatchExpr()
-    {
-        var token = Current();
-        Expect(TokenType.Try);
-        Expect(TokenType.LeftBrace);
-        var tryExpr = ParseExpr();
-        Expect(TokenType.RightBrace);
-
-        var catchClauses = new List<CatchClause>();
-
-        while (Match(TokenType.Catch))
-        {
-            var errors = new List<XdmQName>();
-
-            // Parse catch error list
-            do
-            {
-                if (Match(TokenType.Asterisk))
-                {
-                    errors.Add(new XdmQName("*")); // Wildcard
-                }
-                else
-                {
-                    errors.Add(ParseQName());
-                }
-            } while (Match(TokenType.Pipe));
-
-            Expect(TokenType.LeftBrace);
-            var handler = ParseExpr();
-            Expect(TokenType.RightBrace);
-
-            catchClauses.Add(new CatchClause
-            {
-                Errors = errors,
-                Handler = handler
-            });
+            var predicates = ctx.predicate().Select(p => BuildExpr(p.expr())).ToList();
+            return new AxisStepExpr { Axis = axis, NodeTest = nodeTest, Predicates = predicates, Line = ctx.Start.Line, Column = ctx.Start.Column };
         }
 
-        return new TryCatchExpr
+        private static Axis BuildAxis(XPath4Parser.AxisContext ctx)
         {
-            TryExpr = tryExpr,
-            CatchClauses = catchClauses,
-            Line = token.Line,
-            Column = token.Column
-        };
-    }
-
-    #endregion
-
-    #region Type Parsing
-
-    protected SequenceTypeNode ParseSequenceType()
-    {
-        // Check for empty-sequence()
-        if (Check(TokenType.EmptySequence))
-        {
-            Advance();
-            Expect(TokenType.LeftParen);
-            Expect(TokenType.RightParen);
-            return new SequenceTypeNode
+            var first = ctx.GetChild(0) as ITerminalNode;
+            return first?.Symbol.Type switch
             {
-                ItemType = new ItemTypeNode { Kind = ItemTypeKind.Empty },
-                Occurrence = OccurrenceIndicator.ZeroOrMore
+                XPath4Lexer.KW_ANCESTOR              => Axis.Ancestor,
+                XPath4Lexer.KW_ANCESTOR_OR_SELF      => Axis.AncestorOrSelf,
+                XPath4Lexer.KW_ATTRIBUTE             => Axis.Attribute,
+                XPath4Lexer.KW_CHILD                 => Axis.Child,
+                XPath4Lexer.KW_DESCENDANT            => Axis.Descendant,
+                XPath4Lexer.KW_DESCENDANT_OR_SELF    => Axis.DescendantOrSelf,
+                XPath4Lexer.KW_FOLLOWING             => Axis.Following,
+                XPath4Lexer.KW_FOLLOWING_SIBLING     => Axis.FollowingSibling,
+                XPath4Lexer.KW_NAMESPACE             => Axis.Namespace,
+                XPath4Lexer.KW_PARENT                => Axis.Parent,
+                XPath4Lexer.KW_PRECEDING             => Axis.Preceding,
+                XPath4Lexer.KW_PRECEDING_SIBLING     => Axis.PrecedingSibling,
+                XPath4Lexer.KW_SELF                  => Axis.Self,
+                _                                    => Axis.Child
             };
         }
 
-        var itemType = ParseItemType();
-        var occurrence = OccurrenceIndicator.ExactlyOne;
-
-        if (Match(TokenType.QuestionMark))
-            occurrence = OccurrenceIndicator.ZeroOrOne;
-        else if (Match(TokenType.Asterisk))
-            occurrence = OccurrenceIndicator.ZeroOrMore;
-        else if (Match(TokenType.Plus))
-            occurrence = OccurrenceIndicator.OneOrMore;
-
-        return new SequenceTypeNode
+        private ExprNode BuildNodeTest(XPath4Parser.NodetestContext ctx)
         {
-            ItemType = itemType,
-            Occurrence = occurrence
-        };
-    }
+            if (ctx.unionnodetest() is { } unt)
+                return BuildSimpleNodeTest(unt.simplenodetest()[0]);
+            if (ctx.simplenodetest() is { } snt)
+                return BuildSimpleNodeTest(snt);
+            throw new XPathParseException($"Dynamic node tests are not supported (line {ctx.Start.Line})");
+        }
 
-    protected ItemTypeNode ParseItemType()
-    {
-        var token = Current();
-
-        // item()
-        if (Check(TokenType.Item))
+        private ExprNode BuildSimpleNodeTest(XPath4Parser.SimplenodetestContext ctx)
         {
-            Advance();
-            Expect(TokenType.LeftParen);
-            Expect(TokenType.RightParen);
+            if (ctx.typetest()  is { } tt) return BuildTypeTest(tt);
+            return BuildSelector(ctx.selector()!);
+        }
+
+        private ExprNode BuildTypeTest(XPath4Parser.TypetestContext ctx)
+        {
+            if (ctx.xnodetype() is { } xnt) return BuildXNodeType(xnt);
+            // gnodetype / jnodetype: treat as any-node
+            return new KindTestExpr { Kind = XdmNodeKind.Element, Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private ExprNode BuildXNodeType(XPath4Parser.XnodetypeContext ctx)
+        {
+            int ln = ctx.Start.Line, col = ctx.Start.Column;
+            // node() — kind=Element + no Name acts as "matches all nodes" in the evaluator
+            if (ctx.anyxnodetype()                != null) return new KindTestExpr { Kind = XdmNodeKind.Element,               Line = ln, Column = col };
+            if (ctx.textnodetype()                != null) return new KindTestExpr { Kind = XdmNodeKind.Text,                  Line = ln, Column = col };
+            if (ctx.commentnodetype()             != null) return new KindTestExpr { Kind = XdmNodeKind.Comment,               Line = ln, Column = col };
+            if (ctx.namespacenodetype()           != null) return new KindTestExpr { Kind = XdmNodeKind.Namespace,             Line = ln, Column = col };
+            if (ctx.documentnodetype()            != null) return new KindTestExpr { Kind = XdmNodeKind.Document,              Line = ln, Column = col };
+            if (ctx.schemaelementnodetype()       != null) return new KindTestExpr { Kind = XdmNodeKind.Element,               Line = ln, Column = col };
+            if (ctx.schemaattributenodetype()     != null) return new KindTestExpr { Kind = XdmNodeKind.Attribute,             Line = ln, Column = col };
+
+            if (ctx.processinginstructionnodetype() is { } pi)
+            {
+                XdmQName? name = pi.QName() != null ? new XdmQName(pi.QName().GetText()) : null;
+                return new KindTestExpr { Kind = XdmNodeKind.ProcessingInstruction, Name = name, Line = ln, Column = col };
+            }
+            if (ctx.elementnodetype() is { } en)
+            {
+                XdmQName? name = null;
+                var nt = en.nametestunion()?.nametest();
+                if (nt?.eqname() is { } eqn) name = ResolveEqName(eqn);
+                return new KindTestExpr { Kind = XdmNodeKind.Element, Name = name, Line = ln, Column = col };
+            }
+            if (ctx.attributenodetype() is { } an)
+            {
+                XdmQName? name = null;
+                var nt = an.nametestunion()?.nametest();
+                if (nt?.eqname() is { } eqn) name = ResolveEqName(eqn);
+                return new KindTestExpr { Kind = XdmNodeKind.Attribute, Name = name, Line = ln, Column = col };
+            }
+            return new KindTestExpr { Kind = XdmNodeKind.Element, Line = ln, Column = col };
+        }
+
+        private ExprNode BuildSelector(XPath4Parser.SelectorContext ctx)
+        {
+            if (ctx.wildcard() is { } wc) return BuildWildcard(wc, ctx.Start.Line, ctx.Start.Column);
+            return BuildNameTest(ctx.eqname()!, ctx.Start.Line, ctx.Start.Column);
+        }
+
+        private static ExprNode BuildWildcard(XPath4Parser.WildcardContext ctx, int line, int col)
+        {
+            // STAR only → bare *
+            if (ctx.CS() == null && ctx.SC() == null && ctx.BracedURILiteral() == null)
+                return new NameTestExpr { IsWildcard = true, LocalName = "*", Line = line, Column = col };
+            // QName CS → prefix:*
+            if (ctx.CS() != null)
+                return new NameTestExpr { Prefix = ctx.QName().GetText(), IsLocalWildcard = true, LocalName = "*", Line = line, Column = col };
+            // SC QName → *:local
+            if (ctx.SC() != null)
+                return new NameTestExpr { IsPrefixWildcard = true, LocalName = ctx.QName().GetText(), Line = line, Column = col };
+            // BracedURILiteral STAR → Q{uri}*
+            return new NameTestExpr { IsWildcard = true, LocalName = "*", Line = line, Column = col };
+        }
+
+        private ExprNode BuildNameTest(XPath4Parser.EqnameContext ctx, int line, int col)
+        {
+            var (local, prefix, ns) = SplitEqName(ctx.GetText());
+            return new NameTestExpr { Prefix = prefix, LocalName = local, NamespaceUri = ns, Line = line, Column = col };
+        }
+
+        // ── Postfix expression ────────────────────────────────────────────
+
+        private ExprNode BuildPostfixExpr(XPath4Parser.PostfixexprContext ctx)
+        {
+            var result = BuildPrimaryExpr(ctx.primaryexpr());
+            if (ctx.ChildCount == 1) return result;
+
+            for (int i = 1; i < ctx.ChildCount; i++)
+            {
+                var child = ctx.GetChild(i);
+                if (child is XPath4Parser.PredicateContext pred)
+                {
+                    if (result is FilterExpr fe)
+                        fe.Predicates.Add(BuildExpr(pred.expr()));
+                    else
+                        result = new FilterExpr { Primary = result, Predicates = [BuildExpr(pred.expr())], Line = result.Line, Column = result.Column };
+                }
+                else if (child is XPath4Parser.LookupContext lkp)
+                {
+                    var ks = lkp.keyspecifier();
+                    result = new PostfixLookupExpr
+                    {
+                        Base = result,
+                        KeyExpr = BuildKeySpecifier(ks),
+                        IsWildcard = ks.lookupwildcard() != null,
+                        Line = lkp.Start.Line, Column = lkp.Start.Column
+                    };
+                }
+                else if (child is XPath4Parser.PositionalargumentlistContext pal)
+                {
+                    // Dynamic function call: $f(args) — model as FilterExpr for now
+                    var args = BuildPositionalArgList(pal);
+                    result = new FilterExpr { Primary = result, Predicates = args, Line = result.Line, Column = result.Column };
+                }
+                else if (child is ITerminalNode tn && tn.Symbol.Type == XPath4Lexer.METHOD_ARROW)
+                {
+                    // METHOD_ARROW QName positionalargumentlist
+                    i++;
+                    var qname = ctx.GetChild(i).GetText();
+                    i++;
+                    var methodPal = ctx.GetChild(i) as XPath4Parser.PositionalargumentlistContext;
+                    var funcNode = new FunctionCallExpr { Name = qname, Arguments = [], Line = result.Line, Column = result.Column };
+                    result = new ArrowExpr
+                    {
+                        Argument = result, Function = funcNode,
+                        AdditionalArguments = methodPal != null ? BuildPositionalArgList(methodPal) : [],
+                        Line = result.Line, Column = result.Column
+                    };
+                }
+            }
+            return result;
+        }
+
+        private ExprNode? BuildKeySpecifier(XPath4Parser.KeyspecifierContext ctx)
+        {
+            if (ctx.lookupwildcard()    != null) return null;
+            if (ctx.QName()             is { } qn) return new StringLiteralExpr { Value = qn.GetText(),   Line = ctx.Start.Line, Column = ctx.Start.Column };
+            if (ctx.literal()           is { } lit) return BuildLiteral(lit);
+            if (ctx.varref()            is { } vr)  return BuildVarRef(vr);
+            if (ctx.parenthesizedexpr() is { } pe)  return BuildParenthesizedExpr(pe);
+            if (ctx.contextvalueref()   != null)     return new ContextItemExpr { Line = ctx.Start.Line, Column = ctx.Start.Column };
+            return null;
+        }
+
+        private List<ExprNode> BuildPositionalArgList(XPath4Parser.PositionalargumentlistContext ctx)
+        {
+            if (ctx.positionalarguments() is { } pa)
+                return pa.argument().Select(BuildArgument).Where(a => a != null).Select(a => a!).ToList();
+            return [];
+        }
+
+        // ── Primary expressions ───────────────────────────────────────────
+
+        private ExprNode BuildPrimaryExpr(XPath4Parser.PrimaryexprContext ctx)
+        {
+            if (ctx.literal()           is { } lit) return BuildLiteral(lit);
+            if (ctx.varref()            is { } vr)  return BuildVarRef(vr);
+            if (ctx.parenthesizedexpr() is { } pe)  return BuildParenthesizedExpr(pe);
+            if (ctx.contextvalueref()   != null)     return new ContextItemExpr { Line = ctx.Start.Line, Column = ctx.Start.Column };
+            if (ctx.functioncall()      is { } fc)  return BuildFunctionCall(fc);
+            if (ctx.nodeConstructor()   is { } nc)  return BuildComputedConstructor(nc.computedconstructor());
+            if (ctx.functionitemexpr()  is { } fie) return BuildFunctionItemExpr(fie);
+            if (ctx.mapconstructor()    is { } mc)  return BuildMapConstructor(mc);
+            if (ctx.arrayconstructor()  is { } ac)  return BuildArrayConstructor(ac);
+            if (ctx.stringtemplate()    != null)     return new StringLiteralExpr { Value = ctx.stringtemplate()!.GetText(), Line = ctx.Start.Line, Column = ctx.Start.Column };
+            if (ctx.unarylookup()       is { } ul)
+            {
+                var ks = ul.keyspecifier();
+                return new LookupExpr { KeyExpr = BuildKeySpecifier(ks), IsWildcard = ks.lookupwildcard() != null, Line = ctx.Start.Line, Column = ctx.Start.Column };
+            }
+            throw new XPathParseException($"Unknown primary expression at line {ctx.Start.Line}");
+        }
+
+        private ExprNode BuildLiteral(XPath4Parser.LiteralContext ctx)
+        {
+            if (ctx.StringLiteral() is { } sl)
+            {
+                var raw = sl.GetText();
+                string inner = raw.Length >= 2 ? raw[1..^1] : raw;
+                inner = raw[0] == '"' ? inner.Replace("\"\"", "\"") : inner.Replace("''", "'");
+                return new StringLiteralExpr { Value = inner, Line = ctx.Start.Line, Column = ctx.Start.Column };
+            }
+            var num = ctx.numericliteral()!;
+            if (num.IntegerLiteral() is { } il)
+                return new IntegerLiteralExpr { Value = long.Parse(il.GetText()), Line = ctx.Start.Line, Column = ctx.Start.Column };
+            if (num.DecimalLiteral() is { } dl)
+                return new DecimalLiteralExpr { Value = decimal.Parse(dl.GetText(), System.Globalization.CultureInfo.InvariantCulture), Line = ctx.Start.Line, Column = ctx.Start.Column };
+            return new DoubleLiteralExpr { Value = double.Parse(num.DoubleLiteral()!.GetText(), System.Globalization.CultureInfo.InvariantCulture), Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private ExprNode BuildVarRef(XPath4Parser.VarrefContext ctx)
+        {
+            var (local, prefix, ns) = SplitEqName(ctx.eqname().GetText());
+            return new VariableRefExpr { Name = local, Prefix = prefix, NamespaceUri = ns, Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private ExprNode BuildParenthesizedExpr(XPath4Parser.ParenthesizedexprContext ctx)
+        {
+            var inner = ctx.expr() != null ? BuildExpr(ctx.expr()!) : null;
+            return new ParenthesizedExpr { Inner = inner, Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private ExprNode BuildFunctionCall(XPath4Parser.FunctioncallContext ctx)
+        {
+            var qname = ResolveEqName(ctx.eqname());
+            var args  = BuildArgumentListPositional(ctx.argumentlist());
+            return new FunctionCallExpr
+            {
+                Name = qname.LocalName, Prefix = qname.Prefix, NamespaceUri = qname.NamespaceUri,
+                Arguments = args,
+                Line = ctx.Start.Line, Column = ctx.Start.Column
+            };
+        }
+
+        private List<ExprNode> BuildArgumentListPositional(XPath4Parser.ArgumentlistContext ctx)
+        {
+            if (ctx.positionalarguments() is { } pa)
+                return pa.argument().Select(BuildArgument).Where(a => a != null).Select(a => a!).ToList();
+            return [];
+        }
+
+        private ExprNode? BuildArgument(XPath4Parser.ArgumentContext ctx)
+        {
+            if (ctx.exprsingle() is { } es) return BuildExprSingle(es);
+            return null; // argumentplaceholder → omit
+        }
+
+        private ExprNode BuildFunctionItemExpr(XPath4Parser.FunctionitemexprContext ctx)
+        {
+            if (ctx.namedfunctionref() is { } nfr)
+            {
+                var qname = ResolveEqName(nfr.eqname());
+                return new NamedFunctionRefExpr
+                {
+                    Name = qname.LocalName, Prefix = qname.Prefix, NamespaceUri = qname.NamespaceUri,
+                    Arity = int.Parse(nfr.IntegerLiteral().GetText()),
+                    Line = ctx.Start.Line, Column = ctx.Start.Column
+                };
+            }
+            var ifn = ctx.inlinefunctionexpr()!;
+            var sig = ifn.functionsignature();
+            var parms = sig.paramlist()?.varnameandtype().Select(vnt =>
+            {
+                var (name, _, seqType) = GetVarNameAndType(vnt);
+                return new ParameterNode { Name = name, Type = seqType, Line = vnt.Start.Line, Column = vnt.Start.Column };
+            }).ToList() ?? [];
+            SequenceTypeNode? retType = sig.typedeclaration() is { } td ? BuildSequenceType(td.sequencetype()) : null;
+            var body = BuildEnclosedExpr(ifn.functionbody().enclosedexpr()) ?? new SequenceExpr { Items = [] };
+            return new InlineFunctionExpr { Parameters = parms, ReturnType = retType, Body = body, Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private ExprNode? BuildEnclosedExpr(XPath4Parser.EnclosedexprContext ctx)
+            => ctx.expr() != null ? BuildExpr(ctx.expr()!) : null;
+
+        // ── Constructors ─────────────────────────────────────────────────
+
+        private ExprNode BuildMapConstructor(XPath4Parser.MapconstructorContext ctx)
+        {
+            var entries = ctx.mapconstructorentry().Select(e =>
+            {
+                var singles = e.exprsingle();
+                return new MapEntry { Key = BuildExprSingle(singles[0]), Value = BuildExprSingle(singles[1]) };
+            }).ToList();
+            return new MapConstructorExpr { Entries = entries, Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private ExprNode BuildArrayConstructor(XPath4Parser.ArrayconstructorContext ctx)
+        {
+            if (ctx.squarearrayconstructor() is { } sq)
+                return new ArrayConstructorExpr { Members = sq.exprsingle().Select(BuildExprSingle).ToList(), IsCurly = false, Line = ctx.Start.Line, Column = ctx.Start.Column };
+            var curly = ctx.curlyarrayconstructor()!;
+            var inner = BuildEnclosedExpr(curly.enclosedexpr());
+            return new ArrayConstructorExpr { Members = inner != null ? [inner] : [], IsCurly = true, Line = ctx.Start.Line, Column = ctx.Start.Column };
+        }
+
+        private ExprNode BuildComputedConstructor(XPath4Parser.ComputedconstructorContext ctx)
+        {
+            int ln = ctx.Start.Line, col = ctx.Start.Column;
+            if (ctx.comptextconstructor() is { } tc)
+                return new TextConstructorExpr    { Content = BuildEnclosedExpr(tc.enclosedexpr()) ?? EmptySeq(), Line = ln, Column = col };
+            if (ctx.compCommentconstructor() is { } cc)
+                return new CommentConstructorExpr { Content = BuildEnclosedExpr(cc.enclosedexpr()) ?? EmptySeq(), Line = ln, Column = col };
+            if (ctx.compdocconstructor() is { } dc)
+                return new DocumentConstructorExpr { Content = BuildEnclosedExpr(dc.enclosedexpr()) ?? EmptySeq(), Line = ln, Column = col };
+            if (ctx.compElemconstructor() is { } ec)
+            {
+                var (name, nameExpr) = BuildCompNodeName(ec.compnodename());
+                var content = BuildEnclosedExpr(ec.enclosedcontentexpr().enclosedexpr());
+                return new ElementConstructorExpr { Name = name, NameExpr = nameExpr, Content = content != null ? [content] : [], IsComputed = true, Line = ln, Column = col };
+            }
+            if (ctx.compAttrconstructor() is { } ac)
+            {
+                var (name, nameExpr) = BuildCompNodeName(ac.compnodename());
+                return new AttributeConstructorExpr { Name = name, NameExpr = nameExpr, Value = BuildEnclosedExpr(ac.enclosedexpr()), IsComputed = true, Line = ln, Column = col };
+            }
+            if (ctx.compPIconstructor() is { } pi)
+                return new PIConstructorExpr { Content = BuildEnclosedExpr(pi.enclosedexpr()), Line = ln, Column = col };
+            throw new XPathParseException($"Unsupported computed constructor (line {ln})");
+        }
+
+        private (XdmQName? name, ExprNode? nameExpr) BuildCompNodeName(XPath4Parser.CompnodenameContext ctx)
+        {
+            if (ctx.qnameliteral() is { } qnl) return (ResolveEqName(qnl.eqname()), null);
+            return (null, BuildExpr(ctx.expr()!));
+        }
+
+        private static SequenceExpr EmptySeq() => new() { Items = [] };
+
+        // ── Sequence types ────────────────────────────────────────────────
+
+        private SequenceTypeNode BuildSequenceType(XPath4Parser.SequencetypeContext ctx)
+        {
+            if (ctx.KW_EMPTY_SEQUENCE() != null)
+                return new SequenceTypeNode { ItemType = new ItemTypeNode { Kind = ItemTypeKind.Empty }, Occurrence = OccurrenceIndicator.ZeroOrMore };
+            var itemType = BuildItemType(ctx.itemtype()!);
+            return new SequenceTypeNode { ItemType = itemType, Occurrence = BuildOccurrence(ctx.occurrenceindicator()) };
+        }
+
+        private ItemTypeNode BuildItemType(XPath4Parser.ItemtypeContext ctx)
+        {
+            if (ctx.regularitemtype() is { } rit)
+            {
+                if (rit.anyitemtype() != null) return new ItemTypeNode { Kind = ItemTypeKind.Item };
+                if (rit.xnodetype()   != null) return new ItemTypeNode { Kind = ItemTypeKind.Node };
+                if (rit.maptype()     != null) return new ItemTypeNode { Kind = ItemTypeKind.Map };
+                if (rit.arraytype()   != null) return new ItemTypeNode { Kind = ItemTypeKind.Array };
+                return new ItemTypeNode { Kind = ItemTypeKind.Item };
+            }
+            if (ctx.functiontype() != null) return new ItemTypeNode { Kind = ItemTypeKind.Function };
+            if (ctx.typename_()    is { } tn) return new ItemTypeNode { Kind = ItemTypeKind.AtomicType, TypeName = ResolveEqName(tn.eqname()) };
             return new ItemTypeNode { Kind = ItemTypeKind.Item };
         }
 
-        // Node kind tests
-        if (IsNodeKindTest())
+        private static OccurrenceIndicator BuildOccurrence(XPath4Parser.OccurrenceindicatorContext? ctx)
         {
-            var kindTest = ParseKindTest() as KindTestExpr;
-            return new ItemTypeNode
+            if (ctx == null)       return OccurrenceIndicator.ExactlyOne;
+            if (ctx.QM()   != null) return OccurrenceIndicator.ZeroOrOne;
+            if (ctx.STAR() != null) return OccurrenceIndicator.ZeroOrMore;
+            return OccurrenceIndicator.OneOrMore;
+        }
+
+        // ── Comparison operators ──────────────────────────────────────────
+
+        private static ComparisonOperator GetValueCompOp(XPath4Parser.ValuecompContext ctx)
+            => ctx.GetText() switch
             {
-                Kind = kindTest!.Kind switch
-                {
-                    XdmNodeKind.Element => ItemTypeKind.Element,
-                    XdmNodeKind.Attribute => ItemTypeKind.Attribute,
-                    XdmNodeKind.Document => ItemTypeKind.Document,
-                    XdmNodeKind.Text => ItemTypeKind.Text,
-                    XdmNodeKind.Comment => ItemTypeKind.Comment,
-                    XdmNodeKind.ProcessingInstruction => ItemTypeKind.ProcessingInstruction,
-                    XdmNodeKind.Namespace => ItemTypeKind.Namespace,
-                    _ => ItemTypeKind.Node
-                },
-                ElementName = kindTest.Name,
-                TypeName = kindTest.TypeName
+                "eq" => ComparisonOperator.Eq, "ne" => ComparisonOperator.Ne,
+                "lt" => ComparisonOperator.Lt, "le" => ComparisonOperator.Le,
+                "gt" => ComparisonOperator.Gt, "ge" => ComparisonOperator.Ge,
+                _    => ComparisonOperator.Eq
+            };
+
+        private static ComparisonOperator GetGeneralCompOp(XPath4Parser.GeneralcompContext ctx)
+        {
+            var tt = (ctx.GetChild(0) as ITerminalNode)?.Symbol.Type ?? -1;
+            return tt switch
+            {
+                XPath4Lexer.EQ => ComparisonOperator.Equal,
+                XPath4Lexer.NE => ComparisonOperator.NotEqual,
+                XPath4Lexer.LT => ComparisonOperator.LessThan,
+                XPath4Lexer.LE => ComparisonOperator.LessOrEqual,
+                XPath4Lexer.GT => ComparisonOperator.GreaterThan,
+                XPath4Lexer.GE => ComparisonOperator.GreaterOrEqual,
+                _              => ComparisonOperator.Equal
             };
         }
 
-        // function(...)
-        if (Check(TokenType.Function))
+        private static ComparisonOperator GetNodeCompOp(XPath4Parser.NodecompContext ctx)
         {
-            Advance();
-            Expect(TokenType.LeftParen);
-            // Skip function signature for now
-            int depth = 1;
-            while (depth > 0 && !IsAtEnd())
+            if (ctx.KW_IS()        != null) return ComparisonOperator.Is;
+            if (ctx.nodeprecedes() != null) return ComparisonOperator.Precedes;
+            if (ctx.nodefollows()  != null) return ComparisonOperator.Follows;
+            return ComparisonOperator.Is;
+        }
+
+        // ── Name helpers ──────────────────────────────────────────────────
+
+        private (string local, string? prefix, string? ns) SplitEqName(string text)
+        {
+            if (text.StartsWith("Q{"))
             {
-                if (Check(TokenType.LeftParen)) depth++;
-                if (Check(TokenType.RightParen)) depth--;
-                Advance();
+                int end = text.IndexOf('}');
+                return (text[(end + 1)..], null, text[2..end]);
             }
-            return new ItemTypeNode { Kind = ItemTypeKind.Function };
-        }
-
-        // map(...)
-        if (Check(TokenType.Map))
-        {
-            Advance();
-            Expect(TokenType.LeftParen);
-            // Skip map type for now
-            int depth = 1;
-            while (depth > 0 && !IsAtEnd())
+            int colon = text.IndexOf(':');
+            if (colon > 0)
             {
-                if (Check(TokenType.LeftParen)) depth++;
-                if (Check(TokenType.RightParen)) depth--;
-                Advance();
+                var prefix = text[..colon];
+                var local  = text[(colon + 1)..];
+                _ns.TryGetValue(prefix, out var ns);
+                return (local, prefix, ns);
             }
-            return new ItemTypeNode { Kind = ItemTypeKind.Map };
+            return (text, null, null);
         }
 
-        // array(...)
-        if (Check(TokenType.Array))
+        private XdmQName ResolveEqName(XPath4Parser.EqnameContext ctx)
         {
-            Advance();
-            Expect(TokenType.LeftParen);
-            // Skip array type for now
-            int depth = 1;
-            while (depth > 0 && !IsAtEnd())
-            {
-                if (Check(TokenType.LeftParen)) depth++;
-                if (Check(TokenType.RightParen)) depth--;
-                Advance();
-            }
-            return new ItemTypeNode { Kind = ItemTypeKind.Array };
+            var (local, prefix, ns) = SplitEqName(ctx.GetText());
+            if (ns != null) return new XdmQName(ns, local, prefix ?? "");
+            return new XdmQName(local);
         }
 
-        // Atomic type (QName)
-        var typeName = ParseQName();
-        return new ItemTypeNode
+        private (string name, string? prefix, SequenceTypeNode? seqType) GetVarNameAndType(XPath4Parser.VarnameandtypeContext ctx)
         {
-            Kind = ItemTypeKind.AtomicType,
-            TypeName = typeName
-        };
-    }
-
-    protected (XdmQName typeName, bool allowEmpty) ParseSingleType()
-    {
-        var typeName = ParseQName();
-        bool allowEmpty = Match(TokenType.QuestionMark);
-        return (typeName, allowEmpty);
-    }
-
-    #endregion
-
-    #region Helper Methods
-
-    protected XdmQName ParseQName()
-    {
-        var token = Current();
-
-        if (Check(TokenType.QName))
-        {
-            var parts = token.Value.Split(':', 2);
-            Advance();
-            return new XdmQName(
-                _namespaces.GetValueOrDefault(parts[0], string.Empty),
-                parts[1],
-                parts[0]);
+            var (local, prefix, _) = SplitEqName(ctx.eqname().GetText());
+            SequenceTypeNode? seqType = ctx.typedeclaration() is { } td ? BuildSequenceType(td.sequencetype()) : null;
+            return (local, prefix, seqType);
         }
-
-        if (Check(TokenType.NCName))
-        {
-            var name = token.Value;
-            Advance();
-            return new XdmQName(name);
-        }
-
-        // Handle keyword being used as a name
-        if (token.Type >= TokenType.For && token.Type <= TokenType.Nodes)
-        {
-            var name = token.Value;
-            Advance();
-            return new XdmQName(name);
-        }
-
-        throw ParseError($"Expected QName or NCName, got {token.Type}");
     }
+}
 
-    protected (string LocalName, string? Prefix, string? NamespaceUri) ParseVarName()
-    {
-        var qname = ParseQName();
-        return (qname.LocalName, qname.HasPrefix ? qname.Prefix : null, qname.HasNamespace ? qname.NamespaceUri : null);
-    }
-
-    protected string ParseNCName()
-    {
-        var token = Current();
-
-        if (Check(TokenType.NCName))
-        {
-            Advance();
-            return token.Value;
-        }
-
-        // Handle keyword being used as a name
-        if (token.Type >= TokenType.For && token.Type <= TokenType.Nodes)
-        {
-            Advance();
-            return token.Value;
-        }
-
-        throw ParseError($"Expected NCName, got {token.Type}");
-    }
-
-    protected Token Current() => _tokens[_position];
-    protected Token Previous() => _tokens[_position - 1];
-    protected Token Peek(int offset) =>
-        _position + offset < _tokens.Count ? _tokens[_position + offset] : _tokens[^1];
-
-    protected bool IsAtEnd() => Current().Type == TokenType.Eof;
-
-    protected bool Check(TokenType type) => !IsAtEnd() && Current().Type == type;
-
-    /// <summary>
-    /// Checks if the current token can be used as a name (NCName, QName, or keyword usable as name).
-    /// </summary>
-    protected bool IsNameToken()
-    {
-        var type = Current().Type;
-        return type == TokenType.NCName ||
-               type == TokenType.QName ||
-               (type >= TokenType.For && type <= TokenType.Nodes);
-    }
-
-    /// <summary>
-    /// Checks if the token at the given offset can be used as a name.
-    /// </summary>
-    protected bool IsNameToken(int offset)
-    {
-        var type = Peek(offset).Type;
-        return type == TokenType.NCName ||
-               type == TokenType.QName ||
-               (type >= TokenType.For && type <= TokenType.Nodes);
-    }
-
-    protected bool Match(TokenType type)
-    {
-        if (Check(type))
-        {
-            Advance();
-            return true;
-        }
-        return false;
-    }
-
-    protected void Advance()
-    {
-        if (!IsAtEnd()) _position++;
-    }
-
-    protected void Expect(TokenType type)
-    {
-        // Special case for EOF - Check() returns false at EOF
-        if (type == TokenType.Eof)
-        {
-            if (!IsAtEnd())
-                throw ParseError($"Expected {type}, got {Current().Type}");
-            return;
-        }
-        if (!Check(type))
-            throw ParseError($"Expected {type}, got {Current().Type}");
-        Advance();
-    }
-
-    protected Exception ParseError(string message)
-    {
-        var token = Current();
-        return new XdmException("XPST0003", $"{message} at line {token.Line}, column {token.Column}");
-    }
-
-    #endregion
+public class XPathParseException : Exception
+{
+    public XPathParseException(string message) : base(message) { }
 }
