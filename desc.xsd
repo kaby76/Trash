@@ -22,8 +22,7 @@
   ============================================================
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <desc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="../_scripts/desc.xsd">
+    <desc>
       <targets>CSharp;Java;Python3</targets>
     </desc>
 
@@ -33,8 +32,7 @@
   ============================================================
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <desc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="../_scripts/desc.xsd">
+    <desc>
       <antlr-version>^4.13.2</antlr-version>
       <targets>CSharp;Cpp;Java;JavaScript;Python3</targets>
       <grammar-files>MyLexer.g4;MyParser.g4</grammar-files>
@@ -62,8 +60,7 @@
   ============================================================
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <desc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="../_scripts/desc.xsd">
+    <desc>
       <targets>Antlr4ng;Cpp;CSharp;Dart;Go;Java;JavaScript;Python3;TypeScript</targets>
       <entry-point>segmentheader</entry-point>
       <binary/>
@@ -82,8 +79,7 @@
   ============================================================
 
     <?xml version="1.0" encoding="UTF-8" ?>
-    <desc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="../_scripts/desc.xsd">
+    <desc>
       <targets>Antlr4ng;Cpp;CSharp;Dart;Java;JavaScript;TypeScript;Python3</targets>
       <grammar-files>KotlinLexer.g4;KotlinParser.g4</grammar-files>
       <grammar-name>Kotlin</grammar-name>
