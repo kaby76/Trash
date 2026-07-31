@@ -21,7 +21,7 @@ create a parser for the Arithmetic.g4 grammar.
 
     trgen
 
-## Specification of desc.xml
+## Specification of desc.xml ([schema](https://github.com/kaby76/Trash/blob/main/desc.xsd))
 
 The desc.xml is an XML file that specifies how to generate a driver and test
 a grammar. The desc.xml is similar to the Antlr Maven Tester pom.xml file,
