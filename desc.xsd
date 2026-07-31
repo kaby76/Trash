@@ -114,6 +114,11 @@
         appear at most once, except &lt;test&gt; which may be repeated any
         number of times.
 
+        The content model is open: unknown elements are permitted (validated
+        laxly) so that future extensions and tooling-specific additions do not
+        break existing desc.xml files. trgen ignores any element it does not
+        recognise.
+
         When no &lt;test&gt; elements are present, trgen synthesises a single
         default test from the top-level &lt;targets&gt;, &lt;entry-point&gt;,
         and &lt;inputs&gt; values. When one or more &lt;test&gt; elements are
@@ -128,6 +133,8 @@
           - <targets> is required (minOccurs="1", the default for xs:all members)
           - all other single-occurrence elements are optional (minOccurs="0")
           - <test> may repeat (maxOccurs="unbounded", a XSD 1.1 extension to xs:all)
+          - xs:any with processContents="lax" opens the content model so that
+            unknown/future elements pass validation (trgen ignores them at runtime)
       -->
       <xs:all>
 
@@ -450,9 +457,19 @@
                 </xs:annotation>
               </xs:element>
 
+              <!-- Open content: allow unknown elements inside <test> as well. -->
+              <xs:any namespace="##other" processContents="lax"
+                      minOccurs="0" maxOccurs="unbounded"/>
+
             </xs:choice>
           </xs:complexType>
         </xs:element>
+
+        <!-- Open content: allow any unknown element so future extensions and
+             tooling-specific additions do not break validation. trgen ignores
+             elements it does not recognise at runtime. -->
+        <xs:any namespace="##other" processContents="lax"
+                minOccurs="0" maxOccurs="unbounded"/>
 
       </xs:all>
     </xs:complexType>
