@@ -61,7 +61,7 @@ TOOLS=(
     trunfoldlit
     trungroup
     trwdog
-    trxgrep
+    trxpath
     trxml
     trxml2
 )

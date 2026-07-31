@@ -1,3 +1,7 @@
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("trxpath")]
+
 namespace XQuery.DataModel;
 
 /// <summary>

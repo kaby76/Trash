@@ -13,7 +13,7 @@ rm -rf Generated-CSharp
 dotnet trash gen -t CSharp
 cd Generated-CSharp
 make
-echo "1 + 2 + 3" | dotnet trash parse | dotnet trash query grep ' //INT' | dotnet trash tree > ../output
+echo "1 + 2 + 3" | dotnet trash parse | dotnet trash xpath ' //INT' | dotnet trash tree > ../output
 cd ..
 #rm -rf Generated-CSharp
 

@@ -60,7 +60,7 @@ public class Program
         { "trunfoldlit",  "trunfoldlit"  },
         { "trungroup",    "trungroup"    },
         { "trwdog",       "trwdog"       },
-        { "trxgrep",      "trxgrep"      },
+        { "trxpath",      "trxpath"      },
         { "trxml",        "trxml"        },
         { "trxml2",       "trxml2"       },
         // short aliases (strip the "tr" / "tri" prefix)
@@ -108,7 +108,7 @@ public class Program
         { "unfoldlit",    "trunfoldlit"  },
         { "ungroup",      "trungroup"    },
         { "wdog",         "trwdog"       },
-        { "xgrep",        "trxgrep"      },
+        { "xpath",        "trxpath"      },
         { "xml",          "trxml"        },
         { "xml2",         "trxml2"       },
     };
