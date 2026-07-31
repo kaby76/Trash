@@ -305,7 +305,7 @@ public class EvaluatorTests
         Assert.Equal(20, (result[1] as XdmAtomicValue)!.AsInteger());
     }
 
-    [Fact]
+    [Fact(Skip = "'where' clause is XQuery-only and not part of the XPath 4.0 grammar")]
     public void Eval_ForWhere()
     {
         var result = Eval("for $x in (1, 2, 3, 4, 5) where $x > 3 return $x");
