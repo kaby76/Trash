@@ -30,21 +30,21 @@ public class MyATN
         foreach (var n in this.stop)
         {
             sb.AppendLine("s" + n.stateNumber + "[fontsize=11,label=\"" +
-                          n.stateNumber + "\", shape=doublecircle, fixedsize=true, witth=.6];");
+                          n.stateNumber + "\", shape=doublecircle, fixedsize=true, width=.6];");
 
         }
         foreach (var n in this.start)
         {
             if (this.stop.Contains(n)) continue;
             sb.AppendLine("s" + n.stateNumber + "[fontsize=11,label=\"" +
-                          n.stateNumber + "\", shape=circle, fixedsize=true, witth=.6];");
+                          n.stateNumber + "\", shape=circle, fixedsize=true, width=.6];");
         }
         foreach (var n in this.all_states)
         {
             if (this.stop.Contains(n)) continue;
             if (this.start.Contains(n)) continue;
             sb.AppendLine("s" + n.stateNumber + "[fontsize=11,label=\"" +
-                          n.stateNumber + "\", shape=circle, fixedsize=true, witth=.6];");
+                          n.stateNumber + "\", shape=circle, fixedsize=true, width=.6];");
         }
 
         foreach (var s in this.all_states)
