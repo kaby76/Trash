@@ -9,8 +9,13 @@
   test input files, and how multiple separate test configurations should be
   handled.
 
-  All elements are optional and may appear in any order inside <desc>. The only
-  element that must be present for code generation to occur is <targets>.
+  Elements may appear in any order inside <desc>. <targets> is the only
+  required element; all others are optional and may appear at most once,
+  except <test> which may be repeated.
+
+  NOTE: This schema uses XSD 1.1 features (maxOccurs on xs:all members) to
+  enforce these cardinality rules. Validators must support XSD 1.1 — e.g.
+  Saxon-HE 9.8+, Xerces 2.11+, or Visual Studio 2012+.
 
   ============================================================
   Minimal example — just list the targets:
@@ -93,7 +98,9 @@
     </desc>
 -->
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           vc:minVersion="1.1"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning">
 
   <xs:element name="desc">
     <xs:annotation>
@@ -102,9 +109,10 @@
         directory contains one desc.xml that tells trgen how to generate parser
         applications and how to run tests for every supported target language.
 
-        All child elements are optional and may appear in any order. The
-        element set is open: trgen ignores elements it does not recognise, so
-        comments and future extensions do not break existing files.
+        Child elements may appear in any order. &lt;targets&gt; is required and
+        must appear exactly once. All other elements are optional and may
+        appear at most once, except &lt;test&gt; which may be repeated any
+        number of times.
 
         When no &lt;test&gt; elements are present, trgen synthesises a single
         default test from the top-level &lt;targets&gt;, &lt;entry-point&gt;,
@@ -115,17 +123,19 @@
     </xs:annotation>
     <xs:complexType>
       <!--
-        xs:choice with maxOccurs="unbounded" is used instead of xs:sequence so
-        that child elements may appear in any order and any number of <test>
-        elements may be interleaved freely with the other children.
+        xs:all (XSD 1.1) is used so that:
+          - child elements may appear in any order
+          - <targets> is required (minOccurs="1", the default for xs:all members)
+          - all other single-occurrence elements are optional (minOccurs="0")
+          - <test> may repeat (maxOccurs="unbounded", a XSD 1.1 extension to xs:all)
       -->
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:all>
 
         <!-- ═══════════════════════════════════════════════════════════════
              Top-level descriptor elements
              ═══════════════════════════════════════════════════════════════ -->
 
-        <xs:element name="antlr-version" type="xs:string">
+        <xs:element name="antlr-version" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
               Minimum ANTLR4 runtime version required by this grammar, expressed
@@ -144,12 +154,13 @@
           </xs:annotation>
         </xs:element>
 
-        <xs:element name="targets" type="xs:string">
+        <xs:element name="targets" type="xs:string" minOccurs="1" maxOccurs="1">
           <xs:annotation>
             <xs:documentation>
-              Semicolon-separated list of ANTLR4 code-generation target languages
-              for which trgen should generate parser applications. trgen will skip
-              any target not in this list. The order of targets is not significant.
+              REQUIRED. Semicolon-separated list of ANTLR4 code-generation target
+              languages for which trgen should generate parser applications. trgen
+              will skip any target not in this list. The order of targets is not
+              significant.
 
               Known targets (as of ANTLR4 4.13):
                 Antlr4ng  — TypeScript runtime maintained by the Antlr4ng project
@@ -173,7 +184,7 @@
           </xs:annotation>
         </xs:element>
 
-        <xs:element name="grammar-files" type="xs:string">
+        <xs:element name="grammar-files" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
               Semicolon-separated list of .g4 grammar files that make up this
@@ -193,7 +204,7 @@
           </xs:annotation>
         </xs:element>
 
-        <xs:element name="grammar-name" type="xs:string">
+        <xs:element name="grammar-name" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
               Overrides the grammar name that trgen would otherwise derive from
@@ -215,7 +226,7 @@
           </xs:annotation>
         </xs:element>
 
-        <xs:element name="entry-point" type="xs:string">
+        <xs:element name="entry-point" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
               The parser rule name used as the top-level (start) rule when
@@ -234,7 +245,7 @@
           </xs:annotation>
         </xs:element>
 
-        <xs:element name="binary">
+        <xs:element name="binary" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
               Empty element that marks this grammar as operating on binary
@@ -250,7 +261,7 @@
           <xs:complexType/>
         </xs:element>
 
-        <xs:element name="inputs" type="xs:string">
+        <xs:element name="inputs" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
               Glob pattern (relative to the grammar directory) that specifies
@@ -270,7 +281,7 @@
           </xs:annotation>
         </xs:element>
 
-        <xs:element name="imports" type="xs:string">
+        <xs:element name="imports" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
               Relative path to another grammar directory whose .g4 files are
@@ -288,7 +299,7 @@
              Test configuration element
              ═══════════════════════════════════════════════════════════════ -->
 
-        <xs:element name="test">
+        <xs:element name="test" minOccurs="0" maxOccurs="unbounded">
           <xs:annotation>
             <xs:documentation>
               Defines a named group of targets, input files, and parser settings
@@ -443,7 +454,7 @@
           </xs:complexType>
         </xs:element>
 
-      </xs:choice>
+      </xs:all>
     </xs:complexType>
   </xs:element>
 
