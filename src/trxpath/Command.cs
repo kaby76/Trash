@@ -1,6 +1,7 @@
 using Antlr4.Runtime;
 using AntlrJson;
 using ParseTreeEditing.UnvParseTreeDOM;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,20 @@ class Command
         string expr;
         if (config.QueryFile != null && config.QueryFile != "")
         {
-            expr = System.IO.File.ReadAllText(config.QueryFile).Trim();
+            try
+            {
+                expr = System.IO.File.ReadAllText(config.QueryFile).Trim();
+            }
+            catch (Exception ex)
+            {
+                System.Console.Error.WriteLine($"Error reading query file '{config.QueryFile}': {ex.Message}");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(expr))
+            {
+                System.Console.Error.WriteLine($"Error: query file '{config.QueryFile}' is empty.");
+                return;
+            }
         }
         else if (config.Expr != null && config.Expr.Any())
         {

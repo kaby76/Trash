@@ -11,7 +11,7 @@ public class Config
     [Option('f', "file", Required = false, HelpText = "Read parse tree data from file instead of stdin.")]
     public string File { get; set; }
 
-    [Option('q', "query", Required = false, HelpText = "File containing the XPath/XQuery expression.")]
+    [Option('q', "query", Required = false, HelpText = "File containing the XPath expression.")]
     public string QueryFile { get; set; }
 
     [Option("fmt", Required = false, HelpText = "Output formatted parsing results set.")]

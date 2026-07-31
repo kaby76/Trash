@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using org.w3c.dom;
 using ParseTreeEditing.UnvParseTreeDOM;
 using XQuery.DataModel;
@@ -23,6 +24,12 @@ sealed class AdapterDocument : XdmDocument
             foreach (var c in _kids) sb.Append(c.StringValue);
             return sb.ToString();
         }
+    }
+
+    public override string ToString()
+    {
+        var first = _kids.OfType<AdapterElement>().FirstOrDefault();
+        return $"document {{ {first?.NodeName?.LocalName ?? "(empty)"} }}";
     }
 
     public static AdapterDocument Build(IEnumerable<UnvParseTreeNode> roots)

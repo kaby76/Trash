@@ -1,3 +1,7 @@
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("trxpath")]
+
 namespace XQuery.DataModel;
 
 /// <summary>
@@ -40,7 +44,7 @@ public abstract class XdmNode : XdmItem
     /// <summary>
     /// Gets or sets the parent of this node.
     /// </summary>
-    public XdmNode? Parent { get; set; }
+    public XdmNode? Parent { get; internal set; }
 
     /// <summary>
     /// Gets the children of this node.
