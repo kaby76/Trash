@@ -428,7 +428,14 @@ public class XPathParser
             var result = BuildArrowExpr(arrowExprs[0]);
             for (int i = 1; i < arrowExprs.Length; i++)
             {
-                var rhs = BuildArrowExpr(arrowExprs[i]);
+                var rhsCtx = arrowExprs[i];
+                // The RHS of '->' must be a plain function expression. Arrow-target chains
+                // ('=>' / '=?>') on the RHS cannot be used as a callable function reference.
+                if (rhsCtx.children.OfType<XPath4Parser.SequenceArrowTargetContext>().Any() ||
+                    rhsCtx.children.OfType<XPath4Parser.MappingArrowTargetContext>().Any())
+                    throw new XPathParseException(
+                        $"Arrow-target chains on the right-hand side of '->' are not supported (line {rhsCtx.Start.Line})");
+                var rhs = BuildUnaryExpr(rhsCtx.unaryExpr());
                 result = new ArrowExpr { Argument = result, Function = rhs, AdditionalArguments = [], IsThinArrow = true, Line = result.Line, Column = result.Column };
             }
             return result;
@@ -881,6 +888,9 @@ public class XPathParser
             var entries = ctx.mapConstructorEntry().Select(e =>
             {
                 var singles = e.exprSingle();
+                if (singles.Length < 2)
+                    throw new XPathParseException(
+                        $"Map entry at line {e.Start.Line} is missing a value (key : value syntax required)");
                 return new MapEntry { Key = BuildExprSingle(singles[0]), Value = BuildExprSingle(singles[1]) };
             }).ToList();
             return new MapConstructorExpr { Entries = entries, Line = ctx.Start.Line, Column = ctx.Start.Column };

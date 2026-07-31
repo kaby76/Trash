@@ -461,6 +461,38 @@ public class ParserTests
         Assert.IsType<ArrowExpr>(ast);
     }
 
+    [Fact]
+    public void Parse_PipelineExpression()
+    {
+        var parser = new XPathParser("(1, 2, 3) -> count()");
+        var ast = parser.Parse();
+
+        Assert.IsType<ArrowExpr>(ast);
+        var arrow = (ArrowExpr)ast;
+        Assert.True(arrow.IsThinArrow);
+    }
+
+    [Fact]
+    public void Parse_PipelineExpression_RhsWithArrowTargetThrows()
+    {
+        var parser = new XPathParser("$x -> f() => g()");
+        Assert.Throws<XPathParseException>(() => parser.Parse());
+    }
+
+    #endregion
+
+    #region Parser Tests - Map constructor validation
+
+    [Fact]
+    public void Parse_MapConstructorEntry_MissingValueThrows()
+    {
+        // Grammar allows exprSingle without ':' value — builder rejects it with a clear error
+        // We construct such a tree by testing via raw parse; the grammar allows 'map { expr }'
+        // when the optional ': value' is omitted. Verify we get a clear XPathParseException.
+        var parser = new XPathParser("map { 'key' }");
+        Assert.Throws<XPathParseException>(() => parser.Parse());
+    }
+
     #endregion
 
     #region Parser Tests - String Concatenation
