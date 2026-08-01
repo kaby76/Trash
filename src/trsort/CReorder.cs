@@ -1,78 +1,189 @@
-﻿//namespace Trash.Commands
-//{
-//    using Antlr4.Runtime.Tree;
-//    using LanguageServer;
-//    using org.eclipse.wst.xml.xpath2.processor.util;
-//    using System;
-//    using System.Collections.Generic;
-//    using System.Linq;
+namespace Trash;
 
-//    class CReorder
-//    {
-//        public void Help()
-//        {
-//            System.Console.WriteLine(@"reorder alpha
-//reorder bfs <string>
-//reorder dfs <string>
-//Reorder the parser rules according to the specified type and start rule.
-//For BFS and DFS, an XPath expression must be supplied to specify all the start
-//rule symbols. For alphabetic reordering, all parser rules are retained, and
-//simply reordered alphabetically. For BFS and DFS, if the rule is unreachable
-//from a start node set that is specified via <string>, then the rule is dropped
-//from the grammar.
+using org.eclipse.wst.xml.xpath2.processor.util;
+using ParseTreeEditing.UnvParseTreeDOM;
+using System.Collections.Generic;
+using System.Linq;
+using Antlr4.Runtime;
 
-//Example:
-//    reorder alpha
-//    reorder dfs ""//parserRuleSpec/RULE_REF[text()='libraryDefinition']""
-//");
-//        }
+class CReorder
+{
+    static readonly org.eclipse.wst.xml.xpath2.processor.Engine _engine =
+        new org.eclipse.wst.xml.xpath2.processor.Engine();
 
-//        public void Execute(Repl repl, ReplParser.ReorderContext tree, bool piped)
-//        {
-//            Dictionary<string, string> results = new Dictionary<string, string>();
-//            var doc = repl.stack.Peek();
-//            string expr = null;
-//            if (tree.modes() != null)
-//            {
-//                results = LanguageServer.Transform.SortModes(doc);
-//            }
-//            else
-//            {
-//                LspAntlr.ReorderType order = default;
-//                if (tree.alpha() != null)
-//                    order = LspAntlr.ReorderType.Alphabetically;
-//                else if (tree.bfs() != null)
-//                {
-//                    order = LspAntlr.ReorderType.BFS;
-//                    expr = tree.bfs().StringLiteral().GetText();
-//                }
-//                else if (tree.dfs() != null)
-//                {
-//                    order = LspAntlr.ReorderType.DFS;
-//                    expr = tree.dfs().StringLiteral().GetText();
-//                }
-//                else
-//                    throw new Exception("unknown sorting type");
-//                List<IParseTree> nodes = null;
-//                if (expr != null)
-//                {
-//                    expr = expr.Substring(1, expr.Length - 2);
-//                    var pr = ParsingResultsFactory.Create(doc);
-//                    var aparser = pr.Parser;
-//                    var atree = pr.ParseTree;
-//                    using
-//                    (ParseTreeEditing.AntlrDOM.AntlrDynamicContext
-//                    dynamicContext = new ParseTreeEditing.AntlrDOM.ConvertToDOM().Try(atree, aparser))
-//                    {
-//                        org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-//                        nodes = engine.parseExpression(expr,
-//                                new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-//                            .Select(x => (x.NativeValue as ParseTreeEditing.AntlrDOM.AntlrElement).AntlrIParseTree).ToList();
-//                    }
-//                }
-//                results = LanguageServer.Transform.ReorderParserRules(doc, order, nodes);
-//            }
-//            repl.EnactEdits(results);
-//        }
-//    }
-//}
+    // Sort all parser rules alphabetically by rule name, keeping all rules.
+    public static void AlphaSort(UnvParseTreeNode[] trees, Parser parser)
+    {
+        var ate = new ConvertToDOM();
+        using var dynamicContext = ate.Try(trees, parser);
+
+        var ruleNodes = _engine.parseExpression("//ruleSpec[parserRuleSpec]",
+                new StaticContextBuilder())
+            .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+            .Select(x => x.NativeValue as UnvParseTreeElement)
+            .ToList();
+
+        if (ruleNodes.Count == 0) return;
+
+        var list = new List<(string name, UnvParseTreeNode node)>();
+        foreach (var node in ruleNodes)
+        {
+            var name = _engine.parseExpression("./parserRuleSpec/RULE_REF/text()",
+                    new StaticContextBuilder())
+                .evaluate(dynamicContext, new object[] { node })
+                .Select(x => x.NativeValue as UnvParseTreeText)
+                .First().NodeValue as string;
+            list.Add((name, node));
+        }
+
+        // Sort descending so that inserting each at position 0 yields ascending order.
+        list.Sort((x, y) => string.Compare(y.name, x.name, System.StringComparison.Ordinal));
+
+        var rulesContainer = list[0].node.ParentNode as UnvParseTreeNode;
+        foreach (var (_, node) in list)
+            TreeEdits.MoveToFirstChild(node, rulesContainer);
+    }
+
+    // Sort reachable parser rules in BFS order starting from rules matched by startExpr.
+    // Rules unreachable from the start set are dropped from the grammar.
+    public static void BfsSort(UnvParseTreeNode[] trees, Parser parser, string startExpr)
+        => ReachabilitySort(trees, parser, startExpr, bfs: true);
+
+    // Sort reachable parser rules in DFS preorder starting from rules matched by startExpr.
+    // Rules unreachable from the start set are dropped from the grammar.
+    public static void DfsSort(UnvParseTreeNode[] trees, Parser parser, string startExpr)
+        => ReachabilitySort(trees, parser, startExpr, bfs: false);
+
+    static void ReachabilitySort(UnvParseTreeNode[] trees, Parser parser, string startExpr, bool bfs)
+    {
+        var ate = new ConvertToDOM();
+        using var dynamicContext = ate.Try(trees, parser);
+
+        // Build map: rule name -> ruleSpec node.
+        var ruleNodes = _engine.parseExpression("//ruleSpec[parserRuleSpec]",
+                new StaticContextBuilder())
+            .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+            .Select(x => x.NativeValue as UnvParseTreeElement)
+            .ToList();
+
+        if (ruleNodes.Count == 0) return;
+
+        var nameToNode = new Dictionary<string, UnvParseTreeNode>();
+        foreach (var node in ruleNodes)
+        {
+            var name = _engine.parseExpression("./parserRuleSpec/RULE_REF/text()",
+                    new StaticContextBuilder())
+                .evaluate(dynamicContext, new object[] { node })
+                .Select(x => x.NativeValue as UnvParseTreeText)
+                .First().NodeValue as string;
+            nameToNode[name] = node;
+        }
+
+        // Build adjacency: rule name -> list of parser rule names referenced in body.
+        var adjacency = new Dictionary<string, List<string>>();
+        foreach (var kvp in nameToNode)
+        {
+            var refs = _engine.parseExpression("./parserRuleSpec/ruleBlock//RULE_REF/text()",
+                    new StaticContextBuilder())
+                .evaluate(dynamicContext, new object[] { kvp.Value })
+                .Select(x => x.NativeValue as UnvParseTreeText)
+                .Select(t => t.NodeValue as string)
+                .Where(n => nameToNode.ContainsKey(n))
+                .Distinct()
+                .ToList();
+            adjacency[kvp.Key] = refs;
+        }
+
+        // Evaluate the user-supplied XPath to find start rules.
+        var startItems = _engine.parseExpression(startExpr,
+                new StaticContextBuilder())
+            .evaluate(dynamicContext, new object[] { dynamicContext.Document })
+            .ToList();
+
+        var startNames = new List<string>();
+        foreach (var item in startItems)
+        {
+            string name = null;
+            var native = item.NativeValue;
+            if (native is UnvParseTreeText txt)
+                name = txt.NodeValue as string;
+            else if (native is UnvParseTreeElement elem)
+                name = elem.GetChildrenText().FirstOrDefault();
+            if (name != null && nameToNode.ContainsKey(name))
+                startNames.Add(name);
+        }
+
+        if (startNames.Count == 0) return;
+
+        // Traverse graph to get ordered reachable rule names.
+        var ordered = bfs ? BfsOrder(startNames, adjacency) : DfsOrder(startNames, adjacency);
+        if (ordered.Count == 0) return;
+
+        // Capture the rules container before any deletions.
+        var rulesContainer = ruleNodes[0].ParentNode as UnvParseTreeNode;
+
+        // Drop rules that are unreachable from the start set.
+        var reachable = new HashSet<string>(ordered);
+        foreach (var kvp in nameToNode.ToList())
+        {
+            if (!reachable.Contains(kvp.Key))
+                TreeEdits.Delete(kvp.Value);
+        }
+
+        // Reorder remaining rules: insert in reverse order so position-0 insertions
+        // produce the desired final order.
+        for (int i = ordered.Count - 1; i >= 0; i--)
+            TreeEdits.MoveToFirstChild(nameToNode[ordered[i]], rulesContainer);
+    }
+
+    static List<string> BfsOrder(List<string> startNames, Dictionary<string, List<string>> adjacency)
+    {
+        var visited = new HashSet<string>();
+        var queue = new Queue<string>();
+        var result = new List<string>();
+
+        foreach (var name in startNames)
+        {
+            if (adjacency.ContainsKey(name) && visited.Add(name))
+                queue.Enqueue(name);
+        }
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            result.Add(current);
+            if (adjacency.TryGetValue(current, out var refs))
+            {
+                foreach (var next in refs)
+                {
+                    if (visited.Add(next))
+                        queue.Enqueue(next);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    static List<string> DfsOrder(List<string> startNames, Dictionary<string, List<string>> adjacency)
+    {
+        var visited = new HashSet<string>();
+        var result = new List<string>();
+
+        void Dfs(string name)
+        {
+            if (!visited.Add(name)) return;
+            result.Add(name);
+            if (adjacency.TryGetValue(name, out var refs))
+            {
+                foreach (var next in refs)
+                    Dfs(next);
+            }
+        }
+
+        foreach (var name in startNames)
+            Dfs(name);
+
+        return result;
+    }
+}
