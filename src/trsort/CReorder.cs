@@ -44,17 +44,19 @@ class CReorder
             TreeEdits.MoveToFirstChild(node, rulesContainer);
     }
 
-    // Sort reachable parser rules in BFS order starting from rules matched by startExpr.
-    // Rules unreachable from the start set are dropped from the grammar.
-    public static void BfsSort(UnvParseTreeNode[] trees, Parser parser, string startExpr)
-        => ReachabilitySort(trees, parser, startExpr, bfs: true);
+    // Sort reachable parser rules in BFS order starting from the named start rule.
+    // Pass null to auto-detect the start rule via the EOF-alternative heuristic.
+    // Rules unreachable from the start rule are dropped from the grammar.
+    public static void BfsSort(UnvParseTreeNode[] trees, Parser parser, string startRule)
+        => ReachabilitySort(trees, parser, startRule, bfs: true);
 
-    // Sort reachable parser rules in DFS preorder starting from rules matched by startExpr.
-    // Rules unreachable from the start set are dropped from the grammar.
-    public static void DfsSort(UnvParseTreeNode[] trees, Parser parser, string startExpr)
-        => ReachabilitySort(trees, parser, startExpr, bfs: false);
+    // Sort reachable parser rules in DFS preorder starting from the named start rule.
+    // Pass null to auto-detect the start rule via the EOF-alternative heuristic.
+    // Rules unreachable from the start rule are dropped from the grammar.
+    public static void DfsSort(UnvParseTreeNode[] trees, Parser parser, string startRule)
+        => ReachabilitySort(trees, parser, startRule, bfs: false);
 
-    static void ReachabilitySort(UnvParseTreeNode[] trees, Parser parser, string startExpr, bool bfs)
+    static void ReachabilitySort(UnvParseTreeNode[] trees, Parser parser, string startRule, bool bfs)
     {
         var ate = new ConvertToDOM();
         using var dynamicContext = ate.Try(trees, parser);
@@ -96,7 +98,7 @@ class CReorder
 
         // Resolve the set of start rule names.
         List<string> startNames;
-        if (string.IsNullOrEmpty(startExpr))
+        if (string.IsNullOrEmpty(startRule))
         {
             // Auto-detect: find parser rule(s) in non-lexer grammars whose alternatives
             // contain an EOF token.  The first descendant RULE_REF of each matched
@@ -144,41 +146,14 @@ class CReorder
         }
         else
         {
-            // Evaluate the user-supplied XPath expression.
-            var startItems = _engine.parseExpression(startExpr, new StaticContextBuilder())
-                .evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                .ToList();
-
-            startNames = new List<string>();
-            foreach (var item in startItems)
+            // The caller supplied a rule name directly.  Look it up in the grammar.
+            if (!nameToNode.ContainsKey(startRule))
             {
-                string name = null;
-                var native = item.NativeValue;
-                if (native is UnvParseTreeText txt)
-                {
-                    name = txt.NodeValue as string;
-                }
-                else if (native is UnvParseTreeElement elem)
-                {
-                    if (elem.LocalName == "RULE_REF")
-                    {
-                        // XPath selected the RULE_REF token element itself.
-                        name = elem.GetChildrenText().FirstOrDefault();
-                    }
-                    else
-                    {
-                        // For parserRuleSpec, ruleSpec, or any other container: the first
-                        // descendant RULE_REF in document order is the rule name.
-                        name = _engine.parseExpression(".//RULE_REF/text()",
-                                new StaticContextBuilder())
-                            .evaluate(dynamicContext, new object[] { elem })
-                            .Select(x => x.NativeValue as UnvParseTreeText)
-                            .FirstOrDefault()?.NodeValue as string;
-                    }
-                }
-                if (name != null && nameToNode.ContainsKey(name))
-                    startNames.Add(name);
+                System.Console.Error.WriteLine(
+                    $"trsort: start rule '{startRule}' not found in grammar.");
+                throw new System.Exception($"Start rule '{startRule}' not found.");
             }
+            startNames = new List<string> { startRule };
         }
 
         if (startNames.Count == 0) return;

@@ -67,12 +67,12 @@ class Command
 
             if (config.Bfs)
             {
-                // startExpr may be null; CReorder will auto-detect the start rule in that case.
+                // config.Expr is the start rule name, or null to auto-detect.
                 CReorder.BfsSort(trees, parser, config.Expr);
             }
             else if (config.Dfs)
             {
-                // startExpr may be null; CReorder will auto-detect the start rule in that case.
+                // config.Expr is the start rule name, or null to auto-detect.
                 CReorder.DfsSort(trees, parser, config.Expr);
             }
             else
