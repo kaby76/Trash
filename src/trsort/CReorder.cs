@@ -1,39 +1,34 @@
 namespace Trash;
 
-using org.eclipse.wst.xml.xpath2.processor.util;
 using ParseTreeEditing.UnvParseTreeDOM;
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
+using XQuery.Engine;
+using XPathParser = XQuery.Parser.XPathParser;
 
 class CReorder
 {
-    static readonly org.eclipse.wst.xml.xpath2.processor.Engine _engine =
-        new org.eclipse.wst.xml.xpath2.processor.Engine();
+    static readonly XPathEvaluator _evaluator = new XPathEvaluator();
 
     // Sort all parser rules alphabetically by rule name, keeping all rules.
     public static void AlphaSort(UnvParseTreeNode[] trees, Parser parser)
     {
-        var ate = new ConvertToDOM();
-        using var dynamicContext = ate.Try(trees, parser);
+        var adapterDoc = AdapterDocument.Build(trees);
 
-        var ruleNodes = _engine.parseExpression("//ruleSpec[parserRuleSpec]",
-                new StaticContextBuilder())
-            .evaluate(dynamicContext, new object[] { dynamicContext.Document })
-            .Select(x => x.NativeValue as UnvParseTreeElement)
-            .ToList();
+        var ruleSpecExpr = new XPathParser("//ruleSpec[parserRuleSpec]").Parse();
+        var ruleAdapters = _evaluator.Evaluate(ruleSpecExpr, adapterDoc)
+            .OfType<AdapterElement>().ToList();
 
-        if (ruleNodes.Count == 0) return;
+        if (ruleAdapters.Count == 0) return;
 
+        var nameExpr = new XPathParser("./parserRuleSpec/RULE_REF/text()").Parse();
         var list = new List<(string name, UnvParseTreeNode node)>();
-        foreach (var node in ruleNodes)
+        foreach (var ruleAdapter in ruleAdapters)
         {
-            var name = _engine.parseExpression("./parserRuleSpec/RULE_REF/text()",
-                    new StaticContextBuilder())
-                .evaluate(dynamicContext, new object[] { node })
-                .Select(x => x.NativeValue as UnvParseTreeText)
-                .First().NodeValue as string;
-            list.Add((name, node));
+            var name = _evaluator.Evaluate(nameExpr, ruleAdapter)
+                .OfType<AdapterText>().First().Source.Data;
+            list.Add((name, ruleAdapter.Source));
         }
 
         // Sort descending so that inserting each at position 0 yields ascending order.
@@ -48,48 +43,44 @@ class CReorder
     // Pass null to auto-detect the start rule via the EOF-alternative heuristic.
     // Rules unreachable from the start rule are dropped from the grammar.
     public static void BfsSort(UnvParseTreeNode[] trees, Parser parser, string startRule)
-        => ReachabilitySort(trees, parser, startRule, bfs: true);
+        => ReachabilitySort(trees, startRule, bfs: true);
 
     // Sort reachable parser rules in DFS preorder starting from the named start rule.
     // Pass null to auto-detect the start rule via the EOF-alternative heuristic.
     // Rules unreachable from the start rule are dropped from the grammar.
     public static void DfsSort(UnvParseTreeNode[] trees, Parser parser, string startRule)
-        => ReachabilitySort(trees, parser, startRule, bfs: false);
+        => ReachabilitySort(trees, startRule, bfs: false);
 
-    static void ReachabilitySort(UnvParseTreeNode[] trees, Parser parser, string startRule, bool bfs)
+    static void ReachabilitySort(UnvParseTreeNode[] trees, string startRule, bool bfs)
     {
-        var ate = new ConvertToDOM();
-        using var dynamicContext = ate.Try(trees, parser);
+        var adapterDoc = AdapterDocument.Build(trees);
 
-        // Build map: rule name -> ruleSpec node.
-        var ruleNodes = _engine.parseExpression("//ruleSpec[parserRuleSpec]",
-                new StaticContextBuilder())
-            .evaluate(dynamicContext, new object[] { dynamicContext.Document })
-            .Select(x => x.NativeValue as UnvParseTreeElement)
-            .ToList();
+        // Build map: rule name -> ruleSpec node and AdapterElement.
+        var ruleSpecExpr = new XPathParser("//ruleSpec[parserRuleSpec]").Parse();
+        var ruleAdapters = _evaluator.Evaluate(ruleSpecExpr, adapterDoc)
+            .OfType<AdapterElement>().ToList();
 
-        if (ruleNodes.Count == 0) return;
+        if (ruleAdapters.Count == 0) return;
 
+        var nameExpr = new XPathParser("./parserRuleSpec/RULE_REF/text()").Parse();
         var nameToNode = new Dictionary<string, UnvParseTreeNode>();
-        foreach (var node in ruleNodes)
+        var nameToAdapter = new Dictionary<string, AdapterElement>();
+        foreach (var ruleAdapter in ruleAdapters)
         {
-            var name = _engine.parseExpression("./parserRuleSpec/RULE_REF/text()",
-                    new StaticContextBuilder())
-                .evaluate(dynamicContext, new object[] { node })
-                .Select(x => x.NativeValue as UnvParseTreeText)
-                .First().NodeValue as string;
-            nameToNode[name] = node;
+            var name = _evaluator.Evaluate(nameExpr, ruleAdapter)
+                .OfType<AdapterText>().First().Source.Data;
+            nameToNode[name] = ruleAdapter.Source;
+            nameToAdapter[name] = ruleAdapter;
         }
 
         // Build adjacency: rule name -> list of parser rule names referenced in body.
+        var refsExpr = new XPathParser("./parserRuleSpec/ruleBlock//RULE_REF/text()").Parse();
         var adjacency = new Dictionary<string, List<string>>();
-        foreach (var kvp in nameToNode)
+        foreach (var kvp in nameToAdapter)
         {
-            var refs = _engine.parseExpression("./parserRuleSpec/ruleBlock//RULE_REF/text()",
-                    new StaticContextBuilder())
-                .evaluate(dynamicContext, new object[] { kvp.Value })
-                .Select(x => x.NativeValue as UnvParseTreeText)
-                .Select(t => t.NodeValue as string)
+            var refs = _evaluator.Evaluate(refsExpr, kvp.Value)
+                .OfType<AdapterText>()
+                .Select(t => t.Source.Data)
                 .Where(n => nameToNode.ContainsKey(n))
                 .Distinct()
                 .ToList();
@@ -100,24 +91,22 @@ class CReorder
         List<string> startNames;
         if (string.IsNullOrEmpty(startRule))
         {
-            // Auto-detect: find parser rule(s) in non-lexer grammars whose alternatives
-            // contain an EOF token.  The first descendant RULE_REF of each matched
-            // parserRuleSpec is its rule name.
-	    const string autoXPath = "//parserRuleSpec[./ruleBlock//TOKEN_REF/text()='EOF']";
-
-            var detected = _engine.parseExpression(autoXPath, new StaticContextBuilder())
-                .evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                .Select(x => x.NativeValue as UnvParseTreeElement)
-                .ToList();
+            // Auto-detect: find parser rule(s) whose rule body contains an EOF token.
+            const string autoXPath = "//parserRuleSpec[./ruleBlock//TOKEN_REF/text()='EOF']";
+            var autoExpr = new XPathParser(autoXPath).Parse();
+            var detected = _evaluator.Evaluate(autoExpr, adapterDoc)
+                .OfType<AdapterElement>().ToList();
 
             if (detected.Count == 0)
             {
                 System.Console.Error.WriteLine(
                     "trsort: cannot auto-detect start rule: " +
                     "no parser rule with an EOF alternative found. " +
-                    "Provide an XPath expression explicitly.");
+                    "Provide a start rule name explicitly.");
                 throw new System.Exception("Auto-detect: no start rule found.");
             }
+
+            var ruleRefExpr = new XPathParser("./RULE_REF/text()").Parse();
             if (detected.Count > 1)
             {
                 System.Console.Error.WriteLine(
@@ -125,26 +114,22 @@ class CReorder
                     "multiple parser rules contain an EOF alternative:");
                 foreach (var d in detected)
                 {
-                    var n = _engine.parseExpression("./RULE_REF/text()", new StaticContextBuilder())
-                        .evaluate(dynamicContext, new object[] { d })
-                        .Select(x => x.NativeValue as UnvParseTreeText)
-                        .FirstOrDefault()?.NodeValue as string;
+                    var n = _evaluator.Evaluate(ruleRefExpr, d)
+                        .OfType<AdapterText>().FirstOrDefault()?.Source.Data;
                     System.Console.Error.WriteLine("  " + n);
                 }
                 System.Console.Error.WriteLine(
-                    "Provide an XPath expression explicitly to choose a start rule.");
+                    "Provide a start rule name explicitly.");
                 throw new System.Exception("Auto-detect: multiple start rules found.");
             }
 
-            var detectedName = _engine.parseExpression("./RULE_REF/text()", new StaticContextBuilder())
-                .evaluate(dynamicContext, new object[] { detected[0] })
-                .Select(x => x.NativeValue as UnvParseTreeText)
-                .First().NodeValue as string;
+            var detectedName = _evaluator.Evaluate(ruleRefExpr, detected[0])
+                .OfType<AdapterText>().First().Source.Data;
             startNames = new List<string> { detectedName };
         }
         else
         {
-            // The caller supplied a rule name directly.  Look it up in the grammar.
+            // The caller supplied a rule name directly. Look it up in the grammar.
             if (!nameToNode.ContainsKey(startRule))
             {
                 System.Console.Error.WriteLine(
@@ -161,7 +146,7 @@ class CReorder
         if (ordered.Count == 0) return;
 
         // Capture the rules container before any deletions.
-        var rulesContainer = ruleNodes[0].ParentNode as UnvParseTreeNode;
+        var rulesContainer = ruleAdapters[0].Source.ParentNode as UnvParseTreeNode;
 
         // Drop rules that are unreachable from the start set.
         var reachable = new HashSet<string>(ordered);
