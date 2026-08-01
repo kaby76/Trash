@@ -40,6 +40,11 @@ class Command
             lines = File.ReadAllText(config.File);
         }
 
+        int modeCount = (config.Alphabetic ? 1 : 0) + (config.Bfs ? 1 : 0) + (config.Dfs ? 1 : 0);
+        if (modeCount > 1)
+            throw new System.Exception(
+                "Conflicting sort options: specify at most one of --alphabetic, --bfs, --dfs.");
+
         var serializeOptions = new JsonSerializerOptions();
         serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
         serializeOptions.WriteIndented = config.Format;

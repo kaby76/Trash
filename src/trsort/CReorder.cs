@@ -106,9 +106,27 @@ class CReorder
             string name = null;
             var native = item.NativeValue;
             if (native is UnvParseTreeText txt)
+            {
                 name = txt.NodeValue as string;
+            }
             else if (native is UnvParseTreeElement elem)
-                name = elem.GetChildrenText().FirstOrDefault();
+            {
+                if (elem.LocalName == "RULE_REF")
+                {
+                    // XPath selected the RULE_REF token element itself.
+                    name = elem.GetChildrenText().FirstOrDefault();
+                }
+                else
+                {
+                    // For parserRuleSpec, ruleSpec, or any other container: the first
+                    // descendant RULE_REF in document order is the rule name.
+                    name = _engine.parseExpression(".//RULE_REF/text()",
+                            new StaticContextBuilder())
+                        .evaluate(dynamicContext, new object[] { elem })
+                        .Select(x => x.NativeValue as UnvParseTreeText)
+                        .FirstOrDefault()?.NodeValue as string;
+                }
+            }
             if (name != null && nameToNode.ContainsKey(name))
                 startNames.Add(name);
         }
