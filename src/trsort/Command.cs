@@ -67,14 +67,12 @@ class Command
 
             if (config.Bfs)
             {
-                if (string.IsNullOrEmpty(config.Expr))
-                    throw new System.Exception("--bfs requires an XPath expression argument identifying start rules.");
+                // startExpr may be null; CReorder will auto-detect the start rule in that case.
                 CReorder.BfsSort(trees, parser, config.Expr);
             }
             else if (config.Dfs)
             {
-                if (string.IsNullOrEmpty(config.Expr))
-                    throw new System.Exception("--dfs requires an XPath expression argument identifying start rules.");
+                // startExpr may be null; CReorder will auto-detect the start rule in that case.
                 CReorder.DfsSort(trees, parser, config.Expr);
             }
             else
