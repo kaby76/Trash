@@ -12,28 +12,33 @@ to stdout. The input and output are Parse Tree Data.
 
 ## Usage
 
-    trsort bfs <string>
-    trsort dfs <string>
+    trsort [-a]
+    trsort --bfs [<start-rule>]
+    trsort --dfs [<start-rule>]
 
 ## Details
 
-Reorder the parser rules according to the specified type and start rule.
-For BFS and DFS, an XPath expression must be supplied to specify all the start
-rule symbols. For alphabetic reordering, all parser rules are retained, and
-simply reordered alphabetically. For BFS and DFS, if the rule is unreachable
-from a start node set that is specified via <string>, then the rule is dropped
-from the grammar.
+Reorder the parser rules according to the specified mode.
+
+`-a` / `--alphabetic` (default when no mode flag is given): sort all parser
+rules alphabetically. All rules are retained.
+
+`--bfs [<start-rule>]`: sort reachable parser rules in breadth-first order
+from the named start rule. Rules not reachable from the start rule are dropped.
+If `<start-rule>` is omitted, the start rule is auto-detected by finding the
+parser rule whose alternative contains an `EOF` token; an error is reported if
+zero or more than one such rule exists.
+
+`--dfs [<start-rule>]`: same as `--bfs` but uses depth-first (preorder)
+traversal.
+
+Only one mode flag may be specified at a time.
 
 ## Example
 
-    trparse Java.g4 | trsort alpha | trtext
-    trparse Java.g4 | trsort dfs ""//parserRuleSpec/RULE_REF[text()='libraryDefinition']"" | trtext
-
-## Notes
-
-If you are running MSYS2 on Windows, you may notice that XPaths are not being
-processed by this command correctly. To avoid the Bash shell from altering
-XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
+    dotnet trash parse Java.g4 | dotnet trash trsort -a | dotnet trash sponge -o out -c
+    dotnet trash parse Java.g4 | dotnet trash trsort --dfs compilationUnit | dotnet trash sponge -o out -c
+    dotnet trash parse Java.g4 | dotnet trash trsort --bfs | dotnet trash sponge -o out -c
 
 ## Current version
 
