@@ -103,9 +103,7 @@ class CReorder
             // Auto-detect: find parser rule(s) in non-lexer grammars whose alternatives
             // contain an EOF token.  The first descendant RULE_REF of each matched
             // parserRuleSpec is its rule name.
-            const string autoXPath =
-                "//grammarSpec/grammarDecl[not(grammarType/LEXER)]" +
-                "//parserRuleSpec[.//alternative/element[.//TOKEN_REF/text()=\"EOF\"]]";
+	    const string autoXPath = "//parserRuleSpec[./ruleBlock//TOKEN_REF/text()='EOF']";
 
             var detected = _engine.parseExpression(autoXPath, new StaticContextBuilder())
                 .evaluate(dynamicContext, new object[] { dynamicContext.Document })
