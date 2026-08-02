@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("trxpath")]
 [assembly: InternalsVisibleTo("trsort")]
+[assembly: InternalsVisibleTo("trunfoldlit")]
 
 namespace XQuery.DataModel;
 
