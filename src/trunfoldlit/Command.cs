@@ -69,10 +69,10 @@ class Command
         var tokenRefItems = evaluator.Evaluate(exprNode1, adapterDoc).ToList();
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + tokenRefItems.Count + " TOKEN_REF nodes.");
 
-        // ── Step 2: collect all non-fragment lexer rules whose body is exactly one
-        //           string literal, then keep only those with a *unique* literal
-        //           across all such rules (rules in different lexer modes can share
-        //           the same literal, so those must be excluded). ──────────────────
+        // ── Step 2a: find candidate lexer rules — non-fragment, single alternative
+        //            with no lexer commands, body is exactly one string literal.
+        //            Rules like `ET_EQ : '=' -> type(EQ);` are intentionally
+        //            excluded here (they have commands and must not be inlined). ──
         var expr2 =
             "//lexerRuleSpec[not(FRAGMENT)]" +
             "[lexerRuleBlock/lexerAltList[count(*) = 1]/lexerAlt[count(*) = 1]" +
@@ -104,11 +104,35 @@ class Command
             candidates.Add((tokenRefAe.StringValue, litAe.StringValue, blockAe.Source));
         }
 
-        // Only inline tokens whose string literal is unique across all candidates.
+        // ── Step 2b: collect ALL string literals from ALL non-fragment lexer rule
+        //            bodies across every mode and file.  This catches rules like
+        //            `ET_EQ : '=' -> type(EQ);` that share a literal with a
+        //            candidate but were excluded from Step 2a due to their command.
+        //            A candidate is only inlined when its literal appears exactly
+        //            once in this full set. ─────────────────────────────────────
+        var expr3 =
+            "//lexerRuleSpec[not(FRAGMENT)]" +
+            "/lexerRuleBlock/lexerAltList/lexerAlt" +
+            "/lexerElements/lexerElement/lexerAtom/terminalDef/STRING_LITERAL";
+        if (config.Verbose) System.Console.Error.WriteLine("Expr3 = >>>" + expr3 + "<<<");
+        var exprNode3 = new XPathParser(expr3).Parse();
+        var allLitItems = evaluator.Evaluate(exprNode3, adapterDoc).ToList();
+
+        var nonUniqueLits = allLitItems
+            .OfType<AdapterElement>()
+            .Select(ae => ae.StringValue)
+            .GroupBy(s => s)
+            .Where(g => g.Count() > 1)
+            .Select(g => g.Key)
+            .ToHashSet();
+
+        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine(
+            nonUniqueLits.Count + " string literal(s) are shared across multiple lexer rules and will not be inlined.");
+
+        // Only inline candidates whose literal is unique across ALL lexer rule bodies.
         var uniqueRules = candidates
-            .GroupBy(c => c.lit)
-            .Where(g => g.Count() == 1)
-            .ToDictionary(g => g.First().name, g => g.First().block);
+            .Where(c => !nonUniqueLits.Contains(c.lit))
+            .ToDictionary(c => c.name, c => c.block);
 
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine(
             uniqueRules.Count + " lexer rules have a unique string literal and will be inlined.");
