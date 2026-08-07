@@ -1,17 +1,19 @@
-// XPath v4.0
-// Author--Ken Domino
-// Based on the XPath 4.0 WG Review Draft at https://qt4cg.org/specifications/xquery-40/xpath-40.html#nt-bnf
+// XQuery v4.0
+// Author: Ken Domino
+// Based on the XQuery 4.0 spec at https://qt4cg.org/pr/2796/xquery-40/xquery-40-autodiff.html
 //
-// This is an implementation of the XPath version 4.0 grammar.
+// XQuery 4.0 is a superset of XPath 4.0. This grammar incorporates all XPath 4.0
+// expression rules and adds XQuery-specific module structure, prolog, FLWOR enhancements,
+// direct constructors, switch/typeswitch, try/catch, validate, and extension expressions.
 
 // $antlr-format alignTrailingComments true, columnLimit 150, minEmptyLines 1, maxEmptyLinesToKeep 1, reflowComments false, useTab false
 // $antlr-format allowShortRulesOnASingleLine false, allowShortBlocksOnASingleLine true, alignSemicolons hanging, alignColons hanging
 
-parser grammar XPath4Parser;
+parser grammar XQuery4Parser;
 
 options {
-    tokenVocab = XPath4Lexer;
-    superClass = XPath4ParserBase;
+    tokenVocab = XQuery4Lexer;
+    superClass = XQuery4ParserBase;
 }
 
 abbreviatedStep
@@ -29,8 +31,16 @@ additiveExpr
     : multiplicativeExpr (( '+' | '-') multiplicativeExpr)*
     ;
 
+allowingEmpty
+    : 'allowing' 'empty'
+    ;
+
 andExpr
     : comparisonExpr ('and' comparisonExpr)*
+    ;
+
+annotation
+    : '%' eqName ('(' constant (',' constant)+ ')')?
     ;
 
 anyArrayType
@@ -109,7 +119,7 @@ axis
         | 'following-or-self'
         | 'following-sibling'
         | 'following-sibling-or-self'
-        | 'namespace'
+//        | 'namespace' // missing from XQuery4 Spec but in XPath4 Spec.
         | 'parent'
         | 'preceding'
         | 'preceding-or-self'
@@ -123,8 +133,28 @@ axisStep
     : (abbreviatedStep | fullStep) predicate*
     ;
 
+baseURIDecl
+    : 'declare' 'base-uri' uriLiteral
+    ;
+
+boundarySpaceDecl
+    : 'declare' 'boundary-space' ('preserve' | 'strip')
+    ;
+
 bracedAction
     : enclosedExpr
+    ;
+
+bracedSwitchCases
+    : '{' switchCases '}'
+    ;
+
+bracedTypeswitchCases
+    : '{' typeswitchCases '}'
+    ;
+
+caseClause
+    : 'case' (varName 'as')? sequenceTypeUnion 'return' exprSingle
     ;
 
 castableExpr
@@ -142,6 +172,14 @@ castTarget
     | typedArrayType
     | typedMapType
     | typedRecordType
+    ;
+
+catchClause
+    : 'catch' nameTestUnion enclosedExpr
+    ;
+
+cDataSection
+    : CDataSection
     ;
 
 choiceItemType
@@ -178,12 +216,14 @@ compNamespaceConstructor
 
 compNodeName
     : qNameLiteral
-    | '{' expr '}'
+    | unreservedName
+    | OC expr CC
     ;
 
 compNodeNCName
     : markedNCName
-    | '{' expr '}'
+    | unreservedNCName
+    | OC expr CC
     ;
 
 compPIConstructor
@@ -214,16 +254,80 @@ constant
     | QName '(' ')'
     ;
 
+constructionDecl
+    : 'declare' 'construction' ('strip' | 'preserve')
+    ;
+
+contextValueDecl
+    : 'declare' 'context' (('value' ('as' sequenceType)?) | ('item' ('as' itemType)?)) (
+        (':=' varValue)
+        | ('external' (':=' varDefaultValue)?)
+    )
+    ;
+
 contextValueRef
     : '.'
+    ;
+
+copyNamespacesDecl
+    : 'declare' 'copy-namespaces' preserveMode ',' inheritMode
+    ;
+
+countClause
+    : 'count' varName
     ;
 
 curlyArrayConstructor
     : 'array' enclosedExpr
     ;
 
-defaultElementNamespaceDecl
-    : 'declare' 'default' 'element' 'namespace' uriLiteral
+currentVar
+    : varName
+    ;
+
+decimalFormatDecl
+    : 'declare' ('decimal-format' eqName | 'default' 'decimal-format') (
+        dfPropertyName EQ StringLiteral
+    )*
+    ;
+
+defaultCollationDecl
+    : 'declare' 'default' 'collation' uriLiteral
+    ;
+
+defaultNamespaceDecl
+    : 'declare' 'fixed'? 'default' ('element' | 'function') 'namespace' uriLiteral
+    ;
+
+dfPropertyName
+    : (
+        'decimal-separator'
+        | 'grouping-separator'
+        | 'infinity'
+        | 'minus-sign'
+        | 'NaN'
+        | 'percent'
+        | 'per-mille'
+        | 'zero-digit'
+        | 'digit'
+        | 'pattern-separator'
+        | 'exponent-separator'
+    )
+    ;
+
+dirCommentConstructor
+    : DirCommentContents
+    ;
+
+directConstructor
+//    : //dirElemConstructor
+//    | dirCommentConstructor
+    : dirCommentConstructor
+    | dirPIConstructor
+    ;
+
+dirPIConstructor
+    : DirPIContents
     ;
 
 documentNodeType
@@ -245,7 +349,11 @@ elementName
     ;
 
 elementNodeType
-    : 'element' '(' (nameTestUnion ( ',' typeName_ '?'?)?)? ')'
+    : 'element' '(' (nameTestUnion (',' typeName_ '?'?)?)? ')'
+    ;
+
+emptyOrderDecl
+    : 'declare' 'default' 'order' 'empty' ('greatest' | 'least')
     ;
 
 enclosedContentExpr
@@ -253,7 +361,7 @@ enclosedContentExpr
     ;
 
 enclosedExpr
-    : '{' expr? '}'
+    : OC expr? CC
     ;
 
 enumerationType
@@ -263,31 +371,56 @@ enumerationType
 eqName
     : QName
     | URIQualifiedName
+    | 'after'
+    | 'allowing'
     | 'ancestor'
     | 'ancestor-or-self'
     | 'and'
     | 'array'
     | 'as'
+    | 'ascending'
     | 'at'
     | 'attribute'
+    | 'base-uri'
+    | 'before'
+    | 'boundary-space'
+    | 'by'
+    | 'case'
     | 'cast'
     | 'castable'
+    | 'catch'
     | 'child'
+    | 'collation'
     | 'comment'
+    | 'construction'
+    | 'context'
+    | 'copy-namespaces'
+    | 'count'
+    | 'decimal-format'
+    | 'decimal-separator'
     | 'declare'
     | 'default'
     | 'descendant'
     | 'descendant-or-self'
+    | 'descending'
+    | 'digit'
     | 'div'
     | 'document-node'
     | 'document'
     | 'element'
     | 'else'
     | 'empty-sequence'
+    | 'empty'
+    | 'encoding'
+    | 'end'
     | 'enum'
     | 'eq'
     | 'every'
     | 'except'
+    | 'exponent-separator'
+    | 'external'
+    | 'finally'
+    | 'first'
     | 'fn'
     | 'following'
     | 'following-or-self'
@@ -299,10 +432,16 @@ eqName
     | 'function'
     | 'ge'
     | 'gnode'
+    | 'greatest'
+    | 'group'
+    | 'grouping-separator'
     | 'gt'
     | 'idiv'
     | 'if'
+    | 'import'
     | 'in'
+    | 'infinity'
+    | 'inherit'
     | 'instance'
     | 'intersect'
     | 'is'
@@ -310,40 +449,81 @@ eqName
     | 'item'
     | 'jnode'
     | 'key'
+    | 'last'
+    | 'lax'
     | 'le'
+    | 'least'
     | 'let'
     | 'lt'
     | 'map'
     | 'member'
+    | 'minus-sign'
     | 'mod'
+    | 'module'
+    | 'NaN'
     | 'namespace'
     | 'namespace-node'
     | 'ne'
+    | 'next'
+    | 'no-inherit'
+    | 'no-preserve'
     | 'node'
     | 'of'
+    | 'only'
+    | 'option'
     | 'or'
+    | 'order'
+    | 'ordered'
+    | 'ordering'
     | 'otherwise'
     | 'parent'
+    | 'pattern-separator'
+    | 'percent'
+    | 'per-mille'
     | 'precedes'
     | 'precedes-or-is'
     | 'preceding'
     | 'preceding-or-self'
     | 'preceding-sibling'
     | 'preceding-sibling-or-self'
+    | 'preserve'
+    | 'previous'
     | 'processing-instruction'
     | 'record'
     | 'return'
     | 'satisfies'
+    | 'schema'
     | 'schema-attribute'
     | 'schema-element'
     | 'self'
+    | 'sliding'
     | 'some'
+    | 'stable'
+    | 'start'
+    | 'strict'
+    | 'strip'
+    | 'switch'
     | 'text'
     | 'then'
     | 'to'
+    | 'trace'
     | 'treat'
+    | 'try'
+    | 'tumbling'
+    | 'type'
+    | 'typeswitch'
     | 'union'
+    | 'unordered'
+    | 'validate'
     | 'value'
+    | 'variable'
+    | 'version'
+    | 'when'
+    | 'where'
+    | 'while'
+    | 'window'
+    | 'xquery'
+    | 'zero-digit'
     ;
 
 expr
@@ -351,11 +531,28 @@ expr
     ;
 
 exprSingle
-    : forExpr
-    | letExpr
+    : flworExpr
     | quantifiedExpr
+    | switchExpr
+    | typeswitchExpr
     | ifExpr
+    | tryCatchExpr
+// XQuery Update
+    | insertExpr
+    | deleteExpr
+    | renameExpr
+    | replaceExpr
+    | transformExpr
+//
     | orExpr
+    ;
+
+extendedFieldDeclaration
+    : fieldDeclaration (':=' exprSingle)?
+    ;
+
+extensionExpr
+    : Pragma+ '{' expr? '}'
     ;
 
 fieldDeclaration
@@ -374,7 +571,18 @@ fieldDeclaration
 fieldName
     : QName
     | StringLiteral
-    | URIQualifiedName
+    ;
+
+//filterExpr
+//    : postfixExpr predicate
+//    ;
+
+finallyClause
+    : 'finally' enclosedExpr
+    ;
+
+flworExpr
+    : initialClause intermediateClause* returnClause
     ;
 
 // filterExpr — intentionally absent as a named rule.
@@ -405,23 +613,8 @@ forEntryValueBinding
     : 'value' varNameAndType
     ;
 
-// For expression: single ForClause followed by chained ForLetReturn body.
-// Multiple bindings may appear within a clause (for $x in A, $y in B return C)
-// or by chaining clauses (for $x in A for $y in B return C).
-forExpr
-    : forClause forLetReturn
-    ;
-
-// Standard item binding: for $x [as T] [at $p] in expr
 forItemBinding
-    : varNameAndType positionalVar? 'in' exprSingle
-    ;
-
-// The body of a for/let expression -- can chain another for, let, or terminate with return.
-// This avoids the indirect left-recursion that the spec's ForLetReturn would otherwise create.
-forLetReturn
-    : (forClause | letClause) forLetReturn
-    | 'return' exprSingle
+    : varNameAndType allowingEmpty? positionalVar? 'in' exprSingle
     ;
 
 forMemberBinding
@@ -440,6 +633,13 @@ functionCall
     : { this.IsFuncCall() }? eqName argumentList
     ;
 
+functionDecl
+    : 'declare' annotation* 'function' eqName '(' paramListWithDefaults? ')' typeDeclaration? (
+        functionBody
+        | 'external'
+    )
+    ;
+
 functionItemExpr
     : namedFunctionRef
     | inlineFunctionExpr
@@ -450,16 +650,15 @@ functionSignature
     ;
 
 functionType
-    : anyFunctionType
-    | typedFunctionType
+    : annotation* (anyFunctionType | typedFunctionType)
     ;
 
 generalComp
-    : '='
+    : EQ
     | '!='
-    | '<'
+    | LT
     | '<='
-    | '>'
+    | GT
     | '>='
     ;
 
@@ -467,20 +666,54 @@ gNodeType
     : 'gnode' '(' ')'
     ;
 
+groupByClause
+    : 'group' 'by' groupingSpec (',' groupingSpec)*
+    ;
+
+groupingSpec
+    : varName (typeDeclaration? ':=' exprSingle)? ('collation' uriLiteral)?
+    ;
+
 ifExpr
     : 'if' '(' expr ')' (unbracedActions | bracedAction)
     ;
 
+import_
+    : schemaImport
+    | moduleImport
+    ;
+
+inheritMode
+    : 'inherit'
+    | 'no-inherit'
+    ;
+
+initialClause
+    : forClause
+    | letClause
+    | windowClause
+    ;
+
 inlineFunctionExpr
-    : ('function' | 'fn') functionSignature? functionBody
+    : annotation* ('function' | 'fn') functionSignature? functionBody
     ;
 
 instanceofExpr
     : treatExpr ('instance' 'of' sequenceType)?
     ;
 
+intermediateClause
+    : initialClause
+    | whereClause
+    | groupByClause
+    | orderByClause
+    | countClause
+    | whileClause
+    | traceClause
+    ;
+
 intersectExceptExpr
-    : recordPutExpr (( 'intersect' | 'except') recordPutExpr)*
+    : recordPutExpr (('intersect' | 'except') recordPutExpr)*
     ;
 
 itemType
@@ -488,6 +721,10 @@ itemType
     | functionType
     | typeName_
     | choiceItemType
+    ;
+
+itemTypeDecl
+    : 'declare' annotation* 'type' eqName 'as' itemType
     ;
 
 jNodeType
@@ -530,12 +767,8 @@ letClause
     : 'let' letBinding (',' letBinding)*
     ;
 
-letExpr
-    : letClause forLetReturn
-    ;
-
 letMapBinding
-    : '$' '{' varNameAndType (',' varNameAndType)* '}' typeDeclaration? ':=' exprSingle
+    : '$' OC varNameAndType (',' varNameAndType)* CC typeDeclaration? ':=' exprSingle
     ;
 
 letSequenceBinding
@@ -546,9 +779,14 @@ letValueBinding
     : varNameAndType ':=' exprSingle
     ;
 
+libraryModule
+    : moduleDecl prolog
+    ;
+
 literal
     : numericLiteral
     | StringLiteral
+    | qNameLiteral
     ;
 
 lookup
@@ -565,12 +803,16 @@ lookupWildcard
     : '*'
     ;
 
+mainModule
+    : prolog queryBody
+    ;
+
 mapConstructor
-    : 'map'? '{' (mapConstructorEntry ( ',' mapConstructorEntry)*)? '}'
+    : 'map'? OC (mapConstructorEntry ( ',' mapConstructorEntry)*)? CC
     ;
 
 mapConstructorEntry
-    : exprSingle (':' exprSingle)?
+    : exprSingle (COLON exprSingle)?
     ;
 
 mappingArrowTarget
@@ -592,16 +834,32 @@ markedNCName
 // ANTLR4 cannot handle cross-rule left recursion, so FilterExpr, DynamicFunctionCall,
 // LookupExpr, and MethodCall are all inlined into postfixExpr as a (…)* suffix loop.
 
+module_
+    : versionDecl? (libraryModule | mainModule)
+    ;
+
+moduleDecl
+    : 'module' 'namespace' NCName EQ uriLiteral ';'
+    ;
+
+moduleImport
+    : 'import' 'module' ('namespace' NCName EQ)? uriLiteral ('at' uriLiteral ( ',' uriLiteral)*)?
+    ;
+
 multiplicativeExpr
-    : unionExpr (( '*' | '\u00D7' | 'div' | '\u00F7' | 'idiv' | 'mod') unionExpr)*
+    : unionExpr (('*' | '×' | 'div' | '÷' | 'idiv' | 'mod') unionExpr)*
     ;
 
 namedFunctionRef
     : eqName '#' IntegerLiteral
     ;
 
+namedRecordTypeDecl
+    : 'declare' annotation* 'record' eqName '(' (extendedFieldDeclaration (',' extendedFieldDeclaration)*)? ')'
+    ;
+
 namespaceDecl
-    : 'declare' 'namespace' QName '=' uriLiteral
+    : 'declare' 'namespace' QName EQ uriLiteral
     ;
 
 namespaceNodeType
@@ -617,6 +875,10 @@ nameTestUnion
     : nameTest ('|' nameTest)*
     ;
 
+nextVar
+    : 'next' varName
+    ;
+
 nodeComp
     : 'is'
     | 'is-not'
@@ -627,7 +889,8 @@ nodeComp
     ;
 
 nodeConstructor
-    : computedConstructor
+    : directConstructor
+    | computedConstructor
     ;
 
 nodeFollows
@@ -648,6 +911,8 @@ nodeTest
 
 numericLiteral
     : IntegerLiteral
+    | HexIntegerLiteral
+    | BinaryIntegerLiteral
     | DecimalLiteral
     | DoubleLiteral
     ;
@@ -656,6 +921,30 @@ occurrenceIndicator
     : '?'
     | '*'
     | '+'
+    ;
+
+optionDecl
+    : 'declare' 'option' eqName StringLiteral
+    ;
+
+orderByClause
+    : 'stable'? 'order' 'by' orderSpec (',' orderSpec)*
+    ;
+
+orderedExpr
+    : 'ordered' enclosedExpr
+    ;
+
+orderingModeDecl
+    : 'declare' 'ordering' ('ordered' | 'unordered')
+    ;
+
+orderModifier
+    : ('ascending' | 'descending')? ('empty' ('greatest' | 'least'))? ('collation' uriLiteral)?
+    ;
+
+orderSpec
+    : exprSingle orderModifier
     ;
 
 orExpr
@@ -668,6 +957,14 @@ otherwiseExpr
 
 paramList
     : (varNameAndType (',' varNameAndType)*)?
+    ;
+
+paramListWithDefaults
+    : paramWithDefault (',' paramWithDefault)*
+    ;
+
+paramWithDefault
+    : varNameAndType (':=' exprSingle)?
     ;
 
 parenthesizedExpr
@@ -692,7 +989,7 @@ positionalArguments
     ;
 
 positionalVar
-    : 'at' '$' eqName
+    : 'at' varName
     ;
 
 postfixExpr
@@ -702,32 +999,61 @@ postfixExpr
         | lookup
         | '=?>' QName positionalArgumentList
     )*
+//    | filterExpr
+//    | dynamicFunctionCall
+//    | lookupExpr
+//    | methodCall
     ;
+
+//pragma
+//    : '(#' S eqName (S PragmaContents)? '#)'
+//    ;
 
 predicate
     : '[' expr ']'
     ;
 
-predicateList
-    : predicate*
+preserveMode
+    : 'preserve'
+    | 'no-preserve'
+    ;
+
+previousVar
+    : 'previous' varName
     ;
 
 primaryExpr
-    : literal
-    | varRef
-    | parenthesizedExpr
+    : arrayConstructor
+    | literal
     | contextValueRef
     | functionCall
-    | nodeConstructor
     | functionItemExpr
     | mapConstructor
-    | arrayConstructor
+    | nodeConstructor
+    | orderedExpr
+    | parenthesizedExpr
     | stringTemplate
+    | StringConstructor
     | unaryLookup
+    | unorderedExpr
+    | varRef
     ;
 
 processingInstructionNodeType
     : 'processing-instruction' '(' (QName | StringLiteral)? ')'
+    ;
+
+prolog
+    : ((defaultNamespaceDecl | setter | namespaceDecl | import_) ';')* (
+        (
+            contextValueDecl
+            | varDecl
+            | functionDecl
+            | itemTypeDecl
+            | namedRecordTypeDecl
+            | optionDecl
+        ) ';'
+    )*
     ;
 
 qNameLiteral
@@ -740,6 +1066,22 @@ quantifiedExpr
 
 quantifierBinding
     : varNameAndType 'in' exprSingle
+    ;
+
+queryBody
+    : expr
+    ;
+
+queryList
+    : module_ ('%%%' module_?)* EOF
+    ;
+
+quotStringLiteral
+    : QuotAttrContentChar
+    | EscapeQuot
+    | PredefinedEntityRef
+    | CharRef
+    | OC expr CC
     ;
 
 rangeExpr
@@ -767,11 +1109,15 @@ regularItemType
     ;
 
 relativePathExpr
-    : stepExpr (( '/' | '//') stepExpr)*
+    : stepExpr (('/' | '//') stepExpr)*
     ;
 
 restrictedDynamicCall
     : (varRef | parenthesizedExpr | functionItemExpr | mapConstructor | arrayConstructor) positionalArgumentList
+    ;
+
+returnClause
+    : 'return' exprSingle
     ;
 
 schemaAttributeNodeType
@@ -780,6 +1126,15 @@ schemaAttributeNodeType
 
 schemaElementNodeType
     : 'schema-element' '(' elementName ')'
+    ;
+
+schemaImport
+    : 'import' 'schema' schemaPrefix? uriLiteral ('at' uriLiteral ( ',' uriLiteral)*)?
+    ;
+
+schemaPrefix
+    : 'namespace' NCName EQ
+    | 'fixed'? 'default' 'element' 'namespace'
     ;
 
 selector
@@ -796,6 +1151,21 @@ sequenceType
     | itemType occurrenceIndicator?
     ;
 
+sequenceTypeUnion
+    : sequenceType+
+    ;
+
+setter
+    : boundarySpaceDecl
+    | defaultCollationDecl
+    | baseURIDecl
+    | constructionDecl
+    | orderingModeDecl
+    | emptyOrderDecl
+    | copyNamespacesDecl
+    | decimalFormatDecl
+    ;
+
 simpleMapExpr
     : pathExpr ('!' pathExpr)*
     ;
@@ -805,8 +1175,12 @@ simpleNodeTest
     | selector
     ;
 
+slidingWindowClause
+    : 'sliding' 'window' varNameAndType 'in' exprSingle windowStartCondition? windowEndCondition
+    ;
+
 squareArrayConstructor
-    : '[' (exprSingle ( ',' exprSingle)*)? ']'
+    : '[' (exprSingle (',' exprSingle)*)? ']'
     ;
 
 stepExpr
@@ -825,12 +1199,48 @@ stringTemplate
     : StringTemplate
     ;
 
+switchCaseClause
+    : ('case' switchCaseOperand)+ 'return' exprSingle
+    ;
+
+switchCaseOperand
+    : expr
+    ;
+
+switchCases
+    : switchCaseClause+ 'default' 'return' exprSingle
+    ;
+
+switchComparand
+    : '(' expr? ')'
+    ;
+
+switchExpr
+    : 'switch' switchComparand (switchCases | bracedSwitchCases)
+    ;
+
 textNodeType
     : 'text' '(' ')'
     ;
 
+traceClause
+    : 'trace' exprSingle
+    ;
+
 treatExpr
     : castableExpr ('treat' 'as' sequenceType)?
+    ;
+
+tryCatchExpr
+    : tryClause ((catchClause+ finallyClause?) | finallyClause)
+    ;
+
+tryClause
+    : 'try' enclosedExpr
+    ;
+
+tumblingWindowClause
+    : 'tumbling' 'window' varNameAndType 'in' exprSingle windowStartCondition? windowEndCondition?
     ;
 
 typedArrayType
@@ -846,7 +1256,7 @@ typedFunctionParam
     ;
 
 typedFunctionType
-    : ('function' | 'fn') '(' (typedFunctionParam (',' typedFunctionParam)*)? ')' 'as' sequenceType
+    : ('function' | 'fn') '(' typedFunctionParam* ')' 'as' sequenceType
     ;
 
 typedMapType
@@ -854,15 +1264,19 @@ typedMapType
     ;
 
 typedRecordType
-    : 'record' '(' (fieldDeclaration (',' fieldDeclaration)* (',' '...')?)? ')'
+    : 'record' '(' (fieldDeclaration (',' fieldDeclaration)*)? ')'
     ;
 
 typeName_
     : eqName
     ;
 
-simpleTypeName
-    : typeName_
+typeswitchCases
+    : caseClause+ 'default' varName? 'return' exprSingle
+    ;
+
+typeswitchExpr
+    : 'typeswitch' '(' expr ')' (typeswitchCases | bracedTypeswitchCases)
     ;
 
 typeTest
@@ -884,15 +1298,36 @@ unbracedActions
     ;
 
 unionExpr
-    : intersectExceptExpr (( 'union' | '|') intersectExceptExpr)*
+    : intersectExceptExpr (('union' | '|') intersectExceptExpr)*
     ;
 
 unionNodeTest
-    : '(' simpleNodeTest ('|' simpleNodeTest)+ ')'
+    : '(' simpleNodeTest ('|' simpleNodeTest)* ')'
+    ;
+
+unorderedExpr
+    : 'unordered' enclosedExpr
+    ;
+
+unreservedName
+    : eqName
+    ;
+
+unreservedNCName
+    : NCName
     ;
 
 uriLiteral
     : StringLiteral
+    ;
+
+validateExpr
+    : 'validate' (validationMode | ('type' typeName_))? '{' expr '}'
+    ;
+
+validationMode
+    : 'lax'
+    | 'strict'
     ;
 
 valueComp
@@ -905,7 +1340,24 @@ valueComp
     ;
 
 valueExpr
-    : simpleMapExpr
+    : validateExpr
+    | extensionExpr
+    | simpleMapExpr
+    ;
+
+varDecl
+    : 'declare' annotation* 'variable' varNameAndType (
+        ':=' varValue
+        | 'external' (':=' varDefaultValue)?
+    )
+    ;
+
+varDefaultValue
+    : exprSingle
+    ;
+
+varName
+    : '$' eqName
     ;
 
 varNameAndType
@@ -916,11 +1368,40 @@ varRef
     : '$' eqName
     ;
 
+varValue
+    : exprSingle
+    ;
+
+versionDecl
+    : 'xquery' (('encoding' StringLiteral) | ('version' StringLiteral ('encoding' StringLiteral)?)) ';'
+    ;
+
+whereClause
+    : 'where' exprSingle
+    ;
+
+whileClause
+    : 'while' exprSingle
+    ;
+
 wildcard
     : '*'
-    | QName ':*'
-    | '*:' QName
-    | BracedURILiteral '*'
+    ;
+
+windowClause
+    : 'for' (tumblingWindowClause | slidingWindowClause)
+    ;
+
+windowEndCondition
+    : 'only'? 'end' windowVars ('when' exprSingle)?
+    ;
+
+windowStartCondition
+    : 'start' windowVars ('when' exprSingle)?
+    ;
+
+windowVars
+    : currentVar? positionalVar? previousVar? nextVar?
     ;
 
 xNodeType
@@ -936,10 +1417,44 @@ xNodeType
     | anyXNodeType
     ;
 
-xPath
-    : (defaultElementNamespaceDecl ';')? (namespaceDecl ';')* expr EOF
+
+
+// XQuery Update Facility 1.0
+
+insertExprTargetChoice
+    : ('as' ('first' | 'last'))? 'into'
+    | 'after'
+    | 'before'
     ;
 
-auxilary
-    : (expr ';')+ EOF
+insertExpr
+    : 'insert' ('node' | 'nodes') sourceExpr insertExprTargetChoice targetExpr
+    ;
+
+deleteExpr
+    : 'delete' ('node' | 'nodes') targetExpr
+    ;
+
+replaceExpr
+    : 'replace' ('value' 'of')? 'node' targetExpr 'with' exprSingle
+    ;
+
+renameExpr
+    : 'rename' 'node' targetExpr 'as' newNameExpr
+    ;
+
+transformExpr
+    : 'copy' '$' varName ':=' exprSingle (',' '$' varName ':=' exprSingle)* 'modify' exprSingle 'return' exprSingle
+    ;
+
+sourceExpr
+    : exprSingle
+    ;
+
+targetExpr
+    : exprSingle
+    ;
+
+newNameExpr
+    : exprSingle
     ;
