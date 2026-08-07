@@ -109,7 +109,7 @@ namespace Trash
                         }
                         else
                         {
-                            code = File.ReadAllText(f);
+                            code = ReadAllTextShared(f);
                         }
 
                         parsing_result_set = DoParse(code, f);
@@ -140,7 +140,7 @@ namespace Trash
                         }
 
                         string code = null;
-                        code = File.ReadAllText(sgfn);
+                        code = ReadAllTextShared(sgfn);
                         parsing_result_set = DoParse(code, sgfn);
                         pr.Add(parsing_result_set);
                     }
@@ -1507,11 +1507,18 @@ namespace Trash
                                     );
                             to = FixedName(f, config, test);
                         }
-                        var content = File.ReadAllText(from);
+                        var content = ReadAllTextShared(from);
                         InstantiateTemplateFile(config, test, from, to, content);
                     }
                 }
             }
+        }
+
+        static string ReadAllTextShared(string path)
+        {
+            using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var sr = new StreamReader(fs);
+            return sr.ReadToEnd();
         }
 
         IEnumerable<string> EnumerateLines(TextReader reader)
@@ -1688,7 +1695,7 @@ namespace Trash
                 }
                 else
                 {
-                    content = File.ReadAllText(prefix_to_remove + from);
+                    content = ReadAllTextShared(prefix_to_remove + from);
                 }
 
                 InstantiateTemplateFile(config, test, from, to, content);
