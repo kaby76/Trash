@@ -7,7 +7,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
 use antlr4_runtime::{
-    AntlrError, CommonTokenStream, ErrorListener, InputStream, IntStream, Recognizer, TokenView,
+    CommonTokenStream, ErrorListener, InputStream, IntStream, Recognizer, SyntaxErrorEvent,
 };
 
 mod r#gen;
@@ -32,18 +32,14 @@ impl\<R: Recognizer + ?Sized> ErrorListener\<R> for CountingErrorListener {
     fn syntax_error(
         &mut self,
         _recognizer: &R,
-        _offending: Option\<TokenView\<'_>>,
-        line: usize,
-        column: usize,
-        message: &str,
-        _error: Option\<&AntlrError>,
+        event: &SyntaxErrorEvent\<'_>,
     ) {
         if !self.quiet {
-            eprintln!("line {}:{} {}", line, column, message);
+            eprintln!("line {}:{} {}", event.line, event.column, event.message);
         }
         let mut state = self.state.lock().unwrap();
         state.error_count += 1;
-        state.messages.push(format!("line {}:{} {}", line, column, message));
+        state.messages.push(format!("line {}:{} {}", event.line, event.column, event.message));
     }
 }
 
