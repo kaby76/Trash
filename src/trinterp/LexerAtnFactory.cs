@@ -316,12 +316,14 @@ public class LexerAtnFactory : ParserAtnFactory
         if (tokenRef != null)
         {
             var name = GetText(tokenRef).Trim();
+            SetSrcRange(tokenRef, name.Length);
             return MakeLexerTokenRef(name);
         }
         var strLit = ChildTerminal(terminalDef, "STRING_LITERAL");
         if (strLit != null)
         {
             var lit = GetText(strLit).Trim();
+            SetSrcRange(strLit, lit.Length);
             return MakeCharSequence(lit);
         }
         return MakeEpsilonHandle();
@@ -362,8 +364,11 @@ public class LexerAtnFactory : ParserAtnFactory
         if (literals.Count < 2) return MakeEpsilonHandle();
 
         var fromChar = CharValue(GetText(literals[0]).Trim());
-        var toChar = CharValue(GetText(literals[1]).Trim());
+        var toChar   = CharValue(GetText(literals[1]).Trim());
         if (fromChar < 0 || toChar < 0) return MakeEpsilonHandle();
+
+        var endLit = GetText(literals[1]).Trim();
+        SetSrcRange(literals[0], literals[1], endLit.Length);
 
         var set = new IntervalSet();
         set.Add(fromChar, toChar);

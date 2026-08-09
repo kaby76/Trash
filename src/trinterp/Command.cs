@@ -145,12 +145,16 @@ public class Command
         File.WriteAllText(interpPath, interpContent);
         File.WriteAllText(tokensPath, tokensContent);
 
+        StateLocationMap lm = (config.Atn || config.AtnCombined || config.StateMap)
+            ? StateLocationMap.Build(atn)
+            : null;
+
         if (config.Atn)
-            AtnDotWriter.WritePerRule(grammar, atn, outDir);
+            AtnDotWriter.WritePerRule(grammar, atn, outDir, lm);
         if (config.AtnCombined)
-            AtnDotWriter.WriteCombined(grammar, atn, outDir);
+            AtnDotWriter.WriteCombined(grammar, atn, outDir, lm);
         if (config.StateMap)
-            AtnDotWriter.WriteStateMap(grammar, atn, outDir);
+            AtnDotWriter.WriteStateMap(grammar, atn, outDir, lm);
 
         if (config.Verbose)
         {

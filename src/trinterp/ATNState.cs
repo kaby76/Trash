@@ -6,10 +6,17 @@ public abstract class ATNState
 {
     public int stateNumber = -1;
     public int ruleIndex = -1;
-    /// <summary>1-based line in the .g4 source, or -1 if unavailable.</summary>
+    /// <summary>1-based line of the grammar element that enters this state, or -1 if unavailable.</summary>
     public int SourceLine = -1;
-    /// <summary>0-based column in the .g4 source, or -1 if unavailable.</summary>
+    /// <summary>0-based column of the grammar element that enters this state, or -1 if unavailable.</summary>
     public int SourceColumn = -1;
+    /// <summary>
+    /// Exclusive end position of the grammar element whose non-epsilon outgoing transition
+    /// leaves this state. Populated only for "match" states; -1 otherwise.
+    /// Used by StateLocationMap to compute post-transition locations.
+    /// </summary>
+    public int SourceEndLine = -1;
+    public int SourceEndColumn = -1;
     private readonly List<Transition> _transitions = new();
 
     public abstract StateType StateType { get; }

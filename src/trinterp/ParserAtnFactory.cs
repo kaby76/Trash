@@ -26,9 +26,14 @@ public class ParserAtnFactory
     protected int _nextPredIndex;
 
     // Source location of the grammar construct currently being translated into states.
-    // Set by SetSrc() before any NewState<T>() call; propagated into each state's fields.
-    private int _srcLine = -1;
-    private int _srcCol  = -1;
+    // Set by SetSrc() / SetSrcRange() before any NewState<T>() call.
+    // _srcLine/_srcCol    = start of the grammar element (stamped on every new state).
+    // _srcEndLine/_srcEndCol = exclusive end of the grammar element (stamped only on match
+    //                          states; -1 for structural states like block-starts/-ends).
+    private int _srcLine    = -1;
+    private int _srcCol     = -1;
+    private int _srcEndLine = -1;
+    private int _srcEndCol  = -1;
 
 
     public ParserAtnFactory(GrammarModel grammar, OptimizeOptions optimize = null)
@@ -633,12 +638,14 @@ public class ParserAtnFactory
         if (tokenRef != null)
         {
             var name = GetText(tokenRef).Trim();
+            SetSrcRange(tokenRef, name.Length);
             return MakeTokenRef(name);
         }
         var strLit = ChildTerminal(terminalDef, "STRING_LITERAL");
         if (strLit != null)
         {
             var lit = GetText(strLit).Trim();
+            SetSrcRange(strLit, lit.Length);
             return MakeStringLiteral(lit);
         }
         return MakeEpsilonHandle();
@@ -650,6 +657,7 @@ public class ParserAtnFactory
         var nameNode = ChildTerminal(ruleref, "RULE_REF");
         if (nameNode == null) return null;
         var name = GetText(nameNode).Trim();
+        SetSrcRange(nameNode, name.Length);
         return MakeRuleRef(name);
     }
 
@@ -1100,9 +1108,11 @@ public class ParserAtnFactory
     protected T NewState<T>() where T : ATNState, new()
     {
         var s = new T();
-        s.ruleIndex    = _currentRule?.Index ?? -1;
-        s.SourceLine   = _srcLine;
-        s.SourceColumn = _srcCol;
+        s.ruleIndex       = _currentRule?.Index ?? -1;
+        s.SourceLine      = _srcLine;
+        s.SourceColumn    = _srcCol;
+        s.SourceEndLine   = _srcEndLine;
+        s.SourceEndColumn = _srcEndCol;
         _atn.AddState(s);
         return s;
     }
@@ -1110,29 +1120,72 @@ public class ParserAtnFactory
     protected T NewState<T>(RuleModel rule) where T : ATNState, new()
     {
         var s = new T();
-        s.ruleIndex    = rule?.Index ?? -1;
-        s.SourceLine   = _srcLine;
-        s.SourceColumn = _srcCol;
+        s.ruleIndex       = rule?.Index ?? -1;
+        s.SourceLine      = _srcLine;
+        s.SourceColumn    = _srcCol;
+        s.SourceEndLine   = _srcEndLine;
+        s.SourceEndColumn = _srcEndCol;
         _atn.AddState(s);
         return s;
     }
 
     /// <summary>
-    /// Set the source location context that will be stamped onto the next NewState call(s).
-    /// Pass explicit line/column (e.g. from a RuleModel).
+    /// Set the source location context (start only) that will be stamped onto the next NewState call(s).
+    /// Clears any previously set end location.
     /// </summary>
-    protected void SetSrc(int line, int col) { _srcLine = line; _srcCol = col; }
+    protected void SetSrc(int line, int col)
+    {
+        _srcLine    = line;
+        _srcCol     = col;
+        _srcEndLine = -1;
+        _srcEndCol  = -1;
+    }
 
     /// <summary>
     /// Set the source location context from a parse-tree node.
-    /// Walks into the first reachable terminal if <paramref name="node"/> is a non-terminal,
-    /// so it is safe to call with either a token or a rule-node.
+    /// Walks into the first reachable terminal if <paramref name="node"/> is a non-terminal.
+    /// Clears any previously set end location.
     /// </summary>
     protected void SetSrc(UnvParseTreeElement node)
     {
         var (line, col) = SourceOf(node);
-        _srcLine = line;
-        _srcCol  = col;
+        _srcLine    = line;
+        _srcCol     = col;
+        _srcEndLine = -1;
+        _srcEndCol  = -1;
+    }
+
+    /// <summary>
+    /// Set both start and exclusive-end source location from a terminal token node.
+    /// Call this instead of <see cref="SetSrc(UnvParseTreeElement)"/> when creating "match" states
+    /// so that <see cref="StateLocationMap"/> can compute post-transition locations for the
+    /// successor state via <c>DirectPostLocs</c>.
+    /// </summary>
+    protected void SetSrcRange(UnvParseTreeElement terminal, int textLength)
+    {
+        var line    = SafeGetLine(terminal);
+        var col     = SafeGetColumn(terminal);
+        _srcLine    = line;
+        _srcCol     = col;
+        _srcEndLine = line >= 0 ? line : -1;
+        _srcEndCol  = col >= 0 ? col + textLength : -1;
+    }
+
+    /// <summary>
+    /// Set start location from <paramref name="startTerminal"/> and exclusive-end location
+    /// from the end of <paramref name="endTerminal"/> (its column + <paramref name="endTextLength"/>).
+    /// Use for multi-token grammar elements like character ranges (<c>'a'..'z'</c>).
+    /// </summary>
+    protected void SetSrcRange(UnvParseTreeElement startTerminal, UnvParseTreeElement endTerminal, int endTextLength)
+    {
+        var startLine = SafeGetLine(startTerminal);
+        var startCol  = SafeGetColumn(startTerminal);
+        var endLine   = SafeGetLine(endTerminal);
+        var endCol    = SafeGetColumn(endTerminal);
+        _srcLine    = startLine;
+        _srcCol     = startCol;
+        _srcEndLine = endLine >= 0 ? endLine : -1;
+        _srcEndCol  = endCol >= 0 ? endCol + endTextLength : -1;
     }
 
     protected void AddEpsilon(ATNState from, ATNState to, bool prepend = false)
