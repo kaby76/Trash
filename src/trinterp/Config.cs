@@ -20,6 +20,9 @@ public class Config
     [Option("atn-combined", Required = false, HelpText = "Write a single Graphviz .dot file (<grammarName>.atn.dot) containing all rules.")]
     public bool AtnCombined { get; set; }
 
+    [Option("state-map", Required = false, HelpText = "Write a TSV file (<grammarName>.state-map.tsv) mapping each ATN state number to its rule and .g4 line/column. Requires trparse -l.")]
+    public bool StateMap { get; set; }
+
     [Option("optimize", Separator = ',', Required = false,
         HelpText = "Comma-separated ATN optimizations to apply: tail-epsilon, merge-sets, none. Default: tail-epsilon,merge-sets.")]
     public IEnumerable<string> Optimize { get; set; } = new[] { "tail-epsilon", "merge-sets" };

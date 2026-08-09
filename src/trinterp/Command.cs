@@ -149,6 +149,8 @@ public class Command
             AtnDotWriter.WritePerRule(grammar, atn, outDir);
         if (config.AtnCombined)
             AtnDotWriter.WriteCombined(grammar, atn, outDir);
+        if (config.StateMap)
+            AtnDotWriter.WriteStateMap(grammar, atn, outDir);
 
         if (config.Verbose)
         {
@@ -159,6 +161,8 @@ public class Command
                     Console.Error.WriteLine($"[trinterp] Wrote {Path.Combine(outDir, rule.Name + ".dot")}");
             if (config.AtnCombined)
                 Console.Error.WriteLine($"[trinterp] Wrote {Path.Combine(outDir, grammar.Name + ".atn.dot")}");
+            if (config.StateMap)
+                Console.Error.WriteLine($"[trinterp] Wrote {Path.Combine(outDir, grammar.Name + ".state-map.tsv")}");
         }
     }
 }

@@ -177,7 +177,9 @@ public class GrammarParser
             IsFragment = false,
             TokenType = 0,
             ModeName = modeName,
-            BodyNode = ruleBlock
+            BodyNode = ruleBlock,
+            SourceLine = SafeGetLine(nameNode),
+            SourceColumn = SafeGetColumn(nameNode),
         };
 
         // Collect rule-level named actions (@init, @after)
@@ -234,6 +236,8 @@ public class GrammarParser
             BodyNode = lexerRuleBlock,
             PerRuleCaseInsensitive = perRuleCaseInsensitive,
             HasRuleOptions = hasRuleOptions,
+            SourceLine = SafeGetLine(nameNode),
+            SourceColumn = SafeGetColumn(nameNode),
         };
         model.Rules.Add(rule);
     }
@@ -551,4 +555,43 @@ public class GrammarParser
     /// <summary>Returns the first terminal child with the given token-type name.</summary>
     public static UnvParseTreeElement ChildTerminal(UnvParseTreeElement node, string tokenTypeName) =>
         node?.Children.FirstOrDefault(c => c.IsTerminal() && c.LocalName == tokenTypeName);
+
+    /// <summary>
+    /// Returns the 1-based line of a terminal node, or -1 if line information was not
+    /// included in the parse (i.e. trparse was not invoked with -l / --line).
+    /// </summary>
+    public static int SafeGetLine(UnvParseTreeElement node)
+    {
+        if (node == null) return -1;
+        try { return node.GetLine(); }
+        catch { return -1; }
+    }
+
+    /// <summary>
+    /// Returns the 0-based column of a terminal node, or -1 if column information was
+    /// not included in the parse.
+    /// </summary>
+    public static int SafeGetColumn(UnvParseTreeElement node)
+    {
+        if (node == null) return -1;
+        try { return node.GetColumn(); }
+        catch { return -1; }
+    }
+
+    /// <summary>
+    /// Returns the source location (line, column) of the first token reachable from
+    /// <paramref name="node"/>. Works for both terminal and non-terminal elements.
+    /// Returns (-1, -1) when line information was not included in the parse.
+    /// </summary>
+    public static (int line, int col) SourceOf(UnvParseTreeElement node)
+    {
+        if (node == null) return (-1, -1);
+        if (node.IsTerminal()) return (SafeGetLine(node), SafeGetColumn(node));
+        foreach (var child in Children(node))
+        {
+            var loc = SourceOf(child);
+            if (loc.line != -1) return loc;
+        }
+        return (-1, -1);
+    }
 }

@@ -25,6 +25,11 @@ public class ParserAtnFactory
     // Global sempred counter (incremented as predicates are encountered).
     protected int _nextPredIndex;
 
+    // Source location of the grammar construct currently being translated into states.
+    // Set by SetSrc() before any NewState<T>() call; propagated into each state's fields.
+    private int _srcLine = -1;
+    private int _srcCol  = -1;
+
 
     public ParserAtnFactory(GrammarModel grammar, OptimizeOptions optimize = null)
     {
@@ -62,6 +67,7 @@ public class ParserAtnFactory
         _atn.ruleToStopState = new RuleStopState[n];
         foreach (var rule in _grammar.Rules)
         {
+            SetSrc(rule.SourceLine, rule.SourceColumn);
             var start = NewState<RuleStartState>(rule);
             var stop = NewState<RuleStopState>(rule);
             start.stopState = stop;
@@ -482,6 +488,7 @@ public class ParserAtnFactory
     protected AtnHandle WalkAlternative(UnvParseTreeElement altNode)
     {
         // alternative : elementOptions? element+  |  (empty)
+        SetSrc(altNode);
         var elements = new List<AtnHandle>();
         foreach (var child in Children(altNode))
         {
@@ -502,6 +509,7 @@ public class ParserAtnFactory
         //         | atom (ebnfSuffix |)
         //         | ebnf
         //         | actionBlock QUESTION? predicateOptions?
+        SetSrc(element);
 
         var actionBlock = Child(element, "actionBlock");
         if (actionBlock != null)
@@ -581,6 +589,7 @@ public class ParserAtnFactory
     protected AtnHandle WalkBlock(UnvParseTreeElement blockNode, UnvParseTreeElement ebnfSuffix)
     {
         // block : LPAREN (optionsSpec? ruleAction* COLON)? altList RPAREN
+        SetSrc(blockNode);
         var altList = Child(blockNode, "altList");
         if (altList == null) return MakeEpsilonHandle();
 
@@ -1091,7 +1100,9 @@ public class ParserAtnFactory
     protected T NewState<T>() where T : ATNState, new()
     {
         var s = new T();
-        s.ruleIndex = _currentRule?.Index ?? -1;
+        s.ruleIndex    = _currentRule?.Index ?? -1;
+        s.SourceLine   = _srcLine;
+        s.SourceColumn = _srcCol;
         _atn.AddState(s);
         return s;
     }
@@ -1099,9 +1110,29 @@ public class ParserAtnFactory
     protected T NewState<T>(RuleModel rule) where T : ATNState, new()
     {
         var s = new T();
-        s.ruleIndex = rule?.Index ?? -1;
+        s.ruleIndex    = rule?.Index ?? -1;
+        s.SourceLine   = _srcLine;
+        s.SourceColumn = _srcCol;
         _atn.AddState(s);
         return s;
+    }
+
+    /// <summary>
+    /// Set the source location context that will be stamped onto the next NewState call(s).
+    /// Pass explicit line/column (e.g. from a RuleModel).
+    /// </summary>
+    protected void SetSrc(int line, int col) { _srcLine = line; _srcCol = col; }
+
+    /// <summary>
+    /// Set the source location context from a parse-tree node.
+    /// Walks into the first reachable terminal if <paramref name="node"/> is a non-terminal,
+    /// so it is safe to call with either a token or a rule-node.
+    /// </summary>
+    protected void SetSrc(UnvParseTreeElement node)
+    {
+        var (line, col) = SourceOf(node);
+        _srcLine = line;
+        _srcCol  = col;
     }
 
     protected void AddEpsilon(ATNState from, ATNState to, bool prepend = false)

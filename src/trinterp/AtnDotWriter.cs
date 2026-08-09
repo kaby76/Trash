@@ -38,6 +38,27 @@ public static class AtnDotWriter
         File.WriteAllText(path, dot);
     }
 
+    /// <summary>
+    /// Writes a tab-separated state map to &lt;grammarName&gt;.state-map.tsv.
+    /// Each row: stateNumber TAB ruleName TAB line TAB col
+    /// Line/col are -1 when trparse was not invoked with -l.
+    /// </summary>
+    public static void WriteStateMap(GrammarModel grammar, ATN atn, string outDir)
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("state\trule\tline\tcol");
+        foreach (var s in atn.states)
+        {
+            if (s == null) continue;
+            string ruleName = s.ruleIndex >= 0 && s.ruleIndex < grammar.Rules.Count
+                ? grammar.Rules[s.ruleIndex].Name
+                : "(none)";
+            sb.AppendLine($"{s.stateNumber}\t{ruleName}\t{s.SourceLine}\t{s.SourceColumn}");
+        }
+        var path = Path.Combine(outDir, grammar.Name + ".state-map.tsv");
+        File.WriteAllText(path, sb.ToString());
+    }
+
     // ---- per-rule digraph ---------------------------------------------------
 
     private static string RuleToDot(string ruleName, RuleStartState start, RuleStopState stop,
@@ -105,7 +126,8 @@ public static class AtnDotWriter
     {
         foreach (var s in states)
         {
-            string nodeId = $"s{s.stateNumber}";
+            string nodeId  = $"s{s.stateNumber}";
+            string tooltip = StateTooltip(s);
             // StarBlockStartState and PlusBlockStartState are always circles even when
             // they appear in decisionToState (multi-alt case); check them before the
             // generic DecisionState branch below.
@@ -119,12 +141,12 @@ public static class AtnDotWriter
                     var ports = new StringBuilder();
                     for (int pi = 0; pi < n; pi++) { if (pi > 0) ports.Append('|'); ports.Append($"<p{pi}>"); }
                     string label = $"{{&rarr;\\n{s.stateNumber}{symbol}\\nd={dLoop}|{{{ports}}}}}";
-                    sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1];");
+                    sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1{tooltip}];");
                 }
                 else
                 {
                     string label = $"&rarr;\\n{s.stateNumber}{symbol}";
-                    sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                    sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
                 }
                 continue;
             }
@@ -150,38 +172,48 @@ public static class AtnDotWriter
                     label = $"{{{s.stateNumber}+\\nd={d}|{{{ports}}}}}";
                 else
                     label = $"{{{s.stateNumber}\\nd={d}|{{{ports}}}}}";
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1{tooltip}];");
             }
             else if (s is BasicBlockStartState || s is TokensStartState)
             {
                 // Block start collapsed to a single alt by OptimizeSets and removed from
                 // decisionToState: render as BLOCK_START circle (→\nN, no decision ports).
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"&rarr;\\n{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"&rarr;\\n{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
             }
             else if (s is StarLoopbackState)
             {
                 string label = $"{s.stateNumber}*";
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
             }
             else if (s is BlockEndState)
             {
                 string label = $"&larr;\\n{s.stateNumber}";
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
             }
             else if (s is LoopEndState)
             {
                 // LoopEnd is a plain circle — no '←' prefix.
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
             }
             else if (s is RuleStopState)
             {
-                sb.AppendLine($"{nodeId}[fontsize=11, label=\"{s.stateNumber}\", shape=doublecircle, fixedsize=true, width=.6];");
+                sb.AppendLine($"{nodeId}[fontsize=11, label=\"{s.stateNumber}\", shape=doublecircle, fixedsize=true, width=.6{tooltip}];");
             }
             else
             {
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
             }
         }
+    }
+
+    /// <summary>
+    /// Returns a DOT tooltip attribute string for <paramref name="s"/> when source location
+    /// is available, e.g. <c>, tooltip="line 5, col 3"</c>. Returns empty string otherwise.
+    /// </summary>
+    private static string StateTooltip(ATNState s)
+    {
+        if (s.SourceLine < 0) return string.Empty;
+        return $", tooltip=\"line {s.SourceLine}, col {s.SourceColumn}\"";
     }
 
     private static void AppendEdges(StringBuilder sb, IEnumerable<ATNState> states,

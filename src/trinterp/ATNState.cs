@@ -6,6 +6,10 @@ public abstract class ATNState
 {
     public int stateNumber = -1;
     public int ruleIndex = -1;
+    /// <summary>1-based line in the .g4 source, or -1 if unavailable.</summary>
+    public int SourceLine = -1;
+    /// <summary>0-based column in the .g4 source, or -1 if unavailable.</summary>
+    public int SourceColumn = -1;
     private readonly List<Transition> _transitions = new();
 
     public abstract StateType StateType { get; }
