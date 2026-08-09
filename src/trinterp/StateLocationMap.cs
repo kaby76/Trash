@@ -68,7 +68,16 @@ public sealed class StateLocationMap
         // For each state u that is the target of a non-epsilon transition from t:
         //   directPost[u] += { (t.SourceEndLine, t.SourceEndColumn) }  (if SourceEndLine ≥ 0)
         //
-        // epsEdges: list of (from, to) for epsilon transitions (used for closure BFS)
+        // epsEdges: list of (from, to) for epsilon transitions (used for closure BFS).
+        //
+        // IMPORTANT: epsilon edges OUT of a RuleStopState are "rule-exit" links added by
+        // AddRuleFollowLinks. They connect the end of one rule to the caller's follow state,
+        // crossing a rule boundary. We deliberately exclude them from both propagation graphs
+        // so that:
+        //   • fwdPre backward propagation stays inside the rule (caller match-state positions
+        //     cannot leak back through the RuleStop into this rule's states), and
+        //   • bwdPost forward propagation stops at the RuleStop (end positions from inside the
+        //     rule cannot bleed into the caller's states via the RuleStop).
 
         var directPre  = new Dictionary<int, HashSet<SourceLoc>>();
         var directPost = new Dictionary<int, HashSet<SourceLoc>>();
@@ -79,13 +88,18 @@ public sealed class StateLocationMap
         {
             if (s == null) continue;
             bool hasNonEps = false;
+            // Epsilon edges from RuleStopState cross rule boundaries; exclude them.
+            bool isRuleStop = s is RuleStopState;
             for (int i = 0; i < s.NumberOfTransitions; i++)
             {
                 var t = s.Transition(i);
                 if (t is EpsilonTransition)
                 {
-                    AddEdge(epsEdgesFrom, s.stateNumber, t.target.stateNumber);
-                    AddEdge(epsEdgesTo,   t.target.stateNumber, s.stateNumber);
+                    if (!isRuleStop)
+                    {
+                        AddEdge(epsEdgesFrom, s.stateNumber, t.target.stateNumber);
+                        AddEdge(epsEdgesTo,   t.target.stateNumber, s.stateNumber);
+                    }
                 }
                 else
                 {
