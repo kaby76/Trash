@@ -255,9 +255,6 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
 
     private static void InsertNodeAsLastChild(UnvParseTreeNode target, XdmItem item)
     {
-        // TreeEdits has no AppendChild; use InsertAfter on the last child, or
-        // InsertBefore a sentinel. Simplest: InsertAfter the target itself if it
-        // has no children, else after the last child.
         var lastChild = target.ChildNodes.Length > 0
             ? target.ChildNodes.item(target.ChildNodes.Length - 1) as UnvParseTreeNode
             : null;
@@ -265,7 +262,7 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
         if (lastChild != null)
             InsertNodeAfter(lastChild, item);
         else
-            InsertNodeAfter(target, item);
+            InsertDirectChild(target, 0, item);
     }
 
     private static void InsertNodeAsFirstChild(UnvParseTreeNode target, XdmItem item)
@@ -277,6 +274,31 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
         if (firstChild != null)
             InsertNodeBefore(firstChild, item);
         else
-            InsertNodeAfter(target, item);
+            InsertDirectChild(target, 0, item);
+    }
+
+    private static void InsertDirectChild(UnvParseTreeNode parent, int index, XdmItem item)
+    {
+        UnvParseTreeNode nodeToInsert;
+        if (item is XdmAttribute)
+        {
+            var attrNode = MakeAttrNode(item);
+            if (attrNode == null) return;
+            nodeToInsert = attrNode;
+        }
+        else
+        {
+            var src = ExtractSource(item);
+            if (src != null)
+                nodeToInsert = src;
+            else
+            {
+                var text = new UnvParseTreeText();
+                text.Data = item.StringValue;
+                nodeToInsert = text;
+            }
+        }
+        parent.ChildNodes.Insert(index, nodeToInsert);
+        nodeToInsert.ParentNode = parent;
     }
 }

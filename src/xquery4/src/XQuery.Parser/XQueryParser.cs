@@ -367,7 +367,7 @@ public class XQueryParser
             return new IfExpr { Condition = cond, Then = then, Else = else_, Line = ctx.Start.Line, Column = ctx.Start.Column };
         }
 
-        // ── Switch / Typeswitch ──���────────────────────────────────────────────
+        // ── Switch / Typeswitch ─────────────────────────────────────────────────
 
         private ExprNode BuildSwitchExpr(XQuery4Parser.SwitchExprContext ctx)
         {
@@ -1112,7 +1112,7 @@ public class XQueryParser
             return new ArrayConstructorExpr { Members = inner != null ? [inner] : [], IsCurly = true, Line = ctx.Start.Line, Column = ctx.Start.Column };
         }
 
-        // ── Comparison operators ─────────────────────────────────────────���────
+        // ── Comparison operators ────────────────────────────────────────────────
 
         private static ComparisonOperator GetValueCompOp(XQuery4Parser.ValueCompContext ctx)
         {
