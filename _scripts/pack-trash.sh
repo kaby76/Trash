@@ -44,7 +44,6 @@ TOOLS=(
     trparse
     trperf
 #   trpiggy
-    trquery
     trrename
 #    trrr
 #    trrup
@@ -62,6 +61,7 @@ TOOLS=(
     trungroup
     trwdog
     trxpath
+    trxquery
     trxml
     trxml2
 )
