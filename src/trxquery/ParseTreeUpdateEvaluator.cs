@@ -201,8 +201,36 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
         return sb.ToString();
     }
 
+    private static UnvParseTreeAttr? MakeAttrNode(XdmItem item)
+    {
+        if (item is AdapterAttribute aa)
+        {
+            var clone = new UnvParseTreeAttr(aa.Source);
+            clone.Channel = aa.Source.Channel;
+            clone.TokenType = aa.Source.TokenType;
+            clone.ParentNode = null;
+            clone.OwnerElement = null;
+            return clone;
+        }
+        if (item is XdmAttribute xattr)
+        {
+            var a = new UnvParseTreeAttr();
+            a.Name = xattr.LocalName;
+            a.LocalName = xattr.LocalName;
+            a.StringValue = xattr.Value;
+            return a;
+        }
+        return null;
+    }
+
     private static void InsertNodeBefore(UnvParseTreeNode target, XdmItem item)
     {
+        if (item is XdmAttribute)
+        {
+            var attrNode = MakeAttrNode(item);
+            if (attrNode != null) TreeEdits.InsertBefore(target, attrNode);
+            return;
+        }
         var src = ExtractSource(item);
         if (src != null)
             TreeEdits.InsertBefore(target, src);
@@ -212,6 +240,12 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
 
     private static void InsertNodeAfter(UnvParseTreeNode target, XdmItem item)
     {
+        if (item is XdmAttribute)
+        {
+            var attrNode = MakeAttrNode(item);
+            if (attrNode != null) TreeEdits.InsertAfter(target, attrNode);
+            return;
+        }
         var src = ExtractSource(item);
         if (src != null)
             TreeEdits.InsertAfter(target, src);
