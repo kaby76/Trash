@@ -43,7 +43,6 @@ public class Program
         { "trparse",      "trparse"      },
         { "trperf",       "trperf"       },
 //      { "trpiggy",      "trpiggy"      },
-        { "trquery",      "trquery"      },
         { "trrename",     "trrename"     },
 //      { "trrr",         "trrr"         },
 //      { "trrup",        "trrup"        },
@@ -61,6 +60,7 @@ public class Program
         { "trungroup",    "trungroup"    },
         { "trwdog",       "trwdog"       },
         { "trxpath",      "trxpath"      },
+        { "trxquery",     "trxquery"     },
         { "trxml",        "trxml"        },
         { "trxml2",       "trxml2"       },
         // short aliases (strip the "tr" / "tri" prefix)
@@ -91,7 +91,6 @@ public class Program
         { "parse",        "trparse"      },
         { "perf",         "trperf"       },
 //      { "piggy",        "trpiggy"      },
-        { "query",        "trquery"      },
         { "rename",       "trrename"     },
 //      { "rr",           "trrr"         },
 //      { "rup",          "trrup"        },
@@ -109,6 +108,7 @@ public class Program
         { "ungroup",      "trungroup"    },
         { "wdog",         "trwdog"       },
         { "xpath",        "trxpath"      },
+        { "xquery",       "trxquery"     },
         { "xml",          "trxml"        },
         { "xml2",         "trxml2"       },
     };
