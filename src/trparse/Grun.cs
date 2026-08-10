@@ -210,8 +210,10 @@ public class Grun
         // Interp-file-based Earley parsing path
         if (config.PInterp != null && config.LInterp != null)
         {
+            var pinterp = ResolveInterpPath(config.PInterp, config.Lib);
+            var linterp = ResolveInterpPath(config.LInterp, config.Lib);
             var rs = Trash.EarleyAtn.InterpRunner.Run(
-                config.PInterp, config.LInterp, txt, input_name, config.LineNumbers);
+                pinterp, linterp, txt, input_name, config.LineNumbers);
             data.Add(rs);
             System.Console.Error.WriteLine(prefix + "Earley " + row_number + " " + input_name + " success");
             return 0;
@@ -395,5 +397,12 @@ public class Grun
             }
         }
         return result == "success" ? 0 : 1;
+    }
+
+    private static string ResolveInterpPath(string path, string lib)
+    {
+        if (string.IsNullOrEmpty(lib) || Path.IsPathRooted(path))
+            return path;
+        return Path.Combine(lib, path);
     }
 }
