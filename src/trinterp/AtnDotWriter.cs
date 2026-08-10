@@ -51,8 +51,9 @@ public static class AtnDotWriter
     public static string FormatStateMap(GrammarModel grammar, ATN atn, StateLocationMap lm)
     {
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine();
-        sb.AppendLine("state map:");
+        sb.Append('\n');           // end the atn: data line (Serialize uses Append, no trailing \n)
+        sb.Append('\n');           // blank line before section
+        sb.Append("state map:\n");
         foreach (var s in atn.states)
         {
             if (s == null) continue;
@@ -63,9 +64,9 @@ public static class AtnDotWriter
             string locsStr = locs.Count == 0
                 ? "-"
                 : string.Join(";", Sorted(locs).Select(l => $"{l.Line}:{l.Col}"));
-            sb.AppendLine($"{s.stateNumber}\t{ruleName}\t{locsStr}");
+            sb.Append($"{s.stateNumber}\t{ruleName}\t{locsStr}\n");
         }
-        sb.AppendLine();
+        sb.Append('\n');
         return sb.ToString();
     }
 
