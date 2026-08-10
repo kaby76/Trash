@@ -123,6 +123,11 @@ public class Command
             return;
         }
 
+        // ---- Build location map (needed for --state-map, --atn, --atn-combined) ----
+        StateLocationMap lm = (config.Atn || config.AtnCombined || config.StateMap)
+            ? StateLocationMap.Build(atn)
+            : null;
+
         // ---- Format content ----
         string interpContent;
         string tokensContent;
@@ -137,6 +142,9 @@ public class Command
             return;
         }
 
+        if (config.StateMap)
+            interpContent += AtnDotWriter.FormatStateMap(grammar, atn, lm);
+
         // ---- Write files ----
         var baseName = grammar.Name;
         var interpPath = Path.Combine(outDir, baseName + ".interp");
@@ -145,16 +153,10 @@ public class Command
         File.WriteAllText(interpPath, interpContent);
         File.WriteAllText(tokensPath, tokensContent);
 
-        StateLocationMap lm = (config.Atn || config.AtnCombined || config.StateMap)
-            ? StateLocationMap.Build(atn)
-            : null;
-
         if (config.Atn)
             AtnDotWriter.WritePerRule(grammar, atn, outDir, lm);
         if (config.AtnCombined)
             AtnDotWriter.WriteCombined(grammar, atn, outDir, lm);
-        if (config.StateMap)
-            AtnDotWriter.WriteStateMap(grammar, atn, outDir, lm);
 
         if (config.Verbose)
         {
@@ -165,8 +167,6 @@ public class Command
                     Console.Error.WriteLine($"[trinterp] Wrote {Path.Combine(outDir, rule.Name + ".dot")}");
             if (config.AtnCombined)
                 Console.Error.WriteLine($"[trinterp] Wrote {Path.Combine(outDir, grammar.Name + ".atn.dot")}");
-            if (config.StateMap)
-                Console.Error.WriteLine($"[trinterp] Wrote {Path.Combine(outDir, grammar.Name + ".state-map.tsv")}");
         }
     }
 }

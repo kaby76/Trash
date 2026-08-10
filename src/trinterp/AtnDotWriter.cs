@@ -42,17 +42,17 @@ public static class AtnDotWriter
     }
 
     /// <summary>
-    /// Writes a tab-separated state map to &lt;grammarName&gt;.state-map.tsv.
+    /// Formats the state map as a "state map:" section suitable for appending to a .interp file.
     /// Each row: stateNumber TAB ruleName TAB locations
     /// where locations is a semicolon-separated list of "line:col" pairs (1-based line,
     /// 0-based col), or "-" when no source location is available.
     /// Requires trparse -l to have been used; otherwise all locations will be "-".
     /// </summary>
-    public static void WriteStateMap(GrammarModel grammar, ATN atn, string outDir,
-                                     StateLocationMap lm)
+    public static string FormatStateMap(GrammarModel grammar, ATN atn, StateLocationMap lm)
     {
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine("state\trule\tlocations");
+        sb.AppendLine();
+        sb.AppendLine("state map:");
         foreach (var s in atn.states)
         {
             if (s == null) continue;
@@ -65,8 +65,8 @@ public static class AtnDotWriter
                 : string.Join(";", Sorted(locs).Select(l => $"{l.Line}:{l.Col}"));
             sb.AppendLine($"{s.stateNumber}\t{ruleName}\t{locsStr}");
         }
-        var path = Path.Combine(outDir, grammar.Name + ".state-map.tsv");
-        File.WriteAllText(path, sb.ToString());
+        sb.AppendLine();
+        return sb.ToString();
     }
 
     // ---- per-rule digraph ---------------------------------------------------
