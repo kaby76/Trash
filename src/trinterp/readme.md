@@ -6,7 +6,7 @@ Generate ANTLR4 `.interp` files from a grammar parse tree
 
 ## Description
 
-Reads an Antlr4 grammar parse tree from stdin (as produced by `trparse`) and
+Reads an Antlr4 grammar parse tree from stdin (as produced by `dotnet trash parse`) and
 writes `.interp` and `.tokens` files to the output directory. Supports both
 lexer and parser grammars, as well as combined grammars (which produce a lexer
 and parser `.interp` pair).
@@ -28,8 +28,8 @@ consume them without needing the generated target-language source.
 
 ## Examples
 
-    trparse CLexer.g4 CParser.g4 | trinterp -o out/
-    trparse Heavy.g4 | trinterp --actions-in-interp -o out/
+    dotnet trash parse CLexer.g4 CParser.g4 | dotnet trash interp -o out/
+    dotnet trash parse Heavy.g4 | dotnet trash interp --actions-in-interp -o out/
 
 ## Current version
 

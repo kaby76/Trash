@@ -558,7 +558,7 @@ public class GrammarParser
 
     /// <summary>
     /// Returns the 1-based line of a terminal node, or -1 if line information was not
-    /// included in the parse (i.e. trparse was not invoked with -l / --line).
+    /// included in the parse (i.e. <c>dotnet trash parse</c> was not invoked with -l / --line).
     /// </summary>
     public static int SafeGetLine(UnvParseTreeElement node)
     {

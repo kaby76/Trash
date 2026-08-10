@@ -15,7 +15,7 @@ public class Command
 {
     public string Help() =>
         "trinterp: Generate .interp and .tokens files from an ANTLRv4 grammar parse tree.\n" +
-        "Usage: trparse grammar.g4 | trinterp [options]\n";
+        "Usage: dotnet trash parse grammar.g4 | dotnet trash interp [options]\n";
 
     public void Execute(Config config)
     {

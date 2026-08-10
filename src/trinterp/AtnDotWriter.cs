@@ -46,7 +46,7 @@ public static class AtnDotWriter
     /// Each row: stateNumber TAB ruleName TAB locations
     /// where locations is a semicolon-separated list of "line:col" pairs (1-based line,
     /// 0-based col), or "-" when no source location is available.
-    /// Requires trparse -l to have been used; otherwise all locations will be "-".
+    /// Requires <c>dotnet trash parse -l</c> to have been used; otherwise all locations will be "-".
     /// </summary>
     public static string FormatStateMap(GrammarModel grammar, ATN atn, StateLocationMap lm)
     {
