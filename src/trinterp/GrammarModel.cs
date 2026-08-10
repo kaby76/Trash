@@ -15,6 +15,10 @@ public class RuleModel
     public string ModeName;     // lexer only: which mode the rule lives in
     public UnvParseTreeElement BodyNode; // parse tree node of the rule body
     public string ImplicitLiteral; // for T__N rules created from string literals in combined grammars
+    /// <summary>1-based line of the rule name token in the .g4 source, or -1 if unavailable.</summary>
+    public int SourceLine = -1;
+    /// <summary>0-based column of the rule name token in the .g4 source, or -1 if unavailable.</summary>
+    public int SourceColumn = -1;
     // Per-rule caseInsensitive option: null = inherit from grammar, true/false = explicit override.
     public bool? PerRuleCaseInsensitive;
     // True when the rule has a per-rule optionsSpec (affects StringLiteralToType aliasing).

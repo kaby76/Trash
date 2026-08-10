@@ -25,6 +25,16 @@ public class ParserAtnFactory
     // Global sempred counter (incremented as predicates are encountered).
     protected int _nextPredIndex;
 
+    // Source location of the grammar construct currently being translated into states.
+    // Set by SetSrc() / SetSrcRange() before any NewState<T>() call.
+    // _srcLine/_srcCol    = start of the grammar element (stamped on every new state).
+    // _srcEndLine/_srcEndCol = exclusive end of the grammar element (stamped only on match
+    //                          states; -1 for structural states like block-starts/-ends).
+    private int _srcLine    = -1;
+    private int _srcCol     = -1;
+    private int _srcEndLine = -1;
+    private int _srcEndCol  = -1;
+
 
     public ParserAtnFactory(GrammarModel grammar, OptimizeOptions optimize = null)
     {
@@ -62,6 +72,7 @@ public class ParserAtnFactory
         _atn.ruleToStopState = new RuleStopState[n];
         foreach (var rule in _grammar.Rules)
         {
+            SetSrc(rule.SourceLine, rule.SourceColumn);
             var start = NewState<RuleStartState>(rule);
             var stop = NewState<RuleStopState>(rule);
             start.stopState = stop;
@@ -482,6 +493,7 @@ public class ParserAtnFactory
     protected AtnHandle WalkAlternative(UnvParseTreeElement altNode)
     {
         // alternative : elementOptions? element+  |  (empty)
+        SetSrc(altNode);
         var elements = new List<AtnHandle>();
         foreach (var child in Children(altNode))
         {
@@ -502,6 +514,7 @@ public class ParserAtnFactory
         //         | atom (ebnfSuffix |)
         //         | ebnf
         //         | actionBlock QUESTION? predicateOptions?
+        SetSrc(element);
 
         var actionBlock = Child(element, "actionBlock");
         if (actionBlock != null)
@@ -581,6 +594,7 @@ public class ParserAtnFactory
     protected AtnHandle WalkBlock(UnvParseTreeElement blockNode, UnvParseTreeElement ebnfSuffix)
     {
         // block : LPAREN (optionsSpec? ruleAction* COLON)? altList RPAREN
+        SetSrc(blockNode);
         var altList = Child(blockNode, "altList");
         if (altList == null) return MakeEpsilonHandle();
 
@@ -624,12 +638,14 @@ public class ParserAtnFactory
         if (tokenRef != null)
         {
             var name = GetText(tokenRef).Trim();
+            SetSrcRange(tokenRef, name.Length);
             return MakeTokenRef(name);
         }
         var strLit = ChildTerminal(terminalDef, "STRING_LITERAL");
         if (strLit != null)
         {
             var lit = GetText(strLit).Trim();
+            SetSrcRange(strLit, lit.Length);
             return MakeStringLiteral(lit);
         }
         return MakeEpsilonHandle();
@@ -641,6 +657,7 @@ public class ParserAtnFactory
         var nameNode = ChildTerminal(ruleref, "RULE_REF");
         if (nameNode == null) return null;
         var name = GetText(nameNode).Trim();
+        SetSrcRange(nameNode, name.Length);
         return MakeRuleRef(name);
     }
 
@@ -695,6 +712,32 @@ public class ParserAtnFactory
     protected AtnHandle MakeBlock(UnvParseTreeElement blkCtx, List<AtnHandle> alts, UnvParseTreeElement ebnfSuffix)
     {
         if (alts.Count == 0) return MakeEpsilonHandle();
+
+        // Restore block source position before creating any structural states.
+        // Walking the alternatives (via WalkBlock) overwrites _srcLine/_srcCol with the
+        // position of the last grammar element inside the block.  We need all block-level
+        // states (the collapsed set state, the BasicBlockStartState, BlockEndState) to be
+        // stamped with the block's own start position, not the last alt's position.
+        //
+        // For suffixed blocks (?, *, +) we also record the exclusive end of the suffix token
+        // as SourceEndLine/SourceEndColumn.  For optional (?) blocks this end position is
+        // used by StateLocationMap to attribute the "skip" location to the decision state.
+        if (blkCtx != null)
+        {
+            var (blockLine, blockCol) = SourceOf(blkCtx);
+            if (ebnfSuffix != null && blockLine >= 0)
+            {
+                var (sfxLine, sfxCol) = SourceOf(ebnfSuffix);
+                var sfxText           = GetText(ebnfSuffix).Trim();
+                SetSrcRange(blockLine, blockCol,
+                            sfxLine >= 0 ? sfxLine : -1,
+                            sfxCol  >= 0 ? sfxCol + sfxText.Length : -1);
+            }
+            else
+            {
+                SetSrc(blockLine, blockCol);
+            }
+        }
 
         // antlr4's BlockSetTransformer pre-processes the grammar AST to collapse
         // blocks where every alternative is a single atom/range/set into one SET
@@ -1091,7 +1134,11 @@ public class ParserAtnFactory
     protected T NewState<T>() where T : ATNState, new()
     {
         var s = new T();
-        s.ruleIndex = _currentRule?.Index ?? -1;
+        s.ruleIndex       = _currentRule?.Index ?? -1;
+        s.SourceLine      = _srcLine;
+        s.SourceColumn    = _srcCol;
+        s.SourceEndLine   = _srcEndLine;
+        s.SourceEndColumn = _srcEndCol;
         _atn.AddState(s);
         return s;
     }
@@ -1099,9 +1146,84 @@ public class ParserAtnFactory
     protected T NewState<T>(RuleModel rule) where T : ATNState, new()
     {
         var s = new T();
-        s.ruleIndex = rule?.Index ?? -1;
+        s.ruleIndex       = rule?.Index ?? -1;
+        s.SourceLine      = _srcLine;
+        s.SourceColumn    = _srcCol;
+        s.SourceEndLine   = _srcEndLine;
+        s.SourceEndColumn = _srcEndCol;
         _atn.AddState(s);
         return s;
+    }
+
+    /// <summary>
+    /// Set the source location context (start only) that will be stamped onto the next NewState call(s).
+    /// Clears any previously set end location.
+    /// </summary>
+    protected void SetSrc(int line, int col)
+    {
+        _srcLine    = line;
+        _srcCol     = col;
+        _srcEndLine = -1;
+        _srcEndCol  = -1;
+    }
+
+    /// <summary>
+    /// Set the source location context from a parse-tree node.
+    /// Walks into the first reachable terminal if <paramref name="node"/> is a non-terminal.
+    /// Clears any previously set end location.
+    /// </summary>
+    protected void SetSrc(UnvParseTreeElement node)
+    {
+        var (line, col) = SourceOf(node);
+        _srcLine    = line;
+        _srcCol     = col;
+        _srcEndLine = -1;
+        _srcEndCol  = -1;
+    }
+
+    /// <summary>
+    /// Set both start and exclusive-end source location from a terminal token node.
+    /// Call this instead of <see cref="SetSrc(UnvParseTreeElement)"/> when creating "match" states
+    /// so that <see cref="StateLocationMap"/> can compute post-transition locations for the
+    /// successor state via <c>DirectPostLocs</c>.
+    /// </summary>
+    protected void SetSrcRange(UnvParseTreeElement terminal, int textLength)
+    {
+        var line    = SafeGetLine(terminal);
+        var col     = SafeGetColumn(terminal);
+        _srcLine    = line;
+        _srcCol     = col;
+        _srcEndLine = line >= 0 ? line : -1;
+        _srcEndCol  = col >= 0 ? col + textLength : -1;
+    }
+
+    /// <summary>
+    /// Set source location directly with explicit start and exclusive-end coordinates.
+    /// Use when the positions are already known (e.g. computed from a block node + its suffix).
+    /// </summary>
+    protected void SetSrcRange(int startLine, int startCol, int endLine, int endCol)
+    {
+        _srcLine    = startLine;
+        _srcCol     = startCol;
+        _srcEndLine = endLine;
+        _srcEndCol  = endCol;
+    }
+
+    /// <summary>
+    /// Set start location from <paramref name="startTerminal"/> and exclusive-end location
+    /// from the end of <paramref name="endTerminal"/> (its column + <paramref name="endTextLength"/>).
+    /// Use for multi-token grammar elements like character ranges (<c>'a'..'z'</c>).
+    /// </summary>
+    protected void SetSrcRange(UnvParseTreeElement startTerminal, UnvParseTreeElement endTerminal, int endTextLength)
+    {
+        var startLine = SafeGetLine(startTerminal);
+        var startCol  = SafeGetColumn(startTerminal);
+        var endLine   = SafeGetLine(endTerminal);
+        var endCol    = SafeGetColumn(endTerminal);
+        _srcLine    = startLine;
+        _srcCol     = startCol;
+        _srcEndLine = endLine >= 0 ? endLine : -1;
+        _srcEndCol  = endCol >= 0 ? endCol + endTextLength : -1;
     }
 
     protected void AddEpsilon(ATNState from, ATNState to, bool prepend = false)

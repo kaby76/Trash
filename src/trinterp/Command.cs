@@ -15,7 +15,7 @@ public class Command
 {
     public string Help() =>
         "trinterp: Generate .interp and .tokens files from an ANTLRv4 grammar parse tree.\n" +
-        "Usage: trparse grammar.g4 | trinterp [options]\n";
+        "Usage: dotnet trash parse grammar.g4 | dotnet trash interp [options]\n";
 
     public void Execute(Config config)
     {
@@ -123,6 +123,11 @@ public class Command
             return;
         }
 
+        // ---- Build location map (needed for --state-map, --atn, --atn-combined) ----
+        StateLocationMap lm = (config.Atn || config.AtnCombined || config.StateMap)
+            ? StateLocationMap.Build(atn)
+            : null;
+
         // ---- Format content ----
         string interpContent;
         string tokensContent;
@@ -137,6 +142,9 @@ public class Command
             return;
         }
 
+        if (config.StateMap)
+            interpContent += AtnDotWriter.FormatStateMap(grammar, atn, lm);
+
         // ---- Write files ----
         var baseName = grammar.Name;
         var interpPath = Path.Combine(outDir, baseName + ".interp");
@@ -146,9 +154,9 @@ public class Command
         File.WriteAllText(tokensPath, tokensContent);
 
         if (config.Atn)
-            AtnDotWriter.WritePerRule(grammar, atn, outDir);
+            AtnDotWriter.WritePerRule(grammar, atn, outDir, lm);
         if (config.AtnCombined)
-            AtnDotWriter.WriteCombined(grammar, atn, outDir);
+            AtnDotWriter.WriteCombined(grammar, atn, outDir, lm);
 
         if (config.Verbose)
         {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace trinterp;
@@ -15,7 +16,8 @@ public static class AtnDotWriter
     // ---- public entry points ------------------------------------------------
 
     /// <summary>Writes one &lt;ruleName&gt;.dot per rule to outDir.</summary>
-    public static void WritePerRule(GrammarModel grammar, ATN atn, string outDir)
+    public static void WritePerRule(GrammarModel grammar, ATN atn, string outDir,
+                                    StateLocationMap lm)
     {
         var decisionNumbers    = BuildDecisionNumbers(atn);
         var leftRecursiveRules = FindLeftRecursiveRules(atn);
@@ -24,25 +26,55 @@ public static class AtnDotWriter
             var rule = grammar.Rules[i];
             var start = atn.ruleToStartState[i];
             var stop  = atn.ruleToStopState[i];
-            var dot   = RuleToDot(rule.Name, start, stop, grammar, decisionNumbers, leftRecursiveRules);
+            var dot   = RuleToDot(rule.Name, start, stop, grammar, decisionNumbers, leftRecursiveRules, lm);
             var path  = Path.Combine(outDir, grammar.Name + "." + rule.Name + ".dot");
             File.WriteAllText(path, dot);
         }
     }
 
     /// <summary>Writes a single &lt;grammarName&gt;.atn.dot with every rule's states combined.</summary>
-    public static void WriteCombined(GrammarModel grammar, ATN atn, string outDir)
+    public static void WriteCombined(GrammarModel grammar, ATN atn, string outDir,
+                                     StateLocationMap lm)
     {
-        var dot  = CombinedToDot(grammar, atn);
+        var dot  = CombinedToDot(grammar, atn, lm);
         var path = Path.Combine(outDir, grammar.Name + ".atn.dot");
         File.WriteAllText(path, dot);
+    }
+
+    /// <summary>
+    /// Formats the state map as a "state map:" section suitable for appending to a .interp file.
+    /// Each row: stateNumber TAB ruleName TAB locations
+    /// where locations is a semicolon-separated list of "line:col" pairs (1-based line,
+    /// 0-based col), or "-" when no source location is available.
+    /// Requires <c>dotnet trash parse -l</c> to have been used; otherwise all locations will be "-".
+    /// </summary>
+    public static string FormatStateMap(GrammarModel grammar, ATN atn, StateLocationMap lm)
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.Append('\n');           // end the atn: data line (Serialize uses Append, no trailing \n)
+        sb.Append('\n');           // blank line before section
+        sb.Append("state map:\n");
+        foreach (var s in atn.states)
+        {
+            if (s == null) continue;
+            string ruleName = s.ruleIndex >= 0 && s.ruleIndex < grammar.Rules.Count
+                ? grammar.Rules[s.ruleIndex].Name
+                : "(none)";
+            var locs = lm[s.stateNumber];
+            string locsStr = locs.Count == 0
+                ? "-"
+                : string.Join(";", Sorted(locs).Select(l => $"{l.Line}:{l.Col}"));
+            sb.Append($"{s.stateNumber}\t{ruleName}\t{locsStr}\n");
+        }
+        sb.Append('\n');
+        return sb.ToString();
     }
 
     // ---- per-rule digraph ---------------------------------------------------
 
     private static string RuleToDot(string ruleName, RuleStartState start, RuleStopState stop,
                                     GrammarModel grammar, Dictionary<DecisionState, int> decisionNumbers,
-                                    HashSet<int> leftRecursiveRules)
+                                    HashSet<int> leftRecursiveRules, StateLocationMap lm)
     {
         // Collect states reachable from the rule start, scoped to this rule:
         //  - For RuleTransitions follow followState (skip called-rule interior)
@@ -68,7 +100,7 @@ public static class AtnDotWriter
         var sb = new StringBuilder();
         sb.AppendLine("digraph ATN {");
         sb.AppendLine("rankdir=LR;");
-        AppendNodes(sb, Sorted(states), decisionNumbers);
+        AppendNodes(sb, Sorted(states), decisionNumbers, lm);
         AppendEdges(sb, Sorted(states), states, grammar, decisionNumbers, ruleTransitionToFollow: true, leftRecursiveRules);
         sb.AppendLine("}");
         return sb.ToString();
@@ -76,7 +108,7 @@ public static class AtnDotWriter
 
     // ---- combined digraph ---------------------------------------------------
 
-    private static string CombinedToDot(GrammarModel grammar, ATN atn)
+    private static string CombinedToDot(GrammarModel grammar, ATN atn, StateLocationMap lm)
     {
         var decisionNumbers    = BuildDecisionNumbers(atn);
         var leftRecursiveRules = FindLeftRecursiveRules(atn);
@@ -90,7 +122,7 @@ public static class AtnDotWriter
         allStates.Sort((a, b) => a.stateNumber.CompareTo(b.stateNumber));
         var allSet = new HashSet<ATNState>(allStates);
 
-        AppendNodes(sb, allStates, decisionNumbers);
+        AppendNodes(sb, allStates, decisionNumbers, lm);
         // In the combined view show the actual RuleTransition target (rule start),
         // not the followState — the return arc is already an epsilon from the stop state.
         AppendEdges(sb, allStates, allSet, grammar, decisionNumbers, ruleTransitionToFollow: false, leftRecursiveRules);
@@ -101,11 +133,13 @@ public static class AtnDotWriter
     // ---- shared node / edge rendering --------------------------------------
 
     private static void AppendNodes(StringBuilder sb, IEnumerable<ATNState> states,
-                                    Dictionary<DecisionState, int> decisionNumbers)
+                                    Dictionary<DecisionState, int> decisionNumbers,
+                                    StateLocationMap lm)
     {
         foreach (var s in states)
         {
-            string nodeId = $"s{s.stateNumber}";
+            string nodeId  = $"s{s.stateNumber}";
+            string tooltip = StateTooltip(s, lm);
             // StarBlockStartState and PlusBlockStartState are always circles even when
             // they appear in decisionToState (multi-alt case); check them before the
             // generic DecisionState branch below.
@@ -119,12 +153,12 @@ public static class AtnDotWriter
                     var ports = new StringBuilder();
                     for (int pi = 0; pi < n; pi++) { if (pi > 0) ports.Append('|'); ports.Append($"<p{pi}>"); }
                     string label = $"{{&rarr;\\n{s.stateNumber}{symbol}\\nd={dLoop}|{{{ports}}}}}";
-                    sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1];");
+                    sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1{tooltip}];");
                 }
                 else
                 {
                     string label = $"&rarr;\\n{s.stateNumber}{symbol}";
-                    sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                    sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
                 }
                 continue;
             }
@@ -150,38 +184,51 @@ public static class AtnDotWriter
                     label = $"{{{s.stateNumber}+\\nd={d}|{{{ports}}}}}";
                 else
                     label = $"{{{s.stateNumber}\\nd={d}|{{{ports}}}}}";
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=record, fixedsize=false, peripheries=1{tooltip}];");
             }
             else if (s is BasicBlockStartState || s is TokensStartState)
             {
                 // Block start collapsed to a single alt by OptimizeSets and removed from
                 // decisionToState: render as BLOCK_START circle (→\nN, no decision ports).
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"&rarr;\\n{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"&rarr;\\n{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
             }
             else if (s is StarLoopbackState)
             {
                 string label = $"{s.stateNumber}*";
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
             }
             else if (s is BlockEndState)
             {
                 string label = $"&larr;\\n{s.stateNumber}";
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{label}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
             }
             else if (s is LoopEndState)
             {
                 // LoopEnd is a plain circle — no '←' prefix.
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
             }
             else if (s is RuleStopState)
             {
-                sb.AppendLine($"{nodeId}[fontsize=11, label=\"{s.stateNumber}\", shape=doublecircle, fixedsize=true, width=.6];");
+                sb.AppendLine($"{nodeId}[fontsize=11, label=\"{s.stateNumber}\", shape=doublecircle, fixedsize=true, width=.6{tooltip}];");
             }
             else
             {
-                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1];");
+                sb.AppendLine($"{nodeId}[fontsize=11,label=\"{s.stateNumber}\", shape=circle, fixedsize=true, width=.55, peripheries=1{tooltip}];");
             }
         }
+    }
+
+    /// <summary>
+    /// Returns a DOT tooltip attribute string for <paramref name="s"/> using its set of
+    /// source locations from <paramref name="lm"/>, e.g.
+    /// <c>, tooltip="line 5, col 3; line 6, col 10"</c>. Returns empty string when none.
+    /// </summary>
+    private static string StateTooltip(ATNState s, StateLocationMap lm)
+    {
+        var locs = lm[s.stateNumber];
+        if (locs.Count == 0) return string.Empty;
+        var text = string.Join("; ", Sorted(locs).Select(l => $"line {l.Line}, col {l.Col}"));
+        return $", tooltip=\"{text}\"";
     }
 
     private static void AppendEdges(StringBuilder sb, IEnumerable<ATNState> states,
@@ -218,6 +265,9 @@ public static class AtnDotWriter
 
                 if (!included.Contains(target)) continue;
                 bool isEpsilon = tr is EpsilonTransition;
+                // Append source location to non-epsilon edge labels.
+                if (!isEpsilon && s.SourceLine >= 0)
+                    label += $"\n{s.SourceLine}:{s.SourceColumn}";
                 // Dashed style for loopback edges.
                 bool isDashed = s is StarLoopbackState ||
                                 (s is PlusLoopbackState && target.stateNumber < s.stateNumber);
@@ -242,6 +292,9 @@ public static class AtnDotWriter
         list.Sort((a, b) => a.stateNumber.CompareTo(b.stateNumber));
         return list;
     }
+
+    private static IEnumerable<StateLocationMap.SourceLoc> Sorted(IReadOnlySet<StateLocationMap.SourceLoc> locs)
+        => locs.OrderBy(l => l.Line).ThenBy(l => l.Col);
 
     private static Dictionary<DecisionState, int> BuildDecisionNumbers(ATN atn)
     {
