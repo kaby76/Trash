@@ -265,6 +265,9 @@ public static class AtnDotWriter
 
                 if (!included.Contains(target)) continue;
                 bool isEpsilon = tr is EpsilonTransition;
+                // Append source location to non-epsilon edge labels.
+                if (!isEpsilon && s.SourceLine >= 0)
+                    label += $"\n{s.SourceLine}:{s.SourceColumn}";
                 // Dashed style for loopback edges.
                 bool isDashed = s is StarLoopbackState ||
                                 (s is PlusLoopbackState && target.stateNumber < s.stateNumber);
