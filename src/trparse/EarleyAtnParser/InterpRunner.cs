@@ -65,8 +65,25 @@ public static class InterpRunner
             .Where(t => t.Channel == TokenConstants.DefaultChannel || t.Type == TokenConstants.EOF)
             .ToList();
 
-        // Parse → parse tree (ParserRuleContext subclass)
+        // Determine the start rule from the 'start-rule:' section in the parser interp file.
         int startRule = 0;
+        if (parserInterp.StartStateNumber >= 0)
+        {
+            bool found = false;
+            for (int ri = 0; ri < parserAtn.start.Length; ri++)
+            {
+                if (parserAtn.start[ri].stateNumber == parserInterp.StartStateNumber)
+                {
+                    startRule = ri;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                throw new InvalidOperationException(
+                    $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
+        }
+
         var parseTree = EarleyParser.Parse(parserAtn, onChannel, startRule);
         if (parseTree == null)
             throw new InvalidOperationException($"Earley parse failed for '{fileName}': input rejected by grammar.");

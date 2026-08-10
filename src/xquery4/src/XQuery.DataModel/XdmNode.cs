@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("trsort")]
 [assembly: InternalsVisibleTo("trunfoldlit")]
 [assembly: InternalsVisibleTo("trxquery")]
+[assembly: InternalsVisibleTo("trinterp")]
 
 namespace XQuery.DataModel;
 

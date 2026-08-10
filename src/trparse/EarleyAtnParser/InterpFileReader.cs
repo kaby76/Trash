@@ -8,6 +8,11 @@ public class ParsedInterp
     public string[] ChannelNames = Array.Empty<string>();
     public string[] ModeNames = Array.Empty<string>();
     public int[] AtnData = Array.Empty<int>();
+    /// <summary>
+    /// ATN state number of the parser start rule's start state, or -1 if
+    /// the 'start-rule:' section is absent (lexer interp files and old files).
+    /// </summary>
+    public int StartStateNumber = -1;
 }
 
 public static class InterpFileReader
@@ -56,6 +61,16 @@ public static class InterpFileReader
         result.AtnData = new int[parts.Length];
         for (int j = 0; j < parts.Length; j++)
             result.AtnData[j] = int.Parse(parts[j].Trim());
+
+        // Optional start-rule section (parser interp files only).
+        if (TrySkipToSection(lines, ref i, "start-rule:"))
+        {
+            while (i < lines.Length)
+            {
+                var line = lines[i++].Trim();
+                if (line.Length > 0) { result.StartStateNumber = int.Parse(line); break; }
+            }
+        }
 
         return result;
     }
