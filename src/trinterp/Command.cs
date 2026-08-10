@@ -65,22 +65,32 @@ public class Command
             models.Add(model);
             if (model.ImplicitLexer != null) models.Add(model.ImplicitLexer);
 
-            // For parser grammars, find the unique EOF-terminated rule.
+            // For parser grammars, determine the start rule.
             if (!model.IsLexer)
             {
-                var eofRules = FindEofTerminatedRules(root);
-                if (eofRules.Count == 0)
-                    throw new Exception(
-                        $"[trinterp] No EOF-terminated parser rule found in {model.Name}. " +
-                        "Add EOF to exactly one rule to designate the start rule.");
-                if (eofRules.Count > 1)
-                    throw new Exception(
-                        $"[trinterp] Multiple EOF-terminated parser rules found in {model.Name}: " +
-                        string.Join(", ", eofRules) + ". Only one rule may reference EOF.");
-                var startRuleName = eofRules[0];
+                string startRuleName;
+                if (!string.IsNullOrEmpty(config.StartRule))
+                {
+                    startRuleName = config.StartRule;
+                }
+                else
+                {
+                    var eofRules = FindEofTerminatedRules(root);
+                    if (eofRules.Count == 0)
+                        throw new Exception(
+                            $"[trinterp] No EOF-terminated parser rule found in {model.Name}. " +
+                            "Add EOF to exactly one rule or use --start-rule to designate the start rule.");
+                    if (eofRules.Count > 1)
+                        throw new Exception(
+                            $"[trinterp] Multiple EOF-terminated parser rules found in {model.Name}: " +
+                            string.Join(", ", eofRules) + ". Use --start-rule to specify which one.");
+                    startRuleName = eofRules[0];
+                }
                 var startRuleModel = model.Rules.FirstOrDefault(r => r.Name == startRuleName);
-                if (startRuleModel != null)
-                    startRuleIndices[model] = startRuleModel.Index;
+                if (startRuleModel == null)
+                    throw new Exception(
+                        $"[trinterp] Start rule '{startRuleName}' not found in grammar {model.Name}.");
+                startRuleIndices[model] = startRuleModel.Index;
             }
         }
 

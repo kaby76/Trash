@@ -27,6 +27,9 @@ public class Config
         HelpText = "Comma-separated ATN optimizations to apply: tail-epsilon, merge-sets, none. Default: tail-epsilon,merge-sets.")]
     public IEnumerable<string> Optimize { get; set; } = new[] { "tail-epsilon", "merge-sets" };
 
+    [Option("start-rule", Required = false, HelpText = "Name of the parser start rule. Skips the EOF-terminated rule search when specified.")]
+    public string StartRule { get; set; }
+
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
