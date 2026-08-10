@@ -207,6 +207,16 @@ public class Grun
         int row_number,
         List<AntlrJson.ParsingResultSet> data)
     {
+        // Interp-file-based Earley parsing path
+        if (config.PInterp != null && config.LInterp != null)
+        {
+            var rs = Trash.EarleyAtn.InterpRunner.Run(
+                config.PInterp, config.LInterp, txt, input_name, config.LineNumbers);
+            data.Add(rs);
+            System.Console.Error.WriteLine(prefix + "Earley " + row_number + " " + input_name + " success");
+            return 0;
+        }
+
         Type type = null;
         if (parser_type == null || parser_type == "")
         {

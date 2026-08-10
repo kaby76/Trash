@@ -32,13 +32,45 @@ the `--type` command-line option:
 * `rex` for Rex
 * `pegen_v3_10` for the `Generated/` parser
 
+## Earley ATN-based parsing (interp files)
+
+As an alternative to a pre-built generated parser, `trparse` can parse input
+directly from the `.interp` files produced by `trinterp`, using a from-scratch
+Earley parser over the serialized ATN.  No generated C# code and no
+`Antlr4.Runtime.Standard` deserialization are involved.
+
+Provide both the parser and lexer interp files:
+
+    trparse --pinterp abbParser.interp --linterp abbLexer.interp input.abb
+
+The output is the same `ParsingResultSet` JSON format as all other `trparse`
+modes, so every downstream Trash Toolkit tool (`trtree`, `trxgrep`, etc.)
+works without modification.
+
+### How it works
+
+1. **InterpFileReader** parses the `.interp` text into token names, rule names,
+   channel/mode names, and the raw ATN integer array.
+2. **AtnDeserializer** converts the integer array into `MyATN` / `MyATNState` /
+   `MyTransition` structures (custom types in `EarleyAtnParser/`, no Antlr4
+   runtime dependency).
+3. **LexerAtnSimulator** runs a longest-match NFA simulation over the input
+   characters to produce a full token stream (all channels).
+4. **EarleyParser** runs the Earley algorithm directly over the parser ATN,
+   producing a complete single-derivation parse tree
+   (`ParserRuleContext`-compatible).
+5. **InterpRunner** wraps the pipeline and converts the result to a
+   `ParsingResultSet` compatible with the rest of the toolkit.
+
 ## Usage
-    
+
     trparse (<string> | <options>)*
-    -i, --input      Parse the given string as input.
-    -t, --type       Specifies type of grammar: ANTLRv4, ANTLRv3, ANTLRv2, Bison, rex, pegen_v3_10
-    -s, --start-rule Start rule name.
-    -p, --parser     Location of pre-built parser (aka the trgen Generated/ directory)
+    -i, --input        Parse the given string as input.
+    -t, --type         Specifies type of grammar: ANTLRv4, ANTLRv3, ANTLRv2, Bison, rex, pegen_v3_10
+    -s, --start-rule   Start rule name.
+    -p, --parser       Location of pre-built parser (aka the trgen Generated/ directory)
+        --pinterp      Path to parser .interp file (Earley ATN-based parsing).
+        --linterp      Path to lexer .interp file  (Earley ATN-based parsing).
 
 ## Examples
 
@@ -48,9 +80,13 @@ the `--type` command-line option:
     echo "1+2+3" | trparse | trtree
     mkdir out; trparse MyParser.g4 MyLexer.g4 | trkleene | trsponge -o out
 
+    # Earley interp-based parse (no generated code needed)
+    dotnet trash parse abb.g4 | dotnet trash interp -o out/
+    trparse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | trtree
+
 ## Current version
 
-2.0 Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement. Added more perf measurements to templates.
+2.0 Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement. Added more perf measurements to templates. Added Earley ATN-based parsing via --pinterp / --linterp.
 
 ## License
 
