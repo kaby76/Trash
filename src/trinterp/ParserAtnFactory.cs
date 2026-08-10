@@ -713,6 +713,32 @@ public class ParserAtnFactory
     {
         if (alts.Count == 0) return MakeEpsilonHandle();
 
+        // Restore block source position before creating any structural states.
+        // Walking the alternatives (via WalkBlock) overwrites _srcLine/_srcCol with the
+        // position of the last grammar element inside the block.  We need all block-level
+        // states (the collapsed set state, the BasicBlockStartState, BlockEndState) to be
+        // stamped with the block's own start position, not the last alt's position.
+        //
+        // For suffixed blocks (?, *, +) we also record the exclusive end of the suffix token
+        // as SourceEndLine/SourceEndColumn.  For optional (?) blocks this end position is
+        // used by StateLocationMap to attribute the "skip" location to the decision state.
+        if (blkCtx != null)
+        {
+            var (blockLine, blockCol) = SourceOf(blkCtx);
+            if (ebnfSuffix != null && blockLine >= 0)
+            {
+                var (sfxLine, sfxCol) = SourceOf(ebnfSuffix);
+                var sfxText           = GetText(ebnfSuffix).Trim();
+                SetSrcRange(blockLine, blockCol,
+                            sfxLine >= 0 ? sfxLine : -1,
+                            sfxCol  >= 0 ? sfxCol + sfxText.Length : -1);
+            }
+            else
+            {
+                SetSrc(blockLine, blockCol);
+            }
+        }
+
         // antlr4's BlockSetTransformer pre-processes the grammar AST to collapse
         // blocks where every alternative is a single atom/range/set into one SET
         // transition. Implement the equivalent here at construction time so we
@@ -1169,6 +1195,18 @@ public class ParserAtnFactory
         _srcCol     = col;
         _srcEndLine = line >= 0 ? line : -1;
         _srcEndCol  = col >= 0 ? col + textLength : -1;
+    }
+
+    /// <summary>
+    /// Set source location directly with explicit start and exclusive-end coordinates.
+    /// Use when the positions are already known (e.g. computed from a block node + its suffix).
+    /// </summary>
+    protected void SetSrcRange(int startLine, int startCol, int endLine, int endCol)
+    {
+        _srcLine    = startLine;
+        _srcCol     = startCol;
+        _srcEndLine = endLine;
+        _srcEndCol  = endCol;
     }
 
     /// <summary>

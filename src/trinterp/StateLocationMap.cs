@@ -97,8 +97,17 @@ public sealed class StateLocationMap
                 {
                     if (!isRuleStop)
                     {
+                        // The bypass epsilon of an optional block (BasicBlockStartState → its
+                        // endState) is used for forward bwdPost propagation but NOT for backward
+                        // fwdPre propagation.  Without this exclusion, positions of states that
+                        // follow the optional block (e.g. the next token) would leak backward
+                        // through the bypass into the decision state.
+                        bool isBypass = s is BasicBlockStartState bss
+                                        && t.target == bss.endState
+                                        && s.SourceEndLine >= 0; // only optional blocks
                         AddEdge(epsEdgesFrom, s.stateNumber, t.target.stateNumber);
-                        AddEdge(epsEdgesTo,   t.target.stateNumber, s.stateNumber);
+                        if (!isBypass)
+                            AddEdge(epsEdgesTo, t.target.stateNumber, s.stateNumber);
                     }
                 }
                 else
@@ -118,6 +127,21 @@ public sealed class StateLocationMap
             if (hasNonEps && s.SourceLine >= 0)
             {
                 AddLoc(directPre, s.stateNumber, new SourceLoc(s.SourceLine, s.SourceColumn));
+            }
+
+            // For optional block starts (BasicBlockStartState with SourceEndLine set by
+            // MakeBlock when ebnfSuffix = "?"):
+            //   • SourceLine/SourceColumn  = start of "(" — "about to try the block content"
+            //   • SourceEndLine/SourceEndColumn = exclusive end of "?" — "about to skip past
+            //     the entire optional block" (the position reached by the bypass epsilon)
+            // Both are meaningful "pre-positions" for this decision state and are seeded
+            // directly into directPre so that backward propagation distributes them to all
+            // eps-predecessors (e.g. the outer decision state).
+            if (s is BasicBlockStartState && s.SourceEndLine >= 0)
+            {
+                if (s.SourceLine >= 0)
+                    AddLoc(directPre, s.stateNumber, new SourceLoc(s.SourceLine, s.SourceColumn));
+                AddLoc(directPre, s.stateNumber, new SourceLoc(s.SourceEndLine, s.SourceEndColumn));
             }
         }
 
