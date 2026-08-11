@@ -15,7 +15,7 @@ is used to instantiate the two files in the file system.
 
 ## Usage
 
-    trsplit
+    dotnet trash split
 
 ## Details
 
@@ -41,7 +41,7 @@ modified.
 
 ## Example
 
-    trparse Arithmetic.g4 | trsplit | trsponge
+    dotnet trash parse Arithmetic.g4 | dotnet trash split | dotnet trash sponge
 
 ## Current version
 

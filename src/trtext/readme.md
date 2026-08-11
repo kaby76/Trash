@@ -11,11 +11,16 @@ specified, the line number range for the tree is printed.
 
 ## Usage
 
-    trtext line-number?
+    dotnet trash text [-n] [-l] [-L] [-c]
+
+    -n, --line-number          Print line number with output lines.
+    -l, --files-with-matches   Print only names of files with selected lines.
+    -L, --files-without-match  Print only names of files with no selected lines.
+    -c, --count                Print only a count of selected lines per file.
 
 ## Examples
 
-    trquery grep //lexerRuleSpec | trtext
+    dotnet trash query "grep //lexerRuleSpec" | dotnet trash text
 
 ## Current version
 

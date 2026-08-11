@@ -10,7 +10,7 @@ Perform a recursive left- and right- factorization of alternatives for rules.
 
 ## Usage
 
-    trgroup <string>
+    dotnet trash group <string>
 
 ## Details
 
@@ -37,11 +37,11 @@ _Input to command (file "temp.g4")_
 
 _Command_
 
-    trparse temp.g4 | trgroup "//parserRuleSpec[RULE_REF/text()='a']//ruleAltList" | trsponge -c true
-    
+    dotnet trash parse temp.g4 | dotnet trash group "//parserRuleSpec[RULE_REF/text()='a']//ruleAltList" | dotnet trash sponge -c
+
     # Or, a file-wide group refactoring, over all parser and lexer rules:
-    
-    trparse temp.g4 | trgroup | trsponge -c true
+
+    dotnet trash parse temp.g4 | dotnet trash group | dotnet trash sponge -c
 
 _Output_
 

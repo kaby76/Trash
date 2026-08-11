@@ -12,7 +12,7 @@ order is irrelevant. The output is parse tree data.
 
 ## Usage
 
-    trcombine <grammar1> <grammar2>
+    dotnet trash combine <grammar1> <grammar2>
 
 ## Details
 
@@ -74,7 +74,7 @@ Parser grammar in ExpressionParser.g4:
 
 _Command_
 
-    trcombine ExpressionLexer.g4 ExpressionParser.g4 | trprint > Expression.g4
+    dotnet trash combine ExpressionLexer.g4 ExpressionParser.g4 | dotnet trash text > Expression.g4
 
 Combined grammar in Expression.g4:
 

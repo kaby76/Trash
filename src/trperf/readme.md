@@ -14,9 +14,9 @@ are supported. To specify the grammar, you can either
 be in a trgen-generated parser directory, or use the -p option.
 
 ## Usage
-    
-    trperf (<string> | <options>)*
-    -c. -column      String of characters denoting columnns.
+
+    dotnet trash perf (<string> | <options>)*
+    -c, --columns    String of characters denoting columns.
                      F = File name
                      d = Decision number
                      r = Rule name
@@ -37,14 +37,14 @@ be in a trgen-generated parser directory, or use the -p option.
 ## Examples
 
     # print out performance data for a parse, ignore the header line, sort on "Max k", and output in a formatted table.
-    trperf aggregate01.sql | tail -n +2 | sort -k6 -g -r | column -t
+    dotnet trash perf aggregate01.sql | tail -n +2 | sort -k6 -g -r | column -t
 
     # print out performance with header, sorting on ambiguity.
-    trperf x.go -h -c aFdriTkmfaet | ( head -n 1 && tail -n +2 | sort -k1 -g -r ) | head | column -t
+    dotnet trash perf x.go -h -c aFdriTkmfaet | ( head -n 1 && tail -n +2 | sort -k1 -g -r ) | head | column -t
 
     # print out performance with header, sorting on ambiguity,
     # compress text column.
-    dotnet trperf ../examples/AllInOneNoPreprocessor.cs -h -c aFdriTkmfaetc \
+    dotnet trash perf ../examples/AllInOneNoPreprocessor.cs -h -c aFdriTkmfaetc \
       | ( head -n 1 && tail -n +2 | sort -k1 -g -r ) \
       | head | awk '
       {

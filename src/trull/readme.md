@@ -13,7 +13,7 @@ whole file.
 
 ## Usage
 
-    trull <xpath>?
+    dotnet trash ull <xpath>?
 
 ## Examples
 
@@ -29,7 +29,7 @@ Before:
 
 Command:
 
-    trparse KeywordFun.g4 | trull "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL" | trprint
+    dotnet trash parse KeywordFun.g4 | dotnet trash ull "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL" | dotnet trash text
 
 After:
 
@@ -43,7 +43,7 @@ After:
 
 Command:
 
-    trparse KeywordFun.g4 | trull | trprint
+    dotnet trash parse KeywordFun.g4 | dotnet trash ull | dotnet trash text
 
 After:
 

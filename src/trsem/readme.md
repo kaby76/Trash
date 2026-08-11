@@ -10,11 +10,11 @@ Read a static semantics spec file and generate code.
 
 ## Usage
 
-    trsem
+    dotnet trash sem
 
 ## Examples
 
-    trsem
+    dotnet trash sem
 
 ## Current version
 

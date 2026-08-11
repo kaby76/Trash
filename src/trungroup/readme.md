@@ -10,11 +10,11 @@ Perform an ungroup transformation of the 'element' node(s) specified by the stri
 
 ## Usage
 
-    trungroup <string>
+    dotnet trash ungroup <string>
 
 ## Examples
 
-    trparse A.g4 | trungroup "//parserRuleSpec[RULE_REF/text() = 'a']//ruleAltList"
+    dotnet trash parse A.g4 | dotnet trash ungroup "//parserRuleSpec[RULE_REF/text() = 'a']//ruleAltList"
 
 ## Notes
 

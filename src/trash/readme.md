@@ -49,6 +49,7 @@ Both the full command name and a short alias (without the `tr` prefix) are accep
 | trgenvsc       | genvsc      |
 | trglob         | glob        |
 | triconv        | iconv       |
+| trinterp       | interp      |
 | tritext        | itext       |
 | trjson         | json        |
 | trnullable     | nullable    |
@@ -69,5 +70,6 @@ Both the full command name and a short alias (without the `tr` prefix) are accep
 | trxpath        | xpath       |
 | trxml          | xml         |
 | trxml2         | xml2        |
+| trxquery       | xquery      |
 
 Run `trash --help` to list all commands. Run `trash <command> --help` for per-command help.

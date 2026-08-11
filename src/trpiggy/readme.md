@@ -14,7 +14,7 @@ that defines children.
 
 ## Usage
 
-    trpiggy template-spec
+    dotnet trash piggy template-spec
 
 ## Examples
 
@@ -54,7 +54,7 @@ Template input "templates.txt":
 //field[position()=1] -> {{ "<NAME>" : <exp> }} ;
 ```
 
-    trparse input.txt  | trpiggy templates.txt | trprint
+    dotnet trash parse input.txt | dotnet trash piggy templates.txt | dotnet trash text
 
 Output:
 ```

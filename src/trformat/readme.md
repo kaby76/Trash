@@ -10,11 +10,11 @@ Format of grammar using machine learning.
 
 ## Usage
 
-    trformat
+    dotnet trash format
 
 ## Examples
 
-    trparse A.g4 | trformat
+    dotnet trash parse A.g4 | dotnet trash format
 
 ## Current version
 

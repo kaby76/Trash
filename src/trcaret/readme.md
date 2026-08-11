@@ -10,11 +10,11 @@ Reads a tree from stdin and prints lines and caret marks.
 
 ## Usage
 
-    trcaret [options]
+    dotnet trash caret [options]
 
 ## Examples
 
-    trquery grep //lexerRuleSpec | trcaret -H
+    dotnet trash query "grep //lexerRuleSpec" | dotnet trash caret -H
 
 ## Current version
 

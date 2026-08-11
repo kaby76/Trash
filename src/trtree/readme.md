@@ -10,11 +10,11 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 ## Usage
 
-    trtree
+    dotnet trash tree
 
 ## Examples
 
-    trparse A.g4 | trtree
+    dotnet trash parse A.g4 | dotnet trash tree
 
 ## Current version
 

@@ -10,11 +10,11 @@ Reads a parsing result set for a grammar and outputs the rules that are nullable
 
 ## Usage
 
-trnullable
+    dotnet trash nullable
 
 ## Examples
 
-trparse A.g4 | trnullable
+    dotnet trash parse A.g4 | dotnet trash nullable
 
 ## Current version
 

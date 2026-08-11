@@ -14,13 +14,13 @@ occurs at the specified node.
 
 ## Usage
 
-    trunfold <string>
+    dotnet trash unfold <string>
 
 ## Examples
 
 Before:
 
-	grammar Expresion;
+	grammar Expression;
 	s : e ;
 	e : e '*' e       # Mult
 	    | INT           # primary
@@ -30,7 +30,7 @@ Before:
 
 Command:
 
-    trparse Expression.g4 | trunfold "//parserRuleSpec[RULE_REF/text() = 's']//labeledAlt//RULE_REF[text() = 'e']" | trsponge -c
+    dotnet trash parse Expression.g4 | dotnet trash unfold "//parserRuleSpec[RULE_REF/text() = 's']//labeledAlt//RULE_REF[text() = 'e']" | dotnet trash sponge -c
 
 After:
 

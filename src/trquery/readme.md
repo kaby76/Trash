@@ -13,9 +13,7 @@ to stdout. The input and output are Parse Tree Data.
 
 ## Usage
 
-trquery insert xpath-expr string (; additional commands...)*
-trquery delete xpath-expr (; additional commands...)*
-trquery replace xpath-expr string (; additional commands...)*
+    dotnet trash query <command> [; additional commands...]*
 
 ## Details
 
