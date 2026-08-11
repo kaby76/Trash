@@ -24,7 +24,7 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 
