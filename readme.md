@@ -153,15 +153,15 @@ creates an application using the Arithmetic grammar.
 If executed in a directory containing
 an Antlr Maven plugin (`pom.xml`), `dotnet trash gen` will create a program according
 to the information specified in the `pom.xml` file. Either way, it creates a directory
-`Generated/`, and places the source code there.
+`Generated-<target>/` (e.g. `Generated-CSharp/`), and places the source code there.
 
 `dotnet trash gen` has many options to generate a parser from any Antlr4 grammar, for any target.
 But, if a parser is generated for the C# target, built using the NET SDK, then `dotnet trash parse`
 can execute the generated parser, and can be used with all the other tools in Trash. _NB:
 In order to use the generated parser application, you must first build it:
 
-    dotnet restore Generated/Test.csproj
-    dotnet build Generated/Test.csproj
+    dotnet restore Generated-CSharp/Test.csproj
+    dotnet build Generated-CSharp/Test.csproj
 
 ### Run the generated parser application
 
@@ -169,7 +169,7 @@ In order to use the generated parser application, you must first build it:
 
 After using `dotnet trash gen` to generate a parser program in C#, shown previously,
 and after building the program, you can run the parser using `dotnet trash parse`. This program
-looks for the generated parser in directory `Generated/`. If it exists,
+looks for the generated parser in the `Generated-CSharp/` directory. If it exists,
 it will run the parser application in the directory. You can pass
 as command-line arguments an input string or input file. If no command-line
 arguments are supplied, the program will read stdin. The output of `dotnet trash parse`, as
@@ -177,7 +177,7 @@ with most tools of Trash, is parse tree data.
 
 ### Find nodes in the parse tree using XPath
 
-    mkdir empty; cd empty; dotnet trash gen; dotnet build Generated/Test.csproj; \
+    mkdir empty; cd empty; dotnet trash gen; dotnet build Generated-CSharp/Test.csproj; \
         dotnet trash parse -i "1+2+3" | dotnet trash query "grep //SCIENTIFIC_NUMBER"
 
 With this command, a directory is created, the Arithmetic grammar generated, built,
@@ -211,7 +211,7 @@ grammar symbols in any support source code (but it could if the tool is extended
 
     git clone https://github.com/antlr/grammars-v4.git; \
         cd grammars-v4/java/java9; \
-        dotnet trash gen; dotnet build Generated/Test.csproj;\
+        dotnet trash gen; dotnet build Generated-CSharp/Test.csproj;\
         dotnet trash parse examples/AllInOne8.java | dotnet trash query "grep //methodDeclaration" | dotnet trash text | wc
 
 This command clones the Antlr4 grammars-v4 repo, generates a parser for the Java9 grammar,

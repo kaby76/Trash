@@ -27,7 +27,7 @@ _Input to command_
 
 _Command_
 
-dotnet trash parse ExpressionLexer.g4 ExpressionParser.g4 | dotnet trash extract | dotnet trash sponge -c
+    dotnet trash parse ExpressionLexer.g4 ExpressionParser.g4 | dotnet trash extract | dotnet trash sponge -c
 
 The outputed files are:
 
