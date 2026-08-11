@@ -3,34 +3,20 @@
 [![Build](https://github.com/kaby76/Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Trash/actions?query=workflow%3ACI)
 
 Trash is a collection of command-line tools to analyze and transform
-Antlr4 grammars and parse trees. The toolkit can: generate a parser
-application for an Antlr4 grammar for any target and any OS; analyze the
-grammar for common problems; automate changes applied to a grammar scraped
-from a specification; transform parse trees for transpiling
-and preprocessing source code. With the [collection of Antlr grammars](https://github.com/antlr/grammars-v4),
+Antlr4 grammars and parse trees. The toolkit can:
+* Generate a parser application for an Antlr4 grammar for any target and any OS;
+* Generate and parse input for an Antlr4 grammar that is independent of Antlr4 and runtime;
+* Use XPath4, XQuery4, and the XQuery Update Facility languages to search and modify parse trees, including "off-channel" content such as comments.
+* Chain together output from different applications to form complex queries and refactorings.
+
+With the [grammars-v4 collection of Antlr4 grammars](https://github.com/antlr/grammars-v4),
 one can write applications that parse popular programming languages quickly and easily.
-
-Unlike tools that center around Antlr4 parsing, visitors and listeners, this toolkit does not support visitor and
-listener applications because it is too primitive and target-language dependent. Instead, the toolkit operates around
-XQuery scripts that operate directly on parse trees. Also, Antlr4 parse trees do not contain attributes line line/column information,
-intertoken content (e.g., comments), and so on. Trash parse trees contain a multitude of information.
-
-In addition, instead of Antlr and all other parser generators, this toolkit works around
-composable commands with Bash, Powershell, Python, Lua, etc. as the glue. Complex refactorings can be
-achieved by chaining different commands together.
 
 Each app in `Trash` is implemented as a sub-packaged [Dotnet Tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) console application, and can be used on Windows, Linux, or Mac.
 No prerequisites are required other than installing the
 [NET SDK](https://dotnet.microsoft.com/), and the toolchains
 for any other targets you want to use. All commands are executed through the top-level Dotnet application
 "trash", e.g., "dotnet trash parse --help".
-
-The toolkit uses [Antlr](https://www.antlr.org/) and
-[XPath2](https://en.wikipedia.org/wiki/XPath).
-The code is implemented in C#.
-
-An application of the toolkit was used to scrape and refactor the Dart2
-grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/blob/master/refactor.sh).
 
 ## Installation
 ### Requirements
@@ -93,14 +79,14 @@ grammar from spec. See [this script](https://github.com/kaby76/ScrapeDartSpec/bl
 ```
 git clone https://github.com/antlr/grammars-v4
 cd grammars-v4/python/python
-dotnet trash parse *.g4 | dotnet trash query 'grep //grammarDecl' | dotnet trash text
+dotnet trash parse *.g4 | dotnet trash xpath ' //grammarDecl' | dotnet trash text
 # Output:
-# PythonLexer.g4:lexer grammar PythonLexer;
-# PythonParser.g4:parser grammar PythonParser;
+# lexer grammar PythonLexer;
+# parser grammar PythonParser;
 dotnet trash gen
 cd Generated
 dotnet build
-cat - <<EOF | dotnet trash parse | dotnet trash query 'grep //test' | dotnet trash text
+cat - <<EOF | dotnet trash parse | dotnet trash xpath ' //test' | dotnet trash text
 x == y
 x == y if z == b else a == u
 lambda: a
@@ -126,21 +112,6 @@ Other commands for different output are
 [dotnet trash dot](https://github.com/kaby76/Trash/tree/main/src/trdot) for Graphviz Dot output,
 and
 [dotnet trash text](https://github.com/kaby76/Trash/tree/main/src/trtext) for the source text of a parse tree interval.
-
-### Convert grammars to Antlr4
-```
-dotnet trash parse ada.g2 | dotnet trash convert | dotnet trash text | less
-```
-This command parses an [old Antlr2 grammar](https://github.com/kaby76/Trash/blob/main/_tests/trconvert/antlr2/ada.g2)
-using [dotnet trash parse](https://github.com/kaby76/Trash/tree/main/src/trparse),
-converts the parse tree data to Antlr4 syntax using
-[dotnet trash convert](https://github.com/kaby76/Trash/tree/main/src/trconvert)
-and
-finally [prints out the converted parse tree data, ada.g4](https://github.com/kaby76/Trash/blob/main/_tests/trconvert/antlr2/ada.g4)
-using
-[dotnet trash text](https://github.com/kaby76/Trash/tree/main/src/trtext). Other
-grammars that can be converted are Antlr3, Bison, and ISO EBNF. In order to
-use the grammar to parse data, you will need to convert it to an Antlr4 grammar.
 
 ### Generate an Arithmetic parser application
 ```
@@ -212,7 +183,7 @@ grammar symbols in any support source code (but it could if the tool is extended
     git clone https://github.com/antlr/grammars-v4.git; \
         cd grammars-v4/java/java9; \
         dotnet trash gen; dotnet build Generated-CSharp/Test.csproj;\
-        dotnet trash parse examples/AllInOne8.java | dotnet trash query "grep //methodDeclaration" | dotnet trash text | wc
+        dotnet trash parse examples/AllInOne8.java | dotnet trash xpath ' //methodDeclaration' | dotnet trash text | wc
 
 This command clones the Antlr4 grammars-v4 repo, generates a parser for the Java9 grammar,
 then runs the parser on [examples/AllInOne8.java](https://github.com/antlr/grammars-v4/blob/master/java/java9/examples/AllInOne8.java).
@@ -220,33 +191,11 @@ The parse tree is then piped to `dotnet trash query` to find all parse tree node
 a `methodDeclaration` type, prints the source text of each, and counts the result using
 `wc`.
 
-### Split a grammar
-
-Since Antlr2, one can written a combined parser/lexer in one file,
-or a split parser/lexer in two files.
-While it's not hard to split or combine
-a grammar, it's tedious. For automating transformations, it's
-necessary because Antlr4 requires the grammars to be split
-when super classes are needed for different targets.
+### Combine or Split a grammar
 
     dotnet trash combine ArithmeticLexer.g4 ArithmeticParser.g4 | dotnet trash text > Arithmetic.g4
 
-This command calls [dotnet trash combine](https://github.com/kaby76/Trash/tree/main/src/trcombine)
-which parses two split grammar files
-[ArithmeticLexer.g4](https://github.com/kaby76/Trash/blob/main/_tests/combine/ArithmeticLexer.g4)
-and
-[ArithmeticParser.g4](https://github.com/kaby76/Trash/blob/main/_tests/combine/ArithmeticParser.g4),
-and creates a [combined grammar](https://github.com/kaby76/Trash/blob/main/_tests/combine/Arithmetic.g4)
-for the two.
-
-    dotnet trash parse Arithmetic.g4 | dotnet trash split | dotnet trash sponge
-
-This command calls [dotnet trash split](https://github.com/kaby76/Trash/tree/main/src/trsplit)
-which splits the grammar into two parse tree results, one that defines
-ArithmeticLexer.g4 and the other that defines ArithmeticParser.g4.
-The tool [dotnet trash sponge](https://github.com/kaby76/Trash/tree/main/src/trsponge)
-is similar to the [tee](https://en.wikipedia.org/wiki/Tee_(command)) in
-Linux: the parse tree data is split and placed in files.
+    dotnet trash parse Arithmetic.g4 | dotnet trash split | dotnet trash sponge -o split-grammar
 
 ## Parsing Result Sets -- the data passed between commands
 
@@ -271,62 +220,6 @@ Most commands in Trash read and/or write parsing result sets.
 | LBNF | .cf |
 | W3C EBNF | .ebnf |
 | ISO 14977 | .iso14977, .iso |
-
-## Analysis
-
-### Recursion
-
-* [Has direct/indirect recursion](https://github.com/kaby76/Trash/blob/main/doc/analysis.md#has-directindirect-recursion)
-
-## Refactoring
-
-Trash provides a number of transformations that can help to make grammars cleaner (reformatting),
-more readable (reducing the length of the RHS of a rule),
-and more efficient (reducing the number of non-terminals) for Antlr.
-
-Some of these refactorings are very specific for Antlr due to the way
-the parser works, e.g., converting a prioritized chain of productions recognizing
-an arithmetic expression to a recursive alternate form.
-The refactorings implemented are:
-
-### Raw tree editing
-
-* [Delete parse tree node](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#delete-parse-tree-node)
-
-### Reordering
-
-* [Move start rule to top](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#move-start-rule)
-* [Reorder parser rules](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#reorder-parser-rules)
-* [Sort modes](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#sort-modes)
-
-### Changing rules
-
-* [Remove useless parentheses](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#remove-useless-parentheses)
-* [Remove useless parser rules](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#remove-useless-productions)
-* [Rename lexer or parser symbol](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#rename)
-* [Unfold](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#Unfold)
-* [Group alts](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#group-alts)
-* [Ungroup alts](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#ungroup-alts)
-* [Upper and lower case string literals](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#upper-and-lower-case-string-literals)
-* [Fold](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#Fold)
-* Replace direct left recursion with right recursion
-* [Replace direct left/right recursion with Kleene operator](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#Kleene)
-* Replace indirect left recursion with right recursion
-* Replace parser rule symbols that conflict with Antlr keywords
-* [Replace string literals in parser with lexer symbols](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#replace-literals-in-parser-with-lexer-token-symbols)
-* Replace string literals in parser with lexer symbols, with lexer rule create
-* [Delabel removes the annoying and mostly useless labeling in an Antlr grammar](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#delabel)
-
-### Splitting and combining
-
-* [Split combined grammars](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#splitting-and-combining-grammars)
-* [Combine splitted grammars](https://github.com/kaby76/Trash/blob/main/doc/refactoring.md#splitting-and-combining-grammars)
-
-## Conversion
-
-* [Antlr3 import](https://github.com/kaby76/Trash/blob/main/doc/Import.md#antlr3)
-* [Antlr2 import](https://github.com/kaby76/Trash/blob/main/doc/Import.md#antlr2)
-* [Bison import](https://github.com/kaby76/Trash/blob/main/doc/Import.md#bison)
 
 ---------
 
