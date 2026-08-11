@@ -83,8 +83,8 @@ dotnet trash parse *.g4 | dotnet trash xpath ' //grammarDecl' | dotnet trash tex
 # Output:
 # lexer grammar PythonLexer;
 # parser grammar PythonParser;
-dotnet trash gen
-cd Generated
+dotnet trash gen -t CSharp
+cd Generated-CSharp
 dotnet build
 cat - <<EOF | dotnet trash parse | dotnet trash xpath ' //test' | dotnet trash text
 x == y
