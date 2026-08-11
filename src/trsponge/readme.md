@@ -11,11 +11,11 @@ results to file(s).
 
 ## Usage
 
-    trsponge <options>
+    dotnet trash sponge <options>
 
 ## Example
 
-    trparse Arithmetic.g4 | trsplit | trsponge
+    dotnet trash parse Arithmetic.g4 | dotnet trash split | dotnet trash sponge
 
 ## Current version
 

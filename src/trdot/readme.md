@@ -2,7 +2,7 @@
 
 ## Summary
 
-Print a parse tree in Graphvis Dot format
+Print a parse tree in Graphviz Dot format
 
 ## Description
 
@@ -10,7 +10,7 @@ Reads a tree from stdin and prints the tree as a Dot graph.
 
 ## Usage
 
-    trdot
+    dotnet trash dot
 
 ## Details
 
@@ -27,11 +27,11 @@ or a list of parse tree nodes obtained via
 
 Consider the Expression grammar, obtained via
 
-    mkdir foo; cd foo; trgen; cd Generated; dotnet build
+    mkdir foo; cd foo; dotnet trash gen; cd Generated-CSharp; dotnet build
 
 Let's parse the expression "1+2" and print the parse tree as a Dot graph:
 
-    trparse -i "1+2" | trdot
+    dotnet trash parse -i "1+2" | dotnet trash dot
 
 The output will be:
 

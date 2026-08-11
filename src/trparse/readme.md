@@ -25,9 +25,9 @@ depending on the extension of the file name:
 You can force the type of parse with
 the `--type` command-line option:
 
-* `ANTLRv4` for ANTLRv2
+* `ANTLRv4` for ANTLRv4
 * `ANTLRv3` for ANTLRv3
-* `ANTLRv2` for ANTLRv4
+* `ANTLRv2` for ANTLRv2
 * `Bison` for Bison
 * `rex` for Rex
 * `pegen_v3_10` for the `Generated/` parser
@@ -64,25 +64,24 @@ works without modification.
 
 ## Usage
 
-    trparse (<string> | <options>)*
+    dotnet trash parse (<string> | <options>)*
     -i, --input        Parse the given string as input.
     -t, --type         Specifies type of grammar: ANTLRv4, ANTLRv3, ANTLRv2, Bison, rex, pegen_v3_10
-    -s, --start-rule   Start rule name.
     -p, --parser       Location of pre-built parser (aka the trgen Generated/ directory)
         --pinterp      Path to parser .interp file (Earley ATN-based parsing).
         --linterp      Path to lexer .interp file  (Earley ATN-based parsing).
 
 ## Examples
 
-    trparse Java.g2
-    trparse -i "1+2+3"
-    trparse Foobar.g -t ANTLRv2
-    echo "1+2+3" | trparse | trtree
-    mkdir out; trparse MyParser.g4 MyLexer.g4 | trkleene | trsponge -o out
+    dotnet trash parse Java.g2
+    dotnet trash parse -i "1+2+3"
+    dotnet trash parse Foobar.g -t ANTLRv2
+    echo "1+2+3" | dotnet trash parse | dotnet trash tree
+    mkdir out; dotnet trash parse MyParser.g4 MyLexer.g4 | dotnet trash sponge -o out
 
     # Earley interp-based parse (no generated code needed)
     dotnet trash parse abb.g4 | dotnet trash interp -o out/
-    dotnet trash parse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | trtree
+    dotnet trash parse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | dotnet trash tree
 
 ## Current version
 

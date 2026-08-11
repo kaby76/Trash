@@ -10,11 +10,11 @@ Execute a command with a watchdog timer.
 
 ## Usage
 
-    trwdog <arg>+
+    dotnet trash wdog <arg>+
 
 ## Examples
 
-    trwdog make test
+    dotnet trash wdog make test
 
 ## Current version
 

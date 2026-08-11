@@ -4,8 +4,8 @@ Apply XQuery 4.0 Update expressions to a Trash parse tree.
 
 ## Synopsis
 
-    ... | trxquery '<xquery-expression>'
-    ... | trxquery -q <query-file>
+    ... | dotnet trash xquery '<xquery-expression>'
+    ... | dotnet trash xquery -q <query-file>
 
 ## Description
 
@@ -15,7 +15,7 @@ context document, and emits the (possibly mutated) parse tree on stdout.
 
 Mutations are applied using the XQuery Update Facility (insert/delete/replace/rename)
 directly on the underlying parse tree nodes via `TreeEdits`, so the result can be
-piped to other Trash tools (e.g. `trprint`).
+piped to other Trash tools (e.g. `dotnet trash text`).
 
 ## XQuery Update syntax
 
@@ -55,8 +55,8 @@ Rename an element:
 
 Delete all `WS` tokens from a parse tree:
 
-    dotnet trash parse Foo.g4 | trxquery 'delete node //WS'
+    dotnet trash parse Foo.g4 | dotnet trash xquery 'delete node //WS'
 
 Replace the text of the first `ID` token:
 
-    dotnet trash parse Foo.g4 | trxquery 'replace value of node (//ID)[1] with "myNewName"'
+    dotnet trash parse Foo.g4 | dotnet trash xquery 'replace value of node (//ID)[1] with "myNewName"'

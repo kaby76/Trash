@@ -13,9 +13,8 @@ to stdout. The input and output are Parse Tree Data.
 
 ## Usage
 
-trquery insert xpath-expr string (; additional commands...)*
-trquery delete xpath-expr (; additional commands...)*
-trquery replace xpath-expr string (; additional commands...)*
+    dotnet trash query <command> [; additional commands...]*
+    dotnet trash query -c <commands-file>
 
 ## Details
 
@@ -30,12 +29,12 @@ each operation as with trinsert, trdelete, or trreplace.
 
 ### Commands
 
-grep <xpath> match-required?
-insert (before|after)? <xpath> match-required? <string>
-delete <xpath> match-required?
-delete-reattach <xpath> match-required?
-replace <xpath> match-required <string>
-move (before|after)? <xpath> match-required? <xpath>
+    grep <xpath> match-required?
+    insert (before|after)? <xpath> match-required? <string>
+    delete <xpath> match-required?
+    delete-reattach <xpath> match-required?
+    replace <xpath> match-required <string>
+    move (before|after)? <xpath> match-required? <xpath>
 
 ## Examples
 

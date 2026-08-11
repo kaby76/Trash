@@ -10,7 +10,7 @@ Replace a rule with an EBNF form if it contains direct left or direct right recu
 
 ## Usage
 
-trkleene <string>?
+    dotnet trash kleene <string>?
 
 ## Details
 
@@ -27,8 +27,8 @@ is outputed to stdout.
 
 ## Examples
 
-    trparse A.g4 | trkleene
-    trparse A.g4 | trkleene "//parserRuleSpec/RULE_REF[text()='packageOrTypeName']"
+    dotnet trash parse A.g4 | dotnet trash kleene
+    dotnet trash parse A.g4 | dotnet trash kleene "//parserRuleSpec/RULE_REF[text()='packageOrTypeName']"
 
 ## Notes
 

@@ -10,7 +10,7 @@ Remove useless parentheses from a grammar.
 
 ## Usage
 
-    trrup
+    dotnet trash rup
 
 ## Details
 
@@ -27,7 +27,7 @@ grammar:
 
 _Command_
 
-    trparse Expression.g4 | trrup | trprint
+    dotnet trash parse Expression.g4 | dotnet trash rup | dotnet trash text
 
 _Result_
 

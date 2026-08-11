@@ -15,7 +15,7 @@ grammars into completely target independent grammars.
 
 ## Usage
 
-trparse *.g4 | trextract | trsponge -c
+    dotnet trash parse *.g4 | dotnet trash extract | dotnet trash sponge -c
 
 ## Details
 
@@ -27,7 +27,7 @@ _Input to command_
 
 _Command_
 
-trparse ExpressionLexer.g4 ExpressionParser.g4 | trextract | trsponge -c
+    dotnet trash parse ExpressionLexer.g4 ExpressionParser.g4 | dotnet trash extract | dotnet trash sponge -c
 
 The outputed files are:
 

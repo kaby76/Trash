@@ -22,11 +22,11 @@ the XPath patterns to match certain parse trees.
 
 ## Usage
 
-    trgenvsc <options>* 
+    dotnet trash genvsc <options>*
 
 ## Examples
 
-    trgenvsc
+    dotnet trash genvsc
 
 ## Current version
 

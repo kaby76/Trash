@@ -8,7 +8,7 @@ Outputs FIRST and FOLLOW sets of a grammar.
 
 ## Usage
 
-trff (assumes CSharp-targeted parser generated and compiled)
+    dotnet trash ff
 
 ## Details
 

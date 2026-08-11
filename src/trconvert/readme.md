@@ -2,7 +2,7 @@
 
 ## Summary
 
-Convert a grammar from one for to another
+Convert a grammar from one form to another
 
 ## Description
 
@@ -12,7 +12,7 @@ Bison, W3C EBNF, Lark). The input and output are Parse Tree Data.
 
 ## Usage
 
-    trconvert [-t <type>]
+    dotnet trash convert [-t <type>]
 
 ## Details
 
@@ -59,7 +59,7 @@ _Conversion of Antlr4 Abnf to Lark Abnf_
 
 _Command_
 
-    trparse Abnf.g4 | trconvert -t lark | trprint > Abnf.lark
+    dotnet trash parse Abnf.g4 | dotnet trash convert -t lark | dotnet trash text > Abnf.lark
 
 _Output_
 

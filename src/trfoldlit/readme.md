@@ -13,7 +13,7 @@ output are Parse Tree Data.
 
 ## Usage
 
-    trfoldlit
+    dotnet trash foldlit
 
 ## Examples
 
@@ -37,7 +37,7 @@ Before:
 
 Command:
 
-    trparse Expression.g4 | trfoldlit | trsponge -c
+    dotnet trash parse Expression.g4 | dotnet trash foldlit | dotnet trash sponge -c
 
 After:
 

@@ -10,11 +10,11 @@ Read a tree from stdin and write an XML represenation of it.
 
 ## Usage
 
-    trxml
+    dotnet trash xml
 
 ## Examples
 
-    trparse A.g4 | trxml
+    dotnet trash parse A.g4 | dotnet trash xml
 
 ## Current version
 

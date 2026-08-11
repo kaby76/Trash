@@ -11,7 +11,7 @@ searches for problems in the grammar, and outputs the results to stdout.
 
 ## Usage
 
-    tranalyze
+    dotnet trash analyze
 
 ## Details
 
@@ -45,7 +45,7 @@ _Input to command_
 
 _Command_
 
-    trparse Test.g4 | tranalyze
+    dotnet trash parse Test.g4 | dotnet trash analyze
 
 _Output_
 

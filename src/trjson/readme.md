@@ -10,11 +10,11 @@ Read a parse tree from stdin and write a JSON represenation of it.
 
 ## Usage
 
-    trjson
+    dotnet trash json
 
 ## Examples
 
-    trparse A.g4 | trjson | less
+    dotnet trash parse A.g4 | dotnet trash json | less
 
 ## Current version
 

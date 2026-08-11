@@ -11,11 +11,11 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Usage
 
-    tragl
+    dotnet trash agl
 
 ## Example
 
-    trparse -i "1+2" | tragl
+    dotnet trash parse -i "1+2" | dotnet trash agl
 
 ## Current version
 

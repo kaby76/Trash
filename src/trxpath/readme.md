@@ -10,11 +10,11 @@ Find all sub-trees in a parse tree using the given XPath expression.
 
 ## Usage
 
-    trxpath <string>
+    dotnet trash xpath <string>
 
 ## Examples
 
-    trparse A.g4 | trxpath "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+    dotnet trash parse A.g4 | dotnet trash xpath "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
 ## Notes
 
