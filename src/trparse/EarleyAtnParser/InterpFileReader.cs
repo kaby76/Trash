@@ -78,7 +78,10 @@ public static class InterpFileReader
     private static void SkipToSection(string[] lines, ref int i, string header)
     {
         while (i < lines.Length && lines[i].Trim() != header) i++;
-        if (i < lines.Length) i++; // skip the header line
+        if (i >= lines.Length)
+            throw new InvalidDataException(
+                $"Required section '{header}' not found in .interp file.");
+        i++; // skip the header line
     }
 
     private static bool TrySkipToSection(string[] lines, ref int i, string header)

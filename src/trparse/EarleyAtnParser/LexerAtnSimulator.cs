@@ -35,12 +35,8 @@ public class LexerAtnSimulator
             var (matchedRule, matchEnd, actions) = MatchNextToken(input, pos, 0);
 
             if (matchedRule < 0)
-            {
-                // Lexer error: skip one character
-                UpdateLineCol(input, pos, pos + 1, ref line, ref col);
-                pos++;
-                continue;
-            }
+                throw new InvalidOperationException(
+                    $"Lexer error at line {line}:{col}: no rule matches '{input[pos]}' (U+{(int)input[pos]:X4}).");
 
             int tokenType = _atn.ruleToTokenType[matchedRule];
             int channel = DEFAULT_CHANNEL;
@@ -53,7 +49,9 @@ public class LexerAtnSimulator
                     case MyLexerActionType.Skip:    skip = true; break;
                     case MyLexerActionType.Channel: channel = action.Arg1; break;
                     case MyLexerActionType.Type:    tokenType = action.Arg1; break;
-                    // More/Mode/PushMode/PopMode: not implemented for initial version
+                    default:
+                        throw new NotSupportedException(
+                            $"Lexer action '{action.ActionType}' is not supported by the Earley ATN lexer.");
                 }
             }
 

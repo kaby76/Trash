@@ -41,7 +41,7 @@ Earley parser over the serialized ATN.  No generated C# code and no
 
 Provide both the parser and lexer interp files:
 
-    trparse --pinterp abbParser.interp --linterp abbLexer.interp input.abb
+    dotnet trash parse --pinterp abbParser.interp --linterp abbLexer.interp input.abb
 
 The output is the same `ParsingResultSet` JSON format as all other `trparse`
 modes, so every downstream Trash Toolkit tool (`trtree`, `trxgrep`, etc.)
@@ -82,7 +82,7 @@ works without modification.
 
     # Earley interp-based parse (no generated code needed)
     dotnet trash parse abb.g4 | dotnet trash interp -o out/
-    trparse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | trtree
+    dotnet trash parse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | trtree
 
 ## Current version
 
