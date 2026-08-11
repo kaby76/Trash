@@ -15,7 +15,7 @@ dotnet trash parse Expression.g4 > grammar.json
 dotnet trash interp -o interp/ < grammar.json
 
 # Parse a sample expression using the Earley ATN-based path.
-echo "1 + 2 + 3" | dotnet trash parse --lib interp/ | dotnet trash tree > trparse-interp.tree
+printf "1 + 2 + 3" | dotnet trash parse --lib interp/ | dotnet trash tree > trparse-interp.tree
 
 # Diff against the golden file.
 dos2unix trparse-interp.tree
