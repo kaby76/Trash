@@ -208,12 +208,25 @@ public class Grun
         List<AntlrJson.ParsingResultSet> data)
     {
         // Interp-file-based Earley parsing path
-        if (config.PInterp != null && config.LInterp != null)
+        string resolvedPInterp = config.PInterp != null
+            ? ResolveInterpPath(config.PInterp, config.Lib)
+            : null;
+        string resolvedLInterp = config.LInterp != null
+            ? ResolveInterpPath(config.LInterp, config.Lib)
+            : null;
+
+        // Auto-discover interp files when --lib is given without explicit --pinterp/--linterp.
+        if (resolvedPInterp == null && resolvedLInterp == null && !string.IsNullOrEmpty(config.Lib))
         {
-            var pinterp = ResolveInterpPath(config.PInterp, config.Lib);
-            var linterp = ResolveInterpPath(config.LInterp, config.Lib);
+            var discovered = DiscoverInterpPair(config.Lib);
+            resolvedPInterp = discovered.pinterp;
+            resolvedLInterp = discovered.linterp;
+        }
+
+        if (resolvedPInterp != null && resolvedLInterp != null)
+        {
             var rs = Trash.EarleyAtn.InterpRunner.Run(
-                pinterp, linterp, txt, input_name, config.LineNumbers);
+                resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
             data.Add(rs);
             System.Console.Error.WriteLine(prefix + "Earley " + row_number + " " + input_name + " success");
             return 0;
@@ -413,5 +426,41 @@ public class Grun
         if (string.IsNullOrEmpty(lib) || Path.IsPathRooted(path))
             return path;
         return Path.Combine(lib, path);
+    }
+
+    /// <summary>
+    /// Scans <paramref name="dir"/> for matched *Parser.interp + *Lexer.interp pairs.
+    /// Returns the pair when exactly one match is found; throws with a descriptive
+    /// message when zero or multiple matches exist.
+    /// </summary>
+    private static (string pinterp, string linterp) DiscoverInterpPair(string dir)
+    {
+        if (!Directory.Exists(dir))
+            throw new DirectoryNotFoundException($"--lib directory not found: '{dir}'");
+
+        var parserFiles = Directory.GetFiles(dir, "*Parser.interp");
+        var lexerFiles  = Directory.GetFiles(dir, "*Lexer.interp");
+
+        var pairs = new List<(string p, string l)>();
+        foreach (var pf in parserFiles)
+        {
+            var prefix = Path.GetFileNameWithoutExtension(pf); // e.g. "abbParser"
+            prefix = prefix.Substring(0, prefix.Length - "Parser".Length); // "abb"
+            var lf = Path.Combine(dir, prefix + "Lexer.interp");
+            if (File.Exists(lf))
+                pairs.Add((pf, lf));
+        }
+
+        if (pairs.Count == 0)
+            throw new FileNotFoundException(
+                $"No matched *Parser.interp + *Lexer.interp pair found in '{dir}'. " +
+                "Use --pinterp / --linterp to specify them explicitly.");
+        if (pairs.Count > 1)
+            throw new InvalidOperationException(
+                $"Multiple parser/lexer interp pairs found in '{dir}': " +
+                string.Join(", ", pairs.Select(p => Path.GetFileNameWithoutExtension(p.p))) +
+                ". Use --pinterp / --linterp to specify which pair to use.");
+
+        return pairs[0];
     }
 }
