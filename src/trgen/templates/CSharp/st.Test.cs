@@ -191,7 +191,6 @@ public class Program
     static string prefix = "";
     static bool quiet = false;
     static string output_dir = null;
-    static bool earley = false;
     static int limit = 0; // 0 = unlimited
     static bool count_ambig = false;
     static long total_ambig_count = 0;
@@ -298,11 +297,6 @@ public class Program
             else if (args[i] == "-trace")
             {
                 show_trace = true;
-            }
-            else if (args[i] == "-earley")
-            {
-                earley = true;
-                show_tree = false;
             }
             else if (args[i] == "--limit" || args[i].StartsWith("--limit="))
             {
@@ -558,24 +552,6 @@ public class Program
         {
             var ambig_suffix = count_ambig ? " ambig " + (ambig_count_listener?.ambiguity_count ?? 0) : "";
             System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " + parse_seconds + " s " + token_count + " tokens " + (long)(token_count / parse_seconds) + " tps" + ambig_suffix);
-        }
-
-        if (earley) {
-            var epsilon_remover = new EpsilonRemover(parser);
-            var new_atn = epsilon_remover.Convert_ENFA_to_NFA();
-
-            lexer.Reset();
-            parser.Reset();
-
-            int start = parser.RuleNames.Select((value, index) => new { value, index })
-                .Where(pair => (pair.value == StartSymbol))
-                .Select(pair => pair.index).First();
-
-            MyATN atn = new_atn;
-            DateTime ebefore = DateTime.Now;
-            var accepted = EarleyATN.EarleyAtnRecognizer.ParseToTree(parser, new_atn, parser.TokenStream, start);
-            DateTime eafter = DateTime.Now;
-            Console.Error.WriteLine((accepted ? "ACCEPT" : "REJECT") + " " + (eafter - ebefore).TotalSeconds);
         }
 
         if (tee) output.Close();

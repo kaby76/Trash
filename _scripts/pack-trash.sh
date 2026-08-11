@@ -23,47 +23,35 @@ TOOLS=(
     trcombine
     trconvert
     trcover
-#   trdistill
     trdot
-#   trenum
     trextract
     trff
-#   trfold
     trfoldlit
-#   trformat
     trgen
     trgenvsc
     trglob
-#   trgroup
     triconv
     trinterp
     tritext
     trjson
-#   trkleene
     trnullable
     trparse
     trperf
-#   trpiggy
     trrename
-#    trrr
-#    trrup
-#    trsem
     trsort
     trsplit
     trsponge
     trtext
-#    trthompson
     trtokens
     trtree
-#    trull
     trunfold
     trunfoldlit
     trungroup
     trwdog
-    trxpath
-    trxquery
     trxml
     trxml2
+    trxpath
+    trxquery
 )
 
 echo "=== Cleaning staging directory ==="
