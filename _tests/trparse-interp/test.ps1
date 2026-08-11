@@ -1,5 +1,9 @@
 #Requires -Version 7
 $ErrorActionPreference = 'Stop'
+# Force UTF-8 so box-drawing characters from dotnet subprocesses are not
+# misinterpreted through the OEM (CP437) code page.
+$OutputEncoding = [Console]::InputEncoding = [Console]::OutputEncoding = `
+    [System.Text.Encoding]::UTF8
 Set-Location $PSScriptRoot
 
 # Clean up
