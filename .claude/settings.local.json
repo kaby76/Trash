@@ -19,7 +19,9 @@
       "Bash(git config:*)",
       "Bash(sed:*)",
       "Bash(sed s|.*:||:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh:*)"
     ]
   }
 }
