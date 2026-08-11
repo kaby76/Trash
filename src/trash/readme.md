@@ -1,4 +1,4 @@
-1.1.1 Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement. Added more perf measurements to templates.
+2.0 Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement. Added more perf measurements to templates.
 
 # trash
 
@@ -66,7 +66,7 @@ Both the full command name and a short alias (without the `tr` prefix) are accep
 | trunfoldlit    | unfoldlit   |
 | trungroup      | ungroup     |
 | trwdog         | wdog        |
-| trxgrep        | xgrep       |
+| trxpath        | xpath       |
 | trxml          | xml         |
 | trxml2         | xml2        |
 

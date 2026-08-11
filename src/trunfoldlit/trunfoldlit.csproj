@@ -19,7 +19,7 @@ in the parse tree. This program is part of the Trash toolkit.
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>1.1.1</Version>
+		<Version>2.0</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trunfoldlit</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
@@ -32,6 +32,9 @@ in the parse tree. This program is part of the Trash toolkit.
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
 		<ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />
 		<ProjectReference Include="../Logger/Logger.csproj" />
+		<ProjectReference Include="../xquery4/src/XQuery.DataModel/XQuery.DataModel.csproj" />
+		<ProjectReference Include="../xquery4/src/XQuery.Parser/XQuery.Parser.csproj" />
+		<ProjectReference Include="../xquery4/src/XQuery.Engine/XQuery.Engine.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="readme.md" Pack="true" PackagePath=""/>

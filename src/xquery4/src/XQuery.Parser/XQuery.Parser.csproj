@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>XQuery.Parser</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+    <PackageReference Include="Antlr4BuildTasks" Version="12.10.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Antlr4 Include="XPath4Lexer.g4" />
+    <Antlr4 Include="XPath4Parser.g4" />
+    <Antlr4 Include="XQuery4Lexer.g4" />
+    <Antlr4 Include="XQuery4Parser.g4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XQuery.DataModel\XQuery.DataModel.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;3021</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
+  </PropertyGroup>
+
+</Project>

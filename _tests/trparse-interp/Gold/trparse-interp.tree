@@ -1,0 +1,22 @@
+s
+├── e
+│   ├── INT
+│   │   └── "1"
+│   ├── Attribute Skip Value ' '
+│   ├── T__3
+│   │   └── "+"
+│   ├── e
+│   │   ├── Attribute Skip Value ' '
+│   │   └── INT
+│   │       └── "2"
+│   ├── Attribute Skip Value ' '
+│   ├── T__3
+│   │   └── "+"
+│   └── e
+│       ├── Attribute Skip Value ' '
+│       └── INT
+│           └── "3"
+└── EOF
+    └── ""
+
+

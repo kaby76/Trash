@@ -8,7 +8,7 @@ namespace Trash;
 
 public class Program
 {
-    private const string Version = "1.1.0";
+    public static string version = "2.0";
 
     // Maps both full names (e.g. "trgen") and short aliases (e.g. "gen") to the
     // sub-tool directory name that lives next to trash.dll in the package.
@@ -35,6 +35,7 @@ public class Program
         { "trglob",       "trglob"       },
 //      { "trgroup",      "trgroup"      },
         { "triconv",      "triconv"      },
+        { "trinterp",     "trinterp"      },
         { "tritext",      "tritext"      },
         { "trjson",       "trjson"       },
 //      { "trkleene",     "trkleene"     },
@@ -42,7 +43,6 @@ public class Program
         { "trparse",      "trparse"      },
         { "trperf",       "trperf"       },
 //      { "trpiggy",      "trpiggy"      },
-        { "trquery",      "trquery"      },
         { "trrename",     "trrename"     },
 //      { "trrr",         "trrr"         },
 //      { "trrup",        "trrup"        },
@@ -59,7 +59,8 @@ public class Program
         { "trunfoldlit",  "trunfoldlit"  },
         { "trungroup",    "trungroup"    },
         { "trwdog",       "trwdog"       },
-        { "trxgrep",      "trxgrep"      },
+        { "trxpath",      "trxpath"      },
+        { "trxquery",     "trxquery"     },
         { "trxml",        "trxml"        },
         { "trxml2",       "trxml2"       },
         // short aliases (strip the "tr" / "tri" prefix)
@@ -83,13 +84,13 @@ public class Program
 //      { "group",        "trgroup"      },
         { "iconv",        "triconv"      },
         { "itext",        "tritext"      },
+        { "interp",       "trinterp"     },
         { "json",         "trjson"       },
 //      { "kleene",       "trkleene"     },
         { "nullable",     "trnullable"   },
         { "parse",        "trparse"      },
         { "perf",         "trperf"       },
 //      { "piggy",        "trpiggy"      },
-        { "query",        "trquery"      },
         { "rename",       "trrename"     },
 //      { "rr",           "trrr"         },
 //      { "rup",          "trrup"        },
@@ -106,7 +107,8 @@ public class Program
         { "unfoldlit",    "trunfoldlit"  },
         { "ungroup",      "trungroup"    },
         { "wdog",         "trwdog"       },
-        { "xgrep",        "trxgrep"      },
+        { "xpath",        "trxpath"      },
+        { "xquery",       "trxquery"     },
         { "xml",          "trxml"        },
         { "xml2",         "trxml2"       },
     };
@@ -121,7 +123,7 @@ public class Program
 
         if (args[0] is "--version" or "-v")
         {
-            Console.WriteLine(Version);
+            Console.WriteLine(version);
             return 0;
         }
 
@@ -157,7 +159,7 @@ public class Program
 
     static void PrintHelp()
     {
-        Console.WriteLine($"trash {Version} - The Trash toolkit");
+        Console.WriteLine($"trash {version} - The Trash toolkit");
         Console.WriteLine();
         Console.WriteLine("Usage:  trash <command> [options]");
         Console.WriteLine("        trash <alias>   [options]");

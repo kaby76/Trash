@@ -20,17 +20,17 @@ This program is part of the Trash toolkit.
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>1.1.1</Version>
+		<Version>2.0</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trwdog</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Management" Version="10.0.9" />
+		<PackageReference Include="System.Management" Version="10.0.10" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="readme.md" Pack="true" PackagePath=""/>
+		<None Include="readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>

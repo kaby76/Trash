@@ -42,11 +42,20 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "1.1.1";
+    public string Version { get; set; } = "2.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
 
     [Option("xf", Required = false, HelpText = "Read input file names from file provided on command line.")]
     public string ReadFileNameFile { get; set; }
+
+    [Option("pinterp", Required = false, HelpText = "Path to parser .interp file for Earley ATN-based parsing.")]
+    public string PInterp { get; set; }
+
+    [Option("linterp", Required = false, HelpText = "Path to lexer .interp file for Earley ATN-based parsing.")]
+    public string LInterp { get; set; }
+
+    [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths).")]
+    public string Lib { get; set; }
 }

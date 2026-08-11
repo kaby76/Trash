@@ -1,21 +1,474 @@
-<!--  License: MIT
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  desc.xsd — XML Schema for desc.xml grammar descriptor files used by trgen.
+
+  The desc.xml file lives in each grammar directory under grammars-v4 and
+  controls how trgen generates parser applications and test harnesses for each
+  supported ANTLR4 target language. It specifies which targets to generate for,
+  which ANTLR4 version is required, how to locate grammar files, how to discover
+  test input files, and how multiple separate test configurations should be
+  handled.
+
+  Elements may appear in any order inside <desc>. <targets> is the only
+  required element; all others are optional and may appear at most once,
+  except <test> which may be repeated.
+
+  NOTE: This schema uses XSD 1.1 features (maxOccurs on xs:all members) to
+  enforce these cardinality rules. Validators must support XSD 1.1 — e.g.
+  Saxon-HE 9.8+, Xerces 2.11+, or Visual Studio 2012+.
+
+  ============================================================
+  Minimal example — just list the targets:
+  ============================================================
+
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <desc>
+      <targets>CSharp;Java;Python3</targets>
+    </desc>
+
+  ============================================================
+  Full example — grammar with non-default naming, version
+  constraint, a glob for inputs, and two test groups:
+  ============================================================
+
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <desc>
+      <antlr-version>^4.13.2</antlr-version>
+      <targets>CSharp;Cpp;Java;JavaScript;Python3</targets>
+      <grammar-files>MyLexer.g4;MyParser.g4</grammar-files>
+      <grammar-name>MyLanguage</grammar-name>
+      <entry-point>compilationUnit</entry-point>
+      <inputs>examples/**/*.mylang</inputs>
+      <!-- Fast targets get the full example suite. -->
+      <test>
+        <name>fast</name>
+        <targets>CSharp;Cpp;Java</targets>
+        <entry-point>compilationUnit</entry-point>
+        <inputs>examples/**/*.mylang</inputs>
+      </test>
+      <!-- Slow targets get a smaller subset. -->
+      <test>
+        <name>slow</name>
+        <targets>JavaScript;Python3</targets>
+        <entry-point>compilationUnit</entry-point>
+        <inputs>examples/small/*.mylang</inputs>
+      </test>
+    </desc>
+
+  ============================================================
+  Example — grammar with binary input and per-target encoding:
+  ============================================================
+
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <desc>
+      <targets>Antlr4ng;Cpp;CSharp;Dart;Go;Java;JavaScript;Python3;TypeScript</targets>
+      <entry-point>segmentheader</entry-point>
+      <binary/>
+      <test>
+        <targets>CSharp;Java</targets>
+        <file-encoding>ISO-8859-1</file-encoding>
+      </test>
+      <test>
+        <targets>Antlr4ng;Cpp;Dart;Go;JavaScript;Python3;TypeScript</targets>
+        <file-encoding>latin1</file-encoding>
+      </test>
+    </desc>
+
+  ============================================================
+  Example — grammar tests use different entry points:
+  ============================================================
+
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <desc>
+      <targets>Antlr4ng;Cpp;CSharp;Dart;Java;JavaScript;TypeScript;Python3</targets>
+      <grammar-files>KotlinLexer.g4;KotlinParser.g4</grammar-files>
+      <grammar-name>Kotlin</grammar-name>
+      <test>
+        <entry-point>kotlinFile</entry-point>
+        <inputs>examples/kotlinFile</inputs>
+      </test>
+      <test>
+        <entry-point>script</entry-point>
+        <inputs>examples/script</inputs>
+      </test>
+    </desc>
 -->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           vc:minVersion="1.1"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning">
+
   <xs:element name="desc">
+    <xs:annotation>
+      <xs:documentation>
+        Root element of the grammar descriptor file (desc.xml). Each grammar
+        directory contains one desc.xml that tells trgen how to generate parser
+        applications and how to run tests for every supported target language.
+
+        Child elements may appear in any order. &lt;targets&gt; is required and
+        must appear exactly once. All other elements are optional and may
+        appear at most once, except &lt;test&gt; which may be repeated any
+        number of times.
+
+        The content model is open: unknown elements are permitted (validated
+        laxly) so that future extensions and tooling-specific additions do not
+        break existing desc.xml files. trgen ignores any element it does not
+        recognise.
+
+        When no &lt;test&gt; elements are present, trgen synthesises a single
+        default test from the top-level &lt;targets&gt;, &lt;entry-point&gt;,
+        and &lt;inputs&gt; values. When one or more &lt;test&gt; elements are
+        present they fully replace the default test, allowing different subsets
+        of targets, input files, or entry points to be combined in any way.
+      </xs:documentation>
+    </xs:annotation>
     <xs:complexType>
-      <xs:sequence>
-        <xs:element type="xs:string" name="targets"/>
-        <xs:element type="xs:string" name="entry-point"/>
-        <xs:element type="xs:string" name="binary"/>
-        <xs:element name="test" maxOccurs="unbounded" minOccurs="0">
+      <!--
+        xs:all (XSD 1.1) is used so that:
+          - child elements may appear in any order
+          - <targets> is required (minOccurs="1", the default for xs:all members)
+          - all other single-occurrence elements are optional (minOccurs="0")
+          - <test> may repeat (maxOccurs="unbounded", a XSD 1.1 extension to xs:all)
+          - xs:any with processContents="lax" opens the content model so that
+            unknown/future elements pass validation (trgen ignores them at runtime)
+      -->
+      <xs:all>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             Top-level descriptor elements
+             ═══════════════════════════════════════════════════════════════ -->
+
+        <xs:element name="antlr-version" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Minimum ANTLR4 runtime version required by this grammar, expressed
+              as a semver range. trgen uses this to select a compatible ANTLR4
+              JAR and target-language runtime packages. The caret (^) prefix
+              means "compatible with" — i.e., >= the specified version and
+              &lt; the next major version.
+
+              When absent, trgen uses whatever ANTLR4 version it is configured
+              with by default.
+
+              Examples:
+                &lt;antlr-version&gt;^4.10&lt;/antlr-version&gt;
+                &lt;antlr-version&gt;^4.13.2&lt;/antlr-version&gt;
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element name="targets" type="xs:string" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>
+              REQUIRED. Semicolon-separated list of ANTLR4 code-generation target
+              languages for which trgen should generate parser applications. trgen
+              will skip any target not in this list. The order of targets is not
+              significant.
+
+              Known targets (as of ANTLR4 4.13):
+                Antlr4ng  — TypeScript runtime maintained by the Antlr4ng project
+                Cpp       — C++
+                CSharp    — C# / .NET
+                Dart      — Dart
+                Go        — Go
+                Java      — Java
+                JavaScript — JavaScript (Node.js)
+                PHP       — PHP
+                Python3   — Python 3
+                Rust      — Rust (community runtime)
+                TypeScript — TypeScript (official runtime)
+
+              Example:
+                &lt;targets&gt;CSharp;Cpp;Dart;Go;Java;JavaScript;Python3&lt;/targets&gt;
+
+              This element may also appear inside a &lt;test&gt; element to
+              restrict which targets participate in that specific test.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element name="grammar-files" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Semicolon-separated list of .g4 grammar files that make up this
+              grammar. Use this element when the grammar files do not follow the
+              default naming convention (where the file name matches the grammar
+              directory name). List files in dependency order: lexer grammars
+              before combined or parser grammars.
+
+              When absent, trgen discovers grammar files by looking for .g4 files
+              whose base name matches the directory name.
+
+              Examples:
+                &lt;grammar-files&gt;KotlinLexer.g4;KotlinParser.g4&lt;/grammar-files&gt;
+                &lt;grammar-files&gt;HiveLexer.g4;HintParser.g4;HiveParser.g4&lt;/grammar-files&gt;
+                &lt;grammar-files&gt;CaQL.g4&lt;/grammar-files&gt;
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element name="grammar-name" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Overrides the grammar name that trgen would otherwise derive from
+              the grammar directory name. The grammar name is used as the base
+              name for the generated lexer and parser class files and must match
+              the identifier in the `grammar` declaration inside the .g4 file.
+
+              Use this element when the ANTLR4 grammar declaration does not match
+              the directory name, or when a directory contains multiple grammars
+              and a specific one should be the default.
+
+              This element may also appear inside a &lt;test&gt; element to
+              select a different grammar for that specific test.
+
+              Examples:
+                &lt;grammar-name&gt;SystemVerilog&lt;/grammar-name&gt;
+                &lt;grammar-name&gt;Hive&lt;/grammar-name&gt;
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element name="entry-point" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              The parser rule name used as the top-level (start) rule when
+              parsing input files. If absent, trgen uses the first parser rule
+              defined in the grammar.
+
+              This top-level value is the default for all tests. Each &lt;test&gt;
+              element may provide its own &lt;entry-point&gt; to override it for
+              that test run.
+
+              Examples:
+                &lt;entry-point&gt;compilationUnit&lt;/entry-point&gt;
+                &lt;entry-point&gt;file_input&lt;/entry-point&gt;
+                &lt;entry-point&gt;source_text&lt;/entry-point&gt;
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element name="binary" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Empty element that marks this grammar as operating on binary
+              (non-text) input. When present, the generated parser reads input
+              files as raw byte streams rather than decoded character streams.
+              This is required for grammars that match binary protocols or file
+              formats (e.g., TCP header, DICOM).
+
+              Example:
+                &lt;binary/&gt;
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType/>
+        </xs:element>
+
+        <xs:element name="inputs" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Glob pattern (relative to the grammar directory) that specifies
+              which input files are used to test the grammar. Supports `**` for
+              recursive directory matching. May also be a bare directory path, in
+              which case all files directly inside that directory are used.
+
+              This top-level value is the default; each &lt;test&gt; may provide
+              its own &lt;inputs&gt; to override it for that run.
+
+              Examples:
+                &lt;inputs&gt;examples/**/*.java&lt;/inputs&gt;
+                &lt;inputs&gt;examples/*.proto&lt;/inputs&gt;
+                &lt;inputs&gt;examples&lt;/inputs&gt;
+                &lt;inputs&gt;../ada2012/examples/*.adb&lt;/inputs&gt;
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element name="imports" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Relative path to another grammar directory whose .g4 files are
+              imported by this grammar via ANTLR4 `import` statements. trgen
+              will look in that directory when resolving imported grammars during
+              code generation.
+
+              Example:
+                &lt;imports&gt;../c&lt;/imports&gt;
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             Test configuration element
+             ═══════════════════════════════════════════════════════════════ -->
+
+        <xs:element name="test" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>
+              Defines a named group of targets, input files, and parser settings
+              that are executed together as a single test run. Multiple &lt;test&gt;
+              elements may appear to represent different test configurations.
+
+              Common reasons to use multiple &lt;test&gt; elements:
+
+              1. Splitting fast and slow targets so that generated-code
+                 performance differences do not time out CI runs:
+
+                   &lt;test&gt;
+                     &lt;name&gt;fast&lt;/name&gt;
+                     &lt;targets&gt;Cpp;CSharp;Java&lt;/targets&gt;
+                     &lt;inputs&gt;examples/**/*.py&lt;/inputs&gt;
+                   &lt;/test&gt;
+                   &lt;test&gt;
+                     &lt;name&gt;slow&lt;/name&gt;
+                     &lt;targets&gt;JavaScript;Python3&lt;/targets&gt;
+                     &lt;inputs&gt;examples/small/*.py&lt;/inputs&gt;
+                   &lt;/test&gt;
+
+              2. Testing multiple entry points of the same grammar:
+
+                   &lt;test&gt;
+                     &lt;entry-point&gt;kotlinFile&lt;/entry-point&gt;
+                     &lt;inputs&gt;examples/kotlinFile&lt;/inputs&gt;
+                   &lt;/test&gt;
+                   &lt;test&gt;
+                     &lt;entry-point&gt;script&lt;/entry-point&gt;
+                     &lt;inputs&gt;examples/script&lt;/inputs&gt;
+                   &lt;/test&gt;
+
+              3. Varying the character encoding per target runtime:
+
+                   &lt;test&gt;
+                     &lt;targets&gt;CSharp;Java&lt;/targets&gt;
+                     &lt;file-encoding&gt;ISO-8859-1&lt;/file-encoding&gt;
+                   &lt;/test&gt;
+                   &lt;test&gt;
+                     &lt;targets&gt;Antlr4ng;Cpp;Dart;Go;JavaScript;Python3&lt;/targets&gt;
+                     &lt;file-encoding&gt;latin1&lt;/file-encoding&gt;
+                   &lt;/test&gt;
+
+              4. Selecting different grammar variants for the same input:
+
+                   &lt;test&gt;
+                     &lt;grammar-name&gt;Eiffel&lt;/grammar-name&gt;
+                   &lt;/test&gt;
+                   &lt;test&gt;
+                     &lt;grammar-name&gt;EiffelNoSkip&lt;/grammar-name&gt;
+                   &lt;/test&gt;
+
+              When no &lt;test&gt; elements are present, trgen synthesises a
+              single default test using the top-level &lt;targets&gt;,
+              &lt;entry-point&gt;, and &lt;inputs&gt; values.
+            </xs:documentation>
+          </xs:annotation>
           <xs:complexType>
-            <xs:sequence>
-              <xs:element type="xs:string" name="targets"/>
-              <xs:element type="xs:string" name="file-encoding"/>
-            </xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+              <xs:element name="name" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    An optional label for this test configuration. Used to
+                    distinguish runs when multiple &lt;test&gt; elements are
+                    present. If omitted, trgen assigns a sequential numeric index.
+
+                    Example:
+                      &lt;name&gt;fast&lt;/name&gt;
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <xs:element name="targets" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Semicolon-separated list of targets that participate in this
+                    specific test run. Overrides (or refines) the top-level
+                    &lt;targets&gt; value for this test group only. Any target
+                    not listed here is excluded from this test.
+
+                    See the top-level &lt;targets&gt; description for the list of
+                    known target names.
+
+                    Example:
+                      &lt;targets&gt;CSharp;Java&lt;/targets&gt;
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <xs:element name="entry-point" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Parser rule to use as the start rule for this specific test,
+                    overriding the top-level &lt;entry-point&gt;. Use this when
+                    a grammar exposes multiple valid start rules and different
+                    tests need to exercise different ones.
+
+                    Example:
+                      &lt;entry-point&gt;start_scriptlet&lt;/entry-point&gt;
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <xs:element name="inputs" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Glob pattern for input files used in this specific test run,
+                    overriding the top-level &lt;inputs&gt; value. Supports `**`
+                    for recursive matching or may be a bare directory path.
+
+                    Examples:
+                      &lt;inputs&gt;examples/small/*.sql&lt;/inputs&gt;
+                      &lt;inputs&gt;examples/**/*.g4&lt;/inputs&gt;
+                      &lt;inputs&gt;small&lt;/inputs&gt;
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <xs:element name="file-encoding" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Character encoding to use when reading input files for this
+                    test run. Different target runtimes may use different names
+                    for the same encoding, so separate &lt;test&gt; elements with
+                    different &lt;file-encoding&gt; values can target different
+                    runtime groups. When absent, UTF-8 is assumed.
+
+                    Examples:
+                      &lt;file-encoding&gt;ISO-8859-1&lt;/file-encoding&gt;
+                      &lt;file-encoding&gt;latin1&lt;/file-encoding&gt;
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <xs:element name="grammar-name" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Overrides the grammar name for this specific test only. Use
+                    this when a grammar directory contains multiple grammar
+                    variants and different tests should use different ones (for
+                    example, a grammar with and without channel-skip rules).
+
+                    Example:
+                      &lt;grammar-name&gt;EiffelNoSkip&lt;/grammar-name&gt;
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <!-- Open content: allow unknown elements inside <test> as well. -->
+              <xs:any namespace="##other" processContents="lax"
+                      minOccurs="0" maxOccurs="unbounded"/>
+
+            </xs:choice>
           </xs:complexType>
         </xs:element>
-      </xs:sequence>
+
+        <!-- Open content: allow any unknown element so future extensions and
+             tooling-specific additions do not break validation. trgen ignores
+             elements it does not recognise at runtime. -->
+        <xs:any namespace="##other" processContents="lax"
+                minOccurs="0" maxOccurs="unbounded"/>
+
+      </xs:all>
     </xs:complexType>
   </xs:element>
+
 </xs:schema>

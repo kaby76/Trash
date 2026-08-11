@@ -207,6 +207,39 @@ public class Grun
         int row_number,
         List<AntlrJson.ParsingResultSet> data)
     {
+        // Interp-file-based Earley parsing path
+        bool hasPInterp = !string.IsNullOrEmpty(config.PInterp);
+        bool hasLInterp = !string.IsNullOrEmpty(config.LInterp);
+        if (hasPInterp != hasLInterp)
+        {
+            System.Console.Error.WriteLine(
+                "Error: --pinterp and --linterp must be specified together.");
+            return 1;
+        }
+        string resolvedPInterp = hasPInterp
+            ? ResolveInterpPath(config.PInterp, config.Lib)
+            : null;
+        string resolvedLInterp = hasLInterp
+            ? ResolveInterpPath(config.LInterp, config.Lib)
+            : null;
+
+        // Auto-discover interp files when --lib is given without explicit --pinterp/--linterp.
+        if (resolvedPInterp == null && resolvedLInterp == null && !string.IsNullOrEmpty(config.Lib))
+        {
+            var discovered = DiscoverInterpPair(config.Lib);
+            resolvedPInterp = discovered.pinterp;
+            resolvedLInterp = discovered.linterp;
+        }
+
+        if (resolvedPInterp != null && resolvedLInterp != null)
+        {
+            var rs = Trash.EarleyAtn.InterpRunner.Run(
+                resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
+            data.Add(rs);
+            System.Console.Error.WriteLine(prefix + "Earley " + row_number + " " + input_name + " success");
+            return 0;
+        }
+
         Type type = null;
         if (parser_type == null || parser_type == "")
         {
@@ -302,6 +335,15 @@ public class Grun
             type = asm.GetType("Program");
         }
 
+        if (type == null)
+        {
+            System.Console.Error.WriteLine(
+                "No parser found for input '" + input_name + "'. " +
+                "Specify a grammar type with -t, point to a generated parser with -p, " +
+                "or use --pinterp / --linterp for Earley ATN-based parsing.");
+            return 1;
+        }
+
         MethodInfo methodInfo = type.GetMethod("SetupParse2");
         object[] parm1 = new object[] { txt, input_name, config.Quiet };
         var res = methodInfo.Invoke(null, parm1);
@@ -385,5 +427,56 @@ public class Grun
             }
         }
         return result == "success" ? 0 : 1;
+    }
+
+    private static string ResolveInterpPath(string path, string lib)
+    {
+        if (string.IsNullOrEmpty(lib) || Path.IsPathRooted(path))
+            return path;
+        return Path.Combine(lib, path);
+    }
+
+    /// <summary>
+    /// Scans <paramref name="dir"/> for matched parser + lexer .interp pairs.
+    /// Handles both naming conventions produced by trinterp:
+    ///   • Combined grammar "Foo"  → Foo.interp + FooLexer.interp
+    ///   • Explicit grammars "FooParser"/"FooLexer" → FooParser.interp + FooLexer.interp
+    /// Returns the pair when exactly one match is found; throws otherwise.
+    /// </summary>
+    private static (string pinterp, string linterp) DiscoverInterpPair(string dir)
+    {
+        if (!Directory.Exists(dir))
+            throw new DirectoryNotFoundException($"--lib directory not found: '{dir}'");
+
+        var pairs = new List<(string p, string l)>();
+        foreach (var pf in Directory.GetFiles(dir, "*.interp"))
+        {
+            var stem = Path.GetFileNameWithoutExtension(pf);
+            if (stem.EndsWith("Lexer")) continue; // skip lexer files
+
+            // Case 1: combined grammar — Foo.interp pairs with FooLexer.interp
+            var lf = Path.Combine(dir, stem + "Lexer.interp");
+            if (File.Exists(lf)) { pairs.Add((pf, lf)); continue; }
+
+            // Case 2: explicit parser grammar — FooParser.interp pairs with FooLexer.interp
+            if (stem.EndsWith("Parser"))
+            {
+                var baseName = stem.Substring(0, stem.Length - "Parser".Length);
+                lf = Path.Combine(dir, baseName + "Lexer.interp");
+                if (File.Exists(lf)) pairs.Add((pf, lf));
+            }
+        }
+
+        if (pairs.Count == 0)
+            throw new FileNotFoundException(
+                $"No matched parser/lexer .interp pair found in '{dir}'. " +
+                "Use --pinterp / --linterp to specify them explicitly.");
+        if (pairs.Count > 1)
+            throw new InvalidOperationException(
+                $"Multiple parser/lexer .interp pairs found in '{dir}': " +
+                string.Join(", ", pairs.Select(p => Path.GetFileNameWithoutExtension(p.p))) +
+                ". Use --pinterp / --linterp to specify which pair to use.");
+
+        return pairs[0];
     }
 }
