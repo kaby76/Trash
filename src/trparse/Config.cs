@@ -56,6 +56,6 @@ public class Config
     [Option("linterp", Required = false, HelpText = "Path to lexer .interp file for Earley ATN-based parsing.")]
     public string LInterp { get; set; }
 
-    [Option("lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths).")]
+    [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths).")]
     public string Lib { get; set; }
 }

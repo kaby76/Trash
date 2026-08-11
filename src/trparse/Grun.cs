@@ -314,6 +314,15 @@ public class Grun
             type = asm.GetType("Program");
         }
 
+        if (type == null)
+        {
+            System.Console.Error.WriteLine(
+                "No parser found for input '" + input_name + "'. " +
+                "Specify a grammar type with -t, point to a generated parser with -p, " +
+                "or use --pinterp / --linterp for Earley ATN-based parsing.");
+            return 1;
+        }
+
         MethodInfo methodInfo = type.GetMethod("SetupParse2");
         object[] parm1 = new object[] { txt, input_name, config.Quiet };
         var res = methodInfo.Invoke(null, parm1);
