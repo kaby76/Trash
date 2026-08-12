@@ -45,7 +45,7 @@ do
     sed -i -e 's%^[0-9]*[.][0-9]*([.][0-9]*)*.*$'"%$version"' Release 2.0.1.%' readme.md
     for cs in *.cs
     do
-        sed -i -e "s%public string Version { get; set; } = \"[0-9][.][0-9]*[.][0-9]*\";%public string Version { get; set; } = \"$version\";%" $cs
+        sed -i -E "s%public string Version \{ get; set; \} = \"[0-9][.][0-9]*([.][0-9]*)*\";%public string Version \{ get; set; \} = \"$version\";%" $cs
     done
     cd ..
 done

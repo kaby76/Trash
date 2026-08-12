@@ -1,4 +1,4 @@
-﻿using Antlr4.Runtime;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using ParseTreeEditing.UnvParseTreeDOM;
 using System;
@@ -15,6 +15,13 @@ namespace Trash;
 public class Grun
 {
     Config config;
+
+    // Accumulated performance stats across all DoParse calls in this run
+    private double _totalParseSeconds;
+    private long _totalTokens;
+    private long _firstFileTokens;
+    private double _firstFileParseSeconds;
+    private int _fileCount;
 
     public Grun(Config co)
     {
@@ -58,6 +65,7 @@ public class Grun
     public int Run(string parser_type)
     {
         int result = 0;
+        DateTime overallBefore = DateTime.Now;
         try
         {
             var data = new List<AntlrJson.ParsingResultSet>();
@@ -77,7 +85,6 @@ public class Grun
                     inputs.Add(line);
                 }
 
-                DateTime before = DateTime.Now;
                 for (int f = 0; f < inputs.Count(); ++f)
                 {
                     try
@@ -89,18 +96,14 @@ public class Grun
                         txt = inputs[f];
                     }
 
-                    var r = DoParse(parser_type, txt, "", inputs[f], f, data);
+                    var (r, _, _) = DoParse(parser_type, txt, "", inputs[f], f, data);
                     result = result == 0 ? r : result;
                 }
-
-                DateTime after = DateTime.Now;
-                System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
             }
             else if (config.ReadFileNameFile != null)
             {
                 List<string> inputs = new List<string>();
                 inputs = File.ReadAllLines(config.ReadFileNameFile).ToList();
-                DateTime before = DateTime.Now;
                 for (int f = 0; f < inputs.Count(); ++f)
                 {
                     try
@@ -112,12 +115,9 @@ public class Grun
                         txt = inputs[f];
                     }
 
-                    var r = DoParse(parser_type, txt, "", inputs[f], f, data);
+                    var (r, _, _) = DoParse(parser_type, txt, "", inputs[f], f, data);
                     result = result == 0 ? r : result;
                 }
-
-                DateTime after = DateTime.Now;
-                System.Console.Error.WriteLine("Total Time: " + (after - before).TotalSeconds);
             }
             else if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
             {
@@ -129,15 +129,16 @@ public class Grun
                 }
 
                 txt = lines;
-                result = DoParse(parser_type, txt, "", "stdin", 0, data);
+                (result, _, _) = DoParse(parser_type, txt, "", "stdin", 0, data);
             }
             else if (config.Input != null)
             {
                 txt = config.Input;
-                result = DoParse(parser_type, txt, "", "string", 0, data);
+                (result, _, _) = DoParse(parser_type, txt, "", "string", 0, data);
             }
             else if (config.Files != null)
             {
+                int f = 0;
                 foreach (var file in config.Files)
                 {
                     try
@@ -149,8 +150,9 @@ public class Grun
                         txt = file;
                     }
 
-                    var r = DoParse(parser_type, txt, "", file, 0, data);
+                    var (r, _, _) = DoParse(parser_type, txt, "", file, f, data);
                     result = result == 0 ? r : result;
+                    f++;
                 }
             }
 
@@ -180,6 +182,9 @@ public class Grun
                 }
             }
 
+            DateTime overallAfter = DateTime.Now;
+            PrintPerfSummary((overallAfter - overallBefore).TotalSeconds);
+
             if (config.NoParsingResultSets) return result;
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
             var serializeOptions = new JsonSerializerOptions();
@@ -200,7 +205,39 @@ public class Grun
         return result;
     }
 
-    int DoParse(string parser_type,
+    private void UpdateStats(double parseSeconds, long tokenCount)
+    {
+        if (_fileCount == 0)
+        {
+            _firstFileTokens = tokenCount;
+            _firstFileParseSeconds = parseSeconds;
+        }
+        _totalParseSeconds += parseSeconds;
+        _totalTokens += tokenCount;
+        _fileCount++;
+    }
+
+    private void PrintPerfSummary(double overallSeconds)
+    {
+        if (config.Quiet) return;
+        var warmTokens = _totalTokens - _firstFileTokens;
+        var warmSeconds = _totalParseSeconds - _firstFileParseSeconds;
+        var warmTps = (_fileCount > 1 && warmSeconds > 0)
+            ? ((long)(warmTokens / warmSeconds)).ToString()
+            : "n.a.";
+        var firstTps = _firstFileParseSeconds > 0 ? (_firstFileTokens / _firstFileParseSeconds) : 0;
+        var speedup = (_fileCount > 1 && warmSeconds > 0 && firstTps > 0)
+            ? ((warmTokens / warmSeconds) / firstTps).ToString("F2")
+            : "n.a.";
+        System.Console.Error.WriteLine("PT: " + _totalParseSeconds);
+        System.Console.Error.WriteLine("OT: " + (overallSeconds - _totalParseSeconds));
+        System.Console.Error.WriteLine("TT: " + overallSeconds);
+        System.Console.Error.WriteLine("TPS: " + (_totalParseSeconds > 0 ? (long)(_totalTokens / _totalParseSeconds) : 0));
+        System.Console.Error.WriteLine("Post-warmup TPS: " + warmTps);
+        System.Console.Error.WriteLine("Post-warmup speed up: " + speedup);
+    }
+
+    (int ExitCode, double ParseSeconds, long TokenCount) DoParse(string parser_type,
         string txt,
         string prefix,
         string input_name,
@@ -214,7 +251,7 @@ public class Grun
         {
             System.Console.Error.WriteLine(
                 "Error: --pinterp and --linterp must be specified together.");
-            return 1;
+            return (1, 0, 0);
         }
         string resolvedPInterp = hasPInterp
             ? ResolveInterpPath(config.PInterp, config.Lib)
@@ -233,11 +270,20 @@ public class Grun
 
         if (resolvedPInterp != null && resolvedLInterp != null)
         {
-            var rs = Trash.EarleyAtn.InterpRunner.Run(
+            DateTime earleyBefore = DateTime.Now;
+            var (rs, earleyTokenCount) = Trash.EarleyAtn.InterpRunner.Run(
                 resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
+            DateTime earleyAfter = DateTime.Now;
+            double earleyParseSeconds = (earleyAfter - earleyBefore).TotalSeconds;
             data.Add(rs);
-            System.Console.Error.WriteLine(prefix + "Earley " + row_number + " " + input_name + " success");
-            return 0;
+            if (!config.Quiet)
+            {
+                long tps = earleyParseSeconds > 0 ? (long)(earleyTokenCount / earleyParseSeconds) : 0L;
+                System.Console.Error.WriteLine(prefix + "Earley " + row_number + " " + input_name + " success "
+                    + earleyParseSeconds + " s " + earleyTokenCount + " tokens " + tps + " tps");
+            }
+            UpdateStats(earleyParseSeconds, earleyTokenCount);
+            return (0, earleyParseSeconds, earleyTokenCount);
         }
 
         Type type = null;
@@ -341,7 +387,7 @@ public class Grun
                 "No parser found for input '" + input_name + "'. " +
                 "Specify a grammar type with -t, point to a generated parser with -p, " +
                 "or use --pinterp / --linterp for Earley ATN-based parsing.");
-            return 1;
+            return (1, 0, 0);
         }
 
         MethodInfo methodInfo = type.GetMethod("SetupParse2");
@@ -372,14 +418,22 @@ public class Grun
             }
         }
 
-        System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " " +
-                                       (after - before).TotalSeconds);
+        double parseSeconds = (after - before).TotalSeconds;
         var parser = type.GetProperty("Parser").GetValue(null, new object[0]) as Antlr4.Runtime.Parser;
         var lexer = type.GetProperty("Lexer").GetValue(null, new object[0]) as Antlr4.Runtime.Lexer;
         var tokstream = type.GetProperty("TokenStream").GetValue(null, new object[0]) as ITokenStream;
         var charstream = type.GetProperty("CharStream").GetValue(null, new object[0]) as ICharStream;
         var commontokstream = tokstream as CommonTokenStream;
+        long tokenCount = commontokstream != null ? (long)commontokstream.Size : 0L;
         var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
+
+        if (!config.Quiet)
+        {
+            long tps = parseSeconds > 0 ? (long)(tokenCount / parseSeconds) : 0L;
+            System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " "
+                + parseSeconds + " s " + tokenCount + " tokens " + tps + " tps");
+        }
+
         {
             var tuples = res2 as List<Tuple<string, IParseTree>>;
             // Each ambiguous parse tree is for an alt.
@@ -426,7 +480,9 @@ public class Grun
                 }
             }
         }
-        return result == "success" ? 0 : 1;
+
+        UpdateStats(parseSeconds, tokenCount);
+        return (result == "success" ? 0 : 1, parseSeconds, tokenCount);
     }
 
     private static string ResolveInterpPath(string path, string lib)

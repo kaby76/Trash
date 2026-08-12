@@ -15,7 +15,7 @@ using AntlrJson;
 /// </summary>
 public static class InterpRunner
 {
-    public static ParsingResultSet Run(
+    public static (ParsingResultSet Result, int TokenCount) Run(
         string parserInterpPath,
         string lexerInterpPath,
         string inputText,
@@ -84,7 +84,7 @@ public static class InterpRunner
                     $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
         }
 
-        var parseTree = EarleyParser.Parse(parserAtn, onChannel, startRule);
+        var parseTree = EarleyParser.Parse(parserAtn, antlrTokens, startRule);
         if (parseTree == null)
             throw new InvalidOperationException($"Earley parse failed for '{fileName}': input rejected by grammar.");
 
@@ -108,13 +108,13 @@ public static class InterpRunner
         var converter = new ConvertToDOM(lineNumbers);
         var domTree = converter.BottomUpConvert(parseTree, null, myParser, myLexer, tokenStream);
 
-        return new ParsingResultSet
+        return (new ParsingResultSet
         {
             FileName = fileName,
             Nodes    = new[] { (UnvParseTreeNode)domTree },
             Parser   = myParser,
             Lexer    = myLexer
-        };
+        }, onChannel.Count);
     }
 
     private static IDictionary<string, int> BuildTokenTypeMap(string[] symbolicNames)
