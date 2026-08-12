@@ -2,6 +2,7 @@ using AntlrJson;
 using ParseTreeEditing.UnvParseTreeDOM;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -85,6 +86,60 @@ class Command
         var xqueryParser = new XQueryParser(query);
         var moduleNode = xqueryParser.ParseModule();
 
+        // Build a base context that includes fn:doc() so queries can load external
+        // parse tree files and navigate them with standard XPath axes.
+        AdapterDocument LoadDocFile(string path)
+        {
+            var json2  = File.ReadAllText(path);
+            var data2  = JsonSerializer.Deserialize<ParsingResultSet[]>(json2, serializeOptions)!;
+            return AdapterDocument.Build(data2.SelectMany(prs => prs.Nodes));
+        }
+
+        var docFn = new XdmFunction(
+            new XdmQName(XdmQName.FnNamespace, "doc", "fn"),
+            1,
+            args => new XdmSequence(LoadDocFile(args[0].StringValue)));
+
+        // exec(cmd) / exec(cmd, input) — run a shell command and return its stdout as a string.
+        // The optional second argument is written to the process's stdin (avoids shell quoting issues).
+        // On Windows/MSYS2 this uses bash; on Unix it uses sh.
+        static XdmSequence ExecShell(XdmSequence[] args)
+        {
+            var cmd   = args[0].StringValue;
+            var input = args.Length >= 2 ? args[1].StringValue : null;
+            bool isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
+                System.Runtime.InteropServices.OSPlatform.Windows);
+            var (shell, flag) = isWindows ? ("bash", "-c") : ("sh", "-c");
+            var psi = new ProcessStartInfo(shell, $"{flag} \"{cmd.Replace("\"", "\\\"")}\"")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardInput  = input is not null,
+                RedirectStandardError  = false,
+                UseShellExecute        = false,
+            };
+            using var proc = Process.Start(psi)
+                ?? throw new InvalidOperationException($"exec: failed to start '{shell}'");
+            if (input is not null)
+            {
+                proc.StandardInput.Write(input);
+                proc.StandardInput.Close();
+            }
+            var output = proc.StandardOutput.ReadToEnd();
+            proc.WaitForExit();
+            if (proc.ExitCode != 0)
+                throw new InvalidOperationException($"exec: command exited with code {proc.ExitCode}: {cmd}");
+            return new XdmSequence(new XdmAtomicValue(output.TrimEnd('\r', '\n')));
+        }
+
+        var execFn  = new XdmFunction(new XdmQName("exec"), 1, ExecShell);
+        var exec2Fn = new XdmFunction(new XdmQName("exec"), 2, ExecShell);
+
+        var baseCtx = new EvaluationContext();
+        baseCtx.RegisterFunction(new XdmQName("doc"), docFn);
+        baseCtx.RegisterFunction(new XdmQName(XdmQName.FnNamespace, "doc", "fn"), docFn);
+        baseCtx.RegisterFunction(new XdmQName("exec"), execFn);
+        baseCtx.RegisterFunction(new XdmQName("exec"), exec2Fn);
+
         var results = new List<ParsingResultSet>();
 
         foreach (var parse_info in data)
@@ -98,7 +153,8 @@ class Command
             var adapterDoc = AdapterDocument.Build(atrees);
 
             // Build evaluation context with the document as the context item.
-            var ctx       = new EvaluationContext().WithContextItem(adapterDoc);
+            // Inherits fn:doc() and any other base-context registrations.
+            var ctx       = baseCtx.WithContextItem(adapterDoc);
             var evaluator = new ParseTreeUpdateEvaluator(ctx);
 
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("evaluating XQuery module");

@@ -301,7 +301,8 @@ public class Grun
                 ".g2" => "ANTLRv2",
                 ".peg" => "pegen_v3_10",
                 ".rex" => "rex",
-                ".y" => "Bison",
+		".y" => "Bison",
+		".lark" => "Lark",
                 _ => null
             };
             var subdir = parser_type switch
@@ -311,7 +312,8 @@ public class Grun
                 "ANTLRv2" => "antlr2",
                 "pegen_v3_10" => "pegen",
                 "rex" => "rex",
-                "Bison" => "bison",
+		"Bison" => "bison",
+		"Lark" => "lark",
                 _ => null
             };
             if (subdir != null)
