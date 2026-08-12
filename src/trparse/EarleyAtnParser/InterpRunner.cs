@@ -84,7 +84,7 @@ public static class InterpRunner
                     $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
         }
 
-        var parseTree = EarleyParser.Parse(parserAtn, onChannel, startRule);
+        var parseTree = EarleyParser.Parse(parserAtn, antlrTokens, startRule);
         if (parseTree == null)
             throw new InvalidOperationException($"Earley parse failed for '{fileName}': input rejected by grammar.");
 
