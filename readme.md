@@ -107,8 +107,8 @@ dotnet trash parse -i "a == b" | dotnet trash tree
 ```
 `dotnet trash tree` is only one of several ways to view parse tree data.
 Other commands for different output are
-[dotnet trash json](https://github.com/kaby76/Trash/tree/main/src/trjson) for [JSON output](https://github.com/kaby76/Trash/blob/main/_tests/trconvert/antlr2/ada.g4.json),
-[dotnet trash xml](https://github.com/kaby76/Trash/tree/main/src/trxml) for [XML output](https://github.com/kaby76/Trash/blob/main/_tests/trconvert/antlr2/ada.g4.xml),
+[dotnet trash json](https://github.com/kaby76/Trash/tree/main/src/trjson) for [JSON output](https://github.com/kaby76/Trash/blob/main/tests/trconvert/antlr2/ada.g4.json),
+[dotnet trash xml](https://github.com/kaby76/Trash/tree/main/src/trxml) for [XML output](https://github.com/kaby76/Trash/blob/main/tests/trconvert/antlr2/ada.g4.xml),
 [dotnet trash dot](https://github.com/kaby76/Trash/tree/main/src/trdot) for Graphviz Dot output,
 and
 [dotnet trash text](https://github.com/kaby76/Trash/tree/main/src/trtext) for the source text of a parse tree interval.

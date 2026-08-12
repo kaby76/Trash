@@ -33,7 +33,7 @@ A typical desc.xml simply specifies all targets to test.
 
 ```
 <?xml version="1.0" encoding="UTF-8" ?>
-<desc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../_scripts/desc.xsd">
+<desc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../scripts/desc.xsd">
    <targets>Antlr4cs;Antlr4ng;Cpp;CSharp;Dart;Go;Java;JavaScript;PHP;Python3;TypeScript</targets>
 </desc>
 ```
