@@ -586,7 +586,7 @@ namespace Trash
             }
         }
 
-        public static string version = "2.0.1";
+        public static string version = "2.1.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
