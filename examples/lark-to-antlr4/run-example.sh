@@ -3,7 +3,7 @@
 #
 # Usage: bash run-example.sh
 
-set -x
+# set -x
 set -e
 trap 'LAST_COMMAND=$CURRENT_COMMAND; CURRENT_COMMAND=$BASH_COMMAND' DEBUG
 trap 'ERROR_CODE=$?; FAILED_COMMAND=$LAST_COMMAND; tput setaf 1; echo "ERROR: command \"$FAILED_COMMAND\" failed with exit code $ERROR_CODE"; tput sgr0;' ERR INT TERM
@@ -15,6 +15,8 @@ echo "$where"
 
 rm -rf xxx
 mkdir -p xxx
+
+dotnet trash parse verilog.lark common.lark > o.pt
 
 # Pass 1: Apply Lark-to-Antlr4 syntax transforms (steps 1-4).
 dotnet trash xquery -q lark-to-antlr4.xq -f o.pt > transformed.pt
