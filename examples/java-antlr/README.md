@@ -15,7 +15,7 @@ Grammar and example files sourced from
 ## Run
 
 ```bash
-bash run.sh
+bash run-example.sh
 ```
 
 ## How it works
@@ -24,5 +24,5 @@ bash run.sh
    parser, and test driver) in `Generated-Java/`.
 2. `make` (inside `Generated-Java/`) downloads the Antlr4 runtime jar and
    compiles the generated sources.
-3. `bash run.sh -input <file>` parses each example `.java` file and prints
-   the parse tree to stdout.
+3. `bash run.sh -tree <file1> <file2> ...` parses each example `.java` file and prints
+   the parse trees to stdout.

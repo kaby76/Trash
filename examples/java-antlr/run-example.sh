@@ -2,7 +2,7 @@
 # Generate a Java-target Antlr4 parser for the Java grammar, build it,
 # and parse example .java files.
 #
-# Usage: bash run.sh
+# Usage: bash run-example.sh
 
 set -e
 trap 'LAST_COMMAND=$CURRENT_COMMAND; CURRENT_COMMAND=$BASH_COMMAND' DEBUG
@@ -22,10 +22,7 @@ cd Generated-Java
 make
 
 # Parse each example .java file and print the parse tree.
-for f in ../examples/*.java; do
-    [ -f "$f" ] || continue
-    echo "--- Parsing $f ---"
-    bash run.sh -input "$f"
-done
+echo "--- Parsing ---"
+bash run.sh ../examples/*.java
 
 echo "Done."

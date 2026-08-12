@@ -7,4 +7,4 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`abnf-interp/`](abnf-interp/) | Parse ABNF/BNF files using generated `.interp` files (no code generation step) |
 | [`java-antlr/`](java-antlr/) | Generate a Java-target Antlr4 parser for the Java grammar, build, and run |
 
-Each example directory contains a `run.sh` and its own `README.md`.
+Each example directory contains a `run-example.sh` and its own `README.md`.

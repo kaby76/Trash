@@ -14,7 +14,7 @@ Grammar and example files sourced from
 ## Run
 
 ```bash
-bash run.sh
+bash run-example.sh
 ```
 
 ## How it works
@@ -23,5 +23,5 @@ bash run.sh
    representation of its ATN/parse-tree data.
 2. `dotnet trash interp -o interp/` reads that output and writes `.interp`
    and `.tokens` files into `interp/`.
-3. `dotnet trash parse --lib interp/` uses those files to parse each example
-   input with an Earley ATN-based interpreter — no generated code required.
+3. `dotnet trash parse --lib interp/ <file1> <file2> ... | dotnet trash tree -a` uses those files to parse each example
+   input with an Earley ATN-based interpreter (no generated code required) and print out the parse trees in Antlr4 style.

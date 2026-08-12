@@ -14,8 +14,8 @@ echo "$where"
 
 # Generate .interp and .tokens files from the ABNF grammar.
 rm -rf interp grammar.json
-dotnet trash parse Abnf.g4 > grammar.json
-dotnet trash interp -o interp/ < grammar.json
+dotnet trash parse -l Abnf.g4 > grammar.json
+dotnet trash interp -o interp/ --atn < grammar.json
 
 # Parse each .abnf and .bnf example file using the interpreter.
 for f in examples/*.abnf examples/*.bnf examples/apg-java/*.bnf; do
