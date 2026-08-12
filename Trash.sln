@@ -137,8 +137,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trcover", "src\trcover\trco
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trcaret", "src\trcaret\trcaret.csproj", "{3325A532-9EFE-44D9-A814-E50BEC805135}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trquery", "src\trquery\trquery.csproj", "{E7AF9D4A-AE01-4DC2-8194-DD323DF99206}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trxquery", "src\trxquery\trxquery.csproj", "{B3C1F2A8-D4E5-4F67-A890-1234567890AB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trglob", "src\trglob\trglob.csproj", "{4A7CB9F5-817C-4B87-A7B9-D1CDBA278306}"
