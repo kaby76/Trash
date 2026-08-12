@@ -3,7 +3,7 @@
     "trfoldlit": {
       "commandName": "Project",
       "commandLineArgs": "-f o.pt",
-      "workingDirectory": "C:\Users\Kenne\Documents\GitHub\Trash\_tests\basic-trees"
+      "workingDirectory": "C:\Users\Kenne\Documents\GitHub\Trash\tests\basic-trees"
     }
   }
 }

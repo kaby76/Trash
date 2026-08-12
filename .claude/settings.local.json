@@ -21,7 +21,11 @@
       "Bash(sed s|.*:||:*)",
       "Bash(git push:*)",
       "Bash(gh pr:*)",
-      "Bash(gh:*)"
+      "Bash(gh:*)",
+      "Read(//home/Kenne/issues/**)",
+      "Bash(find . -name \"desc.xml\" -exec sed -i 's|/_scripts/desc\\\\.xsd|/scripts/desc.xsd|g' {} +)",
+      "Bash(mkdir:*)",
+      "Bash(gh api:*)"
     ]
   }
 }

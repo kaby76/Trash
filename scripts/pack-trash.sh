@@ -3,7 +3,7 @@
 # Publishes every sub-tool as a framework-dependent DLL into src/trash/staging/,
 # then builds and packs the trash dispatcher nupkg.
 #
-# Usage: bash _scripts/pack-trash.sh [Release|Debug]
+# Usage: bash scripts/pack-trash.sh [Release|Debug]
 #
 set -e
 FAILED_TOOLS=()

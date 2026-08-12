@@ -24,7 +24,7 @@ Usage: trash <command> [options]  (e.g. trash trgen, trash gen, trash trparse)]]
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 
-	<!-- Sub-tool DLLs pre-published into staging/ by _scripts/pack-trash.sh -->
+	<!-- Sub-tool DLLs pre-published into staging/ by scripts/pack-trash.sh -->
 	<ItemGroup>
 		<None Include="staging\**\*" Pack="true" PackagePath="tools/net10.0/any/" />
 	</ItemGroup>
