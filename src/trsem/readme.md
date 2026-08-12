@@ -10,11 +10,11 @@ Read a static semantics spec file and generate code.
 
 ## Usage
 
-    trsem
+    dotnet trash sem
 
 ## Examples
 
-    trsem
+    dotnet trash sem
 
 ## Current version
 
@@ -24,7 +24,7 @@ Read a static semantics spec file and generate code.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

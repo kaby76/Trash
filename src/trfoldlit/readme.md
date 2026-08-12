@@ -13,7 +13,7 @@ output are Parse Tree Data.
 
 ## Usage
 
-    trfoldlit
+    dotnet trash foldlit
 
 ## Examples
 
@@ -37,7 +37,7 @@ Before:
 
 Command:
 
-    trparse Expression.g4 | trfoldlit | trsponge -c
+    dotnet trash parse Expression.g4 | dotnet trash foldlit | dotnet trash sponge -c
 
 After:
 
@@ -71,7 +71,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

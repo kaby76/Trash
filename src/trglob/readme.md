@@ -8,12 +8,12 @@ Expand a glob string into file names.
 
 ## Usage
 
-    trgen <string>+
+    dotnet trash glob <string>+
 
 ## Examples
 
-    trglob '../examples/**/*.dart'
-    trglob '../examples/**'
+    dotnet trash glob '../examples/**/*.dart'
+    dotnet trash glob '../examples/**'
 
 ## Current version
 
@@ -23,7 +23,7 @@ Expand a glob string into file names.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

@@ -11,11 +11,11 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Usage
 
-    tragl
+    dotnet trash agl
 
 ## Example
 
-    trparse -i "1+2" | tragl
+    dotnet trash parse -i "1+2" | dotnet trash agl
 
 ## Current version
 
@@ -25,7 +25,7 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

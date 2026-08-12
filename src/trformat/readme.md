@@ -10,11 +10,11 @@ Format of grammar using machine learning.
 
 ## Usage
 
-    trformat
+    dotnet trash format
 
 ## Examples
 
-    trparse A.g4 | trformat
+    dotnet trash parse A.g4 | dotnet trash format
 
 ## Current version
 
@@ -24,7 +24,7 @@ Format of grammar using machine learning.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

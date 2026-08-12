@@ -13,7 +13,7 @@ whole file.
 
 ## Usage
 
-    trull <xpath>?
+    dotnet trash ull <xpath>?
 
 ## Examples
 
@@ -29,7 +29,7 @@ Before:
 
 Command:
 
-    trparse KeywordFun.g4 | trull "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL" | trprint
+    dotnet trash parse KeywordFun.g4 | dotnet trash ull "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL" | dotnet trash text
 
 After:
 
@@ -43,7 +43,7 @@ After:
 
 Command:
 
-    trparse KeywordFun.g4 | trull | trprint
+    dotnet trash parse KeywordFun.g4 | dotnet trash ull | dotnet trash text
 
 After:
 
@@ -69,7 +69,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

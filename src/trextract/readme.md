@@ -15,7 +15,7 @@ grammars into completely target independent grammars.
 
 ## Usage
 
-trparse *.g4 | trextract | trsponge -c
+    dotnet trash parse *.g4 | dotnet trash extract | dotnet trash sponge -c
 
 ## Details
 
@@ -27,7 +27,7 @@ _Input to command_
 
 _Command_
 
-trparse ExpressionLexer.g4 ExpressionParser.g4 | trextract | trsponge -c
+    dotnet trash parse ExpressionLexer.g4 ExpressionParser.g4 | dotnet trash extract | dotnet trash sponge -c
 
 The outputed files are:
 
@@ -39,7 +39,7 @@ The outputed files are:
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

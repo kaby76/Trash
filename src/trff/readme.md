@@ -8,7 +8,7 @@ Outputs FIRST and FOLLOW sets of a grammar.
 
 ## Usage
 
-trff (assumes CSharp-targeted parser generated and compiled)
+    dotnet trash ff
 
 ## Details
 
@@ -28,7 +28,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

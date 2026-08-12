@@ -10,11 +10,11 @@ Reads a parsing result set for a grammar and outputs the rules that are nullable
 
 ## Usage
 
-trnullable
+    dotnet trash nullable
 
 ## Examples
 
-trparse A.g4 | trnullable
+    dotnet trash parse A.g4 | dotnet trash nullable
 
 ## Current version
 
@@ -24,7 +24,7 @@ trparse A.g4 | trnullable
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

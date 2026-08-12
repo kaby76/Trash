@@ -10,7 +10,7 @@ Remove useless parentheses from a grammar.
 
 ## Usage
 
-    trrup
+    dotnet trash rup
 
 ## Details
 
@@ -27,7 +27,7 @@ grammar:
 
 _Command_
 
-    trparse Expression.g4 | trrup | trprint
+    dotnet trash parse Expression.g4 | dotnet trash rup | dotnet trash text
 
 _Result_
 
@@ -48,7 +48,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

@@ -15,11 +15,11 @@ create a parser for the Arithmetic.g4 grammar.
 
 ## Usage
 
-    trgen <options>* 
+    dotnet trash gen <options>*
 
 ## Examples
 
-    trgen
+    dotnet trash gen
 
 ## Specification of desc.xml ([schema](https://github.com/kaby76/Trash/blob/main/desc.xsd))
 
@@ -37,7 +37,7 @@ A typical desc.xml simply specifies all targets to test.
    <targets>Antlr4cs;Antlr4ng;Cpp;CSharp;Dart;Go;Java;JavaScript;PHP;Python3;TypeScript</targets>
 </desc>
 ```
-trgen will read all .g4's contained in the directory with the desc.xml file.
+`dotnet trash gen` will read all .g4's contained in the directory with the desc.xml file.
 It computes a dependency graph of the grammars used via `tokenVocab` options,
 and `import` statements. The tool will then perform a topological sort, determine
 the first "top-level" parser or combined grammar, and use that grammar for testing.
@@ -89,7 +89,7 @@ After all files are parsed, six summary lines are printed:
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

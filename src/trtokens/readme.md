@@ -12,7 +12,7 @@ for the tree are computed and printed, with a blank line separator.
 
 ## Usage
 
-    trtokens
+    dotnet trash tokens
 
 ## Examples
 
@@ -22,7 +22,7 @@ Input:
 
 Command:
 
-    trparse -i "1 * 2 + 3" | trquery "grep //expression" | trtokens
+    dotnet trash parse -i "1 * 2 + 3" | dotnet trash query "grep //expression" | dotnet trash tokens
 
 Output:
 
@@ -58,7 +58,7 @@ Output:
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

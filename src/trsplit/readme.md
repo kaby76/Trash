@@ -15,7 +15,7 @@ is used to instantiate the two files in the file system.
 
 ## Usage
 
-    trsplit
+    dotnet trash split
 
 ## Details
 
@@ -41,7 +41,7 @@ modified.
 
 ## Example
 
-    trparse Arithmetic.g4 | trsplit | trsponge
+    dotnet trash parse Arithmetic.g4 | dotnet trash split | dotnet trash sponge
 
 ## Current version
 
@@ -51,7 +51,7 @@ modified.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

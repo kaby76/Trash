@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "trscript": {
-      "commandName": "Project",
-      "commandLineArgs": "-c ../examples/3885-example1.lua.trq -f o.pt",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\g4-fix-stat-problem\\lua\\Generated-CSharp"
-    }
-  }
-}

@@ -11,11 +11,11 @@ results to file(s).
 
 ## Usage
 
-    trsponge <options>
+    dotnet trash sponge <options>
 
 ## Example
 
-    trparse Arithmetic.g4 | trsplit | trsponge
+    dotnet trash parse Arithmetic.g4 | dotnet trash split | dotnet trash sponge
 
 ## Current version
 
@@ -25,7 +25,7 @@ results to file(s).
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

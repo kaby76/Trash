@@ -37,7 +37,7 @@ public partial class Program
             {
                 h.AdditionalNewLineAfterOption = false;
                 h.Heading = "trglob";
-                h.Copyright = "Copyright (c) 2023 Ken Domino";
+                h.Copyright = "Copyright (c) 2026 Ken Domino";
                 h.AddPreOptionsText(new Command().Help());
                 return HelpText.DefaultParsingErrorsHandler(result, h);
             }, e => e);

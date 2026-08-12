@@ -10,11 +10,11 @@ Execute a command with a watchdog timer.
 
 ## Usage
 
-    trwdog <arg>+
+    dotnet trash wdog <arg>+
 
 ## Examples
 
-    trwdog make test
+    dotnet trash wdog make test
 
 ## Current version
 
@@ -24,7 +24,7 @@ Execute a command with a watchdog timer.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

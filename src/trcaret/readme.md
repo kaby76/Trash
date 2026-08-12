@@ -10,11 +10,11 @@ Reads a tree from stdin and prints lines and caret marks.
 
 ## Usage
 
-    trcaret [options]
+    dotnet trash caret [options]
 
 ## Examples
 
-    trquery grep //lexerRuleSpec | trcaret -H
+    dotnet trash query "grep //lexerRuleSpec" | dotnet trash caret -H
 
 ## Current version
 
@@ -24,7 +24,7 @@ Reads a tree from stdin and prints lines and caret marks.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

@@ -10,7 +10,7 @@ Rename symbols in a grammar.
 
 ## Usage
 
-    trrename -r <string>
+    dotnet trash rename -r <string>
 
 ## Details
 
@@ -23,7 +23,7 @@ make sure to enclose the argument as it contains semi-colons.
 
 ## Examples
 
-    trparse Foobar.g4 | trrename -r "a,b;c,d" | trprint > new-grammar.g4
+    dotnet trash parse Foobar.g4 | dotnet trash rename -r "a,b;c,d" | dotnet trash text > new-grammar.g4
 
 ## Current version
 
@@ -33,7 +33,7 @@ make sure to enclose the argument as it contains semi-colons.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

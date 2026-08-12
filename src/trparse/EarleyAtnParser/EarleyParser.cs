@@ -15,16 +15,29 @@ using Antlr4.Runtime.Tree;
 public static class EarleyParser
 {
     /// <summary>
-    /// Parse <paramref name="tokens"/> (on-channel tokens including EOF at end)
+    /// Parse <paramref name="allTokens"/> (all channels, including HIDDEN; EOF at end)
     /// and return an IParseTree, or null if the input is rejected.
+    /// Off-channel tokens are skipped during scanning but kept in the token stream
+    /// so that predicates and tree consumers can access them.
     /// </summary>
-    public static IParseTree Parse(MyATN atn, IReadOnlyList<IToken> tokens, int startRuleIndex)
+    public static IParseTree Parse(MyATN atn, IReadOnlyList<IToken> allTokens, int startRuleIndex)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
         if (startRuleIndex < 0 || startRuleIndex >= atn.start.Length)
             throw new ArgumentOutOfRangeException(nameof(startRuleIndex));
 
-        int n = tokens.Count; // includes EOF as last element
+        // Build on-channel index map: chart position k → index in allTokens.
+        // This mirrors CommonTokenStream's behaviour: the parser sees only
+        // DEFAULT_CHANNEL + EOF, but off-channel tokens remain accessible.
+        var onIdx = new List<int>();
+        for (int i = 0; i < allTokens.Count; i++)
+        {
+            var t = allTokens[i];
+            if (t.Channel == TokenConstants.DefaultChannel || t.Type == TokenConstants.EOF)
+                onIdx.Add(i);
+        }
+
+        int n = onIdx.Count; // chart size; last entry is EOF
 
         var chart = new List<HashSet<Item>>(n + 1);
         // backs: keyed on positioned Item (state + origin + stack + position)
@@ -38,11 +51,11 @@ public static class EarleyParser
         backs[seed] = Back.Seed();
         Closure(atn, chart[0], backs, 0);
 
-        // Earley scan loop
+        // Earley scan loop — chart positions index into onIdx
         for (int k = 0; k < n; k++)
         {
             var next = chart[k + 1];
-            var tok = tokens[k];
+            var tok = allTokens[onIdx[k]]; // on-channel token at chart position k
 
             foreach (var it in chart[k])
             {
@@ -51,10 +64,11 @@ public static class EarleyParser
                     if (IsTerminal(tr) && TerminalMatches(tr, tok.Type))
                     {
                         var adv = new Item(tr.target, it.Origin, it.CallStack, k + 1);
+                        int allTokIdx = onIdx[k]; // store all-token index for BuildTree
                         if (next.Add(adv))
-                            backs[adv] = Back.Scan(it, k);
+                            backs[adv] = Back.Scan(it, allTokIdx);
                         else if (!backs.ContainsKey(adv))
-                            backs[adv] = Back.Scan(it, k);
+                            backs[adv] = Back.Scan(it, allTokIdx);
                     }
                 }
             }
@@ -77,7 +91,7 @@ public static class EarleyParser
         var events = ReconstructEvents(accept.Value, backs);
         if (events == null) return null;
 
-        return BuildTree(events, tokens, startRuleIndex);
+        return BuildTree(events, allTokens, onIdx, startRuleIndex);
     }
 
     // =========================================================================
@@ -178,14 +192,18 @@ public static class EarleyParser
     // Tree construction
     // =========================================================================
 
-    private static IParseTree BuildTree(List<Event> events, IReadOnlyList<IToken> tokens, int startRuleIndex)
+    // allTokens: full token stream (all channels).
+    // onIdx:     chart-position k → index into allTokens for the k-th on-channel token.
+    // Consume events carry an all-token index; cursor tracks on-channel position.
+    private static IParseTree BuildTree(List<Event> events, IReadOnlyList<IToken> allTokens,
+        IReadOnlyList<int> onIdx, int startRuleIndex)
     {
         var root = new GenericRuleContext(null, -1, startRuleIndex);
-        if (tokens.Count > 0) root.Start = tokens[0];
+        if (onIdx.Count > 0) root.Start = allTokens[onIdx[0]];
         var stack = new Stack<GenericRuleContext>();
         stack.Push(root);
 
-        int cursor = 0;
+        int cursor = 0; // on-channel position (index into onIdx)
         foreach (var e in events)
         {
             switch (e.Kind)
@@ -193,7 +211,7 @@ public static class EarleyParser
                 case EventKind.EnterRule:
                 {
                     var ctx = new GenericRuleContext(stack.Peek(), 0, e.RuleIndex);
-                    if (cursor < tokens.Count) ctx.Start = tokens[cursor];
+                    if (cursor < onIdx.Count) ctx.Start = allTokens[onIdx[cursor]];
                     stack.Peek().AddChild(ctx);
                     stack.Push(ctx);
                     break;
@@ -201,19 +219,19 @@ public static class EarleyParser
                 case EventKind.ExitRule:
                 {
                     var done = stack.Pop();
-                    int stopIdx = cursor > 0 ? Math.Min(cursor - 1, tokens.Count - 1) : 0;
-                    if (tokens.Count > 0) done.Stop = tokens[stopIdx];
+                    int stopPos = cursor > 0 ? Math.Min(cursor - 1, onIdx.Count - 1) : 0;
+                    if (onIdx.Count > 0) done.Stop = allTokens[onIdx[stopPos]];
                     break;
                 }
                 case EventKind.Consume:
                 {
-                    int i = e.TokenIndex;
-                    if (i >= 0 && i < tokens.Count)
+                    int i = e.TokenIndex; // index into allTokens
+                    if (i >= 0 && i < allTokens.Count)
                     {
-                        var term = new TerminalNodeImpl(tokens[i]);
+                        var term = new TerminalNodeImpl(allTokens[i]);
                         stack.Peek().AddChild(term);
-                        stack.Peek().Stop = tokens[i];
-                        cursor = i + 1;
+                        stack.Peek().Stop = allTokens[i];
+                        cursor++; // advance on-channel position
                     }
                     break;
                 }
@@ -224,12 +242,12 @@ public static class EarleyParser
         while (stack.Count > 1)
         {
             var done = stack.Pop();
-            int stopIdx = cursor > 0 ? Math.Min(cursor - 1, tokens.Count - 1) : 0;
-            if (tokens.Count > 0) done.Stop = tokens[stopIdx];
+            int stopPos = cursor > 0 ? Math.Min(cursor - 1, onIdx.Count - 1) : 0;
+            if (onIdx.Count > 0) done.Stop = allTokens[onIdx[stopPos]];
         }
 
-        if (root.Stop == null && tokens.Count > 0)
-            root.Stop = tokens[Math.Max(0, Math.Min(cursor, tokens.Count - 1))];
+        if (root.Stop == null && onIdx.Count > 0)
+            root.Stop = allTokens[onIdx[Math.Max(0, Math.Min(cursor, onIdx.Count - 1))]];
 
         return root;
     }

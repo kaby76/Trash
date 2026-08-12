@@ -11,7 +11,7 @@ searches for problems in the grammar, and outputs the results to stdout.
 
 ## Usage
 
-    tranalyze
+    dotnet trash analyze
 
 ## Details
 
@@ -45,7 +45,7 @@ _Input to command_
 
 _Command_
 
-    trparse Test.g4 | tranalyze
+    dotnet trash parse Test.g4 | dotnet trash analyze
 
 _Output_
 
@@ -71,7 +71,7 @@ _Output_
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

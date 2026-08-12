@@ -12,9 +12,9 @@ to stdout. The input and output are Parse Tree Data.
 
 ## Usage
 
-    trsort [-a]
-    trsort --bfs [<start-rule>]
-    trsort --dfs [<start-rule>]
+    dotnet trash sort [-a]
+    dotnet trash sort --bfs [<start-rule>]
+    dotnet trash sort --dfs [<start-rule>]
 
 ## Details
 
@@ -36,9 +36,9 @@ Only one mode flag may be specified at a time.
 
 ## Example
 
-    dotnet trash parse Java.g4 | dotnet trash trsort -a | dotnet trash sponge -o out -c
-    dotnet trash parse Java.g4 | dotnet trash trsort --dfs compilationUnit | dotnet trash sponge -o out -c
-    dotnet trash parse Java.g4 | dotnet trash trsort --bfs | dotnet trash sponge -o out -c
+    dotnet trash parse Java.g4 | dotnet trash sort -a | dotnet trash sponge -c
+    dotnet trash parse Java.g4 | dotnet trash sort --dfs compilationUnit | dotnet trash sponge -c
+    dotnet trash parse Java.g4 | dotnet trash sort --bfs | dotnet trash sponge -c
 
 ## Current version
 
@@ -48,7 +48,7 @@ Only one mode flag may be specified at a time.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

@@ -10,11 +10,11 @@ Perform an ungroup transformation of the 'element' node(s) specified by the stri
 
 ## Usage
 
-    trungroup <string>
+    dotnet trash ungroup <string>
 
 ## Examples
 
-    trparse A.g4 | trungroup "//parserRuleSpec[RULE_REF/text() = 'a']//ruleAltList"
+    dotnet trash parse A.g4 | dotnet trash ungroup "//parserRuleSpec[RULE_REF/text() = 'a']//ruleAltList"
 
 ## Notes
 
@@ -30,7 +30,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

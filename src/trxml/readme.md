@@ -10,11 +10,11 @@ Read a tree from stdin and write an XML represenation of it.
 
 ## Usage
 
-    trxml
+    dotnet trash xml
 
 ## Examples
 
-    trparse A.g4 | trxml
+    dotnet trash parse A.g4 | dotnet trash xml
 
 ## Current version
 
@@ -24,7 +24,7 @@ Read a tree from stdin and write an XML represenation of it.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

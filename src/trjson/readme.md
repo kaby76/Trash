@@ -10,11 +10,11 @@ Read a parse tree from stdin and write a JSON represenation of it.
 
 ## Usage
 
-    trjson
+    dotnet trash json
 
 ## Examples
 
-    trparse A.g4 | trjson | less
+    dotnet trash parse A.g4 | dotnet trash json | less
 
 ## Current version
 
@@ -24,7 +24,7 @@ Read a parse tree from stdin and write a JSON represenation of it.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 

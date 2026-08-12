@@ -12,11 +12,11 @@ to stdout. The input and output are Parse Tree Data.
 
 ## Usage
 
-    trfold <string>
+    dotnet trash fold <string>
 
 ## Example
 
-    trparse A.g4 | trfold "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
+    dotnet trash parse A.g4 | dotnet trash fold "//parserRuleSpec[RULE_REF/text() = 'normalAnnotation']"
 
 ## Notes
 
@@ -32,7 +32,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 The MIT License
 
-Copyright (c) 2025 Ken Domino
+Copyright (c) 2026 Ken Domino
 
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software and 
