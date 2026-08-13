@@ -99,19 +99,7 @@ A *parsing result set* is a JSON serialization of an array of:
 
 Most commands in Trash read and/or write parsing result sets.
 
-## Supported grammars
-
-| Grammars | File suffix |
-| ---- | ---- |
-| Antlr4 | .g4 |
-| Antlr3 | .g3 |
-| Antlr2 | .g2 |
-| Bison | .y |
-| LBNF | .cf |
-| W3C EBNF | .ebnf |
-| ISO 14977 | .iso14977, .iso |
-
----------
+## About
 
 The source code for the extension is open source, free of charge, and free of ads. For the latest developments on the extension,
 check out my [blog](http://codinggorilla.com).

@@ -34,13 +34,18 @@ This program is part of the Trash toolkit.]]>
 		<ProjectReference Include="../Logger/Logger.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="../grammars/abnf/Generated-CSharp/abnf.csproj" />
 		<ProjectReference Include="../grammars/antlr2/Generated-CSharp/antlr2.csproj" />
 		<ProjectReference Include="../grammars/antlr3/Generated-CSharp/antlr3.csproj" />
 		<ProjectReference Include="../grammars/antlr4/Generated-CSharp/antlr4.csproj" />
 		<ProjectReference Include="../grammars/bison/Generated-CSharp/bison.csproj" />
+		<ProjectReference Include="../grammars/grammophone/Generated-CSharp/grammophone.csproj" />
+		<ProjectReference Include="../grammars/iso14977/Generated-CSharp/iso14977.csproj" />
 		<ProjectReference Include="../grammars/javacc/Generated-CSharp/javacc.csproj" />
 		<ProjectReference Include="../grammars/lark/Generated-CSharp/lark.csproj" />
 		<ProjectReference Include="../grammars/lbnf/Generated-CSharp/lbnf.csproj" />
+		<ProjectReference Include="../grammars/pegjs/Generated-CSharp/pegjs.csproj" />
+		<ProjectReference Include="../grammars/pest/Generated-CSharp/pest.csproj" />
 		<ProjectReference Include="../grammars/princeton/Generated-CSharp/princeton.csproj" />
 		<ProjectReference Include="../grammars/rex/Generated-CSharp/rex.csproj" />
 		<ProjectReference Include="../grammars/w3cebnf/Generated-CSharp/w3cebnf.csproj" />
