@@ -104,7 +104,7 @@ Most commands in Trash read and/or write parsing result sets.
 The source code for the extension is open source, free of charge, and free of ads. For the latest developments on the extension,
 check out my [blog](http://codinggorilla.com).
 
-# Building
+## Building
 
     git clone https://github.com/kaby76/Trash
     cd Trash
@@ -112,7 +112,7 @@ check out my [blog](http://codinggorilla.com).
     
 You must have the NET SDK version 10 installed to build and run.
 
-# Releases
+## Releases
 
 See https://github.com/kaby76/Trash/releases.
 
