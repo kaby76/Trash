@@ -108,6 +108,19 @@ sealed class AdapterElement : XdmElement
 
         return elem;
     }
+
+    // Override DeepCopy so element constructors get a proper XdmElement with
+    // all children — the base XdmElement.DeepCopy() copies its own private
+    // _children list (always empty for adapters which store in _kids).
+    public override XdmNode DeepCopy()
+    {
+        var copy = new XdmElement(NodeName!);
+        foreach (var attr in _attrs)
+            copy.AddAttribute((XdmAttribute)attr.DeepCopy());
+        foreach (var kid in _kids)
+            copy.AppendChild(kid.DeepCopy());
+        return copy;
+    }
 }
 
 /// <summary>
