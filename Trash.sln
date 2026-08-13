@@ -99,7 +99,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workspaces", "src\Workspace
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trff", "src\trff\trff.csproj", "{0C9D25DA-15A3-4313-966A-78B2537680D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1", "_tests\TestProject1\TestProject1.csproj", "{D65FCED2-B935-4D52-894E-D5FC30D74DCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1", "tests\TestProject1\TestProject1.csproj", "{D65FCED2-B935-4D52-894E-D5FC30D74DCF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grammars", "grammars", "{44E99C4B-9C50-423F-9953-3D314606ED7D}"
 EndProject

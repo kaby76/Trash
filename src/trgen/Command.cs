@@ -586,7 +586,7 @@ namespace Trash
             }
         }
 
-        public static string version = "2.0.1";
+        public static string version = "2.1.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -737,6 +737,15 @@ namespace Trash
                 .Where(t => t != TargetName(target))
                 .Select(t => $"/{t}/"));
             return filter;
+        }
+
+        // Extract the leading non-wildcard directory segment from an example_files glob.
+        // e.g. "examples/**/*.java" -> "examples", "examples" -> "examples"
+        public static string ExampleFilesTopDir(string exampleFiles)
+        {
+            if (string.IsNullOrEmpty(exampleFiles)) return null;
+            var top = exampleFiles.Split('/')[0].Split('*')[0].TrimEnd('/');
+            return string.IsNullOrEmpty(top) ? null : top;
         }
 
         private void ModifyWithDesc(Config config)
@@ -1366,7 +1375,7 @@ namespace Trash
                     test.current_directory = test.current_directory + "/";
 
                 test.start_rule = config.start_rule;
-                test.example_files = "examples";
+                if (test.example_files == null) test.example_files = "examples";
                 test.fully_qualified_lexer_name = null;
                 test.fully_qualified_parser_name = null;
                 test.package = test.target == "Go" ? "parser" : "";
@@ -1374,10 +1383,11 @@ namespace Trash
                                            (test.ignore_string != null
                                                ? test.ignore_string + "|"
                                                : "")
-                                           + "/ignore/|/Generated/|/Generated-[^/]*/|/target/|/examples/|/.claude/|/.git/|/.gitignore/|/.ignore/|"
+                                           + "/ignore/|/Generated/|/Generated-[^/]*/|/target/|/.claude/|/.git/|/.gitignore/|/.ignore/|"
                                            + Command.AllButTargetName(test.target)
                                            + ")).+[.]g4"
                                            + "$";
+                var examplesTopDir = Command.ExampleFilesTopDir(test.example_files);
                 var grammar_list = new TrashGlobbing.Glob(test.current_directory)
                     .RegexContents(all_grammars_pattern)
                     .Where(f =>
@@ -1389,6 +1399,15 @@ namespace Trash
                     .Select(f => f.FullName.Replace('\\', '/'))
                     .Where(f =>
                     {
+                        // Exclude files under the example_files directory (relative path only).
+                        if (examplesTopDir != null)
+                        {
+                            var rel = f.StartsWith(test.current_directory)
+                                ? f.Substring(test.current_directory.Length)
+                                : f;
+                            if (rel.StartsWith(examplesTopDir + "/") || rel == examplesTopDir)
+                                return false;
+                        }
                         if (test.fully_qualified_parser_name != "ArithmeticParser" &&
                             f == "./Arithmetic.g4") return false;
                         if (f == "./files") return false;
@@ -1437,14 +1456,26 @@ namespace Trash
                                              (test.ignore_string != null
                                                  ? test.ignore_string + "|"
                                                  : "")
-                                             + "ignore/|Generated/|Generated-[^/]*/|target/|examples/|.git/|.gitignore|"
+                                             + "ignore/|Generated/|Generated-[^/]*/|target/|.git/|.gitignore|"
                                              + Command.AllButTargetName(test.target)
                                              + ")).+"
                                              + "$";
+                    var sourceExamplesTopDir = Command.ExampleFilesTopDir(test.example_files);
                     var l = new TrashGlobbing.Glob(cwd)
                         .RegexContents(all_source_pattern)
                         .Where(f => f is FileInfo && !f.Attributes.HasFlag(FileAttributes.Directory))
                         .Select(f => f.FullName.Replace('\\', '/'))
+                        .Where(f =>
+                        {
+                            // Exclude files under the example_files directory (relative path only).
+                            if (sourceExamplesTopDir != null)
+                            {
+                                var rel = f.StartsWith(ddd) ? f.Substring(ddd.Length) : f;
+                                if (rel.StartsWith(sourceExamplesTopDir + "/") || rel == sourceExamplesTopDir)
+                                    return false;
+                            }
+                            return true;
+                        })
                         .ToList();
                     test.grammar_directory_source_files.AddRange(l);
                 }

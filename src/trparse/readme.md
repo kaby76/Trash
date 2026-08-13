@@ -13,24 +13,51 @@ are supported. To specify the grammar, you can either
 be in a trgen-generated parser directory, or use the -p option.
 
 If using positional args on the command line, a file is parsed
-depending on the extension of the file name:
+depending on the extension of the file name.  The recognized extensions are
+listed in the [Supported grammars](#supported-grammars) table below.
 
-* `.g2` for an ANTLRv2 grammar
-* `.g3` for an ANTLRv3 grammar
-* `.g4` for an ANTLRv4 grammar
-* `.y` for a Bison grammar
-* `.rex` for a Rex grammar
-* `.gram` for a pegen grammar
+You can force the type of parse with the `--type` command-line option.
+Accepted values:
 
-You can force the type of parse with
-the `--type` command-line option:
+* `ANTLRv4` — ANTLRv4 (`.g4`)
+* `ANTLRv3` — ANTLRv3 (`.g3`)
+* `ANTLRv2` — ANTLRv2 (`.g2`)
+* `Bison` — Bison/Yacc (`.y`)
+* `Lark` — Lark (`.lark`)
+* `rex` — Rex (`.rex`)
+* `LBNF` — LBNF/BNF Converter (`.cf`)
+* `W3CEBNF` — W3C EBNF (`.ebnf`)
+* `Iso14977` — ISO 14977 EBNF (`.iso14977`, `.iso`)
+* `ABNF` — IETF ABNF (`.abnf`)
+* `Javacc` — JavaCC (`.jj`, `.jjt`)
+* `Pegjs` — PEG.js (`.pegjs`)
+* `Pest` — Pest (`.pest`)
+* `Xtext` — Xtext (`.xtext`)
+* `Grammophone` — Grammophone
+* `Princeton` — Princeton BNF
+* `pegen_v3_10` — Python pegen (`.peg`)
 
-* `ANTLRv4` for ANTLRv4
-* `ANTLRv3` for ANTLRv3
-* `ANTLRv2` for ANTLRv2
-* `Bison` for Bison
-* `rex` for Rex
-* `pegen_v3_10` for the `Generated/` parser
+## Supported grammars
+
+| Grammar | File suffix | `--type` value |
+|---------|-------------|----------------|
+| ANTLRv4 | `.g4` | `ANTLRv4` |
+| ANTLRv3 | `.g3` | `ANTLRv3` |
+| ANTLRv2 | `.g2` | `ANTLRv2` |
+| Bison/Yacc | `.y` | `Bison` |
+| Lark | `.lark` | `Lark` |
+| Rex | `.rex` | `rex` |
+| LBNF (BNF Converter) | `.cf` | `LBNF` |
+| W3C EBNF | `.ebnf` | `W3CEBNF` |
+| ISO 14977 EBNF | `.iso14977`, `.iso` | `Iso14977` |
+| IETF ABNF | `.abnf` | `ABNF` |
+| JavaCC | `.jj`, `.jjt` | `Javacc` |
+| PEG.js | `.pegjs` | `Pegjs` |
+| Pest | `.pest` | `Pest` |
+| Xtext | `.xtext` | `Xtext` |
+| Grammophone | — | `Grammophone` |
+| Princeton BNF | — | `Princeton` |
+| Python pegen | `.peg` | `pegen_v3_10` |
 
 ## Earley ATN-based parsing (interp files)
 

@@ -302,6 +302,17 @@ public class Grun
                 ".peg" => "pegen_v3_10",
                 ".rex" => "rex",
                 ".y" => "Bison",
+                ".lark" => "Lark",
+                ".cf" => "LBNF",
+                ".ebnf" => "W3CEBNF",
+                ".xtext" => "Xtext",
+                ".jj" => "Javacc",
+                ".jjt" => "Javacc",
+                ".abnf" => "ABNF",
+                ".iso14977" => "Iso14977",
+                ".iso" => "Iso14977",
+                ".pegjs" => "Pegjs",
+                ".pest" => "Pest",
                 _ => null
             };
             var subdir = parser_type switch
@@ -312,6 +323,17 @@ public class Grun
                 "pegen_v3_10" => "pegen",
                 "rex" => "rex",
                 "Bison" => "bison",
+                "Lark" => "lark",
+                "LBNF" => "lbnf",
+                "W3CEBNF" => "w3cebnf",
+                "Xtext" => "xtext",
+                "Javacc" => "javacc",
+                "ABNF" => "abnf",
+                "Iso14977" => "iso14977",
+                "Pegjs" => "pegjs",
+                "Pest" => "pest",
+                "Grammophone" => "grammophone",
+                "Princeton" => "princeton",
                 _ => null
             };
             if (subdir != null)
@@ -364,8 +386,19 @@ public class Grun
                 "pegen_v3_10" => "pegen",
                 "rex" => "rex",
                 "Bison" => "bison",
+                "Lark" => "lark",
+                "LBNF" => "lbnf",
+                "W3CEBNF" => "w3cebnf",
+                "Xtext" => "xtext",
+                "Javacc" => "javacc",
+                "ABNF" => "abnf",
+                "Iso14977" => "iso14977",
+                "Pegjs" => "pegjs",
+                "Pest" => "pest",
+                "Grammophone" => "grammophone",
+                "Princeton" => "princeton",
                 _ => throw new Exception(
-                    "Unknown built-in parser type, should be one of ANTLRv4, ANTLRv3, ANTLRv2, pegen_v3_10, rex, Bison.")
+                    "Unknown built-in parser type. Supported: ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton.")
             };
             // Get this assembly.
             System.Reflection.Assembly a = this.GetType().Assembly;

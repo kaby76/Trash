@@ -49,8 +49,20 @@ class Command
                         ".g3" => "ANTLRv3",
                         ".g2" => "ANTLRv2",
                         ".gram" => "pegen_v3_10",
+                        ".peg" => "pegen_v3_10",
                         ".rex" => "rex",
                         ".y" => "Bison",
+                        ".lark" => "Lark",
+                        ".cf" => "LBNF",
+                        ".ebnf" => "W3CEBNF",
+                        ".xtext" => "Xtext",
+                        ".jj" => "Javacc",
+                        ".jjt" => "Javacc",
+                        ".abnf" => "ABNF",
+                        ".iso14977" => "Iso14977",
+                        ".iso" => "Iso14977",
+                        ".pegjs" => "Pegjs",
+                        ".pest" => "Pest",
                         _ => null
                     };
                     config.Type = parser_type;

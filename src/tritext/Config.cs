@@ -19,5 +19,5 @@ public class Config
     public string Filter { get; set; } = "";
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "2.0.1";
+    public string Version { get; set; } = "2.1.0";
 }

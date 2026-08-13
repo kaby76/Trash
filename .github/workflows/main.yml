@@ -130,5 +130,5 @@ jobs:
         npm run build
     - name: Test
       run: |
-        cd _tests
+        cd tests
         bash all-tests.sh
