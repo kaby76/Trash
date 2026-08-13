@@ -171,6 +171,7 @@ class Command
                 if (item is AdapterElement ae) selected.Add(ae.Source);
                 else if (item is AdapterText at) selected.Add(at.Source);
                 else if (item is AdapterAttribute aa) selected.Add(aa.Source);
+                else if (item is XdmElement xe) selected.Add(XdmToUnv(xe));
                 else
                 {
                     // Scalar result — print to stdout and don't emit parse tree.
@@ -193,5 +194,35 @@ class Command
         string js = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
         Console.WriteLine(js);
+    }
+
+    // Converts a constructed XdmElement tree (from an element constructor) back
+    // to a UnvParseTreeElement so it can be serialised as a JSON parse tree.
+    static UnvParseTreeElement XdmToUnv(XdmElement elem)
+    {
+        var result = new UnvParseTreeElement { LocalName = elem.NodeName?.LocalName ?? "" };
+        var list = (UnvParseTreeNodeList)result.ChildNodes;
+
+        foreach (var attr in elem.Attributes)
+        {
+            list.Add(new UnvParseTreeAttr
+            {
+                LocalName = attr.LocalName,
+                Name      = attr.LocalName,
+                StringValue = attr.Value,
+                NamespaceURI = attr.NamespaceUri,
+                Prefix    = attr.Prefix,
+            });
+        }
+
+        foreach (var child in elem.Children)
+        {
+            if (child is XdmElement childElem)
+                list.Add(XdmToUnv(childElem));
+            else if (child is XdmText childText)
+                list.Add(new UnvParseTreeText { Data = childText.Value });
+        }
+
+        return result;
     }
 }
