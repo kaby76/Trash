@@ -3,9 +3,11 @@ using AntlrJson;
 using ParseTreeEditing.UnvParseTreeDOM;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using XQuery.DataModel;
 using XQuery.Engine;
 using XPathParser = XQuery.Parser.XPathParser;
 
@@ -96,7 +98,57 @@ class Command
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
 
         var exprNode = new XPathParser(expr).Parse();
-        var evaluator = new XPathEvaluator();
+
+        AdapterDocument LoadDocFile(string path)
+        {
+            var json2 = File.ReadAllText(path);
+            var data2 = JsonSerializer.Deserialize<ParsingResultSet[]>(json2, serializeOptions)!;
+            return AdapterDocument.Build(data2.SelectMany(prs => prs.Nodes));
+        }
+
+        var docFn = new XdmFunction(
+            new XdmQName(XdmQName.FnNamespace, "doc", "fn"),
+            1,
+            args => new XdmSequence(LoadDocFile(args[0].StringValue)));
+
+        static XdmSequence ExecShell(XdmSequence[] args)
+        {
+            var cmd   = args[0].StringValue;
+            var input = args.Length >= 2 ? args[1].StringValue : null;
+            bool isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
+                System.Runtime.InteropServices.OSPlatform.Windows);
+            var (shell, flag) = isWindows ? ("bash", "-c") : ("sh", "-c");
+            var psi = new ProcessStartInfo(shell, $"{flag} \"{cmd.Replace("\"", "\\\"")}\"")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardInput  = input is not null,
+                RedirectStandardError  = false,
+                UseShellExecute        = false,
+            };
+            using var proc = Process.Start(psi)
+                ?? throw new InvalidOperationException($"exec: failed to start '{shell}'");
+            if (input is not null)
+            {
+                proc.StandardInput.Write(input);
+                proc.StandardInput.Close();
+            }
+            var output = proc.StandardOutput.ReadToEnd();
+            proc.WaitForExit();
+            if (proc.ExitCode != 0)
+                throw new InvalidOperationException($"exec: command exited with code {proc.ExitCode}: {cmd}");
+            return new XdmSequence(new XdmAtomicValue(output.TrimEnd('\r', '\n')));
+        }
+
+        var execFn  = new XdmFunction(new XdmQName("exec"), 1, ExecShell);
+        var exec2Fn = new XdmFunction(new XdmQName("exec"), 2, ExecShell);
+
+        var baseCtx = EvaluationContext.CreateDefault();
+        baseCtx.RegisterFunction(new XdmQName("doc"), docFn);
+        baseCtx.RegisterFunction(new XdmQName(XdmQName.FnNamespace, "doc", "fn"), docFn);
+        baseCtx.RegisterFunction(new XdmQName("exec"), execFn);
+        baseCtx.RegisterFunction(new XdmQName("exec"), exec2Fn);
+
+        var evaluator = new XPathEvaluator(baseCtx);
 
         var results = new List<ParsingResultSet>();
         bool do_rs = !config.NoParsingResultSets;
