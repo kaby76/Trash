@@ -753,6 +753,22 @@ public class FunctionLibrary
             return new XdmSequence(new XdmAtomicValue(""));
         });
 
+        // fn:node-name
+        Register("node-name", 0, (args, ctx) =>
+        {
+            if (ctx.ContextItem is XdmNode node && node.NodeName != null)
+                return new XdmSequence(new XdmAtomicValue(node.NodeName));
+            return XdmSequence.Empty;
+        });
+
+        Register("node-name", 1, (args, ctx) =>
+        {
+            if (args[0].IsEmpty) return XdmSequence.Empty;
+            if (args[0].First is XdmNode node && node.NodeName != null)
+                return new XdmSequence(new XdmAtomicValue(node.NodeName));
+            return XdmSequence.Empty;
+        });
+
         // fn:namespace-uri
         Register("namespace-uri", 0, (args, ctx) =>
         {
