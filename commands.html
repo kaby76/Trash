@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trash — Command Reference</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+           margin: 2em auto; max-width: 1100px; color: #24292e; }
+    h1, h2, h3 { border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+    pre, code { background: #f6f8fa; border-radius: 3px; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.9em; }
+    pre  { padding: 0.8em 1em; overflow-x: auto; }
+    code { padding: 0.15em 0.4em; }
+    ul li { margin: 0.3em 0; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1em; }
+    th, td { border: 1px solid #d0d7de; padding: 6px 12px; text-align: left; vertical-align: top; }
+    th { background: #f6f8fa; cursor: pointer; white-space: nowrap; user-select: none; }
+    th:hover { background: #eaeef2; }
+    th.asc::after  { content: " \25B2"; font-size: 0.7em; color: #555; }
+    th.desc::after { content: " \25BC"; font-size: 0.7em; color: #555; }
+    tbody tr:nth-child(even) { background: #f6f8fa; }
+    tbody tr:hover { background: #fff8c5; }
+    td a { color: #0969da; text-decoration: none; }
+    td a:hover { text-decoration: underline; }
+    .badge-rs  { background: #ddf4ff; color: #0969da; border-radius: 4px; padding: 1px 6px; font-size: 0.82em; white-space: nowrap; }
+    .badge-txt { background: #dafbe1; color: #1a7f37; border-radius: 4px; padding: 1px 6px; font-size: 0.82em; white-space: nowrap; }
+    .badge-file{ background: #fff0b3; color: #7d4e00; border-radius: 4px; padding: 1px 6px; font-size: 0.82em; white-space: nowrap; }
+    .badge-gui { background: #ffebe9; color: #cf222e; border-radius: 4px; padding: 1px 6px; font-size: 0.82em; white-space: nowrap; }
+    .badge-any { background: #f0f0f0; color: #555;    border-radius: 4px; padding: 1px 6px; font-size: 0.82em; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<h1>Trash — Command Reference</h1>
+
+<h2>Invocation</h2>
+
+<p>Every Trash command is invoked through the <code>dotnet trash</code> dispatcher:</p>
+
+<pre>dotnet trash &lt;name&gt; [options] [args…]</pre>
+
+<p>Both the full sub-tool name (e.g. <code>trparse</code>) and the short alias without the
+<code>tr</code> prefix (e.g. <code>parse</code>) are accepted.</p>
+
+<h3>Ordering rules</h3>
+<ul>
+  <li><strong>Options before positional arguments.</strong>
+      Named options (e.g. <code>-t CSharp</code>, <code>-q file.xq</code>, <code>-o outdir/</code>)
+      must appear before any bare positional arguments (file names, XPath/XQuery expressions).</li>
+  <li><strong>Use <code>--</code> when an argument looks like a flag.</strong>
+      If a positional argument starts with <code>-</code> (e.g. a query string beginning with
+      <code>-</code>), place <code>--</code> between the last option and the argument so the
+      parser does not treat it as an unknown flag:
+      <pre>dotnet trash xpath -- '--//foo'</pre></li>
+  <li><strong>XPath / XQuery arguments containing <code>/</code>.</strong>
+      Wrap the expression in single quotes to protect it from the shell.
+      On <strong>MSYS2 / Git Bash on Windows</strong>, the shell rewrites leading
+      <code>/</code> and <code>//</code> to Windows paths; run
+      <pre>export MSYS2_ARG_CONV_EXCL="*"</pre>
+      once in your session (or add it to <code>~/.bashrc</code>) to suppress this.</li>
+  <li><strong>Stdin / stdout pipeline.</strong>
+      Most commands read a <em>parse result set</em> (JSON) from stdin and write one to
+      stdout, making them composable with <code>|</code>:
+      <pre>dotnet trash parse Grammar.g4 | dotnet trash xpath '//ruleSpec' | dotnet trash text</pre></li>
+  <li><strong>Reading from a file instead of stdin.</strong>
+      Commands that normally read from stdin accept <code>-f &lt;file&gt;</code> to read a
+      parse result set from a file instead.</li>
+  <li><strong>Materialising results to disk.</strong>
+      <code>dotnet trash sponge</code> writes parse result set data back to the original
+      source files. Use it at the end of a pipeline after any transform:
+      <pre>dotnet trash parse *.g4 | dotnet trash rename -r "old,new" | dotnet trash sponge</pre></li>
+</ul>
+
+<h2>Commands</h2>
+<p>Click a column header to sort by that column; click again to reverse the order.</p>
+
+<table id="cmd-table">
+  <thead>
+    <tr>
+      <th onclick="sortTable(0)">Name</th>
+      <th onclick="sortTable(1)">Function</th>
+      <th onclick="sortTable(2)">Input</th>
+      <th onclick="sortTable(3)">Output</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="src/tragl/readme.md">agl</a></td>
+      <td>Display parse tree graphically (Windows, uses MSAGL)</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-gui">GUI window</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/tranalyze/readme.md">analyze</a></td>
+      <td>Analyze a grammar — unused symbols, Unicode issues, nullable rules, unhalting rules, and more</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-txt">text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trcaret/readme.md">caret</a></td>
+      <td>Print source lines with a caret (^) under the start of each selected parse tree node</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-txt">text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trclonereplace/readme.md">clonereplace</a></td>
+      <td>Clone a rule and replace references to it to optimise full-stack fallbacks</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trcombine/readme.md">combine</a></td>
+      <td>Combine a split Antlr4 lexer grammar and parser grammar into a single combined grammar</td>
+      <td><span class="badge-file">grammar files (args)</span></td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trconvert/readme.md">convert</a></td>
+      <td>Convert a grammar from Antlr2, Antlr3, Bison, W3C EBNF, or Lark syntax to Antlr4</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trcover/readme.md">cover</a></td>
+      <td>Analyse rule coverage for a set of parse inputs; generate an HTML coverage report</td>
+      <td><span class="badge-rs">parse result set</span> + input files</td>
+      <td><span class="badge-file">cover.html</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trdot/readme.md">dot</a></td>
+      <td>Print a parse tree in Graphviz Dot format for visualisation</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-txt">Dot text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trextract/readme.md">extract</a></td>
+      <td>Extract target-specific action code from a grammar and replace with macro calls</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trff/readme.md">ff</a></td>
+      <td>Compute and print FIRST and FOLLOW sets for a grammar</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-txt">text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trfoldlit/readme.md">foldlit</a></td>
+      <td>Fold transform — replace string literals in parser rules with their lexer rule name</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trgen/readme.md">gen</a></td>
+      <td>Generate a complete Antlr4 parser application for a chosen target language</td>
+      <td><span class="badge-file">.g4 files / desc.xml / current dir</span></td>
+      <td><span class="badge-file">Generated-&lt;target&gt;/ source files</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trgenvsc/readme.md">genvsc</a></td>
+      <td>Generate a VS Code extension and LSP server for syntax highlighting a grammar</td>
+      <td><span class="badge-file">.g4 files</span></td>
+      <td><span class="badge-file">Generated-vsc/ extension files</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trglob/readme.md">glob</a></td>
+      <td>Expand glob patterns and print matching file paths</td>
+      <td><span class="badge-any">glob pattern args</span></td>
+      <td><span class="badge-txt">text (file names)</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/triconv/readme.md">iconv</a></td>
+      <td>Read a file and convert or validate its character encoding</td>
+      <td><span class="badge-file">file(s)</span></td>
+      <td><span class="badge-txt">text (converted content)</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trinterp/readme.md">interp</a></td>
+      <td>Generate Antlr4 <code>.interp</code> and <code>.tokens</code> files from a grammar parse tree (no code-generation step required)</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-file">.interp / .tokens files</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/tritext/readme.md">itext</a></td>
+      <td>Extract plain text strings from a PDF file using iText</td>
+      <td><span class="badge-file">PDF file (arg)</span></td>
+      <td><span class="badge-txt">text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trjson/readme.md">json</a></td>
+      <td>Print a parse tree as a pretty-printed JSON object tree (for debugging or export)</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-txt">JSON text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trnullable/readme.md">nullable</a></td>
+      <td>Report which grammar rules can derive the empty string</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-txt">text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trparse/readme.md">parse</a></td>
+      <td>Parse grammar files (<code>.g4</code>, <code>.g3</code>, <code>.g2</code>, <code>.y</code>, …) or arbitrary input using a generated parser; the primary source of parse result sets</td>
+      <td><span class="badge-file">grammar / input files or stdin</span></td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trperf/readme.md">perf</a></td>
+      <td>Parse files with Antlr4 profiling enabled and report per-decision performance statistics</td>
+      <td><span class="badge-file">grammar + input files</span></td>
+      <td><span class="badge-txt">text (performance stats)</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trquery/readme.md">query</a></td>
+      <td>Search parse trees using XPath expressions (legacy interface; prefer <code>xpath</code>)</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trrename/readme.md">rename</a></td>
+      <td>Rename one or more rule symbols throughout a grammar</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trsort/readme.md">sort</a></td>
+      <td>Reorder grammar rules alphabetically or in BFS/DFS traversal order from a start rule</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trsplit/readme.md">split</a></td>
+      <td>Split a combined Antlr4 grammar into a separate lexer grammar and parser grammar</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-rs">parse result set (2 grammars)</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trsponge/readme.md">sponge</a></td>
+      <td>Write parse result set data back to files on disk (inverse of <code>parse</code> for pipeline sinks)</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-file">source files on disk</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trtext/readme.md">text</a></td>
+      <td>Reconstruct and print the source text corresponding to selected parse tree nodes</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-txt">text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trtokens/readme.md">tokens</a></td>
+      <td>Print the token span (first…last token) for each tree in a parse result set</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-txt">text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trtree/readme.md">tree</a></td>
+      <td>Print a parse tree as a human-readable indented node list</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-txt">indented tree text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trunfold/readme.md">unfold</a></td>
+      <td>Unfold transform — inline the RHS of a rule at every reference identified by an XPath expression</td>
+      <td><span class="badge-rs">parse result set</span> + XPath arg</td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trunfoldlit/readme.md">unfoldlit</a></td>
+      <td>Unfold all single-literal lexer rules into the parser rules that reference them</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trungroup/readme.md">ungroup</a></td>
+      <td>Ungroup transform — remove a grouping parenthesis in a rule alternative</td>
+      <td><span class="badge-rs">parse result set</span> + XPath arg</td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trwdog/readme.md">wdog</a></td>
+      <td>Run a command with a watchdog timer; kill it if it exceeds a time limit</td>
+      <td><span class="badge-any">command + args</span></td>
+      <td><span class="badge-any">pass-through</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trxml/readme.md">xml</a></td>
+      <td>Print a parse tree as an XML document</td>
+      <td><span class="badge-rs">parse result set</span></td>
+      <td><span class="badge-txt">XML text</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trxml2/readme.md">xml2</a></td>
+      <td>Enumerate all XPath paths from the root of an XML document to its leaves</td>
+      <td><span class="badge-file">XML file (stdin)</span></td>
+      <td><span class="badge-txt">text (XPath paths)</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trxpath/readme.md">xpath</a></td>
+      <td>Filter a parse tree using an XPath 4.0 expression; returns matching subtrees</td>
+      <td><span class="badge-rs">parse result set</span> + XPath arg</td>
+      <td><span class="badge-rs">parse result set</span></td>
+    </tr>
+    <tr>
+      <td><a href="src/trxquery/readme.md">xquery</a></td>
+      <td>Apply XQuery 4.0 / XQuery Update Facility expressions to a parse tree — select, transform, insert, delete, or replace nodes</td>
+      <td><span class="badge-rs">parse result set</span> + XQuery expression or file</td>
+      <td><span class="badge-rs">parse result set</span> or <span class="badge-txt">text</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+  var sortCol = 0, sortDir = 1;
+
+  function sortTable(col) {
+    if (col === sortCol) {
+      sortDir = -sortDir;
+    } else {
+      sortCol = col;
+      sortDir = 1;
+    }
+    var tbody = document.querySelector('#cmd-table tbody');
+    var rows  = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+    rows.sort(function(a, b) {
+      var aText = a.cells[col].textContent.trim().toLowerCase();
+      var bText = b.cells[col].textContent.trim().toLowerCase();
+      if (aText < bText) return -sortDir;
+      if (aText > bText) return  sortDir;
+      return 0;
+    });
+    rows.forEach(function(r) { tbody.appendChild(r); });
+    var ths = document.querySelectorAll('#cmd-table thead th');
+    for (var i = 0; i < ths.length; i++) {
+      ths[i].className = (i === sortCol) ? (sortDir === 1 ? 'asc' : 'desc') : '';
+    }
+  }
+
+  sortTable(0); // initial sort: Name ascending
+</script>
+
+</body>
+</html>
