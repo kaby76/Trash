@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Trash;
 
@@ -53,12 +52,27 @@ class Command
 
         allFiles = allFiles.Distinct().ToList();
 
-        // Remove files whose path matches any negation pattern.
+        // Remove files matching any negation pattern, using GlobContents so that
+        // inclusion and exclusion share the same matching semantics (segment-aware,
+        // ** handling, separator normalisation, etc.).
         foreach (var negPat in negativePatterns)
         {
-            var regexStr = TrashGlobbing.Glob.GlobToRegex(negPat.Replace("\\", "/"));
-            var regex = new Regex(regexStr);
-            allFiles = allFiles.Where(f => !regex.IsMatch(f)).ToList();
+            var negGlob = new TrashGlobbing.Glob();
+            var z = negPat.Replace("\\", "/");
+            var negMatches = negGlob
+                .GlobContents(cwdi, z, true)
+                .Select(f =>
+                {
+                    var n = f.FullName.Replace('\\', '/');
+                    if (!config.Full)
+                    {
+                        var r = System.IO.Path.GetRelativePath(cwd, n);
+                        return r.Replace('\\', '/');
+                    }
+                    return n;
+                })
+                .ToHashSet();
+            allFiles = allFiles.Where(f => !negMatches.Contains(f)).ToList();
         }
 
         allFiles.Sort();

@@ -70,8 +70,17 @@ namespace TrashGlobbing
                         break;
                     case '{':
                         // Begin alternation group: {a,b,c} → (?:a|b|c)
-                        braceDepth++;
-                        regex.Append("(?:");
+                        // Only treat as alternation when a matching '}' exists; otherwise
+                        // emit a literal '\{' so the regex stays valid.
+                        if (HasMatchingBrace(glob, ptr + 1))
+                        {
+                            braceDepth++;
+                            regex.Append("(?:");
+                        }
+                        else
+                        {
+                            regex.Append("\\{");
+                        }
                         break;
                     case '}':
                         if (braceDepth > 0)
@@ -100,6 +109,23 @@ namespace TrashGlobbing
             }
             regex.Append("$");
             return regex.ToString();
+        }
+
+        // Returns true if there is a '}' in glob[start..] that closes the
+        // immediately enclosing '{' (i.e. at brace depth 0 relative to start).
+        private static bool HasMatchingBrace(string glob, int start)
+        {
+            int depth = 0;
+            for (int i = start; i < glob.Length; i++)
+            {
+                if (glob[i] == '{') depth++;
+                else if (glob[i] == '}')
+                {
+                    if (depth == 0) return true;
+                    depth--;
+                }
+            }
+            return false;
         }
 
         private List<DirectoryInfo> GetDirectory(string cwd, string expr)
