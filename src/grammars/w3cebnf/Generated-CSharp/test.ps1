@@ -1,4 +1,4 @@
-# Generated from trgen 0.23.44
+# Generated from trgen 2.2.0
 
 $workingDirectory = Get-Location
 $filePath = "$workingDirectory/tests.txt"

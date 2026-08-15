@@ -36,8 +36,8 @@ public partial class W3CebnfParser : Parser {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
-		CCEQ=1, Q=2, ALT=3, M=4, P=5, S=6, OP=7, CP=8, CONSTRAINT=9, COMMENT=10, 
-		HEX=11, STRING=12, SET=13, SYMBOL=14, WS=15;
+		CCEQ=1, Q=2, ALT=3, M=4, P=5, S=6, OP=7, CP=8, COMMENT=9, HEX=10, STRING=11, 
+		SET=12, SYMBOL=13, WS=14, CONSTRAINT=15;
 	public const int
 		RULE_grammar_ = 0, RULE_production = 1, RULE_choice = 2, RULE_sequence_or_difference = 3, 
 		RULE_item = 4, RULE_primary = 5;
@@ -50,8 +50,8 @@ public partial class W3CebnfParser : Parser {
 		null, "'::='", "'?'", "'|'", "'-'", "'+'", "'*'", "'('", "')'"
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, "CCEQ", "Q", "ALT", "M", "P", "S", "OP", "CP", "CONSTRAINT", "COMMENT", 
-		"HEX", "STRING", "SET", "SYMBOL", "WS"
+		null, "CCEQ", "Q", "ALT", "M", "P", "S", "OP", "CP", "COMMENT", "HEX", 
+		"STRING", "SET", "SYMBOL", "WS", "CONSTRAINT"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -107,12 +107,6 @@ public partial class W3CebnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitGrammar_(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitGrammar_(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -174,12 +168,6 @@ public partial class W3CebnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitProduction(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitProduction(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -257,12 +245,6 @@ public partial class W3CebnfParser : Parser {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitChoice(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitChoice(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -326,12 +308,6 @@ public partial class W3CebnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitSequence_or_difference(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSequence_or_difference(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -438,12 +414,6 @@ public partial class W3CebnfParser : Parser {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitItem(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitItem(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -514,12 +484,6 @@ public partial class W3CebnfParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IW3CebnfParserListener typedListener = listener as IW3CebnfParserListener;
 			if (typedListener != null) typedListener.ExitPrimary(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IW3CebnfParserVisitor<TResult> typedVisitor = visitor as IW3CebnfParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPrimary(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -594,17 +558,18 @@ public partial class W3CebnfParser : Parser {
 		0,15,1,0,0,0,2,20,1,0,0,0,4,26,1,0,0,0,6,45,1,0,0,0,8,47,1,0,0,0,10,62,
 		1,0,0,0,12,14,3,2,1,0,13,12,1,0,0,0,14,17,1,0,0,0,15,13,1,0,0,0,15,16,
 		1,0,0,0,16,18,1,0,0,0,17,15,1,0,0,0,18,19,5,0,0,1,19,1,1,0,0,0,20,21,5,
-		14,0,0,21,24,5,1,0,0,22,25,3,4,2,0,23,25,5,9,0,0,24,22,1,0,0,0,24,23,1,
-		0,0,0,25,3,1,0,0,0,26,31,3,6,3,0,27,28,5,3,0,0,28,30,3,6,3,0,29,27,1,0,
-		0,0,30,33,1,0,0,0,31,29,1,0,0,0,31,32,1,0,0,0,32,5,1,0,0,0,33,31,1,0,0,
-		0,34,43,3,8,4,0,35,36,5,4,0,0,36,44,3,8,4,0,37,39,3,8,4,0,38,37,1,0,0,
-		0,39,42,1,0,0,0,40,38,1,0,0,0,40,41,1,0,0,0,41,44,1,0,0,0,42,40,1,0,0,
-		0,43,35,1,0,0,0,43,40,1,0,0,0,44,46,1,0,0,0,45,34,1,0,0,0,45,46,1,0,0,
-		0,46,7,1,0,0,0,47,51,3,10,5,0,48,50,7,0,0,0,49,48,1,0,0,0,50,53,1,0,0,
-		0,51,49,1,0,0,0,51,52,1,0,0,0,52,9,1,0,0,0,53,51,1,0,0,0,54,63,5,14,0,
-		0,55,63,5,12,0,0,56,63,5,11,0,0,57,63,5,13,0,0,58,59,5,7,0,0,59,60,3,4,
-		2,0,60,61,5,8,0,0,61,63,1,0,0,0,62,54,1,0,0,0,62,55,1,0,0,0,62,56,1,0,
-		0,0,62,57,1,0,0,0,62,58,1,0,0,0,63,11,1,0,0,0,8,15,24,31,40,43,45,51,62
+		13,0,0,21,24,5,1,0,0,22,25,3,4,2,0,23,25,5,15,0,0,24,22,1,0,0,0,24,23,
+		1,0,0,0,25,3,1,0,0,0,26,31,3,6,3,0,27,28,5,3,0,0,28,30,3,6,3,0,29,27,1,
+		0,0,0,30,33,1,0,0,0,31,29,1,0,0,0,31,32,1,0,0,0,32,5,1,0,0,0,33,31,1,0,
+		0,0,34,43,3,8,4,0,35,36,5,4,0,0,36,44,3,8,4,0,37,39,3,8,4,0,38,37,1,0,
+		0,0,39,42,1,0,0,0,40,38,1,0,0,0,40,41,1,0,0,0,41,44,1,0,0,0,42,40,1,0,
+		0,0,43,35,1,0,0,0,43,40,1,0,0,0,44,46,1,0,0,0,45,34,1,0,0,0,45,46,1,0,
+		0,0,46,7,1,0,0,0,47,51,3,10,5,0,48,50,7,0,0,0,49,48,1,0,0,0,50,53,1,0,
+		0,0,51,49,1,0,0,0,51,52,1,0,0,0,52,9,1,0,0,0,53,51,1,0,0,0,54,63,5,13,
+		0,0,55,63,5,11,0,0,56,63,5,10,0,0,57,63,5,12,0,0,58,59,5,7,0,0,59,60,3,
+		4,2,0,60,61,5,8,0,0,61,63,1,0,0,0,62,54,1,0,0,0,62,55,1,0,0,0,62,56,1,
+		0,0,0,62,57,1,0,0,0,62,58,1,0,0,0,63,11,1,0,0,0,8,15,24,31,40,43,45,51,
+		62
 	};
 
 	public static readonly ATN _ATN =

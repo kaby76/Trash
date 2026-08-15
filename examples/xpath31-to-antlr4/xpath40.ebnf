@@ -1,0 +1,268 @@
+
+AbbreviatedStep	::=	".." | ("@" NodeTest) | SimpleNodeTest
+AbsolutePathExpr	::=	("/" RelativePathExpr?) | ("//" RelativePathExpr)
+AdditiveExpr	::=	MultiplicativeExpr (("+" | "-") MultiplicativeExpr)*
+AndExpr	::=	ComparisonExpr ("and" ComparisonExpr)*
+AnyArrayType	::=	"array" "(" "*" ")"
+AnyFunctionType	::=	("function" | "fn") "(" "*" ")"
+AnyItemType	::=	"item" "(" ")"
+AnyMapType	::=	"map" "(" "*" ")"
+AnyRecordType	::=	"record" "(" "*" ")"
+AnyXNodeType	::=	"node" "(" ")"
+Argument	::=	ExprSingle | ArgumentPlaceholder
+ArgumentList	::=	"(" ((PositionalArguments ("," KeywordArguments)?) | KeywordArguments)? ")"
+ArgumentPlaceholder	::=	"?"
+ArrayConstructor	::=	SquareArrayConstructor | CurlyArrayConstructor
+ArrayType	::=	AnyArrayType | TypedArrayType
+ArrowExpr	::=	UnaryExpr (SequenceArrowTarget | MappingArrowTarget)*
+ArrowTarget	::=	FunctionCall | RestrictedDynamicCall
+AttributeName	::=	EQName
+AttributeNodeType	::=	"attribute" "(" (NameTestUnion ("," TypeName)?)? ")"
+Axis	::=	("ancestor" | "ancestor-or-self" | "attribute" | "child" | "descendant" | "descendant-or-self" | "following" | "following-or-self" | "following-sibling" | "following-sibling-or-self" | "namespace" | "parent" | "preceding" | "preceding-or-self" | "preceding-sibling" | "preceding-sibling-or-self" | "self") "::"
+AxisStep	::=	(AbbreviatedStep | FullStep) Predicate*
+BracedAction	::=	EnclosedExpr
+CastableExpr	::=	CastExpr ("castable" "as" CastTarget OccurrenceIndicator?)?
+CastExpr	::=	PipelineExpr ("cast" "as" CastTarget OccurrenceIndicator?)?
+CastTarget	::=	TypeName | ChoiceItemType | EnumerationType | TypedArrayType | TypedMapType | TypedRecordType
+ChoiceItemType	::=	"(" (ItemType ++ "|") ")"
+CommentNodeType	::=	"comment" "(" ")"
+ComparisonExpr	::=	OtherwiseExpr ((ValueComp | GeneralComp | NodeComp) OtherwiseExpr)?
+CompAttrConstructor	::=	"attribute" CompNodeName EnclosedExpr
+CompCommentConstructor	::=	"comment" EnclosedExpr
+CompDocConstructor	::=	"document" EnclosedExpr
+CompElemConstructor	::=	"element" CompNodeName EnclosedContentExpr
+CompNamespaceConstructor	::=	"namespace" CompNodeNCName EnclosedExpr
+CompNodeName	::=	QNameLiteral | ("{" Expr "}")
+CompNodeNCName	::=	MarkedNCName | ("{" Expr "}")
+CompPIConstructor	::=	"processing-instruction" CompNodeNCName EnclosedExpr
+CompTextConstructor	::=	"text" EnclosedExpr
+ComputedConstructor	::=	CompDocConstructor
+| CompElemConstructor
+| CompAttrConstructor
+| CompNamespaceConstructor
+| CompTextConstructor
+| CompCommentConstructor
+| CompPIConstructor
+Constant	::=	StringLiteral | ("-"? NumericLiteral) | QNameLiteral | ("true" "(" ")") | ("false" "(" ")")
+ContextValueRef	::=	"."
+CurlyArrayConstructor	::=	"array" EnclosedExpr
+DefaultElementNamespaceDecl	::=	"declare" "default" "element" "namespace" URILiteral
+DocumentNodeType	::=	"document-node" "(" (ElementNodeType | SchemaElementNodeType | NameTestUnion)? ")"
+DynamicFunctionCall	::=	PostfixExpr PositionalArgumentList
+DynamicNodeTest	::=	EnclosedExpr
+ElementName	::=	EQName
+ElementNodeType	::=	"element" "(" (NameTestUnion ("," TypeName "?"?)?)? ")"
+EnclosedContentExpr	::=	EnclosedExpr
+EnclosedExpr	::=	"{" Expr? "}"
+EnumerationType	::=	"enum" "(" (StringLiteral ++ ",") ")"
+EQName	::=	QName | URIQualifiedName
+Expr	::=	(ExprSingle ++ ",")
+ExprSingle	::=	ForExpr
+| LetExpr
+| QuantifiedExpr
+| IfExpr
+| OrExpr
+FieldDeclaration	::=	FieldName ("as" SequenceType)?
+FieldName	::=	NCName | StringLiteral
+FilterExpr	::=	PostfixExpr Predicate
+ForBinding	::=	ForItemBinding | ForMemberBinding | ForEntryBinding
+ForClause	::=	"for" (ForBinding ++ ",")
+ForEntryBinding	::=	((ForEntryKeyBinding ForEntryValueBinding?) | ForEntryValueBinding) PositionalVar? "in" ExprSingle
+ForEntryKeyBinding	::=	"key" VarNameAndType
+ForEntryValueBinding	::=	"value" VarNameAndType
+ForExpr	::=	ForClause ForLetReturn
+ForItemBinding	::=	VarNameAndType PositionalVar? "in" ExprSingle
+ForLetReturn	::=	ForExpr | LetExpr | ("return" ExprSingle)
+ForMemberBinding	::=	"member" VarNameAndType PositionalVar? "in" ExprSingle
+FullStep	::=	Axis NodeTest
+FunctionBody	::=	EnclosedExpr
+FunctionCall	::=	EQName ArgumentList
+/* xgc: reserved-function-names */
+/* gn: parens */
+FunctionItemExpr	::=	NamedFunctionRef | InlineFunctionExpr
+FunctionSignature	::=	"(" ParamList ")" TypeDeclaration?
+FunctionType	::=	AnyFunctionType
+| TypedFunctionType
+GeneralComp	::=	"=" | "!=" | "<" | "<=" | ">" | ">="
+GNodeType	::=	"gnode" "(" ")"
+IfExpr	::=	"if" "(" Expr ")" (UnbracedActions | BracedAction)
+InlineFunctionExpr	::=	("function" | "fn") FunctionSignature? FunctionBody
+InstanceofExpr	::=	TreatExpr ("instance" "of" SequenceType)?
+IntersectExceptExpr	::=	RecordPutExpr (("intersect" | "except") RecordPutExpr)*
+ItemType	::=	RegularItemType | FunctionType | TypeName | ChoiceItemType
+JNodeType	::=	"jnode" "(" (("*" | JRootSelector | NCName | Constant) ("," SequenceType)?)? ")"
+JRootSelector	::=	"(" ")"
+KeySpecifier	::=	NCName | Literal | ContextValueRef | VarRef | ParenthesizedExpr | LookupWildcard
+KeywordArgument	::=	EQName ":=" Argument
+KeywordArguments	::=	(KeywordArgument ++ ",")
+LetArrayBinding	::=	"$" "[" (VarNameAndType ++ ",") "]" TypeDeclaration? ":=" ExprSingle
+LetBinding	::=	LetValueBinding | LetSequenceBinding | LetArrayBinding | LetMapBinding
+LetClause	::=	"let" (LetBinding ++ ",")
+LetExpr	::=	LetClause ForLetReturn
+LetMapBinding	::=	"$" "{" (VarNameAndType ++ ",") "}" TypeDeclaration? ":=" ExprSingle
+LetSequenceBinding	::=	"$" "(" (VarNameAndType ++ ",") ")" TypeDeclaration? ":=" ExprSingle
+LetValueBinding	::=	VarNameAndType ":=" ExprSingle
+Literal	::=	NumericLiteral | StringLiteral | QNameLiteral
+Lookup	::=	"?" KeySpecifier
+LookupExpr	::=	PostfixExpr Lookup
+LookupWildcard	::=	"*"
+MapConstructor	::=	"map"? "{" (MapConstructorEntry ** ",") "}"
+MapConstructorEntry	::=	ExprSingle (":" ExprSingle)?
+MappingArrowTarget	::=	"=!>" ArrowTarget
+MapType	::=	AnyMapType | TypedMapType
+MarkedNCName	::=	"#" NCName
+MethodCall	::=	PostfixExpr "=?>" NCName PositionalArgumentList
+MultiplicativeExpr	::=	UnionExpr (("*" | "×" | "div" | "÷" | "idiv" | "mod") UnionExpr)*
+NamedFunctionRef	::=	EQName "#" IntegerLiteral
+/* xgc: reserved-function-names */
+NamespaceDecl	::=	"declare" "namespace" NCName "=" URILiteral
+NamespaceNodeType	::=	"namespace-node" "(" ")"
+NameTest	::=	EQName | Wildcard
+NameTestUnion	::=	(NameTest ++ "|")
+NodeComp	::=	"is" | "is-not" | NodePrecedes | NodeFollows | "precedes-or-is" | "follows-or-is"
+NodeConstructor	::=	ComputedConstructor
+NodeFollows	::=	">>" | "follows"
+NodePrecedes	::=	"<<" | "precedes"
+NodeTest	::=	UnionNodeTest | SimpleNodeTest | DynamicNodeTest
+NumericLiteral	::=	IntegerLiteral | HexIntegerLiteral | BinaryIntegerLiteral | DecimalLiteral | DoubleLiteral
+OccurrenceIndicator	::=	"?" | "*" | "+"
+/* xgc: occurrence-indicators */
+OrExpr	::=	AndExpr ("or" AndExpr)*
+OtherwiseExpr	::=	StringConcatExpr ("otherwise" StringConcatExpr)*
+ParamList	::=	(VarNameAndType ** ",")
+ParenthesizedExpr	::=	"(" Expr? ")"
+PathExpr	::=	AbsolutePathExpr
+| RelativePathExpr
+/* xgc: leading-lone-slash */
+PipelineExpr	::=	(ArrowExpr ++ "->")
+PositionalArgumentList	::=	"(" PositionalArguments? ")"
+PositionalArguments	::=	(Argument ++ ",")
+PositionalVar	::=	"at" VarName
+PostfixExpr	::=	PrimaryExpr | FilterExpr | DynamicFunctionCall | LookupExpr | MethodCall
+Predicate	::=	"[" Expr "]"
+PrimaryExpr	::=	Literal
+| VarRef
+| ParenthesizedExpr
+| ContextValueRef
+| FunctionCall
+| NodeConstructor
+| FunctionItemExpr
+| MapConstructor
+| ArrayConstructor
+| StringTemplate
+| UnaryLookup
+ProcessingInstructionNodeType	::=	"processing-instruction" "(" (NCName | StringLiteral)? ")"
+QNameLiteral	::=	"#" EQName
+QuantifiedExpr	::=	("some" | "every") (QuantifierBinding ++ ",") "satisfies" ExprSingle
+QuantifierBinding	::=	VarNameAndType "in" ExprSingle
+RangeExpr	::=	AdditiveExpr ("to" AdditiveExpr)?
+RecordPutExpr	::=	InstanceofExpr ("+:=" InstanceofExpr)*
+RecordType	::=	AnyRecordType | TypedRecordType
+RegularItemType	::=	AnyItemType | XNodeType | GNodeType | JNodeType | MapType | ArrayType | RecordType | EnumerationType
+RelativePathExpr	::=	StepExpr (("/" | "//") StepExpr)*
+RestrictedDynamicCall	::=	(VarRef | ParenthesizedExpr | FunctionItemExpr | MapConstructor | ArrayConstructor) PositionalArgumentList
+SchemaAttributeNodeType	::=	"schema-attribute" "(" AttributeName ")"
+SchemaElementNodeType	::=	"schema-element" "(" ElementName ")"
+Selector	::=	EQName | Wildcard
+SequenceArrowTarget	::=	"=>" ArrowTarget
+SequenceType	::=	("empty-sequence" "(" ")")
+| (ItemType OccurrenceIndicator?)
+SimpleMapExpr	::=	PathExpr ("!" PathExpr)*
+SimpleNodeTest	::=	TypeTest | Selector
+SquareArrayConstructor	::=	"[" (ExprSingle ** ",") "]"
+StepExpr	::=	PostfixExpr | AxisStep
+StringConcatExpr	::=	RangeExpr ("||" RangeExpr)*
+StringTemplate	::=	"`" (StringTemplateFixedPart | StringTemplateVariablePart)* "`"
+/* ws: explicit */
+StringTemplateFixedPart	::=	((Char - ('{' | '}' | '`')) | "{{" | "}}" | "``")+
+/* ws: explicit */
+StringTemplateVariablePart	::=	EnclosedExpr
+TextNodeType	::=	"text" "(" ")"
+TreatExpr	::=	CastableExpr ("treat" "as" SequenceType)?
+TypedArrayType	::=	"array" "(" SequenceType ")"
+TypeDeclaration	::=	"as" SequenceType
+TypedFunctionParam	::=	("$" EQName "as")? SequenceType
+TypedFunctionType	::=	("function" | "fn") "(" (TypedFunctionParam ** ",") ")" "as" SequenceType
+TypedMapType	::=	"map" "(" ItemType "," SequenceType ")"
+TypedRecordType	::=	"record" "(" (FieldDeclaration ** ",") ")"
+TypeName	::=	EQName
+TypeTest	::=	GNodeType | XNodeType | JNodeType
+UnaryExpr	::=	("-" | "+")* ValueExpr
+UnaryLookup	::=	Lookup
+UnbracedActions	::=	"then" ExprSingle "else" ExprSingle
+UnionExpr	::=	IntersectExceptExpr (("union" | "|") IntersectExceptExpr)*
+UnionNodeTest	::=	"(" (SimpleNodeTest ++ "|") ")"
+URILiteral	::=	StringLiteral
+ValueComp	::=	"eq" | "ne" | "lt" | "le" | "gt" | "ge"
+ValueExpr	::=	SimpleMapExpr
+VarName	::=	"$" EQName
+VarNameAndType	::=	"$" EQName TypeDeclaration?
+VarRef	::=	"$" EQName
+Wildcard	::=	"*"
+| (NCName ":*")
+| ("*:" NCName)
+| (BracedURILiteral "*")
+/* ws: explicit */
+XNodeType	::=	DocumentNodeType
+| ElementNodeType
+| AttributeNodeType
+| SchemaElementNodeType
+| SchemaAttributeNodeType
+| ProcessingInstructionNodeType
+| CommentNodeType
+| TextNodeType
+| NamespaceNodeType
+| AnyXNodeType
+XPath	::=	(DefaultElementNamespaceDecl ";")? (NamespaceDecl ";")* Expr
+
+
+IntegerLiteral	::=	Digits
+/* ws: explicit */
+HexIntegerLiteral	::=	"0x" HexDigits
+/* ws: explicit */
+BinaryIntegerLiteral	::=	"0b" BinaryDigits
+/* ws: explicit */
+DecimalLiteral	::=	("." Digits) | (Digits "." Digits?)
+/* ws: explicit */
+DoubleLiteral	::=	(("." Digits) | (Digits ("." Digits?)?)) [eE] [+-]? Digits
+/* ws: explicit */
+StringLiteral	::=	AposStringLiteral | QuotStringLiteral
+/* ws: explicit */
+AposStringLiteral	::=	"'" (EscapeApos | [^'])* "'"
+/* ws: explicit */
+QuotStringLiteral	::=	'"' (EscapeQuot | [^"])* '"'
+/* ws: explicit */
+URIQualifiedName	::=	BracedURILiteral (NCName ":")? NCName
+/* ws: explicit */
+BracedURILiteral	::=	"Q" "{" [^{}]* "}"
+/* ws: explicit */
+EscapeQuot	::=	'""'
+/* ws: explicit */
+EscapeApos	::=	"''"
+/* ws: explicit */
+Comment	::=	"(:" (CommentContents | Comment)* ":)"
+/* ws: explicit */
+/* gn: comments */
+QName	::=	[http://www.w3.org/TR/REC-xml-names/#NT-QName]Names
+/* xgc: xml-version */
+NCName	::=	[http://www.w3.org/TR/REC-xml-names/#NT-NCName]Names
+/* xgc: xml-version */
+Char	::=	[http://www.w3.org/TR/REC-xml#NT-Char]XML
+/* xgc: xml-version */
+The following symbols are used only in the definition of terminal symbols; they are not terminal symbols in the grammar of A.1 EBNF.
+
+Digits	::=	DecDigit ((DecDigit | "_")* DecDigit)?
+/* ws: explicit */
+DecDigit	::=	[0-9]
+/* ws: explicit */
+HexDigits	::=	HexDigit ((HexDigit | "_")* HexDigit)?
+/* ws: explicit */
+HexDigit	::=	[0-9a-fA-F]
+/* ws: explicit */
+BinaryDigits	::=	BinaryDigit ((BinaryDigit | "_")* BinaryDigit)?
+/* ws: explicit */
+BinaryDigit	::=	[01]
+/* ws: explicit */
+CommentContents	::=	(Char+ - (Char* ('(:' | ':)') Char*))
+/* ws: explicit */
+
