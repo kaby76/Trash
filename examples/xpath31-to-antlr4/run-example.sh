@@ -1,7 +1,7 @@
 #!/bin/bash
-# Generate .interp files from the ABNF grammar and parse example ABNF/BNF files.
+# Generate parser tables for the XPath 3.1 EBNF using the Trash toolkit.
 #
-# Usage: bash run.sh
+# Usage: bash run-example.sh
 
 set -e
 trap 'LAST_COMMAND=$CURRENT_COMMAND; CURRENT_COMMAND=$BASH_COMMAND' DEBUG
