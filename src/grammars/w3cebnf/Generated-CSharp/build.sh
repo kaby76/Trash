@@ -13,7 +13,7 @@ version=4.13.1
 antlr4 -v $version -encoding utf-8 -Dlanguage=CSharp   W3CebnfLexer.g4
 antlr4 -v $version -encoding utf-8 -Dlanguage=CSharp   W3CebnfParser.g4
 
-dotnet restore Test.csproj
-dotnet build Test.csproj
+dotnet restore w3cebnf.csproj
+dotnet build w3cebnf.csproj
 
 exit 0

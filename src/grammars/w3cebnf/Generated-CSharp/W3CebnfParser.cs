@@ -36,8 +36,8 @@ public partial class W3CebnfParser : Parser {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
-		CCEQ=1, Q=2, ALT=3, M=4, P=5, S=6, OP=7, CP=8, COMMENT=9, HEX=10, STRING=11, 
-		SET=12, SYMBOL=13, WS=14, CONSTRAINT=15;
+		CCEQ=1, Q=2, ALT=3, M=4, P=5, S=6, OP=7, CP=8, CONSTRAINT=9, COMMENT=10, 
+		HEX=11, STRING=12, SET=13, SYMBOL=14, WS=15;
 	public const int
 		RULE_grammar_ = 0, RULE_production = 1, RULE_choice = 2, RULE_sequence_or_difference = 3, 
 		RULE_item = 4, RULE_primary = 5;
@@ -50,8 +50,8 @@ public partial class W3CebnfParser : Parser {
 		null, "'::='", "'?'", "'|'", "'-'", "'+'", "'*'", "'('", "')'"
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, "CCEQ", "Q", "ALT", "M", "P", "S", "OP", "CP", "COMMENT", "HEX", 
-		"STRING", "SET", "SYMBOL", "WS", "CONSTRAINT"
+		null, "CCEQ", "Q", "ALT", "M", "P", "S", "OP", "CP", "CONSTRAINT", "COMMENT", 
+		"HEX", "STRING", "SET", "SYMBOL", "WS"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -153,7 +153,6 @@ public partial class W3CebnfParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ChoiceContext choice() {
 			return GetRuleContext<ChoiceContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CONSTRAINT() { return GetToken(W3CebnfParser.CONSTRAINT, 0); }
 		public ProductionContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -182,30 +181,8 @@ public partial class W3CebnfParser : Parser {
 			Match(SYMBOL);
 			State = 21;
 			Match(CCEQ);
-			State = 24;
-			ErrorHandler.Sync(this);
-			switch (TokenStream.LA(1)) {
-			case Eof:
-			case ALT:
-			case OP:
-			case HEX:
-			case STRING:
-			case SET:
-			case SYMBOL:
-				{
-				State = 22;
-				choice();
-				}
-				break;
-			case CONSTRAINT:
-				{
-				State = 23;
-				Match(CONSTRAINT);
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
+			State = 22;
+			choice();
 			}
 		}
 		catch (RecognitionException re) {
@@ -255,21 +232,21 @@ public partial class W3CebnfParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 26;
+			State = 24;
 			sequence_or_difference();
-			State = 31;
+			State = 29;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==ALT) {
 				{
 				{
-				State = 27;
+				State = 25;
 				Match(ALT);
-				State = 28;
+				State = 26;
 				sequence_or_difference();
 				}
 				}
-				State = 33;
+				State = 31;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -319,21 +296,21 @@ public partial class W3CebnfParser : Parser {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 45;
+			State = 43;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,5,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,4,Context) ) {
 			case 1:
 				{
-				State = 34;
+				State = 32;
 				item();
-				State = 43;
+				State = 41;
 				ErrorHandler.Sync(this);
 				switch (TokenStream.LA(1)) {
 				case M:
 					{
-					State = 35;
+					State = 33;
 					Match(M);
-					State = 36;
+					State = 34;
 					item();
 					}
 					break;
@@ -341,26 +318,27 @@ public partial class W3CebnfParser : Parser {
 				case ALT:
 				case OP:
 				case CP:
+				case CONSTRAINT:
 				case HEX:
 				case STRING:
 				case SET:
 				case SYMBOL:
 					{
-					State = 40;
+					State = 38;
 					ErrorHandler.Sync(this);
-					_alt = Interpreter.AdaptivePredict(TokenStream,3,Context);
+					_alt = Interpreter.AdaptivePredict(TokenStream,2,Context);
 					while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 						if ( _alt==1 ) {
 							{
 							{
-							State = 37;
+							State = 35;
 							item();
 							}
 							} 
 						}
-						State = 42;
+						State = 40;
 						ErrorHandler.Sync(this);
-						_alt = Interpreter.AdaptivePredict(TokenStream,3,Context);
+						_alt = Interpreter.AdaptivePredict(TokenStream,2,Context);
 					}
 					}
 					break;
@@ -424,15 +402,15 @@ public partial class W3CebnfParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 47;
+			State = 45;
 			primary();
-			State = 51;
+			State = 49;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 100L) != 0)) {
 				{
 				{
-				State = 48;
+				State = 46;
 				_la = TokenStream.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 100L) != 0)) ) {
 				ErrorHandler.RecoverInline(this);
@@ -443,7 +421,7 @@ public partial class W3CebnfParser : Parser {
 				}
 				}
 				}
-				State = 53;
+				State = 51;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -465,6 +443,7 @@ public partial class W3CebnfParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING() { return GetToken(W3CebnfParser.STRING, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode HEX() { return GetToken(W3CebnfParser.HEX, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SET() { return GetToken(W3CebnfParser.SET, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CONSTRAINT() { return GetToken(W3CebnfParser.CONSTRAINT, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OP() { return GetToken(W3CebnfParser.OP, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ChoiceContext choice() {
 			return GetRuleContext<ChoiceContext>(0);
@@ -492,45 +471,52 @@ public partial class W3CebnfParser : Parser {
 		PrimaryContext _localctx = new PrimaryContext(Context, State);
 		EnterRule(_localctx, 10, RULE_primary);
 		try {
-			State = 62;
+			State = 61;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case SYMBOL:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 54;
+				State = 52;
 				Match(SYMBOL);
 				}
 				break;
 			case STRING:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 55;
+				State = 53;
 				Match(STRING);
 				}
 				break;
 			case HEX:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 56;
+				State = 54;
 				Match(HEX);
 				}
 				break;
 			case SET:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 57;
+				State = 55;
 				Match(SET);
 				}
 				break;
-			case OP:
+			case CONSTRAINT:
 				EnterOuterAlt(_localctx, 5);
 				{
-				State = 58;
+				State = 56;
+				Match(CONSTRAINT);
+				}
+				break;
+			case OP:
+				EnterOuterAlt(_localctx, 6);
+				{
+				State = 57;
 				Match(OP);
-				State = 59;
+				State = 58;
 				choice();
-				State = 60;
+				State = 59;
 				Match(CP);
 				}
 				break;
@@ -550,26 +536,25 @@ public partial class W3CebnfParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,15,65,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,1,0,5,0,14,8,
-		0,10,0,12,0,17,9,0,1,0,1,0,1,1,1,1,1,1,1,1,3,1,25,8,1,1,2,1,2,1,2,5,2,
-		30,8,2,10,2,12,2,33,9,2,1,3,1,3,1,3,1,3,5,3,39,8,3,10,3,12,3,42,9,3,3,
-		3,44,8,3,3,3,46,8,3,1,4,1,4,5,4,50,8,4,10,4,12,4,53,9,4,1,5,1,5,1,5,1,
-		5,1,5,1,5,1,5,1,5,3,5,63,8,5,1,5,0,0,6,0,2,4,6,8,10,0,1,2,0,2,2,5,6,69,
-		0,15,1,0,0,0,2,20,1,0,0,0,4,26,1,0,0,0,6,45,1,0,0,0,8,47,1,0,0,0,10,62,
-		1,0,0,0,12,14,3,2,1,0,13,12,1,0,0,0,14,17,1,0,0,0,15,13,1,0,0,0,15,16,
-		1,0,0,0,16,18,1,0,0,0,17,15,1,0,0,0,18,19,5,0,0,1,19,1,1,0,0,0,20,21,5,
-		13,0,0,21,24,5,1,0,0,22,25,3,4,2,0,23,25,5,15,0,0,24,22,1,0,0,0,24,23,
-		1,0,0,0,25,3,1,0,0,0,26,31,3,6,3,0,27,28,5,3,0,0,28,30,3,6,3,0,29,27,1,
-		0,0,0,30,33,1,0,0,0,31,29,1,0,0,0,31,32,1,0,0,0,32,5,1,0,0,0,33,31,1,0,
-		0,0,34,43,3,8,4,0,35,36,5,4,0,0,36,44,3,8,4,0,37,39,3,8,4,0,38,37,1,0,
-		0,0,39,42,1,0,0,0,40,38,1,0,0,0,40,41,1,0,0,0,41,44,1,0,0,0,42,40,1,0,
-		0,0,43,35,1,0,0,0,43,40,1,0,0,0,44,46,1,0,0,0,45,34,1,0,0,0,45,46,1,0,
-		0,0,46,7,1,0,0,0,47,51,3,10,5,0,48,50,7,0,0,0,49,48,1,0,0,0,50,53,1,0,
-		0,0,51,49,1,0,0,0,51,52,1,0,0,0,52,9,1,0,0,0,53,51,1,0,0,0,54,63,5,13,
-		0,0,55,63,5,11,0,0,56,63,5,10,0,0,57,63,5,12,0,0,58,59,5,7,0,0,59,60,3,
-		4,2,0,60,61,5,8,0,0,61,63,1,0,0,0,62,54,1,0,0,0,62,55,1,0,0,0,62,56,1,
-		0,0,0,62,57,1,0,0,0,62,58,1,0,0,0,63,11,1,0,0,0,8,15,24,31,40,43,45,51,
-		62
+		4,1,15,64,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,1,0,5,0,14,8,
+		0,10,0,12,0,17,9,0,1,0,1,0,1,1,1,1,1,1,1,1,1,2,1,2,1,2,5,2,28,8,2,10,2,
+		12,2,31,9,2,1,3,1,3,1,3,1,3,5,3,37,8,3,10,3,12,3,40,9,3,3,3,42,8,3,3,3,
+		44,8,3,1,4,1,4,5,4,48,8,4,10,4,12,4,51,9,4,1,5,1,5,1,5,1,5,1,5,1,5,1,5,
+		1,5,1,5,3,5,62,8,5,1,5,0,0,6,0,2,4,6,8,10,0,1,2,0,2,2,5,6,68,0,15,1,0,
+		0,0,2,20,1,0,0,0,4,24,1,0,0,0,6,43,1,0,0,0,8,45,1,0,0,0,10,61,1,0,0,0,
+		12,14,3,2,1,0,13,12,1,0,0,0,14,17,1,0,0,0,15,13,1,0,0,0,15,16,1,0,0,0,
+		16,18,1,0,0,0,17,15,1,0,0,0,18,19,5,0,0,1,19,1,1,0,0,0,20,21,5,14,0,0,
+		21,22,5,1,0,0,22,23,3,4,2,0,23,3,1,0,0,0,24,29,3,6,3,0,25,26,5,3,0,0,26,
+		28,3,6,3,0,27,25,1,0,0,0,28,31,1,0,0,0,29,27,1,0,0,0,29,30,1,0,0,0,30,
+		5,1,0,0,0,31,29,1,0,0,0,32,41,3,8,4,0,33,34,5,4,0,0,34,42,3,8,4,0,35,37,
+		3,8,4,0,36,35,1,0,0,0,37,40,1,0,0,0,38,36,1,0,0,0,38,39,1,0,0,0,39,42,
+		1,0,0,0,40,38,1,0,0,0,41,33,1,0,0,0,41,38,1,0,0,0,42,44,1,0,0,0,43,32,
+		1,0,0,0,43,44,1,0,0,0,44,7,1,0,0,0,45,49,3,10,5,0,46,48,7,0,0,0,47,46,
+		1,0,0,0,48,51,1,0,0,0,49,47,1,0,0,0,49,50,1,0,0,0,50,9,1,0,0,0,51,49,1,
+		0,0,0,52,62,5,14,0,0,53,62,5,12,0,0,54,62,5,11,0,0,55,62,5,13,0,0,56,62,
+		5,9,0,0,57,58,5,7,0,0,58,59,3,4,2,0,59,60,5,8,0,0,60,62,1,0,0,0,61,52,
+		1,0,0,0,61,53,1,0,0,0,61,54,1,0,0,0,61,55,1,0,0,0,61,56,1,0,0,0,61,57,
+		1,0,0,0,62,11,1,0,0,0,7,15,29,38,41,43,49,61
 	};
 
 	public static readonly ATN _ATN =
