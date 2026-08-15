@@ -26,6 +26,7 @@ namespace TrashGlobbing
         {
             var regex = new StringBuilder();
             var characterClass = false;
+            int braceDepth = 0;
             regex.Append("^");
             int ptr = 0;
             for ( ; ptr < glob.Length; ++ptr)
@@ -66,6 +67,30 @@ namespace TrashGlobbing
                     case '[':
                         characterClass = true;
                         regex.Append(c);
+                        break;
+                    case '{':
+                        // Begin alternation group: {a,b,c} → (?:a|b|c)
+                        braceDepth++;
+                        regex.Append("(?:");
+                        break;
+                    case '}':
+                        if (braceDepth > 0)
+                        {
+                            braceDepth--;
+                            regex.Append(")");
+                        }
+                        else
+                        {
+                            // Unmatched '}' — treat as literal
+                            regex.Append("\\}");
+                        }
+                        break;
+                    case ',':
+                        // Inside braces ',' is the alternation separator; outside it is literal
+                        if (braceDepth > 0)
+                            regex.Append("|");
+                        else
+                            regex.Append(",");
                         break;
                     default:
                         if (RegexSpecialChars.Contains(c)) regex.Append('\\');

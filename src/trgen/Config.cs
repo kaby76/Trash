@@ -76,6 +76,7 @@ public class Config
     public string SetupFfn = ".trgen.rc";
     public string root_directory;
     public string example_files { get; set; }
+    public List<string> all_example_files { get; set; }
 
     public List<Test> Tests;
 
