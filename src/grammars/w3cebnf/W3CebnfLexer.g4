@@ -1,6 +1,5 @@
 // https://www.w3.org/TR/REC-xml/#sec-notation
 
-
 lexer grammar W3CebnfLexer;
 
 channels { OFF_CHANNEL }
@@ -13,11 +12,11 @@ P : '+' ;
 S : '*' ;
 OP : '(' ;
 CP : ')' ;
-CONSTRAINT : '[' Url | ~']'* ']' ;
+CONSTRAINT: '[' [ \t\n]+ ('wfc' | 'vc') ':' .*? ']';
 COMMENT : '/*' .*? '*/' -> channel(HIDDEN) ;
 HEX : Hex ;
-STRING : '"' .*? '"' | '\'' .*? '\'' ;
-SET : '[' '^'? ( Hex | . )+? ']' ;
+STRING : '"' ~'"'* '"' | '\'' ~'\''* '\'' ;
+SET : '[' '^'? ~']'+ ']' ;
 SYMBOL : Symbol ;
 WS : Ws -> channel(OFF_CHANNEL) ;
 fragment Symbol : [a-zA-Z0-9_.\-] [a-zA-Z0-9_.\-]* ;
