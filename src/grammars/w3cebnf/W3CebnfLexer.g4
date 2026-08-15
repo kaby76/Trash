@@ -13,7 +13,7 @@ P : '+' ;
 S : '*' ;
 OP : '(' ;
 CP : ')' ;
-//CONSTRAINT : '[' (Url | ~']'*) ']' ;
+CONSTRAINT : '[' (Url | ~']'*) ']' ;
 COMMENT : '/*' .*? '*/' -> channel(HIDDEN) ;
 HEX : Hex ;
 STRING : '"' ~'"'* '"' | '\'' ~'\''* '\'' ;
