@@ -35,7 +35,7 @@ public class Config
     [Option('q', "quiet", Required = false, Default = false, HelpText = "Do not output anything; only set error code.")]
     public bool Quiet { get; set; }
 
-    [Option('t', "type", Required = false, HelpText = "Override type of parse.")]
+    [Option('t', "type", Required = false, HelpText = "Override type of parse. Use 'gen' to force the local Generated-CSharp parser regardless of file extension. Other values: ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton.")]
     public string Type { get; set; }
 
     [Option('v', "verbose", Required = false)]
