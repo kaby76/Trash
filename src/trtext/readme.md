@@ -24,7 +24,7 @@ specified, the line number range for the tree is printed.
 
 ## Current version
 
-2.0 Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement. Added more perf measurements to templates.
+Release 2.3.0.
 
 ## License
 
