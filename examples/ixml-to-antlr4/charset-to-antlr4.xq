@@ -8,7 +8,7 @@
 
 (: Step 1: Strip quotes from string members inside character sets.
    e.g., [";"] -> [;],  ["@^-"] -> [@^-]. :)
-(for $s in //set_/member/string_/(DQUOTE_STRING | SQUOTE_STRING)
+(for $s in //set_/member/string_
  let $inner := substring(string($s), 2, string-length(string($s)) - 2)
  return replace value of node $s with $inner),
 
