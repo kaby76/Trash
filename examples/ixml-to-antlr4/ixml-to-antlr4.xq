@@ -59,7 +59,7 @@
 (for $s in //string_/DQUOTE_STRING
  let $inner     := substring(string($s), 2, string-length(string($s)) - 2)
  let $unescaped := fn:replace($inner, '""', '"')
- let $escaped   := fn:replace($unescaped, "'", "\\'")
+ let $escaped   := fn:replace($unescaped, "'", "\'")
  let $new       := concat("'", $escaped, "'")
  return replace value of node $s with $new),
 
