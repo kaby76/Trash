@@ -110,19 +110,17 @@ public class TreeOutput
 
     private static string ToLiteral(string input)
     {
-        using (var writer = new StringWriter())
+        var sb = new StringBuilder(input.Length);
+        foreach (char c in input)
         {
-            var literal = input;
-            literal = literal.Replace("\\", "\\\\");
-            literal = literal.Replace("\b", "\\b");
-            literal = literal.Replace("\n", "\\n");
-            literal = literal.Replace("\t", "\\t");
-            literal = literal.Replace("\r", "\\r");
-            literal = literal.Replace("\f", "\\f");
-            literal = literal.Replace("\"", "\\\"");
-            literal = literal.Replace(string.Format("\" +{0}\t\"", Environment.NewLine), "");
-            return literal;
+            if (c == '&')
+                sb.Append("&amp;");
+            else if (c < 0x20 || c == 0x7F)
+                sb.Append($"&#{(int)c};");
+            else
+                sb.Append(c);
         }
+        return sb.ToString();
     }
 
     public static string PerformEscapes(string s)

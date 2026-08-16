@@ -961,6 +961,7 @@ public class XQueryParser
                 var raw   = sl.GetText();
                 var inner = raw.Length >= 2 ? raw[1..^1] : raw;
                 inner = raw[0] == '"' ? inner.Replace("\"\"", "\"") : inner.Replace("''", "'");
+                inner = ResolveXmlEscapes(inner);
                 return new StringLiteralExpr { Value = inner, Line = ctx.Start.Line, Column = ctx.Start.Column };
             }
             var num = ctx.numericLiteral()!;
@@ -1226,6 +1227,51 @@ public class XQueryParser
             if (raw.Length >= 2 && ((raw[0] == '"' && raw[^1] == '"') || (raw[0] == '\'' && raw[^1] == '\'')))
                 return raw[1..^1];
             return raw;
+        }
+
+        /// <summary>
+        /// Resolves XML character references (&#N; &#xNN;) and predefined entity
+        /// references (&amp; &lt; &gt; &quot; &apos;) in the body of an XQuery
+        /// string literal, per XQuery 1.0 spec §2.6.
+        /// </summary>
+        private static string ResolveXmlEscapes(string s)
+        {
+            if (!s.Contains('&')) return s;
+            var sb = new System.Text.StringBuilder(s.Length);
+            int i = 0;
+            while (i < s.Length)
+            {
+                if (s[i] != '&') { sb.Append(s[i++]); continue; }
+                int semi = s.IndexOf(';', i + 1);
+                if (semi < 0) { sb.Append(s[i++]); continue; }
+                var entity = s[(i + 1)..semi];
+                switch (entity)
+                {
+                    case "amp":  sb.Append('&');  break;
+                    case "lt":   sb.Append('<');  break;
+                    case "gt":   sb.Append('>');  break;
+                    case "quot": sb.Append('"');  break;
+                    case "apos": sb.Append('\''); break;
+                    default:
+                        if (entity.Length > 1 && entity[0] == '#')
+                        {
+                            bool hex = entity.Length > 2 && (entity[1] == 'x' || entity[1] == 'X');
+                            var digits = hex ? entity[2..] : entity[1..];
+                            if (int.TryParse(digits,
+                                    hex ? System.Globalization.NumberStyles.HexNumber
+                                        : System.Globalization.NumberStyles.Integer,
+                                    null, out int cp))
+                                sb.Append(char.ConvertFromUtf32(cp));
+                            else
+                                sb.Append('&').Append(entity).Append(';');
+                        }
+                        else
+                            sb.Append('&').Append(entity).Append(';');
+                        break;
+                }
+                i = semi + 1;
+            }
+            return sb.ToString();
         }
     }
 }

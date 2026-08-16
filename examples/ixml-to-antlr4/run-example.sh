@@ -28,10 +28,14 @@ dotnet trash xquery -q encoded-to-antlr4.xq -f structural.pt > encoded.pt
 # Pass 3: Convert character-set member syntax (unquote chars, rewrite class codes).
 dotnet trash xquery -q charset-to-antlr4.xq -f encoded.pt > charsets.pt
 
-# Pass 4: Expand separator quantifiers '++' and '**' to standard repetition,
+# Pass 4: Extract inline character sets to named Antlr4 lexer rules (SET_N).
+dotnet trash xquery -q sets-to-lexer.xq -f charsets.pt > sets.pt
+
+# Pass 5: Expand separator quantifiers '++' and '**' to standard repetition,
 # then write the result to xxx/.
-dotnet trash xquery -q sep-repeat-to-antlr4.xq -f charsets.pt \
-    | dotnet trash sponge -o xxx
+dotnet trash xquery -q sep-repeat-to-antlr4.xq -f sets.pt > final.pt
+dotnet trash tree -f final.pt > final.tree
+dotnet trash sponge -f final.pt -o xxx
 
 # Rename each *.ixml output file to *.g4 (trparse preserves the original name).
 for f in xxx/*.ixml; do

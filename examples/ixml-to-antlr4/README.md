@@ -48,7 +48,16 @@ The final grammar is written to `xxx/ixml.ixml`.
    - Rewrites Unicode category codes to Antlr4 `\p{XX}` syntax:
      e.g. `[L]` → `[\p{L}]`, `[Zs]` → `[\p{Zs}]`.
 
-5. **Pass 4** (`sep-repeat-to-antlr4.xq`) — separator quantifiers:
+5. **Pass 4** (`sets-to-lexer.xq`) — inline character sets:
+   - Antlr4 forbids character classes (`[...]` / `~[...]`) inside parser rules;
+     they are only valid in lexer rules.
+   - Each `charset` node is replaced with a generated lexer token name (`SET_1`,
+     `SET_2`, …) and a corresponding lexer rule (`SET_N : <charset> ;`) is
+     appended at the end of the grammar.
+   - The charset text is captured after Passes 1–3 so members are already
+     normalised (quotes stripped, Unicode categories as `\p{XX}`, hex as `\uXXXX`).
+
+6. **Pass 5** (`sep-repeat-to-antlr4.xq`) — separator quantifiers:
    - `f ++ sep` (one-or-more with separator) → `f (sep f)*`
    - `f ** sep` (zero-or-more with separator) → `(f (sep f)*)?`
    - Uses `string()` to capture factor and separator text after prior
