@@ -1,4 +1,4 @@
-# Generated from trgen 0.23.44
+# Generated from trgen 2.3.0
 build: FORCE
 	bash build.sh
 clean: FORCE

@@ -13,7 +13,6 @@ version=4.13.1
 antlr4 -v $version -encoding utf-8 -Dlanguage=CSharp   ixmlLexer.g4
 antlr4 -v $version -encoding utf-8 -Dlanguage=CSharp   ixmlParser.g4
 
-
 dotnet restore ixml.csproj
 dotnet build ixml.csproj
 

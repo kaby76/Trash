@@ -132,12 +132,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitGrammar_rules(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitGrammar_rules(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -202,12 +196,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitGrammar_rule(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitGrammar_rule(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -280,12 +268,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitModifier(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitModifier(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -356,12 +338,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitSilent_modifier(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSilent_modifier(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -402,12 +378,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitAtomic_modifier(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAtomic_modifier(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -450,12 +420,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitCompound_atomic_modifier(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitCompound_atomic_modifier(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -496,12 +460,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitNon_atomic_modifier(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNon_atomic_modifier(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -554,12 +512,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitExpression(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpression(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -632,12 +584,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitTerm(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTerm(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -716,12 +662,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitNode(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNode(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -795,12 +735,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitTerminal(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTerminal(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -891,12 +825,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitPrefix_operator(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPrefix_operator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -957,12 +885,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitInfix_operator(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitInfix_operator(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1039,12 +961,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitPostfix_operator(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPostfix_operator(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1135,12 +1051,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitPositive_predicate_operator(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPositive_predicate_operator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1181,12 +1091,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitNegative_predicate_operator(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNegative_predicate_operator(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1229,12 +1133,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitSequence_operator(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSequence_operator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1275,12 +1173,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitChoice_operator(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitChoice_operator(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1323,12 +1215,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitOptional_operator(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOptional_operator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1370,12 +1256,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitRepeat_operator(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRepeat_operator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1416,12 +1296,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitRepeat_once_operator(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRepeat_once_operator(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1465,12 +1339,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitRepeat_exact(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRepeat_exact(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1519,12 +1387,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitRepeat_min(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRepeat_min(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1575,12 +1437,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitRepeat_max(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRepeat_max(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1634,12 +1490,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitRepeat_min_max(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRepeat_min_max(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1695,12 +1545,6 @@ public partial class PestParser : Parser {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitPush(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPush(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1754,12 +1598,6 @@ public partial class PestParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IPestParserListener typedListener = listener as IPestParserListener;
 			if (typedListener != null) typedListener.ExitPeek_slice(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IPestParserVisitor<TResult> typedVisitor = visitor as IPestParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPeek_slice(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 

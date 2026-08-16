@@ -173,12 +173,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitGrammar_(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitGrammar_(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -263,12 +257,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitHeader_(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitHeader_(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -337,12 +325,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitClassDef(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitClassDef(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -436,12 +418,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitFileOptionsSpec(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFileOptionsSpec(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -509,12 +485,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitParserOptionsSpec(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitParserOptionsSpec(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -584,12 +554,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitTreeParserOptionsSpec(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTreeParserOptionsSpec(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -657,12 +621,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitLexerOptionsSpec(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLexerOptionsSpec(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -732,12 +690,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitSubruleOptionsSpec(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSubruleOptionsSpec(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -805,12 +757,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitOption(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOption(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -862,12 +808,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitOptionValue(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOptionValue(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -949,12 +889,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitLexerOption(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLexerOption(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1006,12 +940,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitLexerOptionValue(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLexerOptionValue(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1076,12 +1004,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitCharSet(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitCharSet(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1144,12 +1066,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitSetBlockElement(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSetBlockElement(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1211,12 +1127,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitTokensSpec(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTokensSpec(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1283,12 +1193,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitTokenEntry(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTokenEntry(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1403,12 +1307,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitTokensSpecOptions(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTokensSpecOptions(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1481,12 +1379,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitSuperClass(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSuperClass(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1549,12 +1441,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitParserSpec(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitParserSpec(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1678,12 +1564,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitLexerSpec(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLexerSpec(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1811,12 +1691,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitTreeParserSpec(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTreeParserSpec(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1912,12 +1786,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitRules(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRules(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2011,12 +1879,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitRule_(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRule_(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2177,12 +2039,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitRuleOptionsSpec(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRuleOptionsSpec(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2253,12 +2109,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitThrowsSpec(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitThrowsSpec(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2328,12 +2178,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitBlock(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBlock(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2397,12 +2241,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitAlternative(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAlternative(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2473,12 +2311,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitExceptionGroup(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExceptionGroup(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2541,12 +2373,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitExceptionSpec(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExceptionSpec(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2620,12 +2446,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitExceptionSpecNoLabel(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExceptionSpecNoLabel(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2688,12 +2508,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitExceptionHandler(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExceptionHandler(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2743,12 +2557,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitElement(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitElement(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2822,12 +2630,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitElementOptionSpec(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitElementOptionSpec(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2933,12 +2735,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitElementNoOptionSpec(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitElementNoOptionSpec(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3172,12 +2968,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitRule_ref_or_keyword_as(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRule_ref_or_keyword_as(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3236,12 +3026,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitTree_(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTree_(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3308,12 +3092,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitRootNode(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRootNode(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3383,12 +3161,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitEbnf(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEbnf(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3528,12 +3300,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitAst_type_spec(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAst_type_spec(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3600,12 +3366,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitRange_(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRange_(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3699,12 +3459,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitTerminal_(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTerminal_(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3808,12 +3562,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitNotTerminal(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNotTerminal(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3892,12 +3640,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitQualifiedID(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitQualifiedID(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3959,12 +3701,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitId_(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitId_(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4023,12 +3759,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitAction(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAction(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4090,12 +3820,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitActionScopeName(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitActionScopeName(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4165,12 +3889,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitRuleAction(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRuleAction(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4220,12 +3938,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitAltList(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAltList(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4290,12 +4002,6 @@ public partial class ANTLRv2Parser : Parser {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitActionBlock(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitActionBlock(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4358,12 +4064,6 @@ public partial class ANTLRv2Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv2ParserListener typedListener = listener as IANTLRv2ParserListener;
 			if (typedListener != null) typedListener.ExitArgActionBlock(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IANTLRv2ParserVisitor<TResult> typedVisitor = visitor as IANTLRv2ParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitArgActionBlock(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 

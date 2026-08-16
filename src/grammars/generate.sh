@@ -15,9 +15,5 @@ do
 		echo Grammar `pwd` failed.
 		exit 1
 	fi
-	cd Generated-*
-	mv Test.csproj $i.csproj
-	sed -i -e "s/Test.csproj/$i.csproj/g" build.sh
-	sed -i -e 's/^antlr4/antlr4 -visitor/g' build.sh
 	popd > /dev/null 2>&1
 done

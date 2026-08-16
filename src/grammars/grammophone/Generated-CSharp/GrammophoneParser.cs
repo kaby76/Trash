@@ -106,12 +106,6 @@ public partial class GrammophoneParser : Parser {
 			IGrammophoneListener typedListener = listener as IGrammophoneListener;
 			if (typedListener != null) typedListener.ExitProds(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IGrammophoneVisitor<TResult> typedVisitor = visitor as IGrammophoneVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitProds(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -175,12 +169,6 @@ public partial class GrammophoneParser : Parser {
 			IGrammophoneListener typedListener = listener as IGrammophoneListener;
 			if (typedListener != null) typedListener.ExitProd(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IGrammophoneVisitor<TResult> typedVisitor = visitor as IGrammophoneVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitProd(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -230,12 +218,6 @@ public partial class GrammophoneParser : Parser {
 			IGrammophoneListener typedListener = listener as IGrammophoneListener;
 			if (typedListener != null) typedListener.ExitLhs(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IGrammophoneVisitor<TResult> typedVisitor = visitor as IGrammophoneVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLhs(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -281,12 +263,6 @@ public partial class GrammophoneParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IGrammophoneListener typedListener = listener as IGrammophoneListener;
 			if (typedListener != null) typedListener.ExitRhs(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IGrammophoneVisitor<TResult> typedVisitor = visitor as IGrammophoneVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRhs(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -352,12 +328,6 @@ public partial class GrammophoneParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IGrammophoneListener typedListener = listener as IGrammophoneListener;
 			if (typedListener != null) typedListener.ExitAtom(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IGrammophoneVisitor<TResult> typedVisitor = visitor as IGrammophoneVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAtom(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -438,12 +408,6 @@ public partial class GrammophoneParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IGrammophoneListener typedListener = listener as IGrammophoneListener;
 			if (typedListener != null) typedListener.ExitSymbol(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IGrammophoneVisitor<TResult> typedVisitor = visitor as IGrammophoneVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSymbol(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
