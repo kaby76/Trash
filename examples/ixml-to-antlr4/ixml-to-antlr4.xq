@@ -37,8 +37,10 @@
 (for $d in //rule_/DOT | //version/DOT
  return replace value of node $d with ";"),
 
-(: Step 8: Convert iXML comments '{...}' to Antlr4 block-comment '/* ... */'. :)
-(for $c in //COMMENT
+(: Step 8: Convert iXML comments '{...}' to Antlr4 block-comment '/* ... */'.
+   COMMENT tokens are on the hidden channel, so they appear as XDM attributes
+   (@COMMENT), not elements (//COMMENT). :)
+(for $c in //@COMMENT
  let $inner := substring(string($c), 2, string-length(string($c)) - 2)
  return replace value of node $c with concat("/* ", $inner, " */")),
 
